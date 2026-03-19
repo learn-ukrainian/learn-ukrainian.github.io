@@ -14,7 +14,7 @@ objectives:
 - "Learner understands voiced/voiceless pairs (Б/П Д/Т З/С Ж/Ш Г/Х Ґ/К)"
 - Learner knows the hard vs soft consonant distinction
 - Learner can read words with all consonants
-- "Key rule: Ukrainian voiced consonants do NOT devoice at word end (зуб = зу[б], not зу[п])"
+- "Key rule: Ukrainian voiced consonants do NOT devoice at word end (зуб ends with voiced б, not п)"
 content_outline:
 - section: Вступ — Introduction
   words: 100
@@ -46,8 +46,8 @@ content_outline:
     fricative), NOT a hard 'g' like English 'go'. Х like German 'ch' in 'ach'."
   - "Ґ/К — ґанок (porch) / кіт (M1 review). Ґ IS the hard 'g' (like English 'go') —
     very rare (~400 native words). Removed from alphabet in 1933, restored 1990."
-  - "CRITICAL RULE: voiced consonants stay voiced at word end! зуб = зу[б], NOT
-    зу[п]. хліб = хлі[б], NOT хлі[п]. Different from Russian and German."
+  - "CRITICAL RULE: voiced consonants stay voiced at word end! зуб ends with voiced
+    б, NOT п. хліб ends with voiced б, NOT п. Different from Russian and German."
 - section: "Тверді та м'які — Hard and Soft Consonants"
   words: 250
   points:

@@ -24,7 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T23:54:03Z",
+      "ts": "2026-03-19T00:24:34Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -33,9 +33,9 @@
     },
     "validate": {
       "status": "failed",
-      "ts": "2026-03-18T23:54:38Z",
+      "ts": "2026-03-19T00:25:01Z",
       "attempts": 0,
-      "note": "precheck-prompt-bug:systemic-5-failures",
+      "note": "precheck-prompt-bug:systemic-6-failures",
       "executor": {
         "type": "deterministic",
         "name": "morphological_validator"
@@ -43,12 +43,23 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T23:56:46Z",
+      "ts": "2026-03-19T00:26:34Z",
       "task_id": "v5-the-genitive-i-absence-pC",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-19T00:40:27Z",
+      "attempts": 5,
+      "note": "exhausted-content-passes",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

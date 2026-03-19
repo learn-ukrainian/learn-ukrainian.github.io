@@ -1,27 +1,14 @@
 # RAG Verification: mine-and-yours
 
-**Date:** 2026-03-18 05:33 UTC | **Words checked:** 120 | **VESUM coverage:** 118/120 (98.3%)
+**Date:** 2026-03-19 07:51 UTC | **Words checked:** 80 | **VESUM coverage:** 80/80 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 118
-- ⚠️ Partial (RAG only): 1
-- ❌ Not found: 1
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| их | activities | ✗ | ✗ | ✗ |
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| Оксана | activities | ✗ | ✗ | ✓ |
+- ✅ Verified (VESUM): 80
+- ⚠️ Partial (RAG only): 0
+- ❌ Not found: 0
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 95 | 95 | 0 |
-| Activities (.yaml) | 25 | 23 | 1 |
+| Prose (.md) | 80 | 80 | 0 |

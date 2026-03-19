@@ -46,14 +46,17 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1620
+word_count: 1584
 deviations: []
 frictions: []
 research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Check that all distractors are safe dictionary forms to avoid VESUM failures, while still testing the grammatical concept."
-rag_tools_used: []
+  - "Check that all morphological distractors in activities correspond to real Ukrainian word forms"
+  - "Verify strict translation of plan points into correct sections, ensuring exact inclusion of collocations"
+rag_tools_used:
+  - "read_file: Extracted exact pedagogy from the plan and schemas"
+  - "run_shell_command: Executed distractor morphological analysis locally to avoid VESUM rejections"
 ```
 Focus your review on the `review_focus` items above.
 
@@ -78,13 +81,13 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Inventory Specialist
-Word count:       1836 / 1200 (153.0%)
+Word count:       1558 / 1200 (129.8%)
 Activities:       3
 Vocabulary items: 20
-Engagement boxes: 1
-Immersion:        10.0% (target: 15-30%)
-Richness:         73% (threshold: 60%)
-Richness gaps:    engagement: 1/2, video_embeds: 0/2
+Engagement boxes: 0
+Immersion:        11.5% (target: 15-30%)
+Richness:         63% (threshold: 60%)
+Richness gaps:    engagement: 0/2, video_embeds: 0/2
 Audit status:     FAIL
 ```
 
@@ -107,7 +110,42 @@ Audit status:     FAIL
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-(No deterministic issues found -- D.0 pre-screen clean)
+1. **[STRESS_MISMATCH]** (severity: HIGH)
+   Location: ~line 14
+   Text: Wrong stress: 'ме́не' → should be 'мене́'
+   Fix: Replace 'ме́не' with 'мене́'.
+2. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 24
+   Text: Stressed word not in dictionary: гроше́й (грошей)
+   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+3. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 26
+   Text: Stressed word not in dictionary: гро́ші (гроші)
+   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+4. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 46
+   Text: Stressed word not in dictionary: телефо́на (телефона)
+   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+5. **[STRESS_MISMATCH]** (severity: HIGH)
+   Location: ~line 93
+   Text: Wrong stress: 'його́' → should be 'йо́го'
+   Fix: Replace 'його́' with 'йо́го'.
+6. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 93
+   Text: Stressed word not in dictionary: ньо́го (нього)
+   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+7. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 93
+   Text: Stressed word not in dictionary: її́ (її)
+   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+8. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
+   Location: (whole module)
+   Text: Only 0 engagement boxes (minimum: 1 for A1)
+   Fix: Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+9. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+   Location: the-genitive-i-absence.yaml
+   Text: Activity answers contain VESUM-failed words: цукра
+   Fix: Fix spelling or replace these words — students will practice non-existent forms.
 
 ---
 
@@ -115,10 +153,11 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 99 | **VESUM coverage:** 98/99 (99.0%)
+**Words checked:** 94 | **VESUM coverage:** 92/94 (97.9%)
 
-**❌ Not found in VESUM or textbooks (1):**
+**❌ Not found in VESUM or textbooks (2):**
 - `н` (source: prose)
+- `цукра` (source: activities)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 

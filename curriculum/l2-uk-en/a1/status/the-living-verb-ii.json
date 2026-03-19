@@ -2,13 +2,13 @@
   "module": "the-living-verb-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T04:38:54.291142Z",
+  "last_audit": "2026-03-19T12:50:06.848437Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T04:38:35.847273Z",
+    "md": "2026-03-19T06:25:55.659019Z",
     "meta": "2026-03-18T04:15:01.349790Z",
-    "activities": "2026-03-18T04:38:35.852887Z",
-    "vocabulary": "2026-03-18T04:38:35.853775Z",
+    "activities": "2026-03-19T06:25:55.659214Z",
+    "vocabulary": "2026-03-19T06:25:55.659383Z",
     "research": "2026-03-12T09:49:45.895696Z",
     "plan": "2026-03-17T16:54:31.222253Z"
   },
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1421/1200 (raw: 1646) | pedagogy: 1 violations"
+      "message": "1662/1200 (raw: 1840) | immersion: 9.4% LOW (target 15-25% (M16))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/0 | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "17/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -51,11 +51,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: fill-in, match-up"
-    ],
-    "pass_count": 3,
-    "fail_count": 2,
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

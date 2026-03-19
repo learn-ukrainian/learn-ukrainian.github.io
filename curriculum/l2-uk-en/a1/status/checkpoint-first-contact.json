@@ -1,0 +1,61 @@
+{
+  "module": "checkpoint-first-contact",
+  "level": "A1",
+  "plan_version": "2.1",
+  "last_audit": "2026-03-19T12:49:47.192966Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-19T05:25:39.293488Z",
+    "meta": "2026-03-19T01:01:19.752177Z",
+    "activities": "2026-03-19T05:28:39.344171Z",
+    "vocabulary": "2026-03-19T05:28:39.369660Z",
+    "research": "2026-03-12T09:48:45.659756Z",
+    "plan": "2026-03-17T16:54:31.096559Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1674/1200 (raw: 1776) | pedagogy: 3 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Checkpoint Format Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

@@ -179,27 +179,22 @@ Pidruchnyk.com.ua
 
 ## Module Constraints (HARD FAIL if violated)
 
-GRAMMAR CONSTRAINTS (A1.1 — First Contact):
-Keep grammar simple — this is the learner's first exposure to Ukrainian.
+GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M06):
+NO CONJUGATED VERBS. NO IMPERATIVES. This is the phonetics phase.
 
-ALLOWED:
+ALLOWED structures (Ukrainian examples only):
 - Це + noun: «Це кіт», «Це мама»
-- Simple present tense (я читаю, я бачу)
-- Basic imperatives (читай, слухай, дивись)
-- Question words: «Хто це?», «Що це?», «Де?»
-- Так/Ні answers
-- Adj + noun: «великий дім», «нова книга»
+- Noun + тут/там: «Мама тут», «Кіт там»
+- Question words: «Хто це?», «Що це?», «Де мама?»
+- Так/Ні: «Так, це кіт», «Ні, це не кіт»
+- Fixed phrases (memorized, no grammar): дякую, будь ласка, привіт
 
-BANNED (too complex for first contact):
-- Past tense, future tense, conditionals
-- Participles, passive voice, gerunds
-- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)
-- Do not explicitly teach cases — use nouns in natural contexts
+BANNED: ALL verbs, past/future tense, cases, compound sentences
 
-METALANGUAGE:
-- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'
-- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')
-- Explanatory prose in English, Ukrainian for examples and dialogues
+STRESS MARKS: Do NOT add stress marks (´). Write plain Ukrainian.
+The pipeline adds stress marks deterministically after you write.
+
+METALANGUAGE: English prose, Ukrainian examples. Bilingual headings.
 
 > **These constraints apply to activities too.** If only specific letters are allowed, every Ukrainian word in activities must use ONLY those letters. If sentences are not allowed, do NOT create sentence-level activities.
 

@@ -46,22 +46,16 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1350
-deviations:
-  - section: "none"
-    reason: "Fully adhered to the required sections."
-frictions:
-  - type: NONE
-    description: "No issues encountered."
-    proposed_fix: "N/A"
-research_gaps:
-  - "none"
-unverified_terms:
-  - "none"
+word_count: 1597
+deviations: []
+frictions: []
+research_gaps: []
+unverified_terms: []
 review_focus:
-  - "Check the immersion containers and conversational tone."
-rag_tools_used:
-  - "search_text: 'Soft sign palatalization (Ь) Apostrophe function and rules' → Provided in context"
+  - "Check that all constraints regarding A1.1 grammar (no verbs) are met."
+  - "Verify that all 6 YouTube videos are correctly embedded in their H3 sections."
+  - "Ensure that all target vocabulary words from the plan are used naturally in the text and activities."
+rag_tools_used: []
 ```
 Focus your review on the `review_focus` items above.
 
@@ -86,13 +80,13 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Typography Artist
-Word count:       1602 / 1200 (133.5%)
+Word count:       1961 / 1200 (163.4%)
 Activities:       7
-Vocabulary items: 27
-Engagement boxes: 3
-Immersion:        8.3% (target: 5-15%)
-Richness:         94% (threshold: 60%)
-Richness gaps:    none
+Vocabulary items: 20
+Engagement boxes: 0
+Immersion:        4.4% (target: 5-15%)
+Richness:         75% (threshold: 60%)
+Richness gaps:    engagement: 0/2
 Audit status:     FAIL
 ```
 
@@ -118,32 +112,20 @@ The following issues were detected by automated regex-based scanners BEFORE your
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
 1. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 65
-   Text: Verb 'цо́кає' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
-   Fix: Replace verb 'цо́кає' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+   Location: ~line 128
+   Text: Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
+   Fix: Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
 2. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 113
-   Text: Verb 'дзвони́ти' (VESUM: verb:imperf:inf) in pre-verb module M4. Verbs are forbidden before M15.
-   Fix: Replace verb 'дзвони́ти' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-3. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 130
-   Text: Verb 'Дя́кую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
-   Fix: Replace verb 'Дя́кую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-4. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 131
+   Location: ~line 129
    Text: Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
    Fix: Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-5. **[STRESS_MISMATCH]** (severity: HIGH)
-   Location: ~line 65
-   Text: Wrong stress: 'цві́ркун' → should be 'цвірку́н'
-   Fix: Replace 'цві́ркун' with 'цвірку́н'.
-6. **[STRESS_UNKNOWN]** (severity: INFO)
-   Location: ~line 130
-   Text: Stressed word not in dictionary: Дя́кую (дякую)
-   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
-7. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+3. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
+   Location: (whole module)
+   Text: Only 0 engagement boxes (minimum: 1 for A1)
+   Fix: Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+4. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
    Location: completing-the-alphabet.yaml
-   Text: Activity answers contain VESUM-failed words: мьясо, мьяч, мясо, мяч, обьєкт, обєкт, пьять, пять, сімья, сімя
+   Text: Activity answers contain VESUM-failed words: ДЖ, ДЗ, м'асо, м'ач, мьясо, мьяч, мясо, мяч, об'ект, обьєкт
    Fix: Fix spelling or replace these words — students will practice non-existent forms.
 
 ---
@@ -152,25 +134,25 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 102 | **VESUM coverage:** 84/102 (82.4%)
+**Words checked:** 75 | **VESUM coverage:** 54/75 (72.0%)
 
-**❌ Not found in VESUM or textbooks (17):**
+**❌ Not found in VESUM or textbooks (20):**
 - `ДЖ` (source: prose)
 - `ДЗ` (source: prose)
 - `ець` (source: prose)
 - `иця` (source: prose)
+- `м'асо` (source: activities)
+- `м'ач` (source: activities)
 - `М'Я` (source: prose)
 - `мьясо` (source: activities)
 - `мьяч` (source: activities)
 - `мясо` (source: activities)
 - `мяч` (source: activities)
+- `об'ект` (source: activities)
 - `обьєкт` (source: activities)
 - `обєкт` (source: activities)
-- `пьять` (source: activities)
-- `пять` (source: activities)
-- `сімья` (source: activities)
-- `сімя` (source: activities)
-- ... and 2 more
+- `п'ать` (source: activities)
+- ... and 5 more
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 

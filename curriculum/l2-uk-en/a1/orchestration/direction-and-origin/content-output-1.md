@@ -1,227 +1,176 @@
-Every journey begins with a question. You already know how to say where things are — **Де?** with the Locative case. Now you're adding two new questions to your toolkit: **Куди?** (where to?) and **Звідки?** (where from?). Think of it like a train conductor's three essential questions: Where is the passenger? Where are they going? Where did they come from?
-
-By the end of this module, you'll be able to tell someone where you're going, how you're getting there, and where you came from — all with the right cases and prepositions.
+Welcome aboard! Every great journey has three questions: where are you right now, where are you going, and where are you coming from? As your conductor on this language journey, I am here to help you navigate direction and origin in Ukrainian. Think of these grammar rules as your train tickets—they get you exactly where you need to go!
 
 ## Куди? + Знахідний (Where to? + Accusative)
 
-When you want to say where you're going, Ukrainian uses the question word **куди?** (where to?) with the **знахідний відмінок** (Accusative case). You already know the Accusative from earlier modules — now you're using it for direction.
+We have already learned how to talk about where we are using the question **Де?** (Where?) and the Locative case. For example, **в магазині** (in the store) or **на роботі** (at work). But when we are in motion, heading to a new destination, the question changes to **Куди?** (Where to?), and so does the grammar!
 
-### В/у + Accusative for direction
+For moving toward a destination, we often use the prepositions **в** / **у** (into) and **на** (onto) with the Accusative case. The Accusative case is the case of the direct object, but it also has a special job: showing direction. Let's look at how we use it with the verbs **іти** (to go on foot) and **їхати** (to go by vehicle).
 
-The prepositions **в** and **у** mean "into" when paired with the Accusative. Notice that masculine inanimate nouns keep their base form — no ending changes:
+*   **Я іду в магазин.** — I am going to the store.
+*   **Я їду у Львів.** — I am traveling to Lviv.
 
-- Я іду **в магазин**. — I'm going to the store.
-- Я їду **у Львів**. — I'm going to Lviv.
-- Вона іде **в аеропорт**. — She's going to the airport.
-- Ми їдемо **в Україну**. — We're going to Ukraine.
+Notice that for masculine inanimate nouns like **магазин** and **Львів**, the Accusative form is exactly the same as the base dictionary form. This is a very helpful pattern! 
 
-For feminine nouns, the Accusative ending changes just as you learned: **-а → -у**, **-я → -ю**:
+When do we use **на** instead of **в**? The rule is beautifully consistent: if a place uses **на** for location (Locative), it also uses **на** for direction (Accusative). Institutions and events typically take **на**.
 
-- Він іде **в школу**. — He's going to school.
-- Я іду **в лікарню**. — I'm going to the hospital.
+*   **Я іду на пошту.** — I am going to the post office.
+*   **Я їду на роботу.** — I am traveling to work.
+*   **Він іде на вокзал.** — He is going to the station.
 
-### На + Accusative for direction
+The biggest trap for learners is mixing up static location and direction. Always ask yourself: am I there already, or am I moving there? Let's practice the contrast to build your reflex. This is key to preventing case confusion.
 
-Some places use **на** instead of **в/у** — the same ones that use **на** for location. For direction, **на** also takes the Accusative:
+Де? (Location) → в магазині (Locative)
+Куди? (Direction) → в магазин (Accusative)
 
-- Я іду **на пошту**. — I'm going to the post office.
-- Вона їде **на вокзал**. — She's going to the station.
-- Він іде **на роботу**. — He's going to work.
+Де? (Location) → на пошті (Locative)
+Куди? (Direction) → на пошту (Accusative)
 
-### The key contrast: Де? vs Куди?
-
-This is where learners often mix things up — and where you need to pay extra attention. The same preposition changes meaning depending on the case:
-
-| Question | Case | Example |
-|----------|------|---------|
-| **Де?** (where?) | Locative | в магазин**і** |
-| **Куди?** (where to?) | Accusative | в магазин |
-
-- Де ти? — Я **в магазині**. (I'm at the store — Locative)
-- Куди ти йдеш? — Я іду **в магазин**. (I'm going to the store — Accusative)
-
-> **(На вулиці / On the street)**
->
-> — Куди ти йдеш? — Where are you going?
-> — Я іду в магазин. — I'm going to the store.
-> — А Марія? — And Maria?
-> — Вона їде на роботу. — She's going to work.
-
-[!tip] **Іти vs їхати**
-Two motion verbs, one rule: **іти** (to go on foot) and **їхати** (to go by vehicle). *Я іду в магазин* — you're walking. *Я їду у Львів* — you're riding (bus, train, car). When in doubt, think: am I walking or riding?
+By keeping **Де?** and **Куди?** separate in your mind, your Ukrainian sentences will always arrive safely at the right destination!
 
 ## До + Родовий (To + Genitive)
 
-There's another way to say "to" in Ukrainian — the preposition **до**, which always takes the **родовий відмінок** (Genitive case). You use **до** when you're heading *towards* someone or something, rather than going *inside*.
+Our train is moving along, and now we reach another very important preposition for direction: **до** (to, towards). While **в** / **у** and **на** take the Accusative case, the preposition **до** ALWAYS requires the Genitive case. 
 
-### До + Genitive for people and places
+How do you choose between **в/у/на** and **до**? It is all about the destination type. We use **в/у/на** when we are entering inside a building or attending an event. We use **до** when we are approaching something, going toward a city, or—most importantly—going to see a person. This distinction is one of the hallmarks of a natural-sounding Ukrainian speaker, so mastering it now will put you miles ahead in your fluency!
 
-- Я іду **до лікаря**. — I'm going to the doctor.
-- Вона їде **до Києва**. — She's going to Kyiv.
-- Він іде **до друга**. — He's going to a friend's.
-- Діти йдуть **до школи**. — The children go to school.
-<!-- adapted from: Vashulenko, Grade 3 -->
+When you are visiting a person, you must use **до** plus the Genitive case form of that person. Let's look at the animate noun **лікар** (doctor). The Genitive animate form is **лікаря**.
 
-The collocation **додому** (homeward) is written as one word — it's a special adverb:
+*   **Я іду до лікаря.** — I am going to the doctor.
+*   **Вона іде до брата.** — She is going to her brother.
 
-- Я повертаюся **додому**. — I'm returning home.
+You will also hear **до** used very frequently with cities and countries, often interchangeably with **в** / **у** to express direction.
 
-### В/у/на vs до: what's the difference?
+*   **Я їду до Києва.** — I am traveling to Kyiv.
+*   **Ми їдемо до України.** — We are traveling to Ukraine.
 
-Both express direction, but with a subtle difference:
+Let's contrast the semantics to be perfectly clear. If you say **Я іду в аптеку** (into the pharmacy), you mean you are entering the building. If you say **Я іду до лікаря** (to the doctor), you mean you are approaching the person for an appointment. Both express direction, but the focus shifts from the physical structure to the person.
 
-- **в/у, на** → you're going *inside* or *onto* the place
-- **до** → you're heading *towards* someone or approaching a place
+There are also some very common collocations (fixed phrases) with **до** that you should memorize like a special transit pass: **до дому** (homeward), **до брата** (to a brother), and **до школи** (to school — approaching).
 
-Compare these two sentences:
-
-- Я іду **в лікарню**. — I'm going into the hospital (the building).
-- Я іду **до лікаря**. — I'm going to the doctor (the person).
-
-[!note] **До with people**
-When you're going to *see someone*, **до** is your go-to preposition: **до лікаря** (to the doctor), **до друга** (to a friend), **до мами** (to mom). Think of it as "towards a person."
-
-> **(Біля дому / Near the house)**
->
-> — Куди ти йдеш? — Where are you going?
-> — Я іду до лікаря. — I'm going to the doctor.
-> — А потім? — And then?
-> — Потім я повертаюся додому. — Then I'm returning home.
+Remember this golden rule: **до** never takes the Accusative. Whether you are traveling **до аеропорту** (to the airport) or **до Києва** (to Kyiv), the Genitive case is strictly required.
 
 ## Звідки? + Родовий (Where from? + Genitive)
 
-Now for the third question: **Звідки?** (where from?). When you want to say where someone is from or where they're coming from, you use the Genitive case with **з**, **від**, or their variants.
+Now that we know how to reach our destination, how do we talk about where we started? The question word for origin is **Звідки?** (Where from?). To answer this question, we use the prepositions **з** / **із** / **зі** (from) or **від** (from a person). Both of these prepositions require the Genitive case.
 
-### З/із/зі + Genitive for origin from a place
+Let's start with expressing where you are from. This is one of the most common conversation starters in any language! We use **з** / **із** / **зі** plus the Genitive case to show origin from a place.
 
-- Я **з України**. — I'm from Ukraine.
-- Він **із Києва**. — He's from Kyiv.
-- Вона **зі Львова**. — She's from Lviv.
-- Ми **з Одеси**. — We're from Odesa.
-- Він виходить **з дому**. — He's going out of the house.
+*   **Я з України.** — I am from Ukraine.
+*   **Він із Києва.** — He is from Kyiv.
+*   **Вона зі Львова.** — She is from Lviv.
 
-### Від + Genitive for "from a person"
+But what if you are receiving something from a person, or returning from visiting someone? In that case, we use the preposition **від**. The contrast is strict: use **з** for coming from inside a place, and **від** for coming from a person.
 
-When something comes *from a person*, use **від**:
+*   **Книжка від мами.** — A book from mom.
+*   **Кава від брата.** — Coffee from a brother.
+*   **Я іду від лікаря.** — I am coming from the doctor.
 
-- **Лист від мами**. — A letter from mom.
-- **Подарунок від друга**. — A gift from a friend.
+You noticed we have three forms for "from a place": **з**, **із**, and **зі**. Why? Ukrainian language rules (Pravopys §25) love euphony and hate awkward consonant combinations! Our language is often called one of the most melodic in the world, and this rule is exactly why. We switch the preposition to make the sentence flow smoothly over the tongue without any harsh stops.
 
-The rule is simple: **з** = from a place (inside), **від** = from a person.
+| Preposition | Used before... | Example |
+|---|---|---|
+| **з** | vowels and most consonants | **з Києва**, **з роботи**, **з аеропорту** |
+| **із** | sibilants or clusters | **із села**, **із лісу** |
+| **зі** | words starting with з-, с-, ш-, щ- | **зі школи**, **зі столу** |
 
-### Euphonic з/із/зі
+Whenever you use the verb **виходити** (to go out), you will naturally pair it with this origin structure. For instance, **виходити з дому** (to go out of the house). 
 
-Ukrainian loves smooth sounds. The preposition **з** has two variants — **із** and **зі** — to avoid awkward consonant clusters:
-<!-- adapted from: Litvinova, Grade 5, p. 177 -->
-
-| Preposition | When to use | Example |
-|-------------|-------------|---------|
-| **з** | before vowels and most consonants | з Одеси, з Києва |
-| **із** | between consonants, before sibilants | із Києва, із радістю |
-| **зі** | before з-, с-, ш-, щ- and clusters | зі Львова, зі школи, зі мною |
-
-Don't worry about memorizing every rule — the goal is smooth pronunciation. If a combination feels hard to say, try **із** or **зі** instead.
-
-[!tip] **Quick test**
-Say it out loud. If "з" + the next word creates a tongue-twister, switch to **із** or **зі**. Your ear will guide you!
+<!-- adapted from: Заболотний, Grade 5 -->
 
 ## Три питання (Three Questions)
 
-You now have all three spatial questions. Together, they form a complete system for talking about location, direction, and origin — like the three stops on every train route.
+We have collected all the pieces of our spatial puzzle. Now, it is time to put them together into one beautiful system. In Ukrainian, location, direction, and origin form a strict three-question paradigm: **Де?**, **Куди?**, and **Звідки?**. 
 
-### The paradigm
+Every place you visit can be looked at from these three perspectives. Let's take **школа** (school) as our example. Notice how the case and the preposition shift to match the exact perspective. 
 
-| Question | Meaning | Case | Prepositions |
-|----------|---------|------|-------------|
-| **Де?** | Where? (location) | Locative | в/у, на |
-| **Куди?** | Where to? (direction) | Accusative / до + Gen | в/у, на, до |
-| **Звідки?** | Where from? (origin) | Genitive | з/із/зі, від |
+> — **Де Марія?**
+> — Where is Maria? (Location)
+> — **Вона в школі.**
+> — She is at school. (Locative)
 
-### Same place, three perspectives
+> — **Куди йде Марія?**
+> — Where is Maria going? (Direction)
+> — **Вона іде в школу.**
+> — She is going to school. (Accusative)
 
-Watch how the same noun changes across all three questions:
+> — **Звідки йде Марія?**
+> — Where is Maria coming from? (Origin)
+> — **Вона іде зі школи.**
+> — She is coming from school. (Genitive)
 
-**Школа (school):**
-- Де? — **В школі.** (at school — Locative)
-- Куди? — **В школу.** (to school — Accusative)
-- Звідки? — **Зі школи.** (from school — Genitive)
+This pattern applies to almost any location. Let's do a parallel drill with a few more places. Read these aloud and notice the rhythm of the changes!
 
-**Робота (work):**
-- Де? — **На роботі.** (at work)
-- Куди? — **На роботу.** (to work)
-- Звідки? — **З роботи.** (from work)
+*   **в університеті** (at university) / **в університет** (to university) / **з університету** (from university)
+*   **на роботі** (at work) / **на роботу** (to work) / **з роботи** (from work)
+*   **в Україні** (in Ukraine) / **в Україну** (to Ukraine) / **з України** (from Ukraine)
 
-**Київ (Kyiv):**
-- Де? — **У Києві.** (in Kyiv)
-- Куди? — **У Київ.** / **До Києва.** (to Kyiv)
-- Звідки? — **З Києва.** (from Kyiv)
+To help you visualize this spatial paradigm, here is a summary table. This is your master map for navigating Ukrainian locations!
 
-**Лікар (doctor):**
-- Де? — **У лікаря.** / **В лікарні.** (at the doctor's / in the hospital)
-- Куди? — **До лікаря.** / **В лікарню.** (to the doctor / to the hospital)
-- Звідки? — **Від лікаря.** / **З лікарні.** (from the doctor / from the hospital)
+| Question Word | English | Case Used | Prepositions |
+|---|---|---|---|
+| **Де?** | Where? (Location) | Locative | **в/у**, **на** |
+| **Куди?** | Where to? (Direction) | Accusative | **в/у**, **на** |
+| **Куди?** | Where to? (Direction) | Genitive | **до** |
+| **Звідки?** | Where from? (Origin) | Genitive | **з/із/зі**, **від** |
 
-[!practice] **Your turn!**
-Try building all three forms for **пошта** (post office) and **аеропорт** (airport). Use the patterns above as your guide. You can check your answers: на пошті / на пошту / з пошти; в аеропорту / в аеропорт / з аеропорту.
+Keep this map handy. Whenever you learn a new place word, practice running it through all three questions. 
 
-📺 **Video: ULP 2-47 — Родовий відмінок (Genitive Case)**
-This episode of Ukrainian Lessons covers the Genitive case with food and travel examples — a perfect companion to the **до + Родовий** and **Звідки? + Родовий** patterns you just learned.
-[Watch on YouTube](https://www.youtube.com/watch?v=QhKN_tj05Rg)
+> [!video] Food festivals + Genitive case
+> This video from Ukrainian Lessons gives a great general explanation of the Genitive case, which perfectly reinforces how we use **до** + Genitive and **Звідки?** + Genitive!
+> [Watch on YouTube](https://www.youtube.com/watch?v=QhKN_tj05Rg)
 
 ## Практика (Practice)
 
-Time to put your three questions to work in real conversations.
+Let's put your new knowledge into action! The best way to master direction and origin is to practice realistic conversation patterns. Imagine you meet a friend on the street.
 
-> **(На вокзалі / At the train station)**
->
-> — Куди ви їдете? — Where are you going?
-> — Я їду до Києва. — I'm going to Kyiv.
-> — Звідки ви? — Where are you from?
-> — Я з Одеси. — I'm from Odesa.
+> — **Добрий день! Куди ти йдеш?**
+> — Good afternoon! Where are you going?
+> 
+> — **Я іду на роботу. А ти?**
+> — I am going to work. And you?
+> 
+> — **Я іду до лікаря.**
+> — I am going to the doctor.
 
-> **(У кафе / At a café)**
->
-> — Куди ти йдеш після кави? — Where are you going after coffee?
-> — Я іду на пошту. — I'm going to the post office.
-> — А потім? — And then?
-> — Потім я іду до лікаря. — Then I'm going to the doctor.
-> — А звідки ти зараз? — And where are you coming from now?
-> — Я з роботи. — I'm from work.
+Or imagine you are at an international conference meeting new people:
 
-> **(Біля аеропорту / Near the airport)**
->
-> — Куди вона їде? — Where is she going?
-> — Вона їде в аеропорт. — She's going to the airport.
-> — А він? — And him?
-> — Він повертається додому. — He's returning home.
+> — **Звідки ти?**
+> — Where are you from?
+> 
+> — **Я зі Львова. А ви?**
+> — I am from Lviv. And you?
+> 
+> — **Ми з Києва.**
+> — We are from Kyiv.
 
-### Three-question drill
+Now it is your turn! Practice makes perfect, and repetition is the key to building strong language muscles. Try these three-question transformation drills. I will give you a starting location. Your task is to produce the direction and origin forms. Say them aloud, and imagine yourself walking the route!
 
-Practice transforming each location into all three forms:
+1.  Start: **в парку** (in the park - Locative)
+    *   Direction: **в парк** (Accusative)
+    *   Origin: **з парку** (Genitive)
+2.  Start: **на вокзалі** (at the station - Locative)
+    *   Direction: **на вокзал** (Accusative)
+    *   Origin: **з вокзалу** (Genitive)
+3.  Start: **в аптеці** (in the pharmacy - Locative)
+    *   Direction: **в аптеку** (Accusative)
+    *   Origin: **з аптеки** (Genitive)
+4.  Start: **в магазині** (in the store - Locative)
+    *   Direction: **в магазин** (Accusative)
+    *   Origin: **з магазину** (Genitive)
 
-- **Магазин**: у магазині → в магазин → з магазину
-- **Школа**: у школі → в школу → зі школи
-- **Вокзал**: на вокзалі → на вокзал → з вокзалу
-- **Україна**: в Україні → в Україну → з України
-
-[!challenge] **Challenge**
-A friend asks: **Звідки ти?** How do you answer? Try: *Я з ...* (your city or country). Then tell them where you're going: *Я їду в/до ...*
+When you **повертатися** (return) from your language trips, you will confidently know how to explain your entire route to your friends!
 
 ## Підсумок
 
-You've just mastered the three essential questions of Ukrainian spatial language. You can now say where you are (**Де?**), where you're going (**Куди?**), and where you're from (**Звідки?**) — each with the right case and prepositions.
+You have completed a major milestone in your Ukrainian journey! You now have the power to express movement through space with precision. We learned that the question **Куди?** pairs with **в** / **у** or **на** plus the Accusative case for destinations, or **до** plus the Genitive case when heading toward a person. We also discovered that **Звідки?** uses **з** / **із** / **зі** and **від** with the Genitive case to explain where we came from. 
 
-Here's what you've learned:
-- **Куди?** → Accusative (в/у, на) or **до** + Genitive
-- **Звідки?** → **з/із/зі** + Genitive (from a place) or **від** + Genitive (from a person)
-- **Іти** (on foot) vs **їхати** (by vehicle)
-- The euphonic з/із/зі alternation for smooth pronunciation
+Most importantly, you now see the interconnected system of **Де?**, **Куди?**, and **Звідки?**. You are no longer just standing still in the language; you are moving forward and navigating like a true local!
 
-**Self-check — can you do these?**
+Before we wrap up, test yourself with these quick questions:
 
-1. Say "I'm going to the post office" in Ukrainian.
-2. What's the difference between *Я іду в лікарню* and *Я іду до лікаря*?
-3. How do you say "I'm from Kyiv"?
-4. When do you use **зі** instead of **з**?
+1. What case follows the preposition **до**?
+2. If you are going to see a person, do you use the preposition **в** or **до**?
+3. How do you ask "Where are you from?" in Ukrainian?
+4. Which preposition means "from a person": **з** or **від**?
 
-Great work — you've completed the full spatial paradigm! Next up, you'll learn to talk about what happened *yesterday* using the past tense.
+Keep practicing on your daily commute. Every time you leave your house, say **Я іду...** and proudly name your destination!

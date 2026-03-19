@@ -1,0 +1,93 @@
+module: a1-015
+level: A1
+sequence: 15
+slug: the-living-verb-i
+version: '2.0'
+title: The Living Verb I
+subtitle: First Conjugation (-ати/-яти)
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can conjugate First Conjugation verbs in present tense
+- Learner can form basic action statements
+- Learner can describe daily activities using -ати verbs
+- Learner can explain basic concept of imperfective aspect
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - Transition from static descriptions (a1-05 'My World - Objects') to dynamic action verbs — the shift from 'this is' to
+    'I do'.
+  - 'Historical hook: The ''Apostol'' (1574) by Ivan Fedorov, the first printed book in Ukraine, symbolizing a deep-rooted
+    literacy tradition and the importance of the verb ''читати''.'
+  - 'Aligning with State Standard §4.2.4.1: Introduction to indicative mood conjugation in the present tense using high-frequency
+    examples like читати and працювати.'
+- section: Презентація (Presentation)
+  words: 350
+  points:
+  - 'Visualizing the First Conjugation pattern: -ати → -аю, -аєш, -ає, -аємо, -аєте, -ають — using a ''Stem + Ending'' table
+    (e.g., чит + аю).'
+  - 'Concept of Imperfective Aspect: Focus on ongoing or habitual actions (process vs. result) — explaining that these verbs
+    describe what you are doing now or usually.'
+  - 'Pro-drop feature: Explain that the ending ''is'' the pronoun; while English requires ''I/You/He'', Ukrainian verb endings
+    allow pronouns to be optional.'
+  - 'Visual aid for regularity: Applying the pattern to the State Standard examples (читати, працювати) to show universal
+    application across hundreds of verbs.'
+- section: Практика (Practice)
+  words: 350
+  points:
+  - 'Error Correction: Addressing ''Infinitive Abuse'' — drill replacing the infinitive base ''Я читати'' with the conjugated
+    ''Я читаю'' to break English transfer habits.'
+  - 'Error Correction: Reducing ''Pronoun Overuse'' — exercises that strip away the constant ''Я'' to achieve natural flow:
+    ''Читаю. Працюю. Знаю.'''
+  - 'SVO Sentence Drills: Use inanimate masculine and neuter objects (журнал, лист, радіо) where Nominative equals Accusative
+    to avoid early case confusion while building fluency.'
+  - 'Contextual application: Describing a daily routine using common verbs (працювати вдома, слухати радіо, писати повідомлення).'
+- section: Культурний аспект та підсумок (Cultural Insight and Summary)
+  words: 250
+  points:
+  - 'Cultural Proverb: ''Птицю пізнати по пір''ю, а людину по мові'' (A bird is known by its feathers, a person by their speech)
+    — linking grammatical accuracy to personal character.'
+  - 'The ''Master Key'' metaphor: Summarizing how this one conjugation pattern unlocks the vast majority of everyday Ukrainian
+    verbs.'
+  - Summary of the transition from English instructional scaffolding to initial Ukrainian immersion through action statements.
+vocabulary_hints:
+  required:
+  - читати (to read) — читати книгу, читати вголос, читати новини; High frequency (Top 100 verbs)
+  - писати (to write) — писати листа, писати повідомлення, гарно писати; High frequency (Top 100 verbs)
+  - знати (to know) — знати все, знати правду, не знати; Very High frequency (Top 20 verbs)
+  - працювати (to work) — працювати вдома, працювати багато, працювати над проєктом; High frequency (Top 50 verbs)
+  - слухати (to listen) — слухати музику, слухати уважно, слухати радіо; High frequency verb
+  - 'питати (to ask) — питати про це; warning: requires accusative for the person being asked'
+  - грати (to play) — грати в ігри; грати на гітарі
+  - чекати (to wait) — чекати на автобус; чекати на відповідь
+  recommended:
+  - думати (to think) — думати про це; думати багато
+  - розуміти (to understand) — розуміти все; не розуміти
+  - вивчати (to study) — вивчати мову; вивчати слова
+  - відпочивати (to rest) — відпочивати вдома; відпочивати влітку
+activity_hints:
+- type: fill-in
+  focus: Conjugate First Conjugation verbs
+  items: 30
+- type: fill-in
+  focus: Complete with correct verb form
+  items: 20
+- type: match-up
+  focus: Match pronoun to verb form
+  items: 18
+connects_to:
+- a1-18 (Questions and Negation)
+- a1-16 (The Living Verb II)
+prerequisites:
+- 'a1-10 (My World: Objects)'
+persona:
+  voice: Patient Supportive Tutor
+  role: Sports Commentator
+grammar:
+- First Conjugation pattern (-ати → -аю, -аєш...)
+- Personal verb endings
+- Imperfective aspect introduction
+register: розмовний

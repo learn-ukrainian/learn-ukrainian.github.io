@@ -1,164 +1,42 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1940",
+    "COMPUTED_WORD_COUNT": "1402",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "161.7",
-    "COMPUTED_ACTIVITY_COUNT": "0",
-    "COMPUTED_VOCAB_COUNT": "0",
+    "COMPUTED_WORD_PERCENT": "116.8",
+    "COMPUTED_ACTIVITY_COUNT": "4",
+    "COMPUTED_VOCAB_COUNT": "12",
     "COMPUTED_ENGAGEMENT_COUNT": "5",
-    "COMPUTED_IMMERSION_PERCENT": "23.7",
+    "COMPUTED_IMMERSION_PERCENT": "14.9",
     "COMPUTED_IMMERSION_TARGET": "15-25%",
-    "COMPUTED_RICHNESS_SCORE": "96",
-    "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 4/5",
+    "COMPUTED_RICHNESS_SCORE": "69",
+    "COMPUTED_RICHNESS_THRESHOLD": "60",
+    "COMPUTED_RICHNESS_GAPS": "video_embeds: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 42",
-      "text": "Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'Мені' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 100",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 110",
-      "text": "Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'Мені' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 111",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 112",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 118",
-      "text": "Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'Мені' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 119",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 120",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 124",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 125",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 126",
-      "text": "Non-nominative 'Тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'Тобі' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 134",
-      "text": "Non-nominative 'Тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'Тобі' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 136",
-      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.",
-      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 138",
-      "text": "Non-nominative 'вам' (dative, VESUM: noun:anim:p:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'вам' (dative) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 140",
-      "text": "Non-nominative 'тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.",
-      "fix": "Replace 'тобі' (dative) with its nominative form or use English equivalent."
-    }
-  ],
+  "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/likes-and-preferences.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/likes-and-preferences-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/likes-and-preferences.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M19 — Likes and Preferences\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/likes-and-preferences.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz, unjumble\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  ⚠️ HYDRATION NOTE: Outline sums to 1300, exceeding word_target 1200\n     Additional 100 words (allowed for content depth)\n\n  📊 Section Word Analysis:\n     Мені подобається (I like)      356 /  275  ✅ (+81)\n     Я люблю (I love)               245 /  250  ✅ (-5)\n     Я хочу (I want)                276 /  250  ✅ (+26)\n     Порівняння (Comparing likes)   488 /  250  ✅ (+238)\n     Практика (Practice)            148 /  175  ⚠️ (-27)\n     Підсумок                       191 /  100  ✅ (+91)\n     ─────────────────────────────────────────────────────\n     TOTAL                         1704 / 1300  ✅ (+404)\n  ✨ Prose quality violations found: 1\n     ❌ [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (3 occurrences): (Comparing likes), (Dative construction), (Nominative subject) — breaks immersion target\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1940/1200 (raw: 2126)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 5/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ✅ 9/10 (High)\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 23.7% (target 15-25% (M19))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [INFO] Dative case used at A1: 'Вам' (taught formally at A2)\n     → FIX: No action needed — incidental dative exposure is acceptable.\n  [INFO] Dative case used at A1: 'вам' (taught formally at A2)\n     → FIX: No action needed — incidental dative exposure is acceptable.\n  [INFO] Dative case used at A1: 'вам' (taught formally at A2)\n     → FIX: No action needed — incidental dative exposure is acceptable.\n  [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (3 occurrences): (Comparing likes), (Dative construction), (Nominative subject) — breaks immersion target\n     → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)\n   → 4 violations (moderate)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/likes-and-preferences-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/likes-and-preferences.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: likes-and-preferences.md\n  VESUM misses: 2 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 177724.75it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 103 | VESUM: 101 (98.1%) | RAG: 0 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/likes-and-preferences-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 101/103 (98%) verified\n⚠️ VESUM not found (2): бл, ться",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/likes-and-preferences.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/likes-and-preferences-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/likes-and-preferences.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M19 — Likes and Preferences\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/likes-and-preferences.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz, unjumble\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  ⚠️ HYDRATION NOTE: Outline sums to 1300, exceeding word_target 1200\n     Additional 100 words (allowed for content depth)\n\n  📊 Section Word Analysis:\n     Мені подобається (I like)      300 /  275  ✅ (+25)\n     Я люблю (I love)               246 /  250  ✅ (-4)\n     Я хочу (I want)                305 /  250  ✅ (+55)\n     Порівняння (Comparing likes)   297 /  250  ✅ (+47)\n     Практика (Practice)            194 /  175  ✅ (+19)\n     Підсумок                        99 /  100  ✅ (-1)\n     ─────────────────────────────────────────────────────\n     TOTAL                         1441 / 1300  ✅ (+141)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1402/1200 (raw: 1603)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 5/1\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ✅ 9/10 (High)\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section\nImmersion    ⚠️ 14.9% (target 15-25%, within tolerance (M19))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/likes-and-preferences-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/likes-and-preferences.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: likes-and-preferences.md\n  Words: 74 | VESUM: 74 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/likes-and-preferences-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 99/99 (100%) verified",
   "h2_sections": "1. Мені подобається (I like)\n2. Я люблю (I love)\n3. Я хочу (I want)\n4. Порівняння (Comparing likes)\n5. Практика (Practice)",
   "vesum_stats": {
-    "total": 103,
-    "vesum_hits": 101,
+    "total": 99,
+    "vesum_hits": 99,
     "rag_hits": 0,
-    "not_found": 2,
+    "not_found": 0,
     "rag_errors": 0,
     "proper_names": 0,
     "by_source": {
       "prose": {
-        "total": 103,
-        "vesum_hits": 101,
-        "not_found": 2
+        "total": 74,
+        "vesum_hits": 74,
+        "not_found": 0
+      },
+      "activities": {
+        "total": 25,
+        "vesum_hits": 25,
+        "not_found": 0
       }
     }
   },
-  "vesum_not_found": [
-    {
-      "original": "бл",
-      "clean": "бл",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "ться",
-      "clean": "ться",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    }
-  ],
-  "content_hash": "d8ec217799c33cbf"
+  "vesum_not_found": [],
+  "content_hash": "6ca9bbcf2ebe5d56"
 }

@@ -1,0 +1,456 @@
+- type: quiz
+  title: 'Skill Check: Cyrillic Reading and Gender'
+  instruction: Choose the correct answer. Each question combines your reading skills with gender knowledge.
+  items:
+    - question: 'The words "дим" (smoke) and "дім" (house) differ by one vowel. Which vowel appears in "дім"?'
+      options:
+        - text: "і"
+          correct: true
+        - text: "и"
+          correct: false
+        - text: "е"
+          correct: false
+        - text: "о"
+          correct: false
+      explanation: 'The word "дім" uses "і", which sounds like "ee" in "bee". The word "дим" uses "и", which sounds like "i" in "bit".'
+    - question: 'What gender is the word "стіл" (table)?'
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: 'The word "стіл" ends in a consonant (л), so it is masculine.'
+    - question: 'The word "тато" (dad) ends in -о. What gender is it?'
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Neuter"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: 'Even though "тато" ends in -о (usually neuter), it refers to a male person, so it is masculine. Meaning overrides the ending.'
+    - question: 'The word "книга" (book) ends in -а. What gender is it?'
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: 'Words ending in -а or -я are typically feminine. "Книга" ends in -а, so it is feminine.'
+    - question: 'Which pair shows a correct minimal pair for the и/і distinction?'
+      options:
+        - text: "кит (whale) / кіт (cat)"
+          correct: true
+        - text: "мама (mom) / тато (dad)"
+          correct: false
+        - text: "стіл (table) / книга (book)"
+          correct: false
+        - text: "так (yes) / ні (no)"
+          correct: false
+      explanation: 'A minimal pair differs by one sound. "Кит" (whale) and "кіт" (cat) differ only in the vowel: и vs і.'
+    - question: 'The word "місто" (city) ends in -о. What gender is it?'
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: 'Words ending in -о or -е are typically neuter. "Місто" follows the standard rule.'
+    - question: 'Which word is neuter?'
+      options:
+        - text: "кафе"
+          correct: true
+        - text: "кава"
+          correct: false
+        - text: "стіл"
+          correct: false
+        - text: "сукня"
+          correct: false
+      explanation: 'The word "кафе" ends in -е, which signals neuter gender. "Кава" and "сукня" are feminine, "стіл" is masculine.'
+    - question: 'What makes "тато" different from "місто" in terms of gender?'
+      options:
+        - text: 'Both end in -о, but "тато" is masculine because it refers to a male person'
+          correct: true
+        - text: 'They are both neuter because they end in -о'
+          correct: false
+        - text: '"Тато" is feminine and "місто" is neuter'
+          correct: false
+        - text: '"Тато" follows the standard ending rule'
+          correct: false
+      explanation: 'Both words end in -о, but "тато" is masculine because biological gender overrides the ending rule for people.'
+
+- type: quiz
+  title: 'Skill Check: Adjective-Noun Agreement'
+  instruction: Choose the correct answer. Each question tests whether you can match adjectives to nouns by gender.
+  items:
+    - question: 'How do you say "big table" in Ukrainian?'
+      options:
+        - text: "великий стіл"
+          correct: true
+        - text: "велика стіл"
+          correct: false
+        - text: "велике стіл"
+          correct: false
+        - text: "великі стіл"
+          correct: false
+      explanation: '"Стіл" is masculine, so the adjective takes the masculine ending -ий: "великий стіл".'
+    - question: 'How do you say "new book" in Ukrainian?'
+      options:
+        - text: "нова книга"
+          correct: true
+        - text: "новий книга"
+          correct: false
+        - text: "нове книга"
+          correct: false
+        - text: "нові книга"
+          correct: false
+      explanation: '"Книга" is feminine, so the adjective takes the feminine ending -а: "нова книга".'
+    - question: 'How do you say "beautiful city" in Ukrainian?'
+      options:
+        - text: "гарне місто"
+          correct: true
+        - text: "гарний місто"
+          correct: false
+        - text: "гарна місто"
+          correct: false
+        - text: "гарні місто"
+          correct: false
+      explanation: '"Місто" is neuter, so the adjective takes the neuter ending -е: "гарне місто".'
+    - question: 'Which phrase correctly describes a red dress?'
+      options:
+        - text: "червона сукня"
+          correct: true
+        - text: "червоний сукня"
+          correct: false
+        - text: "червоне сукня"
+          correct: false
+        - text: "червоні сукня"
+          correct: false
+      explanation: '"Сукня" is feminine (ends in -я), so the adjective takes the feminine ending -а: "червона сукня".'
+    - question: 'Which phrase correctly describes a white sweater?'
+      options:
+        - text: "білий светр"
+          correct: true
+        - text: "біла светр"
+          correct: false
+        - text: "біле светр"
+          correct: false
+        - text: "білі светр"
+          correct: false
+      explanation: '"Светр" is masculine (ends in a consonant), so the adjective takes the masculine ending -ий: "білий светр".'
+    - question: 'The phrase "сині штани" uses the adjective ending -і because...'
+      options:
+        - text: '"штани" is always plural'
+          correct: true
+        - text: '"штани" is feminine'
+          correct: false
+        - text: '"штани" is neuter'
+          correct: false
+        - text: '"синій" always ends in -і'
+          correct: false
+      explanation: '"Штани" (pants) is always plural, just like in English. Plural adjectives take the ending -і: "сині штани".'
+    - question: 'How do you say "small cat" in Ukrainian?'
+      options:
+        - text: "маленький кіт"
+          correct: true
+        - text: "маленька кіт"
+          correct: false
+        - text: "маленьке кіт"
+          correct: false
+        - text: "маленькі кіт"
+          correct: false
+      explanation: '"Кіт" is masculine (ends in a consonant), so the adjective takes the masculine ending -ий: "маленький кіт".'
+    - question: 'How do you say "new cafe" in Ukrainian?'
+      options:
+        - text: "нове кафе"
+          correct: true
+        - text: "новий кафе"
+          correct: false
+        - text: "нова кафе"
+          correct: false
+        - text: "нові кафе"
+          correct: false
+      explanation: '"Кафе" is neuter (ends in -е), so the adjective takes the neuter ending -е: "нове кафе".'
+
+- type: quiz
+  title: 'Skill Check: Plurals and Vocabulary'
+  instruction: Choose the correct answer. These questions combine plural formation with vocabulary from prior modules.
+  items:
+    - question: 'What is the plural of "стіл" (table)?'
+      options:
+        - text: "столи"
+          correct: true
+        - text: "стіли"
+          correct: false
+        - text: "столі"
+          correct: false
+        - text: "стілі"
+          correct: false
+      explanation: 'In the plural, the vowel і in "стіл" shifts to о, giving "столи". This vowel alternation is common in Ukrainian.'
+    - question: 'What is the plural of "книга" (book)?'
+      options:
+        - text: "книги"
+          correct: true
+        - text: "книгі"
+          correct: false
+        - text: "книга"
+          correct: false
+        - text: "книгу"
+          correct: false
+      explanation: 'Feminine nouns ending in -а form their plural by replacing -а with -и: "книга" becomes "книги".'
+    - question: 'What is the plural of "місто" (city)?'
+      options:
+        - text: "міста"
+          correct: true
+        - text: "містo"
+          correct: false
+        - text: "містi"
+          correct: false
+        - text: "містy"
+          correct: false
+      explanation: 'Neuter nouns ending in -о form their plural by replacing -о with -а: "місто" becomes "міста".'
+    - question: 'What do you say before eating in a Ukrainian cafe?'
+      options:
+        - text: "Смачного!"
+          correct: true
+        - text: "Дякую!"
+          correct: false
+        - text: "Так!"
+          correct: false
+        - text: "Де кафе?"
+          correct: false
+      explanation: '"Смачного!" means "Bon appetit!" — it is the essential phrase Ukrainians say before a meal.'
+    - question: 'How do you politely ask for the bill in a Ukrainian cafe?'
+      options:
+        - text: "Можна рахунок?"
+          correct: true
+        - text: "Що це?"
+          correct: false
+        - text: "Де кафе?"
+          correct: false
+        - text: "Хто це?"
+          correct: false
+      explanation: '"Можна рахунок?" literally means "May I have the bill?" — a polite way to ask.'
+    - question: 'Which question word do you use to ask about a person?'
+      options:
+        - text: "хто"
+          correct: true
+        - text: "що"
+          correct: false
+        - text: "де"
+          correct: false
+        - text: "так"
+          correct: false
+      explanation: '"Хто" means "who" and is used to ask about people. "Що" means "what" for things, and "де" means "where" for places.'
+    - question: 'You want to politely request coffee at a cafe. Which phrase do you use?'
+      options:
+        - text: "Дайте, будь ласка, каву"
+          correct: true
+        - text: "Де кава?"
+          correct: false
+        - text: "Хто кава?"
+          correct: false
+        - text: "Що кава?"
+          correct: false
+      explanation: '"Дайте, будь ласка" means "Give me, please" — the polite way to make a request in Ukrainian.'
+
+- type: quiz
+  title: 'Full Integration: Hostel and Cafe Scenarios'
+  instruction: Choose the correct answer. Each question requires you to combine multiple skills you have learned.
+  items:
+    - question: 'Your hostel host points at a large house and says "Це ___ дім." Which adjective form completes the sentence?'
+      options:
+        - text: "великий"
+          correct: true
+        - text: "велика"
+          correct: false
+        - text: "велике"
+          correct: false
+        - text: "великі"
+          correct: false
+      explanation: '"Дім" is masculine (ends in a consonant), so the adjective must be masculine: "великий дім".'
+    - question: 'You see a beautiful dress in a shop window. How do you say "This is a beautiful dress"?'
+      options:
+        - text: "Це гарна сукня."
+          correct: true
+        - text: "Це гарний сукня."
+          correct: false
+        - text: "Це гарне сукня."
+          correct: false
+        - text: "Це гарні сукня."
+          correct: false
+      explanation: '"Сукня" is feminine, so the adjective takes the feminine form: "гарна". The full pattern is Це + adj + noun.'
+    - question: 'At a cafe, you want to say "This is black coffee." Which is correct?'
+      options:
+        - text: "Це чорна кава."
+          correct: true
+        - text: "Це чорний кава."
+          correct: false
+        - text: "Це чорне кава."
+          correct: false
+        - text: "Це чорні кава."
+          correct: false
+      explanation: '"Кава" is feminine (ends in -а), so the adjective takes the feminine form: "чорна кава".'
+    - question: 'Someone asks "Що це?" while pointing at a cake. You answer "Це ___." Which word completes the answer?'
+      options:
+        - text: "торт"
+          correct: true
+        - text: "хто"
+          correct: false
+        - text: "де"
+          correct: false
+        - text: "так"
+          correct: false
+      explanation: '"Що це?" asks "What is this?" The answer names the object: "Це торт" (This is a cake).'
+    - question: 'You are at the hostel describing a new city. How do you say "This is a new city"?'
+      options:
+        - text: "Це нове місто."
+          correct: true
+        - text: "Це новий місто."
+          correct: false
+        - text: "Це нова місто."
+          correct: false
+        - text: "Це нові місто."
+          correct: false
+      explanation: '"Місто" is neuter (ends in -о), so the adjective takes the neuter ending -е: "нове місто".'
+    - question: 'A guest at the hostel asks "Це маленький кіт?" You want to say "No, this is a big cat!" Which is correct?'
+      options:
+        - text: "Ні, це великий кіт!"
+          correct: true
+        - text: "Ні, це велика кіт!"
+          correct: false
+        - text: "Так, це маленький кіт!"
+          correct: false
+        - text: "Ні, це великий книга!"
+          correct: false
+      explanation: '"Кіт" is masculine, so "великий" takes the masculine form. "Ні" means "no" to contradict the question.'
+    - question: 'How do you ask "Where is the cafe?" in Ukrainian?'
+      options:
+        - text: "Де кафе?"
+          correct: true
+        - text: "Що кафе?"
+          correct: false
+        - text: "Хто кафе?"
+          correct: false
+        - text: "Так кафе?"
+          correct: false
+      explanation: '"Де" means "where" — the correct question word for asking about a location.'
+
+- type: match-up
+  title: 'Match the Noun to Its Correct Adjective Form'
+  instruction: 'Each noun on the left requires a specific adjective form. Match the noun to the correctly agreeing adjective.'
+  pairs:
+    - left: "стіл (table)"
+      right: "великий (big, masc.)"
+    - left: "книга (book)"
+      right: "нова (new, fem.)"
+    - left: "місто (city)"
+      right: "гарне (beautiful, neut.)"
+    - left: "сукня (dress)"
+      right: "червона (red, fem.)"
+    - left: "светр (sweater)"
+      right: "білий (white, masc.)"
+    - left: "кафе (cafe)"
+      right: "нове (new, neut.)"
+    - left: "кіт (cat)"
+      right: "маленький (small, masc.)"
+    - left: "кава (coffee)"
+      right: "чорна (black, fem.)"
+
+- type: fill-in
+  title: 'Complete the Sentence'
+  instruction: 'Choose the correct adjective form to complete each sentence. Think about the gender of the noun first!'
+  items:
+    - sentence: "Це ___ стіл."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]
+      explanation: '"Стіл" is masculine, so the adjective takes the masculine ending -ий.'
+    - sentence: "Це ___ книга."
+      answer: "нова"
+      options: ["нова", "новий", "нове", "нові"]
+      explanation: '"Книга" is feminine, so the adjective takes the feminine ending -а.'
+    - sentence: "Це ___ місто."
+      answer: "гарне"
+      options: ["гарне", "гарний", "гарна", "гарні"]
+      explanation: '"Місто" is neuter, so the adjective takes the neuter ending -е.'
+    - sentence: "Це ___ кава."
+      answer: "чорна"
+      options: ["чорна", "чорний", "чорне", "чорні"]
+      explanation: '"Кава" is feminine (ends in -а), so the adjective takes the feminine ending -а.'
+    - sentence: "Це ___ торт."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]
+      explanation: '"Торт" is masculine (ends in a consonant), so the adjective takes the masculine ending -ий.'
+    - sentence: "Це ___ кафе."
+      answer: "нове"
+      options: ["нове", "новий", "нова", "нові"]
+      explanation: '"Кафе" is neuter (ends in -е), so the adjective takes the neuter ending -е.'
+
+- type: group-sort
+  title: 'Sort Nouns by Gender'
+  instruction: 'Sort these nouns into the correct gender group. Remember the ending rules — and the exception for people!'
+  groups:
+    - name: "Masculine"
+      items: ["стіл", "кіт", "дім", "торт", "светр", "тато"]
+    - name: "Feminine"
+      items: ["книга", "кава", "сукня", "мама"]
+    - name: "Neuter"
+      items: ["місто", "кафе"]
+
+- type: unjumble
+  title: 'Put the Words in Order'
+  instruction: 'Arrange the words to form a correct Ukrainian sentence using the Це + adjective + noun pattern.'
+  items:
+    - words: ["кава", "Це", "чорна"]
+      answer: "Це чорна кава."
+    - words: ["стіл", "великий", "Це"]
+      answer: "Це великий стіл."
+    - words: ["місто", "нове", "Це"]
+      answer: "Це нове місто."
+    - words: ["кіт", "маленький", "Це"]
+      answer: "Це маленький кіт."
+    - words: ["сукня", "Це", "червона"]
+      answer: "Це червона сукня."
+    - words: ["кафе?", "Де"]
+      answer: "Де кафе?"
+
+- type: true-false
+  title: 'True or False? Gender and Agreement Rules'
+  instruction: 'Decide whether each statement about Ukrainian grammar is true or false.'
+  items:
+    - statement: 'The word "стіл" is masculine because it ends in a consonant.'
+      correct: true
+      explanation: 'Correct! Nouns ending in a consonant are typically masculine.'
+    - statement: 'The word "тато" is neuter because it ends in -о.'
+      correct: false
+      explanation: 'False! "Тато" refers to a male person (dad), so it is masculine. Biological gender overrides the ending rule.'
+    - statement: 'The correct phrase for "new book" is "нова книга".'
+      correct: true
+      explanation: 'Correct! "Книга" is feminine, so the adjective takes the feminine ending: "нова".'
+    - statement: 'The plural of "стіл" is "стіли".'
+      correct: false
+      explanation: 'False! The plural of "стіл" is "столи" — the internal vowel і shifts to о when the word becomes longer.'
+    - statement: 'The phrase "великий кава" uses correct adjective agreement.'
+      correct: false
+      explanation: 'False! "Кава" is feminine, so the adjective should be "велика кава", not "великий кава".'
+    - statement: 'The phrase "Смачного!" is said before a meal in Ukraine.'
+      correct: true
+      explanation: 'Correct! "Смачного!" means "Bon appetit!" and is an essential dining phrase in Ukrainian culture.'
+    - statement: 'The word "штани" (pants) is always plural, just like in English.'
+      correct: true
+      explanation: 'Correct! "Штани" has no singular form, so adjectives modifying it use the plural ending -і: "сині штани".'
+    - statement: 'The question word "де" is used to ask about a person.'
+      correct: false
+      explanation: 'False! "Де" means "where" and asks about a place. To ask about a person, use "хто" (who).'

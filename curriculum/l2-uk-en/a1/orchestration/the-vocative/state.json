@@ -22,15 +22,6 @@
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
       }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-17T07:04:05Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
     }
   }
 }

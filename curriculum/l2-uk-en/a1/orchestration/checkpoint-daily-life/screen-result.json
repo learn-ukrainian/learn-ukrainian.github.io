@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1830",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "152.5",
+    "COMPUTED_ACTIVITY_COUNT": "0",
+    "COMPUTED_VOCAB_COUNT": "0",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "17.8",
+    "COMPUTED_IMMERSION_TARGET": "20-35%",
+    "COMPUTED_RICHNESS_SCORE": "70",
+    "COMPUTED_RICHNESS_THRESHOLD": "85",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/3, activity_types: 0/8",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [
+    {
+      "type": "STRESS_UNKNOWN",
+      "severity": "INFO",
+      "location": "~line 72",
+      "text": "Stressed word not in dictionary: ко́штува (коштува)",
+      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
+    }
+  ],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/checkpoint-daily-life.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/checkpoint-daily-life-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/checkpoint-daily-life.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M44 — Checkpoint: Daily Life\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/checkpoint-daily-life.md | Target: 1200 words\n  📋 Required activity types from meta: quiz\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Огляд (Overview)                                             215 /  180  ✅ (+35)\n     Навичка 1: Часові форми (Skill 1: Tenses)                    414 /  300  ✅ (+114)\n     Навичка 2: Повсякденне життя (Skill 2: Daily Life)           378 /  240  ✅ (+138)\n     Навичка 3: Опис та погода (Skill 3: Description & Weather)   319 /  240  ✅ (+79)\n     Інтеграційне завдання (Integration Task)                     328 /  240  ✅ (+88)\n     ───────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                       1654 / 1200  ✅ (+454)\n❌ CHECKPOINT FORMAT ERRORS:\n  → Skill 1 missing '### Model:' or '### Модель:' H3 header\n  → Skill 1 missing '### Practice:' or '### Практика:' H3 header\n  → Skill 1 missing '### Self-Check' or '### Самоперевірка' H3 header\n  → Skill 2 missing '### Model:' or '### Модель:' H3 header\n  → Skill 2 missing '### Practice:' or '### Практика:' H3 header\n  → Skill 2 missing '### Self-Check' or '### Самоперевірка' H3 header\n  → Skill 3 missing '### Model:' or '### Модель:' H3 header\n  → Skill 3 missing '### Practice:' or '### Практика:' H3 header\n  → Skill 3 missing '### Self-Check' or '### Самоперевірка' H3 header\n  ✨ Prose quality violations found: 1\n     ❌ [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (5 occurrences): (Masculine speaker), (Feminine speaker), (Neuter subject) — breaks immersion target\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1830/1200 (raw: 1903)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 3/2\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 17.8% (checkpoint - no gate)\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [INFO] Dative case used at A1: 'пові' (taught formally at A2)\n     → FIX: No action needed — incidental dative exposure is acceptable.\n  [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (5 occurrences): (Masculine speaker), (Feminine speaker), (Neuter subject) — breaks immersion target\n     → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 2 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/checkpoint-daily-life-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/checkpoint-daily-life.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\nCritical Failures:\n  • Checkpoint Format Errors\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/checkpoint-daily-life-audit.log for details)\n\nRunning RAG word verification...\nVerifying: checkpoint-daily-life.md\n  Words: 153 | VESUM: 153 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/checkpoint-daily-life-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 153/153 (100%) verified",
+  "h2_sections": "1. Огляд (Overview)\n2. Навичка 1: Часові форми (Skill 1: Tenses)\n3. Навичка 2: Повсякденне життя (Skill 2: Daily Life)\n4. Навичка 3: Опис та погода (Skill 3: Description & Weather)\n5. Інтеграційне завдання (Integration Task)",
+  "vesum_stats": {
+    "total": 153,
+    "vesum_hits": 153,
+    "rag_hits": 0,
+    "not_found": 0,
+    "rag_errors": 0,
+    "proper_names": 0,
+    "by_source": {
+      "prose": {
+        "total": 153,
+        "vesum_hits": 153,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [],
+  "content_hash": "22ad1235c0a2905b"
+}

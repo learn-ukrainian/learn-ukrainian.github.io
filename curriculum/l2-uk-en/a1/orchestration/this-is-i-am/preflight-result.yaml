@@ -1,33 +1,13 @@
 status: ISSUES_FOUND
-issue_count: 3
+issue_count: 1
 high_count: 1
 issues:
 - type: CONTRADICTION
-  location: Rule 2 (Vocabulary Bank) vs Rule 5 (English Prose Style) and 'What the
-    Learner Already Knows'
-  problem: Rule 2 explicitly states to 'Use ONLY these Ukrainian words' and lists
-    only 15 new words. However, the 'What the Learner Already Knows' section lists
-    91 cumulative vocabulary words. If the AI strictly follows Rule 2, it cannot use
-    the words the learner already knows (like мама, кіт, це), which contradicts the
-    'Natural, level-appropriate Ukrainian' instruction in the Vocabulary section and
-    makes writing a 1200-word module pedagogically impossible.
-  suggested_fix: Clarify Rule 2 to allow the use of both the target 15 new words AND
-    the 91 words from the cumulative vocabulary list.
+  location: Activity Rules (Item Minimums) vs activity_hints in Plan
+  problem: 'The plan specifies ''items: 4'' for the ''Meeting someone new'' fill-in
+    activity, but the prompt''s hard constraints in the ''Item Minimums'' table require
+    a minimum of 6 items for ''fill-in'' activities. Following the plan''s count will
+    trigger a ''HARD FAIL'' during the audit phase.'
+  suggested_fix: Increase the item count for the 'Meeting someone new' activity in
+    the plan to 6 or more to satisfy the audit gate requirements.
   severity: HIGH
-- type: IMPOSSIBLE_TARGET
-  location: Activity Rules (Item Minimums) vs Plan (activity_hints)
-  problem: The prompt's 'Item Minimums' table sets a HARD FAIL rule for 'fill-in'
-    activities at ≥6 items. However, the plan's activity_hints includes a fill-in
-    activity ('Meeting someone new') with only 4 items. Following the plan will cause
-    an audit gate failure.
-  suggested_fix: Increase the item count for the 'Meeting someone new' fill-in activity
-    in the plan to 6, or adjust the prompt's minimum rule.
-  severity: MEDIUM
-- type: WORD_TARGET_MISMATCH
-  location: Vocabulary section vs Rule 2
-  problem: The Vocabulary section mentions a '20 vocabulary target', but Rule 2 (the
-    Vocabulary Bank) provides only 15 unique words. It is mathematically impossible
-    to reach a target of 20 unique new words when restricted to a bank of 15.
-  suggested_fix: Add 5 more recommended words to the vocabulary_hints and Rule 2 list
-    to reach the target of 20.
-  severity: MEDIUM

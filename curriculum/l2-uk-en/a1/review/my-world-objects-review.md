@@ -1,166 +1,208 @@
-<!-- content-hash: 3d83ca23cc6a -->
-# Factual Review (Pass 1)
+<!-- content-hash: 423ee2299219 -->
+# Рецензія: My World: Objects
 
-## Plan Adherence Summary
-
-**Content outline points:** 13 total, 10 covered, 1 missing, 2 partial
-**Required vocabulary:** 6 total, 6 present, 0 missing
-**Activity hints:** 4 total, 1 matched, 3 missing (under count)
-**Plan Adherence Score:** 6/10
-(10 = all points covered; deduct 1 per MISSING content point, 2 per MISSING required word, 1 for PARTIAL and activity count misses)
-
-### Plan Point Coverage
-
-- Section "Вступ (Introduction)":
-  - [ ] Recap of a1-03 (Gender) and a1-04 (Identification) as the grammatical foundation for demonstrative specification. — PARTIAL (Content incorrectly references Module 8 and Module 9 instead of a1-03 and a1-04).
-  - [x] Introduction of the proverb «В гостях добре, а вдома краще» (East or West, home is best) to anchor the home-centric vocabulary and cultural value of 'дім'. — COVERED ("There's a beloved Ukrainian proverb: «В гостях добре, а вдома краще» — 'East or West, home is best.'")
-  - [x] Overview of State Standard §4.2.2 regarding the formation and usage of gendered and plural forms of the demonstrative pronouns 'цей' and 'той'. — COVERED ("master two families of demonstrative words that follow the Ukrainian State Standard §4.2.2")
-- Section "Презентація (Presentation)":
-  - [ ] Visual scaffolding: Distinguishing 'Near' (цей/ця/це/ці) via hand-touching icons vs. 'Far' (той/та/те/ті) via finger-pointing icons. — MISSING (No hand-touching or finger-pointing icons are present in the text).
-  - [x] The 'Identification vs. Specification' hurdle: Differentiate 'Це стіл' (This is a table - Identification) from 'Цей стіл' (This table - Specification) with English metalanguage. — COVERED ("You already know how to identify objects using Це: Це стіл. — This is a table... But now you can specify which object you mean: Цей стіл. — This table.")
-  - [x] Formation of plural forms: Introducing 'ці' and 'ті' with emphasis on inherently plural nouns like 'двері' (ці двері) as mentioned in research. — COVERED ("When you're talking about more than one thing... just use ці... The word двері (door) is one of them")
-  - [x] Gender agreement patterns: Demonstrating the rhyming sound association between demonstrative endings and noun endings (e.g., цЯ книгА, цЕ вікнО) to prevent mismatch. — COVERED ("the demonstrative endings rhyme with the noun endings... ця книга... це вікно")
-- Section "Практика (Practice)":
-  - [x] Drill: Gender Matching. Correcting the common learner error 'цей книга' using minimal pairs and phonological reinforcement of the feminine '-а' ending. — COVERED ("One of the most common beginner mistakes is saying цей книга... ця книга ✓ (книга ends in -а → feminine → ця)")
-  - [x] Household categorization: Grouping kitchen objects (ніж, ложка, блюдо) and furniture (диван, шафа, крісло) by their grammatical gender. — COVERED ("Masculine... стілець, диван... ніж... Feminine... шафа, ложка...")
-  - [x] Proximity mnemonic: Using the 'T' for 'There/That' association (той/та) to resolve proximity confusion between near and far objects during identification tasks. — COVERED ("Той = There / That — far objects start with Т!")
-- Section "Культурний контекст (Cultural Insight)":
-  - [x] The Traditional Ukrainian Home: Explaining the 'Покуття' (Pokuttia/Red Corner) concept as a spiritual focal point for icons and rushnyky, even in modern layouts. — COVERED ("Traditional homes featured a special corner called the покуття...")
-  - [x] Lexical distinctions in dwelling: Comparing the traditional rural 'хата' with the modern urban 'квартира' and the general concept of 'дім'. — COVERED ("хата — a traditional rural cottage... квартира — a modern apartment... дім — the general word...")
-- Section "Продукція та підсумок (Production and Summary)":
-  - [x] Persona Task: 'Interior Designer'. Navigating a living space, pointing to distant and near objects, and correctly specifying them with gender-matched demonstratives. — COVERED ("Imagine you're an interior designer showing a client around their new квартира.")
-  - [ ] Review of Standard §4.2.2 competencies: Self-assessment on matching demonstrative gender and number with 40 household and everyday objects. — PARTIAL (Content asks to self-assess against "15 household objects" rather than the planned 40).
-
-### Required Vocabulary Coverage
-
-| Word | In Prose? | In Activities? | Status |
-|------|-----------|---------------|--------|
-| цей / ця / це / ці | YES | YES | PRESENT |
-| той / та / те / ті | YES | YES | PRESENT |
-| стіл | YES | YES | PRESENT |
-| книга | YES | YES | PRESENT |
-| телефон | YES | YES | PRESENT |
-| кімната | YES | YES | PRESENT |
-
-### Activity Hints Coverage
-
-| Hint Type | Focus | Required Items | Found? | Actual Items |
-|-----------|-------|---------------|--------|-------------|
-| match-up | Label room objects | 20 | YES | 10 |
-| quiz | Match demonstrative to gender | 20 | YES | 6 |
-| fill-in | Complete with цей/ця/це | 15 | YES | 6 |
-| fill-in | Що це? conversations | 6 | YES | 6 |
-
-### Missing Plan Points (Fix Targets)
-
-- **Вступ (Introduction)**: "Recap of a1-03 (Gender) and a1-04 (Identification)..." (PARTIAL - Module references Module 8 and 9 instead of 3 and 4).
-- **Презентація (Presentation)**: "Visual scaffolding: Distinguishing 'Near' (цей/ця/це/ці) via hand-touching icons vs. 'Far' (той/та/те/ті) via finger-pointing icons." (MISSING).
-- **Продукція та підсумок (Production and Summary)**: "Review of Standard §4.2.2 competencies: Self-assessment on matching demonstrative gender and number with 40 household and everyday objects." (PARTIAL - Target count is 15 instead of 40).
-- **Activities (YAML)**: Required items counts are missed for match-up (10/20), quiz (6/20), and first fill-in (6/15).
-
----
-
-## Factual Verification Summary
-
-**Total claims checked:** 6
-**Confirmed [Tier 1]:** 5
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 1
-**Factual Alignment Score:** 10/10
-
-## Confirmed Claims
-
-- **Proverb usage**: Module says: "«В гостях добре, а вдома краще» — East or West, home is best."
-  - Confirmed by Research Notes: "Прислів'я: «В гостях добре, а вдома краще» — exact Ukrainian equivalent of "East or West, home is best.""
-- **Pluralia tantum nouns**: Module says: "The word двері (door) is one of them... You'll always say ці двері or ті двері"
-  - Confirmed by Research Notes/VESUM: "двері is a pluralia tantum... Learners must memorise it with its fixed form ці двері..."
-- **Cultural corner**: Module says: "traditional homes featured a special corner called the покуття (sacred corner)... decorated the area with рушники"
-  - Confirmed by Research Notes: "Покуття... sacred "red corner" of a traditional Ukrainian хата where icons and rushnyky... were displayed."
-- **Dwelling vocabulary**: Module says: "хата — a traditional rural cottage... квартира — a modern apartment... дім — the general word"
-  - Confirmed by Research Notes: "хата / квартира / дім — three genuinely distinct words... хата = rural/traditional cottage... квартира = urban apartment... дім = house or home"
-- **Noun genders**: Module says: "книга ends in -а → feminine... вікно ends in -о → neuter... стіл ends in a consonant → masculine"
-  - Confirmed by Research Notes and VESUM.
-
-## Discrepancies
-
-None.
-
-## Unverified Claims
-
-- "In Module 8, you discovered the three-gender system... In Module 9, you learned to identify things with Це + noun" (The numbering is unverified and contradicts the plan which specifies A1-03 and A1-04).
-
-## Verdict
-
-**Status:** PASS
-(Note: Some plan points are partially missing/under target, but no HIGH severity discrepancies or 3+ completely MISSING plan points found. Activity item counts will need to be scaled up by the content builder.)
-
----
-
-# Language Review (Pass 2)
-
-**Reviewed-By:** gemini-2.5-pro (RAG-grounded)
-
+**Level:** A1 | **Module:** 10
+**Overall Score:** 7.9/10
 **Status:** FAIL
-**Overall Score:** 7.0/10
+**Reviewed:** 2026-03-19
+**Reviewed-By:** claude-sonnet-4-20250514
+
+## Plan Verification
+
+```
+Plan-Content Alignment: PASS
+- Sections: All 5 H2 sections present and match content_outline
+- Vocabulary: 6/6 required (цей/ця/це/ці, той/та/те/ті, стіл, книга, телефон, кімната), 6/6 recommended
+- Grammar scope: MINOR ISSUE — locative case "квартирі" in activity (see below)
+- Objectives: All 4 objectives addressed
+```
+
+### Plan Content Outline Point-by-Point
+
+**Section "Вступ (Introduction)":**
+- Recap of a1-03 (Gender) and a1-04 (Identification): COVERED — Line 3: 「every noun in Ukrainian belongs to a specific gender family (**masculine**, **feminine**, or **neuter**), which we learned to recognize in our very first modules」
+- Proverb «В гостях добре, а вдома краще»: COVERED — Line 5: 「В гостях добре, а вдома краще」
+- State Standard §4.2.2 overview: COVERED — Line 7: 「According to the State Standard for Ukrainian as a Second Language (§4.2.2), at this level, you need to know exactly how to use the specific words for "this" (**цей**, **ця**, **це**, **ці**) and "that" (**той**, **та**, **те**, **ті**) in their correct gendered and plural forms.」
+
+**Section "Презентація (Presentation)":**
+- Visual scaffolding Near/Far: COVERED — Line 11 describes hand-touching/finger-pointing icons
+- Identification vs Specification hurdle: COVERED — Lines 17-19 with 「Це стіл.」 vs 「Цей стіл」
+- Plural forms ці/ті with двері: COVERED — Line 35: 「Ці речі」 and двері as pluralia tantum
+- Gender agreement rhyming patterns: COVERED — Line 37: 「цЯ книгА」, 「цЕ вікнО」, 「цЕЙ стіл」
+
+**Section "Практика (Practice)":**
+- Gender Matching drill: COVERED — Line 41: 「A very common learner error for English speakers is to completely forget gender agreement and just use the masculine form for everything, resulting in mistakes like *цей книга* (wrong!)」
+- Household categorization by gender: COVERED — Line 50: 「A **ніж** (knife) is masculine, so we say **цей ніж**. A **ложка** (spoon) is feminine, so we say **ця ложка**. A **блюдо** (dish) is neuter, so we say **це блюдо**.」
+- Proximity mnemonic T for There/That: COVERED — Line 54
+
+**Section "Культурний контекст (Cultural Insight)":**
+- Покуття / Red Corner: COVERED — Line 58: 「**Покуття** (Pokuttia, or Red Corner)」
+- Lexical distinctions хата/квартира/дім: COVERED — Lines 61-63
+
+**Section "Продукція та підсумок (Production and Summary)":**
+- Interior Designer persona task: COVERED — Line 67-71 with near/far speaking practice
+- Review of Standard §4.2.2 competencies: COVERED — Line 73: 「Can you now perform a self-assessment on matching demonstrative gender and number with 40 household and everyday objects?」
+
+**Activity Hints:**
+- match-up (20 items): ✅ Present with 20 pairs
+- quiz (20 items): ✅ Present with 20 items
+- fill-in (15 items): ✅ Present with 15 items
+- fill-in conversations (6 items): ✅ Present with 6 items
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 6/10 | <7 | Unedited English placeholders were left in the Micro-Dialogue headers like `(Pointing at Things / Pointing out)`. |
-| 2 | Language | 8/10 | <8 | The dialogue line "Так, ця кімната. А той диван." is an unnatural fragment in context. |
-| 3 | Pedagogy | 6/10 | <7 | The noun `блюдо` is taught and tested in an activity but is missing from the Vocabulary list. |
-| 4 | Activities | 7/10 | <7 | The fill-in activity asks the learner to use `блюдо`, which is an untaught word. |
-| 5 | Beginner Safety | 8/10 | <7 | Tone is warm and encouraging; mnemonic tricks are helpful. "Would I Continue?" 4/5. |
-| 6 | LLM Fingerprint | 4/10 | <7 | Learner text explicitly cites "competencies from State Standard §4.2.2", a severe meta-prompt hallucination. |
-| 7 | Linguistic Accuracy | 9/10 | <9 | Demonstrative pronoun forms and gender rhyming rules are accurately explained. |
+| 1 | Experience Quality | 7/10 | <7 | Zero callout boxes — entire module is flat prose with no visual engagement breaks. Richness 54% < 60% threshold. No `[!tip]`, `[!example]`, or `[!cultural-note]` anywhere. |
+| 2 | Language | 8/10 | <8 | English is mostly warm but overwrought in places — 「In Ukrainian culture, the concept of home or **дім** holds a profoundly special place in people's hearts.」 and 「incredibly important concept known as the **Покуття**」. Superlative stacking in section "Вступ (Introduction)": "perfectly captures", "greatest comfort", "perfect anchor" all within 3 sentences. |
+| 3 | Pedagogy | 8/10 | <7 | All plan points covered, clear PPP flow. But immersion at 7.8% is below 15-35% target for Module 10+. Module could use more Ukrainian examples inline. |
+| 4 | Activities | 7/10 | <7 | Locative case scope creep in fill-in item 5 ("квартирі"). Quiz has 20 items but all follow identical 4-option demonstrative selection format — low variety within the activity. Vocabulary YAML missing 8 words that appear in activities (річ, хата, ніж, ложка, блюдо, диван, крісло, Покуття). |
+| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 5/5 — pacing comfortable, instructions clear, quick wins via error drill, Ukrainian introduced gently, encouraging tone. Loses a point for lack of callout boxes as visual safety scaffolding. |
+| 6 | LLM Fingerprint | 8/10 | <7 | Overwrought adverbs: 「Imagine you are enthusiastically navigating a beautiful living space with a new client.」 Superlative inflation: "profoundly special", "incredibly important", "perfectly captures". Not egregious for A1 but clearly LLM-generated prose patterns. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian forms verified in VESUM. Gender agreements correct throughout. блюдо confirmed valid (noun:inanim:n). Minor: "квартирі" in activity is valid Ukrainian (locative) but teaches case not yet covered. |
 
-**Weighted Overall:** (9.0 + 8.8 + 7.2 + 9.1 + 10.4 + 4.0 + 13.5) / 8.9 = **7.0/10**
+**Weighted Overall:** (7×1.5 + 8×1.1 + 8×1.2 + 7×1.3 + 8×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (10.5 + 8.8 + 9.6 + 9.1 + 10.4 + 8.0 + 13.5) / 8.9
+= 69.9 / 8.9 = **7.9/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN] — no Russianisms detected. блюдо verified in VESUM as valid Ukrainian.
+- Calques: [CLEAN]
+- Colonial framing: [CLEAN] — no Russian comparisons
+- Grammar scope: [FLAG] — "квартирі" (locative case) in activity fill-in item 5, line 357 of activities YAML. Locative case is not taught at Module 10.
+- Activity errors: [FLAG] — 8 words appear in activities but are missing from vocabulary YAML
+- Beginner safety: 5/5
+- Factual accuracy: [CLEAN] — Покуття description is accurate; proverb is genuine; хата/квартира/дім distinctions are correct
 
 ## Critical Issues Found
 
-### Issue 1: AI Prompt Leakage (State Standard Hallucination)
-**Location**: `## Вступ (Introduction)` and `## Продукція та підсумок (Production and Summary)`
-**Problem**: The module explicitly tells the student: "that follow the Ukrainian State Standard §4.2.2" and "Check your progress against these competencies from State Standard §4.2.2". This is the LLM hallucinating its own system constraints into the learner-facing text. A beginner learner doesn't know or care about internal curriculum standard document sections.
-**Fix**: Remove all references to the "State Standard".
+### Issue 1: Zero Engagement Boxes (AUDIT GATE FAIL)
+- **Location**: Entire module — all 5 sections
+- **Problem**: The module has zero callout boxes (`> [!tip]`, `> [!example]`, `> [!cultural-note]`, etc.). The audit requires minimum 1 for A1, and the richness gate shows engagement: 0/2. This is the primary reason for FAIL audit status.
+- **Fix**: Add at least 2 callout boxes:
+  1. A `> [!tip]` in section "Презентація (Presentation)" after the identification vs specification explanation (after line 19) with a mnemonic summary
+  2. A `> [!cultural-note]` wrapping the Покуття content in section "Культурний контекст (Cultural Insight)" (line 58)
 
-### Issue 2: Untranslated Bilingual Headers
-**Location**: `### Micro-Dialogues`
-**Problem**: The headers for two micro-dialogues were left as duplicated English text instead of a Ukrainian/English pair.
-Found: `(Pointing at Things / Pointing out)` and `(Showing the Apartment / Showing the apartment)`.
-**Fix**: Provide the correct Ukrainian translations: `(Вказуємо на предмети / Pointing out)` and `(Показуємо квартиру / Showing the apartment)`.
+### Issue 2: Grammar Scope Creep — Locative Case in Activity
+- **Location**: Activities YAML, line 356-359 (fill-in item 5)
+- **Original**: `'Де ти живеш? — Я живу в ___.'` with answer "квартирі"
+- **Problem**: The locative case form "квартирі" (в квартирі) has not been taught at Module 10. This requires knowledge of locative endings, which is beyond A1.1 scope. The plan specifies nominative-only Ukrainian.
+- **Fix**: Replace with a nominative-case identification pattern consistent with the module's scope: `'Що це? — Це ___.'` with answer "квартира" and options from dwelling vocabulary.
 
-### Issue 3: Vocabulary Mismatch (Untaught Word Tested)
-**Location**: `### Household Objects by Gender`, `Activities` (fill-in), and `Vocabulary` YAML
-**Problem**: The text introduces `**блюдо** (dish)` as a neuter noun example, and the fill-in activity tests it (`"___ блюдо (neuter)"`). However, `блюдо` is completely missing from the Vocabulary list. In A1, all active vocabulary must be in the vocab list. Furthermore, `блюдо` (serving platter) is a poor basic vocab choice compared to `тарілка` (plate). 
-**Fix**: Remove `блюдо` from the text's household objects list, and replace it with `ліжко` in the fill-in activity to align with the existing vocabulary list.
+### Issue 3: Vocabulary YAML Missing 8 Words Used in Activities
+- **Location**: Vocabulary YAML (`my-world-objects.yaml`) — only 20 items
+- **Problem**: The following words appear in activities (match-up) but are absent from the vocabulary sidecar: річ, хата, ніж, ложка, блюдо, диван, крісло, Покуття. This causes vocab/activity misalignment.
+- **Fix**: Add at least the nouns that appear in both prose AND activities to the vocabulary YAML: хата, ніж, ложка, блюдо, диван, крісло, річ.
 
-### Issue 4: Unnatural Dialogue Fragment
-**Location**: `### Micro-Dialogues` (`Showing the Apartment`)
-**Problem**: The line "— Так, ця кімната. А той диван." is syntactically incomplete and unnatural. It translates literally to "Yes, this room. And that sofa." without forming a coherent predicate or question.
-**Fix**: Complete the thought by adding a spatial anchor, e.g., "— Так, ця кімната. А там — той диван."
+### Issue 4: Low Immersion (7.8% vs 15-35% target)
+- **Location**: Whole module — sections "Вступ (Introduction)" through "Продукція та підсумок (Production and Summary)"
+- **Problem**: Module 10 falls in the 11-20 band (target 25-45% Ukrainian). At 7.8%, immersion is critically low. The content is almost entirely English prose with only isolated bolded Ukrainian words.
+- **Fix**: Add 2-3 short Ukrainian example dialogues using blockquote format (as research notes suggest): e.g., «Що це? — Це книга. — Ця книга? — Так, ця книга.» in section "Практика (Practice)". Add more Ukrainian mini-sentences throughout section "Презентація (Presentation)".
+
+### Issue 5: Richness Below Threshold (54% vs 60%)
+- **Location**: Richness gaps: engagement 0/2, examples 4/8, video_embeds 0/2
+- **Problem**: The module lacks visual engagement variety. No tables for the gender paradigm (the Near/Far demonstrative grid cries out for a summary table). No callout boxes. Few standalone example blocks.
+- **Fix**: Add a demonstrative paradigm summary table in section "Презентація (Presentation)" after line 37. Add example blocks in section "Практика (Practice)". Engagement boxes addressed in Issue 1.
 
 ## Ukrainian Language Issues
 
-- The dialogue fragment "А той диван." sounds like translated English ("And that sofa") rather than natural Ukrainian pointing. It requires a spatial anchor ("А там — той диван") or a question word ("А це що?").
-- The choice of `блюдо` for "dish" is overly specific (usually a large serving platter) for basic A1 household objects where `тарілка` (plate/dish) or `посуд` (dishes) is standard, though `блюдо` is technically neuter.
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| Activities L356 | Де ти живеш? — Я живу в ___. (answer: квартирі) | Що це? — Це ___. (answer: квартира) | Scope creep (locative case) |
 
-## Fix Plan to Reach 9/10
+## Beginner Safety Audit
 
-1. Delete the phrases mentioning "State Standard §4.2.2" from the introduction and summary.
-2. Translate the English placeholder headers in the Micro-Dialogues section to Ukrainian.
-3. Remove `блюдо` from the neuter nouns list in the text.
-4. In the Activities YAML, change the fill-in question `"___ блюдо (neuter)"` to `"___ ліжко (neuter)"`.
-5. Rewrite the unnatural dialogue fragment "А той диван." to "А там — той диван."
+"Would I Continue?" Test: 5/5
+- Overwhelmed? Pass — pacing is comfortable, concepts introduced one at a time
+- Instructions clear? Pass — always clear what's expected
+- Quick wins? Pass — error correction drill in section "Практика (Practice)" provides immediate reinforcement
+- Ukrainian scary? Pass — introduced gently with English scaffolding throughout
+- Come back tomorrow? Pass — encouraging tone, manageable scope
+
+## Strengths
+- **Excellent plan adherence** — every single content_outline point is addressed with clear evidence. All 4 activity hint types present with correct item counts.
+- **Sound pedagogical sequencing** in section "Презентація (Presentation)" — identification vs specification distinction is clearly explained with the 「Це стіл.」 / 「Цей стіл」 contrast before moving to gender agreement.
+- **Effective mnemonic devices** — the rhyming association (「цЯ книгА」, 「цЕ вікнО」, 「цЕЙ стіл」) and the "T for There/That" proximity mnemonic are genuinely useful teaching tools.
+- **Error correction drill** in section "Практика (Practice)" — proactively addressing the common *цей книга* mistake with minimal pairs (「Is it *цей кімната*? No, it's **ця кімната**!」) is strong pedagogy.
+- **Culturally grounded** — Покуття, хата/квартира/дім distinctions, and the proverb are authentic cultural content.
+
+## Fix Plan to Reach 9/10 (REQUIRED — score is 7.9)
+
+### Experience Quality: 7/10 → 9/10
+**What to fix:**
+1. Add `> [!tip]` callout in section "Презентація (Presentation)" after the identification/specification explanation (after line 19) summarizing the key distinction
+2. Add `> [!cultural-note]` callout wrapping Покуття content in section "Культурний контекст (Cultural Insight)" (line 58)
+3. Add a demonstrative paradigm table in section "Презентація (Presentation)" (after line 34) showing цей/ця/це/ці and той/та/те/ті in a clean grid
+
+**Expected score after fix:** 9/10
+
+### Activities: 7/10 → 9/10
+**What to fix:**
+1. Replace locative-case activity item (line 356) with nominative-case pattern
+2. Add missing vocabulary items to YAML (хата, ніж, ложка, блюдо, диван, крісло, річ)
+
+**Expected score after fix:** 9/10
+
+### Pedagogy: 8/10 → 9/10
+**What to fix:**
+1. Add 2-3 Ukrainian mini-dialogues using blockquote format in section "Практика (Practice)" to raise immersion from 7.8% toward 15%+
+2. Add a Ukrainian example dialogue in section "Презентація (Presentation)" after the near/far explanation
+
+**Expected score after fix:** 9/10
+
+### Language: 8/10 → 9/10
+**What to fix:**
+1. Line 5: Tone down "profoundly special place in people's hearts" → "special place in Ukrainian culture"
+2. Line 58: Replace "incredibly important concept" → "important tradition"
+3. Line 67: Replace "enthusiastically navigating" → "walking through"
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+(9×1.5 + 9×1.1 + 9×1.2 + 9×1.3 + 8×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 11.7 + 10.4 + 8.0 + 13.5) / 8.9
+= 77.8 / 8.9 = **8.7/10**
+
+## Factual Verification
+
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (not a seminar track)
+- Dates checked: N/A
+- Named figures verified: N/A
+- Primary quotes cross-referenced: N/A
+- Chronological sequence: N/A
+- Claims without research grounding: 0 — Покуття description matches research notes; proverb verified; хата/квартира/дім distinctions match research exactly
+- Callout box verification: No callout boxes exist to verify (which is itself the problem)
 
 ## Verification Summary
 
-- **Vocabulary Check**: Compared all tested words in activities and text examples against the provided Vocabulary YAML list. Found 1 missing word (`блюдо`).
-- **Language Flow**: Scanned for Russianisms, unnatural phrasing, and English calques. Found 1 unnatural fragment.
-- **Pedagogical Structure**: Checked immersion level and instructional progression.
-- **Meta-hallucinations**: Scanned for AI filler and instruction leakage. Found 2 severe instances of curriculum standards mentioned directly to the student.
+- Content lines read: 75
+- Activity items checked: 61 (20 match-up + 20 quiz + 15 fill-in + 6 conversation fill-in)
+- Ukrainian sentences verified: 22
+- Citations in bank: 24
+- Issues found: 5
 
 ## Verdict
 
-**Status:** FAIL
-**Rationale:** The module contains severe LLM instruction leakage (mentioning internal State Standard codes to a beginner learner) and violates strict pedagogical rules by testing a word that was never included in the vocabulary list. It also has minor English placeholder errors in headers and a slightly unnatural dialogue line. These issues require revision before passing.
+**FAIL**
+
+The module fails the audit gate due to zero engagement boxes (richness 54% < 60% threshold). Primary blocking issues: (1) add at least 2 callout boxes, (2) fix locative case scope creep in activities, (3) add missing vocabulary to YAML sidecar. Content quality and plan adherence are strong — fixes are additive, not rewrite-level.
+
+---
+
+## Post-Fix Re-Score (automated)
+
+**Scored by:** claude-opus-4-6 (on fixed content)
+**Overall Score:** 5.8/10
+**Verdict:** FAIL
+
+| Dimension | Score |
+|-----------|-------|
+| experience | 6/10 |
+| language | 7/10 |
+| pedagogy | 7/10 |
+| activities | 4/10 |
+| beginner_safety | 7/10 |
+| llm_fingerprint | 4/10 |
+| linguistic_accuracy | 7/10 |

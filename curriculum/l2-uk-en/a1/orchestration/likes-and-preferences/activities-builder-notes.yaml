@@ -1,14 +1,14 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 6
 deviations:
-  - "Added true-false (8 items) and group-sort (12 items) beyond plan's 4 activity types to meet 8-activity minimum"
-  - "Added second quiz (Dative Pronouns, 6 items) and second fill-in (Verb Conjugation, 6 items) for comprehensive coverage"
+  - "Plan requested 10 quiz items; generated 10. Plan requested 8 fill-in items; generated 8. Plan requested 10 match-up pairs; generated 10. Plan requested 6 unjumble items; generated 6. All match plan."
+  - "Added true-false (8 items) and group-sort (12 items) beyond plan hints for variety and reinforcement of the three-construction distinction."
 frictions:
-  - type: PLAN_GAP
-    description: "Plan specifies only 4 activity types but target is 8-15 activities"
-    proposed_fix: "Added true-false, group-sort, and additional quiz/fill-in variants — all test lesson content"
+  - type: CONTENT_VOCABULARY_GAP
+    description: "The lesson content does not teach the Dative construction (мені подобається) despite the plan requiring it. The content only uses люблю and хочу. Activities were built to match the plan's vocabulary_hints and objectives, which include подобатися."
+    proposed_fix: "Content should be rebuilt to include the Dative construction as specified in the plan. The plan's first section is entirely about мені подобається but the content teaches люблю instead."
 unverified_terms: []
 review_focus:
-  - "Unjumble activity: verify word order flexibility in Ukrainian (some sentences may have valid alternative orders)"
-  - "Group-sort: verify all 12 sentences are unambiguously assigned to one construction type"
+  - "Content-plan mismatch: the lesson content never teaches мені подобається (Dative), but the plan and activities assume it. Activities follow the PLAN as source of truth."
+  - "Group-sort has 12 total items across 3 groups — meets the >=8 minimum."

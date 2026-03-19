@@ -24,42 +24,42 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T02:48:56Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T02:58:30Z",
-      "attempts": 2,
-      "note": "escalation-claude-dedup",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T02:58:30Z",
-      "note": "adopted-existing",
-      "executor": {
-        "type": "script",
-        "name": "adopted_existing"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T03:06:14Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-19T04:33:29Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T04:49:32Z",
+      "attempts": 3,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T04:51:44Z",
+      "task_id": "v5-the-living-verb-i-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T05:08:58Z",
+      "attempts": 5,
+      "note": "needs-manual-review",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

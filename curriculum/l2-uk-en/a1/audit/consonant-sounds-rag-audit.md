@@ -1,9 +1,9 @@
 # RAG Verification: consonant-sounds
 
-**Date:** 2026-03-18 22:19 UTC | **Words checked:** 63 | **VESUM coverage:** 60/63 (95.2%)
+**Date:** 2026-03-19 01:14 UTC | **Words checked:** 49 | **VESUM coverage:** 46/49 (93.9%)
 
 ## Summary
-- ✅ Verified (VESUM): 60
+- ✅ Verified (VESUM): 46
 - ⚠️ Partial (RAG only): 2
 - ❌ Not found: 1
 
@@ -17,11 +17,11 @@
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| дж | prose | ✗ | ✓ | ✗ |
-| дз | prose | ✗ | ✓ | ✗ |
+| ДЖ | prose | ✗ | ✓ | ✗ |
+| ДЗ | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 63 | 60 | 1 |
+| Prose (.md) | 49 | 46 | 1 |

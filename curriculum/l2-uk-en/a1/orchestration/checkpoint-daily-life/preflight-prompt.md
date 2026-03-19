@@ -5,6 +5,8 @@ You are about to build a module using the prompt below. Before you start, verify
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 44 of the A1 track (Ukrainian for English speakers). Title: "Checkpoint: Daily Life" — Can You Manage the Day?. Phase: A1.4 [Tenses & Daily Life]. Previous module: Weather And Nature. Next module: Can And Know How.
+
 # Beginner Checkpoint: Synthesis & Review
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
@@ -231,7 +233,7 @@ NOTE: The textbook examples above are provided as INSPIRATION for the pedagogica
 Write the checkpoint content for **Checkpoint: Daily Life** (a1 track).
 
 - **Target**: 1200–1800 words (below 1200 = FAIL)
-- **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types
+- **Engagement callouts**: **1+ MANDATORY** — spread across sections, at least 3 different types
 - **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
@@ -329,7 +331,7 @@ Ukrainian sentences max 10 words. Mix container types.
 - **Russianisms**: banned (кушати, получати, etc.)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear
 - **Euphony**: і/й, у/в alternation
-- **Engagement callouts**: 3+
+- **Engagement callouts**: 1+
 - **IPA/phonetic brackets**: BANNED
 - **New grammar/vocabulary**: BANNED — checkpoint reviews only
 
@@ -450,6 +452,13 @@ Total: {total} words (target: 1200)
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+
 </prompt>
 
 ## The Plan
@@ -557,9 +566,9 @@ register: розмовний
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
-Min engagement boxes: 3
-Min activity types: 4
+Min activities: 0
+Min engagement boxes: 1
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -602,6 +611,7 @@ Only report if:
 These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
 
 - **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
 - **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
 - **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
 - **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**

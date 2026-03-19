@@ -1,124 +1,218 @@
 - type: fill-in
   title: "Change the Verb to Past Tense"
-  instruction: "Each sentence needs a past tense verb. Choose the correct form."
+  instruction: "Choose the correct past tense form of the verb in brackets."
   items:
-    - sentence: "Вчора він ___ книгу."
+    - sentence: "Він ___ книгу вчора. (читати)"
       answer: "читав"
-      options: ["читав", "читати", "читає", "читала"]
-      explanation: "Він (he) takes the masculine ending -в: читав."
-    - sentence: "Вона ___ каву зранку."
-      answer: "пила"
-      options: ["пив", "пила", "пити", "п'є"]
-      explanation: "Вона (she) takes the feminine ending -ла: пила."
-    - sentence: "Вони ___ обід у ресторані."
-      answer: "їли"
-      options: ["їсти", "їв", "їла", "їли"]
-      explanation: "Вони (they) takes the plural ending -ли: їли."
-    - sentence: "Він ___ у офісі."
-      answer: "працював"
-      options: ["працювати", "працює", "працював", "працювала"]
-      explanation: "Він takes the masculine ending -в: працював."
-    - sentence: "Вона ___ додому."
-      answer: "ішла"
-      options: ["ішла", "ішов", "йти", "іде"]
-      explanation: "Вона takes the feminine form: ішла."
-    - sentence: "Він ___ довго."
-      answer: "спав"
-      options: ["спати", "спав", "спала", "спить"]
-      explanation: "Він takes the masculine ending -в: спав."
-    - sentence: "Вони ___ фільм ввечері."
-      answer: "дивилися"
-      options: ["дивитися", "дивився", "дивилася", "дивилися"]
-      explanation: "Вони takes the plural form: дивилися."
-    - sentence: "Воно ___ цікаво."
-      answer: "було"
-      options: ["був", "була", "було", "бути"]
-      explanation: "Воно (it/neuter) takes the neuter ending -ло: було."
-    - sentence: "Він ___ яблуко."
-      answer: "їв"
-      options: ["їсти", "їв", "їла", "їли"]
-      explanation: "Він takes the irregular masculine form: їв (not їстив)."
-    - sentence: "Вона ___ листа."
-      answer: "писала"
-      options: ["писати", "писав", "писала", "пише"]
-      explanation: "Вона takes the feminine ending -ла: писала."
-    - sentence: "Він ___ в магазин."
-      answer: "ходив"
-      options: ["ходити", "ходив", "ходила", "ходить"]
-      explanation: "Він takes the masculine ending -в: ходив."
-    - sentence: "Вона ___ уроки."
-      answer: "робила"
-      options: ["робити", "робив", "робила", "робить"]
-      explanation: "Вона takes the feminine ending -ла: робила."
-- type: fill-in
-  title: "Choose the Correct Gender Form"
-  instruction: "The subject tells you the gender. Pick the past tense form that matches."
-  items:
-    - sentence: "Я ___ книгу. (female speaker)"
-      answer: "читала"
       options: ["читав", "читала", "читало", "читали"]
-      explanation: "A female speaker uses the feminine ending -ла: я читала."
-    - sentence: "Я ___ удома. (male speaker)"
-      answer: "був"
-      options: ["був", "була", "було", "були"]
-      explanation: "A male speaker uses the masculine form: я був."
-    - sentence: "Ти ___ на роботі? (asking a woman)"
-      answer: "була"
-      options: ["був", "була", "було", "були"]
-      explanation: "Asking a woman, so use feminine -ла: ти була."
-    - sentence: "Я ___ каву. (male speaker)"
-      answer: "пив"
+      explanation: "Він is masculine, so we use the -в ending: читав."
+    - sentence: "Вона ___ каву зранку. (пити)"
+      answer: "пила"
       options: ["пив", "пила", "пило", "пили"]
-      explanation: "A male speaker uses the masculine form: я пив."
-    - sentence: "Ти ___ фільм? (asking a man)"
-      answer: "дивився"
-      options: ["дивився", "дивилася", "дивилося", "дивилися"]
-      explanation: "Asking a man, so use masculine -ся: ти дивився."
-    - sentence: "Я ___ у офісі. (female speaker)"
-      answer: "працювала"
+      explanation: "Вона is feminine, so we use the -ла ending: пила."
+    - sentence: "Ми ___ в ресторані. (їсти)"
+      answer: "їли"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Ми is plural, so we use the -ли ending: їли."
+    - sentence: "Він ___ у офісі. (працювати)"
+      answer: "працював"
       options: ["працював", "працювала", "працювало", "працювали"]
-      explanation: "A female speaker uses the feminine ending -ла: я працювала."
-    - sentence: "Ти ___ вчора? (asking a man)"
+      explanation: "Він is masculine, so we use the -в ending: працював."
+    - sentence: "Вона ___ фільм. (дивитися)"
+      answer: "дивилася"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Вона is feminine, so we use the -лася ending: дивилася."
+    - sentence: "Вони ___ уроки. (робити)"
+      answer: "робили"
+      options: ["робив", "робила", "робило", "робили"]
+      explanation: "Вони is plural, so we use the -ли ending: робили."
+    - sentence: "Він ___ довго. (спати)"
       answer: "спав"
       options: ["спав", "спала", "спало", "спали"]
-      explanation: "Asking a man, so use masculine -в: ти спав."
-    - sentence: "Я ___ в музей. (female speaker)"
-      answer: "ходила"
-      options: ["ходив", "ходила", "ходило", "ходили"]
-      explanation: "A female speaker uses the feminine ending -ла: я ходила."
-    - sentence: "Ти ___ листа? (asking a woman)"
-      answer: "писала"
-      options: ["писав", "писала", "писало", "писали"]
-      explanation: "Asking a woman, so use feminine -ла: ти писала."
-    - sentence: "Я ___ серіал. (male speaker)"
-      answer: "дивився"
-      options: ["дивився", "дивилася", "дивилося", "дивилися"]
-      explanation: "A male speaker uses the masculine form: я дивився."
-- type: fill-in
-  title: "What Did You Do Yesterday?"
-  instruction: "Complete the sentences about yesterday using the correct past tense form."
-  items:
-    - sentence: "Вчора зранку я ___ каву. (male speaker)"
-      answer: "пив"
-      options: ["пив", "пила", "пити", "п'є"]
-      explanation: "A male speaker talking about yesterday morning: я пив каву."
-    - sentence: "Вчора ввечері вона ___ серіал."
-      answer: "дивилася"
-      options: ["дивився", "дивилася", "дивитися", "дивиться"]
-      explanation: "Вона takes the feminine reflexive form: дивилася."
-    - sentence: "Минулого тижня ми ___ в ресторані."
-      answer: "їли"
-      options: ["їсти", "їв", "їла", "їли"]
-      explanation: "Ми (we) takes the plural ending -ли: їли."
-    - sentence: "Вчора він ___ на роботу."
-      answer: "ходив"
-      options: ["ходив", "ходила", "ходити", "ходить"]
-      explanation: "Він takes the masculine ending -в: ходив."
-    - sentence: "Що ти ___ вчора? (asking a woman)"
-      answer: "робила"
-      options: ["робив", "робила", "робити", "робить"]
-      explanation: "Asking a woman, so use feminine -ла: що ти робила?"
-    - sentence: "Вчора ___ дуже цікаво!"
+      explanation: "Він is masculine, so we use the -в ending: спав."
+    - sentence: "Воно ___ цікаво. (бути)"
       answer: "було"
       options: ["був", "була", "було", "були"]
-      explanation: "Impersonal sentences use neuter було: вчора було цікаво."
+      explanation: "Воно is neuter, so we use the -ло ending: було."
+    - sentence: "Вона ___ газету. (читати)"
+      answer: "читала"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "Вона is feminine, so we use the -ла ending: читала."
+    - sentence: "Він ___ обід. (їсти)"
+      answer: "їв"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Він is masculine. The irregular past tense of їсти for masculine is їв."
+    - sentence: "Вона ___ воду. (пити)"
+      answer: "пила"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Вона is feminine, so we use the -ла ending: пила."
+    - sentence: "Він ___ додому. (йти)"
+      answer: "ішов"
+      options: ["ішов", "йшла", "йшло", "йшли"]
+      explanation: "Він is masculine. The irregular past tense of йти for masculine is ішов."
+    - sentence: "Вона ___ в магазин. (ходити)"
+      answer: "ходила"
+      options: ["ходив", "ходила", "ходило", "ходили"]
+      explanation: "Вона is feminine, so we use the -ла ending: ходила."
+    - sentence: "Він ___ каву. (робити)"
+      answer: "робив"
+      options: ["робив", "робила", "робило", "робили"]
+      explanation: "Він is masculine, so we use the -в ending: робив."
+    - sentence: "Вони ___ новини. (читати)"
+      answer: "читали"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "Вони is plural, so we use the -ли ending: читали."
+    - sentence: "Вона ___ яблуко. (їсти)"
+      answer: "їла"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Вона is feminine. The irregular past tense of їсти for feminine is їла."
+    - sentence: "Він ___ удома. (бути)"
+      answer: "був"
+      options: ["був", "була", "було", "були"]
+      explanation: "Він is masculine, so we use the -в ending: був."
+    - sentence: "Вона ___ на роботі. (бути)"
+      answer: "була"
+      options: ["був", "була", "було", "були"]
+      explanation: "Вона is feminine, so we use the -ла ending: була."
+    - sentence: "Він ___ фільм. (дивитися)"
+      answer: "дивився"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Він is masculine, so we use the -вся ending: дивився."
+    - sentence: "Вони ___ чай. (пити)"
+      answer: "пили"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Вони is plural, so we use the -ли ending: пили."
+    - sentence: "Він ___ книжку. (писати)"
+      answer: "писав"
+      options: ["писав", "писала", "писало", "писали"]
+      explanation: "Він is masculine, so we use the -в ending: писав."
+    - sentence: "Вона ___. (спати)"
+      answer: "спала"
+      options: ["спав", "спала", "спало", "спали"]
+      explanation: "Вона is feminine, so we use the -ла ending: спала."
+    - sentence: "Вони ___ в магазині. (купувати)"
+      answer: "купували"
+      options: ["купував", "купувала", "купувало", "купували"]
+      explanation: "Вони is plural, so we use the -ли ending: купували."
+    - sentence: "Він ___ вечерю. (готувати)"
+      answer: "готував"
+      options: ["готував", "готувала", "готувало", "готували"]
+      explanation: "Він is masculine, so we use the -в ending: готував."
+    - sentence: "Вона ___ вчора ввечері. (гуляти)"
+      answer: "гуляла"
+      options: ["гуляв", "гуляла", "гуляло", "гуляли"]
+      explanation: "Вона is feminine, so we use the -ла ending: гуляла."
+
+- type: fill-in
+  title: "Choose the Correct Gender Ending"
+  instruction: "Read the sentence and select the verb form that matches the gender of the subject."
+  items:
+    - sentence: "Мама ___ обід."
+      answer: "готувала"
+      options: ["готував", "готувала", "готувало", "готували"]
+      explanation: "Мама is feminine, so the verb takes the -ла ending."
+    - sentence: "Тато ___ газету."
+      answer: "читав"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "Тато is masculine, so the verb takes the -в ending."
+    - sentence: "Діти ___ в магазин."
+      answer: "ходили"
+      options: ["ходив", "ходила", "ходило", "ходили"]
+      explanation: "Діти is plural, so the verb takes the -ли ending."
+    - sentence: "Сестра ___ каву."
+      answer: "пила"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Сестра is feminine, so the verb takes the -ла ending."
+    - sentence: "Брат ___ фільм."
+      answer: "дивився"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Брат is masculine, so the verb takes the -вся ending."
+    - sentence: "Друзі ___ в ресторані."
+      answer: "їли"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Друзі is plural, so the verb takes the -ли ending."
+    - sentence: "Бабуся ___ удома."
+      answer: "була"
+      options: ["був", "була", "було", "були"]
+      explanation: "Бабуся is feminine, so the verb takes the -ла ending."
+    - sentence: "Я (a man) ___ новини."
+      answer: "читав"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "When a man says I (я), the past tense verb takes the masculine -в ending."
+    - sentence: "Я (a woman) ___ у офісі."
+      answer: "працювала"
+      options: ["працював", "працювала", "працювало", "працювали"]
+      explanation: "When a woman says I (я), the past tense verb takes the feminine -ла ending."
+    - sentence: "Дідусь ___ довго."
+      answer: "спав"
+      options: ["спав", "спала", "спало", "спали"]
+      explanation: "Дідусь is masculine, so the verb takes the -в ending."
+    - sentence: "Подруга ___ в магазин."
+      answer: "ходила"
+      options: ["ходив", "ходила", "ходило", "ходили"]
+      explanation: "Подруга is feminine, so the verb takes the -ла ending."
+    - sentence: "Учитель ___ книжку."
+      answer: "писав"
+      options: ["писав", "писала", "писало", "писали"]
+      explanation: "Учитель is masculine, so the verb takes the -в ending."
+    - sentence: "Ми ___ каву."
+      answer: "пили"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Ми is plural, so the verb takes the -ли ending."
+    - sentence: "Студентка ___ уроки."
+      answer: "робила"
+      options: ["робив", "робила", "робило", "робили"]
+      explanation: "Студентка is feminine, so the verb takes the -ла ending."
+    - sentence: "Він ___ додому."
+      answer: "ішов"
+      options: ["ішов", "йшла", "йшло", "йшли"]
+      explanation: "Він is masculine. The irregular past tense of йти for masculine is ішов."
+    - sentence: "Вона ___ телевізор."
+      answer: "дивилася"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Вона is feminine, so the reflexive verb takes the -лася ending."
+    - sentence: "Вони ___ вечерю."
+      answer: "готували"
+      options: ["готував", "готувала", "готувало", "готували"]
+      explanation: "Вони is plural, so the verb takes the -ли ending."
+    - sentence: "Хлопець ___ воду."
+      answer: "пив"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Хлопець is masculine, so the verb takes the -в ending."
+    - sentence: "Дівчина ___ яблуко."
+      answer: "їла"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Дівчина is feminine. The irregular past tense of їсти for feminine is їла."
+    - sentence: "Ми ___ удома."
+      answer: "були"
+      options: ["був", "була", "було", "були"]
+      explanation: "Ми is plural, so the verb takes the -ли ending."
+
+- type: fill-in
+  title: "What Did You Do Yesterday?"
+  instruction: "Complete each sentence with the correct past tense verb from the options."
+  items:
+    - sentence: "Вчора я ___ каву зранку."
+      answer: "робив"
+      options: ["робив", "робила", "робили", "робило"]
+      explanation: "The speaker (masculine) made coffee yesterday morning. Робив is the masculine past tense of робити."
+    - sentence: "Вчора ввечері ми ___ фільм."
+      answer: "дивилися"
+      options: ["дивився", "дивилася", "дивилися", "дивилося"]
+      explanation: "Ми is plural, so the reflexive verb takes the -лися ending."
+    - sentence: "Минулого тижня вона ___ в ресторані."
+      answer: "їла"
+      options: ["їв", "їла", "їли", "їло"]
+      explanation: "Вона is feminine. The irregular past tense of їсти for feminine is їла."
+    - sentence: "Вчора він ___ книгу."
+      answer: "читав"
+      options: ["читав", "читала", "читали", "читало"]
+      explanation: "Він is masculine, so we use the -в ending: читав."
+    - sentence: "Минулого місяця вони ___ у магазині."
+      answer: "купували"
+      options: ["купував", "купувала", "купували", "купувало"]
+      explanation: "Вони is plural, so we use the -ли ending: купували."
+    - sentence: "Вчора зранку вона ___ в магазин."
+      answer: "ходила"
+      options: ["ходив", "ходила", "ходили", "ходило"]
+      explanation: "Вона is feminine, so we use the -ла ending: ходила."

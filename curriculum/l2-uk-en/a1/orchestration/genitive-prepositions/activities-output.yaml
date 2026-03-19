@@ -1,0 +1,213 @@
+- type: fill-in
+  title: "Choose the Correct Preposition"
+  instruction: "Fill in the blank with the correct preposition (в, у, or на) to complete each sentence."
+  items:
+    - sentence: "Мама ___ магазині."
+      answer: "в"
+      options: ["в", "у", "на", "біля"]
+      explanation: "We use в before магазині because the previous word ends in a vowel (а) and the next word starts with a consonant (м)."
+    - sentence: "Він був ___ школі."
+      answer: "у"
+      options: ["в", "у", "на", "навпроти"]
+      explanation: "We use у between two consonants (в before ш) to keep the sentence flowing smoothly."
+    - sentence: "Книга лежить ___ столі."
+      answer: "на"
+      options: ["в", "у", "на", "біля"]
+      explanation: "We use на for surfaces — the book is resting on top of the table."
+    - sentence: "Вона ___ Львові."
+      answer: "у"
+      options: ["в", "у", "на", "між"]
+      explanation: "We always use у before the льв- cluster. Saying в Львові is a common learner error."
+    - sentence: "Тато ___ роботі."
+      answer: "на"
+      options: ["в", "у", "на", "поруч"]
+      explanation: "Work (робота) is an activity, not a physical box, so we use на for this institutional meaning."
+    - sentence: "Ми зараз ___ кухні."
+      answer: "на"
+      options: ["в", "у", "на", "далеко"]
+      explanation: "The kitchen is a traditional exception — Ukrainians always say на кухні, not в кухні."
+    - sentence: "Діти ___ кімнаті."
+      answer: "в"
+      options: ["в", "у", "на", "біля"]
+      explanation: "A room is an enclosed space, so we use в/у. Here в works because the previous word ends in a vowel."
+    - sentence: "Кіт спить ___ підлозі."
+      answer: "на"
+      options: ["в", "у", "на", "навпроти"]
+      explanation: "The floor is a surface, so we use на. Notice the г→з alternation: підлога → на підлозі."
+    - sentence: "Я ___ автобусі."
+      answer: "в"
+      options: ["в", "у", "на", "між"]
+      explanation: "A bus is an enclosed space (you are inside it), so we use в/у. Here в works before a vowel (а)."
+    - sentence: "Вона зараз ___ уроці."
+      answer: "на"
+      options: ["в", "у", "на", "біля"]
+      explanation: "A lesson is an event or activity, not a physical space, so we use на уроці."
+
+- type: quiz
+  title: "Prepositions and Location"
+  instruction: "Choose the correct answer for each question about Ukrainian location prepositions."
+  items:
+    - question: "Which preposition do you use to say someone is at a concert?"
+      options:
+        - text: "на концерті"
+          correct: true
+        - text: "в концерті"
+          correct: false
+        - text: "біля концерті"
+          correct: false
+        - text: "у концерті"
+          correct: false
+      explanation: "A concert is an event, so we use на. На концерті means at the concert."
+    - question: "Why do we say у Львові instead of в Львові?"
+      options:
+        - text: "Because у is required before the льв- consonant cluster"
+          correct: true
+        - text: "Because Львів is a special city"
+          correct: false
+        - text: "Because в is only for small cities"
+          correct: false
+        - text: "Because у always comes before Л"
+          correct: false
+      explanation: "The euphony rule requires у before heavy clusters like льв-, зв-, св- to keep the language flowing smoothly."
+    - question: "What case does the preposition біля require?"
+      options:
+        - text: "Genitive"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Nominative"
+          correct: false
+        - text: "Instrumental"
+          correct: false
+      explanation: "Біля (near) always takes the Genitive case: біля школи, біля парку, біля магазину."
+    - question: "How do you say 'Where is the post office located?' in Ukrainian?"
+      options:
+        - text: "Де знаходиться пошта?"
+          correct: true
+        - text: "Де пошта знаходиться?"
+          correct: false
+        - text: "Пошта де знаходиться?"
+          correct: false
+        - text: "Знаходиться де пошта?"
+          correct: false
+      explanation: "The natural word order is Де знаходиться + noun. The verb знаходиться is used for formal location questions."
+    - question: "Which phrase correctly says 'opposite the pharmacy'?"
+      options:
+        - text: "навпроти аптеки"
+          correct: true
+        - text: "навпроти аптека"
+          correct: false
+        - text: "навпроти аптеку"
+          correct: false
+        - text: "навпроти аптеці"
+          correct: false
+      explanation: "Навпроти takes the Genitive case. The Genitive of аптека is аптеки."
+    - question: "What happens to the letter г in нога when you put it in the Locative case?"
+      options:
+        - text: "г changes to з (на нозі)"
+          correct: true
+        - text: "г changes to ж (на ножі)"
+          correct: false
+        - text: "г stays the same (на ногі)"
+          correct: false
+        - text: "г changes to к (на ноці)"
+          correct: false
+      explanation: "In the Locative case, г alternates to з. So нога becomes на нозі."
+    - question: "Why do Ukrainians say на кухні instead of в кухні?"
+      options:
+        - text: "It is a traditional exception from when kitchens were open cooking areas"
+          correct: true
+        - text: "Because кухня starts with the letter к"
+          correct: false
+        - text: "Because kitchens are always outside"
+          correct: false
+        - text: "Because на is always used with food places"
+          correct: false
+      explanation: "Historically, cooking areas were open hearths, not enclosed rooms. This linguistic tradition persists in modern Ukrainian."
+    - question: "Which preposition pair uses the Instrumental case as a preview chunk?"
+      options:
+        - text: "поруч з / між"
+          correct: true
+        - text: "біля / навпроти"
+          correct: false
+        - text: "в / на"
+          correct: false
+        - text: "далеко від / близько від"
+          correct: false
+      explanation: "Поруч з (next to) and між (between) take the Instrumental case. Біля and навпроти take the Genitive."
+    - question: "How do you say 'near the bus stop' in Ukrainian?"
+      options:
+        - text: "біля зупинки"
+          correct: true
+        - text: "біля зупинка"
+          correct: false
+        - text: "біля зупинку"
+          correct: false
+        - text: "біля зупинці"
+          correct: false
+      explanation: "Біля takes the Genitive case. The Genitive of зупинка (feminine) is зупинки."
+    - question: "What is the correct way to say 'in the city' in Ukrainian?"
+      options:
+        - text: "у місті"
+          correct: true
+        - text: "в місто"
+          correct: false
+        - text: "на місті"
+          correct: false
+        - text: "у місто"
+          correct: false
+      explanation: "A city is an enclosed space, so we use в/у + Locative. Місто becomes місті in the Locative case."
+
+- type: match-up
+  title: "Match the Place to Its Preposition Phrase"
+  instruction: "Match each place on the left with the correct Ukrainian prepositional phrase on the right."
+  pairs:
+    - left: "in the store"
+      right: "в магазині"
+    - left: "on the table"
+      right: "на столі"
+    - left: "at the post office"
+      right: "на пошті"
+    - left: "near the school"
+      right: "біля школи"
+    - left: "opposite the bank"
+      right: "навпроти банку"
+    - left: "in the kitchen"
+      right: "на кухні"
+    - left: "at the lesson"
+      right: "на уроці"
+    - left: "on the street"
+      right: "на вулиці"
+    - left: "near the park"
+      right: "біля парку"
+    - left: "in the school"
+      right: "у школі"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian location prepositions is true or false."
+  items:
+    - statement: "The prepositions в and у mean the same thing — the choice between them depends on euphony."
+      correct: true
+      explanation: "Correct! В and у both mean 'in'. You choose between them based on surrounding sounds to keep the language flowing."
+    - statement: "You should say в Львові when talking about being in Lviv."
+      correct: false
+      explanation: "Wrong — you must say у Львові. The euphony rule requires у before the heavy льв- cluster."
+    - statement: "The preposition на is used for events and activities, like на концерті (at the concert)."
+      correct: true
+      explanation: "Correct! На is used for events, activities, and institutions, not just physical surfaces."
+    - statement: "Біля takes the Locative case, just like в and на."
+      correct: false
+      explanation: "Wrong — біля takes the Genitive case, not the Locative. For example: біля школи (Genitive), not біля школі."
+    - statement: "Ukrainians say на кухні because the kitchen was traditionally an open cooking area, not an enclosed room."
+      correct: true
+      explanation: "Correct! This is a linguistic tradition from when kitchens were open hearths, so на (on/at) stuck instead of в (in)."
+    - statement: "The verb знаходиться is used for formal location questions like 'Where is the pharmacy located?'"
+      correct: true
+      explanation: "Correct! Де знаходиться аптека? is more polished than simply Де аптека?"
+    - statement: "When the letter к appears before the Locative ending -і, it stays unchanged."
+      correct: false
+      explanation: "Wrong — к changes to ц before the -і ending. For example: рука → у руці."
+    - statement: "Навпроти банку means 'opposite the bank' and uses the Genitive case."
+      correct: true
+      explanation: "Correct! Навпроти takes the Genitive case. Банк → банку (Genitive)."

@@ -23,12 +23,33 @@
       }
     },
     "content": {
-      "status": "failed",
-      "ts": "2026-03-18T06:06:17Z",
+      "status": "complete",
+      "ts": "2026-03-19T11:17:52Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T11:43:52Z",
+      "attempts": 3,
+      "note": "escalation-claude",
       "executor": {
         "type": "llm",
         "agent": "claude",
         "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "failed",
+      "ts": "2026-03-19T11:45:53Z",
+      "note": "activities-schema-invalid",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

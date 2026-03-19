@@ -1,0 +1,363 @@
+- type: match-up
+  title: "Label Room Objects"
+  instruction: "Match each Ukrainian household word to its English meaning."
+  pairs:
+    - left: "стіл"
+      right: "table"
+    - left: "книга"
+      right: "book"
+    - left: "телефон"
+      right: "phone"
+    - left: "кімната"
+      right: "room"
+    - left: "стілець"
+      right: "chair"
+    - left: "ліжко"
+      right: "bed"
+    - left: "лампа"
+      right: "lamp"
+    - left: "вікно"
+      right: "window"
+    - left: "шафа"
+      right: "wardrobe"
+    - left: "двері"
+      right: "door"
+    - left: "ніж"
+      right: "knife"
+    - left: "ложка"
+      right: "spoon"
+    - left: "блюдо"
+      right: "dish"
+    - left: "диван"
+      right: "sofa"
+    - left: "крісло"
+      right: "armchair"
+    - left: "хата"
+      right: "traditional cottage"
+    - left: "квартира"
+      right: "apartment"
+    - left: "дім"
+      right: "house / home"
+    - left: "річ"
+      right: "thing"
+    - left: "Покуття"
+      right: "Red Corner (sacred space)"
+
+- type: quiz
+  title: "Match the Demonstrative to the Gender"
+  instruction: "Choose the correct demonstrative pronoun for each noun."
+  items:
+    - question: "Which demonstrative means 'this' for the masculine noun стіл (table)?"
+      options:
+        - text: "цей"
+          correct: true
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Стіл is masculine, so we use the masculine form цей."
+    - question: "Which demonstrative means 'this' for the feminine noun книга (book)?"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Книга is feminine, so we use the feminine form ця."
+    - question: "Which demonstrative means 'this' for the neuter noun вікно (window)?"
+      options:
+        - text: "це"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Вікно is neuter, so we use the neuter form це."
+    - question: "Which demonstrative means 'that' for the masculine noun телефон (phone)?"
+      options:
+        - text: "той"
+          correct: true
+        - text: "та"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+      explanation: "Телефон is masculine, so we use the masculine form той."
+    - question: "Which demonstrative means 'that' for the feminine noun шафа (wardrobe)?"
+      options:
+        - text: "та"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+      explanation: "Шафа is feminine, so we use the feminine form та."
+    - question: "Which demonstrative means 'that' for the neuter noun ліжко (bed)?"
+      options:
+        - text: "те"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "та"
+          correct: false
+        - text: "ті"
+          correct: false
+      explanation: "Ліжко is neuter, so we use the neuter form те."
+    - question: "Which demonstrative means 'these' for the plural noun двері (door)?"
+      options:
+        - text: "ці"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+      explanation: "Двері is always plural in Ukrainian, so we use the plural form ці."
+    - question: "Which demonstrative means 'those' for the plural noun речі (things)?"
+      options:
+        - text: "ті"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "та"
+          correct: false
+        - text: "те"
+          correct: false
+      explanation: "Речі is plural, so we use the plural form ті."
+    - question: "Which demonstrative means 'this' for the feminine noun лампа (lamp)?"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Лампа is feminine (ends in -а), so we use ця."
+    - question: "Which demonstrative means 'this' for the masculine noun диван (sofa)?"
+      options:
+        - text: "цей"
+          correct: true
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Диван is masculine (ends in a consonant), so we use цей."
+    - question: "Which demonstrative means 'this' for the neuter noun крісло (armchair)?"
+      options:
+        - text: "це"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Крісло is neuter (ends in -о), so we use це."
+    - question: "Which demonstrative means 'that' for the feminine noun кімната (room)?"
+      options:
+        - text: "та"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+      explanation: "Кімната is feminine (ends in -а), so we use та."
+    - question: "Which demonstrative means 'this' for the masculine noun ніж (knife)?"
+      options:
+        - text: "цей"
+          correct: true
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Ніж is masculine (ends in a consonant), so we use цей."
+    - question: "Which demonstrative means 'this' for the feminine noun ложка (spoon)?"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Ложка is feminine (ends in -а), so we use ця."
+    - question: "Which demonstrative means 'this' for the neuter noun блюдо (dish)?"
+      options:
+        - text: "це"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Блюдо is neuter (ends in -о), so we use це."
+    - question: "Which demonstrative means 'that' for the masculine noun стілець (chair)?"
+      options:
+        - text: "той"
+          correct: true
+        - text: "та"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+      explanation: "Стілець is masculine (ends in a consonant), so we use той."
+    - question: "Which demonstrative means 'this' for the feminine noun хата (cottage)?"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Хата is feminine (ends in -а), so we use ця."
+    - question: "Which demonstrative means 'this' for the feminine noun квартира (apartment)?"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Квартира is feminine (ends in -а), so we use ця."
+    - question: "Which demonstrative means 'this' for the masculine noun дім (home)?"
+      options:
+        - text: "цей"
+          correct: true
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+      explanation: "Дім is masculine (ends in a consonant), so we use цей."
+    - question: "What is the key difference between Це стіл and Цей стіл?"
+      options:
+        - text: "Це стіл identifies (This is a table), Цей стіл specifies (This table)"
+          correct: true
+        - text: "They mean exactly the same thing"
+          correct: false
+        - text: "Це стіл is formal, Цей стіл is informal"
+          correct: false
+        - text: "Це стіл is plural, Цей стіл is singular"
+          correct: false
+      explanation: "Це стіл is identification (This is a table). Цей стіл is specification (This table) — a key distinction in Ukrainian."
+
+- type: fill-in
+  title: "Complete with the Correct Demonstrative"
+  instruction: "Fill in the blank with the correct form of 'this' (цей, ця, це, ці)."
+  items:
+    - sentence: "___ стіл."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Стіл is masculine, so we use цей."
+    - sentence: "___ книга."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Книга is feminine (ends in -а), so we use ця."
+    - sentence: "___ вікно."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Вікно is neuter (ends in -о), so we use це."
+    - sentence: "___ двері."
+      answer: "Ці"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Двері is always plural, so we use ці."
+    - sentence: "___ лампа."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Лампа is feminine (ends in -а), so we use ця."
+    - sentence: "___ телефон."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Телефон is masculine (ends in a consonant), so we use цей."
+    - sentence: "___ ліжко."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Ліжко is neuter (ends in -о), so we use це."
+    - sentence: "___ шафа."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Шафа is feminine (ends in -а), so we use ця."
+    - sentence: "___ диван."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Диван is masculine (ends in a consonant), so we use цей."
+    - sentence: "___ крісло."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Крісло is neuter (ends in -о), so we use це."
+    - sentence: "___ кімната."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Кімната is feminine (ends in -а), so we use ця."
+    - sentence: "___ стілець."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Стілець is masculine (ends in a consonant), so we use цей."
+    - sentence: "___ ніж."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Ніж is masculine (ends in a consonant), so we use цей."
+    - sentence: "___ ложка."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Ложка is feminine (ends in -а), so we use ця."
+    - sentence: "___ блюдо."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+      explanation: "Блюдо is neuter (ends in -о), so we use це."
+
+- type: fill-in
+  title: "Що це? Conversations"
+  instruction: "Complete each mini-conversation with the correct Ukrainian word."
+  items:
+    - sentence: 'Що це? — Це ___.'
+      answer: "стіл"
+      options: ["стіл", "стілець", "диван", "ніж"]
+      explanation: "Стіл means table."
+    - sentence: 'Що це? — Це ___.'
+      answer: "книга"
+      options: ["книга", "лампа", "шафа", "ложка"]
+      explanation: "Книга means book."
+    - sentence: 'Що це? — Це ___.'
+      answer: "вікно"
+      options: ["вікно", "ліжко", "крісло", "блюдо"]
+      explanation: "Вікно means window."
+    - sentence: 'Що це? — Це ___.'
+      answer: "телефон"
+      options: ["телефон", "диван", "стілець", "дім"]
+      explanation: "Телефон means phone."
+    - sentence: 'Де ти живеш? — Я живу в ___.'
+      answer: "квартирі"
+      options: ["квартирі", "кімнаті", "хаті", "шафі"]
+      explanation: "Квартира (apartment) takes the locative form квартирі after в."
+    - sentence: 'Що це? — Це ___.'
+      answer: "диван"
+      options: ["диван", "стіл", "ніж", "телефон"]
+      explanation: "Диван means sofa."

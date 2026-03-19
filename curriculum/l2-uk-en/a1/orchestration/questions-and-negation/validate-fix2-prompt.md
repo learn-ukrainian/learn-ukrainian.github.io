@@ -1,23 +1,12 @@
-        # Fix ALL 2 issue(s) in `questions-and-negation`
+        # Fix ALL 1 issue(s) in `questions-and-negation`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 2 issues. You must produce fixes for all 2.**
-        **After you finish, count your fixes. If the count is less than 2, go back and fix the ones you missed.**
+        **There are 1 issues. You must produce fixes for all 1.**
+        **After you finish, count your fixes. If the count is less than 1, go back and fix the ones you missed.**
 
-        ### Fix: Gate `Pedagogy` FAIL — 1 violations
-
-### Fix 2: PEDAGOGICAL_VIOLATION
-**What:** [VOCAB_NOT_IN_CONTENT] Only 8/19 (42%) vocabulary words appear in content+activities. Missing: бо, де, звідки, коли, куди, ні, тому що, хто, чому, що (+1 more)
-**How to fix:** RENAME one header to NOT contain 'Introduction'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
-### Other Audit Failures
+        ### Other Audit Failures
 
 ```
-З'єднуємо речення (Joining Sentences)                                                      157 /  200  ❌ (-43)
-❌ [VOCAB_NOT_IN_CONTENT] Only 8/19 (42%) vocabulary words appear in content+activities. Missing: бо, де, звідки, коли, куди, ні, тому що, хто, чому, що (+1 more)
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.log for details)
 ```
 
@@ -71,6 +60,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 
 ## Verification Tools (USE THEM)
@@ -92,7 +82,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 2 issues listed above — every single one, not a subset
+        1. Fix ALL 1 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

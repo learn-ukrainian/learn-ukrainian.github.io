@@ -1,198 +1,374 @@
+- type: fill-in
+  title: "Conjugate First Conjugation Verbs"
+  instruction: "Choose the correct present tense form of the verb to complete the sentence."
+  items:
+    - sentence: "Я ___ книгу. (читати)"
+      answer: "читаю"
+      options: ["читаю", "читаєш", "читає", "читати"]
+      explanation: "The ending -ю shows the action is done by Я (I)."
+    - sentence: "Ти ___ лист. (писати)"
+      answer: "пишеш"
+      options: ["пишу", "пишеш", "пише", "писати"]
+      explanation: "For Ти (you informal), the ending is -еш. Note the stem change with писати."
+    - sentence: "Він ___ радіо. (слухати)"
+      answer: "слухає"
+      options: ["слухаю", "слухаєш", "слухає", "слухати"]
+      explanation: "For він/вона/воно (he/she/it), the ending is -є."
+    - sentence: "Ми ___ вдома. (працювати)"
+      answer: "працюємо"
+      options: ["працюю", "працюємо", "працюєте", "працювати"]
+      explanation: "For Ми (we), the ending is -ємо. Remember the stem contracts from -ювати to -ю-."
+    - sentence: "Ви ___ багато. (думати)"
+      answer: "думаєте"
+      options: ["думаю", "думаємо", "думаєте", "думати"]
+      explanation: "For Ви (you formal/plural), the ending is -єте."
+    - sentence: "Вони ___ все. (розуміти)"
+      answer: "розуміють"
+      options: ["розумію", "розуміє", "розуміємо", "розуміють"]
+      explanation: "For Вони (they), the ending is -ють."
+    - sentence: "Я ___ правду. (знати)"
+      answer: "знаю"
+      options: ["знаю", "знаєш", "знає", "знати"]
+      explanation: "For Я (I), the ending is -ю attached to the stem зна-."
+    - sentence: "Ти ___ в ігри. (грати)"
+      answer: "граєш"
+      options: ["граю", "граєш", "грає", "грати"]
+      explanation: "For Ти (you informal), the ending is -єш."
+    - sentence: "Він ___ новини. (читати)"
+      answer: "читає"
+      options: ["читаю", "читаєш", "читає", "читають"]
+      explanation: "For він (he), the ending is -є."
+    - sentence: "Ми ___ текст. (вивчати)"
+      answer: "вивчаємо"
+      options: ["вивчаю", "вивчаємо", "вивчаєте", "вивчати"]
+      explanation: "For Ми (we), the ending is -ємо."
+    - sentence: "Вони ___ радіо. (слухати)"
+      answer: "слухають"
+      options: ["слухаю", "слухає", "слухаємо", "слухають"]
+      explanation: "For Вони (they), the ending is -ють."
+    - sentence: "Ви ___ лист. (писати)"
+      answer: "пишете"
+      options: ["пишу", "пишеш", "пишете", "пишуть"]
+      explanation: "For Ви (you formal/plural), the ending is -ете. Note the stem change with писати."
+    - sentence: "Я ___ на відповідь. (чекати)"
+      answer: "чекаю"
+      options: ["чекаю", "чекаєш", "чекає", "чекати"]
+      explanation: "For Я (I), the ending is -ю."
+    - sentence: "Ти ___ багато. (працювати)"
+      answer: "працюєш"
+      options: ["працюю", "працюєш", "працює", "працювати"]
+      explanation: "For Ти (you informal), the ending is -єш. Remember the stem contracts."
+    - sentence: "Вона ___ про це. (думати)"
+      answer: "думає"
+      options: ["думаю", "думаєш", "думає", "думають"]
+      explanation: "For вона (she), the ending is -є."
+    - sentence: "Ми ___ все. (знати)"
+      answer: "знаємо"
+      options: ["знаю", "знаємо", "знаєте", "знають"]
+      explanation: "For Ми (we), the ending is -ємо."
+    - sentence: "Вони ___ лист. (писати)"
+      answer: "пишуть"
+      options: ["пишу", "пишеш", "пише", "пишуть"]
+      explanation: "For Вони (they), the ending is -уть. Note the stem change with писати."
+    - sentence: "Ти ___ уважно. (слухати)"
+      answer: "слухаєш"
+      options: ["слухаю", "слухаєш", "слухає", "слухати"]
+      explanation: "For Ти (you informal), the ending is -єш."
+    - sentence: "Він ___ вдома. (відпочивати)"
+      answer: "відпочиває"
+      options: ["відпочиваю", "відпочиваєш", "відпочиває", "відпочивати"]
+      explanation: "For він (he), the ending is -є."
+    - sentence: "Ми ___ багато. (грати)"
+      answer: "граємо"
+      options: ["граю", "граєш", "граємо", "грають"]
+      explanation: "For Ми (we), the ending is -ємо."
+    - sentence: "Вони ___ вдома. (працювати)"
+      answer: "працюють"
+      options: ["працюю", "працюємо", "працюєте", "працюють"]
+      explanation: "For Вони (they), the ending is -ють. Remember the stem contracts from -ювати to -ю-."
+    - sentence: "Ви ___ все. (знати)"
+      answer: "знаєте"
+      options: ["знаю", "знаємо", "знаєте", "знають"]
+      explanation: "For Ви (you formal/plural), the ending is -єте."
+    - sentence: "Я ___ багато. (думати)"
+      answer: "думаю"
+      options: ["думаю", "думаєш", "думає", "думати"]
+      explanation: "For Я (I), the ending is -ю."
+    - sentence: "Він ___ на відповідь. (чекати)"
+      answer: "чекає"
+      options: ["чекаю", "чекаєш", "чекає", "чекають"]
+      explanation: "For він (he), the ending is -є."
+    - sentence: "Ви ___ журнал. (читати)"
+      answer: "читаєте"
+      options: ["читаю", "читаємо", "читаєте", "читають"]
+      explanation: "For Ви (you formal/plural), the ending is -єте."
+    - sentence: "Вона ___ повідомлення. (писати)"
+      answer: "пише"
+      options: ["пишу", "пишеш", "пише", "пишуть"]
+      explanation: "For вона (she), the ending is -е. Note the stem change with писати."
+    - sentence: "Ти ___ все. (розуміти)"
+      answer: "розумієш"
+      options: ["розумію", "розумієш", "розуміє", "розуміють"]
+      explanation: "For Ти (you informal), the ending is -єш."
+    - sentence: "Ми ___ про це. (думати)"
+      answer: "думаємо"
+      options: ["думаю", "думаєш", "думаємо", "думають"]
+      explanation: "For Ми (we), the ending is -ємо."
+    - sentence: "Вони ___ в ігри. (грати)"
+      answer: "грають"
+      options: ["граю", "граєш", "грає", "грають"]
+      explanation: "For Вони (they), the ending is -ють."
+    - sentence: "Він ___ слова. (вивчати)"
+      answer: "вивчає"
+      options: ["вивчаю", "вивчаєш", "вивчає", "вивчають"]
+      explanation: "For він (he), the ending is -є."
+
+- type: fill-in
+  title: "Complete with the Correct Verb Form"
+  instruction: "Read the context and choose the correct verb form to fill in the blank."
+  items:
+    - sentence: "Мій друг ___ текст."
+      answer: "вивчає"
+      options: ["вивчаю", "вивчаєш", "вивчає", "вивчати"]
+      explanation: "Мій друг is third person singular (він), so the ending is -є."
+    - sentence: "Ми ___ новини щодня."
+      answer: "читаємо"
+      options: ["читаю", "читаємо", "читаєте", "читають"]
+      explanation: "Ми (we) takes the ending -ємо."
+    - sentence: "Вони ___ уважно."
+      answer: "слухають"
+      options: ["слухаю", "слухає", "слухаємо", "слухають"]
+      explanation: "Вони (they) takes the ending -ють."
+    - sentence: "Я ___ на автобус."
+      answer: "чекаю"
+      options: ["чекаю", "чекаєш", "чекає", "чекати"]
+      explanation: "Я (I) takes the ending -ю."
+    - sentence: "Ти ___ про це."
+      answer: "питаєш"
+      options: ["питаю", "питаєш", "питає", "питати"]
+      explanation: "Ти (you informal) takes the ending -єш."
+    - sentence: "Ввечері я ___."
+      answer: "відпочиваю"
+      options: ["відпочиваю", "відпочиває", "відпочиваємо", "відпочивати"]
+      explanation: "Я (I) takes the ending -ю."
+    - sentence: "Ви ___ дуже багато."
+      answer: "працюєте"
+      options: ["працюю", "працюємо", "працюєте", "працюють"]
+      explanation: "Ви (you formal/plural) takes the ending -єте."
+    - sentence: "Він ___ повідомлення."
+      answer: "пише"
+      options: ["пишу", "пишеш", "пише", "пишуть"]
+      explanation: "Він (he) takes the ending -е. Note the stem change with писати."
+    - sentence: "Ти ___ журнал."
+      answer: "читаєш"
+      options: ["читаю", "читаєш", "читає", "читають"]
+      explanation: "Ти (you informal) takes the ending -єш."
+    - sentence: "Вона ___ правду."
+      answer: "знає"
+      options: ["знаю", "знаєш", "знає", "знають"]
+      explanation: "Вона (she) is third person singular, so the ending is -є."
+    - sentence: "Ми ___ на автобус."
+      answer: "чекаємо"
+      options: ["чекаю", "чекаємо", "чекаєте", "чекають"]
+      explanation: "Ми (we) takes the ending -ємо."
+    - sentence: "Він ___ в ігри."
+      answer: "грає"
+      options: ["граю", "граєш", "грає", "грають"]
+      explanation: "Він (he) is third person singular, so the ending is -є."
+    - sentence: "Вони ___ вдома."
+      answer: "працюють"
+      options: ["працюю", "працюємо", "працюєте", "працюють"]
+      explanation: "Вони (they) takes the ending is -ють. Remember the stem contracts."
+    - sentence: "Ви ___ все."
+      answer: "розумієте"
+      options: ["розумію", "розуміє", "розумієте", "розуміють"]
+      explanation: "Ви (you formal/plural) takes the ending -єте."
+    - sentence: "Вони ___ текст."
+      answer: "вивчають"
+      options: ["вивчаю", "вивчає", "вивчаємо", "вивчають"]
+      explanation: "Вони (they) takes the ending -ють."
+    - sentence: "Я ___ добре."
+      answer: "граю"
+      options: ["граю", "граєш", "грає", "грати"]
+      explanation: "Я (I) takes the ending -ю."
+    - sentence: "Мій брат ___ багато."
+      answer: "думає"
+      options: ["думаю", "думаєш", "думає", "думають"]
+      explanation: "Мій брат is third person singular (він), so the ending is -є."
+    - sentence: "Ти ___ вдома."
+      answer: "відпочиваєш"
+      options: ["відпочиваю", "відпочиваєш", "відпочиває", "відпочивати"]
+      explanation: "Ти (you informal) takes the ending -єш."
+    - sentence: "Ви ___ слова."
+      answer: "вивчаєте"
+      options: ["вивчаю", "вивчаємо", "вивчаєте", "вивчають"]
+      explanation: "Ви (you formal/plural) takes the ending -єте."
+    - sentence: "Вона ___ на відповідь."
+      answer: "чекає"
+      options: ["чекаю", "чекаєш", "чекає", "чекають"]
+      explanation: "Вона (she) is third person singular, so the ending is -є."
+
 - type: match-up
-  title: Match pronoun to verb form
+  title: "Match the Pronoun to the Verb Form"
+  instruction: "Match each pronoun with the correct conjugated form of the verb."
   pairs:
-  - left: я (читати)
-    right: читаю
-  - left: ти (знати)
-    right: знаєш
-  - left: він (слухати)
-    right: слухає
-  - left: ми (працювати)
-    right: працюємо
-  - left: ви (вивчати)
-    right: вивчаєте
-  - left: вони (грати)
-    right: грають
-  - left: вона (думати)
-    right: думає
-  - left: ми (питати)
-    right: питаємо
-  - left: ви (чекати)
-    right: чекаєте
-  - left: вони (розуміти)
-    right: розуміють
-  - left: я (відпочивати)
-    right: відпочиваю
-  - left: ти (працювати)
-    right: працюєш
-  - left: він (грати)
-    right: грає
-  - left: ми (знати)
-    right: знаємо
-  - left: ви (слухати)
-    right: слухаєте
-  - left: вони (читати)
-    right: читають
-  - left: я (писати)
-    right: пишу
-  - left: ти (писати)
-    right: пишеш
-  instruction: З'єднайте відповідні елементи.
-- type: fill-in
-  title: Choose the correct verb form
-  instruction: Вставте правильну форму дієслова.
+    - left: "Я + читати"
+      right: "читаю"
+    - left: "Ти + знати"
+      right: "знаєш"
+    - left: "Він + слухати"
+      right: "слухає"
+    - left: "Ми + працювати"
+      right: "працюємо"
+    - left: "Ви + грати"
+      right: "граєте"
+    - left: "Вони + думати"
+      right: "думають"
+    - left: "Я + вивчати"
+      right: "вивчаю"
+    - left: "Ти + чекати"
+      right: "чекаєш"
+    - left: "Він + писати"
+      right: "пише"
+    - left: "Ми + знати"
+      right: "знаємо"
+    - left: "Вони + читати"
+      right: "читають"
+    - left: "Ви + слухати"
+      right: "слухаєте"
+    - left: "Я + працювати"
+      right: "працюю"
+    - left: "Ти + відпочивати"
+      right: "відпочиваєш"
+    - left: "Він + думати"
+      right: "думає"
+    - left: "Ми + вивчати"
+      right: "вивчаємо"
+    - left: "Вони + слухати"
+      right: "слухають"
+    - left: "Ви + чекати"
+      right: "чекаєте"
+
+- type: quiz
+  title: "Understanding First Conjugation"
+  instruction: "Choose the correct answer about Ukrainian verb conjugation."
   items:
-  - sentence: Я ___ книгу. (читати)
-    answer: читаю
-    translation: I am reading a book.
-  - sentence: Ти ___ це. (знати)
-    answer: знаєш
-    translation: You know this.
-  - sentence: Він ___ вдома. (працювати)
-    answer: працює
-    translation: He works at home.
-  - sentence: Ми ___ радіо. (слухати)
-    answer: слухаємо
-    translation: We listen to the radio.
-  - sentence: Ви ___ багато. (питати)
-    answer: питаєте
-    translation: You ask a lot.
-  - sentence: Вони ___ у футбол. (грати)
-    answer: грають
-    translation: They play football.
-  - sentence: Я ___ на тебе. (чекати)
-    answer: чекаю
-    translation: I am waiting for you.
-  - sentence: Ти ___ про це. (думати)
-    answer: думаєш
-    translation: You think about this.
-  - sentence: Вона ___ все. (розуміти)
-    answer: розуміє
-    translation: She understands everything.
-  - sentence: Ми ___ українську. (вивчати)
-    answer: вивчаємо
-    translation: We study Ukrainian.
-  - sentence: Ви ___ тут. (відпочивати)
-    answer: відпочиваєте
-    translation: You rest here.
-  - sentence: Вони ___ новини. (читати)
-    answer: читають
-    translation: They read the news.
-  - sentence: Я ___ лист. (писати)
-    answer: пишу
-    translation: I am writing a letter.
-  - sentence: Ти ___ повідомлення. (писати)
-    answer: пишеш
-    translation: You are writing a message.
-  - sentence: Він ___ текст. (писати)
-    answer: пише
-    translation: He is writing a text.
-  - sentence: Ми ___ слова. (писати)
-    answer: пишемо
-    translation: We write words.
-  - sentence: Ви ___ гарно. (писати)
-    answer: пишете
-    translation: You write beautifully.
-  - sentence: Вони ___ швидко. (писати)
-    answer: пишуть
-    translation: They write fast.
-  - sentence: Я ___ відповідь. (знати)
-    answer: знаю
-    translation: I know the answer.
-  - sentence: Ти ___ багато. (працювати)
-    answer: працюєш
-    translation: You work a lot.
-  - sentence: Вона ___ музику. (слухати)
-    answer: слухає
-    translation: She listens to music.
-  - sentence: Ми ___ вчителя. (питати)
-    answer: питаємо
-    translation: We ask the teacher.
-  - sentence: Ви ___ добре. (грати)
-    answer: граєте
-    translation: You play well.
-  - sentence: Вони ___ автобус. (чекати)
-    answer: чекають
-    translation: They are waiting for the bus.
-  - sentence: Я ___ так. (думати)
-    answer: думаю
-    translation: I think so.
-  - sentence: Ти ___ мене? (розуміти)
-    answer: розумієш
-    translation: Do you understand me?
-  - sentence: Він ___ мову. (вивчати)
-    answer: вивчає
-    translation: He studies the language.
-  - sentence: Ми ___ вдома. (відпочивати)
-    answer: відпочиваємо
-    translation: We rest at home.
-  - sentence: Ви ___ текст. (читати)
-    answer: читаєте
-    translation: You are reading the text.
-  - sentence: Вони ___ правду. (знати)
-    answer: знають
-    translation: They know the truth.
-- type: fill-in
-  title: Conjugate correctly
-  instruction: Вставте правильну форму дієслова.
+    - question: "What is the correct 'I' form of працювати?"
+      options:
+        - text: "працюю"
+          correct: true
+        - text: "працюваю"
+          correct: false
+        - text: "працювати"
+          correct: false
+        - text: "працюєш"
+          correct: false
+      explanation: "The stem contracts from -ювати to -ю- before adding the ending. Працюваю is a common mistake."
+    - question: "Why can you say 'Читаю' without the pronoun Я?"
+      options:
+        - text: "The verb ending -ю already shows who is doing the action"
+          correct: true
+        - text: "It is considered rude to use pronouns in Ukrainian"
+          correct: false
+        - text: "Ukrainian does not have pronouns"
+          correct: false
+        - text: "You must always include the pronoun"
+          correct: false
+      explanation: "Ukrainian is a pro-drop language. The ending itself acts like a built-in pronoun, so Я is optional."
+    - question: "What ending do you add for 'they' (вони) in the First Conjugation?"
+      options:
+        - text: "-ють"
+          correct: true
+        - text: "-ємо"
+          correct: false
+        - text: "-єте"
+          correct: false
+        - text: "-ю"
+          correct: false
+      explanation: "Вони takes the ending -ють (e.g., вони читають, вони знають)."
+    - question: "Which sentence is correct?"
+      options:
+        - text: "Я читаю журнал."
+          correct: true
+        - text: "Я читати журнал."
+          correct: false
+        - text: "Я читає журнал."
+          correct: false
+        - text: "Я читаємо журнал."
+          correct: false
+      explanation: "You must conjugate the verb. Я читати is 'infinitive abuse' — a common English-speaker mistake."
+    - question: "What does the present tense cover in Ukrainian?"
+      options:
+        - text: "Both ongoing actions and habitual actions"
+          correct: true
+        - text: "Only actions happening right now"
+          correct: false
+        - text: "Only habitual or regular actions"
+          correct: false
+        - text: "Only future actions"
+          correct: false
+      explanation: "Читаю can mean both 'I am reading right now' and 'I read regularly'. One form covers both."
+    - question: "What is the correct 'we' form of знати?"
+      options:
+        - text: "знаємо"
+          correct: true
+        - text: "знаю"
+          correct: false
+        - text: "знаєте"
+          correct: false
+        - text: "знають"
+          correct: false
+      explanation: "Ми (we) takes the ending -ємо, so it is знаємо."
+
+- type: true-false
+  title: "True or False? Verb Conjugation Facts"
+  instruction: "Decide whether each statement about Ukrainian verbs is true or false."
   items:
-  - sentence: Що ти ___? (читати)
-    answer: читаєш
-    translation: What are you reading?
-  - sentence: Я ___ зараз. (працювати)
-    answer: працюю
-    translation: I am working now.
-  - sentence: Де він ___? (відпочивати)
-    answer: відпочиває
-    translation: Where is he resting?
-  - sentence: Ми ___ вас. (розуміти)
-    answer: розуміємо
-    translation: We understand you.
-  - sentence: Що ви ___? (вивчати)
-    answer: вивчаєте
-    translation: What are you studying?
-  - sentence: Вони ___ листи. (писати)
-    answer: пишуть
-    translation: They write letters.
-  - sentence: Я не ___. (знати)
-    answer: знаю
-    translation: I don't know.
-  - sentence: Ти ___ на гітарі? (грати)
-    answer: граєш
-    translation: Do you play the guitar?
-  - sentence: Вона ___ друга. (чекати)
-    answer: чекає
-    translation: She is waiting for a friend.
-  - sentence: Ми ___ про це. (думати)
-    answer: думаємо
-    translation: We think about this.
-  - sentence: Ви ___ радіо? (слухати)
-    answer: слухаєте
-    translation: Are you listening to the radio?
-  - sentence: Вони ___ мене. (питати)
-    answer: питають
-    translation: They ask me.
-  - sentence: Я ___ швидко. (читати)
-    answer: читаю
-    translation: I read fast.
-  - sentence: Ти ___ гарно. (писати)
-    answer: пишеш
-    translation: You write beautifully.
-  - sentence: Він ___ все. (знати)
-    answer: знає
-    translation: He knows everything.
-  - sentence: Ми ___ разом. (працювати)
-    answer: працюємо
-    translation: We work together.
-  - sentence: Ви ___ добре. (відпочивати)
-    answer: відпочиваєте
-    translation: You are resting well.
-  - sentence: Вони ___ українську. (розуміти)
-    answer: розуміють
-    translation: They understand Ukrainian.
-  - sentence: Я ___ слова. (вивчати)
-    answer: вивчаю
-    translation: I am studying words.
-  - sentence: Ти ___ тут. (чекати)
-    answer: чекаєш
-    translation: You wait here.
+    - statement: "In Ukrainian, you must always say the pronoun before the verb, just like in English."
+      correct: false
+      explanation: "Ukrainian is a pro-drop language. The verb ending shows who is acting, so pronouns are optional."
+    - statement: "The First Conjugation endings are -ю, -єш, -є, -ємо, -єте, -ють."
+      correct: true
+      explanation: "These are the standard endings for First Conjugation (-ати) verbs in the present tense."
+    - statement: "The correct 'I' form of працювати is працюваю."
+      correct: false
+      explanation: "The stem contracts. The correct form is працюю, not працюваю."
+    - statement: "Читаю can mean both 'I read regularly' and 'I am reading right now'."
+      correct: true
+      explanation: "The Ukrainian present tense covers both ongoing and habitual actions."
+    - statement: "To conjugate a First Conjugation verb, you remove -ти and add the personal ending."
+      correct: true
+      explanation: "You find the stem by removing -ти (e.g., чита- from читати), then add the ending."
+    - statement: "Saying 'Я читати книгу' is correct Ukrainian."
+      correct: false
+      explanation: "This is 'infinitive abuse'. You must conjugate the verb: Я читаю книгу."
+
+- type: unjumble
+  title: "Build the Sentence"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["читаю", "Я", "журнал"]
+      answer: "Я читаю журнал"
+    - words: ["лист", "пишеш", "Ти"]
+      answer: "Ти пишеш лист"
+    - words: ["радіо", "слухає", "Він"]
+      answer: "Він слухає радіо"
+    - words: ["працюємо", "Ми", "вдома"]
+      answer: "Ми працюємо вдома"
+    - words: ["багато", "Вони", "читають"]
+      answer: "Вони читають багато"
+    - words: ["повідомлення", "пишемо", "Ми"]
+      answer: "Ми пишемо повідомлення"
+
+- type: group-sort
+  title: "Sort the Verb Forms"
+  instruction: "Sort each conjugated verb form into the correct pronoun group."
+  groups:
+    - name: "Я (I)"
+      items: ["читаю", "знаю", "працюю"]
+    - name: "Ти (you)"
+      items: ["читаєш", "знаєш", "граєш"]
+    - name: "Він/Вона (he/she)"
+      items: ["слухає", "думає", "вивчає"]
+    - name: "Вони (they)"
+      items: ["працюють", "чекають", "розуміють"]

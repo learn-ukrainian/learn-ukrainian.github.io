@@ -1,21 +1,6 @@
-  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=35789 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=35075 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ```yaml
 prompt_preflight:
-  status: ISSUES_FOUND
-  issues:
-    - type: CONTRADICTION
-      location: "Rule 1 (Grammar Allowlist) vs. Rule 6 (Hard Constraints - Grammar)"
-      problem: "Rule 1 explicitly forbids conjugated verbs and imperatives, stating: 'Any other structure (including conjugated verbs) is FORBIDDEN.' However, Rule 6 (Hard Constraints) explicitly lists 'Simple present tense (я читаю, я бачу)' and 'Basic imperatives' as ALLOWED. This is a direct conflict for an A1.1 First Contact module."
-      suggested_fix: "Clarify whether verbs are permitted. Given the A1.1 context and the 'Coming next' section, Rule 1's prohibition is likely correct, and Rule 6 should be updated to remove verbs."
-      severity: HIGH
-    - type: CONTRADICTION
-      location: "Rule 4 (Stress Marks) vs. Section 5 Language Quality Rules (Stress Mark Typography)"
-      problem: "Rule 4 states: 'Do NOT add stress marks (´) to Ukrainian words... The pipeline adds stress marks deterministically.' Conversely, the Language Quality Rules section states: 'ALWAYS use lowercase letters with a combining acute accent (´) on the stressed vowel.' This creates direct ambiguity for the generator."
-      suggested_fix: "Confirm if the content generator should omit stress marks for this pipeline or if the global style guide requirement for manual stress marks applies. Usually, local Rule 4 takes precedence."
-      severity: MEDIUM
-    - type: PLAN_CONTRADICTION
-      location: "Rule 1 (Vocab Constraint) vs. Section 4 Outline (Syntactic Agreement)"
-      problem: "Rule 1 states: 'Do not use vocabulary words the learner hasn't seen unless you introduce them explicitly.' The outline requires using adjectives like 'великий', 'цікава', 'чисте', and 'новий' to demonstrate gender agreement. However, these adjectives are neither in the cumulative vocabulary (M1-M6) nor listed as target lemmas in the Required/Recommended vocabulary list (they only appear in usage examples)."
-      suggested_fix: "Add the base forms of these adjectives (великий, новий, цікавий, чистий) to the Recommended vocabulary list to ensure they are formally taught and indexed, rather than just appearing as 'unseen' words in examples."
-      severity: MEDIUM
+  status: PASS
+  issues: []
 ```

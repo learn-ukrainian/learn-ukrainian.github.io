@@ -1,0 +1,265 @@
+- type: fill-in
+  title: Form Adverbs from Adjectives
+  instruction: 'Each sentence shows an adjective. Choose the correct adverb form (ending in -о or -е).'
+  items:
+    - sentence: "швидкий → ___"
+      answer: "швидко"
+      options: ["швидко", "швидка", "швидку", "швидкий"]
+      explanation: "Drop -ий from швидкий and add -о to get швидко (quickly)."
+    - sentence: "повільний → ___"
+      answer: "повільно"
+      options: ["повільно", "повільна", "повільну", "повільний"]
+      explanation: "Drop -ий from повільний and add -о to get повільно (slowly)."
+    - sentence: "гарний → ___"
+      answer: "гарно"
+      options: ["гарно", "гарна", "гарну", "гарний"]
+      explanation: "Drop -ий from гарний and add -о to get гарно (beautifully/nicely)."
+    - sentence: "поганий → ___"
+      answer: "погано"
+      options: ["погано", "погана", "погану", "поганий"]
+      explanation: "Drop -ий from поганий and add -о to get погано (badly)."
+    - sentence: "тихий → ___"
+      answer: "тихо"
+      options: ["тихо", "тиха", "тиху", "тихий"]
+      explanation: "Drop -ий from тихий and add -о to get тихо (quietly)."
+    - sentence: "голосний → ___"
+      answer: "голосно"
+      options: ["голосно", "голосна", "голосну", "голосний"]
+      explanation: "Drop -ий from голосний and add -о to get голосно (loudly)."
+    - sentence: "легкий → ___"
+      answer: "легко"
+      options: ["легко", "легка", "легку", "легкий"]
+      explanation: "Drop -ий from легкий and add -о to get легко (easily)."
+    - sentence: "важкий → ___"
+      answer: "важко"
+      options: ["важко", "важка", "важку", "важкий"]
+      explanation: "Drop -ий from важкий and add -о to get важко (with difficulty)."
+
+- type: fill-in
+  title: Choose the Right Adverb
+  instruction: Pick the adverb that best completes each sentence.
+  items:
+    - sentence: "Він працює ___."
+      answer: "добре"
+      options: ["добре", "погано", "швидко", "тихо"]
+      explanation: "Він працює добре means He works well."
+    - sentence: "Я читаю ___."
+      answer: "швидко"
+      options: ["швидко", "повільно", "голосно", "важко"]
+      explanation: "Я читаю швидко means I read quickly."
+    - sentence: "Вони слухають ___."
+      answer: "тихо"
+      options: ["тихо", "голосно", "швидко", "добре"]
+      explanation: "Вони слухають тихо means They listen quietly."
+    - sentence: "Вона говорить ___."
+      answer: "голосно"
+      options: ["голосно", "тихо", "легко", "погано"]
+      explanation: "Вона говорить голосно means She speaks loudly."
+    - sentence: "Я ___ снідаю."
+      answer: "завжди"
+      options: ["завжди", "ніколи", "іноді", "рідко"]
+      explanation: "Я завжди снідаю means I always eat breakfast."
+    - sentence: "Він ___ читає тут."
+      answer: "зазвичай"
+      options: ["зазвичай", "ніколи", "рідко", "завжди"]
+      explanation: "Він зазвичай читає тут means He usually reads here."
+    - sentence: "Ми ___ гуляємо в парку."
+      answer: "часто"
+      options: ["часто", "ніколи", "рідко", "завжди"]
+      explanation: "Ми часто гуляємо в парку means We often walk in the park."
+    - sentence: "Вона ___ спить тут."
+      answer: "іноді"
+      options: ["іноді", "завжди", "часто", "ніколи"]
+      explanation: "Вона іноді спить тут means She sometimes sleeps here."
+
+- type: quiz
+  title: Frequency Adverbs
+  instruction: Choose the correct answer about how frequency adverbs work in Ukrainian.
+  items:
+    - question: "Which adverb means 'always' in Ukrainian?"
+      options:
+        - text: "завжди"
+          correct: true
+        - text: "ніколи"
+          correct: false
+        - text: "іноді"
+          correct: false
+        - text: "рідко"
+          correct: false
+      explanation: "Завжди means always — it is at the top of the frequency scale (100%)."
+    - question: "Which adverb is the opposite of завжди (always)?"
+      options:
+        - text: "ніколи"
+          correct: true
+        - text: "часто"
+          correct: false
+        - text: "зазвичай"
+          correct: false
+        - text: "іноді"
+          correct: false
+      explanation: "Ніколи (never) is the opposite of завжди (always) — 0% vs 100%."
+    - question: "How do you correctly say 'I never work' in Ukrainian?"
+      options:
+        - text: "Я ніколи не працюю"
+          correct: true
+        - text: "Я ніколи працюю"
+          correct: false
+        - text: "Я не працюю ніколи"
+          correct: false
+        - text: "Ніколи я працюю"
+          correct: false
+      explanation: "Ukrainian requires double negation with ніколи. The pattern is: Я ніколи НЕ + verb."
+    - question: "Put these in order from most frequent to least frequent: часто, завжди, іноді"
+      options:
+        - text: "завжди → часто → іноді"
+          correct: true
+        - text: "часто → завжди → іноді"
+          correct: false
+        - text: "іноді → часто → завжди"
+          correct: false
+        - text: "завжди → іноді → часто"
+          correct: false
+      explanation: "Завжди (always, 100%) → часто (often) → іноді (sometimes)."
+    - question: "Where does the word дуже go in a Ukrainian sentence?"
+      options:
+        - text: "Before the adverb or adjective it modifies"
+          correct: true
+        - text: "After the adverb or adjective it modifies"
+          correct: false
+        - text: "At the end of the sentence"
+          correct: false
+        - text: "At the beginning of the sentence"
+          correct: false
+      explanation: "Дуже always precedes the word it modifies: дуже добре (very well), дуже швидко (very quickly)."
+    - question: "What is the adverb form of the adjective добрий (good)?"
+      options:
+        - text: "добре"
+          correct: true
+        - text: "добро"
+          correct: false
+        - text: "добра"
+          correct: false
+        - text: "добру"
+          correct: false
+      explanation: "Добрий is an exception — the adverb is добре (not добро). It means well and also serves as OK/agreed."
+    - question: "Which question word do you use to ask about HOW an action is done?"
+      options:
+        - text: "Як?"
+          correct: true
+        - text: "Який?"
+          correct: false
+        - text: "Що?"
+          correct: false
+        - text: "Де?"
+          correct: false
+      explanation: "Як? (How?) asks about the manner of an action. Який? (Which/What kind?) asks about a noun."
+    - question: "Which word means 'almost' in Ukrainian?"
+      options:
+        - text: "майже"
+          correct: true
+        - text: "трохи"
+          correct: false
+        - text: "зовсім"
+          correct: false
+        - text: "дуже"
+          correct: false
+      explanation: "Майже means almost. Трохи = a bit, зовсім = completely, дуже = very."
+
+- type: fill-in
+  title: 'Food Critic: Describe How Things Are Done'
+  instruction: 'You are a food critic reviewing a restaurant. Complete each sentence with the best adverb.'
+  items:
+    - sentence: "Ця людина готує дуже ___!"
+      answer: "смачно"
+      options: ["смачно", "погано", "тихо", "важко"]
+      explanation: "Готує дуже смачно means cooks very deliciously — a great food critic compliment!"
+    - sentence: "Він працює ___ і добре."
+      answer: "швидко"
+      options: ["швидко", "повільно", "погано", "тихо"]
+      explanation: "Працює швидко і добре means works quickly and well."
+    - sentence: "Офіціант говорить дуже ___."
+      answer: "тихо"
+      options: ["тихо", "голосно", "швидко", "добре"]
+      explanation: "Говорить дуже тихо means speaks very quietly."
+    - sentence: "Я ___ їм тут."
+      answer: "іноді"
+      options: ["іноді", "ніколи", "завжди", "дуже"]
+      explanation: "Я іноді їм тут means I sometimes eat here."
+    - sentence: "Офіціант розуміє нас ___."
+      answer: "погано"
+      options: ["погано", "добре", "швидко", "голосно"]
+      explanation: "Розуміє нас погано means understands us badly."
+    - sentence: "Вони готують дуже ___."
+      answer: "добре"
+      options: ["добре", "погано", "тихо", "важко"]
+      explanation: "Готують дуже добре means they cook very well."
+
+- type: match-up
+  title: Adjective to Adverb
+  instruction: Match each adjective with its adverb form.
+  pairs:
+    - left: "швидкий"
+      right: "швидко"
+    - left: "повільний"
+      right: "повільно"
+    - left: "гарний"
+      right: "гарно"
+    - left: "поганий"
+      right: "погано"
+    - left: "тихий"
+      right: "тихо"
+    - left: "голосний"
+      right: "голосно"
+    - left: "легкий"
+      right: "легко"
+    - left: "добрий"
+      right: "добре"
+
+- type: group-sort
+  title: Sort the Words
+  instruction: Sort these words into the correct category.
+  groups:
+    - name: "Adverbs (answer Як?)"
+      items: ["добре", "швидко", "повільно", "тихо", "голосно"]
+    - name: "Adjectives (answer Який?)"
+      items: ["добрий", "швидкий", "повільний", "тихий", "голосний"]
+
+- type: true-false
+  title: True or False?
+  instruction: Decide whether each statement about Ukrainian adverbs is correct.
+  items:
+    - statement: "To form an adverb from an adjective, you replace -ий with -о."
+      correct: true
+      explanation: "That is the basic rule. швидкий → швидко, тихий → тихо."
+    - statement: "The adverb form of добрий is добро."
+      correct: false
+      explanation: "Добрий is an exception — the adverb is добре, not добро."
+    - statement: "In Ukrainian, you can say Я ніколи працюю without the word не."
+      correct: false
+      explanation: "Ukrainian requires double negation. The correct form is Я ніколи НЕ працюю."
+    - statement: "The word дуже must come before the adverb it modifies."
+      correct: true
+      explanation: "Дуже always precedes its target word: дуже добре (very well), never добре дуже."
+    - statement: "Завжди means sometimes in Ukrainian."
+      correct: false
+      explanation: "Завжди means always. Sometimes is іноді."
+    - statement: "Adverbs in Ukrainian typically follow the verb they describe."
+      correct: true
+      explanation: "Standard word order places the adverb after the verb: Він працює добре."
+
+- type: unjumble
+  title: Put the Words in Order
+  instruction: Arrange the words to form a correct Ukrainian sentence.
+  items:
+    - words: ["добре", "Він", "працює"]
+      answer: "Він працює добре"
+    - words: ["швидко", "читаю", "Я"]
+      answer: "Я читаю швидко"
+    - words: ["снідаю", "завжди", "Я"]
+      answer: "Я завжди снідаю"
+    - words: ["не", "ніколи", "працюю", "Я"]
+      answer: "Я ніколи не працюю"
+    - words: ["дуже", "працює", "Вона", "швидко"]
+      answer: "Вона працює дуже швидко"
+    - words: ["часто", "парку", "в", "гуляємо", "Ми"]
+      answer: "Ми часто гуляємо в парку"

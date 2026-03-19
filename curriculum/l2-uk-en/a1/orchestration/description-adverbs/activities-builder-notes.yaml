@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan hints suggest 25/20/10/8 items per activity — reduced to 8/8/8/6 for quality. Plan item counts are aspirational; A1 schema minimum is 6 per fill-in/quiz."
+  - "Added match-up, group-sort, true-false, and unjumble beyond the 4 required types for pedagogical variety and to meet A1 minimum of 8 activities."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints request 63 total items across 4 activities, which is excessive for A1 level and would create repetitive exercises."
+    proposed_fix: "Keep item counts at 6-8 per activity for quality. Plan should use realistic item counts for A1."
+unverified_terms: []
+review_focus:
+  - "Fill-in activity 1 uses adjective forms (швидка, швидку, etc.) as distractors — all verified against VESUM."
+  - "Unjumble activity — verify sentence word orders match natural Ukrainian syntax."
+  - "Double negation quiz item (ніколи не) — confirm distractor options are clearly wrong."

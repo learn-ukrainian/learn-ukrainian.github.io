@@ -1,0 +1,303 @@
+- type: fill-in
+  title: "Conjugate Reflexive Verbs"
+  instruction: "Choose the correct conjugated form of the reflexive verb to complete the sentence."
+  items:
+    - sentence: "Я ___ телевізор щовечора."
+      answer: "дивлюся"
+      options: ["дивлюся", "дивишся", "дивиться", "дивляться"]
+      explanation: "The subject is я (I), so we use the first person singular form дивлюся."
+    - sentence: "Ти ___ добре в школі."
+      answer: "вчишся"
+      options: ["вчуся", "вчишся", "вчиться", "вчаться"]
+      explanation: "The subject is ти (you), so we use the second person singular form вчишся."
+    - sentence: "Вона ___ голосно."
+      answer: "сміється"
+      options: ["сміюся", "сміється", "сміються", "сміємося"]
+      explanation: "The subject is вона (she), so we use the third person singular form сміється."
+    - sentence: "Ми ___ додому пізно."
+      answer: "повертаємося"
+      options: ["повертаюся", "повертаєшся", "повертаємося", "повертаються"]
+      explanation: "The subject is ми (we), so we use the first person plural form повертаємося."
+    - sentence: "Вони ___ спортом."
+      answer: "займаються"
+      options: ["займаюся", "займаєшся", "займається", "займаються"]
+      explanation: "The subject is вони (they), so we use the third person plural form займаються."
+    - sentence: "Він ___ вранці."
+      answer: "вмивається"
+      options: ["вмиваюся", "вмивається", "вмиваємося", "вмиваються"]
+      explanation: "The subject is він (he), so we use the third person singular form вмивається."
+    - sentence: "Я ___ швидко."
+      answer: "одягаюся"
+      options: ["одягаюся", "одягаєшся", "одягається", "одягаються"]
+      explanation: "The subject is я (I), so we use the first person singular form одягаюся."
+    - sentence: "Ти ___ йогою?"
+      answer: "займаєшся"
+      options: ["займаюся", "займаєшся", "займається", "займаються"]
+      explanation: "The subject is ти (you), so we use the second person singular form займаєшся."
+    - sentence: "Вони ___ кіно."
+      answer: "дивляться"
+      options: ["дивлюся", "дивиться", "дивимося", "дивляться"]
+      explanation: "The subject is вони (they), so we use the third person plural form дивляться."
+    - sentence: "Він ___ у вікно."
+      answer: "дивиться"
+      options: ["дивлюся", "дивишся", "дивиться", "дивляться"]
+      explanation: "The subject is він (he), so we use the third person singular form дивиться."
+    - sentence: "Ви ___ в школі?"
+      answer: "вчитеся"
+      options: ["вчуся", "вчишся", "вчитеся", "вчаться"]
+      explanation: "The subject is ви (you, plural/formal), so we use the second person plural form вчитеся."
+    - sentence: "Ми ___ кіно."
+      answer: "дивимося"
+      options: ["дивлюся", "дивишся", "дивимося", "дивляться"]
+      explanation: "The subject is ми (we), so we use the first person plural form дивимося."
+    - sentence: "Я ___ голосно."
+      answer: "сміюся"
+      options: ["сміюся", "сміється", "сміються", "сміємося"]
+      explanation: "The subject is я (I), so we use the first person singular form сміюся."
+    - sentence: "Вона ___ добре."
+      answer: "вчиться"
+      options: ["вчуся", "вчишся", "вчиться", "вчаться"]
+      explanation: "The subject is вона (she), so we use the third person singular form вчиться."
+    - sentence: "Ти ___ вранці?"
+      answer: "вмиваєшся"
+      options: ["вмиваюся", "вмиваєшся", "вмивається", "вмиваються"]
+      explanation: "The subject is ти (you), so we use the second person singular form вмиваєшся."
+    - sentence: "Вони ___ додому."
+      answer: "повертаються"
+      options: ["повертаюся", "повертається", "повертаємося", "повертаються"]
+      explanation: "The subject is вони (they), so we use the third person plural form повертаються."
+    - sentence: "Він ___ вранці."
+      answer: "голиться"
+      options: ["голюся", "голишся", "голиться", "голяться"]
+      explanation: "The subject is він (he), so we use the third person singular form голиться."
+    - sentence: "Я ___ музикою."
+      answer: "цікавлюся"
+      options: ["цікавлюся", "цікавишся", "цікавиться", "цікавляться"]
+      explanation: "The subject is я (I), so we use the first person singular form цікавлюся."
+    - sentence: "Ми ___ спортом."
+      answer: "займаємося"
+      options: ["займаюся", "займаєшся", "займаємося", "займаються"]
+      explanation: "The subject is ми (we), so we use the first person plural form займаємося."
+    - sentence: "Вона ___ тепло."
+      answer: "одягається"
+      options: ["одягаюся", "одягаєшся", "одягається", "одягаються"]
+      explanation: "The subject is вона (she), so we use the third person singular form одягається."
+    - sentence: "Ви ___ телевізор?"
+      answer: "дивитеся"
+      options: ["дивлюся", "дивишся", "дивитеся", "дивляться"]
+      explanation: "The subject is ви (you, plural/formal), so we use the second person plural form дивитеся."
+    - sentence: "Ти ___ стильно."
+      answer: "одягаєшся"
+      options: ["одягаюся", "одягаєшся", "одягається", "одягаємося"]
+      explanation: "The subject is ти (you), so we use the second person singular form одягаєшся."
+    - sentence: "Вони ___ голосно."
+      answer: "сміються"
+      options: ["сміюся", "сміється", "сміємося", "сміються"]
+      explanation: "The subject is вони (they), so we use the third person plural form сміються."
+    - sentence: "Він ___ додому пізно."
+      answer: "повертається"
+      options: ["повертаюся", "повертаєшся", "повертається", "повертаються"]
+      explanation: "The subject is він (he), so we use the third person singular form повертається."
+    - sentence: "Ми ___ вранці."
+      answer: "вмиваємося"
+      options: ["вмиваюся", "вмиваєшся", "вмиваємося", "вмиваються"]
+      explanation: "The subject is ми (we), so we use the first person plural form вмиваємося."
+
+- type: fill-in
+  title: "Choose the Correct Suffix: -ся or -сь"
+  instruction: "Select the correct reflexive suffix. Use -сь after vowels, -ся after consonants."
+  items:
+    - sentence: "Я дивлю___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Дивлю ends in the vowel ю, so we use the shorter form -сь."
+    - sentence: "Він дивить___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Дивить ends in a soft consonant, so we use -ся."
+    - sentence: "Ми вчимо___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Вчимо ends in the vowel о, so we use -сь."
+    - sentence: "Вони дивлять___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Дивлять ends in a soft consonant, so we use -ся."
+    - sentence: "Ти дивиш___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Дивиш ends in the consonant ш, so we use -ся."
+    - sentence: "Я мию___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Мию ends in the vowel ю, so we use -сь."
+    - sentence: "Я вчу___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Вчу ends in the vowel у, so we use -сь."
+    - sentence: "Ти вчиш___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Вчиш ends in the consonant ш, so we use -ся."
+    - sentence: "Я одягаю___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Одягаю ends in the vowel ю, so we use -сь."
+    - sentence: "Ви дивите___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Дивите ends in the vowel е, so we use -сь."
+    - sentence: "Ми повертаємо___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Повертаємо ends in the vowel о, so we use -сь."
+    - sentence: "Ти одягаєш___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Одягаєш ends in the consonant ш, so we use -ся."
+    - sentence: "Я займаю___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Займаю ends in the vowel ю, so we use -сь."
+    - sentence: "Ми сміємо___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Сміємо ends in the vowel о, so we use -сь."
+    - sentence: "Вони займають___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Займають ends in the consonant т, so we use -ся."
+    - sentence: "Він голить___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Голить ends in a soft consonant, so we use -ся."
+    - sentence: "Я смію___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Смію ends in the vowel ю, so we use -сь."
+    - sentence: "Вони вмивають___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Вмивають ends in the consonant т, so we use -ся."
+    - sentence: "Ми займаємо___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Займаємо ends in the vowel о, so we use -сь."
+    - sentence: "Він зупиняєть___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Зупиняєть ends in a soft consonant, so we use -ся."
+    - sentence: "Я повертаю___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Повертаю ends in the vowel ю, so we use -сь."
+    - sentence: "Вони одягають___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Одягають ends in the consonant т, so we use -ся."
+    - sentence: "Ви вмиваєте___."
+      answer: "сь"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Вмиваєте ends in the vowel е, so we use -сь."
+    - sentence: "Ти голиш___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Голиш ends in the consonant ш, so we use -ся."
+    - sentence: "Вони повертають___."
+      answer: "ся"
+      options: ["ся", "сь", "се", "си"]
+      explanation: "Повертають ends in the consonant т, so we use -ся."
+
+- type: match-up
+  title: "Transitive and Reflexive Verb Pairs"
+  instruction: "Match each transitive verb (action directed outward) with its reflexive counterpart (action directed back at oneself)."
+  pairs:
+    - left: "мити (to wash something)"
+      right: "митися (to wash oneself)"
+    - left: "одягати (to dress someone)"
+      right: "одягатися (to dress oneself)"
+    - left: "зупиняти (to stop something)"
+      right: "зупинятися (to stop oneself)"
+    - left: "називати (to name something)"
+      right: "називатися (to be called)"
+    - left: "вчити (to teach)"
+      right: "вчитися (to study)"
+    - left: "дивити (to show / to amaze)"
+      right: "дивитися (to watch / to look)"
+    - left: "вмивати (to wash someone's face)"
+      right: "вмиватися (to wash one's face)"
+    - left: "повертати (to turn something)"
+      right: "повертатися (to return)"
+    - left: "зустрічати (to meet someone)"
+      right: "зустрічатися (to meet each other)"
+    - left: "вітати (to greet someone)"
+      right: "вітатися (to greet each other)"
+    - left: "знайомити (to introduce someone)"
+      right: "знайомитися (to get acquainted)"
+    - left: "цікавити (to interest someone)"
+      right: "цікавитися (to be interested in)"
+
+- type: fill-in
+  title: "Daily Routine Conversations"
+  instruction: "Complete each sentence with the correct reflexive verb from the options."
+  items:
+    - sentence: "Я ___ вранці холодною водою."
+      answer: "вмиваюся"
+      options: ["вмиваюся", "вмивається", "миюся", "дивлюся"]
+      explanation: "Вмиватися means to wash one's face. First person singular: вмиваюся."
+    - sentence: "Дитина ___ тепло."
+      answer: "одягається"
+      options: ["одягаюся", "одягається", "одягаються", "одягаємося"]
+      explanation: "The subject is дитина (child), third person singular: одягається."
+    - sentence: "Як це ___?"
+      answer: "називається"
+      options: ["називаюся", "називається", "називаються", "називаємося"]
+      explanation: "Називатися means to be called. Third person singular for це: називається."
+    - sentence: "Ми ___ в школі."
+      answer: "вчимося"
+      options: ["вчуся", "вчишся", "вчимося", "вчаться"]
+      explanation: "The subject is ми (we), so we use the first person plural form вчимося."
+    - sentence: "Ти ___ стильно."
+      answer: "одягаєшся"
+      options: ["одягаюся", "одягаєшся", "одягається", "одягаються"]
+      explanation: "The subject is ти (you), so we use the second person singular form одягаєшся."
+    - sentence: "Вони ___ додому пізно."
+      answer: "повертаються"
+      options: ["повертаюся", "повертається", "повертаємося", "повертаються"]
+      explanation: "The subject is вони (they), so we use the third person plural form повертаються."
+    - sentence: "Він ___ спортом щодня."
+      answer: "займається"
+      options: ["займаюся", "займається", "займаємося", "займаються"]
+      explanation: "The subject is він (he), third person singular: займається."
+    - sentence: "Вона ___ вранці холодною водою."
+      answer: "вмивається"
+      options: ["вмиваюся", "вмивається", "вмиваємося", "вмиваються"]
+      explanation: "The subject is вона (she), third person singular: вмивається."
+    - sentence: "Я ___ додому о шостій."
+      answer: "повертаюся"
+      options: ["повертаюся", "повертаєшся", "повертається", "повертаються"]
+      explanation: "The subject is я (I), first person singular: повертаюся."
+    - sentence: "Ви ___ йогою?"
+      answer: "займаєтеся"
+      options: ["займаюся", "займаєшся", "займаєтеся", "займаються"]
+      explanation: "The subject is ви (you, plural/formal), second person plural: займаєтеся."
+    - sentence: "Вони ___ голосно."
+      answer: "сміються"
+      options: ["сміюся", "сміється", "сміємося", "сміються"]
+      explanation: "The subject is вони (they), third person plural: сміються."
+    - sentence: "Він ___ вранці."
+      answer: "голиться"
+      options: ["голюся", "голишся", "голиться", "голяться"]
+      explanation: "The subject is він (he), third person singular: голиться."
+    - sentence: "Ти ___ музикою?"
+      answer: "цікавишся"
+      options: ["цікавлюся", "цікавишся", "цікавиться", "цікавляться"]
+      explanation: "The subject is ти (you), second person singular: цікавишся."
+    - sentence: "Автобус ___ тут."
+      answer: "зупиняється"
+      options: ["зупиняюся", "зупиняєшся", "зупиняється", "зупиняються"]
+      explanation: "The subject is автобус (bus), third person singular: зупиняється."
+    - sentence: "Ми ___ кожного ранку."
+      answer: "розминаємося"
+      options: ["розминаюся", "розминаєшся", "розминаємося", "розминаються"]
+      explanation: "The subject is ми (we), first person plural: розминаємося."

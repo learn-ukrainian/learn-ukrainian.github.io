@@ -1,0 +1,263 @@
+- type: fill-in
+  title: "Change the Adjective Gender"
+  instruction: "The adjective is given in masculine form. Choose the correct form to match the noun's gender."
+  items:
+    - sentence: "Це ___ книга. (новий)"
+      answer: "нова"
+      options: ["нова", "нове", "нові", "новий"]
+      explanation: "Книга is feminine, so новий becomes нова (-а ending)."
+    - sentence: "Це ___ місто. (старий)"
+      answer: "старе"
+      options: ["стара", "старе", "старі", "старий"]
+      explanation: "Місто is neuter, so старий becomes старе (-е ending)."
+    - sentence: "Це ___ кімната. (великий)"
+      answer: "велика"
+      options: ["велике", "великі", "велика", "великий"]
+      explanation: "Кімната is feminine, so великий becomes велика (-а ending)."
+    - sentence: "Це ___ вікно. (гарний)"
+      answer: "гарне"
+      options: ["гарна", "гарне", "гарні", "гарний"]
+      explanation: "Вікно is neuter, so гарний becomes гарне (-е ending)."
+    - sentence: "Це ___ двері. (новий)"
+      answer: "нові"
+      options: ["нова", "нове", "нові", "новий"]
+      explanation: "Двері is plural, so новий becomes нові (-і ending)."
+    - sentence: "Це ___ школа. (добрий)"
+      answer: "добра"
+      options: ["добре", "добра", "добрі", "добрий"]
+      explanation: "Школа is feminine, so добрий becomes добра (-а ending)."
+    - sentence: "Це ___ село. (малий)"
+      answer: "мале"
+      options: ["мала", "малі", "мале", "малий"]
+      explanation: "Село is neuter, so малий becomes мале (-е ending)."
+    - sentence: "Це ___ лампа. (синій)"
+      answer: "синя"
+      options: ["синя", "синє", "сині", "синій"]
+      explanation: "Лампа is feminine. Синій is soft stem, so it becomes синя (-я ending)."
+
+- type: fill-in
+  title: "Complete with the Correct Adjective Form"
+  instruction: "Choose the adjective form that correctly matches the noun in each sentence."
+  items:
+    - sentence: "Це ___ дім."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]
+      explanation: "Дім is masculine, so we use великий (-ий ending)."
+    - sentence: "Це ___ кава."
+      answer: "смачна"
+      options: ["смачний", "смачна", "смачне", "смачні"]
+      explanation: "Кава is feminine, so we use смачна (-а ending)."
+    - sentence: "Це ___ фото."
+      answer: "цікаве"
+      options: ["цікавий", "цікава", "цікаве", "цікаві"]
+      explanation: "Фото is neuter, so we use цікаве (-е ending)."
+    - sentence: "Це ___ машина."
+      answer: "нова"
+      options: ["новий", "нова", "нове", "нові"]
+      explanation: "Машина is feminine, so we use нова (-а ending)."
+    - sentence: "Це ___ диван."
+      answer: "дорогий"
+      options: ["дорогий", "дорога", "дороге", "дорогі"]
+      explanation: "Диван is masculine, so we use дорогий (-ий ending)."
+    - sentence: "Це ___ море."
+      answer: "синє"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Море is neuter. Синій is soft stem, so the neuter form is синє (-є ending)."
+    - sentence: "Це ___ погода."
+      answer: "погана"
+      options: ["поганий", "погана", "погане", "погані"]
+      explanation: "Погода is feminine, so we use погана (-а ending)."
+    - sentence: "Це ___ суп."
+      answer: "смачний"
+      options: ["смачний", "смачна", "смачне", "смачні"]
+      explanation: "Суп is masculine, so we use смачний (-ий ending)."
+
+- type: match-up
+  title: "Match the Adjective to the Noun"
+  instruction: "Match each adjective form to the noun it correctly agrees with."
+  pairs:
+    - left: "новий"
+      right: "дім"
+    - left: "нова"
+      right: "квартира"
+    - left: "нове"
+      right: "місто"
+    - left: "гарна"
+      right: "книга"
+    - left: "великий"
+      right: "будинок"
+    - left: "мале"
+      right: "село"
+    - left: "старі"
+      right: "двері"
+    - left: "синя"
+      right: "лампа"
+    - left: "червоне"
+      right: "яблуко"
+    - left: "дешева"
+      right: "кава"
+
+- type: fill-in
+  title: "Describe What You See"
+  instruction: "You are a real estate agent showing an apartment. Choose the correct adjective form to complete each description."
+  items:
+    - sentence: "Тут ___ кімната."
+      answer: "мала"
+      options: ["малий", "мала", "мале", "малі"]
+      explanation: "Кімната is feminine, so малий becomes мала."
+    - sentence: "Ось ___ диван."
+      answer: "старий"
+      options: ["старий", "стара", "старе", "старі"]
+      explanation: "Диван is masculine, so we use старий."
+    - sentence: "Це ___ ліжко."
+      answer: "нове"
+      options: ["новий", "нова", "нове", "нові"]
+      explanation: "Ліжко is neuter, so новий becomes нове."
+    - sentence: "Там ___ стіл."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]
+      explanation: "Стіл is masculine, so we use великий."
+    - sentence: "Це ___ квартира."
+      answer: "дорога"
+      options: ["дорогий", "дорога", "дороге", "дорогі"]
+      explanation: "Квартира is feminine, so дорогий becomes дорога."
+    - sentence: "Тут ___ вікно."
+      answer: "гарне"
+      options: ["гарний", "гарна", "гарне", "гарні"]
+      explanation: "Вікно is neuter, so гарний becomes гарне."
+
+- type: true-false
+  title: "True or False? Adjective Agreement Rules"
+  instruction: "Decide whether each statement about Ukrainian adjectives is true or false."
+  items:
+    - statement: "Hard stem masculine adjectives end in -ий (e.g., новий, старий)."
+      correct: true
+      explanation: "Correct! Hard stem masculine adjectives use the -ий ending."
+    - statement: "The adjective синій (blue) is a hard stem adjective."
+      correct: false
+      explanation: "Синій is a soft stem adjective. Notice the -ій ending, not -ий."
+    - statement: "Feminine adjectives always end in -а for hard stems (e.g., нова, стара)."
+      correct: true
+      explanation: "Correct! Hard stem feminine adjectives use the -а ending."
+    - statement: "You can use the masculine form новий with a feminine noun like книга."
+      correct: false
+      explanation: "The adjective must agree in gender. Книга is feminine, so you must say нова книга."
+    - statement: "Plural adjectives always end in -і, regardless of the noun's gender."
+      correct: true
+      explanation: "Correct! Whether the noun is masculine, feminine, or neuter, the plural adjective ending is always -і."
+    - statement: "The word червоний (red) is a soft stem adjective."
+      correct: false
+      explanation: "Червоний is a hard stem adjective, despite being a color word. It uses -ий, not -ій."
+    - statement: "In the sentence Книга гарна, the adjective comes after the noun."
+      correct: true
+      explanation: "Correct! This is the predicative position. The adjective still agrees in gender."
+    - statement: "Soft stem feminine adjectives end in -а (e.g., синя uses -а)."
+      correct: false
+      explanation: "Soft stem feminine adjectives end in -я (e.g., синя), not -а."
+
+- type: group-sort
+  title: "Sort Adjectives by Type"
+  instruction: "Sort these adjective forms into Hard Stem or Soft Stem groups."
+  groups:
+    - name: "Hard Stem"
+      items:
+        - "новий"
+        - "гарна"
+        - "старе"
+        - "великий"
+        - "червона"
+        - "дешевий"
+    - name: "Soft Stem"
+      items:
+        - "синій"
+        - "синя"
+        - "синє"
+        - "сині"
+
+- type: quiz
+  title: "Check Your Understanding"
+  instruction: "Choose the correct answer for each question about Ukrainian adjectives."
+  items:
+    - question: "Which question word do you use to describe a masculine noun?"
+      options:
+        - text: "Який?"
+          correct: true
+        - text: "Яка?"
+          correct: false
+        - text: "Яке?"
+          correct: false
+        - text: "Які?"
+          correct: false
+      explanation: "Який? is the question word for masculine nouns (e.g., Який дім? — What kind of house?)."
+    - question: "What is the correct feminine form of великий?"
+      options:
+        - text: "велике"
+          correct: false
+        - text: "великі"
+          correct: false
+        - text: "велика"
+          correct: true
+        - text: "великий"
+          correct: false
+      explanation: "Feminine hard stem adjectives end in -а, so великий becomes велика."
+    - question: "What is the neuter form of the soft stem adjective синій?"
+      options:
+        - text: "синя"
+          correct: false
+        - text: "синє"
+          correct: true
+        - text: "сині"
+          correct: false
+        - text: "синій"
+          correct: false
+      explanation: "Soft stem neuter adjectives end in -є, so синій becomes синє."
+    - question: "Which phrase has a gender agreement error?"
+      options:
+        - text: "новий дім"
+          correct: false
+        - text: "нова книга"
+          correct: false
+        - text: "новий машина"
+          correct: true
+        - text: "нове місто"
+          correct: false
+      explanation: "Машина is feminine, so it needs the feminine form нова, not the masculine новий."
+    - question: "What ending do ALL plural adjectives share, regardless of gender?"
+      options:
+        - text: "-а"
+          correct: false
+        - text: "-е"
+          correct: false
+        - text: "-ий"
+          correct: false
+        - text: "-і"
+          correct: true
+      explanation: "All plural adjectives end in -і (нові, гарні, сині), no matter the original gender."
+    - question: "Which pair are antonyms (opposites)?"
+      options:
+        - text: "новий / гарний"
+          correct: false
+        - text: "великий / малий"
+          correct: true
+        - text: "старий / поганий"
+          correct: false
+        - text: "добрий / цікавий"
+          correct: false
+      explanation: "Великий (big) and малий (small) are antonyms."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["книга", "Це", "нова"]
+      answer: "Це нова книга"
+    - words: ["великий", "дім", "Це"]
+      answer: "Це великий дім"
+    - words: ["мале", "Це", "село"]
+      answer: "Це мале село"
+    - words: ["гарна", "Це", "кімната"]
+      answer: "Це гарна кімната"
+    - words: ["дорогий", "Це", "диван"]
+      answer: "Це дорогий диван"
+    - words: ["синє", "Це", "море"]
+      answer: "Це синє море"

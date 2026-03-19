@@ -60,17 +60,19 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 7
 **Previous module:** The Gender Code
 
-**Cumulative vocabulary (91 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
-сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
+**Cumulative vocabulary (115 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
+сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
-вухо, їжа, яйце, юшка, каша, небо, сир, хліб, зуб, дім
-вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь, людина
-суп, вода, дим, люк, хор, сіль, Львів, мідь, осінь, мить
-тінь, м'ясо, п'ять, сім'я, м'яч, цукор, цибуля, час, черепаха, чай
-що, щастя, факт, джерело, дзвін, об'єкт, фото, ще, бджола, дзеркало
-склад, голосний, приголосний, перенесення, сестра, дерево, вулиця, автобус, бібліотека, університет
-чайка
+вухо, їжа, яйце, юшка, каша, небо, сир, Європа, хліб, зуб
+дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь
+люди, суп, вода, дим, люк, сіль, Львів, м'ясо, п'ять, сім'я
+цукор, час, що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола
+дзеркало, черепаха, чай, фото, склад, голосний, приголосний, перенос, сестра, дерево
+вулиця, автобус, бібліотека, університет, буква, звук, слово, книга, замок, добрий
+школа, мука, хата, кава, книжка, дорога, далеко, наголос, інтонація, питання
+відповідь, кафе, голос, брат, вікно, море, ніч, земля, серце, сонце
+собака, ім'я, артефакт, зона, укриття
 
 **Grammar already taught (29 topics):**
 - Full alphabet overview (33 letters)
@@ -286,38 +288,23 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ## 5. Rules (read ALL before writing)
 
-### RULE 1: GRAMMAR ALLOWLIST (A1.1 modules M1-M14)
+### RULE 1: GRAMMAR — see Section 6
 
-You may ONLY write these Ukrainian sentence structures:
-- **Це** + noun: `Це кіт.`
-- **Noun** + **тут/там**: `Мама тут.`
-- **Noun** + **—** + **noun**: `Мама — вчителька.`
-- **Adjective** + **noun**: `Великий дім.`
-- **Питання**: `Це кіт? Хто це? Де мама?`
-- **Fixed phrases** (memorized, no grammar analysis): дякую, будь ласка, привіт, до побачення
+Section 6 (Hard Constraints) defines exactly what grammar structures you may use for this module. Follow those constraints — they vary by module number.
 
-Any other structure (including conjugated verbs) is FORBIDDEN. If you need to express an action, rephrase as a noun: "reading practice" not "let's read."
+### RULE 2: VOCABULARY
 
-### RULE 2: VOCABULARY BANK
-
-Use ONLY these Ukrainian words. Do NOT pull other Cyrillic words from memory:
+Prioritize these Ukrainian words (from the plan). You may also use words from the cumulative vocabulary and common Ukrainian words, but these are your core teaching targets:
 
 **Allowed Ukrainian words:** привіт, добрий, добрий, добрий, до, дякую, будь, вибачте, перепрошую, дуже, пане, пані, бувай/бувайте, здрастуйте, ласкаво, на
 
-### RULE 3: VARIATION PATTERN
+### RULE 3: VARIATION
 
-Alternate your example formatting across sections:
-- Section 1: bulleted word list + [!tip] callout
-- Section 2: mini-dialogue with location label `> **(Вдома / At home)**`
-- Section 3: comparison pattern (X vs Y)
-- Section 4: [!challenge] or [!practice] callout with exercise
-- Section 5: reading practice sentences
-
-NEVER start 3+ sections with the same phrase. NEVER use "Here is" or "Let's look at" more than once.
+Vary your formatting across sections. Do NOT start 3+ sections the same way. Mix: bulleted lists, dialogues, comparison patterns, callout boxes, practice exercises.
 
 ### RULE 4: STRESS MARKS
 
-Do NOT add stress marks (´) to Ukrainian words. Write plain Ukrainian: `молоко` not `молоко́`. The pipeline adds stress marks deterministically after you write.
+Write Ukrainian without stress marks — the pipeline adds them after. Exception: if the plan uses capitalized stress (молокО, далекО) to indicate stress position, you may use that notation in teaching examples.
 
 ### RULE 5: ENGLISH PROSE STYLE
 
@@ -403,8 +390,8 @@ Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translatio
 
 ## 6. Hard Constraints
 
-GRAMMAR CONSTRAINTS (A1.1 — First Contact):
-Keep grammar simple — this is the learner's first exposure to Ukrainian.
+GRAMMAR CONSTRAINTS (A1.1 — Grammar, M07-M14):
+Keep grammar simple — first exposure to Ukrainian grammar.
 
 ALLOWED:
 - Це + noun: «Це кіт», «Це мама»
@@ -414,16 +401,10 @@ ALLOWED:
 - Так/Ні answers
 - Adj + noun: «великий дім», «нова книга»
 
-BANNED (too complex for first contact):
-- Past tense, future tense, conditionals
-- Participles, passive voice, gerunds
-- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)
-- Do not explicitly teach cases — use nouns in natural contexts
+BANNED: Past/future tense, conditionals, participles, passive, gerunds,
+compound sentences (no і/а/але joining clauses)
 
-METALANGUAGE:
-- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'
-- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')
-- Explanatory prose in English, Ukrainian for examples and dialogues
+METALANGUAGE: English first, Ukrainian in parentheses. Bilingual headings.
 
 - **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
 - **No Russian characters**: ы, э, ё, ъ — never

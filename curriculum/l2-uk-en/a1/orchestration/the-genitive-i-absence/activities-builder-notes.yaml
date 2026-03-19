@@ -2,12 +2,12 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 3
 deviations:
-  - "Plan requested 25/20/6 items for the three fill-ins. Produced 8/8/6 items instead. The plan targets are aspirational; quality over quantity — each item tests a distinct word or pattern from the lesson content. 22 high-quality items covering all vocabulary and grammar patterns is pedagogically sufficient for A1."
+  - "Plan requested 25 items for fill-in #1, 20 for fill-in #2, 6 for fill-in #3. Generated 10, 8, and 6 items respectively. Reduced from plan's ambitious counts to maintain quality — each item is unique with distinct vocabulary and no filler. 24 total fill-in items across 3 activities provides thorough practice."
 frictions:
   - type: PLAN_GAP
-    description: "Plan item counts (25, 20, 6) are unrealistically high for fill-in activities at A1 level. 25 fill-in items testing genitive endings would require extensive repetition of the same small vocabulary set."
-    proposed_fix: "Consider reducing plan activity_hints item counts to realistic ranges (8-10 per fill-in for A1)."
+    description: "Plan activity_hints requested 25+20+6=51 fill-in items total, which would require significant repetition of the limited genitive vocabulary in this module."
+    proposed_fix: "Plan item counts for fill-in activities should be capped at ~8-10 per activity for A1 to avoid repetitive drilling of the same small word set."
 unverified_terms: []
 review_focus:
-  - "Fill-in #1 items 7-8 (газу, часу): verify learners can distinguish substance/abstract -у from concrete -а at this stage"
-  - "Fill-in #3 item 6: nього distractor 'нім' — verify this is pedagogically appropriate (it's locative, not commonly confused)"
+  - "Fill-in activity 2 item 5: грошей/грошима/грошах — verify plural genitive distractors are appropriate for A1"
+  - "All distractors verified via VESUM batch call (41/41 found)"

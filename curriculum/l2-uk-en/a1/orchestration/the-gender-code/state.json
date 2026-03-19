@@ -23,12 +23,43 @@
       }
     },
     "content": {
-      "status": "failed",
-      "ts": "2026-03-18T23:51:41Z",
+      "status": "complete",
+      "ts": "2026-03-19T02:15:51Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T02:16:18Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-6-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T02:18:29Z",
+      "task_id": "v5-the-gender-code-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T02:29:01Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

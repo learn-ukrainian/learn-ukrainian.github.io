@@ -1,5 +1,5 @@
 **Phase**: Beginner Checkpoint Content
-**Step**: Writing checkpoint content for checkpoint-cases
+**Step**: Writing content
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

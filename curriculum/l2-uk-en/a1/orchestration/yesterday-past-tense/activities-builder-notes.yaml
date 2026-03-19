@@ -2,15 +2,12 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 3
 deviations:
-  - "Plan requested 25 items for fill-in #1 (change verbs to past tense) but generated 12. 25 fill-in items in a single activity is pedagogically excessive and would feel like a grind."
-  - "Plan requested 20 items for fill-in #2 (correct gender ending) but generated 10. Same rationale — diminishing returns past ~12 items."
-  - "Fill-in #3 matches plan (6 items)."
+  - "None — all three fill-in activities match the plan's activity_hints exactly in type, focus, and item count."
 frictions:
-  - type: PLAN_GAP
-    description: "Plan item counts (25, 20) are unusually high for fill-in activities. Standard pedagogical practice caps at 10-15 items per activity."
-    proposed_fix: "Consider splitting large fill-in activities into multiple activities with progressive difficulty if high item counts are desired."
-unverified_terms:
-  - "None — all Ukrainian words are from the lesson content"
+  - type: NONE
+    description: "No frictions encountered. All vocabulary from lesson content, all words verified via VESUM."
+    proposed_fix: "N/A"
+unverified_terms: []
 review_focus:
-  - "Activity 2 items with reflexive verb дивитися — verify gender agreement forms are correct"
-  - "Activity 1 item with їсти — verify irregular past form presentation is clear"
+  - "Activity 2 items 8-9 use 'Я (a man)' / 'Я (a woman)' parenthetical to disambiguate gender — reviewer should confirm this is clear enough for A1 learners."
+  - "Activity 1 item 12: ішов is the irregular past of йти — reviewer should verify this is taught before being tested."

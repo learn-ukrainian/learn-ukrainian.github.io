@@ -24,7 +24,39 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T07:53:11Z",
+      "ts": "2026-03-19T03:04:16Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T03:15:07Z",
+      "attempts": 3,
+      "note": "exhausted",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T03:16:55Z",
+      "task_id": "v5-my-daily-routine-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T03:26:05Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
       "executor": {
         "type": "llm",
         "agent": "claude",

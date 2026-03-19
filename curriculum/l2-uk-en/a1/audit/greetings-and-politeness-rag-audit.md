@@ -1,39 +1,29 @@
 # RAG Verification: greetings-and-politeness
 
-**Date:** 2026-03-18 23:24 UTC | **Words checked:** 93 | **VESUM coverage:** 79/93 (84.9%)
+**Date:** 2026-03-19 02:46 UTC | **Words checked:** 46 | **VESUM coverage:** 41/46 (89.1%)
 
 ## Summary
-- ✅ Verified (VESUM): 79
-- ⚠️ Partial (RAG only): 7
-- ❌ Not found: 7
+- ✅ Verified (VESUM): 41
+- ⚠️ Partial (RAG only): 3
+- ❌ Not found: 2
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Оксані | activities | ✗ | ✗ | ✗ |
 | Петре | prose | ✗ | ✗ | ✗ |
-| Софіє | prose | ✗ | ✗ | ✗ |
-| Тарасе | prose | ✗ | ✗ | ✗ |
-| Іванівна | prose | ✗ | ✗ | ✗ |
-| Ірина | prose | ✗ | ✗ | ✗ |
 | Іро | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Андрій | prose | ✗ | ✓ | ✗ |
-| Оксана | prose | ✗ | ✗ | ✓ |
+| Анна | prose | ✗ | ✓ | ✗ |
 | Оксано | prose | ✗ | ✓ | ✗ |
-| Олена | prose | ✗ | ✓ | ✗ |
-| Софія | prose | ✗ | ✓ | ✗ |
-| Тарас | prose | ✗ | ✗ | ✓ |
-| Тетяно | prose | ✗ | ✗ | ✓ |
+| Олег | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 80 | 67 | 6 |
-| Activities (.yaml) | 13 | 12 | 1 |
+| Prose (.md) | 46 | 41 | 2 |

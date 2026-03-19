@@ -2,15 +2,15 @@
   "module": "stress-and-intonation",
   "level": "A1",
   "plan_version": "3.0",
-  "last_audit": "2026-03-19T00:41:47.331039Z",
+  "last_audit": "2026-03-19T12:50:03.025345Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-19T00:38:33.910099Z",
+    "md": "2026-03-19T03:09:37.756523Z",
     "meta": "2026-03-18T23:49:04.061169Z",
-    "activities": "2026-03-18T23:59:31.264213Z",
-    "vocabulary": "2026-03-19T00:25:00.687802Z",
+    "activities": "2026-03-19T03:02:47.636487Z",
+    "vocabulary": "2026-03-19T03:02:47.593611Z",
     "research": "2026-03-17T18:15:18.444909Z",
-    "plan": "2026-03-18T20:25:24.081811Z"
+    "plan": "2026-03-19T01:05:32.741236Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2061/1200 (raw: 2098)"
+      "message": "1864/1200 (raw: 1900)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/0"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "21/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "pass",

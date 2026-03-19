@@ -1,83 +1,38 @@
-        # Fix ALL 15 issue(s) in `the-living-verb-i`
+        # Fix ALL 6 issue(s) in `the-living-verb-i`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 15 issues. You must produce fixes for all 15.**
-        **After you finish, count your fixes. If the count is less than 15, go back and fix the ones you missed.**
+        **There are 6 issues. You must produce fixes for all 6.**
+        **After you finish, count your fixes. If the count is less than 6, go back and fix the ones you missed.**
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'книгу' (VESUM: noun:inanim:f:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'книгу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 24
+**What:** Accusative 'музику' (VESUM: noun:anim:m:v_zna) in M15. Accusative not taught until M25.
+**How to fix:** Replace 'музику' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 110
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'музику' (VESUM: noun:anim:m:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'музику' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 47
-
-### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'мову' (VESUM: noun:inanim:f:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'мову' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 50
-
-### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'працю' (VESUM: noun:inanim:f:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'працю' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 63
-
-### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'книгу' (VESUM: noun:inanim:f:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'книгу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 73
-
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'книгу' (VESUM: noun:inanim:f:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'книгу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 74
-
-### Fix 7: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'музику' (VESUM: noun:anim:m:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'музику' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 103
-
-### Fix 8: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'музику' (VESUM: noun:anim:m:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'музику' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 124
-
-### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'бібліотеці' (dative, VESUM: noun:inanim:f:v_dav) in M15. Only nominative case allowed before M25.
-**How to fix:** Replace 'бібліотеці' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 133
-
-### Fix 10: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'кому' (accusative, VESUM: noun:inanim:f:v_zna) in M15. Only nominative case allowed before M25.
-**How to fix:** Replace 'кому' (accusative) with its nominative form or use English equivalent.
-**Where:** ~line 137
-
-### Fix 11: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'кому' (accusative, VESUM: noun:inanim:f:v_zna) in M15. Only nominative case allowed before M25.
-**How to fix:** Replace 'кому' (accusative) with its nominative form or use English equivalent.
-**Where:** ~line 147
-
-### Fix 12: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'музику' (VESUM: noun:anim:m:v_zna) in M15. Accusative not taught until M25.
-**How to fix:** Replace 'музику' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 154
-
-### Fix 13: MORPHOLOGICAL_VIOLATION
 **What:** Accusative 'Птицю' (VESUM: noun:anim:f:v_zna) in M15. Accusative not taught until M25.
 **How to fix:** Replace 'Птицю' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 160
+**Where:** ~line 114
 
-### Fix 14: MORPHOLOGICAL_VIOLATION
+### Fix 3: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'пір'ю' (dative, VESUM: noun:inanim:n:v_dav) in M15. Only nominative case allowed before M25.
 **How to fix:** Replace 'пір'ю' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 160
+**Where:** ~line 114
 
-### Fix 15: MORPHOLOGICAL_VIOLATION
+### Fix 4: MORPHOLOGICAL_VIOLATION
 **What:** Accusative 'людину' (VESUM: noun:anim:f:v_zna) in M15. Accusative not taught until M25.
 **How to fix:** Replace 'людину' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 160
+**Where:** ~line 114
+
+### Fix 5: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'мові' (dative, VESUM: noun:inanim:f:v_dav) in M15. Only nominative case allowed before M25.
+**How to fix:** Replace 'мові' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 114
+
+### Fix 6: LOW_ENGAGEMENT
+**What:** Only 0 engagement boxes (minimum: 1 for A1)
+**How to fix:** Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+**Where:** (whole module)
 
 ### Other Audit Failures
 
@@ -137,6 +92,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 
 ## Verification Tools (USE THEM)
@@ -158,7 +114,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 15 issues listed above — every single one, not a subset
+        1. Fix ALL 6 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

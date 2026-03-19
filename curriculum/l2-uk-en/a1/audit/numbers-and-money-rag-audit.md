@@ -1,9 +1,9 @@
 # RAG Verification: numbers-and-money
 
-**Date:** 2026-03-05 06:22 UTC | **Words checked:** 270 | **VESUM coverage:** 270/270 (100.0%)
+**Date:** 2026-03-19 11:43 UTC | **Words checked:** 73 | **VESUM coverage:** 73/73 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 270
+- ✅ Verified (VESUM): 73
 - ⚠️ Partial (RAG only): 0
 - ❌ Not found: 0
 
@@ -11,5 +11,4 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 260 | 260 | 0 |
-| Activities (.yaml) | 10 | 10 | 0 |
+| Prose (.md) | 73 | 73 | 0 |

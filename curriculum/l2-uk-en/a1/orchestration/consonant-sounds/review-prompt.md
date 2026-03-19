@@ -46,16 +46,19 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1435
-deviations: []
+word_count: 1340
+deviations:
+  - section: "Voiced and Voiceless Pairs"
+    reason: "Added H3 sub-headers for each pair to cleanly structure the requested video embeds, as permitted by 'You MAY add H3 sub-headings within H2 sections'."
 frictions: []
-research_gaps: []
-unverified_terms: []
+research_gaps:
+  - "None."
+unverified_terms:
+  - "None (all vocabulary sourced directly from approved hints)."
 review_focus:
-  - "Check that NO transliterations (sh, zh, ch) were used. The explanations rely strictly on English phonetic equivalents."
-  - "Verify A1.1 grammar constraints - NO VERBS used in dialogues or examples."
-  - "Check that all 17 videos specified in the plan were correctly embedded under appropriate headers."
-rag_tools_used: []
+  - "Check that the H3 structural injection for videos aligns with project expectations for A1.1 content rendering."
+rag_tools_used:
+  - "None directly via subprocesses; trusted exact constraints from plan."
 ```
 Focus your review on the `review_focus` items above.
 
@@ -80,13 +83,13 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Typography Artist
-Word count:       1934 / 1200 (161.2%)
+Word count:       1304 / 1200 (108.7%)
 Activities:       6
 Vocabulary items: 20
-Engagement boxes: 2
-Immersion:        6.1% (target: 5-15%)
-Richness:         90% (threshold: 60%)
-Richness gaps:    examples: 7/8
+Engagement boxes: 0
+Immersion:        6.4% (target: 5-15%)
+Richness:         80% (threshold: 60%)
+Richness gaps:    engagement: 0/2
 Audit status:     FAIL
 ```
 
@@ -110,7 +113,30 @@ Audit status:     FAIL
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-(No deterministic issues found -- D.0 pre-screen clean)
+1. **[IPA_BANNED]** (severity: HIGH)
+   Location: ~line 86
+   Text: Banned IPA transcription: [б]
+   Fix: Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+2. **[IPA_BANNED]** (severity: HIGH)
+   Location: ~line 86
+   Text: Banned IPA transcription: [п]
+   Fix: Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+3. **[IPA_BANNED]** (severity: HIGH)
+   Location: ~line 87
+   Text: Banned IPA transcription: [б]
+   Fix: Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+4. **[IPA_BANNED]** (severity: HIGH)
+   Location: ~line 87
+   Text: Banned IPA transcription: [п]
+   Fix: Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+5. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 39
+   Text: Imperative 'закрий' (VESUM: verb:perf:impr:s:2) — imperatives not taught until M47.
+   Fix: Replace 'закрий' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+6. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 125
+   Text: Imperative 'закрий' (VESUM: verb:perf:impr:s:2) — imperatives not taught until M47.
+   Fix: Replace 'закрий' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
 
 ---
 
@@ -118,12 +144,13 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 61 | **VESUM coverage:** 58/61 (95.1%)
+**Words checked:** 50 | **VESUM coverage:** 46/50 (92.0%)
 
-**❌ Not found in VESUM or textbooks (3):**
-- `дж` (source: prose)
-- `дз` (source: prose)
-- `хліп` (source: prose)
+**❌ Not found in VESUM or textbooks (4):**
+- `ДЖ` (source: prose)
+- `ДЗ` (source: prose)
+- `зу` (source: prose)
+- `хлі` (source: prose)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 

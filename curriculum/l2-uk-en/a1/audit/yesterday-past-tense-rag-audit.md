@@ -1,30 +1,33 @@
 # RAG Verification: yesterday-past-tense
 
-**Date:** 2026-03-18 00:03 UTC | **Words checked:** 248 | **VESUM coverage:** 243/248 (98.0%)
+**Date:** 2026-03-19 02:40 UTC | **Words checked:** 175 | **VESUM coverage:** 167/175 (95.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 243
-- ⚠️ Partial (RAG only): 1
+- ✅ Verified (VESUM): 167
+- ⚠️ Partial (RAG only): 4
 - ❌ Not found: 4
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
+| ЗУНР | prose | ✗ | ✗ | ✗ |
 | ли | prose | ✗ | ✗ | ✗ |
 | ло | prose | ✗ | ✗ | ✗ |
-| сти | prose | ✗ | ✗ | ✗ |
-| ї | prose | ✗ | ✗ | ✗ |
+| Міні-практика | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Львів | prose | ✗ | ✓ | ✗ |
+| лася | prose | ✗ | ✓ | ✗ |
+| Оксана | prose | ✗ | ✗ | ✓ |
+| Тарас | prose | ✗ | ✗ | ✓ |
+| Федоров | prose | ✗ | ✗ | ✓ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 113 | 108 | 4 |
-| Activities (.yaml) | 135 | 135 | 0 |
+| Prose (.md) | 130 | 122 | 4 |
+| Activities (.yaml) | 45 | 45 | 0 |

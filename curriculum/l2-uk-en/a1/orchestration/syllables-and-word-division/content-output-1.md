@@ -1,175 +1,107 @@
 ## Що таке склад? — What Is a Syllable?
 
-Welcome! Let's take a closer look at the building blocks of Ukrainian words. In this module, you will learn to count syllables, identify syllable types, and correctly divide words for writing. Let's get started!
+Welcome back! You have mastered the Ukrainian alphabet, and you are doing an incredible job. Now that you know all the letters and the sounds they make, you are ready for the next big step: building words. Just like a house is built brick by brick, words are built piece by piece. In Ukrainian, these pieces are called syllables. Learning how syllables work will transform the way you read and speak. It makes long words feel much less intimidating.
 
-In English, our intuition about syllables is often based on the rhythm of a spoken word or the presence of silent letters. For example, the English word *make* has two written vowels but we only pronounce one syllable, because the letter *e* is completely silent. This can make spelling and reading quite tricky for beginners.
+So, what exactly is a syllable? You can think of a syllable, or **склад**, as a single beat of rhythm in a word. If you clap your hands while saying a word, each clap represents one syllable.
 
-In Ukrainian, you do not have to guess. The rule is wonderfully simple and strictly mathematical: the vowel is the absolute core of the syllable. Every single vowel creates exactly one syllable. Therefore, counting syllables means simply counting vowels. If a word has one vowel, it has one syllable. If it has four vowels, it has four syllables. There are absolutely no silent vowels in the Ukrainian language! Every letter you see is pronounced.
+Here is the golden rule of Ukrainian syllables, and it is beautifully simple: the vowel is the absolute core of the syllable. In fact, every single vowel creates exactly one syllable. This means that if you want to know how many syllables a word has, you do not need to guess. All you have to do is count the vowels! This metalinguistic term for vowel is **голосний**. Every **голосний** creates a new beat.
 
-Let's look at how counting syllables by counting vowels works in practice with some familiar words.
+Let’s look at some examples to see this in action.
 
-- **кіт** (cat) — The word has exactly 1 **голосни́й** (vowel), which is «і». Therefore, it has 1 **скла́д** (syllable).
-- **ма́-ма** (mom) — The word has 2 vowels («а» and «а»). Therefore, it has 2 syllables.
-- **мо-ло-ко́** (milk) — The word has 3 vowels («о», «о», «о»). Therefore, it has 3 syllables.
-- **У-кра-ї́-на** (Ukraine) — The word has 4 vowels («у», «а», «ї», «а»). Therefore, it has exactly 4 syllables.
-- **я́б-лу-ко** (apple) — The word has 3 vowel letters («я», «у», «о»). Therefore, it has 3 syllables.
+Take the word for milk: **молоко**.
+Look at the vowels: **о**, **о**, **о**. That is three vowels.
+Because there are three vowels, there are exactly three syllables: **мо-ло-ко**.
 
-This absolute rule is a huge advantage for learners. However, it is crucial to correctly identify what a vowel is. Remember from previous modules that letters like «й» are consonants, not vowels. So, a word like **край** (edge) has only one vowel («а») and thus one syllable. Conversely, the letter «ї» is always a full vowel, making its own syllable.
+What about a short word like the word for cat? «Це кіт.»
+There is only one vowel: **і**. Therefore, it has only one syllable: **кіт**. One clap, one syllable.
 
-> [!tip] Watch out for Ї and Й!
-> The letter **ї** is a true **голосни́й** (vowel) and always forms its own syllable. But the letter **й** is a **приголо́сний** (consonant) and never creates a syllable. Don't let their visual similarity trick you!
+Now let’s look at a very important word: **Україна**.
+Let’s count the vowels: **у**, **а**, **ї**, **а**. That makes four vowels. So, the word has four syllables: **у-кра-ї-на**. Notice that the letter **ї** is a full vowel, and it creates its own syllable.
 
-When you see a new Ukrainian word, your very first step to reading it aloud should be to scan for vowels. Count them, and you will immediately know the word's rhythm.
-
-> **(На ку́хні / In the kitchen)**
-> — Ма́ма тут?
-> — Так, ма́ма тут.
-> — А молоко́ тут?
-> — Ні, молоко́ там.
+This might feel a little different from your English syllable intuition. In English, syllable boundaries can sometimes feel flexible or depend on spelling rules that do not match the sounds. In Ukrainian, syllable boundaries follow very clear, consistent phonetic rules. Once you learn to spot the vowels, you will never struggle to break down a long word. You just find the vowels, count them, and clap it out.
 
 ## Типи складів — Syllable Types
 
-Now that we know how to count syllables, let's look at their shapes. Syllables in Ukrainian come in two main types: open and closed. Knowing the difference helps you speak more smoothly.
+Now that you know how to count syllables, let's talk about the different shapes they can take. Syllables come in two main types: open and closed.
 
-Open syllables end in a vowel. This is the default and by far the most common syllable type in the Ukrainian language. When you speak Ukrainian, it naturally wants to flow from consonant to vowel, consonant to vowel.
+An open syllable is one that ends in a vowel. The air flows freely out of your mouth without being stopped by a consonant. This is the absolute default and the most common type of syllable in the Ukrainian language. When you listen to native speakers, the language sounds so melodic and flowing largely because it is packed with open syllables. Examples of open syllables are **ма-** and **но-**.
 
-- **ма́-ма** (mom) — Both syllables end in the vowel «а» (ма-, ма-). They are open.
-- **мо-ло-ко́** (milk) — All three syllables end in the vowel «о» (мо-, ло-, ко-). They are open.
-- **де́-ре-во** (tree) — Three syllables, all ending in vowels (де-, ре-, во-). All open.
+Look at the word for tree: **дерево**.
+If we break it down, we get **де-ре-во**. Every single syllable ends in a vowel. They are all open syllables.
 
-Closed syllables end in a consonant. These are less common inside words, but they frequently occur at the very end of a word (at the word boundary).
+Look at the word for street: **вулиця**.
+Broken down, it is **ву-ли-ця**. Again, all open syllables! The word flows beautifully.
 
-- **кіт** (cat) — The syllable ends in the consonant «т», making it a closed syllable.
-- **там** (there) — The syllable ends in «м». It is a closed syllable.
+A closed syllable, on the other hand, ends in a consonant (**приголосний**). The flow of air is stopped or restricted at the end of the beat. Closed syllables usually occur at the very end of a word, like in **там**.
 
-Closed syllables can also occur in the middle of a word when a sonorant consonant (a highly resonant consonant like й, в, р, л, м, н) precedes another consonant. For example, in the word **чай-ка** (seagull), the first syllable ends with the sonorant consonant «й», so it is closed.
+For example, let's look at the word for bus: **автобус**.
+It breaks down into **ав-то-бус**. The final syllable, **бус**, ends in the consonant **с**, so it is a closed syllable. Another example is the word for cat, **кіт**, which is a single closed syllable. Closed syllables also happen in the middle of a word when a sonorant consonant (like **й**, **в**, **р**, **л**, **м**, **н**) comes before another consonant, as in the word **чай-ка**.
 
-> **(На ву́лиці / On the street)**
-> — Це авто́бус?
-> — Так, це авто́бус.
-> — Де авто́бус?
-> — Авто́бус там.
+What happens when you have a bunch of consonants clustered together? This brings us to consonant clusters. In spoken Ukrainian, phonetic syllables follow a rule called maximal onset. This means consonants prefer to group together at the beginning of the next syllable rather than closing the previous one.
 
-Let's look at the word **авто́бус** (bus). How many syllables? Three vowels («а», «о», «у»), so three syllables: **ав-то́-бус**. The final syllable «-бус» ends in a consonant, so it is a closed syllable. The first syllable «ав-» also acts like a closed syllable here because «в» is a sonorant consonant preceding the «т».
+Take the word for sister: **сестра**.
+Phonetically, you split it as **се-стра**. The cluster **стр** jumps to the second syllable, leaving the first syllable open. Another example is **о-стрів**.
 
-What happens when you have a cluster of consonants in the middle of a word? Phonetically (how we speak), Ukrainian prefers to group consonants at the beginning of the next syllable. This is called the maximal onset principle.
-
-- **се-стра́** (sister) — Both consonants «с» and «т» attach to the second syllable, keeping the first syllable open.
-- **о́-стрів** (island) — The whole cluster «стр» moves to the second syllable.
-
-For a learner, this means your phonetic syllables should strive to be open whenever possible. Always try to push the consonants forward to the next vowel when reading aloud. Orthographic hyphenation (**перено́с**) is more flexible, but learners should focus on phonetic boundaries first.
-
-> **(Вдома / At home)**
-> — Сестра́ тут?
-> — Ні, сестра́ там.
-> — А кіт?
-> — Кіт тут.
-
-Practice identifying open and closed syllables in high-frequency words. Take **ву́-ли-ця** (street) — three open syllables. Or **у-ні-вер-си-те́т** (university) — the final syllable «-тет» is closed, while the others remain open. Recognizing these patterns will significantly improve your reading rhythm.
+While written orthographic hyphenation (**перенос**) is a bit more flexible—the official Pravopys rules allow you to write **се-стра**, **сес-тра**, or even **сест-ра**—as a learner, you should focus on the phonetic boundaries first. Always try to keep syllables open when you speak.
 
 ## Правила переносу — Word Division Rules
 
-While phonetic syllables help us speak beautifully, we also need to know how to split words when writing. In Ukrainian handwriting and printed text, words are frequently split at the end of a line. This orthographic process is called **перено́с** (word division or hyphenation).
+Speaking of writing, let's dive into the rules of word division, or **перенос**. When you are writing in Ukrainian—whether you are carefully writing in a copybook or typing up a document to be printed—you will often reach the end of a line before you finish a word. You need to know exactly where you are allowed to hyphenate and break the word. Correct word division matters a great deal in Ukrainian handwriting and printing; it shows that you truly understand the structure of the language.
 
-Orthographic hyphenation (how we split words on paper) is more flexible than phonetic syllabification (how we speak them), but it has strict rules that you must memorize. Incorrect word division is a common learner error, often caused by applying English hyphenation habits to Ukrainian text. Why does correct division matter? In Ukrainian schools, writing neatly in copybooks is heavily emphasized, and proper word division is a sign of good literacy and respect for the language rules.
+While spoken syllables focus on keeping things open, written word division has its own specific set of rules. Here is what you need to know.
 
-These are the parts you CANNOT split:
+First, let's look at what you absolutely cannot split. You cannot leave a single letter alone on a line, and you cannot carry a single letter over to the next line. Even if that single letter is a full syllable, it must stay attached to the rest of the word. For example, the word **Україна** has the syllables **у-кра-ї-на**. However, you cannot write «У-країна». The single letter **У** is not allowed to stand alone.
 
-1. A single letter. You can never leave a single letter alone on the previous line, nor can you carry a single letter to the next line. It does not matter if it is a vowel or a consonant.
-   - ❌ *У-краї́на* (Incorrect: «У» is left completely alone on the first line)
-   - ✅ *Укра-ї́на* (Correct)
-   - ✅ *Украї́-на* (Correct)
-   - ❌ *о-ко* (Incorrect: the word **о́ко** cannot be hyphenated at all because both syllables consist of single letters!)
+You also cannot split the digraphs **дж** and **дз** when they represent a single sound. For example, in the word **ґудзик**, the **дз** makes one sound. You must divide it as **ґу-дзик**. You cannot write «ґуд-зик».
 
-2. The digraphs дж and дз. When these letter pairs represent a single sound, they are inseparable. They act as one phonetic unit.
-   - ❌ *ґуд-зик* (Incorrect: splitting the «дз» sound into two pieces)
-   - ✅ *ґу-дзик* (Correct)
+There are a couple of special characters that love to stick to their friends. You cannot separate the soft sign (**ь**) from the preceding consonant. It modifies the consonant before it, so they are an inseparable pair. In the word **пальці**, the correct split is **паль-ці**. You cannot write «пал-ьці».
 
-3. The soft sign (ь). The soft sign belongs entirely to the consonant before it. You can never separate it from its partner consonant.
-   - ❌ *пал-ьці* (Incorrect: «ь» is separated from «л»)
-   - ✅ *паль-ці* (Correct)
+Similarly, you cannot separate the apostrophe group from the consonant before it. The apostrophe stays with the preceding consonant. Take the word **сім'я**. The correct division is **сі-м'я**. You must never write «сім-'я».
 
-4. The apostrophe group. The apostrophe indicates a brief pause and keeps the preceding consonant hard. You cannot separate the apostrophe from the consonant right before it.
-   - ❌ *сім-'я* (Incorrect: apostrophe separated from «м»)
-   - ✅ *сі-м'я* (Correct)
+So, where can you split? You can split between two consonants. For example, in a word like **сільський**, you can split it as **сіль-ський**. Notice how the **ль** stays together because of the soft sign rule, and you split between the two consonant groups. You can also easily split between a vowel and a consonant, which is the most natural place. For instance, **молоко** easily divides as **мо-ло-ко**.
 
-> [!warning] The One-Letter Trap
-> English speakers often want to split the word **університе́т** as *у-ніверсите́т*. This is strictly forbidden in Ukrainian writing. You must keep the first letter attached to the rest of the word if it's the only letter in the syllable.
+A common learner error is applying English hyphenation habits to Ukrainian words. English rules are often based on root words or prefixes in ways that Ukrainian does not follow. Let's drill with some longer problem words.
 
-On the other hand, you CAN split:
+Look at the word for library: **бібліотека**.
+It has five syllables: **бі-блі-о-те-ка**. It can be divided at any of those dashes, but remember, you cannot leave the single letter **о** on a line by itself!
 
-1. Between two consonants. If a word has a cluster of consonants, orthographic rules let you split them right down the middle, even if phonetically they belong to the next syllable. For example, you can write **сес-тра́** or **сест-ра́** on paper, even though you pronounce it **се-стра́**. Note: if there is a soft sign involved, it must stay with the first consonant, for example **сіль-ськи́й** («ль» is an inseparable team).
-2. Between a vowel and a consonant. The most common and natural place to divide a word is right after a vowel: **мо-ло-ко́**.
+Look at the word for university: **університет**.
+It also has five syllables: **у-ні-вер-си-тет**. Just like before, the **у** cannot be left alone on a line.
 
-Let's drill with some problem words. Take the word **бібліоте́ка** (library). Because it has five syllables, you have many options. You can divide it as:
-- бі-бліоте́ка
-- біблі-оте́ка
-- бібліо-те́ка
-- бібліоте́-ка
-
-All of these options perfectly respect the rule: no single letters left alone, no forbidden splits.
-
-> **(В університе́ті / At the university)**
-> — Це університе́т?
-> — Так, це університе́т.
-> — А бібліоте́ка там?
-> — Ні, бібліоте́ка тут.
-
-Mastering **перено́с** will make your written Ukrainian look authentic and well-educated. Always double-check your splits when writing long words!
+Mastering these rules of word division will make your written Ukrainian look elegant and perfectly natural.
 
 ## Практика — Practice
 
-Let's put everything together. The best way to build your reading fluency is to start by reading words slowly, syllable-by-syllable, and then gradually build up to full speed.
+You have learned so much! Now it is time to put your new knowledge into practice. The best way to get comfortable with syllables and word division is to actively work with them. Let's do some syllable counting drills.
 
-**Syllable Counting Drills**
-Look at the following common words. Count the vowels to quickly identify each syllable boundary. Remember, every vowel equals one syllable!
+Look at the word **молоко**. Count the vowels: **о**, **о**, **о**. That is three vowels, which means three syllables. The boundaries are **мо-ло-ко**.
 
-- **де́рево** (tree) → 3 vowels (е, е, о) → 3 syllables (де́-ре-во). All of these are open syllables.
-- **молоко́** (milk) → 3 vowels (о, о, о) → 3 syllables (мо-ло-ко́). All of these are open syllables.
-- **сестра́** (sister) → 2 vowels (е, а) → 2 syllables. Phonetically, we push the cluster forward: се-стра́.
-- **Украї́на** (Ukraine) → 4 vowels (у, а, ї, а) → 4 syllables (У-кра-ї́-на).
+Look at the word **автобус**. Count the vowels: **а**, **о**, **у**. Three vowels, three syllables. The boundaries are **ав-то-бус**.
 
-**Word Division Exercises**
-Imagine you are writing a letter to a friend and you run out of space at the end of the line. Where can you place the hyphen in these multi-syllable words? Let's mark the correct orthographic division points.
+Look at the word **сестра**. Count the vowels: **е**, **а**. Two vowels, two syllables. Phonetically, the boundary is **се-стра**.
 
-- **бібліоте́ка** (library) → бі-блі-о-те-ка. Note: You cannot split it as *б-ібліотека* or *бібліотек-а* because you cannot leave or carry a single letter.
-- **університе́т** (university) → у-ні-вер-си-те́т. However, for writing (**перено́с**), you cannot leave «у» alone! So valid splits for writing are: уні-вер-си-те́т, універ-си-те́т, універси-те́т.
-- **авто́бус** (bus) → ав-то-бус. The «в» acts as a sonorant, closing the first syllable. The «с» closes the final syllable.
+Now, let's try some word division exercises for writing. Imagine you are reaching the end of a line in your notebook. Where would you mark the correct division points in these multi-syllable words?
 
-> **(У мі́сті / In the city)**
-> — Це ву́лиця?
-> — Так, це ву́лиця.
-> — А Украї́на тут?
-> — Так, Украї́на тут.
+For the word **бібліотека**, you can divide it as **бі-блі-о-те-ка**, but remember not to leave the **о** alone if you divide it there.
 
-**Reading Fluency**
-Now, read these words out loud. Start by clapping out each syllable slowly and deliberately, then say the word naturally.
+For the word **університет**, you can divide it as **у-ні-вер-си-тет**, but the **у** must stay with the rest of the word if it is at the start of the line.
 
-1. Clap: мо - ло - ко́. Say: молоко́!
-2. Clap: У - кра - ї́ - на. Say: Украї́на!
-3. Clap: ву́ - ли - ця. Say: ву́лиця!
-4. Clap: де́ - ре - во. Say: де́рево!
+Finally, practice reading multi-syllable words aloud. This is a fantastic way to build your reading fluency. Start by reading the word slowly, syllable-by-syllable.
 
-Building this basic syllable-level awareness will make tackling longer words much less intimidating as you progress.
+«Бі... блі... о... те... ка.»
+«У... ні... вер... си... тет.»
 
-> **(На ку́хні / In the kitchen)**
-> — Це я́блуко?
-> — Так, це я́блуко.
-> — А сік тут?
-> — Ні, сік там.
+Once you feel comfortable, speed it up and read the word at full speed. «Це бібліотека.» «Це університет.»
+
+This step-by-step approach will make even the longest Ukrainian words feel easy and manageable. You are doing great!
 
 ## Підсумок — Summary
 
-Great job! You have successfully unlocked the secret rhythm of the Ukrainian language. Let's recap what we learned in this module:
-
-- Every **голосни́й** (vowel) equals exactly one **скла́д** (syllable). If you know the vowels, you know the syllables.
-- Open syllables end in a vowel; closed syllables end in a consonant. Ukrainian heavily favors beautiful, open syllables.
-- Consonant clusters push forward when speaking (maximal onset, like **се-стра́**).
-- Word division (**перено́с**) for writing has strict, non-negotiable rules: never split a single letter, never separate digraphs like «дж» or «дз» (if they are one sound), and never detach the soft sign (ь) or the apostrophe from their preceding consonants.
+Let's quickly review what we have covered today. You learned that every vowel creates one syllable, so counting syllables simply means counting the vowels. You discovered that open syllables end in a vowel and are the most common type in Ukrainian, while closed syllables end in a consonant. We also explored consonant cluster split rules, where spoken syllables prefer to stay open (like **се-стра**). Finally, you learned the strict word division rules for writing.
 
 **Self-check:**
-1. How many syllables in Украї́на? (Answer: Four vowels, so four syllables).
-2. What is an open syllable? (Answer: A syllable that ends in a vowel).
-3. Where do you split a consonant cluster for pronunciation? (Answer: Push the cluster to the next vowel, maximizing the onset).
+- How many syllables in **Україна**?
+- What is an open syllable?
+- Where do you split a consonant cluster phonetically?
 
-In our next module, M6 — stress and intonation, we will learn how to emphasize the correct syllable and make your speech sound truly native. Keep practicing your reading rhythm!
+In our next module, M6, we will build on this rhythm by exploring stress and intonation. Keep up the excellent work!

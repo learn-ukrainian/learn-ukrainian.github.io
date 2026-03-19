@@ -1,441 +1,294 @@
 - type: fill-in
-  title: "Choose the Correct Demonstrative"
-  instruction: "Fill in the blank with the correct demonstrative pronoun (this/that/these/those)."
+  title: Choose the Correct Demonstrative Pronoun
+  instruction: Fill in the blank with the correct form of 'this' or 'that' based on
+    the gender and number of the noun.
   items:
-    - sentence: "___ книга цікава."
-      answer: "Ця"
-      options: ["Ця", "Цей", "Це", "Ці"]
-      explanation: "Книга is feminine, so it takes ця (this)."
-    - sentence: "___ будинок старий."
-      answer: "Цей"
-      options: ["Цей", "Ця", "Це", "Ці"]
-      explanation: "Будинок is masculine, so it takes цей (this)."
-    - sentence: "___ озеро велике."
-      answer: "Це"
-      options: ["Це", "Цей", "Ця", "Ці"]
-      explanation: "Озеро is neuter, so it takes це (this)."
-    - sentence: "___ студенти говорять добре."
-      answer: "Ці"
-      options: ["Ці", "Цей", "Ця", "Це"]
-      explanation: "Студенти is plural, so it takes ці (these)."
-    - sentence: "___ вулиця гарна."
-      answer: "Та"
-      options: ["Та", "Той", "Те", "Ті"]
-      explanation: "Вулиця is feminine, so it takes та (that)."
-    - sentence: "___ стілець зручний."
-      answer: "Той"
-      options: ["Той", "Та", "Те", "Ті"]
-      explanation: "Стілець is masculine, so it takes той (that)."
-    - sentence: "___ місто далеко."
-      answer: "Те"
-      options: ["Те", "Той", "Та", "Ті"]
-      explanation: "Місто is neuter, so it takes те (that)."
-    - sentence: "___ книги цікаві."
-      answer: "Ті"
-      options: ["Ті", "Той", "Та", "Те"]
-      explanation: "Книги is plural, so it takes ті (those)."
-    - sentence: "___ торт смачний."
-      answer: "Цей"
-      options: ["Цей", "Ця", "Це", "Ці"]
-      explanation: "Торт is masculine, so it takes цей (this)."
-    - sentence: "___ дівчина — студентка."
-      answer: "Ця"
-      options: ["Ця", "Цей", "Це", "Ці"]
-      explanation: "Дівчина is feminine, so it takes ця (this)."
-
+  - sentence: _____ хлопець читає книгу.
+    answer: цей
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Хлопець is masculine, so we use цей (this, masculine).
+  - sentence: _____ дівчина — моя сестра.
+    answer: ця
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Дівчина is feminine, so we use ця (this, feminine).
+  - sentence: _____ озеро — велике.
+    answer: це
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Озеро is neuter, so we use це (this, neuter).
+  - sentence: _____ студенти — нові.
+    answer: ці
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Студенти is plural, so we use ці (these).
+  - sentence: _____ будинок — старий.
+    answer: той
+    options:
+    - той
+    - та
+    - те
+    - ті
+    explanation: Будинок is masculine, so we use той (that, masculine).
+  - sentence: _____ вулиця — гарна.
+    answer: та
+    options:
+    - той
+    - та
+    - те
+    - ті
+    explanation: Вулиця is feminine, so we use та (that, feminine).
+  - sentence: _____ місто — нове.
+    answer: те
+    options:
+    - той
+    - та
+    - те
+    - ті
+    explanation: Місто is neuter, so we use те (that, neuter).
+  - sentence: _____ люди — мої друзі.
+    answer: ті
+    options:
+    - той
+    - та
+    - те
+    - ті
+    explanation: Люди is plural, so we use ті (those).
+  - sentence: _____ книга — цікава.
+    answer: ця
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Книга is feminine, so we use ця (this, feminine).
+  - sentence: _____ стілець — новий.
+    answer: цей
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+    explanation: Стілець is masculine, so we use цей (this, masculine).
 - type: quiz
-  title: "Gender Agreement with Demonstratives"
-  instruction: "Choose the correct answer for each question."
+  title: Demonstrative Pronoun Agreement
+  instruction: Choose the correct answer for each question about Ukrainian demonstrative
+    pronouns.
   items:
-    - question: "Which demonstrative do you use with книга (this)?"
-      options:
-        - text: "ця"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "Книга is feminine, so it takes ця."
-    - question: "Which demonstrative do you use with будинок (that)?"
-      options:
-        - text: "той"
-          correct: true
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "Будинок is masculine, so it takes той."
-    - question: "Which demonstrative do you use with озеро (this)?"
-      options:
-        - text: "це"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "Озеро is neuter, so it takes це."
-    - question: "Which demonstrative do you use with стільці (these)?"
-      options:
-        - text: "ці"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-      explanation: "Стільці is plural, so it takes ці — one form for all plural nouns."
-    - question: "Which demonstrative do you use with вулиця (that)?"
-      options:
-        - text: "та"
-          correct: true
-        - text: "той"
-          correct: false
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "Вулиця is feminine, so it takes та."
-    - question: "Which demonstrative do you use with місто (that)?"
-      options:
-        - text: "те"
-          correct: true
-        - text: "той"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "Місто is neuter, so it takes те."
-    - question: "What is the plural form of цей, ця, and це?"
-      options:
-        - text: "ці"
-          correct: true
-        - text: "ті"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-      explanation: "All three singular forms (цей, ця, це) merge into one plural: ці."
-    - question: "Which demonstrative do you use with хлопець (this)?"
-      options:
-        - text: "цей"
-          correct: true
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "Хлопець is masculine, so it takes цей."
-    - question: "All 'this/these' forms in Ukrainian start with which letter?"
-      options:
-        - text: "ц"
-          correct: true
-        - text: "т"
-          correct: false
-        - text: "в"
-          correct: false
-        - text: "м"
-          correct: false
-      explanation: "Цей, ця, це, ці — all start with ц. The 'that/those' forms start with т."
-    - question: "All 'that/those' forms in Ukrainian start with which letter?"
-      options:
-        - text: "т"
-          correct: true
-        - text: "ц"
-          correct: false
-        - text: "д"
-          correct: false
-        - text: "с"
-          correct: false
-      explanation: "Той, та, те, ті — all start with т."
-    - question: "Which demonstrative do you use with кафе (this)?"
-      options:
-        - text: "це"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "Кафе is neuter, so it takes це."
-    - question: "Which demonstrative do you use with торт (that)?"
-      options:
-        - text: "той"
-          correct: true
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "Торт is masculine (consonant ending), so it takes той."
-
+  - question: Which demonstrative pronoun do you use with a masculine noun to say
+      'this'?
+    options:
+    - text: цей
+      correct: true
+    - text: ця
+      correct: false
+    - text: це
+      correct: false
+    - text: ці
+      correct: false
+    explanation: Цей is the masculine singular form of 'this' — цей хлопець, цей будинок.
+  - question: Which demonstrative pronoun do you use with a feminine noun to say 'that'?
+    options:
+    - text: той
+      correct: false
+    - text: та
+      correct: true
+    - text: те
+      correct: false
+    - text: ті
+      correct: false
+    explanation: Та is the feminine singular form of 'that' — та вулиця, та дівчина.
+  - question: How do you say 'this city' in Ukrainian? (місто is neuter)
+    options:
+    - text: цей місто
+      correct: false
+    - text: ця місто
+      correct: false
+    - text: це місто
+      correct: true
+    - text: ці місто
+      correct: false
+    explanation: Місто is neuter, so we use це — це місто.
+  - question: How do you say 'those people' in Ukrainian?
+    options:
+    - text: той люди
+      correct: false
+    - text: та люди
+      correct: false
+    - text: те люди
+      correct: false
+    - text: ті люди
+      correct: true
+    explanation: Люди is plural, so we use ті (those) — gender does not matter in
+      plural.
+  - question: What is special about the word ці?
+    options:
+    - text: It is used only for feminine nouns
+      correct: false
+    - text: It is the plural form for all genders
+      correct: true
+    - text: It means 'that' for neuter nouns
+      correct: false
+    - text: It is used only for masculine nouns
+      correct: false
+    explanation: Ці is the universal plural form — цей, ця, and це all become ці in
+      the plural.
+  - question: Which sentence uses це as a linking word meaning 'This is...'?
+    options:
+    - text: Це місто — старе.
+      correct: false
+    - text: Це стілець.
+      correct: true
+    - text: Це озеро — велике.
+      correct: false
+    - text: Це село — гарне.
+      correct: false
+    explanation: '''Це стілець'' means ''This is a chair'' — це acts as a linking
+      word, not a gender-matching pronoun. Стілець is masculine, but це does not change.'
+  - question: Why is 'цей книжки' incorrect?
+    options:
+    - text: Книжки is feminine, so it needs ця
+      correct: false
+    - text: Книжки is plural, so it needs ці
+      correct: true
+    - text: Книжки is neuter, so it needs це
+      correct: false
+    - text: Цей is not a real Ukrainian word
+      correct: false
+    explanation: Книжки is the plural form of книжка. All plural nouns use ці, regardless
+      of gender.
+  - question: How do you say 'that chair' in Ukrainian? (стілець is masculine)
+    options:
+    - text: та стілець
+      correct: false
+    - text: те стілець
+      correct: false
+    - text: той стілець
+      correct: true
+    - text: ті стілець
+      correct: false
+    explanation: Стілець is masculine, so we use той — той стілець.
+  - question: In the sentence 'Та дівчина та її подруга', what does the first та mean?
+    options:
+    - text: and
+      correct: false
+    - text: that (feminine)
+      correct: true
+    - text: this (feminine)
+      correct: false
+    - text: those
+      correct: false
+    explanation: The first та is a demonstrative pronoun meaning 'that girl'. The
+      second та is the conjunction 'and'.
+  - question: Which form means 'that' for a neuter noun?
+    options:
+    - text: той
+      correct: false
+    - text: та
+      correct: false
+    - text: те
+      correct: true
+    - text: ті
+      correct: false
+    explanation: Те is the neuter singular form of 'that' — те озеро, те місто.
+  - question: You are in a cafe and want to point at a cake right in front of you.
+      What do you say?
+    options:
+    - text: Той торт, будь ласка.
+      correct: false
+    - text: Цей торт, будь ласка.
+      correct: true
+    - text: Ті торт, будь ласка.
+      correct: false
+    - text: Ця торт, будь ласка.
+      correct: false
+    explanation: The cake is close to you, so use цей (this). Торт is masculine —
+      цей торт.
+  - question: How do you say 'these books' in Ukrainian?
+    options:
+    - text: ця книжки
+      correct: false
+    - text: цей книжки
+      correct: false
+    - text: це книжки
+      correct: false
+    - text: ці книжки
+      correct: true
+    explanation: Книжки is plural, so we always use ці — ці книжки.
 - type: match-up
-  title: "Match Demonstrative Phrases to English"
-  instruction: "Match each Ukrainian phrase with its English translation."
+  title: Match the Demonstrative to Its Noun
+  instruction: Match each noun with the correct demonstrative pronoun for 'this'.
   pairs:
-    - left: "цей хлопець"
-      right: "this guy"
-    - left: "ця книга"
-      right: "this book"
-    - left: "це місто"
-      right: "this city"
-    - left: "ці студенти"
-      right: "these students"
-    - left: "той будинок"
-      right: "that building"
-    - left: "та вулиця"
-      right: "that street"
-    - left: "те озеро"
-      right: "that lake"
-    - left: "ті люди"
-      right: "those people"
-    - left: "цей стілець"
-      right: "this chair"
-    - left: "ця дівчина"
-      right: "this girl"
-
+  - left: хлопець (guy)
+    right: цей
+  - left: дівчина (girl)
+    right: ця
+  - left: місто (city)
+    right: це
+  - left: книжки (books)
+    right: ці
+  - left: будинок (building)
+    right: цей
+  - left: вулиця (street)
+    right: ця
+  - left: озеро (lake)
+    right: це
+  - left: студенти (students)
+    right: ці
+  - left: стілець (chair)
+    right: цей
+  - left: школа (school)
+    right: ця
 - type: group-sort
-  title: "Sort Nouns by Gender"
-  instruction: "Sort these nouns into groups based on which demonstrative form they take."
+  title: Sort by Gender Group
+  instruction: Sort these nouns into the correct demonstrative group. Which pronoun
+    — цей, ця, це, or ці — goes with each noun?
   groups:
-    - name: "Masculine (цей / той)"
-      items:
-        - "будинок"
-        - "хлопець"
-        - "стілець"
-        - "торт"
-    - name: "Feminine (ця / та)"
-      items:
-        - "книга"
-        - "вулиця"
-        - "дівчина"
-        - "подруга"
-    - name: "Neuter (це / те)"
-      items:
-        - "місто"
-        - "озеро"
-        - "кафе"
-    - name: "Plural (ці / ті)"
-      items:
-        - "студенти"
-        - "книги"
-        - "будинки"
-
-- type: true-false
-  title: "True or False?"
-  instruction: "Decide whether each statement is true or false."
-  items:
-    - statement: "The Ukrainian word for 'this' changes depending on the noun's gender."
-      correct: true
-      explanation: "Correct — цей (masculine), ця (feminine), це (neuter)."
-    - statement: "Ці is the plural form for all genders — masculine, feminine, and neuter."
-      correct: true
-      explanation: "All three singular forms collapse into one plural: ці."
-    - statement: "The word та always means 'that' in Ukrainian."
-      correct: false
-      explanation: "Та can also mean 'and' (like і). Test it: can you replace та with і? If yes, it means 'and.'"
-    - statement: "In the sentence 'Це кафе.' (with nothing after), це works as a demonstrative pronoun meaning 'this cafe.'"
-      correct: false
-      explanation: "When це stands alone before a noun, it works as a copula meaning 'This is a cafe.'"
-    - statement: "Цей is the correct demonstrative for the noun книга."
-      correct: false
-      explanation: "Книга is feminine, so it takes ця, not цей."
-    - statement: "Той, та, те, ті are used for things that are farther away from the speaker."
-      correct: true
-      explanation: "The 'that/those' set is for distant objects, like English 'that over there.'"
-    - statement: "You can replace та with і to check if та means 'and.'"
-      correct: true
-      explanation: "If the sentence still makes sense with і, then та is a conjunction meaning 'and.'"
-    - statement: "The plural of той, та, and те is ті."
-      correct: true
-      explanation: "Just like цей/ця/це become ці, the forms той/та/те become ті in the plural."
-
-- type: unjumble
-  title: "Put the Words in Order"
-  instruction: "Arrange the words to form a correct Ukrainian sentence."
-  items:
-    - words: ["книга", "Ця", "цікава"]
-      answer: "Ця книга цікава"
-    - words: ["старий", "будинок", "Той"]
-      answer: "Той будинок старий"
-    - words: ["нові", "будинки", "Ці"]
-      answer: "Ці будинки нові"
-    - words: ["велике", "Це", "озеро"]
-      answer: "Це озеро велике"
-    - words: ["гарна", "вулиця", "Та"]
-      answer: "Та вулиця гарна"
-    - words: ["цікаві", "книги", "Ті"]
-      answer: "Ті книги цікаві"
-
-- type: quiz
-  title: "This or That? Proximity and Ambiguity"
-  instruction: "Choose the correct answer."
-  items:
-    - question: "You're holding a book and want to say 'this book.' Which is correct?"
-      options:
-        - text: "ця книга"
-          correct: true
-        - text: "цей книга"
-          correct: false
-        - text: "це книга"
-          correct: false
-        - text: "ці книга"
-          correct: false
-      explanation: "Книга is feminine, so 'this book' is ця книга."
-    - question: "You see a building across the street. How do you say 'that building'?"
-      options:
-        - text: "той будинок"
-          correct: true
-        - text: "та будинок"
-          correct: false
-        - text: "те будинок"
-          correct: false
-        - text: "ті будинок"
-          correct: false
-      explanation: "Будинок is masculine, so 'that building' is той будинок."
-    - question: "In 'Та дівчина та її подруга,' which та means 'and'?"
-      options:
-        - text: "The second та"
-          correct: true
-        - text: "The first та"
-          correct: false
-        - text: "Both"
-          correct: false
-        - text: "Neither"
-          correct: false
-      explanation: "The first та describes дівчина (that girl). The second та connects two people (and her friend)."
-    - question: "What does це mean in 'Це кафе.' (with nothing after)?"
-      options:
-        - text: "This is (copula)"
-          correct: true
-        - text: "This (demonstrative)"
-          correct: false
-        - text: "That"
-          correct: false
-        - text: "These"
-          correct: false
-      explanation: "When це + noun + period, it is a copula: 'This is a cafe.'"
-    - question: "What does це mean in 'Це кафе гарне.'?"
-      options:
-        - text: "This (demonstrative)"
-          correct: true
-        - text: "This is (copula)"
-          correct: false
-        - text: "That"
-          correct: false
-        - text: "A"
-          correct: false
-      explanation: "When це + noun + continues, it is a demonstrative: 'This cafe is nice.'"
-    - question: "How do you say 'these lakes' in Ukrainian?"
-      options:
-        - text: "ці озера"
-          correct: true
-        - text: "це озера"
-          correct: false
-        - text: "цей озера"
-          correct: false
-        - text: "ця озера"
-          correct: false
-      explanation: "Озера is plural, so it takes ці — the one plural form for all genders."
-    - question: "If you want to say 'that chair' (far away), which is correct?"
-      options:
-        - text: "той стілець"
-          correct: true
-        - text: "цей стілець"
-          correct: false
-        - text: "та стілець"
-          correct: false
-        - text: "те стілець"
-          correct: false
-      explanation: "Стілець is masculine, and for a far object we use той."
-    - question: "Which demonstrative means 'those' for all plural nouns?"
-      options:
-        - text: "ті"
-          correct: true
-        - text: "ці"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-      explanation: "Ті is the plural form of той/та/те, meaning 'those'."
-    - question: "How do you say 'this city'?"
-      options:
-        - text: "це місто"
-          correct: true
-        - text: "те місто"
-          correct: false
-        - text: "ця місто"
-          correct: false
-        - text: "цей місто"
-          correct: false
-      explanation: "Місто is neuter, so 'this city' is це місто."
-    - question: "If your friend mentions a book and you want to refer back to 'that book', you say:"
-      options:
-        - text: "та книга"
-          correct: true
-        - text: "ця книга"
-          correct: false
-        - text: "ті книга"
-          correct: false
-        - text: "те книга"
-          correct: false
-      explanation: "Книга is feminine, and 'that' (previously mentioned/distant) is та."
-    - question: "Which demonstrative means 'these' for all plural nouns?"
-      options:
-        - text: "ці"
-          correct: true
-        - text: "ті"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-      explanation: "Ці is the plural form of цей/ця/це, meaning 'these'."
-    - question: "To say 'this guy is my friend', you start with:"
-      options:
-        - text: "Цей хлопець"
-          correct: true
-        - text: "Той хлопець"
-          correct: false
-        - text: "Ця хлопець"
-          correct: false
-        - text: "Це хлопець"
-          correct: false
-      explanation: "Хлопець is masculine and 'this' is цей."
-
-- type: match-up
-  title: "This vs That — Proximity Pairs"
-  instruction: "Match each 'this' phrase with its 'that' equivalent."
-  pairs:
-    - left: "цей стілець"
-      right: "той стілець"
-    - left: "ця вулиця"
-      right: "та вулиця"
-    - left: "це озеро"
-      right: "те озеро"
-    - left: "ці будинки"
-      right: "ті будинки"
-    - left: "цей торт"
-      right: "той торт"
-    - left: "ця книга"
-      right: "та книга"
-    - left: "це місто"
-      right: "те місто"
-    - left: "ці студенти"
-      right: "ті студенти"
-    - left: "цей будинок"
-      right: "той будинок"
-    - left: "ця дівчина"
-      right: "та дівчина"
+  - name: цей (masculine)
+    items:
+    - будинок
+    - хлопець
+    - стілець
+  - name: ця (feminine)
+    items:
+    - вулиця
+    - дівчина
+    - школа
+  - name: це (neuter)
+    items:
+    - місто
+    - озеро
+    - село
+  - name: ці (plural)
+    items:
+    - книжки
+    - студенти
+    - люди
+- type: classify
+  title: це as Linking Word or Demonstrative?
+  instruction: 'Classify each sentence: does це act as a linking word (''This is...'')
+    or as a demonstrative pronoun (''this specific neuter noun'')?'
+  categories:
+  - items:
+    - Це стілець.
+    - Це кафе.
+    - Це місто.
+    label: Linking word (This is...)
+  - items:
+    - Це місто — старе.
+    - Це озеро — велике.
+    - Це кафе — гарне.
+    label: Demonstrative (this + neuter noun)

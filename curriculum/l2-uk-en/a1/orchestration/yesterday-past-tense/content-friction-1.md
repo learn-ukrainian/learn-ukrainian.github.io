@@ -1,4 +1,0 @@
-**Phase**: Full Build
-**Friction Type**: PLAN_GAP
-**Problem**: The plan specifies "дужий" in cumulative vocabulary, but дужий means "strong/powerful" — not "tired." The dialogue line "Я був дуже дужий" (intended as "I was very tired") is semantically wrong. The correct word for "tired" would be втомлений or стомлений, neither of which is in the cumulative vocabulary.
-**Proposed Fix**: Either (1) add втомлений to this module's vocabulary, (2) remove the "tired" line from the dialogue, or (3) rephrase using known vocabulary. The content currently uses the line — reviewer should flag for correction.

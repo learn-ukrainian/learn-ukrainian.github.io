@@ -1,239 +1,247 @@
 - type: watch-and-repeat
-  title: 'Listen and Repeat: First 10 Letters'
-  instruction: 'Watch the video for each letter, listen carefully to Anna, and repeat the sound aloud.'
+  title: "Listen and Repeat the 10 Practice Letters"
+  instruction: "Watch each short video, listen carefully to the sound, and repeat it aloud. Pay special attention to letters that look like English letters but sound different!"
   items:
-    - letter: 'А'
-      word: 'мама'
-      video: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE'
-      note: 'Open "a" sound'
-    - letter: 'О'
-      word: 'молоко'
-      video: 'https://www.youtube.com/watch?v=gJFxRIPRZbI'
-      note: 'Rounded "o" sound'
-    - letter: 'У'
-      word: 'тут'
-      video: 'https://www.youtube.com/watch?v=VB1O6PmtYRU'
-      note: '"oo" sound'
-    - letter: 'І'
-      word: 'кіт'
-      video: 'https://www.youtube.com/watch?v=Z9TH0H4ShGo'
-      note: '"ee" sound'
-    - letter: 'М'
-      word: 'мама'
-      video: 'https://www.youtube.com/watch?v=Ez95H4ibuJo'
-      note: 'Like English M'
-    - letter: 'Н'
-      word: 'ніс'
-      video: 'https://www.youtube.com/watch?v=vNUfiKHPYaU'
-      note: 'Looks like H, sounds like N'
-    - letter: 'Т'
-      word: 'тато'
-      video: 'https://www.youtube.com/watch?v=m-jcLR_gK0k'
-      note: 'Like English T'
-    - letter: 'К'
-      word: 'кіт'
-      video: 'https://www.youtube.com/watch?v=J7sGEI4-xJo'
-      note: 'Like English K'
-    - letter: 'С'
-      word: 'сон'
-      video: 'https://www.youtube.com/watch?v=7UsFBgSL91E'
-      note: 'Looks like C, sounds like S'
-    - letter: 'Л'
-      word: 'ліс'
-      video: 'https://www.youtube.com/watch?v=v6-3Xg52Buk'
-      note: 'Like English L'
+    - letter: "А"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+      note: "Open 'a' as in 'father'"
+    - letter: "М"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      note: "Like English M"
+    - letter: "О"
+      word: "око"
+      video: "https://www.youtube.com/watch?v=gJFxRIPRZbI"
+      note: "Rounded 'o' as in 'more'"
+    - letter: "Н"
+      word: "ніс"
+      video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+      note: "Looks like English H but sounds like N — a visual trap!"
+    - letter: "У"
+      word: "тут"
+      video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+      note: "'oo' as in 'moon'"
+    - letter: "Т"
+      word: "тато"
+      video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
+      note: "Like English T"
+    - letter: "І"
+      word: "кіт"
+      video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+      note: "'ee' as in 'see'"
+    - letter: "К"
+      word: "кіт"
+      video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+      note: "Like English K"
+    - letter: "С"
+      word: "сон"
+      video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+      note: "Like English S — looks like English C but sounds like S!"
+    - letter: "Л"
+      word: "ліс"
+      video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+      note: "Like English L, tongue position differs slightly"
 
 - type: image-to-letter
-  title: 'Match Picture to Starting Letter'
-  instruction: 'Look at the emoji and select the letter the Ukrainian word starts with.'
+  title: "What Letter Does the Word Start With?"
+  instruction: "Look at the picture. Think of the Ukrainian word for it, then choose the letter it starts with."
   items:
-    - emoji: '👩'
-      answer: 'М'
-      distractors: ['Н', 'Т', 'К']
-      note: 'мама (mom)'
-    - emoji: '🐈'
-      answer: 'К'
-      distractors: ['М', 'С', 'Л']
-      note: 'кіт (cat)'
-    - emoji: '🥛'
-      answer: 'М'
-      distractors: ['О', 'С', 'Н']
-      note: 'молоко (milk)'
-    - emoji: '👁️'
-      answer: 'О'
-      distractors: ['А', 'У', 'І']
-      note: 'око (eye)'
-    - emoji: '🌲'
-      answer: 'Л'
-      distractors: ['Т', 'С', 'М']
-      note: 'ліс (forest)'
-    - emoji: '🏙️'
-      answer: 'М'
-      distractors: ['Н', 'Л', 'С']
-      note: 'місто (city)'
-    - emoji: '👨'
-      answer: 'Т'
-      distractors: ['К', 'С', 'М']
-      note: 'тато (dad)'
-    - emoji: '💤'
-      answer: 'С'
-      distractors: ['О', 'М', 'Н']
-      note: 'сон (dream)'
+    - emoji: "🐱"
+      answer: "К"
+      distractors: ["М", "С", "Т"]
+      note: "кіт (cat) starts with К"
+    - emoji: "🌲"
+      answer: "Л"
+      distractors: ["Н", "К", "М"]
+      note: "ліс (forest) starts with Л"
+    - emoji: "👁️"
+      answer: "О"
+      distractors: ["А", "І", "У"]
+      note: "око (eye) starts with О"
+    - emoji: "🏙️"
+      answer: "М"
+      distractors: ["Н", "Т", "С"]
+      note: "місто (city) starts with М"
+    - emoji: "💤"
+      answer: "С"
+      distractors: ["Т", "К", "Л"]
+      note: "сон (dream) starts with С"
+    - emoji: "👨"
+      answer: "Т"
+      distractors: ["М", "К", "Н"]
+      note: "тато (dad) starts with Т"
+    - emoji: "👃"
+      answer: "Н"
+      distractors: ["М", "Л", "С"]
+      note: "ніс (nose) starts with Н"
+    - emoji: "🥛"
+      answer: "М"
+      distractors: ["С", "К", "Л"]
+      note: "молоко (milk) starts with М"
 
 - type: classify
-  title: 'Vowels vs Consonants'
-  instruction: 'Sort the 10 practice letters into vowels (голосні) and consonants (приголосні).'
+  title: "Sort the Letters"
+  instruction: "Drag each of the 10 practice letters into the correct category. Remember: vowels use your voice only with no obstruction, consonants obstruct the airflow."
   categories:
-    - label: 'Голосні (Vowels)'
-      symbol_hint: 'vowel'
-      items: ['А', 'О', 'У', 'І']
-    - label: 'Приголосні (Consonants)'
-      symbol_hint: 'consonant'
-      items: ['М', 'Н', 'Т', 'К', 'С', 'Л']
+    - label: "Vowels"
+      symbol_hint: "vowel"
+      items: ["А", "О", "У", "І"]
+    - label: "Consonants"
+      symbol_hint: "consonant"
+      items: ["М", "Н", "Т", "К", "С", "Л"]
 
 - type: match-up
-  title: 'Match Letter to Sound'
-  instruction: 'Match each Ukrainian letter to its correct sound description.'
+  title: "Match Each Letter to Its Sound"
+  instruction: "Match each Ukrainian letter to the sound it makes. Watch out for visual traps — some letters look like English letters but sound completely different!"
   pairs:
-    - left: 'А'
-      right: 'open "a" sound'
-    - left: 'О'
-      right: 'rounded "o" sound'
-    - left: 'У'
-      right: '"oo" sound'
-    - left: 'І'
-      right: '"ee" sound'
-    - left: 'М'
-      right: '"m" sound'
-    - left: 'Н'
-      right: '"n" sound (not H!)'
-    - left: 'Т'
-      right: '"t" sound'
-    - left: 'К'
-      right: '"k" sound'
-    - left: 'С'
-      right: '"s" sound (not C!)'
-    - left: 'Л'
-      right: '"l" sound'
+    - left: "А"
+      right: "'a' as in father"
+    - left: "О"
+      right: "'o' as in more"
+    - left: "У"
+      right: "'oo' as in moon"
+    - left: "І"
+      right: "'ee' as in see"
+    - left: "М"
+      right: "/m/ sound (same as English M)"
+    - left: "Н"
+      right: "/n/ sound (looks like H but is NOT H!)"
+    - left: "Т"
+      right: "/t/ sound (same as English T)"
+    - left: "К"
+      right: "/k/ sound (same as English K)"
+    - left: "С"
+      right: "/s/ sound (looks like C but sounds like S!)"
+    - left: "Л"
+      right: "/l/ sound (similar to English L)"
 
 - type: fill-in
-  title: 'Build Syllables and Words'
-  instruction: 'Choose the correct syllable or word built from the letters.'
+  title: "Build Words from Letters and Syllables"
+  instruction: "Use what you know about blending letters to complete each word-building exercise. Choose the correct result."
   items:
-    - sentence: 'М + А = ___'
-      answer: 'МА'
-      options: ['МА', 'АМ', 'МО', 'ОМ']
-    - sentence: 'МА + МА = ___'
-      answer: 'мама'
-      options: ['мама', 'тато', 'масло', 'сало']
-    - sentence: 'Т + А = ___'
-      answer: 'ТА'
-      options: ['ТА', 'АТ', 'ТО', 'ОТ']
-    - sentence: 'ТА + ТО = ___'
-      answer: 'тато'
-      options: ['тато', 'мама', 'місто', 'молоко']
-    - sentence: 'К + І = ___'
-      answer: 'КІ'
-      options: ['КІ', 'ІК', 'КО', 'ОК']
-    - sentence: 'КІ + Т = ___'
-      answer: 'кіт'
-      options: ['кіт', 'сон', 'ліс', 'ніс']
-    - sentence: 'С + О = ___'
-      answer: 'СО'
-      options: ['СО', 'СА', 'СУ', 'СІ']
-    - sentence: 'СО + М = ___'
-      answer: 'сом'
-      options: ['сом', 'сон', 'мак', 'сік']
+    - sentence: "М + А → МА. МА + МА → ___"
+      answer: "мама"
+      options: ["мама", "масло", "молоко", "мак"]
+      explanation: "Blending М+А gives МА. Two МА syllables make мама (mom)."
+    - sentence: "К + І → КІ. КІ + Т → ___"
+      answer: "кіт"
+      options: ["кіт", "кіно", "там", "тут"]
+      explanation: "Blending К+І gives КІ. Adding Т makes кіт (cat)."
+    - sentence: "Т + А → ТА. ТА + ТО → ___"
+      answer: "тато"
+      options: ["тато", "там", "так", "тут"]
+      explanation: "Blending Т+А gives ТА. Adding ТО makes тато (dad)."
+    - sentence: "М + О → МО. МО + ЛО + КО → ___"
+      answer: "молоко"
+      options: ["молоко", "масло", "місто", "мама"]
+      explanation: "Three syllables МО+ЛО+КО blend into молоко (milk)."
+    - sentence: "Л + І → ЛІ. ЛІ + С → ___"
+      answer: "ліс"
+      options: ["ліс", "ніс", "сік", "стіл"]
+      explanation: "Blending Л+І gives ЛІ. Adding С makes ліс (forest)."
+    - sentence: "С + О → СО. СО + Н → ___"
+      answer: "сон"
+      options: ["сон", "сом", "сік", "сало"]
+      explanation: "Blending С+О gives СО. Adding Н makes сон (dream)."
+    - sentence: "М + А → МА. МА + К → ___"
+      answer: "мак"
+      options: ["мак", "мама", "масло", "місто"]
+      explanation: "Blending М+А gives МА. Adding К makes мак (poppy)."
+    - sentence: "М + І → МІ. МІ + С + ТО → ___"
+      answer: "місто"
+      options: ["місто", "масло", "молоко", "мак"]
+      explanation: "Blending М+І gives МІ. Adding СТО makes місто (city)."
 
 - type: quiz
-  title: 'Read and Identify'
-  instruction: 'Read the Ukrainian word and choose the correct meaning.'
+  title: "Read and Identify"
+  instruction: "Read the Ukrainian word and choose what it means. Use your knowledge of the 10 practice letters to sound out each word!"
   items:
-    - question: 'What does the word "мама" mean?'
+    - question: "What does the word кіт mean?"
       options:
-        - text: 'mom'
+        - text: "cat"
           correct: true
-        - text: 'dad'
+        - text: "milk"
           correct: false
-        - text: 'cat'
+        - text: "table"
           correct: false
-        - text: 'milk'
+        - text: "forest"
           correct: false
-      explanation: 'МАМА means mom in Ukrainian.'
-    - question: 'What does the word "кіт" mean?'
+      explanation: "кіт = К+І+Т. It means cat."
+    - question: "What does the word молоко mean?"
       options:
-        - text: 'cat'
+        - text: "butter"
+          correct: false
+        - text: "milk"
           correct: true
-        - text: 'dog'
+        - text: "juice"
           correct: false
-        - text: 'eye'
+        - text: "lard"
           correct: false
-        - text: 'nose'
-          correct: false
-      explanation: 'КІТ means cat in Ukrainian.'
-    - question: 'What does the word "молоко" mean?'
+      explanation: "молоко = МО+ЛО+КО. It means milk."
+    - question: "What does the word ліс mean?"
       options:
-        - text: 'milk'
+        - text: "nose"
+          correct: false
+        - text: "dream"
+          correct: false
+        - text: "forest"
           correct: true
-        - text: 'butter'
+        - text: "city"
           correct: false
-        - text: 'juice'
-          correct: false
-        - text: 'water'
-          correct: false
-      explanation: 'МОЛОКО means milk in Ukrainian.'
-    - question: 'What does the word "місто" mean?'
+      explanation: "ліс = Л+І+С. It means forest."
+    - question: "What does the word масло mean?"
       options:
-        - text: 'city'
+        - text: "poppy"
+          correct: false
+        - text: "city"
+          correct: false
+        - text: "catfish"
+          correct: false
+        - text: "butter"
           correct: true
-        - text: 'forest'
-          correct: false
-        - text: 'table'
-          correct: false
-        - text: 'cinema'
-          correct: false
-      explanation: 'МІСТО means city in Ukrainian.'
-    - question: 'What does the word "ліс" mean?'
+      explanation: "масло = МАС+ЛО. It means butter."
+    - question: "Which Ukrainian letter looks like English H but sounds like N?"
       options:
-        - text: 'forest'
+        - text: "Н"
           correct: true
-        - text: 'city'
+        - text: "М"
           correct: false
-        - text: 'table'
+        - text: "К"
           correct: false
-        - text: 'lard'
+        - text: "Т"
           correct: false
-      explanation: 'ЛІС means forest in Ukrainian.'
-    - question: 'What does the word "око" mean?'
+      explanation: "Н is the biggest visual trap for beginners — it looks like H but makes the /n/ sound."
+    - question: "Which Ukrainian letter looks like English C but sounds like S?"
       options:
-        - text: 'eye'
+        - text: "К"
+          correct: false
+        - text: "Л"
+          correct: false
+        - text: "С"
           correct: true
-        - text: 'nose'
+        - text: "Т"
           correct: false
-        - text: 'dream'
-          correct: false
-        - text: 'dad'
-          correct: false
-      explanation: 'ОКО means eye in Ukrainian.'
-    - question: 'What does the word "ніс" mean?'
+      explanation: "С looks like English C but makes the /s/ sound."
+    - question: "What does the word стіл mean?"
       options:
-        - text: 'nose'
+        - text: "juice"
+          correct: false
+        - text: "table"
           correct: true
-        - text: 'eye'
+        - text: "dream"
           correct: false
-        - text: 'cat'
+        - text: "here"
           correct: false
-        - text: 'yes'
-          correct: false
-      explanation: 'НІС means nose in Ukrainian.'
-    - question: 'What does the word "тато" mean?'
+      explanation: "стіл = С+Т+І+Л. It means table."
+    - question: "What does the word сік mean?"
       options:
-        - text: 'dad'
+        - text: "lard"
+          correct: false
+        - text: "poppy"
+          correct: false
+        - text: "eye"
+          correct: false
+        - text: "juice"
           correct: true
-        - text: 'mom'
-          correct: false
-        - text: 'dream'
-          correct: false
-        - text: 'there'
-          correct: false
-      explanation: 'ТАТО means dad in Ukrainian.'
+      explanation: "сік = С+І+К. It means juice."

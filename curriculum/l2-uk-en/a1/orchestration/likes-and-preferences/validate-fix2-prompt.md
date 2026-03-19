@@ -1,93 +1,88 @@
-        # Fix ALL 16 issue(s) in `likes-and-preferences`
+        # Fix ALL 15 issue(s) in `likes-and-preferences`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 16 issues. You must produce fixes for all 16.**
-        **After you finish, count your fixes. If the count is less than 16, go back and fix the ones you missed.**
+        **There are 15 issues. You must produce fixes for all 15.**
+        **After you finish, count your fixes. If the count is less than 15, go back and fix the ones you missed.**
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 42
+**Where:** ~line 7
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 100
+**What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 8
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 110
+**Where:** ~line 26
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 111
-
-### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 112
-
-### Fix 6: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 118
+**Where:** ~line 27
+
+### Fix 5: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'Йому' (dative, VESUM: noun:unanim:m:v_dav:pron:pers:3) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Йому' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 28
+
+### Fix 6: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 51
 
 ### Fix 7: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 119
+**What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 53
 
 ### Fix 8: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 120
+**What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 55
 
 ### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 124
+**What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 90
 
 ### Fix 10: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 125
+**What:** Non-nominative 'вам' (dative, VESUM: noun:anim:p:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'вам' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 100
 
 ### Fix 11: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Тобі' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 126
+**Where:** ~line 101
 
 ### Fix 12: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Тобі' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 134
+**Where:** ~line 107
 
 ### Fix 13: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M19. Accusative not taught until M25.
-**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 136
+**What:** Non-nominative 'тобі' (dative, VESUM: noun:anim:s:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'тобі' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 108
 
 ### Fix 14: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'вам' (dative, VESUM: noun:anim:p:v_dav:pron:pers:2) in M19. Only nominative case allowed before M25.
-**How to fix:** Replace 'вам' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 138
+**What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
+**How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 109
 
 ### Fix 15: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'Мені' (dative, VESUM: noun:anim:s:v_dav:pron:pers:1) in M19. Only nominative case allowed before M25.
 **How to fix:** Replace 'Мені' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 144
-
-### Fix: Gate `Immersion` FAIL — 25.4% HIGH (target 15-25% (M19))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
+**Where:** ~line 124
 
 ### Other Audit Failures
 
 ```
 📚 PEDAGOGICAL VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/likes-and-preferences-audit.log for details)
 ```
 
 
@@ -142,6 +137,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 
 ## Verification Tools (USE THEM)
@@ -163,7 +159,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 16 issues listed above — every single one, not a subset
+        1. Fix ALL 15 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

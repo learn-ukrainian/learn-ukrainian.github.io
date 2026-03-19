@@ -129,8 +129,8 @@ Read ALL files before writing.
 
 ## Module Constraints (HARD FAIL if violated)
 
-GRAMMAR CONSTRAINTS (A1.1 — First Contact):
-Keep grammar simple — this is the learner's first exposure to Ukrainian.
+GRAMMAR CONSTRAINTS (A1.1 — Grammar, M07-M14):
+Keep grammar simple — first exposure to Ukrainian grammar.
 
 ALLOWED:
 - Це + noun: «Це кіт», «Це мама»
@@ -140,16 +140,10 @@ ALLOWED:
 - Так/Ні answers
 - Adj + noun: «великий дім», «нова книга»
 
-BANNED (too complex for first contact):
-- Past tense, future tense, conditionals
-- Participles, passive voice, gerunds
-- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)
-- Do not explicitly teach cases — use nouns in natural contexts
+BANNED: Past/future tense, conditionals, participles, passive, gerunds,
+compound sentences (no і/а/але joining clauses)
 
-METALANGUAGE:
-- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'
-- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')
-- Explanatory prose in English, Ukrainian for examples and dialogues
+METALANGUAGE: English first, Ukrainian in parentheses. Bilingual headings.
 
 
 

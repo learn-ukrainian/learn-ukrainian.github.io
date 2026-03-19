@@ -2,14 +2,15 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 6
 deviations:
-  - "Quiz focus says 'listen and identify' but activities are text-based (no audio support in YAML schema). Adapted to visual/conceptual И vs І discrimination using words from the lesson content."
-  - "Group-sort plan says 8 items but schema description recommends ≥10 total across groups. Used 10 items (8 two-sound + 2 one-sound) to satisfy schema."
-  - "Vocabulary combines моя and моє into a single мій entry with notes about both forms, since they share the same lemma. Added око as 20th item."
+  - "group-sort: Plan specified 8 items but schema requires minimum 10 total across groups. Expanded TWO-sounds group from 6 to 8 items (added їжа and юшка, both word-initial iotated vowels from lesson content). ONE-sound group kept at 2 (дядько, люди) — these are the only after-consonant iotated vowel examples in the lesson."
+  - "quiz: Plan focus says 'listen and identify which vowel you hear' but activities cannot play audio. Adapted to visual identification and knowledge questions, all staying on the И/І theme as specified."
+  - "Vocabulary: Plan required моя but VESUM lemma is мій. Listed as мій with notes about моя/моє forms."
 frictions:
   - type: PLAN_GAP
-    description: "Group-sort has only 2 lesson words for 'one sound after consonant' group (дядько, люди). The lesson content introduces very few iotated-after-consonant examples."
-    proposed_fix: "Plan could add more after-consonant examples like ряд, тюль, or сядь to the content outline for better balance."
+    description: "group-sort plan says 8 items but A1 schema requires minimum 10 total items across groups. The lesson content only provides 2 clear after-consonant examples (дядько, люди), creating a lopsided 8:2 split."
+    proposed_fix: "Update plan activity_hints for group-sort to specify 10+ items. Consider adding more after-consonant iotated vowel examples to the lesson content (e.g., тітка with softened Т before І, or similar)."
 unverified_terms: []
 review_focus:
-  - "Group-sort imbalance: 8 items in 'Two sounds' vs 2 in 'One sound' — pedagogically justified (lesson emphasizes word-initial iotated vowels) but visually lopsided."
-  - "Fill-in uses English sentences with number answers — non-standard for fill-in type but matches the plan focus (counting syllables). Verify renderer handles number-string options correctly."
+  - "group-sort: The 8:2 split between groups is pedagogically lopsided. Reviewer should assess whether this imbalance is acceptable or whether the activity needs restructuring."
+  - "quiz item 10: distractor сір is intentionally not a real word (to test И vs І). May need vesum_exempt flag if validator flags it."
+  - "fill-in: Using number strings ('1', '2', '3', '4') as options rather than Ukrainian words. Verify this is acceptable for A1.1 where English scaffolding is standard."

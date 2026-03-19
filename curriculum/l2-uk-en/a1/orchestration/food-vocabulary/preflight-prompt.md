@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 39 of the A1 track (Ukrainian for English speakers). Title: "Food and Drink" — What Shall We Eat?. Phase: A1.4 [Tenses & Daily Life]. Previous module: My Daily Routine. Next module: Shopping And Market.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,51 +60,35 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 38
 **Previous module:** My Daily Routine
 
-**Cumulative vocabulary (436 words):**
+**Cumulative vocabulary (278 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
-яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, Львів, м'ясо, п'ять, сім'я, цукор
-час, що, джерело, дзвін, осінь, м'яч, щастя, бджола, дзеркало, черепаха
-цибуля, хлопець, вчителька, факт, фото, чай, кінь, сестра, дерево, вулиця
-автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів, ґудзик, кава
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, студент, студентка, українець, українка, вчитель, ось, мене звати, особовий займенник
-займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт
-цей, ця, ці, той, та, те, ті, кімната, стілець, ліжко
-лампа, шафа, двері, квартира, новий, старий, гарний, великий, малий, поганий
-цікавий, синій, червоний, молодий, дорогий, дешевий, смачний, зелений, який, множина
-білий, чорний, жовтий, бордо, беж, хакі, колір, сорочка, штани, сукня
-плаття, куртка, светр, джинси, окуляри, носити, одягати, розмір, дієслово, друг
-музей, машина, пісня, зошит, ручка, словник, читати, говорити, знати, розуміти
-питати, відповідати, перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати
-думати, вивчати, відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити
-любити, їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, гість
-природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися
-знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе
-часто, швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний
-хороший, фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій, твій
-твоя, твоє, його, її, наш, наша, ваш, ваша, їхній, свій
-чий, чия, чиє, річ, сумка, будинок, озеро, такий, інший, кожний
-сам, дівчина, година, хвилина, тиждень, місяць, рік, ранок, вечір, вчасно
-понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, зараз, пізно, рано
-січень, мати, чути, брати, купувати, гречка, пакет, шукати, знаходити, відкривати
-проблема, голос, подруга, лікар, пес, колега, сусід, дитина, матуся, татусь
-братик, сестричка, знайомий, в, на, через, про, за, готель, вокзал
-країна, міст, парк, екскурсія, квиток, іти, їхати, дякувати, у, магазин
-робота, банк, підлога, стіна, туалет, нога, маяти, куди, дуже, дужий
-йти, людина, метро, багато, використовувати, аптека, простий, український, жаль, відсутність
-гроші, сьогодні, українська, означати, форма, водити, закінчення, відмінок, опис, знахідний
-правило, правити, жіночий, ом, веліти, вести, йога, зараза, кий, краса
-красити, нове, до, місцевий, звідки, рух, додому, вчора, бути, минулий
-раніше, спати, чоловічий, середній, завтра, буду, наступний, план, збиратися, скоро
-потім, післязавтра, вранці, вдень, ввечері, майбутнє
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
+вухо, їжа, яйце, юшка, каша, небо, сир, Європа, хліб, зуб
+дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь
+люди, суп, вода, дим, люк, сіль, Львів, м'ясо, п'ять, сім'я
+цукор, час, що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола
+дзеркало, черепаха, чай, фото, склад, голосний, приголосний, перенос, сестра, дерево
+вулиця, автобус, бібліотека, університет, буква, звук, слово, книга, замок, добрий
+школа, мука, хата, кава, книжка, дорога, далеко, наголос, інтонація, питання
+відповідь, кафе, голос, брат, вікно, море, ніч, земля, серце, сонце
+собака, ім'я, артефакт, зона, укриття, привіт, ранок, вечір, побачення, дякувати
+ласка, вибачити, перепрошувати, приємно, пан, пані, ти, ви, дуже, щиро
+бувати, здрастуйте, справа, це, я, він, вона, воно, ми, вони
+хто, студент, студентка, вчитель, вчителька, українець, українка, ось, звати, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, квартира, ніж, ложка, блюдо, диван, крісло, річ
+немає, без, гроші, проблема, квиток, ключ, газ, від, на жаль, вогонь
+будь ласка, є, магазин, кухня, пошта, біля, навпроти, знаходитися, поруч, між
+близько, парк, аптека, банк, зупинка, метро, новий, великий, маленький, красивий
+старий, цікавий, смачний, дорогий, український, молодий, важливий, популярний, фільм, ресторан
+церква, де, куди, звідки, через, за, про, робота, центр, іти
+їхати, до, з, лікар, Київ, повертатися, виходити, аеропорт, вокзал, вчора
+бути, робити, їсти, пити, читати, дивитися, ходити, минулий, раніше, тиждень
+місяць, спати, працювати, йти, писати, варити, готувати, купувати, гуляти, додому
+завтра, наступний, план, хотіти, збиратися, скоро, потім, рік, сподіватися, мріяти
+планувати, пізніше, післязавтра, майбутнє, відпочивати, прокидатися, вмиватися, одягатися, снідати, обідати
+вечеряти, лягати, зазвичай, спочатку, нарешті, щодня, перерва, одяг
 
 **Grammar already taught (125 topics):**
 - Full alphabet overview (33 letters)
@@ -418,9 +404,9 @@ Ukrainian sentences max 10 words. Mix container types.
 
 ## 4. Outline
 
-Write **Food and Drink** for the a1 track.
+Write **Food and Drink** for the a1 track. Target: 1200–1800 words.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+### CRITICAL: EXACT H2 HEADERS (copy-paste, do not alter)
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -460,56 +446,31 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ---
 
-## 5. Guidelines
+## 5. Rules (read ALL before writing)
 
-### Workflow
-1. **Research first**: `search_text("Food noun gender Я не їм construction", grade=3-5)` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+### RULE 1: GRAMMAR — see Section 6
 
-### Beginner Lesson Arc
+Section 6 (Hard Constraints) defines exactly what grammar structures you may use for this module. Follow those constraints — they vary by module number.
 
-1. **WELCOME** — warm greeting, set context
-2. **PREVIEW** — "By the end of this module, you'll be able to..."
-3. **PRESENT** — the main content sections
-4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in the final `## Підсумок` section, tell learners what they can now do
+### RULE 2: VOCABULARY
 
-### Emotional Safety (scored — Beginner Safety dimension)
+Prioritize these Ukrainian words (from the plan). You may also use words from the cumulative vocabulary and common Ukrainian words, but these are your core teaching targets:
 
-Use direct address ("you", "your") at least 15 times throughout the module. Include encouragement ("Great job!", "You're doing well", "Don't worry"), quick wins (learner reads their first word early), and reassurance ("This is normal", "Take your time"). The learner should feel supported, not overwhelmed.
+**Allowed Ukrainian words:** хліб, борщ, м'ясо, овочі, фрукти, вода, кава, чай, молоко, сік, суп, паляниця, каша, компот, риба, сир
 
-### Writing Style
+### RULE 3: VARIATION
 
-English explains; Ukrainian is what they're learning. In each section:
-1. **Explain** the concept in English (with Ukrainian vocabulary **bolded inline**). Short Ukrainian phrases are fine inline.
-2. **Show** with **5-10 Ukrainian examples** per grammar point using bulleted lists, dialogues, and pattern boxes.
-3. **Reinforce** with a callout box (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
+Vary your formatting across sections. Do NOT start 3+ sections the same way. Mix: bulleted lists, dialogues, comparison patterns, callout boxes, practice exercises.
 
-Tables contribute zero to immersion. Use **dialogues** and **bulleted examples** for Ukrainian content.
+### RULE 4: STRESS MARKS
 
-**MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
+Write Ukrainian without stress marks — the pipeline adds them after. Exception: if the plan uses capitalized stress (молокО, далекО) to indicate stress position, you may use that notation in teaching examples.
 
-**Grammar terminology by level:**
-- A1 M1-M10: English terms in prose, bilingual section headings with em-dash: `## Голосні — Vowels`
-- A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
-- A2+: Ukrainian terms freely after first gloss
+### RULE 5: ENGLISH PROSE STYLE
 
-### Dialogue Quality
+You are a warm tutor. Use "you/your" often. Include encouragement. Keep it conversational.
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
-
-**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
-- Greeting: `— Привіт! — Привіт!`
-- Identification: `— Це кіт? — Так, це кіт.`
-- Location: `— Молоко тут? — Ні, молоко там.`
-- Combined: `— Мама тут? — Так, мама тут. А тато там.`
-
-Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
-
-**Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
+Cite textbook adaptations: `<!-- adapted from: {author}, Grade {N} -->`
 
 ## Language Quality Rules (Beginner Tier)
 
@@ -552,7 +513,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
@@ -665,18 +626,131 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-039
+level: A1
+sequence: 39
+slug: food-vocabulary
+version: '2.0'
+title: Food and Drink
+subtitle: What Shall We Eat?
+focus: vocabulary
+pedagogy: PPP
+phase: A1.4 [Tenses & Daily Life]
+word_target: 1200
+objectives:
+- Name common foods and drinks in Ukrainian
+- Express food preferences and dislikes
+- Understand the cultural significance of паляниця
+- Read a simple menu
+content_outline:
+- section: Їжа (Food)
+  words: 275
+  points:
+  - 'Basic food categories: хліб, м''ясо, риба, овочі, фрукти, каша, суп, борщ. Organized by food group for memorization.'
+  - 'Gender of food nouns: masculine (хліб, суп, борщ, сир), feminine (каша, риба, картопля), neuter (м''ясо, яблуко, молоко).
+    Gender awareness for adjective agreement.'
+  - 'Collocations with adjectives: свіжий хліб, гаряча каша, смачний борщ, домашній суп. Building natural-sounding food descriptions.'
+- section: Напої (Drinks)
+  words: 250
+  points:
+  - 'Common drinks vocabulary: вода, чай, кава, сік, молоко, компот. Gender and typical modifiers: гаряча кава, холодна вода,
+    апельсиновий сік.'
+  - 'Ordering pattern: Я хочу каву (Accusative). Будь ласка, чай з молоком. Building on Accusative knowledge from earlier
+    modules.'
+  - 'Cultural note: Ukrainian tea culture (чай з медом, чай з лимоном) vs coffee culture (кава по-львівськи). Regional preferences
+    across Ukraine.'
+- section: Паляниця (The Shibboleth Bread)
+  words: 175
+  points:
+  - 'Cultural sidebar: Паляниця — the round wheat bread that became a linguistic shibboleth during 2022. The specific pronunciation
+    of пал-я-ни-ця is difficult for Russian speakers to reproduce.'
+  - 'Ukrainian bread traditions: хліб as sacred (never thrown away), the ''хліб-сіль'' (bread and salt) hospitality greeting.
+    Connection to the proverb «Хліб — усьому голова».'
+- section: Мені подобається / Я не їм (Preferences)
+  words: 250
+  points:
+  - 'Expressing food preferences: Мені подобається борщ (I like borscht). Я люблю каву з молоком (I love coffee with milk).
+    Review of подобатися + Dative construction.'
+  - 'Expressing dislikes and restrictions: Я не їм м''ясо (I don''t eat meat — vegetarian). Я не п''ю каву (I don''t drink
+    coffee). Negation with food verbs.'
+  - 'Allergies and dietary needs: У мене алергія на горіхи (I have an allergy to nuts). Я не можу їсти глютен. Practical survival
+    phrases for dietary restrictions.'
+- section: Практика (Practice)
+  words: 250
+  points:
+  - 'Food vocabulary drills: Categorization (їжа vs напої), gender sorting, adjective matching. Building automatic recall
+    of food terms.'
+  - 'Menu reading preview: Simple Ukrainian menu items. Recognizing food words in authentic format with prices.'
+  - 'Preference dialogues: Що ти любиш їсти? Яка твоя улюблена їжа? Conversational practice expressing food tastes.'
+vocabulary_hints:
+  required:
+  - хліб (bread) — свіжий хліб; sacred symbol, хліб-сіль tradition
+  - борщ (borscht) — смачний борщ; national dish, masculine gender
+  - м'ясо (meat) — neuter gender; Я не їм м'ясо (vegetarian phrase)
+  - овочі (vegetables) — plural noun; food category
+  - фрукти (fruits) — plural noun; food category
+  - вода (water) — холодна вода, пляшка води; high frequency
+  - кава (coffee) — кава з молоком; feminine gender
+  - чай (tea) — чай з лимоном; masculine gender
+  - молоко (milk) — neuter gender; кава з молоком
+  - сік (juice) — апельсиновий сік; masculine gender
+  - суп (soup) — їсти суп (eat, not drink); masculine gender
+  recommended:
+  - паляниця (palianytsia) — cultural shibboleth; round wheat bread
+  - каша (porridge) — гаряча каша; feminine gender, traditional breakfast
+  - компот (compote) — traditional Ukrainian drink; masculine gender
+  - риба (fish) — feminine gender; food category
+  - сир (cheese) — masculine gender; not to confuse with Russian сыр
+activity_hints:
+- type: match-up
+  focus: Match food word to its category (їжа vs напої)
+  items: 12
+- type: quiz
+  focus: Food preference expressions and correct forms
+  items: 10
+- type: fill-in
+  focus: Complete food dialogue with correct vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort items into їжа vs напої categories
+  items: 12
+connects_to:
+- a1-40 (Shopping and Market)
+prerequisites:
+- a1-38 (My Daily Routine)
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrainian Chef
+grammar:
+- Food noun gender
+- Я не їм construction
+- Food collocations with adjectives
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
-Min engagement boxes: 3
-Min activity types: 4
+Min activities: 0
+Min engagement boxes: 1
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -705,18 +779,46 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -724,18 +826,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

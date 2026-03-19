@@ -1,6 +1,21 @@
-  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=36265 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=33309 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ```yaml
 prompt_preflight:
-  status: PASS
-  issues: []
+  status: ISSUES_FOUND
+  issues:
+    - type: CONTRADICTION
+      location: "Section 4 (Outline) vs Section 6 (Hard Constraints)"
+      problem: "The outline for «Голосні в словах» requires the sentence «Мама каже 'так'», but Section 6 (Grammar Constraints) explicitly states «BANNED: ALL verbs» and «NO CONJUGATED VERBS» for the A1.1 phonetics phase."
+      suggested_fix: "Remove the verb «каже» from the outline example to comply with A1.1 grammar constraints (e.g., use «Мама: 'так'» or «Ось мама»)."
+      severity: HIGH
+    - type: CONTRADICTION
+      location: "Section 4 (Outline) vs Section 6 (Hard Constraints - No colonial framing)"
+      problem: "The plan and outline for «Six Base Vowels» and «Word Stress» require explaining that Ukrainian vowels do not reduce «unlike Russian». However, the «No colonial framing» rule in Section 6 strictly forbids defining Ukrainian by comparing it to Russian («Don't say 'unlike Russian...'»)."
+      suggested_fix: "Modify the outline to present vowel purity as an inherent feature of Ukrainian without referencing Russian pronunciation patterns, focusing exclusively on the «Golden Rule»."
+      severity: HIGH
+    - type: CONTRADICTION
+      location: "Language Quality Rules vs Section 6 (Hard Constraints)"
+      problem: "The Language Quality Rules section states «ALWAYS use ... combining acute accent (´) on the stressed vowel», while Section 6 explicitly states «STRESS MARKS: Do NOT add stress marks (´). Write plain Ukrainian.» because the pipeline handles them."
+      suggested_fix: "Align the instructions to clarify that the generator should write plain text, and remove the conflicting requirement to manually add stress marks from the template."
+      severity: MEDIUM
 ```

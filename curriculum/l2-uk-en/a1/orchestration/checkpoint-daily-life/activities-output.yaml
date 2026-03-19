@@ -1,0 +1,334 @@
+- type: quiz
+  title: 'A1.4 Checkpoint: Daily Life Comprehensive Review'
+  instruction: 'This checkpoint quiz tests everything you learned in the A1.4 phase: past and future tenses, daily routine, food, shopping, weather, and adverbs. Each question combines skills from multiple lessons. Choose the best answer.'
+  items:
+    - question: 'A man is describing his yesterday. Which sentence is correct?'
+      options:
+        - text: "Я працювала вчора."
+          correct: false
+        - text: "Я працював вчора."
+          correct: true
+        - text: "Я працювало вчора."
+          correct: false
+        - text: "Я буду працювати вчора."
+          correct: false
+      explanation: "A masculine speaker uses the -в ending in past tense: працював. The -ла ending is feminine, and буду + infinitive is future tense — it cannot combine with вчора (yesterday)."
+    - question: 'A woman wants to say she cooked dinner yesterday. Which is correct?'
+      options:
+        - text: "Я готував вечерю вчора."
+          correct: false
+        - text: "Я буду готувати вечерю."
+          correct: false
+        - text: "Я готувала вечерю вчора."
+          correct: true
+        - text: "Я готувало вечерю вчора."
+          correct: false
+      explanation: "A feminine speaker uses the -ла ending: готувала. The -в ending is masculine, -ло is neuter, and буду готувати is future — wrong with вчора."
+    - question: 'Which sentence correctly uses the future tense?'
+      options:
+        - text: "Завтра я снідав рано."
+          correct: false
+        - text: "Завтра я снідала рано."
+          correct: false
+        - text: "Завтра я буду снідати рано."
+          correct: true
+        - text: "Завтра я снідати рано."
+          correct: false
+      explanation: "Future tense requires буду + infinitive: буду снідати. Снідав/снідала are past tense forms, and the infinitive alone cannot be the main verb."
+    - question: 'Someone asks you about your plans. Fill in the blank: Завтра ми ___ гуляти в місті.'
+      options:
+        - text: "гуляли"
+          correct: false
+        - text: "будемо"
+          correct: true
+        - text: "буду"
+          correct: false
+        - text: "гуляв"
+          correct: false
+      explanation: "With ми (we), the correct helper verb is будемо. Буду is for я only. Гуляли and гуляв are past tense forms."
+    - question: 'Which question asks WHERE someone went (direction)?'
+      options:
+        - text: "Де ти був?"
+          correct: false
+        - text: "Звідки ти йшов?"
+          correct: false
+        - text: "Куди ти пішов?"
+          correct: true
+        - text: "Коли ти пішов?"
+          correct: false
+      explanation: "Куди means 'where to' (direction). Де means 'where at' (location), звідки means 'where from' (origin), and коли means 'when' (time)."
+    - question: 'Your friend asks where you were yesterday. Which answer combines location and past tense correctly?'
+      options:
+        - text: "Я буду в магазині."
+          correct: false
+        - text: "Я був у магазині."
+          correct: true
+        - text: "Я був до магазину."
+          correct: false
+        - text: "Я буду в магазин."
+          correct: false
+      explanation: "Де? (where at) requires the locative case: у магазині. Був is past tense of бути. До магазину answers куди (direction), not де (location)."
+    - question: 'Which pair correctly shows a past action and a future plan?'
+      options:
+        - text: "Вчора я читав. Завтра я читав."
+          correct: false
+        - text: "Вчора я буду читати. Завтра я читав."
+          correct: false
+        - text: "Вчора я читав. Завтра я буду читати."
+          correct: true
+        - text: "Вчора я буду читати. Завтра я буду читати."
+          correct: false
+      explanation: "Past tense (читав) goes with вчора (yesterday), and future tense (буду читати) goes with завтра (tomorrow). You cannot mix them the other way."
+    - question: 'They (вони) will have breakfast late tomorrow. Choose the correct sentence.'
+      options:
+        - text: "Вони будемо снідати пізно."
+          correct: false
+        - text: "Вони будуть снідати пізно."
+          correct: true
+        - text: "Вони буду снідати пізно."
+          correct: false
+        - text: "Вони снідали пізно завтра."
+          correct: false
+      explanation: "With вони (they), the helper verb is будуть. Будемо is for ми, буду is for я, and снідали is past tense which cannot be used with завтра."
+    - question: 'What does the sentence mean: Я зазвичай обідаю вдома?'
+      options:
+        - text: "I rarely have lunch at home."
+          correct: false
+        - text: "I usually have lunch at home."
+          correct: true
+        - text: "I sometimes have lunch at home."
+          correct: false
+        - text: "I never have lunch at home."
+          correct: false
+      explanation: "Зазвичай means 'usually.' Обідаю means 'I have lunch' and вдома means 'at home.' The sentence describes a regular daily habit."
+    - question: 'Which frequency adverb means the OPPOSITE of часто?'
+      options:
+        - text: "зазвичай"
+          correct: false
+        - text: "іноді"
+          correct: false
+        - text: "рідко"
+          correct: true
+        - text: "завтра"
+          correct: false
+      explanation: "Рідко (rarely) is the opposite of часто (often). Зазвичай means 'usually,' іноді means 'sometimes,' and завтра is a time word, not a frequency adverb."
+    - question: 'Put the daily routine in the correct time order. Which comes FIRST?'
+      options:
+        - text: "обідати"
+          correct: false
+        - text: "вечеряти"
+          correct: false
+        - text: "вставати"
+          correct: true
+        - text: "лягати спати"
+          correct: false
+      explanation: "Вставати (to get up) is the first action of the day. The typical order is: вставати → снідати → обідати → вечеряти → лягати спати."
+    - question: 'A woman is telling her friend about her morning routine in past tense. Which is correct?'
+      options:
+        - text: "Вранці я встав і снідала."
+          correct: false
+        - text: "Вранці я встала і снідав."
+          correct: false
+        - text: "Вранці я встала і снідала."
+          correct: true
+        - text: "Вранці я встало і снідало."
+          correct: false
+      explanation: "Both verbs must agree with the feminine speaker: встала (got up) and снідала (had breakfast). You cannot mix masculine -в with feminine -ла."
+    - question: 'Which sentence correctly combines a daily routine verb with a frequency adverb?'
+      options:
+        - text: "Він часто вечеряє пізно."
+          correct: true
+        - text: "Він часто вечеряти пізно."
+          correct: false
+        - text: "Він часто вечеряв пізно."
+          correct: false
+        - text: "Він часто будемо вечеряти."
+          correct: false
+      explanation: "For habitual actions in present tense, use the conjugated form: вечеряє (he has dinner). Вечеряти is the infinitive, вечеряв is past tense, and будемо is the wrong person (ми, not він)."
+    - question: 'You want to buy bread at a store. How do you say it?'
+      options:
+        - text: "Я хочу коштувати хліб."
+          correct: false
+        - text: "Я хочу купити хліб."
+          correct: true
+        - text: "Я хочу готувати хліб."
+          correct: false
+        - text: "Я хочу снідати хліб."
+          correct: false
+      explanation: "Купити means 'to buy.' Коштувати means 'to cost' (not 'to buy'), готувати means 'to cook,' and снідати means 'to have breakfast.'"
+    - question: 'How do you ask the price of soup?'
+      options:
+        - text: "Де коштує суп?"
+          correct: false
+        - text: "Куди коштує суп?"
+          correct: false
+        - text: "Скільки коштує суп?"
+          correct: true
+        - text: "Коли коштує суп?"
+          correct: false
+      explanation: "Скільки коштує? means 'How much does it cost?' Де means 'where,' куди means 'where to,' and коли means 'when' — none of these work with price."
+    - question: 'Which sentence correctly describes a past shopping trip with food vocabulary?'
+      options:
+        - text: "Вчора я купував свіжі овочі в магазині."
+          correct: true
+        - text: "Вчора я буду купувати свіжі овочі."
+          correct: false
+        - text: "Завтра я купував свіжі овочі."
+          correct: false
+        - text: "Вчора я купувати свіжі овочі."
+          correct: false
+      explanation: "Вчора (yesterday) requires past tense: купував. Буду купувати is future tense, and the bare infinitive купувати cannot serve as the main verb in a sentence."
+    - question: 'Which food item would you most likely order as a hot first course at a Ukrainian lunch?'
+      options:
+        - text: "каша"
+          correct: false
+        - text: "хліб"
+          correct: false
+        - text: "борщ"
+          correct: true
+        - text: "кава"
+          correct: false
+      explanation: "Борщ is the classic Ukrainian hot soup, typically served as the first course at lunch. Каша is porridge (breakfast), хліб is bread (side), and кава is coffee (drink)."
+    - question: 'She will buy coffee and milk tomorrow. Choose the correct sentence.'
+      options:
+        - text: "Вона будемо купувати каву і молоко завтра."
+          correct: false
+        - text: "Вона буде купувати каву і молоко завтра."
+          correct: true
+        - text: "Вона буду купувати каву і молоко завтра."
+          correct: false
+        - text: "Вона купувала каву і молоко завтра."
+          correct: false
+      explanation: "With вона (she), the helper verb is буде. Будемо is for ми, буду is for я, and купувала is past tense — wrong with завтра (tomorrow)."
+    - question: 'A man had porridge for breakfast and drank tea. Which sentence is correct?'
+      options:
+        - text: "Я снідала кашу і пила чай."
+          correct: false
+        - text: "Я снідав кашу і пив чай."
+          correct: true
+        - text: "Я снідав кашу і пила чай."
+          correct: false
+        - text: "Я снідало кашу і пило чай."
+          correct: false
+      explanation: "A masculine speaker must use -в endings for BOTH verbs: снідав (had breakfast) and пив (drank). Mixing -в and -ла within the same sentence is a gender agreement error."
+    - question: 'What does добре mean when your friend suggests a plan and you reply with it?'
+      options:
+        - text: "goodbye"
+          correct: false
+        - text: "slowly"
+          correct: false
+        - text: "okay / agreed"
+          correct: true
+        - text: "badly"
+          correct: false
+      explanation: "Добре literally means 'well/good' but is commonly used as 'okay' or 'agreed' when responding to plans or suggestions in daily conversation."
+    - question: 'Which adverb describes HOW someone reads? Мій брат читає дуже ___.'
+      options:
+        - text: "вчора"
+          correct: false
+        - text: "швидко"
+          correct: true
+        - text: "завтра"
+          correct: false
+        - text: "часто"
+          correct: false
+      explanation: "Швидко (fast/quickly) describes the manner of reading. Вчора and завтра are time words, and часто (often) describes frequency, not manner."
+    - question: 'Which pair of adverbs are opposites?'
+      options:
+        - text: "добре — часто"
+          correct: false
+        - text: "швидко — повільно"
+          correct: true
+        - text: "тихо — добре"
+          correct: false
+        - text: "голосно — швидко"
+          correct: false
+      explanation: "Швидко (fast) and повільно (slowly) are opposites describing manner. Тихо (quietly) pairs with голосно (loudly), and добре (well) pairs with погано (badly)."
+    - question: 'How do you say "Today it is warm and sunny" in Ukrainian?'
+      options:
+        - text: "Сьогодні тепло і сонячно."
+          correct: true
+        - text: "Сьогодні холодно і хмарно."
+          correct: false
+        - text: "Вчора було тепло і сонячно."
+          correct: false
+        - text: "Завтра буде тепло і сонячно."
+          correct: false
+      explanation: "Сьогодні (today) with no було/буде means present tense. Тепло = warm, сонячно = sunny. The other options are about yesterday or tomorrow."
+    - question: 'Yesterday it was very cold. Which sentence is correct?'
+      options:
+        - text: "Вчора буде дуже холодно."
+          correct: false
+        - text: "Вчора дуже холодно."
+          correct: false
+        - text: "Вчора було дуже холодно."
+          correct: true
+        - text: "Завтра було дуже холодно."
+          correct: false
+      explanation: "Past weather requires було: вчора було холодно. Without було, the sentence sounds like present tense. Буде is future tense. Завтра (tomorrow) cannot take було (past)."
+    - question: 'Tomorrow it will be cloudy. Choose the correct weather expression.'
+      options:
+        - text: "Завтра було хмарно."
+          correct: false
+        - text: "Завтра хмарно."
+          correct: false
+        - text: "Завтра буде хмарно."
+          correct: true
+        - text: "Вчора буде хмарно."
+          correct: false
+      explanation: "Future weather requires буде: завтра буде хмарно. Було is for past tense, and вчора (yesterday) cannot combine with буде (will be)."
+    - question: 'Which season matches this description: Часто йде дощ, стає холодніше?'
+      options:
+        - text: "влітку"
+          correct: false
+        - text: "взимку"
+          correct: false
+        - text: "восени"
+          correct: true
+        - text: "навесні"
+          correct: false
+      explanation: "Восени (in autumn) is when it often rains (часто йде дощ) and gets colder. Влітку (summer) is warm, взимку (winter) is snow, and навесні (spring) is getting warmer."
+    - question: 'Which sentence integrates a season, weather, and a frequency adverb correctly?'
+      options:
+        - text: "Влітку зазвичай дуже тепло."
+          correct: true
+        - text: "Влітку зазвичай дуже холодно."
+          correct: false
+        - text: "Взимку часто дуже тепло."
+          correct: false
+        - text: "Навесні рідко погода."
+          correct: false
+      explanation: "Влітку (in summer) + зазвичай (usually) + тепло (warm) makes sense. Winter is cold not warm, and навесні рідко погода is grammatically incomplete."
+    - question: 'Read this mini-story and answer: Вчора я встав рано. Вранці було холодно і хмарно. Я снідав кашу. What did the speaker do FIRST?'
+      options:
+        - text: "снідав кашу"
+          correct: false
+        - text: "встав рано"
+          correct: true
+        - text: "було холодно"
+          correct: false
+        - text: "пішов на роботу"
+          correct: false
+      explanation: "The speaker first встав рано (got up early), then noticed the weather, then снідав кашу (had porridge). Пішов на роботу is not mentioned in this excerpt."
+    - question: 'A woman is planning her tomorrow: shopping, cooking, and a walk. Which set of sentences is ALL correct?'
+      options:
+        - text: "Я буду купувати овочі. Я буду готувати вечерю. Я буду гуляти."
+          correct: true
+        - text: "Я будемо купувати овочі. Я буду готувати вечерю. Я буду гуляти."
+          correct: false
+        - text: "Я буду купувати овочі. Я готувала вечерю. Я буду гуляти."
+          correct: false
+        - text: "Я буду купувати овочі. Я буду готувати вечерю. Я гуляла."
+          correct: false
+      explanation: "All three future plans need буду + infinitive with я. Будемо is for ми, not я. Готувала and гуляла are past tense — they break the future narrative."
+    - question: 'Read the full scenario: Вчора було сонячно. Я пішла до ресторану і їла борщ. Завтра буде холодно. Я буду готувати вдома. Which statement about the speaker is TRUE?'
+      options:
+        - text: "The speaker is male and ate at home yesterday."
+          correct: false
+        - text: "The speaker is female, ate out yesterday, and will cook at home tomorrow."
+          correct: true
+        - text: "The speaker is female and will go to a restaurant tomorrow."
+          correct: false
+        - text: "The speaker is male and will cook at a restaurant tomorrow."
+          correct: false
+      explanation: "Пішла and їла use -ла endings (feminine speaker). She went to a restaurant yesterday (пішла до ресторану). Tomorrow she will cook at home (буду готувати вдома), not go out."

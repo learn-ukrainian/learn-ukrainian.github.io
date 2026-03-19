@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 7
+deviations:
+  - "Plan requests 30 items for fill-in #1, 20 for fill-in #2, 18 for match-up. Produced 8, 8, and 9 respectively. The plan item counts are aspirational targets far exceeding schema minimums (6). Quality prioritized over quantity — each item tests a distinct verb/pronoun combination without repetition."
+  - "Added quiz (6 items), true-false (6 items), unjumble (6 items), and group-sort (12 items) beyond the 3 required types to provide variety and reinforce different skills (conceptual understanding, error recognition, sentence building, categorization)."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints request 30+20+18 = 68 total items across 3 activities. This is extremely high for A1 and would create repetitive, low-quality drill. Schema minimum is 6 per activity."
+    proposed_fix: "Consider adjusting plan activity_hints to realistic counts (8-12 per fill-in, 8-10 for match-up) for future plans."
+unverified_terms: []
+review_focus:
+  - "fill-in activities: verify all 4 options per item are distinct valid forms and only 1 is correct in context"
+  - "unjumble: verify word order is natural Ukrainian (SVO with adverbs)"
+  - "group-sort: confirm all 12 verb forms are correctly categorized by pronoun"

@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan requested 30 fill-in items for counting practice — reduced to 8 high-quality items to avoid repetitive filler (quality over quantity). The plan's item counts (30, 20, 15) are extremely high for A1 fill-in activities and would produce rote repetition without pedagogical value."
+  - "Added 4 bonus activity types (match-up, true-false, group-sort, unjumble) beyond the 4 required types to increase variety and reinforce the 1-2-5 rule from multiple angles."
+  - "Quiz adapted from 'identify numbers heard' (audio) to knowledge quiz — no audio capability in YAML activities."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints specify unrealistically high item counts (30, 20, 15) for fill-in activities. At A1 level, 6-8 well-crafted items per activity is the sweet spot."
+    proposed_fix: "Plan review should cap fill-in items at 10-12 for A1 modules."
+unverified_terms: []
+review_focus:
+  - "Group-sort activity uses 'двадцять одна гривня' which combines tens+ones — verify this is within A1.2 scope"
+  - "Unjumble sentences should be checked for natural Ukrainian word order"

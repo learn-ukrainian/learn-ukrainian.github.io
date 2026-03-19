@@ -1,0 +1,13 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1428
+deviations: []
+frictions: []
+research_gaps: []
+unverified_terms: []
+review_focus:
+  - "Verify strict adherence to A1.2 grammar bounds (no complex cases, no perfective verbs outside specified limits)."
+  - "Check that all distractors in activities are drawn strictly from the provided A1 cumulative vocabulary."
+  - "Ensure no IPA or transliteration is present and all Ukrainian has correct stress marks."
+rag_tools_used:
+  - "Textbook retrieval provided in context via numbers-and-money-research.md (Grade 6 & Grade 3 textbooks utilized)."

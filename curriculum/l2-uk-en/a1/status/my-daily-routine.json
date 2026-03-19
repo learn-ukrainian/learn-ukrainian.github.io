@@ -1,0 +1,61 @@
+{
+  "module": "my-daily-routine",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-19T12:49:57.673760Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-19T04:26:05.735860Z",
+    "meta": "2026-03-19T04:14:17.998728Z",
+    "activities": "2026-03-19T04:26:05.736087Z",
+    "vocabulary": "2026-03-19T04:26:05.736360Z",
+    "research": "2026-03-12T10:20:23.267088Z",
+    "plan": "2026-03-11T19:39:54.326241Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2007/1200 (raw: 2030) | engagement: 0/1 | immersion: 14.8% LOW (target 20-35% (M38))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 2,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

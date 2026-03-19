@@ -24,18 +24,18 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T05:42:04Z",
+      "ts": "2026-03-19T10:38:52Z",
       "executor": {
         "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     },
     "validate": {
-      "status": "failed",
-      "ts": "2026-03-18T05:52:13Z",
+      "status": "complete",
+      "ts": "2026-03-19T10:59:20Z",
       "attempts": 2,
-      "note": "dedup-exhausted",
+      "note": "escalation-claude-dedup",
       "executor": {
         "type": "llm",
         "agent": "claude",
@@ -44,23 +44,23 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T05:55:11Z",
+      "ts": "2026-03-19T11:00:56Z",
       "task_id": "v5-demonstratives-this-that-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T06:00:15Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-19T11:13:39Z",
+      "attempts": 3,
+      "note": "fix-iter2",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

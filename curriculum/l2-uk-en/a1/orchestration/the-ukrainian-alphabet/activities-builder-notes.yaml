@@ -2,13 +2,12 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 6
 deviations:
-  - "None. All activities generated exactly match the required types, focuses, and item minimums outlined in the plan."
+  - "image-to-letter includes 2 additional words (сон, тато, ніс, молоко) beyond the plan's 6 named words (мама, кіт, молоко, око, ліс, місто) to reach 8 items as required. мама was replaced by тато to avoid duplicate М starting letters for variety."
 frictions:
-  - type: NONE
-    description: "N/A"
-    proposed_fix: "N/A"
-unverified_terms:
-  - "None. All words and syllables used are directly derived from the module content."
+  - type: PLAN_GAP
+    description: "Plan's image-to-letter focus names 6 specific words but requires 8 items. Had to supplement with additional decodable words."
+    proposed_fix: "N/A — natural expansion within scope."
+unverified_terms: []
 review_focus:
-  - "Review the watch-and-repeat video URLs to ensure they accurately align with Anna Ohoiko's curriculum."
-  - "Verify that the fill-in syllable tasks correctly represent the progressive 'First Contact' blending process."
+  - "fill-in activity uses a non-standard sentence format (М + А → МА. МА + МА → ___) rather than natural sentences. This is intentional for the blending focus but may need renderer testing."
+  - "image-to-letter emoji choices — verify emoji render correctly across platforms (especially 👁️ for око and 🏙️ for місто)."

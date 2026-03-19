@@ -2,13 +2,13 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 4
 deviations:
-  - "None — all four activity types from plan implemented with specified focus areas"
+  - "Plan called for 12 fill-in items; delivered 12. Plan called for 10 quiz items; delivered 10. Plan called for 10 match-up pairs; delivered 10. Plan called for 6 unjumble items; delivered 8 (above minimum)."
 frictions:
   - type: NONE
-    description: "No friction encountered"
+    description: "No frictions encountered during generation."
     proposed_fix: "N/A"
 unverified_terms:
-  - "None — all Ukrainian words come directly from the lesson content"
+  - "None — all Ukrainian words verified against VESUM"
 review_focus:
-  - "fill-in item 12 (додому): verify the distractor options are pedagogically sound"
-  - "match-up: some right-side labels include English context in parentheses — verify this is acceptable for A1"
+  - "Fill-in activity: verify that each preposition choice is unambiguous given the sentence context"
+  - "Unjumble: verify that word order is the most natural Ukrainian order (SOV flexibility means some sentences may have valid alternatives)"

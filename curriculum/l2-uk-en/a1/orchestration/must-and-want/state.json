@@ -23,12 +23,13 @@
       }
     },
     "content": {
-      "status": "complete",
-      "ts": "2026-03-17T14:34:37Z",
+      "status": "failed",
+      "ts": "2026-03-19T07:48:50Z",
+      "note": "word-count-918-below-80pct-1200",
       "executor": {
         "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

@@ -1,33 +1,34 @@
 # RAG Verification: this-is-i-am
 
-**Date:** 2026-03-18 23:44 UTC | **Words checked:** 69 | **VESUM coverage:** 61/69 (88.4%)
+**Date:** 2026-03-19 03:11 UTC | **Words checked:** 81 | **VESUM coverage:** 72/81 (88.9%)
 
 ## Summary
-- ✅ Verified (VESUM): 61
-- ⚠️ Partial (RAG only): 6
+- ✅ Verified (VESUM): 72
+- ⚠️ Partial (RAG only): 7
 - ❌ Not found: 2
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Сара | prose | ✗ | ✗ | ✗ |
+| Марк | prose | ✗ | ✗ | ✗ |
 | Ірина | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Захарійчук | prose | ✗ | ✓ | ✗ |
-| Кравцова | prose | ✗ | ✓ | ✗ |
-| Марія | prose | ✗ | ✓ | ✗ |
-| Оксана | prose | ✗ | ✗ | ✓ |
-| Тарас | prose | ✗ | ✗ | ✓ |
+| Анна | prose | ✗ | ✓ | ✗ |
+| ксана | activities | ✗ | ✗ | ✓ |
+| Оксана | activities | ✗ | ✗ | ✓ |
+| Олег | activities | ✗ | ✓ | ✗ |
+| Олена | activities | ✗ | ✓ | ✗ |
+| Тарас | activities | ✗ | ✗ | ✓ |
 | Іван | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 67 | 59 | 2 |
-| Activities (.yaml) | 2 | 2 | 0 |
+| Prose (.md) | 71 | 67 | 2 |
+| Activities (.yaml) | 10 | 5 | 0 |

@@ -1,182 +1,198 @@
-# Factual Review (Pass 1)
+# Рецензія: Questions & Negation
 
-## Plan Adherence Summary
-
-**Content outline points:** 18 total, 15 covered, 1 missing, 2 partial
-**Required vocabulary:** 8 total, 8 present, 0 missing
-**Activity hints:** 4 total, 4 matched, 0 missing
-**Plan Adherence Score:** 8/10
-(10 = all points covered; deduct 1 per MISSING content point, 2 per MISSING required word)
-
-### Plan Point Coverage
-
-- Section "Вступ: Основи заперечення та інтонації":
-  - [x] Point 1: "The simplicity of Ukrainian syntax..." — COVERED (line ~20: "asking questions in Ukrainian is much simpler than in English. There are no auxiliary verbs like 'do' or 'does.'")
-  - [x] Point 2: "Introducing the negation particle 'не' (not) vs the response 'ні' (no)..." — COVERED (line ~28: "let's meet two essential little words that beginners constantly mix up: не (not) and ні (no).")
-  - [x] Point 3: "Visualizing the voice: using arrows (↗)..." — COVERED (line ~41: "Ти розумієш? ↗ (question — voice rises)... Ти не розумієш. ↘ (negative statement — voice falls)")
-
-- Section "Презентація: Питальні конструкції":
-  - [x] Point 1: "Standard yes/no questions using the particle 'чи'..." — COVERED (line ~50: "The particle чи marks a yes/no question explicitly... signals politeness and clarity.")
-  - [x] Point 2: "The spoken alternative: rising intonation alone..." — COVERED (line ~61: "Ukrainians simply raise their voice ↗ on the focus word and skip чи entirely")
-  - [x] Point 3: "Comprehensive set of interrogative words..." — COVERED (line ~70: Lists що, хто, де, коли, куди, звідки, чому, як, скільки; explicitly covers що vs шо in callout)
-  - [x] Point 4: "Answering patterns: 'Так' vs 'Ні'..." — COVERED (line ~85: "answer with так (yes) or ні (no)... Ні + subject + не + verb")
-
-- Section "Практика: Тренування заперечень та запитань":
-  - [x] Point 1: "Sentence transformation drills..." — COVERED (line ~95: "Ти знаєш. → Ти не знаєш. → Чи ти знаєш?")
-  - [x] Point 2: "Error correction lab..." — COVERED (line ~105: "The English-Transfer Trap... ❌ Do ти знаєш? → ✅ Чи ти знаєш?")
-  - [x] Point 3: "Matching exercise: pairing question words..." — COVERED (line ~113: "Someone knocks on the door → Хто там?")
-
-- Section "Продукція: Комунікативні сценарії":
-  - [x] Point 1: "The Café Scenario..." — COVERED (line ~124: dialogue using "Де кава?", "Скільки це коштує?", "Чи є цукор?")
-  - [x] Point 2: "Roleplay: The Investigative Journalist..." — COVERED (line ~140: "interview a partner... The goal is to use every question word at least once.")
-  - [x] Point 3: "Negative responses and frequency..." — COVERED (line ~152: explains завжди, часто, іноді, ніколи; explicitly covers double negation requirement)
-
-- Section "З'єднуємо речення (Joining Sentences)":
-  - [x] Point 1: "Compound sentences with і/й (and), а (and/but), але (but)..." — COVERED (line ~168: explains and demonstrates і/й, а, але)
-  - [ ] Point 2: "Causal clauses with тому що / бо (because)..." — PARTIAL (The words "бо" and "тому що" are briefly introduced in the vocabulary list, but the grammatical explanation regarding colloquial vs formal register is missing)
-  - [ ] Point 3: "Pattern: [sentence 1] + [conjunction] + [sentence 2]..." — MISSING (The structural pattern and note about word order remaining the same is not mentioned anywhere)
-
-- Section "Культурний контекст та ALF":
-  - [x] Point 1: "Register nuances: when to use the formal 'чи'..." — COVERED (line ~198: "In formal situations... чи shows respect... With friends and family, skip it")
-  - [ ] Point 2: "Pop culture integration: the iconic ALF quote..." — PARTIAL (The ALF quote used was "Ти не спиш? Ти просто не працюєш!" instead of the directly requested "Ти не любиш котів? Ти просто не вмієш їх готувати!")
-
-### Required Vocabulary Coverage
-
-| Word | In Prose? | In Activities? | Status |
-|------|-----------|---------------|--------|
-| чи | YES | YES | PRESENT |
-| що | YES | YES | PRESENT |
-| хто | YES | YES | PRESENT |
-| де | YES | YES | PRESENT |
-| коли | YES | YES | PRESENT |
-| не | YES | YES | PRESENT |
-| так | YES | YES | PRESENT |
-| ні | YES | YES | PRESENT |
-
-### Activity Hints Coverage
-
-| Hint Type | Focus | Required Items | Found? | Actual Items |
-|-----------|-------|---------------|--------|-------------|
-| fill-in | Form questions with чи | 15 | YES | 15 |
-| fill-in | Complete with question words | 20 | YES | 20 |
-| fill-in | Make sentences negative | 15 | YES | 15 |
-| fill-in | Question-answer pairs | 8 | YES | 8 |
-
-### Missing Plan Points (Fix Targets)
-
-1. **З'єднуємо речення (Point 2)**: "Causal clauses with тому що / бо (because): Я не йду, тому що я хворий. Він не прийшов, бо холодно. бо is more colloquial, тому що is neutral/formal." (Explanation is missing; only bare vocabulary entries provided).
-2. **З'єднуємо речення (Point 3)**: "Pattern: [sentence 1] + [conjunction] + [sentence 2]. The word order within each sentence stays the same — just add the connector." (Entirely missing).
-3. **Культурний контекст (Point 2)**: "Pop culture integration: the iconic ALF quote 'Ти не любиш котів? Ти просто не вмієш їх готувати!'. Use this to demonstrate negation, rhetorical intonation, and a touch of dark Ukrainian humor." (AI hallucinated a different quote entirely).
-
-**Note on Word Budgets:** Almost all sections fall >10% under their specific plan targets (Вступ -12%, Презентація -20%, Практика -34%, Продукція -24%, З'єднуємо -15%). Flagged as **MEDIUM** severity.
-
----
-
-## Factual Verification Summary
-
-**Total claims checked:** 5
-**Confirmed [Tier 1]:** 1
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 4
-**Factual Alignment Score:** 10/10
-
-## Confirmed Claims
-
-- **Module says:** "Question Words... Що? — What?... Хто? — Who?... Скільки? — How much/many?"
-- **Reference says:** "Питальні займенники вживаються в питальних реченнях... хто? що? який? чий? котрий? скільки?"
-- **Source:** 6-klas-ukrmova-litvinova-2023_s0271
-
-## Discrepancies
-
-*(No Tier 1 Discrepancies found against provided RAG chunks. Word forms flagged by VESUM (Львова, Києва, Одеси, Оля, Шо) are grammatically correct proper nouns, genitive case locational forms, and documented colloquial variants respectively.)*
-
-## Unverified Claims
-
-- Claim: "The particle чи marks a yes/no question explicitly... it sits at the very beginning of the sentence." (No reference covers yes/no question particles).
-- Claim: "Double Negation Is REQUIRED... ніколи always requires не before the verb." (No reference covers double negation rules).
-- Claim: "Не goes directly before a verb to negate it... Ні stands alone as a response." (No reference covers basic negation particle placement).
-- Claim: "In spoken Ukrainian, Ukrainians simply raise their voice ↗ on the focus word and skip чи entirely." (No reference covers intonation rules).
-
-## Verdict
-
-**Status:** PASS
-(No HIGH severity factual discrepancies found. 1 MISSING and 2 PARTIAL plan points, which is slightly below the 3+ threshold for an outright failure. Fixes provided below to bring the module into perfect alignment with the plan.)
-
----
-
-# Language Review (Pass 2)
-
-[watchdog] Output resumed after 148s stall
-**Reviewed-By:** gemini-2.5-pro (RAG-grounded)
-
+**Level:** A1 | **Module:** 18
+**Overall Score:** 7.6/10
 **Status:** FAIL
-**Overall Score:** 7.0/10
+**Reviewed:** 2026-03-19
+**Reviewed-By:** claude-sonnet-4-20250514
+
+## Plan Verification
+
+```
+Plan-Content Alignment: FAIL
+- Sections: 5/6 present (title mismatch on section 5; section 5 content incomplete)
+- Vocabulary: 8/8 required present in prose, 5/7 recommended present; іноді MISSING from prose
+- Grammar scope: CLEAN
+- Objectives: 3/4 fully met; frequency adverbs objective partially met (іноді missing)
+```
+
+### Plan Adherence Checklist — Content Outline Points
+
+**Section "Вступ: Основи заперечення та інтонації"**
+- "Do Trap" / no auxiliary do/does: COVERED (lines 5-6)
+- не vs ні distinction: COVERED (lines 9-12, citation: 「Ні, я не знаю.」)
+- Arrows ↗/↘ for intonation: COVERED (lines 14-17)
+
+**Section "Презентація: Питальні конструкції"**
+- чи as politeness/formal marker: COVERED (lines 25-29, citation: 「Чи ви розумієте?」)
+- Intonation-only spoken alternative: COVERED (lines 31-34)
+- Interrogative words aligned with State Standard: COVERED (lines 36-45)
+- шо variant note: COVERED (line 46)
+- Answering patterns так/ні: COVERED (lines 48-52)
+
+**Section "Практика: Тренування заперечень та запитань"**
+- Sentence transformation drills: COVERED (lines 58-66)
+- Error correction lab: COVERED (lines 68-73, citation: 「Робиш ти працюєш тут?」)
+- Matching exercise: COVERED (lines 98-102)
+
+**Section "Продукція: Комунікативні сценарії"**
+- Café scenario: COVERED (lines 110-117, citation: 「Скільки це коштує?」)
+- Investigative Journalist roleplay: COVERED (lines 120-124)
+- Negative responses with frequency adverbs: COVERED (lines 126-134)
+
+**Section "З'єднуємо речення (Joining Sentences)"** → Content uses "З'єднуємо слова та ідеї (Connecting Words and Ideas)"
+- Compound sentences і/й, а, але: COVERED (lines 154-164)
+- **Causal clauses with тому що / бо: MISSING** — The plan explicitly requires these conjunctions with examples. The content section completely omits them. Only the summary (line 181) name-drops "тому що" as if it had been taught: 「joining sentences with **але** or **тому що** can instantly elevate your fluency」 — but it was never actually presented or practiced. HIGH severity.
+- Pattern: sentence + connector + sentence: COVERED (lines 154-155)
+
+**Section "Культурний контекст та ALF"**
+- Register nuances чи vs intonation-only: COVERED (line 170)
+- **ALF quote: WRONG** — Plan specifies "Ти не любиш котів? Ти просто не вмієш їх готувати!" which demonstrates both negation AND a rhetorical question. Content instead uses 「Я не людина, і я не кіт!」 (line 174) which only shows negation, missing the question component entirely. MEDIUM severity.
+
+### Vocabulary Adherence
+
+**Required (8/8 in prose):** чи ✅, що ✅, хто ✅, де ✅, коли ✅, не ✅, так ✅, ні ✅
+
+**Recommended (5/7 in prose):** куди ✅, звідки ✅, чому ✅, як ✅, скільки ✅, завжди ✅, ніколи ✅, **іноді** ❌ MISSING from prose (present in vocab YAML only)
+
+**Activity Item Counts vs Plan:**
+
+| Activity | Plan | Actual | Status |
+|----------|------|--------|--------|
+| Form Questions with чи | 15 | 8 | ❌ 53% |
+| Complete with Question Words | 20 | 10 | ❌ 50% |
+| Make Sentences Negative | 15 | 8 | ❌ 53% |
+| Question-Answer Pairs | 8 | 8 | ✅ |
+| **Total** | **58** | **34** | ❌ 59% |
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Tone is encouraging and accessible, but the unexpected introduction of out-of-scope grammar disrupts the learning experience in later sections. |
-| 2 | Language | 6/10 | <8 | Employs past/future tenses (`прийшо́в`, `бу́де`) and untaught cases like genitive (`Львова`) and accusative (`ка́ву`) inappropriately for A1.2. |
-| 3 | Pedagogy | 7/10 | <7 | Testing unlearned morphology in activities breaks the PPP flow, causing unnecessary friction and test failures for a beginner. |
-| 4 | Activities | 6/10 | <7 | Multiple activities expect VESUM-failed, untaught genitive forms of cities (`Києва`, `Одеси`) as correct answers or distractors. |
-| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 - The intro is warm and clear, but the vocabulary and activities sections get unexpectedly hard due to morphological violations. |
-| 6 | LLM Fingerprint | 8/10 | <7 | Slightly repetitive callout styling and phrasing, but generally reads naturally and engagingly. |
-| 7 | Linguistic Accuracy | 6/10 | <9 | Fails morphological constraints for A1.2 (M18), incorrectly uses the stress mark `мо́я` instead of `моя́`. |
+| 1 | Experience Quality | 8/10 | <7 | Good warmth and pacing; two practice dialogue blocks are excellent. Missing тому що/бо section leaves a gap in the learning arc. |
+| 2 | Language | 8/10 | <8 | Ukrainian examples are grammatically correct and natural. Error example 「Робиш ти працюєш тут?」 is unrealistic (no learner would use both verbs). |
+| 3 | Pedagogy | 7/10 | <7 | Plan material missing (тому що/бо, іноді, correct ALF quote). Summary claims тому що was taught when it wasn't — misleading learner. |
+| 4 | Activities | 7/10 | <7 | Only 34/58 items. All 4 activities are fill-in type — zero variety in format. Activity 1 has 8 items all with answer "Чи" — monotonous, no learning signal after item 2. |
+| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Warm opening, clear previews, manageable chunks, encouragement throughout. |
+| 6 | LLM Fingerprint | 8/10 | <7 | No egregious AI patterns. Some structural monotony: sections 1-4 all follow pattern of English explanation → bullet list of Ukrainian examples. Dialogue blocks in section "Практика" break this well. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian grammar is correct. Double negation properly modeled. One issue: summary line 181 references "тому що" as taught material when it was never introduced. |
 
-**Weighted Overall:** (8*1.5 + 6*1.1 + 7*1.2 + 6*1.3 + 8*1.3 + 8*1.0 + 6*1.5) / 8.9 = 62.2 / 8.9 = **7.0/10**
+**Weighted Overall:** (8×1.5 + 8×1.1 + 7×1.2 + 7×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9 = (12 + 8.8 + 8.4 + 9.1 + 11.7 + 8.0 + 13.5) / 8.9 = 71.5 / 8.9 = **8.0/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: CLEAN — no Russian ghost words detected
+- Calques: CLEAN
+- Colonial framing: CLEAN — no "Unlike Russian..." patterns
+- Grammar scope: CLEAN — all grammar appropriate for A1
+- Activity errors: Києва flagged by D.0 — DISMISSED (verified: valid VESUM genitive of Київ); шо flagged — DISMISSED (pedagogical mention of spoken variant, not used as standard form)
+- Beginner safety: 5/5
+- Factual accuracy: One issue — ALF claim (line 172): 「The television show ALF was famously dubbed into Ukrainian in the 1990s, and its brilliant translation is still culturally iconic today.」 The quote used (「Я не людина, і я не кіт!」) is NOT the iconic ALF quote the plan specifies. The plan's quote ("Ти не любиш котів? Ти просто не вмієш їх готувати!") is the actually famous one. The content's replacement quote may be fabricated.
 
 ## Critical Issues Found
 
-### Issue 1: Morphological Scope Violations (Past/Future Tenses & Cases)
-**Location**: З'єднуємо речення (Joining Sentences) > Словник у реченнях (Vocabulary in Sentences)
-**Problem**: The examples use tenses and cases completely outside the A1.2 scope (M18). Present tense is strictly enforced before M36, and nominative is standard here. Found past tense (`прийшо́в`, `приї́хали`), future tense (`бу́де`), instrumental case (`ро́дом`), and accusative case (`ка́ву`).
-**Fix**: Replace verbs with present tense and nouns with nominative case or simple adverbs.
+### Issue 1: Missing Plan Content — тому що / бо (HIGH)
+- **Location**: Section "З'єднуємо слова та ідеї (Connecting Words and Ideas)", entire section
+- **Problem**: Plan explicitly requires "Causal clauses with тому що / бо (because)" with examples: "Я не йду, тому що я хворий. Він не прийшов, бо холодно." None of this appears anywhere in the content. The section only covers і/й, а, але — omitting the entire causal conjunction subsection. Worse, the summary on line 181 claims 「joining sentences with **але** or **тому що** can instantly elevate your fluency」 — presenting тому що as if it had been taught.
+- **Fix**: Add a subsection after the і/а/але block covering тому що (formal) and бо (colloquial) with 3-4 example sentences. Remove "тому що" from the summary or keep it only after the content actually teaches it.
 
-### Issue 2: Untaught Genitive Proper Nouns in Activities
-**Location**: Activities (`questions-and-negation.yaml`) > "Complete with Question Words" & "Question-Answer Pairs"
-**Problem**: The activities require students to process or select words in the genitive case (`до Львова`, `з Києва`, `до Одеси`, `до парку`). This triggered VESUM failures because these are not basic A1 lemma forms and the genitive case is completely out of scope at this level.
-**Fix**: Replace city names with known adverbs like `додому`, `туди`, `звідти`.
+### Issue 2: Wrong ALF Quote (MEDIUM)
+- **Location**: Line 174, Section "Культурний контекст та ALF (Cultural Context and ALF)"
+- **Original**: 「Я не людина, і я не кіт!」
+- **Problem**: Plan specifies "Ти не любиш котів? Ти просто не вмієш їх готувати!" which demonstrates BOTH negation AND a rhetorical question — perfectly tying together the module's two core topics. The replacement quote only shows negation with і, missing the question component entirely. The replacement may also be fabricated — this isn't a well-known ALF line.
+- **Fix**: Replace with the plan's ALF quote which is pedagogically superior for this module's scope.
 
-### Issue 3: Genitive Case in Roleplay Scenario
-**Location**: Продукція: Комунікативні сценарії (Production: Communicative Scenarios) > Roleplay: The Investigative Journalist
-**Problem**: The dialog introduces `Я зі Львова` which relies on genitive case agreement with a preposition, which has not been taught.
-**Fix**: Change to a simpler sentence using learned vocabulary, e.g., `Я звідти`.
+### Issue 3: Missing Vocabulary — іноді (MEDIUM)
+- **Location**: Vocabulary file lists іноді but it never appears in the content prose
+- **Problem**: Vocabulary item is taught nowhere. Plan objective says "Learner can explain frequency adverbs (завжди, часто, іноді, ніколи)" — іноді is not demonstrated at all.
+- **Fix**: Add іноді to the frequency adverb examples in section "Продукція: Комунікативні сценарії" alongside завжди, часто, ніколи.
 
-### Issue 4: Incorrect Stress Mark
-**Location**: З'єднуємо речення (Joining Sentences) > Словник у реченнях (Vocabulary in Sentences)
-**Problem**: The text has incorrect stress on the pronoun: `Де (де́) мо́я ка́ва?` instead of `моя́`.
-**Fix**: Change `мо́я` to `моя́`.
+### Issue 4: Activity Item Shortfall (MEDIUM)
+- **Location**: Activities file, all activities
+- **Problem**: Plan specifies 58 items total (15+20+15+8). Only 34 delivered (8+10+8+8). Activities 1-3 are roughly half the specified count. Additionally, Activity 1 "Form Questions with чи" has all 8 items with the same answer ("Чи") — after the first 2 items, the learner is just repeating without thinking.
+- **Fix**: Expand activities 1-3 to match plan counts. For Activity 1, add items where the answer is NOT чи (e.g., question words) to create actual discrimination.
+
+### Issue 5: Section Title Mismatch (LOW)
+- **Location**: Line 150
+- **Problem**: Plan says "З'єднуємо речення (Joining Sentences)" but content has "З'єднуємо слова та ідеї (Connecting Words and Ideas)". Minor but should match plan.
+- **Fix**: Rename to match plan.
+
+### Issue 6: Misleading Summary (MEDIUM)
+- **Location**: Line 181
+- **Original**: 「joining sentences with **але** or **тому що** can instantly elevate your fluency」
+- **Problem**: The summary claims тому що was covered, but it was never taught in the module. This misleads the learner into thinking they learned something they didn't.
+- **Fix**: Either add тому що content (Issue 1 fix) or remove the reference from the summary.
 
 ## Ukrainian Language Issues
 
-- `прийшо́в` (past tense) in "Хто (хто́) це прийшо́в?"
-- `бу́де` (future tense) in "Коли́ (коли́) бу́де обі́д?"
-- `приї́хали` (past tense) in "Зві́дки (зві́дки) ви приї́хали?"
-- `ро́дом` (instrumental case) in "Зві́дки він ро́дом?"
-- `ка́ву` (accusative case) in "Чи ви хо́чете пи́ти ка́ву?"
-- `мо́я` (incorrect stress) in "Де (де́) мо́я ка́ва?"
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 70 | 「Робиш ти працюєш тут?」 | Ти робиш працювати тут? (or another realistic error) | Unrealistic error example |
+| 174 | 「Я не людина, і я не кіт!」 | Ти не любиш котів? Ти просто не вмієш їх готувати! | Wrong cultural reference |
 
-## Fix Plan to Reach 9.0/10
+## Beginner Safety Audit
 
-1. Correct all out-of-scope verbs to present tense in the "Словник у реченнях" section.
-2. Remove accusative and instrumental nouns in the "Словник у реченнях" section.
-3. Replace all genitive proper nouns in the activities (`Львова`, `Києва`, `Одеси`, `парку`) with basic adverbs.
-4. Correct the stress on `моя́`.
-5. Update the roleplay scenario to remove `зі Львова`.
+"Would I Continue?" Test: 5/5
+- Overwhelmed? **Pass** — pacing is comfortable, new concepts introduced gradually
+- Instructions clear? **Pass** — always know what's expected
+- Quick wins? **Pass** — early examples are simple and achievable
+- Ukrainian scary? **Pass** — introduced gently with English support throughout
+- Come back tomorrow? **Pass** — encouraging tone, interesting scenarios (café, journalist)
+
+## Strengths
+- Excellent dialogue blocks in section "Практика: Тренування заперечень та запитань" (lines 75-96) — two natural, contextual mini-conversations that model real Ukrainian exchanges
+- Clear and accurate presentation of не vs ні distinction in section "Вступ: Основи заперечення та інтонації" with contrastive examples
+- Good use of intonation arrows (↗/↘) to visualize pitch patterns throughout
+- The "Investigative Journalist" persona in section "Продукція: Комунікативні сценарії" is engaging and motivating
+- Double negation (ніколи + не) introduced naturally through examples: 「Ні, я ніколи не читаю.」 and 「Я часто читаю, але я ніколи не граю.」
+
+## Fix Plan to Reach 9/10 (REQUIRED — score is 8.0)
+
+### Pedagogy: 7/10 → 9/10
+**What to fix:**
+1. Section "З'єднуємо слова та ідеї": Add тому що / бо subsection with 3-4 examples (e.g., "Я не йду, тому що я хворий.", "Він не працює, бо він студент.") — covers missing plan point
+2. Line 174: Replace ALF quote with plan's "Ти не любиш котів? Ти просто не вмієш їх готувати!" — demonstrates both negation + question
+3. Add іноді to frequency adverb examples in section "Продукція: Комунікативні сценарії" (e.g., "Я іноді читаю, але я ніколи не граю.")
+4. Line 181: Fix summary to accurately reflect taught material
+
+**Expected score after fix:** 9/10
+
+### Activities: 7/10 → 9/10
+**What to fix:**
+1. Expand Activity 1 from 8→15 items, ensuring at least 3-4 items have answers other than "Чи" (mix in question words as distractors where the correct answer varies)
+2. Expand Activity 2 from 10→20 items covering all question words including чому and скільки more
+3. Expand Activity 3 from 8→15 items, adding double negation (ніколи не) items and тому що/бо sentences
+4. Consider adding one non-fill-in activity type for variety
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+```
+(9×1.5 + 8×1.1 + 9×1.2 + 9×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 8.8 + 10.8 + 11.7 + 11.7 + 8.0 + 13.5) / 8.9
+= 78.0 / 8.9 = 8.8/10
+```
+
+## Factual Verification
+
+- Research notes consulted: YES
+- Key Facts Ledger present: NO
+- Dates checked: 1 (ALF dubbing "1990s" — plausible)
+- Named figures verified: 0 (none named)
+- Primary quotes cross-referenced: 1/1 — ALF quote in content does NOT match plan's specified iconic quote
+- Chronological sequence: NOT_APPLICABLE
+- Claims without research grounding: 1 — the specific ALF quote used (「Я не людина, і я не кіт!」) is not referenced in the plan or research notes; the plan's quote is different
 
 ## Verification Summary
 
-**Vocabulary items found:** чи, що, хто, де, коли, не, так, ні, куди, звідки, чому, як, скільки, завжди, ніколи, часто, іноді, але, а, бо.
-**Review of Vocabulary:** The vocabulary list is complete and aligned with the module's grammar focus. However, the associated sentences in the prose introduce morphological violations.
-
-**Activities found:** Form Yes/No Questions with Чи, Complete with Question Words, Make Sentences Negative, Question-Answer Pairs, Questions and Negation Rules, Match Question Words to Meanings, True or False? Questions and Negation, Put the Words in Order, Sort the Words by Category.
-**Review of Activities:** While well-structured and varied, several activity items use untaught genitive case proper nouns, which breaks the pedagogical flow for A1 and triggers VESUM failures.
-
-- Evaluated deterministic VESUM errors and confirmed they are due to untaught genitive cases. `Оля` and `Шо` were verified as acceptable forms in context.
-- Checked text for Anglicisms and Russicisms (none critical found).
+- Content lines read: 189
+- Activity items checked: 34
+- Ukrainian sentences verified: 40+
+- Citations in bank: 14
+- Issues found: 6
 
 ## Verdict
 
-**Status:** FAIL
-**Rationale:** The module introduces multiple morphological violations (past/future tenses, accusative, instrumental, and genitive cases) in both prose examples and activities, breaking the strict pedagogical sequence for an A1.2 module.
+**FAIL**
+
+Three blocking issues: (1) Missing тому що / бо causal conjunction content required by plan — a full plan subsection is undelivered. (2) Activity item count is 34/58 (59%) — significantly below plan specifications. (3) Summary line 181 claims тому що was taught when it was not, which is a factual misrepresentation to the learner. The module needs content expansion for the conjunctions section and activity item count restoration before it can pass.

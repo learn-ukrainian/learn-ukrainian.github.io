@@ -1,43 +1,63 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1320",
+    "COMPUTED_WORD_COUNT": "1719",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "110.0",
-    "COMPUTED_ACTIVITY_COUNT": "1",
+    "COMPUTED_WORD_PERCENT": "143.2",
+    "COMPUTED_ACTIVITY_COUNT": "2",
     "COMPUTED_VOCAB_COUNT": "12",
-    "COMPUTED_ENGAGEMENT_COUNT": "4",
-    "COMPUTED_IMMERSION_PERCENT": "16.8",
+    "COMPUTED_ENGAGEMENT_COUNT": "2",
+    "COMPUTED_IMMERSION_PERCENT": "12.1",
     "COMPUTED_IMMERSION_TARGET": "15-25%",
-    "COMPUTED_RICHNESS_SCORE": "86",
-    "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3",
+    "COMPUTED_RICHNESS_SCORE": "73",
+    "COMPUTED_RICHNESS_THRESHOLD": "60",
+    "COMPUTED_RICHNESS_GAPS": "video_embeds: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
   "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-i.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.log\n\n\n========================================\n\n📋 Auditing: A1 M15 — The Living Verb I\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-i.md | Target: 1200 words\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Template violations: 1 critical, 0 warnings, 0 info\n     🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple headers contain 'Summary': Summary, Культурний аспект та підсумок (Cultural Insight and Summary)\n\n  📊 Section Word Analysis:\n     Вступ (Introduction)                                           232 /  250  ✅ (-18)\n     Презентація (Presentation)                                     348 /  350  ✅ (-2)\n     Практика (Practice)                                            396 /  350  ✅ (+46)\n     Культурний аспект та підсумок (Cultural Insight and Summary)   267 /  250  ✅ (+17)\n     ─────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                         1243 / 1200  ✅ (+43)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1320/1200 (raw: 1562)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 16.8% (target 15-25% (M15))\n\n📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:\n  🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple headers contain 'Summary': Summary, Культурний аспект та підсумок (Cultural Insight and Summary)\n     → FIX: RENAME one header to NOT contain 'Summary'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 1 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-living-verb-i.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\nCritical Failures:\n  • 1 Critical Template Violations\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.log for details)\n\nRunning RAG word verification...\nVerifying: the-living-verb-i.md\n  VESUM misses: 11 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 192105.53it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 93 | VESUM: 82 (88.2%) | RAG: 1 | Not found: 10\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 88/99 (89%) verified\n⚠️ VESUM not found (11): ати, ва, еш, писа, пиш, працюваю, увати, ють, ємо, єте",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-i.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-living-verb-i.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M15 — The Living Verb I\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-i.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ (Introduction)                                           396 /  250  ✅ (+146)\n     Презентація (Presentation)                                     720 /  350  ✅ (+370)\n     Практика (Practice)                                            694 /  350  ✅ (+344)\n     Культурний аспект та підсумок (Cultural Insight and Summary)   380 /  250  ✅ (+130)\n     ─────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                         2190 / 1200  ✅ (+990)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1719/1200 (raw: 2548)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 2/1\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    ⚠️ 12.1% (target 15-25%, within tolerance (M15))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-living-verb-i.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-living-verb-i.md\n  VESUM misses: 15 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 63678.70it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 109 | VESUM: 94 (86.2%) | RAG: 3 | Not found: 12\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 124/139 (89%) verified\n⚠️ VESUM not found (14): Анна, Анно, ати, Міні-розповідь, працюваю, ю, юва, ювати, ють, яти",
   "h2_sections": "1. Вступ (Introduction)\n2. Презентація (Presentation)\n3. Практика (Practice)\n4. Культурний аспект та підсумок (Cultural Insight and Summary)",
   "vesum_stats": {
-    "total": 99,
-    "vesum_hits": 88,
+    "total": 139,
+    "vesum_hits": 124,
     "rag_hits": 0,
-    "not_found": 11,
+    "not_found": 14,
     "rag_errors": 0,
-    "proper_names": 0,
+    "proper_names": 1,
     "by_source": {
       "prose": {
-        "total": 93,
-        "vesum_hits": 82,
-        "not_found": 11
+        "total": 109,
+        "vesum_hits": 94,
+        "not_found": 14
       },
       "activities": {
-        "total": 6,
-        "vesum_hits": 6,
+        "total": 30,
+        "vesum_hits": 30,
         "not_found": 0
       }
     }
   },
   "vesum_not_found": [
+    {
+      "original": "Анна",
+      "clean": "анна",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Анно",
+      "clean": "анно",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
     {
       "original": "ати",
       "clean": "ати",
@@ -49,38 +69,8 @@
       "status": "❌"
     },
     {
-      "original": "ва",
-      "clean": "ва",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "еш",
-      "clean": "еш",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "писа",
-      "clean": "писа",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "пиш",
-      "clean": "пиш",
+      "original": "Міні-розповідь",
+      "clean": "міні-розповідь",
       "source": "prose",
       "vesum": false,
       "textbook": false,
@@ -99,8 +89,28 @@
       "status": "❌"
     },
     {
-      "original": "увати",
-      "clean": "увати",
+      "original": "ю",
+      "clean": "ю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "юва",
+      "clean": "юва",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ювати",
+      "clean": "ювати",
       "source": "prose",
       "vesum": false,
       "textbook": false,
@@ -111,6 +121,16 @@
     {
       "original": "ють",
       "clean": "ють",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "яти",
+      "clean": "яти",
       "source": "prose",
       "vesum": false,
       "textbook": false,
@@ -147,7 +167,17 @@
       "literary": false,
       "vesum_info": [],
       "status": "❌"
+    },
+    {
+      "original": "Іване",
+      "clean": "іване",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
     }
   ],
-  "content_hash": "694e95f34900d900"
+  "content_hash": "77cf3d80470af1fc"
 }

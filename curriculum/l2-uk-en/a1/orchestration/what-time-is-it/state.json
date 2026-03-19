@@ -21,47 +21,6 @@
         "type": "script",
         "name": "discover_passthrough"
       }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-18T06:15:08Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-18T06:27:11Z",
-      "attempts": 2,
-      "note": "dedup-exhausted",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T06:29:14Z",
-      "task_id": "v5-what-time-is-it-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T06:49:22Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
-      }
     }
   }
 }

@@ -1,58 +1,68 @@
-        # Fix ALL 10 issue(s) in `questions-and-negation`
+        # Fix ALL 12 issue(s) in `questions-and-negation`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 10 issues. You must produce fixes for all 10.**
-        **After you finish, count your fixes. If the count is less than 10, go back and fix the ones you missed.**
+        **There are 12 issues. You must produce fixes for all 12.**
+        **After you finish, count your fixes. If the count is less than 12, go back and fix the ones you missed.**
 
         ### Fix 1: IPA_BANNED
 **What:** Banned IPA transcription: [sentence 1]
 **How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 196
+**Where:** ~line 119
 
 ### Fix 2: IPA_BANNED
+**What:** Banned IPA transcription: [conjunction]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 119
+
+### Fix 3: IPA_BANNED
 **What:** Banned IPA transcription: [sentence 2]
 **How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 196
-
-### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'гривень' (genitive, VESUM: noun:inanim:p:v_rod) in M18. Only nominative case allowed before M25.
-**How to fix:** Replace 'гривень' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 126
+**Where:** ~line 119
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'українську' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
-**How to fix:** Replace 'українську' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 146
+**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
+**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 29
 
 ### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'рибу' (VESUM: noun:anim:f:v_zna) in M18. Accusative not taught until M25.
-**How to fix:** Replace 'рибу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 166
+**What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
+**How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 105
 
 ### Fix 6: MORPHOLOGICAL_VIOLATION
 **What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
 **How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 177
+**Where:** ~line 121
 
 ### Fix 7: MORPHOLOGICAL_VIOLATION
 **What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
 **How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 181
+**Where:** ~line 122
 
 ### Fix 8: MORPHOLOGICAL_VIOLATION
 **What:** Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.
 **How to fix:** Replace 'каву' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 185
+**Where:** ~line 123
 
 ### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'котів' (genitive, VESUM: noun:anim:p:v_rod) in M18. Only nominative case allowed before M25.
-**How to fix:** Replace 'котів' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 208
+**What:** Non-present verb 'прийшов' (past tense, VESUM: verb:perf:past:m) in M18. Only present tense available before M36.
+**How to fix:** Replace 'прийшов' with present tense form or English.
+**Where:** ~line 128
 
 ### Fix 10: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'котів' (genitive, VESUM: noun:anim:p:v_rod) in M18. Only nominative case allowed before M25.
+**How to fix:** Replace 'котів' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 138
+
+### Fix 11: MORPHOLOGICAL_VIOLATION
 **What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M18. Only nominative case allowed before M25.
 **How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 208
+**Where:** ~line 138
+
+### Fix 12: LOW_ENGAGEMENT
+**What:** Only 0 engagement boxes (minimum: 1 for A1)
+**How to fix:** Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+**Where:** (whole module)
 
 ### Other Audit Failures
 
@@ -110,6 +120,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 
 ## Verification Tools (USE THEM)
@@ -131,7 +142,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 10 issues listed above — every single one, not a subset
+        1. Fix ALL 12 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

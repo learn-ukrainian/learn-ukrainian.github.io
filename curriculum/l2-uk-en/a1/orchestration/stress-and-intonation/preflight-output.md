@@ -1,21 +1,16 @@
-  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=32340 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=31512 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ```yaml
 prompt_preflight:
   status: ISSUES_FOUND
   issues:
     - type: CONTRADICTION
-      location: "Section 5: Rule 4 vs. Language Quality Rules"
-      problem: "Rule 4 explicitly forbids adding stress marks ('Do NOT add stress marks (´)... Write plain Ukrainian'), while the 'Language Quality Rules' and 'Hard Constraints' (Section 6) require them ('Use lowercase letters with a combining acute accent (´)... stress marks (´) only'). This is a direct contradiction that makes it impossible to satisfy both requirements."
-      suggested_fix: "Clarify if the writer should use plain Ukrainian or manually add stress marks. If a pipeline adds them later, remove the requirement for manual stress marks in the 'Language Quality Rules' and 'Hard Constraints' sections."
-      severity: HIGH
+      location: "Rules Section 5 -> Rule 4 vs Language Quality Rules -> Stress Mark Typography"
+      problem: "Rule 4 states: 'Exception: if the plan uses capitalized stress (молокО, далекО) to indicate stress position, you may use that notation'. However, the Language Quality Rules section explicitly states: 'Wrong: мА́ма... (do NOT capitalize the stressed vowel)' and 'ALWAYS use lowercase letters with a combining acute accent'. Following the Rule 4 exception will trigger a typography failure in the audit gate."
+      suggested_fix: "Remove the permission to use capitalized stress notation. Instruct the generator to convert plan examples like 'зАмок' into 'за́мок' using the combining acute accent on a lowercase vowel."
+      severity: MEDIUM
     - type: CONTRADICTION
-      location: "Section 5: Rule 1 vs. Section 6: Hard Constraints"
-      problem: "Rule 1 states 'Any other structure (including conjugated verbs) is FORBIDDEN,' but Section 6 (Hard Constraints) says 'ALLOWED: Simple present tense (я читаю, я бачу).' For a Phase A1.1 [First Contact] module, this creates uncertainty about whether verbs like 'писати' (included in vocabulary) can be conjugated in example sentences."
-      suggested_fix: "Reconcile the grammar allowlist. If conjugated verbs are allowed for A1.1, update Rule 1. If not, remove 'Simple present tense' from the Allowed list in Section 6."
-      severity: HIGH
-    - type: PLAN_CONTRADICTION
-      location: "Vocabulary Hints vs. Grammar Allowlist"
-      problem: "The plan includes the verb 'писати' and mentions its conjugation (пишу, пишеш), but the grammar constraints for A1.1 (First Contact) are strictly nominal (Це + noun, Noun + тут). Using 'писати' in a sentence would require conjugation, violating the primary grammar constraint for this level."
-      suggested_fix: "Replace 'писати' with a high-frequency noun compatible with A1.1 structures (e.g., 'книга' or 'клас') or explicitly allow the infinitive 'писати' for identifying stress only, forbidding its use in sentences."
+      location: "Rules Section 5 -> Rule 4 vs Language Quality Rules -> Stress Mark Typography"
+      problem: "Rule 4 says 'Write Ukrainian without stress marks — the pipeline adds them after', but the Language Quality Rules state 'The ONLY pronunciation aid is the stress mark (´) on the vowel' and provide 'Correct: ма́ма' examples. In a module specifically about Stress and Intonation, omitting stress marks in the prose makes the content pedagogically useless, while including them may conflict with the 'pipeline' instruction."
+      suggested_fix: "Clarify that for this specific module (M06), the generator MUST use stress marks (combining acute accent) for all teaching examples and vocabulary items to fulfill the 'Linguistic Accuracy' and 'Pedagogy' gates, even if a pipeline exists for other modules."
       severity: MEDIUM
 ```

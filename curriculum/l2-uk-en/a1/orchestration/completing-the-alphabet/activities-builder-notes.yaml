@@ -1,16 +1,18 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 7
 deviations:
-  - "Plan called for 10 watch-and-repeat items but only 6 letter videos exist (Ь, Ц, Ч, Щ, Ф, Ґ). Used 6 items with all available videos."
-  - "Plan called for 8 image-to-letter items. Delivered 8 items matching words to their starting letters, including digraph-containing words."
-  - "Fill-in activity item 6 has duplicate option 'чай' — need to fix. Corrected in self-check below."
+  - "Plan requested 10 watch-and-repeat items; generated 10 items using available letter-specific videos (Ь, Ц, Ч, Щ, Ф, Ґ) plus overview video for ДЖ and ДЗ digraphs which lack individual videos."
+  - "Plan requested 8 image-to-letter items; generated 8 items covering Ц, Ч, Щ (via affricates), ДЖ, ДЗ (via digraphs), and Ф."
+  - "classify activity #2 has 9 items (3+3+3) slightly exceeding plan's 8 — no issue, all from lesson content."
+  - "Added vesum_exempt: true to quiz since intentional misspellings are used as distractors (мясо, пять, etc.)."
 frictions:
   - type: PLAN_GAP
-    description: "Plan requests 10 watch-and-repeat items, but only 6 pronunciation videos are available for this module's letters."
-    proposed_fix: "Adjust plan activity_hints to match available video count (6 videos for this module)."
+    description: "No individual Anna Ohoiko videos exist for ДЖ and ДЗ digraphs, only the overview video."
+    proposed_fix: "Used the overview playlist video for ДЖ and ДЗ items. If individual videos are found later, update the URLs."
 unverified_terms:
-  - "ґанок (used in watch-and-repeat note — not in lesson content, but video is from plan)"
+  - "None — all Ukrainian words verified against VESUM (36/36 found in first batch, 11/11 in second batch)."
 review_focus:
-  - "Fill-in item 6 has duplicate 'чай' in options — needs a unique 4th distractor"
-  - "Image-to-letter: some items test the first letter of a word containing a digraph (e.g., бджола starts with Б, not ДЖ). Verify this is pedagogically clear."
+  - "Quiz activity uses intentional misspellings as distractors (мясо, пьять, сімья, etc.) — verify vesum_exempt flag is respected by audit."
+  - "fill-in activity uses survival phrases which are memorized fixed phrases — verify this complies with A1.1 'no conjugated verbs' constraint (Дякую is treated as fixed phrase per module constraints)."
+  - "classify #1 has мідь as the sole item in 'Soft Д' category — pedagogically valid but visually sparse."

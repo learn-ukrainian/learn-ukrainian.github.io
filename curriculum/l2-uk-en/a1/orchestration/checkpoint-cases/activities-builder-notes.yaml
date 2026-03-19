@@ -2,13 +2,13 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 6
 deviations:
-  - "Plan hints at 1 quiz with 30 items. Delivered the 30-item quiz plus 5 additional activities (fill-in, group-sort, match-up, true-false, unjumble) for checkpoint integration practice."
+  - "Plan specifies 1 quiz with 30 items. Delivered the 30-item quiz as planned, plus 5 additional integrative activities (fill-in 8 items, match-up 8 pairs, group-sort 12 items, true-false 8 items, unjumble 6 items) to provide variety appropriate for a checkpoint module."
+  - "Quiz item 10 initially had duplicate маму option — caught in self-check and corrected to мама/маму/мами/мамою (4 distinct forms)."
 frictions:
   - type: PLAN_GAP
-    description: "Plan activity_hints only specifies one quiz. For a checkpoint module testing integration across 3 cases, prepositions, and agreement, additional activity types provide better skill coverage."
-    proposed_fix: "N/A — supplementary activities added within the 0-15 allowed range."
-unverified_terms:
-  - "None — all Ukrainian words come directly from the module content (checkpoint-cases.md)"
+    description: "Plan activity_hints only specifies quiz (30 items), but checkpoint pedagogy benefits from multiple activity types testing integration differently."
+    proposed_fix: "Future checkpoint plans should include hints for 4-6 varied activity types."
+unverified_terms: []
 review_focus:
-  - "Quiz items 15-20 (adjective agreement) — verify that all case forms are linguistically correct"
-  - "Unjumble item 3 has only 2 words (Немає кави) — may be too simple but is valid Ukrainian"
+  - "Quiz is 30 items — verify none feel repetitive and that the difficulty progresses from pure case identification toward integrated preposition+agreement questions."
+  - "Group-sort 'у тебе є' item — technically this is Genitive because у + Gen expresses possession, but some learners may find this confusing since у also signals Locative in other contexts."

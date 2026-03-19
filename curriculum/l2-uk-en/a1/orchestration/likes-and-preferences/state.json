@@ -25,43 +25,42 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T04:25:32Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T04:49:48Z",
-      "attempts": 2,
-      "note": "escalation-claude",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T04:51:44Z",
-      "task_id": "v5-likes-and-preferences-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T05:02:24Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-19T06:43:42Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T07:16:29Z",
+      "attempts": 3,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T07:18:25Z",
+      "task_id": "v5-likes-and-preferences-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T07:24:45Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

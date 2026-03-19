@@ -1,0 +1,18 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "Plan requested 20 items for match-up — delivered 20 pairs."
+  - "Plan requested 20 items for quiz — delivered 20 items."
+  - "Plan requested 15 items for fill-in #1 — delivered 15 items."
+  - "Plan requested 6 items for fill-in #2 — delivered 6 items."
+  - "Vocabulary has 20 items (8 demonstrative pronouns + 12 nouns) — matches target."
+frictions:
+  - type: CONTENT_VOCABULARY_GAP
+    description: "Fill-in #2 item 5 uses locative form квартирі which goes slightly beyond A1.1 grammar scope, but the phrase Я живу в... is high-frequency and natural."
+    proposed_fix: "Could replace with another Що це? item if locative is deemed too advanced."
+unverified_terms:
+  - "квартирі (locative form — not separately verified but квартира confirmed in VESUM)"
+review_focus:
+  - "Fill-in #2 item 5 uses locative case — verify this is acceptable at A1.1"
+  - "Quiz item 20 tests identification vs specification distinction — ensure the long option text renders well"

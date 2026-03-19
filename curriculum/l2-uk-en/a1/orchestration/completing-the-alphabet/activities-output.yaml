@@ -1,86 +1,102 @@
 - type: watch-and-repeat
-  title: "Watch and Repeat: New Letters and Sounds"
-  instruction: "Watch each video by Anna Ohoiko. Listen carefully, then repeat the sound and example word aloud."
+  title: "Pronunciation Practice"
+  instruction: "Watch the video for each letter, then repeat the sound and example word out loud. Focus on the unique sound each letter or combination makes."
   items:
     - letter: "Ь"
       word: "сіль"
       video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
-      note: "The soft sign has no sound of its own — it softens the consonant before it."
+      note: "The soft sign has no sound of its own — it softens the consonant before it. Listen for the soft Л in сіль."
     - letter: "Ц"
       word: "цукор"
       video: "https://www.youtube.com/watch?v=u44eCjR2Oz8"
-      note: "Like the 'ts' in English 'cats'. A crisp affricate."
+      note: "Ц is an affricate — Т+С fused into one sharp sound, like 'ts' in 'cats'."
     - letter: "Ч"
-      word: "час"
+      word: "чай"
       video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
-      note: "Like the 'ch' in English 'church'."
+      note: "Ч sounds like 'ch' in 'church'. Very common in Ukrainian."
     - letter: "Щ"
       word: "що"
       video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
-      note: "Two sounds fused together: Ш + Ч. Pronounce both clearly."
+      note: "Щ is two sounds: Ш+Ч (sh+ch). Pronounce both clearly, one after the other."
     - letter: "Ф"
       word: "факт"
       video: "https://www.youtube.com/watch?v=haHRsFFZRQI"
-      note: "Like English 'f'. Rare in native Ukrainian words — mostly in borrowings."
+      note: "Ф sounds like English 'f'. Rare in native Ukrainian words — mostly in borrowings."
     - letter: "Ґ"
-      word: "ґанок"
+      word: "Ґ"
       video: "https://www.youtube.com/watch?v=gNjHqjTW9WQ"
-      note: "A hard 'g' sound, different from Г. Review from previous modules."
+      note: "Ґ is a unique Ukrainian letter — a hard G sound, distinct from Г."
+    - letter: "ДЖ"
+      word: "джерело"
+      video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
+      note: "ДЖ is a digraph — two letters, one sound. Like 'j' in 'jungle'."
+    - letter: "ДЗ"
+      word: "дзвін"
+      video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
+      note: "ДЗ is a digraph — two letters, one buzzing sound. Uniquely Ukrainian."
+    - letter: "Ь"
+      word: "кінь"
+      video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
+      note: "Compare кінь (horse, soft Н) with кін (stake, hard Н). The soft sign changes the word completely."
+    - letter: "Щ"
+      word: "щастя"
+      video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
+      note: "Practice the Ш+Ч cluster in щастя (happiness). Both sounds must be clear."
 
 - type: classify
   title: "Which Consonant Is Softened?"
-  instruction: "Look at each word containing the soft sign (Ь). Drag it to the correct category based on which consonant is softened."
+  instruction: "Sort these words by which consonant the soft sign (Ь) softens. Some words have no soft sign at all."
   categories:
-    - label: "Soft Н"
-      symbol_hint: "consonant"
-      items: ["день", "кінь", "осінь"]
     - label: "Soft Л"
-      symbol_hint: "consonant"
       items: ["сіль", "Львів"]
+    - label: "Soft Н"
+      items: ["день", "осінь", "кінь"]
     - label: "Soft Д"
-      symbol_hint: "consonant"
       items: ["мідь"]
+    - label: "No Ь"
+      items: ["чай", "цукор", "час", "факт"]
 
 - type: image-to-letter
-  title: "What Letter Does It Start With?"
-  instruction: "Look at the picture. Which Ukrainian letter does this word begin with?"
+  title: "Which Special Letter?"
+  instruction: "Look at the picture and think of the Ukrainian word. Which special letter or digraph does the word contain?"
   items:
-    - emoji: "🧂"
+    - emoji: "🍬"
       answer: "Ц"
-      distractors: ["Ч", "С"]
-      note: "цукор (sugar) starts with Ц"
-    - emoji: "🕐"
+      distractors: ["Ч", "Щ"]
+      note: "цукор (sugar) contains the affricate Ц"
+    - emoji: "⏰"
       answer: "Ч"
       distractors: ["Ц", "Щ"]
-      note: "час (time) starts with Ч"
-    - emoji: "🐝"
-      answer: "Б"
-      distractors: ["Д", "Ж"]
-      note: "бджола (bee) starts with Б"
-    - emoji: "🐢"
+      note: "час (time) contains the affricate Ч"
+    - emoji: "🫖"
       answer: "Ч"
-      distractors: ["Ц", "Ш"]
-      note: "черепаха (turtle) starts with Ч"
+      distractors: ["Ц", "Ф"]
+      note: "чай (tea) contains the affricate Ч"
+    - emoji: "💧"
+      answer: "ДЖ"
+      distractors: ["ДЗ", "Щ"]
+      note: "джерело (spring/source) contains the digraph ДЖ"
+    - emoji: "🔔"
+      answer: "ДЗ"
+      distractors: ["ДЖ", "Ц"]
+      note: "дзвін (bell) contains the digraph ДЗ"
     - emoji: "🪞"
-      answer: "Д"
-      distractors: ["З", "Ж"]
-      note: "дзеркало (mirror) starts with Д (part of digraph ДЗ)"
-    - emoji: "🏔️"
-      answer: "Д"
-      distractors: ["Ж", "Г"]
-      note: "джерело (spring) starts with Д (part of digraph ДЖ)"
-    - emoji: "📸"
+      answer: "ДЗ"
+      distractors: ["ДЖ", "Ч"]
+      note: "дзеркало (mirror) contains the digraph ДЗ"
+    - emoji: "🐝"
+      answer: "ДЖ"
+      distractors: ["ДЗ", "Ц"]
+      note: "бджола (bee) contains the digraph ДЖ"
+    - emoji: "📷"
       answer: "Ф"
-      distractors: ["В", "П"]
-      note: "фото (photo) starts with Ф"
-    - emoji: "🐴"
-      answer: "К"
-      distractors: ["Ч", "Н"]
-      note: "кінь (horse) starts with К"
+      distractors: ["Х", "В"]
+      note: "фото (photo) contains the rare letter Ф"
 
 - type: quiz
   title: "Apostrophe Rules"
-  instruction: "Choose the correct answer about how the apostrophe works in Ukrainian."
+  instruction: "Test your understanding of when and why the apostrophe is used in Ukrainian spelling."
+  vesum_exempt: true
   items:
     - question: "Which spelling is correct for the word meaning 'meat'?"
       options:
@@ -90,31 +106,31 @@
           correct: false
         - text: "мьясо"
           correct: false
-        - text: "м ясо"
+        - text: "м'асо"
           correct: false
-      explanation: "The apostrophe separates М from the iotated vowel Я, preserving the Й-sound."
+      explanation: "The apostrophe separates the labial consonant М from the iotated vowel Я, keeping М hard and preserving the Y+A sound."
     - question: "Which spelling is correct for the word meaning 'five'?"
       options:
-        - text: "п'ять"
-          correct: true
         - text: "пять"
           correct: false
+        - text: "п'ять"
+          correct: true
         - text: "пьять"
           correct: false
-        - text: "п ять"
+        - text: "п'ать"
           correct: false
-      explanation: "After П, the apostrophe keeps the Й-sound in Я."
+      explanation: "П is a labial consonant followed by Я, so the apostrophe is required to keep П hard and preserve the full Y+A sound."
     - question: "Which spelling is correct for the word meaning 'family'?"
       options:
-        - text: "сім'я"
-          correct: true
-        - text: "сімя"
-          correct: false
         - text: "сімья"
           correct: false
-        - text: "сім я"
+        - text: "сімя"
           correct: false
-      explanation: "The apostrophe after М preserves the Й-sound in Я."
+        - text: "сім'я"
+          correct: true
+        - text: "сім'а"
+          correct: false
+      explanation: "The apostrophe appears after М (a labial consonant) before Я. Ukrainian never uses Ь before iotated vowels the way Russian does."
     - question: "Which spelling is correct for the word meaning 'ball'?"
       options:
         - text: "м'яч"
@@ -123,42 +139,53 @@
           correct: false
         - text: "мьяч"
           correct: false
-        - text: "м яч"
+        - text: "м'ач"
           correct: false
-      explanation: "The apostrophe separates М from Я, keeping the Й-sound."
+      explanation: "М is a labial consonant, and the following vowel is Я — the apostrophe is mandatory."
     - question: "Which spelling is correct for the word meaning 'object'?"
       options:
-        - text: "об'єкт"
-          correct: true
         - text: "обєкт"
+          correct: false
+        - text: "об'ект"
           correct: false
         - text: "обьєкт"
           correct: false
-        - text: "об єкт"
-          correct: false
-      explanation: "The apostrophe after Б separates it from the iotated vowel Є."
-    - question: "After which group of consonants does the apostrophe appear?"
-      options:
-        - text: "Б, П, В, М, Ф, Р"
+        - text: "об'єкт"
           correct: true
-        - text: "Т, Д, Н, Л, С, З"
-          correct: false
-        - text: "К, Г, Х, Ж, Ш, Щ"
-          correct: false
+      explanation: "The apostrophe appears after Б (a labial consonant) before Є (an iotated vowel)."
+    - question: "After which consonants does the apostrophe typically appear?"
+      options:
+        - text: "Б, П, В, М, Ф, and Р"
+          correct: true
         - text: "All consonants"
           correct: false
-      explanation: "The apostrophe appears only after Б, П, В, М, Ф, Р before iotated vowels."
-    - question: "What does the apostrophe preserve in pronunciation?"
+        - text: "Only Б and П"
+          correct: false
+        - text: "Only М and В"
+          correct: false
+      explanation: "The apostrophe appears after labial consonants (Б, П, В, М, Ф) and also after Р, before iotated vowels."
+    - question: "What does the apostrophe do in Ukrainian?"
       options:
-        - text: "The Й-sound of the following vowel"
+        - text: "It softens the consonant before it"
+          correct: false
+        - text: "It keeps the consonant hard and preserves the Y-sound of the vowel"
           correct: true
-        - text: "The hardness of the vowel"
+        - text: "It shows possession, like in English"
           correct: false
-        - text: "A pause between syllables"
+        - text: "It doubles the consonant sound"
           correct: false
-        - text: "The stress on the vowel"
+      explanation: "The apostrophe acts as a barrier — it keeps the preceding consonant hard and lets the iotated vowel keep its full Y-sound."
+    - question: "Before which vowels does the apostrophe appear?"
+      options:
+        - text: "А, О, У, І"
           correct: false
-      explanation: "Without the apostrophe, the Й-sound would be absorbed into softening the consonant."
+        - text: "Е, И, І, О"
+          correct: false
+        - text: "Я, Ю, Є, Ї"
+          correct: true
+        - text: "All vowels"
+          correct: false
+      explanation: "The apostrophe appears only before iotated vowels — Я, Ю, Є, Ї — which have a Y-sound that would otherwise be absorbed."
     - question: "Which word does NOT need an apostrophe?"
       options:
         - text: "цукор"
@@ -169,93 +196,72 @@
           correct: false
         - text: "сім'я"
           correct: false
-      explanation: "Цукор has no combination of Б/П/В/М/Ф/Р + iotated vowel, so no apostrophe is needed."
-    - question: "Before which vowels does the apostrophe appear?"
+      explanation: "Цукор has no labial consonant followed by an iotated vowel, so no apostrophe is needed."
+    - question: "In the word м'ясо, the apostrophe tells you to..."
       options:
-        - text: "Я, Ю, Є, Ї"
+        - text: "Soften the М"
+          correct: false
+        - text: "Pronounce a hard М, then the full Y+A sound of Я"
           correct: true
-        - text: "А, О, У, Е, И"
+        - text: "Skip the Я sound entirely"
           correct: false
-        - text: "І, И, Е, А"
+        - text: "Pronounce М twice"
           correct: false
-        - text: "All vowels"
-          correct: false
-      explanation: "The apostrophe appears before iotated vowels only: Я, Ю, Є, Ї."
-    - question: "In the word м'ясо, what does the apostrophe tell you about the М?"
-      options:
-        - text: "М stays hard, followed by Й + А"
-          correct: true
-        - text: "М becomes soft, followed by А"
-          correct: false
-        - text: "М is silent"
-          correct: false
-        - text: "М changes to a different sound"
-          correct: false
-      explanation: "The apostrophe means the consonant stays hard and the iotated vowel keeps its full Й + vowel sound."
+      explanation: "Without the apostrophe, М+Я would blend into a soft M+A. The apostrophe forces a clear separation: hard М, then full Я (Y+A)."
 
 - type: classify
-  title: "Sort by Sound Type"
-  instruction: "Sort these letters into the correct category based on what kind of sound they represent."
+  title: "Which Affricate or Cluster?"
+  instruction: "Sort each word by the special consonant it contains: the affricate Ц, the affricate Ч, or the consonant cluster Щ."
   categories:
-    - label: "Affricate (two sounds fused into one)"
-      symbol_hint: "consonant"
-      items: ["Ц", "Ч"]
-    - label: "Consonant cluster written as one letter"
-      symbol_hint: "consonant"
-      items: ["Щ"]
-    - label: "Digraph (two letters = one sound)"
-      symbol_hint: "consonant"
-      items: ["ДЖ", "ДЗ"]
-    - label: "Modifier (no sound of its own)"
-      symbol_hint: "modifier"
-      items: ["Ь"]
+    - label: "Ц"
+      items: ["цукор", "цибуля", "місяць"]
+    - label: "Ч"
+      items: ["час", "чай", "черепаха"]
+    - label: "Щ"
+      items: ["що", "ще", "щастя"]
 
 - type: fill-in
   title: "Complete the Phrase"
-  instruction: "Choose the correct word to complete each phrase. These are survival phrases using the full alphabet."
+  instruction: "Fill in the missing word to complete each Ukrainian survival phrase."
   items:
-    - sentence: "_____ день!"
-      answer: "Добрий"
-      options: ["Добрий", "Добре", "Доброго", "Добра"]
-      explanation: "Добрий день! means Good day! — a standard Ukrainian greeting."
-    - sentence: "Як _____?"
+    - sentence: "Complete the greeting meaning 'Good day!': Добрий ___!"
+      answer: "день"
+      options: ["день", "ніч", "ранок", "час"]
+      explanation: "Добрий день! is the standard daytime greeting in Ukrainian."
+    - sentence: "Complete the question meaning 'How are you?': Як ___?"
       answer: "справи"
-      options: ["справи", "справа", "справ", "справу"]
-      explanation: "Як справи? means How are you? — a common follow-up greeting."
-    - sentence: "Хто _____?"
-      answer: "це"
-      options: ["це", "то", "тут", "там"]
-      explanation: "Хто це? means Who is this?"
-    - sentence: "Що _____?"
-      answer: "це"
-      options: ["це", "то", "тут", "там"]
-      explanation: "Що це? means What is this?"
-    - sentence: "До _____!"
+      options: ["справи", "день", "тут", "там"]
+      explanation: "Як справи? literally means 'How are things?' — the standard way to ask how someone is."
+    - sentence: "Complete the phrase meaning 'Please!': Будь ___!"
+      answer: "ласка"
+      options: ["ласка", "день", "добре", "тут"]
+      explanation: "Будь ласка! literally means 'Be kind!' — the standard way to say 'please'."
+    - sentence: "Complete the phrase meaning 'Goodbye!': До ___!"
       answer: "побачення"
-      options: ["побачення", "зустрічі", "завтра", "вечора"]
-      explanation: "До побачення! means Goodbye!"
-    - sentence: "Це _____, а не кава."
+      options: ["побачення", "день", "ранок", "ніч"]
+      explanation: "До побачення! literally means 'Until the seeing!' — the standard farewell."
+    - sentence: "Complete the question meaning 'What is this?': ___ це?"
+      answer: "Що"
+      options: ["Що", "Як", "Де", "Хто"]
+      explanation: "Що це? means 'What is this?' — one of the most common questions in Ukrainian."
+    - sentence: "Complete the answer meaning 'This is tea.': Це ___."
       answer: "чай"
-      options: ["чай", "час", "цукор", "щастя"]
-      explanation: "Чай means tea — from the lesson dialogue."
+      options: ["чай", "час", "що", "ще"]
+      explanation: "Це чай. — a simple Це + noun statement using the word for tea."
 
 - type: match-up
-  title: "Match the Phrase to Its Meaning"
-  instruction: "Match each Ukrainian survival phrase to its English meaning."
+  title: "Match the Survival Phrase"
+  instruction: "Match each Ukrainian phrase to its English meaning."
   pairs:
     - left: "Добрий день!"
       right: "Good day!"
     - left: "Як справи?"
       right: "How are you?"
-    - left: "Хто це?"
-      right: "Who is this?"
-    - left: "Що це?"
-      right: "What is this?"
+    - left: "Дякую!"
+      right: "Thank you!"
+    - left: "Будь ласка!"
+      right: "Please!"
     - left: "До побачення!"
       right: "Goodbye!"
-    - left: "Так"
-      right: "Yes"
-    - left: "Ні"
-      right: "No"
-    - left: "Це чай"
-      right: "This is tea"
+    - left: "Що це?"
+      right: "What is this?"

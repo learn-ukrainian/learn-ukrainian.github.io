@@ -24,7 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T22:26:43Z",
+      "ts": "2026-03-19T01:18:52Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -32,18 +32,18 @@
       }
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T22:32:18Z",
-      "attempts": 3,
+      "status": "failed",
+      "ts": "2026-03-19T01:19:19Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-5-failures",
       "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "type": "deterministic",
+        "name": "morphological_validator"
       }
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T22:34:48Z",
+      "ts": "2026-03-19T01:22:41Z",
       "task_id": "v5-completing-the-alphabet-pC",
       "executor": {
         "type": "llm",
@@ -53,7 +53,7 @@
     },
     "review": {
       "status": "complete",
-      "ts": "2026-03-18T23:47:12Z",
+      "ts": "2026-03-19T01:37:12Z",
       "attempts": 5,
       "note": "exhausted-content-passes",
       "executor": {

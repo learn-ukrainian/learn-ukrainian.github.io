@@ -1,0 +1,16 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "Plan calls for 12 fill-in items; generated 12 (met target)."
+  - "Plan calls for 10 quiz items; generated 10 (met target)."
+  - "Plan calls for 10 match-up pairs; generated 10 (met target)."
+  - "Plan calls for 8 true-false items; generated 8 (met target)."
+frictions:
+  - type: NONE
+    description: "No frictions encountered."
+    proposed_fix: "N/A"
+unverified_terms: []
+review_focus:
+  - "Quiz item 6 tests a subtle distinction (Acc inanimate masc looks like Nom) — verify the explanation is clear for A1 learners."
+  - "Match-up has some pairs with compound labels (Nominative/Accusative) — verify the Starlight renderer handles slash in right-side text."

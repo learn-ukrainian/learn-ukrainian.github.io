@@ -1,0 +1,194 @@
+- type: fill-in
+  title: "Introduce Yourself"
+  instruction: "Complete each self-introduction sentence by choosing the correct word."
+  items:
+    - sentence: "___ звати Іван."
+      answer: "Мене"
+      options: ["Мене", "Моя", "Мій", "Це"]
+      explanation: "Мене звати... is the fixed phrase for 'My name is...' in Ukrainian."
+    - sentence: "Мене звати Анна. Я ___."
+      answer: "студентка"
+      options: ["студентка", "студент", "вчитель", "українець"]
+      explanation: "Анна is a woman, so the feminine form студентка is correct."
+    - sentence: "Мене звати Марк. Я ___."
+      answer: "українець"
+      options: ["українець", "українка", "студентка", "вчителька"]
+      explanation: "Марк is a man, so the masculine nationality form українець is correct."
+    - sentence: "Привіт! Мене ___ Ірина."
+      answer: "звати"
+      options: ["звати", "це", "тут", "ось"]
+      explanation: "Мене звати... is the standard way to say 'My name is...' in Ukrainian."
+    - sentence: "Я студент. Я ___."
+      answer: "тут"
+      options: ["тут", "це", "хто", "що"]
+      explanation: "Я тут means 'I am here' — using the zero copula, no verb needed."
+    - sentence: "Мене звати Оксана. Я ___."
+      answer: "українка"
+      options: ["українка", "українець", "студент", "вчитель"]
+      explanation: "Оксана is a woman, so the feminine form українка is correct."
+    - sentence: "Я ___. Я студент."
+      answer: "українець"
+      options: ["українець", "українка", "вчителька", "студентка"]
+      explanation: "With the masculine студент, the matching nationality form is українець."
+    - sentence: "Мене звати Тарас. Я ___."
+      answer: "вчитель"
+      options: ["вчитель", "вчителька", "студентка", "українка"]
+      explanation: "Тарас is a man, so the masculine form вчитель is correct."
+    - sentence: "Привіт! ___ звати Оксана."
+      answer: "Мене"
+      options: ["Мене", "Моя", "Вона", "Це"]
+      explanation: "Мене звати... is the fixed phrase for introducing yourself, regardless of gender."
+    - sentence: "Мене звати Олена. Я ___."
+      answer: "вчителька"
+      options: ["вчителька", "вчитель", "українець", "студент"]
+      explanation: "Олена is a woman, so the feminine form вчителька is correct."
+    - sentence: "___ звати Тарас. Він студент."
+      answer: "Його"
+      options: ["Його", "Мене", "Її", "Це"]
+      explanation: "Його звати... means 'His name is...' — used when introducing someone else (male)."
+    - sentence: "___ звати Олена. Вона вчителька."
+      answer: "Її"
+      options: ["Її", "Його", "Мене", "Це"]
+      explanation: "Її звати... means 'Her name is...' — used when introducing someone else (female)."
+    - sentence: "Я студентка. Я ___ тут."
+      answer: "теж"
+      options: ["теж", "це", "хто", "ось"]
+      explanation: "Я теж тут means 'I am also here' — теж means 'also, too'."
+    - sentence: "Мене звати Ірина. Я студентка. Я ___."
+      answer: "тут"
+      options: ["тут", "він", "хто", "що"]
+      explanation: "Я тут means 'I am here' — completing a three-part self-introduction."
+    - sentence: "Я вчителька. Мене звати ___."
+      answer: "Олена"
+      options: ["Олена", "Тарас", "Марк", "Іван"]
+      explanation: "Вчителька is feminine, so the name must be feminine — Олена."
+
+- type: fill-in
+  title: "Complete Sentences with Pronouns"
+  instruction: "Choose the correct Ukrainian pronoun to complete each sentence."
+  items:
+    - sentence: "___ студент."
+      answer: "Я"
+      options: ["Я", "Це", "Він", "Хто"]
+      explanation: "Я студент means 'I am a student' — zero copula, no verb needed."
+    - sentence: "___ вчителька."
+      answer: "Вона"
+      options: ["Вона", "Він", "Воно", "Вони"]
+      explanation: "Вчителька is feminine, so the pronoun must be вона (she)."
+    - sentence: "___ студенти."
+      answer: "Ми"
+      options: ["Ми", "Я", "Він", "Вона"]
+      explanation: "Студенти is plural, and ми means 'we'."
+    - sentence: "___ вчитель."
+      answer: "Він"
+      options: ["Він", "Вона", "Воно", "Ми"]
+      explanation: "Вчитель is masculine, so the pronoun is він (he)."
+    - sentence: "Книга — ___ нова."
+      answer: "вона"
+      options: ["вона", "він", "воно", "вони"]
+      explanation: "Книга is a feminine noun, so we replace it with вона (she), not воно (it)."
+    - sentence: "Стіл — ___ тут."
+      answer: "він"
+      options: ["він", "вона", "воно", "вони"]
+      explanation: "Стіл is a masculine noun, so we replace it with він (he), not воно."
+    - sentence: "Вікно — ___ там."
+      answer: "воно"
+      options: ["воно", "він", "вона", "вони"]
+      explanation: "Вікно is a neuter noun, so воно is the correct pronoun."
+    - sentence: "___ мої друзі."
+      answer: "Вони"
+      options: ["Вони", "Ми", "Він", "Вона"]
+      explanation: "Друзі is plural, and вони means 'they'."
+    - sentence: "___ це?"
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Так"]
+      explanation: "Use хто (who) when asking about a person."
+    - sentence: "___ це? — Це підручник."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Ось"]
+      explanation: "Use що (what) when asking about an object, not a person."
+    - sentence: "Дім — ___ там."
+      answer: "він"
+      options: ["він", "вона", "воно", "вони"]
+      explanation: "Дім is a masculine noun, so we use він."
+    - sentence: "___ студент?"
+      answer: "Ви"
+      options: ["Ви", "Я", "Він", "Це"]
+      explanation: "Ви студент? means 'Are you a student?' using the formal/polite register."
+    - sentence: "___ мій брат."
+      answer: "Це"
+      options: ["Це", "Він", "Вона", "Хто"]
+      explanation: "Це мій брат means 'This is my brother' — using це for identification."
+    - sentence: "Місто — ___ тут."
+      answer: "воно"
+      options: ["воно", "він", "вона", "ми"]
+      explanation: "Місто is a neuter noun, so the correct pronoun is воно."
+    - sentence: "___ українці."
+      answer: "Ми"
+      options: ["Ми", "Я", "Він", "Вона"]
+      explanation: "Ми українці means 'We are Ukrainians' — plural subject needs ми."
+
+- type: fill-in
+  title: "Meeting Someone New"
+  instruction: "You are at passport control. Complete the dialogue with the correct word."
+  items:
+    - sentence: "Привіт! ___ це?"
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Так"]
+      explanation: "When asking about a person, use хто (who)."
+    - sentence: "Це мій брат. ___ студент."
+      answer: "Він"
+      options: ["Він", "Вона", "Воно", "Це"]
+      explanation: "Брат is masculine, so we use він to say 'He is a student.'"
+    - sentence: "___ вчитель? — Ні, я студент."
+      answer: "Ви"
+      options: ["Ви", "Ти", "Він", "Вони"]
+      explanation: "At passport control, you must use the formal ви with strangers."
+    - sentence: "А ___? Вона студентка?"
+      answer: "вона"
+      options: ["вона", "він", "воно", "ти"]
+      explanation: "Asking about a woman — use вона (she)."
+    - sentence: "Ні, вона ___."
+      answer: "вчителька"
+      options: ["вчителька", "вчитель", "студент", "українець"]
+      explanation: "She is a teacher — the feminine form вчителька is needed."
+    - sentence: "___ мої друзі. Ми всі тут."
+      answer: "Вони"
+      options: ["Вони", "Він", "Вона", "Ви"]
+      explanation: "Вони мої друзі means 'They are my friends' — plural needs вони."
+    - sentence: "___ це? — Це мій підручник."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Ось"]
+      explanation: "A textbook is an object, so use що (what), not хто (who)."
+    - sentence: "Це моя сестра. ___ студентка."
+      answer: "Вона"
+      options: ["Вона", "Він", "Воно", "Вони"]
+      explanation: "Сестра is feminine, so the pronoun is вона (she)."
+    - sentence: "Мене ___ Олег. Я українець."
+      answer: "звати"
+      options: ["звати", "це", "тут", "ось"]
+      explanation: "Мене звати... is the standard phrase for stating your name."
+    - sentence: "Це мій тато. ___ вчитель."
+      answer: "Він"
+      options: ["Він", "Вона", "Воно", "Ви"]
+      explanation: "Тато is masculine, so we use він to say 'He is a teacher.'"
+    - sentence: "___ студентка? — Так, я студентка."
+      answer: "Ви"
+      options: ["Ви", "Ти", "Він", "Вона"]
+      explanation: "At passport control with a stranger, the formal ви is mandatory."
+    - sentence: "Це моя книга. ___ нова."
+      answer: "Вона"
+      options: ["Вона", "Він", "Воно", "Це"]
+      explanation: "Книга is feminine, so we replace it with вона, not воно."
+    - sentence: "А ___ це? — Це мій телефон."
+      answer: "що"
+      options: ["що", "хто", "він", "вона"]
+      explanation: "A phone is an object, so use що (what) to ask about it."
+    - sentence: "Я ___. Мене звати Оксана."
+      answer: "українка"
+      options: ["українка", "українець", "студент", "вчитель"]
+      explanation: "Oксана is a woman, so the feminine nationality form українка is correct."
+    - sentence: "Ось ___! Це мій брат."
+      answer: "він"
+      options: ["він", "вона", "воно", "вони"]
+      explanation: "Брат is masculine, so we use він with ось to say 'Here he is!'"

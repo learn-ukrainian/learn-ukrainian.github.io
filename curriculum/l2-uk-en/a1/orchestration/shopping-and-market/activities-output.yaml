@@ -1,0 +1,201 @@
+- type: fill-in
+  title: "Complete the Shopping Dialogue"
+  instruction: "Fill in the blank with the correct Ukrainian word or phrase to complete each shopping sentence."
+  items:
+    - sentence: "___ коштує яблуко?"
+      answer: "Скільки"
+      options: ["Скільки", "Де", "Що", "Як"]
+      explanation: "To ask the price, we use Скільки коштує? (How much does it cost?)"
+    - sentence: "Це коштує двадцять ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гривню"]
+      explanation: "After numbers 5 and above, we use the Genitive plural form гривень."
+    - sentence: "Я хочу ___ сир."
+      answer: "купити"
+      options: ["купити", "коштувати", "платити", "дякувати"]
+      explanation: "Купити (to buy) is the correct verb for purchasing items."
+    - sentence: "Хліб, ___ ласка."
+      answer: "будь"
+      options: ["будь", "дуже", "як", "де"]
+      explanation: "Будь ласка means please — a polite way to request an item."
+    - sentence: "У вас ___ молоко?"
+      answer: "є"
+      options: ["є", "має", "був", "тут"]
+      explanation: "To check availability in a store, we ask У вас є...? (Do you have...?)"
+    - sentence: "Де ___ купити шампунь?"
+      answer: "можна"
+      options: ["можна", "треба", "хочу", "будь"]
+      explanation: "Де можна купити...? means Where can one buy...?"
+    - sentence: "___ коштує тридцять дві гривні."
+      answer: "Кава"
+      options: ["Кава", "Каву", "Кави", "Каві"]
+      explanation: "The item being priced is the subject of the sentence and takes Nominative case."
+    - sentence: "Можна платити ___?"
+      answer: "карткою"
+      options: ["карткою", "картка", "картки", "картку"]
+      explanation: "Карткою (by card) uses the Instrumental case to express the means of payment."
+    - sentence: "Дві ___ води, будь ласка."
+      answer: "пляшки"
+      options: ["пляшки", "пляшка", "пляшок", "пляшку"]
+      explanation: "After the number 2, feminine nouns take the form пляшки."
+    - sentence: "Ні, ___."
+      answer: "немає"
+      options: ["немає", "нічого", "ніде", "ніколи"]
+      explanation: "Немає means there is none — the standard response when an item is unavailable."
+
+- type: quiz
+  title: "Quantities and Case Forms"
+  instruction: "Choose the correct answer for each question about Ukrainian shopping expressions."
+  items:
+    - question: "Which unit of measurement would you use when buying apples by weight?"
+      options:
+        - text: "кілограм"
+          correct: true
+        - text: "літр"
+          correct: false
+        - text: "пляшка"
+          correct: false
+        - text: "пачка"
+          correct: false
+      explanation: "Кілограм (kilogram) is used for fruits, vegetables, and meat sold by weight."
+    - question: "What is the correct form after the number 5: п'ять ___?"
+      options:
+        - text: "гривень"
+          correct: true
+        - text: "гривня"
+          correct: false
+        - text: "гривні"
+          correct: false
+        - text: "гривню"
+          correct: false
+      explanation: "Numbers 5 and above take Genitive plural: п'ять гривень."
+    - question: "Which is the correct way to say 'a bottle of water'?"
+      options:
+        - text: "пляшка води"
+          correct: true
+        - text: "пляшка вода"
+          correct: false
+        - text: "пляшка воду"
+          correct: false
+        - text: "пляшку води"
+          correct: false
+      explanation: "After a unit of measurement, the product takes Genitive case: води (from вода)."
+    - question: "What is the gender of the word шампунь (shampoo)?"
+      options:
+        - text: "masculine"
+          correct: true
+        - text: "feminine"
+          correct: false
+        - text: "neuter"
+          correct: false
+        - text: "plural"
+          correct: false
+      explanation: "Despite ending in a soft sign, шампунь is masculine — a common learner trap."
+    - question: "How do you say 'a packet of sugar' in Ukrainian?"
+      options:
+        - text: "пачка цукру"
+          correct: true
+        - text: "пачка цукор"
+          correct: false
+        - text: "пачки цукру"
+          correct: false
+        - text: "пачку цукор"
+          correct: false
+      explanation: "The product after a unit takes Genitive case: цукру (from цукор)."
+    - question: "What is the correct form: дві ___?"
+      options:
+        - text: "гривні"
+          correct: true
+        - text: "гривень"
+          correct: false
+        - text: "гривня"
+          correct: false
+        - text: "гривню"
+          correct: false
+      explanation: "Numbers 2, 3, and 4 take Nominative plural: дві гривні."
+    - question: "Which unit would you use for buying milk?"
+      options:
+        - text: "літр"
+          correct: true
+        - text: "кілограм"
+          correct: false
+        - text: "штука"
+          correct: false
+        - text: "пачка"
+          correct: false
+      explanation: "Літр (litre) is the standard unit for liquids like milk and juice."
+    - question: "What does the phrase 'на ринку' mean?"
+      options:
+        - text: "at the market"
+          correct: true
+        - text: "in the store"
+          correct: false
+        - text: "at the pharmacy"
+          correct: false
+        - text: "at the cafe"
+          correct: false
+      explanation: "На ринку means at the market. Note: we say на ринку (not у ринку)."
+    - question: "How do you say 'two kilograms' in Ukrainian?"
+      options:
+        - text: "два кілограми"
+          correct: true
+        - text: "два кілограмів"
+          correct: false
+        - text: "два кілограм"
+          correct: false
+        - text: "два кілограму"
+          correct: false
+      explanation: "Numbers 2-4 take Nominative plural: два кілограми."
+    - question: "What does 'решта' mean in a shopping context?"
+      options:
+        - text: "change (money back)"
+          correct: true
+        - text: "receipt"
+          correct: false
+        - text: "bag"
+          correct: false
+        - text: "discount"
+          correct: false
+      explanation: "Решта means change — the money returned after paying."
+
+- type: match-up
+  title: "Match Product to Unit"
+  instruction: "Match each product with the unit of measurement typically used when buying it."
+  pairs:
+    - left: "яблука"
+      right: "кілограм"
+    - left: "молоко"
+      right: "літр"
+    - left: "цукор"
+      right: "пачка"
+    - left: "вода"
+      right: "пляшка"
+    - left: "мило"
+      right: "штука"
+    - left: "хліб"
+      right: "будь ласка (by item)"
+    - left: "сир"
+      right: "кілограм"
+    - left: "чай"
+      right: "пачка"
+    - left: "кава"
+      right: "пачка"
+    - left: "м'ясо"
+      right: "кілограм"
+
+- type: unjumble
+  title: "Build Shopping Sentences"
+  instruction: "Arrange the words to form a correct Ukrainian shopping sentence."
+  items:
+    - words: ["коштує", "Скільки", "яблуко"]
+      answer: "Скільки коштує яблуко"
+    - words: ["купити", "хочу", "Я", "сир"]
+      answer: "Я хочу купити сир"
+    - words: ["будь", "Хліб", "ласка"]
+      answer: "Хліб будь ласка"
+    - words: ["є", "вас", "У", "молоко"]
+      answer: "У вас є молоко"
+    - words: ["коштує", "двадцять", "Це", "гривень"]
+      answer: "Це коштує двадцять гривень"
+    - words: ["купити", "можна", "Де", "шампунь"]
+      answer: "Де можна купити шампунь"

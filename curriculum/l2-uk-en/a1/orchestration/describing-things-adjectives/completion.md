@@ -1,10 +1,10 @@
-FAIL: pipeline a1 11
+PASS: pipeline a1 11
 
   Module:   describing-things-adjectives
   Track:    a1
   Mode:     v5
-  Words:    0 (target: 1200)
+  Words:    1902 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-18T23:54:04Z
+  Verdict:  PASS
+  Date:     2026-03-19T03:47:46Z

@@ -2,13 +2,13 @@
   "module": "the-living-verb-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T04:06:19.400123Z",
+  "last_audit": "2026-03-19T12:50:06.100348Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T04:06:01.471818Z",
-    "meta": null,
-    "activities": "2026-03-18T04:06:01.469883Z",
-    "vocabulary": "2026-03-18T03:56:26.492939Z",
+    "md": "2026-03-19T06:03:29.366731Z",
+    "meta": "2026-03-19T05:37:37.347574Z",
+    "activities": "2026-03-19T06:06:52.422642Z",
+    "vocabulary": "2026-03-19T06:03:42.500591Z",
     "research": "2026-03-12T09:49:05.268115Z",
     "plan": "2026-03-05T15:41:08.651060Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1329/1200 (raw: 1572) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1931/1200 (raw: 2848)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/0"
+      "message": "7/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "12/1"
+      "message": "21/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,18 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
-    "pass_count": 4,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

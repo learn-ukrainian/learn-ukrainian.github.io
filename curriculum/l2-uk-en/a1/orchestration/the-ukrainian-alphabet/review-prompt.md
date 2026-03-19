@@ -46,17 +46,16 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1655
+word_count: 1689
 deviations: []
 frictions: []
 research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Check that tone is encouraging and direct address ('you') is used frequently as targeted (found >30 instances)."
-  - "Verify zero Russian characters and zero Latin transliteration of Ukrainian."
-  - "Verify appropriate use of angular quotes «» to describe sounds to avoid transliteration rules."
-rag_tools_used:
-  - "search_text: 'Full alphabet overview (33 letters)' → Used textbook examples of букви vs звуки."
+  - "Ensure no A1 grammar constraints were violated. I maintained strict adherence to using 'Це + noun', 'Noun + тут/там', and 'Так/Ні' without introducing verbs in the Ukrainian text."
+  - "Verify the video URLs link correctly. I utilized markdown hyperlinks to embed the mandatory Anna Ohoiko YouTube videos directly under the relevant letters per instructions."
+  - "Confirm all activity types follow the strict A1 schema limitations. Extracted vocabulary words match exactly."
+rag_tools_used: []
 ```
 Focus your review on the `review_focus` items above.
 
@@ -81,14 +80,14 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Typography Artist
-Word count:       1639 / 1200 (136.6%)
+Word count:       1744 / 1200 (145.3%)
 Activities:       6
 Vocabulary items: 20
-Engagement boxes: 4
-Immersion:        9.0% (target: 5-15%)
-Richness:         78% (threshold: 95%)
-Richness gaps:    engagement: 3/5, cultural: 1/3, proverbs: 0/1, tables: 0/2
-Audit status:     PASS
+Engagement boxes: 0
+Immersion:        5.1% (target: 5-15%)
+Richness:         52% (threshold: 60%)
+Richness gaps:    engagement: 0/2, examples: 0/8
+Audit status:     FAIL
 ```
 
 **Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
@@ -111,29 +110,13 @@ Audit status:     PASS
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-1. **[LLM_FILLER]** (severity: MEDIUM)
-   Location: ~line 4
-   Text: In this module, we will
-   Fix: Rephrase -- formulaic opener
-2. **[LLM_FILLER]** (severity: MEDIUM)
-   Location: ~line 4
-   Text: In this module, we will explore
-   Fix: Rephrase -- formulaic opener
-3. **[IPA_BANNED]** (severity: HIGH)
-   Location: ~line 1
-   Text: Banned IPA transcription: [watchdog]
-   Fix: Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-4. **[STRESS_MISMATCH]** (severity: HIGH)
-   Location: ~line 38
-   Text: Wrong stress: 'приголо́сні' → should be 'при́голосні'
-   Fix: Replace 'приголо́сні' with 'при́голосні'.
-5. **[STRESS_UNKNOWN]** (severity: INFO)
-   Location: ~line 133
-   Text: Stressed word not in dictionary: дя́кую (дякую)
-   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
-6. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+1. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
+   Location: (whole module)
+   Text: Only 0 engagement boxes (minimum: 1 for A1)
+   Fix: Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+2. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
    Location: the-ukrainian-alphabet.yaml
-   Text: Activity answers contain VESUM-failed words: АМ, КІ, СА, СО, СУ
+   Text: Activity answers contain VESUM-failed words: КІ, ЛІ, ЛО, СО
    Fix: Fix spelling or replace these words — students will practice non-existent forms.
 
 ---
@@ -142,14 +125,14 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 54 | **VESUM coverage:** 49/54 (90.7%)
+**Words checked:** 45 | **VESUM coverage:** 40/45 (88.9%)
 
 **❌ Not found in VESUM or textbooks (5):**
-- `АМ` (source: activities)
 - `КІ` (source: prose)
-- `СА` (source: activities)
+- `ЛО` (source: activities)
+- `ЛІ` (source: activities)
+- `СЛО` (source: activities)
 - `СО` (source: activities)
-- `СУ` (source: activities)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 
@@ -595,9 +578,7 @@ Also check for:
 
 **LLM filler phrases** (pre-scanned by D.0, verify any flagged):
 
-D.0 found these filler phrases -- verify each one:
-- "In this module, we will" at ~line 4
-- "In this module, we will explore" at ~line 4
+(No LLM filler phrases detected by D.0 scanner)
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts

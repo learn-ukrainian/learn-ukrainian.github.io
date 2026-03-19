@@ -1,31 +1,22 @@
 # RAG Verification: imperative-and-requests
 
-**Date:** 2026-03-10 17:27 UTC | **Words checked:** 217 | **VESUM coverage:** 211/217 (97.2%)
+**Date:** 2026-03-19 10:58 UTC | **Words checked:** 155 | **VESUM coverage:** 152/155 (98.1%)
 
 ## Summary
-- ✅ Verified (VESUM): 211
-- ⚠️ Partial (RAG only): 1
-- ❌ Not found: 5
+- ✅ Verified (VESUM): 152
+- ⚠️ Partial (RAG only): 0
+- ❌ Not found: 3
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| даїть | prose | ✗ | ✗ | ✗ |
-| Літвінова | prose | ✗ | ✗ | ✗ |
-| показай | activities | ✗ | ✗ | ✗ |
-| сказай | prose | ✗ | ✗ | ✗ |
+| ть | prose | ✗ | ✗ | ✗ |
+| ться | prose | ✗ | ✗ | ✗ |
 | іть | prose | ✗ | ✗ | ✗ |
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| Авраменко | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 183 | 178 | 4 |
-| Activities (.yaml) | 34 | 33 | 1 |
+| Prose (.md) | 155 | 152 | 3 |

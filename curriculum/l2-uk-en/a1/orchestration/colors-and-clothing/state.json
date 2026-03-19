@@ -23,12 +23,43 @@
       }
     },
     "content": {
-      "status": "failed",
-      "ts": "2026-03-18T23:54:39Z",
+      "status": "complete",
+      "ts": "2026-03-19T03:53:12Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T03:53:40Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-5-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T03:55:22Z",
+      "task_id": "v5-colors-and-clothing-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T04:09:44Z",
+      "attempts": 5,
+      "note": "needs-manual-review",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

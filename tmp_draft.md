@@ -1,180 +1,160 @@
-## Вступ — Introduction
+## Вступ: Частини тіла та народна мудрість (Introduction: Body Parts & Folk Wisdom)
 
-Welcome to your first step in reading Ukrainian! You are embarking on a wonderful journey. Ukrainian uses the Cyrillic script, which might look unfamiliar at first, but don't worry—you will learn it quickly. The Cyrillic alphabet descended from the Greek alphabet via the First Bulgarian Empire.
+Welcome back! So far, we have talked about our daily routines, ordering food, and navigating the city. Today, we are going to learn how to talk about ourselves in a very physical sense — our bodies and our health. Whether you are explaining to a friend why you cannot meet up, or you need to visit a doctor in Ukraine, these words are absolutely essential for your daily life.
 
-The Ukrainian alphabet has 33 letters, and it is highly phonetic. This means each letter usually maps to one specific sound. Unlike English, where a combination like "ough" can sound five different ways (like "though" or "through"), reading Ukrainian is straightforward. You will not have to guess how a word sounds once you know the rules.
+Let's start by looking at some of the most common body parts. In Ukrainian, some words cover more territory than they do in English. This is important to remember!
 
-Here is the full 33-letter alphabet chart:
-А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
+*   **голова́** — head
+*   **живі́т** — stomach / belly
+*   **рука́** — arm AND hand
+*   **нога́** — leg AND foot
 
-Please do not try to memorize it all right now! Take your time. We will master each group in the upcoming modules.
+Did you notice that? When you say **рука́**, you might mean your entire arm, or just your hand. The same goes for **нога́**, which means both leg and foot. 
 
-> [!culture]
-> Cyrillic was created in the ninth century by students of Saints Cyril and Methodius. Remember, it is NOT derived from Latin script—it descends directly from the Greek alphabet. You are learning a rich, historical writing system. Welcome, and let's get started!
+We also have some special pairs for things we have two of. These plural forms look a little different from the regular plural rules we learned before. Think of them as visual pairs!
 
-## Букви і звуки — Letters and Sounds
+*   **о́ко** (eye) → **о́чі** (eyes)
+*   **ву́хо** (ear) → **ву́ха** (ears)
 
-As you start your journey into Ukrainian reading, you will quickly encounter two very important linguistic terms: letters (**бу́кви**) and sounds (**зву́ки**). What is the difference between them? It is actually quite simple. Letters (**бу́кви**) are the written symbols that you see on a piece of paper or a screen. Sounds (**зву́ки**), on the other hand, are exactly what you hear and pronounce when you speak the language aloud. They are not the same thing! For example, Ukrainian has 38 phonemes (distinct sounds) but only 33 letters in its alphabet.
+In Ukraine, there is a very famous proverb that you will often hear in schools, sports clubs, or even from parents encouraging their children to exercise: 
 
-This might sound a bit complex at first, but please do not let it overwhelm you. Here is a key insight that will make your life much easier: Ukrainian spelling is highly phonetic—one letter almost always represents one sound. This phonetic consistency makes Ukrainian FAR easier to read than English. Once you learn the 33 letters, you can sound out any word you encounter.
+> «У здоро́вому ті́лі — здоро́вий дух!»
+> In a healthy body — a healthy spirit!
 
-> [!tip]
-> Ukrainian has 38 phonemes but only 33 letters. Do not let this worry you! It just means a few letters have double duty, which you will master step by step.
+This reminds us how important it is to stay healthy! And speaking of bodies, let's quickly review how we talk about location using the question **де?** (where?). Remember the preposition **на** (on)? 
 
-Of course, there are a few exceptions. Some letters do double duty: iotated vowels (Я, Ю, Є, Ї) can represent two sounds depending on where they appear in a word. Furthermore, the soft sign (Ь) modifies the consonant right before it, giving it a soft sound, but it has no sound of its own. Do not stress about these rules now; we will cover the details in M2 and M4. For today, your great job is simply knowing the difference between **бу́кви** and **зву́ки**.
+*   **на голові́** — on the head
+*   **на рука́х** — on the hands / arms
+*   **на нога́х** — on the feet / legs
 
-## Голосні та приголосні — Vowels and Consonants
+If you are wearing a hat, it is **на голові́**. If you are standing, you are **на нога́х**. Simple, right? Now let's learn how to express when one of these parts is not feeling so well.
 
-Every language organizes its alphabet logically, and Ukrainian is wonderfully structured. We divide the 33 letters into two main categories: vowels (**голосні́**) and consonants (**приголосні́**).
+## Презентація: Як ми говоримо про біль (Presentation: Expressing Pain & Symptoms)
 
-There are exactly 10 vowel letters in Ukrainian. We can further break these down into 6 base vowels (А, О, У, Е, И, І) and 4 iotated vowels (Я, Ю, Є, Ї). What makes a vowel special? Vowels are produced using your voice only, with no obstruction in your mouth or throat. The air flows freely! A crucial rule to remember: every Ukrainian syllable has exactly one vowel. This means if you spot a word with four vowels, it has exactly four syllables.
+When you want to say "My head hurts" or "I have a stomachache," Ukrainian uses a completely different structure than English. Instead of saying "I hurt" or "I have pain," we say that the body part itself is doing the hurting!
 
-Next, there are 22 consonant letters, plus the soft sign (Ь), which acts as a modifier and has no sound of its own. Consonants are quite different from vowels. They are produced when the air from your lungs is obstructed by your lips, tongue, or teeth. This obstruction creates the distinct sounds of the consonants.
+The magic word is the verb **боли́ть** (it hurts). In these sentences, the body part is the main actor (the subject). 
 
-Here is a preview chart organized by category:
+Here is the pattern: **У ме́не боли́ть** + [Body Part].
 
-*   Голосні (Base): А, О, У, Е, И, І
-*   Голосні (Iotated): Я, Ю, Є, Ї
-*   Приголосні: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ
-*   Modifier: Ь
+*   **У ме́не боли́ть голова́.** — My head hurts. (Literally: By me, the head hurts.)
+*   **У ме́не боли́ть живі́т.** — My stomach hurts.
+*   **У ме́не боли́ть го́рло.** — My throat hurts.
 
-Do not worry about memorizing this entire chart today! You are taking steady steps. M2 will master vowels, M3 consonants, and M4 special signs. You are doing well, and your foundation is already getting stronger.
+Because the body part is doing the action, the verb must match it! If one thing hurts, we use the singular **боли́ть**. But what if two things hurt? We use the plural form **боля́ть** (they hurt).
 
-## Перші 10 літер — First 10 Letters
+*   **У ме́не боля́ть о́чі.** — My eyes hurt.
+*   **У ме́не боля́ть но́ги.** — My legs hurt.
 
-Today is an exciting day! You are going to practice your very first set of letters. Today's practice set includes just 10 letters: А, О, У, І (which are 4 vowels) and М, Н, Т, К, С, Л (which are 6 consonants). These 10 high-frequency letters let you read real Ukrainian words immediately. By the end of this section, you will be reading!
+### 🛑 Common Learner Error
+English speakers often make a mistake here. Because "eyes" is plural, they might try to translate "My head hurts" but accidentally make the verb plural too! 
+❌ Wrong: «У ме́не боля́ть голова́.» (The head is singular!)
+✅ Correct: «У ме́не боли́ть голова́.»
 
-Let's look at each letter with pronunciation guidance. Listen carefully and take your time.
+Sometimes, you do not have a specific pain, but you just feel unwell overall. For this, we use impersonal phrases with the word **мені́** (to me).
 
-### Літера А
-**А** — open 'a' as in 'father'.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/hvB3VpcR3ZE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — А*
+*   **Мені́ пога́но.** — I feel bad. (Literally: To me it is bad.)
+*   **Мені́ до́бре.** — I feel good.
 
-### Літера О
-**О** — rounded 'o' as in 'more'.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/gJFxRIPRZbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — О*
+Do NOT translate "I feel bad" word-for-word as «Я пога́но»! That sounds like you are saying "I am a bad person." Always use **мені́** when talking about your general state.
 
-### Літера У
-**У** — 'oo' as in 'moon'.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/VB1O6PmtYRU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — У*
+### Symptoms and Home Remedies
 
-### Літера І
-**І** — 'ee' as in 'see'.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/Z9TH0H4ShGo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — І*
+If you catch a cold, you might experience other symptoms. Here is some useful vocabulary:
+*   **температу́ра** — fever (literally: temperature)
+*   **ка́шель** — cough
+*   **не́жить** — runny nose
+*   **головни́й біль** — headache
 
-### Літера М
-**М** — like English M.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/Ez95H4ibuJo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — М*
+> — **У тебе́ висо́ка температу́ра?** (Do you have a high fever?)
+> — **Так, я мі́ряю температу́ру.** (Yes, I am measuring the fever.)
+> — **У ме́не си́льний ка́шель.** (I have a strong cough.)
 
-### Літера Н
-**Н** — like English N. Watch out! It looks like an English H, but it is NOT H! This is a very common visual trap.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/vNUfiKHPYaU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — Н*
+In Ukraine, the first line of defense against a cold is often traditional home remedies. This is called **траволікува́ння** (phytotherapy, or herbal medicine). If you tell a Ukrainian friend you are sick, they will almost certainly offer you tea with **мали́на** (raspberry), **кали́на** (viburnum berries), or a spoonful of **мед** (honey). 
 
-### Літера Т
-**Т** — like English T.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/m-jcLR_gK0k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — Т*
+*   **Чай з мали́ною** — tea with raspberry
+*   **Чай з кали́ною** — tea with viburnum
+*   **Чай з ме́дом** — tea with honey
 
-### Літера К
-**К** — like English K.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/J7sGEI4-xJo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — К*
+## Діалог: У лікаря та в аптеці (Dialogue: At the Doctor's & Pharmacy)
 
-### Літера С
-**С** — like English S. Another trap: it looks like an English C, but it sounds like S.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/7UsFBgSL91E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — С*
+Sometimes, tea with raspberry is not enough, and you need to see a professional. You will need to visit your **сіме́йний лі́кар** (family doctor).
 
-### Літера Л
-**Л** — like English L, but the tongue position differs slightly.
-> [!video]
-> <iframe width="560" height="315" src="https://www.youtube.com/embed/v6-3Xg52Buk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-> *Anna Ohoiko — Ukrainian Lessons — Л*
+Let's clear up a very common confusion between two words that look similar but mean different things:
+*   **лі́кар** — doctor (the person)
+*   **ліка́рня** — hospital (the place)
 
-> [!warning]
-> Be incredibly careful with **Н** and **С**. Your English-speaking brain will want to read them as H and C. Remind yourself: **Н** = N, and **С** = S!
+Because you go *to a person*, you must use the preposition **до** + Genitive case.
+❌ Wrong: «Я йду в лі́кар.» (You cannot go inside a person!)
+✅ Correct: «Я йду до лі́каря.» (I am going to the doctor.)
+✅ Correct: «Я йду в ліка́рню.» (I am going to the hospital.)
 
-Now, let's explore detailed phonetic walkthroughs. First, how to blend letters into syllables. Take the letter **М** and the letter **А**. Together, they make the syllable **МА**. Now, add another **МА** right after it. What do you get? **МА** + **МА** → **ма́ма** (mom)! Excellent, you just read your very first word! Now, let's look at a slightly different word. How to read **К** + **І** + **Т** → **кіт** (cat)? First, blend **К** and **І** to get **КІ**. Then, add the **Т** at the end. You always build from letters to syllables, and then to full words.
+When you arrive, the doctor will usually start the conversation with a standard question:
+> **Лі́кар:** **Що вас турбу́є?** (What bothers you?)
+> **Паціє́нт:** **У ме́не дуже боли́ть го́рло і є температу́ра.** (My throat hurts a lot, and I have a fever.)
+> **Лі́кар:** **Відкри́йте рот, будь ла́ска.** (Open your mouth, please.)
 
-Because Ukrainian spelling is so phonetic, you can use ONLY these 10 letters to decode many words. Try sounding these out:
-*   **ма́ма** (mom)
-*   **та́то** (dad)
-*   **кіт** (cat)
-*   **молоко́** (milk)
-*   **ма́сло** (butter)
-*   **о́ко** (eye)
-*   **ніс** (nose)
-*   **мі́сто** (city)
-*   **ліс** (forest)
-*   **сон** (dream)
-*   **сом** (catfish)
-*   **мак** (poppy)
-*   **сік** (juice)
-*   **са́ло** (lard)
-*   **стіл** (table)
-*   **тут** (here)
-*   **там** (there)
-*   **кіно́** (cinema)
+After the doctor examines you, you will likely need to go to the **апте́ка** (pharmacy). You can easily spot a pharmacy in Ukraine by looking for a bright green cross (**зеле́ний хрест**) glowing above the door. You might also see a smaller kiosk called an **апте́чний пункт** (dispensary kiosk) inside clinics or supermarkets.
 
-Take your time reading each one. Great job! You are doing incredibly well.
+At the pharmacy, you will need to buy **лі́ки** (medicine). Note that **лі́ки** is always plural! You ask for medicine *against* a symptom using the preposition **від**.
 
-## Перші слова — First Words in Context
+*   **лі́ки від ка́шлю** — cough medicine
+*   **лі́ки від головно́го бо́лю** — headache medicine
 
-Now that you can sound out individual words, let's put them into context. We are going to practice reading micro-dialogues using your decodable words plus a few new sight words. Learning words in context is much better for your memory!
+Some medicines require a prescription, while others are over-the-counter.
+*   **за реце́птом** — with a prescription
+*   **без реце́пту** — without a prescription
 
-First, you need to learn three important sight words. These words contain untaught letters, so you should just recognize them as whole shapes right now. Do not worry about sounding out every single letter yet.
-*   **приві́т** (hello)
-*   **дя́кую** (thank you)
-*   **це** (this is)
+Let's look at a short interaction:
+> **Ви:** **Да́йте, будь ла́ска, лі́ки від ка́шлю.** (Give me, please, cough medicine.)
+> **Фармаце́вт:** **У вас є реце́пт?** (Do you have a prescription?)
+> **Ви:** **Ні. Мені́ тре́ба лі́ки без реце́пту.** (No. I need medicine without a prescription.)
 
-You will also use the words **так** (yes) and **ні** (no). These are fully decodable with the 10 practice letters you just learned!
+## Практика: Пояснення причин (Practice: Explaining Causes)
 
-Here are your micro-dialogues. Read them out loud to practice:
+Now that we know how to describe our symptoms and ask for help, let's practice using these words to explain *why* we are doing (or not doing) something.
 
-> — Це кіт?
-> — Так, це кіт.
+To connect our actions with our symptoms, we can use simple complex sentences with the conjunctions **бо** (because / for) or **тому́ що** (because). 
 
-> — Це мі́сто?
-> — Ні, це ліс.
+*   **Я не прийшо́в, бо я хво́рий.** — I did not come because I am sick.
+*   **Я йду до лі́каря, тому́ що в ме́не температу́ра.** — I am going to the doctor because I have a fever.
+*   **Я п'ю чай з мали́ною, бо в ме́не боли́ть го́рло.** — I am drinking tea with raspberry because my throat hurts.
 
-> — Приві́т! Це ма́ма.
-> — Так, дя́кую.
+Let's clarify the difference between being sick and the process of being sick.
+*   **хво́рий** is an adjective describing a state right now (sick, ill).
+  *   **Він хво́рий.** (He is sick today.)
+*   **хворі́ти** is a verb describing the ongoing process or frequency.
+  *   **Він ча́сто хворі́є.** (He gets sick often.)
 
-Let's do some more reading practice. Here are short sentences mixing your decodable words and sight words. Read them carefully:
+Also, remember the common error we discussed earlier regarding the verb **боли́ть**? 
+❌ Wrong: «Я болю́» (This sounds like "I am the one causing pain!")
+✅ Correct: «Мені́ боли́ть» or «У ме́не боли́ть» (It hurts me / I have pain).
 
-*   Ма́ма тут.
-*   Кіт там.
-*   Це молоко́.
-*   Це ма́сло.
-*   Та́то тут.
-*   Це са́ло.
+Let's look at two different roleplays. Notice the difference in tone and register between talking to a friend casually and speaking formally at the polyclinic.
 
-You are making phenomenal progress! Being able to read actual sentences in your very first module is a huge achievement. Your hard work is already paying off.
+**Casual (with a friend):**
+> — **Приві́т! Ти йдеш у кіно́ сього́дні?** (Hi! Are you going to the cinema today?)
+> — **Ні, я вдо́ма, бо я хво́рий.** (No, I am at home because I am sick.)
+> — **Що ста́лося?** (What happened?)
+> — **У ме́не боли́ть голова́ і є не́жить.** (My head hurts and I have a runny nose.)
+> — **Пий чай з ме́дом! Оду́жуй!** (Drink tea with honey! Get well!)
 
-## Підсумок — Summary
+**Formal (at the polyclinic):**
+> — **Добри́день. Що вас турбу́є?** (Good day. What bothers you?)
+> — **Здра́стуйте. У ме́не боля́ть ву́ха і висо́ка температу́ра.** (Hello. My ears hurt and I have a high fever.)
+> — **Вам тре́ба купи́ти лі́ки. Ось реце́пт.** (You need to buy medicine. Here is the prescription.)
+> — **Дя́кую, де тут апте́ка?** (Thank you, where is the pharmacy here?)
 
-Let's review everything you have learned today. You now know that the Ukrainian alphabet has 33 letters: 10 vowels, 22 consonants, and 1 modifier (**Ь**). It is a highly phonetic system, which means reading will become effortless with a bit of practice.
+By using **бо** or **тому́ що**, you can clearly communicate your situation. And remember, the structure **У ме́не боли́ть** paired with the correct body part is your best tool for getting the right help!
 
-You mastered 10 letters today! Because of your dedication, you can now read words like **ма́ма**, **та́то**, **кіт**, **молоко́**, **мі́сто**, and **ліс** completely on your own.
+## Підсумок
 
-Let's do a quick self-check to ensure you feel confident:
-*   Can you find all 10 vowel letters on the chart?
-*   Can you read **ма́ма** and **кіт**?
-*   What is the difference between letters (**бу́кви**) and sounds (**зву́ки**)?
+In this module, you learned how to navigate a very practical and important topic: your health. You discovered that in Ukrainian, we don't say "I hurt," but rather that the specific body part hurts (**У ме́не боли́ть голова́**). We also covered the difference between singular (**боли́ть**) and plural (**боля́ть**) pain expressions.
 
-If you can answer those questions, you are perfectly prepared for the next step! Next, M2 deep-dives into the vowel system, where you will master all 10 vowel letters. Great job today!
+You now know how to explain your symptoms to a **сіме́йний лі́кар** and how to ask for **лі́ки** at the **апте́ка** under the green cross. And don't forget the power of traditional Ukrainian **чай з мали́ною**!
+
+**Self-Check Questions:**
+1. How do you say "My leg hurts" vs. "My legs hurt" in Ukrainian?
+2. What is the difference between **лі́кар** and **ліка́рня**?
+3. How do you ask a pharmacist for "medicine for a cough without a prescription"?
+4. Translate: "I am at home because I am sick."

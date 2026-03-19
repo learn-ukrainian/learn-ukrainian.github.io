@@ -1,14 +1,14 @@
 {
   "module": "questions-and-negation",
   "level": "A1",
-  "plan_version": "2.0",
-  "last_audit": "2026-03-18T05:21:40.123943Z",
+  "plan_version": "2.1",
+  "last_audit": "2026-03-19T12:50:00.744176Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T05:21:23.136558Z",
-    "meta": null,
-    "activities": "2026-03-18T05:21:23.134050Z",
-    "vocabulary": "2026-03-18T05:21:23.134596Z",
+    "md": "2026-03-19T07:32:13.269614Z",
+    "meta": "2026-03-19T07:28:12.657758Z",
+    "activities": "2026-03-19T07:29:25.986758Z",
+    "vocabulary": "2026-03-19T07:23:21.918100Z",
     "research": "2026-03-17T07:38:44.208186Z",
     "plan": "2026-03-17T17:06:51.758187Z"
   },
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2042/1200 (raw: 2180) | pedagogy: 8 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2386/1200 (raw: 2439)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/0"
+      "message": "4/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -34,9 +34,9 @@
       "message": "20/1"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "PENDING \u2014 awaiting review"
+      "message": "9/10 (High)"
     },
     "research": {
       "status": "pass",
@@ -44,18 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
-    "pass_count": 4,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

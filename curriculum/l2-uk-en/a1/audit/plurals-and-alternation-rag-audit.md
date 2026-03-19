@@ -1,29 +1,31 @@
 # RAG Verification: plurals-and-alternation
 
-**Date:** 2026-03-18 02:42 UTC | **Words checked:** 167 | **VESUM coverage:** 163/167 (97.6%)
+**Date:** 2026-03-19 04:22 UTC | **Words checked:** 144 | **VESUM coverage:** 138/144 (95.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 163
+- ✅ Verified (VESUM): 138
 - ⚠️ Partial (RAG only): 2
-- ❌ Not found: 2
+- ❌ Not found: 4
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
+| дитин | activities | ✗ | ✗ | ✗ |
 | кіти | prose | ✗ | ✗ | ✗ |
-| яблуки | activities | ✗ | ✗ | ✗ |
+| ніжа | activities | ✗ | ✗ | ✗ |
+| окна | activities | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| ий | prose | ✗ | ✓ | ✗ |
-| ій | prose | ✗ | ✓ | ✗ |
+| Захарійчук | prose | ✗ | ✓ | ✗ |
+| Кравцова | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 95 | 92 | 1 |
-| Activities (.yaml) | 72 | 71 | 1 |
+| Prose (.md) | 108 | 105 | 1 |
+| Activities (.yaml) | 36 | 33 | 3 |

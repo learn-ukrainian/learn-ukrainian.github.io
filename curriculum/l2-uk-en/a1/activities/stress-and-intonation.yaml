@@ -1,0 +1,341 @@
+- type: quiz
+  title: Stress Placement
+  instruction: Identify which syllable carries the stress in these Ukrainian words.
+  items:
+  - question: Where does the stress fall in the word мама?
+    options:
+    - text: First syllable (МА-ма)
+      correct: true
+    - text: Second syllable (ма-МА)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: No stress at all
+      correct: false
+    explanation: The word мама has first-syllable stress — it is one of the most common
+      household words with this pattern.
+  - question: Where does the stress fall in the word молоко?
+    options:
+    - text: First syllable (МО-ло-ко)
+      correct: false
+    - text: Second syllable (мо-ЛО-ко)
+      correct: false
+    - text: Third syllable (мо-ло-КО)
+      correct: true
+    - text: First and third equally
+      correct: false
+    explanation: Молоко has last-syllable stress — the emphasis falls on the final
+      КО.
+  - question: Where does the stress fall in the word школа?
+    options:
+    - text: First syllable (ШКО-ла)
+      correct: true
+    - text: Second syllable (шко-ЛА)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: No fixed stress
+      correct: false
+    explanation: Школа has first-syllable (penultimate) stress — ШКО-ла.
+  - question: Where does the stress fall in the word вода?
+    options:
+    - text: First syllable (ВО-да)
+      correct: false
+    - text: Second syllable (во-ДА)
+      correct: true
+    - text: Both syllables equally
+      correct: false
+    - text: It changes every time
+      correct: false
+    explanation: Вода has last-syllable stress — во-ДА.
+  - question: Where does the stress fall in the word далеко?
+    options:
+    - text: First syllable (ДА-ле-ко)
+      correct: false
+    - text: Second syllable (да-ЛЕ-ко)
+      correct: true
+    - text: Third syllable (да-ле-КО)
+      correct: false
+    - text: First and third equally
+      correct: false
+    explanation: Далеко has penultimate stress — да-ЛЕ-ко. Many beginners mistakenly
+      put the stress on the last syllable.
+  - question: Where does the stress fall in the word добрий?
+    options:
+    - text: First syllable (ДО-брий)
+      correct: true
+    - text: Second syllable (до-БРИЙ)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: No stress
+      correct: false
+    explanation: Добрий has first-syllable stress — ДО-брий, as in the greeting добрий
+      день.
+  - question: Where does the stress fall in the word книжка?
+    options:
+    - text: First syllable (КНИЖ-ка)
+      correct: true
+    - text: Second syllable (книж-КА)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: It depends on the sentence
+      correct: false
+    explanation: Книжка has first-syllable stress — КНИЖ-ка.
+  - question: Where does the stress fall in the word дорога?
+    options:
+    - text: First syllable (ДО-ро-га)
+      correct: false
+    - text: Second syllable (до-РО-га)
+      correct: true
+    - text: Third syllable (до-ро-ГА)
+      correct: false
+    - text: First and second equally
+      correct: false
+    explanation: Дорога has penultimate stress — до-РО-га.
+  - question: Where does the stress fall in the word кава?
+    options:
+    - text: First syllable (КА-ва)
+      correct: true
+    - text: Second syllable (ка-ВА)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: No fixed stress
+      correct: false
+    explanation: Кава has first-syllable stress — КА-ва.
+  - question: Where does the stress fall in the word хата?
+    options:
+    - text: First syllable (ХА-та)
+      correct: true
+    - text: Second syllable (ха-ТА)
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: No fixed stress
+      correct: false
+    explanation: Хата has first-syllable stress — ХА-та.
+  - question: Where does the stress fall in the word рука?
+    options:
+    - text: First syllable (РУ-ка)
+      correct: false
+    - text: Second syllable (ру-КА)
+      correct: true
+    - text: Both syllables equally
+      correct: false
+    - text: It changes depending on usage
+      correct: false
+    explanation: In its basic form, рука has last-syllable stress — ру-КА. But remember,
+      in the plural руки the stress moves!
+  - question: Where does the stress fall in the word Україна?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Second syllable
+      correct: false
+    - text: Third syllable (Укра-Ї-на)
+      correct: true
+    - text: Fourth syllable
+      correct: false
+    explanation: Україна has stress on the third syllable — У-кра-Ї-на.
+- type: match-up
+  title: Stress Minimal Pairs
+  instruction: Match each stressed word to its correct English meaning.
+  pairs:
+  - left: замок (stress on ЗА-)
+    right: castle
+  - left: замок (stress on -МОК)
+    right: lock
+  - left: мука (stress on МУ-)
+    right: torment
+  - left: мука (stress on -КА)
+    right: flour
+  - left: брати (stress on БРА-)
+    right: brothers
+  - left: брати (stress on -ТИ)
+    right: to take
+  - left: рука (stress on -КА)
+    right: hand
+  - left: руки (stress on РУ-)
+    right: hands
+- type: true-false
+  title: Intonation and Stress Facts
+  instruction: Decide whether each statement about Ukrainian stress and intonation
+    is true or false.
+  items:
+  - statement: In Ukrainian, stress always falls on the second-to-last syllable, just
+      like in Polish.
+    correct: false
+    explanation: Ukrainian stress is free — it can fall on any syllable. Polish has
+      fixed penultimate stress, but Ukrainian does not.
+  - statement: Two Ukrainian words spelled the same way can have different meanings
+      depending on which syllable is stressed.
+    correct: true
+    explanation: This is exactly how stress minimal pairs work — for example, замок
+      means castle or lock depending on the stress.
+  - statement: When asking a yes/no question in Ukrainian, your pitch should rise
+      at the very end of the sentence, just like in English.
+    correct: false
+    explanation: In Ukrainian yes/no questions, the pitch rises sharply on the stressed
+      syllable of the key word, then falls. It is not a simple terminal rise.
+  - statement: In a Ukrainian statement, the pitch falls at the end of the sentence.
+    correct: true
+    explanation: Declarative intonation in Ukrainian uses a falling pitch at the end,
+      signaling that the speaker has finished.
+  - statement: Ukrainian stress can move to a different syllable when a word changes
+      its grammatical form.
+    correct: true
+    explanation: This is called mobile stress. For example, рука (stress on -КА) becomes
+      руки (stress on РУ-) in the plural.
+  - statement: The acute accent mark in Ukrainian dictionaries shows which vowel is
+      stressed.
+    correct: true
+    explanation: The accent mark (like in вода) is placed over the stressed vowel
+      to help learners identify the correct pronunciation.
+  - statement: When using a question word like Де, the pitch stays flat throughout
+      the entire sentence.
+    correct: false
+    explanation: With a question word, the pitch rises on the question word itself
+      and then falls for the rest of the sentence.
+  - statement: The words книжка and вода both end with the letter а, so they must
+      have the same stress pattern.
+    correct: false
+    explanation: Having the same ending does not guarantee the same stress. Книжка
+      is stressed on the first syllable, while вода is stressed on the last.
+- type: fill-in
+  title: Complete the Stress Rule
+  instruction: Choose the correct word or phrase to complete each statement about
+    Ukrainian stress and intonation.
+  items:
+  - sentence: Ukrainian stress is called ___ — it can fall on any syllable.
+    answer: free
+    options:
+    - free
+    - fixed
+    - final
+    - penultimate
+    explanation: Ukrainian stress is free, meaning there is no single rule for where
+      it falls.
+  - sentence: The word замок means 'castle' when the stress is on the ___ syllable.
+    answer: first
+    options:
+    - first
+    - second
+    - third
+    - last
+    explanation: ЗА-мок (first syllable) = castle; за-МОК (second syllable) = lock.
+  - sentence: The word замок means 'lock' when the stress is on the ___ syllable.
+    answer: second
+    options:
+    - first
+    - second
+    - third
+    - last
+    explanation: За-МОК (second syllable) = lock; ЗА-мок (first syllable) = castle.
+  - sentence: When stress moves between forms of the same word (like рука → руки),
+      this is called ___ stress.
+    answer: mobile
+    options:
+    - mobile
+    - fixed
+    - final
+    - invisible
+    explanation: Mobile stress means the stress shifts to a different syllable when
+      the word changes grammatical form.
+  - sentence: In a Ukrainian statement like 'Це кафе', the pitch ___ at the end.
+    answer: falls
+    options:
+    - falls
+    - rises
+    - stays flat
+    - disappears
+    explanation: Declarative intonation uses a falling pitch at the end of the sentence.
+  - sentence: In a Ukrainian yes/no question, the pitch rises sharply on the ___ of
+      the key word.
+    answer: stressed syllable
+    options:
+    - stressed syllable
+    - first syllable
+    - last syllable
+    - last word
+    explanation: Ukrainian yes/no questions feature a sharp pitch rise on the stressed
+      syllable of the key word, then a fall.
+  - sentence: The word мама has stress on the ___ syllable.
+    answer: first
+    options:
+    - first
+    - second
+    - third
+    - last
+    explanation: МА-ма — stress on the first syllable, common in basic family words.
+  - sentence: The word молоко has stress on the ___ syllable.
+    answer: third
+    options:
+    - first
+    - second
+    - third
+    - none
+    explanation: Мо-ло-КО — stress on the third (last) syllable.
+  - sentence: In Ukrainian dictionaries, stress is marked with a(n) ___ over the stressed
+      vowel.
+    answer: acute accent
+    options:
+    - acute accent
+    - circle
+    - underline
+    - bold dot
+    explanation: The acute accent mark (like the mark in вода) is placed directly
+      over the stressed vowel.
+  - sentence: Words like мама, тато, хата, and кава all share stress on the ___ syllable.
+    answer: first
+    options:
+    - first
+    - second
+    - last
+    - middle
+    explanation: These common family and household words all have first-syllable stress.
+- type: group-sort
+  title: Sort by Stress Position
+  instruction: Sort these Ukrainian words into groups based on which syllable carries
+    the stress.
+  groups:
+  - name: First-syllable stress
+    items:
+    - мама
+    - тато
+    - хата
+    - кава
+    - добрий
+  - name: Penultimate (middle) stress
+    items:
+    - школа
+    - книжка
+    - дорога
+    - далеко
+  - name: Last-syllable stress
+    items:
+    - молоко
+    - вода
+    - рука
+- type: anagram
+  title: Unscramble the Word
+  instruction: Rearrange the letters to form a Ukrainian word from this lesson. All
+    letters are space-separated.
+  items:
+  - scrambled: о л о м о к
+    answer: молоко
+  - scrambled: а к у р
+    answer: рука
+  - scrambled: а д о в
+    answer: вода
+  - scrambled: а л о к ш
+    answer: школа
+  - scrambled: а к в а
+    answer: кава
+  - scrambled: а г о р о д
+    answer: дорога
+  - scrambled: а м а м
+    answer: мама
+  - scrambled: о т а т
+    answer: тато

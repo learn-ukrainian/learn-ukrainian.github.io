@@ -1,0 +1,205 @@
+- type: match-up
+  title: "Match the Noun to Its Gender"
+  instruction: "Match each Ukrainian noun to its grammatical gender based on the ending rules you learned."
+  pairs:
+    - left: "стіл"
+      right: "Masculine"
+    - left: "хліб"
+      right: "Masculine"
+    - left: "дім"
+      right: "Masculine"
+    - left: "брат"
+      right: "Masculine"
+    - left: "книга"
+      right: "Feminine"
+    - left: "школа"
+      right: "Feminine"
+    - left: "земля"
+      right: "Feminine"
+    - left: "сестра"
+      right: "Feminine"
+    - left: "вікно"
+      right: "Neuter"
+    - left: "місто"
+      right: "Neuter"
+    - left: "море"
+      right: "Neuter"
+    - left: "сонце"
+      right: "Neuter"
+
+- type: quiz
+  title: "Identify the Gender"
+  instruction: "Choose the correct gender for each Ukrainian noun."
+  items:
+    - question: "What is the gender of the word серце (heart)?"
+      options:
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: true
+        - text: "No gender"
+          correct: false
+      explanation: "Серце ends in -е, which signals Neuter gender."
+    - question: "What is the gender of the word тато (dad)?"
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Тато ends in -о, which normally signals Neuter, but biological sex overrides the ending. Dad is male, so тато is Masculine."
+    - question: "What is the gender of the word собака (dog)?"
+      options:
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: true
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Собака ends in -а, which signals Feminine gender. The grammatical ending determines gender here."
+    - question: "What is the gender of the word день (day)?"
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "День ends in a soft sign (-ь) and must be memorized as Masculine."
+    - question: "What is the gender of the word ніч (night)?"
+      options:
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: true
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Ніч ends in a soft consonant and must be memorized as Feminine."
+    - question: "What is the gender of the word зона (zone)?"
+      options:
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: true
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Зона ends in -а, which signals Feminine gender."
+    - question: "What is the gender of the word артефакт (artifact)?"
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Артефакт ends in a hard consonant, which signals Masculine gender."
+    - question: "What is the gender of the word укриття (shelter)?"
+      options:
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: true
+        - text: "No gender"
+          correct: false
+      explanation: "Укриття is Neuter. Despite ending in -я, it belongs to a special neuter group, similar to ім'я."
+    - question: "Which ending usually signals a Feminine noun?"
+      options:
+        - text: "A hard consonant"
+          correct: false
+        - text: "-о or -е"
+          correct: false
+        - text: "-а or -я"
+          correct: true
+        - text: "-ий or -ій"
+          correct: false
+      explanation: "Feminine nouns typically end in -а or -я, like книга, сестра, земля."
+    - question: "Which possessive pronoun do you use with a Neuter noun?"
+      options:
+        - text: "мій"
+          correct: false
+        - text: "моя"
+          correct: false
+        - text: "моє"
+          correct: true
+        - text: "мої"
+          correct: false
+      explanation: "Neuter nouns use моє, for example: моє вікно, моє місто."
+
+- type: fill-in
+  title: "Choose the Correct Possessive Pronoun"
+  instruction: "Fill in the blank with the correct form of 'my' (мій, моя, or моє) to match the noun's gender."
+  items:
+    - sentence: "Це ___ стіл."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Стіл is Masculine, so we use мій."
+    - sentence: "Це ___ книга."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Книга is Feminine, so we use моя."
+    - sentence: "Це ___ вікно."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Вікно is Neuter, so we use моє."
+    - sentence: "Це ___ тато."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Тато is Masculine (biological sex overrides the -о ending), so we use мій."
+    - sentence: "Це ___ мама."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Мама is Feminine, so we use моя."
+    - sentence: "Це ___ місто."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Місто is Neuter, so we use моє."
+    - sentence: "Це ___ дім."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Дім is Masculine (ends in a consonant), so we use мій."
+    - sentence: "Це ___ сестра."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Сестра is Feminine (ends in -а), so we use моя."
+
+- type: match-up
+  title: "Match the Noun to Its Possessive Pronoun"
+  instruction: "Match each noun to the correct form of 'my' based on its gender."
+  pairs:
+    - left: "брат"
+      right: "мій"
+    - left: "мама"
+      right: "моя"
+    - left: "серце"
+      right: "моє"
+    - left: "хліб"
+      right: "мій"
+    - left: "земля"
+      right: "моя"
+    - left: "море"
+      right: "моє"
+    - left: "чоловік"
+      right: "мій"
+    - left: "жінка"
+      right: "моя"
+    - left: "сонце"
+      right: "моє"
+    - left: "собака"
+      right: "моя"

@@ -21,6 +21,47 @@
         "type": "script",
         "name": "discover_passthrough"
       }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-19T06:33:39Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T06:47:57Z",
+      "attempts": 3,
+      "note": "escalation-claude",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T06:50:54Z",
+      "task_id": "v5-checkpoint-daily-life-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-19T07:03:22Z",
+      "attempts": 5,
+      "note": "exhausted-content-passes",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
     }
   }
 }

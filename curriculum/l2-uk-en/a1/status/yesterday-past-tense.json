@@ -2,13 +2,13 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T01:03:47.351076Z",
+  "last_audit": "2026-03-19T12:50:11.515923Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T01:03:31.750906Z",
-    "meta": "2026-03-18T00:49:05.423869Z",
-    "activities": "2026-03-18T01:03:31.751618Z",
-    "vocabulary": "2026-03-18T01:00:14.071416Z",
+    "md": "2026-03-19T03:38:11.613475Z",
+    "meta": "2026-03-19T03:32:37.107799Z",
+    "activities": "2026-03-19T03:34:35.901038Z",
+    "vocabulary": "2026-03-19T03:31:03.158947Z",
     "research": "2026-03-12T10:19:07.914558Z",
     "plan": "2026-03-05T14:05:44.355925Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1379/1200 (raw: 1583) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1983/1200 (raw: 2075)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "21/1"
     },
     "naturalness": {
       "status": "info",
@@ -39,21 +39,21 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

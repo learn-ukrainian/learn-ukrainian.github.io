@@ -1,0 +1,13 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "Fill-in #2 item 14 uses 'шся' as an answer option — this tests a tricky conjugation pattern (смієшся) where the learner must recognize the full suffix includes the conjugation ending. This is pedagogically valuable but unusual for a suffix-choice activity."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan requests 25+15+12+6 = 58 total items across 4 activities. This is very high for A1 but all items were generated to match plan exactly."
+    proposed_fix: "N/A — followed plan faithfully."
+unverified_terms: []
+review_focus:
+  - "Fill-in #2 item 14 (шся option) — verify this is pedagogically appropriate for A1 learners"
+  - "Fill-in #2 items 12 and 15 — the 'він сміє___' and 'вона вмиває___' items involve the -ться pattern which is more complex (suffix attaches after -ть- not directly after the stem vowel/consonant)"

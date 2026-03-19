@@ -24,7 +24,38 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T14:31:25Z",
+      "ts": "2026-03-19T05:09:38Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T05:27:08Z",
+      "attempts": 3,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T05:29:44Z",
+      "task_id": "v5-description-adverbs-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T05:51:26Z",
+      "attempts": 5,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "claude",

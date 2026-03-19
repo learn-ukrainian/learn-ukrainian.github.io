@@ -1,0 +1,13 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 6
+deviations:
+  - "Added unjumble (8 items) and group-sort (12 items) beyond plan's 4 required types — these reinforce imperative forms through sentence construction and categorization, complementing the drill-sergeant persona."
+frictions:
+  - type: NONE
+    description: "No frictions encountered. All words verified against VESUM. Schema fields match activities-a1.schema.json."
+    proposed_fix: "N/A"
+unverified_terms: []
+review_focus:
+  - "Quiz item 8 about reflexive -ся → -сь: verify дивись is correctly described as shortened -сь (not dropped entirely)"
+  - "Fill-in item 2 uses Скажіть with comma before будь ласка — check natural punctuation"

@@ -1,207 +1,154 @@
 ## Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)
 
-You learned your first family of Ukrainian verbs — First Conjugation verbs like **читати** (to read) and **знати** (to know), with their characteristic **-аю, -аєш, -ає** endings. You've already taken a huge step: you can talk about actions in the present tense.
+Welcome back to the world of verbs! In our previous module, you learned the First Conjugation—the largest family of verbs in Ukrainian. Today, we are exploring the second pillar of Ukrainian verbal action: the Second Conjugation. These verbs, which typically end in **-ити** or **-іти**, are essential for expressing ongoing, habitual, and continuous actions. They form the backbone of many daily routines and interactions.
 
-Now you're meeting the second great family — **Second Conjugation**, the **-ити** verbs. These verbs have a different set of endings, and together with First Conjugation, they cover nearly every verb you'll need.
+Before we look at the grammar, let's look at why these verbs matter culturally. Ukrainian culture places a massive emphasis on hospitality. When you visit a Ukrainian home, you will immediately encounter the «Triad of Hospitality». This consists of three core actions: **їсти** (to eat), **пити** (to drink), and **говорити** (to speak). True connection is built through sharing a meal, pouring a warm drink, and having a long, meaningful conversation. These aren't just vocabulary words; they are the literal foundation of social interaction. You cannot truly experience Ukrainian culture without them.
 
-### The Hospitality Triad
+To use these verbs correctly, we need a quick concept check. Remember from our earlier discussions that Ukrainian verbs focus heavily on the process of an action. When you say you are doing something right now, or you do it regularly, you are using the imperfective aspect. We are focusing purely on the «doing», not the «completing». So, when a host asks if you want to eat or drink, they are inviting you into the ongoing process of sharing time together. It is an invitation to stay, sit, and belong.
 
-In Ukrainian culture, there are three things a good host always offers: food, drink, and conversation. When a guest arrives, you feed them, pour them something warm, and sit down to talk. Three verbs capture this perfectly:
+Are you ready to join the table? Let's see how these essential verbs work in action. Once you master them, you will unlock a new level of fluency.
 
-- **їсти** — to eat
-- **пити** — to drink
-- **говорити** — to speak
-
-These three verbs will be your companions throughout this module. Of them, **говорити** is your model Second Conjugation verb. The other two hold surprises — **їсти** is completely irregular, and **пити** actually follows First Conjugation patterns despite its **-ити** ending. You'll learn to handle all three.
-
-> [!culture] **Тріада гостинності**
-> In Ukraine, offering food and drink is how you show care. Remember to sit down and eat when invited — it's an expression of welcome. Refusing a meal can feel like rejecting your host's warmth.
-
-### Quick Concept Check
-
-Remember the difference between **doing** something and **completing** something? All the verbs in this module describe **ongoing or habitual actions** — things you do regularly or are doing right now. This is the imperfective aspect you already know from Module 15.
-
-- **Я читаю.** — I'm reading. (ongoing)
-- **Я багато знаю.** — I know a lot. (habitual)
-
-You're building on a solid foundation. Let's go!
+> [!tip] Golden Rule of Conjugation
+> First Conjugation → **е/є** in endings (читаєш, знаєш). Second Conjugation → **и/і** in endings (говориш, робиш). When in doubt, check the vowel!
 
 ## Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)
 
-### The Second Conjugation Pattern
+Let's look at the mechanics of the Second Conjugation. The key to recognizing these verbs is the vowel in their endings. While the First Conjugation relies heavily on **е** or **є**, the Second Conjugation is built around **и** and **і**.
 
-Second Conjugation verbs end in **-ити** in the infinitive. Their present tense endings are built around the vowel **и** (and **-ять** in the **вони** form). Compare with First Conjugation side by side:
+Here is the standard pattern for a regular **-ити** verb like **говорити** (to speak), placed side-by-side with a First Conjugation verb like **читати** (to read) for comparison. Notice the critical vowel difference in the endings.
 
-| Person | First Conj. (**читати**) | Second Conj. (**говорити**) |
-|--------|------------------------|-----------------------------|
-| я | читаю | говорю |
-| ти | читаєш | говориш |
-| він/вона | читає | говорить |
-| ми | читаємо | говоримо |
-| ви | читаєте | говорите |
-| вони | читають | говорять |
+| First Conjugation | Second Conjugation |
+| :--- | :--- |
+| **я читаю** (I read) | **я говорю** (I speak) |
+| **ти читаєш** (you read) | **ти говориш** (you speak) |
+| **він читає** (he reads) | **він говорить** (he speaks) |
+| **ми читаємо** (we read) | **ми говоримо** (we speak) |
+| **ви читаєте** (you read) | **ви говорите** (you speak) |
+| **вони читають** (they read) | **вони говорять** (they speak) |
 
-The pattern is clear: where First Conjugation uses **є**, Second Conjugation uses **и** (or **і**). The **я** form ends in **-ю** for both, but look at the **вони** form: **-ють** vs **-ять**.
+You can clearly see that **ти говориш** uses **и**, while **ти читаєш** uses **є**. This pattern is remarkably consistent. Great work spotting the pattern — you're already thinking like a Ukrainian grammarian!
 
-Here are more Second Conjugation verbs in action:
+**Consonant Mutations in the «Я» Form**
+Second conjugation verbs have a unique quirk: the final consonant of the stem often changes, but *only* in the **я** (I) form. Don't worry — this is a natural phonetic adjustment to make the word easier to say, and the pattern is very consistent once you see it a few times. 
 
-- **Я бачу гарний парк.** — I see a beautiful park.
-- **Ти робиш домашнє завдання.** — You're doing homework.
-- **Вона любить спорт.** — She loves sports.
-- **Ми вчимо алфавіт.** — We're learning the alphabet.
-- **Вони ходять до школи.** — They walk to school.
+For example, look at the State Standard model verb **сидіти** (to sit). The letter **д** mutates into **дж**.
 
-### Consonant Mutations: The «Я» Surprise
+> **Mutation Pattern: д → дж**
+> **сидіти** → **я сиджу** (I sit)
+> **ходити** → **я ходжу** (I walk)
 
-Some Second Conjugation verbs change their final consonant in the **я** form. This is called **consonant mutation**. It happens because of how sounds evolved in Ukrainian over centuries. Here are the key patterns:
+**The Labial L**
+Some verbs have stems ending in a labial consonant—letters formed with your lips, like **б**, **п**, **в**, **м**, or **ф**. When you try to add the **ю** ending for the **я** form, your lips need a phonetic buffer. So, Ukrainian inserts a «helper» **л**. It is not just an arbitrary rule; it is a physical aid to separate the labial consonant from the **ю** sound.
 
-**д → дж:**
-- **ходити** → я **ходжу**
-- **сидіти** → я **сиджу**
+> **Mutation Pattern: Labial + л**
+> **робити** → **я роблю** (I do)
+> **любити** → **я люблю** (I love)
 
-**с → ш:**
-- **просити** → я **прошу**
+**The Irregularity of Їсти**
+The most important hospitality verb, **їсти** (to eat), is highly irregular. It does not follow the standard patterns, and you simply must memorize its forms. 
 
-**т → ч:**
-- **платити** → я **плачу**
+| The Verb **їсти** (to eat) |
+| :--- |
+| **я їм** |
+| **ти їси** |
+| **він їсть** |
+| **ми їмо** |
+| **ви їсте** |
+| **вони їдять** |
 
-<!-- adapted from: Glazova, Grade 10, §26 — consonant alternation patterns -->
+A very common learner error is trying to apply regular endings, resulting in incorrect forms like *я їджу* or *я їстю*. Always stick to the correct **я їм**. 
 
-> [!tip] **Only the «я» form mutates!**
-> These mutations only affect the **я** form. All other forms keep the original consonant: **ти ходиш**, **він ходить**, **ми ходимо** — no mutation. Just watch out when you say **«я...»**!
+**To See vs. To Watch**
+Finally, be careful to maintain the distinction between **бачити** (to see) and **дивитися** (to watch). **Бачити** describes the physical faculty of sight, the result of having your eyes open. 
 
-### The Labial «Л»
+*   **я бачу** (I see)
+*   **ти бачиш** (you see)
 
-When the verb stem ends in a **labial consonant** — a sound you make with your lips (**б, п, в, м, ф**) — Ukrainian inserts an extra **л** before **-ю** in the **я** form. Think of it as your tongue helping your lips transition to the **ю** sound:
-
-- **робити** → я **роблю** (б + л + ю)
-- **любити** → я **люблю** (б + л + ю)
-
-This **л** appears ONLY in the **я** form. Compare: ти **робиш**, він **робить** — no **л** anywhere.
-
-<!-- adapted from: Karaman, Grade 10 — labial consonant + j alternation -->
-
-### The Irregular Verb «Їсти»
-
-The verb **їсти** (to eat) doesn't follow either conjugation pattern. You need to memorize it:
-
-| Person | їсти |
-|--------|------|
-| я | **їм** |
-| ти | **їси** |
-| він/вона | **їсть** |
-| ми | **їмо** |
-| ви | **їсте** |
-| вони | **їдять** |
-
-> [!warning] **Common Mistake**
-> The correct form is **«я їм»** — short and simple. Memorize it!
-
-### «Бачити» vs «Дивитися»
-
-English has "see" and "watch" — Ukrainian makes a similar distinction:
-
-- **бачити** — to see (result or ability): **Я бачу сонце.** — I see the sun.
-- **дивитися** — to watch (deliberate action): **Я дивлюся.** — I'm watching.
-
-Use **бачити** when something enters your vision naturally. Use **дивитися** when you're actively looking at something. You'll learn to conjugate **дивитися** fully in the next module on reflexive verbs — for now, just know the difference exists.
-
-### A Note on «Пити»
-
-The verb **пити** (to drink) looks like a Second Conjugation verb because it ends in **-ити**. But surprise — it conjugates with First Conjugation endings:
-
-- я **п'ю**, ти **п'єш**, він **п'є**, ми **п'ємо**, ви **п'єте**, вони **п'ють**
-
-Don't let the infinitive fool you! The key to identifying conjugation is the **personal endings**, not the infinitive form.
+If you are intentionally directing your eyes at something for a period of time, like a movie, you use **дивитися**. Keep them distinct to prevent semantic confusion in your early sentence building!
 
 ## Практика: Помилки та автоматизація (Practice: Errors and Automation)
 
-### Don't Mix Your Pronouns!
+Now it is time to build your muscle memory. The Second Conjugation is highly regular once you learn the endings, but it requires practice to prevent old habits from interfering. The more you drill these patterns, the more automatic they become.
 
-The most common mistake learners make is matching the wrong pronoun to the verb ending. Look at these pairs — only one form is correct:
+**Preventing Conjugation Mixing**
+The most frequent mistake learners make is Conjugation Mixing. Because verbs like **говорити** and **читати** both end in **-ти** in their dictionary form, it is tempting to mix their endings. You might accidentally apply First Conjugation vowels to a Second Conjugation verb. 
 
-- ❌ ти робить → ✅ ти **робиш**
-- ❌ він люблять → ✅ він **любить**
-- ❌ вони ходимо → ✅ вони **ходять**
+For example, a learner might say *ти робеш*. This is entirely incorrect! Remember the golden rule: Second Conjugation uses **и**. The correct form is **ти робиш**. 
 
-The trick: if the infinitive ends in **-ити** and the **ти** form has **-иш**, you know it's Second Conjugation. When you see **-єш**, that's First Conjugation territory.
+Let's identify and correct the habit of applying the wrong vowels:
 
-### Mutation Drill: The «Я» Form
+*   Incorrect: *ти бачеш* → Correct: **ти бачиш** (you see)
+*   Incorrect: *він ходе* → Correct: **він ходить** (he walks)
+*   Incorrect: *ми просемо* → Correct: **ми просимо** (we ask)
 
-Practice saying these out loud. Every one has a consonant change in the **я** form:
+**Mutation Mastery**
+The consonant mutations in the **я** form also require focused drilling. If you forget the mutation, you will produce forms that sound very strange to native speakers. We need intensive drills to eliminate these omission errors.
 
-- ходити → я **ходжу** (д → дж)
-- сидіти → я **сиджу** (д → дж)
-- просити → я **прошу** (с → ш)
-- платити → я **плачу** (т → ч)
-- робити → я **роблю** (labial + л)
-- любити → я **люблю** (labial + л)
+*   **ходити** (to walk): Always say **я ходжу**.
+*   **сидіти** (to sit): Always say **я сиджу**.
+*   **платити** (to pay): Always say **я плачу**.
+*   **просити** (to ask): Always say **я прошу**.
 
-> [!practice] **Say It Out Loud**
-> Cover the right column. Look at each infinitive and say the **я** form from memory. Then check yourself. Repeat until you get all six without hesitation!
+**Sorting and Categorizing**
+To build structural intuition for vowel patterns in endings, try a sorting exercise. Categorize verbs mentally as you learn them. Ask yourself: does this verb take **е/є** or **и/і**? 
 
-### Sorting Challenge
+*   Group 1 (First Conjugation, **е/є**): **знати**, **думати**, **грати**.
+*   Group 2 (Second Conjugation, **и/і**): **говорити**, **робити**, **вчити**.
 
-Can you sort these verbs into First and Second Conjugation? Look at how they conjugate, not just the infinitive:
+By organizing verbs into these mental buckets, your brain will automatically select the right vowel for the ending. Let's practice with the verb **стояти** (to stand). Though it looks a bit unusual, it mostly follows the Second Conjugation pattern. 
 
-**Second Conjugation** (endings: -иш, -ить, -имо, -ите, -ять):
-- говорити, робити, бачити, любити, ходити, просити, сидіти, вчити, платити, стояти
-
-**First Conjugation** (endings: -єш, -є, -ємо, -єте, -ють):
-- читати, знати, пити (!)
-
-Remember: **пити** ends in **-ити** but conjugates like First Conjugation. The endings always tell the truth!
-
-> **(У кафе / At a café)**
->
-> — Що ти тут робиш?
-> — Я сиджу й п'ю чай.
-> — А він готує обід?
-> — Він їсть борщ.
-> — Добре, я теж хочу їсти!
-> — Please, sit down! Тут смачно.
+| The Verb **стояти** (to stand) |
+| :--- |
+| **я стою** (I stand) |
+| **ти стоїш** (you stand) |
+| **вони стоять** (they stand) |
 
 ## Продукування та культурний контекст (Production and Cultural Context)
 
-### Talking About Your Day
+You are now ready to start using these verbs in real-world contexts. These high-frequency action words are perfect for describing your daily routines and personal interests. 
 
-Let's put these verbs together to describe a routine. Notice how seamlessly First and Second Conjugation verbs mix in natural speech:
+Here are some common collocations that you can start using immediately. Learn these as fixed phrases for now — we'll explore the grammar behind the word endings in a later module:
 
-> **Моя рутина (My routine)**
-> Я люблю спорт, тому часто ходжу в парк. Вдома я роблю домашнє завдання. Я також вчу алфавіт і щодня говорю українською.
+*   **робити домашнє завдання** (to do homework)
+*   **говорити українською** (to speak Ukrainian)
+*   **любити природу** (to love nature)
+*   **пити каву** (to drink coffee)
 
-### Deep Culture - The Etymology of «Любити»
+> [!tip] Watch Out: пити Is a Rebel!
+> Despite ending in **-ити**, the verb **пити** (to drink) is actually a **First Conjugation** verb: **п'ю**, **п'єш**, **п'є**, **п'ємо**, **п'єте**, **п'ють**. Notice the **є** vowel — that's the First Conjugation marker. Don't try to conjugate it like говорити!
 
-Here's something beautiful about Ukrainian. The verb **любити** (to love) shares an ancient root with **люди** (people) and **людство** (humanity). In the Proto-Indo-European language family, the root *\*lewdh-* meant "to care for, to be drawn toward." In Ukrainian, love and people grew from the same word. To love is, quite literally, to belong to your community.
+**Deep Culture: The Etymology of Любити**
+Let's take a closer look at the verb **любити** (to love). In English, «love» is a very broad concept. But the Ukrainian word has deep historical roots. It comes from the ancient Proto-Indo-European root *\*lewdh-*, which is the exact same root shared with the word **люди** (people) and **людство** (humanity). 
 
-- **Я люблю Київ.** — I love Kyiv.
-- **Люди люблять спорт.** — People love sports.
+This etymology illustrates how love is intrinsically linked to community belonging. In the Ukrainian mindset, to love is, quite literally, to be drawn toward people. This makes **любити** a profoundly social and human-centric verb, reminding us that connection is at the heart of the culture. 
 
-### The Social Weight of Food
+**The Social Ethics of Hospitality**
+Let's return to our Hospitality Triad: **їсти**, **пити**, and **говорити**. When you are a guest in Ukraine, these verbs carry significant social weight. A host will almost certainly offer you food and drink as a primary gesture of welcome. 
 
-In Ukrainian hospitality, **їсти** and **пити** carry deep social meaning. When someone invites you home and says **"Please, sit down and eat!"** — this is more than a meal. It's an act of trust and generosity. Politely refusing food (**«Ні, дякую, я не їм»**) can feel like rejecting your host's goodwill. Even if you're not hungry, it's customary to accept at least a cup of **чай** or **кава**.
+If you say **я не їм** (I am not eating) or flatly refuse a dish, you must be aware that this can sometimes be perceived as a rejection of the host's goodwill. Food is synonymous with care. Refusing the meal can accidentally signal that you are refusing the care itself. Of course, you do not have to eat everything on the table! But participating in the process—taking a small bite, sharing a drink, and engaging warmly in conversation—shows deep respect for the host's effort and solidifies your place at the table.
 
-> **(Вдома / At home)**
->
-> — Привіт! Please, sit down.
-> — Дякую! Ти готуєш борщ?
-> — Так, я люблю борщ!
-> — Добре. А ти п'єш чай? Сік?
-> — Я п'ю чай, дякую.
+> [!cultural-note] A Ukrainian Kitchen Scene
+> — Сідай! Їж! (Sit down! Eat!)
+> — Дякую! Я їм. Смачно! (Thank you! I'm eating. Delicious!)
+> — Пий чай! (Drink tea!)
+> — Дякую, п'ю. (Thank you, I'm drinking.)
+> — Говори! Як справи? (Talk! How are things?)
 
-# Підсумок
+## Підсумок
+Fantastic work — you've come a long way! You have now mastered the two major verb families in Ukrainian. The Second Conjugation, with its characteristic **и** and **і** vowels, powers some of the most important words in the language, especially the Triad of Hospitality: **їсти**, **пити**, and **говорити**. 
 
-You've made excellent progress! You can **conjugate Second Conjugation verbs** like **говорити**, **робити**, **бачити**, and **любити** — recognizing their characteristic **-иш, -ить, -имо, -ите, -ять** endings. You can handle **consonant mutations** in the **я** form (**ходжу**, **сиджу**, **прошу**, **плачу**) and the **labial л** pattern (**роблю**, **люблю**). You know that **їсти** is irregular (**я їм!**) and that **пити** secretly follows First Conjugation despite its **-ити** ending.
+Remember to watch out for consonant mutations in the **я** form, like **я ходжу** and **я люблю**. Keep your vowels straight to avoid conjugation mixing, and never use *я їджу* when you mean **я їм**! 
 
-Most importantly, you can now talk about the core activities of Ukrainian social life — eating, drinking, and speaking together.
+**You can now:**
+- Conjugate Second Conjugation verbs (-ити) in present tense
+- Spot and apply consonant mutations in the я-form (ходжу, роблю, прошу)
+- Use the Hospitality Triad (їсти, пити, говорити) in real conversations
+- Tell First and Second Conjugation apart by their vowel patterns
 
-### Self-Check
+You are fully equipped to describe your daily actions, express your preferences, and participate graciously in a traditional Ukrainian gathering. Молодець! 🎉
 
-Ask yourself:
-
-1. What are the present tense endings for Second Conjugation verbs?
-2. What happens to **д** in the **я** form of **ходити**?
-3. Why does **робити** become **роблю**?
-4. What is the correct **я** form of **їсти**?
-
-If you can answer all four, you're ready for the next module — **Reflexive Verbs**, where you'll meet the particle **-ся/-сь** and learn verbs like **дивитися** (to watch) and **вчитися** (to study). Great work — you're doing beautifully!
+**Self-Check Questions:**
+1. What is the characteristic vowel of the Second Conjugation for the «ти» (you) form?
+2. Why do we insert the letter «л» in the «я» form of verbs like **робити** and **любити**?
+3. What is the correct «я» form of the highly irregular verb **їсти**?
+4. How might refusing to eat (**не їсти**) be perceived by a Ukrainian host?

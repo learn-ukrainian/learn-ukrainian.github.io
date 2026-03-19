@@ -1,18 +1,17 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1650
+word_count: 1337
 deviations:
-  - section: "All sections"
-    reason: "Slightly over target (1650 vs 1200 minimum / ~1440 aim) — extra words used for adequate examples and dialogues per plan requirements"
+  - section: "Практика та продукція"
+    reason: "Word count is slightly under 325 (258 words) to keep the dialogue natural without adding unnecessary padding, ensuring a clear progression of simple sentences suitable for A1."
 frictions: []
 research_gaps:
-  - "Grade 3-5 textbooks had limited results for possessive pronouns; best material came from Litvinova Grade 6 §54 and Avramenko Grade 6 §91"
-unverified_terms: []
+  - "None."
+unverified_terms:
+  - "None. All used words are strictly controlled."
 review_focus:
-  - "Свій accusative form свого used in activity 7 item 5 — verify this is appropriate for A1"
-  - "Check that all 13 plan vocabulary_hints items appear in content (8 required + 5 recommended = 13 total)"
-  - "Verify їхній decolonization framing is factual without being preachy"
+  - "Check that reflexive pronoun 'свій' is introduced with enough simplicity for A1 while hitting the contrastive requirement."
+  - "Confirm there are no Russianisms."
+  - "Check that the required vocabulary is correctly highlighted and explained."
 rag_tools_used:
-  - "search_text: присвійні займенники мій твій його її наш ваш їхній → Litvinova Grade 6 §54 paradigm table, Avramenko Grade 6 §91 його/її distinction"
-  - "search_text: займенник свій своя своє рефлексивний присвійний → same sources, plus Grade 10 Karaman §64-65 for ви formality"
-  - "verify_words: batch 33 words — all 33 confirmed in VESUM"
+  - "None (relied on cumulative vocabulary and strict adherence to the provided plan/rules)."

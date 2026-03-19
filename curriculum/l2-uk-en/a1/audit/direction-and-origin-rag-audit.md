@@ -1,9 +1,9 @@
 # RAG Verification: direction-and-origin
 
-**Date:** 2026-03-17 23:34 UTC | **Words checked:** 96 | **VESUM coverage:** 90/96 (93.8%)
+**Date:** 2026-03-19 02:17 UTC | **Words checked:** 84 | **VESUM coverage:** 78/84 (92.9%)
 
 ## Summary
-- ✅ Verified (VESUM): 90
+- ✅ Verified (VESUM): 78
 - ⚠️ Partial (RAG only): 6
 - ❌ Not found: 0
 
@@ -15,12 +15,12 @@
 | Львова | prose | ✗ | ✓ | ✗ |
 | Львів | prose | ✗ | ✓ | ✗ |
 | Марія | prose | ✗ | ✓ | ✗ |
-| Одеси | prose | ✗ | ✓ | ✗ |
-| Харків | prose | ✗ | ✓ | ✗ |
+| ш | activities | ✗ | ✓ | ✗ |
+| щ | activities | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 91 | 85 | 0 |
-| Activities (.yaml) | 5 | 5 | 0 |
+| Prose (.md) | 70 | 66 | 0 |
+| Activities (.yaml) | 14 | 12 | 0 |

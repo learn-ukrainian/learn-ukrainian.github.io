@@ -1,406 +1,201 @@
-- type: quiz
-  title: "Essential Shopping Phrases"
-  instruction: "Choose the correct Ukrainian phrase."
-  items:
-    - question: "How do you ask for the price?"
-      options:
-        - text: "Скільки це коштує?"
-          correct: true
-        - text: "У вас є вода?"
-          correct: false
-        - text: "Дайте, будь ласка."
-          correct: false
-        - text: "Я хочу купити."
-          correct: false
-      explanation: "Скільки коштує is the standard phrase for 'How much does it cost'."
-    - question: "How do you politely ask a vendor for an item?"
-      options:
-        - text: "Дайте, будь ласка."
-          correct: true
-        - text: "Скільки це коштує?"
-          correct: false
-        - text: "Де тут магазин?"
-          correct: false
-        - text: "Ваша решта."
-          correct: false
-      explanation: "Дайте, будь ласка (Give me, please) is the polite and standard way to request an item."
-    - question: "How do you say 'I want to buy...'?"
-      options:
-        - text: "Я хочу купити..."
-          correct: true
-        - text: "Дайте, будь ласка..."
-          correct: false
-        - text: "У вас є..."
-          correct: false
-        - text: "Скільки коштують..."
-          correct: false
-      explanation: "Я хочу means 'I want' and купити means 'to buy'."
-    - question: "How do you ask if a store has water?"
-      options:
-        - text: "У вас є вода?"
-          correct: true
-        - text: "Скільки коштує вода?"
-          correct: false
-        - text: "Дайте воду, будь ласка."
-          correct: false
-        - text: "Я хочу воду."
-          correct: false
-      explanation: "Always use 'У вас є...?' to ask if a store carries an item."
-    - question: "What do you say when handing something over (e.g., money or an item)?"
-      options:
-        - text: "Ось, будь ласка."
-          correct: true
-        - text: "Ваша решта."
-          correct: false
-        - text: "Дайте, будь ласка."
-          correct: false
-        - text: "Я хочу купити."
-          correct: false
-      explanation: "Ось translates to 'here is' when handing something to someone."
-    - question: "How do you say 'your change'?"
-      options:
-        - text: "Ваша решта."
-          correct: true
-        - text: "Ваша картка."
-          correct: false
-        - text: "Ось, будь ласка."
-          correct: false
-        - text: "Де тут аптека."
-          correct: false
-      explanation: "Решта means change (money returned)."
-    - question: "Where do you typically go to buy fresh produce by the kilogram?"
-      options:
-        - text: "На ринок"
-          correct: true
-        - text: "В аптеку"
-          correct: false
-        - text: "Ваша решта"
-          correct: false
-        - text: "У вас є"
-          correct: false
-      explanation: "Ринок is an outdoor market where produce is usually weighed."
-    - question: "How do you ask 'Where is the pharmacy here?'"
-      options:
-        - text: "Де тут аптека?"
-          correct: true
-        - text: "У вас є аптека?"
-          correct: false
-        - text: "Скільки коштує аптека?"
-          correct: false
-        - text: "Я хочу купити аптеку."
-          correct: false
-      explanation: "Де means 'where', тут means 'here', and аптека is 'pharmacy'."
-
 - type: fill-in
-  title: "Complete the Dialogue"
-  instruction: "Complete the sentences with the correct words."
+  title: "Complete the Shopping Dialogue"
+  instruction: "Fill in the blank with the correct Ukrainian word or phrase to complete each shopping sentence."
   items:
-    - sentence: "Добрий день! У вас ___ кава?"
-      answer: "є"
-      options:
-        - "є"
-        - "бути"
-        - "хочу"
-        - "дайте"
-    - sentence: "Так, є. Скільки вона ___?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "є"
-        - "хочу"
-    - sentence: "Кава коштує сорок ___."
+    - sentence: "___ коштує яблуко?"
+      answer: "Скільки"
+      options: ["Скільки", "Де", "Що", "Як"]
+      explanation: "To ask the price, we use Скільки коштує? (How much does it cost?)"
+    - sentence: "Це коштує двадцять ___."
       answer: "гривень"
-      options:
-        - "гривень"
-        - "гривня"
-        - "гривні"
-        - "гривню"
-    - sentence: "Дайте, ___ ласка."
+      options: ["гривень", "гривня", "гривні", "гривню"]
+      explanation: "After numbers 5 and above, we use the Genitive plural form гривень."
+    - sentence: "Я хочу ___ сир."
+      answer: "купити"
+      options: ["купити", "коштувати", "платити", "дякувати"]
+      explanation: "Купити (to buy) is the correct verb for purchasing items."
+    - sentence: "Хліб, ___ ласка."
       answer: "будь"
+      options: ["будь", "дуже", "як", "де"]
+      explanation: "Будь ласка means please — a polite way to request an item."
+    - sentence: "У вас ___ молоко?"
+      answer: "є"
+      options: ["є", "має", "був", "тут"]
+      explanation: "To check availability in a store, we ask У вас є...? (Do you have...?)"
+    - sentence: "Де ___ купити шампунь?"
+      answer: "можна"
+      options: ["можна", "треба", "хочу", "будь"]
+      explanation: "Де можна купити...? means Where can one buy...?"
+    - sentence: "___ коштує тридцять дві гривні."
+      answer: "Кава"
+      options: ["Кава", "Каву", "Кави", "Каві"]
+      explanation: "The item being priced is the subject of the sentence and takes Nominative case."
+    - sentence: "Можна платити ___?"
+      answer: "карткою"
+      options: ["карткою", "картка", "картки", "картку"]
+      explanation: "Карткою (by card) uses the Instrumental case to express the means of payment."
+    - sentence: "Дві ___ води, будь ласка."
+      answer: "пляшки"
+      options: ["пляшки", "пляшка", "пляшок", "пляшку"]
+      explanation: "After the number 2, feminine nouns take the form пляшки."
+    - sentence: "Ні, ___."
+      answer: "немає"
+      options: ["немає", "нічого", "ніде", "ніколи"]
+      explanation: "Немає means there is none — the standard response when an item is unavailable."
+
+- type: quiz
+  title: "Quantities and Case Forms"
+  instruction: "Choose the correct answer for each question about Ukrainian shopping expressions."
+  items:
+    - question: "Which unit of measurement would you use when buying apples by weight?"
       options:
-        - "будь"
-        - "хочу"
-        - "ось"
-        - "решта"
-    - sentence: "___, будь ласка. Ваша решта."
-      answer: "Ось"
+        - text: "кілограм"
+          correct: true
+        - text: "літр"
+          correct: false
+        - text: "пляшка"
+          correct: false
+        - text: "пачка"
+          correct: false
+      explanation: "Кілограм (kilogram) is used for fruits, vegetables, and meat sold by weight."
+    - question: "What is the correct form after the number 5: п'ять ___?"
       options:
-        - "Ось"
-        - "Так"
-        - "Де"
-        - "Скільки"
-    - sentence: "Дякую! До ___!"
-      answer: "побачення"
+        - text: "гривень"
+          correct: true
+        - text: "гривня"
+          correct: false
+        - text: "гривні"
+          correct: false
+        - text: "гривню"
+          correct: false
+      explanation: "Numbers 5 and above take Genitive plural: п'ять гривень."
+    - question: "Which is the correct way to say 'a bottle of water'?"
       options:
-        - "побачення"
-        - "день"
-        - "ласка"
-        - "решта"
-    - sentence: "Я ___ купити хліб."
-      answer: "хочу"
+        - text: "пляшка води"
+          correct: true
+        - text: "пляшка вода"
+          correct: false
+        - text: "пляшка воду"
+          correct: false
+        - text: "пляшку води"
+          correct: false
+      explanation: "After a unit of measurement, the product takes Genitive case: води (from вода)."
+    - question: "What is the gender of the word шампунь (shampoo)?"
       options:
-        - "хочу"
-        - "є"
-        - "ось"
-        - "решта"
-    - sentence: "Де тут ___? Мені потрібне мило."
-      answer: "аптека"
+        - text: "masculine"
+          correct: true
+        - text: "feminine"
+          correct: false
+        - text: "neuter"
+          correct: false
+        - text: "plural"
+          correct: false
+      explanation: "Despite ending in a soft sign, шампунь is masculine — a common learner trap."
+    - question: "How do you say 'a packet of sugar' in Ukrainian?"
       options:
-        - "аптека"
-        - "решта"
-        - "картка"
-        - "пляшка"
-    - sentence: "Дайте два ___ помідорів."
-      answer: "кілограми"
+        - text: "пачка цукру"
+          correct: true
+        - text: "пачка цукор"
+          correct: false
+        - text: "пачки цукру"
+          correct: false
+        - text: "пачку цукор"
+          correct: false
+      explanation: "The product after a unit takes Genitive case: цукру (from цукор)."
+    - question: "What is the correct form: дві ___?"
       options:
-        - "кілограми"
-        - "кілограм"
-        - "кілограмів"
-        - "літри"
-    - sentence: "Я хочу три ___ води."
-      answer: "літри"
+        - text: "гривні"
+          correct: true
+        - text: "гривень"
+          correct: false
+        - text: "гривня"
+          correct: false
+        - text: "гривню"
+          correct: false
+      explanation: "Numbers 2, 3, and 4 take Nominative plural: дві гривні."
+    - question: "Which unit would you use for buying milk?"
       options:
-        - "літри"
-        - "літр"
-        - "літрів"
-        - "штуки"
+        - text: "літр"
+          correct: true
+        - text: "кілограм"
+          correct: false
+        - text: "штука"
+          correct: false
+        - text: "пачка"
+          correct: false
+      explanation: "Літр (litre) is the standard unit for liquids like milk and juice."
+    - question: "What does the phrase 'на ринку' mean?"
+      options:
+        - text: "at the market"
+          correct: true
+        - text: "in the store"
+          correct: false
+        - text: "at the pharmacy"
+          correct: false
+        - text: "at the cafe"
+          correct: false
+      explanation: "На ринку means at the market. Note: we say на ринку (not у ринку)."
+    - question: "How do you say 'two kilograms' in Ukrainian?"
+      options:
+        - text: "два кілограми"
+          correct: true
+        - text: "два кілограмів"
+          correct: false
+        - text: "два кілограм"
+          correct: false
+        - text: "два кілограму"
+          correct: false
+      explanation: "Numbers 2-4 take Nominative plural: два кілограми."
+    - question: "What does 'решта' mean in a shopping context?"
+      options:
+        - text: "change (money back)"
+          correct: true
+        - text: "receipt"
+          correct: false
+        - text: "bag"
+          correct: false
+        - text: "discount"
+          correct: false
+      explanation: "Решта means change — the money returned after paying."
 
 - type: match-up
-  title: "Units of Measurement"
-  instruction: "Match the word to its English meaning."
+  title: "Match Product to Unit"
+  instruction: "Match each product with the unit of measurement typically used when buying it."
   pairs:
-    - left: "літр"
-      right: "litre"
-    - left: "кілограм"
-      right: "kilogram"
-    - left: "пачка"
-      right: "packet"
-    - left: "пляшка"
-      right: "bottle"
-    - left: "штука"
-      right: "piece"
-    - left: "гривня"
-      right: "currency"
-    - left: "решта"
-      right: "change"
-    - left: "картка"
-      right: "card"
-    - left: "аптека"
-      right: "pharmacy"
-    - left: "ціна"
-      right: "price"
-
-- type: quiz
-  title: "Quantity and Case Agreement"
-  instruction: "Choose the correct form for the quantity."
-  items:
-    - question: "Which form is correct for 'one hryvnia'?"
-      options:
-        - text: "одна гривня"
-          correct: true
-        - text: "одна гривні"
-          correct: false
-        - text: "одна гривень"
-          correct: false
-        - text: "одна гривню"
-          correct: false
-    - question: "Which form is correct for 'two hryvnias'?"
-      options:
-        - text: "дві гривні"
-          correct: true
-        - text: "дві гривня"
-          correct: false
-        - text: "дві гривень"
-          correct: false
-        - text: "дві гривню"
-          correct: false
-    - question: "Which form is correct for 'four hryvnias'?"
-      options:
-        - text: "чотири гривні"
-          correct: true
-        - text: "чотири гривня"
-          correct: false
-        - text: "чотири гривень"
-          correct: false
-        - text: "чотири гривню"
-          correct: false
-    - question: "Which form is correct for 'five hryvnias'?"
-      options:
-        - text: "п'ять гривень"
-          correct: true
-        - text: "п'ять гривня"
-          correct: false
-        - text: "п'ять гривні"
-          correct: false
-        - text: "п'ять гривню"
-          correct: false
-    - question: "Which form is correct for 'ten hryvnias'?"
-      options:
-        - text: "десять гривень"
-          correct: true
-        - text: "десять гривня"
-          correct: false
-        - text: "десять гривні"
-          correct: false
-        - text: "десять гривню"
-          correct: false
-    - question: "Which form is correct for 'twenty hryvnias'?"
-      options:
-        - text: "двадцять гривень"
-          correct: true
-        - text: "двадцять гривня"
-          correct: false
-        - text: "двадцять гривні"
-          correct: false
-        - text: "двадцять гривню"
-          correct: false
-    - question: "Which form is correct for 'two litres'?"
-      options:
-        - text: "два літри"
-          correct: true
-        - text: "два літр"
-          correct: false
-        - text: "два літрів"
-          correct: false
-        - text: "два літру"
-          correct: false
-    - question: "Which form is correct for 'five litres'?"
-      options:
-        - text: "п'ять літрів"
-          correct: true
-        - text: "п'ять літри"
-          correct: false
-        - text: "п'ять літр"
-          correct: false
-        - text: "п'ять літру"
-          correct: false
-    - question: "Which form is correct for 'three kilograms'?"
-      options:
-        - text: "три кілограми"
-          correct: true
-        - text: "три кілограм"
-          correct: false
-        - text: "три кілограмів"
-          correct: false
-        - text: "три кілограму"
-          correct: false
-    - question: "Which form is correct for 'six kilograms'?"
-      options:
-        - text: "шість кілограмів"
-          correct: true
-        - text: "шість кілограми"
-          correct: false
-        - text: "шість кілограм"
-          correct: false
-        - text: "шість кілограму"
-          correct: false
+    - left: "яблука"
+      right: "кілограм"
+    - left: "молоко"
+      right: "літр"
+    - left: "цукор"
+      right: "пачка"
+    - left: "вода"
+      right: "пляшка"
+    - left: "мило"
+      right: "штука"
+    - left: "хліб"
+      right: "штука"
+    - left: "сир"
+      right: "кілограм"
+    - left: "чай"
+      right: "пачка"
+    - left: "кава"
+      right: "пачка"
+    - left: "м'ясо"
+      right: "кілограм"
 
 - type: unjumble
-  title: "Build the Sentence"
-  instruction: "Put the words in the correct order."
+  title: "Build Shopping Sentences"
+  instruction: "Arrange the words to form a correct Ukrainian shopping sentence."
   items:
-    - words:
-        - "Скільки"
-        - "коштує"
-        - "вода"
-      answer: "Скільки коштує вода"
-    - words:
-        - "Я"
-        - "хочу"
-        - "купити"
-        - "хліб"
-      answer: "Я хочу купити хліб"
-    - words:
-        - "Дайте"
-        - "молоко"
-        - "будь"
-        - "ласка"
-      answer: "Дайте молоко будь ласка"
-    - words:
-        - "У"
-        - "вас"
-        - "є"
-        - "кава"
-      answer: "У вас є кава"
-    - words:
-        - "Де"
-        - "можна"
-        - "купити"
-        - "мило"
-      answer: "Де можна купити мило"
-    - words:
-        - "Борщ"
-        - "коштує"
-        - "сімдесят"
-        - "гривень"
-      answer: "Борщ коштує сімдесят гривень"
-
-- type: true-false
-  title: "Shopping and Grammar Rules"
-  instruction: "Determine if the statement is true or false."
-  items:
-    - statement: "To ask a vendor for an item, use the phrase 'Дайте, будь ласка'."
-      correct: true
-      explanation: "This is the polite and standard way to say 'Give me, please'."
-    - statement: "You should use the verb 'мати' (to have) when asking if a store carries an item, like 'Ви маєте хліб?'."
-      correct: false
-      explanation: "Native speakers use the existence structure 'У вас є...?' instead."
-    - statement: "The word 'гривня' changes its ending depending on the number before it."
-      correct: true
-      explanation: "Yes, for example: одна гривня, дві гривні, п'ять гривень."
-    - statement: "For quantities of five and above, we use 'гривні', like 'п'ять гривні'."
-      correct: false
-      explanation: "For five and above, or numbers ending in zero, we use 'гривень', for example 'п'ять гривень'."
-    - statement: "The verb form 'коштує' is used for a single item, and 'коштують' is for multiple items."
-      correct: true
-      explanation: "Yes! 'Вода коштує' (singular) and 'Яблука коштують' (plural)."
-    - statement: "When you buy apples at an outdoor market, they are typically sold by the 'літр'."
-      correct: false
-      explanation: "Apples are sold by weight, so you use 'кілограм'."
-    - statement: "The word 'шампунь' (shampoo) is a masculine noun in Ukrainian."
-      correct: true
-      explanation: "Yes, it is masculine, so we say 'Мій шампунь' or 'Мені потрібен шампунь'."
-    - statement: "A pharmacy in Ukrainian is called 'магазин'."
-      correct: false
-      explanation: "A pharmacy is 'аптека'. 'Магазин' is a regular store."
-
-- type: group-sort
-  title: "Sort the Vocabulary"
-  instruction: "Sort the items into the correct categories."
-  groups:
-    - name: "Hygiene Products"
-      items:
-        - "мило"
-        - "шампунь"
-        - "рушник"
-        - "туалетний папір"
-        - "зубна паста"
-    - name: "Units of Measurement"
-      items:
-        - "кілограм"
-        - "літр"
-        - "пляшка"
-        - "пачка"
-        - "штука"
-
-- type: match-up
-  title: "Vocabulary Review"
-  instruction: "Match the Ukrainian word to its English meaning."
-  pairs:
-    - left: "купити"
-      right: "to buy"
-    - left: "коштувати"
-      right: "to cost"
-    - left: "магазин"
-      right: "store"
-    - left: "ринок"
-      right: "market"
-    - left: "мило"
-      right: "soap"
-    - left: "рушник"
-      right: "towel"
-    - left: "вода"
-      right: "water"
-    - left: "хліб"
-      right: "bread"
+    - words: ["коштує", "Скільки", "яблуко"]
+      answer: "Скільки коштує яблуко"
+    - words: ["купити", "хочу", "Я", "сир"]
+      answer: "Я хочу купити сир"
+    - words: ["будь", "Хліб", "ласка"]
+      answer: "Хліб, будь ласка"
+    - words: ["є", "вас", "У", "молоко"]
+      answer: "У вас є молоко"
+    - words: ["коштує", "двадцять", "Це", "гривень"]
+      answer: "Це коштує двадцять гривень"
+    - words: ["купити", "можна", "Де", "шампунь"]
+      answer: "Де можна купити шампунь"

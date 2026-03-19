@@ -1,0 +1,219 @@
+- type: fill-in
+  title: "Form the Plural"
+  instruction: "Choose the correct plural form to complete each sentence."
+  items:
+    - sentence: "Це нові ___."
+      answer: "книги"
+      options: ["книга", "книги", "книгах", "книжки"]
+      explanation: "Feminine nouns ending in -а replace it with -и in the plural."
+    - sentence: "Тут молоді ___."
+      answer: "студенти"
+      options: ["студент", "студенти", "студента", "студентів"]
+      explanation: "Masculine nouns ending in a consonant add -и to form the plural."
+    - sentence: "Це великі ___."
+      answer: "міста"
+      options: ["місто", "міста", "містом", "місті"]
+      explanation: "Neuter nouns ending in -о replace it with -а in the plural."
+    - sentence: "Де гарні ___?"
+      answer: "коти"
+      options: ["кіт", "коти", "кота", "котів"]
+      explanation: "The vowel і in кіт alternates to о in the plural: коти."
+    - sentence: "Це старі ___."
+      answer: "столи"
+      options: ["стіл", "столи", "стола", "столів"]
+      explanation: "The vowel і in стіл alternates to о in the plural: столи."
+    - sentence: "Де нові ___?"
+      answer: "ножі"
+      options: ["ніж", "ножі", "ножа", "ножів"]
+      explanation: "The vowel і in ніж alternates to о in the plural: ножі."
+    - sentence: "Тут малі ___."
+      answer: "діти"
+      options: ["дитина", "діти", "дитини", "дітей"]
+      explanation: "Діти is an irregular plural from дитина."
+    - sentence: "Це добрі ___."
+      answer: "люди"
+      options: ["людина", "люди", "людини", "людей"]
+      explanation: "Люди is an irregular plural from людина."
+    - sentence: "Тут великі ___."
+      answer: "вікна"
+      options: ["вікно", "вікна", "вікні", "вікон"]
+      explanation: "Neuter nouns ending in -о replace it with -а in the plural."
+    - sentence: "Це нові ___."
+      answer: "вулиці"
+      options: ["вулиця", "вулиці", "вулицю", "вулиць"]
+      explanation: "Feminine nouns ending in -я replace it with -і in the plural."
+    - sentence: "Де старі ___?"
+      answer: "доми"
+      options: ["дім", "доми", "дома", "домів"]
+      explanation: "The vowel і in дім alternates to о in the plural: доми."
+    - sentence: "Це сині ___."
+      answer: "моря"
+      options: ["море", "моря", "морі", "морям"]
+      explanation: "Neuter nouns ending in -е replace it with -я in the plural."
+
+- type: match-up
+  title: "Match Singular to Plural"
+  instruction: "Match each singular noun on the left with its correct plural form on the right."
+  pairs:
+    - left: "студент"
+      right: "студенти"
+    - left: "книга"
+      right: "книги"
+    - left: "місто"
+      right: "міста"
+    - left: "кіт"
+      right: "коти"
+    - left: "дитина"
+      right: "діти"
+    - left: "людина"
+      right: "люди"
+    - left: "стіл"
+      right: "столи"
+    - left: "ніж"
+      right: "ножі"
+    - left: "вікно"
+      right: "вікна"
+    - left: "море"
+      right: "моря"
+    - left: "око"
+      right: "очі"
+    - left: "дім"
+      right: "доми"
+
+- type: quiz
+  title: "Choose the Correct Plural"
+  instruction: "Select the correct plural form for each noun."
+  items:
+    - question: "What is the plural of кіт (cat)?"
+      options:
+        - text: "коти"
+          correct: true
+        - text: "кота"
+          correct: false
+        - text: "котів"
+          correct: false
+        - text: "коту"
+          correct: false
+      explanation: "The і in кіт alternates to о when the plural ending -и is added: коти."
+    - question: "What is the plural of місто (city)?"
+      options:
+        - text: "міста"
+          correct: true
+        - text: "місті"
+          correct: false
+        - text: "містом"
+          correct: false
+        - text: "містах"
+          correct: false
+      explanation: "Neuter nouns ending in -о replace it with -а in the plural: міста."
+    - question: "What is the plural of дитина (child)?"
+      options:
+        - text: "діти"
+          correct: true
+        - text: "дитини"
+          correct: false
+        - text: "дитин"
+          correct: false
+        - text: "дітей"
+          correct: false
+      explanation: "Діти is an irregular plural. The stem changes completely from дитина."
+    - question: "What is the plural of стіл (table)?"
+      options:
+        - text: "столи"
+          correct: true
+        - text: "стола"
+          correct: false
+        - text: "столів"
+          correct: false
+        - text: "столу"
+          correct: false
+      explanation: "The і in стіл alternates to о in the plural: столи."
+    - question: "What is the plural of книга (book)?"
+      options:
+        - text: "книги"
+          correct: true
+        - text: "книга"
+          correct: false
+        - text: "книгах"
+          correct: false
+        - text: "книжки"
+          correct: false
+      explanation: "Feminine nouns ending in -а replace it with -и: книги."
+    - question: "What is the plural form of the adjective новий (new)?"
+      options:
+        - text: "нові"
+          correct: true
+        - text: "нова"
+          correct: false
+        - text: "нове"
+          correct: false
+        - text: "новій"
+          correct: false
+      explanation: "All adjectives use the single plural ending -і regardless of gender: нові."
+    - question: "What is the plural of ніж (knife)?"
+      options:
+        - text: "ножі"
+          correct: true
+        - text: "ножа"
+          correct: false
+        - text: "ножів"
+          correct: false
+        - text: "ніжа"
+          correct: false
+      explanation: "The і in ніж alternates to о, and the ending -і is added: ножі."
+    - question: "What is the plural of людина (person)?"
+      options:
+        - text: "люди"
+          correct: true
+        - text: "людини"
+          correct: false
+        - text: "людей"
+          correct: false
+        - text: "людина"
+          correct: false
+      explanation: "Люди is an irregular plural. The stem changes completely from людина."
+    - question: "What is the plural of око (eye)?"
+      options:
+        - text: "очі"
+          correct: true
+        - text: "ока"
+          correct: false
+        - text: "окна"
+          correct: false
+        - text: "очей"
+          correct: false
+      explanation: "Очі is an irregular plural from око. The stem changes unexpectedly."
+    - question: "What is the plural of сестра (sister)?"
+      options:
+        - text: "сестри"
+          correct: true
+        - text: "сестру"
+          correct: false
+        - text: "сестер"
+          correct: false
+        - text: "сестрі"
+          correct: false
+      explanation: "Feminine nouns ending in -а replace it with -и: сестри. Note the stress shifts too."
+
+- type: group-sort
+  title: "Sort the Nouns"
+  instruction: "Sort these nouns into the correct category."
+  groups:
+    - name: "Countable (has singular and plural)"
+      items:
+        - "книга"
+        - "студент"
+        - "місто"
+        - "кіт"
+        - "брат"
+    - name: "Uncountable (singular only)"
+      items:
+        - "молоко"
+        - "цукор"
+        - "повітря"
+    - name: "Plural-only (no singular form)"
+      items:
+        - "гроші"
+        - "двері"
+        - "ножиці"
+        - "окуляри"

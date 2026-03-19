@@ -1,122 +1,45 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "2001",
+    "COMPUTED_WORD_COUNT": "2242",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "166.8",
-    "COMPUTED_ACTIVITY_COUNT": "5",
-    "COMPUTED_VOCAB_COUNT": "10",
-    "COMPUTED_ENGAGEMENT_COUNT": "4",
-    "COMPUTED_IMMERSION_PERCENT": "22.6",
+    "COMPUTED_WORD_PERCENT": "186.8",
+    "COMPUTED_ACTIVITY_COUNT": "2",
+    "COMPUTED_VOCAB_COUNT": "6",
+    "COMPUTED_ENGAGEMENT_COUNT": "2",
+    "COMPUTED_IMMERSION_PERCENT": "12.4",
     "COMPUTED_IMMERSION_TARGET": "15-25%",
-    "COMPUTED_RICHNESS_SCORE": "82",
-    "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3, tables: 0/2",
+    "COMPUTED_RICHNESS_SCORE": "80",
+    "COMPUTED_RICHNESS_THRESHOLD": "60",
+    "COMPUTED_RICHNESS_GAPS": "video_embeds: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 219",
-      "text": "Non-present verb 'прийшо́в' (past tense, VESUM: verb:perf:past:m) in M18. Only present tense available before M36.",
-      "fix": "Replace 'прийшо́в' with present tense form or English."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 221",
-      "text": "Non-present verb 'бу́де' (futr tense, VESUM: verb:imperf:futr:s:3) in M18. Only present tense available before M36.",
-      "fix": "Replace 'бу́де' with present tense form or English."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 223",
-      "text": "Non-present verb 'приї́хали' (past tense, VESUM: verb:perf:past:p) in M18. Only present tense available before M36.",
-      "fix": "Replace 'приї́хали' with present tense form or English."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 223",
-      "text": "Non-nominative 'ро́дом' (instrumental, VESUM: noun:inanim:m:v_oru) in M18. Only nominative case allowed before M25.",
-      "fix": "Replace 'ро́дом' (instrumental) with its nominative form or use English equivalent."
-    },
-    {
-      "type": "MORPHOLOGICAL_VIOLATION",
-      "severity": "HIGH",
-      "location": "~line 227",
-      "text": "Accusative 'ка́ву' (VESUM: noun:inanim:f:v_zna) in M18. Accusative not taught until M25.",
-      "fix": "Replace 'ка́ву' (accusative) with nominative form or use English equivalent."
-    },
-    {
-      "type": "STRESS_MISMATCH",
-      "severity": "HIGH",
-      "location": "~line 220",
-      "text": "Wrong stress: 'мо́я' → should be 'моя́'",
-      "fix": "Replace 'мо́я' with 'моя́'."
-    },
-    {
-      "type": "STRESS_UNKNOWN",
-      "severity": "INFO",
-      "location": "~line 221",
-      "text": "Stressed word not in dictionary: обі́д (обід)",
-      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
-    },
-    {
-      "type": "STRESS_UNKNOWN",
-      "severity": "INFO",
-      "location": "~line 227",
-      "text": "Stressed word not in dictionary: дя́кую (дякую)",
-      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
-    }
-  ],
+  "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/questions-and-negation.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.log\n\n\n========================================\n\n📋 Auditing: A1 M18 — Questions & Negation\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/questions-and-negation.md | Target: 1200 words\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Template violations: 1 critical, 0 warnings, 0 info\n     🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple headers contain 'Introduction': Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation), Культурний контекст та ALF (Cultural Context and ALF)\n\n  ⚠️ HYDRATION NOTE: Outline sums to 1400, exceeding word_target 1200\n     Additional 200 words (allowed for content depth)\n\n  📊 Section Word Analysis:\n     Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)   296 /  250  ✅ (+46)\n     Презентація: Питальні конструкції (Presentation: Interrogative Structures)                 363 /  325  ✅ (+38)\n     Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)    211 /  250  ⚠️ (-39)\n     Продукція: Комунікативні сценарії (Production: Communicative Scenarios)                    249 /  250  ✅ (-1)\n     З'єднуємо речення (Joining Sentences)                                                      333 /  200  ✅ (+133)\n     Культурний контекст та ALF (Cultural Context and ALF)                                      161 /  125  ✅ (+36)\n     ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                                     1613 / 1400  ✅ (+213)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2001/1200 (raw: 2133)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 22.6% (target 15-25% (M18))\n\n📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:\n  🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple headers contain 'Introduction': Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation), Культурний контекст та ALF (Cultural Context and ALF)\n     → FIX: RENAME one header to NOT contain 'Introduction'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 1 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/questions-and-negation.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\nCritical Failures:\n  • 1 Critical Template Violations\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.log for details)\n\nRunning RAG word verification...\nVerifying: questions-and-negation.md\n  VESUM misses: 3 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 34370.15it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 122 | VESUM: 119 (97.5%) | RAG: 1 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/questions-and-negation-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 136/139 (98%) verified\n⚠️ VESUM not found (3): Львова, Оля, Шо",
-  "h2_sections": "1. Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)\n2. Презентація: Питальні конструкції (Presentation: Interrogative Structures)\n3. Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)\n4. Продукція: Комунікативні сценарії (Production: Communicative Scenarios)\n5. З'єднуємо речення (Joining Sentences)\n6. Культурний контекст та ALF (Cultural Context and ALF)",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/questions-and-negation.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/questions-and-negation.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M18 — Questions and Negation\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/questions-and-negation.md | Target: 1200 words\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  ⚠️ HYDRATION NOTE: Outline sums to 1400, exceeding word_target 1200\n     Additional 200 words (allowed for content depth)\n\n  📊 Section Word Analysis:\n     Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)   317 /  200  ✅ (+117)\n     Презентація: Питальні конструкції (Presentation: Interrogative Structures)                 372 /  300  ✅ (+72)\n     Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)    467 /  300  ✅ (+167)\n     Продукція: Комунікативні сценарії (Production: Communicative Scenarios)                    339 /  250  ✅ (+89)\n     З'єднуємо слова та ідеї (Connecting Words and Ideas)                                       283 /  200  ✅ (+83)\n     Культурний контекст та ALF (Cultural Context and ALF)                                      169 /  150  ✅ (+19)\n     ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                                     1947 / 1400  ✅ (+547)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2242/1200 (raw: 2299)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 2/1\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ✅ 9/10 (High)\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    ⚠️ 12.4% (target 15-25%, within tolerance (M18))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/questions-and-negation-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/questions-and-negation.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: questions-and-negation.md\n  VESUM misses: 1 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 28767.52it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 97 | VESUM: 96 (99.0%) | RAG: 0 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/questions-and-negation-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 102/103 (99%) verified\n⚠️ VESUM not found (1): шо",
+  "h2_sections": "1. Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)\n2. Презентація: Питальні конструкції (Presentation: Interrogative Structures)\n3. Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)\n4. Продукція: Комунікативні сценарії (Production: Communicative Scenarios)\n5. З'єднуємо слова та ідеї (Connecting Words and Ideas)\n6. Культурний контекст та ALF (Cultural Context and ALF)",
   "vesum_stats": {
-    "total": 139,
-    "vesum_hits": 136,
+    "total": 103,
+    "vesum_hits": 102,
     "rag_hits": 0,
-    "not_found": 3,
+    "not_found": 1,
     "rag_errors": 0,
     "proper_names": 0,
     "by_source": {
       "prose": {
-        "total": 122,
-        "vesum_hits": 119,
-        "not_found": 3
+        "total": 97,
+        "vesum_hits": 96,
+        "not_found": 1
       },
       "activities": {
-        "total": 17,
-        "vesum_hits": 17,
+        "total": 6,
+        "vesum_hits": 6,
         "not_found": 0
       }
     }
   },
   "vesum_not_found": [
     {
-      "original": "Львова",
-      "clean": "львова",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "Оля",
-      "clean": "оля",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "Шо",
+      "original": "шо",
       "clean": "шо",
       "source": "prose",
       "vesum": false,
@@ -126,5 +49,5 @@
       "status": "❌"
     }
   ],
-  "content_hash": "3036d51ff375c6b2"
+  "content_hash": "97a0f1c4297a56bd"
 }

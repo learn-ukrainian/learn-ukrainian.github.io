@@ -1,20 +1,11 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1570
-deviations:
-  - section: "All sections"
-    reason: "No deviations from plan. All H2 sections present, all points covered."
+word_count: 1399
+deviations: []
 frictions: []
 research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Aspect conflict examples — verify that all infinitives used with буду are imperfective"
-  - "Genitive time expressions — наступного тижня/року treated as memorized chunks per plan"
-  - "Synthetic future FYI section — confirm recognition-only framing is appropriate for A1"
-  - "Dialogue naturalness — all dialogues have location markers and 4+ lines"
-rag_tools_used:
-  - "search_text: 'майбутній час буду інфінітив складений' grade=4 → Found conjugation tables from Кравцова (p.108-109), Варзацька (p.132-133), Захарійчук (p.150)"
-  - "search_text: 'плани на вихідні що будеш робити завтра' → Found dialogue about plans (Кравцова p.136), future tense in context (Заболотний Grade 8 p.90)"
-  - "verify_words: 20/20 target vocabulary confirmed in VESUM"
-  - "verify_words: 14/14 additional forms confirmed (наступного, тижня, року, працюватиму, etc.)"
-  - "verify_lemma: бути → 30 forms confirmed, all 6 future forms verified"
+  - "Check that compound future rules are clearly and accurately explained."
+  - "Check that the aspect constraint (imperfective only) is well-communicated to prevent learner errors."
+rag_tools_used: []

@@ -1,87 +1,127 @@
-        # Fix ALL 16 issue(s) in `mine-and-yours`
+        # Fix ALL 24 issue(s) in `mine-and-yours`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 16 issues. You must produce fixes for all 16.**
-        **After you finish, count your fixes. If the count is less than 16, go back and fix the ones you missed.**
+        **There are 24 issues. You must produce fixes for all 24.**
+        **After you finish, count your fixes. If the count is less than 24, go back and fix the ones you missed.**
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'знахідок' (genitive, VESUM: noun:inanim:p:v_rod) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'знахідок' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 7
+**What:** Non-nominative 'знахі́док' (genitive, VESUM: noun:inanim:p:v_rod) in M20. Only nominative case allowed before M25.
+**How to fix:** Replace 'знахі́док' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 3
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'знахідок' (genitive, VESUM: noun:inanim:p:v_rod) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'знахідок' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 9
+**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
+**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 57
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'українською' (instrumental, VESUM: noun:inanim:f:v_oru) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'українською' (instrumental) with its nominative form or use English equivalent.
-**Where:** ~line 45
+**What:** Accusative 'ма́му' (VESUM: noun:anim:f:v_zna) in M20. Accusative not taught until M25.
+**How to fix:** Replace 'ма́му' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 63
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 71
+**What:** Accusative 'свою́' (VESUM: adj:f:v_zna:pron:pos) in M20. Accusative not taught until M25.
+**How to fix:** Replace 'свою́' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 64
 
 ### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'книгу' (VESUM: noun:inanim:f:v_zna) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'книгу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 77
+**What:** Accusative 'ма́му' (VESUM: noun:anim:f:v_zna) in M20. Accusative not taught until M25.
+**How to fix:** Replace 'ма́му' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 64
 
 ### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'свою' (VESUM: adj:f:v_zna:pron:pos) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'свою' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 78
+**What:** Imperative 'Дава́йте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Дава́йте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 74
 
 ### Fix 7: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'книгу' (VESUM: noun:inanim:f:v_zna) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'книгу' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 78
+**What:** Non-nominative 'знахі́док' (genitive, VESUM: noun:inanim:p:v_rod) in M20. Only nominative case allowed before M25.
+**How to fix:** Replace 'знахі́док' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 99
 
 ### Fix 8: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'свою' (VESUM: adj:f:v_zna:pron:pos) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'свою' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 82
+**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
+**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 121
 
 ### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'маму' (VESUM: noun:anim:f:v_zna) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'маму' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 82
-
-### Fix 10: MORPHOLOGICAL_VIOLATION
-**What:** Accusative 'маму' (VESUM: noun:anim:f:v_zna) in M20. Accusative not taught until M25.
-**How to fix:** Replace 'маму' (accusative) with nominative form or use English equivalent.
-**Where:** ~line 83
-
-### Fix 11: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Давайте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Давайте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 103
-
-### Fix 12: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 118
-
-### Fix 13: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
+**What:** Accusative 'маши́ну' (VESUM: noun:inanim:f:v_zna) in M20. Accusative not taught until M25.
+**How to fix:** Replace 'маши́ну' (accusative) with nominative form or use English equivalent.
 **Where:** ~line 122
 
-### Fix 14: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'вам' (dative, VESUM: noun:anim:p:v_dav:pron:pers:2) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'вам' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 175
+### Fix 10: MORPHOLOGICAL_VIOLATION
+**What:** Accusative 'свою́' (VESUM: adj:f:v_zna:pron:pos) in M20. Accusative not taught until M25.
+**How to fix:** Replace 'свою́' (accusative) with nominative form or use English equivalent.
+**Where:** ~line 122
 
-### Fix 15: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'їх' (genitive, VESUM: noun:unanim:p:v_rod:pron:pers:3) in M20. Only nominative case allowed before M25.
-**How to fix:** Replace 'їх' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 188
+### Fix 11: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'чий' (m) + 'чия́' (f)
+**How to fix:** Change 'чий' to match the gender/case of 'чия́', or vice versa.
+**Where:** ~line 17
 
-### Fix 16: LOW_ENGAGEMENT
-**What:** Only 0 engagement boxes (minimum: 3 for A1)
-**How to fix:** Add 3 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+### Fix 12: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'ї́хній' (f/m) + 'ї́хня' (f)
+**How to fix:** Change 'ї́хній' to match the gender/case of 'ї́хня', or vice versa.
+**Where:** ~line 50
+
+### Fix 13: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'ї́хня' (f) + 'ї́хнє' (n)
+**How to fix:** Change 'ї́хня' to match the gender/case of 'ї́хнє', or vice versa.
+**Where:** ~line 50
+
+### Fix 14: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'ї́хнє' (n) + 'ї́хні' (p)
+**How to fix:** Change 'ї́хнє' to match the gender/case of 'ї́хні', or vice versa.
+**Where:** ~line 50
+
+### Fix 15: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'чий' (m) + 'знахі́док' (p)
+**How to fix:** Change 'чий' to match the gender/case of 'знахі́док', or vice versa.
+**Where:** ~line 99
+
+### Fix 16: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'чия́' (f) + 'чиє́' (n)
+**How to fix:** Change 'чия́' to match the gender/case of 'чиє́', or vice versa.
+**Where:** ~line 99
+
+### Fix 17: STRESS_MISMATCH
+**What:** Wrong stress: 'знахі́док' → should be 'зна́хідок'
+**How to fix:** Replace 'знахі́док' with 'зна́хідок'.
+**Where:** ~line 3
+
+### Fix 18: STRESS_UNKNOWN
+**What:** Stressed word not in dictionary: чиї́ (чиї)
+**How to fix:** Verify stress manually — word not found in ukrainian-word-stress dictionary.
+**Where:** ~line 31
+
+### Fix 19: STRESS_UNKNOWN
+**What:** Stressed word not in dictionary: гро́ші (гроші)
+**How to fix:** Verify stress manually — word not found in ukrainian-word-stress dictionary.
+**Where:** ~line 34
+
+### Fix 20: STRESS_MISMATCH
+**What:** Wrong stress: 'брати́' → should be 'бра́ти'
+**How to fix:** Replace 'брати́' with 'бра́ти'.
+**Where:** ~line 35
+
+### Fix 21: STRESS_MISMATCH
+**What:** Wrong stress: 'його́' → should be 'йо́го'
+**How to fix:** Replace 'його́' with 'йо́го'.
+**Where:** ~line 43
+
+### Fix 22: STRESS_UNKNOWN
+**What:** Stressed word not in dictionary: її́ (її)
+**How to fix:** Verify stress manually — word not found in ukrainian-word-stress dictionary.
+**Where:** ~line 44
+
+### Fix 23: STRESS_UNKNOWN
+**What:** Stressed word not in dictionary: дя́кую (дякую)
+**How to fix:** Verify stress manually — word not found in ukrainian-word-stress dictionary.
+**Where:** ~line 103
+
+### Fix 24: LOW_ENGAGEMENT
+**What:** Only 0 engagement boxes (minimum: 1 for A1)
+**How to fix:** Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
 **Where:** (whole module)
 
 ### Other Audit Failures
@@ -140,6 +180,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 
 ## Verification Tools (USE THEM)
@@ -161,7 +202,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 16 issues listed above — every single one, not a subset
+        1. Fix ALL 24 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

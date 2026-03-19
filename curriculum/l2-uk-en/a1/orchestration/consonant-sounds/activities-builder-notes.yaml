@@ -2,14 +2,14 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 6
 deviations:
-  - "None — all 6 activities match plan activity_hints exactly in type, focus, and item count"
+  - "classify #1 has 17 total items (plan said 15) — added Ґ to voiced category since the lesson covers it"
+  - "classify #2 has 14 total items (plan said 8) — expanded to cover more lesson examples for better practice"
+  - "Quiz includes 2 conceptual questions (Г sound, no-devoicing rule) beyond pure voiced/voiceless — these are key lesson objectives"
 frictions:
-  - type: NONE
-    description: "No frictions encountered"
-    proposed_fix: "N/A"
-unverified_terms:
-  - "None — all 26 Ukrainian words verified against VESUM (26/26 found)"
+  - type: SCHEMA_MISMATCH
+    description: "classify schema uses 'categories' with 'label' + 'items', not 'groups' with 'name' + 'items' like group-sort"
+    proposed_fix: "N/A — followed correct schema"
+unverified_terms: []
 review_focus:
-  - "classify (hard/soft): items include parenthetical context (e.g., 'лук (Л before У)') — verify renderer handles this gracefully"
-  - "match-up: pairs include parenthetical labels '(voiced)' / '(voiceless)' for clarity — verify this doesn't confuse the matching UI"
-  - "image-to-letter emoji for beetle: used 🪲 — verify cross-platform emoji support; fallback could be 🐞"
+  - "classify #2 (hard/soft): items use format 'Л in лук' — verify renderer handles this display format correctly"
+  - "Quiz items 9-10 test conceptual knowledge (Г sound type, devoicing rule) rather than pure hands-on-ears; appropriate for A1 phonetics objectives"

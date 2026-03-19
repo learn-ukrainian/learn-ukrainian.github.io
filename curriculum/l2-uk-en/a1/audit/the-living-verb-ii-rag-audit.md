@@ -1,29 +1,26 @@
 # RAG Verification: the-living-verb-ii
 
-**Date:** 2026-03-18 03:39 UTC | **Words checked:** 121 | **VESUM coverage:** 107/121 (88.4%)
+**Date:** 2026-03-19 05:26 UTC | **Words checked:** 133 | **VESUM coverage:** 122/133 (91.7%)
 
 ## Summary
-- ✅ Verified (VESUM): 107
+- ✅ Verified (VESUM): 122
 - ⚠️ Partial (RAG only): 1
-- ❌ Not found: 13
+- ❌ Not found: 10
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| аю | prose | ✗ | ✗ | ✗ |
-| ає | prose | ✗ | ✗ | ✗ |
-| аєш | prose | ✗ | ✗ | ✗ |
-| имо | prose | ✗ | ✗ | ✗ |
-| ите | prose | ✗ | ✗ | ✗ |
+| бачеш | prose | ✗ | ✗ | ✗ |
+| имо | activities | ✗ | ✗ | ✗ |
+| ите | activities | ✗ | ✗ | ✗ |
 | ити | prose | ✗ | ✗ | ✗ |
-| ить | prose | ✗ | ✗ | ✗ |
-| иш | prose | ✗ | ✗ | ✗ |
-| сь | prose | ✗ | ✗ | ✗ |
-| ють | prose | ✗ | ✗ | ✗ |
-| ємо | prose | ✗ | ✗ | ✗ |
-| єте | prose | ✗ | ✗ | ✗ |
-| єш | prose | ✗ | ✗ | ✗ |
+| ить | activities | ✗ | ✗ | ✗ |
+| иш | activities | ✗ | ✗ | ✗ |
+| просемо | prose | ✗ | ✗ | ✗ |
+| робеш | prose | ✗ | ✗ | ✗ |
+| їджу | prose | ✗ | ✗ | ✗ |
+| їстю | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
@@ -35,4 +32,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 121 | 107 | 13 |
+| Prose (.md) | 83 | 76 | 6 |
+| Activities (.yaml) | 50 | 46 | 4 |

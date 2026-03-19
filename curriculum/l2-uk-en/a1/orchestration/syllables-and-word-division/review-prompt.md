@@ -46,16 +46,19 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1520
+word_count: 1465
 deviations: []
 frictions: []
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Check that the emphasis on counting vowels as syllables is clear and mathematically precise."
-  - "Verify the explanation of orthographic vs phonetic division is appropriate and understandable for A1."
-  - "Ensure no disallowed grammar constructs were used in the short dialogues."
+  - "Check that only single quotes are used in YAML strings."
+  - "Verify strict adherence to exact H2 headings and outline."
+  - "Verify that all 12 vocabulary terms are defined in YAML and used in content."
+  - "Check that no capitalized stress marks were included."
+  - "Verify zero Russianisms and correct application of 'Це + noun' pattern only."
 rag_tools_used:
-  - "search_text: 'Syllable structure Open and closed syllables' → Guided the pedagogy toward visual vowel counting (Zabolotnyi Grade 5) and word-division rules."
+  - "read_file: checked textbooks via pre-generated research file"
 ```
 Focus your review on the `review_focus` items above.
 
@@ -80,14 +83,14 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Rhythm Coach
-Word count:       2016 / 1200 (168.0%)
+Word count:       1596 / 1200 (133.0%)
 Activities:       6
 Vocabulary items: 20
-Engagement boxes: 2
-Immersion:        11.2% (target: 5-15%)
-Richness:         80% (threshold: 60%)
-Richness gaps:    video_embeds: 0/2
-Audit status:     PASS
+Engagement boxes: 0
+Immersion:        6.8% (target: 5-15%)
+Richness:         53% (threshold: 60%)
+Richness gaps:    engagement: 0/2, examples: 4/8, video_embeds: 0/2
+Audit status:     FAIL
 ```
 
 **Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
@@ -109,7 +112,26 @@ Audit status:     PASS
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-(No deterministic issues found -- D.0 pre-screen clean)
+1. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 43
+   Text: Verb 'стрів' (VESUM: verb:perf:past:m) in pre-verb module M5. Verbs are forbidden before M15.
+   Fix: Replace verb 'стрів' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+2. **[RUSSICISM_OR_NONSTANDARD]** (severity: MEDIUM)
+   Location: ~line 45
+   Text: Non-standard form 'перенос' — prefer: перенесення
+   Fix: Replace 'перенос' with 'перенесення'
+3. **[AGREEMENT_ERROR]** (severity: HIGH)
+   Location: ~line 45
+   Text: Agreement mismatch: 'се' (n) + 'перенос' (m)
+   Fix: Change 'се' to match the gender/case of 'перенос', or vice versa.
+4. **[AGREEMENT_ERROR]** (severity: HIGH)
+   Location: ~line 61
+   Text: Agreement mismatch: 'сільський' (m) + 'сіль' (f)
+   Fix: Change 'сільський' to match the gender/case of 'сіль', or vice versa.
+5. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
+   Location: (whole module)
+   Text: Only 0 engagement boxes (minimum: 1 for A1)
+   Fix: Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
 
 ---
 
@@ -117,18 +139,19 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 112 | **VESUM coverage:** 103/112 (92.0%)
+**Words checked:** 99 | **VESUM coverage:** 89/99 (89.9%)
 
-**❌ Not found in VESUM or textbooks (9):**
-- `ву` (source: prose)
+**❌ Not found in VESUM or textbooks (10):**
+- `блі` (source: prose)
+- `Бі` (source: prose)
+- `вер` (source: prose)
+- `ву` (source: activities)
 - `дж` (source: prose)
 - `дз` (source: prose)
-- `кра` (source: prose)
-- `ли` (source: prose)
-- `ло` (source: prose)
+- `ка` (source: prose)
+- `ло` (source: activities)
 - `ль` (source: prose)
-- `ст` (source: prose)
-- `ібліотека` (source: activities)
+- `стр` (source: prose)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 

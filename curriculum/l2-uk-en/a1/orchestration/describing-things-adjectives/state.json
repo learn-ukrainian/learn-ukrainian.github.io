@@ -23,12 +23,43 @@
       }
     },
     "content": {
-      "status": "failed",
-      "ts": "2026-03-18T23:54:04Z",
+      "status": "complete",
+      "ts": "2026-03-19T03:35:19Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T03:35:52Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-7-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T03:38:11Z",
+      "task_id": "v5-describing-things-adjectives-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T03:47:42Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

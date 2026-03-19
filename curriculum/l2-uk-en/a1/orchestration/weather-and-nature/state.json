@@ -24,7 +24,39 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T14:31:49Z",
+      "ts": "2026-03-19T05:57:05Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T06:13:43Z",
+      "attempts": 3,
+      "note": "exhausted",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T06:15:42Z",
+      "task_id": "v5-weather-and-nature-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T06:28:21Z",
+      "attempts": 5,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "claude",

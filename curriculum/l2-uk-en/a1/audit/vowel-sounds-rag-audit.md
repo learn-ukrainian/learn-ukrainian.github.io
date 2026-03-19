@@ -1,9 +1,9 @@
 # RAG Verification: vowel-sounds
 
-**Date:** 2026-03-18 21:42 UTC | **Words checked:** 61 | **VESUM coverage:** 60/61 (98.4%)
+**Date:** 2026-03-19 00:56 UTC | **Words checked:** 51 | **VESUM coverage:** 50/51 (98.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 60
+- ✅ Verified (VESUM): 50
 - ⚠️ Partial (RAG only): 0
 - ❌ Not found: 1
 
@@ -17,5 +17,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 56 | 55 | 1 |
+| Prose (.md) | 46 | 45 | 1 |
 | Activities (.yaml) | 5 | 5 | 0 |

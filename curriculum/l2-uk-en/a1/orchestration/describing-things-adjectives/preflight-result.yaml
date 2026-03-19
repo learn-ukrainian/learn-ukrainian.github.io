@@ -1,31 +1,23 @@
 status: ISSUES_FOUND
-issue_count: 3
-high_count: 3
+issue_count: 2
+high_count: 0
 issues:
 - type: CONTRADICTION
-  location: Rule 1 vs Rule 6 (Grammar Allowlist)
-  problem: Rule 1 (A1.1 Allowlist) strictly forbids conjugated verbs and imperatives
-    ('Any other structure including conjugated verbs is FORBIDDEN'), while Rule 6
-    (Hard Constraints) explicitly allows 'Simple present tense' and 'Basic imperatives'.
-    For an A1.1 First Contact module, conjugated verbs typically trigger audit failures.
-  suggested_fix: Remove 'Simple present tense' and 'Basic imperatives' from the Rule
-    6 ALLOWED list to align with the M1-M14 Allowlist in Rule 1.
-  severity: HIGH
-- type: CONTRADICTION
-  location: Rule 4 vs Language Quality Rules (Stress Marks)
-  problem: Rule 4 explicitly states 'Do NOT add stress marks (´) to Ukrainian words'
-    because the pipeline handles it. However, the 'Language Quality Rules' section
-    states 'Use lowercase letters with a combining acute accent (´) on the stressed
-    vowel' and lists it as 'RIGHT'. This creates a direct conflict for the generator.
-  suggested_fix: Align both rules to specify that stress marks should NOT be added
-    manually if the pipeline is responsible for them.
-  severity: HIGH
-- type: CONTRADICTION
-  location: Rule 2 (Vocabulary Bank) vs Cumulative Vocabulary
-  problem: Rule 2 commands 'Use ONLY these Ukrainian words' and lists only 15 adjectives.
-    However, the 'What the Learner Already Knows' section lists 91 cumulative words,
-    and Rule 1 examples include nouns (кіт, мама, вчителька) not found in Rule 2.
-    Following Rule 2 literally would prevent the use of any nouns or previous vocabulary.
-  suggested_fix: Clarify that Rule 2 refers to the new target adjectives and that
-    the use of cumulative vocabulary (M1-M10) is encouraged/allowed.
-  severity: HIGH
+  location: Outline / Section 4
+  problem: The instruction to use vocabulary from 'A1-25 (Daily Routine)' directly
+    contradicts the hard constraint 'Do not use vocabulary words the learner hasn't
+    seen' (as only Modules 01-10 are completed). This will likely trigger an audit
+    failure for pedagogy/vocabulary limits.
+  suggested_fix: Remove the requirement to use A1-25 vocabulary or explicitly provide
+    a limited list of 'foreshadowing' words that the model is allowed to introduce
+    in this module.
+  severity: MEDIUM
+- type: PLAN_CONTRADICTION
+  location: Outline / Section 1 & Section 4
+  problem: 'The prompt contains inconsistent module numbering: Section 1 refers to
+    the Gender Code as ''A1-03'' (while the plan and prerequisites list ''a1-07''),
+    and Section 4 refers to upcoming Colors as ''A1-27'' (while plan and context list
+    ''a1-12'').'
+  suggested_fix: Align all sequence references to match the plan and manifest (A1-07
+    for Gender, A1-12 for Colors).
+  severity: LOW

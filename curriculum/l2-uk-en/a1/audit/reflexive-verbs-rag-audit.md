@@ -1,31 +1,31 @@
 # RAG Verification: reflexive-verbs
 
-**Date:** 2026-03-06 05:03 UTC | **Words checked:** 298 | **VESUM coverage:** 292/298 (98.0%)
+**Date:** 2026-03-19 06:02 UTC | **Words checked:** 227 | **VESUM coverage:** 221/227 (97.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 292
-- ⚠️ Partial (RAG only): 2
+- ✅ Verified (VESUM): 221
+- ⚠️ Partial (RAG only): 3
 - ❌ Not found: 3
-- ❓ RAG error (Qdrant unreachable): 1
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| сясь | activities | ✗ | ✗ | ✗ |
+| зупиняєть | activities | ✗ | ✗ | ✗ |
+| сь | prose | ✗ | ✗ | ✗ |
 | ться | prose | ✗ | ✗ | ✗ |
-| цця | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Одеса | prose | ✗ | ✓ | ✗ |
-| Олег | prose | ✗ | ✓ | ✗ |
+| Хрещатик | prose | ✗ | ✓ | ✗ |
+| ш | prose | ✗ | ✓ | ✗ |
+| ю | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 252 | 247 | 3 |
-| Activities (.yaml) | 46 | 45 | 1 |
+| Prose (.md) | 149 | 144 | 2 |
+| Activities (.yaml) | 78 | 77 | 1 |

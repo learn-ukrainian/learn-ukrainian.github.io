@@ -22,15 +22,6 @@
         "agent": "gemini",
         "model": "unknown"
       }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-17T14:49:50Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
     }
   }
 }

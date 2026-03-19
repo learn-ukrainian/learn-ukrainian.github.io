@@ -1,163 +1,194 @@
-# Factual Review (Pass 1)
+**Reviewed-By:** claude-opus-4-6
 
-[watchdog] Output resumed after 160s stall
-## Plan Adherence Summary
+# Рецензія: The Living Verb II
 
-**Content outline points:** 14 total, 13 covered, 0 missing, 1 partial
-**Required vocabulary:** 8 total, 8 present, 0 missing
-**Activity hints:** 3 total, 3 matched, 0 missing
-**Plan Adherence Score:** 9/10
-(10 = all points covered; deduct 1 per MISSING content point, 2 per MISSING required word)
-
-### Plan Point Coverage
-
-- Section "Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)":
-  - [x] Point 1: "Introduction to Second Conjugation verbs (-ити)..." — COVERED (line ~4: "Now you're meeting the second great family — Second Conjugation, the -ити verbs. ... All the verbs in this module describe ongoing or habitual actions")
-  - [x] Point 2: "Cultural Motivator - The Triad of Hospitality..." — COVERED (line ~10: "three things a good host always offers: food, drink, and conversation... їсти, пити, говорити")
-  - [x] Point 3: "Concept check: reviewing the difference between 'doing' (imperfective) and 'completing'..." — COVERED (line ~24: "Remember the difference between doing something and completing something? All the verbs in this module describe ongoing or habitual actions")
-
-- Section "Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)":
-  - [x] Point 1: "Systematic introduction of endings: -ити → -ю, -иш, -ить, -имо, -ите, -ять..." — COVERED (Comparison table: "| я | читаю | говорю |")
-  - [x] Point 2: "State Standard competency (§4.2.4.1): Using 'сидіти' (я сиджу) as the primary model..." — COVERED ("сидіти → я сиджу (NOT ~~я сидю~~)")
-  - [x] Point 3: "Phonetic framing of the 'Labial L' in 'люблю' and 'роблю'..." — COVERED ("Ukrainian inserts an extra л before -ю in the я form. Think of it as your tongue helping your lips transition...")
-  - [x] Point 4: "The irregularity of 'їсти' (to eat)..." — COVERED ("Never say ~~«я їджу»~~ or ~~«я їстю»~~. The correct form is «я їм»")
-  - [x] Point 5: "Distinction between 'бачити' (to see - result/faculty) and 'дивитися' (to watch - process)..." — COVERED ("бачити — to see (result or ability)... дивитися — to watch (deliberate action)")
-
-- Section "Практика: Помилки та автоматизація (Practice: Errors and Automation)":
-  - [x] Point 1: "Contrastive drills to prevent Conjugation Mixing..." — COVERED ("❌ ти робеш → ✅ ти робиш")
-  - [x] Point 2: "Mutation Mastery: intensive 'Я'-form drills..." — COVERED ("ходити → я ходжу (д → дж)", "сидіти → я сиджу", "платити → я плачу")
-  - [x] Point 3: "Sorting exercises: categorization of 1st and 2nd conjugation verbs..." — COVERED ("Can you sort these verbs into First and Second Conjugation?")
-
-- Section "Продукування та культурний контекст (Production and Cultural Context)":
-  - [ ] Point 1: "Contextual Production: describing daily routines and interests using high-frequency collocations such as 'робити домашнє завдання', 'любити природу', and 'говорити українською'." — PARTIAL (The required collocations appear as isolated examples in the Presentation section, but there is no cohesive text or contextual dialogue in the Production section demonstrating daily routines.)
-  - [x] Point 2: "Deep Culture - The Etymology of 'Любити'..." — COVERED ("The verb любити (to love) shares an ancient root with люди...")
-  - [x] Point 3: "Social Ethics of Hospitality: discussing the weight of 'їсти' and 'пити' in hosting..." — COVERED ("In Ukrainian hospitality, їсти and пити carry deep social meaning...")
-
-### Required Vocabulary Coverage
-
-| Word | In Prose? | In Activities? | Status |
-|------|-----------|---------------|--------|
-| говорити | YES | YES | PRESENT |
-| робити | YES | YES | PRESENT |
-| бачити | YES | YES | PRESENT |
-| любити | YES | YES | PRESENT |
-| їсти | YES | YES | PRESENT |
-| пити | YES | YES | PRESENT |
-| ходити | YES | YES | PRESENT |
-| просити | YES | YES | PRESENT |
-
-### Activity Hints Coverage
-
-| Hint Type | Focus | Required Items | Found? | Actual Items |
-|-----------|-------|---------------|--------|-------------|
-| fill-in | Conjugate Second Conjugation verbs | 30 | YES | 8 (in primary block, ~20 across all fill-ins) |
-| match-up | Sort verbs by conjugation type | 20 | YES | 10 (as group-sort) |
-| fill-in | Complete with mutated forms | 15 | YES | 6 |
-*Note: The required item counts for the activities were not fully met, although the types and pedagogical focuses perfectly match the hints.*
-
-### Missing Plan Points (Fix Targets)
-
-- PARTIAL point in "Продукування та культурний контекст":
-  "Contextual Production: describing daily routines and interests using high-frequency collocations such as 'робити домашнє завдання', 'любити природу', and 'говорити українською'."
-
----
-
-## Factual Verification Summary
-
-**Total claims checked:** 7
-**Confirmed [Tier 1]:** 2
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 5
-**Factual Alignment Score:** 10/10
-
-## Confirmed Claims
-
-1. **Second Conjugation endings (-иш, -ить) for verbs like "вчити" and "бачити"**
-   - **Module says:** "Second Conjugation verbs end in -ити ... ти говориш, він говорить, ми говоримо... ти робиш... ми вчимо..."
-   - **Reference says:** "вчу, вчиш, вчить ... бачу, бачиш"
-   - **Source:** [4-klas-ukrayinska-mova-varzatska-2021-1_s0132], [4-klas-ukrmova-zaharijchuk_s0151]
-
-2. **The verb "бачити" does not undergo consonant mutation in the я-form**
-   - **Module says:** "Я бачу сонце." (using 'бачу', not mutated to 'бачю' or similar)
-   - **Reference says:** "бачу, бачиш"
-   - **Source:** [4-klas-ukrmova-zaharijchuk_s0151]
-
-## Discrepancies
-
-None found against the provided reference texts. 
-
-*(Note on VESUM failures: The words flagged as missing from VESUM in the pre-computed metrics (`амо`, `ате`, `говоряю`, `їджу`, `їстю`, `ходю`, `робю`, etc.) are explicitly used as **incorrect distractor options** in the `activities.yaml` or as examples of common learner mistakes in the `Практика: Помилки та автоматизація` section. Their absence from the dictionary is correct and expected.)*
-
-## Unverified Claims
-
-1. "The verb любити (to love) shares an ancient root with люди (people) and людство (humanity). In the Proto-Indo-European language family, the root *lewdh- meant 'to care for, to be drawn toward.'"
-2. "бачити — to see (result or ability)... дивитися — to watch (deliberate action)" (Distinction not covered in provided textbook chunks).
-3. The complete conjugation table for the irregular verb "їсти" (я їм, ти їси, він їсть...).
-4. The conjugation of "пити" with First Conjugation endings (я п'ю, ти п'єш...).
-5. The specific consonant mutation rules (д → дж, с → ш, т → ч) and the Labial 'Л' rule (б, п, в, м, ф + л).
-
-## Verdict
-
-**Status:** PASS
-
----
-
-# Language Review (Pass 2)
-
-**Reviewed-By:** gemini-2.5-pro (RAG-grounded)
-
+**Level:** A1 | **Module:** 16
+**Overall Score:** 7.1/10
 **Status:** FAIL
-**Overall Score:** 7.0/10
+**Reviewed:** 2026-03-19
+
+## Plan Verification
+
+```
+Plan-Content Alignment: PASS (with minor gaps)
+- Sections: 4/4 present (Вступ, Презентація, Практика, Продукування)
+- Vocabulary: 8/8 required present in prose, 4/4 recommended present
+- Grammar scope: PASS — no scope creep detected
+- Objectives: 4/4 addressed
+```
+
+**Plan Adherence Checklist (content_outline.points):**
+
+**Section "Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)":**
+- Introduction to Second Conjugation as second pillar: COVERED — Line 3: 「Today, we are exploring the second pillar of Ukrainian verbal action: the Second Conjugation.」
+- Cultural Motivator — Hospitality Triad (їсти, пити, говорити): COVERED — Line 5: 「їсти (to eat), пити (to drink), and говорити (to speak)」
+- Concept check (imperfective review): COVERED — Line 7 discusses "doing" vs "completing" and anchors to prior knowledge.
+
+**Section "Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)":**
+- Systematic endings + side-by-side comparison: COVERED — Lines 17-24 table shows читати vs говорити.
+- State Standard §4.2.4.1 сидіти model: COVERED — Line 31: 「сидіти (to sit)」 with mutation pattern.
+- Labial L phonetic framing: COVERED — Lines 38-42 explain physical rationale.
+- Irregularity of їсти: COVERED — Lines 44-56 with dedicated table and error examples.
+- бачити vs дивитися distinction: COVERED — Lines 58-64.
+
+**Section "Практика: Помилки та автоматизація (Practice: Errors and Automation)":**
+- Contrastive drills (conjugation mixing): COVERED — Line 73: 「For example, a learner might say *ти робеш*. This is entirely incorrect!」
+- Mutation mastery drills: COVERED — Lines 84-87.
+- Sorting exercises: COVERED — Lines 89-93.
+
+**Section "Продукування та культурний контекст (Production and Cultural Context)":**
+- Contextual production collocations: COVERED — Lines 109-112.
+- Etymology of любити: COVERED — Line 115: 「It comes from the ancient Proto-Indo-European root *\*lewdh-*」
+- Social ethics of hospitality: COVERED — Lines 119-122.
+
+**Activity hints:**
+- fill-in (conjugation): COVERED — activity 1 (8 items) + activity 3 (6 items)
+- match-up (verb sorting): COVERED — activity 2 (10 pairs)
+- fill-in (mutated forms): COVERED — activity 3 specifically targets я-forms with mutations
+
+**Vocabulary required:** All 8 required verbs (говорити, робити, бачити, любити, їсти, пити, ходити, просити) appear in prose AND at least one activity. ✅
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | The "Triad of Hospitality" and etymology of "любити" are engaging and culturally rich, but unintroduced grammar causes confusion. |
-| 2 | Language | 6/10 | <8 | High severity morphological violation: module relies heavily on Accusative case (e.g., "мову", "природу", "каву") which is not taught yet. |
-| 3 | Pedagogy | 6/10 | <7 | Teaches basic sentence structures using cases the student has not learned yet, creating a severe scope violation. |
-| 4 | Activities | 5/10 | <7 | Distractors in multiple-choice questions use completely hallucinated words (e.g., "говоряю", "бачає", "вчемо"), failing VESUM and teaching bad habits. |
-| 5 | Beginner Safety | 6/10 | <7 | Exposing A1 learners to unintroduced grammatical cases and completely fake distractor words makes the module unsafe and confusing. |
-| 6 | LLM Fingerprint | 9/10 | <7 | Natural voice, clear progression, and nice integration of culture into grammar. No generic padding detected. |
-| 7 | Linguistic Accuracy | 9/10 | <9 | Conjugation rules, consonant mutations, and the "labial л" explanations are factually accurate. |
+| 1 | Experience Quality | 7/10 | <7 | Warm hospitality framing but NO callout boxes, no encouragement markers, abrupt Підсумок. Missing "You can now..." celebration beats. |
+| 2 | Language | 8/10 | <8 | Ukrainian grammar is correct throughout. Collocations at lines 110-112 use untaught cases (instrumental/accusative) but as fixed phrases — acceptable. No Russianisms. |
+| 3 | Pedagogy | 8/10 | <7 | Strong PPP structure, excellent error-correction approach. Missing explicit warning that пити is NOT 2nd conjugation despite -ити ending. |
+| 4 | Activities | 8/10 | <7 | 6 activities, good variety (fill-in, match-up, group-sort, quiz, true-false). All items verified correct. Missing activity that produces full sentences. |
+| 5 | Beginner Safety | 7/10 | <7 | "Would I Continue?" 3/5 — no quick wins before dense grammar, no encouragement phrases, no "don't worry" moments. Content is warm but lacks explicit emotional safety markers. |
+| 6 | LLM Fingerprint | 8/10 | <7 | No structural monotony. Sections open differently. No "це не просто" patterns. One minor flag: "Let's" opener used 4x (lines 13, 31, 75, 115) but varied enough. |
+| 7 | Linguistic Accuracy | 8/10 | <9 | Missing critical note that пити is 1st conjugation (п'ю, п'єш), not 2nd — a learner following this module would reasonably assume it's 2nd conjugation. Error examples (їджу, робеш, etc.) correctly marked as incorrect. |
 
-**Weighted Overall:** 7.0/10
+**Weighted Overall:** (7×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 7×1.3 + 8×1.0 + 8×1.5) / 8.9 = (10.5 + 8.8 + 9.6 + 10.4 + 9.1 + 8.0 + 12.0) / 8.9 = 68.4 / 8.9 = **7.7/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN] — no instances found
+- Calques: [CLEAN]
+- Colonial framing: [CLEAN] — no "unlike Russian" comparisons
+- Grammar scope: [MINOR] — accusative/instrumental in collocations (lines 110-112) pre-date their teaching module, but presented as fixed chunks
+- Activity errors: [CLEAN] — all forms verified against VESUM
+- Beginner safety: 3/5 (see below)
+- Factual accuracy: [ISSUE] — пити misclassified by omission (see Critical Issue 3)
 
 ## Critical Issues Found
 
-### Issue 1: Severe Scope Violation (Accusative Case)
-**Location**: `Вступ: Тріада гостинності`, `Презентація: Моделі та мутації`, `Продукування та культурний контекст`, and Vocabulary.
-**Problem**: The content repeatedly uses the Accusative case for direct objects (e.g., `- **Вона любить природу.**`, `- **Я знаю українську мову.**`, `Я сиджу й п'ю каву.`, `- **Я люблю маму.**`). As flagged by the pre-screen, the Accusative case is not taught until M25, making this a major scope violation.
-**Fix**: Replace all feminine Accusative objects with masculine inanimate nouns (where Nominative equals Accusative), infinitives, or drop the objects entirely. For example, replace "природу" with "спорт", "каву" with "чай", and "маму" with "Київ".
+### Issue 1: Zero Engagement Boxes (AUDIT GATE FAILURE)
+- **Location**: Whole module
+- **Problem**: The module contains zero `> [!tip]`, `> [!example]`, `> [!cultural-note]`, `> [!did-you-know]` or similar callout boxes. The audit requires minimum 1 for A1. Richness is 57% (threshold 60%) — engagement boxes are the missing dimension. The blockquotes at lines 33-35 and 40-42 are plain `>` blockquotes, not Obsidian-style callouts.
+- **Fix**: Add at least 2 callout boxes: one `> [!tip]` for the "golden rule" about и vowels (near line 26), and one `> [!cultural-note]` for the hospitality triad (near line 5 or lines 119-122). Also add one `> [!example]` with a mini-dialogue using the hospitality verbs.
 
-### Issue 2: Hallucinated Vocabulary in Activities
-**Location**: `the-living-verb-ii.yaml` (Fill-in activities)
-**Problem**: The multiple-choice distractors for the conjugation exercises use completely fabricated morphology that does not exist in Ukrainian (e.g., `говоряю`, `бачає`, `вчемо`, `просаємо`, `любає`). This fails the VESUM audit and exposes learners to non-existent forms they might accidentally internalize.
-**Fix**: Replace all hallucinated distractors with real Ukrainian words that are grammatically incorrect for the given context (e.g., instead of "говоряю", use "говорить" or "говоримо" as incorrect choices for the "я" form).
+### Issue 2: Підсумок Uses H1 Instead of H2
+- **Location**: Line 124: 「# Підсумок」
+- **Problem**: All other sections use `##` (H2). The summary uses `#` (H1), breaking the document structure hierarchy. The plan doesn't list Підсумок as a separate section, and it shouldn't outrank the main H2 sections.
+- **Fix**: Change `# Підсумок` to `## Підсумок`.
 
-### Issue 3: Invalid Paradigm Distractors
-**Location**: `the-living-verb-ii.yaml` (Conjugation Knowledge Check)
-**Problem**: One of the distractor options for Second Conjugation endings is `-аш, -ать, -амо, -ате, -ають`. These are not valid verb endings in Ukrainian and fail VESUM checks.
-**Fix**: Replace these with plausible but incorrect endings, such as the standard First Conjugation endings with an alternative vowel, or just the correct First Conjugation endings (`-аєш, -ає, -аємо, -аєте, -ають`).
+### Issue 3: пити Silently Grouped with 2nd Conjugation
+- **Location**: Section "Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)", line 5, and section "Продукування та культурний контекст (Production and Cultural Context)", line 112
+- **Problem**: The module introduces пити as part of the Hospitality Triad alongside 2nd conjugation verbs (їсти, говорити) but never warns that пити is actually 1st conjugation (п'ю, п'єш, п'є — uses є, not и). VESUM confirms: п'ю, п'єш, п'є, п'ємо, п'єте, п'ють — all 1st conjugation forms. A learner following this module would reasonably try to conjugate *я пию, *ти пиїш — nonexistent forms. The builder notes identify this friction but the content doesn't address it.
+- **Fix**: Add an explicit warning box near line 112 or in section "Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)": "Despite ending in -ити, пити is actually a First Conjugation verb: п'ю, п'єш, п'є. Don't be fooled by the infinitive ending!"
+
+### Issue 4: No Encouragement or Emotional Safety Markers
+- **Location**: Whole module
+- **Problem**: Zero explicit encouragement phrases ("Great!", "You've got this!", "Don't worry"), zero "don't worry" moments, and zero "You can now..." validation markers. The Beginner Safety rubric requires ≥3 encouragement phrases, ≥2 "don't worry" moments, and ≥2 validation markers. The closest the module gets is "Are you ready to join the table?" (line 9), which is inviting but not encouraging.
+- **Fix**: Add at minimum: (1) one encouragement phrase after the first table (line 25-26), (2) one "don't worry" moment near the mutation section (line 29), (3) "You can now..." celebration in Підсумок.
+
+### Issue 5: Immersion Below Target Band
+- **Location**: Whole module
+- **Problem**: Audit shows 8.3% immersion. Module 16 falls in the "Modules 11-20: 25-45% Ukrainian" band. At 8.3%, the module is far below the minimum 25% target. Most Ukrainian appears only in bold vocabulary words and tables, with almost all prose in English.
+- **Fix**: Add Ukrainian mini-dialogues or Reading Practice blocks after sections "Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)" and "Продукування та культурний контекст (Production and Cultural Context)". Example: a short dialogue of a guest arriving at a Ukrainian home using the hospitality triad verbs. This would boost immersion while reinforcing the cultural theme.
+
+### Issue 6: D.0 Morphological Violations — Collocations with Untaught Cases
+- **Location**: Lines 110-112 in section "Продукування та культурний контекст (Production and Cultural Context)"
+- **Original**: 「говорити українською」(instrumental), 「любити природу」(accusative), 「пити каву」(accusative)
+- **Problem**: D.0 flags instrumental and accusative forms not taught until M25. These are standard collocations presented as fixed phrases, which is pedagogically defensible at A1. However, the module doesn't signal these as "learn as a chunk" — a learner might try to analyze the case ending.
+- **Fix**: PARTIALLY DISMISS. Add a brief note: "Learn these as fixed phrases for now — we'll explore the grammar behind the word endings in a later module." This addresses the D.0 flag without removing essential collocations.
 
 ## Ukrainian Language Issues
-- `Я знаю українську мову.` — uses Accusative feminine, violating A1 scope.
-- `Вона любить природу.` — uses Accusative feminine, violating A1 scope.
-- `Я сиджу й п'ю каву.` — uses Accusative feminine, violating A1 scope.
-- `Люди люблять правду.` — uses Accusative feminine, violating A1 scope.
-- Distractors like `говоряю`, `бачає`, `вчемо`, `просаємо`, `любає` are hallucinated non-words.
 
-## Fix Plan to Reach PASS
-1. Audit and replace all instances of Accusative feminine nouns with Nominative-equivalent masculine inanimate nouns or infinitives across the markdown content and vocabulary.
-2. Review all multiple-choice activities and replace hallucinated distractors with grammatically incorrect but real Ukrainian verb forms.
-3. Fix the invalid paradigm distractor in the Conjugation Knowledge Check.
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 56 | 「*я їджу* or *я їстю*」 | N/A — correctly marked as errors | Error example (OK) |
+| 73 | 「*ти робеш*」 | N/A — correctly marked as error | Error example (OK) |
+| 77-79 | 「*ти бачеш*」「*він ходе*」「*ми просемо*」 | N/A — correctly marked as errors | Error examples (OK) |
+| 112 | пити treated as 2nd conjugation by context | Add explicit 1st conjugation warning | Misclassification by omission |
+
+All error examples are correctly marked with italics (*) as incorrect forms — this is good pedagogy. No Russianisms detected. No calques detected.
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 3/5
+- Overwhelmed? **Pass** — pacing is reasonable, grammar is introduced in manageable chunks with tables
+- Instructions clear? **Pass** — always clear what to learn, tables are well-organized
+- Quick wins? **Fail** — 500+ words of content before first activity reference; no inline mini-exercises
+- Ukrainian scary? **Pass** — Ukrainian introduced gently with translations throughout
+- Come back tomorrow? **Fail** — no encouragement phrases, no celebration, abrupt ending without warmth
+
+## Strengths
+- **Excellent error pedagogy**: The module explicitly shows common errors (їджу, робеш, просемо) and corrects them — this is exactly what real Ukrainian teachers do (contrastive drilling).
+- **Strong cultural framing**: The Hospitality Triad is an engaging, memorable hook that gives vocabulary emotional resonance.
+- **Correct linguistics**: All conjugation tables are accurate. The mutation explanations (д→дж, labial+л, с→ш, т→ч) are correct and well-sequenced.
+- **Activity variety**: 6 activities across 5 types (fill-in ×2, match-up, group-sort, quiz, true-false) — good variety for reinforcement.
+- **Etymology of любити**: The PIE root connection to люди is factually grounded and pedagogically memorable.
+
+## Fix Plan to Reach 9/10 (REQUIRED — score is 7.7)
+
+### Experience Quality: 7/10 → 9/10
+**What to fix:**
+1. Add 2-3 `> [!tip]`, `> [!cultural-note]`, `> [!example]` callout boxes — solves engagement=0 audit gate
+2. Line 124: Change `# Підсумок` to `## Підсумок`
+3. Add "You can now..." celebration in Підсумок
+4. Add a mini-dialogue in Ukrainian using hospitality verbs (boosts immersion + engagement + experience)
+
+**Expected score after fix:** 9/10
+
+### Beginner Safety: 7/10 → 9/10
+**What to fix:**
+1. Add ≥3 encouragement phrases (after table at line 25, after mutation section ~line 42, after practice section ~line 87)
+2. Add ≥1 "don't worry" moment near mutations (~line 29: "Don't worry — this pattern is very consistent once you see it a few times")
+3. Add "You can now..." validation in Підсумок
+
+**Expected score after fix:** 9/10
+
+### Linguistic Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Add explicit пити warning — this verb is 1st conjugation (п'ю, п'єш), not 2nd, despite -ити ending. Place near the Hospitality Triad introduction or as a `> [!tip]` callout.
+2. Add "learn as fixed phrases" note for collocations at lines 109-112
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+```
+(9×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 8.8 + 9.6 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
+= 75.5 / 8.9 = 8.5/10
+```
+
+To reach 9.0+, Pedagogy and Activities would also need polish (add inline practice earlier, add a sentence-building activity), but the immediate priority is the 3 failing dimensions above.
+
+## Factual Verification
+
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (not a seminar track)
+- Dates checked: N/A
+- Named figures verified: N/A
+- Primary quotes cross-referenced: N/A
+- Chronological sequence: N/A
+- Claims without research grounding: 0
+- Etymology of любити (PIE *lewdh-): Consistent with research notes line 13. ✅
+- пити as 1st conjugation: Confirmed by VESUM (п'ю, п'єш, п'є). Research notes line 15 say "Regular -ити verb" which is misleading — it's regular but 1st conjugation.
 
 ## Verification Summary
-- Checked Ukrainian text for Russianisms (none found).
-- Checked for pedagogical flow and scope (Accusative scope violation confirmed).
-- Verified pre-screen VESUM failures (hallucinated verb forms confirmed in activities).
-- Checked vocabulary list against text usage (issues with 'каву' and 'мову' confirmed).
+
+- Content lines read: 135
+- Activity items checked: 46 (8 fill-in + 10 match-up + 6 fill-in + 12 group-sort + 6 quiz + 8 true-false — minus 4 duplicate quiz items = 46 unique checks)
+- Ukrainian sentences verified: 24 (all table entries + blockquote examples + error examples)
+- Citations in bank: 25
+- Issues found: 6
 
 ## Verdict
-**Status:** FAIL
-**Rationale:** The module fails due to a severe scope violation (heavy reliance on the Accusative case before it is taught) and the use of hallucinated, non-existent words as distractors in activities, which poses a risk to beginner safety and fails the vocabulary audit.
+
+**FAIL**
+
+Three blocking issues: (1) **Zero engagement boxes** — audit gate failure requiring at minimum 1 callout box. (2) **пити misclassification by omission** — learners will assume it's 2nd conjugation, producing nonexistent forms. (3) **Immersion at 8.3%** vs 25% minimum for M16 — module needs Ukrainian dialogues or reading practice blocks. Fix plan is concrete and achievable in one rebuild pass.

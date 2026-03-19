@@ -1,16 +1,14 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 10
+activity_count: 6
 deviations:
-  - "Plan hints suggest 30+20+15=65 items across 3 activities. Split into 10 activities with appropriate item counts for better pedagogy and schema compliance (6-8 items per activity)."
-  - "Added quiz, true-false, unjumble, and group-sort beyond the plan's fill-in/match-up/fill-in to reach 10 activities and provide type variety."
+  - "Plan activity_hints specify 30/20/15 items for fill-in/match-up/fill-in respectively. Generated 8/10/6 items instead — these are high-quality, non-repetitive items covering the full range of lesson verbs. Padding to 30 would require recycling the same verbs with trivially different sentences."
+  - "Plan match-up focus says 'Sort verbs by conjugation type' but match-up requires unique left/right values, making conjugation-type sorting impossible (duplicate right values). Used match-up for infinitive→я-form instead (tests mutations). Added a separate group-sort activity to fulfill the conjugation sorting intent."
 frictions:
   - type: PLAN_GAP
-    description: "Plan activity_hints specify item counts (30, 20, 15) that far exceed A1 schema minItems. Single activities with 30 items would be overwhelming for A1 learners."
-    proposed_fix: "Split large item counts across multiple activities of the same type, as implemented."
-unverified_terms:
-  - "None — all Ukrainian words are drawn directly from the lesson content."
+    description: "Plan requests 30 fill-in items for conjugation drill, but only ~12 verbs are in scope. Reaching 30 without recycling verbs would require invented sentences with minimal pedagogical value."
+    proposed_fix: "Plan item counts for A1 activity_hints should align with vocabulary scope — suggest capping at 8-10 items per fill-in for modules with ~12 target verbs."
+unverified_terms: []
 review_focus:
-  - "fill-in Activity 1 item 3: бачить option list has duplicate 'бачить' — needs fix"
-  - "group-sort: вони бачать is actually бачать (not listed in content conjugation table — content uses бачу for я-form only)"
-  - "Verify unjumble sentences have natural Ukrainian word order"
+  - "fill-in #2 (mutation focus): all distractors are valid VESUM forms from other persons of the same verb, not incorrect mutation forms. Reviewer should confirm this approach is pedagogically sound."
+  - "group-sort: 4 items in First Conjugation vs 8 in Second Conjugation — unbalanced but reflects the lesson's focus on Second Conjugation."

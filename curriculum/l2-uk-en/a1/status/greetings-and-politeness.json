@@ -2,13 +2,13 @@
   "module": "greetings-and-politeness",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-19T00:23:58.400155Z",
+  "last_audit": "2026-03-19T12:49:54.965872Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T01:29:20.015062Z",
-    "meta": null,
-    "activities": "2026-03-18T01:29:20.015492Z",
-    "vocabulary": "2026-03-18T01:18:54.576565Z",
+    "md": "2026-03-19T03:45:39.693008Z",
+    "meta": "2026-03-19T03:41:13.557928Z",
+    "activities": "2026-03-19T03:48:16.963967Z",
+    "vocabulary": "2026-03-19T03:48:17.003368Z",
     "research": "2026-03-17T07:19:23.712480Z",
     "plan": "2026-03-16T23:41:21.666719Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1550/1200 (raw: 1633) | pedagogy: 1 violations"
+      "message": "1620/1200 (raw: 1646) | pedagogy: 7 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
     },
     "review": {
       "status": "skipped",
@@ -51,8 +51,10 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
+    "blocking_issues": [
+      "Missing required activity types: anagram"
+    ],
+    "pass_count": 3,
     "fail_count": 1,
     "deferred_count": 0
   }

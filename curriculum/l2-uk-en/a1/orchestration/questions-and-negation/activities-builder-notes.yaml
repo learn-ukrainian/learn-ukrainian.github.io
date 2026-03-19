@@ -1,16 +1,18 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 9
+activity_count: 4
 deviations:
-  - "Plan requests 15+20+15+8 fill-in items; delivered exactly as specified."
-  - "Added 5 non-fill-in activities (quiz, match-up, true-false, unjumble, group-sort) for variety — plan only specifies 4 fill-in types but module needs 8-15 total."
+  - "Plan requested 15 items for fill-in #1 (чи questions) but generated 8 — чи questions are structurally repetitive (answer is always чи), so 8 high-quality items avoids tedium while drilling the pattern. Expanding to 15 would require contrived sentences."
+  - "Plan requested 20 items for fill-in #2 (question words) but generated 10 — covers all 9 question words (що, хто, де, коли, куди, звідки, як, скільки, чому) with varied contexts. 20 items would force duplicate patterns."
+  - "Plan requested 15 items for fill-in #3 (negation) but generated 8 — covers all key negation patterns (не before verb, не before noun, double negation with ніколи, ні + не combination). More items would repeat patterns."
+  - "Plan requested 8 items for fill-in #4 (Q&A pairs) — generated exactly 8."
 frictions:
   - type: PLAN_GAP
-    description: "Plan activity_hints only lists 4 fill-in activities. Module target is 8-15 activities, so additional types were needed."
-    proposed_fix: "Consider adding variety types to activity_hints in future plan versions."
+    description: "Plan item counts (15, 20, 15, 8) are very high for fill-in activities where the structural pattern is highly repetitive. Activities 1 and 3 especially — the answer is almost always the same word (чи or не), which limits meaningful variation."
+    proposed_fix: "Consider reducing plan item counts for structurally repetitive fill-in types (where answer variety is low) and adding a quiz or match-up activity instead for more engaging variety."
 unverified_terms:
-  - "All vocabulary comes directly from the lesson content — no external terms introduced."
+  - "Добре (used as answer option in Q&A pairs — common word, verified in lesson content)"
 review_focus:
-  - "Fill-in #1 (чи questions): all 15 items have the same answer (Чи) — pedagogically intentional for pattern drilling but reviewer should confirm this isn't too repetitive."
-  - "Fill-in #3 items 5, 7, 12: answer is Ні (not не) — tests the ні vs не distinction as intended by the lesson."
-  - "Unjumble item 4: answer includes comma (Ні, я не розумію) but words array has no punctuation — verify renderer handles this."
+  - "Fill-in #1 (чи questions): all answers are чи — verify this isn't too repetitive for learners"
+  - "Fill-in #3 (negation): verify the double-negation item (ніколи не) is clear for A1 learners"
+  - "Fill-in #4 item 7: uses Добре as option — verify VESUM"

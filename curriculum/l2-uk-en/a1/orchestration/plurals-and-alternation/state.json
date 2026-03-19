@@ -23,12 +23,43 @@
       }
     },
     "content": {
-      "status": "failed",
-      "ts": "2026-03-18T23:55:10Z",
+      "status": "complete",
+      "ts": "2026-03-19T04:15:39Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T04:16:06Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-8-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T04:18:05Z",
+      "task_id": "v5-plurals-and-alternation-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T04:22:34Z",
+      "attempts": 1,
+      "note": "shallow-review",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

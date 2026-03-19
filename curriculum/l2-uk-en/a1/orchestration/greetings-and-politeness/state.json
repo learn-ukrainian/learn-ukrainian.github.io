@@ -24,8 +24,29 @@
       }
     },
     "content": {
+      "status": "complete",
+      "ts": "2026-03-19T02:31:30Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T02:46:29Z",
+      "attempts": 3,
+      "note": "escalation-claude",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
       "status": "failed",
-      "ts": "2026-03-18T23:52:08Z",
+      "ts": "2026-03-19T02:48:17Z",
+      "note": "activities-schema-invalid",
       "executor": {
         "type": "llm",
         "agent": "gemini",

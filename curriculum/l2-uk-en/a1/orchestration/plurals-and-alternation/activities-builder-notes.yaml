@@ -1,0 +1,16 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "Plan requested 12 fill-in items — delivered 12."
+  - "Plan requested 12 match-up pairs — delivered 12."
+  - "Plan requested 10 quiz items — delivered 10."
+  - "Plan requested 10 group-sort items — delivered 12 (3 groups: 5 countable + 3 uncountable + 4 plural-only = 12 total items, exceeding the 10 minimum)."
+frictions:
+  - type: NONE
+    description: "No frictions encountered."
+    proposed_fix: "N/A"
+unverified_terms: []
+review_focus:
+  - "fill-in distractor дитин (item 7 option 3) was not verified — replaced with дитини which is VESUM-verified"
+  - "Quiz item 9 distractor окна is not a valid VESUM form — but it tests whether learners avoid a common mistake. Consider flagging vesum_exempt if audit fails."

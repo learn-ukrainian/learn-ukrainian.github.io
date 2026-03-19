@@ -24,39 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T05:11:11Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-18T05:21:48Z",
-      "attempts": 2,
-      "note": "dedup-exhausted",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T05:23:57Z",
-      "task_id": "v5-mine-and-yours-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T05:33:26Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-19T07:27:19Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",

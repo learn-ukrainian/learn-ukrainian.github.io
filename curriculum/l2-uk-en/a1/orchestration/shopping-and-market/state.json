@@ -24,7 +24,38 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T07:57:46Z",
+      "ts": "2026-03-19T03:55:25Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-19T04:04:59Z",
+      "attempts": 2,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T04:06:44Z",
+      "task_id": "v5-shopping-and-market-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-19T04:18:10Z",
+      "attempts": 5,
+      "note": "exhausted-content-passes",
       "executor": {
         "type": "llm",
         "agent": "claude",

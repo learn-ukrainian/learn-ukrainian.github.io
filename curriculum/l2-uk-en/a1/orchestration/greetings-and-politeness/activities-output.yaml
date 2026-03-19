@@ -1,0 +1,237 @@
+- type: match-up
+  title: "Match Formal and Informal Greetings"
+  instruction: "Match each Ukrainian greeting or farewell with its English meaning."
+  pairs:
+    - left: "привіт"
+      right: "hello (informal)"
+    - left: "добрий ранок"
+      right: "good morning"
+    - left: "добрий день"
+      right: "good afternoon"
+    - left: "добрий вечір"
+      right: "good evening"
+    - left: "до побачення"
+      right: "goodbye (formal)"
+    - left: "на все добре"
+      right: "all the best"
+    - left: "здрастуйте"
+      right: "hello (formal, slightly old-fashioned)"
+    - left: "бувай"
+      right: "bye (informal)"
+    - left: "дуже приємно"
+      right: "pleased to meet you"
+    - left: "будь ласка"
+      right: "please / you're welcome"
+
+- type: quiz
+  title: "Choose the Right Greeting"
+  instruction: "Pick the most appropriate expression for each situation."
+  items:
+    - question: "You meet your professor at the university at 10 AM. What do you say?"
+      options:
+        - text: "Добрий ранок"
+          correct: true
+        - text: "Привіт"
+          correct: false
+        - text: "Бувай"
+          correct: false
+        - text: "Дякую"
+          correct: false
+      explanation: "A professor is a formal contact, and 10 AM is morning — so you use the formal morning greeting."
+    - question: "You see your close friend on the street. How do you greet them?"
+      options:
+        - text: "Привіт"
+          correct: true
+        - text: "Добрий день, пане"
+          correct: false
+        - text: "Перепрошую"
+          correct: false
+        - text: "До побачення"
+          correct: false
+      explanation: "A close friend is informal, so you use the casual greeting."
+    - question: "It is 7 PM and you are entering a shop. What greeting do you use?"
+      options:
+        - text: "Добрий вечір"
+          correct: true
+        - text: "Добрий ранок"
+          correct: false
+        - text: "Привіт"
+          correct: false
+        - text: "Бувай"
+          correct: false
+      explanation: "After 6 PM you use the evening greeting, and a shop assistant requires a formal register."
+    - question: "You are speaking to a teacher. Should you use ти or ви?"
+      options:
+        - text: "Ви"
+          correct: true
+        - text: "Ти"
+          correct: false
+        - text: "Either is fine"
+          correct: false
+        - text: "Neither — just use the name"
+          correct: false
+      explanation: "A teacher is a formal contact. Always use ви until explicitly invited to switch."
+    - question: "Someone hands you a coffee. What do you say?"
+      options:
+        - text: "Дякую"
+          correct: true
+        - text: "Вибачте"
+          correct: false
+        - text: "Привіт"
+          correct: false
+        - text: "До побачення"
+          correct: false
+      explanation: "When receiving something, you express gratitude with дякую."
+    - question: "You accidentally bump into a stranger. What should you say?"
+      options:
+        - text: "Вибачте"
+          correct: true
+        - text: "Привіт"
+          correct: false
+        - text: "Дякую"
+          correct: false
+        - text: "Добре"
+          correct: false
+      explanation: "When you inconvenience a stranger, use the formal apology вибачте."
+    - question: "You want to order a coffee politely. Which word do you add?"
+      options:
+        - text: "Будь ласка"
+          correct: true
+        - text: "Дуже приємно"
+          correct: false
+        - text: "Привіт"
+          correct: false
+        - text: "На все добре"
+          correct: false
+      explanation: "Будь ласка means please and is used when making a polite request."
+    - question: "You are leaving a formal meeting. What do you say?"
+      options:
+        - text: "До побачення"
+          correct: true
+        - text: "Привіт"
+          correct: false
+        - text: "Бувай"
+          correct: false
+        - text: "Добрий ранок"
+          correct: false
+      explanation: "До побачення is the standard formal goodbye."
+    - question: "You are not sure if a situation is formal or informal. What is the safest greeting?"
+      options:
+        - text: "Добрий день"
+          correct: true
+        - text: "Привіт"
+          correct: false
+        - text: "Бувай"
+          correct: false
+        - text: "Здрастуйте"
+          correct: false
+      explanation: "Добрий день is the safest default greeting when you are unsure of the social context."
+    - question: "How do you address a woman formally in Ukrainian?"
+      options:
+        - text: "Пані"
+          correct: true
+        - text: "Пане"
+          correct: false
+        - text: "Друже"
+          correct: false
+        - text: "Мамо"
+          correct: false
+      explanation: "Пані is the formal title for Ms. used before a woman's name."
+
+- type: fill-in
+  title: "Complete the Dialogue"
+  instruction: "Choose the correct word or phrase to complete each line."
+  items:
+    - sentence: "___, пане Петре!"
+      answer: "Добрий день"
+      options: ["Добрий день", "Привіт", "Бувай", "Дякую"]
+      explanation: "Пане Петре is a formal address, so you need a formal greeting."
+    - sentence: "Я Анна. ___."
+      answer: "Дуже приємно"
+      options: ["Дуже приємно", "Вибачте", "До побачення", "Добрий ранок"]
+      explanation: "After introducing yourself, you say дуже приємно (pleased to meet you)."
+    - sentence: "___, каву і сік."
+      answer: "Будь ласка"
+      options: ["Будь ласка", "Дякую", "Вибачте", "Привіт"]
+      explanation: "When ordering something politely, you use будь ласка (please)."
+    - sentence: "___! Як справи?"
+      answer: "Привіт"
+      options: ["Привіт", "До побачення", "Перепрошую", "Вибачте"]
+      explanation: "Як справи is casual, so you use the informal greeting привіт."
+    - sentence: "Добре, ___. На все добре!"
+      answer: "дякую"
+      options: ["дякую", "вибачте", "привіт", "пане"]
+      explanation: "After saying things are good, you thank the person with дякую."
+    - sentence: "___, де бібліотека?"
+      answer: "Вибачте"
+      options: ["Вибачте", "Дякую", "Привіт", "Добре"]
+      explanation: "When getting a stranger's attention to ask a question, use вибачте (excuse me)."
+    - sentence: "___ дякую, пані Оксано!"
+      answer: "Дуже"
+      options: ["Дуже", "Щиро", "Добре", "Так"]
+      explanation: "Дуже дякую means thank you very much — a common way to intensify gratitude."
+    - sentence: "Хто ___? — Я Олег."
+      answer: "ви"
+      options: ["ви", "ти", "це", "так"]
+      explanation: "Asking a stranger's name requires the formal ви form."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian phrase or sentence."
+  items:
+    - words: ["день", "Добрий"]
+      answer: "Добрий день"
+    - words: ["побачення", "До"]
+      answer: "До побачення"
+    - words: ["ласка", "Будь"]
+      answer: "Будь ласка"
+    - words: ["добре", "все", "На"]
+      answer: "На все добре"
+    - words: ["приємно", "Дуже"]
+      answer: "Дуже приємно"
+    - words: ["дякую", "Щиро"]
+      answer: "Щиро дякую"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian greetings and politeness is true or false."
+  items:
+    - statement: "You can use привіт with your boss at work."
+      correct: false
+      explanation: "Привіт is informal and only used with friends, peers, and children. Use a formal greeting with your boss."
+    - statement: "Добрий день is the safest default greeting when you are unsure of the formality."
+      correct: true
+      explanation: "Добрий день works in most situations and is considered the safe default."
+    - statement: "Будь ласка can mean both please and you're welcome."
+      correct: true
+      explanation: "Будь ласка has a dual function — it is used when requesting something and when responding to thanks."
+    - statement: "You should always start with ти when speaking to someone new."
+      correct: false
+      explanation: "Always start with ви. Using ти with a stranger is considered rude in Ukrainian culture."
+    - statement: "Вибачте is the informal way to say excuse me."
+      correct: false
+      explanation: "Вибачте is the formal form. The informal version is вибач."
+    - statement: "До побачення literally means until seeing."
+      correct: true
+      explanation: "До побачення breaks down as до (until) + побачення (seeing) — a beautiful farewell formula."
+
+- type: group-sort
+  title: "Formal or Informal?"
+  instruction: "Sort each expression into the correct category."
+  groups:
+    - name: "Formal"
+      items:
+        - "Добрий день"
+        - "До побачення"
+        - "Вибачте"
+        - "Перепрошую"
+        - "Здрастуйте"
+    - name: "Informal"
+      items:
+        - "Привіт"
+        - "Бувай"
+        - "Вибач"
+    - name: "Both formal and informal"
+      items:
+        - "Дякую"
+        - "На все добре"

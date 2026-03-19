@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "Plan requested 15 items for fill-in #3; delivered 15. Plan requested 10 quiz items; delivered 10. Plan requested 8 fill-in #1 items; delivered 8. Plan requested 6 fill-in #2 items; delivered 6."
+frictions:
+  - type: SCHEMA_MISMATCH
+    description: "Plan activity_hints specify 3 fill-in activities (8, 6, 15 items) and 1 quiz (10 items). All delivered as specified."
+    proposed_fix: "N/A"
+unverified_terms:
+  - "менюу, менює, менюм — intentional nonsense distractors for the indeclinable меню item (fill-in #1, item 5). These are not real Ukrainian words; they exist to test whether the learner knows меню never changes."
+review_focus:
+  - "Fill-in #1 item 5 uses fabricated distractors for меню (indeclinable) — reviewer should confirm this pedagogical choice is acceptable."
+  - "Quiz item 8 tests cultural knowledge (Kulchytskyi) — borderline on 'tests language not content' rule, but this is a core-track A1 module where cultural context is integral to the lesson."

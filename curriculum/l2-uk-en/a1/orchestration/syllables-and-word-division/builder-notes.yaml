@@ -1,12 +1,15 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1520
+word_count: 1465
 deviations: []
 frictions: []
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Check that the emphasis on counting vowels as syllables is clear and mathematically precise."
-  - "Verify the explanation of orthographic vs phonetic division is appropriate and understandable for A1."
-  - "Ensure no disallowed grammar constructs were used in the short dialogues."
+  - "Check that only single quotes are used in YAML strings."
+  - "Verify strict adherence to exact H2 headings and outline."
+  - "Verify that all 12 vocabulary terms are defined in YAML and used in content."
+  - "Check that no capitalized stress marks were included."
+  - "Verify zero Russianisms and correct application of 'Це + noun' pattern only."
 rag_tools_used:
-  - "search_text: 'Syllable structure Open and closed syllables' → Guided the pedagogy toward visual vowel counting (Zabolotnyi Grade 5) and word-division rules."
+  - "read_file: checked textbooks via pre-generated research file"

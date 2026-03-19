@@ -1,25 +1,18 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1585
+word_count: 1554
 deviations:
-  - section: 'Презентація: Моделі та мутації'
-    reason: 'Section ran to ~530 words vs 375 target (+41%). This section covers 5 distinct grammar points (paradigm table, consonant mutations, labial л, їсти irregular, бачити vs дивитися, пити note) which required adequate space. No other section is under target.'
-frictions: []
+  - section: "none"
+    reason: "Fully adhered to the plan and outline."
+frictions:
+  - type: PLAN_GAP
+    description: "The verb 'пити' was listed under regular -ити verbs, but it is a 1st conjugation verb (п'ю, п'єш). Addressed by treating it purely as a vocabulary item for the hospitality triad without conjugating it as a 2nd conjugation verb."
+    proposed_fix: "Update the vocabulary hint in the plan to note that 'пити' is 1st conjugation despite the -ити ending."
 research_gaps:
-  - 'No Grade 3-4 textbook content specifically contrasting 1st vs 2nd conjugation side-by-side — had to rely on Grade 10 Glazova/Karaman for consonant alternation patterns and adapt down to A1 level.'
-unverified_terms: []
+  - "none"
+unverified_terms:
+  - "none"
 review_focus:
-  - 'Verify that пити is correctly characterized as First Conjugation despite -ити infinitive ending — VESUM confirms п''ю/п''єш/п''є pattern'
-  - 'Check that the їсти paradigm matches VESUM exactly (я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять — all verified)'
-  - 'Confirm стояти conjugation pattern (стоїш, стоїть with -ї-) is correctly noted as Second Conjugation'
-  - 'Ensure дивитися is only mentioned as foreshadowing, not taught — it belongs to the next module on reflexive verbs'
+  - "Check that the distinction between 1st and 2nd conjugation is clear and the presentation of mutations feels intuitive for an A1 learner. Ensure distractors in activities are verified valid words as per constraints."
 rag_tools_used:
-  - 'search_text: "друга дієвідміна дієслів -ити теперішній час" grade=4 → Grade 4 conjugation tables from Kravtsova, Zaharijchuk, Varzatska showing personal endings'
-  - 'search_text: "чергування приголосних у дієсловах ходжу сиджу" → Grade 10 Glazova §26 consonant alternation rules, Grade 10 Karaman labial+j patterns, Grade 5 Avramenko §50'
-  - 'verify_words: 30 core verb forms (all infinitives + key conjugated forms) → 30/30 found in VESUM'
-  - 'verify_words: 23 additional conjugated forms (вчать, стою, роблять, etc.) → 23/23 found in VESUM'
-  - 'verify_words: 16 context nouns/adjectives (домашнє, завдання, природу, etc.) → 16/16 found in VESUM'
-  - 'verify_lemma: їсти → 22 forms confirmed, including irregular я їм, ти їси, він їсть, вони їдять'
-  - 'verify_lemma: говорити → 27 forms confirmed, model Second Conjugation paradigm'
-  - 'verify_lemma: робити → 27 forms confirmed, including роблю (labial mutation)'
-  - 'verify_lemma: пити → 24 forms confirmed, First Conjugation endings (п''ю, п''єш, п''є)'
+  - "search_text: 'Second Conjugation pattern (-ити → -у, -иш...) Consonant mutation patterns' → Used results to confirm textbook framing."

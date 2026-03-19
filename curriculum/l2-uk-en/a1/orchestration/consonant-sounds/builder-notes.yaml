@@ -1,12 +1,15 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1435
-deviations: []
+word_count: 1340
+deviations:
+  - section: "Voiced and Voiceless Pairs"
+    reason: "Added H3 sub-headers for each pair to cleanly structure the requested video embeds, as permitted by 'You MAY add H3 sub-headings within H2 sections'."
 frictions: []
-research_gaps: []
-unverified_terms: []
+research_gaps:
+  - "None."
+unverified_terms:
+  - "None (all vocabulary sourced directly from approved hints)."
 review_focus:
-  - "Check that NO transliterations (sh, zh, ch) were used. The explanations rely strictly on English phonetic equivalents."
-  - "Verify A1.1 grammar constraints - NO VERBS used in dialogues or examples."
-  - "Check that all 17 videos specified in the plan were correctly embedded under appropriate headers."
-rag_tools_used: []
+  - "Check that the H3 structural injection for videos aligns with project expectations for A1.1 content rendering."
+rag_tools_used:
+  - "None directly via subprocesses; trusted exact constraints from plan."

@@ -1,4 +1,4 @@
-Today, we are going to connect your vocabulary with something very practical: shopping in Ukraine. Whether you are at a modern supermarket or a lively outdoor bazaar, you will need to know how to ask about prices. Let's start with the most important question for any shopper.
+**Привіт!** Today, we are going to connect your vocabulary with something very practical: shopping in Ukraine. By the end of this module, you will be able to ask prices, request items politely, and navigate a real Ukrainian store or market. Whether you are at a modern supermarket or a lively outdoor bazaar, you will need to know how to ask about prices. Let's start with the most important question for any shopper.
 
 ## Скільки коштує? (How much?)
 
@@ -16,7 +16,7 @@ Now, let's talk about money. The currency of Ukraine is the **гривня** (hr
 Here is how we count our money:
 - **одна гривня** (one hryvnia) — ends in **-я**
 - **дві гривні** (two hryvnias) — numbers 2, 3, and 4 take the Nominative plural, ending in **-і**
-- **п'ять гривень** (five hryvnias) — numbers 5 and above take the Genitive plural, ending in **-ень**
+- **п'ять гривень** (five hryvnias) — numbers 5 and above take the Genitive plural (**гривень**)
 
 When the seller answers your question about the price, they will use the same verb **коштувати** and then give you the amount. You can also produce full price sentences yourself. For example:
 - **Це коштує двадцять гривень.** (This costs twenty hryvnias.)
@@ -36,6 +36,15 @@ When you are ready to order or ask for an item, it is polite to use specific sho
 Another very common phrase uses the perfective verb **купити** (to buy). You can say:
 - **Я хочу купити сир.** (I want to buy cheese.)
 - **Я хочу купити яблуко.** (I want to buy an apple.)
+
+You can also use the imperative formula **Дайте, будь ласка** (Give me, please). This is a fixed shopping phrase — just add the item you want:
+- **Дайте хліб, будь ласка.** (Give me bread, please.)
+- **Дайте воду, будь ласка.** (Give me water, please.)
+- **Дайте два кілограми яблук, будь ласка.** (Give me two kilograms of apples, please.)
+
+And when you want to ask permission, use **Можна...?** (May I...? / Can I...?):
+- **Можна воду?** (Can I have water?)
+- **Можна мило, будь ласка?** (Can I have soap, please?)
 
 Sometimes you want to politely request an item without a verb. In this case, just ask for the item directly:
 - **Каву, будь ласка.** (A coffee, please.)
@@ -81,7 +90,7 @@ Let's see the Genitive with quantities in action:
 
 But what if you need more than one kilogram or more than one bottle? You will need to combine numbers with these units. The rules for number-noun case agreement patterns are the same as we saw with the currency!
 
-For numbers 2, 3, and 4, the masculine words **кілограм** and **літр** take the Nominative plural ending **-и** (or **-і**). The feminine words **пачка** and **пляшка** change their ending to **-и** (Genitive singular form).
+For numbers 2, 3, and 4, the masculine words **кілограм** and **літр** take the Nominative plural ending **-и** (or **-і**). The feminine words **пачка** and **пляшка** change their ending to **-и** (Nominative plural).
 - **два кілограми** (two kilograms)
 - **три літри** (three litres)
 - **дві пляшки** (two bottles)
@@ -104,15 +113,25 @@ You will also need to buy everyday essentials. Let's build your vocabulary for e
 
 Here are the basic items you might look for:
 - **мило** (soap) — a neuter noun. For example: **Я хочу купити мило.** (I want to buy soap.)
-- **зубна паста** (toothpaste) — a feminine phrase.
-- **шампунь** (shampoo) — a masculine noun! Be careful with this one. Because it ends in a soft sign, learners often think it is feminine, but it is actually masculine.
-- **рушник** (towel) — a masculine noun. In Ukraine, embroidered towels hold special cultural meaning, but you also need a regular one for the bathroom.
-- **туалетний папір** (toilet paper) — a masculine phrase.
+- **зубна паста** (toothpaste) — a feminine phrase. For example: **Мені потрібна зубна паста.** (I need toothpaste.)
+- **шампунь** (shampoo) — a masculine noun! Be careful with this one. Because it ends in a soft sign, learners often think it is feminine, but it is actually masculine. For example: **Мені потрібен шампунь.** (I need shampoo.)
+- **рушник** (towel) — a masculine noun. In Ukraine, embroidered towels hold special cultural meaning, but you also need a regular one for the bathroom. For example: **Дайте рушник, будь ласка.** (Give me a towel, please.)
+- **туалетний папір** (toilet paper) — a masculine phrase. For example: **Дайте туалетний папір, будь ласка.** (Give me toilet paper, please.)
 
 When you need to find these items, you will combine your location vocabulary with your shopping skills. The best way to ask where to buy items is to use the phrase **Де можна купити...?** (Where can one buy...?).
 
 - **Де можна купити шампунь?** (Where can I buy shampoo?)
 - **Де можна купити зубну пасту?** (Where can I buy toothpaste?)
+- **Мені потрібні мило і шампунь.** (I need soap and shampoo.)
+- **Скільки коштує рушник?** (How much does the towel cost?)
+
+Here is a short dialogue at the **аптека**:
+
+> — **Добрий день! У вас є зубна паста?** (Good afternoon! Do you have toothpaste?)
+> — **Так, є. Ось тут.** (Yes, we do. Right here.)
+> — **Дайте зубну пасту, будь ласка. Скільки коштує?** (Give me toothpaste, please. How much does it cost?)
+> — **Сорок п'ять гривень.** (Forty-five hryvnias.)
+> — **Дякую!** (Thank you!)
 
 You can also simply ask where a specific shop is located. Remember that a pharmacy is called an **аптека**.
 - **Де тут аптека?** (Where is the pharmacy here?)
@@ -152,10 +171,16 @@ Finally, let's practice quantity expressions by building a simple shopping list.
 - **три кілограми м'яса** (three kilograms of meat)
 - **одна пачка цукру** (one packet of sugar)
 
+> [!tip]
+> At Ukrainian outdoor markets (**ринки**), sellers often call out their prices: **Яблука — тридцять гривень кілограм!** Listen for this pattern — it is great real-world listening practice.
+
+> [!did-you-know]
+> Many Ukrainians prefer shopping at **ринки** (outdoor markets) over supermarkets, especially for fresh produce. Sellers often let you taste fruit before buying: **Спробуйте!** (Try it!) You might hear: **Свіжі яблука, дуже смачні!** (Fresh apples, very tasty!)
+
 By practicing these phrases, you will feel confident and prepared the next time you go shopping!
 
 # Підсумок
-You have done an amazing job today! Shopping is one of the most essential survival skills in any language, and you now have the tools you need. You learned how to ask for prices using **Скільки коштує?** and how to correctly agree your numbers with the word **гривня**. You explored polite request patterns like **Хліб, будь ласка** and **Я хочу купити**, and you know how to check for availability with **Є...?**.
+You have done an amazing job today! Shopping is one of the most essential survival skills in any language, and you now have the tools you need. You learned how to ask for prices using **Скільки коштує?** and how to correctly agree your numbers with the word **гривня**. You explored polite request patterns like **Хліб, будь ласка**, **Дайте, будь ласка**, **Можна...?**, and **Я хочу купити**, and you know how to check for availability with **Є...?**.
 
 We also covered important containers and units, such as **кілограм**, **літр**, **пляшка**, and **пачка**, along with the hygiene essentials like **мило** and **шампунь**. Remember the contrast between the locations: **у магазині** versus **на ринку**.
 

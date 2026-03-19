@@ -1,10 +1,13 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1620
+word_count: 1584
 deviations: []
 frictions: []
 research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Check that all distractors are safe dictionary forms to avoid VESUM failures, while still testing the grammatical concept."
-rag_tools_used: []
+  - "Check that all morphological distractors in activities correspond to real Ukrainian word forms"
+  - "Verify strict translation of plan points into correct sections, ensuring exact inclusion of collocations"
+rag_tools_used:
+  - "read_file: Extracted exact pedagogy from the plan and schemas"
+  - "run_shell_command: Executed distractor morphological analysis locally to avoid VESUM rejections"

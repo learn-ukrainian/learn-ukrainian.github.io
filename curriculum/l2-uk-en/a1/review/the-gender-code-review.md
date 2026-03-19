@@ -1,183 +1,195 @@
-<!-- content-hash: cfb362725499 -->
+<!-- content-hash: 3bc96ae2828d -->
 # Рецензія: The Gender Code
 
 **Level:** A1 | **Module:** 7
-**Overall Score:** 7.6/10
+**Overall Score:** 7.0/10
 **Status:** FAIL
 **Reviewed:** 2026-03-19
-**Reviewed-By:** claude-sonnet-4-20250514
+**Reviewed-By:** claude-sonnet-4-6
 
 ## Plan Verification
 
 ```
-Plan-Content Alignment: FAIL
-- Sections: 5/5 present ✅
-- Vocabulary: 8/8 required in prose ✅, 12/12 recommended in prose ✅, 4 prose words missing from vocab YAML
-- Grammar scope: PARTIAL — declension families objective unmet
-- Objectives: 3/4 met, 1 MISSING (see below)
+Plan-Content Alignment: PARTIAL FAIL
+- Sections: 5/5 present (all H2 headers match plan)
+- Vocabulary: 8/8 required present in prose, 12/12 recommended present
+- Grammar scope: PARTIAL — "4 declension families" objective unmet
+- Objectives: 3/4 met — declension families objective MISSING
 ```
 
 ### Plan Adherence Checklist
 
-**Objectives:**
-- ✅ COVERED: "Learner can identify noun gender by word ending" — entire module teaches this
-- ❌ MISSING: "Learner can categorize nouns into 4 declension families" — only a passing mention of "Family 4" on line 47: 「However, **ім'я́** belongs to a special historical group (Family 4) and is actually Neuter!」 No systematic overview of all 4 declension families exists
-- ✅ COVERED: "Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)" — lines 15-19 and throughout
-- ✅ COVERED: "Learner can identify common exceptions" — тато, день/ніч, ім'я all covered
+**Section "Вступ (Introduction)":**
+- Three-gender system intro: COVERED — Line 3: 「It is crucial to understand that gender is a linguistic category for all nouns, not just people.」
+- Cultural Hook (Neuter Sun): COVERED — Line 5 discusses сонце as neuter life-giver
+- Visual Mnemonic Framework: COVERED — Line 7: 「Think of it as a categorization logic using color codes. Imagine blue for Masculine words, which often end in hard consonants.」
 
-**Section "Вступ (Introduction)" points:**
-- ✅ COVERED: Three-gender system intro — line 3
-- ✅ COVERED: Cultural Hook: Neuter Sun — line 7
-- ✅ COVERED: Visual Mnemonic Framework — line 9
+**Section "Презентація правил (Presentation of Rules)":**
+- Pattern Recognition for Endings: COVERED — Line 11 presents consonant→M, -а/-я→F, -о/-е→N with examples. Note: plan lists кімната but content substitutes школа — acceptable.
+- §4.2.2 Possessive pronouns as diagnostic tool: COVERED — Lines 15, 17-19
+- Syntactic Agreement: COVERED — Lines 21, 23-25 (великий стіл, цікава книга, чисте вікно)
+- Identity and Family Dialogue: COVERED — Lines 29-33
 
-**Section "Презентація правил (Presentation of Rules)" points:**
-- ✅ COVERED: Pattern Recognition — lines 15-19
-- ✅ COVERED: Possessive pronouns as diagnostic tool — line 21
-- ✅ COVERED: Syntactic Agreement — lines 23-26
-- ✅ COVERED: Family Dialogue — lines 28-36
+**Section "Практичні вправи (Practice Exercises)":**
+- Natural Gender Override Trap (тато): COVERED — Line 38
+- Soft Sign Ambiguity (день vs ніч): COVERED — Lines 40-43
+- Name Trap / Family 4 (ім'я): COVERED — Lines 45-48
+- State Standard Categorization Drill: COVERED — Lines 52-56
 
-**Section "Практичні вправи (Practice Exercises)" points:**
-- ✅ COVERED: Natural Gender Override Trap (тато) — line 40
-- ✅ COVERED: Soft Sign Ambiguity — lines 42-45
-- ✅ COVERED: Name Trap / Family 4 — line 47
-- ✅ COVERED: Categorization drill — lines 52-55
+**Section "Самостійна робота (Independent Work/Production)":**
+- "It" Trap Correction: COVERED — Lines 60-64
+- S.T.A.L.K.E.R. vocabulary: COVERED — Line 66
+- Applying Agreement: COVERED — Lines 68-72
 
-**Section "Самостійна робота (Independent Work/Production)" points:**
-- ✅ COVERED: "It" Trap Correction — lines 61-66
-- ✅ COVERED: S.T.A.L.K.E.R. vocabulary — lines 68-71
-- ✅ COVERED: Applying Agreement — lines 73-78
+**Section "Культурний код та підсумок (Cultural Code and Summary)":**
+- 95% predictability rule summary: COVERED — Line 78
+- Cultural Reflection (земля-мати, сонце-життя): COVERED — Line 80, BUT сонце-життя is problematic (see Critical Issues)
+- Final Competency Check: COVERED — Lines 82-87
 
-**Section "Культурний код та підсумок (Cultural Code and Summary)" points:**
-- ✅ COVERED: Summary of gender prediction — line 84
-- PARTIAL: Cultural Reflection — line 86 covers земля-мати but "сонце-життя" is fabricated (see Critical Issues)
-- ✅ COVERED: Final Competency Check — lines 88-92
+**Plan Objective Gap:** Plan objective 2 states "Learner can categorize nouns into 4 declension families." The content only mentions "Family 4" once in passing (line 45: 「Explaining why ім'я is Neuter despite ending in -я requires knowing that it belongs to a special historical group called Family 4.」). Declension families 1-3 are never named or systematically presented. This is a MISSING objective.
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Warm and encouraging throughout. Good arc from welcome → practice → celebrate. One engagement box is thin — only 「[!tip] The Golden Rule of Practice」 on line 49. Missing a second callout. |
-| 2 | Language | 8/10 | <8 | English is clear and accessible. Ukrainian grammar is accurate. One issue: "memorised" (British spelling, line 84) should be "memorized" for consistency. The expression 「**со́нце-життя́** (Sun-Life)」 on line 86 is not a real Ukrainian compound. |
-| 3 | Pedagogy | 8/10 | <7 | PPP structure well executed. Missing plan objective (4 declension families). Good contrastive pairs (тато/місто, день/ніч, земля/ім'я). The tip box on line 50 is excellent pedagogy: 「Don't just learn **соба́ка** (dog); learn **моя́ соба́ка**.」 |
-| 4 | Activities | 8/10 | <7 | 8 activities with good variety (match-up ×2, quiz, fill-in, group-sort, true-false, anagram, unjumble). All items checked — correct answers, good explanations. Missing: no activity tests the "It" Trap (він/вона/воно for objects), which is heavily taught in section "Самостійна робота (Independent Work/Production)". |
-| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Not overwhelmed, instructions clear, quick wins present, Ukrainian introduced gently with translations, encouraging throughout. |
-| 6 | LLM Fingerprint | 7/10 | <7 | 「This system is the heartbeat of the language」 (line 5) — stacked abstract metaphor. 「You have successfully unlocked the Gender Code!」 (line 84) — gamified LLM rhetoric. 「You are not just learning rules; you are learning to think and feel in Ukrainian.」 (line 94) — "не просто X, а Y" pattern in English. The fabricated compound 「со́нце-життя́」 is LLM-typical invention. Structural monotony: sections 3-5 all open with "Let's..." |
-| 7 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian forms verified correct: possessive agreement (мій/моя/моє), adjective agreement (великий стіл, цікава книга, чисте вікно). Stress marks accurate where present. One fabricated cultural term: со́нце-життя́ is not attested. |
+| 1 | Experience Quality | 6/10 | <7 | Zero engagement callouts. Dense prose paragraphs. No visual breaks. "Let us" formality throughout. No warmth markers. |
+| 2 | Language | 8/10 | <8 | Ukrainian examples are grammatically correct. English is overly formal ("Let us" x10, "It is crucial to understand"). No Russianisms found. |
+| 3 | Pedagogy | 7/10 | <7 | Good PPP structure. Plan objective about 4 declension families unmet. "сонце-життя" is fabricated. Color mnemonic introduced but never reinforced visually (no color table). |
+| 4 | Activities | 7/10 | <7 | 4 activities with good variety (match-up, quiz, fill-in). But only 4 vs plan hints suggesting ~85 items total across 4 types. Quiz has 10 items — solid. VESUM flags on "-ий or -ій" are false positives (ending morphemes, not standalone words). |
+| 5 | Beginner Safety | 6/10 | <7 | "Would I Continue?" 2/5. No welcome greeting (Привіт). No encouragement phrases. No "don't worry" moments. Dense paragraphs would overwhelm a beginner. Abrupt ending. |
+| 6 | LLM Fingerprint | 6/10 | <7 | "Let us" appears 10+ times — real tutors say "Let's". Structural monotony: sections open with "Let us [verb]" pattern. 「The secret to the Ukrainian gender code lies right at the end of the word.」— formulaic. Uniform bullet-list example formatting across all sections. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian examples verified correct (gender assignments, adjective agreement, pronoun usage). "сонце-життя" is not a real Ukrainian compound (VESUM: NOT FOUND). "земля-мати" is legitimate. |
 
-**Weighted Overall:** (8×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 7×1.0 + 9×1.5) / 8.9 = (12 + 8.8 + 9.6 + 10.4 + 11.7 + 7.0 + 13.5) / 8.9 = 73.0 / 8.9 = **8.2/10**
+**Weighted Overall:**
+```
+(6×1.5 + 8×1.1 + 7×1.2 + 7×1.3 + 6×1.3 + 6×1.0 + 9×1.5) / 8.9
+= (9.0 + 8.8 + 8.4 + 9.1 + 7.8 + 6.0 + 13.5) / 8.9
+= 62.6 / 8.9
+= 7.0/10
+```
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: [CLEAN] — no Russianisms detected
-- Calques: [CLEAN]
-- Colonial framing: [CLEAN] — Romance language comparison (line 7) is legitimate cross-linguistic pedagogy, not Russian contrast
-- Grammar scope: [CLEAN] — no grammar from later modules introduced
-- Activity errors: [CLEAN] — all answers correct, no duplicate options
-- Beginner safety: 5/5
-- Factual accuracy: [1 ISSUE] — "со́нце-життя́" presented as Ukrainian cultural concept; not attested in textbooks or standard usage
-- "95% predictability" (lines 13, 84) — plausible approximation but unsourced
+- Russianisms: CLEAN — no давайте calques, no Russian ghost words detected
+- Calques: CLEAN
+- Colonial framing: CLEAN — no "Unlike Russian" comparisons
+- Grammar scope: PARTIAL FAIL — 4 declension families objective not met in content
+- Activity errors: LOW — "-ий or -ій" VESUM flag is a false positive (morphological endings as distractor options)
+- Beginner safety: 2/5 (see below)
+- Factual accuracy: FLAG — "сонце-життя" presented as a real Ukrainian cultural compound; "95% predictability rule" unsourced
 
 ## Critical Issues Found
 
-### Issue 1: Fabricated Ukrainian Expression — "со́нце-життя́"
-- **Location**: Line 86, Section "Культурний код та підсумок (Cultural Code and Summary)"
-- **Original**: 「We say **со́нце-життя́** (Sun-Life) because the neuter sun is an impartial, balancing force for all living things.」
-- **Problem**: "Земля-мати" (Mother Earth) is a well-established Ukrainian expression. "Сонце-життя" is NOT a standard Ukrainian compound noun or cultural concept. RAG textbook search returned no matches. VESUM does not list it. This appears to be an LLM fabrication presented as a real cultural expression. The plan itself lists it (line 63: "сонце-життя"), so this is a plan-inherited error, but the content should not present fabricated expressions as cultural facts.
-- **Fix**: Replace with a real Ukrainian expression or reframe. E.g., refer to "ясне сонце" (bright sun) or "красне сонечко" (dear little sun) — both genuine folk expressions. Or simply drop the parallel and keep only земля-мати.
-- **Severity**: HIGH
+### Issue 1: Zero Engagement Boxes (Audit Gate Failure)
+- **Location**: Entire module — all 5 sections
+- **Problem**: The module contains zero callout boxes (`> [!tip]`, `> [!example]`, `> [!cultural-note]`, `> [!did-you-know]`). The audit requires minimum 1 for A1, and the richness gate requires 2. This is a blocking audit failure.
+- **Fix**: Add at minimum 2 engagement callouts. Recommended placements:
+  1. After line 7 in section "Вступ (Introduction)": `> [!tip]` with the color-code mnemonic as a visual reference table (Blue=M, Red=F, Yellow=N)
+  2. After line 43 in section "Практичні вправи (Practice Exercises)": `> [!did-you-know]` about the день/ніч pair being commonly used in greetings
 
-### Issue 2: Missing Plan Objective — 4 Declension Families
-- **Location**: Entire module; plan objective #2: "Learner can categorize nouns into 4 declension families"
-- **Problem**: The content only mentions "Family 4" once in passing (line 47: 「belongs to a special historical group (Family 4)」). There is no systematic presentation of what the 4 declension families are, how they differ, or how to categorize nouns into them. This is a plan objective that is entirely unmet.
-- **Fix**: Add a brief overview table or callout box in section "Презентація правил (Presentation of Rules)" that previews the 4 families at recognition level (not full detail). E.g., a `[!did-you-know]` box explaining the 4 families exist and that learners will explore them more in later modules.
-- **Severity**: MEDIUM
+### Issue 2: Fabricated Compound "сонце-життя"
+- **Location**: Line 80, Section "Культурний код та підсумок (Cultural Code and Summary)"
+- **Original**: 「We say сонце-життя (sun-life) because the neuter ending places the sun in a universal, balanced role.」
+- **Problem**: "сонце-життя" is NOT a standard Ukrainian compound expression. VESUM returns NOT FOUND. The research notes mention "земля-мати" as a cultural hook but never mention "сонце-життя." This appears to be an LLM fabrication presented as authentic Ukrainian cultural language. "Земля-мати" is real; "сонце-життя" is not.
+- **Fix**: Replace with an actual Ukrainian expression, e.g., "ясне сонце" (bright sun) or "сонце — джерело життя" (sun is the source of life), or simply remove the fabricated compound and discuss сонце's neuter gender using the existing cultural hook from the introduction.
 
-### Issue 3: Low Immersion (8.5% vs 15-35% target)
-- **Location**: Whole module
-- **Problem**: Module 7 falls in the 6-10 band, targeting 15-35% Ukrainian. At 8.5%, the immersion is well below minimum. Most Ukrainian appears only as bolded inline words with immediate English translations.
-- **Fix**: Add 2-3 short Ukrainian reading practice blocks after key sections. E.g., after section "Практичні вправи (Practice Exercises)", add a 3-4 sentence block: "Це мій стіл. Стіл великий. А це моя книга. Книга цікава." These simple, repetitive sentences increase immersion without overwhelming the learner.
-- **Severity**: MEDIUM
+### Issue 3: LLM Voice — "Let us" x10+
+- **Location**: Lines 11, 27, 38, 40, 45, 52, 60, 68, 78, 82
+- **Original**: 「Let us start with Masculine nouns.」 (line 11), 「Let us look at the case of тато」 (line 38), etc.
+- **Problem**: "Let us" appears 10+ times throughout the module. This is extremely formal and a strong LLM fingerprint. Real English tutors use "Let's" in conversational instruction. The formality creates a cold, robotic feel that fails the beginner warmth test.
+- **Fix**: Replace all "Let us" with "Let's" throughout the module.
 
-### Issue 4: Only 1 Engagement Box (need ≥2)
-- **Location**: Only 「[!tip] The Golden Rule of Practice」 on line 49
-- **Problem**: Audit reports engagement: 1/2. The module needs at least 2 engagement callout boxes. There are no `[!did-you-know]`, `[!culture]`, or `[!fun-fact]` boxes.
-- **Fix**: Add a `[!did-you-know]` box. Natural candidate: a box in section "Культурний код та підсумок (Cultural Code and Summary)" about the cultural significance of земля-мати in Ukrainian folklore, or a box in section "Вступ (Introduction)" noting that Ukrainian has 3 genders while English lost its gender system centuries ago.
-- **Severity**: MEDIUM
+### Issue 4: Missing Warmth & Encouragement (Beginner Safety Failure)
+- **Location**: Entire module — all 5 sections
+- **Problem**: Zero encouragement phrases ("Great!", "You've got this!", "Don't worry"). No welcome greeting (no "Привіт!"). No "don't worry, this is normal" moment. No celebration at the end — line 89 just says 「Keep practicing your color codes and observing the endings of every new word you meet.」 which is flat and perfunctory. The "Would I Continue?" test fails on 3/5 criteria.
+- **Fix**: Add (1) a warm opening like "Привіт! Welcome to..." in section "Вступ (Introduction)", (2) at least 2 encouragement moments mid-module (after the first practice set, after S.T.A.L.K.E.R. section), (3) a celebration closing in section "Культурний код та підсумок (Cultural Code and Summary)" that says "You can now identify the gender of most Ukrainian nouns!"
 
-### Issue 5: Vocabulary YAML Missing Prose Words
-- **Location**: Vocabulary file (`the-gender-code.yaml`)
-- **Problem**: хліб (line 15), кімната (line 17), чоловік (line 53), жінка (line 54) all appear as teaching examples in the prose and/or activities but are absent from the vocabulary YAML. хліб is used in pattern recognition examples and the group-sort activity. кімната is used in the pattern recognition and match-up activity. чоловік and жінка are used in the categorization drill.
-- **Fix**: Add all 4 words to the vocabulary YAML as supplementary items.
-- **Severity**: LOW
+### Issue 5: Plan Objective Unmet — 4 Declension Families
+- **Location**: Line 45 (only mention), Section "Практичні вправи (Practice Exercises)"
+- **Original**: 「Explaining why ім'я is Neuter despite ending in -я requires knowing that it belongs to a special historical group called Family 4.」
+- **Problem**: Plan objective 2 states "Learner can categorize nouns into 4 declension families." The content only mentions "Family 4" in passing. Families 1-3 are never named. The learner cannot meet this objective from the content provided.
+- **Fix**: Add a brief overview table or callout in section "Презентація правил (Presentation of Rules)" that names all 4 declension families with one example each, even at recognition level. This could double as one of the missing engagement boxes.
 
-### Issue 6: LLM Structural Monotony — "Let's..." Openings
-- **Location**: Section openings
-- **Problem**: 3 sections begin with "Let's..." variants: "Let's start with a beautiful cultural hook" (line 7, section "Вступ (Introduction)"), "Now, let's look at how we can actually predict" (line 13, section "Презентація правил (Presentation of Rules)"), "Let's dive into some practical exercises" (line 40, section "Практичні вправи (Practice Exercises)"). This is a structural monotony pattern.
-- **Fix**: Vary section openings. E.g., section "Практичні вправи (Practice Exercises)" could open with "Time to put those rules to the test!" instead.
-- **Severity**: LOW
+### Issue 6: Unsourced "95% Predictability Rule"
+- **Location**: Line 78, Section "Культурний код та підсумок (Cultural Code and Summary)"
+- **Original**: 「For most words, you have a 95% predictability rule.」
+- **Problem**: The "95%" statistic is presented as fact but has no source. The research notes don't mention this figure. While gender IS largely predictable from endings, the specific "95%" claim is unverifiable and may be fabricated.
+- **Fix**: Change to "For most words, the ending reliably predicts the gender" — remove the unsourced statistic.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 86 | 「со́нце-життя́」 | Remove or replace with "красне сонечко" | Fabricated compound |
-| 84 | "memorised" | "memorized" | Spelling inconsistency (British/American) |
+| 80 | 「сонце-життя」 | ясне сонце / remove compound | Fabricated compound |
+
+Note: All other Ukrainian in the module is grammatically correct. Gender assignments, adjective agreement, pronoun forms (мій/моя/моє), and example sentences all verify clean.
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? **Pass** — content is well-paced with manageable chunks
-- Instructions clear? **Pass** — always clear what the learner should do
-- Quick wins? **Pass** — early successes with color-coding mnemonic, then progressive practice
-- Ukrainian scary? **Pass** — introduced gently with translations
-- Come back tomorrow? **Pass** — encouraging tone throughout, progress celebration at end
+"Would I Continue?" Test: 2/5
+- Overwhelmed? **FAIL** — Dense prose paragraphs, no visual breaks, no callout boxes. Section "Практичні вправи (Practice Exercises)" covers 4 different concepts (тато trap, soft sign, ім'я, drill) in one unbroken flow.
+- Instructions clear? **PASS** — Each concept is explained step by step with examples.
+- Quick wins? **FAIL** — The first practice opportunity is after ~400 words of explanation. No mini-exercise until section "Практичні вправи (Practice Exercises)".
+- Ukrainian scary? **PASS** — Ukrainian is introduced gently, always with English translations.
+- Come back tomorrow? **FAIL** — The flat, formal tone ("Let us", "It is crucial", "It is time for") combined with zero encouragement makes this feel like a textbook chapter, not a tutoring session. Line 89: 「Keep practicing your color codes and observing the endings of every new word you meet.」 is a homework assignment, not a celebration.
 
 ## Strengths
-- **Excellent contrastive pairs**: тато/місто, день/ніч, земля/ім'я — each pair teaches a specific exception through comparison. This mirrors Vашуленко Grade 3 antonym-pairing methodology (confirmed in research notes).
-- **S.T.A.L.K.E.R. cultural hook** is genuinely engaging for the target audience (teens + adults). 「If you are familiar with the famous Ukrainian video game franchise S.T.A.L.K.E.R., you can use its iconic vocabulary as classification anchors for our three buckets」 — creative and culturally authentic.
-- **Golden Rule tip** on line 50: 「Don't just learn **соба́ка** (dog); learn **моя́ соба́ка**.」 — this is excellent A1 pedagogy that builds the right habits from day one.
-- **Activity variety**: 8 activities across 7 types. The group-sort "three buckets" mirrors the color-coded mnemonic from the prose.
-- **Dialogue block** (lines 30-34): 「Вдо́ма (At home)」 is natural and contextualizes family vocabulary beautifully.
 
-## Fix Plan to Reach 9/10 (REQUIRED — score is 8.2)
+- **Solid grammatical accuracy**: All Ukrainian examples are correct — gender assignments, adjective-noun agreement, possessive pronoun matching all verified clean against VESUM.
+- **Excellent use of contrastive pairs**: тато vs місто, день vs ніч, земля vs ім'я — these are effective minimal pairs drawn directly from the plan and research notes.
+- **Good cultural anchoring**: The S.T.A.L.K.E.R. hook (артефакт/зона/укриття) is creative and culturally appropriate for the target audience.
+- **Well-structured dialogue**: Lines 29-33 with 「Це мій брат. Він добрий.」 and 「Це моя сестра. Вона добра.」 demonstrate gender agreement naturally.
+- **Activities cover good range**: match-up, quiz, fill-in provide varied practice. The quiz items test real understanding (тато exception, укриття exception).
 
-### LLM Fingerprint: 7/10 → 8/10
+## Fix Plan to Reach 9/10 (REQUIRED — score is 7.0)
+
+### Experience Quality: 6/10 → 9/10
 **What to fix:**
-1. Line 5: Replace 「This system is the heartbeat of the language」 with a simpler statement like "This system is the foundation of the language" — removes stacked metaphor
-2. Line 86: Remove the fabricated 「со́нце-життя́」 and replace with genuine folk reference or simply expand земля-мати discussion
-3. Vary section openings — change at least 1 of the 3 "Let's..." openings
-
-**Expected score after fix:** 8/10
-
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Line 84: "memorised" → "memorized" for consistency
-2. Line 86: Remove fabricated "сонце-життя" — this is a language accuracy issue when presenting Ukrainian cultural concepts
+1. Add 2+ engagement callout boxes (> [!tip], > [!did-you-know]) — one in section "Вступ (Introduction)" with color-code table, one in section "Практичні вправи (Practice Exercises)"
+2. Replace all "Let us" → "Let's" (10+ instances)
+3. Add warm opening greeting in section "Вступ (Introduction)"
+4. Add celebration closing in section "Культурний код та підсумок (Cultural Code and Summary)"
+5. Add 2-3 encouragement phrases throughout
 
 **Expected score after fix:** 9/10
 
-### Pedagogy: 8/10 → 9/10
+### Beginner Safety: 6/10 → 9/10
 **What to fix:**
-1. Add a brief declension families preview (callout box) in section "Презентація правил (Presentation of Rules)" to address the missing plan objective
-2. Add 1 engagement box (e.g., `[!did-you-know]`) to meet richness gate
+1. Add "Привіт!" welcome at opening
+2. Add "Don't worry" moment after introducing soft sign exceptions (line 40)
+3. Add "Great job!" after the pronoun drill (after line 64)
+4. Replace flat ending (line 89) with "You can now identify gender for most Ukrainian nouns! That's a real superpower."
+5. Break section "Практичні вправи (Practice Exercises)" into smaller visual chunks
 
 **Expected score after fix:** 9/10
 
-### Experience Quality: 8/10 → 9/10
+### LLM Fingerprint: 6/10 → 9/10
 **What to fix:**
-1. Add a second engagement callout box (fixes richness gate)
-2. Add 2-3 short Ukrainian reading practice blocks (fixes immersion gap)
+1. Replace all 10+ "Let us" with "Let's"
+2. Vary section openings — not every section should start with "Let us [verb]"
+3. Remove 「The secret to the Ukrainian gender code lies right at the end of the word.」 and replace with direct instruction ("Gender in Ukrainian is easy to spot — just look at the ending.")
+4. Vary example formatting — use a table for one set, inline for another, dialogue for a third
 
 **Expected score after fix:** 9/10
 
-### Activities: 8/10 → 9/10
+### Pedagogy: 7/10 → 9/10
 **What to fix:**
-1. Add a quiz or fill-in activity that tests він/вона/воно pronoun assignment for objects (matching the "It Trap" teaching in section "Самостійна робота (Independent Work/Production)")
+1. Add declension families overview (even brief) to meet plan objective 2
+2. Remove or replace fabricated "сонце-життя" compound
+3. Replace "95% predictability rule" with unquantified statement
+4. Add the color-code mnemonic as an actual visual table (currently described in words only)
 
 **Expected score after fix:** 9/10
 
 ### Projected Overall After Fixes
-(9×1.5 + 9×1.1 + 9×1.2 + 9×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9 = (13.5 + 9.9 + 10.8 + 11.7 + 11.7 + 8.0 + 13.5) / 8.9 = 79.1 / 8.9 = **8.9/10**
+```
+(9×1.5 + 9×1.1 + 9×1.2 + 7×1.3 + 9×1.3 + 9×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 9.1 + 11.7 + 9.0 + 13.5) / 8.9
+= 77.5 / 8.9
+= 8.7/10
+```
+
+Note: Activities kept at 7 because item counts are below plan hints (4 activities vs suggested ~85 items). A rebuild of activities would be needed to push higher, but this is outside the content fix scope.
 
 ## Factual Verification
 
@@ -186,20 +198,19 @@ Plan-Content Alignment: FAIL
 - Dates checked: N/A
 - Named figures verified: N/A
 - Primary quotes cross-referenced: N/A
-- Grammar rules verified: Gender prediction rules match textbook references (Grade 3 p.110, Grade 4 p.35, Grade 6 p.129). Possessive pronoun diagnostic (мій/моя/моє) matches exactly.
-- Cultural claims: "земля-мати" ✅ verified (genuine Ukrainian folk concept). "сонце-життя" ❌ not attested in textbooks or standard dictionaries. "95% predictability" — plausible but unsourced.
-- D.0 Pre-Screen confirmation: STRESS_UNKNOWN for Зо́на and ста́рший — both confirmed valid in VESUM. INFO-level, no action needed.
+- Chronological sequence: N/A
+- Claims without research grounding: 1 found — "сонце-життя" as cultural compound, "95% predictability" as unsourced statistic
 
 ## Verification Summary
 
-- Content lines read: 94
-- Activity items checked: 48 (8 match-up + 8 quiz + 8 fill-in + 8 match-up + 15 group-sort items + 8 true-false + 8 anagram + 6 unjumble = all)
+- Content lines read: 89
+- Activity items checked: 40 (across 4 activities)
 - Ukrainian sentences verified: 25+
-- Citations in bank: 20
+- Citations in bank: 25
 - Issues found: 6
 
 ## Verdict
 
 **FAIL**
 
-Blocking issues: (1) Fabricated Ukrainian compound "сонце-життя" presented as cultural fact — must be removed or replaced with an attested expression; (2) Missing plan objective on 4 declension families needs at least a preview; (3) Immersion at 8.5% is below the 15% minimum for module 7 band; (4) Engagement boxes 1/2 — needs one more callout to pass richness gate. None of these are difficult fixes — one revision pass should bring this to PASS.
+Blocking issues: (1) Zero engagement boxes — audit gate failure, (2) Beginner Safety auto-fail at 6/10, (3) Experience Quality auto-fail at 6/10, (4) LLM Fingerprint auto-fail at 6/10. The Ukrainian grammar is solid and activities are functional, but the module reads like an LLM-generated textbook chapter, not a warm tutoring session. Fabricated "сонце-життя" compound and unmet declension families objective require content fixes. All issues are fixable without a full rebuild.

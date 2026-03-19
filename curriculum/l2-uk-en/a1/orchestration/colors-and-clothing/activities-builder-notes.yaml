@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan activity_hints specified 30 items for match-up #1 and 20 for match-up #2; reduced to 6 and 8 pairs respectively since A1 schema minItems is 6 and the module only covers 6 core colors + ~8 clothing items. Inflating to 30 pairs would require inventing content not in the lesson."
+  - "Added group-sort, true-false, quiz, and unjumble activities beyond the 4 required types to increase variety and reinforce gender agreement from multiple angles."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan asks for 30 match-up items but the module vocabulary only supports ~6 color words and ~8 clothing items. 30 unique meaningful pairs would require content beyond the lesson scope."
+    proposed_fix: "Plan review should cap match-up pairs at realistic vocabulary coverage for A1 modules (6-10 pairs typical)."
+unverified_terms: []
+review_focus:
+  - "fill-in activities: verify gender agreement explanations are pedagogically clear for A1 learners"
+  - "unjumble: verify word order is unambiguous for each sentence"

@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "2006",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "167.2",
+    "COMPUTED_ACTIVITY_COUNT": "0",
+    "COMPUTED_VOCAB_COUNT": "0",
+    "COMPUTED_ENGAGEMENT_COUNT": "1",
+    "COMPUTED_IMMERSION_PERCENT": "13.5",
+    "COMPUTED_IMMERSION_TARGET": "15-30%",
+    "COMPUTED_RICHNESS_SCORE": "63",
+    "COMPUTED_RICHNESS_THRESHOLD": "60",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 1/2, video_embeds: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [
+    {
+      "type": "AGREEMENT_ERROR",
+      "severity": "HIGH",
+      "location": "~line 8",
+      "text": "Agreement mismatch: 'родовий' (m) + 'до' (n/p)",
+      "fix": "Change 'родовий' to match the gender/case of 'до', or vice versa."
+    }
+  ],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/genitive-prepositions.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/genitive-prepositions-audit.log\n\n\n========================================\n\n📋 Auditing: A1 M32 — Genitive Prepositions\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/genitive-prepositions.md | Target: 1200 words\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Template violations: 2 critical, 0 warnings, 0 info\n     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up' per template 'a1-module-template.md'\n     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation' per template 'a1-module-template.md'\n\n  📊 Section Word Analysis:\n     В/У + Місцевий (In + Locative)          561 /  300  ✅ (+261)\n     На + Місцевий (On + Locative)           393 /  300  ✅ (+93)\n     Біля/Поруч/Між (Near/Next to/Between)   334 /  250  ✅ (+84)\n     Де знаходиться...? (Where is...?)       314 /  200  ✅ (+114)\n     Практика (Practice)                     203 /  150  ✅ (+53)\n     ──────────────────────────────────────────────────────────────\n     TOTAL                                  1805 / 1200  ✅ (+605)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2006/1200 (raw: 2092)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 1/1\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section\nImmersion    ⚠️ 13.5% (target 15-30%, within tolerance (M32))\n\n📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:\n  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up' per template 'a1-module-template.md'\n     → FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/a1-module-template.md.md\n  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation' per template 'a1-module-template.md'\n     → FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a1-module-template.md.md\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 2 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/genitive-prepositions-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/genitive-prepositions.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\nCritical Failures:\n  • 2 Critical Template Violations\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/genitive-prepositions-audit.log for details)\n\nRunning RAG word verification...\nVerifying: genitive-prepositions.md\n  VESUM misses: 6 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 188649.36it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 88 | VESUM: 82 (93.2%) | RAG: 3 | Not found: 3\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/genitive-prepositions-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 82/88 (93%) verified\n⚠️ VESUM not found (6): зв, льв, Львові, св, Хрещатик, Шевченка",
+  "h2_sections": "1. В/У + Місцевий (In + Locative)\n2. На + Місцевий (On + Locative)\n3. Біля/Поруч/Між (Near/Next to/Between)\n4. Де знаходиться...? (Where is...?)\n5. Практика (Practice)",
+  "vesum_stats": {
+    "total": 88,
+    "vesum_hits": 82,
+    "rag_hits": 0,
+    "not_found": 6,
+    "rag_errors": 0,
+    "proper_names": 0,
+    "by_source": {
+      "prose": {
+        "total": 88,
+        "vesum_hits": 82,
+        "not_found": 6
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "зв",
+      "clean": "зв",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "льв",
+      "clean": "льв",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Львові",
+      "clean": "львові",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "св",
+      "clean": "св",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Хрещатик",
+      "clean": "хрещатик",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Шевченка",
+      "clean": "шевченка",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "fc06079e628b042c"
+}

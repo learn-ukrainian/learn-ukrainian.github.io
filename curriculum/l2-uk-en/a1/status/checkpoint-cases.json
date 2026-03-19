@@ -2,13 +2,13 @@
   "module": "checkpoint-cases",
   "level": "A1",
   "plan_version": "1.0",
-  "last_audit": "2026-03-18T00:11:42.490323Z",
+  "last_audit": "2026-03-19T12:49:45.609189Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T00:11:28.144075Z",
+    "md": "2026-03-19T03:04:28.172322Z",
     "meta": "2026-03-18T00:11:12.293043Z",
-    "activities": null,
-    "vocabulary": null,
+    "activities": "2026-03-19T02:48:34.968260Z",
+    "vocabulary": "2026-03-19T02:48:35.039982Z",
     "research": "2026-03-12T10:17:14.349967Z",
     "plan": "2026-03-17T07:30:09.792797Z"
   },
@@ -19,24 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1337/1000 (raw: 1562)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2159/1000 (raw: 2376) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "6/0"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
-      "message": "PENDING — awaiting review"
+      "message": "PENDING \u2014 awaiting review"
     },
     "research": {
       "status": "pass",
@@ -44,20 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
-  },
-  "pipeline_status": "draft",
-  "pipeline_status_ts": "2026-03-17T23:11:55Z"
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
 }

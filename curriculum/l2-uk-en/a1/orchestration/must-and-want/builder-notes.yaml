@@ -1,0 +1,15 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1440
+deviations:
+  - section: "Треба / Потрібно"
+    reason: "Included explanation of Dative experiencer (menі, tobі) as chunks as per research notes."
+frictions: []
+research_gaps: []
+unverified_terms: []
+review_focus:
+  - "Verify the distinction between треба (impersonal) and повинен (personal) is clear for A1 learners."
+  - "Check the хот- to хоч- stem change explanation."
+rag_tools_used:
+  - "query.py text: треба, потрібно, повинен, хотіти → found textbook examples in Grade 3-5."
+  - "query.py word: verified all vocabulary words in VESUM."

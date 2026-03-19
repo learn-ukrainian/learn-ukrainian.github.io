@@ -1,28 +1,11 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1442
-deviations:
-  - section: "Складні випадки та практика"
-    reason: "Added second dialogue (at work) beyond plan's single museum context to meet dialogue variety requirements (4-6 dialogues). Museum context kept via cultural callout box."
-  - section: "Vocabulary"
-    reason: "закон introduced via cultural hook (ЗУНР) rather than main grammar content. Low frequency in drills but serves the plan's cultural engagement goal."
-frictions:
-  - type: PLAN_GAP
-    description: "Plan persona is 'Museum Curator' but the module focus is personal daily routine. Balanced by using museum as a cultural example location rather than framing the entire module from a curator perspective."
-  - type: TEMPLATE_CONSTRAINT
-    description: "Plan activity_hints suggest 25+20+6=51 fill-in items total. Reduced to 8+8+6=22 to keep activities proportional to content length (1442 words). Schema minimum of 6 per activity is met."
-research_gaps:
-  - "Grade 4 textbook excerpts had OCR artifacts, limiting direct textbook adaptation"
+word_count: 1743
+deviations: []
+frictions: []
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Verify ішов vs йшов usage consistency (VESUM has both іти and йти as separate lemmas; content uses ішов/ішла from іти)"
-  - "Check that надрукував and прийняла (perfective) are acceptable as cultural fixed phrases within an imperfective-only module"
-  - "Verify дужий means 'tired' in this context — cumulative vocab shows дужий but primary meaning is 'strong'. Consider replacing with alternative phrasing"
-rag_tools_used:
-  - "search_text: 'минулий час дієслів утворення суфікси -в -ла -ло -ли' grade=4 → Found Захарійчук p.147 (суфікси -л-, -в), Кравцова p.111 (gender paradigm)"
-  - "verify_words: batch 39 words (all lemmas + inflected forms) → 39/39 found"
-  - "verify_lemma: їсти → 22 forms confirmed (їв/їла/їло/їли past forms)"
-  - "verify_lemma: йти → 24 forms confirmed (йшов/йшла/йшло/йшли past forms)"
-  - "verify_lemma: дивитися → 41 forms confirmed (reflexive past forms)"
-  - "verify_words: batch 21 supplementary words → 21/21 found"
-  - "verify_words: batch 12 context words (ввечері, зранку, обід, закон, etc.) → 12/12 found"
+  - "Check that all distractors in activities correctly use standard verified past tense verb forms as requested by the plan."
+  - "Verify strict adherence to English/Ukrainian code-switching per A1 guidelines."
+rag_tools_used: []

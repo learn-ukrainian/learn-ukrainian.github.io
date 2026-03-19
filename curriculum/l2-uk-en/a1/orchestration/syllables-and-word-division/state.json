@@ -24,7 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T22:56:09Z",
+      "ts": "2026-03-19T01:41:01Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -32,18 +32,18 @@
       }
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T22:58:46Z",
-      "attempts": 1,
+      "status": "failed",
+      "ts": "2026-03-19T01:41:35Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-5-failures",
       "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "type": "deterministic",
+        "name": "morphological_validator"
       }
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T23:00:37Z",
+      "ts": "2026-03-19T01:43:19Z",
       "task_id": "v5-syllables-and-word-division-pC",
       "executor": {
         "type": "llm",
@@ -53,9 +53,9 @@
     },
     "review": {
       "status": "complete",
-      "ts": "2026-03-18T23:05:15Z",
-      "attempts": 1,
-      "note": "d1-inline-fixes",
+      "ts": "2026-03-19T01:54:50Z",
+      "attempts": 5,
+      "note": "exhausted-content-passes",
       "executor": {
         "type": "llm",
         "agent": "claude",

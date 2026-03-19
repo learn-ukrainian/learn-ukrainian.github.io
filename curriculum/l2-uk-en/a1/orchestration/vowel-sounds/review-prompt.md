@@ -46,17 +46,14 @@ Read ALL of these files before writing anything:
 ```yaml
 phase: CONTENT
 status: SUCCESS
-word_count: 1450
+word_count: 1354
 deviations:
-  - section: "none"
-    reason: "Followed the outline exactly."
-frictions: []
-research_gaps: []
-unverified_terms: []
+  - section: "Голосні в словах — Vowels in Words"
+    reason: "Included the exact phrase «Мама каже 'так'.» as required by the outline bullet point, despite the overarching phonetics phase grammar constraint against conjugated verbs, prioritizing structural compliance with the mandatory outline."
 review_focus:
-  - "Check that no Latin transliterations slipped in. Described sounds via English analogies (e.g. «the English word 'you'») instead of bracketed transliterations like 'ya' or 'ye'."
-rag_tools_used:
-  - "search_text: 'Base vowel pronunciation' → Confirmed Grade 1/2 pedagogy focusing on pure sounds and literal letter-to-sound matching."
+  - "Please review the strict inclusion of the verb 'каже' in 'Vowels in Words' section; it fulfills the outline but lightly violates the 'no verbs' rule."
+  - "Verified that all 18 target vocabulary words are naturally embedded in the text."
+  - "Verified distractors in the 'quiz' activity use only explicitly validated words (сир, сік, кіт, ліс, кит, син, риба, місто, ніс, стіл) to prevent VESUM validation failures."
 ```
 Focus your review on the `review_focus` items above.
 
@@ -81,13 +78,13 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Typography Artist
-Word count:       2153 / 1200 (179.4%)
+Word count:       1699 / 1200 (141.6%)
 Activities:       6
 Vocabulary items: 20
-Engagement boxes: 2
-Immersion:        5.2% (target: 5-15%)
-Richness:         77% (threshold: 60%)
-Richness gaps:    engagement: 1/2
+Engagement boxes: 0
+Immersion:        4.2% (target: 5-15%)
+Richness:         62% (threshold: 60%)
+Richness gaps:    engagement: 0/2, examples: 3/8
 Audit status:     FAIL
 ```
 
@@ -111,10 +108,18 @@ Audit status:     FAIL
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-1. **[STRESS_UNKNOWN]** (severity: INFO)
-   Location: ~line 98
-   Text: Stressed word not in dictionary: за́мок (замок)
-   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
+1. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 83
+   Text: Verb 'каже' (VESUM: verb:imperf:pres:s:3) in pre-verb module M2. Verbs are forbidden before M15.
+   Fix: Replace verb 'каже' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+2. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
+   Location: (whole module)
+   Text: Only 0 engagement boxes (minimum: 1 for A1)
+   Fix: Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+3. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+   Location: vowel-sounds.yaml
+   Text: Activity answers contain VESUM-failed words: кот
+   Fix: Fix spelling or replace these words — students will practice non-existent forms.
 
 ---
 
@@ -122,9 +127,11 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 61 | **VESUM coverage:** 60/61 (98.4%)
+**Words checked:** 54 | **VESUM coverage:** 51/54 (94.4%)
 
-**❌ Not found in VESUM or textbooks (1):**
+**❌ Not found in VESUM or textbooks (3):**
+- `кот` (source: activities)
+- `Кравцова` (source: prose)
 - `Європа` (source: prose)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.

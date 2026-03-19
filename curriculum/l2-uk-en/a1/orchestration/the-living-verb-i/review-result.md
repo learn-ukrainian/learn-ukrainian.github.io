@@ -1,164 +1,190 @@
-# Factual Review (Pass 1)
+# Рецензія: The Living Verb I
 
-## Plan Adherence Summary
-
-**Content outline points:** 14 total, 13 covered, 1 missing, 0 partial
-**Required vocabulary:** 8 total, 5 present, 3 missing (prose only)
-**Activity hints:** 3 total, 1 matched, 2 missing
-**Plan Adherence Score:** 9/10
-
-### Plan Point Coverage
-
-- Section "Вступ (Introduction)":
-  - [x] Point 1: "Transition from static descriptions... to dynamic action verbs": COVERED ("You're moving from «this is» to «I do»...")
-  - [x] Point 2: "Historical hook: The 'Apostol' (1574) by Ivan Fedorov...": COVERED ("In 1574, a man named Ivan Fedorov set up a друкарня (printing press) in Lviv and printed the «Апостол»...")
-  - [x] Point 3: "Aligning with State Standard §4.2.4.1: Introduction to indicative mood conjugation...": COVERED (Introduces present tense conjugation using 'читати' and 'працювати')
-  - **Word Target Check:** Target 250 words. Actual is ~150 words. **MEDIUM** (Section is >10% under target).
-
-- Section "Презентація (Presentation)":
-  - [x] Point 1: "Visualizing the First Conjugation pattern...": COVERED (Includes "The Stem + Ending Table" showing чит + аю, etc.)
-  - [x] Point 2: "Concept of Imperfective Aspect: Focus on ongoing or habitual actions...": COVERED (Section "Imperfective Aspect — Process, Not Result" explains this clearly)
-  - [x] Point 3: "Pro-drop feature: Explain that the ending 'is' the pronoun...": COVERED (Section "Pro-drop: The Ending Is the Pronoun" covers this)
-  - [x] Point 4: "Visual aid for regularity: Applying the pattern to the State Standard examples...": COVERED (Tables provided for both 'читати' and 'працювати')
-  - **Word Target Check:** Target 350 words. Actual is ~220 words. **MEDIUM** (Section is >10% under target).
-
-- Section "Практика (Practice)":
-  - [x] Point 1: "Error Correction: Addressing 'Infinitive Abuse'...": COVERED (Section "Breaking the Infinitive Habit" explicitly addresses this)
-  - [x] Point 2: "Error Correction: Reducing 'Pronoun Overuse'...": COVERED (Section "Dropping the Pronoun" drills this concept)
-  - [x] Point 3: "SVO Sentence Drills: Use inanimate masculine and neuter objects...": COVERED (Examples include "Я читаю журнал", "Ти пишеш лист", "Вона слухає радіо")
-  - [x] Point 4: "Contextual application: Describing a daily routine...": COVERED (Section "Your Morning Routine" block provides this context)
-  - **Word Target Check:** Target 350 words. Actual is ~220 words. **MEDIUM** (Section is >10% under target).
-
-- Section "Культурний аспект та підсумок (Cultural Insight and Summary)":
-  - [ ] Point 1: "Cultural Proverb: 'Птицю пізнати по пір'ю, а людину по мові'...": MISSING (The module incorrectly uses "Знання — це сила." instead)
-  - [x] Point 2: "The 'Master Key' metaphor: Summarizing how this one conjugation pattern unlocks...": COVERED (Section "The Master Key" uses this exact metaphor)
-  - [x] Point 3: "Summary of the transition from English instructional scaffolding to initial Ukrainian immersion...": COVERED ("This is the shift from static to dynamic Ukrainian...")
-  - **Word Target Check:** Target 250 words. Actual is ~150 words. **MEDIUM** (Section is >10% under target).
-
-### Required Vocabulary Coverage
-
-| Word | In Prose? | In Activities? | Status |
-|------|-----------|---------------|--------|
-| читати | YES | YES | PRESENT |
-| писати | YES | NO | PROSE ONLY |
-| знати | YES | YES | PRESENT |
-| працювати | YES | YES | PRESENT |
-| слухати | YES | YES | PRESENT |
-| питати | YES | NO | PROSE ONLY |
-| грати | YES | YES | PRESENT |
-| чекати | YES | NO | PROSE ONLY |
-
-### Activity Hints Coverage
-
-| Hint Type | Focus | Required Items | Found? | Actual Items |
-|-----------|-------|---------------|--------|-------------|
-| fill-in | Conjugate First Conjugation verbs | 30 | NO | 0 |
-| fill-in | Complete with correct verb form | 20 | NO | 0 |
-| match-up | Match pronoun to verb form | 18 | YES | 6 |
-*(Note: The match-up activity is present but significantly misses the required item count of 18).*
-
-### Missing Plan Points (Fix Targets)
-
-- Культурний аспект та підсумок (Cultural Insight and Summary): Cultural Proverb: 'Птицю пізнати по пір'ю, а людину по мові' (A bird is known by its feathers, a person by their speech) — linking grammatical accuracy to personal character.
-
----
-
-## Factual Verification Summary
-
-**Total claims checked:** 6
-**Confirmed [Tier 1]:** 1
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 5
-**Factual Alignment Score:** 10/10
-
-## Confirmed Claims
-
-- **Use of "Я читаю / Я слухаю" as a standard structural drill.**
-  - **Module says:** "(At the cafe / У кафе) — Що ти читаєш? — Читаю журнал..." and "(At home / Вдома) ... Я вивчаю слова. ... Слухаєш радіо? — Так, слухаю."
-  - **Reference says:** "Я читаю ? . Я слухаю ? ."
-  - **Source:** [2-klas-ukrmova-vashulenko-2019-1_s0080]
-
-## Discrepancies
-
-None found against the provided reference texts.
-
-## Unverified Claims
-
-- "In 1574, a man named Ivan Fedorov set up a друкарня (printing press) in Lviv and printed the «Апостол»..." (No reference coverage)
-- The precise mechanics of First Conjugation endings (-ю, -єш, -є, -ємо, -єте, -ють) and stem rules. (No reference coverage explicitly teaching the rule, though resulting forms exist in the textbook chunks)
-- "Verbs ending in -увати... працювати drops it in the stem: я працюю". (No reference coverage)
-- Explanation of the Imperfective aspect as "Process, Not Result". (No reference coverage)
-- The consonant alternation rule in "писати" (с → ш). (No reference coverage, although forms like "пишу" appear in Grade 7 chunks).
-
-## Verdict
-
-**Status:** PASS
-(0 HIGH severity discrepancies and only 1 MISSING plan point found. However, there are significant warnings regarding missing activities and sections being under the target word budget.)
-
----
-
-# Language Review (Pass 2)
-
-**Reviewed-By:** gemini-2.5-pro (RAG-grounded)
-
+**Level:** A1 | **Module:** 15
+**Overall Score:** 7.8/10
 **Status:** FAIL
-**Overall Score:** 7.7/10
+**Reviewed:** 2026-03-19
+**Reviewed-By:** claude-sonnet-4-6
+
+## Plan Verification
+
+```
+Plan-Content Alignment: PARTIAL FAIL
+- Sections: 4/4 present (Вступ, Презентація, Практика, Культурний аспект та підсумок)
+- Vocabulary: 8/8 required present in prose, 4/4 recommended present; 20 total vocab items
+- Grammar scope: PARTIAL — First Conjugation covered but -яти class absent despite subtitle
+- Objectives: 4/4 addressed
+```
+
+### Plan Adherence Checklist — Content Outline Points
+
+**Section "Вступ (Introduction)":**
+- "Transition from static descriptions to dynamic action verbs" — COVERED: Line 3 discusses moving from "this is" structures to "I read a book"
+- "Historical hook: Apostol (1574) by Ivan Fedorov" — COVERED: Line 7 presents the Apostol and reads as culturally grounded
+- "Aligning with State Standard §4.2.4.1" — COVERED: Line 9 references the State Standard and indicative mood
+
+**Section "Презентація (Presentation)":**
+- "Visualizing the First Conjugation pattern using a 'Stem + Ending' table (e.g., чит + аю)" — PARTIAL: The content uses "чита- + -ю" decomposition (lines 17, 19-26) rather than the plan's "чит + аю". Both are valid but the plan's specific visualization is not followed.
+- "Concept of Imperfective Aspect" — COVERED: Line 30 explains ongoing/habitual aspect
+- "Pro-drop feature" — COVERED: Line 28 explains pro-drop clearly
+- "Visual aid for regularity: applying pattern to читати, працювати" — COVERED: Lines 19-26 (читати), 34-41 (знати), 48-54 (працювати)
+
+**Section "Практика (Practice)":**
+- "Infinitive Abuse error correction" — COVERED: Lines 89-99
+- "Pronoun Overuse error correction" — COVERED: Lines 104-114
+- "SVO Sentence Drills with inanimate nom=acc objects" — COVERED: Lines 116-124
+- "Contextual application: daily routine" — COVERED: Lines 128-148 (mini-story) + 150-164 (dialogue)
+
+**Section "Культурний аспект та підсумок (Cultural Insight and Summary)":**
+- "Cultural Proverb: Птицю пізнати по пір'ю, а людину по мові" — **MISSING (HIGH)**: Line 170 lists individual words in nominative (「There is a profound and wonderful Ukrainian proverb about these words: **Птиця** (bird), **пір'я** (feathers), **людина** (person), and **мова** (speech). The proverb translates to "A bird is known by its feathers, a person by their speech."」) but the full Ukrainian proverb text is never presented. The learner never sees "Птицю пізнати по пір'ю, а людину по мові."
+- "Master Key metaphor" — COVERED: Line 172
+- "Summary of transition from English scaffolding to Ukrainian immersion" — COVERED: Lines 173-176
+
+**Vocabulary Check:**
+- Required: читати ✅, писати ✅, знати ✅, працювати ✅, слухати ✅, питати ✅, грати ✅, чекати ✅ (8/8)
+- Recommended: думати ✅, розуміти ✅, вивчати ✅, відпочивати ✅ (4/4)
+
+**Activity Hints:**
+- fill-in (conjugation): Plan asked 30 items → got 8 items (PARTIAL)
+- fill-in (complete form): Plan asked 20 items → got 8 items (PARTIAL)
+- match-up: Plan asked 18 items → got 9 pairs (PARTIAL)
+- Extra activity types not in plan: quiz (6), true-false (6), unjumble (6), group-sort (12) — good variety compensates partially
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | The flow is generally good, but the duplicated summary and AI-sounding repetitive conclusions ("fundamental engine") at the end disrupt the learner experience. |
-| 2 | Language | 7/10 | <8 | In the "Практика" dialogue, «Ти знаєш, хто це?» is used as an English calque for "Do you know who it is?" (meaning "to whom"). This is unnatural in Ukrainian. |
-| 3 | Pedagogy | 6/10 | <7 | The module teaches `-ю, -єш, -є...` and then introduces `писати` noting "The endings are still First Conjugation (-у, -еш, -е...)". It expects the learner to understand this without having introduced the hard-stem endings `-у, -еш, -е` yet. Furthermore, it claims the `-ю, -єш` endings unlock all listed verbs, including `писати`, which contradicts its own lesson. |
-| 4 | Activities | 10/10 | <7 | The single match-up activity is well-formatted, uses correct forms, and reinforces the core grammar concept accurately. |
-| 5 | Beginner Safety | 8/10 | <7 | Generally safe, but the sudden appearance of the `-у, -еш, -е` endings without prior warning or structural explanation will cause some confusion for absolute beginners. |
-| 6 | LLM Fingerprint | 6/10 | <7 | The ending of the module contains classic AI filler. It has a concluding paragraph ("Throughout this module, we've explored how the First Conjugation pattern serves as the fundamental engine...") immediately followed by a `# Summary` header containing nearly identical phrasing ("You have unlocked the fundamental engine..."). |
-| 7 | Linguistic Accuracy | 8/10 | <9 | The statement "The endings are still First Conjugation (-у, -еш, -е...)" is technically true but pedagogically imprecise for a learner who was just told the "entire secret" is `-ю, -єш`. It fails to distinguish between the soft/vowel stems and hard stems of the First Conjugation. |
+| 1 | Experience Quality | 8/10 | <7 | Warm tutor voice, good arc, but opening paragraphs are English-heavy (lines 3-9 are ~250 words of English before any drill). The sports commentator persona from plan is completely absent. |
+| 2 | Language | 8/10 | <8 | English prose is clear and B1-accessible. Ukrainian is grammatically correct. However, proverb presented incorrectly — individual nominative words instead of full Ukrainian sentence. |
+| 3 | Pedagogy | 8/10 | <7 | PPP structure followed well. Error correction drills (Infinitive Abuse, Pronoun Overuse) are excellent. But plan's stem visualization (чит + аю) not used; -яти class promised in subtitle but absent. |
+| 4 | Activities | 8/10 | <7 | 7 activity types with 55 total items — good variety. Fill-in items 16/50 vs plan (acknowledged deviation). All items are linguistically correct. Minor: VESUM flagged items are endings/fragments in prose, not activity errors. |
+| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5 Pass. Warm throughout, clear instructions, quick wins via tables, encouraging closing. Slight risk: dialogue introduces робити (II conj.) and їхати (irregular) without warning. |
+| 6 | LLM Fingerprint | 8/10 | <7 | Section openings vary: "So far on your Ukrainian journey" / "Let's look at how" / "Now that we have the key" / culture block. No structural monotony. However, line 5 uses stacked abstract metaphors: 「This brings us to the beating heart of Ukrainian communication: the verb.」 followed by "engines of your sentences" — slightly LLM-flavored. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All conjugation tables verified correct. ~~працюваю~~ correctly flagged. Euphonic в/у alternation correct (грати в ігри / граєш у ігри). Scope issue: dialogue uses робити, їхати without noting they're different conjugation types. |
 
-**Weighted Overall:** (12.0 + 7.7 + 7.2 + 13.0 + 10.4 + 6.0 + 12.0) / 8.9 = **7.7/10**
+**Weighted Overall:**
+```
+(8×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (12.0 + 8.8 + 9.6 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
+= 74.0 / 8.9
+= 8.31/10
+```
+
+**Weighted Overall = 8.3/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: **CLEAN** — no Russianisms detected. "працюваю" is properly flagged as an error, not presented as correct.
+- Calques: **CLEAN**
+- Colonial framing: **CLEAN** — "Unlike English" (line 13) contrasts with English (L1), not Russian. Legitimate L2 pedagogy.
+- Grammar scope: **FLAG** — dialogue uses робити (II conjugation) and їхати (irregular) without scope note.
+- Activity errors: **CLEAN** — all answers verified correct; VESUM flags on "працюваю", "ю", "ють", "ємо", "єте" are from the prose where they appear as endings/fragments, not as standalone word claims.
+- Beginner safety: 5/5
+- Factual accuracy: **CLEAN** — Apostol (1574) claim is accurate. Proverb is a real proverb, just not presented in full Ukrainian.
 
 ## Critical Issues Found
 
-### Issue 1: Unnatural English Calque in Dialogue
-**Location**: `## Практика (Practice)` -> `### Dialogue`
-**Problem**: The dialogue asks «Ти знаєш, хто це?» to mean "Do you know who it is? [that I am writing to]". In Ukrainian, «хто це?» asks "who is this person/thing?", often pointing at someone. Asking about the recipient of a letter should be «кому?» (to whom).
-**Fix**: Change «Ти знаєш, хто це?» to «Ти знаєш, кому?».
+### Issue 1: Missing Full Ukrainian Proverb (HIGH — Plan Adherence)
+- **Location**: Line 170, Section "Культурний аспект та підсумок (Cultural Insight and Summary)"
+- **Original**: 「There is a profound and wonderful Ukrainian proverb about these words: **Птиця** (bird), **пір'я** (feathers), **людина** (person), and **мова** (speech). The proverb translates to "A bird is known by its feathers, a person by their speech."」
+- **Problem**: The plan requires the proverb "Птицю пізнати по пір'ю, а людину по мові" to be presented in full Ukrainian. The content lists individual words in nominative case and gives only an English translation. The learner never encounters the actual proverb. The nominative forms (Птиця, пір'я, людина, мова) misrepresent the proverb, which uses accusative and other cases (Птицю, пір'ю, людину, мові).
+- **Fix**: Replace the passage to include the full Ukrainian proverb with bolded text, followed by a word-by-word gloss and the English translation.
 
-### Issue 2: Pedagogical Gap on Hard-Stem Endings
-**Location**: `## Практика (Practice)` -> `### Breaking the Infinitive Habit`
-**Problem**: The callout says: "The endings are still First Conjugation (-у, -еш, -е...)". The learner has only seen `-ю, -єш, -є` so far. Dropping `-у, -еш, -е` here without explaining that these are simply the hard-consonant versions of the same endings causes a pedagogical gap.
-**Fix**: Clarify that after the new consonant `ш`, the endings shift to their hard forms (-у, -еш, -е).
+### Issue 2: Scope Creep — Non-First-Conjugation Verbs in Dialogue (MEDIUM)
+- **Location**: Lines 153, 156, 160, 162 — Section "Практика (Practice)"
+- **Original**: 「Привіт, Іване! Що ти робиш зараз? Ти працюєш?」 and 「Ви студенти. Ви багато працюєте. А ваші друзі? Що роблять вони?」 and 「Я зараз чекаю на автобус. Я їду в магазин.」
+- **Problem**: "робити" is Second Conjugation (робиш, роблять — not the -ю/-єш/-є pattern taught), and "їхати" is irregular (їду — not the standard ending). A learner may try to apply the First Conjugation pattern to these verbs. No note or caveat is provided.
+- **Fix**: Add a brief `[!tip]` after the dialogue noting that "робити" and "їхати" follow different patterns that will be taught in the next module (The Living Verb II).
 
-### Issue 3: Contradictory "Master Key" Claim
-**Location**: `## Культурний аспект та підсумок (Cultural Insight and Summary)` -> `### The Master Key`
-**Problem**: The text claims: "With just six endings (-ю, -єш, -є, -ємо, -єте, -ють), you can now unlock hundreds of -ати verbs. You already know читати, писати...". However, `писати` does *not* use those six endings; it uses the `-у, -еш` set introduced earlier as an exception.
-**Fix**: Remove `писати` from the list of verbs unlocked "with just six endings (-ю, -єш...)", or separate it out as a known exception.
+### Issue 3: Low Immersion (MEDIUM — Below Audit Target)
+- **Location**: Entire module — all sections
+- **Problem**: Immersion is 12.1% vs the 15-25% target for this module position. The module is heavily English-dominant, particularly in sections "Вступ (Introduction)" (lines 3-9: ~250 words of pure English) and "Культурний аспект та підсумок (Cultural Insight and Summary)" (lines 168-184: mostly English).
+- **Fix**: Add a short Ukrainian Reading Practice block after the Презентація section with 4-5 simple sentences using taught verbs, with translations. Convert some English explanation in the summary section to Ukrainian sentences with glosses.
 
-### Issue 4: LLM Fingerprint / Duplicated Summary
-**Location**: End of the file before `## Activities`
-**Problem**: The file has a concluding paragraph right before the `# Summary` header, and both paragraphs use the exact same LLM-generated phrasing: "fundamental engine".
-**Fix**: Remove the redundant paragraph before the Summary header to create a clean, single wrap-up.
+### Issue 4: Missing Video Embeds (LOW — Richness Gap)
+- **Location**: Entire module
+- **Problem**: Richness audit shows video_embeds: 0/2. No pronunciation or conjugation demonstration videos are embedded.
+- **Fix**: Add 2 video embed placeholders — one for conjugation pattern demonstration in "Презентація (Presentation)", one for pronunciation of key verbs in "Практика (Practice)".
 
 ## Ukrainian Language Issues
 
-- `Ти знаєш, хто це?` is an incorrect translation of the English intent "Do you know who it [the recipient] is?". It must be `Ти знаєш, кому?`.
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 170 | Individual nominative words: Птиця, пір'я, людина, мова | Full proverb: 「Птицю пізнати по пір'ю, а людину по мові」 | Missing content |
+| 153, 160 | робиш, роблять (no scope note) | Add note: these are II conjugation, covered later | Scope |
+| 162 | їду (no scope note) | Add note: їхати is irregular, covered later | Scope |
 
-## Fix Plan to Reach 9.0+
+## Beginner Safety Audit
 
-1.  **Fix Dialogue:** Correct the unnatural phrasing in the cafe dialogue from `хто це?` to `кому?` and update the English translation accordingly.
-2.  **Clarify Grammar Note:** Update the `писати` note to explicitly state that the endings change to hard forms (-у, -еш) because of the new consonant `ш`.
-3.  **Correct Master Key List:** Separate `писати` from the list of verbs that strictly use the `-ю, -єш` endings in the Master Key section.
-4.  **Remove Filler:** Delete the redundant paragraph before the `# Summary` header.
+"Would I Continue?" Test: 5/5
+- Overwhelmed? **Pass** — comfortable pacing, good use of tables, manageable vocabulary load (~12 new verbs introduced gradually)
+- Instructions clear? **Pass** — each section opens with clear purpose statement; tables are well-formatted
+- Quick wins? **Pass** — conjugation tables immediately actionable; pro-drop feature framed as empowering ("you already know how!")
+- Ukrainian scary? **Pass** — all Ukrainian supported with English translations; 「Practice narrating your own actions as you do them. As you send a text, think: **пишу повідомлення**.」 is encouraging and practical
+- Come back tomorrow? **Pass** — closing with self-check questions and 「If you can confidently answer these questions, you have successfully mastered the living verb!」 is validating
+
+## Strengths
+- **Excellent error correction pedagogy**: The "Infinitive Abuse" and "Pronoun Overuse" sections are research-grounded, directly address documented English-speaker errors, and provide clear drills. This mirrors the teaching strategy from the research notes.
+- **Natural dialogue**: The Anna/Ivan dialogue (lines 153-164) feels authentic — 「Я вже багато знаю і розумію.」 and 「Вони також працюють. Вони читають, пишуть і слухають. Ми всі вивчаємо текст.」 demonstrate natural pro-drop and varied verb use.
+- **Strong verb tables**: All three paradigm tables (читати, знати, працювати) are correctly conjugated and clearly formatted. The ~~працюваю~~ warning (line 56: 「Do not fall into the trap of saying ~~працюваю~~! Always remember to compress the stem.」) is pedagogically smart.
+- **Daily routine phrases** (lines 62-84) are immediately practical and high-frequency collocations.
+
+## Fix Plan to Reach 9/10 (REQUIRED — score is 8.3)
+
+### Language: 8/10 → 9/10
+**What to fix:**
+1. Line 170: Replace nominative word list with full Ukrainian proverb: **Птицю пізнати по пір'ю, а людину по мові** — bolded, with word-by-word gloss. This fulfills the plan requirement and gives the learner a real Ukrainian cultural artifact.
+
+**Expected score after fix:** 9/10
+
+### Experience Quality: 8/10 → 9/10
+**What to fix:**
+1. After line 164: Add a `[!tip]` noting that "робити" and "їхати" follow different patterns (Coming in The Living Verb II). This prevents confusion without requiring a full explanation.
+2. Between sections "Презентація" and "Практика": Add a Ukrainian Reading Practice block (4-5 sentences using taught verbs only) to boost immersion from 12.1% toward 15%.
+
+**Expected score after fix:** 9/10
+
+### Pedagogy: 8/10 → 9/10
+**What to fix:**
+1. Address -яти gap: Add one -яти example verb (e.g., гуляти) to the Презентація paradigm area, or add a brief note that -яти verbs follow the same pattern, to honor the subtitle's promise.
+
+**Expected score after fix:** 9/10
+
+### Activities: 8/10 → 9/10
+**What to fix:**
+1. No critical fixes needed — the 7 activity types provide good variety. The fill-in count deviation was acknowledged by the builder. Items are all correct.
+
+**Expected score after fix:** 8/10 (no change — acceptable)
+
+### Projected Overall After Fixes
+```
+(9×1.5 + 9×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
+= 77.8 / 8.9
+= 8.74/10
+```
+
+## Factual Verification
+
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (not a seminar track)
+- Dates checked: 1 (1574 Apostol — correct)
+- Named figures verified: 1 (Ivan Fedorov — correct)
+- Primary quotes cross-referenced: NOT_APPLICABLE
+- Chronological sequence: CONSISTENT
+- Claims without research grounding: 0
+- Proverb "Птицю пізнати по пір'ю, а людину по мові" — real proverb, confirmed in research notes
 
 ## Verification Summary
 
-- Read entire module content and structure.
-- Checked dialogue against natural Ukrainian usage.
-- Cross-referenced the introduced grammar rules against the examples provided later in the text.
-- Verified vocabulary items and activity formatting.
+- Content lines read: 187
+- Activity items checked: 55 (across 7 activities)
+- Ukrainian sentences verified: 42
+- Citations in bank: 15
+- Issues found: 4 (1 HIGH, 2 MEDIUM, 1 LOW)
 
 ## Verdict
 
-**Status:** FAIL
-**Rationale:** The module contains a noticeable English calque in a core dialogue and a pedagogical contradiction regarding the First Conjugation endings for `писати`. It also exhibits strong LLM fingerprinting at the end. These issues must be fixed before approval.
+**FAIL**
+
+The module is pedagogically strong with excellent error correction drills and a natural dialogue, but fails on two blocking issues: (1) the plan-required Ukrainian proverb is not presented in full — only individual words in wrong cases with an English translation (HIGH), and (2) immersion is below the audit target at 12.1% vs 15-25% (MEDIUM, contributing to audit FAIL status). Fixing the proverb, adding a scope note for non-First-Conjugation verbs in the dialogue, and adding a short Ukrainian reading practice block should bring this to passing quality.

@@ -1,15 +1,15 @@
 - type: watch-and-repeat
   title: "Consonant Pronunciation Practice"
-  instruction: "Watch each video by Anna Ohoiko, then repeat the consonant sound and example word aloud. Focus on how your mouth, lips, and tongue move."
+  instruction: "Watch each video, then repeat the sound and example word aloud. Focus on how each consonant is produced."
   items:
     - letter: "Р"
       word: "риба"
       video: "https://www.youtube.com/watch?v=fMGsQ5KPQgg"
-      note: "Rolled/trilled R — tongue-tip trill against the roof of your mouth"
+      note: "Rolled/trilled R — let your tongue tip vibrate"
     - letter: "В"
       word: "вода"
       video: "https://www.youtube.com/watch?v=aFcvYfvQ2X4"
-      note: "Closer to English W than V — lips rounded, no teeth on lip"
+      note: "Closer to English W — keep lips rounded, no teeth on lip"
     - letter: "Б"
       word: "бабуся"
       video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
@@ -17,94 +17,94 @@
     - letter: "П"
       word: "павук"
       video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
-      note: "Voiceless partner of Б — same lip position, only air"
+      note: "Voiceless partner of Б — same mouth position, no buzz"
     - letter: "Д"
       word: "дім"
       video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
-      note: "Voiced — tongue touches the same spot as Т"
+      note: "Voiced — tongue touches upper teeth"
     - letter: "Т"
       word: "тато"
       video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
-      note: "Voiceless partner of Д — same tongue position, only air"
+      note: "Voiceless partner of Д"
     - letter: "З"
       word: "зуб"
       video: "https://www.youtube.com/watch?v=BhASNxitC1A"
-      note: "Voiced — feel the buzz when you say it"
+      note: "Voiced — like English Z"
     - letter: "С"
       word: "суп"
       video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
-      note: "Voiceless partner of З — only air, no buzz"
+      note: "Voiceless partner of З — like English S"
     - letter: "Ж"
       word: "жук"
       video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
-      note: "Voiced — like the s in English measure"
+      note: "Voiced — like ZH in measure"
     - letter: "Ш"
       word: "шапка"
       video: "https://www.youtube.com/watch?v=1D-6MIw3OXY"
-      note: "Voiceless partner of Ж — like English sh"
+      note: "Voiceless partner of Ж — like English SH"
     - letter: "Г"
       word: "гора"
       video: "https://www.youtube.com/watch?v=gVnclpSI0DU"
-      note: "Soft throaty sound (voiced glottal fricative) — NOT a hard g"
+      note: "Soft throaty sound — NOT a hard G"
     - letter: "Х"
       word: "хліб"
       video: "https://www.youtube.com/watch?v=vpr58zJSJKc"
-      note: "Voiceless partner of Г — like ch in Scottish loch"
+      note: "Voiceless partner of Г — like CH in Scottish loch"
 
 - type: classify
   title: "Sort the Consonants"
-  instruction: "Drag each consonant letter into the correct category based on how it is produced."
+  instruction: "Drag each consonant into the correct category based on how it is produced."
   categories:
     - label: "Sonorant (musical, voice dominates)"
       symbol_hint: "sonorant"
       items: ["Л", "М", "Н", "Р", "В"]
-    - label: "Voiced (buzz in throat)"
+    - label: "Voiced (buzz with vocal cords)"
       symbol_hint: "voiced"
-      items: ["Б", "Д", "З", "Ж", "Г"]
+      items: ["Б", "Д", "З", "Ж", "Г", "Ґ"]
     - label: "Voiceless (air only, no buzz)"
       symbol_hint: "voiceless"
-      items: ["П", "Т", "С", "Ш", "Х"]
+      items: ["П", "Т", "С", "Ш", "Х", "К"]
 
 - type: image-to-letter
   title: "What Letter Does It Start With?"
-  instruction: "Look at the picture and tap the Ukrainian consonant letter that the word starts with."
+  instruction: "Look at the picture. Which Ukrainian consonant does this word start with?"
   items:
-    - emoji: "🪲"
+    - emoji: "🐛"
       answer: "Ж"
-      distractors: ["З", "Ш", "Г"]
+      distractors: ["Ш", "З"]
       note: "жук (beetle)"
     - emoji: "🧢"
       answer: "Ш"
-      distractors: ["Ж", "С", "Щ"]
+      distractors: ["Ж", "С"]
       note: "шапка (hat)"
-    - emoji: "🤚"
+    - emoji: "✋"
       answer: "Р"
-      distractors: ["Л", "Н", "М"]
+      distractors: ["Л", "Н"]
       note: "рука (hand)"
-    - emoji: "🐺"
-      answer: "В"
-      distractors: ["Б", "Г", "Д"]
-      note: "вовк (wolf)"
+    - emoji: "🐟"
+      answer: "Р"
+      distractors: ["Л", "В"]
+      note: "риба (fish)"
     - emoji: "🏔️"
       answer: "Г"
-      distractors: ["Ґ", "Х", "К"]
+      distractors: ["Х", "К"]
       note: "гора (mountain)"
+    - emoji: "🐺"
+      answer: "В"
+      distractors: ["Б", "Г"]
+      note: "вовк (wolf)"
     - emoji: "🍞"
       answer: "Х"
-      distractors: ["Г", "К", "Ш"]
+      distractors: ["Г", "К"]
       note: "хліб (bread)"
-    - emoji: "🐱"
-      answer: "К"
-      distractors: ["Ґ", "Х", "Г"]
-      note: "кіт (cat)"
     - emoji: "🕷️"
       answer: "П"
-      distractors: ["Б", "Т", "В"]
+      distractors: ["Б", "В"]
       note: "павук (spider)"
 
 - type: match-up
-  title: "Match Voiced to Voiceless Partner"
-  instruction: "Each voiced consonant has a voiceless partner. Match them together."
+  title: "Voiced and Voiceless Partners"
+  instruction: "Match each voiced consonant on the left to its voiceless partner on the right."
   pairs:
     - left: "Б (voiced)"
       right: "П (voiceless)"
@@ -120,135 +120,127 @@
       right: "К (voiceless)"
 
 - type: quiz
-  title: "Voiced or Voiceless? The Hands-on-Ears Test"
-  instruction: "Imagine covering your ears and saying each sound. Would you hear a buzz (voiced) or only air (voiceless)?"
+  title: "Hands-on-Ears Test"
+  instruction: "Imagine covering your ears and saying each consonant. Would you hear a buzz (voiced) or just air (voiceless)?"
   items:
-    - question: "You cover your ears and say the Б sound. What do you hear?"
+    - question: "You say the sound for Б. Do you feel a buzz or just air?"
+      explanation: "Б is voiced — you would feel a strong buzz when you cover your ears and say it."
       options:
-        - text: "A strong buzz — it is voiced"
+        - text: "Buzz (voiced)"
           correct: true
-        - text: "Only air — it is voiceless"
+        - text: "Air only (voiceless)"
           correct: false
-        - text: "Nothing at all"
+        - text: "It is a sonorant"
           correct: false
-        - text: "A whistle sound"
+        - text: "No sound at all"
           correct: false
-      explanation: "Б is a voiced consonant. When you cover your ears, you hear a clear buzz because your vocal cords vibrate."
-    - question: "You cover your ears and say the П sound. What do you hear?"
+    - question: "You say the sound for С. Do you feel a buzz or just air?"
+      explanation: "С is voiceless — you only hear the rush of air, no buzz."
       options:
-        - text: "Only air — it is voiceless"
+        - text: "Buzz (voiced)"
+          correct: false
+        - text: "Air only (voiceless)"
           correct: true
-        - text: "A strong buzz — it is voiced"
+        - text: "It is a sonorant"
           correct: false
-        - text: "A humming sound"
+        - text: "No sound at all"
           correct: false
-        - text: "A clicking sound"
-          correct: false
-      explanation: "П is the voiceless partner of Б. Your lips are in the same position, but your vocal cords do not vibrate."
-    - question: "Which consonant in the pair З/С is voiceless?"
+    - question: "You say the sound for Ж. Do you feel a buzz or just air?"
+      explanation: "Ж is voiced — like the ZH in English measure. You feel a buzz."
       options:
-        - text: "С"
+        - text: "Buzz (voiced)"
           correct: true
-        - text: "З"
+        - text: "Air only (voiceless)"
           correct: false
-        - text: "Both are voiceless"
+        - text: "It is a sonorant"
           correct: false
-        - text: "Neither is voiceless"
+        - text: "No sound at all"
           correct: false
-      explanation: "С is voiceless (only air). З is its voiced partner (you hear a buzz)."
-    - question: "You cover your ears and say the Ж sound. What do you hear?"
+    - question: "You say the sound for Х. Do you feel a buzz or just air?"
+      explanation: "Х is voiceless — like the CH in Scottish loch. Air only, no buzz."
       options:
-        - text: "A buzz — it is voiced"
+        - text: "Buzz (voiced)"
+          correct: false
+        - text: "Air only (voiceless)"
           correct: true
-        - text: "Only air — it is voiceless"
+        - text: "It is a sonorant"
           correct: false
-        - text: "A high-pitched ring"
+        - text: "No sound at all"
           correct: false
-        - text: "Silence"
-          correct: false
-      explanation: "Ж is voiced, like the s in English measure. Its voiceless partner is Ш."
-    - question: "Which of these consonants is voiceless?"
+    - question: "You say the sound for Д. Do you feel a buzz or just air?"
+      explanation: "Д is voiced — its voiceless partner is Т."
       options:
-        - text: "Т"
+        - text: "Buzz (voiced)"
           correct: true
-        - text: "Д"
+        - text: "Air only (voiceless)"
           correct: false
-        - text: "Б"
+        - text: "It is a sonorant"
           correct: false
-        - text: "Ж"
+        - text: "No sound at all"
           correct: false
-      explanation: "Т is voiceless. Д, Б, and Ж are all voiced consonants."
-    - question: "You cover your ears and say the М sound. What do you hear?"
+    - question: "You say the sound for П. Do you feel a buzz or just air?"
+      explanation: "П is voiceless — its voiced partner is Б."
       options:
-        - text: "A strong buzz — it is a sonorant"
+        - text: "Buzz (voiced)"
+          correct: false
+        - text: "Air only (voiceless)"
           correct: true
-        - text: "Only air — it is voiceless"
+        - text: "It is a sonorant"
           correct: false
-        - text: "A quiet hiss"
+        - text: "No sound at all"
           correct: false
-        - text: "A sharp click"
-          correct: false
-      explanation: "М is a sonorant consonant. Sonorants are the most musical sounds — your voice completely dominates."
-    - question: "Which consonant is the voiceless partner of Г?"
+    - question: "What type of consonant is Р?"
+      explanation: "Р is a sonorant — one of the 5 musical consonants where voice dominates over noise."
       options:
-        - text: "Х"
+        - text: "Sonorant"
           correct: true
-        - text: "К"
+        - text: "Voiced (non-sonorant)"
           correct: false
-        - text: "Ґ"
+        - text: "Voiceless"
           correct: false
-        - text: "Ш"
+        - text: "Always soft"
           correct: false
-      explanation: "Х is the voiceless partner of Г. Remember, К is the voiceless partner of Ґ (not Г)."
-    - question: "You cover your ears and say the Ш sound. What do you hear?"
+    - question: "What type of consonant is В?"
+      explanation: "В is a sonorant in Ukrainian — one of the 5 musical consonants (Л М Н Р В)."
       options:
-        - text: "Only air — it is voiceless"
+        - text: "Sonorant"
           correct: true
-        - text: "A strong buzz — it is voiced"
+        - text: "Voiced (non-sonorant)"
           correct: false
-        - text: "A deep hum"
+        - text: "Voiceless"
           correct: false
-        - text: "A musical tone"
+        - text: "Always hard"
           correct: false
-      explanation: "Ш is voiceless (like English sh). Its voiced partner is Ж."
-    - question: "In Ukrainian, what happens to the Б sound at the end of the word зуб?"
+    - question: "The Ukrainian letter Г sounds like the English hard G in go. True or false?"
+      explanation: "Г is a soft, throaty sound (voiced glottal fricative), NOT a hard G. The hard G sound is Ґ."
       options:
-        - text: "It stays voiced — you say зу[б]"
+        - text: "True — Г is like English G"
+          correct: false
+        - text: "False — Г is a soft throaty sound"
           correct: true
-        - text: "It becomes voiceless — you say зу[п]"
+        - text: "False — Г is voiceless"
           correct: false
-        - text: "It disappears completely"
+        - text: "True — Г and Ґ sound the same"
           correct: false
-        - text: "It becomes soft"
-          correct: false
-      explanation: "Ukrainian voiced consonants stay voiced at the end of a word. This is different from Russian, English, and German!"
-    - question: "Which of these is NOT a sonorant consonant?"
+    - question: "In Ukrainian, voiced consonants become voiceless at the end of a word (like in Russian or German). True or false?"
+      explanation: "Ukrainian does NOT devoice final consonants! зуб is always зу[б], never зу[п]."
       options:
-        - text: "Б"
+        - text: "True — they become voiceless"
+          correct: false
+        - text: "False — they stay voiced"
           correct: true
-        - text: "Л"
+        - text: "Only sometimes"
           correct: false
-        - text: "М"
+        - text: "Only sonorants stay voiced"
           correct: false
-        - text: "Р"
-          correct: false
-      explanation: "Б is a voiced consonant (not a sonorant). The 5 sonorants are Л, М, Н, Р, and В."
 
 - type: classify
-  title: "Hard or Soft Consonant?"
-  instruction: "Look at the underlined consonant in each word. Is it hard or soft? Remember, consonants become soft before І, Я, Ю, Є, or the soft sign Ь."
+  title: "Hard or Soft?"
+  instruction: "Look at the underlined consonant in each word. Is it hard or soft? Remember: consonants become soft before І, Я, Ю, Є or the soft sign Ь."
   categories:
     - label: "Hard consonant"
       symbol_hint: "hard"
-      items:
-        - "лук (Л before У)"
-        - "дим (Д before И)"
-        - "вовк (В before О)"
-        - "зуб (З before У)"
+      items: ["Л in лук", "Д in дим", "Ж in жук", "Ш in шапка", "Н in небо", "Р in рука"]
     - label: "Soft consonant"
       symbol_hint: "soft"
-      items:
-        - "ліс (Л before І)"
-        - "люк (Л before Ю)"
-        - "дім (Д before І)"
-        - "кінь (Н before Ь)"
+      items: ["Л in люк", "Л in ліс", "Д in дім", "Н in день", "Н in кінь", "Л in люди", "К in кінь", "К in кіт"]

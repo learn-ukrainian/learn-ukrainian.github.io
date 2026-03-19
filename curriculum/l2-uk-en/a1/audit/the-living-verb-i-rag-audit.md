@@ -1,37 +1,43 @@
 # RAG Verification: the-living-verb-i
 
-**Date:** 2026-03-18 03:06 UTC | **Words checked:** 159 | **VESUM coverage:** 147/159 (92.5%)
+**Date:** 2026-03-19 05:09 UTC | **Words checked:** 211 | **VESUM coverage:** 193/211 (91.5%)
 
 ## Summary
-- ✅ Verified (VESUM): 147
-- ⚠️ Partial (RAG only): 1
-- ❌ Not found: 11
+- ✅ Verified (VESUM): 193
+- ⚠️ Partial (RAG only): 3
+- ❌ Not found: 15
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
+| Анно | prose | ✗ | ✗ | ✗ |
 | ати | prose | ✗ | ✗ | ✗ |
-| еш | prose | ✗ | ✗ | ✗ |
-| писа | prose | ✗ | ✗ | ✗ |
-| пиш | prose | ✗ | ✗ | ✗ |
+| ете | activities | ✗ | ✗ | ✗ |
+| еш | activities | ✗ | ✗ | ✗ |
+| Міні-розповідь | prose | ✗ | ✗ | ✗ |
 | працюваю | prose | ✗ | ✗ | ✗ |
-| увати | prose | ✗ | ✗ | ✗ |
-| уть | prose | ✗ | ✗ | ✗ |
+| уть | activities | ✗ | ✗ | ✗ |
+| юва | prose | ✗ | ✗ | ✗ |
+| ювати | prose | ✗ | ✗ | ✗ |
 | ють | prose | ✗ | ✗ | ✗ |
+| яти | prose | ✗ | ✗ | ✗ |
 | ємо | prose | ✗ | ✗ | ✗ |
 | єте | prose | ✗ | ✗ | ✗ |
 | єш | prose | ✗ | ✗ | ✗ |
+| Іване | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| ва | prose | ✗ | ✓ | ✗ |
+| Анна | prose | ✗ | ✓ | ✗ |
+| ю | prose | ✗ | ✓ | ✗ |
+| Іван | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 98 | 86 | 11 |
-| Activities (.yaml) | 61 | 61 | 0 |
+| Prose (.md) | 152 | 137 | 12 |
+| Activities (.yaml) | 59 | 56 | 3 |

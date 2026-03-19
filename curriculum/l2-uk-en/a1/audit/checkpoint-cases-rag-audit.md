@@ -1,20 +1,30 @@
 # RAG Verification: checkpoint-cases
 
-**Date:** 2026-03-17 23:11 UTC | **Words checked:** 79 | **VESUM coverage:** 78/79 (98.7%)
+**Date:** 2026-03-19 02:06 UTC | **Words checked:** 209 | **VESUM coverage:** 204/209 (97.6%)
 
 ## Summary
-- ✅ Verified (VESUM): 78
-- ⚠️ Partial (RAG only): 0
-- ❌ Not found: 1
+- ✅ Verified (VESUM): 204
+- ⚠️ Partial (RAG only): 3
+- ❌ Not found: 2
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
 | н | prose | ✗ | ✗ | ✗ |
+| Ол | prose | ✗ | ✗ | ✗ |
+
+## ⚠️ Partial Match (human review)
+
+| Word | Source | VESUM | Textbook | Literary |
+|------|--------|-------|----------|----------|
+| Києва | prose | ✗ | ✓ | ✗ |
+| Олег | prose | ✗ | ✓ | ✗ |
+| ій | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 79 | 78 | 1 |
+| Prose (.md) | 176 | 171 | 2 |
+| Activities (.yaml) | 33 | 33 | 0 |

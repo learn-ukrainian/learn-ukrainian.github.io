@@ -1,13 +1,10 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1450
+word_count: 1354
 deviations:
-  - section: "none"
-    reason: "Followed the outline exactly."
-frictions: []
-research_gaps: []
-unverified_terms: []
+  - section: "Голосні в словах — Vowels in Words"
+    reason: "Included the exact phrase «Мама каже 'так'.» as required by the outline bullet point, despite the overarching phonetics phase grammar constraint against conjugated verbs, prioritizing structural compliance with the mandatory outline."
 review_focus:
-  - "Check that no Latin transliterations slipped in. Described sounds via English analogies (e.g. «the English word 'you'») instead of bracketed transliterations like 'ya' or 'ye'."
-rag_tools_used:
-  - "search_text: 'Base vowel pronunciation' → Confirmed Grade 1/2 pedagogy focusing on pure sounds and literal letter-to-sound matching."
+  - "Please review the strict inclusion of the verb 'каже' in 'Vowels in Words' section; it fulfills the outline but lightly violates the 'no verbs' rule."
+  - "Verified that all 18 target vocabulary words are naturally embedded in the text."
+  - "Verified distractors in the 'quiz' activity use only explicitly validated words (сир, сік, кіт, ліс, кит, син, риба, місто, ніс, стіл) to prevent VESUM validation failures."

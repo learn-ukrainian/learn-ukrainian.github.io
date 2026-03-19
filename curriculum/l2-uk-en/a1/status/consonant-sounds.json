@@ -2,13 +2,13 @@
   "module": "consonant-sounds",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T23:19:18.436786Z",
+  "last_audit": "2026-03-19T12:49:49.558804Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T23:18:59.645562Z",
-    "meta": "2026-03-16T21:59:34.088224Z",
-    "activities": "2026-03-18T23:18:59.647374Z",
-    "vocabulary": "2026-03-18T23:18:59.649250Z",
+    "md": "2026-03-19T02:11:30.629760Z",
+    "meta": "2026-03-19T02:09:16.474129Z",
+    "activities": "2026-03-19T02:09:06.123283Z",
+    "vocabulary": "2026-03-19T02:09:04.937222Z",
     "research": "2026-03-17T09:25:18.987508Z",
     "plan": "2026-03-18T21:12:55.178816Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1957/1200 (raw: 2036)"
+      "message": "1413/1200 (raw: 1474)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "21/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",

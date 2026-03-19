@@ -21,6 +21,35 @@
         "type": "script",
         "name": "discover_passthrough"
       }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-19T04:25:39Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T04:26:02Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-8-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "failed",
+      "ts": "2026-03-19T04:28:39Z",
+      "note": "activities-schema-invalid",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
     }
   }
 }

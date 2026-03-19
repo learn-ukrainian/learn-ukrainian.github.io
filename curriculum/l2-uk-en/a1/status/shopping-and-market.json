@@ -1,0 +1,59 @@
+{
+  "module": "shopping-and-market",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-19T12:50:02.272782Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-19T05:17:02.349960Z",
+    "meta": "2026-03-19T05:03:13.504314Z",
+    "activities": "2026-03-19T05:10:29.989540Z",
+    "vocabulary": "2026-03-19T05:11:41.728151Z",
+    "research": "2026-03-12T10:21:05.073246Z",
+    "plan": "2026-03-05T10:20:01.606158Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2154/1200 (raw: 2182)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "22/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

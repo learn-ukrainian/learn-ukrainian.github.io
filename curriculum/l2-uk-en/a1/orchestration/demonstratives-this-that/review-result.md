@@ -1,157 +1,230 @@
-# Factual Review (Pass 1)
+# Рецензія: Demonstratives — The Grammar of This and That
 
-## Plan Adherence Summary
-
-**Content outline points:** 10 total, 10 covered, 0 missing, 0 partial
-**Required vocabulary:** 12 total, 12 present, 0 missing
-**Activity hints:** 4 total, 4 matched, 0 missing
-**Plan Adherence Score:** 10/10
-
-### Plan Point Coverage
-
-- Section "Цей/ця/це (This)":
-  - [x] Point 1: "Узгодження за родом: цей (чол.), ця (жін.), це (серед.). Приклади: цей хлопець, ця дівчина, це місто. Парадигма подібна до присвійних займенників (мій/моя/моє)." — COVERED (line ~20: "The word for 'this' must match the gender of the noun... just like your possessive pronouns мій/моя/моє"; includes examples "цей хлопець", "ця дівчина", "це місто".)
-  - [x] Point 2: "Різниця між «Це» як зв'язкою (Це кафе = This is a cafe) та «це» як вказівним займенником (Це кафе гарне = This cafe is nice). Критичний контраст для початківців (§4.2.2)." — COVERED (line ~43: "Compare these two sentences carefully: Це кафе. — This is a café... Це кафе гарне. — This café is nice.")
-- Section "Ці (These)":
-  - [x] Point 3: "Множинна форма для всіх родів: ці книги, ці студенти, ці міста. Порівняння з однинними формами: цей → ці, ця → ці, це → ці." — COVERED (line ~64: "When a noun is plural, all three gender forms collapse into one: ці (these)."; includes examples "ці стільці", "ці книги", "ці міста".)
-  - [x] Point 4: "Типова помилка: вживання однинної форми з множиною (*цей книги замість ці книги). Стратегія запобігання." — COVERED (line ~77: "[!warning] Watch out for number mismatch... A common beginner error is using a singular demonstrative with a plural noun: *цей книги instead of ці книги.")
-- Section "Той/та/те/ті (That/Those)":
-  - [x] Point 5: "Узгодження за родом: той (чол.), та (жін.), те (серед.), ті (множ.). Приклади: той будинок, та вулиця, те озеро, ті люди." — COVERED (line ~92: table listing "той", "та", "те", "ті" with exact examples.)
-  - [x] Point 6: "Увага: збіг форми «та» (жін.) зі сполучником «та» (і/and). Контекстне розрізнення: Та дівчина та її подруга (That girl and her friend)." — COVERED (line ~115: "The Double Life of Та... 1. та = "that" (feminine demonstrative)... 2. та = "and" (conjunction... Та дівчина та її подруга тут.")
-- Section "Цей vs Той у контексті (This vs That in context)":
-  - [x] Point 7: "Просторова дистанція: цей стілець (близько) vs той стілець (далеко). У магазині: Дайте мені цей торт (this cake here) vs Дайте мені той торт (that cake there)." — COVERED (line ~138: "When you're pointing at things, цей means 'here, close to me' and той means 'over there, farther away'... Я хочу цей торт... А той торт великий?")
-  - [x] Point 8: "Текстуальна дистанція: посилання на щойно сказане (цей) та раніше згадане (той). Вживання в діалогах та описах." — COVERED (line ~158: "Conversational Distance... Я бачу такий великий будинок! Цей будинок новий... Ми говорили про інший будинок. Той будинок старий.")
-- Section "Практика (Practice)":
-  - [x] Point 9: "Вправи на вибір правильного вказівного займенника відповідно до роду та числа іменника." — COVERED (line ~175: "Gender Agreement Drill" block present.)
-  - [x] Point 10: "Класифікація за групами цей/ця/це/ці та той/та/те/ті. Контрастні вправи на просторову дистанцію." — COVERED (line ~185: "Proximity Contrast" block pairing "Цей стілець новий, а той стілець старий".)
-
-### Required Vocabulary Coverage
-
-| Word | In Prose? | In Activities? | Status |
-|------|-----------|---------------|--------|
-| цей | YES | YES | PRESENT |
-| ця | YES | YES | PRESENT |
-| це | YES | YES | PRESENT |
-| ці | YES | YES | PRESENT |
-| той | YES | YES | PRESENT |
-| та | YES | YES | PRESENT |
-| те | YES | YES | PRESENT |
-| ті | YES | YES | PRESENT |
-| будинок | YES | YES | PRESENT |
-| вулиця | YES | YES | PRESENT |
-| озеро | YES | YES | PRESENT |
-| стілець | YES | YES | PRESENT |
-
-### Activity Hints Coverage
-
-| Hint Type | Focus | Required Items | Found? | Actual Items |
-|-----------|-------|---------------|--------|-------------|
-| fill-in | Insert correct demonstrative pronoun | 10 | YES | 10 |
-| quiz | Gender agreement with demonstratives | 12 | YES | 12 |
-| match-up | Match demonstrative to correct noun | 10 | YES | 10 |
-| group-sort | Sort nouns into цей-group vs той-group | 12 | YES | 14 |
-
-### Missing Plan Points (Fix Targets)
-
-*(None. All points are covered effectively.)*
-
----
-
-## Factual Verification Summary
-
-**Total claims checked:** 6
-**Confirmed [Tier 1]:** 2
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 4
-**Factual Alignment Score:** 10/10
-
-## Confirmed Claims
-
-- **Demonstrative forms "той, та, те, ті":** The module states that "той" is masculine, "та" is feminine, "те" is neuter, and "ті" is plural. This matches the inflection table in the provided reference: "[6-klas-ukrmova-litvinova-2023_s0280]" which outlines "Н. той, та, те, ті" for вказівні займенники.
-- **The use of "це" as a standalone identifier (copula-like):** The module teaches "Це кафе." (This is a café) where "це" acts as the subject/copula pointing at something. This usage is confirmed by "[6-klas-ukrmova-litvinova-2023_s0279]" which contains natural examples like "Хіба це проблема?" and "Твої почуття — це нормально."
-
-## Discrepancies
-
-*(No discrepancies found.)*
-
-## Unverified Claims
-
-- **The spatial and conversational differences between "цей" and "той":** Conceptually accurate per general grammar, but not explicitly verified by the provided RAG text chunks.
-- **The dual function of "та":** The module correctly identifies "та" as both a demonstrative pronoun (that) and a conjunction (and), but this is not covered in the provided Tier 1 textbook references.
-- **The spelling and forms of "цей, ця, це, ці":** The chunks mention the word "цей" and "цього/цьому", but don't contain the full nominative singular/plural paradigm table.
-- **Common beginner mistake *цей книги:** This pedagogical warning is conceptually sound but cannot be fact-checked against native-speaker textbook chunks.
-
-## Verdict
-
-**Status:** PASS
-
----
-
-# Language Review (Pass 2)
-
-**Reviewed-By:** gemini-2.5-pro (RAG-grounded)
-
+**Level:** A1 | **Module:** 21
+**Overall Score:** 7.0/10
 **Status:** FAIL
-**Overall Score:** 7.7/10
+**Reviewed:** 2026-03-19
+**Reviewed-By:** claude-sonnet-4-6
+
+## Plan Verification
+
+```
+Plan-Content Alignment: PARTIAL FAIL
+- Sections: 7/7 present (5 content + intro + summary, mapping to 5 plan sections)
+- Vocabulary: 12/12 required present in prose, 4/4 recommended present, 20 total
+- Grammar scope: FAIL — multiple morphological scope violations (imperatives, non-nominative cases, past/future tense in Ukrainian instructional prose)
+- Objectives: 4/4 addressed
+```
+
+### Content Outline Point-by-Point
+
+**Section "Цей/ця/це: Вказуємо на близькі об'єкти"**:
+- Gender agreement цей (m.), ця (f.), це (n.) with examples: **COVERED** — lines 11-22 present all three forms with examples
+- Paradigm parallel to мій/моя/моє: **COVERED** — line 7 explicitly makes this connection
+- Copula це vs demonstrative це distinction: **COVERED** — lines 24-38 with contrast table, very well done
+- §4.2.2 reference: Not explicitly cited but pedagogically addressed
+
+**Section "Ці: Вказуємо на багато об'єктів"**:
+- Plural form ці for all genders with examples: **COVERED** — lines 53-65
+- Singular→plural transformation: **COVERED** — lines 57-59
+- Common error *цей книги: **COVERED** — line 69 explicitly addresses this
+
+**Section "Той/та/те/ті: Вказуємо на далекі об'єкти"**:
+- Gender agreement той/та/те/ті with examples: **COVERED** — lines 84-94
+- та ambiguity (demonstrative vs conjunction): **COVERED** — lines 96-104, excellent example 「Та ді́вчи́на та її по́друга.」
+
+**Section "Цей vs Той у контексті"**:
+- Spatial proximity цей стілець vs той стілець: **COVERED** — lines 114-117
+- Shop/café scenario "Дайте мені цей торт": **PARTIAL** — plan says "Дайте мені цей торт" but content uses 「Remember to use: Цей торт, будь ла́ска.」 (line 121). The "Дайте мені" form is absent, and "Remember to use:" is odd formatting.
+- Textual distance (цей for recent, той for earlier): **COVERED** — lines 126-128
+
+**Section "Практика: Тренуємо вказівні займенники"**:
+- Exercises choosing correct demonstrative by gender/number: **COVERED** — lines 136-141
+- Classification into groups + proximity contrast: **COVERED** — lines 143-148
+- Note: Practice section reveals answers inline (lines 138-141), reducing pedagogical challenge
+
+**Activity Hints**:
+- fill-in (10 items): **COVERED** ✓
+- quiz (12 items): **COVERED** ✓
+- match-up (10 items): **COVERED** ✓
+- group-sort (12 items): **COVERED** ✓
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | The tone is encouraging, but encountering unlearned grammatical cases (like accusative "цю кімнату") creates unnecessary friction for a beginner. |
-| 2 | Language | 7/10 | <8 | Contains grammatically invalid mixing of an English preposition with a Ukrainian nominative phrase ("with кожний новий крок"). |
-| 3 | Pedagogy | 7/10 | <7 | Introduces the accusative case ("цю кімнату"), locative case ("У кімнаті"), and past tense ("говорили") prematurely, violating A1 progressive constraints. |
-| 4 | Activities | 9/10 | <7 | Solid reinforcement of the demonstrative matching rules; the YAML items do not leak any out-of-scope grammar. |
-| 5 | Beginner Safety | 7/10 | <7 | Would I Continue? 4/5. Seeing unexplained vowel mutations ("кімната" -> "цю кімнату") without learning cases causes panic. |
-| 6 | LLM Fingerprint | 9/10 | <7 | The writing is natural and avoids typical robotic formatting; good contextual dialogue scenarios. |
-| 7 | Linguistic Accuracy | 7/10 | <9 | "Кожний новий крок" used as the object of an English preposition ("with") is not valid Ukrainian. If translated, it requires the instrumental case ("з кожним новим кроком"). |
+| 1 | Experience Quality | 8/10 | <7 | Warm tutor voice, good arc from welcome to celebration. "Remember to use:" formatting on lines 121-122 is awkward. Practice section (lines 138-141) gives answers immediately — no challenge. |
+| 2 | Language | 6/10 | <8 | **AUTO-FAIL.** 15+ morphological scope violations in Ukrainian instructional prose. Imperatives (Зверніть, Подивіться, перевіряйте, Пам'ятайте), non-nominative cases (середнього роду, різницю, природною, простішою, множині), future tense (буде), past tense (навчилися, вивчили). At M21, Ukrainian prose should use only nominative + present tense. |
+| 3 | Pedagogy | 8/10 | <7 | Excellent copula vs demonstrative contrast (lines 24-38). Good error prevention for *цей книги. Missing "Дайте мені" from plan. Practice section too easy (answers visible). |
+| 4 | Activities | 8/10 | <7 | 4 types, 44 items total, well-structured. All correct answers verified. Good variety (fill-in, quiz, match-up, group-sort). Quiz item 6 (line 105-115) tests copula distinction — excellent. |
+| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. Warm welcome, clear structure, quick wins. But Ukrainian instructional sentences are too complex for M21 — learner can't parse 「Але коли ми вказуємо на конкретний предмет середнього роду」 at this stage. |
+| 6 | LLM Fingerprint | 8/10 | <7 | No structural monotony — section openings vary. No stacked abstract nouns. No "It is important to note" patterns. Minor: lines 121-122 "Remember to use:" is an unusual formatting choice that feels like a prompt artifact. |
+| 7 | Linguistic Accuracy | 6/10 | <9 | **AUTO-FAIL.** Morphological violations dominate. Research notes (line 52) explicitly say "No imperative verbs in instructions — use English" but content uses 4 imperatives in Ukrainian. Non-nominative grammar in instructional prose throughout. |
 
-**Weighted Overall:** 68.4 / 8.9 = **7.7/10**
+**Weighted Overall:** (8×1.5 + 6×1.1 + 8×1.2 + 8×1.3 + 8×1.3 + 8×1.0 + 6×1.5) / 8.9 = (12 + 6.6 + 9.6 + 10.4 + 10.4 + 8.0 + 9.0) / 8.9 = 66.0 / 8.9 = **7.4/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: **CLEAN** — no Russianisms detected
+- Calques: **CLEAN** — no calques detected
+- Colonial framing: **CLEAN** — no "Unlike Russian..." patterns
+- Grammar scope: **FAIL** — 15+ morphological violations (imperatives, non-nominative cases, non-present tenses in Ukrainian instructional prose)
+- Activity errors: **CLEAN** — all activities verified correct
+- Beginner safety: 4/5
+- Factual accuracy: **CLEAN** — grammar explanations are accurate, culture note (line 108) plausible
+- LLM fingerprint: **CLEAN** — no auto-fail patterns
 
 ## Critical Issues Found
 
-### Issue 1: Grammatical Invalidity (Macaronic Phrasing)
-**Location**: Section "Цей vs Той у контексті (This vs That in context)" -> "Try it yourself" callout
-**Problem**: "...your Ukrainian is becoming more natural with **кожний** новий крок (every new step)!" Using a Ukrainian noun phrase in the nominative case directly after an English preposition ("with") is linguistically invalid and sets a bad precedent.
-**Fix**: Rewrite into two distinct sentences, keeping the Ukrainian grammatically intact: "...becoming more natural. **Кожний** новий крок — це успіх (Every new step is a success)!"
+### Issue 1: Morphological Scope Violations — Imperatives in Ukrainian Instructions (HIGH)
+- **Location**: Lines 15, 40, 47, 76
+- **Original**: 「Зверніть увагу на закінчення.」 (line 15), 「Пам'ятайте про це, і ваша мова буде природною!」 (line 40), 「Подивіться відео про вказівні займенники. Це допомагає краще розуміти тему!」 (line 47), 「Завжди перевіряйте рід іменника. Якщо слово жіночого роду, кажемо «ця» або «та».」 (line 76)
+- **Problem**: Imperatives (Зверніть, Пам'ятайте, Подивіться, перевіряйте) not taught until M47. The research notes explicitly state: "No imperative verbs in instructions — use English." These Ukrainian imperative sentences are unparseable for M21 learners.
+- **Fix**: Replace all Ukrainian imperative instructions with English. E.g., line 15 → "Notice the endings." / line 40 → "Remember this, and your Ukrainian will be natural!" / line 47 → "Watch this video about demonstrative pronouns. It helps you understand the topic better!" / line 76 → "Always check the gender of the noun. If the word is feminine, we say «ця» or «та»."
 
-### Issue 2: Scope Violation - Accusative Case
-**Location**: Section "Цей vs Той у контексті (This vs That in context)" -> Spatial Distance -> (У кімнаті / In the room)
-**Problem**: The sentence "Я люблю **цю** кімнату!" uses the accusative case. For beginners who have only learned the nominative (цей/ця/це), seeing "цю" and "кімнату" is confusing and violates the A1 constraints (accusative is not taught until M25).
-**Fix**: Change to a nominative construction: "**Ця** кімната дуже гарна!"
+### Issue 2: Non-Nominative Cases in Ukrainian Instructional Prose (HIGH)
+- **Location**: Lines 34, 40, 51
+- **Original**: 「Але коли ми вказуємо на конкретний предмет середнього роду」 (line 34 — genitive середнього роду), 「Бачите різницю?」 (line 40 — accusative різницю), 「У множині українська мова стає простішою!」 (line 51 — instrumental простішою, dative множині)
+- **Problem**: At M21, only nominative case is available. Genitive (середнього, роду), accusative (різницю), instrumental (простішою, природною), and dative (множині) appear in Ukrainian instructional prose that learners are expected to read.
+- **Fix**: Move these instructional sentences to English. E.g., line 34 → "But when we point to a specific neuter noun..." / line 51 → "In the plural, Ukrainian becomes simpler!"
 
-### Issue 3: Scope Violation - Past Tense
-**Location**: Section "Цей vs Той у контексті (This vs That in context)" -> Conversational Distance
-**Problem**: "Ми говорили про **інший** будинок." uses the past tense verb "говорили" and the prepositional object "про інший будинок", which are out of scope for early A1 modules.
-**Fix**: Change to a simpler structure that avoids the past tense entirely: "А **інший** будинок? **Той** будинок старий."
+### Issue 3: Non-Present Tenses in Ukrainian Prose (MEDIUM)
+- **Location**: Lines 40, 80, 132
+- **Original**: 「Пам'ятайте про це, і ваша мова буде природною!」 (line 40 — future буде), 「Ми навчилися вказувати на предмети поруч.」 (line 80 — past навчилися), 「Ви сьогодні багато вивчили!」 (line 132 — past вивчили)
+- **Problem**: Only present tense available before M36. Future (буде) and past (навчилися, вивчили) appear in Ukrainian instructional prose.
+- **Fix**: Replace with English or present tense. E.g., line 80 → "We now know how to point to objects nearby." / line 132 → "You've learned a lot today!"
 
-### Issue 4: Scope Violation - Locative Case Headers
-**Location**: Section "Цей vs Той у контексті (This vs That in context)" -> Spatial Distance
-**Problem**: Dialogue headers use the locative case with prepositions: "> **(У кімнаті / In the room)**" and "> **(На ринку / At the market)**". This exposes learners to noun mutations ('кімната' -> 'кімнаті', 'ринок' -> 'ринку') before cases are formally taught.
-**Fix**: Simplify to nominative labels: "> **(Кімната / Room)**" and "> **(Ринок / Market)**".
+### Issue 4: "Remember to use:" Formatting Artifact (LOW)
+- **Location**: Lines 121-122
+- **Original**: 「Remember to use: Цей торт, будь ла́ска.」
+- **Problem**: "Remember to use:" is an unusual prompt-like prefix. The plan specifies "Дайте мені цей торт" but the content uses "Цей торт, будь ла́ска" with this odd framing. "Дайте мені" is imperative so shouldn't be in Ukrainian either, but the example should flow naturally.
+- **Fix**: Remove "Remember to use:" prefix. Present as: `*   **Цей торт, будь ла́ска.** — This cake here, please.`
+
+### Issue 5: Practice Section Reveals Answers Inline (MEDIUM)
+- **Location**: Lines 138-141
+- **Problem**: The fill-in-the-blank exercise shows the answer immediately after each blank: "_____ **хло́пець** (masculine) → **цей хло́пець**". This removes the pedagogical challenge — the learner reads the answer without attempting it.
+- **Fix**: Present blanks without answers, then provide answers in a separate collapsed/spoiler section, or simply remove the answers and let the activities YAML handle interactive practice.
 
 ## Ukrainian Language Issues
 
-- "with **кожний** новий крок" — Ungrammatical mixing of languages avoiding proper declension.
-- "Я люблю **цю** кімнату!" — Unexplained accusative case usage.
-- "Ми говорили про **інший** будинок." — Unexplained past tense and prepositional case.
-- "У кімнаті", "На ринку" — Unexplained locative case usage.
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 15 | 「Зверніть увагу на закінчення.」 | "Notice the endings." (English) | Scope — imperative |
+| 34 | 「на конкретний предмет середнього роду」 | "a specific neuter noun" (English) | Scope — genitive |
+| 40 | 「Бачите різницю?」 | "Can you see the difference?" (English) | Scope — accusative |
+| 40 | 「Пам'ятайте про це, і ваша мова буде природною!」 | "Remember this, and your Ukrainian will sound natural!" (English) | Scope — imperative + future + instrumental |
+| 47 | 「Подивіться відео про вказівні займенники. Це допомагає краще розуміти тему!」 | "Watch this video about demonstrative pronouns. It helps you understand the topic better!" (English) | Scope — imperative + accusative |
+| 51 | 「У множині українська мова стає простішою!」 | "In the plural, Ukrainian becomes simpler!" (English) | Scope — dative + instrumental |
+| 76 | 「Завжди перевіряйте рід іменника. Якщо слово жіночого роду, кажемо «ця» або «та».」 | "Always check the gender of the noun. If the word is feminine, we say «ця» or «та»." (English) | Scope — imperative |
+| 80 | 「Ми навчилися вказувати на предмети поруч.」 | "We've learned to point to nearby objects." (English) | Scope — past tense |
+| 132 | 「Ви сьогодні багато вивчили!」 | "You've learned a lot today!" (English) | Scope — past tense |
 
-## Fix Plan to Reach 9.0+
+## Beginner Safety Audit
 
-1. Replace "Я люблю цю кімнату!" with a nominative sentence like "Ця кімната дуже гарна!".
-2. Replace the past-tense "Ми говорили про інший будинок." with a simpler transition like "А інший будинок?".
-3. Change the location headers "(У кімнаті...)" and "(На ринку...)" to nominative "(Кімната...)", "(Ринок...)".
-4. Fix the "Try it yourself" callout text to avoid mixing the English preposition "with" with Ukrainian nominative phrases.
+"Would I Continue?" Test: 4/5
+- Overwhelmed? **Pass** — pacing is comfortable, small chunks, clear structure
+- Instructions clear? **Pass** — learner always knows what to do
+- Quick wins? **Pass** — цей/ця/це presented early, quick pattern recognition
+- Ukrainian scary? **Fail** — Ukrainian instructional sentences (「Але коли ми вказуємо на конкретний предмет середнього роду」) contain grammar far beyond M21. A beginner would hit walls of unparseable Ukrainian prose.
+- Come back tomorrow? **Pass** — encouraging tone, good closing at line 164
+
+## Strengths
+
+- **Excellent copula vs demonstrative contrast** (lines 24-38): The distinction between "Це кафе" (copula) and "Це кафе гарне" (demonstrative) is the hardest concept in this module and it's handled beautifully with clear examples and explicit contrast.
+- **та ambiguity teaching** (lines 96-104): The double-та example 「Та ді́вчи́на та її по́друга.」 is a perfect illustration, with clear explanation of position-based disambiguation.
+- **Warm tutor voice**: Opening connects to prior knowledge (мій/моя/моє), closing celebrates progress with 「Чудова робота! Ви будуєте міцний фундамент.」
+- **Activity quality**: 44 items across 4 types, all answers verified correct. Quiz item testing copula distinction (lines 105-115) is particularly clever.
+- **Vocabulary coverage**: All 12 required + 4 recommended words from plan present in prose and activities.
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+### Language: 6/10 → 9/10
+**What to fix:**
+1. Lines 15, 40, 47, 76: Replace ALL Ukrainian imperative instructions with English equivalents (4 locations)
+2. Lines 34, 40, 51: Replace Ukrainian sentences containing non-nominative cases with English (3 locations)
+3. Lines 40, 80, 132: Replace Ukrainian past/future tense in instructional prose with English (3 locations)
+4. Lines 42, 71: Video titles contain УКРАЇ́НСЬКОЮ (instrumental) — these are external titles, acceptable to keep as-is (DISMISS)
+
+**Expected score after fix:** 9/10
+
+### Linguistic Accuracy: 6/10 → 9/10
+**What to fix:**
+Same fixes as Language above — the morphological violations are the only accuracy issue. Grammar explanations themselves are correct. Example Ukrainian sentences (цей хлопець, ця вулиця, etc.) are all properly formed nominative phrases — the violations are exclusively in instructional/meta prose.
+
+**Expected score after fix:** 9/10
+
+### Experience Quality: 8/10 → 9/10
+**What to fix:**
+1. Lines 121-122: Remove "Remember to use:" prefix
+2. Lines 138-141: Remove inline answers from practice blanks, or restructure as "try first, then check"
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+```
+(9×1.5 + 9×1.1 + 8×1.2 + 8×1.3 + 8×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 9.6 + 10.4 + 10.4 + 8.0 + 13.5) / 8.9
+= 75.3 / 8.9 = 8.5/10
+```
+
+## Factual Verification
+
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (not applicable — grammar module)
+- Dates checked: N/A
+- Named figures verified: N/A
+- Primary quotes cross-referenced: N/A
+- Chronological sequence: N/A
+- Claims without research grounding: 0
+- Grammar rules verified: All demonstrative pronoun gender agreement rules are accurate per textbook references (Grade 6, pp. 272-273 declension tables confirm той/та/те/ті paradigm)
+- Culture note (line 108): 「У магазині українці часто кажуть «цей» або «той».」 — plausible, aligns with research cultural hook #1 (market/café scenario)
+
+## VESUM Pre-Scan Dismissals
+
+The 4 words flagged as "not found" (Пам, ятайте, єкти, єктів) are **tokenization artifacts** from apostrophe splitting. The actual words are:
+- Пам'ятайте → VESUM: `verb:imperf:impr:p:2` (valid, but scope violation — imperative)
+- об'єкти / об'єктів → VESUM: `noun:inanim:p:v_naz` (valid, in section headers only)
+
+All 4 dismissed as false positives.
+
+## Pre-Screen Confirmation/Dismissal
+
+| # | Pre-screen finding | Verdict | Rationale |
+|---|-------------------|---------|-----------|
+| 1 | Зверніть (imperative, line 15) | **CONFIRMED** | Imperative in Ukrainian instruction |
+| 2 | увагу (accusative, line 15) | **CONFIRMED** | Part of imperative phrase |
+| 3 | середнього (genitive, line 34) | **CONFIRMED** | Non-nominative in instruction |
+| 4 | роду (genitive, line 34) | **CONFIRMED** | Non-nominative in instruction |
+| 5 | різницю (accusative, line 40) | **CONFIRMED** | Non-nominative in instruction |
+| 6 | буде (future, line 40) | **CONFIRMED** | Future tense in instruction |
+| 7 | природною (instrumental, line 40) | **CONFIRMED** | Non-nominative in instruction |
+| 8 | УКРАЇ́НСЬКОЮ (instrumental, line 42) | **DISMISSED** | External video title — not lesson prose |
+| 9 | Подивіться (imperative, line 47) | **CONFIRMED** | Imperative in Ukrainian instruction |
+| 10 | тему (accusative, line 47) | **CONFIRMED** | Non-nominative in instruction |
+| 11 | їх (genitive, line 51) | **CONFIRMED** | Non-nominative in instruction |
+| 12 | множині (dative, line 51) | **CONFIRMED** | Non-nominative in instruction |
+| 13 | простішою (instrumental, line 51) | **CONFIRMED** | Non-nominative in instruction |
+| 14 | УКРАЇ́НСЬКОЮ (instrumental, line 71) | **DISMISSED** | External video title — not lesson prose |
+| 15 | перевіряйте (imperative, line 76) | **CONFIRMED** | Imperative in Ukrainian instruction |
+| 16 | ді́вчи stress unknown | **DISMISSED** | Tokenization artifact of ді́вчи́на |
+
+**Additional violations found** (missed by pre-screen):
+- Line 40: Пам'ятайте (imperative, `verb:imperf:impr:p:2`)
+- Line 80: навчилися (past tense, `verb:rev:perf:past:p`)
+- Line 132: вивчили (past tense, `verb:perf:past:p`)
 
 ## Verification Summary
 
-- Scanned for A1 Russianisms (none found).
-- Checked for out-of-scope grammar (Accusative, Locative, Past Tense found based on deterministic prescreen).
-- Verified vocabulary items against their usage in the text.
-- Checked Activities for alignment with the text and verified no scope leaks.
+- Content lines read: 165
+- Activity items checked: 44 (10 fill-in + 12 quiz + 10 match-up + 12 group-sort)
+- Ukrainian sentences verified: 28
+- Citations in bank: 19
+- Issues found: 5 (3 critical, 2 medium)
+- VESUM verifications performed: 8
+- Pre-screen items confirmed: 13/16 (2 dismissed as video titles, 1 as tokenization artifact)
 
 ## Verdict
 
-**Status:** FAIL
-**Rationale:** The module is engaging and well-structured, but it suffers from critical scope violations (accusative case, past tense, locative case) and one instance of grammatically invalid macaronic phrasing. Fixing these will bring it into strict compliance for an A1 learner.
+**FAIL**
+
+Blocking issues: (1) **15+ morphological scope violations** — Ukrainian instructional prose uses imperatives, non-nominative cases, and non-present tenses that M21 learners cannot parse. The research notes explicitly prohibit imperatives in instructions. (2) **Language and Linguistic Accuracy both auto-fail** (6/10 each, thresholds 8 and 9). The fixes are straightforward — convert Ukrainian instructional sentences to English while keeping Ukrainian example phrases intact. The underlying content quality (pedagogy, activities, vocabulary coverage) is strong and should pass easily after morphological fixes.

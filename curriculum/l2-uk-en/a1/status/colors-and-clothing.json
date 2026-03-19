@@ -2,13 +2,13 @@
   "module": "colors-and-clothing",
   "level": "A1",
   "plan_version": "2.1",
-  "last_audit": "2026-03-19T00:48:56.423366Z",
+  "last_audit": "2026-03-19T12:49:47.975855Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-19T00:48:42.515017Z",
+    "md": "2026-03-19T05:08:18.779360Z",
     "meta": "2026-03-18T02:48:33.424321Z",
-    "activities": null,
-    "vocabulary": null,
+    "activities": "2026-03-19T05:06:00.536809Z",
+    "vocabulary": "2026-03-19T04:55:22.171207Z",
     "research": "2026-03-12T09:47:38.648896Z",
     "plan": "2026-03-06T08:59:07.401793Z"
   },
@@ -21,22 +21,22 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1440/1200 (raw: 1483) | engagement: 0/1"
+      "message": "1684/1200 (raw: 1719) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "8/0"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
-      "message": "PENDING — awaiting review"
+      "message": "PENDING \u2014 awaiting review"
     },
     "research": {
       "status": "pass",
@@ -44,7 +44,7 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
@@ -52,10 +52,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
+    "pass_count": 4,
     "fail_count": 1,
-    "deferred_count": 3
-  },
-  "pipeline_status": "needs-template-fix",
-  "pipeline_status_ts": "2026-03-18T23:49:07Z"
+    "deferred_count": 0
+  }
 }

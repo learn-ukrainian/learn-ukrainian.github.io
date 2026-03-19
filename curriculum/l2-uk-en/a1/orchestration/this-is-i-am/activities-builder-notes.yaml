@@ -1,0 +1,13 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 3
+deviations:
+  - "fill-in #3 (Meeting someone new): plan specified 4 items but schema minItems is 6; expanded to 6 items to pass validation"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints specify 4 items for fill-in #3, but A1 schema requires minItems: 6 for fill-in"
+    proposed_fix: "Update plan to specify at least 6 items for all fill-in activities"
+unverified_terms: []
+review_focus:
+  - "fill-in #2 has 15 items — verify no repetitive patterns in the later items"
+  - "Confirm formal ви register is consistently used in passport control scenario (fill-in #3)"

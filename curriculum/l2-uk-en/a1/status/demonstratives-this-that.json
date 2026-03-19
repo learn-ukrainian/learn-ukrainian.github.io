@@ -1,4 +1,59 @@
 {
-  "pipeline_status": "needs-manual-review",
-  "pipeline_status_ts": "2026-03-18T06:00:15Z"
+  "module": "demonstratives-this-that",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-19T12:49:50.337594Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-19T12:06:50.052893Z",
+    "meta": "2026-03-19T11:56:13.981797Z",
+    "activities": "2026-03-19T12:07:23.962572Z",
+    "vocabulary": "2026-03-19T12:00:56.442008Z",
+    "research": "2026-03-12T09:52:57.386569Z",
+    "plan": "2026-03-05T14:06:04.261405Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1722/1200 (raw: 1799)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
 }

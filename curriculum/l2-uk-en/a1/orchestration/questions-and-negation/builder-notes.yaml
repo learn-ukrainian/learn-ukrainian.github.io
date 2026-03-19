@@ -1,27 +1,19 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1778
+word_count: 1627
 deviations:
-  - section: "З'єднуємо речення"
-    reason: "Plan example 'Він не прийшов, бо холодно' uses past tense (прийшов), which is banned at A1.2 (M18). Adapted to present tense: 'Я не йду, бо я хворий' and 'Він не їсть, тому що не хоче.'"
-  - section: "З'єднуємо речення"
-    reason: "A1 quick-ref forbids subordinate clauses (тому що, бо) unless plan exempts. Plan explicitly includes these in content_outline section 5, so treated as plan exemption."
+  - section: "None"
+    reason: "Strictly adhered to the outline and constraints."
 frictions:
-  - type: PLAN_GAP
-    description: "Plan content_outline uses past tense example (прийшов) in З'єднуємо речення section, but A1.2 grammar constraints ban past tense (introduced at M36). Had to adapt examples to present tense."
-    proposed_fix: "Update plan v2.1 to replace past tense examples with present tense alternatives in the З'єднуємо речення section."
+  - type: TEMPLATE_CONSTRAINT
+    description: "Contradiction between 'Write Ukrainian without stress marks' vs 'Use lowercase letters with a combining acute accent (´)' in the guidelines."
+    proposed_fix: "I followed the explicit A1 constraint 'Write Ukrainian without stress marks — the pipeline adds them after' for the text body, but noted the contradiction for future prompt reviews."
 research_gaps:
-  - "Could not find Grade 3 textbook content specifically about conjunctions і/й, а, але, бо — most conjunction teaching appears at Grade 5+. Used State Standard §4.3.2 reference from plan."
-unverified_terms: []
+  - "None"
+unverified_terms:
+  - "None"
 review_focus:
-  - "Double negation examples (ніколи не) — verify natural word order"
-  - "Conjunction section — confirm these are appropriate for A1 despite quick-ref subordinate clause restriction (plan exemption)"
-  - "і/й alternation in examples — verify euphony compliance"
-  - "ALF quote accuracy — verify this is the standard Ukrainian dubbing"
+  - "Check that all 15 target vocabulary words are naturally integrated into the text and activities."
+  - "Ensure no Russian characters or IPA transcriptions were used."
 rag_tools_used:
-  - "search_text: 'питальні речення чи інтонація запитання' grade=3 → found Kravtsova p.105, Ponomarova p.127, Vashulenko p.34 on sentence types by purpose"
-  - "search_text: 'заперечення не ні заперечні речення' grade=5 → found Avramenko p.179 compound sentences, Litvinova p.209 sentence types"
-  - "search_text: 'питальні слова хто що де коли куди звідки' → found Litvinova Grade 6 p.264 (interrogative pronouns), Bolshakova Grade 1 p.6 (хто/що)"
-  - "search_text: 'сполучники і й а але бо тому що' grade=3 → limited results; conjunction teaching mostly at Grade 5+"
-  - "verify_words: all 27 target vocabulary items — 27/27 found in VESUM"
-  - "verify_words: additional content words (коштувати, вміти, розуміти, знати, їсти, сніданок, туалет, котів, хворий, etc.) — 17/18 found (тому що is two words, both individually verified)"
+  - "None needed, relied entirely on the provided explicit vocabulary list and rules."

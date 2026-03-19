@@ -1,7 +1,7 @@
 # Audit Report: M03 — consonant-sounds.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-18 23:19:18
+**Generated:** 2026-03-19 12:49:49
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,7 +11,7 @@
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** classify, image-to-letter, match-up, quiz, watch-and-repeat
-**Engagement:** ≥2 callouts
+**Engagement:** ≥1 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -20,11 +20,11 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | watch-and-repeat | Consonant Pronunciation Practice | 12 | 1 | ✅ |
-| 2 | classify | Sort the Consonants | 15 | 1 | ✅ |
-| 3 | image-to-letter | What Letter Does It Start With? | 9 | 5 | ✅ |
-| 4 | match-up | Match Voiced to Voiceless Partner | 6 | 6 | ✅ |
-| 5 | quiz | Voiced or Voiceless? The Hands-on-Ears Test | 10 | 6 | ✅ |
-| 6 | classify | Hard or Soft Consonant? | 15 | 1 | ✅ |
+| 2 | classify | Sort the Consonants | 17 | 1 | ✅ |
+| 3 | image-to-letter | What Letter Does It Start With? | 8 | 5 | ✅ |
+| 4 | match-up | Voiced and Voiceless Partners | 6 | 6 | ✅ |
+| 5 | quiz | Hands-on-Ears Test | 10 | 6 | ✅ |
+| 6 | classify | Hard or Soft? | 15 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 6 (target: 0-4) ❌
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1957/1200 (raw: 2036)
+- **Words:** ✅ 1413/1200 (raw: 1474)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/2
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.2% (target 5-15% (M03))
+- **Immersion:** 🇺🇦 6.1% (target 5-15% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -54,9 +54,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 138 | Included in Core |
-| **Сонорні — Sonorant Consonants** | ✅ | 351 | Included in Core |
-| **Дзвінкі та глухі пари — Voiced and Voiceless Pairs** | ✅ | 634 | Included in Core |
-| **Тверді та м'які — Hard and Soft Consonants** | ✅ | 411 | Included in Core |
+| **Intro/Narrative** | ✅ | 129 | Included in Core |
+| **Сонорні — Sonorant Consonants** | ✅ | 318 | Included in Core |
+| **Дзвінкі та глухі пари — Voiced and Voiceless Pairs** | ✅ | 489 | Included in Core |
+| **Тверді та м'які — Hard and Soft Consonants** | ✅ | 223 | Included in Core |
 | **Читання — Reading Practice** | ⚪️ | 0 | Skipped (using YAML) |
-| **Підсумок — Summary** | ✅ | 177 | Included in Core |
+| **Підсумок — Summary** | ✅ | 108 | Included in Core |

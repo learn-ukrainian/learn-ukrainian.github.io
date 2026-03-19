@@ -2,11 +2,12 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 6
 deviations:
-  - "Plan calls for fill-in with 8 items focused on 'Mark correct word division points' — implemented as multiple-choice fill-in where learners pick the correct hyphenation. 8 items provided."
-  - "Plan calls for match-up with 10 items focused on 'Match words to their syllable count' — implemented with 10 pairs mapping words to syllable counts."
-  - "Added true-false (10 items) and anagram (8 items) beyond plan hints to reinforce key concepts and provide variety. These are allowed types for A1."
-frictions: []
+  - "Plan requested 10 quiz items; provided 10. Plan requested 8 fill-in items; provided 8. Plan requested 12 group-sort items; provided 13. Plan requested 10 match-up pairs; provided 10. Added true-false (8 items) and anagram (6 items) for variety beyond the 4 required types."
+frictions:
+  - type: SCHEMA_MISMATCH
+    description: "ґудзик uses the letter ґ which is verified in VESUM but uses a different Unicode codepoint (ғ vs ґ). Had to verify the correct form separately."
+    proposed_fix: "N/A — just needed the correct Unicode character ґ (U+0491)."
 unverified_terms: []
 review_focus:
-  - "fill-in activity uses English sentences with Ukrainian word division options — verify this is acceptable for A1.1 scaffolding"
-  - "match-up has duplicate right-side values (e.g., multiple words map to '3 syllables') — this is intentional for syllable counting but verify renderer handles it"
+  - "fill-in activity: verify the distractor syllable divisions look plausible but are clearly wrong"
+  - "anagram: verify letter counts match between scrambled and answer for all items"

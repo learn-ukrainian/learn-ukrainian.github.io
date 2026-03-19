@@ -1,230 +1,184 @@
-You already know how to talk about what things are, describe them, ask questions, and say what you do. Now it's time for something personal — talking about what you **like**, what you **love**, and what you **want**. These are some of the most useful sentences in any language, and Ukrainian has its own elegant way of expressing them.
-
-By the end of this module, you'll be able to say what appeals to you, tell someone what you love, express what you want, and ask others about their preferences — all in natural, everyday Ukrainian.
-
 ## Мені подобається (I like)
 
-Here's something that surprises many English speakers: in Ukrainian, you don't "like" things the way you do in English. Instead of "I like coffee," Ukrainian says something closer to "Coffee is pleasing **to me**." The thing you like is actually the subject of the sentence!
+When expressing that something appeals to you in Ukrainian, you can use the verb **люби́ти** (to like/love). This is a direct way to share your tastes. While some textbooks teach complex "to me is pleasing" structures, at this stage, we will focus on using straightforward verbs to express what you enjoy.
 
-The construction works like this: **Dative pronoun + подобається + what you like**. The word **подобається** means "is pleasing" or "appeals to." You don't need to worry about conjugating it for different people — it stays the same because it agrees with the thing that's liked, not with you.
+* **Я люблю́ ка́ва.** — I like coffee.
+* **Я люблю́ чита́ти.** — I like to read.
 
-Here are the Dative forms of the personal pronouns you already know:
+Notice that you can follow the verb directly with an infinitive action, such as **чита́ти** (to read). This is extremely common when talking about your hobbies and daily routines.
 
-| Pronoun | English meaning | Example |
-|---------|-----------------|---------|
-| я | "to me" | Мені подобається кава. |
-| ти | "to you" | Тобі подобається музика. |
-| він | "to him" | Йому подобається читати. |
-| вона | "to her" | Їй подобається парк. |
-| ми | "to us" | Нам подобається борщ. |
-| ви | "to you" | Вам подобається книга? |
-| вони | "to them" | Їм подобається школа. |
+> — Приві́т! Що ти лю́биш?
+> — Я люблю́ му́зика і спорт. А ти?
+> — Я люблю́ чита́ти і пи́ти чай.
+> — Це гарно! Я теж люблю́ чай.
 
-Don't try to memorize these as grammar rules — just learn them as fixed chunks, the way you'd learn a phrase like "excuse me." You'll meet the Dative case formally later. For now, just think "to me," "to you," and so on.
+To say who likes something, you use the standard pronouns you already know:
 
-> [!tip] **Quick Win**
-> You can already say what is pleasing! Just pick a word you know and put it before **подобається**: **Чай подобається.** — Tea is pleasing. Try it with any noun you've learned!
+| Pronoun | Meaning | Example | Meaning |
+|---|---|---|---|
+| я | I | **Я люблю́ ка́ву.** | I like coffee. |
+| ти | you | **Ти лю́биш чай.** | You like tea. |
+| він | he | **Він лю́бить му́зику.** | He likes music. |
+| вона | she | **Вона́ лю́бить сніг.** | She likes snow. |
+| ми | we | **Ми лю́бимо лі́то.** | We like summer. |
+| ви | you (formal/pl) | **Ви лю́бите мі́сто.** | You like the city. |
+| вони | they | **Вони́ лю́блять о́сінь.** | They like autumn. |
 
-Now, what happens when more than one thing is pleasing? The verb changes to match:
+The verb **люби́ти** changes its ending to match the person who is liking something. Understanding these basic patterns helps you communicate your preferences clearly and naturally.
 
-- Кава **подобається**. — Coffee is pleasing. *(one thing)*
-- Квіти **подобаються**. — Flowers are pleasing. *(many things)*
+* **Я люблю́ ціка́вий фільм.** — I like an interesting film.
+* **Я люблю́ ці кві́ти.** — I like these flowers.
+* **Він лю́бить нові́ книжки́.** — He likes new books.
 
-Notice the difference: **подобається** (singular) vs **подобаються** (plural). The verb agrees with what is liked.
-
-You can also use this construction with verbs in the infinitive form — to say an action is pleasing:
-
-- Читати подобається. — Reading is pleasing.
-- Гуляти подобається? — Is walking pleasing?
-- Співати подобається. — Singing is pleasing.
-
-> [!warning] **Common Mistake**
-> English speakers often try to say ~~"Я подобаюся кава"~~ — mapping "I like coffee" word for word. This is wrong! In Ukrainian, YOU are in the Dative case (which means "to me"), and the COFFEE is the subject: **Мені подобається кава.**
-
-<!-- adapted from: Vashulenko, Grade 3, p.5 — "Що я люблю" theme -->
+> [!tip] 💡🎬🌍
+> **Цікаво знати!** (Interesting to know!)
+> В Україна люди часто п'ють чай або кава разом. Це гарна традиція.
+> (In Ukraine, people often drink tea or coffee together. This is a nice tradition.)
 
 ## Я люблю (I love)
 
-While **подобається** describes something that appeals to you, **люблю** is stronger and more personal. It means "I love" or "I really enjoy." And unlike **подобається**, here YOU are the subject — just like in English.
+While we often use **люби́ти** for general appeal, it is also used for stronger emotions. The verb **люби́ти** is used for active enjoyment or deep affection. This verb is incredibly useful for expressing strong positive feelings about food, activities, or people in your life. Do not be afraid to use it often!
 
-The verb **любити** belongs to the Second Conjugation. Here is the full present-tense pattern:
+The person is the active subject, and the thing loved takes a special object form (the Accusative). The grammatical subject is the person who is feeling the emotion. By mastering this verb, you can describe your world with much more passion and detail.
 
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | я **люблю** | ми **любимо** |
-| 2nd | ти **любиш** | ви **любите** |
-| 3rd | він/вона **любить** | вони **люблять** |
+* **Я люблю́ чай.** — I love tea.
+* **Я люблю́ спорт.** — I love sports.
+* **Я люблю́ чита́ти.** — I love to read.
 
-Notice how the first person singular (**люблю**) and third person plural (**люблять**) both have an inserted **л** after the **б**. This is a consonant change you've seen before with Second Conjugation verbs.
+The verb belongs to the second conjugation group. Notice the spelling change in the first person singular form, where an extra letter appears to make pronunciation smoother:
 
-After **люблю**, the object takes the Accusative form. You'll study Accusative case formally in a later module. For inanimate masculine objects, the form looks exactly like the Nominative:
+| Pronoun | Verb Form |
+|---|---|
+| я | **люблю́** |
+| ти | **лю́биш** |
+| він/вона/воно | **лю́бить** |
+| ми | **лю́бимо** |
+| ви | **лю́бите** |
+| вони | **лю́блять** |
 
-- Я люблю чай. — I love tea. *(чай)*
-- Він любить борщ. — He loves borshch. *(борщ)*
-- Ми любимо парк. — We love the park. *(парк)*
-- Вони люблять торт. — They love cake. *(торт)*
+There is an important difference in meaning depending on context. Sometimes **я люблю́** describes a general preference, and sometimes an active, ongoing attachment or habit.
 
-You can also use **любити** with infinitives, just like **подобається**:
+* **Я люблю́ ця кни́га.** — I like this book.
+* **Я люблю́ цей текст.** — I love this text.
+* **Я люблю́ смачни́й борщ.** — I like tasty borscht.
+* **Я люблю́ смачни́й борщ.** — I love tasty borscht.
 
-- Я люблю читати. — I love reading.
-- Вона любить співати. — She loves singing.
-- Ми любимо гуляти. — We love walking.
-
-> [!note] **подобається vs люблю — What's the Difference?**
-> Think of it this way: **подобається** is about a reaction — something appeals to you. **Люблю** is about a feeling — you actively love or enjoy something.
->
-> - Цей парк подобається. — This park is appealing. *(reaction)*
-> - Я люблю цей парк. — I love this park. *(feeling)*
->
-> Both are natural. Use **подобається** when you discover something pleasant. Use **люблю** for things you know you love.
+> [!tip] 💡🎬🌍
+> **Remember!**
+> Я люблю спорт. Він любить читати. Ми любимо музика.
+> (I love sports. He loves to read. We love music.)
 
 ## Я хочу (I want)
 
-The verb **хотіти** (to want) is one of the most useful verbs in Ukrainian. It belongs to the First Conjugation, with a simple consonant change where **т** becomes **ч**. It's very common, so you'll memorize its pattern quickly through use.
+To express desire, use the verb **хоті́ти** (to want). This verb is irregular, meaning its endings follow a unique pattern. It is incredibly useful for everyday situations, such as ordering food at a restaurant or suggesting an activity to a friend. Learning this verb early will help you navigate many practical situations in Ukraine.
 
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | я **хочу** | ми **хочемо** |
-| 2nd | ти **хочеш** | ви **хочете** |
-| 3rd | він/вона **хоче** | вони **хочуть** |
+The most common way to use this verb is to follow it directly with an infinitive action. This lets you explain exactly what you intend to do next, making your communication much clearer and more efficient.
 
-You can use **хочу** in two ways. First, with an infinitive — to say what you want **to do**:
+* **Я хо́чу ї́сти.** — I want to eat.
+* **Я хо́чу спа́ти.** — I want to sleep.
+* **Він хо́че чита́ти.** — He wants to read.
 
-- Я хочу їсти. — I want to eat.
-- Я хочу піти. — I want to go.
-- Вона хоче читати. — She wants to read.
-- Ми хочемо гуляти. — We want to walk.
+Here is the complete conjugation pattern for this irregular verb. Pay close attention to the vowel changes in the plural forms, as they shift noticeably:
 
-Second, with a noun — to say what you want **to have**. Just like with **любити**, the noun takes the Accusative form:
+| Pronoun | Verb Form |
+|---|---|
+| я | **хо́чу** |
+| ти | **хо́чеш** |
+| він/вона/воно | **хо́че** |
+| ми | **хо́чемо** |
+| ви | **хо́чете** |
+| вони | **хо́чуть** |
 
-- Я хочу каву. — I want coffee.
-- Ти хочеш чай? — Do you want tea?
-- Він хоче борщ. — He wants borshch.
-- Вони хочуть квиток. — They want a ticket.
+You can also use this verb directly with an object. Just like with our active verb for love, the object takes a specific form to show it is being wanted. You will practice this form more later, but memorize these common examples for now so you can request things politely.
 
-> [!tip] **Three Constructions, Three Patterns**
-> Here's your cheat sheet:
->
-> | Construction | Structure | Example |
-> |-------------|-----------|---------|
-> | подобається | Dative + подобається + Nominative/infinitive | Мені подобається кава. |
-> | люблю | Subject + люблю + Accusative/infinitive | Я люблю каву. |
-> | хочу | Subject + хочу + Accusative/infinitive | Я хочу каву. |
->
-> Notice: with **люблю** and **хочу**, YOU are the subject. With **подобається**, the THING you like is the subject.
+* **Я хо́чу сік.** — I want juice.
+* **Я хо́чу квито́к.** — I want a ticket.
+* **Вона́ хо́че чай.** — She wants tea.
 
-How is **хочу** different from the other two? It's about desire or intention, not preference:
+Compare this directly with the verb we learned first. Preferences do not require this special object form when talking about simple things. This distinction is vital for sounding natural.
 
-- Мені подобається кава. — I like coffee. *(general preference)*
-- Я люблю каву. — I love coffee. *(strong, lasting feeling)*
-- Я хочу каву. — I want coffee. *(right now, please!)*
+* **Я люблю́ ка́ва.** — I like coffee.
+* **Я хо́чу чай.** — I want tea.
 
-> **(Кафе / Café)**
->
-> — Привіт! Ви хочете каву?
-> — Так, я хочу каву. Дякую!
-> — А торт? Тобі подобається торт?
-> — Так, дуже! Я люблю торт.
-> — Добре! Ось кава і смачний торт.
+> [!tip] 💡🎬🌍
+> **У кафе:** (At the cafe:)
+> — Я хочу кава.
+> — А я хочу чай і торт.
+> (— I want coffee. — And I want tea and cake.)
 
-## Порівняння
+## Порівняння (Comparing likes)
 
-Now you have three powerful tools for talking about preferences. Let's use them in conversations! When you want to ask someone about their preferences, here are the key questions:
+Once you can state your own preferences, the next step is asking others about theirs. Building dialogues about shared and different tastes is essential for making friends. You will find that Ukrainians are very hospitable and will frequently ask what you like or want. Showing interest in their answers is a great way to build rapport.
 
-- Тобі подобається музика? — Do you like music?
-- Ти любиш читати? — Do you love reading?
-- Ви хочете каву? — Do you want coffee?
-- А ти? — And you? *(informal)*
-- А вам? — And you? *(formal)*
+To turn statements into questions, simply use rising intonation or the question word **чи**. You can also ask directly about someone else using short question tags.
 
-Notice that **тобі** and **ти** are both "you," but they appear in different constructions. With **подобається**, you use the Dative form **тобі** (to you). With **любиш** and **хочеш**, you use the Nominative **ти** because you are the subject of those verbs. This is the key structural difference between the three patterns.
+* **А ти?** — And you?
+* **А ви?** — And you? (formal/plural)
+* **Ти лю́биш му́зика?** — Do you like music?
+* **Ти лю́биш чита́ти?** — Do you love to read?
+* **Ви хо́чете ї́сти?** — Do you want to eat?
 
-These questions are your gateway to real conversations. Let's see them in action. Each dialogue below uses all three constructions in a natural setting — pay attention to which form of "you" appears in each sentence:
+Let us look at a short dialogue building on these phrases. Notice how the speakers compare their tastes naturally, creating a flowing conversation:
 
-> **(Парк / Park)**
->
-> — Мені подобається цей парк. А тобі?
-> — Так, мені також подобається. Тут дуже гарно.
-> — Ти любиш гуляти?
-> — Так, я люблю гуляти. А ти?
-> — Я також! Мені подобається гуляти разом.
+> — **Приві́т! Ти лю́биш цей чай?**
+> — **Так, смачни́й чай. А ти?**
+> — **Я теж. Я дуже люблю́ чай.**
 
-In this dialogue, the first speaker uses **мені подобається** to say the park appeals to them, then switches to **ти любиш** to ask about an activity. Both are natural ways to talk about liking things — the choice depends on whether you're describing a reaction or asking about a habit.
+Understanding cultural context is helpful when discussing preferences. Ukrainians love to gather for meals and hot drinks, especially in the colder months. Finding out what people enjoy eating or doing in their free time naturally introduces new vocabulary you will see in upcoming modules. Being able to compare your likes with others will make these social interactions much more engaging and authentic.
 
-> **(Школа / School)**
->
-> — Тобі подобається ця книга?
-> — Ні, вона нудна. Я люблю цікаві книги.
-> — А який фільм тобі подобається?
-> — Мені подобаються цікаві фільми.
+* **Ми хо́чемо йти в кафе́.** — We want to go to a cafe.
+* **Вони́ лю́блять смачни́й торт.** — They like tasty cake.
+* **Я люблю́ чай.** — I love tea.
+* **Це нудни́й фільм, я хо́чу спа́ти.** — This is a boring film, I want to sleep.
 
-Here, the response **вона нудна** (it is boring) uses a short adjective sentence — a very common way to give opinions in Ukrainian. Notice also that the last line uses **подобаються** (plural) because **фільми** (films) is plural.
-
-Notice how **цікавий** (interesting) and **нудний** (boring) help you express opinions. And the word **улюблений** (favourite) is perfect for talking about top preferences:
-
-- Моя улюблена книга — це... — My favourite book is...
-- Мій улюблений колір — синій. — My favourite colour is blue.
-- Яка твоя улюблена музика? — What is your favourite music?
-
-> [!culture] **What Ukrainians Love**
-> Ukrainians love to share food and drinks with friends and family. A host will often ask **«Ви хочете чай чи каву?»** (Do you want tea or coffee?) rather than just asking what you like in general. **Борщ**, **вареники**, and **чай** are everyday favourites. Ukrainian culture is warm and hospitable. The Ukrainian proverb says: **«На колір і смак товариш не всяк»** — roughly, "Tastes differ" or "To each their own." This means everyone has their own unique taste and style. In Ukraine, people value these personal differences in food, music, and art.
-
-Here's a longer dialogue that puts everything together. Try reading it through once, then go back and identify which of the three constructions each speaker uses:
-
-> **(Дім / Home)**
->
-> — Що ти любиш робити?
-> — Я люблю читати і слухати музику.
-> — Цікаво! А яка музика тобі подобається?
-> — Мені подобається українська музика. А тобі?
-> — Мені також! Я хочу послухати разом!
-> — Добре! Ходімо!
+> [!tip] 💡🎬🌍
+> **Діалог:** (Dialogue:)
+> — Що ти хочеш?
+> — Я хочу сік. А ти?
+> — Я хочу вода.
+> (— What do you want? — I want juice. And you? — I want water.)
 
 ## Практика (Practice)
 
-Let's practise choosing the right construction. Remember:
+Now it is time to practice choosing the correct construction. Depending on the context, you must decide whether to describe a like, an active love, or a direct desire.
 
-- **Подобається** — something appeals to you (Dative + подобається)
-- **Люблю** — you love or enjoy something (Subject + люблю)
-- **Хочу** — you want something right now (Subject + хочу)
+Look at the following pattern examples to see how the choice changes the meaning slightly:
 
-Try filling in the blanks in these mini-conversations:
+* **Я люблю́ суп.** — I like soup.
+* **Я люблю́ суп.** — I love soup.
+* **Я хо́чу суп.** — I want soup.
 
-- — ___ подобається кава? — Так, ___ подобається.  *(Answer: Тобі... мені)*
-- — Ти ___ читати? — Так, я ___ читати.  *(Answer: любиш... люблю)*
-- — Ви ___ чай? — Так, ми ___ чай.  *(Answer: хочете... хочемо)*
+Consider the context carefully. If a friend asks you to watch a movie, but you have no interest, you might use an adjective to explain why you want to leave:
 
-> [!practice] **Your Turn**
-> Think about your own preferences. Can you say three things you like using each construction?
->
-> 1. Мені подобається ___. *(something that appeals to you)*
-> 2. Я люблю ___. *(something you love)*
-> 3. Я хочу ___. *(something you want right now)*
->
-> Now try asking a friend: **А тобі? Що ти любиш?**
+> — **Ти хо́чеш диви́тися фільм?**
+> — **Ні, це нудни́й фільм. Я хо́чу спа́ти.**
 
-Here's one final dialogue to bring it all together:
+Try to fill in the gaps mentally when you hear these conversations. Paying attention to context clues makes it easier:
 
-> **(Кафе / Café)**
->
-> — Добрий день! Що бажаєте?
-> — Я хочу каву, будь ласка. А ти?
-> — Мені подобається чай. Я хочу чай.
-> — Ви хочете торт? Він дуже смачний!
-> — Так! Ми любимо смачний торт!
+> — **Що ти лю́биш?**
+> — **Я люблю́ ________.**
+> — **Що ти лю́биш?**
+> — **Я люблю́ ________.**
+
+Practice these forms daily. Discuss your preferences, from a tasty drink to an interesting book. 
+
+* **Це ціка́вий текст.** — This is an interesting text.
+* **Ця му́зика гарна.** — This music is beautiful.
+
+> [!tip] 💡🎬🌍
+> **Ваш вибір:** (Your choice:)
+> Choose the correct word: хочу, люблю, любиш.
+> (Choose the correct word: want, love/like, love/like (you).)
 
 # Підсумок
-Great job! You've learned three essential ways to talk about your preferences in Ukrainian. Let's celebrate what you can now do:
 
-You can say what appeals to you with **мені подобається** — using the Dative construction where the thing you like is the subject. You can express love and enjoyment with **я люблю** — where you are the subject and the object takes the Accusative form. And you can express what you want right now with **я хочу** — followed by an infinitive or an Accusative noun.
+You can now confidently express your likes, loves, and desires. You understand how to use direct verbs to share your tastes and feelings.
 
-You've also learned all seven Dative pronoun forms (**мені, тобі, йому, їй, нам, вам, їм**), how to use adjectives like **цікавий**, **нудний**, **смачний**, and **улюблений** to express opinions, and how to ask others about their preferences with **А тобі? Ти любиш...? Ви хочете...?**
+You have learned the standard pronoun forms, the conjugation pattern for showing affection, and the irregular forms for expressing wants. You can also ask others about their tastes and compare your preferences smoothly.
 
-**Self-check — can you do these?**
+Test your knowledge with these questions:
 
-1. Say "I like music" using **подобається**.
-2. Say "She loves coffee" using **любити**.
-3. Say "We want to walk" using **хотіти**.
-4. Ask someone "Do you like this book?" using **подобається**.
-
-If you can do all four, you're ready to move on to the next module, where you'll learn about possessive pronouns — **mine**, **yours**, and more!
+1. How do you say "I like coffee"?
+2. Which verb describes an active, ongoing attachment or habit?
+3. What is the irregular first-person singular form for "to want"?
+4. How do you ask "And you?" formally when discussing preferences?

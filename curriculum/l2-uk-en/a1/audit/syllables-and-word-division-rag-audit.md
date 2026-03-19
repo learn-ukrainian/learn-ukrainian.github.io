@@ -1,33 +1,36 @@
 # RAG Verification: syllables-and-word-division
 
-**Date:** 2026-03-18 23:05 UTC | **Words checked:** 111 | **VESUM coverage:** 103/111 (92.8%)
+**Date:** 2026-03-19 01:55 UTC | **Words checked:** 111 | **VESUM coverage:** 100/111 (90.1%)
 
 ## Summary
-- ✅ Verified (VESUM): 103
-- ⚠️ Partial (RAG only): 2
-- ❌ Not found: 6
+- ✅ Verified (VESUM): 100
+- ⚠️ Partial (RAG only): 4
+- ❌ Not found: 7
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| ву | prose | ✗ | ✗ | ✗ |
-| кра | prose | ✗ | ✗ | ✗ |
-| ли | prose | ✗ | ✗ | ✗ |
-| ло | prose | ✗ | ✗ | ✗ |
+| блі | prose | ✗ | ✗ | ✗ |
+| вер | prose | ✗ | ✗ | ✗ |
+| ву | activities | ✗ | ✗ | ✗ |
+| ло | activities | ✗ | ✗ | ✗ |
 | ль | prose | ✗ | ✗ | ✗ |
-| ст | prose | ✗ | ✗ | ✗ |
+| на-тра-ві | prose | ✗ | ✗ | ✗ |
+| стр | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
+| Бі | prose | ✗ | ✓ | ✗ |
 | дж | prose | ✗ | ✓ | ✗ |
 | дз | prose | ✗ | ✓ | ✗ |
+| ка | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 90 | 82 | 6 |
-| Activities (.yaml) | 21 | 21 | 0 |
+| Prose (.md) | 82 | 73 | 5 |
+| Activities (.yaml) | 29 | 27 | 2 |

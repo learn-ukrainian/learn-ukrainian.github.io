@@ -1,22 +1,10 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1835
-deviations:
-  - section: "Overall"
-    reason: "Content came in at ~1835 words, well above the 1200 minimum target. All sections meet their individual minimums."
+word_count: 1100
+deviations: []
 frictions: []
-research_gaps:
-  - "Grade 3-4 textbooks did not have explicit demonstrative pronoun sections — demonstratives are formally taught at Grade 6 level (Litvinova 2023, Avramenko 2023). Adapted Grade 6 declension tables for A1."
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Copula vs demonstrative це distinction — verify examples are clear and unambiguous"
-  - "та ambiguity section — verify the quick test (replace with і) is pedagogically sound"
-  - "All 20 vocabulary items appear in content — verify no orphaned vocab"
-  - "Activity schemas match activities-a1.schema.json exactly (additionalProperties: false)"
-  - "Ukrainian sentences all ≤10 words"
-rag_tools_used:
-  - "search_text: вказівні займенники цей ця це ці той та те ті (grade 6) → Litvinova p.272-273 declension table, Avramenko p.200 stress patterns"
-  - "search_text: вказівні займенники узгодження рід число (grade 4) → Kravtsova p.68-70 adjective agreement tables (no direct demonstrative content)"
-  - "verify_words: all 20 vocabulary items → 20/20 confirmed in VESUM"
-  - "verify_lemma: цей → 39 forms (adj:pron:dem), confirmed all nominative forms"
-  - "verify_lemma: той → 40 forms (adj:pron:dem + part), confirmed all nominative forms"
+  - "Check that distance and spatial contrasts match exactly."
+rag_tools_used: []

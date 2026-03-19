@@ -1,7 +1,7 @@
 # Audit Report: M05 — syllables-and-word-division.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-19 00:05:19
+**Generated:** 2026-03-19 12:50:03
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,10 +21,10 @@
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Count the Syllables | 10 | 6 | ✅ |
 | 2 | fill-in | Mark the Correct Word Division | 8 | 6 | ✅ |
-| 3 | group-sort | Open or Closed Syllable? | 12 | 6 | ✅ |
+| 3 | group-sort | Open or Closed Syllables? | 13 | 6 | ✅ |
 | 4 | match-up | Match the Word to Its Syllable Count | 10 | 6 | ✅ |
-| 5 | true-false | True or False? Test Your Syllable Knowledge | 10 | 6 | ✅ |
-| 6 | anagram | Unscramble the Word | 8 | 6 | ✅ |
+| 5 | true-false | True or False? Test Your Syllable Knowledge | 8 | 6 | ✅ |
+| 6 | anagram | Unscramble the Word | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 6 (target: 0-4) ❌
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2021/1200 (raw: 2051)
+- **Words:** ✅ 1916/1200 (raw: 1946)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 11.2% (target 5-15% (M05))
+- **Immersion:** 🇺🇦 7.7% (target 5-15% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -54,8 +54,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 434 | Included in Core |
-| **Типи складів — Syllable Types** | ✅ | 477 | Included in Core |
-| **Правила переносу — Word Division Rules** | ✅ | 564 | Included in Core |
-| **Практика — Practice** | ✅ | 358 | Included in Core |
-| **Підсумок — Summary** | ✅ | 188 | Included in Core |
+| **Intro/Narrative** | ✅ | 443 | Included in Core |
+| **Типи складів — Syllable Types** | ✅ | 430 | Included in Core |
+| **Правила переносу — Word Division Rules** | ✅ | 596 | Included in Core |
+| **Практика — Practice** | ✅ | 330 | Included in Core |
+| **Підсумок — Summary** | ✅ | 117 | Included in Core |

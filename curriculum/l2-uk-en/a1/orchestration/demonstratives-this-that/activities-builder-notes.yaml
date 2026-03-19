@@ -1,16 +1,13 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 4
 deviations:
-  - "Added true-false (8 items) and unjumble (6 items) beyond plan hints for variety and to meet 8-activity minimum"
-  - "Added second quiz (6 items) focusing on proximity contrast and це/та ambiguity — key lesson objectives"
-  - "Added second match-up (6 pairs) for this↔that proximity pairing"
+  - "Plan requested 10 fill-in items — delivered 10. Plan requested 12 quiz items — delivered 12. Plan requested 10 match-up pairs — delivered 10. Plan requested 12 group-sort items — delivered 12 (3 per group across 4 groups)."
 frictions:
-  - type: PLAN_GAP
-    description: "Plan group-sort focus says 'Sort nouns into цей-group vs той-group' which is ambiguous — could mean proximity or gender grouping"
-    proposed_fix: "Implemented as gender grouping (4 groups: masculine/feminine/neuter/plural) since proximity is contextual and has no fixed correct answer per noun"
-unverified_terms:
-  - "подруга (used in group-sort, from lesson content line 106/132)"
+  - type: NONE
+    description: "No frictions encountered. All activity types from plan activity_hints implemented."
+    proposed_fix: "N/A"
+unverified_terms: []
 review_focus:
-  - "Quiz 2 item 3 (та ambiguity) — verify the multiple-choice options are clear enough"
-  - "Group-sort has 14 items across 4 groups (3 in neuter and plural) — verify balance is acceptable"
+  - "Quiz item 6 tests the це copula vs demonstrative distinction — verify the example sentences are unambiguous."
+  - "Match-up has repeated right-side values (цей appears 3x, ця 3x, etc.) — this is by design since we're testing gender classification, not unique pairing."

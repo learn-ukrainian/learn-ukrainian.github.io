@@ -29,7 +29,17 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 
 
 
-**NOTE: 2 inline fix(es) from the review have ALREADY been applied to the files. Do NOT re-apply those fixes. Read the CURRENT file contents carefully — they reflect the post-fix state. Only fix issues that are still present in the current files.**
+**NOTE: 10 inline fix(es) from the review have ALREADY been applied to the files. Do NOT re-apply those fixes. Read the CURRENT file contents carefully — they reflect the post-fix state. Only fix issues that are still present in the current files.**
+
+## Plan Adherence Issues (Deterministic — MUST FIX)
+
+- **[HIGH] MISSING_STRUCTURAL_ELEMENT** in `Вступ — Introduction`
+  - Expected: Plan point requires visual element: Review: M1 gave you the map, M2 mastered vowels, M3 mastered consonants. Today: the final pieces — m
+  - Actual: Section contains only prose — no table or bulleted list found
+  - Fix: Add a markdown table or bulleted list to section 'Вступ — Introduction'
+
+
+---
 
 ## Review Findings (targeted fix required)
 
@@ -37,56 +47,80 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 - Fix ONLY the issues listed below
 - Do NOT rewrite surrounding text
 - Preserve word count and structure
-- Only modify these sections: Line 113, Section "Диграфи ДЖ, ДЗ", Line 65, Section "Африкати, Щ та Ф"
+- Only modify these sections: Activities file, line 217 (classify activity, Ц category), All H2 sections — lines 19-25, 46-50, 67-68, 76-78, 86-88, 96-97, 104-105, 108-109, Entire module, Entire module — all sections, Lines 7, 18, 45, 54, 121, 136, Vocabulary file — missing entry
 
-### Finding 1: Wrong Stress — цві́ркун (STRESS_MISMATCH)
-**Location**: Line 65, Section "Африкати, Щ та Ф"
-**Problem**: Standard Ukrainian stress is цвірку́н (stress on final syllable), not цві́ркун. Confirmed by D.0 stress verification pipeline (2.7M forms).
-**Required Fix**: Replace `**цві́ркун**` with `**цвірку́н**`
+### Finding 1: ZERO Engagement Boxes (Audit Gate FAIL)
+**Location**: Entire module — all sections
+**Problem**: The module contains 0 engagement boxes (`[!tip]`, `[!culture]`, `[!did-you-know]`, `[!example]`). The richness gate requires engagement ≥ 2. This is an audit gate failure.
+**Required Fix**: Add at least 2 callout boxes. Suggestions:
 **Severity**: HIGH
 
-### Finding 2: Verb in Pre-Verb Module — цо́кає (MORPHOLOGICAL_VIOLATION)
-**Location**: Line 65, Section "Африкати, Щ та Ф"
-**Problem**: цо́кає is verb:imperf:pres:s:3 per VESUM. Module M4 is pre-verb (verbs forbidden before M15). While this appears inside a cultural riddle quote, it still introduces a conjugated verb form that hasn't been taught.
-**Required Fix**: Rephrase to avoid the verb form. Use: «Не годи́нник, а цо́к-цо́к-цо́к.» — onomatopoeia instead of verb, preserving the Ц focus and riddle spirit.
+### Finding 2: "Let us" Formality (×6 occurrences)
+**Location**: Lines 7, 18, 45, 54, 121, 136
+**Problem**: "Let us" ×6 is formal and robotic. A patient, supportive tutor would say "Let's" — contractions are explicitly permitted in the tier guidance ("Contractions allowed"). This is an LLM fingerprint pattern.
+**Required Fix**: Replace all 6 instances of "Let us" with "Let's".
 **Severity**: HIGH
 
-### Finding 3: Verb in Pre-Verb Module — дзвони́ти (MORPHOLOGICAL_VIOLATION)
-**Location**: Line 113, Section "Диграфи ДЖ, ДЗ"
-**Problem**: дзвони́ти is verb:imperf:inf per VESUM. Explicitly teaching a verb derivation (noun → verb) is grammar scope creep for M4.
-**Required Fix**: Remove the verb derivation. Replace with a cultural detail that keeps the ДЗ focus: "The word дзвін is everywhere in Ukrainian life — from church towers to phone calls."
+### Finding 3: місяць in Activity Without Prose Introduction
+**Location**: Activities file, line 217 (classify activity, Ц category)
+**Problem**: The word місяць appears in the classify activity under the Ц category but is never mentioned in the prose content and is not in the plan's vocabulary_hints. Students encounter an untaught word in practice.
+**Required Fix**: Replace місяць with a word that IS taught in the prose and demonstrates Ц. The prose mentions цукор and цибуля — both already in the activity. Replace місяць with a Ц-word from the content, or add місяць to the prose in section "Африкати, Щ та Ф — Affricates, Щ, and Ф".
 **Severity**: HIGH
 
-### Finding 4: D.0 Pre-Screen Dismissals
+### Finding 4: Low Immersion (4.4% vs 10-25% target)
+**Location**: Entire module
+**Problem**: Module 4 falls in the M3-5 band (target 10-25% Ukrainian). Current immersion is 4.4%. The only Ukrainian-language reading passage is the single-line challenge on line 123. The survival phrases on lines 126-130 are isolated words with English translations.
+**Required Fix**: Add more Ukrainian reading opportunities: expand the reading challenge, add a second mini-reading passage in section "Апостроф — The Apostrophe", and consider adding short Ukrainian sentences after each example cluster rather than only English explanations.
+**Severity**: HIGH
+
+### Finding 5: Identical Example Formatting Across All Sections
+**Location**: All H2 sections — lines 19-25, 46-50, 67-68, 76-78, 86-88, 96-97, 104-105, 108-109
+**Problem**: Every single section presents examples in the exact same format: `*   **word** (translation) — explanation`. No variation (no tables, no inline examples, no dialogues, no comparison boxes). This is a clear LLM structural monotony pattern.
+**Required Fix**: Vary example presentation: use a comparison table for the кін/кінь minimal pair, use inline examples for some words, present the apostrophe words in a formatted box or table with columns for "Without apostrophe" vs "With apostrophe".
+**Severity**: HIGH
+
+### Finding 6: фото Missing from Vocabulary File
+**Location**: Vocabulary file — missing entry
+**Problem**: фото (photo) appears in the prose at line 97 as a vocabulary example for Ф but has no entry in the vocabulary YAML file. It is listed in the plan as a recommended word.
+**Required Fix**: Add фото to the vocabulary file.
 **Severity**: HIGH
 
 ---
 
 ## Critical Issues Found
 
-### Issue 1: Wrong Stress — цві́ркун (STRESS_MISMATCH)
-- **Location**: Line 65, Section "Африкати, Щ та Ф"
-- **Original**: 「The answer is **цві́ркун** (cricket)!」
-- **Problem**: Standard Ukrainian stress is цвірку́н (stress on final syllable), not цві́ркун. Confirmed by D.0 stress verification pipeline (2.7M forms).
-- **Fix**: Replace `**цві́ркун**` with `**цвірку́н**`
+### Issue 1: ZERO Engagement Boxes (Audit Gate FAIL)
+- **Location**: Entire module — all sections
+- **Problem**: The module contains 0 engagement boxes (`[!tip]`, `[!culture]`, `[!did-you-know]`, `[!example]`). The richness gate requires engagement ≥ 2. This is an audit gate failure.
+- **Fix**: Add at least 2 callout boxes. Suggestions:
+  - Section "М'який знак — The Soft Sign": Add `[!tip]` after the minimal pair about кін/кінь — e.g., a tip about listening for soft consonants.
+  - Section "Диграфи ДЖ, ДЗ — Digraphs": Add `[!culture]` about the uniqueness of ДЗ to Ukrainian.
 
-### Issue 2: Verb in Pre-Verb Module — цо́кає (MORPHOLOGICAL_VIOLATION)
-- **Location**: Line 65, Section "Африкати, Щ та Ф"
-- **Original**: 「«Не годи́нник, а цо́кає.»」
-- **Problem**: цо́кає is verb:imperf:pres:s:3 per VESUM. Module M4 is pre-verb (verbs forbidden before M15). While this appears inside a cultural riddle quote, it still introduces a conjugated verb form that hasn't been taught.
-- **Fix**: Rephrase to avoid the verb form. Use: «Не годи́нник, а цо́к-цо́к-цо́к.» — onomatopoeia instead of verb, preserving the Ц focus and riddle spirit.
+### Issue 2: "Let us" Formality (×6 occurrences)
+- **Location**: Lines 7, 18, 45, 54, 121, 136
+- **Original**: 「Let us look at some everyday examples where the soft sign does its work:」 (line 18), 「Let us look at some very common, everyday words that use this symbol:」 (line 45), 「Let us compare the sounds closely.」 (line 54), 「Let us briefly review the final, crucial pieces of the alphabet puzzle you have just mastered:」 (line 136)
+- **Problem**: "Let us" ×6 is formal and robotic. A patient, supportive tutor would say "Let's" — contractions are explicitly permitted in the tier guidance ("Contractions allowed"). This is an LLM fingerprint pattern.
+- **Fix**: Replace all 6 instances of "Let us" with "Let's".
 
-### Issue 3: Verb in Pre-Verb Module — дзвони́ти (MORPHOLOGICAL_VIOLATION)
-- **Location**: Line 113, Section "Диграфи ДЖ, ДЗ"
-- **Original**: 「The word дзвін also gives Ukrainian the verb **дзвони́ти** (to ring, to call).」
-- **Problem**: дзвони́ти is verb:imperf:inf per VESUM. Explicitly teaching a verb derivation (noun → verb) is grammar scope creep for M4.
-- **Fix**: Remove the verb derivation. Replace with a cultural detail that keeps the ДЗ focus: "The word дзвін is everywhere in Ukrainian life — from church towers to phone calls."
+### Issue 3: місяць in Activity Without Prose Introduction
+- **Location**: Activities file, line 217 (classify activity, Ц category)
+- **Problem**: The word місяць appears in the classify activity under the Ц category but is never mentioned in the prose content and is not in the plan's vocabulary_hints. Students encounter an untaught word in practice.
+- **Fix**: Replace місяць with a word that IS taught in the prose and demonstrates Ц. The prose mentions цукор and цибуля — both already in the activity. Replace місяць with a Ц-word from the content, or add місяць to the prose in section "Африкати, Щ та Ф — Affricates, Щ, and Ф".
 
-### Issue 4: D.0 Pre-Screen Dismissals
-- **[MORPHOLOGICAL_VIOLATION] Дя́кую (line 130)**: DISMISSED — properly framed as fixed survival phrase (line 127): 「These are fixed phrases — you will learn how they work grammatically later.」 Standard A1 pedagogy.
-- **[MORPHOLOGICAL_VIOLATION] Будь (line 131)**: DISMISSED — same framing, same justification.
-- **[STRESS_UNKNOWN] Дя́кую (line 130)**: DISMISSED — VESUM finds lowercase дякую (lemma: дякувати, verb:imperf:pres:s:1). Capitalization caused lookup miss.
-- **[ACTIVITY_VESUM_FAIL] (activities)**: DISMISSED — activity has `vesum_exempt: true` with note: "Distractors include intentional misspellings (мясо, мьясо...) to test apostrophe knowledge." These are deliberately invalid forms in a quiz about correct spelling.
+### Issue 4: Low Immersion (4.4% vs 10-25% target)
+- **Location**: Entire module
+- **Problem**: Module 4 falls in the M3-5 band (target 10-25% Ukrainian). Current immersion is 4.4%. The only Ukrainian-language reading passage is the single-line challenge on line 123. The survival phrases on lines 126-130 are isolated words with English translations.
+- **Fix**: Add more Ukrainian reading opportunities: expand the reading challenge, add a second mini-reading passage in section "Апостроф — The Apostrophe", and consider adding short Ukrainian sentences after each example cluster rather than only English explanations.
+
+### Issue 5: Identical Example Formatting Across All Sections
+- **Location**: All H2 sections — lines 19-25, 46-50, 67-68, 76-78, 86-88, 96-97, 104-105, 108-109
+- **Problem**: Every single section presents examples in the exact same format: `*   **word** (translation) — explanation`. No variation (no tables, no inline examples, no dialogues, no comparison boxes). This is a clear LLM structural monotony pattern.
+- **Fix**: Vary example presentation: use a comparison table for the кін/кінь minimal pair, use inline examples for some words, present the apostrophe words in a formatted box or table with columns for "Without apostrophe" vs "With apostrophe".
+
+### Issue 6: фото Missing from Vocabulary File
+- **Location**: Vocabulary file — missing entry
+- **Problem**: фото (photo) appears in the prose at line 97 as a vocabulary example for Ф but has no entry in the vocabulary YAML file. It is listed in the plan as a recommended word.
+- **Fix**: Add фото to the vocabulary file.
 
 ---
 
@@ -94,35 +128,42 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 65 | 「**цві́ркун**」 | 「**цвірку́н**」 | Stress |
-| 65 | 「а цо́кає」 | 「а цо́к-цо́к-цо́к」 | Scope (verb in M4) |
-| 113 | 「the verb **дзвони́ти** (to ring, to call)」 | (remove verb derivation) | Scope (verb in M4) |
+| 128 | 「**Дякую!** (Thank you!)」 | Acceptable as formulaic phrase — not verb instruction | Scope (mitigated) |
+| 129 | 「**Будь ласка!** (Please!)」 | Acceptable as formulaic phrase — not verb instruction | Scope (mitigated) |
+
+Note: D.0 flagged Дякую and Будь as MORPHOLOGICAL_VIOLATION (verbs in pre-verb module). These are confirmed verbs in VESUM (дякувати verb:imperf:pres:s:1, бути verb:imperf:impr:s:2). However, the plan explicitly requires these as survival phrases in section "Весь алфавіт!". They are presented as fixed expressions, not as grammar instruction. The morphological validator correctly identifies the verb forms; the pedagogical context makes them acceptable as formulaic chunks. **Recommendation**: Add a brief English note like "(This is a set phrase — we'll learn verb forms later!)" to preempt learner confusion.
 
 ---
 
-## Fix Plan to Reach 9/10 (REQUIRED — score < 9.0)
+## Fix Plan to Reach 9/10 (REQUIRED)
 
-### Linguistic Accuracy: 8/10 → 9/10
+### Experience Quality: 7/10 → 9/10
 **What to fix:**
-1. Line 65: Change `**цві́ркун**` → `**цвірку́н**` — wrong stress mark
-2. Line 65: Change `«Не годи́нник, а цо́кає.»` → `«Не годи́нник, а цо́к-цо́к-цо́к.»` — removes verb from pre-verb module while keeping Ц focus
-3. Line 113: Remove verb дзвони́ти derivation. Replace: "The word дзвін also gives Ukrainian the verb **дзвони́ти** (to ring, to call)." → "The word **дзвін** is everywhere in Ukrainian life — from church towers to phone calls."
+1. Add ≥2 engagement boxes to close the richness gate:
+   - After line 33 (кін/кінь section): Add `> [!tip]` about listening for soft vs hard consonants
+   - After line 110 (digraphs section): Add `> [!culture]` about ДЗ being uniquely Ukrainian
+2. Add a `> [!did-you-know]` in section "Африкати, Щ та Ф" about Ц being one of the most characteristic sounds of Ukrainian
 
 **Expected score after fix:** 9/10
 
 ### Language: 8/10 → 9/10
-**What to fix:** Fixes 1-3 above also resolve the Language dimension issues (stress error, scope violations).
+**What to fix:**
+1. Lines 7, 18, 45, 54, 121, 136: Replace all "Let us" → "Let's" (6 instances)
 
 **Expected score after fix:** 9/10
 
-### LLM Fingerprint: 8/10 → 8/10
-**Observation only (no fix required for pass):** Example formatting is consistent across sections (bold + parenthetical + dash + context note). This is functional formatting for an alphabet module, not a fingerprint concern worth fixing. No action needed.
+### LLM Fingerprint: 7/10 → 8/10
+**What to fix:**
+1. Replace "Let us" ×6 with "Let's" (removes robotic formality pattern)
+2. Vary example formatting: convert at least one bullet-list example cluster into a table (e.g., the кін/кінь minimal pair as a comparison table, or apostrophe words as a before/after table)
+
+**Expected score after fix:** 8/10
 
 ### Projected Overall After Fixes
 ```
-(9×1.5 + 9×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
-= (13.5 + 9.9 + 10.8 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
-= 77.8 / 8.9 = 8.7/10 → PASS (no auto-fail dimensions)
+Experience: 9×1.5=13.5 | Language: 9×1.1=9.9 | Pedagogy: 8×1.2=9.6 |
+Activities: 8.5×1.3=11.05 | Safety: 9×1.3=11.7 | LLM: 8×1.0=8.0 | Accuracy: 9×1.5=13.5
+Total: 77.25 / 8.9 = 8.7/10
 ```
 
 ---
@@ -132,8 +173,15 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 ```
 ⚠️  Outline compliance: 0 errors, 1 warnings
 ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Підсумок — Summary' found in markdown but not in outline.
+✨ Purity violations found: 1
+❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
 --- STRICT GATES (Level A1) ---
+📚 PEDAGOGICAL VIOLATIONS FOUND:
+[ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
+📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+→ 1 violations (minor)
 ❌ [REVIEW_VERDICT_FAIL] Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
+⚠️  [PRAISE_ONLY_CITATIONS] Review cites 25 Ukrainian passages but ALL are used positively — none highlight problems. A credible review uses citations to show both strengths AND weaknesses. REDO: DELETE the existing review file and regenerate from scratch. Run build_module_v5.py review phase (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue.
 ❌ AUDIT FAILED. Correct errors before proceeding.
 Critical Failures:
 • Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
@@ -160,267 +208,264 @@ Check if they are valid Ukrainian forms. Fix misspellings or Russianisms.
 ```markdown
 ## Вступ — Introduction
 
-Welcome to your final alphabet lesson! Here is how far you have come:
+Welcome back! You have made absolutely incredible progress so far. In Module 1, we looked at the big picture and the map of the Ukrainian language. In Module 2, you mastered the six fundamental vowels. In Module 3, you conquered the vast landscape of consonants. Today, we are putting the final, exciting pieces of the puzzle together. We are looking at the special phonetic modifiers like the soft sign (**Ь**) and the apostrophe (**'**), the unique affricate consonants (**Ц**, **Ч**, **Щ**), the dynamic digraphs (**ДЖ**, **ДЗ**), and the somewhat rare letter **Ф**.
 
-*   **Module 1** — You got the map: the Cyrillic code and how Ukrainian writing works.
-*   **Module 2** — You mastered all ten vowels.
-*   **Module 3** — You learned every consonant.
-*   **Module 4 (today)** — The final pieces of the puzzle!
+These are the final tools you need to unlock the Ukrainian language. Once you finish this module, you will be able to read absolutely any Ukrainian word you see. That is a massive milestone for any language learner! You will be able to sound out street signs in Kyiv, read menus in Lviv, and pronounce the names of new friends perfectly.
 
-Today, we are placing those final pieces: the special modifiers (like the soft sign **Ь** and the apostrophe), the affricates (**Ц**, **Ч**, **Щ**), the unique digraphs (**ДЖ**, **ДЗ**), and the rare letter **Ф**. After completing this module, you will be able to read absolutely ANY Ukrainian word you see. Think about that for a moment — the entire Ukrainian language is about to open up to you! This is a huge milestone. Let's finish what we started!
+Learning a new alphabet can feel like climbing a mountain, but you are now standing right near the peak. You have trained your brain to recognize Cyrillic letters, and you have trained your mouth to produce new sounds. The elements we cover today are the polish—the little details that make your Ukrainian sound authentic and natural. Let's dive in and complete your alphabet journey with confidence!
 
 ## М'який знак — The Soft Sign
 
 ### Літера Ь
 [Anna Ohoiko — Ukrainian Lessons — Ь](https://www.youtube.com/watch?v=cJlal8XKBxo)
 
-Meet the soft sign, or **м'який знак**. The letter **Ь** is unique because it has no sound of its own at all. Its only job is to soften, or palatalize, the consonant that comes immediately before it. When you see **Ь**, you need to place your tongue closer to the roof of your mouth as you say the preceding consonant, making it sound "soft" and light.
+Meet the soft sign, written as **Ь**. This letter is entirely unique in the Ukrainian alphabet because it makes absolutely no sound of its own. You cannot pronounce a soft sign by itself in isolation. Instead, it acts purely as a phonetic modifier. Its entire job is to soften, or palatalize, the consonant that comes right before it.
 
-Here is the pattern you need to know: **Ь** appears after consonants at the very end of a word, or sometimes before another consonant in the middle of a word. It will never appear at the start of a word, and it will never appear after a vowel.
+To understand softening, we need to think about where your tongue is inside your mouth. When you pronounce a hard consonant, your tongue is generally relaxed. But for a soft consonant, you press the middle part of your tongue closer to the roof of your mouth, right behind your upper teeth. This physical shift gives the consonant a slightly "lighter," "sweeter," or more delicate quality.
 
-Let's look at some common words where **Ь** does its magic:
-*   **сі́ль** (salt) — Notice how the **Л** is soft at the end. This is a common everyday kitchen word.
-*   **де́нь** (day) — This is a top 50 word! You will hear it in phrases like «До́брий де́нь!»
-*   **Льві́в** (Lviv) — Here, **Ь** softens the **Л** right before the consonant **В**.
-*   **мі́дь** (copper) — The **Д** becomes soft.
-*   **о́сінь** (autumn) — A beautiful word for the season, ending softly.
-*   **ми́ть** (moment) — Here, **Ь** softens the **Т** at the end. A fleeting instant!
-*   **ті́нь** (shadow) — Here, **Ь** softens the **Н** at the end, just like in де́нь and кі́нь.
+Let's look at some everyday examples where the soft sign does its work:
+*   **сіль** (salt) — A common item in any kitchen. The **Л** is soft.
+*   **день** (day) — You will use this in the standard greeting **Добрий день!** (Good day!). The **Н** is soft.
+*   **осінь** (autumn) — A beautiful season in Ukraine. The **Н** is soft.
 
-> [!tip] The Soft Sign Changes Everything
-> The soft sign isn't just an accent; it can change the entire meaning of a word! Take a look at this minimal pair:
-> *   **кі́н** (a stake in a game) — Hard **Н**.
-> *   **кі́нь** (horse) — Soft **Н**.
-> Adding **Ь** changes the preceding consonant's quality, creating a completely different word!
+Do you notice a visual pattern here? The **Ь** often appears at the very end of a word, right after a consonant, as we see in **сіль** and **день**. However, it can also appear right in the middle of a word, tucked between two different consonants, to show that the first consonant is soft:
+*   **Львів** (Lviv) — This is the famous, historic western Ukrainian city. Here, the first **Л** is soft.
+*   **мідь** (copper) — The **Д** is soft.
+
+There is a very strict rule for the soft sign: it will never appear at the beginning of a word, and it will never appear after a vowel. It only ever follows consonants.
+
+To truly appreciate why the soft sign is so critically important, let us look at a minimal pair. A minimal pair is a set of two words that are completely identical except for one single sound.
+*   **кін** (a stake in a game) — Here, the **Н** is hard.
+*   **кінь** (horse) — Here, the **Н** is soft because of the **Ь**.
+
+That one little silent sign changes the physical quality of the preceding consonant, creating an entirely different word! If you drop the soft sign, you might accidentally talk about a wooden stake instead of a beautiful animal.
+
+> [!tip]
+> **Listening for softness:** When you hear a Ukrainian word ending in a consonant, ask yourself — does it sound "light" and "sweet," or "firm" and "plain"? That difference is the soft sign at work. Train your ear with pairs like **кін** / **кінь** and **кон** / **конь**!
 
 ## Апостроф — The Apostrophe
 
-You might be used to seeing an apostrophe as just a punctuation mark in English, but in Ukrainian, the apostrophe is a crucial part of spelling and pronunciation. The apostrophe separates a consonant from a following iotated vowel (**Я**, **Ю**, **Є**, **Ї**). Its job is preserving the **Й**-sound of the iotated vowel that would otherwise be absorbed into softening the consonant.
+We have another very special symbol in written Ukrainian: the apostrophe (**'**). While the soft sign softens a consonant, the apostrophe does the exact opposite job. It keeps a consonant hard when it is followed by an iotated vowel (**Я**, **Ю**, **Є**, **Ї**).
 
-The rule is quite strict: the apostrophe appears after the consonants **Б**, **П**, **В**, **М**, **Ф**, **Р** before the vowels **Я**, **Ю**, **Є**, **Ї**.
+In English, an apostrophe usually shows possession (like "John's book") or a contraction (like "don't"). But in Ukrainian, the apostrophe is purely phonetic. It tells your mouth exactly how to behave.
 
-Without the apostrophe, a combination like **М** + **Я** would mean "soft **М** + **А**". But with the apostrophe, **М'Я** means "hard **М** + **Й** + **А**". The apostrophe is NOT optional; it tells you exactly how to say the word!
+Think back to the iotated vowels. They have a dual function. Normally, when they follow a consonant, they automatically soften that consonant and lose their initial "Y" sound.
 
-Let's practice reading some common words with an apostrophe:
-*   **м'я́со** (meat) — Hard **М**, followed by the **Й** sound, then **А**.
-*   **п'я́ть** (five) — A very common number. Hard **П**, then **Й** sound.
-*   **сім'я́** (family) — An incredibly high-frequency word you will use often.
-*   **м'я́ч** (ball) — A common word from children's vocabulary.
-*   **об'є́кт** (object) — Here, the apostrophe separates the prefix from the root.
+But what if we *want* to keep the consonant hard and we also *want* to keep the full "Y" sound of the vowel? That is exactly what the apostrophe is designed for. It acts like a tiny, invisible wall separating the consonant from the vowel.
 
-> [!challenge] Can you spot the difference?
-> Listen closely when native speakers say words like **м'я́со**. You will hear a distinct little break or a clear **Й** sound right where the apostrophe sits. Try saying it aloud yourself: hard **М**, then **Я**. You are doing great!
+Let's look at some very common, everyday words that use this symbol:
+*   **м'ясо** (meat)
+*   **п'ять** (five)
+*   **сім'я** (family)
+*   **м'яч** (ball)
+*   **об'єкт** (object)
+
+There is a strict spelling rule for when the apostrophe appears. It typically shows up after the labial consonants—these are consonants made with your lips, specifically **Б**, **П**, **В**, **М**, and **Ф**—and also after the consonant **Р**, right before the vowels **Я**, **Ю**, **Є**, or **Ї**.
+
+Let's compare the sounds closely. If we were to write the letters **МЯ** without an apostrophe, the **М** would become soft, and the **Я** would just sound like "A". It would sound like "mya" blended smoothly together into one sound.
+But with the apostrophe in place, **М'Я** means we pronounce a distinctly hard **М**, followed immediately by the full "Y+A" sound of the vowel **Я**. The apostrophe forces you to pronounce both parts clearly and separately.
+
+Remember, the apostrophe is absolutely not optional. It is a mandatory part of spelling these words, and forgetting it changes the pronunciation and the rhythm of the word completely!
 
 ## Африкати, Щ та Ф — Affricates, Щ, and Ф
+
+Now let us look at some special consonant sounds that add real texture to the language. First, we will examine the affricates. An affricate is a complex sound made by very quickly combining two separate consonants into one single, explosive sound.
 
 ### Літера Ц
 [Anna Ohoiko — Ukrainian Lessons — Ц](https://www.youtube.com/watch?v=u44eCjR2Oz8)
 
-The letter **Ц** is a true affricate. This means it is the sounds **Т** and **С** fused together into one single sound, just like the English 'ts' in the word 'cats'. It is a sharp, crisp sound.
-*   **цу́кор** (sugar) — An everyday kitchen word.
-*   **цибу́ля** (onion) — Another common food item.
-The **Ц** sound is also very common in Ukrainian word endings, like -ець or -иця.
+The letter **Ц** is a true affricate. It is the perfect, seamless combination of the **Т** sound and the **С** sound, fused together into one sharp burst. It sounds exactly like the "ts" at the end of the English words "cats" or "boots".
+*   **цукор** (sugar)
+*   **цибуля** (onion)
 
-> [!did-you-know] Загадка з Ц
-> Here is a classic Ukrainian riddle: «Не годи́нник, а цо́к-цо́к-цо́к.» (Not a clock, but tick-tick-tick.) Can you guess? The answer is **цвірку́н** (cricket)! Riddles like these are used in Ukrainian schools to practice the Ц sound.
+This letter is incredibly common in Ukrainian, especially in word endings like **-ець** (often marking a person or agent, as in *хлопець*) or **-иця** (as in *вулиця*). It gives the language a crisp, rhythmic quality.
 
 ### Літера Ч
 [Anna Ohoiko — Ukrainian Lessons — Ч](https://www.youtube.com/watch?v=UsJkbdsY2RA)
 
-The letter **Ч** is another true affricate. It sounds exactly like the English 'ch' in 'church'. It is a very frequent letter in Ukrainian.
-*   **ча́с** (time/hour) — A top 100 word you will need often.
-*   **черепа́ха** (turtle) — A fun word from children's literature!
-*   **ча́й** (tea) — A high-frequency drink.
+Next is the letter **Ч**, which is another true affricate. It sounds exactly like the "ch" in the English words "church", "cheese", or "catch". This is a very frequent and important sound in spoken Ukrainian.
+*   **час** (time/hour)
+*   **черепаха** (turtle)
+*   **чай** (tea)
+
+You will use this letter constantly. For example: «**Що** це? Це **чай**.» (What is this? This is tea.)
 
 ### Літера Щ
 [Anna Ohoiko — Ukrainian Lessons — Щ](https://www.youtube.com/watch?v=QmBLieIuf6Q)
 
-Now for a big secret: **Щ** is NOT an affricate! Instead, it represents TWO separate sounds: **Ш** + **Ч**. It is a consonant cluster written as one convenient letter. You need to pronounce both sounds clearly, one after the other.
-*   **що́** (what) — This word appears in almost every conversation!
-*   **ще́** (still/more) — Very useful for asking for more tea!
-*   **ща́стя** (happiness) — A beautiful, high-frequency word.
+The letter **Щ** looks a bit like the letter **Ц** because of that little tail on the bottom right, but it behaves very differently. **Щ** is not an affricate. Instead, it is a consonant cluster. It represents two completely separate sounds written efficiently as one single letter: **Ш** plus **Ч** (sh + ch). When you say it, you must pronounce both sounds clearly, one right after the other.
+*   **що** (what)
+*   **ще** (still/more)
+*   **щастя** (happiness)
+
+The little word **що** is a powerhouse. It appears in almost every single Ukrainian conversation you will ever have! Mastering the crisp "sh-ch" sound will instantly make your Ukrainian sound more authentic.
 
 ### Літера Ф
 [Anna Ohoiko — Ukrainian Lessons — Ф](https://www.youtube.com/watch?v=haHRsFFZRQI)
 
-The letter **Ф** sounds just like the English 'f'. It is actually quite rare in native Ukrainian words! It appears mostly in borrowings from other languages. It is the voiceless partner of the letter **В**.
-*   **фа́кт** (fact) — An easy internationalism.
-*   **фо́то** (photo) — Another familiar borrowed word.
-
-> [!practice] Reading Practice
-> Read these short dialogues out loud:
-> > **(На кухні)**
-> > — Це цу́кор?
-> > — Та́к, це цу́кор.
->
-> > **(Вдома)**
-> > — Це ча́й?
-> > — Ні́, це ка́ва.
+Finally in this group, let us look at the letter **Ф**. This letter sounds exactly like the English "f" in "fun" or "family". Interestingly, **Ф** is quite rare in native, historical Ukrainian words. You will mostly see it in words borrowed from other languages or in internationalisms that are recognized worldwide. It serves as the voiceless partner of the letter **В**.
+*   **факт** (fact)
+*   **фото** (photo)
 
 ## Диграфи ДЖ, ДЗ — Digraphs
 
-Sometimes, Ukrainian uses two letters to represent one single sound. These are called digraphs. These are single phonemes written with two characters, and you should always read them as one smooth sound, not two separate ones.
+Ukrainian has two specific sounds that do not have their own single dedicated letters in the alphabet. Instead, they are written using two letters grouped together. These combinations are called digraphs. A digraph is simply two letters that represent one single phoneme, or sound. English uses digraphs all the time, like the "sh" in "shoe" or the "th" in "think".
 
-The first digraph is **ДЖ**. This sounds just like the English 'j' in 'jungle'. It is the voiced partner of the letter **Ч**. Let's look at some examples:
-*   **джерело́** (spring/source) — A beautiful nature word.
-*   **бджола́** (bee) — Another great nature vocabulary word.
+The first Ukrainian digraph is **ДЖ**. It sounds just like the "j" in the English word "jungle" or the "g" in the word "gem". It is the voiced, vibrating partner of the letter **Ч**.
+*   **джерело** (spring/source)
+*   **бджола** (bee)
 
-The second digraph is **ДЗ**. This sound has no direct English equivalent! You have to buzz it together as one sound. It is the voiced partner of the letter **Ц**. This sound is distinctly Ukrainian — a hallmark of authentic Ukrainian phonology.
-*   **дзві́н** (bell) — A very important cultural word. Church bells are a big part of Ukrainian history.
-*   **дзе́ркало** (mirror) — An everyday object you will find in any home.
+The second digraph is **ДЗ**. There is actually no perfect, single-letter English equivalent for this sound. It is a fusion of the **Д** sound and the **З** sound, creating a buzzing "dz" noise. You can hear something similar if you say the "ds" in the English word "kids" or "adds", but in Ukrainian, it is sharper and more unified. It is the voiced partner of the letter **Ц**. This specific sound is uniquely Ukrainian and adds a beautiful buzz to the language.
+*   **дзвін** (bell)
+*   **дзеркало** (mirror)
 
-> [!culture] Дзвін — The Sound of Ukraine
-> Church bells (**дзві́н**) have deep cultural significance in Ukraine. The word **дзвін** is everywhere in Ukrainian life — from church towers to phone calls. The **ДЗ** sound is distinctly Ukrainian — you will not find it in many other languages. When you hear that buzzing **ДЗ**, you are hearing something uniquely Ukrainian!
+When you see these letters printed together in a word, you must remember to pronounce them as one smooth, continuous sound, not as two separate distinct letters!
 
-> [!note] One Sound, Not Two
-> Remember, when you see **ДЖ** or **ДЗ**, do not split them up! Treat them as a single sound block.
+> [!culture]
+> The sound **ДЗ** is uniquely Ukrainian — you will not find it in most other Slavic languages. Words like **дзвін** (bell) and **дзеркало** (mirror) have a distinctive buzzing quality that is one of the hallmarks of authentic Ukrainian pronunciation.
 
 ## Весь алфавіт! — The Full Alphabet Mastered
 
-Congratulations! You have learned the complete 33-letter Ukrainian alphabet: **А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**. Plus, you know the digraphs **ДЖ**, **ДЗ** and the apostrophe.
+### Літера Ґ
+[Anna Ohoiko — Ukrainian Lessons — Ґ](https://www.youtube.com/watch?v=gNjHqjTW9WQ)
 
-### Full-Alphabet Reading Challenge
-Let's put everything together. Try to read this short paragraph. It uses all the letter types you have learned — vowels, consonants, the soft sign, the apostrophe, affricates, and digraphs:
-*   «Ту́т м'я́со, ри́ба, цу́кор і ча́й. Моя́ сім'я́ — це вели́ке ща́стя!»
-*   «До́брий де́нь, Украї́но! Де́ дзві́н і бджола́?»
+You have truly done it! You now know the complete, 33-letter Ukrainian alphabet from start to finish:
+**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-Now you can also read these essential survival phrases using the full alphabet. These are fixed phrases — you will learn how they work grammatically later. For now, just practice reading them aloud:
-*   **До́брий де́нь!** (Good day!)
-*   **Я́к спра́ви?** (How are you?)
-*   **Дя́кую!** (Thank you!)
-*   **Будь ла́ска!** (Please!)
-*   **Хто́ це́?** (Who is this?)
-*   **Що́ це́?** (What is this?)
-*   **До поба́чення!** (Goodbye!)
+Plus, you know the powerful digraphs **ДЖ** and **ДЗ**, and the rule-enforcing apostrophe (**'**). You have trained your eyes and your voice. Let's celebrate with a quick, comprehensive reading challenge that uses all these different types of letters, affricates, and modifiers in simple contexts:
 
-Take a moment for a huge celebration: you can now decode any Ukrainian word you encounter. The reading skills you have built from Module 1 to Module 4 are the foundation for reading, writing, and speaking Ukrainian!
+> Це **осінь**. Це **факт**. Там **цукор**, **чай**, **м'ясо**, **цибуля**. Тут **джерело**. Це **Львів**. **Що** це? Це **щастя**.
+
+Now you can use basic survival phrases with perfect confidence and accurate pronunciation:
+*   **Добрий день!** (Good day!)
+*   **Як справи?** (How are you?)
+*   **Дякую!** (Thank you!)
+*   **Будь ласка!** (Please!)
+*   **До побачення!** (Goodbye!)
+
+You have officially unlocked the ability to decode any Ukrainian word you encounter. The reading skills and phonetic awareness you have built from these first four modules are your unshakeable foundation. Everything you learn from here on out—the grammar, the vocabulary, the conversations—will build on this massive, impressive achievement.
 
 ## Підсумок — Summary
 
-You did it! You have mastered the final pieces of the Ukrainian alphabet. Let's do a quick recap:
-*   The soft sign (**Ь**) softens consonants.
-*   The apostrophe preserves the **Й**-sound before iotated vowels.
-*   **Ц** and **Ч** are crisp affricates.
-*   **Щ** is a **Ш** + **Ч** cluster.
-*   **ДЖ** and **ДЗ** are unique digraphs.
-*   **Ф** is a rare letter found mostly in borrowed words.
+Let's briefly review the final, crucial pieces of the alphabet puzzle you have just mastered:
+*   The soft sign (**Ь**) softens the consonant immediately before it. It has no actual sound of its own.
+*   The apostrophe (**'**) acts as a phonetic barrier. It preserves the "Y" sound of iotated vowels and keeps the preceding consonant hard.
+*   The letters **Ц** and **Ч** are true affricates, blending two consonant sounds smoothly into one single burst.
+*   The letter **Щ** is a unique consonant cluster, representing two separate, distinct sounds: **Ш** plus **Ч**.
+*   The pairs **ДЖ** and **ДЗ** are digraphs: two separate letters working together to make one single voiced sound.
+*   The letter **Ф** is relatively rare and mostly used in borrowed, international words.
 
-**Self-check time:**
-*   What does **Ь** do to the letter before it?
-*   When do you use an apostrophe in Ukrainian?
-*   What two sounds does the letter **Щ** represent?
-*   Can you read any Ukrainian word now? (Hint: The answer is yes!)
+Self-check questions to test your understanding:
+1. What exactly does the **Ь** do to the letter that comes right before it?
+2. When and why do you use an apostrophe in written Ukrainian?
+3. What two specific sounds does the letter **Щ** represent?
+4. Can you confidently read any Ukrainian word you see now?
 
-Next up in Module 5, we will look at syllables and word division. Get ready!
+Next up is Module 5, where we will take your reading skills to the next level by exploring syllables and word division!
 ```
 
 ### Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/completing-the-alphabet.yaml`
 
 ```yaml
 - type: watch-and-repeat
-  title: "Watch and Repeat: New Letters and Sounds"
-  instruction: "Watch each video by Anna Ohoiko. Listen carefully, then repeat the sound and example word aloud."
+  title: "Pronunciation Practice"
+  instruction: "Watch the video for each letter, then repeat the sound and example word out loud. Focus on the unique sound each letter or combination makes."
   items:
     - letter: "Ь"
       word: "сіль"
       video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
-      note: "The soft sign has no sound of its own — it softens the consonant before it."
+      note: "The soft sign has no sound of its own — it softens the consonant before it. Listen for the soft Л in сіль."
     - letter: "Ц"
       word: "цукор"
       video: "https://www.youtube.com/watch?v=u44eCjR2Oz8"
-      note: "Like the 'ts' in English 'cats'. A crisp affricate."
+      note: "Ц is an affricate — Т+С fused into one sharp sound, like 'ts' in 'cats'."
     - letter: "Ч"
-      word: "час"
+      word: "чай"
       video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
-      note: "Like the 'ch' in English 'church'."
+      note: "Ч sounds like 'ch' in 'church'. Very common in Ukrainian."
     - letter: "Щ"
       word: "що"
       video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
-      note: "Two sounds fused together: Ш + Ч. Pronounce both clearly."
+      note: "Щ is two sounds: Ш+Ч (sh+ch). Pronounce both clearly, one after the other."
     - letter: "Ф"
       word: "факт"
       video: "https://www.youtube.com/watch?v=haHRsFFZRQI"
-      note: "Like English 'f'. Rare in native Ukrainian words — mostly in borrowings."
+      note: "Ф sounds like English 'f'. Rare in native Ukrainian words — mostly in borrowings."
     - letter: "Ґ"
-      word: "ґанок"
+      word: "Ґ"
       video: "https://www.youtube.com/watch?v=gNjHqjTW9WQ"
-      note: "A hard 'g' sound, different from Г. Review from previous modules."
-    - letter: "Apostrophe"
-      word: "м'ясо"
-      video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
-      note: "The apostrophe separates a consonant from an iotated vowel, preserving the Й-sound. (Overview video — no dedicated apostrophe video available.)"
+      note: "Ґ is a unique Ukrainian letter — a hard G sound, distinct from Г."
     - letter: "ДЖ"
       word: "джерело"
       video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
-      note: "A digraph — two letters, one sound. Like English 'j' in 'jungle'. (Overview video — no dedicated ДЖ video available.)"
+      note: "ДЖ is a digraph — two letters, one sound. Like 'j' in 'jungle'."
     - letter: "ДЗ"
       word: "дзвін"
       video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
-      note: "A digraph — two letters, one sound. No English equivalent. Buzz it together. (Overview video — no dedicated ДЗ video available.)"
+      note: "ДЗ is a digraph — two letters, one buzzing sound. Uniquely Ukrainian."
     - letter: "Ь"
-      word: "день"
+      word: "кінь"
       video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
-      note: "Practice the soft sign again — compare день (soft Н) with ден (hard Н)."
+      note: "Compare кінь (horse, soft Н) with кін (stake, hard Н). The soft sign changes the word completely."
+    - letter: "Щ"
+      word: "щастя"
+      video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
+      note: "Practice the Ш+Ч cluster in щастя (happiness). Both sounds must be clear."
 
 - type: classify
   title: "Which Consonant Is Softened?"
-  instruction: "Look at each word containing the soft sign (Ь). Drag it to the correct category based on which consonant is softened."
+  instruction: "Sort these words by which consonant the soft sign (Ь) softens. Some words have no soft sign at all."
   categories:
-    - label: "Soft Н"
-      symbol_hint: "consonant"
-      items: ["день", "кінь", "осінь", "тінь"]
     - label: "Soft Л"
-      symbol_hint: "consonant"
       items: ["сіль", "Львів"]
+    - label: "Soft Н"
+      items: ["день", "осінь", "кінь"]
     - label: "Soft Д"
-      symbol_hint: "consonant"
       items: ["мідь"]
-    - label: "Soft Т"
-      symbol_hint: "consonant"
-      items: ["мить"]
+    - label: "No Ь"
+      items: ["чай", "цукор", "час", "факт"]
 
 - type: image-to-letter
-  title: "What Letter Does It Start With?"
-  instruction: "Look at the picture. Which Ukrainian letter does this word begin with?"
+  title: "Which Special Letter?"
+  instruction: "Look at the picture and think of the Ukrainian word. Which special letter or digraph does the word contain?"
   items:
-    - emoji: "🧂"
+    - emoji: "🍬"
       answer: "Ц"
-      distractors: ["Ч", "С"]
-      note: "цукор (sugar) starts with Ц"
-    - emoji: "🕐"
+      distractors: ["Ч", "Щ"]
+      note: "цукор (sugar) contains the affricate Ц"
+    - emoji: "⏰"
       answer: "Ч"
       distractors: ["Ц", "Щ"]
-      note: "час (time) starts with Ч"
-    - emoji: "🐝"
-      answer: "Б"
-      distractors: ["Д", "Ж"]
-      note: "бджола (bee) starts with Б"
-    - emoji: "🐢"
+      note: "час (time) contains the affricate Ч"
+    - emoji: "🫖"
       answer: "Ч"
-      distractors: ["Ц", "Ш"]
-      note: "черепаха (turtle) starts with Ч"
+      distractors: ["Ц", "Ф"]
+      note: "чай (tea) contains the affricate Ч"
+    - emoji: "💧"
+      answer: "ДЖ"
+      distractors: ["ДЗ", "Щ"]
+      note: "джерело (spring/source) contains the digraph ДЖ"
+    - emoji: "🔔"
+      answer: "ДЗ"
+      distractors: ["ДЖ", "Ц"]
+      note: "дзвін (bell) contains the digraph ДЗ"
     - emoji: "🪞"
-      answer: "Д"
-      distractors: ["З", "Ж"]
-      note: "дзеркало (mirror) starts with Д (part of digraph ДЗ)"
-    - emoji: "🏔️"
-      answer: "Д"
-      distractors: ["Ж", "Г"]
-      note: "джерело (spring) starts with Д (part of digraph ДЖ)"
-    - emoji: "📸"
+      answer: "ДЗ"
+      distractors: ["ДЖ", "Ч"]
+      note: "дзеркало (mirror) contains the digraph ДЗ"
+    - emoji: "🐝"
+      answer: "ДЖ"
+      distractors: ["ДЗ", "Ц"]
+      note: "бджола (bee) contains the digraph ДЖ"
+    - emoji: "📷"
       answer: "Ф"
-      distractors: ["В", "П"]
-      note: "фото (photo) starts with Ф"
-    - emoji: "🐴"
-      answer: "К"
-      distractors: ["Ч", "Н"]
-      note: "кінь (horse) starts with К"
+      distractors: ["Х", "В"]
+      note: "фото (photo) contains the rare letter Ф"
 
 - type: quiz
   title: "Apostrophe Rules"
-  instruction: "Choose the correct answer about how the apostrophe works in Ukrainian."
+  instruction: "Test your understanding of when and why the apostrophe is used in Ukrainian spelling."
   vesum_exempt: true
-  notes: "Distractors include intentional misspellings (мясо, мьясо, пять, пьять, сімя, сімья, обєкт, обьєкт) to test apostrophe knowledge. These are deliberately invalid forms."
   items:
     - question: "Which spelling is correct for the word meaning 'meat'?"
       options:
@@ -430,31 +475,31 @@ Next up in Module 5, we will look at syllables and word division. Get ready!
           correct: false
         - text: "мьясо"
           correct: false
-        - text: "м ясо"
+        - text: "м'асо"
           correct: false
-      explanation: "The apostrophe separates М from the iotated vowel Я, preserving the Й-sound."
+      explanation: "The apostrophe separates the labial consonant М from the iotated vowel Я, keeping М hard and preserving the Y+A sound."
     - question: "Which spelling is correct for the word meaning 'five'?"
       options:
-        - text: "п'ять"
-          correct: true
         - text: "пять"
           correct: false
+        - text: "п'ять"
+          correct: true
         - text: "пьять"
           correct: false
-        - text: "п ять"
+        - text: "п'ать"
           correct: false
-      explanation: "After П, the apostrophe keeps the Й-sound in Я."
+      explanation: "П is a labial consonant followed by Я, so the apostrophe is required to keep П hard and preserve the full Y+A sound."
     - question: "Which spelling is correct for the word meaning 'family'?"
       options:
-        - text: "сім'я"
-          correct: true
-        - text: "сімя"
-          correct: false
         - text: "сімья"
           correct: false
-        - text: "сім я"
+        - text: "сімя"
           correct: false
-      explanation: "The apostrophe after М preserves the Й-sound in Я."
+        - text: "сім'я"
+          correct: true
+        - text: "сім'а"
+          correct: false
+      explanation: "The apostrophe appears after М (a labial consonant) before Я. Ukrainian never uses Ь before iotated vowels the way Russian does."
     - question: "Which spelling is correct for the word meaning 'ball'?"
       options:
         - text: "м'яч"
@@ -463,42 +508,53 @@ Next up in Module 5, we will look at syllables and word division. Get ready!
           correct: false
         - text: "мьяч"
           correct: false
-        - text: "м яч"
+        - text: "м'ач"
           correct: false
-      explanation: "The apostrophe separates М from Я, keeping the Й-sound."
+      explanation: "М is a labial consonant, and the following vowel is Я — the apostrophe is mandatory."
     - question: "Which spelling is correct for the word meaning 'object'?"
       options:
-        - text: "об'єкт"
-          correct: true
         - text: "обєкт"
+          correct: false
+        - text: "об'ект"
           correct: false
         - text: "обьєкт"
           correct: false
-        - text: "об єкт"
-          correct: false
-      explanation: "The apostrophe after Б separates it from the iotated vowel Є."
-    - question: "After which group of consonants does the apostrophe appear?"
-      options:
-        - text: "Б, П, В, М, Ф, Р"
+        - text: "об'єкт"
           correct: true
-        - text: "Т, Д, Н, Л, С, З"
-          correct: false
-        - text: "К, Г, Х, Ж, Ш, Щ"
-          correct: false
+      explanation: "The apostrophe appears after Б (a labial consonant) before Є (an iotated vowel)."
+    - question: "After which consonants does the apostrophe typically appear?"
+      options:
+        - text: "Б, П, В, М, Ф, and Р"
+          correct: true
         - text: "All consonants"
           correct: false
-      explanation: "The apostrophe appears only after Б, П, В, М, Ф, Р before iotated vowels."
-    - question: "What does the apostrophe preserve in pronunciation?"
+        - text: "Only Б and П"
+          correct: false
+        - text: "Only М and В"
+          correct: false
+      explanation: "The apostrophe appears after labial consonants (Б, П, В, М, Ф) and also after Р, before iotated vowels."
+    - question: "What does the apostrophe do in Ukrainian?"
       options:
-        - text: "The Й-sound of the following vowel"
+        - text: "It softens the consonant before it"
+          correct: false
+        - text: "It keeps the consonant hard and preserves the Y-sound of the vowel"
           correct: true
-        - text: "The hardness of the vowel"
+        - text: "It shows possession, like in English"
           correct: false
-        - text: "A pause between syllables"
+        - text: "It doubles the consonant sound"
           correct: false
-        - text: "The stress on the vowel"
+      explanation: "The apostrophe acts as a barrier — it keeps the preceding consonant hard and lets the iotated vowel keep its full Y-sound."
+    - question: "Before which vowels does the apostrophe appear?"
+      options:
+        - text: "А, О, У, І"
           correct: false
-      explanation: "Without the apostrophe, the Й-sound would be absorbed into softening the consonant."
+        - text: "Е, И, І, О"
+          correct: false
+        - text: "Я, Ю, Є, Ї"
+          correct: true
+        - text: "All vowels"
+          correct: false
+      explanation: "The apostrophe appears only before iotated vowels — Я, Ю, Є, Ї — which have a Y-sound that would otherwise be absorbed."
     - question: "Which word does NOT need an apostrophe?"
       options:
         - text: "цукор"
@@ -509,111 +565,75 @@ Next up in Module 5, we will look at syllables and word division. Get ready!
           correct: false
         - text: "сім'я"
           correct: false
-      explanation: "Цукор has no combination of Б/П/В/М/Ф/Р + iotated vowel, so no apostrophe is needed."
-    - question: "Before which vowels does the apostrophe appear?"
+      explanation: "Цукор has no labial consonant followed by an iotated vowel, so no apostrophe is needed."
+    - question: "In the word м'ясо, the apostrophe tells you to..."
       options:
-        - text: "Я, Ю, Є, Ї"
+        - text: "Soften the М"
+          correct: false
+        - text: "Pronounce a hard М, then the full Y+A sound of Я"
           correct: true
-        - text: "А, О, У, Е, И"
+        - text: "Skip the Я sound entirely"
           correct: false
-        - text: "І, И, Е, А"
+        - text: "Pronounce М twice"
           correct: false
-        - text: "All vowels"
-          correct: false
-      explanation: "The apostrophe appears before iotated vowels only: Я, Ю, Є, Ї."
-    - question: "In the word м'ясо, what does the apostrophe tell you about the М?"
-      options:
-        - text: "М stays hard, followed by Й + А"
-          correct: true
-        - text: "М becomes soft, followed by А"
-          correct: false
-        - text: "М is silent"
-          correct: false
-        - text: "М changes to a different sound"
-          correct: false
-      explanation: "The apostrophe means the consonant stays hard and the iotated vowel keeps its full Й + vowel sound."
+      explanation: "Without the apostrophe, М+Я would blend into a soft M+A. The apostrophe forces a clear separation: hard М, then full Я (Y+A)."
 
 - type: classify
-  title: "Sort by Sound Type"
-  instruction: "Sort these letters into the correct category based on what kind of sound they represent."
+  title: "Which Affricate or Cluster?"
+  instruction: "Sort each word by the special consonant it contains: the affricate Ц, the affricate Ч, or the consonant cluster Щ."
   categories:
-    - label: "Affricate (two sounds fused into one)"
-      symbol_hint: "consonant"
-      items: ["Ц", "Ч"]
-    - label: "Consonant cluster written as one letter"
-      symbol_hint: "consonant"
-      items: ["Щ"]
-    - label: "Digraph (two letters = one sound)"
-      symbol_hint: "consonant"
-      items: ["ДЖ", "ДЗ"]
-    - label: "Modifier (no sound of its own)"
-      symbol_hint: "modifier"
-      items: ["Ь", "Апостроф"]
-    - label: "Simple consonant (single sound)"
-      symbol_hint: "consonant"
-      items: ["Ф"]
+    - label: "Ц"
+      items: ["цукор", "цибуля"]
+    - label: "Ч"
+      items: ["час", "чай", "черепаха"]
+    - label: "Щ"
+      items: ["що", "ще", "щастя"]
 
 - type: fill-in
   title: "Complete the Phrase"
-  instruction: "Choose the correct word to complete each phrase. These are survival phrases using the full alphabet."
+  instruction: "Fill in the missing word to complete each Ukrainian survival phrase."
   items:
-    - sentence: "_____ день!"
-      answer: "Добрий"
-      options: ["Добрий", "Добре", "Доброго", "Добра"]
-      explanation: "Добрий день! means Good day! — a standard Ukrainian greeting."
-    - sentence: "Як _____?"
+    - sentence: "Complete the greeting meaning 'Good day!': Добрий ___!"
+      answer: "день"
+      options: ["день", "ніч", "ранок", "час"]
+      explanation: "Добрий день! is the standard daytime greeting in Ukrainian."
+    - sentence: "Complete the question meaning 'How are you?': Як ___?"
       answer: "справи"
-      options: ["справи", "справа", "справ", "справу"]
-      explanation: "Як справи? means How are you? — a common follow-up greeting."
-    - sentence: "Хто _____?"
-      answer: "це"
-      options: ["це", "то", "тут", "там"]
-      explanation: "Хто це? means Who is this?"
-    - sentence: "Що _____?"
-      answer: "це"
-      options: ["це", "то", "тут", "там"]
-      explanation: "Що це? means What is this?"
-    - sentence: "До _____!"
+      options: ["справи", "день", "тут", "там"]
+      explanation: "Як справи? literally means 'How are things?' — the standard way to ask how someone is."
+    - sentence: "Complete the phrase meaning 'Please!': Будь ___!"
+      answer: "ласка"
+      options: ["ласка", "день", "добре", "тут"]
+      explanation: "Будь ласка! literally means 'Be kind!' — the standard way to say 'please'."
+    - sentence: "Complete the phrase meaning 'Goodbye!': До ___!"
       answer: "побачення"
-      options: ["побачення", "зустрічі", "завтра", "вечора"]
-      explanation: "До побачення! means Goodbye!"
-    - sentence: "Це _____, а не кава."
+      options: ["побачення", "день", "ранок", "ніч"]
+      explanation: "До побачення! literally means 'Until the seeing!' — the standard farewell."
+    - sentence: "Complete the question meaning 'What is this?': ___ це?"
+      answer: "Що"
+      options: ["Що", "Як", "Де", "Хто"]
+      explanation: "Що це? means 'What is this?' — one of the most common questions in Ukrainian."
+    - sentence: "Complete the answer meaning 'This is tea.': Це ___."
       answer: "чай"
-      options: ["чай", "час", "цукор", "щастя"]
-      explanation: "Чай means tea — from the lesson dialogue."
-    - sentence: "Моя _____ — це велике щастя!"
-      answer: "сім'я"
-      options: ["сім'я", "сіль", "осінь", "цибуля"]
-      explanation: "Сім'я means family — practises reading the apostrophe from the lesson."
-    - sentence: "Де _____ і бджола?"
-      answer: "дзвін"
-      options: ["дзвін", "дзеркало", "джерело", "день"]
-      explanation: "Дзвін means bell — practises reading the ДЗ digraph from the lesson."
+      options: ["чай", "час", "що", "ще"]
+      explanation: "Це чай. — a simple Це + noun statement using the word for tea."
 
 - type: match-up
-  title: "Match the Phrase to Its Meaning"
-  instruction: "Match each Ukrainian survival phrase to its English meaning."
+  title: "Match the Survival Phrase"
+  instruction: "Match each Ukrainian phrase to its English meaning."
   pairs:
     - left: "Добрий день!"
       right: "Good day!"
     - left: "Як справи?"
       right: "How are you?"
-    - left: "Хто це?"
-      right: "Who is this?"
-    - left: "Що це?"
-      right: "What is this?"
-    - left: "До побачення!"
-      right: "Goodbye!"
-    - left: "Так"
-      right: "Yes"
-    - left: "Ні"
-      right: "No"
-    - left: "Це чай"
-      right: "This is tea"
     - left: "Дякую!"
       right: "Thank you!"
     - left: "Будь ласка!"
       right: "Please!"
+    - left: "До побачення!"
+      right: "Goodbye!"
+    - left: "Що це?"
+      right: "What is this?"
 ```
 
 ### Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/completing-the-alphabet.yaml`
@@ -624,134 +644,101 @@ items:
     translation: "salt"
     pos: "noun"
     gender: "f"
-    notes: "Demonstrates Ь softening Л. Everyday kitchen word."
+    notes: "Demonstrates Ь softening the Л. Everyday kitchen word."
   - lemma: "день"
     translation: "day"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates Ь softening Н. Top 50 word. Used in Добрий день!"
+    notes: "Demonstrates Ь softening the Н. Top 50 word."
+    usage: "Добрий день!"
   - lemma: "Львів"
     translation: "Lviv"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates Ь before consonant В. Major Ukrainian city."
-  - lemma: "мідь"
-    translation: "copper"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ь softening Д."
-  - lemma: "осінь"
-    translation: "autumn"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ь softening Н. Seasonal vocabulary."
-  - lemma: "кінь"
-    translation: "horse"
-    pos: "noun"
-    gender: "m"
-    notes: "Minimal pair with кін (stake). Shows how Ь changes meaning."
-  - lemma: "мить"
-    translation: "moment; instant"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ь softening Т. Used in classify activity."
-  - lemma: "тінь"
-    translation: "shadow"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ь softening Н. Used in classify activity."
+    notes: "Demonstrates Ь before a consonant (soft Л). Historic western Ukrainian city."
   - lemma: "м'ясо"
     translation: "meat"
     pos: "noun"
     gender: "n"
-    notes: "Demonstrates apostrophe separating М from Я."
+    notes: "Demonstrates the apostrophe after labial М before Я."
   - lemma: "п'ять"
     translation: "five"
     pos: "numeral"
-    notes: "Demonstrates apostrophe after П before Я."
+    notes: "Demonstrates the apostrophe after labial П before Я."
   - lemma: "сім'я"
     translation: "family"
     pos: "noun"
     gender: "f"
-    notes: "Demonstrates apostrophe. High-frequency word."
-  - lemma: "м'яч"
-    translation: "ball"
-    pos: "noun"
-    gender: "m"
-    notes: "Demonstrates apostrophe. Common children's vocabulary."
+    notes: "Demonstrates the apostrophe after labial М before Я. High-frequency word."
   - lemma: "цукор"
     translation: "sugar"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates Ц affricate. Everyday kitchen word."
-  - lemma: "цибуля"
-    translation: "onion"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ц. Common food vocabulary."
+    notes: "Demonstrates the affricate Ц. Everyday kitchen word."
   - lemma: "час"
     translation: "time; hour"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates Ч affricate. Top 100 word."
-  - lemma: "черепаха"
-    translation: "turtle"
-    pos: "noun"
-    gender: "f"
-    notes: "Demonstrates Ч. Fun children's vocabulary word."
-  - lemma: "чай"
-    translation: "tea"
-    pos: "noun"
-    gender: "m"
-    notes: "Demonstrates Ч. High-frequency drink word."
+    notes: "Demonstrates the affricate Ч. Top 100 word."
   - lemma: "що"
     translation: "what"
     pos: "pronoun"
-    notes: "Demonstrates Щ (Ш+Ч cluster). Top 10 word. Interrogative pronoun in 'Що це?'"
-  - lemma: "щастя"
-    translation: "happiness"
-    pos: "noun"
-    gender: "n"
-    notes: "Demonstrates Щ. High-frequency word."
-  - lemma: "факт"
-    translation: "fact"
-    pos: "noun"
-    gender: "m"
-    notes: "Demonstrates Ф. Internationalism — easy to remember."
+    notes: "Demonstrates the consonant cluster Щ. Top 10 word. Used in Що це?"
   - lemma: "джерело"
     translation: "spring; source"
     pos: "noun"
     gender: "n"
-    notes: "Demonstrates ДЖ digraph. Nature vocabulary."
+    notes: "Demonstrates the ДЖ digraph."
   - lemma: "дзвін"
     translation: "bell"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates ДЗ digraph. Culturally significant — church bells."
-  - lemma: "об'єкт"
-    translation: "object"
+    notes: "Demonstrates the ДЗ digraph. Culturally significant (church bells)."
+  - lemma: "осінь"
+    translation: "autumn"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Ь softening the Н. Seasonal vocabulary."
+  - lemma: "м'яч"
+    translation: "ball"
     pos: "noun"
     gender: "m"
-    notes: "Demonstrates apostrophe after Б before Є. Prefix-root separation."
-  - lemma: "фото"
-    translation: "photo"
+    notes: "Demonstrates the apostrophe after labial М before Я."
+  - lemma: "щастя"
+    translation: "happiness"
     pos: "noun"
     gender: "n"
-    notes: "Demonstrates Ф. Indeclinable borrowed word."
-  - lemma: "ще"
-    translation: "still; more"
-    pos: "adverb"
-    notes: "Demonstrates Щ. High-frequency adverb."
+    notes: "Demonstrates the consonant cluster Щ. High-frequency word."
+  - lemma: "факт"
+    translation: "fact"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates the rare letter Ф. An internationalism."
   - lemma: "бджола"
     translation: "bee"
     pos: "noun"
     gender: "f"
-    notes: "Demonstrates ДЖ digraph. Nature vocabulary."
+    notes: "Demonstrates the ДЖ digraph. Nature vocabulary."
   - lemma: "дзеркало"
     translation: "mirror"
     pos: "noun"
     gender: "n"
-    notes: "Demonstrates ДЗ digraph. Everyday object."
+    notes: "Demonstrates the ДЗ digraph. Everyday object."
+  - lemma: "черепаха"
+    translation: "turtle"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates the affricate Ч. Common in children's literature."
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates the affricate Ч. High-frequency word."
+  - lemma: "кінь"
+    translation: "horse"
+    pos: "noun"
+    gender: "m"
+    notes: "Minimal pair with кін (stake). Demonstrates how Ь changes word meaning."
 ```
 
 ---

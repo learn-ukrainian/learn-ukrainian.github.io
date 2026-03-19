@@ -1,0 +1,179 @@
+- type: quiz
+  title: "Daily Routine Knowledge Check"
+  instruction: "Choose the correct answer for each question about daily routines in Ukrainian."
+  items:
+    - question: "Which verb means 'to wake up' in Ukrainian?"
+      options:
+        - text: "прокидатися"
+          correct: true
+        - text: "лягати"
+          correct: false
+        - text: "вмиватися"
+          correct: false
+        - text: "одягатися"
+          correct: false
+      explanation: "Прокидатися means to wake up. Лягати means to lie down, вмиватися means to wash up, одягатися means to get dressed."
+    - question: "What is the correct order for these morning activities?"
+      options:
+        - text: "прокидатися, вмиватися, снідати"
+          correct: true
+        - text: "снідати, прокидатися, вмиватися"
+          correct: false
+        - text: "вмиватися, снідати, прокидатися"
+          correct: false
+        - text: "снідати, вмиватися, прокидатися"
+          correct: false
+      explanation: "A typical morning follows this order: wake up (прокидатися), wash up (вмиватися), then have breakfast (снідати)."
+    - question: "If you travel to work by bus, which verb do you use?"
+      options:
+        - text: "їхати"
+          correct: true
+        - text: "йти"
+          correct: false
+        - text: "лягати"
+          correct: false
+        - text: "дивитися"
+          correct: false
+      explanation: "Їхати is used when traveling by transport (bus, car, metro). Йти means going on foot."
+    - question: "Which Ukrainian meal is traditionally the main, most substantial meal of the day?"
+      options:
+        - text: "обід"
+          correct: true
+        - text: "сніданок"
+          correct: false
+        - text: "вечеря"
+          correct: false
+        - text: "перерва"
+          correct: false
+      explanation: "In Ukrainian culture, обід (lunch, around 13:00-14:00) is the biggest meal, typically with a first course and second course."
+    - question: "What does the word зазвичай mean?"
+      options:
+        - text: "usually"
+          correct: true
+        - text: "always"
+          correct: false
+        - text: "never"
+          correct: false
+        - text: "sometimes"
+          correct: false
+      explanation: "Зазвичай means usually — it describes a regular habit, like я зазвичай прокидаюся о сьомій годині."
+    - question: "What is the correct way to say 'at seven o'clock' in Ukrainian?"
+      options:
+        - text: "о сьомій годині"
+          correct: true
+        - text: "в сьому годину"
+          correct: false
+        - text: "на сьомій годині"
+          correct: false
+        - text: "до сьомої години"
+          correct: false
+      explanation: "Time expressions use о (or об before a vowel) + Locative case: о сьомій годині."
+    - question: "What does домашній одяг mean?"
+      options:
+        - text: "home clothes"
+          correct: true
+        - text: "work uniform"
+          correct: false
+        - text: "street clothes"
+          correct: false
+        - text: "sports clothes"
+          correct: false
+      explanation: "Домашній одяг means home clothes — Ukrainians change into them immediately upon returning home."
+    - question: "Which word means 'first' when listing the order of daily events?"
+      options:
+        - text: "спочатку"
+          correct: true
+        - text: "потім"
+          correct: false
+        - text: "нарешті"
+          correct: false
+        - text: "щодня"
+          correct: false
+      explanation: "Спочатку means first (in a sequence). Потім means then, нарешті means finally, щодня means every day."
+
+- type: fill-in
+  title: "Complete the Routine"
+  instruction: "Choose the correct word to complete each sentence about daily activities."
+  items:
+    - sentence: "Я ___ о сьомій годині."
+      answer: "прокидаюся"
+      options: ["прокидаюся", "лягаю", "обідаю", "вечеряю"]
+      explanation: "Прокидаюся (I wake up) fits the morning time — о сьомій годині (at seven o'clock)."
+    - sentence: "___ я вмиваюся і снідаю."
+      answer: "Потім"
+      options: ["Потім", "Нарешті", "Щодня", "Додому"]
+      explanation: "Потім (then) is the sequence marker that connects the next step after waking up."
+    - sentence: "Я ___ на роботу автобусом."
+      answer: "їду"
+      options: ["їду", "йду", "лягаю", "дивлюсь"]
+      explanation: "Їду (by transport) is correct because the sentence mentions автобусом (by bus)."
+    - sentence: "Увечері я ___ цікавий фільм."
+      answer: "дивлюсь"
+      options: ["дивлюсь", "вмиваюся", "снідаю", "працюю"]
+      explanation: "Дивлюсь (I watch) is the correct reflexive verb for watching a film."
+    - sentence: "___ я лягаю спати о десятій годині."
+      answer: "Нарешті"
+      options: ["Нарешті", "Спочатку", "Потім", "Зазвичай"]
+      explanation: "Нарешті (finally) marks the last event in the daily sequence — going to bed."
+    - sentence: "Я ___ працюю з дев'ятої до п'ятої."
+      answer: "щодня"
+      options: ["щодня", "нарешті", "спочатку", "потім"]
+      explanation: "Щодня (every day) is a frequency marker describing a regular habit."
+    - sentence: "Я повертаюся ___ і одягаю домашній одяг."
+      answer: "додому"
+      options: ["додому", "на роботу", "спочатку", "нарешті"]
+      explanation: "Додому means homeward/home. After work, you return home (повертатися додому)."
+    - sentence: "О першій годині я маю обідню ___."
+      answer: "перерву"
+      options: ["перерву", "годину", "вечерю", "роботу"]
+      explanation: "Обідня перерва (lunch break) — перерву is the Accusative form of перерва."
+
+- type: match-up
+  title: "Match Activities to Times of Day"
+  instruction: "Match each daily activity to when it typically happens."
+  pairs:
+    - left: "прокидатися"
+      right: "morning — wake up"
+    - left: "вмиватися"
+      right: "morning — wash up"
+    - left: "снідати"
+      right: "morning — have breakfast"
+    - left: "їхати на роботу"
+      right: "morning — commute"
+    - left: "обідати"
+      right: "afternoon — have lunch"
+    - left: "повертатися додому"
+      right: "evening — come home"
+    - left: "вечеряти"
+      right: "evening — have dinner"
+    - left: "лягати спати"
+      right: "night — go to bed"
+
+- type: fill-in
+  title: "Describe Your Typical Day"
+  instruction: "Choose the correct reflexive verb form to complete each sentence."
+  items:
+    - sentence: "Ти ___ о восьмій годині?"
+      answer: "прокидаєшся"
+      options: ["прокидаєшся", "прокидаюся", "прокидається", "прокидатися"]
+      explanation: "Ти прокидаєшся — the ти form uses -ся after the consonant ш."
+    - sentence: "Вона ___ і снідає."
+      answer: "вмивається"
+      options: ["вмивається", "вмиваюся", "вмиватися", "вмиваєшся"]
+      explanation: "Вона вмивається — the він/вона/воно form ends in -ться, where the reflexive particle -ся follows the consonant т."
+    - sentence: "Я ___ і йду на роботу."
+      answer: "одягаюсь"
+      options: ["одягаюсь", "одягаєшся", "одягається", "одягатися"]
+      explanation: "Я одягаюсь — the я form uses -сь after the vowel ю."
+    - sentence: "Він ___ телевізор увечері."
+      answer: "дивиться"
+      options: ["дивиться", "дивлюсь", "дивишся", "дивитися"]
+      explanation: "Він дивиться — the він form uses -ся after the consonant т."
+    - sentence: "Ми ___ о шостій годині."
+      answer: "прокидаємось"
+      options: ["прокидаємось", "прокидаюся", "прокидаєшся", "прокидається"]
+      explanation: "Ми прокидаємось — the ми form uses -сь after the vowel о."
+    - sentence: "Вони ___ після вечері."
+      answer: "одягаються"
+      options: ["одягаються", "одягаюсь", "одягаєшся", "одягається"]
+      explanation: "Вони одягаються — the вони form uses -ся after the consonant т."

@@ -1,37 +1,124 @@
 items:
-  - word: читати
-    ipa: tʃɪˈtɑtɪ
-    translation: to read
-  - word: писати
-    ipa: pɪˈsɑtɪ
-    translation: to write
-  - word: знати
-    ipa: znɑtɪ
-    translation: to know
-  - word: працювати
-    ipa: prɐt͡sʲʊˈʋɑtɪ
-    translation: to work
-  - word: слухати
-    ipa: ˈsluxɐtɪ
-    translation: to listen
-  - word: питати
-    ipa: pɪˈtɑtɪ
-    translation: to ask
-  - word: грати
-    ipa: ˈɦrɑtɪ
-    translation: to play
-  - word: чекати
-    ipa: t͡ʃɛˈkɑtɪ
-    translation: to wait
-  - word: думати
-    ipa: ˈdumɐtɪ
-    translation: to think
-  - word: розуміти
-    ipa: rozʊˈmitɪ
-    translation: to understand
-  - word: вивчати
-    ipa: ʋɪu̯ˈt͡ʃɑtɪ
-    translation: to study
-  - word: відпочивати
-    ipa: ʋʲidpɔt͡ʃɪˈʋɑtɪ
-    translation: to rest
+  - lemma: "читати"
+    translation: "to read"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "читати книгу, читати новини, читати вголос"
+    example: "Я читаю журнал."
+  - lemma: "писати"
+    translation: "to write"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "писати лист, писати повідомлення, гарно писати"
+    notes: "Stem changes in conjugation: пис- becomes пиш- (я пишу, він пише)"
+    example: "Ти пишеш лист."
+  - lemma: "знати"
+    translation: "to know"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "знати все, знати правду, не знати"
+    example: "Ми знаємо багато слів."
+  - lemma: "працювати"
+    translation: "to work"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "працювати вдома, працювати багато"
+    notes: "Stem contracts: -ювати becomes -ю- (працюю, NOT працюваю)"
+    example: "Ми працюємо дуже багато."
+  - lemma: "слухати"
+    translation: "to listen"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "слухати музику, слухати уважно, слухати радіо"
+    example: "Він слухає радіо."
+  - lemma: "питати"
+    translation: "to ask"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "питати про це"
+    example: "Він питає про це."
+  - lemma: "грати"
+    translation: "to play"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "грати в ігри, добре грати"
+    example: "Ти граєш у ігри?"
+  - lemma: "чекати"
+    translation: "to wait"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "чекати на автобус, чекати на відповідь"
+    example: "Я чекаю на автобус."
+  - lemma: "думати"
+    translation: "to think"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "думати про це, думати багато"
+    example: "Я завжди думаю."
+  - lemma: "розуміти"
+    translation: "to understand"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "розуміти все, не розуміти"
+    example: "Ми розуміємо все."
+  - lemma: "вивчати"
+    translation: "to study"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "вивчати мову, вивчати текст, вивчати слова"
+    example: "Мій друг також вивчає текст."
+  - lemma: "відпочивати"
+    translation: "to rest"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "відпочивати вдома, відпочивати влітку"
+    example: "Ввечері я відпочиваю."
+  - lemma: "гуляти"
+    translation: "to walk, to stroll"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "гуляти в парку, гуляти щодня"
+    notes: "Example of a -яти verb that follows the same First Conjugation pattern"
+    example: "Я гуляю в парку."
+  - lemma: "відповідати"
+    translation: "to answer"
+    pos: "verb"
+    aspect: "imperfective"
+    usage: "відповідати на питання"
+    example: "Ми відповідаємо."
+  - lemma: "журнал"
+    translation: "magazine"
+    pos: "noun"
+    gender: "m"
+    example: "Я читаю журнал."
+  - lemma: "лист"
+    translation: "letter"
+    pos: "noun"
+    gender: "m"
+    example: "Ти пишеш лист."
+  - lemma: "радіо"
+    translation: "radio"
+    pos: "noun"
+    gender: "n"
+    notes: "Indeclinable noun — the form never changes"
+    example: "Він слухає радіо."
+  - lemma: "повідомлення"
+    translation: "message"
+    pos: "noun"
+    gender: "n"
+    example: "Ми пишемо повідомлення."
+  - lemma: "новини"
+    translation: "news"
+    pos: "noun"
+    notes: "Typically used in plural"
+    example: "Він читає новини."
+  - lemma: "автобус"
+    translation: "bus"
+    pos: "noun"
+    gender: "m"
+    example: "Я чекаю на автобус."
+  - lemma: "текст"
+    translation: "text"
+    pos: "noun"
+    gender: "m"
+    example: "Мій друг вивчає текст."

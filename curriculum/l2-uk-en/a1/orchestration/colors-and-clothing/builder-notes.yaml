@@ -1,0 +1,11 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1575
+deviations: []
+frictions: []
+unverified_terms: []
+review_focus:
+  - "Adherence to A1.1 grammar constraints: strictly verb-free sentences (Це + noun/adj) used for descriptions to prevent premature introduction of cases/verbs."
+  - "Gender agreement consistency, particularly the contrastive pairings for hard/soft stems (синій) and pluralia tantum nouns."
+rag_tools_used:
+  - "search_text: 'Color adjectives with agreement Clothing vocabulary' → verified exact grammar rule framing and appropriate contextual usage for A1 adjectives in Ukrainian Grade 1-4 standard curricula."

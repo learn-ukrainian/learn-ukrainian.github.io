@@ -1,4 +1,24 @@
-status: PASS
-issue_count: 0
+status: ISSUES_FOUND
+issue_count: 2
 high_count: 0
-issues: []
+issues:
+- type: PLAN_CONTRADICTION
+  location: Prompt Title/Subtitle vs. Outline Sections
+  problem: The Title ('Genitive Prepositions') and Subtitle ('біля, без, від, для,
+    до + Родовий') directly contradict the MANDATORY Outline. Sections 1 and 2 focus
+    exclusively on the Locative Case (в/у, на + Місцевий), which are not Genitive
+    prepositions. Furthermore, the prepositions 'без, від, для, до' listed in the
+    title are entirely absent from the outline and required vocabulary.
+  suggested_fix: Update the Title to 'Location Prepositions' and align the subtitle
+    with the actual outline (в/у, на, біля, навпроти). Alternatively, if Genitive
+    prepositions like 'без, від, для, до' are required, add bullet points for them
+    in the Genitive section.
+  severity: MEDIUM
+- type: CONTRADICTION
+  location: Activity Rules section
+  problem: The prompt lists 'cloze' as a 'Forbidden type' in the first list of activity
+    types, but then states 'M11+ | ... cloze (needs 14+ blanks)' is allowed in the
+    following table. For a Module 32, this is ambiguous.
+  suggested_fix: Remove 'cloze' from the forbidden list if it is allowed for M11+
+    with constraints, or clarify that it remains forbidden for this specific module.
+  severity: LOW

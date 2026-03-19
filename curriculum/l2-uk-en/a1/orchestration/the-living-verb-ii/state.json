@@ -24,43 +24,42 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T03:13:08Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T03:22:48Z",
-      "attempts": 2,
-      "note": "escalation-claude",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T03:25:08Z",
-      "task_id": "v5-the-living-verb-ii-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T03:38:49Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-19T05:13:42Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-19T05:14:08Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-6-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-19T05:18:03Z",
+      "task_id": "v5-the-living-verb-ii-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-19T05:25:55Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

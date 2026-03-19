@@ -2,13 +2,13 @@
   "module": "plurals-and-alternation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T03:42:12.022643Z",
+  "last_audit": "2026-03-19T12:49:59.969375Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T03:41:55.852907Z",
+    "md": "2026-03-19T05:15:37.500055Z",
     "meta": "2026-03-18T03:09:16.058302Z",
-    "activities": "2026-03-18T03:41:55.853172Z",
-    "vocabulary": "2026-03-18T03:28:31.007932Z",
+    "activities": "2026-03-19T05:18:05.531677Z",
+    "vocabulary": "2026-03-19T05:18:05.568957Z",
     "research": "2026-03-12T09:48:01.142487Z",
     "plan": "2026-03-05T10:32:23.378911Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1614/1200 (raw: 2039) | pedagogy: 2 violations"
+      "message": "2338/1200 (raw: 2380) | engagement: 0/1"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "4/0"
     },
     "vocabulary": {
       "status": "pass",
