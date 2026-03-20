@@ -230,22 +230,19 @@ def step_write(level: str, module_num: int, slug: str,
         )
     elif writer == "claude":
         import subprocess
-        import tempfile
 
         from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
 
         model = CLAUDE_MODEL_CORE_CONTENT
         _log(f"  Dispatching to Claude ({model})...")
 
-        # Write prompt to temp file
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
-            f.write(prompt)
-            prompt_file = Path(f.name)
-
+        # Pipe prompt content via stdin to Claude CLI
+        # -p flag with stdin: cat prompt | claude -p --output-format text
         try:
             result = subprocess.run(
-                ["claude", "-p", str(prompt_file), "--model", model,
-                 "--output-format", "text", "--max-turns", "5"],
+                ["claude", "-p", "--model", model,
+                 "--output-format", "text"],
+                input=prompt,
                 capture_output=True, text=True, timeout=600,
                 cwd=str(PROJECT_ROOT),
             )
@@ -253,8 +250,10 @@ def step_write(level: str, module_num: int, slug: str,
             raw = result.stdout if ok else ""
             if not ok:
                 _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
-        finally:
-            prompt_file.unlink(missing_ok=True)
+        except subprocess.TimeoutExpired:
+            _log("  ❌ Claude timed out (600s)")
+            ok = False
+            raw = ""
     else:
         _log(f"  ❌ Unknown writer: {writer}")
         return None
@@ -609,7 +608,8 @@ def main():
     parser = argparse.ArgumentParser(description="V6 Pipeline Build")
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("module", type=int, help="Module number")
-    parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini")
+    parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini",
+                        help="Default: gemini (Claude CLI truncates long-form content)")
     parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "verify", "publish", "all"],
                         default="all")
     args = parser.parse_args()
