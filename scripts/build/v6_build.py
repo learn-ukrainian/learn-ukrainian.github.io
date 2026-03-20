@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from datetime import UTC
 from pathlib import Path
 
 import yaml
@@ -278,6 +279,112 @@ def step_write(level: str, module_num: int, slug: str,
     return output_path
 
 
+def step_write_with_retry(
+    level: str, module_num: int, slug: str,
+    packet_path: Path,
+    writer: str = "gemini",
+    max_retries: int = 2,
+) -> Path | None:
+    """Write content with quick verify and retry loop.
+
+    Strategy (from Gemini consultation #982):
+    - Retry 1: same model + correction directive
+    - Retry 2: switch model (circuit breaker)
+    - Retry 3 (exhausted): return None → flag for human review
+    - Always regenerate WHOLE module (not sections)
+    - Do NOT include failed output in retry (prevents anchoring)
+    """
+    from build.quick_verify import (
+        build_correction_directive,
+        format_results,
+        has_errors,
+        quick_verify,
+    )
+
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+
+    # Stats log
+    stats_path = CURRICULUM_ROOT / level / "build-stats.jsonl"
+
+    other_writer = "claude" if writer == "gemini" else "gemini"
+
+    for attempt in range(1, max_retries + 2):  # +2 because range is exclusive
+        current_writer = writer if attempt <= max_retries else other_writer
+        _log(f"\n  📝 Write attempt {attempt}/{max_retries + 1} (writer: {current_writer})")
+
+        output = step_write(level, module_num, slug, packet_path, writer=current_writer)
+        if output is None:
+            _log(f"  ❌ Writer returned no output on attempt {attempt}")
+            _log_stats(stats_path, slug, "WRITE_FAILED", attempt, current_writer, False)
+            continue
+
+        # Quick verify
+        content = output.read_text("utf-8")
+        results = quick_verify(content, plan)
+        _log(format_results(results))
+
+        if not has_errors(results):
+            _log(f"  ✅ Quick verify PASSED on attempt {attempt}")
+            _log_stats(stats_path, slug, "PASS", attempt, current_writer, True)
+            return output
+
+        # Failed — log and prepare retry
+        error_types = ", ".join(set(r.check for r in results if r.severity == "ERROR"))
+        _log_stats(stats_path, slug, error_types, attempt, current_writer, False)
+
+        if attempt > max_retries:
+            _log(f"  ❌ Exhausted {max_retries + 1} attempts. Flag for human review.")
+            # Write error report
+            report_dir = CURRICULUM_ROOT / level / "build-errors"
+            report_dir.mkdir(parents=True, exist_ok=True)
+            report_path = report_dir / f"{slug}-errors.md"
+            report_path.write_text(
+                f"# Build Error Report: {slug}\n\n"
+                f"## Attempts: {max_retries + 1}\n\n"
+                + "\n".join(str(r) for r in results)
+                + "\n\n## Correction Directive\n\n"
+                + build_correction_directive(results),
+                "utf-8",
+            )
+            _log(f"  → Error report: {report_path}")
+            return output  # Return the output anyway (human can fix)
+
+        # Build correction directive for next attempt
+        directive = build_correction_directive(results)
+        _log("  🔄 Retrying with correction directive...")
+
+        # Inject directive into the template for the next attempt
+        # The directive is prepended to the plan section of the prompt
+        # We modify the plan_path temporarily? No — better to pass it through
+        # For now, save directive to orchestration dir so step_write can pick it up
+        orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+        orch_dir.mkdir(parents=True, exist_ok=True)
+        directive_path = orch_dir / f"correction-attempt-{attempt}.md"
+        directive_path.write_text(directive, "utf-8")
+
+    return None  # Should not reach here
+
+
+def _log_stats(stats_path: Path, slug: str, error_type: str,
+               attempt: int, model: str, success: bool):
+    """Append retry stats to JSONL file."""
+    import json
+    from datetime import datetime
+
+    stats_path.parent.mkdir(parents=True, exist_ok=True)
+    entry = {
+        "slug": slug,
+        "error_type": error_type,
+        "attempt": attempt,
+        "model": model,
+        "success": success,
+        "timestamp": datetime.now(tz=UTC).isoformat(),
+    }
+    with open(stats_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
 def step_exercises(content_path: Path) -> bool:
     """Step 5b: Fill exercise placeholders."""
     _log(f"\n{'='*60}")
@@ -490,12 +597,15 @@ def main():
         if not packet_path.exists():
             packet_path = None
 
-    # Step 5: WRITE (preflight is integrated into write — checks prompt before dispatch)
+    # Step 5: WRITE + QUICK VERIFY + RETRY
     content_path = None
     if steps in ("all", "write"):
-        content_path = step_write(args.level, args.module, slug, packet_path, args.writer)
+        content_path = step_write_with_retry(
+            args.level, args.module, slug, packet_path,
+            writer=args.writer, max_retries=2,
+        )
         if not content_path:
-            _log("\n❌ Build FAILED at Step 5 (write)")
+            _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
             sys.exit(1)
     else:
         content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
