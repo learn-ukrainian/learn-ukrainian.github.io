@@ -71,82 +71,71 @@ levels:
   a2:
     type: core
     modules:
-    - the-dative-i-pronouns
-    - the-dative-ii-nouns
+    # A2.1: Foundation + Aspect Introduction (M01-M07)
+    - a2-bridge
+    - aspect-concept
+    - aspect-in-vocabulary
+    - genitive-intro
+    - genitive-dates-numbers
+    - foundations-practice
+    - checkpoint-foundations
+    # A2.2: Genitive Case Complete (M08-M14)
+    - genitive-prepositions-source
+    - genitive-prepositions-purpose
+    - genitive-prepositions-direction
+    - genitive-adjectives-pronouns
+    - genitive-plural
+    - shopping-and-health
+    - checkpoint-genitive
+    # A2.3: Dative Case (M15-M20)
+    - dative-pronouns
+    - dative-nouns
+    - dative-adjectives-pronouns
     - dative-verbs
-    - the-instrumental-i-accompaniment
-    - the-instrumental-ii-means-and-tools
-    - being-and-becoming
-    - spatial-prepositions
-    - logical-prepositions
-    - plural-noun-declension
-    - plural-adjective-declension
+    - services-and-communication
+    - checkpoint-dative
+    # A2.4: Instrumental Case (M21-M27)
+    - instrumental-accompaniment
+    - instrumental-means
+    - instrumental-profession
+    - instrumental-prepositions
+    - instrumental-adjectives-pronouns
+    - work-and-food
+    - checkpoint-instrumental
+    # A2.5: Case Synthesis + Plurals (M28-M34)
+    - plural-nominative-accusative
+    - plural-genitive
+    - plural-other-cases
+    - which-case-when
     - all-cases-practice
-    - at-the-post-office-and-bank
+    - home-and-daily-life
     - checkpoint-cases
-    - aspect-introduction
-    - the-completed-past
-    - future-plans-and-promises
-    - aspect-morphology
-    - aspect-mastery-pairs
-    - possessive-sviy
-    - reflexive-sebe
-    - indefinite-negative-pronouns
-    - bigger-better-stronger
-    - the-best-the-worst
-    - preferences-and-choices
-    - numerals-and-nouns
-    - numeral-case-agreement
-    - if-i-were
-    - complete-imperative
-    - smart-shopping
-    - checkpoint-aspect-comparison
-    - telling-stories
+    # A2.6: Aspect, Tenses, and Motion (M35-M41)
+    - aspect-in-past
+    - synthetic-future
+    - aspect-mastery
+    - motion-verbs
+    - imperative-complete
+    - telling-stories-and-travel
+    - checkpoint-verbs
+    # A2.7: Complex Sentences + Conditionals (M42-M47)
     - because-and-although
-    - she-said-that
-    - i-think-that
-    - i-feel-like
-    - in-order-to
-    - which-one
-    - time-clauses
-    - health-and-body
-    - checkpoint
-    - basic-motion-prefixes
-    - advanced-motion-prefixes
-    - action-verb-prefixes
-    - adjective-suffixes-qualities
-    - adjective-suffixes-types
-    - root-families-i
-    - root-families-ii
-    - wf-mastery
-    - checkpoint-word-formation
-    - food-and-cooking
-    - home-and-furniture
-    - nature-and-weather
-    - emotions-personality
-    - work-professions
-    - technology-media
-    - hobbies-leisure
-    - education-learning
-    - shopping-services
-    - sports-fitness
-    - checkpoint-full-grammar
-    - practical-intro
-    - practical-warm-up
-    - at-the-pharmacy
-    - hotel-accommodation
-    - rental-accommodation
-    - scheduling-appointments
-    - scheduling-interviews
-    - giving-directions
-    - asking-for-directions
-    - social-media-ukrainian
-    - texting-messaging
-    - online-services
-    - participles-passive
-    - impersonal-passive
-    - gerunds-intro
-    - a2-final-exam
+    - purpose-clauses
+    - relative-clauses
+    - real-conditionals
+    - education-and-work
+    - checkpoint-syntax
+    # A2.8: Refinement + Graduation (M48-M57)
+    - comparison
+    - numerals-and-cases
+    - sviy-and-sebe
+    - indefinite-negative-pronouns
+    - synonyms-antonyms-style
+    - preferences-and-choices
+    - nature-and-traditions
+    - a2-comprehensive-review
+    - a2-practice-exam
+    - a2-finale
   b1:
     type: core
     modules:
