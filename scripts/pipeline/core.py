@@ -42,7 +42,6 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
-    FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
     PRO_TRACKS,
@@ -1776,11 +1775,12 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         try:
             from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
 
-            # Writer dispatch — same agent that builds content
+            # Writer dispatch — uses the SAME model that builds content
+            preflight_model = ctx.model  # PRO_MODEL for content, not FLASH
             def _preflight_dispatch(prompt_text):
                 return dispatch_gemini(
                     prompt_text, task_id=f"preflight-{ctx.slug}",
-                    model=FLASH_MODEL, stdout_only=True, timeout=300,
+                    model=preflight_model, stdout_only=True, timeout=300,
                 )
 
             preflight = run_prompt_preflight(
