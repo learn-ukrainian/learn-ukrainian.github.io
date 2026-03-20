@@ -2,7 +2,7 @@ module: a1-020
 level: A1
 sequence: 20
 slug: my-morning
-version: '1.0'
+version: '1.1'
 title: My Morning
 subtitle: "Прокидаюся, вмиваюся — reflexive verbs and routines"
 focus: grammar
@@ -36,8 +36,8 @@ content_outline:
     The -ся attaches to the end of every conjugated form:
     я вмиваюся, ти вмиваєшся, він/вона вмивається."
   - "Кравцова Grade 4 p.113: pronunciation note:
-    -шся sounds like [с'а]: вмиваєшся → [вмиваєс'а].
-    -ться sounds like [ц'а]: вмивається → [вмиваєц'а].
+    -шся sounds like [с':а] (long soft с): вмиваєшся → [вмиваєс':а].
+    -ться sounds like [ц':а] (long soft ц): вмивається → [вмиваєц':а].
     The spelling and pronunciation differ — learn both!"
 - section: "Мій ранок (My Morning)"
   words: 300
@@ -47,7 +47,9 @@ content_outline:
     одягатися (to get dressed), збиратися (to get ready),
     повертатися (to return home).
     Non-reflexive morning verbs for contrast:
-    снідати (to have breakfast), пити каву (to drink coffee), йти (to go)."
+    снідати (to have breakfast), пити каву (to drink coffee).
+    Йти (to go) — irregular: я йду, ти йдеш, він/вона йде.
+    Learn these forms — they don't follow Group I or II patterns."
   - "Sequence words for telling a story:
     спочатку (first), потім (then), після цього (after this), нарешті (finally).
     Мій ранок: Спочатку я прокидаюся. Потім вмиваюся і одягаюся.
@@ -97,7 +99,7 @@ prerequisites:
 - a1-019 (Questions)
 grammar:
 - "Reflexive verbs: regular conjugation + -ся/-сь suffix"
-- "Pronunciation: -шся=[с'а], -ться=[ц'а]"
+- "Pronunciation: -шся=[с':а], -ться=[ц':а] (gemination)"
 - "Sequence words: спочатку, потім, після цього, нарешті"
 register: розмовний
 references:

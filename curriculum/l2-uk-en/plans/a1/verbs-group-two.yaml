@@ -2,7 +2,7 @@ module: a1-017
 level: A1
 sequence: 17
 slug: verbs-group-two
-version: '1.0'
+version: '1.1'
 title: Verbs Group II
 subtitle: "Говорю, говориш, говорить — the second pattern"
 focus: grammar
@@ -49,7 +49,8 @@ content_outline:
     | ти | читаєш | говориш |
     | він/вона | читає | говорить |
     | вони | читають | говорять |
-    Key difference: ти form → -єш (I) vs -иш (II), вони → -ють (I) vs -ять (II)."
+    Key difference: ти form → -єш (I) vs -иш (II), вони → -ють (I) vs -ять/-ать (II).
+    Note: after ч, ш, ж, щ → -ать (not -ять): бачать, вчать, ходять (but not *бачять)."
   - "Consonant changes in Group II (я-form only):
     робити → роблю (б→бл), ходити → ходжу (д→дж),
     просити → прошу (с→ш), бачити → бачу (no change).
