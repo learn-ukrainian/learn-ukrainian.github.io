@@ -238,7 +238,7 @@ def step_write(level: str, module_num: int, slug: str,
         try:
             result = subprocess.run(
                 ["claude", "-p", str(prompt_file), "--model", model,
-                 "--output-format", "text", "--max-turns", "1"],
+                 "--output-format", "text", "--max-turns", "5"],
                 capture_output=True, text=True, timeout=600,
                 cwd=str(PROJECT_ROOT),
             )
