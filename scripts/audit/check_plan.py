@@ -249,7 +249,8 @@ def check_apostrophes(plan: dict) -> list[PlanIssue]:
     }
 
     for wrong, correct in needs_apostrophe.items():
-        pattern = rf"(?<![а-яґєіїА-ЯҐЄІЇ']){re.escape(wrong)}(?![а-яґєіїА-ЯҐЄІЇ])"
+        # Skip if preceded by * (intentional "incorrect form" marker in teaching examples)
+        pattern = rf"(?<![а-яґєіїА-ЯҐЄІЇ'*]){re.escape(wrong)}(?![а-яґєіїА-ЯҐЄІЇ])"
         if re.search(pattern, text, re.IGNORECASE):
             issues.append(PlanIssue("APOSTROPHE", "ERROR",
                                     f"Missing apostrophe: '{wrong}' should be '{correct}'"))
