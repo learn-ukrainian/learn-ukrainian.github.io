@@ -37,7 +37,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 logger = logging.getLogger(__name__)
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
+PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
 
 def _log(msg: str):
