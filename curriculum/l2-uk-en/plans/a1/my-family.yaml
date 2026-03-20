@@ -45,11 +45,14 @@ content_outline:
   points:
   - "Anna Ep6 pattern: Ukrainian doesn't say 'I have' with a verb.
     Instead: 'At me there-is' — У мене є брат.
-    Full paradigm: у мене є, у тебе є, у нього є, у неї є,
-    у нас є, у вас є, у них є."
+    For A1, teach only: у мене є, у тебе є (informal), у вас є (formal).
+    Other forms (у нього, у неї, у нас, у них) use genitive pronouns
+    which are A2 grammar — introduce them gradually through dialogues
+    as memorized phrases, not as a paradigm table."
   - "Questions with rising intonation: У тебе є сестра? ↗
-    Negative: У мене немає (there isn't) — teach as chunk only.
-    Genitive forms after немає (немає сестри) are A2 grammar."
+    Negative: Defer 'У мене немає' to A2 where genitive is taught.
+    For A1, learners answer: Ні. / Ні, у мене тільки один брат.
+    This avoids the pedagogical trap of немає + nominative (*немає брат)."
   - "Numbers preview (Anna Ep6): один/одна changes by gender:
     один брат, одна сестра. два/дві: два брати, дві сестри."
 - section: "Мій, моя, моє (Possessive Pronouns)"
@@ -76,9 +79,10 @@ vocabulary_hints:
   - сестра (sister)
   - бабуся (grandmother)
   - дідусь (grandfather)
-  - мій, моя, моє (my — m/f/n)
+  - мій, моя, моє, мої (my — m/f/n/pl)
+  - твій, твоя, твоє (your — m/f/n, informal)
   - у мене є (I have)
-  - у мене немає (I don't have — chunk)
+  - у тебе є (you have, informal)
   recommended:
   - батьки (parents)
   - дядько (uncle)
@@ -87,6 +91,12 @@ vocabulary_hints:
   - син (son)
   - дружина (wife)
   - чоловік (man / husband)
+  - його (his — doesn't change)
+  - її (her — doesn't change)
+  - один, одна (one — m/f)
+  - два, дві (two — m/f)
+  - чи (or — in questions)
+  - тільки (only)
 activity_hints:
 - type: quiz
   focus: "Answer: У тебе є...? Так / Ні"
@@ -105,10 +115,11 @@ connects_to:
 prerequisites:
 - a1-005 (Who Am I?)
 grammar:
-- "У мене є construction (memorized chunk, NOT genitive grammar)"
-- "Possessive pronouns мій/моя/моє (nominative only — full paradigm A2)"
+- "У мене є / у тебе є (memorized chunks, NOT genitive paradigm)"
+- "Possessive pronouns мій/моя/моє/мої, твій/твоя/твоє (nominative only)"
 - "Gender agreement preview (possessive + noun)"
-- "Numbers один/одна, два/дві with family"
+- "Numbers один/одна, два/дві with family members"
+- "Negation: Ні + simple response (NOT У мене немає — deferred to A2)"
 register: розмовний
 references:
 - title: "ULP Season 1, Episode 6 — Family + I Have"

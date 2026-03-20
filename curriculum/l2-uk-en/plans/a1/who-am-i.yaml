@@ -61,9 +61,9 @@ content_outline:
   - "Following Anna Ep4: Звідки ти? / Звідки ви?
     Я з України. Я з Канади. Я зі Штатів. Я з Німеччини.
     Note: 'з/зі + country' uses genitive forms (України, Канади)
-    but teach as CHUNKS — genitive grammar is A2.
-    Also: Де ви живете? Я живу в Києві / у Львові —
-    locative forms as chunks, full locative in M29."
+    but teach as MEMORIZED CHUNKS — genitive grammar is A2.
+    Do NOT introduce 'Де ви живете?' here — locative + verb
+    conjugation are taught later (M16 verbs, M29 locative)."
 - section: "Підсумок — Summary"
   words: 0
   points:
@@ -87,6 +87,10 @@ vocabulary_hints:
   - звідки (where from)
   - зараз (now, currently)
   - друг (friend, male)
+  - його (his — doesn't change)
+  - її (her — doesn't change)
+  - Канада (Canada)
+  - Німеччина (Germany)
 activity_hints:
 - type: fill-in
   focus: "Complete self-introduction: Мене звати..., Я з..., Я —..."
