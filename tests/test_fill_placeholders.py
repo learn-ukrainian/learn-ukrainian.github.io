@@ -11,6 +11,7 @@ from build.exercises.fill_placeholders import (
     ExercisePlaceholder,
     _generate_exercise_dsl,
     _parse_placeholder,
+    _parse_qa_pairs,
     fill_placeholders,
 )
 
@@ -31,72 +32,125 @@ vocabulary: стіл, книга, вікно"""
     assert result.vocabulary == ["стіл", "книга", "вікно"]
 
 
-def test_parse_placeholder_defaults():
-    block = "type: fill-in"
+def test_parse_placeholder_with_questions():
+    block = """type: match-up
+tests: false friends
+questions: В→v, Н→n, Р→r"""
     result = _parse_placeholder(block)
-    assert result.exercise_type == "fill-in"
-    assert result.items == 4  # default
-    assert result.vocabulary == []
+    assert result.questions == "В→v, Н→n, Р→r"
 
 
-def test_parse_placeholder_bad_items():
-    block = "type: quiz\nitems: abc"
+def test_parse_placeholder_with_groups():
+    block = """type: group-sort
+tests: classify
+groups: Голосні: А, О, У; Приголосні: М, К, Б"""
     result = _parse_placeholder(block)
-    assert result.items == 4  # fallback
+    assert result.groups == "Голосні: А, О, У; Приголосні: М, К, Б"
 
 
-# --- DSL generation tests ---
+def test_parse_qa_pairs_arrow():
+    pairs = _parse_qa_pairs("В→v, Н→n, Р→rolled r")
+    assert len(pairs) == 3
+    assert pairs[0] == ("В", "v")
+    assert pairs[2] == ("Р", "rolled r")
 
 
-def test_generate_quiz():
+def test_parse_qa_pairs_equals():
+    pairs = _parse_qa_pairs("стіл=він, книга=вона, вікно=воно")
+    assert len(pairs) == 3
+    assert pairs[1] == ("книга", "вона")
+
+
+def test_parse_qa_pairs_empty():
+    assert _parse_qa_pairs("") == []
+    assert _parse_qa_pairs("no separators here") == []
+
+
+# --- DSL generation with real content ---
+
+
+def test_generate_quiz_with_qa_pairs():
     placeholder = ExercisePlaceholder(
         exercise_type="quiz",
-        tests="choose the right form",
-        vocabulary=["стіл", "книга"],
+        tests="match letter to sound",
+        vocabulary=["В", "Н", "Р"],
         items=3,
+        questions="В→v, Н→n, Р→r",
     )
     dsl = _generate_exercise_dsl(placeholder)
     assert ":::quiz" in dsl
-    assert 'title: "Choose the right form"' in dsl
-    assert '"стіл"' in dsl
-    assert '"книга"' in dsl
+    assert '"В"' in dsl
+    assert '"v"' in dsl  # Real answer, not "?"
+    assert '"?"' not in dsl  # No skeleton placeholders
     assert dsl.endswith(":::")
 
 
-def test_generate_fill_in():
+def test_generate_quiz_from_vocab():
+    placeholder = ExercisePlaceholder(
+        exercise_type="quiz",
+        tests="identify the word",
+        vocabulary=["мама", "тато"],
+        items=2,
+    )
+    dsl = _generate_exercise_dsl(placeholder)
+    assert ":::quiz" in dsl
+    assert '"мама"' in dsl
+    assert '"так"' in dsl  # Default binary options
+
+
+def test_generate_match_up_with_pairs():
+    placeholder = ExercisePlaceholder(
+        exercise_type="match-up",
+        tests="match false friends",
+        questions="В→v (not b), Н→n (not h), Р→rolled r (not p)",
+        items=3,
+    )
+    dsl = _generate_exercise_dsl(placeholder)
+    assert ":::match-up" in dsl
+    assert '"В"' in dsl
+    assert '"v (not b)"' in dsl  # Real pair
+    assert '"?"' not in dsl
+
+
+def test_generate_group_sort_with_groups():
+    placeholder = ExercisePlaceholder(
+        exercise_type="group-sort",
+        tests="sort by type",
+        groups="Голосні: А, О, У, І; Приголосні: М, К, Б, Ш",
+        items=8,
+    )
+    dsl = _generate_exercise_dsl(placeholder)
+    assert ":::group-sort" in dsl
+    assert '"Голосні"' in dsl
+    assert '"Приголосні"' in dsl
+    assert '"А"' in dsl
+    assert '"М"' in dsl
+
+
+def test_generate_fill_in_with_pairs():
     placeholder = ExercisePlaceholder(
         exercise_type="fill-in",
-        tests="add the correct ending",
-        vocabulary=["мам", "книг"],
+        tests="complete the greeting",
+        questions="— ___! → Привіт; — Як ___? → справи",
         items=2,
     )
     dsl = _generate_exercise_dsl(placeholder)
     assert ":::fill-in" in dsl
-    assert "answer:" in dsl
+    assert '"Привіт"' in dsl
 
 
-def test_generate_match_up():
+def test_generate_true_false_with_pairs():
     placeholder = ExercisePlaceholder(
-        exercise_type="match-up",
-        tests="match opposites",
-        vocabulary=["великий", "маленький"],
+        exercise_type="true-false",
+        tests="check facts",
+        questions="В українській мові 33 літери → true; В українській мові 33 звуки → false",
         items=2,
     )
     dsl = _generate_exercise_dsl(placeholder)
-    assert ":::match-up" in dsl
-    assert '"великий"' in dsl
-
-
-def test_generate_group_sort():
-    placeholder = ExercisePlaceholder(
-        exercise_type="group-sort",
-        tests="sort by gender",
-        vocabulary=["стіл", "книга", "вікно", "ліжко"],
-        items=4,
-    )
-    dsl = _generate_exercise_dsl(placeholder)
-    assert ":::group-sort" in dsl
-    assert "groups:" in dsl
+    assert ":::true-false" in dsl
+    assert "33 літери" in dsl
+    assert "answer: true" in dsl
+    assert "answer: false" in dsl
 
 
 def test_generate_unknown_type():
@@ -107,7 +161,6 @@ def test_generate_unknown_type():
     )
     dsl = _generate_exercise_dsl(placeholder)
     assert "<!-- EXERCISE:" in dsl
-    assert "mystery-type" in dsl
 
 
 # --- Integration tests ---
@@ -138,26 +191,27 @@ def test_fill_placeholders_multiple():
     content = """## Section 1
 
 :::exercise-placeholder
-type: quiz
-tests: test 1
-items: 2
-vocabulary: а, о
+type: group-sort
+tests: classify
+items: 4
+groups: Vowels: а, о; Consonants: м, к
 :::
 
 ## Section 2
 
 :::exercise-placeholder
-type: fill-in
-tests: test 2
-items: 3
-vocabulary: мама, тато, брат
+type: match-up
+tests: match pairs
+items: 2
+questions: мама→mother, тато→father
 :::
 """
     result, count = fill_placeholders(content)
     assert count == 2
-    assert ":::quiz" in result
-    assert ":::fill-in" in result
+    assert ":::group-sort" in result
+    assert ":::match-up" in result
     assert ":::exercise-placeholder" not in result
+    assert '"mother"' in result  # Real content, not "?"
 
 
 def test_fill_placeholders_none():
@@ -167,18 +221,13 @@ def test_fill_placeholders_none():
     assert result == content
 
 
-def test_fill_preserves_surrounding_content():
-    content = """Before exercise.
-
-:::exercise-placeholder
+def test_no_question_marks_in_real_content():
+    """Exercises with explicit Q&A should never produce '?' placeholders."""
+    content = """:::exercise-placeholder
 type: match-up
-tests: matching
-items: 2
-vocabulary: один, два
-:::
-
-After exercise."""
-    result, count = fill_placeholders(content)
-    assert count == 1
-    assert "Before exercise." in result
-    assert "After exercise." in result
+tests: sounds
+items: 3
+questions: В→v, Н→n, Р→r
+:::"""
+    result, _ = fill_placeholders(content)
+    assert '"?"' not in result

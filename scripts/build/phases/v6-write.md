@@ -108,6 +108,8 @@ Each section should follow the word budget specified. The total must reach {WORD
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
 - Dialogues: natural, not stilted. Real situations, real responses.
+- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Avoid generic LLM cheerfulness ("Good news!", "Don't panic!", "Fun fact!"). Let the content be interesting on its own.
+- **Never make claims about specific Ukrainian words** without being 100% sure. If you're not certain about a letter, sound, or form — describe it generally rather than risk an error.
 
 {PEDAGOGICAL_CONSTRAINTS}
 

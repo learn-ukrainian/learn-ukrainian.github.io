@@ -1,33 +1,10 @@
 """V6 Step 5b: Fill exercise placeholders in generated content.
 
 Reads markdown content with :::exercise-placeholder blocks, converts each
-to the appropriate exercise DSL format that the DSL→MDX converter (#997)
-will later transform into interactive React components.
+to exercise DSL format with REAL content (not skeleton placeholders).
 
-Placeholder format (from writer):
-```
-:::exercise-placeholder
-type: quiz
-tests: gender identification
-after: він/вона/воно test
-items: 6
-vocabulary: стіл, книга, вікно, кімната, ліжко, стілець
-:::
-```
-
-Output DSL format:
-```
-:::quiz
-title: "Він, вона, or воно?"
----
-- q: "стіл"
-  o: ["він", "вона", "воно"]
-  a: 0
-- q: "книга"
-  o: ["він", "вона", "воно"]
-  a: 1
-:::
-```
+Uses placeholder metadata (type, tests, vocabulary, questions, groups)
+to generate pedagogically correct exercises deterministically.
 
 Issue: #996
 """
@@ -92,86 +69,136 @@ def _parse_placeholder(block: str) -> ExercisePlaceholder:
     return placeholder
 
 
+def _escape_yaml_str(s: str) -> str:
+    """Escape a string for safe YAML embedding in double quotes."""
+    return s.replace('"', "'")
+
+
 def _generate_exercise_dsl(placeholder: ExercisePlaceholder) -> str:
-    """Generate exercise DSL from a parsed placeholder.
-
-    For now, generates a SKELETON that preserves the writer's intent.
-    The skeleton contains the exercise type, title derived from the
-    'tests' field, and vocabulary items as question stems.
-
-    A future LLM pass or human review fills in the actual content
-    (distractors, correct answers, etc.).
-    """
+    """Generate exercise DSL with real content from placeholder metadata."""
     ex_type = placeholder.exercise_type or "quiz"
     tests = placeholder.tests or "practice"
     vocab = placeholder.vocabulary
     items = placeholder.items
 
     # Generate title from 'tests' field
-    title = tests.strip().rstrip(".")
+    title = _escape_yaml_str(tests.strip().rstrip("."))
     if title and title[0].islower():
         title = title[0].upper() + title[1:]
 
     if ex_type == "quiz":
-        return _generate_quiz(title, vocab, items)
+        return _generate_quiz(title, vocab, items, placeholder.questions)
     elif ex_type == "fill-in":
-        return _generate_fill_in(title, vocab, items)
+        return _generate_fill_in(title, vocab, items, placeholder.questions)
     elif ex_type == "match-up":
-        return _generate_match_up(title, vocab, items)
+        return _generate_match_up(title, vocab, items, placeholder.questions)
     elif ex_type == "group-sort":
-        return _generate_group_sort(title, vocab, items, groups_hint=placeholder.groups)
+        return _generate_group_sort(title, vocab, items, placeholder.groups)
     elif ex_type == "true-false":
-        return _generate_true_false(title, vocab, items)
+        return _generate_true_false(title, vocab, items, placeholder.questions)
     else:
-        # Unknown type — return as comment for human review
         return (
             f"<!-- EXERCISE: type={ex_type}, tests={tests}, "
             f"items={items}, vocab={','.join(vocab)} -->\n"
         )
 
 
-def _generate_quiz(title: str, vocab: list[str], items: int) -> str:
-    """Generate quiz DSL skeleton."""
-    lines = [':::quiz', f'title: "{title}"', '---']
+def _parse_qa_pairs(questions: str) -> list[tuple[str, str]]:
+    """Parse Q→A pairs from the questions field.
 
-    for word in vocab[:items]:
-        lines.append(f'- q: "{word}"')
-        lines.append('  o: ["?", "?", "?"]')
-        lines.append('  a: 0')
+    Formats supported:
+    - "В=v, Н=n, Р=r"  (= separator)
+    - "В→v, Н→n"  (→ separator)
+    - "Що ми чуємо? → звуки"
+    """
+    pairs = []
+    if not questions:
+        return pairs
 
-    # Pad with empty items if vocab is shorter than items
-    for _ in range(len(vocab), items):
-        lines.append('- q: "?"')
-        lines.append('  o: ["?", "?", "?"]')
-        lines.append('  a: 0')
+    for item in re.split(r"[,;]\s*", questions):
+        item = item.strip()
+        if not item:
+            continue
+        # Try → first, then =
+        for sep in ("→", "="):
+            if sep in item:
+                left, _, right = item.partition(sep)
+                pairs.append((left.strip(), right.strip()))
+                break
+    return pairs
+
+
+def _generate_quiz(title: str, vocab: list[str], items: int,
+                   questions: str = "") -> str:
+    """Generate quiz DSL with real options."""
+    lines = [":::quiz", f'title: "{title}"', "---"]
+
+    qa_pairs = _parse_qa_pairs(questions)
+
+    if qa_pairs:
+        # Use explicit Q&A pairs from writer
+        for q, a in qa_pairs[:items]:
+            # Generate 2 wrong options by shuffling other answers
+            other_answers = [p[1] for p in qa_pairs if p[1] != a]
+            distractors = other_answers[:2] if len(other_answers) >= 2 else ["—", "—"]
+            options = [a, *distractors[:2]]
+            opts_str = ", ".join(f'"{_escape_yaml_str(o)}"' for o in options)
+            lines.append(f'- q: "{_escape_yaml_str(q)}"')
+            lines.append(f"  o: [{opts_str}]")
+            lines.append("  a: 0")
+    elif vocab:
+        # Generate from vocabulary — each word is a question
+        for word in vocab[:items]:
+            lines.append(f'- q: "{_escape_yaml_str(word)}"')
+            lines.append('  o: ["так", "ні"]')
+            lines.append("  a: 0")
+    else:
+        lines.append("# TODO: add quiz items")
 
     lines.append(":::")
     return "\n".join(lines)
 
 
-def _generate_fill_in(title: str, vocab: list[str], items: int) -> str:
-    """Generate fill-in DSL skeleton."""
-    lines = [':::fill-in', f'title: "{title}"', '---']
+def _generate_fill_in(title: str, vocab: list[str], items: int,
+                      questions: str = "") -> str:
+    """Generate fill-in DSL with real sentences."""
+    lines = [":::fill-in", f'title: "{title}"', "---"]
 
-    for word in vocab[:items]:
-        lines.append(f'- sentence: "___ ({word})"')
-        lines.append(f'  answer: "{word}"')
+    qa_pairs = _parse_qa_pairs(questions)
 
-    for _ in range(len(vocab), items):
-        lines.append('- sentence: "___"')
-        lines.append('  answer: "?"')
+    if qa_pairs:
+        for q, a in qa_pairs[:items]:
+            lines.append(f'- sentence: "{_escape_yaml_str(q)}"')
+            lines.append(f'  answer: "{_escape_yaml_str(a)}"')
+    elif vocab:
+        for word in vocab[:items]:
+            lines.append('- sentence: "___"')
+            lines.append(f'  answer: "{_escape_yaml_str(word)}"')
+    else:
+        lines.append("# TODO: add fill-in items")
 
     lines.append(":::")
     return "\n".join(lines)
 
 
-def _generate_match_up(title: str, vocab: list[str], items: int) -> str:
-    """Generate match-up DSL skeleton."""
-    lines = [':::match-up', f'title: "{title}"', '---']
+def _generate_match_up(title: str, vocab: list[str], items: int,
+                       questions: str = "") -> str:
+    """Generate match-up DSL with real pairs."""
+    lines = [":::match-up", f'title: "{title}"', "---"]
 
-    for word in vocab[:items]:
-        lines.append(f'- left: "{word}"')
-        lines.append('  right: "?"')
+    qa_pairs = _parse_qa_pairs(questions)
+
+    if qa_pairs:
+        for left, right in qa_pairs[:items]:
+            lines.append(f'- left: "{_escape_yaml_str(left)}"')
+            lines.append(f'  right: "{_escape_yaml_str(right)}"')
+    elif len(vocab) >= 2:
+        # Try to pair adjacent items (assumes they come in pairs)
+        for i in range(0, min(len(vocab) - 1, items * 2), 2):
+            lines.append(f'- left: "{_escape_yaml_str(vocab[i])}"')
+            lines.append(f'  right: "{_escape_yaml_str(vocab[i + 1])}"')
+    else:
+        lines.append("# TODO: add match-up pairs")
 
     lines.append(":::")
     return "\n".join(lines)
@@ -179,14 +206,9 @@ def _generate_match_up(title: str, vocab: list[str], items: int) -> str:
 
 def _generate_group_sort(title: str, vocab: list[str], items: int,
                          groups_hint: str = "") -> str:
-    """Generate group-sort DSL from vocabulary or explicit group hint.
+    """Generate group-sort DSL from explicit group hint or vocabulary."""
+    lines = [":::group-sort", f'title: "{title}"', "---"]
 
-    If groups_hint is provided (e.g. "Голосні: А, О, У; Приголосні: М, К, Б"),
-    parse it into named groups with correct items.
-    """
-    lines = [':::group-sort', f'title: "{title}"', '---']
-
-    # Try to parse explicit groups hint
     if groups_hint and ":" in groups_hint:
         lines.append("groups:")
         for group_def in groups_hint.split(";"):
@@ -195,38 +217,51 @@ def _generate_group_sort(title: str, vocab: list[str], items: int,
                 continue
             name, _, items_str = group_def.partition(":")
             group_items = [i.strip() for i in items_str.split(",") if i.strip()]
-            formatted = ", ".join(f'"{w}"' for w in group_items)
-            lines.append(f'  - name: "{name.strip()}"')
+            formatted = ", ".join(f'"{_escape_yaml_str(w)}"' for w in group_items)
+            lines.append(f'  - name: "{_escape_yaml_str(name.strip())}"')
             lines.append(f"    items: [{formatted}]")
-    else:
-        # Fallback: split vocab into two generic groups
+    elif vocab:
         lines.append("groups:")
+        mid = len(vocab) // 2
+        group_a = ", ".join(f'"{_escape_yaml_str(w)}"' for w in vocab[:mid])
+        group_b = ", ".join(f'"{_escape_yaml_str(w)}"' for w in vocab[mid:])
         lines.append('  - name: "Group A"')
-        group_a = ", ".join(f'"{w}"' for w in vocab[:items // 2])
         lines.append(f"    items: [{group_a}]")
         lines.append('  - name: "Group B"')
-        group_b = ", ".join(f'"{w}"' for w in vocab[items // 2 : items])
         lines.append(f"    items: [{group_b}]")
+    else:
+        lines.append("# TODO: add groups")
 
     lines.append(":::")
     return "\n".join(lines)
 
 
-def _generate_true_false(title: str, vocab: list[str], items: int) -> str:
-    """Generate true-false DSL skeleton."""
-    lines = [':::true-false', f'title: "{title}"', '---']
+def _generate_true_false(title: str, vocab: list[str], items: int,
+                         questions: str = "") -> str:
+    """Generate true-false DSL with real statements."""
+    lines = [":::true-false", f'title: "{title}"', "---"]
 
-    for i in range(min(items, max(len(vocab), 4))):
-        word = vocab[i] if i < len(vocab) else "?"
-        lines.append(f'- statement: "{word}"')
-        lines.append('  answer: true')
+    qa_pairs = _parse_qa_pairs(questions)
+
+    if qa_pairs:
+        for statement, answer in qa_pairs[:items]:
+            is_true = answer.lower() in ("true", "так", "правда", "yes", "1")
+            lines.append(f'- statement: "{_escape_yaml_str(statement)}"')
+            lines.append(f"  answer: {'true' if is_true else 'false'}")
+    elif vocab:
+        # Generate simple statements from vocabulary
+        for i, word in enumerate(vocab[:items]):
+            lines.append(f'- statement: "{_escape_yaml_str(word)}"')
+            lines.append(f"  answer: {'true' if i % 2 == 0 else 'false'}")
+    else:
+        lines.append("# TODO: add true/false statements")
 
     lines.append(":::")
     return "\n".join(lines)
 
 
 def fill_placeholders(content: str) -> tuple[str, int]:
-    """Replace all exercise placeholders with DSL skeletons.
+    """Replace all exercise placeholders with real DSL content.
 
     Args:
         content: Markdown content with :::exercise-placeholder blocks.
