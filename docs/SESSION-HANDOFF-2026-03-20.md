@@ -34,21 +34,42 @@
 - Prose quality is good ("top-tier pedagogy" per Gemini round 1)
 - **Three blockers preventing 8+/10:**
 
+## M01 Build Results (3 attempts)
+
+### Attempt 1: Claude → 435 words, FAILED (no H2 headings)
+### Attempt 2: Claude + correction directive → 148 words, FAILED
+### Attempt 3: Gemini (circuit breaker) → 2,216 words, PASSED quick verify
+### Gemini review scores: 4/10 → 2/10 → 5/10
+
+**Prose quality is good** — Gemini praised pedagogy, phonetics, textbook integration.
+**Exercise quality is the bottleneck** — stray quotes, no fill-in context, wrong item counts.
+**Claude consistently fails to produce long content** with this prompt. Gemini succeeds.
+
 ## BLOCKERS — Fix these next
 
-### 1. Exercise filler produces empty `?` placeholders (BIGGEST ISSUE)
-- **File:** `scripts/build/exercises/fill_placeholders.py`
-- **Problem:** Generates structurally correct DSL but quiz options are all `"?"`, match-up right sides are `"?"`, true-false statements are single words not sentences
-- **Fix needed:** Add LLM call (Gemini) to generate real Ukrainian content for exercises:
-  - Quiz: real options with one correct answer + 2-3 distractors
-  - Match-up: real left↔right pairings
-  - Group-sort: correctly categorized items (currently works IF writer provides `groups:` hint)
-  - True-false: real statements that can be true or false
-  - All Ukrainian words VESUM-verified
-- **Where to add:** Either upgrade `fill_placeholders.py` to call LLM, or add a new step between EXERCISES and ANNOTATE
-- **Estimated scope:** ~200 lines of new code + LLM dispatch
+### 1. Writer produces bad exercise placeholder metadata
+- **Problem:** Writer (both Claude and Gemini) produces exercise placeholders with:
+  - Stray single quotes in YAML values (`"'В"`, `"зву́ки'"`)
+  - Fill-in exercises with no sentence context (just `"___"`)
+  - Wrong item counts (plan says 6, writer provides 2)
+  - Vague metadata that the filler can't turn into good exercises
+- **Fix options:**
+  a. Better prompt guidance for exercise placeholder format (show more examples)
+  b. Post-processing to strip stray quotes from exercise YAML
+  c. Separate LLM pass specifically for exercise content generation
+  d. Move exercise generation to a dedicated Gemini call with the prose as context
+- **Estimated scope:** Option (d) is most reliable — ~150 lines for exercise-specific LLM call
 
-### 2. Writer produces factual errors (Київ gaffe)
+### 2. Claude fails to produce long content with current prompt
+- **Problem:** Claude Opus consistently produces 150-500 word responses instead of 1200+
+- Both attempts in the latest build failed (435 words, 148 words)
+- Gemini succeeds on first try with 2,216 words
+- **Options:**
+  a. Use Gemini as default writer for A1 (Claude reviews instead)
+  b. Investigate why Claude truncates — may be prompt too long (22K chars)
+  c. Try different Claude invocation (longer max_turns, different flags)
+
+### 3. Writer produces factual errors (Київ gaffe from attempt 2)
 - **Problem:** Claude wrote "this one is и, not ї" about Київ — which is wrong (Київ has both)
 - **Fix options:**
   a. Add factual verification step (check Ukrainian claims against VESUM/RAG)
