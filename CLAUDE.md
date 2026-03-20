@@ -14,6 +14,17 @@
 
 ---
 
+## Ukrainian Linguistic Principles
+
+When working with Ukrainian text (plans, content, reviews, code comments), follow these rules:
+
+1. **Admit uncertainty, never invent.** If unsure about a Ukrainian word, stress, or grammatical form — flag it with `<!-- VERIFY -->` and check VESUM/goroh.pp.ua. Never guess. Your pre-training is contaminated by Russian.
+2. **Four separate checks:** Russianisms (кон→кін), Surzhyk (шо→що), Calques (приймати душ→брати душ), Paronyms (тактична≠тактовна). These are four different problems — catch them all.
+3. **Authority hierarchy:** Горох (stress) → VESUM (forms) → Правопис 2019 (rules) → Антоненко-Давидович "Як ми говоримо" (style).
+4. **Think in Ukrainian categories:** звук/літера, голосний/приголосний, відмінок, наголос — not English translations.
+
+---
+
 ## How We Work (Mandatory Workflow)
 
 <critical>

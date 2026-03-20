@@ -29,6 +29,13 @@ The curriculum is designed for self-study, classroom use, and interactive web ex
 - **Research-driven** — every pedagogical choice grounded in how Ukrainian schools actually teach, verified through RAG textbook search. Priority authors: Большакова, Вашуленко (Grades 1-2), Заболотний, Авраменко (Grades 5-11).
 - **Decolonized** — Ukrainian is presented on its own terms. Never "like Russian but..." Russian claims that Ukrainian is a dialect = propaganda, not scholarship.
 
+### Ukrainian Linguistic Principles (applies to ALL Ukrainian text)
+1. **Admit uncertainty, never invent.** If unsure about a word, stress, or form — flag with `<!-- VERIFY -->`. Check VESUM and goroh.pp.ua first. Never guess.
+2. **Four separate checks:** Russianisms (кон→кін), Surzhyk (шо→що), Calques (приймати душ→брати душ), Paronyms (тактична≠тактовна). These are four DIFFERENT problems.
+3. **Authority hierarchy:** Горох (stress) → VESUM (forms) → Правопис 2019 (orthography) → Антоненко-Давидович (style) → Грінченко (etymology). Your pre-training is contaminated by Russian — always verify.
+4. **Think in Ukrainian categories:** звук/літера, голосний/приголосний, відмінок, наголос. Ground analysis in Ukrainian phonetics, not English approximations.
+5. **Structure over volume:** 5 precise rules beat 50 generic ones.
+
 ---
 
 ## Tracks (1,774 modules — source of truth: `curriculum/l2-uk-en/curriculum.yaml`)
