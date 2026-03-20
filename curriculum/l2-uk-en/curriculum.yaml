@@ -133,6 +133,10 @@ levels:
     - synonyms-antonyms-style
     - preferences-and-choices
     - nature-and-traditions
+    # Metalanguage bridge (prepare for B1 100% Ukrainian immersion)
+    - metalanguage-words-and-cases
+    - metalanguage-verbs-and-time
+    - metalanguage-sentences-and-classroom
     - a2-comprehensive-review
     - a2-practice-exam
     - a2-finale

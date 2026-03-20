@@ -124,8 +124,8 @@ A2 builds on A1's 55 modules. A1 taught 4 cases (Nom, Acc, Loc, Voc) + present/p
 | 46 | education-and-work | School and Work | communication | Apply complex sentences in academic/professional context |
 | 47 | checkpoint-syntax | Checkpoint | review | Review M42-46 |
 
-### A2.8: Refinement and Graduation (10 modules)
-*Complete remaining grammar (comparison, numerals, свій/себе, indefinite pronouns), stylistics, and graduate.*
+### A2.8: Refinement and Graduation (13 modules)
+*Complete remaining grammar, stylistics, metalanguage bridge for B1 immersion, and graduate.*
 
 | # | Slug | Title | Focus | Core Content |
 |---|------|-------|-------|-------------|
@@ -136,9 +136,12 @@ A2 builds on A1's 55 modules. A1 taught 4 cases (Nom, Acc, Loc, Voc) + present/p
 | 52 | synonyms-antonyms-style | Words Have Friends | grammar | Synonyms, antonyms, epithets, metaphors; diminutives (-ик, -ок, -ечк-, -очк-). **Syntactic stylistics:** еліпсис (Усе найкраще — дітям!), повтор (думали-думали, де-де?). |
 | 53 | preferences-and-choices | I Prefer, I Choose | communication | Apply comparison + complex sentences for expressing opinions |
 | 54 | nature-and-traditions | Ukrainian Seasons and Holidays | communication | Describe nature, seasons, traditions — integrates all A2 grammar |
-| 55 | a2-comprehensive-review | The Full Picture | review | Comprehensive review: all cases, aspect, adjectives, complex sentences |
-| 56 | a2-practice-exam | Practice Exam | review | Simulated A2 test: reading, writing, grammar, communication |
-| 57 | a2-finale | A2 Finale | review | Capstone: extended conversation, narration, practical tasks in a Ukrainian city |
+| 55 | metalanguage-words-and-cases | Слова і відмінки | bridge | **Metalanguage bridge 1:** Parts of speech (іменник, прикметник, дієслово, займенник, числівник, прислівник, прийменник, сполучник). Case names + question pairs. Gender/number terms. Method: re-label known concepts with Ukrainian terms using Grade 3-4 textbook excerpts. |
+| 56 | metalanguage-verbs-and-time | Дія і час | bridge | **Metalanguage bridge 2:** Verb categories (час, вид доконаний/недоконаний, спосіб, дієвідміна, особа). Adverb terms. Dictionary literacy: read goroh.pp.ua entries (ж.р., док., недок., одн., мн.). |
+| 57 | metalanguage-sentences-and-classroom | Речення і клас | bridge | **Metalanguage bridge 3:** Syntax terms (речення, підмет, присудок, додаток, означення, обставина). Word anatomy (корінь, префікс, суфікс, закінчення). **Classroom imperatives:** Прочитайте, Запишіть, Виберіть, Підкресліть, Вставте, Дайте відповідь. |
+| 58 | a2-comprehensive-review | The Full Picture | review | Comprehensive review: all cases, aspect, adjectives, complex sentences |
+| 59 | a2-practice-exam | Practice Exam | review | Simulated A2 test: reading, writing, grammar, communication |
+| 60 | a2-finale | A2 Finale | review | Capstone: extended conversation, narration, practical tasks in a Ukrainian city |
 
 ---
 
@@ -153,8 +156,8 @@ A2 builds on A1's 55 modules. A1 taught 4 cases (Nom, Acc, Loc, Voc) + present/p
 | A2.5 Case Synthesis + Plurals | 7 | 5 | 1 | 1 |
 | A2.6 Aspect + Motion | 7 | 5 | 1 | 1 |
 | A2.7 Complex Syntax | 6 | 4 | 1 | 1 |
-| A2.8 Refinement + Graduation | 10 | 5 | 2 | 3 |
-| **Total** | **57** | **37** | **9** | **11** |
+| A2.8 Refinement + Graduation | 13 | 5 | 2 | 3+3 bridge |
+| **Total** | **60** | **37** | **9** | **14** |
 
 ---
 
