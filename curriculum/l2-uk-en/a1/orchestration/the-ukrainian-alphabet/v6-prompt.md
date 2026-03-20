@@ -815,40 +815,43 @@ HARD GRAMMAR RULES (audit will reject violations):
 Overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
 Playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
 
-Per-letter videos (embed each with its letter):
-- А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-- О: https://www.youtube.com/watch?v=gJFxRIPRZbI
-- У: https://www.youtube.com/watch?v=VB1O6PmtYRU
-- Е: https://www.youtube.com/watch?v=KFlsroBW0dk
-- И: https://www.youtube.com/watch?v=W-1rCu0indE
-- І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-- Я: https://www.youtube.com/watch?v=yhSAf41LX8I
-- Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
-- Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
-- Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
-- М: https://www.youtube.com/watch?v=Ez95H4ibuJo
-- Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
-- Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
-- Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-- Й: https://www.youtube.com/watch?v=aq0cjB90s3w
-- В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-- Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
-- П: https://www.youtube.com/watch?v=JksSjjxyW5Y
-- Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
-- Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
-- Г: https://www.youtube.com/watch?v=gVnclpSI0DU
-- К: https://www.youtube.com/watch?v=J7sGEI4-xJo
-- Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
-- Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
-- З: https://www.youtube.com/watch?v=BhASNxitC1A
-- С: https://www.youtube.com/watch?v=7UsFBgSL91E
-- Х: https://www.youtube.com/watch?v=vpr58zJSJKc
-- Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
-- Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-- Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
-- Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
-- Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
-- Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
+Per-letter videos — embed each next to its letter description.
+Use format: <YouTubeVideo client:only="react" url="URL" label="Літера X — Ukrainian Lessons" />
+Replace X with the actual letter. Example: label="Літера А — Ukrainian Lessons"
+
+- Літера А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+- Літера О: https://www.youtube.com/watch?v=gJFxRIPRZbI
+- Літера У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+- Літера Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+- Літера И: https://www.youtube.com/watch?v=W-1rCu0indE
+- Літера І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+- Літера Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+- Літера Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+- Літера Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+- Літера Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
+- Літера М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+- Літера Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+- Літера Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+- Літера Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+- Літера Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+- Літера В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+- Літера Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+- Літера П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+- Літера Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+- Літера Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+- Літера Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+- Літера К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+- Літера Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+- Літера Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+- Літера З: https://www.youtube.com/watch?v=BhASNxitC1A
+- Літера С: https://www.youtube.com/watch?v=7UsFBgSL91E
+- Літера Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+- Літера Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+- Літера Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+- Літера Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+- Літера Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+- Літера Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+- Літера Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
 
 ---
 
