@@ -58,6 +58,48 @@ def is_digital_pdf(pdf_path: Path, sample_pages: int = 5) -> bool:
     return pages_with_text >= 2  # At least 2 pages with real text
 
 
+def _repair_cp1251_mojibake(text: str) -> str:
+    """Fix CP1251-as-Latin-1 mojibake in extracted PDF text.
+
+    Some PDFs store Ukrainian text in CP1251 encoding, but PyMuPDF reads
+    it as Latin-1, producing garbled output (e.g., "Òîìì³" instead of
+    "Томмі"). This function detects and repairs the encoding mismatch.
+
+    Characters in the Latin-1 range (128-255) that aren't valid Unicode
+    punctuation are re-decoded as CP1251. Already-valid Unicode chars
+    (smart quotes, dashes, Cyrillic) are preserved.
+    """
+    # Characters that are valid Unicode, not mojibake — preserve as-is
+    passthrough = {
+        0x2019, 0x2018, 0x201C, 0x201D,  # smart quotes
+        0x2013, 0x2014,                    # en/em dash
+        0x2026,                            # ellipsis
+        0x00AB, 0x00BB,                    # guillemets
+        0x2022,                            # bullet
+        0x00A0,                            # non-breaking space
+    }
+
+    # Quick check: if text is already mostly Cyrillic, skip repair
+    cyrillic = sum(1 for c in text if "\u0400" <= c <= "\u04FF")
+    alpha = sum(1 for c in text if c.isalpha())
+    if alpha > 0 and cyrillic / alpha > 0.7:
+        return text  # Already clean
+
+    result = []
+    for c in text:
+        code = ord(c)
+        if code <= 127 or code in passthrough:
+            result.append(c)
+        elif code <= 255:
+            try:
+                result.append(bytes([code]).decode("cp1251"))
+            except Exception:
+                result.append(c)
+        else:
+            result.append(c)
+    return "".join(result)
+
+
 def extract_text_fast(pdf_path: Path) -> str:
     """Extract text from digital PDF using pymupdf (fast, no OCR)."""
     import pymupdf
@@ -67,7 +109,8 @@ def extract_text_fast(pdf_path: Path) -> str:
     for i in range(len(doc)):
         text = doc[i].get_text()
         if text.strip():
-            pages.append(f"## Сторінка {i + 1}\n\n{text.strip()}")
+            text = _repair_cp1251_mojibake(text.strip())
+            pages.append(f"## Сторінка {i + 1}\n\n{text}")
     doc.close()
     return "\n\n".join(pages)
 
