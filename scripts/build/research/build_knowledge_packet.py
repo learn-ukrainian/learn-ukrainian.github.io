@@ -125,8 +125,8 @@ def _search_rag(query: str, grade: int | None = None,
 def _format_hit(hit: dict) -> str:
     """Format a single RAG hit as markdown."""
     text = hit.get("text", "").strip()
-    if not text:
-        return ""
+    if not text or len(text) < 50:
+        return ""  # Skip empty or too-short excerpts (TOC entries, page numbers)
 
     grade = hit.get("grade", "?")
     author = hit.get("author", "unknown")

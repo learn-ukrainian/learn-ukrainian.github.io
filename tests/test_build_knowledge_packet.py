@@ -78,7 +78,7 @@ def test_extract_grade_hint():
 
 def test_format_hit():
     hit = {
-        "text": "Ми чуємо і вимовляємо звуки.",
+        "text": "Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери. Голосні звуки утворюються за допомогою голосу.",
         "grade": 1,
         "author": "bolshakova",
         "page": "24",
@@ -87,7 +87,7 @@ def test_format_hit():
     }
     result = _format_hit(hit)
     assert "> **Source:** Grade 1, bolshakova, p.24" in result
-    assert "Ми чуємо і вимовляємо звуки." in result
+    assert "Ми чуємо і вимовляємо звуки" in result
     assert "test-chunk-001" in result
 
 
