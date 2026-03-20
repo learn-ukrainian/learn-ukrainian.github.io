@@ -1,0 +1,109 @@
+module: a1-009
+level: A1
+sequence: 9
+slug: what-is-it-like
+version: '1.0'
+title: What Is It Like?
+subtitle: "Великий стіл, нова книга — describing things"
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Use adjectives that agree with nouns in gender (nominative case only)
+- Ask "What kind?" with який/яка/яке
+- Describe objects and rooms using common adjective pairs
+- Build descriptive sentences combining M08 nouns with M09 adjectives
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Describing a room (Вашуленко Grade 3 p.131 'Моя кімната'):
+    — Яка твоя кімната? — Моя кімната велика і світла.
+    — А стіл? — Стіл новий. А ліжко — старе.
+    Adjective agreement emerges from real description."
+  - "Dialogue 2 — Shopping (window shopping):
+    — Дивись, яка гарна сумка! — Так, але вона дорога.
+    — А цей рюкзак? — Він великий і дешевий."
+- section: "Який? Яка? Яке? (What kind?)"
+  words: 300
+  points:
+  - "The question 'What kind?' changes by gender — same pattern as мій/моя/моє:
+    Який стіл? (m) → Великий стіл.
+    Яка книга? (f) → Нова книга.
+    Яке вікно? (n) → Чисте вікно.
+    Які речі? (pl) → Гарні речі."
+  - "Пономарова Grade 3 p.98: Adjective has the same gender as the noun.
+    Masculine: -ий or -ій (великий, синій)
+    Feminine: -а or -я (велика, синя)
+    Neuter: -е or -є (велике, синє)
+    Plural: -і (великі, сині)
+    This pattern will reappear in every case — learn it well now."
+- section: "Прикметники (Common Adjectives)"
+  words: 300
+  points:
+  - "Taught in pairs (opposites — easier to remember):
+    великий ↔ маленький (big ↔ small)
+    новий ↔ старий (new ↔ old)
+    гарний ↔ поганий (nice/beautiful ↔ bad)
+    чистий ↔ брудний (clean ↔ dirty)
+    дорогий ↔ дешевий (expensive ↔ cheap)
+    світлий ↔ темний (light ↔ dark)"
+  - "Building descriptions with M08 objects:
+    У мене є великий стіл. Моя кімната маленька, але гарна.
+    Вікно велике і чисте. Стілець старий, а ліжко — нове.
+    Note: 'а' = and/but (contrast), 'і' = and (parallel)."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Self-check: What ending does a masculine adjective have? (-ий/-ій)
+    Feminine? (-а/-я) Neuter? (-е/-є)
+    Describe your room in 3 sentences using adjectives."
+vocabulary_hints:
+  required:
+  - який, яка, яке (what kind? — m/f/n)
+  - великий (big)
+  - маленький (small)
+  - новий (new)
+  - старий (old)
+  - гарний (nice, beautiful)
+  - чистий (clean)
+  - дорогий (expensive)
+  - дешевий (cheap)
+  recommended:
+  - поганий (bad)
+  - брудний (dirty)
+  - світлий (light, bright)
+  - темний (dark)
+  - а (and/but — contrast)
+  - але (but)
+activity_hints:
+- type: fill-in
+  focus: "Add correct adjective ending: нов__ книга, велик__ стіл, чист__ вікно"
+  items: 10
+- type: match-up
+  focus: "Match adjective opposites: великий ↔ маленький"
+  items: 6
+- type: quiz
+  focus: "Який/яка/яке? Choose correct question word."
+  items: 6
+- type: fill-in
+  focus: "Describe the room using given nouns and adjectives"
+  items: 6
+connects_to:
+- a1-010 (Colors)
+prerequisites:
+- a1-008 (Things Have Gender)
+grammar:
+- "Adjective-noun agreement in nominative (-ий/-а/-е pattern)"
+- "Question words який/яка/яке/які"
+- "Adjective opposites as vocabulary strategy"
+- "а (contrast) vs і (parallel)"
+register: розмовний
+references:
+- title: "Пономарова Grade 3, p.98"
+  notes: "'Прикметник має такий рід, як іменник, з яким він зв'язаний.'"
+- title: "Вашуленко Grade 3, p.128-131"
+  notes: "Adjective agreement exercises, 'Моя кімната' description task."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
