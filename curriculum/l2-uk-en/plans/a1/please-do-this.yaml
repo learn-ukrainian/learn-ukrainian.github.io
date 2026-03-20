@@ -24,7 +24,7 @@ content_outline:
   points:
   - 'How to form commands: dropping the ending of ''вони'' form.'
   - 'Type 1: If stem ends in vowel, add -й (ти) / -йте (ви). Example: читати -> читають -> читай / читайте.'
-  - 'Type 2: If stem ends in consonant, add -и / -іть. Example: говорити -> говорять -> говори / говоріть.'
+  - 'Type 2: If stem ends in consonant, add -и / -іть. Example: говорити -> говорять -> говори / говоріть. Note: some verbs have consonant mutations in conjugation but NOT in imperative (робити -> роблю BUT imperative is роби, not *робли). At A1, memorize common imperatives rather than deriving them.'
 - section: Корисні фрази (Useful phrases)
   words: 400
   points:

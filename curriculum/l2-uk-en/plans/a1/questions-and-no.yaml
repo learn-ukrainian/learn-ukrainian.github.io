@@ -31,7 +31,7 @@ content_outline:
   points:
   - "The difference between 'Ні' (the answer 'No') and 'не' (the particle 'not')."
   - "Rule: 'не' goes directly BEFORE the verb. Я не знаю. Він не працює."
-  - "Double negation is normal and required: Ні, я не хочу (No, I don't want to)."
+  - "'Ні, я не хочу' is NOT double negation — 'Ні' answers the question, 'не' negates the verb. True double negation uses negative pronouns: Я нічого не хочу (I don't want anything), Я нікуди не йду (I'm not going anywhere). Double negation is normal and required in Ukrainian."
 vocabulary_hints:
   required:
   - хто (who)

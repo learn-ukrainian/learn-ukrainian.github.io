@@ -29,8 +29,8 @@ content_outline:
   words: 400
   points:
   - 'Vocabulary: ліки (medicine), таблетки (pills), аптека (pharmacy).'
-  - 'Structure: Дайте мені, будь ласка, ліки від... (medicine for/against) + Genitive (від голови, від
-    кашлю).'
+  - 'Structure: Дайте мені, будь ласка, ліки від... (medicine for/against) + Genitive (від головного болю,
+    від кашлю).'
 vocabulary_hints:
   required:
   - допоможіть
