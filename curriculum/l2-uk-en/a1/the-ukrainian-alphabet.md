@@ -1,19 +1,3 @@
----
-title: "The Ukrainian Alphabet"
-sidebar:
-  order: 1
-  label: "01. The Ukrainian Alphabet"
-pipeline: v6
-build_status: draft
----
-
-import Quiz from '@site/src/components/Quiz';
-import FillIn from '@site/src/components/FillIn';
-import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse from '@site/src/components/TrueFalse';
-import GroupSort from '@site/src/components/GroupSort';
-import YouTubeVideo from '@site/src/components/YouTubeVideo';
-
 ## Зву́ки і лі́тери (Sounds and Letters)
 
 Welcome to Ukrainian! The very first step on our journey is understanding a core principle taught to every Ukrainian child in Grade 1. It is the golden rule of Ukrainian phonetics:
@@ -32,7 +16,12 @@ Ukrainian sounds are divided into two main families:
 
 *For a full letter-by-letter pronunciation guide, check out this [complete playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV).*
 
-<TrueFalse client:only="react" items={[{"statement": "(placeholder — needs LLM generation)", "answer": true}, {"statement": "(placeholder — needs LLM generation)", "answer": false}]} />
+:::exercise[true-false]
+<!-- TODO: Generate true/false statements about: difference between sounds and letters -->
+<!-- Vocabulary: звук, літера -->
+- [true] (placeholder — needs LLM generation)
+- [false] (placeholder — needs LLM generation)
+:::
 
 ## Голосні звуки (Vowel Sounds)
 
