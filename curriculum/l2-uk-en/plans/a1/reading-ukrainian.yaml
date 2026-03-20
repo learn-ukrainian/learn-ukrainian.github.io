@@ -27,7 +27,9 @@ content_outline:
     2. Split at syllable boundaries (consonants prefer starting new syllables)
     3. Sound out each syllable
     4. Blend into the full word at natural speed
-    Practice: ап-те-ка, у-ні-вер-си-тет, шо-ко-лад."
+    Practice: а-пте-ка, у-ні-вер-си-тет, шо-ко-лад.
+    Note: Ukrainian phonetic syllable division (складоподіл) follows the
+    open-syllable principle — consonants prefer starting new syllables."
   - "Following Большакова p.29 звуковий аналіз method: identify vowels,
     divide into syllables, then read. This is how Ukrainian children learn."
 - section: "Голосні літери (Vowel Letters)"
@@ -46,23 +48,23 @@ content_outline:
     И vs І: кит (whale) vs кіт (cat), дим (smoke) vs дім (house).
     Listen to Anna's pronunciation videos for each — the difference
     is subtle but changes meaning."
-- section: "Приголосні літери (Consonant Letters)"
+- section: "Читання слів (Reading Words)"
   words: 300
   points:
-  - "All consonant letters with their sounds, grouped progressively.
-    Letters that match Latin sounds closely: К, М, Т (dental!).
-    False friends: В [в], Н [н], Р [р] rolled, С [с], Х [х].
-    New shapes: Б [б], Г [г] breathy, Д [д], Ж [ж], З [з], Й [й],
-    Л [л], П [п], Ф [ф], Ц [ц], Ч [ч], Ш [ш].
-    Special: Щ = always [шч] (two sounds), Ґ = [ґ] hard g (rare)."
-  - "Letters that represent NO sound on their own:
-    Ь (soft sign) — modifies the consonant before it. Silent.
-    ' (apostrophe) — separates consonant from iotated vowel.
-    These will be explored in detail in M03."
-  - "Voiced/voiceless pairs (preview for M03):
-    Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.
-    Unlike Russian, Ukrainian does NOT devoice at word end:
-    дуб is [дуб] not *[дуп]."
+  - "Apply M01 letter knowledge to read real words fluently.
+    Strategy: don't read letter-by-letter. Read syllable-by-syllable.
+    Start with the vowels (find them first), then build outward.
+    Example: книга — find vowels И, А → кни-га → read."
+  - "Common word patterns for reading practice:
+    CVCV: мама, тато, каша, вода, рука, хата, коза, нога
+    CVCCV: школа, книга, банда, парта
+    CVC: дім, сон, ліс, дуб, хліб, банк
+    The more patterns you see, the faster you read."
+  - "Special letter combinations to watch for:
+    Щ is always [шч] — що, ще, щастя.
+    Ь has no sound — it softens: день, сіль, кінь.
+    ' (apostrophe) separates: сім'я, м'ясо, п'ять.
+    These will be explored fully in M03."
 - section: "Читаємо разом (Reading Together)"
   words: 200
   points:
@@ -112,11 +114,11 @@ connects_to:
 prerequisites:
 - a1-001 (Sounds, Letters, and Hello)
 grammar:
-- "Syllable rule: count vowels = count syllables"
+- "Syllable rule: count vowels = count syllables (складоподіл)"
 - "10 vowel letters → 6 vowel sounds mapping"
 - "Iotated vowels (Я, Ю, Є as two sounds or softening; Ї always [йі])"
-- "All 33 consonant letters with sounds"
-- "Ь and apostrophe (preview — detailed in M03)"
+- "Reading fluency: syllable-by-syllable word reading"
+- "Ь, apostrophe, voiced/voiceless (preview — detailed in M03)"
 register: розмовний
 references:
 - title: "Большакова Grade 1 буквар, p.25"
