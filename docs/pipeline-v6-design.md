@@ -149,23 +149,58 @@ After WRITE, before EXERCISES — fast structural check:
 - Research usage check: verify textbook citations exist in prose
 - **Gate: zero blocking issues.**
 
+### Step 7b: ENRICH (deterministic — vocabulary, videos, formatting)
+After verification, before review — add required structural elements:
+1. **Vocabulary table (Словник)** — auto-generate from plan `vocabulary_hints` at end of module
+   - Required words with translations, gender markers, stress marks
+   - Recommended words listed separately
+   - All entries VESUM-verified
+2. **Pronunciation videos** — embed Anna Ohoiko videos from plan `pronunciation_videos`
+   - Per-letter videos inline next to letter descriptions (M01-M02)
+   - Playlist link in module header/sidebar
+3. **External resources tab** — collect all referenced external content:
+   - Anna Ohoiko ULP episodes (URLs from plan references)
+   - Textbook page references (for teacher use)
+   - Additional podcast episodes, blog posts
+4. **Dialogue formatting** — post-process dialogues for visual clarity:
+   - Speaker labels with consistent styling
+   - Visual distinction between speakers (indentation, color hints)
+   - Conversation blocks wrapped in custom `:::dialogue` DSL
+5. **Story/narrative formatting** — reading practice sections get:
+   - Clear visual separation from teaching prose
+   - Ukrainian text with glossary tooltips for new words
+
 ### Step 8: REVIEW (LLM — adversarial, different model than writer)
 - If Gemini wrote → Claude reviews (or vice versa)
-- Structured scoring: 7 dimensions, weighted
-- Review findings MUST be atomic and actionable: "Replace word X with word Y in paragraph 3" — not "improve the flow"
-- Fix loop: review findings → deterministic fixes first (regex) → LLM fixes for remaining → re-review (max 3 iterations)
-- **Gate: score ≥ 8.0/10.**
+- **Multidimensional structured rubric** (10 dimensions, weighted):
+  1. Plan adherence (15%) — every content_outline point covered?
+  2. Linguistic accuracy (15%) — all Ukrainian correct, no Russianisms?
+  3. Pedagogical quality (15%) — PPP applied, textbook pedagogy?
+  4. Vocabulary coverage (10%) — all required/recommended vocab used naturally?
+  5. Exercise quality (10%) — exercises in right places, testing right skills, real content?
+  6. Engagement & tone (10%) — interesting for teens/adults? No LLM filler?
+  7. Structural integrity (5%) — headings, word count, no duplicates?
+  8. Cultural accuracy (5%) — decolonized, respectful, factually correct?
+  9. Dialogue & conversation quality (10%) — natural, not stilted, culturally appropriate?
+  10. Vocabulary table & resources (5%) — complete словник, videos embedded?
+- Review findings MUST cite SPECIFIC lines/paragraphs — not "improve the flow"
+- Each finding: [DIMENSION] [SEVERITY: critical/major/minor] [SPECIFIC LOCATION] [WHAT'S WRONG] [HOW TO FIX]
+- **Gate: weighted score ≥ 8.0/10, zero critical findings.**
 
 ### Step 9: PUBLISH (deterministic)
 - Convert custom DSL to interactive components (MDX/React)
 - DSL→MDX converter is deterministic code, not LLM
+- **Tab structure per module:**
+  - **Урок (Lesson)** tab — main content with inline exercises
+  - **Ресурси (Resources)** tab — Anna's videos, external links, textbook refs
+  - **Зошит (Workbook)** tab — additional practice (generated later)
 - Starlight build
 - Deploy to site
 
 ### Step 10: WORKBOOK (later, optional)
 - Complex interactive activities generated from stable, reviewed content
 - Types: unjumble, group-sort, error-correction, mark-the-words, comparative-study
-- Generated as separate workbook tab alongside the lesson
+- Generated as separate **Зошит** tab alongside the lesson
 - Only after all modules in a sub-level are written and reviewed
 
 ---
