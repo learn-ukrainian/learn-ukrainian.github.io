@@ -160,9 +160,12 @@ def step_write(level: str, module_num: int, slug: str,
     for key in ("vowels", "consonants", "special", "letters"):
         letters.update(pv.get(key, {}))
     if letters:
-        pv_lines.append("\nPer-letter videos (embed each with its letter):")
+        pv_lines.append("\nPer-letter videos — embed each next to its letter description.")
+        pv_lines.append("Use format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Літера X — Anna Ohoiko\" />")
+        pv_lines.append("Replace X with the actual letter. Example: label=\"Літера А — Anna Ohoiko\"")
+        pv_lines.append("")
         for letter, url in letters.items():
-            pv_lines.append(f"- {letter}: {url}")
+            pv_lines.append(f"- Літера {letter}: {url}")
 
     # Get constraints from config_tables
     from pipeline.config_tables import (
@@ -292,6 +295,75 @@ def step_annotate(content_path: Path) -> bool:
     return True
 
 
+def step_verify(content_path: Path, level: str, module_num: int) -> bool:
+    """Step 7: VESUM verification + grammar scope check."""
+    _log(f"\n{'='*60}")
+    _log("  Step 7: VERIFY — VESUM + grammar checks")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False
+
+    text = content_path.read_text("utf-8")
+    issues = []
+
+    # VESUM word check
+    try:
+        from pipeline.screen import _run_vesum_verify
+        stats, not_found, _ = _run_vesum_verify(content_path)
+        vesum_hits = stats.get("vesum_hits", 0)
+        total = stats.get("total", 0)
+        # Filter proper nouns
+        real_not_found = [r for r in not_found
+                          if not (r.get("original", "")[0:1].isupper() and r.get("source") == "prose")]
+        if real_not_found:
+            _log(f"  ⚠️  VESUM: {len(real_not_found)} word(s) not found:")
+            for r in real_not_found[:5]:
+                _log(f"    — {r.get('original', '?')}")
+            issues.extend(real_not_found)
+        else:
+            _log(f"  ✅ VESUM: {vesum_hits}/{total} words verified")
+    except Exception as e:
+        _log(f"  ⚠️  VESUM check skipped: {e}")
+
+    # Russicism scan
+    try:
+        from pipeline.semantic_russianisms import scan_for_russianisms
+        russicisms = scan_for_russianisms(text)
+        if russicisms:
+            _log(f"  ⚠️  Russicisms found: {len(russicisms)}")
+            for r in russicisms[:3]:
+                _log(f"    — {r}")
+            issues.extend(russicisms)
+        else:
+            _log("  ✅ No Russicisms detected")
+    except ImportError:
+        _log("  ℹ️  Russicism scanner not available")
+    except Exception as e:
+        _log(f"  ⚠️  Russicism scan failed: {e}")
+
+    # IPA check (skip for phonetics M01-M03)
+    if not (level == "a1" and module_num <= 3):
+        try:
+            from pipeline.screen import _run_ipa_scan
+            ipa_issues = _run_ipa_scan(text)
+            if ipa_issues:
+                _log(f"  ⚠️  IPA/Latin transliteration found: {len(ipa_issues)} issue(s)")
+                issues.extend(ipa_issues)
+            else:
+                _log("  ✅ No IPA/Latin transliteration")
+        except Exception as e:
+            _log(f"  ⚠️  IPA check failed: {e}")
+
+    if issues:
+        _log(f"\n  ⚠️  Verification found {len(issues)} issue(s) — review recommended")
+    else:
+        _log("\n  ✅ Verification PASSED — all clean")
+
+    return len(issues) == 0
+
+
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
     """Step 9: Convert DSL→MDX."""
     _log(f"\n{'='*60}")
@@ -353,7 +425,7 @@ def main():
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini")
-    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "verify", "publish", "all"],
                         default="all")
     args = parser.parse_args()
 
@@ -389,7 +461,7 @@ def main():
         if not packet_path.exists():
             packet_path = None
 
-    # Step 5: WRITE
+    # Step 5: WRITE (preflight is integrated into write — checks prompt before dispatch)
     content_path = None
     if steps in ("all", "write"):
         content_path = step_write(args.level, args.module, slug, packet_path, args.writer)
@@ -406,6 +478,10 @@ def main():
     # Step 6: ANNOTATE
     if steps in ("all", "annotate"):
         step_annotate(content_path)
+
+    # Step 7: VERIFY
+    if steps in ("all", "verify"):
+        step_verify(content_path, args.level, args.module)
 
     # Step 9: PUBLISH
     if steps in ("all", "publish"):
