@@ -138,16 +138,16 @@ def check_phase_alignment(plan: dict) -> list[PlanIssue]:
 
     phase_key = phase.split("[")[0].strip()
 
-    # V2 phase ranges
+    # V3 phase ranges (updated to match curriculum.yaml V3)
     expected_phases = {
-        range(1, 8): "A1.1",
-        range(8, 15): "A1.2",
-        range(15, 22): "A1.3",
-        range(22, 29): "A1.4",
-        range(29, 37): "A1.5",
-        range(37, 44): "A1.6",
-        range(44, 51): "A1.7",
-        range(51, 61): "A1.8",
+        range(1, 8): "A1.1",      # M01-M07: Sounds, Letters, First Contact
+        range(8, 15): "A1.2",     # M08-M14: My World
+        range(15, 22): "A1.3",    # M15-M21: Actions
+        range(22, 28): "A1.4",    # M22-M27: Time and Nature
+        range(28, 36): "A1.5",    # M28-M35: Places
+        range(36, 42): "A1.6",    # M36-M41: Food and Shopping
+        range(42, 48): "A1.7",    # M42-M47: Communication
+        range(48, 56): "A1.8",    # M48-M55: Past, Future, Graduation
     }
 
     for seq_range, expected in expected_phases.items():

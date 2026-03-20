@@ -1,0 +1,109 @@
+module: a1-034
+level: A1
+sequence: 34
+slug: where-from
+version: '1.0'
+title: Where From?
+subtitle: "Звідки ти? Я з України — origins and directions"
+focus: communication
+pedagogy: PPP
+phase: A1.5 [Places]
+word_target: 1200
+objectives:
+- Ask and answer Звідки? (Where from?) using з/із + country/city
+- Name Ukrainian cities and common countries
+- Complete the location trio: Де? / Куди? / Звідки?
+- Talk about origins, nationality, and travel history
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Meeting someone (extending M05, ULP Ep4):
+    — Звідки ти? — Я з України, з Києва. А ти?
+    — Я з Канади, із Торонто. — Давно тут?
+    — Ні, я приїхав місяць тому.
+    Звідки? pattern with countries and cities."
+  - "Dialogue 2 — Coming from somewhere:
+    — Звідки ти йдеш? — Я йду з роботи.
+    — А Олена? — Вона йде зі школи.
+    — Куди вона йде? — Додому.
+    Direction FROM (з + genitive chunk) vs TO (в/на + accusative)."
+- section: "Звідки? (Where From?)"
+  words: 300
+  points:
+  - "Three direction questions complete:
+    Де ти? — В Україні. (locative — where you ARE)
+    Куди ти їдеш? — В Україну. (accusative — where you're GOING)
+    Звідки ти? — З України. (genitive — where you're FROM)
+    At A1: learn з + country/city as chunks. Genitive grammar = A2."
+  - "Pattern: з/із/зі + genitive (memorized forms):
+    з України, з Києва, зі Львова, з Одеси, з Харкова.
+    з Канади, зі США (зі Штатів), з Англії, з Німеччини, з Польщі.
+    з роботи, зі школи, з магазину, з банку.
+    Note: euphony rules from M28 apply: з/із/зі."
+- section: "Країни і міста (Countries and Cities)"
+  words: 300
+  points:
+  - "Ukrainian cities:
+    Київ (Kyiv), Львів (Lviv), Одеса (Odesa), Харків (Kharkiv),
+    Дніпро (Dnipro), Запоріжжя (Zaporizhzhia).
+    Countries (common for learners):
+    Україна, Канада, США, Англія, Німеччина, Польща,
+    Франція, Італія, Японія."
+  - "Nationality and language links:
+    Я з України → Я українець/українка → Я говорю українською.
+    Review from M05: Мене звати..., Я з..., Я говорю...
+    New: Я живу в Києві, але я з Львова. (current location vs origin)"
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Three location questions:
+    Де? → в/на + locative (В Україні)
+    Куди? → в/на + accusative (В Україну)
+    Звідки? → з/із/зі + genitive chunk (З України)
+    Self-check: Where are you from? Where do you live now?
+    Where are you going after this lesson?"
+vocabulary_hints:
+  required:
+  - звідки (where from)
+  - з/із/зі (from — + genitive chunk)
+  - Україна (Ukraine)
+  - Київ (Kyiv)
+  - Львів (Lviv)
+  - Канада (Canada)
+  recommended:
+  - Одеса (Odesa)
+  - Харків (Kharkiv)
+  - США (USA)
+  - Англія (England)
+  - Німеччина (Germany)
+  - Польща (Poland)
+  - додому (home — direction)
+activity_hints:
+- type: fill-in
+  focus: "Answer: Звідки ти? — Я з ___. (Україна → України)"
+  items: 8
+- type: group-sort
+  focus: "Sort: Де? / Куди? / Звідки? — в Україні / в Україну / з України"
+  items: 9
+- type: quiz
+  focus: "Choose correct: Я йду (з/в/на) роботи."
+  items: 8
+- type: fill-in
+  focus: "Complete: Я живу в ___, але я з ___."
+  items: 6
+connects_to:
+- a1-035 (Checkpoint — Places)
+prerequisites:
+- a1-033 (Around the City)
+grammar:
+- "Звідки? + з/із/зі + genitive (memorized chunks)"
+- "Location trio: Де? (M.в.) / Куди? (Зн.в.) / Звідки? (Р.в. chunk)"
+- "Country/city names in three case forms"
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 4"
+  url: https://www.ukrainianlessons.com/episode4/
+  notes: "Where are you from? — nationalities and countries."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
