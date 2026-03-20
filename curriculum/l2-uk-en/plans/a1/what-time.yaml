@@ -1,0 +1,112 @@
+module: a1-022
+level: A1
+sequence: 22
+slug: what-time
+version: '1.0'
+title: What Time?
+subtitle: "Котра година? О котрій? — telling time in Ukrainian"
+focus: vocabulary
+pedagogy: PPP
+phase: A1.4 [Time and Nature]
+word_target: 1200
+objectives:
+- Ask and answer "What time is it?" (Котра година?)
+- Tell time on the hour and half hour
+- Use "at" + time (о + locative as chunk — no case grammar)
+- Schedule simple events using time expressions
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Scheduling a meeting:
+    — Котра година? — Десята.
+    — О котрій ти працюєш? — О дев'ятій. А ти?
+    — Я працюю о десятій. — Зустрінемося о першій?
+    Time expressions emerge through making plans."
+  - "Dialogue 2 — Daily schedule:
+    — Коли ти снідаєш? — О восьмій ранку.
+    — А обідаєш? — О першій. Вечеряю о сьомій.
+    Combining time with verbs from A1.3."
+- section: "Котра година? (What Time Is It?)"
+  words: 300
+  points:
+  - "Захарійчук Grade 4 p.117: Котра година? — ordinal numbers for hours.
+    Full hours use feminine ordinal numbers (година = feminine):
+    Перша (1:00), друга (2:00), третя (3:00), четверта (4:00),
+    п'ята (5:00), шоста (6:00), сьома (7:00), восьма (8:00),
+    дев'ята (9:00), десята (10:00), одинадцята (11:00), дванадцята (12:00).
+    Learn these as vocabulary — the grammar behind ordinals comes later."
+  - "Half hours and quarters:
+    Пів на другу (1:30 — literally 'half to the second').
+    Чверть на третю (2:15). За чверть третя (2:45).
+    At A1: focus on full hours and 'пів на'. Quarters for recognition only."
+- section: "О котрій? (At What Time?)"
+  words: 300
+  points:
+  - "'At' + time uses о/об + locative form (taught as chunks):
+    О першій (at 1), о другій (at 2), о третій (at 3),
+    о четвертій (at 4), о п'ятій (at 5), о шостій (at 6),
+    о сьомій (at 7), о восьмій (at 8), о дев'ятій (at 9),
+    о десятій (at 10), об одинадцятій (at 11), о дванадцятій (at 12).
+    Note: об before vowels (об одинадцятій)."
+  - "Time of day words:
+    ранку (in the morning), дня (in the afternoon),
+    вечора (in the evening), ночі (at night).
+    О сьомій ранку (at 7 AM). О третій дня (at 3 PM).
+    О десятій вечора (at 10 PM). Опівдні (at noon). Опівночі (at midnight)."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Telling time:
+    Котра година? — Десята. (What time? — Ten o'clock.)
+    О котрій? — О десятій. (At what time? — At ten.)
+    Пів на другу (1:30). О пів на другу (at 1:30).
+    Self-check: What time is it now? When do you wake up?
+    When do you eat lunch? Say 3 times in Ukrainian."
+vocabulary_hints:
+  required:
+  - година (hour, f)
+  - котра (which — feminine, for time)
+  - перша, друга, третя (1st, 2nd, 3rd — feminine ordinals)
+  - ранок (morning, m)
+  - вечір (evening, m)
+  - день (day, m)
+  - ніч (night, f)
+  recommended:
+  - четверта, п'ята, шоста (4th, 5th, 6th)
+  - сьома, восьма, дев'ята (7th, 8th, 9th)
+  - десята, одинадцята, дванадцята (10th, 11th, 12th)
+  - пів (half)
+  - чверть (quarter)
+  - опівдні (at noon)
+activity_hints:
+- type: quiz
+  focus: "Котра година? Match clock faces to spoken time."
+  items: 8
+- type: fill-in
+  focus: "О котрій? Complete: Я снідаю о ___. (восьмій)"
+  items: 8
+- type: match-up
+  focus: "Match times: 7:00 ↔ сьома, 9:00 ↔ дев'ята"
+  items: 6
+- type: quiz
+  focus: "Ранку, дня, or вечора? Choose the right time of day."
+  items: 6
+connects_to:
+- a1-023 (Days and Months)
+prerequisites:
+- a1-021 (Checkpoint — Actions)
+grammar:
+- "Ordinal numbers for hours (feminine forms — learned as vocabulary)"
+- "О/об + locative time expressions (memorized chunks)"
+- "Пів на + ordinal (half-hour pattern)"
+register: розмовний
+references:
+- title: "Захарійчук Grade 4, p.117"
+  notes: "О котрій годині? Котра година? — time expressions with ordinals."
+- title: "Літвінова Grade 6, p.245-246"
+  notes: "Full time expression system: на, по, до, пів на."
+- title: "Авраменко Grade 6, p.172"
+  notes: "Прийменники на позначення часу: о, за, на, по, до."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
