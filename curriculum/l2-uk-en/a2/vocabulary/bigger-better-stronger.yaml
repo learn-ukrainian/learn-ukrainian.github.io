@@ -1,8 +1,0 @@
-items:
-  - lemma: "іменник"
-    translation: "noun"
-    pos: "noun"
-  - lemma: "дієслово"
-    translation: "verb"
-    pos: "noun"
-    notes: "describes the concept of a verb as a part of speech"
