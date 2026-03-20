@@ -105,7 +105,8 @@ def step_research(level: str, module_num: int, slug: str) -> Path | None:
 
 
 def step_write(level: str, module_num: int, slug: str,
-               packet_path: Path, writer: str = "gemini") -> Path | None:
+               packet_path: Path, writer: str = "gemini",
+               correction_directive: str = "") -> Path | None:
     """Step 5: Single LLM session — generate prose + exercise placeholders."""
     _log(f"\n{'='*60}")
     _log(f"  Step 5: WRITE — Content generation ({writer})")
@@ -201,6 +202,11 @@ def step_write(level: str, module_num: int, slug: str,
 
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
+
+    # Inject correction directive at top of prompt (for retries)
+    if correction_directive:
+        prompt = correction_directive + "\n\n" + prompt
+        _log(f"  ⚠️  Correction directive injected ({len(correction_directive)} chars)")
 
     # Save prompt for inspection
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
@@ -309,11 +315,17 @@ def step_write_with_retry(
 
     other_writer = "claude" if writer == "gemini" else "gemini"
 
+    current_directive = ""  # No directive on first attempt
+
     for attempt in range(1, max_retries + 2):  # +2 because range is exclusive
         current_writer = writer if attempt <= max_retries else other_writer
         _log(f"\n  📝 Write attempt {attempt}/{max_retries + 1} (writer: {current_writer})")
 
-        output = step_write(level, module_num, slug, packet_path, writer=current_writer)
+        output = step_write(
+            level, module_num, slug, packet_path,
+            writer=current_writer,
+            correction_directive=current_directive,
+        )
         if output is None:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
             _log_stats(stats_path, slug, "WRITE_FAILED", attempt, current_writer, False)
@@ -350,18 +362,15 @@ def step_write_with_retry(
             _log(f"  → Error report: {report_path}")
             return output  # Return the output anyway (human can fix)
 
-        # Build correction directive for next attempt
-        directive = build_correction_directive(results)
+        # Build correction directive for next attempt — injected into prompt
+        current_directive = build_correction_directive(results)
         _log("  🔄 Retrying with correction directive...")
 
-        # TODO(#1006): Inject directive into step_write prompt.
-        # Currently saved to disk for human inspection but not consumed by
-        # step_write on retry. To complete: either pass directive as param
-        # to step_write() or have step_write() check orchestration/ dir.
+        # Also save directive to disk for human inspection
         orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
         orch_dir.mkdir(parents=True, exist_ok=True)
         directive_path = orch_dir / f"correction-attempt-{attempt}.md"
-        directive_path.write_text(directive, "utf-8")
+        directive_path.write_text(current_directive, "utf-8")
 
     return None  # Should not reach here
 
@@ -409,15 +418,55 @@ def step_exercises(content_path: Path) -> bool:
     return True
 
 
+def _post_process_content(content_path: Path) -> int:
+    """Deterministic post-processing: strip LLM artifacts."""
+    text = content_path.read_text("utf-8")
+    original_len = len(text)
+    fixes = 0
+
+    # 1. Strip duplicate summary section (LLM sometimes writes two)
+    # Keep the first "## Підсумок" or "## Summary", remove subsequent ones
+    import re
+    summary_headings = list(re.finditer(
+        r"^## (?:Підсумок|Summary).*$", text, re.MULTILINE
+    ))
+    if len(summary_headings) > 1:
+        # Keep first, remove everything from second summary heading onward
+        cut_pos = summary_headings[1].start()
+        text = text[:cut_pos].rstrip() + "\n"
+        fixes += 1
+        _log("  🔧 Removed duplicate summary section")
+
+    # 2. Strip "Content notes" meta-section (LLM self-audit artifact)
+    content_notes = re.search(
+        r"\n\*\*Content notes:\*\*.*$", text, re.DOTALL
+    )
+    if content_notes:
+        text = text[:content_notes.start()].rstrip() + "\n"
+        fixes += 1
+        _log("  🔧 Removed Content notes meta-section")
+
+    # 3. Strip trailing --- separator before content notes
+    text = re.sub(r"\n---\s*$", "\n", text)
+
+    if len(text) != original_len:
+        content_path.write_text(text, "utf-8")
+
+    return fixes
+
+
 def step_annotate(content_path: Path) -> bool:
     """Step 6: Add stress marks + deterministic fixes."""
     _log(f"\n{'='*60}")
-    _log("  Step 6: ANNOTATE — Stress marks")
+    _log("  Step 6: ANNOTATE — Stress marks + post-processing")
     _log(f"{'='*60}")
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
         return False
+
+    # Post-processing first (strip LLM artifacts before stress annotation)
+    _post_process_content(content_path)
 
     try:
         from pipeline.stress_annotator import annotate_file

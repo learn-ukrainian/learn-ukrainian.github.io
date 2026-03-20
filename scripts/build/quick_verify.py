@@ -88,16 +88,20 @@ def _check_word_count(content: str, plan: dict) -> list[QuickVerifyError]:
     errors = []
     target = plan.get("word_target", 1200)
 
-    # Count words (exclude markdown syntax, exercise placeholders)
-    # Strip exercise placeholders
+    # Count words (exclude markdown syntax, exercise blocks, meta-notes)
+    # Strip ALL fenced blocks (:::anything ... :::) — exercise placeholders AND filled DSL
     text = re.sub(
-        r":::exercise-placeholder.*?:::",
+        r"^:::.*?^:::",
         "",
         content,
-        flags=re.DOTALL,
+        flags=re.DOTALL | re.MULTILINE,
     )
-    # Strip markdown headings, links, images
+    # Strip "Content notes" / meta-notes section at end (LLM self-audit artifact)
+    text = re.sub(r"\*\*Content notes:\*\*.*$", "", text, flags=re.DOTALL)
+    text = re.sub(r"^---\s*$.*$", "", text, flags=re.DOTALL | re.MULTILINE)
+    # Strip markdown headings, links, images, tables
     text = re.sub(r"^#+\s+.*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\|.*\|$", "", text, flags=re.MULTILINE)  # table rows
     text = re.sub(r"!\[.*?\]\(.*?\)", "", text)
     text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
 

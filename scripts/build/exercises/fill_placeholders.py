@@ -46,6 +46,8 @@ class ExercisePlaceholder:
     after: str = ""
     items: int = 4
     vocabulary: list[str] = field(default_factory=list)
+    questions: str = ""   # Specific Q&A pairs from writer
+    groups: str = ""      # Group definitions for group-sort
     raw: str = ""
 
 
@@ -82,6 +84,10 @@ def _parse_placeholder(block: str) -> ExercisePlaceholder:
                 placeholder.items = 4
         elif key == "vocabulary":
             placeholder.vocabulary = [v.strip() for v in value.split(",") if v.strip()]
+        elif key == "questions":
+            placeholder.questions = value
+        elif key == "groups":
+            placeholder.groups = value
 
     return placeholder
 
@@ -113,7 +119,7 @@ def _generate_exercise_dsl(placeholder: ExercisePlaceholder) -> str:
     elif ex_type == "match-up":
         return _generate_match_up(title, vocab, items)
     elif ex_type == "group-sort":
-        return _generate_group_sort(title, vocab, items)
+        return _generate_group_sort(title, vocab, items, groups_hint=placeholder.groups)
     elif ex_type == "true-false":
         return _generate_true_false(title, vocab, items)
     else:
@@ -171,16 +177,37 @@ def _generate_match_up(title: str, vocab: list[str], items: int) -> str:
     return "\n".join(lines)
 
 
-def _generate_group_sort(title: str, vocab: list[str], items: int) -> str:
-    """Generate group-sort DSL skeleton."""
+def _generate_group_sort(title: str, vocab: list[str], items: int,
+                         groups_hint: str = "") -> str:
+    """Generate group-sort DSL from vocabulary or explicit group hint.
+
+    If groups_hint is provided (e.g. "Голосні: А, О, У; Приголосні: М, К, Б"),
+    parse it into named groups with correct items.
+    """
     lines = [':::group-sort', f'title: "{title}"', '---']
-    lines.append("groups:")
-    lines.append('  - name: "Group A"')
-    group_a = ", ".join(f'"{w}"' for w in vocab[:items // 2])
-    lines.append(f"    items: [{group_a}]")
-    lines.append('  - name: "Group B"')
-    group_b = ", ".join(f'"{w}"' for w in vocab[items // 2 : items])
-    lines.append(f"    items: [{group_b}]")
+
+    # Try to parse explicit groups hint
+    if groups_hint and ":" in groups_hint:
+        lines.append("groups:")
+        for group_def in groups_hint.split(";"):
+            group_def = group_def.strip()
+            if ":" not in group_def:
+                continue
+            name, _, items_str = group_def.partition(":")
+            group_items = [i.strip() for i in items_str.split(",") if i.strip()]
+            formatted = ", ".join(f'"{w}"' for w in group_items)
+            lines.append(f'  - name: "{name.strip()}"')
+            lines.append(f"    items: [{formatted}]")
+    else:
+        # Fallback: split vocab into two generic groups
+        lines.append("groups:")
+        lines.append('  - name: "Group A"')
+        group_a = ", ".join(f'"{w}"' for w in vocab[:items // 2])
+        lines.append(f"    items: [{group_a}]")
+        lines.append('  - name: "Group B"')
+        group_b = ", ".join(f'"{w}"' for w in vocab[items // 2 : items])
+        lines.append(f"    items: [{group_b}]")
+
     lines.append(":::")
     return "\n".join(lines)
 

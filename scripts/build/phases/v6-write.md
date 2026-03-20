@@ -10,25 +10,49 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 
 ---
 
-## 5 Hard Rules
+## 7 Hard Rules
 
 1. **NO stress marks (´)** — do not add stress marks to any Ukrainian word. A deterministic tool adds them after you write.
-2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: «Х — як «ch» у шотландському «loch»».
+2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
-4. **Ukrainian quotes: «...»** — always use angular quotes, never straight quotes "...".
+4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 5. **Exercise placeholders ONLY** — mark where exercises go using the format below, but do NOT write exercise content. A separate tool fills them.
+6. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
+7. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. Count as you go. Short modules fail review. Expand explanations, add more examples, include more dialogues — never pad with filler.
 
 ## Exercise Placeholder Format
 
-When you want an exercise, write:
+When you want an exercise, write a placeholder block. Be SPECIFIC about what the exercise should contain — include the actual questions, answers, and distractors. The more detail you provide, the better the exercise.
 
 ```
 :::exercise-placeholder
 type: quiz | fill-in | match-up | group-sort | true-false
-tests: [what skill this exercises tests]
+tests: [what skill this exercise tests — be specific]
 after: [what concept was just taught]
 items: [number of items]
-vocabulary: [comma-separated words to use]
+vocabulary: [comma-separated Ukrainian words to use as stems]
+questions: [specific questions with answers, e.g. "Що ми чуємо? → звуки" or "В=? → [в] не [б]"]
+groups: [for group-sort: group names and which items go where]
+:::
+```
+
+**Good example:**
+```
+:::exercise-placeholder
+type: group-sort
+tests: classify letters as vowel or consonant
+after: голосні vs приголосні explanation
+items: 8
+groups: Голосні: А, О, У, І; Приголосні: М, К, Б, Ш
+:::
+```
+
+**Bad example (too vague):**
+```
+:::exercise-placeholder
+type: quiz
+tests: understanding
+items: 5
 :::
 ```
 
