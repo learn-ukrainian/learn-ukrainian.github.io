@@ -221,8 +221,35 @@ def step_write(level: str, module_num: int, slug: str,
             model=PRO_MODEL,
             stdout_only=True, timeout=600,
         )
+    elif writer == "claude":
+        import subprocess
+        import tempfile
+
+        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
+
+        model = CLAUDE_MODEL_CORE_CONTENT
+        _log(f"  Dispatching to Claude ({model})...")
+
+        # Write prompt to temp file
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
+            f.write(prompt)
+            prompt_file = Path(f.name)
+
+        try:
+            result = subprocess.run(
+                ["claude", "-p", str(prompt_file), "--model", model,
+                 "--output-format", "text", "--max-turns", "1"],
+                capture_output=True, text=True, timeout=600,
+                cwd=str(PROJECT_ROOT),
+            )
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+            if not ok:
+                _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
+        finally:
+            prompt_file.unlink(missing_ok=True)
     else:
-        _log("  Claude writing not yet implemented in V6 runner")
+        _log(f"  ❌ Unknown writer: {writer}")
         return None
 
     if not ok or not raw:
