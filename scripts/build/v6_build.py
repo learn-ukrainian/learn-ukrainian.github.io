@@ -159,10 +159,11 @@ def step_write(level: str, module_num: int, slug: str,
     letters = {}
     for key in ("vowels", "consonants", "special", "letters"):
         letters.update(pv.get(key, {}))
+    credit = pv.get("credit", "Ukrainian Lessons")
     if letters:
         pv_lines.append("\nPer-letter videos — embed each next to its letter description.")
-        pv_lines.append("Use format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Літера X — Anna Ohoiko\" />")
-        pv_lines.append("Replace X with the actual letter. Example: label=\"Літера А — Anna Ohoiko\"")
+        pv_lines.append(f'Use format: <YouTubeVideo client:only="react" url="URL" label="Літера X — {credit}" />')
+        pv_lines.append(f'Replace X with the actual letter. Example: label="Літера А — {credit}"')
         pv_lines.append("")
         for letter, url in letters.items():
             pv_lines.append(f"- Літера {letter}: {url}")
