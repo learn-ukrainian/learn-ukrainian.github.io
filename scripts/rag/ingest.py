@@ -102,6 +102,19 @@ def create_text_collection(client, recreate: bool = False):
             field_name=field,
             field_schema=schema_type,
         )
+
+    # Full-text index on chunk text for keyword search
+    from qdrant_client.models import TextIndexParams, TextIndexType, TokenizerType
+    client.create_payload_index(
+        collection_name=TEXT_COLLECTION,
+        field_name="text",
+        field_schema=TextIndexParams(
+            type=TextIndexType.TEXT,
+            tokenizer=TokenizerType.MULTILINGUAL,
+            lowercase=True,
+            min_token_len=2,
+        ),
+    )
     print(f"[ingest] Collection '{TEXT_COLLECTION}' created with indexes.")
 
 
@@ -433,6 +446,19 @@ def create_literary_collection(client, recreate: bool = False):
             field_name=field,
             field_schema=schema_type,
         )
+
+    # Full-text index on chunk text for keyword search
+    from qdrant_client.models import TextIndexParams, TextIndexType, TokenizerType
+    client.create_payload_index(
+        collection_name=LITERARY_COLLECTION,
+        field_name="text",
+        field_schema=TextIndexParams(
+            type=TextIndexType.TEXT,
+            tokenizer=TokenizerType.MULTILINGUAL,
+            lowercase=True,
+            min_token_len=2,
+        ),
+    )
     print(f"[ingest] Collection '{LITERARY_COLLECTION}' created with indexes.")
 
 

@@ -84,9 +84,48 @@ def build_filter(grade: int | None = None, subject: str | None = None,
     return Filter(must=conditions) if conditions else None
 
 
+def _keyword_search(client, query: str, qfilter, limit: int) -> list[dict]:
+    """Full-text keyword search on the text payload field.
+
+    Uses Qdrant's full-text index (multilingual tokenizer) to find chunks
+    containing the query words. This catches exact matches that semantic
+    search misses — e.g., a specific verse buried in a play script.
+    """
+    from qdrant_client.models import FieldCondition, Filter, MatchText
+
+    # Build filter combining keyword match + any grade/subject filters
+    keyword_condition = FieldCondition(key="text", match=MatchText(text=query))
+    if qfilter and qfilter.must:
+        combined_filter = Filter(must=[keyword_condition, *qfilter.must])
+    else:
+        combined_filter = Filter(must=[keyword_condition])
+
+    try:
+        points, _ = client.scroll(
+            collection_name=TEXT_COLLECTION,
+            scroll_filter=combined_filter,
+            limit=limit,
+            with_payload=True,
+            with_vectors=False,
+        )
+    except Exception:
+        # Full-text index may not exist yet — degrade gracefully
+        return []
+    return points
+
+
 def search_text(query: str, grade: int | None = None, subject: str | None = None,
                 trust_tier: int | None = None, limit: int = 5) -> list[dict]:
-    """Hybrid text search combining dense + sparse scores."""
+    """Hybrid text search combining dense + sparse + keyword scores.
+
+    Three-leg search:
+    1. Dense (semantic) — BGE-M3 embeddings for meaning-based matching
+    2. Sparse (BM25-style) — BGE-M3 lexical weights for term matching
+    3. Keyword (full-text) — Qdrant payload index for exact word matching
+
+    Legs 1+2 are fused via RRF. Leg 3 results are merged in, ensuring
+    exact text matches always surface even when buried in large chunks.
+    """
     from qdrant_client.models import (
         FusionQuery,
         Prefetch,
@@ -109,20 +148,20 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
 
     qfilter = build_filter(grade, subject, trust_tier)
 
-    # Hybrid search via Reciprocal Rank Fusion
+    # Hybrid search via Reciprocal Rank Fusion (dense + sparse)
     results = client.query_points(
         collection_name=TEXT_COLLECTION,
         prefetch=[
             Prefetch(
                 query=dense_vec,
                 using="dense",
-                limit=limit * 3,
+                limit=limit * 5,
                 filter=qfilter,
             ),
             Prefetch(
                 query=SparseVector(indices=sparse_indices, values=sparse_values),
                 using="sparse",
-                limit=limit * 3,
+                limit=limit * 5,
                 filter=qfilter,
             ),
         ],
@@ -131,12 +170,16 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
         with_payload=True,
     )
 
+    # Collect RRF hits
+    seen_ids = set()
     hits = []
     for point in results.points:
         payload = point.payload or {}
+        chunk_id = payload.get("chunk_id", "")
+        seen_ids.add(chunk_id)
         hits.append({
             "score": point.score if hasattr(point, 'score') else 0,
-            "chunk_id": payload.get("chunk_id", ""),
+            "chunk_id": chunk_id,
             "text": payload.get("text", "")[:500],
             "section_title": payload.get("section_title", ""),
             "grade": payload.get("grade", 0),
@@ -144,13 +187,53 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
             "page": payload.get("page_start", ""),
             "trust_tier": payload.get("trust_tier", 0),
         })
-    return hits
+
+    # Keyword search — find exact text matches that RRF missed.
+    # These are chunks containing the actual query words, so they
+    # deserve to be in the results even if semantic search ranked
+    # them low (e.g., a verse buried in a play script).
+    keyword_points = _keyword_search(client, query, qfilter, limit)
+    keyword_hits = []
+    for point in keyword_points:
+        payload = point.payload or {}
+        chunk_id = payload.get("chunk_id", "")
+        if chunk_id not in seen_ids:
+            seen_ids.add(chunk_id)
+            keyword_hits.append({
+                "score": 0,  # placeholder, will be set below
+                "chunk_id": chunk_id,
+                "text": payload.get("text", "")[:500],
+                "section_title": payload.get("section_title", ""),
+                "grade": payload.get("grade", 0),
+                "author": payload.get("author", ""),
+                "page": payload.get("page_start", ""),
+                "trust_tier": payload.get("trust_tier", 0),
+            })
+
+    if keyword_hits:
+        # Keyword matches are exact text hits — insert them among the
+        # top results by replacing the lowest-scoring RRF hits.
+        # Give keyword hits a score just above the median RRF score
+        # so they appear mid-results (not first, but visible).
+        mid_score = hits[len(hits) // 2]["score"] if hits else 0.5
+        for kh in keyword_hits:
+            kh["score"] = mid_score
+
+        # Merge: keep all keyword hits + fill remaining slots with RRF hits
+        merged = keyword_hits.copy()
+        for h in hits:
+            if h["chunk_id"] not in {kh["chunk_id"] for kh in keyword_hits}:
+                merged.append(h)
+        merged.sort(key=lambda x: x["score"], reverse=True)
+        return merged[:limit]
+
+    return hits[:limit]
 
 
 def search_literary(query: str, work: str | None = None, genre: str | None = None,
                     period: str | None = None, limit: int = 5) -> list[dict]:
-    """Search literary texts (Slovo, PVL, chronicles, etc.) via dense vectors."""
-    from qdrant_client.models import FieldCondition, Filter, MatchValue
+    """Search literary texts (Slovo, PVL, chronicles, etc.) via dense + keyword."""
+    from qdrant_client.models import FieldCondition, Filter, MatchText, MatchValue
 
     client = get_client()
     encoder = get_text_encoder()
@@ -176,11 +259,9 @@ def search_literary(query: str, work: str | None = None, genre: str | None = Non
         with_payload=True,
     )
 
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
+    def _make_hit(payload, score=0):
         hit = {
-            "score": point.score if hasattr(point, "score") else 0,
+            "score": score,
             "chunk_id": payload.get("chunk_id", ""),
             "text": payload.get("text", "")[:500],
             "work": payload.get("work", ""),
@@ -192,7 +273,50 @@ def search_literary(query: str, work: str | None = None, genre: str | None = Non
         }
         if payload.get("original_text"):
             hit["original_text"] = payload["original_text"][:300]
-        hits.append(hit)
+        return hit
+
+    seen_ids = set()
+    hits = []
+    for point in results.points:
+        payload = point.payload or {}
+        chunk_id = payload.get("chunk_id", "")
+        seen_ids.add(chunk_id)
+        hits.append(_make_hit(payload, point.score if hasattr(point, "score") else 0))
+
+    # Keyword search — find exact text matches that dense search missed
+    kw_conditions = [FieldCondition(key="text", match=MatchText(text=query))]
+    if conditions:
+        kw_conditions.extend(conditions)
+    try:
+        kw_points, _ = client.scroll(
+            collection_name=LITERARY_COLLECTION,
+            scroll_filter=Filter(must=kw_conditions),
+            limit=limit,
+            with_payload=True,
+            with_vectors=False,
+        )
+    except Exception:
+        kw_points = []
+
+    keyword_hits = []
+    for point in kw_points:
+        payload = point.payload or {}
+        chunk_id = payload.get("chunk_id", "")
+        if chunk_id not in seen_ids:
+            seen_ids.add(chunk_id)
+            keyword_hits.append(_make_hit(payload))
+
+    if keyword_hits:
+        mid_score = hits[len(hits) // 2]["score"] if hits else 0.5
+        for kh in keyword_hits:
+            kh["score"] = mid_score
+        merged = keyword_hits.copy()
+        for h in hits:
+            if h["chunk_id"] not in {kh["chunk_id"] for kh in keyword_hits}:
+                merged.append(h)
+        merged.sort(key=lambda x: x["score"], reverse=True)
+        return merged[:limit]
+
     return hits
 
 
