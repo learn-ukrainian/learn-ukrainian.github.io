@@ -133,10 +133,14 @@ def _generate_group_sort(fields: dict) -> str:
 
 _GENERATORS = {
     "multiple-choice": _generate_multiple_choice,
+    "quiz": _generate_multiple_choice,  # alias
     "cloze": _generate_cloze,
+    "fill-in": _generate_cloze,  # alias
     "match": _generate_match,
+    "match-up": _generate_match,  # alias
     "true-false": _generate_true_false,
     "group-sort": _generate_group_sort,
+    "read-and-answer": _generate_true_false,  # stub — needs LLM
 }
 
 

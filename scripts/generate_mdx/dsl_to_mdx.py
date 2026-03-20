@@ -165,8 +165,11 @@ def _convert_read_and_answer(content: str) -> str:
 
 _CONVERTERS = {
     "multiple-choice": _convert_multiple_choice,
+    "quiz": _convert_multiple_choice,  # alias
     "cloze": _convert_cloze,
+    "fill-in": _convert_cloze,  # alias
     "match": _convert_match,
+    "match-up": _convert_match,  # alias
     "true-false": _convert_true_false,
     "group-sort": _convert_group_sort,
     "read-and-answer": _convert_read_and_answer,
