@@ -638,7 +638,9 @@ def _get_summary_heading(ctx: ModuleContext) -> str:
             name = section.get("section", "")
             if "підсумок" in name.lower() or "summary" in name.lower():
                 return name
-    # Fallback
+    # Fallback — must match config_tables._build_exact_section_titles
+    if ctx.track.startswith("a1") and ctx.module_num <= 3:
+        return "Summary"
     if ctx.track.startswith("a1") and ctx.module_num <= 14:
         return "Підсумок — Summary"
     return "Підсумок"

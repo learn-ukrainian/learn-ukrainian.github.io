@@ -43,7 +43,7 @@ content_outline:
     each one represents TWO sounds (й + vowel) in certain positions."
   - "The iotated vowels explained:
     Я = [йа] at word start or after vowel (яблуко, моя),
-    but after a consonant it softens it + [а] (мяч = м'[а]ч).
+    but after a consonant it softens it + [а] (пісня — the Я softens Н).
     Ю = [йу] or softening + [у]. Є = [йе] or softening + [е].
     Ї = ALWAYS [йі] — it NEVER softens a consonant. Ї only appears
     at word start, after a vowel, or after an apostrophe. Ї is unique
@@ -118,9 +118,9 @@ content_outline:
   words: 150
   points:
   - "The 33rd letter: Ь (м'який знак). It has NO sound of its own.
-    Its job is to soften the consonant before it. Compare:
-    кон (a variant form) vs кінь (horse) — the Ь makes Н soft.
-    день (day), сіль (salt), мідь (copper) — all end with soft consonants.
+    Its job is to soften the consonant before it — making it sound
+    lighter and gentler. Common words with Ь:
+    день (day), сіль (salt), кінь (horse), мідь (copper).
     Full exploration of Ь in M02 — for now, just know it exists and
     it's why Ukrainian has 33 letters but 38 sounds: some consonants
     have both a hard and a soft version."
