@@ -26,6 +26,21 @@ import yaml
 SCRIPTS_DIR = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+# Pre-compiled regexes (avoid recompilation per call)
+_RE_CYRILLIC = re.compile(r"[А-ЯІЇЄҐа-яіїєґ]")
+_RE_TEXTBOOK_REF = re.compile(
+    r"((?:Большакова|Вашуленко|Заболотний|Авраменко|Пономарова|"
+    r"Кравцова|Захарійчук|Варзацька|Літвінова|Караман|Голуб)"
+    r"\s+Grade\s+\d+\s+p\.\d+)"
+)
+_RE_TEXTBOOK_PARSE = re.compile(r"(\w+)\s+Grade\s+(\d+)\s+p\.(\d+)")
+_RE_CYRILLIC_PHRASE = re.compile(
+    r"[А-ЯІЇЄҐа-яіїєґ'][А-ЯІЇЄҐа-яіїєґ'ʼ\s\-]{4,40}"
+)
+_RE_GRADE = re.compile(r"Grade\s+(\d+)")
+_RE_MULTI_SPACE = re.compile(r"\s{2,}")
+_RE_PAREN_SPLIT = re.compile(r"\s*\(")
+
 
 def _extract_search_queries(section: dict) -> list[str]:
     """Extract Ukrainian search queries from a plan section's points.
@@ -41,7 +56,7 @@ def _extract_search_queries(section: dict) -> list[str]:
     # Section title — strip English parenthetical
     title = section.get("section", "")
     # "Звуки і літери (Sounds and Letters)" → "Звуки і літери"
-    uk_title = re.split(r"\s*\(", title)[0].strip()
+    uk_title = _RE_PAREN_SPLIT.split(title)[0].strip()
     if uk_title and _has_cyrillic(uk_title):
         queries.append(uk_title)
 
@@ -52,24 +67,15 @@ def _extract_search_queries(section: dict) -> list[str]:
             continue
         # Extract textbook references for targeted search
         # e.g., "Большакова Grade 1 p.24" → search what's on that page
-        refs = re.findall(
-            r"((?:Большакова|Вашуленко|Заболотний|Авраменко|Пономарова|"
-            r"Кравцова|Захарійчук|Варзацька|Літвінова|Караман|Голуб)"
-            r"\s+Grade\s+\d+\s+p\.\d+)",
-            point,
-        )
+        refs = _RE_TEXTBOOK_REF.findall(point)
         for ref in refs:
-            # Parse "Большакова Grade 1 p.24" → author, grade, page
-            match = re.match(r"(\w+)\s+Grade\s+(\d+)\s+p\.(\d+)", ref)
+            match = _RE_TEXTBOOK_PARSE.match(ref)
             if match:
                 queries.append(f"{match.group(1)} сторінка {match.group(3)}")
 
         # Extract Ukrainian phrases (words in Cyrillic, 2+ words)
         # Look for quoted phrases or key Ukrainian terms
-        cyrillic_phrases = re.findall(
-            r"[А-ЯІЇЄҐа-яіїєґ'][А-ЯІЇЄҐа-яіїєґ'ʼ\s\-]{4,40}",
-            point,
-        )
+        cyrillic_phrases = _RE_CYRILLIC_PHRASE.findall(point)
         for phrase in cyrillic_phrases:
             phrase = phrase.strip()
             if len(phrase.split()) >= 2 and _has_cyrillic(phrase):
@@ -88,7 +94,7 @@ def _extract_search_queries(section: dict) -> list[str]:
 
 def _has_cyrillic(text: str) -> bool:
     """Check if text contains Cyrillic characters."""
-    return bool(re.search(r"[А-ЯІЇЄҐа-яіїєґ]", text))
+    return bool(_RE_CYRILLIC.search(text))
 
 
 def _extract_grade_hint(plan: dict) -> int | None:
@@ -97,7 +103,7 @@ def _extract_grade_hint(plan: dict) -> int | None:
     grades = []
     for ref in refs:
         title = ref.get("title", "") + " " + ref.get("notes", "")
-        matches = re.findall(r"Grade\s+(\d+)", title)
+        matches = _RE_GRADE.findall(title)
         grades.extend(int(g) for g in matches)
     if grades:
         return min(grades)  # Use lowest grade (most foundational)
@@ -129,7 +135,7 @@ def _format_hit(hit: dict) -> str:
     chunk_id = hit.get("chunk_id", "")
 
     # Clean up text — remove excessive whitespace
-    text = re.sub(r"\s{2,}", " ", text)
+    text = _RE_MULTI_SPACE.sub(" ", text)
     # Truncate very long excerpts
     if len(text) > 400:
         text = text[:400] + "..."

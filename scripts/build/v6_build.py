@@ -119,10 +119,10 @@ def step_write(level: str, module_num: int, slug: str,
 
     template = template_path.read_text("utf-8")
 
-    # Load plan
+    # Load plan (read once, parse once)
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
     plan_content = plan_path.read_text("utf-8")
+    plan = yaml.safe_load(plan_content)
 
     # Load knowledge packet
     packet = packet_path.read_text("utf-8") if packet_path and packet_path.exists() else ""
@@ -267,12 +267,12 @@ def step_write(level: str, module_num: int, slug: str,
 
     if content_start < 0:
         _log("  ❌ No H2 headings found in output")
-        output_path.write_text(raw, "utf-8")
+        final_content = raw
     else:
-        content = "\n".join(lines[content_start:])
-        output_path.write_text(content, "utf-8")
+        final_content = "\n".join(lines[content_start:])
 
-    word_count = len(output_path.read_text("utf-8").split())
+    output_path.write_text(final_content, "utf-8")
+    word_count = len(final_content.split())
     _log(f"  ✅ Content written ({word_count} words)")
     _log(f"  → {output_path}")
 
@@ -354,10 +354,10 @@ def step_write_with_retry(
         directive = build_correction_directive(results)
         _log("  🔄 Retrying with correction directive...")
 
-        # Inject directive into the template for the next attempt
-        # The directive is prepended to the plan section of the prompt
-        # We modify the plan_path temporarily? No — better to pass it through
-        # For now, save directive to orchestration dir so step_write can pick it up
+        # TODO(#1006): Inject directive into step_write prompt.
+        # Currently saved to disk for human inspection but not consumed by
+        # step_write on retry. To complete: either pass directive as param
+        # to step_write() or have step_write() check orchestration/ dir.
         orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
         orch_dir.mkdir(parents=True, exist_ok=True)
         directive_path = orch_dir / f"correction-attempt-{attempt}.md"
