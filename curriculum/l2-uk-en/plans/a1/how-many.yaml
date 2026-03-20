@@ -2,7 +2,7 @@ module: a1-011
 level: A1
 sequence: 11
 slug: how-many
-version: '1.0'
+version: '1.1'
 title: How Many?
 subtitle: "Один, два, три — numbers through prices, ages, and phones"
 focus: vocabulary
@@ -36,7 +36,7 @@ content_outline:
   - "11-20: одинадцять, дванадцять, тринадцять, чотирнадцять, п'ятнадцять,
     шістнадцять, сімнадцять, вісімнадцять, дев'ятнадцять, двадцять.
     Pattern: base + -надцять (like English '-teen').
-    Watch the stress: одинáдцять, дванáдцять — stress stays on the second syllable."
+    Watch the stress: одинáдцять, дванáдцять — stress always falls on the syllable 'на' in -надцять."
 - section: "Десятки і сотні (Tens and Hundreds)"
   words: 300
   points:
@@ -53,7 +53,7 @@ content_outline:
   words: 300
   points:
   - "Three practical uses of numbers:
-    1. Prices: Скільки коштує? — Двісті гривень. Сто п'ятдесят копійок.
+    1. Prices: Скільки коштує? — Двісті гривень. Сто п'ятдесят гривень.
     2. Age: Скільки тобі років? — Мені двадцять три (роки).
     3. Phone: Мій номер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.
     Self-check: Say your age in Ukrainian. Say a price (250 hryvnias). Read a phone number."

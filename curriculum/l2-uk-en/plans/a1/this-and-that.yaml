@@ -1,0 +1,106 @@
+module: a1-012
+level: A1
+sequence: 12
+slug: this-and-that
+version: '1.0'
+title: This and That
+subtitle: "Цей стіл, та книга — pointing at things"
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Use цей/ця/це (this) and той/та/те (that) with correct gender agreement
+- Point at and identify objects using demonstratives + nouns from M08-M10
+- Combine demonstratives with adjectives and colors (цей великий червоний стіл)
+- Distinguish цей (near/this) from той (far/that)
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Shopping (extending M10 colors + M11 prices):
+    — Скільки коштує ця сумка? — Яка? Ця червона? — Ні, та синя.
+    — Та коштує двісті гривень. — А цей рюкзак? — Цей — сто п'ятдесят.
+    Demonstratives emerge naturally: цей/ця = the one here, той/та = the one there."
+  - "Dialogue 2 — In a room (extending M08-M09):
+    — Що це? — Це мій стіл. — А те? — Те — крісло.
+    — Цей стілець новий, а той — старий.
+    Contrast near/far with objects already known."
+- section: "Цей, ця, це (This)"
+  words: 300
+  points:
+  - "Demonstrative pronouns follow the same gender pattern as мій/моя/моє and який/яка/яке:
+    Цей стіл (m) — this table.
+    Ця книга (f) — this book.
+    Це вікно (n) — this window.
+    Заболотний Grade 6 p.210: вказівні займенники цей, той змінюються за родами.
+    At A1 we learn nominative only — other forms come later."
+  - "Combining with adjectives and colors:
+    Цей великий червоний стіл. Ця нова синя сумка. Це маленьке біле вікно.
+    Word order: demonstrative + adjective(s) + noun (same as English!)."
+- section: "Той, та, те (That)"
+  words: 300
+  points:
+  - "Той/та/те = that (farther away, or previously mentioned):
+    Той стіл (m) — that table.
+    Та книга (f) — that book.
+    Те вікно (n) — that window.
+    Contrast: Цей стілець новий, а той — старий.
+    Warning: 'та' also means 'and' (like і/й). Context makes it clear:
+    мама та тато (and) vs та книга (that book)."
+  - "Practical usage — pointing and choosing:
+    Який стіл? — Цей чи той? (This one or that one?)
+    Яка сумка? — Ця червона чи та синя?
+    Яке вікно? — Це велике чи те маленьке?
+    Note: 'Це' as demonstrative (це вікно = this window) vs 'це' as 'this is' (Це вікно = This is a window). Context makes it clear."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Gender agreement table — all patterns from A1.2 together:
+    | | m | f | n |
+    | мій | моя | моє | (M06 possessives)
+    | який | яка | яке | (M09 questions)
+    | цей | ця | це | (M12 this)
+    | той | та | те | (M12 that)
+    Same endings, same logic — Ukrainian is consistent!
+    Self-check: Point at 3 things near you (цей/ця/це), then 3 things far away (той/та/те)."
+vocabulary_hints:
+  required:
+  - цей, ця, це (this — m/f/n)
+  - той, та, те (that — m/f/n)
+  - чи (or — in questions)
+  recommended:
+  - ось (here is, look — pointing word)
+  - там (there)
+  - тут (here)
+  - він, вона, воно (review from M08 — used for reference)
+activity_hints:
+- type: quiz
+  focus: "Цей, ця, or це? Choose the right demonstrative for each noun."
+  items: 8
+- type: fill-in
+  focus: "Complete: ___ книга нова, а ___ — стара. (ця/та)"
+  items: 8
+- type: match-up
+  focus: "Match цей/ця/це with мій/моя/моє and який/яка/яке — same gender!"
+  items: 6
+- type: quiz
+  focus: "Той, та, or те? Point at the far object."
+  items: 6
+connects_to:
+- a1-013 (Many Things)
+prerequisites:
+- a1-009 (What Is It Like?)
+grammar:
+- "Demonstrative pronouns цей/ця/це (this) and той/та/те (that) — nominative only"
+- "Gender agreement pattern: same as мій/який"
+- "Word order: demonstrative + adjective + noun"
+- "та = 'that' (demonstrative) vs та = 'and' (conjunction) — context distinguishes"
+register: розмовний
+references:
+- title: "Заболотний Grade 6, p.210"
+  notes: "Вказівні займенники цей, той змінюються за родами, числами, відмінками."
+- title: "Літвінова Grade 6, p.273"
+  notes: "Full declension table for той — we use nominative only at A1."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
