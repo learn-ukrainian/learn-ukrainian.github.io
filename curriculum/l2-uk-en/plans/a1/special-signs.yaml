@@ -1,0 +1,124 @@
+module: a1-003
+level: A1
+sequence: 3
+slug: special-signs
+version: '1.0'
+title: Special Signs
+subtitle: "Ь, apostrophe, and the voice of consonants"
+focus: phonetics
+pedagogy: PPP
+phase: A1.1 [Sounds, Letters, and First Contact]
+word_target: 1200
+objectives:
+- Understand what the soft sign (Ь) does to consonants
+- Read words with apostrophe correctly (сім'я, м'ясо)
+- Distinguish voiced and voiceless consonant pairs
+- Pronounce the tricky Ukrainian sounds И, Г, Р
+content_outline:
+- section: "М'який знак (The Soft Sign — Ь)"
+  words: 250
+  points:
+  - "Ь has no sound. Its job: soften the consonant before it.
+    Ukrainian distinguishes hard (тверді) and soft (м'якшені) consonants.
+    Захарійчук Grade 1 p.15 notation: hard = [–], soft = [=].
+    Common words: день (day), сіль (salt), кінь (horse), мідь (copper).
+    The Ь appears only after consonants, never at word start."
+  - "Where Ь commonly appears:
+    -нь: день, кінь, осінь
+    -ль: сіль, кіль
+    -ть: мить, путь
+    -зь: зв'язь
+    Practice: учитель (teacher), батько (father), маленький (small)."
+- section: "Апостроф (The Apostrophe)"
+  words: 250
+  points:
+  - "Захарійчук Grade 1 p.97: Apostrophe comes after б, п, в, м, ф, р
+    before я, ю, є, ї. It keeps the consonant HARD and gives the vowel
+    its full [й] + vowel sound."
+  - "Without apostrophe: consonant softens (пісня — Н is soft).
+    With apostrophe: consonant stays hard + vowel = two sounds.
+    сім'я [сім-йа] (family), м'ясо [м-йасо] (meat),
+    п'ять [п-йать] (five), комп'ютер [комп-йутер] (computer).
+    Reading practice: п'ять, дев'ять, м'який, м'яч, об'єкт."
+- section: "Дзвінкі і глухі (Voiced and Voiceless)"
+  words: 250
+  points:
+  - "Consonants come in voiced-voiceless pairs. Hand on throat test:
+    vibration = voiced. Pairs:
+    Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч."
+  - "Critical difference from Russian: Ukrainian does NOT devoice
+    consonants at word end. дуб is [дуб], NOT *[дуп].
+    мороз is [мороз], NOT *[морос]. This is authentic Ukrainian."
+  - "Minimal pairs for ear training:
+    балка (beam) vs палка (stick),
+    коза (goat) vs коса (braid)."
+- section: "Важкі звуки (Tricky Sounds)"
+  words: 250
+  points:
+  - "И — not English 'ee' or 'i'. Between them. Smile for 'ee' but
+    pull tongue back slightly. Practice: бик, лист, зима, тихо, синій."
+  - "Г — voiced glottal fricative [ɦ]. NOT Russian hard [g].
+    Like saying 'h' but with voice. Words: гарно, гори, голова.
+    Ґ = hard [g], only in: ґанок, ґудзик, ґречний."
+  - "Р — rolled/trilled, like Spanish. Practice: рука, робота, ранок, риба.
+    Even imperfect Р is understood — don't stress about it."
+- section: "Підсумок — Summary"
+  words: 200
+  points:
+  - "Self-check: What does Ь do? After which letters does apostrophe appear?
+    Name 3 voiced-voiceless pairs. How is Ukrainian Г different from Ґ?
+    Read these words: сім'я, день, п'ять, гарно."
+vocabulary_hints:
+  required:
+  - сім'я (family) — apostrophe word
+  - день (day) — soft sign after Н
+  - сіль (salt) — soft sign after Л
+  - м'ясо (meat) — apostrophe after М
+  - п'ять (five) — apostrophe after П
+  - гарно (nicely, beautifully) — Г [ɦ] practice
+  - риба (fish) — Р and И practice
+  recommended:
+  - батько (father, formal) — soft sign
+  - учитель (teacher) — soft sign at end
+  - дев'ять (nine) — apostrophe
+  - комп'ютер (computer) — apostrophe in cognate
+  - м'який (soft) — apostrophe + soft sign
+activity_hints:
+- type: quiz
+  focus: "Does this word have a soft sign, apostrophe, or neither?"
+  items: 8
+- type: match-up
+  focus: "Match voiced-voiceless pairs: Б↔П, Д↔Т, etc."
+  items: 8
+- type: fill-in
+  focus: "Add the missing Ь or apostrophe: сім_я, ден_, п_ять"
+  items: 6
+- type: quiz
+  focus: "Choose the correct pronunciation for Г vs Ґ words"
+  items: 4
+connects_to:
+- a1-004 (Stress and Melody)
+prerequisites:
+- a1-002 (Reading Ukrainian)
+grammar:
+- "Soft sign (Ь) — softens preceding consonant, no sound"
+- "Apostrophe — after б,п,в,м,ф,р before я,ю,є,ї (Захарійчук rule)"
+- "Voiced/voiceless consonant pairs (8 pairs)"
+- "Ukrainian non-devoicing at word end (vs Russian)"
+- "Г [ɦ] vs Ґ [g] distinction"
+register: розмовний
+references:
+- title: "Захарійчук Grade 1 (NUS 2025), p.97"
+  notes: "Apostrophe rule: after б,п,в,м,ф,р before я,ю,є,ї."
+- title: "Захарійчук Grade 1 (NUS 2025), p.15"
+  notes: "Hard [–] vs soft [=] consonant notation."
+- title: "Большакова Grade 1, p.45-47"
+  notes: "Тверді і пом'якшені приголосні звуки."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  relevant:
+    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
