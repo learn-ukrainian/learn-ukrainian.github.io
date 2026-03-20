@@ -181,6 +181,41 @@ vocabulary: кит, кіт, бик, бік, сил, сіль
 6. **Review fixes must be atomic** — "Replace X with Y", not "improve the flow."
 7. **Cognitive load concern** — prose + exercise syntax in one session degrades formatting. → RESOLVED: exercise placeholders in prose, actual exercises in separate session.
 
+---
+
+## Ukrainian Linguistic Principles (applies to ALL LLM steps)
+
+Based on a tested tutor prompt that catches errors other prompts miss. See `docs/prompts/tutor-prompt-reference.md` for full analysis.
+
+These principles apply to Steps 4, 5, and 8 — everywhere an LLM touches Ukrainian text.
+
+### The 5 Hard Rules
+1. **Admit uncertainty, never invent.** If unsure about a word, stress, form, or meaning — flag it with `<!-- VERIFY: word -->`. Never guess. This single rule prevents most hallucinations.
+2. **No Russianisms, no surzhyk, no calques, no paronyms.** Four separate problems, four separate checks. тактична≠тактовна is a paronym. кон is a Russicism. "мати місце" (to take place) is a calque. "шо" instead of "що" is surzhyk.
+3. **Ukrainian authority hierarchy.** When in doubt, consult in this order: Горох (stress/morphology), VESUM (word forms), Правопис 2019 (orthography), Антоненко-Давидович "Як ми говоримо" (style/usage).
+4. **Ukrainian first.** Write the Ukrainian, then explain in English. The LLM must think in Ukrainian linguistic categories (звуки/літери, голосні/приголосні), not translate from English.
+5. **Structure over volume.** 5 precise rules beat 50 generic ones. Every rule must be testable — if you can't write a test case for it, remove it.
+
+### How they apply per step
+
+| Step | Primary principles | Focus |
+|------|--------------------|-------|
+| Step 4 (Preflight) | Rules 1-3 | Detect problems in plan+prompt BEFORE writing |
+| Step 5 (Write) | Rules 1, 3, 4 | Think in Ukrainian, flag uncertainty, use authorities |
+| Step 8 (Review) | Rules 1-3 | Zero-tolerance detection, catch what writer missed |
+
+### Test scenarios (from real failures)
+1. тактична vs тактовна — paronym (Rule 2)
+2. кон vs кін — Russicism (Rule 2)
+3. Ї softens consonants — factual error (Rule 1: should flag uncertainty)
+4. мяч without apostrophe — orthographic error (Rule 3: Правопис)
+5. програміст "used for both" — outdated claim (Rule 3: check current usage)
+6. братú vs брáти stress — Russian-influenced (Rule 3: Горох)
+7. Па-пá regional attribution — factual error (Rule 1: should verify)
+8. метро stress — wrong (Rule 3: Горох says метрó)
+
+---
+
 ## Open questions for final review
 
 1. **Exercise placeholder format:** Is the `:::exercise-placeholder` syntax shown above clear enough for the writer? Any fields missing?
