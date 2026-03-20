@@ -3,67 +3,71 @@ description: 'L2 Ukrainian-English Curriculum Manifest (RFC #410)'
 levels:
   a1:
     type: core
+    # V3 — 55 modules, State Standard 2024 compliant
+    # A1.1: Sounds, Letters, and First Contact
     modules:
-    - the-ukrainian-alphabet
-    - sounds-and-special-signs
-    - syllables-stress-intonation
-    - greetings-and-politeness
+    - sounds-letters-and-hello
+    - reading-ukrainian
+    - special-signs
+    - stress-and-melody
     - who-am-i
     - my-family
     - checkpoint-first-contact
-    - my-room-gender
-    - describing-things
-    - colors-and-clothing
-    - many-things-plurals
-    - numbers-and-money
+    # A1.2: My World
+    - things-have-gender
+    - what-is-it-like
+    - colors
+    - how-many
     - this-and-that
+    - many-things
     - checkpoint-my-world
+    # A1.3: Actions
     - what-i-like
-    - daily-verbs-group-1
-    - speaking-and-seeing-group-2
-    - i-want-i-can-i-must
-    - questions-and-no
-    - my-morning-routine
+    - verbs-group-one
+    - verbs-group-two
+    - i-want-i-can
+    - questions
+    - my-morning
     - checkpoint-actions
-    - what-time-is-it
-    - days-and-weeks
-    - months-and-seasons
-    - weather-and-nature
-    - my-daily-life
-    - free-time-and-hobbies
+    # A1.4: Time and Nature
+    - what-time
+    - days-and-months
+    - weather
+    - my-day
+    - free-time
     - checkpoint-time-nature
-    - euphony-natural-flow
+    # A1.5: Places
+    - euphony
     - where-is-it
     - my-city
-    - going-places
+    - where-to
     - transport
-    - where-are-you-from
     - around-the-city
+    - where-from
     - checkpoint-places
+    # A1.6: Food and Shopping
     - food-and-drink
-    - eating-and-drinking
+    - i-eat-i-drink
     - at-the-cafe
     - shopping
     - people-around-me
-    - adjectives-everywhere
     - checkpoint-food-shopping
-    - hey-friend-vocative
+    # A1.7: Communication
+    - hey-friend
     - please-do-this
-    - give-me-i-like
     - linking-ideas
-    - when-where-what
-    - holidays-and-traditions
+    - when-and-where
+    - holidays
     - checkpoint-communication
-    - what-happened-past
+    # A1.8: Past, Future, Graduation
+    - what-happened
     - yesterday
-    - what-will-happen-future
+    - what-will-happen
     - my-plans
     - my-story
-    - body-and-health
+    - health
     - emergencies
-    - phone-and-writing
-    - a1-review
-    - a1-final-assessment
+    - a1-finale
   a2:
     type: core
     modules:
