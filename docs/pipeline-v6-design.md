@@ -125,6 +125,22 @@ vocabulary: кит, кіт, бик, бік, сил, сіль
 - Known auto-fixes applied
 - Exercise DSL validated (all blocks parseable)
 
+### Step 6b: QUICK VERIFY + RETRY (deterministic + conditional)
+After WRITE, before EXERCISES — fast structural check:
+1. All H2 headers from `content_outline` present?
+2. Word count within ±15% of `word_target`?
+3. Fast regex for severe Russianisms (ы, э, ъ, кот, пожалуйста)
+4. Core vocabulary from plan actually used?
+
+**If FAIL:**
+- Retry 1: SAME model + correction directive (no failed output — avoid anchoring)
+- Retry 2: DIFFERENT model (circuit breaker — Gemini↔Claude switch)
+- Retry 3: Flag for human review (systemic issue — plan or prompt needs fixing)
+- Correction directive: specific error + ALL original constraints restated (prevent overcorrection)
+- Always regenerate WHOLE module (not sections — preserves narrative continuity)
+- Log: `[slug, error_type, attempt_number, success]` for systemic diagnosis
+- On human fix: auto-generate `friction.yaml` entry (permanent learning)
+
 ### Step 7: VERIFY (deterministic gate)
 - VESUM word verification (proper nouns excluded, exercise content included)
 - Grammar scope check (morphological validator per phase)
