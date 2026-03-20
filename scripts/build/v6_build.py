@@ -212,11 +212,12 @@ def step_write(level: str, module_num: int, slug: str,
     output_path = output_dir / f"{slug}.md"
 
     if writer == "gemini":
+        from batch_gemini_config import PRO_MODEL
         from pipeline.core import dispatch_gemini
-        _log("  Dispatching to Gemini (gemini-3.1-pro-preview)...")
+        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
         ok, raw = dispatch_gemini(
             prompt, task_id=f"v6-{slug}",
-            model="gemini-3.1-pro-preview",
+            model=PRO_MODEL,
             stdout_only=True, timeout=600,
         )
     else:
