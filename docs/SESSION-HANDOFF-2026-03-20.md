@@ -10,132 +10,131 @@
 - 55/55 plans written in `curriculum/l2-uk-en/plans/a1/`
 - All Gemini-reviewed, all fixes applied
 - All pass `check_plan.py`
-- 8 phases: A1.1-A1.8 (sounds → past/future/graduation)
 
 ### A2 Design: COMPLETE ✅
 - 60 modules across 8 phases in `docs/l2-uk-en/A2-CURRICULUM-V3.md`
 - Gemini-reviewed, gap analysis done, all State Standard items covered
 - 3 metalanguage bridge modules (M55-57) prepare for B1 immersion
-- `curriculum.yaml` updated with V3 A2 slugs
-- **Plans NOT written yet** — design only
+- Plans NOT written yet — design only
 
-### V6 Pipeline: BUILT, NEEDS QUALITY ITERATION
-- All components built in `scripts/build/`:
-  - `research/build_knowledge_packet.py` (#994) — RAG textbook queries
-  - `phases/v6-write.md` (#995) — writing prompt template
-  - `quick_verify.py` (#1006) — structural check + retry loop
-  - `exercises/fill_placeholders.py` (#996) — exercise DSL skeleton
-  - `v6_build.py` — orchestrator with retry, correction directive injection
-- Tests: 39/39 pass in `tests/test_build_knowledge_packet.py`, `tests/test_quick_verify.py`, `tests/test_fill_placeholders.py`
-- Stress annotator + VESUM verification: existing code, works
+### V6 Pipeline: BUILT, ITERATING ON QUALITY
+All components in `scripts/build/`:
+- `research/build_knowledge_packet.py` (#994) ✅
+- `phases/v6-write.md` (#995) ✅
+- `quick_verify.py` (#1006) ✅
+- `exercises/fill_placeholders.py` (#996) ✅
+- `phases/v6-review.md` (#991) ✅ — 10-dimension structured rubric
+- `v6_build.py` — orchestrator with retry + correction directive injection
+- Tests: 39/39 pass
 
-### M01 First Build: 2/10 from Gemini
-- Pipeline runs end-to-end: `CHECK → RESEARCH → WRITE → QUICK VERIFY → RETRY → EXERCISES → ANNOTATE → VERIFY → PUBLISH`
-- Prose quality is good ("top-tier pedagogy" per Gemini round 1)
-- **Three blockers preventing 8+/10:**
+### M01 Writer Comparison (#1001): COMPLETE
+- **Claude: 8.55/10** — attempt 1, 1,779 words
+- **Gemini: 8.35/10** — attempt 2, 2,191 words
+- **Decision: Claude writes, Gemini reviews** (Claude wins on tone/pedagogy)
+- Both fail on same 2 things: exercises (stray quotes, no fill-in context) and missing словник/videos
 
-## M01 Build Results (3 attempts)
+### Key fix applied this session: Claude CLI invocation
+- **Root cause:** `-p` was passed a file PATH, not prompt CONTENT
+- **Fix:** pipe via stdin: `subprocess.run(["claude", "-p", ...], input=prompt)`
+- Claude now produces 1,800+ words on attempt 1
 
-### Attempt 1: Claude → 435 words, FAILED (no H2 headings)
-### Attempt 2: Claude + correction directive → 148 words, FAILED
-### Attempt 3: Gemini (circuit breaker) → 2,216 words, PASSED quick verify
-### Gemini review scores: 4/10 → 2/10 → 5/10
+---
 
-**Prose quality is good** — Gemini praised pedagogy, phonetics, textbook integration.
-**Exercise quality is the bottleneck** — stray quotes, no fill-in context, wrong item counts.
-**Claude consistently fails to produce long content** with this prompt. Gemini succeeds.
+## BLOCKERS — Fix these next session
 
-## BLOCKERS — Fix these next
+### 1. Stray quotes in exercise YAML (QUICK FIX)
+- **Problem:** Writer produces `"'В"` and `"зву́ки'"` — rogue single quotes
+- **Where:** Output of exercise filler DSL
+- **Fix:** Add regex post-processing in `_post_process_content()` to strip stray quotes from :::exercise blocks
+- **Estimated scope:** ~10 lines
 
-### 1. Writer produces bad exercise placeholder metadata
-- **Problem:** Writer (both Claude and Gemini) produces exercise placeholders with:
-  - Stray single quotes in YAML values (`"'В"`, `"зву́ки'"`)
-  - Fill-in exercises with no sentence context (just `"___"`)
-  - Wrong item counts (plan says 6, writer provides 2)
-  - Vague metadata that the filler can't turn into good exercises
+### 2. Fill-in exercises have no context (MEDIUM)
+- **Problem:** `sentence: "___"` with no surrounding text — learner can't guess the answer
 - **Fix options:**
-  a. Better prompt guidance for exercise placeholder format (show more examples)
-  b. Post-processing to strip stray quotes from exercise YAML
-  c. Separate LLM pass specifically for exercise content generation
-  d. Move exercise generation to a dedicated Gemini call with the prose as context
-- **Estimated scope:** Option (d) is most reliable — ~150 lines for exercise-specific LLM call
+  a. Better prompt: tell writer to provide `questions:` field with contextual sentences
+  b. Post-process: inject dialogue context from surrounding prose
+  c. Dedicated LLM call for exercise enrichment
+- **Recommended:** Option (a) — update `v6-write.md` with fill-in examples
 
-### 2. Claude fails to produce long content with current prompt
-- **Problem:** Claude Opus consistently produces 150-500 word responses instead of 1200+
-- Both attempts in the latest build failed (435 words, 148 words)
-- Gemini succeeds on first try with 2,216 words
-- **Options:**
-  a. Use Gemini as default writer for A1 (Claude reviews instead)
-  b. Investigate why Claude truncates — may be prompt too long (22K chars)
-  c. Try different Claude invocation (longer max_turns, different flags)
+### 3. Step 7b ENRICH not implemented (MEDIUM)
+- **What it does:** Adds словник table, Anna's videos, external resources, dialogue formatting
+- **Design:** Already in `docs/pipeline-v6-design.md` Step 7b
+- **Components needed:**
+  - Vocabulary table generator (from plan `vocabulary_hints`)
+  - Video embed generator (from plan `pronunciation_videos`)
+  - External resources tab content
+  - Dialogue formatter (wrap conversations in `:::dialogue`)
+- **Estimated scope:** ~200 lines new code
 
-### 3. Writer produces factual errors (Київ gaffe from attempt 2)
-- **Problem:** Claude wrote "this one is и, not ї" about Київ — which is wrong (Київ has both)
-- **Fix options:**
-  a. Add factual verification step (check Ukrainian claims against VESUM/RAG)
-  b. Better prompt: "Never make claims about specific Ukrainian words without verifying"
-  c. Both
-- **Where:** Post-processing in `step_annotate` or new verification in `step_verify`
+### 4. Exercise item count doesn't match plan (MINOR)
+- Plan says 6 quiz items, writer provides 4-5
+- Fix: add item count to quick verify checks
 
-### 3. LLM writing fingerprint
-- **Problem:** "Good news:", "Don't panic", "That's a story for Module 2" — conversational but not premium
-- **Fix:** Add negative examples to prompt (`phases/v6-write.md`): "Avoid: 'Good news', 'Don't worry', generic cheerfulness"
-- **Estimated scope:** 5 lines added to prompt
+---
 
-## Key design decisions (don't re-discuss these)
+## Architecture decisions (don't re-discuss)
 
-- **Stress marks:** Writer produces NONE → deterministic annotator adds them. A1-A2 all words, B1+ vocabulary only.
-- **Error recovery:** Max 2 retries, whole-module regeneration, model switching (Gemini↔Claude), no anchoring (don't include failed output in retry).
-- **A1 writer:** Claude writes, Gemini reviews. B1+ flip (Gemini writes, Claude reviews).
-- **Cases before verbs** in A2 (Genitive first — highest utility).
-- **B1 100% Ukrainian immersion** from lesson 1 — metalanguage taught at end of A2.
+- **Writer:** Claude (better tone/pedagogy, 8.55 vs 8.35)
+- **Reviewer:** Gemini (adversarial, 10-dimension rubric)
+- **Stress marks:** Writer produces NONE → deterministic annotator. A1-A2 all words, B1+ vocab only.
+- **Error recovery:** Max 2 retries, whole-module regen, model switch, no anchoring
+- **Tab structure:** Урок / Ресурси / Зошит (lesson / resources / workbook)
+- **Default writer invocation:** `claude -p --model claude-opus-4-6 --output-format text` via stdin pipe
 
 ## Key commands
 
 ```bash
-# Build M01
+# Build M01 with Claude
 .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude
 
-# Run plan checker
-.venv/bin/python scripts/audit/check_plan.py a1 --first 55
+# Build M01 with Gemini
+.venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini
 
 # Run V6 tests
 .venv/bin/python -m pytest tests/test_build_knowledge_packet.py tests/test_quick_verify.py tests/test_fill_placeholders.py -v
 
-# Send to Gemini for review
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "Review M01 content..." --task-id issue-981 --model gemini-3.1-pro-preview
+# Send to Gemini for structured review
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "..." --task-id issue-1001 --model gemini-3.1-pro-preview
 
-# Knowledge packet standalone
-.venv/bin/python scripts/build/research/build_knowledge_packet.py curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml
+# Plan checker
+.venv/bin/python scripts/audit/check_plan.py a1 --first 55
 ```
 
 ## Open issues (active)
 
-| Issue | What | Priority |
-|-------|------|----------|
-| #982 | Epic: V6 Pipeline | HIGH — in progress |
-| #981 | Epic: A1 rebuild | HIGH — plans done, content building |
+| Issue | What | Status |
+|-------|------|--------|
+| #982 | Epic: V6 Pipeline | IN PROGRESS |
+| #981 | Epic: A1 rebuild | Plans done, M01 built |
 | #994 | Research packet | ✅ DONE |
-| #995 | Writing prompt | ✅ DONE (needs refinement) |
+| #995 | Writing prompt | ✅ DONE (needs fill-in examples) |
 | #1006 | Quick verify + retry | ✅ DONE |
-| #996 | Exercise filler | ⚠️ PARTIAL — skeletons work, needs LLM content |
-| #988 | Stress annotation | ✅ DONE (existing code works) |
-| #989 | Verification | ✅ DONE (existing code works) |
-| #991 | Review calibration | ⬜ NOT STARTED |
-| #997 | DSL→MDX converter | ✅ DONE (existing code works) |
-| #1002 | B1 curriculum design | ⬜ DEFERRED |
+| #996 | Exercise filler | ✅ DONE (needs stray quote fix) |
+| #988 | Stress annotation | ✅ DONE |
+| #989 | Verification | ✅ DONE |
+| #991 | Review prompt | ✅ DONE (10-dimension rubric) |
+| #997 | DSL→MDX converter | ✅ DONE (existing) |
+| #1001 | Writer comparison | ✅ DONE — Claude wins |
 
 ## File locations
 
 ```
-curriculum/l2-uk-en/plans/a1/     — 55 V3 plans
-curriculum/l2-uk-en/plans/a2/     — empty (ready for V3 plans)
-docs/l2-uk-en/A1-A2-CURRICULUM-V3.md — A1 curriculum design
-docs/l2-uk-en/A2-CURRICULUM-V3.md — A2 curriculum design (60 modules)
-docs/pipeline-v6-design.md        — V6 pipeline design
-scripts/build/v6_build.py         — V6 orchestrator (682 lines)
-scripts/build/research/           — knowledge packet generator
-scripts/build/exercises/           — exercise filler
-scripts/build/quick_verify.py     — structural checks
-scripts/build/phases/v6-write.md  — writing prompt template
+curriculum/l2-uk-en/plans/a1/                          — 55 V3 plans
+curriculum/l2-uk-en/a1/sounds-letters-and-hello-claude.md  — Claude M01 (8.55/10)
+curriculum/l2-uk-en/a1/sounds-letters-and-hello-gemini.md  — Gemini M01 (8.35/10)
+docs/l2-uk-en/A2-CURRICULUM-V3.md                      — A2 design (60 modules)
+docs/pipeline-v6-design.md                             — V6 pipeline design
+scripts/build/v6_build.py                              — V6 orchestrator
+scripts/build/research/build_knowledge_packet.py       — RAG query engine
+scripts/build/exercises/fill_placeholders.py            — exercise DSL generator
+scripts/build/quick_verify.py                          — structural checks + retry
+scripts/build/phases/v6-write.md                       — writing prompt template
+scripts/build/phases/v6-review.md                      — 10-dimension review rubric
 ```
+
+## Next session priority order
+1. Fix stray quotes in exercises (10 min)
+2. Fix fill-in context (update prompt, 15 min)
+3. Build Step 7b ENRICH — словник + videos (1 hour)
+4. Rebuild M01, get PASS from Gemini (target: 9+/10)
+5. Scale to M02-M07 (A1.1 phase)
