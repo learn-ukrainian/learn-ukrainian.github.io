@@ -1,0 +1,119 @@
+module: a1-039
+level: A1
+sequence: 39
+slug: shopping
+version: '1.0'
+title: Shopping
+subtitle: "Скільки коштує? — prices, quantities, and buying things"
+focus: communication
+pedagogy: PPP
+phase: A1.6 [Food and Shopping]
+word_target: 1200
+objectives:
+- Ask and understand prices (Скільки коштує?)
+- Use Ukrainian currency (гривня, копійка) and numbers with prices
+- Buy things at a shop or market using polite phrases
+- Express quantities (кілограм, літр, пачка, пляшка)
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — At the market:
+    — Скільки коштує кілограм яблук? — Сорок гривень.
+    — А помідори? — Тридцять п'ять гривень за кілограм.
+    — Дайте, будь ласка, два кілограми помідорів і кілограм яблук.
+    — Сімдесят п'ять гривень. — Ось, будь ласка.
+    Prices, quantities, polite buying at the market."
+  - "Dialogue 2 — At the supermarket:
+    — Вибачте, де тут хліб? — Хліб у третьому ряді.
+    — А молоко? — Молоко в холодильнику, там.
+    — Скільки коштує цей сир? — Сто двадцять гривень.
+    — Дорого! А є дешевший? — Так, ось цей — вісімдесят.
+    Navigation, asking prices, comparing (дорого/дешево)."
+- section: "Скільки коштує? (How Much?)"
+  words: 300
+  points:
+  - "Price patterns:
+    Скільки коштує [item]? — [number] гривень/гривні/гривня.
+    Скільки коштують [plural item]? — verb agrees with plural.
+    Currency: гривня (1), гривні (2-4), гривень (5+).
+    Копійка: one hundredth of a гривня (often rounded)."
+  - "Numbers with prices (review from M12):
+    21 гривня, 32 гривні, 45 гривень, 100 гривень.
+    Дорого! (Expensive!) Дешево! (Cheap!) Нормальна ціна. (Fair price.)
+    Є знижка? (Is there a discount?) За все — [total]. (Total.)"
+- section: "Де купити? (Where to Buy)"
+  words: 300
+  points:
+  - "Shopping locations:
+    магазин (shop), супермаркет (supermarket), ринок (market),
+    аптека (pharmacy), крамниця (store — Ukrainian synonym for магазин).
+    Specific: м'ясний відділ (meat section), молочний (dairy section)."
+  - "Quantity words:
+    кілограм (kilogram): кілограм яблук, два кілограми помідорів.
+    літр (liter): літр молока, два літри соку.
+    пачка (pack): пачка масла, пачка чаю.
+    пляшка (bottle): пляшка води, пляшка соку.
+    буханка (loaf): буханка хліба.
+    All use genitive after quantity — taught as chunks at A1."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Shopping toolkit:
+    Ask: Скільки коштує? Де тут [item]?
+    Buy: Дайте, будь ласка, [quantity] [item].
+    React: Дорого! / Дешево! / Добре, беру.
+    Pay: Скільки за все? Можна карткою?
+    Self-check: Buy 3 items at a market.
+    Ask the price, choose a quantity, pay."
+vocabulary_hints:
+  required:
+  - коштувати (to cost)
+  - скільки (how much/many)
+  - гривня (hryvnia, f)
+  - ціна (price, f)
+  - магазин (shop, m)
+  - ринок (market, m)
+  - купувати (to buy)
+  - дорого (expensive — adverb)
+  - дешево (cheap — adverb)
+  recommended:
+  - копійка (kopeck, f)
+  - кілограм (kilogram, m)
+  - літр (liter, m)
+  - пляшка (bottle, f)
+  - пачка (pack, f)
+  - знижка (discount, f)
+  - супермаркет (supermarket, m)
+  - гроші (money, pl.)
+  - готівка (cash, f)
+activity_hints:
+- type: fill-in
+  focus: "Скільки коштує ___? — ___ гривень. (match items with prices)"
+  items: 8
+- type: quiz
+  focus: "Choose correct: 23 (гривня / гривні / гривень)"
+  items: 8
+- type: fill-in
+  focus: "At the market: Дайте ___ (кілограм/літр/пляшка) ___."
+  items: 6
+- type: quiz
+  focus: "Where do you buy it? Match item to shop type."
+  items: 8
+connects_to:
+- a1-040 (People Around Me)
+prerequisites:
+- a1-038 (At the Cafe)
+grammar:
+- "Скільки коштує/коштують? — singular/plural agreement"
+- "Currency: гривня/гривні/гривень (1/2-4/5+)"
+- "Quantity + genitive as chunks: кілограм яблук, літр молока"
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 31"
+  url: https://www.ukrainianlessons.com/episode31/
+  notes: "Shopping vocabulary, prices, quantities."
+- title: "State Standard 2024, Topic 3 (купівля)"
+  notes: "Communicative situation: shopping, prices, paying."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

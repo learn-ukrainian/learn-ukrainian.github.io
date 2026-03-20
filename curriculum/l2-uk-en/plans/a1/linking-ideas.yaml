@@ -1,0 +1,123 @@
+module: a1-044
+level: A1
+sequence: 44
+slug: linking-ideas
+version: '1.0'
+title: Linking Ideas
+subtitle: "І, а, але, бо — connecting your thoughts"
+focus: grammar
+pedagogy: PPP
+phase: A1.7 [Communication]
+word_target: 1200
+objectives:
+- Use coordinating conjunctions і, та, а, але to connect clauses
+- Express reasons with бо and тому що
+- Build longer, more natural sentences instead of choppy short ones
+- Recognize conjunctions in spoken and written Ukrainian
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Making plans:
+    — Ти хочеш каву чи чай? — Каву, бо я дуже втомлений.
+    — А я хочу чай, але без цукру.
+    — Ходімо в кафе, і я візьму ще тістечко.
+    — Я теж хочу, але я на дієті!
+    Conjunctions: бо (because), а (and/but contrast), але (but), і (and)."
+  - "Dialogue 2 — Talking about the day:
+    — Що ти робив сьогодні? — Я працював, а потім ходив у магазин.
+    — Я хотів зателефонувати, але ти не відповів.
+    — Вибач, бо телефон був без звуку. — Нічого!
+    — Завтра я вільний, і ми можемо зустрітися.
+    Natural use of conjunctions in everyday talk."
+- section: "Сполучники (Conjunctions)"
+  words: 300
+  points:
+  - "What are conjunctions? Ukrainian term: сполучник (from сполучити — to connect).
+    They connect words, phrases, or whole sentences.
+    Without: Я люблю каву. Я люблю чай. (choppy)
+    With: Я люблю каву і чай. (natural)
+    Without: Я хочу піти. Я втомлений. (disconnected)
+    With: Я хочу піти, бо я втомлений. (connected thought)"
+  - "Grade 4-5 approach: сполучники сурядності (coordinating).
+    These connect EQUAL parts:
+    і / та — 'and' (та = synonym of і, common in writing):
+    мама і тато, хліб та масло, Я читаю і пишу.
+    а — 'and' with contrast or switch:
+    Я люблю каву, а ти? Він працює, а вона відпочиває.
+    але — 'but' (stronger contrast):
+    Я хочу, але не можу. Він молодий, але розумний."
+- section: "Бо і тому що (Because)"
+  words: 300
+  points:
+  - "Two ways to say 'because':
+    бо — short, common in speech: Я не йду, бо я хворий.
+    тому що — longer, common in writing: Я не йду, тому що я хворий.
+    Both are correct. Both are Ukrainian. бо is NOT informal or wrong.
+    Comma rule: always put a comma before бо and тому що.
+    Я втомлений, бо багато працював.
+    Ми не гуляємо, тому що йде дощ."
+  - "Building reasons:
+    Чому? (Why?) → Бо / Тому що...
+    — Чому ти вчиш українську? — Бо я люблю Україну.
+    — Чому ти не їси? — Тому що я не голодний.
+    — Чому ви тут? — Бо ми чекаємо друга.
+    Бо answers the question Чому? — this is how Ukrainians explain things."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Conjunction quick reference:
+    | Conjunction | Meaning | Example |
+    | і / та | and | Я їм хліб і п'ю воду. |
+    | а | and (contrast) | Я читаю, а він пише. |
+    | але | but | Я хочу, але не можу. |
+    | бо | because | Я не йду, бо хворий. |
+    | тому що | because | Я не йду, тому що хворий. |
+    Comma rules: always before а, але, бо, тому що.
+    Before і — only when connecting two full sentences.
+    Self-check: Connect these pairs with the right conjunction:
+    Я люблю каву. Я не люблю чай. → Я люблю каву, а/але..."
+vocabulary_hints:
+  required:
+  - і (and)
+  - та (and — synonym of і)
+  - а (and/but — contrast)
+  - але (but)
+  - бо (because)
+  - тому що (because — longer form)
+  recommended:
+  - чому (why)
+  - тому (therefore/that's why)
+  - також (also)
+  - теж (also — colloquial)
+  - або (or)
+  - чи (or — in questions)
+activity_hints:
+- type: fill-in
+  focus: "Choose: і, а, але, бо — Я хочу ___ не можу. Він працює, ___ вона відпочиває."
+  items: 10
+- type: quiz
+  focus: "Which conjunction? Я не йду, ___ хворий. (і / а / бо)"
+  items: 8
+- type: fill-in
+  focus: "Connect with бо/тому що: Я вчу українську, ___."
+  items: 6
+- type: group-sort
+  focus: "Sort: і/та (addition) vs а/але (contrast) vs бо/тому що (reason)"
+  items: 10
+connects_to:
+- a1-045 (When and Where)
+prerequisites:
+- a1-043 (Please Do This)
+grammar:
+- "Coordinating conjunctions: і/та (and), а (contrast), але (but)"
+- "Causal conjunctions: бо, тому що (because)"
+- "Comma rules: before а, але, бо, тому що"
+register: розмовний
+references:
+- title: "State Standard 2024, §4.3.2"
+  notes: "Basic complex sentences — і, а, але, бо."
+- title: "Grade 4-5 textbook: Сполучники (Заболотний)"
+  notes: "Coordinating conjunctions: сполучники сурядності."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

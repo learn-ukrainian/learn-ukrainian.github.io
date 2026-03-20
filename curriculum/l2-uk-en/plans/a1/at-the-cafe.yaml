@@ -1,0 +1,117 @@
+module: a1-038
+level: A1
+sequence: 38
+slug: at-the-cafe
+version: '1.0'
+title: At the Cafe
+subtitle: "У кафе — ordering, paying, and cafe culture"
+focus: communication
+pedagogy: PPP
+phase: A1.6 [Food and Shopping]
+word_target: 1200
+objectives:
+- Order food and drinks at a Ukrainian cafe
+- Use polite request phrases (Можна...? Дайте, будь ласка...)
+- Read a simple Ukrainian menu and ask about items
+- Understand Ukrainian cafe culture (tipping, paying)
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Ordering at a cafe:
+    — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте?
+    — Борщ дуже смачний. — Добре, мені борщ і хліб, будь ласка.
+    — А що будете пити? — Каву з молоком.
+    — Добре, одну хвилинку.
+    Polite ordering with будь ласка, мені + accusative."
+  - "Dialogue 2 — Paying the bill:
+    — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять гривень.
+    — Можна карткою? — Так, звичайно.
+    — Дякую, дуже смачно було! — Дякуємо, приходьте ще!
+    Paying, complimenting food, tipping."
+- section: "Як замовити (How to Order)"
+  words: 300
+  points:
+  - "Ordering patterns:
+    Мені [accusative], будь ласка. (Мені каву, будь ласка.)
+    Можна [accusative]? (Можна воду?)
+    Дайте, будь ласка, [accusative]. (Дайте, будь ласка, борщ.)
+    Я хочу / Я буду [accusative]. (Я буду салат.)
+    All use accusative from M37 — real application."
+  - "Asking about the menu:
+    Що ви рекомендуєте? (What do you recommend?)
+    Це гостре? (Is it spicy?) Це з м'ясом? (Is it with meat?)
+    А що це? (What is this?) Скільки коштує? (How much?)
+    Є вегетаріанське меню? (Is there a vegetarian menu?)"
+- section: "Культура кафе (Cafe Culture)"
+  words: 300
+  points:
+  - "Ukrainian cafe culture:
+    Кафе vs ресторан: кафе is casual, ресторан is formal.
+    Меню: the waiter brings it, or it's on the wall/board.
+    Рахунок: ask for the bill — it doesn't come automatically.
+    Чайові (tips): 10% is standard, not obligatory.
+    Карткою чи готівкою? (Card or cash?) — most places take cards."
+  - "Useful cafe phrases:
+    Вільно? / Тут вільно? (Is this seat free?)
+    Можна меню? (Can I have the menu?)
+    Ще одну каву, будь ласка. (One more coffee, please.)
+    Без цукру. (Without sugar.) З лимоном. (With lemon.)
+    Все було дуже смачно! (Everything was delicious!)"
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Cafe communication toolkit:
+    Order: Мені [accusative], будь ласка.
+    Ask: Скільки коштує? Що рекомендуєте?
+    Pay: Рахунок, будь ласка. Можна карткою?
+    Compliment: Дуже смачно!
+    Self-check: Order a full meal (starter, main, drink) at a cafe.
+    Ask for the bill and pay."
+vocabulary_hints:
+  required:
+  - кафе (cafe, n, indecl.)
+  - меню (menu, n, indecl.)
+  - рахунок (bill, m)
+  - замовляти (to order)
+  - офіціант (waiter, m)
+  - смачно (delicious — adverb)
+  - будь ласка (please)
+  recommended:
+  - ресторан (restaurant, m)
+  - рекомендувати (to recommend)
+  - чайові (tip/gratuity, pl.)
+  - готівка (cash, f)
+  - картка (card, f)
+  - гостре (spicy — neuter adj.)
+  - вегетаріанський (vegetarian — adj.)
+activity_hints:
+- type: fill-in
+  focus: "Order at a cafe: Мені ___, будь ласка. (choose correct accusative)"
+  items: 8
+- type: quiz
+  focus: "What do you say? Match situation to phrase (order/pay/ask/compliment)"
+  items: 8
+- type: fill-in
+  focus: "Complete the cafe dialogue with correct phrases"
+  items: 6
+- type: match-up
+  focus: "Match Ukrainian cafe phrases with their functions"
+  items: 8
+connects_to:
+- a1-039 (Shopping)
+prerequisites:
+- a1-037 (I Eat, I Drink)
+grammar:
+- "Мені + accusative (ordering pattern)"
+- "Можна + accusative (polite request)"
+- "Review: accusative inanimate from M37"
+register: розмовний
+references:
+- title: "ULP Season 1, Episodes 11-12"
+  url: https://www.ukrainianlessons.com/episode11/
+  notes: "Ordering at a cafe, restaurant vocabulary."
+- title: "State Standard 2024, Topic 3 (ресторан)"
+  notes: "Communicative situation: ordering food and drinks."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

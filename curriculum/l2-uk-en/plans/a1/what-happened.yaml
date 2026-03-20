@@ -1,0 +1,126 @@
+module: a1-048
+level: A1
+sequence: 48
+slug: what-happened
+version: '1.0'
+title: What Happened?
+subtitle: "Він читав, вона читала — past tense with gender"
+focus: grammar
+pedagogy: PPP
+phase: A1.8 [Past, Future, Graduation]
+word_target: 1200
+objectives:
+- Form past tense of verbs for all genders and plural (він читав, вона читала, воно читало, вони читали)
+- Recognize that Ukrainian past tense marks GENDER, not person
+- Use past tense to describe completed actions in simple sentences
+- Ask and answer "What did you do?" (Що ти робив/робила?)
+content_outline:
+- section: "Dialogues"
+  words: 300
+  points:
+  - "Dialogue 1 — What did you do yesterday?
+    — Що ти робив учора? — Я читав книжку. А ти?
+    — Я готувала вечерю. — А що робив Тарас?
+    — Він гуляв у парку. — А Олена?
+    — Вона працювала.
+    Note gender: робив (he), робила (she). Same verb, different ending."
+  - "Dialogue 2 — A weekend:
+    — Як ти провів вихідні? — Добре! У суботу я гуляв у місті.
+    — А в неділю? — У неділю я дивився фільм. А ти?
+    — Я ходила в кафе з подругою. Ми їли торт і пили каву.
+    — Як смачно!
+    Past tense in natural narration."
+- section: "Минулий час (Past Tense)"
+  words: 300
+  points:
+  - "Grade 3-4 textbooks: минулий час (past tense).
+    How to form it: take the infinitive, remove -ти, add:
+    він → -в (читати → читав)
+    вона → -ла (читати → читала)
+    воно → -ло (читати → читало)
+    вони → -ли (читати → читали)
+    KEY INSIGHT: past tense shows GENDER, not person!
+    Я читав = I (male) was reading. Я читала = I (female) was reading.
+    Same person (я), different gender ending."
+  - "This is different from present tense (which marks person):
+    Present: я читаю, ти читаєш, він читає (person endings).
+    Past: я/ти/він читав, я/ти/вона читала (gender endings).
+    Він працював. Вона працювала. Воно працювало. Вони працювали.
+    No aspect distinction at A1 — just learn the forms."
+- section: "Практика (Practice)"
+  words: 300
+  points:
+  - "Core verbs in past tense (all known from A1.3):
+    читати → читав / читала / читало / читали
+    працювати → працював / працювала / працювало / працювали
+    гуляти → гуляв / гуляла / гуляло / гуляли
+    готувати → готував / готувала / готувало / готували
+    дивитися → дивився / дивилася / дивилося / дивилися
+    говорити → говорив / говорила / говорило / говорили"
+  - "Building sentences about the past:
+    Учора я читав цікаву книжку. (Yesterday I read an interesting book.)
+    Вона працювала в офісі. (She worked in the office.)
+    Ми гуляли в парку. (We walked in the park.)
+    Вони готували вечерю разом. (They cooked dinner together.)
+    Time words for past: учора (yesterday), минулого тижня (last week)."
+- section: "Summary"
+  words: 300
+  points:
+  - "Past tense formation:
+    Infinitive stem + -в (він), -ла (вона), -ло (воно), -ли (вони).
+    Gender matters: Я читав (male speaker). Я читала (female speaker).
+    Вони завжди -ли (plural = no gender distinction).
+    Question: Що ти робив/робила? (What did you do?)
+    Answer: Я читав/читала книжку.
+    Self-check: Tell your partner what you did yesterday using 3 different verbs."
+vocabulary_hints:
+  required:
+  - учора (yesterday)
+  - робити (to do)
+  - читати (to read)
+  - працювати (to work)
+  - гуляти (to walk)
+  - готувати (to cook)
+  - дивитися (to watch)
+  - говорити (to speak)
+  recommended:
+  - минулий (past, adj)
+  - вихідні (weekend, pl)
+  - субота (Saturday, f)
+  - неділя (Sunday, f)
+  - разом (together)
+  - фільм (film, m)
+  - провести (to spend time)
+activity_hints:
+- type: fill-in
+  focus: "Form past tense: читати → він чита__, вона чита__, вони чита__"
+  items: 10
+- type: quiz
+  focus: "Choose correct gender: Олена (читав/читала/читало) книжку."
+  items: 8
+- type: group-sort
+  focus: "Sort by gender: він-forms vs вона-forms vs вони-forms"
+  items: 10
+- type: fill-in
+  focus: "Complete: Учора я ___ (гуляти) в парку. Вона ___ (готувати) вечерю."
+  items: 6
+connects_to:
+- a1-049 (Yesterday)
+prerequisites:
+- a1-047 (Checkpoint — Communication)
+grammar:
+- "Past tense (минулий час): gender-based endings -в, -ла, -ло, -ли"
+- "Past tense marks gender, not person (unlike present tense)"
+- "Formation: infinitive stem + gender ending"
+- "Question: Що ти робив/робила?"
+register: розмовний
+references:
+- title: "State Standard 2024, §4.2.4.1"
+  notes: "Past tense — gender agreement in verb forms."
+- title: "Grade 3-4 textbook: Минулий час"
+  notes: "Past tense formation: -в, -ла, -ло, -ли endings."
+- title: "ULP Season 1, Episodes 26-27"
+  url: https://www.ukrainianlessons.com/episode26/
+  notes: "Past tense verbs and narrating events."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

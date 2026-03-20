@@ -1,0 +1,93 @@
+module: a1-041
+level: A1
+sequence: 41
+slug: checkpoint-food-shopping
+version: '1.0'
+title: "Checkpoint: Food and Shopping"
+subtitle: "Can you order food and buy things in Ukrainian?"
+focus: review
+pedagogy: PPP
+phase: A1.6 [Food and Shopping]
+word_target: 1000
+objectives:
+- Demonstrate food and drink vocabulary in context
+- Use accusative case correctly for both inanimate and animate nouns
+- Order at a cafe and buy things at a shop/market
+- Combine all A1.6 skills in connected scenarios
+content_outline:
+- section: "Що ми знаємо? (What Do We Know?)"
+  words: 200
+  points:
+  - "Self-check covering M36-M40:
+    Can you name 10 foods and 5 drinks? (M36)
+    Can you say what you eat/drink using accusative? (M37)
+    Can you order at a cafe? (M38)
+    Can you ask prices and buy things? (M39)
+    Can you use accusative for people? (M40)"
+- section: "Читання (Reading Practice)"
+  words: 250
+  points:
+  - "A short Ukrainian text using vocabulary from M36-M40.
+    Content: Anna goes to the market, buys food, then goes to a cafe.
+    She orders борщ and каву з молоком, asks for the bill,
+    then meets a friend and introduces her brother.
+    Uses food vocabulary, accusative inanimate and animate, cafe phrases."
+- section: "Граматика (Grammar Summary)"
+  words: 200
+  points:
+  - "Key patterns from A1.6:
+    1. Food/drink vocabulary: їжа, напої, meals (M36)
+    2. Accusative inanimate: masc = nom, fem -а→-у (M37)
+    3. Ordering: Мені каву, будь ласка (M38)
+    4. Prices: Скільки коштує? Гривня/гривні/гривень (M39)
+    5. Accusative animate: fem -а→-у, masc = genitive (M40)
+    6. Chunks: кава з молоком, кілограм яблук (M36, M39)"
+- section: "Діалог (Connected Dialogue)"
+  words: 200
+  points:
+  - "A day of food and shopping:
+    — Що ти їш на сніданок? — Я їм кашу і п'ю каву з молоком.
+    — Потім іду на ринок. Скільки коштують помідори?
+    — Тридцять гривень. — Дайте кілограм, будь ласка.
+    — Потім у кафе: Мені борщ і воду, будь ласка.
+    — О, я бачу Олену! Олено, привіт! Ти знаєш мого брата?
+    Combines all A1.6 skills in one realistic day."
+- section: "Підсумок — Summary"
+  words: 150
+  points:
+  - "A1.6 achievement summary:
+    You can talk about food and drinks.
+    You can use accusative for things AND people.
+    You can order at a cafe and pay.
+    You can shop at a market and ask prices.
+    Next: A1.7 — Communication (phone, email, making plans)."
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: "Accusative check: choose correct form for inanimate AND animate nouns"
+  items: 10
+- type: fill-in
+  focus: "Complete the cafe + market dialogue with correct forms"
+  items: 8
+- type: group-sort
+  focus: "Sort accusative forms: inanimate (що?) vs animate (кого?)"
+  items: 10
+- type: quiz
+  focus: "What do you say? Match shopping/cafe situations to correct phrases"
+  items: 8
+connects_to:
+- a1-042 (next module in A1.7)
+prerequisites:
+- a1-040 (People Around Me)
+grammar:
+- "Review: accusative inanimate (M37) and animate (M40)"
+- "Review: ordering patterns (M38) and price patterns (M39)"
+- "Review: з + noun chunks (M36, M39)"
+register: розмовний
+references:
+- title: "Synthesis of M36-M40 content"
+  notes: "No new material — review and integration of A1.6 phase."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

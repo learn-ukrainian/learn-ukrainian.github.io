@@ -1,0 +1,122 @@
+module: a1-036
+level: A1
+sequence: 36
+slug: food-and-drink
+version: '1.0'
+title: Food and Drink
+subtitle: "Їжа і напої — what Ukrainians eat and drink"
+focus: vocabulary
+pedagogy: PPP
+phase: A1.6 [Food and Shopping]
+word_target: 1200
+objectives:
+- Name common Ukrainian foods and drinks
+- Use кава з молоком, чай з цукром as memorized chunks (NOT instrumental grammar)
+- Talk about what you eat and drink daily
+- Recognize iconic Ukrainian dishes (борщ, вареники, сало)
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — At home in the morning:
+    — Що ти хочеш на сніданок? — Каву з молоком і хліб з маслом.
+    — А я хочу чай з цукром і кашу.
+    Food + drink combinations as chunks (з + noun = memorized phrase)."
+  - "Dialogue 2 — Talking about food preferences:
+    — Що ти зазвичай їш на обід? — Суп і салат.
+    — А на вечерю? — М'ясо з картоплею або рибу з рисом.
+    Three meals: сніданок, обід, вечеря."
+- section: "Їжа (Food)"
+  words: 300
+  points:
+  - "Core food vocabulary by category:
+    Хліб і каша: хліб, каша, рис, макарони.
+    М'ясо і риба: м'ясо, курка, риба.
+    Овочі: картопля, морква, цибуля, помідор, огірок.
+    Фрукти: яблуко, банан, апельсин.
+    Молочне: молоко, сир, масло, сметана, йогурт.
+    Інше: яйце, цукор, сіль, олія."
+  - "Ukrainian iconic foods (cultural note):
+    борщ (beet soup — national dish), вареники (filled dumplings),
+    сало (cured pork fat), галушки (dumplings), деруни (potato pancakes).
+    These words are cultural identity, not just vocabulary."
+- section: "Напої (Drinks)"
+  words: 300
+  points:
+  - "Core drink vocabulary:
+    Гарячі: кава, чай. Холодні: вода, сік, компот, лимонад.
+    Молочні: молоко, кефір. Алкогольні: пиво, вино (for recognition).
+    Key chunk pattern: [drink] з [addition] — memorized, NOT grammar:
+    кава з молоком, чай з цукром, чай з лимоном, вода з газом."
+  - "Why 'з + noun' is a chunk, not grammar:
+    At A1, learn кава з молоком as a fixed phrase, like 'coffee with milk.'
+    The instrumental case ending (-ом, -ою) is grammar for A2.
+    For now: memorize the whole phrase. Say it as one unit."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Food and drink toolkit:
+    Що ти хочеш? — Каву з молоком. / Хліб з маслом.
+    Що ти їш на сніданок / обід / вечерю?
+    Three meals: сніданок (breakfast), обід (lunch), вечеря (dinner).
+    Self-check: Name 5 foods and 3 drinks you like.
+    Name one Ukrainian dish and why it matters."
+vocabulary_hints:
+  required:
+  - їжа (food, f)
+  - напій (drink, m)
+  - хліб (bread, m)
+  - кава (coffee, f)
+  - чай (tea, m)
+  - вода (water, f)
+  - молоко (milk, n)
+  - сік (juice, m)
+  - м'ясо (meat, n)
+  - риба (fish, f)
+  - суп (soup, m)
+  - сніданок (breakfast, m)
+  - обід (lunch, m)
+  - вечеря (dinner, f)
+  recommended:
+  - борщ (beet soup, m)
+  - вареник (dumpling, m)
+  - каша (porridge, f)
+  - сир (cheese, m)
+  - масло (butter, n)
+  - яйце (egg, n)
+  - картопля (potato, f)
+  - цукор (sugar, m)
+  - сіль (salt, f)
+  - сметана (sour cream, f)
+  - компот (compote, m)
+  - курка (chicken, f)
+activity_hints:
+- type: match-up
+  focus: "Match Ukrainian food/drink words with pictures or English meanings"
+  items: 10
+- type: group-sort
+  focus: "Sort into categories: їжа / напої (food vs drinks)"
+  items: 12
+- type: fill-in
+  focus: "Complete: Я хочу ___ з ___. (кава/молоко, чай/цукор)"
+  items: 6
+- type: quiz
+  focus: "Which is the Ukrainian national dish? Identify iconic foods."
+  items: 8
+connects_to:
+- a1-037 (I Eat, I Drink)
+prerequisites:
+- a1-035 (Checkpoint — Places)
+grammar:
+- "з + noun as memorized chunk (NOT instrumental grammar)"
+- "Що ти хочеш? — review хотіти from M19"
+- "No new grammar — vocabulary-focused module"
+register: розмовний
+references:
+- title: "ULP Season 1, Episodes 11-13"
+  url: https://www.ukrainianlessons.com/episode11/
+  notes: "Anna introduces food and drink vocabulary, cafe ordering."
+- title: "State Standard 2024, Topic 3 (ресторан)"
+  notes: "Communicative situation: restaurant, food, ordering."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

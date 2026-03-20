@@ -1,0 +1,123 @@
+module: a1-046
+level: A1
+sequence: 46
+slug: holidays
+version: '1.0'
+title: Holidays
+subtitle: "Різдво, Великдень, День Незалежності — Ukrainian celebrations"
+focus: cultural
+pedagogy: PPP
+phase: A1.7 [Communication]
+word_target: 1200
+objectives:
+- Name and describe major Ukrainian holidays (Різдво, Великдень, День Незалежності)
+- Use holiday greetings appropriately (З Різдвом! З Великоднем! З Днем Незалежності!)
+- Talk about what people do on holidays using known vocabulary
+- Understand the cultural significance of Ukrainian holidays
+content_outline:
+- section: "Діалоги (Dialogues)"
+  words: 300
+  points:
+  - "Dialogue 1 — Before Christmas:
+    — Коли в тебе Різдво? — Двадцять п'ятого грудня. А в тебе?
+    — У нас — теж! Раніше святкували сьомого січня, але тепер — двадцять п'ятого.
+    — Що ви робите на Різдво? — Ми співаємо колядки і їмо кутю.
+    — Як гарно! З Різдвом! — З Різдвом Христовим!
+    Різдво vocabulary: колядки (carols), кутя (kutia — ritual dish), святкувати."
+  - "Dialogue 2 — Independence Day:
+    — Двадцять четверте серпня — День Незалежності!
+    — Так, це головне державне свято України.
+    — Що ви робите? — Ми дивимося парад і ходимо на концерт.
+    — А ввечері? — Ввечері — салют і святковий вечір з друзями.
+    — З Днем Незалежності! — Слава Україні!
+    National holiday: парад, концерт, салют."
+- section: "Українські свята (Ukrainian Holidays)"
+  words: 300
+  points:
+  - "Різдво (Christmas) — December 25:
+    Ukraine moved Christmas from January 7 to December 25 in 2023.
+    January 7 was the Russian Orthodox date; December 25 aligns with Europe.
+    Traditions: Свята вечеря (Holy Supper) on December 24 — 12 страв (12 dishes).
+    кутя (kutia) — wheat porridge with honey and poppy seeds — the first dish.
+    колядки (carols) — traditional Christmas songs. Колядники go door to door."
+  - "Великдень (Easter):
+    The biggest religious holiday. Date changes each year (spring).
+    Traditions: писанки (decorated eggs — unique Ukrainian art),
+    паска (Easter bread), святити кошик (blessing the Easter basket at church).
+    Greeting: Христос воскрес! — Воістину воскрес! (Christ is risen! — Indeed risen!)"
+- section: "Державні свята (National Holidays)"
+  words: 300
+  points:
+  - "День Незалежності — August 24, 1991:
+    Ukraine declared independence from the Soviet Union.
+    The most important державне свято (national holiday).
+    Celebrations: парад (parade), концерти, салют (fireworks), прапори (flags).
+    Greeting: З Днем Незалежності! (Happy Independence Day!)
+    Слава Україні! — Героям слава! (Glory to Ukraine! — Glory to the heroes!)"
+  - "Other holidays to know:
+    Новий рік (New Year) — January 1 — biggest secular celebration.
+    Вишиванковий день (Vyshyvanka Day) — third Thursday of May.
+    Everyone wears вишиванка (embroidered shirt) — symbol of Ukrainian identity.
+    День Конституції (Constitution Day) — June 28.
+    День захисників і захисниць (Defenders' Day) — October 1."
+- section: "Підсумок — Summary"
+  words: 300
+  points:
+  - "Holiday greetings pattern: З + instrumental case!
+    З Різдвом! (Merry Christmas!) З Великоднем! (Happy Easter!)
+    З Новим роком! (Happy New Year!) З Днем Незалежності!
+    З днем народження! (Happy birthday!)
+    Pattern: З + [holiday/occasion in instrumental] + !
+    You already know instrumental from з + noun (кава з молоком).
+    Here it's the same: 'with' the holiday → instrumental.
+    Quick calendar:
+    грудень 25 — Різдво, січень 1 — Новий рік,
+    весна — Великдень, серпень 24 — День Незалежності.
+    Self-check: How do you say 'Merry Christmas' and 'Happy New Year'?"
+vocabulary_hints:
+  required:
+  - свято (holiday, n)
+  - святкувати (to celebrate)
+  - Різдво (Christmas, n)
+  - Великдень (Easter, m)
+  - Новий рік (New Year)
+  - вітати (to congratulate/greet)
+  recommended:
+  - кутя (kutia, f)
+  - колядка (carol, f)
+  - писанка (decorated Easter egg, f)
+  - паска (Easter bread, f)
+  - парад (parade, m)
+  - прапор (flag, m)
+  - вишиванка (embroidered shirt, f)
+  - незалежність (independence, f)
+  - салют (fireworks, m)
+activity_hints:
+- type: quiz
+  focus: "Match holiday to date: Різдво → 25 грудня, День Незалежності → 24 серпня"
+  items: 8
+- type: fill-in
+  focus: "Greetings: З ___! (Різдвом, Великоднем, Новим роком)"
+  items: 8
+- type: quiz
+  focus: "Which holiday? Кутя, колядки, Свята вечеря → (Різдво / Великдень / Новий рік)"
+  items: 8
+- type: group-sort
+  focus: "Sort traditions by holiday: Різдво vs Великдень vs День Незалежності"
+  items: 10
+connects_to:
+- a1-047 (Checkpoint — Communication)
+prerequisites:
+- a1-045 (When and Where)
+grammar:
+- "З + instrumental for holiday greetings: З Різдвом! З Великоднем!"
+- "Review: dates (М18), instrumental chunks (М36)"
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 23"
+  url: https://www.ukrainianlessons.com/episode23/
+  notes: "Ukrainian holidays and celebrations."
+- title: "State Standard 2024, §3 (традиції)"
+  notes: "Thematic area: traditions, holidays, cultural practices."
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
