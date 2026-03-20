@@ -25,7 +25,7 @@ __pycache__/
 # Build/Output
 
 dist/
-build/
+/build/
 *.tsbuildinfo
 output/json/
 
