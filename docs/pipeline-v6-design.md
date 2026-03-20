@@ -117,7 +117,10 @@ vocabulary: кит, кіт, бик, бік, сил, сіль
   - Anna Ohoiko-style: pronunciation practice, word-stress identification
 
 ### Step 6: ANNOTATE (deterministic)
-- Stress marks added by `stress_annotator.py` (ukrainian-word-stress + Stanza)
+- **Stress marks:** Added by `stress_annotator.py` (ukrainian-word-stress, 2.7M verified forms)
+  - Writer produces NO stress marks — annotator adds them all deterministically
+  - **A1-A2 only:** stress marks on all Ukrainian words in prose + vocabulary
+  - **B1+:** stress marks ONLY in vocabulary tables/glossaries, NOT in prose (real Ukrainian has no stress marks — immersion means authentic text)
 - Deterministic heading fixes
 - Known auto-fixes applied
 - Exercise DSL validated (all blocks parseable)
