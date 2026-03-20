@@ -1,0 +1,190 @@
+# Pipeline V6 Design — End-to-End Process
+
+**Date:** 2026-03-20
+**Status:** DRAFT v2 — incorporating Gemini's first review
+**Issue:** #993
+
+## Philosophy
+
+The current V5 pipeline has 7 phases with 3 LLM handoffs. Information is lost at each handoff. Research doesn't reach the writer. Activities don't match the content. Plans have Russicisms that survive into published modules. The pipeline fixes symptoms instead of preventing problems.
+
+V6 is a ground-up rethink: fewer phases, deeper gates, one creative session, exercises handled separately but contextually.
+
+---
+
+## Pipeline Overview
+
+```
+PLAN → CHECK → RESEARCH → PREFLIGHT → WRITE → EXERCISES → ANNOTATE → VERIFY → REVIEW → PUBLISH
+  1       2        3          4          5         5b          6          7         8         9
+```
+
+### Step 1: PLAN (human + Claude + Gemini)
+- Human approves curriculum structure
+- Claude drafts plans, Gemini adversarial reviews
+- Plans are immutable architecture (version-bumped if changed)
+- Plans contain: objectives, content outline with section points, vocabulary hints, grammar scope, activity hints, references, pronunciation videos
+
+### Step 2: CHECK (deterministic gate — #983)
+- Script validates plan YAML
+- Checks: required fields, word budgets, no stress marks, VESUM verification, Russicism scan, apostrophe check, phase alignment, grammar scope
+- **Gate: zero errors.** Plan goes back to Step 1 if it fails.
+
+### Step 3: RESEARCH (deterministic + RAG)
+- Script reads the plan, queries RAG per section
+- Searches textbooks (Большакова, Вашуленко Grade 1-2; Заболотний, Авраменко Grade 5-11)
+- Output: Verified Knowledge Packet — structured by plan section, with textbook excerpts, examples, page references
+- Knowledge Packet must be CONCISE — curated excerpts, not raw OCR dumps
+- `assess_research.py` scores quality
+- **Gate: research score ≥ 9/10.** If below, research re-runs with adjusted queries.
+
+### Step 4: PREFLIGHT (LLM — same model as writer)
+- Reads the assembled prompt (plan + knowledge packet + rules)
+- Checks: contradictions between plan and rules, Russicisms in combined context, feasibility
+- Can auto-fix the plan (with version bump)
+- **Gate: zero HIGH issues.** Build does not proceed with unresolved contradictions.
+
+### Step 5: WRITE (single LLM session — prose only)
+- **Model:** Gemini Pro 1M or Claude Opus 4.6 1M
+- **Input:** Plan + Verified Knowledge Packet (INLINE in prompt, not file path) + writing rules (max 5 hard rules, not 50 generic ones)
+- **Process:** One session, section by section. Writer focuses ONLY on prose + pedagogy.
+- **Exercise placeholders:** Writer marks WHERE exercises should go and WHAT they test, but does NOT write exercise syntax. Format:
+
+```markdown
+## Голосні звуки (Vowel Sounds)
+
+Ukrainian has 6 vowel sounds but 10 vowel letters...
+
+[prose about iotated vowels — Я, Ю, Є, Ї]
+
+:::exercise-placeholder
+type: multiple-choice
+tests: identify which vowel letters are iotated
+after: iotated vowels explanation
+items: 4
+vocabulary: Я, Ю, Є, Ї, А, О, У, И, І
+correct: Я, Ю, Є, Ї
+:::
+
+[prose about И vs І distinction]
+
+:::exercise-placeholder
+type: cloze
+tests: И vs І in minimal pairs
+after: И/І distinction
+items: 3
+vocabulary: кит, кіт, бик, бік, сил, сіль
+:::
+```
+
+- **Output format:** Markdown with `:::exercise-placeholder` blocks (custom DSL).
+  - NOT MDX (JSX syntax too brittle for LLM)
+  - NOT YAML/JSON (escaping distracts from linguistic quality)
+  - Custom DSL degrades gracefully if malformed
+- **Chunked output:** For modules >3000 words, writer outputs section by section with a continue mechanism. Prevents truncation and maintains quality at the tail end.
+- **Research usage guarantee:** Knowledge Packet is inline — part of immediate working memory. Writer MUST cite textbook sources with `<!-- adapted from: Author, Grade N, p.XX -->` comments. Post-build check verifies citations exist.
+- **RAG tools:** Available during session for edge-case fact-checking, but heavy lifting done by pre-research.
+
+### Step 5b: EXERCISES (separate focused session)
+- **Input:** The completed prose from Step 5 (with exercise placeholders) + plan activity hints
+- **Process:** Short, focused LLM session (or partially deterministic) that reads each `:::exercise-placeholder` and generates the actual exercise in the custom DSL:
+
+```markdown
+:::exercise[multiple-choice]
+Які голосні літери є йотованими? (Which vowel letters are iotated?)
+- [ ] А
+- [x] Я
+- [x] Ю
+- [ ] О
+- [x] Є
+- [x] Ї
+- [ ] И
+- [ ] І
+:::
+
+:::exercise[cloze]
+к{и}т — whale, к{і}т — cat
+б{и}к — bull, б{і}к — side
+с{и}л — strength (gen. pl.), с{і}ль — salt
+:::
+```
+
+- **Why separate:** Writer stays in creative flow during Step 5 (no syntax distraction). Exercise generator has FULL prose context. If exercises are bad, regenerate without touching prose.
+- **Partially deterministic:** Simple types (fill-gap from vocabulary, match columns from word lists) could be generated by code, not LLM. Only complex types (ZNO, reading comprehension) need LLM.
+- **Exercise types available:**
+  - Textbook-style: multiple-choice, cloze (fill-gap), match-columns, true/false, read-and-answer
+  - ZNO-format: sentence-select, row-select, error-find, fill-ending
+  - Anna Ohoiko-style: pronunciation practice, word-stress identification
+
+### Step 6: ANNOTATE (deterministic)
+- Stress marks added by `stress_annotator.py` (ukrainian-word-stress + Stanza)
+- Deterministic heading fixes
+- Known auto-fixes applied
+- Exercise DSL validated (all blocks parseable)
+
+### Step 7: VERIFY (deterministic gate)
+- VESUM word verification (proper nouns excluded, exercise content included)
+- Grammar scope check (morphological validator per phase)
+- Content quality checks (no Russicisms, no LLM filler, no scope creep)
+- IPA check (exempt for phonetics M01-M03)
+- Research usage check: verify textbook citations exist in prose
+- **Gate: zero blocking issues.**
+
+### Step 8: REVIEW (LLM — adversarial, different model than writer)
+- If Gemini wrote → Claude reviews (or vice versa)
+- Structured scoring: 7 dimensions, weighted
+- Review findings MUST be atomic and actionable: "Replace word X with word Y in paragraph 3" — not "improve the flow"
+- Fix loop: review findings → deterministic fixes first (regex) → LLM fixes for remaining → re-review (max 3 iterations)
+- **Gate: score ≥ 8.0/10.**
+
+### Step 9: PUBLISH (deterministic)
+- Convert custom DSL to interactive components (MDX/React)
+- DSL→MDX converter is deterministic code, not LLM
+- Starlight build
+- Deploy to site
+
+### Step 10: WORKBOOK (later, optional)
+- Complex interactive activities generated from stable, reviewed content
+- Types: unjumble, group-sort, error-correction, mark-the-words, comparative-study
+- Generated as separate workbook tab alongside the lesson
+- Only after all modules in a sub-level are written and reviewed
+
+---
+
+## Key differences from V5
+
+| Aspect | V5 | V6 |
+|--------|----|----|
+| LLM sessions for content | 3 (research, content, activities) | 1 (write prose) + 1 (fill exercises) |
+| Research | LLM-driven, may ignore plan | Deterministic RAG, structured by plan, inline in prompt |
+| Exercises | Separate session, mismatches content | Placeholders in prose → filled in focused session |
+| Exercise format | Complex YAML schema | Custom DSL (:::exercise blocks) |
+| Preflight model | Flash (cheap/fast) | Same model as writer (pro) |
+| Plan checking | None before build | Deterministic gate (#983) |
+| Stress marks | Missing step, now built | Deterministic post-step |
+| Information loss | 3 handoff points | 0 (research inline, exercises from prose context) |
+| Research usage | File path — writer ignores it | Inline — guaranteed in working memory |
+| Output format | .md + .yaml + .yaml | .md with DSL → deterministic MDX conversion |
+| Prompt rules | 50+ generic rules | Max 5 hard rules + concrete example |
+| Review fixes | Vague qualitative feedback | Atomic: "Replace X with Y in paragraph 3" |
+| Long modules | Single shot (truncates) | Section-by-section with continue |
+
+---
+
+## Gemini's first review (2026-03-20) — key decisions made
+
+1. **Output format: Custom DSL** — not MDX (JSX too brittle), not YAML (escaping distracts). Markdown with :::exercise blocks. Degrades gracefully.
+2. **Research: MUST be inline** — file paths don't work. Gemini confirmed he ignores file-path research. Inline injection guaranteed.
+3. **Research must be concise** — curated excerpts, not 30 pages of raw OCR.
+4. **Chunking needed** for 5000-word modules — section-by-section output.
+5. **Prompt: 5 hard rules + concrete example** — not 50 generic rules.
+6. **Review fixes must be atomic** — "Replace X with Y", not "improve the flow."
+7. **Cognitive load concern** — prose + exercise syntax in one session degrades formatting. → RESOLVED: exercise placeholders in prose, actual exercises in separate session.
+
+## Open questions for final review
+
+1. **Exercise placeholder format:** Is the `:::exercise-placeholder` syntax shown above clear enough for the writer? Any fields missing?
+2. **DSL→MDX converter:** Should this be a new tool, or extend the existing MDX generator?
+3. **Deterministic exercise generation:** Which exercise types can be generated by code (no LLM)? fill-gap from vocabulary list? match-columns from word pairs?
+4. **Section-by-section chunking:** How does the continue mechanism work? Same prompt with "continue from Section 3"? Or separate prompts per section?
+5. **Research citation format:** `<!-- adapted from: Author, Grade N, p.XX -->` — is this sufficient for verification?
