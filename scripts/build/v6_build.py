@@ -528,9 +528,14 @@ def _save_quick_verify(level: str, slug: str, results: list, attempt: int):
 
 
 def step_exercises(content_path: Path) -> bool:
-    """Step 5b: Fill exercise placeholders."""
+    """Step 5b: Fill any remaining exercise placeholders.
+
+    In V6, the writer produces exercises directly as DSL blocks.
+    This step is a FALLBACK — it only fills :::exercise-placeholder
+    blocks that the writer may have left unfilled.
+    """
     _log(f"\n{'='*60}")
-    _log("  Step 5b: EXERCISES — Fill placeholders")
+    _log("  Step 5b: EXERCISES — Check for unfilled placeholders")
     _log(f"{'='*60}")
 
     if not content_path or not content_path.exists():
@@ -540,6 +545,17 @@ def step_exercises(content_path: Path) -> bool:
     from exercises.fill_placeholders import fill_placeholders
 
     text = content_path.read_text("utf-8")
+
+    # Count writer-produced exercises
+    import re
+    direct_exercises = len(re.findall(
+        r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b",
+        text, re.MULTILINE,
+    ))
+    if direct_exercises:
+        _log(f"  ✅ Writer produced {direct_exercises} exercise(s) directly")
+
+    # Fill any remaining placeholders (fallback)
     filled, count = fill_placeholders(text)
 
     if count > 0:

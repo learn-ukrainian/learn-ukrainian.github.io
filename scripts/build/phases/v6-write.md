@@ -15,51 +15,86 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 1. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 2. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
 3. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-4. **Exercise placeholders** — mark where exercises go using the format below. Write the specific questions, answers, vocabulary, and distractors INSIDE the placeholder block. A downstream tool converts them to interactive components.
+4. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
 5. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
 6. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
-## Exercise Placeholder Format
+## Exercises — Write Them Directly
 
-After each key teaching point, write an exercise placeholder. Base your placeholders on the `activity_hints` in the Plan below — each hint should become one placeholder.
+After each key teaching point, write an exercise directly in DSL format. Base your exercises on the `activity_hints` in the Plan — each hint should become one exercise.
 
-Be SPECIFIC — include the actual questions, answers, and distractors. The more detail you provide, the better the exercise.
+Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
 
+### DSL Format
+
+Use these exact formats. Each block starts with `:::type` and ends with `:::`.
+
+**Quiz** (multiple choice):
 ```
-:::exercise-placeholder
-type: quiz | fill-in | match-up | group-sort | true-false
-tests: [what skill this exercise tests — be specific]
-after: [what concept was just taught]
-items: [number of items]
-vocabulary: [comma-separated Ukrainian words to use as stems]
-questions: [specific questions with answers, e.g. "Що ми чуємо? → звуки" or "В=v, Н=n, Р=r"]
-groups: [for group-sort: group names and which items go where, e.g. "Голосні: А, О, У; Приголосні: М, К, Б"]
+:::quiz
+title: "Звук чи літера?"
+---
+- q: "Що ми чуємо і вимовляємо?"
+  o: ["звуки", "літери", "слова"]
+  a: 0
+- q: "Що ми бачимо і пишемо?"
+  o: ["літери", "звуки", "речення"]
+  a: 0
 :::
 ```
 
-**Good example:**
+**Fill-in** (complete the sentence):
 ```
-:::exercise-placeholder
-type: group-sort
-tests: classify letters as vowel or consonant
-after: голосні vs приголосні explanation
-items: 8
-groups: Голосні: А, О, У, І; Приголосні: М, К, Б, Ш
+:::fill-in
+title: "Complete the greeting"
+---
+- sentence: "Привіт! Як ___?"
+  answer: "справи"
+- sentence: "Дякую, ___."
+  answer: "добре"
 :::
 ```
 
-**Bad example (too vague — the downstream tool cannot generate real content from this):**
+**Match-up** (connect pairs):
 ```
-:::exercise-placeholder
-type: quiz
-tests: understanding
-items: 5
+:::match-up
+title: "Match false friend letters to their real sounds"
+---
+- left: "В"
+  right: "sounds like [в], not [b]"
+- left: "Н"
+  right: "sounds like [н], not [h]"
 :::
 ```
 
-Spread placeholders evenly throughout the module. Never cluster them.
+**Group-sort** (classify into categories):
+```
+:::group-sort
+title: "Classify letters"
+---
+groups:
+  - name: "Голосні"
+    items: ["А", "О", "У", "І"]
+  - name: "Приголосні"
+    items: ["М", "К", "Б", "Ш"]
+:::
+```
+
+**True-false**:
+```
+:::true-false
+title: "True or false?"
+---
+- statement: "В українській мові 33 літери."
+  answer: true
+- statement: "Голосних звуків більше, ніж приголосних."
+  answer: false
+:::
+```
+
+Spread exercises evenly throughout the module. Never cluster them.
 
 ### Approved Exercise Patterns
 
@@ -162,8 +197,8 @@ Write in Markdown. Use:
 - `**bold**` for Ukrainian words being taught
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
-- `:::exercise-placeholder` for exercise locations (using the key-value format above)
+- `:::quiz` / `:::fill-in` / `:::match-up` / `:::group-sort` / `:::true-false` for exercises (using the DSL formats above)
 
-Do NOT write MDX component syntax, YAML frontmatter, or JSON. Plain Markdown with the exercise placeholder blocks described above.
+Do NOT write MDX component syntax or JSON. Plain Markdown with the exercise DSL blocks described above.
 
 Begin writing now. Start with the first section heading.
