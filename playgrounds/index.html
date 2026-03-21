@@ -114,7 +114,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
 <script>
 async function loadStats() {
-  let v5Count = 0, v5Pct = 0, pendingConsultations = 0;
+  let v6Count = 0, v5Count = 0, builtPct = 0, pendingConsultations = 0;
   try {
     const [data, pv, cMetrics] = await Promise.all([
       fetch('/api/dashboard/overview').then(r => r.json()),
@@ -122,16 +122,17 @@ async function loadStats() {
       fetch('/api/consultation/metrics').then(r => r.json()).catch(() => ({})),
     ]);
     const t = data.totals;
+    v6Count = pv.counts?.v6 || 0;
     v5Count = pv.counts?.v5 || 0;
-    v5Pct = pv.pct_v5 || 0;
+    builtPct = pv.pct_built || 0;
     pendingConsultations = cMetrics.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${v5Count} (${v5Pct}%)</div><div class="label">V5 Pipeline</div></div>
-      <div class="stat"><div class="value" style="color:var(--purple)">${t.total > 0 ? Math.round(t.pass / t.total * 100) : 0}%</div><div class="label">Complete</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${v6Count} v6 / ${v5Count} v5</div><div class="label">Pipeline</div></div>
+      <div class="stat"><div class="value" style="color:var(--purple)">${builtPct}%</div><div class="label">Built</div></div>
     `;
 
     document.getElementById('audit-stat').textContent = `${t.pass} passing / ${t.total} total`;
@@ -148,7 +149,7 @@ async function loadStats() {
     const data = await res.json();
     const t = data.totals;
     document.getElementById('progress-stat').textContent =
-      `${v5Count} v5 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
+      `${v6Count} v6 · ${v5Count} v5 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
   } catch(e) {}
 
   try {

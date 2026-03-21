@@ -112,7 +112,8 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--green)" id="total-audit">—</div><div class="label">Audit Passing</div></div>
   <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-reviewed">—</div><div class="label">Reviewed</div></div>
   <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v5">—</div><div class="label">V5 Pipeline</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v6">—</div><div class="label">V6 Pipeline</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-v5">—</div><div class="label">V5 Pipeline</div></div>
 </div>
 
 <div class="container">
@@ -147,21 +148,27 @@ function progressBar(val, total, cls) {
   <div class="phase-count">${val}/${total} (${p}%)</div>`;
 }
 
+function isDone(phase) {
+  return phase && phase.status === 'complete';
+}
+
 function chipClass(mod) {
   const phases = mod.phases || {};
-  if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return 'chip-pass';
-  if (phases.validate && phases.validate.status === 'complete') return 'chip-audit';
-  if (phases.content && phases.content.status === 'complete') return 'chip-content';
-  if (phases.research && phases.research.status === 'complete') return 'chip-research';
+  // V6 phases: check, research, write, exercises, annotate, enrich, verify, publish
+  // V5 phases: research, discover, content, validate, review, activities, mdx
+  if (isDone(phases.publish) || isDone(phases.mdx) || isDone(phases.review)) return 'chip-pass';
+  if (isDone(phases.verify) || isDone(phases.validate)) return 'chip-audit';
+  if (isDone(phases.write) || isDone(phases.content)) return 'chip-content';
+  if (isDone(phases.research)) return 'chip-research';
   return 'chip-none';
 }
 
 function chipLabel(mod) {
   const phases = mod.phases || {};
-  if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return '✓';
-  if (phases.validate && phases.validate.status === 'complete') return 'Va';
-  if (phases.content && phases.content.status === 'complete') return 'C';
-  if (phases.research && phases.research.status === 'complete') return 'R';
+  if (isDone(phases.publish) || isDone(phases.mdx) || isDone(phases.review)) return '✓';
+  if (isDone(phases.verify) || isDone(phases.validate)) return 'Va';
+  if (isDone(phases.write) || isDone(phases.content)) return 'C';
+  if (isDone(phases.research)) return 'R';
   return '·';
 }
 
@@ -185,7 +192,7 @@ async function loadModulePanel(trackId, panel) {
       const cls = chipClass(mod);
       const label = chipLabel(mod);
       const title = chipTitle(mod);
-      const obsolete = mod.pipeline_version === 'v5' ? '' : ' obsolete';
+      const obsolete = (mod.pipeline_version === 'v5' || mod.pipeline_version === 'v6') ? '' : ' obsolete';
       return `<div class="module-chip ${cls}${obsolete}" data-tip="${title}">${label}</div>`;
     }).join('');
 
@@ -258,9 +265,10 @@ async function load() {
     document.getElementById('total-audit').textContent = t.audit_passing;
     document.getElementById('total-reviewed').textContent = t.reviewed || 0;
     document.getElementById('total-final-review').textContent = t.final_review_done;
+    document.getElementById('total-v6').textContent = `${pv.counts?.v6 || 0}`;
     document.getElementById('total-v5').textContent = `${pv.counts?.v5 || 0}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Pipeline state across all tracks — ${pv.pct_v5 || 0}% on v5`;
+      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${pv.pct_built || 0}% built`;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)
