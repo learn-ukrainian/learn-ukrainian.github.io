@@ -765,9 +765,16 @@ def _compute_gaps(dims: dict) -> list[str]:
 
 
 def find_research_path(track_dir: Path, slug: str) -> Path | None:
-    """Find the research file path for a module."""
+    """Find the research file path for a module.
+
+    Checks V5 format ({slug}-research.md) and V6 format ({slug}-knowledge-packet.md).
+    """
     research_dir = track_dir / "research"
-    for candidate in [f"{slug}-research.md", f"{slug.lstrip('0123456789-')}-research.md"]:
+    for candidate in [
+        f"{slug}-research.md",
+        f"{slug.lstrip('0123456789-')}-research.md",
+        f"{slug}-knowledge-packet.md",
+    ]:
         rp = research_dir / candidate
         if rp.exists():
             return rp

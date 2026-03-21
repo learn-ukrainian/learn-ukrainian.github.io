@@ -4,6 +4,7 @@ Handles build progress tracking, ETA calculation, and track health
 aggregation. All functions are sync and designed for asyncio.to_thread().
 """
 
+import json
 from datetime import UTC, datetime
 
 from .config import CURRICULUM_ROOT, LEVELS
@@ -65,11 +66,18 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
     }
 
 
+V6_PHASE_ORDER = ["check", "research", "write", "exercises", "annotate", "verify", "publish"]
+
+
 def scan_module_phases(orch_dir, version):
     """Scan pipeline phases for a module. Returns (furthest, running, latest_ts, audit_status)."""
     furthest = running_phase = latest_ts = audit_status = None
 
-    if version == "v5":
+    if version == "v6":
+        phases = read_v2_state(orch_dir).get("phases", {})
+        phase_names = V6_PHASE_ORDER
+        audit_key = "verify"
+    elif version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         phase_names = V5_PHASE_ORDER
         audit_key = "validate"
@@ -198,7 +206,10 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
 def _check_build_phase(orch_dir):
     """Check if content phase is complete. Returns (built_count, timestamp_or_none)."""
     version = detect_pipeline_version(orch_dir)
-    if version == "v5":
+    if version == "v6":
+        phases = read_v2_state(orch_dir).get("phases", {})
+        content_phase = phases.get("write", {})
+    elif version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         content_phase = phases.get("content", {})
     else:
@@ -275,3 +286,32 @@ def compute_enrichment_status(track: str | None) -> dict:
             "not_enriched": not_enriched[:10] if len(not_enriched) <= 10 else [*not_enriched[:5], f"...+{len(not_enriched) - 5}"],
         }
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
+
+
+def compute_build_stats(track: str) -> dict:
+    """Parse V6 build-stats.jsonl for a track."""
+    stats_path = CURRICULUM_ROOT / track / "build-stats.jsonl"
+    if not stats_path.exists():
+        return {"track": track, "entries": [], "summary": {}}
+
+    entries = []
+    for line in stats_path.read_text().splitlines():
+        if line.strip():
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+
+    # Compute summary
+    total = len(entries)
+    successes = sum(1 for e in entries if e.get("success"))
+    slugs = set(e.get("slug", "") for e in entries)
+
+    return {
+        "track": track,
+        "total_attempts": total,
+        "successes": successes,
+        "unique_modules": len(slugs),
+        "success_rate": round(successes / total * 100, 1) if total else 0,
+        "entries": entries[-50:],  # Last 50 entries
+    }

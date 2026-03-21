@@ -8,6 +8,7 @@ Orchestrates the V6 pipeline:
 4. WRITE: Single LLM session (prose + exercise placeholders)
 5b. EXERCISES: Fill placeholders with DSL
 6. ANNOTATE: Stress marks + deterministic fixes
+7b. ENRICH: Словник, videos, resources, dialogue formatting
 7. VERIFY: VESUM + grammar scope
 8. REVIEW: Cross-agent review (future)
 9. PUBLISH: DSL→MDX conversion
@@ -43,6 +44,40 @@ PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
 def _log(msg: str):
     print(msg, flush=True)
+
+
+def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
+    """Write V6 pipeline state in V5-compatible format."""
+    import json
+    from datetime import datetime
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    state_path = orch_dir / "state.json"
+
+    # Load existing state or create new
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text())
+        except Exception:
+            state = {}
+    else:
+        state = {}
+
+    # V6 uses mode "v6" — API will detect this
+    state["mode"] = "v6"
+    state["track"] = level
+    state["slug"] = slug
+
+    # Map V6 steps to phase entries
+    phases = state.get("phases", {})
+    phases[step] = {
+        "status": status,
+        "ts": datetime.now(tz=UTC).isoformat(),
+    }
+    state["phases"] = phases
+
+    state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
@@ -448,6 +483,17 @@ def _post_process_content(content_path: Path) -> int:
     # 3. Strip trailing --- separator before content notes
     text = re.sub(r"\n---\s*$", "\n", text)
 
+    # 4. Strip stray single quotes from exercise DSL values
+    # LLMs sometimes produce: q: "'text'" or answer: "'word'"
+    stray_quote_pattern = re.compile(
+        r'''((?:q|answer|sentence|left|right|statement|name):\s*")'([^"]*)'("?)'''
+    )
+    new_text = stray_quote_pattern.sub(r'\1\2\3', text)
+    if new_text != text:
+        fixes += 1
+        text = new_text
+        _log("  🔧 Stripped stray quotes from exercise DSL")
+
     if len(text) != original_len:
         content_path.write_text(text, "utf-8")
 
@@ -475,6 +521,32 @@ def step_annotate(content_path: Path) -> bool:
         _log("  ⚠️  Stress annotator not available")
     except Exception as e:
         _log(f"  ⚠️  Stress annotation failed: {e}")
+
+    return True
+
+
+def step_enrich(content_path: Path, level: str, slug: str) -> bool:
+    """Step 7b: ENRICH — словник, videos, resources, dialogue formatting."""
+    _log(f"\n{'='*60}")
+    _log("  Step 7b: ENRICH — Словник, videos, resources")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False
+
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        _log(f"  ⚠️  Plan not found: {plan_path}")
+        return True  # Non-blocking
+
+    from build.enrich import enrich_file
+
+    actions = enrich_file(content_path, plan_path)
+    if actions:
+        _log(f"  ✅ Enriched: {', '.join(actions)}")
+    else:
+        _log("  ℹ️  No enrichments needed")
 
     return True
 
@@ -610,7 +682,7 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini",
                         help="Default: gemini (Claude CLI truncates long-form content)")
-    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "verify", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "enrich", "verify", "publish", "all"],
                         default="all")
     args = parser.parse_args()
 
@@ -632,6 +704,8 @@ def main():
     if steps in ("all", "check") and not step_check(args.level, args.module, slug):
         _log("\n❌ Build FAILED at Step 2 (plan check)")
         sys.exit(1)
+    if steps in ("all", "check"):
+        _save_v6_state(args.level, slug, "check")
 
     # Step 3: RESEARCH
     packet_path = None
@@ -640,6 +714,7 @@ def main():
         if not packet_path:
             _log("\n❌ Build FAILED at Step 3 (research)")
             sys.exit(1)
+        _save_v6_state(args.level, slug, "research")
     else:
         # Try to find existing packet
         packet_path = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
@@ -656,24 +731,34 @@ def main():
         if not content_path:
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
             sys.exit(1)
+        _save_v6_state(args.level, slug, "write")
     else:
         content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
 
     # Step 5b: EXERCISES
     if steps in ("all", "exercises"):
         step_exercises(content_path)
+        _save_v6_state(args.level, slug, "exercises")
 
     # Step 6: ANNOTATE
     if steps in ("all", "annotate"):
         step_annotate(content_path)
+        _save_v6_state(args.level, slug, "annotate")
+
+    # Step 7b: ENRICH
+    if steps in ("all", "enrich"):
+        step_enrich(content_path, args.level, slug)
+        _save_v6_state(args.level, slug, "enrich")
 
     # Step 7: VERIFY
     if steps in ("all", "verify"):
         step_verify(content_path, args.level, args.module)
+        _save_v6_state(args.level, slug, "verify")
 
     # Step 9: PUBLISH
     if steps in ("all", "publish"):
         step_publish(content_path, args.level, slug)
+        _save_v6_state(args.level, slug, "publish")
 
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
 

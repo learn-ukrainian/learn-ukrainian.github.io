@@ -9,6 +9,7 @@ Checks:
 2. Word count bounds — within ±15% of target
 3. Toxic token scan — severe Russianisms, Latin chars in Cyrillic
 4. Vocabulary inclusion — core required vocab items appear in prose
+5. Exercise items — placeholders/filled exercises match plan activity_hints count
 
 Returns a list of QuickVerifyError. Empty list = PASS.
 
@@ -206,6 +207,47 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
     return errors
 
 
+def _check_exercise_items(content: str, plan: dict) -> list[QuickVerifyError]:
+    """Check that exercise placeholders have enough items matching plan activity_hints."""
+    errors = []
+    activity_hints = plan.get("activity_hints", [])
+
+    if not activity_hints:
+        return errors
+
+    # Count exercise placeholders in content
+    placeholders = re.findall(
+        r":::exercise-placeholder\s*\n(.*?):::",
+        content, re.DOTALL,
+    )
+
+    # Also check for already-filled exercises (:::quiz, :::fill-in, etc.)
+    filled_exercises = re.findall(
+        r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b",
+        content, re.MULTILINE,
+    )
+
+    total_exercises = len(placeholders) + len(filled_exercises)
+    expected = len(activity_hints)
+
+    if total_exercises == 0 and activity_hints:
+        errors.append(QuickVerifyError(
+            check="EXERCISES",
+            severity="WARNING",
+            message=f"Plan expects {expected} exercise(s) but content has 0 placeholders",
+        ))
+        return errors
+
+    if total_exercises < expected:
+        errors.append(QuickVerifyError(
+            check="EXERCISES",
+            severity="WARNING",
+            message=f"Plan expects {expected} exercise(s) but content has {total_exercises}",
+        ))
+
+    return errors
+
+
 def quick_verify(content: str, plan: dict) -> list[QuickVerifyError]:
     """Run all quick verification checks.
 
@@ -221,6 +263,7 @@ def quick_verify(content: str, plan: dict) -> list[QuickVerifyError]:
     errors.extend(_check_word_count(content, plan))
     errors.extend(_check_toxic_tokens(content))
     errors.extend(_check_vocabulary(content, plan))
+    errors.extend(_check_exercise_items(content, plan))
     return errors
 
 

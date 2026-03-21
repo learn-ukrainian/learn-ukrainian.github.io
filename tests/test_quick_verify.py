@@ -200,3 +200,111 @@ def test_correction_directive():
 
 def test_correction_directive_empty():
     assert build_correction_directive([]) == ""
+
+
+# --- Exercise item count checks ---
+
+
+def _make_plan_with_activities(activity_hints=None, **kwargs):
+    """Create a plan dict with activity_hints."""
+    plan = _make_plan(**kwargs)
+    if activity_hints is not None:
+        plan["activity_hints"] = activity_hints
+    return plan
+
+
+def test_exercises_no_hints():
+    """No activity_hints in plan => no exercise errors."""
+    plan = _make_plan()
+    content = _make_content()
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_placeholders_match():
+    """Placeholders match activity_hints count => pass."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+    ])
+    content = _make_content(extra=(
+        "\n:::exercise-placeholder\ntype: quiz\ntitle: Test 1\n:::\n"
+        "\n:::exercise-placeholder\ntype: fill-in\ntitle: Test 2\n:::\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_zero_placeholders():
+    """Plan has hints but content has no placeholders => warning."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+    ])
+    content = _make_content()
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 1
+    assert ex_errors[0].severity == "WARNING"
+    assert "0 placeholders" in ex_errors[0].message
+
+
+def test_exercises_fewer_than_expected():
+    """Content has fewer exercises than plan expects => warning."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+        {"type": "match-up", "title": "Test 3"},
+    ])
+    content = _make_content(extra=(
+        "\n:::exercise-placeholder\ntype: quiz\ntitle: Test 1\n:::\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 1
+    assert "3 exercise(s) but content has 1" in ex_errors[0].message
+
+
+def test_exercises_filled_count():
+    """Filled exercises (:::quiz etc.) count toward the total."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+    ])
+    content = _make_content(extra=(
+        "\n:::quiz\nsome quiz content\n:::\n"
+        "\n:::fill-in\nsome fill content\n:::\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_mixed_placeholder_and_filled():
+    """Mix of placeholders and filled exercises counts correctly."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+    ])
+    content = _make_content(extra=(
+        "\n:::exercise-placeholder\ntype: quiz\ntitle: Test 1\n:::\n"
+        "\n:::fill-in\nsome fill content\n:::\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_more_than_expected():
+    """More exercises than expected => no error (overshoot is fine)."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+    ])
+    content = _make_content(extra=(
+        "\n:::exercise-placeholder\ntype: quiz\ntitle: Test 1\n:::\n"
+        "\n:::exercise-placeholder\ntype: fill-in\ntitle: Bonus\n:::\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0

@@ -9,6 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from build.exercises.fill_placeholders import (
     ExercisePlaceholder,
+    _clean_text,
+    _escape_yaml_str,
     _generate_exercise_dsl,
     _parse_placeholder,
     _parse_qa_pairs,
@@ -231,3 +233,167 @@ questions: В→v, Н→n, Р→r
 :::"""
     result, _ = fill_placeholders(content)
     assert '"?"' not in result
+
+
+# --- Bug fix: _clean_text strips stray quotes (#996) ---
+
+
+def test_clean_text_strips_leading_quote():
+    assert _clean_text("'В") == "В"
+
+
+def test_clean_text_strips_trailing_quote():
+    assert _clean_text("зву́ки'") == "зву́ки"
+
+
+def test_clean_text_strips_both_quotes():
+    assert _clean_text("'мама'") == "мама"
+
+
+def test_clean_text_strips_whitespace_and_quotes():
+    assert _clean_text("  'hello'  ") == "hello"
+
+
+def test_clean_text_preserves_internal_apostrophe():
+    assert _clean_text("пам'ятка") == "пам'ятка"
+
+
+def test_clean_text_empty():
+    assert _clean_text("") == ""
+
+
+def test_clean_text_only_quotes():
+    assert _clean_text("''") == ""
+
+
+# --- _escape_yaml_str with _clean_text ---
+
+
+def test_escape_yaml_str_cleans_stray_quotes():
+    assert _escape_yaml_str("'В") == "В"
+
+
+def test_escape_yaml_str_clean_and_escape():
+    assert _escape_yaml_str("""'say "hi"'""") == "say 'hi'"
+
+
+# --- Vocabulary parsing strips stray quotes ---
+
+
+def test_parse_vocab_strips_stray_quotes():
+    block = "type: quiz\nvocabulary: 'В, зву́ки', мама"
+    ph = _parse_placeholder(block)
+    assert ph.vocabulary == ["В", "зву́ки", "мама"]
+
+
+def test_parse_vocab_preserves_internal_apostrophe():
+    block = "type: quiz\nvocabulary: пам'ятка, об'єкт"
+    ph = _parse_placeholder(block)
+    assert ph.vocabulary == ["пам'ятка", "об'єкт"]
+
+
+# --- Bug fix: fill-in context (#996) ---
+
+
+def test_fill_in_vocab_gives_context_sentence():
+    content = (
+        ":::exercise-placeholder\n"
+        "type: fill-in\n"
+        "tests: practice\n"
+        "vocabulary: мама, тато\n"
+        ":::"
+    )
+    result, count = fill_placeholders(content)
+    assert count == 1
+    assert '- sentence: "___"' not in result
+    assert "Write the Ukrainian word" in result
+    assert 'answer: "мама"' in result
+    assert 'answer: "тато"' in result
+
+
+def test_fill_in_vocab_with_translation():
+    content = (
+        ":::exercise-placeholder\n"
+        "type: fill-in\n"
+        "tests: practice\n"
+        "vocabulary: мама (mother), тато (father)\n"
+        ":::"
+    )
+    result, count = fill_placeholders(content)
+    assert count == 1
+    assert "mother" in result
+    assert "father" in result
+    assert 'answer: "мама"' in result
+    assert 'answer: "тато"' in result
+
+
+def test_fill_in_qa_pairs_take_precedence():
+    content = (
+        ":::exercise-placeholder\n"
+        "type: fill-in\n"
+        "tests: practice\n"
+        "questions: ___ каже мама→мама\n"
+        "vocabulary: тато\n"
+        ":::"
+    )
+    result, count = fill_placeholders(content)
+    assert count == 1
+    assert "___ каже мама" in result
+    assert 'answer: "мама"' in result
+
+
+# --- TODO removal: fallback exercises produce valid DSL ---
+
+
+def test_quiz_fallback_no_todo():
+    content = ":::exercise-placeholder\ntype: quiz\ntests: test\n:::"
+    result, _ = fill_placeholders(content)
+    assert "TODO" not in result
+    assert '- q: "No vocabulary provided"' in result
+
+
+def test_fill_in_fallback_no_todo():
+    content = ":::exercise-placeholder\ntype: fill-in\ntests: test\n:::"
+    result, _ = fill_placeholders(content)
+    assert "TODO" not in result
+    assert '- sentence: "No vocabulary provided"' in result
+
+
+def test_match_up_fallback_no_todo():
+    content = ":::exercise-placeholder\ntype: match-up\ntests: test\n:::"
+    result, _ = fill_placeholders(content)
+    assert "TODO" not in result
+    assert '- left: "—"' in result
+
+
+def test_group_sort_fallback_no_todo():
+    content = ":::exercise-placeholder\ntype: group-sort\ntests: test\n:::"
+    result, _ = fill_placeholders(content)
+    assert "TODO" not in result
+    assert 'name: "—"' in result
+
+
+def test_true_false_fallback_no_todo():
+    content = ":::exercise-placeholder\ntype: true-false\ntests: test\n:::"
+    result, _ = fill_placeholders(content)
+    assert "TODO" not in result
+    assert '- statement: "No content provided"' in result
+
+
+# --- Stray quotes end-to-end ---
+
+
+def test_stray_quotes_stripped_from_quiz_output():
+    content = (
+        ":::exercise-placeholder\n"
+        "type: quiz\n"
+        "tests: letter sounds\n"
+        "vocabulary: 'В, зву́ки'\n"
+        ":::"
+    )
+    result, count = fill_placeholders(content)
+    assert count == 1
+    assert "\"'В\"" not in result
+    assert "\"зву́ки'\"" not in result
+    assert '"В"' in result
+    assert '"зву́ки"' in result

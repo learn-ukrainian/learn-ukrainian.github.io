@@ -1,7 +1,11 @@
 """Convert Exercise DSL blocks to MDX/React components.
 
-Parses :::exercise[type] blocks in markdown and converts them to
+Parses exercise blocks in markdown and converts them to
 the corresponding React components for Starlight rendering.
+
+Supports two DSL formats:
+  - Legacy: :::exercise[type]  (markdown-style content)
+  - V6:     :::type            (YAML-style content from fill_placeholders.py)
 
 Usage:
     from generate_mdx.dsl_to_mdx import convert_dsl_to_mdx
@@ -14,11 +18,210 @@ from __future__ import annotations
 
 import json
 import re
+import sys
+from pathlib import Path
 
-# Parse :::exercise[type] blocks
+import yaml
+
+# Allow imports from scripts/ when run from project root
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from build.text_utils import strip_stray_quotes as _strip_stray_quotes
+
+# ---------------------------------------------------------------------------
+# Regex: match both :::exercise[type] (legacy) and :::type (V6) blocks
+# Group 1 = legacy type, Group 2 = V6 type, Group 3 = body
+# ---------------------------------------------------------------------------
 _EXERCISE_RE = re.compile(
-    r':::exercise\[([^\]]+)\]\n(.*?)\n:::', re.DOTALL
+    r":::(?:exercise\[([^\]]+)\]|(\w[\w-]*))\n(.*?)\n:::",
+    re.DOTALL,
 )
+
+# Known V6 exercise types (bare :::type format)
+_V6_TYPES = {"quiz", "fill-in", "match-up", "group-sort", "true-false"}
+
+# ---------------------------------------------------------------------------
+# YouTube URL → <YouTubeVideo> component
+# ---------------------------------------------------------------------------
+_YOUTUBE_RE = re.compile(
+    r"(?:^|\n)\s*(?:https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)([\w-]+)(?:&\S*)?)",
+    re.MULTILINE,
+)
+
+
+def _youtube_replace(match: re.Match) -> str:
+    """Convert a bare YouTube URL to a <YouTubeVideo> component."""
+    video_id = match.group(1)
+    url = f"https://www.youtube.com/watch?v={video_id}"
+    return f'\n<YouTubeVideo client:only="react" url="{url}" />'
+
+
+# ---------------------------------------------------------------------------
+# V6 helpers
+# ---------------------------------------------------------------------------
+
+def _parse_v6_body(body: str) -> tuple[str, str]:
+    """Split V6 body into title and YAML content (after ---)."""
+    parts = body.split("---", 1)
+    title = ""
+    yaml_text = body
+    if len(parts) == 2:
+        header = parts[0].strip()
+        yaml_text = parts[1].strip()
+        # Extract title from header
+        for line in header.split("\n"):
+            line = line.strip()
+            if line.startswith("title:"):
+                title = line[len("title:"):].strip().strip('"').strip("'")
+    return title, yaml_text
+
+
+
+def _clean_item(obj):
+    """Recursively strip stray quotes from strings in dicts/lists."""
+    if isinstance(obj, str):
+        return _strip_stray_quotes(obj)
+    if isinstance(obj, list):
+        return [_clean_item(x) for x in obj]
+    if isinstance(obj, dict):
+        return {k: _clean_item(v) for k, v in obj.items()}
+    return obj
+
+
+# ---------------------------------------------------------------------------
+# V6 converters
+# ---------------------------------------------------------------------------
+
+def _convert_v6_quiz(body: str) -> str:
+    """Convert V6 quiz DSL to <Quiz> component."""
+    _title, yaml_text = _parse_v6_body(body)
+    try:
+        items = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return f"<!-- Failed to parse V6 quiz -->\n{body}"
+
+    if not isinstance(items, list) or not items:
+        return f"<!-- Failed to parse V6 quiz: no items -->\n{body}"
+
+    questions = []
+    for item in items:
+        q = _strip_stray_quotes(item.get("q", ""))
+        options_raw = item.get("o", [])
+        answer_idx = item.get("a", 0)
+        options = []
+        for i, opt in enumerate(options_raw):
+            opt = _strip_stray_quotes(str(opt))
+            options.append({"text": opt, "correct": i == answer_idx})
+        questions.append({"question": q, "options": options})
+
+    return (
+        f'<Quiz client:only="react" '
+        f'questions={{{json.dumps(questions, ensure_ascii=False)}}} />'
+    )
+
+
+def _convert_v6_fill_in(body: str) -> str:
+    """Convert V6 fill-in DSL to <FillIn> component."""
+    _title, yaml_text = _parse_v6_body(body)
+    try:
+        items = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return f"<!-- Failed to parse V6 fill-in -->\n{body}"
+
+    if not isinstance(items, list) or not items:
+        return f"<!-- Failed to parse V6 fill-in: no items -->\n{body}"
+
+    fill_items = []
+    for item in items:
+        sentence = _strip_stray_quotes(item.get("sentence", ""))
+        answer = _strip_stray_quotes(item.get("answer", ""))
+        fill_items.append({"sentence": sentence, "answer": answer})
+
+    return (
+        f'<FillIn client:only="react" '
+        f'items={{{json.dumps(fill_items, ensure_ascii=False)}}} />'
+    )
+
+
+def _convert_v6_match_up(body: str) -> str:
+    """Convert V6 match-up DSL to <MatchUp> component."""
+    _title, yaml_text = _parse_v6_body(body)
+    try:
+        items = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return f"<!-- Failed to parse V6 match-up -->\n{body}"
+
+    if not isinstance(items, list) or not items:
+        return f"<!-- Failed to parse V6 match-up: no items -->\n{body}"
+
+    pairs = []
+    for item in items:
+        left = _strip_stray_quotes(item.get("left", ""))
+        right = _strip_stray_quotes(item.get("right", ""))
+        pairs.append({"left": left, "right": right})
+
+    return (
+        f'<MatchUp client:only="react" '
+        f'pairs={{{json.dumps(pairs, ensure_ascii=False)}}} />'
+    )
+
+
+def _convert_v6_group_sort(body: str) -> str:
+    """Convert V6 group-sort DSL to <GroupSort> component."""
+    _title, yaml_text = _parse_v6_body(body)
+    try:
+        data = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return f"<!-- Failed to parse V6 group-sort -->\n{body}"
+
+    # data could be a dict with 'groups' key, or the YAML might contain it
+    groups = None
+    if isinstance(data, dict):
+        groups = data.get("groups", [])
+    if not groups:
+        return f"<!-- Failed to parse V6 group-sort: no groups -->\n{body}"
+
+    groups = _clean_item(groups)
+    return (
+        f'<GroupSort client:only="react" '
+        f'groups={{{json.dumps(groups, ensure_ascii=False)}}} />'
+    )
+
+
+def _convert_v6_true_false(body: str) -> str:
+    """Convert V6 true-false DSL to <TrueFalse> component."""
+    _title, yaml_text = _parse_v6_body(body)
+    try:
+        items = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return f"<!-- Failed to parse V6 true-false -->\n{body}"
+
+    if not isinstance(items, list) or not items:
+        return f"<!-- Failed to parse V6 true-false: no items -->\n{body}"
+
+    tf_items = []
+    for item in items:
+        statement = _strip_stray_quotes(item.get("statement", ""))
+        answer = bool(item.get("answer", False))
+        tf_items.append({"statement": statement, "answer": answer})
+
+    return (
+        f'<TrueFalse client:only="react" '
+        f'items={{{json.dumps(tf_items, ensure_ascii=False)}}} />'
+    )
+
+
+_V6_CONVERTERS = {
+    "quiz": _convert_v6_quiz,
+    "fill-in": _convert_v6_fill_in,
+    "match-up": _convert_v6_match_up,
+    "group-sort": _convert_v6_group_sort,
+    "true-false": _convert_v6_true_false,
+}
+
+# ---------------------------------------------------------------------------
+# Legacy converters (:::exercise[type] with markdown-style content)
+# ---------------------------------------------------------------------------
 
 
 def _convert_multiple_choice(content: str) -> str:
@@ -120,8 +323,6 @@ def _convert_true_false(content: str) -> str:
 
 def _convert_group_sort(content: str) -> str:
     """Convert group-sort DSL to <GroupSort> component."""
-    import yaml
-
     try:
         data = yaml.safe_load(content)
         groups = data.get("groups", [])
@@ -163,7 +364,7 @@ def _convert_read_and_answer(content: str) -> str:
     )
 
 
-_CONVERTERS = {
+_LEGACY_CONVERTERS = {
     "multiple-choice": _convert_multiple_choice,
     "quiz": _convert_multiple_choice,  # alias
     "cloze": _convert_cloze,
@@ -176,24 +377,58 @@ _CONVERTERS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+
 def convert_dsl_to_mdx(text: str) -> tuple[str, int]:
-    """Convert all :::exercise[type] blocks to MDX components.
+    """Convert all exercise DSL blocks to MDX components.
+
+    Handles both legacy :::exercise[type] and V6 :::type formats.
+    Also converts bare YouTube URLs to <YouTubeVideo> components.
 
     Returns (mdx_content, count_of_conversions).
     """
     count = 0
 
-    def _replace(match):
+    def _replace(match: re.Match) -> str:
         nonlocal count
-        exercise_type = match.group(1)
-        content = match.group(2)
+        legacy_type = match.group(1)  # from :::exercise[type]
+        v6_type = match.group(2)      # from :::type
+        body = match.group(3)
 
-        converter = _CONVERTERS.get(exercise_type)
-        if converter:
-            count += 1
-            return converter(content)
-        else:
-            return f"<!-- Unknown exercise type: {exercise_type} -->\n{match.group(0)}"
+        if legacy_type:
+            # Legacy format: :::exercise[type]
+            converter = _LEGACY_CONVERTERS.get(legacy_type)
+            if converter:
+                count += 1
+                return converter(body)
+            return f"<!-- Unknown exercise type: {legacy_type} -->\n{match.group(0)}"
+
+        if v6_type:
+            # V6 format: :::type
+            v6_converter = _V6_CONVERTERS.get(v6_type)
+            if v6_converter:
+                count += 1
+                return v6_converter(body)
+            # Not a known exercise type — leave untouched (could be
+            # an admonition like :::note or :::tip)
+            return match.group(0)
+
+        return match.group(0)
 
     result = _EXERCISE_RE.sub(_replace, text)
+
+    # Convert bare YouTube URLs
+    def _yt_replace(m: re.Match) -> str:
+        nonlocal count
+        count += 1
+        return _youtube_replace(m)
+
+    result = _YOUTUBE_RE.sub(_yt_replace, result)
+
+    # Clean stray quotes that leaked from DSL: "'text'" → "text"
+    result = re.sub(r"\"'([^\"]*)'\"", r'"\1"', result)
+
     return result, count

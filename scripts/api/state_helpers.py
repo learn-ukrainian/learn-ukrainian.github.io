@@ -132,10 +132,20 @@ class StateCtx:
 
 
 def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
-    """Load unified pipeline state for a module via pipeline.state.
+    """Load unified pipeline state for a module.
 
-    Returns v5-format state dict with mode='v5' and plain phase keys.
+    Handles V6 state directly (mode='v6'), delegates V5/V4/V3 to pipeline.state.
     """
+    # V6 state: read directly (pipeline.state only knows v5)
+    state_file = orch_dir / "state.json"
+    if state_file.exists():
+        try:
+            data = json.loads(state_file.read_text())
+            if data.get("mode") == "v6":
+                return data
+        except Exception:
+            pass
+
     ctx = StateCtx(track, slug, orch_dir)
     try:
         return _load_pipeline_state(ctx)
@@ -146,12 +156,14 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
 def detect_pipeline_version(orch_dir: Path) -> str:
     """Detect pipeline version for a module.
 
-    Priority: state.json mode=v5 > state-v4.json > state-v3.json > state.json['mode'] > 'unbuilt'.
+    Priority: state.json mode=v6/v5 > state-v4.json > state-v3.json > state.json['mode'] > 'unbuilt'.
     """
     state_file = orch_dir / "state.json"
     if state_file.exists():
         try:
             data = json.loads(state_file.read_text())
+            if data.get("mode") == "v6":
+                return "v6"
             if data.get("mode") == "v5":
                 return "v5"
         except Exception:
@@ -267,8 +279,12 @@ def parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
 # ==================== RESEARCH & CONTENT HELPERS ====================
 
 def has_research_file(track_dir: Path, slug: str) -> bool:
-    """Return True if a research file exists for this module."""
-    return (track_dir / "research" / f"{slug}-research.md").exists()
+    """Return True if a research file exists for this module (V5 or V6 format)."""
+    research_dir = track_dir / "research"
+    return (
+        (research_dir / f"{slug}-research.md").exists()
+        or (research_dir / f"{slug}-knowledge-packet.md").exists()
+    )
 
 
 def is_research_done(state: dict, track_dir: Path | None = None, slug: str | None = None) -> bool:
@@ -279,8 +295,13 @@ def is_research_done(state: dict, track_dir: Path | None = None, slug: str | Non
 
 
 def is_content_done(state: dict) -> bool:
-    """Content done if pipeline state has content phase complete."""
-    return _phase_complete(state, "content")
+    """Content done if pipeline state has content phase complete.
+
+    V6 uses 'write' phase instead of 'content', both with status='complete'.
+    """
+    if _phase_complete(state, "content"):
+        return True
+    return _phase_complete(state, "write")
 
 
 def find_content_file(track_dir: Path, slug: str) -> Path | None:

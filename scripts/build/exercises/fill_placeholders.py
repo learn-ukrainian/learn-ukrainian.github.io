@@ -60,7 +60,7 @@ def _parse_placeholder(block: str) -> ExercisePlaceholder:
             except ValueError:
                 placeholder.items = 4
         elif key == "vocabulary":
-            placeholder.vocabulary = [v.strip() for v in value.split(",") if v.strip()]
+            placeholder.vocabulary = [_clean_text(v) for v in value.split(",") if v.strip()]
         elif key == "questions":
             placeholder.questions = value
         elif key == "groups":
@@ -69,8 +69,17 @@ def _parse_placeholder(block: str) -> ExercisePlaceholder:
     return placeholder
 
 
+from build.text_utils import strip_stray_quotes
+
+
+def _clean_text(s: str) -> str:
+    """Strip stray quotes and whitespace from text."""
+    return strip_stray_quotes(s)
+
+
 def _escape_yaml_str(s: str) -> str:
     """Escape a string for safe YAML embedding in double quotes."""
+    s = _clean_text(s)
     return s.replace('"', "'")
 
 
@@ -153,7 +162,9 @@ def _generate_quiz(title: str, vocab: list[str], items: int,
             lines.append('  o: ["так", "ні"]')
             lines.append("  a: 0")
     else:
-        lines.append("# TODO: add quiz items")
+        lines.append('- q: "No vocabulary provided"')
+        lines.append('  o: ["—"]')
+        lines.append("  a: 0")
 
     lines.append(":::")
     return "\n".join(lines)
@@ -172,10 +183,20 @@ def _generate_fill_in(title: str, vocab: list[str], items: int,
             lines.append(f'  answer: "{_escape_yaml_str(a)}"')
     elif vocab:
         for word in vocab[:items]:
-            lines.append('- sentence: "___"')
-            lines.append(f'  answer: "{_escape_yaml_str(word)}"')
+            clean = _clean_text(word)
+            # Extract translation if present in parentheses: "мама (mother)" → "mother"
+            trans_match = re.match(r'(.+?)\s*\((.+?)\)', clean)
+            if trans_match:
+                uk_word = trans_match.group(1).strip()
+                translation = trans_match.group(2).strip()
+                lines.append(f'- sentence: "How do you say \\"{translation}\\" in Ukrainian? → ___"')
+                lines.append(f'  answer: "{_escape_yaml_str(uk_word)}"')
+            else:
+                lines.append('- sentence: "Write the Ukrainian word: ___"')
+                lines.append(f'  answer: "{_escape_yaml_str(clean)}"')
     else:
-        lines.append("# TODO: add fill-in items")
+        lines.append('- sentence: "No vocabulary provided"')
+        lines.append('  answer: "—"')
 
     lines.append(":::")
     return "\n".join(lines)
@@ -198,7 +219,8 @@ def _generate_match_up(title: str, vocab: list[str], items: int,
             lines.append(f'- left: "{_escape_yaml_str(vocab[i])}"')
             lines.append(f'  right: "{_escape_yaml_str(vocab[i + 1])}"')
     else:
-        lines.append("# TODO: add match-up pairs")
+        lines.append('- left: "—"')
+        lines.append('  right: "—"')
 
     lines.append(":::")
     return "\n".join(lines)
@@ -230,7 +252,9 @@ def _generate_group_sort(title: str, vocab: list[str], items: int,
         lines.append('  - name: "Group B"')
         lines.append(f"    items: [{group_b}]")
     else:
-        lines.append("# TODO: add groups")
+        lines.append("groups:")
+        lines.append('  - name: "—"')
+        lines.append('    items: ["—"]')
 
     lines.append(":::")
     return "\n".join(lines)
@@ -254,7 +278,8 @@ def _generate_true_false(title: str, vocab: list[str], items: int,
             lines.append(f'- statement: "{_escape_yaml_str(word)}"')
             lines.append(f"  answer: {'true' if i % 2 == 0 else 'false'}")
     else:
-        lines.append("# TODO: add true/false statements")
+        lines.append('- statement: "No content provided"')
+        lines.append("  answer: true")
 
     lines.append(":::")
     return "\n".join(lines)
