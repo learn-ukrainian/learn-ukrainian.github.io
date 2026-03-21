@@ -308,6 +308,88 @@ def fill_placeholders(content: str) -> tuple[str, int]:
     return result, count
 
 
+# --- Exercise DSL Ukrainian word extraction ---
+
+_RE_EXERCISE_BLOCK = re.compile(
+    r":::(quiz|fill-in|match-up|group-sort|true-false)\b.*?:::",
+    re.DOTALL,
+)
+
+# Match Cyrillic words (including apostrophe for Ukrainian words like пам'ятка)
+_RE_UKRAINIAN_WORD = re.compile(r"[а-яА-ЯіІїЇєЄґҐ][а-яіїєґ'ʼ]*")
+
+
+def validate_exercise_vocab(content: str) -> list[str]:
+    """Extract all Ukrainian words from exercise DSL blocks for VESUM verification.
+
+    Scans the content for exercise DSL blocks (:::quiz, :::fill-in, etc.)
+    and extracts every Ukrainian word found in answers, options, sentences,
+    statements, group items, and match pairs.
+
+    These words can then be passed to VESUM verification downstream
+    (e.g., in step_verify) to ensure all exercise vocabulary is valid.
+
+    Args:
+        content: Markdown content containing exercise DSL blocks.
+
+    Returns:
+        Deduplicated list of Ukrainian words found in exercise blocks,
+        preserving first-occurrence order.
+    """
+    seen: set[str] = set()
+    result: list[str] = []
+
+    for match in _RE_EXERCISE_BLOCK.finditer(content):
+        block = match.group(0)
+        for word_match in _RE_UKRAINIAN_WORD.finditer(block):
+            word = word_match.group(0)
+            # Skip single-char words that are likely YAML artifacts
+            if len(word) < 2:
+                continue
+            lower = word.lower()
+            if lower not in seen:
+                seen.add(lower)
+                result.append(word)
+
+    return result
+
+
+def enrich_exercises_llm(content: str, plan: dict) -> str:
+    """Enrich deterministic exercises with LLM-generated contextual content.
+
+    This is an OPTIONAL post-processing pass that improves exercises which
+    the deterministic filler produced with generic output. For example,
+    fill-in exercises with "Write the Ukrainian word: ___" could be
+    enriched with contextual sentences from the LLM.
+
+    Candidates for enrichment:
+    - fill-in exercises with generic "Write the Ukrainian word" prompts
+    - quiz exercises with binary так/ні options (no real distractors)
+    - true-false exercises generated from bare vocabulary (no real statements)
+
+    Architecture:
+    1. fill_placeholders() runs first (fast, deterministic, no network)
+    2. This function runs AFTER, only when --enrich-exercises flag is passed
+    3. It finds exercises that would benefit from richer context
+    4. For each, it calls the writer LLM to generate better content
+    5. Returns the improved content string
+
+    Args:
+        content: Markdown content with already-filled exercise DSL blocks.
+        plan: Module plan dict (provides context: level, topic, vocabulary).
+
+    Returns:
+        Content with enriched exercises (or unchanged if nothing to enrich).
+
+    TODO: Implement LLM enrichment. Currently a stub that returns content
+    unchanged. Will be wired up when the v6 pipeline adds --enrich-exercises
+    support.
+    """
+    # TODO: Identify generic exercises and call writer LLM for enrichment.
+    # See AC description in #996 for the full design.
+    return content
+
+
 # CLI for testing
 if __name__ == "__main__":
     import sys

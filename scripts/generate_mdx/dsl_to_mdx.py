@@ -48,6 +48,53 @@ _YOUTUBE_RE = re.compile(
     re.MULTILINE,
 )
 
+# ---------------------------------------------------------------------------
+# Bare URL → markdown link (for non-YouTube URLs in prose)
+# ---------------------------------------------------------------------------
+# Matches bare http(s) URLs. Exclusion of URLs inside markdown links,
+# YouTubeVideo components, and HTML comments is handled by range checking
+# in _convert_bare_urls().
+_BARE_URL_RE = re.compile(
+    r'(https?://[^\s<>\)\]"]+)',
+)
+
+
+def _convert_bare_urls(text: str) -> str:
+    """Convert bare URLs in prose to markdown links.
+
+    Skips URLs already in markdown link syntax [text](url),
+    in <YouTubeVideo> components, or in HTML comments.
+    """
+    # First, collect ranges that should be excluded (markdown links,
+    # YouTubeVideo components, HTML comments)
+    exclude_ranges: list[tuple[int, int]] = []
+
+    # Markdown links: [text](url)
+    for m in re.finditer(r'\[[^\]]*\]\([^)]*\)', text):
+        exclude_ranges.append((m.start(), m.end()))
+
+    # YouTubeVideo components
+    for m in re.finditer(r'<YouTubeVideo[^>]*/?>', text):
+        exclude_ranges.append((m.start(), m.end()))
+
+    # HTML comments
+    for m in re.finditer(r'<!--.*?-->', text, re.DOTALL):
+        exclude_ranges.append((m.start(), m.end()))
+
+    def _in_excluded(start: int, end: int) -> bool:
+        return any(es <= start and end <= ee for es, ee in exclude_ranges)
+
+    def _url_replace(match: re.Match) -> str:
+        url = match.group(1)
+        if _in_excluded(match.start(1), match.end(1)):
+            return match.group(0)
+        # Extract domain for display text
+        domain_match = re.search(r'https?://(?:www\.)?([^/]+)', url)
+        domain = domain_match.group(1) if domain_match else url
+        return f'[{domain}]({url})'
+
+    return _BARE_URL_RE.sub(_url_replace, text)
+
 
 def _youtube_replace(match: re.Match) -> str:
     """Convert a bare YouTube URL to a <YouTubeVideo> component."""
@@ -427,6 +474,9 @@ def convert_dsl_to_mdx(text: str) -> tuple[str, int]:
         return _youtube_replace(m)
 
     result = _YOUTUBE_RE.sub(_yt_replace, result)
+
+    # Convert bare URLs in prose to markdown links
+    result = _convert_bare_urls(result)
 
     # Clean stray quotes that leaked from DSL: "'text'" → "text"
     result = re.sub(r"\"'([^\"]*)'\"", r'"\1"', result)

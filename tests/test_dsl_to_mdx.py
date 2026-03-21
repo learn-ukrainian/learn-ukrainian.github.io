@@ -248,6 +248,48 @@ class TestMixedContent:
         assert ":::note" in result
 
 
+class TestBareUrlConversion:
+    """Bare URL → markdown link conversion."""
+
+    def test_bare_url_converted(self):
+        text = "Check out https://www.ukrainianlessons.com/episode1/ for more."
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[ukrainianlessons.com](https://www.ukrainianlessons.com/episode1/)" in result
+
+    def test_bare_url_with_path(self):
+        text = "Visit https://example.com/page/sub for details."
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[example.com](https://example.com/page/sub)" in result
+
+    def test_markdown_link_not_double_wrapped(self):
+        text = "See [my link](https://example.com/page) here."
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[my link](https://example.com/page)" in result
+        # Should NOT create a nested link
+        assert "[example.com]" not in result
+
+    def test_youtube_component_url_not_converted(self):
+        text = '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=abc" />'
+        result, _count = convert_dsl_to_mdx(text)
+        # Should remain as component, not get wrapped in markdown link
+        assert "<YouTubeVideo" in result
+        assert "[youtube.com]" not in result
+        assert "[www.youtube.com]" not in result
+
+    def test_html_comment_url_not_converted(self):
+        text = "<!-- See https://example.com/internal for reference -->"
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[example.com]" not in result
+
+    def test_multiple_bare_urls(self):
+        text = (
+            "First https://example.com/a then https://other.org/b end."
+        )
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[example.com](https://example.com/a)" in result
+        assert "[other.org](https://other.org/b)" in result
+
+
 class TestActualM01Content:
     """Integration test with the real M01 file format."""
 
@@ -271,3 +313,21 @@ class TestActualM01Content:
         assert ':::group-sort' not in result
         assert ':::match-up' not in result
         assert ':::fill-in' not in result
+
+    def test_m01_no_raw_dsl_blocks(self):
+        """After conversion, no raw :::exercise-type blocks remain."""
+        import pathlib
+        import re as _re
+        m01 = pathlib.Path(
+            "curriculum/l2-uk-en/a1/sounds-letters-and-hello.md"
+        )
+        if not m01.exists():
+            pytest.skip("M01 file not available")
+        text = m01.read_text()
+        result, _count = convert_dsl_to_mdx(text)
+        # No exercise DSL blocks should survive conversion
+        dsl_remnants = _re.findall(r':::(quiz|fill-in|match-up|group-sort|true-false)\b', result)
+        assert dsl_remnants == [], f"Raw DSL blocks remain: {dsl_remnants}"
+        # All expected React components are present
+        for component in ['<Quiz', '<FillIn', '<MatchUp', '<GroupSort']:
+            assert component in result, f"Missing component: {component}"

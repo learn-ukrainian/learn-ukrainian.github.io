@@ -14,7 +14,9 @@ from build.exercises.fill_placeholders import (
     _generate_exercise_dsl,
     _parse_placeholder,
     _parse_qa_pairs,
+    enrich_exercises_llm,
     fill_placeholders,
+    validate_exercise_vocab,
 )
 
 # --- Parsing tests ---
@@ -397,3 +399,123 @@ def test_stray_quotes_stripped_from_quiz_output():
     assert "\"зву́ки'\"" not in result
     assert '"В"' in result
     assert '"зву́ки"' in result
+
+
+# --- validate_exercise_vocab ---
+
+
+def test_validate_exercise_vocab_extracts_from_quiz():
+    content = (
+        ':::quiz\ntitle: "Test"\n---\n'
+        '- q: "Яка літера?"\n  o: ["мама", "тато", "книга"]\n  a: 0\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    assert "Яка" in words
+    assert "літера" in words
+    assert "мама" in words
+    assert "тато" in words
+    assert "книга" in words
+
+
+def test_validate_exercise_vocab_extracts_from_fill_in():
+    content = (
+        ':::fill-in\ntitle: "Practice"\n---\n'
+        '- sentence: "Напишіть українське слово: ___"\n'
+        '  answer: "привіт"\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    assert "Напишіть" in words
+    assert "українське" in words
+    assert "привіт" in words
+
+
+def test_validate_exercise_vocab_extracts_from_group_sort():
+    content = (
+        ':::group-sort\ntitle: "Sort"\n---\n'
+        "groups:\n"
+        '  - name: "Голосні"\n    items: ["апельсин", "огірок"]\n'
+        '  - name: "Приголосні"\n    items: ["молоко", "картопля"]\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    assert "Голосні" in words
+    assert "апельсин" in words
+    assert "молоко" in words
+    assert "картопля" in words
+
+
+def test_validate_exercise_vocab_deduplicates():
+    content = (
+        ':::quiz\ntitle: "Test"\n---\n'
+        '- q: "мама"\n  o: ["мама", "тато"]\n  a: 0\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    # "мама" appears twice but should be deduplicated
+    lower_words = [w.lower() for w in words]
+    assert lower_words.count("мама") == 1
+
+
+def test_validate_exercise_vocab_skips_single_char():
+    content = (
+        ':::quiz\ntitle: "Test"\n---\n'
+        '- q: "я і ти"\n  o: ["так", "ні"]\n  a: 0\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    # Single-char words like "я", "і" should be skipped
+    assert "я" not in words
+    assert "і" not in words
+    assert "ти" in words
+    assert "так" in words
+
+
+def test_validate_exercise_vocab_ignores_non_exercise_text():
+    content = (
+        "## Розділ перший\n\nЦе звичайний текст поза вправою.\n\n"
+        ':::quiz\ntitle: "Test"\n---\n'
+        '- q: "привіт"\n  o: ["так", "ні"]\n  a: 0\n'
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    # Words outside exercise blocks should NOT be extracted
+    assert "Розділ" not in words
+    assert "звичайний" not in words
+    # Words inside should be
+    assert "привіт" in words
+
+
+def test_validate_exercise_vocab_empty():
+    assert validate_exercise_vocab("No exercises here.") == []
+
+
+def test_validate_exercise_vocab_preserves_apostrophe():
+    content = (
+        ':::fill-in\ntitle: "Test"\n---\n'
+        "- sentence: \"Це пам'ятка\"\n"
+        "  answer: \"пам'ятка\"\n"
+        ":::"
+    )
+    words = validate_exercise_vocab(content)
+    assert "пам'ятка" in words
+
+
+# --- enrich_exercises_llm ---
+
+
+def test_enrich_exercises_llm_stub_returns_unchanged():
+    """Stub should return content unchanged."""
+    content = ':::quiz\ntitle: "Test"\n---\n- q: "test"\n  o: ["a"]\n  a: 0\n:::'
+    result = enrich_exercises_llm(content, {"level": "A1"})
+    assert result == content
+
+
+def test_enrich_exercises_llm_empty_content():
+    assert enrich_exercises_llm("", {}) == ""
+
+
+def test_enrich_exercises_llm_no_exercises():
+    content = "## Just text\n\nNo exercises here."
+    assert enrich_exercises_llm(content, {"level": "A1"}) == content
