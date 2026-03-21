@@ -65,7 +65,9 @@ Spread placeholders evenly throughout the module. Never cluster them.
 
 ## Plan
 
+<plan_content>
 {PLAN_CONTENT}
+</plan_content>
 
 ---
 
@@ -73,7 +75,9 @@ Spread placeholders evenly throughout the module. Never cluster them.
 
 Use these as source material. Cite specific examples and adapt pedagogy from Ukrainian textbooks. Write original prose — do not copy excerpts verbatim.
 
+<knowledge_packet>
 {KNOWLEDGE_PACKET}
+</knowledge_packet>
 
 ---
 
@@ -112,7 +116,7 @@ Each section should follow the word budget specified. The total must reach {WORD
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
 - Dialogues: natural, not stilted. Real situations, real responses.
 - **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Avoid generic LLM cheerfulness ("Good news!", "Don't panic!", "Fun fact!"). Let the content be interesting on its own.
-- **Never make claims about specific Ukrainian words** without being 100% sure. If you're not certain about a letter, sound, or form — describe it generally rather than risk an error.
+- **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
 
 {PEDAGOGICAL_CONSTRAINTS}
 

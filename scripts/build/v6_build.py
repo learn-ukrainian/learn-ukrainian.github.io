@@ -713,26 +713,52 @@ def step_review(content_path: Path, level: str, module_num: int,
     review_path.write_text(raw, "utf-8")
     _log(f"  Review saved → {review_path}")
 
-    # Parse score from review output
+    # Parse raw dimension scores from review output and calculate weighted total
     import re
-    score = 0.0
-    score_match = re.search(
-        r"\*\*(?:Weighted total|Final|Score)[^*]*\*\*\s*\|?\s*\*?\*?(\d+\.?\d*)",
-        raw,
-    )
-    if score_match:
-        score = float(score_match.group(1))
 
-    # Parse verdict
+    # Dimension weights (must match v6-review.md)
+    DIMENSION_WEIGHTS = {
+        1: 0.15,  # Plan adherence
+        2: 0.15,  # Linguistic accuracy
+        3: 0.15,  # Pedagogical quality
+        4: 0.10,  # Vocabulary coverage
+        5: 0.15,  # Exercise quality
+        6: 0.10,  # Engagement & tone
+        7: 0.05,  # Structural integrity
+        8: 0.05,  # Cultural accuracy
+        9: 0.10,  # Dialogue & conversation quality
+    }
+
+    # Extract per-dimension scores from the markdown table
+    score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
+    raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
+
+    if raw_scores and len(raw_scores) >= len(DIMENSION_WEIGHTS):
+        weighted = sum(
+            raw_scores[i] * DIMENSION_WEIGHTS.get(i + 1, 0)
+            for i in range(len(DIMENSION_WEIGHTS))
+        )
+        score = round(weighted, 1)
+        _log(f"  Raw scores: {raw_scores}")
+        _log(f"  Weighted score (calculated): {score}/10")
+    else:
+        score = 0.0
+        _log(f"  ⚠️  Could not parse dimension scores (found {len(raw_scores)} of 9)")
+
+    # Parse verdict (reviewer judges severity, pipeline judges score)
     verdict = "UNKNOWN"
     for v in ("PASS", "REVISE", "REJECT"):
         if f"Verdict: {v}" in raw or f"Verdict:{v}" in raw:
             verdict = v
             break
 
-    passed = verdict == "PASS" and score >= 8.0
+    # Two independent gates
+    score_pass = score >= 8.0
+    severity_pass = verdict == "PASS"
+    passed = score_pass and severity_pass
+
     icon = "✅" if passed else "❌"
-    _log(f"  {icon} Review: {score}/10 — {verdict}")
+    _log(f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — {verdict} (severity gate: {'✅' if severity_pass else '❌'})")
 
     return passed, score
 

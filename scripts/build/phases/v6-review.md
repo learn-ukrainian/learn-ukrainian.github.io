@@ -10,11 +10,15 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 
 ## Plan (source of truth)
 
+<plan_content>
 {PLAN_CONTENT}
+</plan_content>
 
 ## Generated Content
 
+<generated_module_content>
 {GENERATED_CONTENT}
+</generated_module_content>
 
 ---
 
@@ -31,6 +35,7 @@ Check for:
 - Calques (приймати душ→брати душ)
 - Incorrect gender assignment or case endings
 - Factually wrong claims about Ukrainian phonetics, grammar, or culture
+  - If you suspect a factual or phonetic error but are not 100% certain, flag it as `[NEEDS RAG VERIFICATION]` rather than marking it as critical/major
 
 If no errors found, state: "No linguistic errors found."
 
@@ -65,9 +70,9 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 
 **Note:** Vocabulary tables (словник), video embeds, and external resource links are added by a downstream ENRICH step — do NOT penalize their absence.
 
-### Step 4: Calculate weighted score
+### Step 4: Output raw scores
 
-Multiply each dimension score by its weight. Sum to get final score (out of 10).
+Output ONLY the raw 1-10 scores in the table below. Do NOT calculate the weighted total — the pipeline script handles the math deterministically. Just write your per-dimension scores.
 
 ### Step 5: List findings
 
@@ -83,15 +88,13 @@ Critical = module cannot ship. Major = quality below standard. Minor = polish it
 
 ### Step 6: Verdict
 
-The verdict has TWO independent gates — both must pass:
-- **Score gate:** weighted score ≥ 8.0
-- **Severity gate:** zero critical findings
+Base your verdict on the **severity of findings** — the pipeline calculates the weighted score separately.
 
 | Verdict | Condition |
 |---------|-----------|
-| **PASS** | Score ≥ 8.0 AND zero critical findings |
-| **REVISE** | Score 6.0–7.9, OR has major findings but no criticals |
-| **REJECT** | Score < 6.0, OR has any critical finding (regardless of score) |
+| **PASS** | Zero critical findings, at most minor issues |
+| **REVISE** | Has major findings but no criticals — fixable without rewrite |
+| **REJECT** | Has any critical finding — fundamental problems requiring rewrite |
 
 ---
 
@@ -109,7 +112,6 @@ The verdict has TWO independent gates — both must pass:
 |-----------|-------|----------|
 | 1. Plan adherence | X/10 | [specific evidence from the text] |
 | ... | ... | ... |
-| **Weighted total** | **X.X/10** | |
 
 ## Findings
 [list all findings with dimension/severity/location/issue/fix]
