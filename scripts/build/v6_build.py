@@ -775,12 +775,12 @@ def step_review(content_path: Path, level: str, module_num: int,
     _log(f"  Reviewer: {reviewer} (writer was {writer})")
 
     if reviewer == "gemini":
-        from batch_gemini_config import REVIEW_MODEL
+        from batch_gemini_config import PRO_MODEL
         from pipeline.core import dispatch_gemini
-        _log(f"  Dispatching to Gemini ({REVIEW_MODEL})...")
+        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
         ok, raw = dispatch_gemini(
             prompt, task_id=f"v6-review-{slug}",
-            model=REVIEW_MODEL,
+            model=PRO_MODEL,
             stdout_only=True, timeout=600,
         )
     else:
