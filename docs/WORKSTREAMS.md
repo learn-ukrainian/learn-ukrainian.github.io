@@ -1,144 +1,138 @@
-# Workstreams — V4 Full Curriculum Rebuild
+# Workstreams — V6 Pipeline Era
 
-> Master epic: [#717](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/717)
-> Last updated: 2026-03-03
+> Epics: [#982](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/982) (V6 Pipeline) | [#981](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/981) (A1 Rebuild)
+> Last updated: 2026-03-21
 
-## Overview
+---
 
-8 workstreams, each with a GitHub label (`ws:*`) for filtering.
+## Three Quality Pillars
+
+Every shippable module must pass all three:
+
+| Pillar | What | How |
+|--------|------|-----|
+| **Content** | Pedagogy, tone, accuracy, Ukrainian quality | Gemini adversarial review (10-dimension rubric, #991) |
+| **Structural** | Word count, activities, vocab, engagement | Deterministic audit gates (`audit_module.py`) |
+| **Visual** | Tabs render, exercises work, no broken MDX | Chrome-based QA (#1008) |
+
+---
+
+## Priority Queue
+
+Work items in execution order. Each must unblock the next.
+
+### P0 — Unblock the pipeline
+
+| # | Title | Why first |
+|---|-------|-----------|
+| [#1007](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1007) | Monitor API migration | V6 builds invisible to dashboard/API — nothing tracks progress |
+| [#996](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/996) | Exercise placeholder filler | Stray quotes, missing fill-in context — exercises broken |
+| [#997](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/997) | DSL to MDX converter | Exercises must render correctly in Starlight |
+| [#1006](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1006) | Quick verify + retry loop | Structural checks catch errors before review |
+| [#991](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/991) | Review prompt calibration | Gemini review is the content quality gate |
+
+### P1 — Ship M01, prove the pipeline end-to-end
+
+| # | Title | Why now |
+|---|-------|---------|
+| [#1009](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1009) | ENRICH — словник, videos, tabs, dialogue formatting | M01 missing vocabulary table, Anna's videos, resource tabs |
+| — | M01 quality pass | Rebuild M01 through full V6, target 9+/10 from Gemini |
+| [#1008](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1008) | Visual QA (Chrome) | Verify M01 renders correctly before scaling |
+
+### P2 — Scale
+
+| # | Title | Scope |
+|---|-------|-------|
+| — | Scale A1.1 (M02-M07) | First 7 modules through V6 pipeline |
+| [#1011](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1011) | A2 plan writing | 60 modules from V3 design into plan YAMLs |
+| [#1010](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1010) | Rewrite WORKSTREAMS.md | This file (close after merge) |
+
+### P3 — Pipeline hardening (open, not blocking)
+
+| # | Title | Notes |
+|---|-------|-------|
+| [#999](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/999) | Tutor prompt principles | Integrate into writing prompt |
+| [#998](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/998) | Chunking for long modules | Needed when scaling to B1+ (4,000+ words) |
+| [#989](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/989) | Validation false positives | Reduce noise in verify step |
+| [#985](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/985) | Preflight auto-fixes | Auto-correct plan issues before build |
+| [#984](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/984) | Automated plan review | LLM adversarial review of plans |
+
+### Completed V6 components
+
+| # | Title |
+|---|-------|
+| [#994](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/994) | Research knowledge packet |
+| [#995](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/995) | Writing prompt design |
+| [#988](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/988) | Stress annotation |
+
+---
+
+## V6 Pipeline Architecture
 
 ```
-gh issue list --label "ws:rebuild-core" --state open
+Plan (YAML) → Research packet (RAG) → Write (Claude) → Quick verify → Exercises (DSL fill)
+  → Stress annotation → ENRICH (словник/videos/tabs) → Validate → Review (Gemini) → MDX
 ```
 
-## Priority Order
+- **Writer:** Claude (won comparison #1001 — 8.55 vs 8.35)
+- **Reviewer:** Gemini (adversarial, 10-dimension rubric)
+- **Retry:** Max 2 attempts, whole-module regen, model switch on failure
+- **Orchestrator:** `scripts/build/v6_build.py`
 
-| Priority | Workstream | Label | Focus |
-|----------|-----------|-------|-------|
-| **P0** | V4 Pipeline | `ws:v4-pipeline` | Test v4, prove upgrade + rebuild paths |
-| **P0** | RAG | `ws:rag` | Supports all rebuild waves |
-| **P1** | Core Rebuild | `ws:rebuild-core` | A1-B2 (Wave 1: 325 modules) |
-| **P1** | Seminar Rebuild | `ws:rebuild-seminar` | HIST/BIO/ISTORIO (Waves 2-3, 6) |
-| **P2** | Advanced Rebuild | `ws:rebuild-advanced` | C1/LIT/LIT-*/OES/RUTH/C2 (Waves 4-8) |
-| **P2** | l2-uk-direct | `ws:l2-uk-direct` | Separate track, parallel work |
-| **P3** | Infrastructure | `ws:infra` | Tests, CI/CD, performance |
-| **P3** | Documentation | `ws:docs` | Site, guides, docs cleanup |
+---
 
-## ws:v4-pipeline — Pipeline V4 Testing & Launch
+## Content Status
 
-**Goal**: Prove v4 works for both upgrade and full-rebuild paths before batch runs.
+### A1 — 55 plans, 0 shipped modules
 
-| # | Title | Status |
-|---|-------|--------|
-| 703 | Pipeline v4 implementation | Code done, needs testing |
-| 667 | Pipeline hardening (test regime) | Revised for v4 |
-| 670 | Diagnose failing modules | Re-scope for v4 |
-| 672 | Batch runs | Re-scope for v4 |
-| ~~681~~ | ~~Gemini 3-preview → 3.1-preview~~ | ✅ Done |
-| 640 | Prose proofreading script | Integrated into v4 validate |
-| 718 | V4 upgrade: A1 track + HIST alignment audit | New |
-| 719 | D.1 inline fixes — eliminate D.2 for simple repairs | New |
-| 720 | V4 research quality evaluation | New |
-| 725 | Audit & clean external_resources.yaml | In progress |
+- All 55 plans written, Gemini-reviewed, pass `check_plan.py`
+- M01 built by both Claude and Gemini (comparison complete)
+- Next: fix pipeline blockers, then ship M01, then scale A1.1
 
-**Next action**: Run A1 track upgrade (#718) — 64 modules through v4 discover→content→review.
+### A2 — design complete, no plans
 
-## ws:rebuild-core — Core Tracks A1-B2 (Wave 1)
+- 60 modules across 8 phases designed in `docs/l2-uk-en/A2-CURRICULUM-V3.md`
+- Gemini-reviewed, State Standard coverage verified
+- Plan writing tracked in #1011
 
-**Goal**: All 325 A1-B2 modules rebuilt/upgraded through v4.
+### B1-C2 — design phase
 
 | # | Title | Status |
 |---|-------|--------|
-| 717 | Master rebuild epic | New |
-| 560 | The Great Rebuild | Master content epic |
-| 709 | A1 restructure 44→64 | Committed, 63/64 built |
-| 710 | Research for new/restructured modules | Not started |
-| 699 | Rewrite Cyrillic Code I-IV plans | Not started |
-| 682 | A2 immersion rules | Not started |
-| 594 | Pre-seed Phase A research | Not started |
-| 705 | Vocabulary progression audit | Not started |
+| [#1002](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1002) | B1 design | Open |
+| [#1003](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1003) | B2 design | Open |
+| [#1004](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1004) | C1 design | Open, deferred |
+| [#1005](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1005) | C2 design | Open, deferred |
 
-**Strategy**:
-- A1: upgrade existing 63 + build 1 missing
-- A2/B1/B2: drop content, rebuild from plans
+---
 
-## ws:rebuild-seminar — Seminar Tracks (Waves 2-3, 6)
+## Deferred Work
 
-**Goal**: HIST(140), BIO(175), ISTORIO(136) modules at v4 reviewed status.
+All labeled `priority:later`. Will revisit after A1-B2 core tracks ship.
 
-| # | Title | Status |
-|---|-------|--------|
-| 706 | Seminar depth review | Not started |
-| 499 | Chronicle quotes for C1-BIO | Not started |
-| 635-638 | REALNA ISTORIIA content additions | Not started |
-| 675 | Textbook image enrichment | Not started |
+### Seminar tracks
+| # | Title |
+|---|-------|
+| [#706](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/706) | Seminar depth review |
+| [#499](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/499) | Chronicle quotes for C1-BIO |
+| [#675](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/675) | Textbook image enrichment |
 
-**Strategy**:
-- HIST: upgrade via `--restart-from discover --review`
-- BIO: upgrade 76 + build 99
-- ISTORIO: upgrade 3 + build 133
+### STEM domain tracks (#859 epic + children)
+All STEM work (IT, MED, BUS, LAW, etc.) is deferred. Issues #859-#870 remain open but not prioritized until core A1-B2 tracks are complete.
 
-## ws:rebuild-advanced — Advanced Tracks (Waves 4-8)
+### Advanced tracks
+| # | Title |
+|---|-------|
+| [#303](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/303) | C2 implementation (100 modules) |
+| [#497](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/497) | OES + RUTH tracks (200 modules) |
+| [#658](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/658) | Literature Matrix Phase B |
+| [#676](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/676) | Monolingual toggle (C1+) |
+| [#429](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/429) | PRO tracks activity framework |
+| [#705](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/705) | Vocabulary progression audit |
 
-**Goal**: C1(106), LIT(221), LIT-*(159), OES(100), RUTH(112), C2(91) = 789 modules.
-
-| # | Title | Status |
-|---|-------|--------|
-| 303 | C2 implementation | Blocked on v4 batch |
-| 263 | C2 vocab | Blocked on #303 |
-| 497 | OES + RUTH tracks | Blocked on plans + RAG |
-| 550 | Literature expansion | Blocked on #701 |
-| 658 | Literature Matrix Phase B | Blocked on #550 |
-| 659 | Canonical gap fill | Blocked on #550 |
-| 429 | PRO tracks activities | **DEFERRED** to STEM phase |
-| 676 | Monolingual toggle | Feature, not rebuild |
-
-**Depends on**: Literary RAG (#701), pipeline maturity from Waves 1-3.
-
-## ws:rag — RAG Infrastructure
-
-**Goal**: Comprehensive Ukrainian language verification and enrichment.
-
-| # | Title | Status |
-|---|-------|--------|
-| 666 | RAG Infrastructure (Qdrant) | Operational (10K images, 1.2K text chunks) |
-| 692 | RAG Content Expansion | Ongoing |
-| 683 | Textbook processing pipeline | In progress |
-| 695 | rag_batch_verify.py | Not started |
-| 701 | Literary RAG (ukrlib) | In progress |
-| 712 | Benchmark EmbeddingGemma vs BGE-M3 | Not started |
-| 713 | Image annotation bugs | Not started |
-| 715 | ZNO exam dataset (2,328 questions) | Not started |
-| 376 | Map Dobra Forma textbook | Not started |
-| 722 | Crawl and index ESU into RAG | New |
-| 723 | Live query tools for research verification | New |
-| 724 | Scrape ukrainianlessons.com full content | New |
-
-## ws:l2-uk-direct — Direct Track
-
-**Goal**: L1-agnostic Ukrainian course, parallel to l2-uk-en.
-
-| # | Title | Status |
-|---|-------|--------|
-| 661 | Infrastructure & tooling | 10/47 A1 modules in draft |
-| 662 | A1 module build | In progress |
-| 664 | Scripts (source_images, manifest) | Not started |
-| 674 | A2→B2 roadmap | Planning only |
-| 708 | Dedicated pipeline | Not started |
-
-## ws:infra — Infrastructure & Tech Debt
-
-| # | Title | Status |
-|---|-------|--------|
-| 520 | Comprehensive test suite | 36 test files exist, v4 coverage missing |
-| 521 | Performance bottlenecks | Not started |
-| 532 | CI/CD pipeline | Not started |
-| 688 | Deduplicate shared infrastructure | Not started |
-
-## ws:docs — Documentation & Site
-
-| # | Title | Status |
-|---|-------|--------|
-| 522 | Documentation gaps | Ongoing |
-| 655 | Migrate to Astro Starlight | Not started |
-| 634 | Monolingual lexicon builder | Not started |
+### RAG & infrastructure
+| # | Title |
+|---|-------|
+| [#715](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/715) | ZNO exam dataset integration |
+| [#854](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/854) | Expand RAG sources for weak areas |
+| [#634](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/634) | Monolingual lexicon builder |

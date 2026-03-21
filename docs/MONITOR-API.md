@@ -60,8 +60,8 @@ curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
 
 Returns per-track counts:
 - `total` — plan files count (source of truth)
-- `research_done` — v4 research, v3 Phase A, or v2 phase 1 complete
-- `content_done` — v4 content, v3 Phase B, or v2 phase 2 complete
+- `research_done` — v6/v5/v4 research, v3 Phase A, or v2 phase 1 complete
+- `content_done` — v6/v5/v4 content, v3 Phase B, or v2 phase 2 complete (V6 modules with `state.json` mode="v6" are counted as built)
 - `audit_passing` — `status/*.json` overall == "pass"
 - `final_review_done` — `review/*-final-review.md` exists
 - `prompt_reviewed` — `/prompt-review` done (`audit/*-prompt-review.md` exists)
@@ -92,7 +92,7 @@ Sample response:
 
 ### `GET /api/state/pipeline/{track}`
 
-Per-module v5/v4/v3 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
+Per-module v6/v5/v4/v3 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
@@ -124,6 +124,28 @@ Returns (v3 module):
 }
 ```
 
+Returns (v6 module):
+```json
+{
+  "num": 1, "slug": "sounds-letters-and-hello",
+  "pipeline_version": "v6",
+  "phases": {
+    "check": {"status": "complete", "ts": "2026-03-20T14:00:00Z"},
+    "research": {"status": "complete", "ts": "2026-03-20T14:01:00Z"},
+    "write": {"status": "complete", "ts": "2026-03-20T14:05:00Z"},
+    "exercises": {"status": "complete", "ts": "2026-03-20T14:08:00Z"},
+    "annotate": {"status": "complete", "ts": "2026-03-20T14:10:00Z"},
+    "enrich": {"status": "complete", "ts": "2026-03-20T14:12:00Z"},
+    "verify": {"status": "complete", "ts": "2026-03-20T14:15:00Z"},
+    "publish": {"status": "pending"}
+  },
+  "audit": "pass",
+  "words": 1500,
+  "word_target": 1200,
+  "research_score": null
+}
+```
+
 Returns (v5 module):
 ```json
 {
@@ -145,10 +167,11 @@ Returns (v5 module):
 }
 ```
 
-**Pipeline version detection** (per module): `state.json["mode"] == "v5"` > `state-v4.json` > `state-v3.json` > `"unbuilt"`.
+**Pipeline version detection** (per module): `state.json["mode"] == "v6"` > `state.json["mode"] == "v5"` > `state-v4.json` > `state-v3.json` > `"unbuilt"`.
 
-All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v5/v4.
+All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v6/v5/v4.
 
+V6 phases: `check`, `research`, `write`, `exercises`, `annotate`, `enrich`, `verify`, `publish`.
 V5 phases: `research`, `discover`, `content`, `validate`, `activities`, `review`, `mdx`.
 V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
 V3 phases: `A`, `B`, `C`, `audit`, `D`.
@@ -161,7 +184,7 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ### `GET /api/state/pipeline-versions[?track=x]`
 
-Migration progress — how many modules are v5 vs v4/v3/unbuilt. **The single-glance v5 migration dashboard.**
+Migration progress — how many modules are v6/v5 vs v4/v3/unbuilt. **The single-glance pipeline migration dashboard.**
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
@@ -172,17 +195,18 @@ Returns:
 ```json
 {
   "total": 64,
-  "counts": {"v5": 40, "v4": 2, "v3": 22, "unbuilt": 0},
-  "pct_v5": 63,
+  "counts": {"v6": 5, "v5": 35, "v4": 2, "v3": 22, "unbuilt": 0},
+  "pct_v5": 55,
   "pct_built": 66,
   "needs_rebuild": 22,
-  "per_track": {"a1": {"v5": 40, "v4": 2, "v3": 22, "unbuilt": 0}},
+  "per_track": {"a1": {"v6": 5, "v5": 35, "v4": 2, "v3": 22, "unbuilt": 0}},
+  "v6_modules": [...],
   "v5_modules": [...],
   "v4_modules": [...]
 }
 ```
 
-`needs_rebuild` = `v3 + unbuilt` count. `pct_v5` shows v5 adoption rate.
+`needs_rebuild` = `v3 + unbuilt` count. V6 modules are detected via `state.json` with `mode="v6"` and appear in the `"v6"` category alongside v5.
 
 ---
 
@@ -220,6 +244,38 @@ curl -s http://localhost:8765/api/state/build-status | python3 -m json.tool
 ```
 
 Returns only tracks that have activity. Use during overnight builds for a single-glance overview.
+
+---
+
+### `GET /api/state/build-stats/{track}`
+
+V6 build attempt history from `build-stats.jsonl`. Each V6 build appends a line to this file; this endpoint reads and summarizes it.
+
+```bash
+curl -s http://localhost:8765/api/state/build-stats/a1 | python3 -m json.tool
+```
+
+Returns:
+```json
+{
+  "track": "a1",
+  "total_attempts": 12,
+  "successes": 8,
+  "unique_modules": 5,
+  "success_rate": "66.7%",
+  "entries": [
+    {
+      "slug": "sounds-letters-and-hello",
+      "attempt": 2,
+      "result": "success",
+      "timestamp": "2026-03-20T14:15:00Z",
+      "duration_seconds": 180
+    }
+  ]
+}
+```
+
+`entries` returns the last 50 build attempts (most recent first). Use this to monitor V6 build reliability, identify modules that need multiple attempts, and track overall build success rates.
 
 ---
 
