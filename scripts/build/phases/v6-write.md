@@ -119,6 +119,7 @@ Each section should follow the word budget specified. The total must reach {WORD
 - **Zero Russian**: No ы, э, ё, ъ. No Russian words (кот→кіт, хорошо→добре, конечно→звичайно)
 - **Zero Surzhyk**: No шо→що, чо→чому, тіпа→типу
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
+- **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
 ### Writing Quality
