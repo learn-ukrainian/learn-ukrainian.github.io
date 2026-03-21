@@ -308,3 +308,109 @@ def test_exercises_more_than_expected():
     results = quick_verify(content, plan)
     ex_errors = [r for r in results if r.check == "EXERCISES"]
     assert len(ex_errors) == 0
+
+
+# --- AC10: Retry catches bad output ---
+
+
+def test_retry_catches_bad_output():
+    """Content missing H2 headers fails quick_verify, and
+    build_correction_directive produces a non-empty directive."""
+    plan = _make_plan(
+        sections=[
+            {"section": "Привітання (Greetings)", "words": 400},
+            {"section": "Знайомство (Introductions)", "words": 400},
+        ],
+        word_target=800,
+    )
+    # Content has NO H2 headers at all — just plain text
+    bad_content = "Українська мова дуже гарна і мелодійна. " * 150
+
+    results = quick_verify(bad_content, plan)
+    assert has_errors(results), "Missing H2 headers should produce ERROR results"
+
+    structure_errors = [r for r in results if r.check == "STRUCTURE"]
+    assert len(structure_errors) == 2, "Both sections should be flagged as missing"
+
+    directive = build_correction_directive(results)
+    assert directive, "Directive should be non-empty"
+    assert "<correction_directive>" in directive
+    assert "Привітання" in directive
+
+
+# --- AC11: Exhausted retries flags human ---
+
+
+def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
+    """When all retries are exhausted, an error report is generated."""
+    import importlib
+
+    # Import v6_build module
+    v6_mod = importlib.import_module("build.v6_build")
+
+    # Set up a fake curriculum root in tmp_path
+    level = "a1"
+    slug = "test-slug"
+
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    plan_dir = curriculum_root / "plans" / level
+    plan_dir.mkdir(parents=True)
+    level_dir = curriculum_root / level
+    level_dir.mkdir(parents=True)
+
+    # Write a minimal plan
+    plan_content = {
+        "title": "Test Module",
+        "word_target": 1200,
+        "content_outline": [
+            {"section": "Section A", "words": 600},
+            {"section": "Section B", "words": 600},
+        ],
+    }
+    import yaml as _yaml
+    (plan_dir / f"{slug}.yaml").write_text(
+        _yaml.dump(plan_content, allow_unicode=True), "utf-8",
+    )
+
+    # Write bad content that always fails quick_verify (missing headers, too short)
+    bad_md = "This is bad content without any H2 headers or Ukrainian."
+    content_path = level_dir / f"{slug}.md"
+    content_path.write_text(bad_md, "utf-8")
+
+    # Monkeypatch CURRICULUM_ROOT and step_write to always return bad content
+    monkeypatch.setattr(v6_mod, "CURRICULUM_ROOT", curriculum_root)
+
+    def fake_step_write(level, module_num, slug, packet_path,
+                        writer="gemini", correction_directive=""):
+        """Always return the bad content file."""
+        content_path.write_text(bad_md, "utf-8")
+        return content_path
+
+    monkeypatch.setattr(v6_mod, "step_write", fake_step_write)
+
+    # Run with max_retries=1 (2 total attempts)
+    result = v6_mod.step_write_with_retry(
+        level=level, module_num=1, slug=slug,
+        packet_path=None, writer="gemini", max_retries=1,
+    )
+
+    # Should return the output (for human to fix)
+    assert result is not None
+
+    # Error report should exist
+    error_report = curriculum_root / level / "build-errors" / f"{slug}-errors.md"
+    assert error_report.exists(), "Error report should be generated"
+    report_text = error_report.read_text("utf-8")
+    assert "Build Error Report" in report_text
+    assert "Attempts: 2" in report_text
+
+    # Friction file should exist (AC9 integration check)
+    friction_path = curriculum_root / level / "orchestration" / slug / "friction.yaml"
+    assert friction_path.exists(), "Friction file should be auto-generated"
+    friction_data = _yaml.safe_load(friction_path.read_text("utf-8"))
+    assert isinstance(friction_data, list)
+    assert len(friction_data) >= 1
+    entry = friction_data[-1]
+    assert entry["source"] == "auto-generated"
+    assert entry["status"] == "active"
+    assert "V6 build failed after 2 attempts" in entry["note"]
