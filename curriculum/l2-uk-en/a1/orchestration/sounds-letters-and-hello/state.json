@@ -1,0 +1,43 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "sounds-letters-and-hello",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-21T19:41:13.821065+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-21T19:41:26.307015+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-21T19:42:52.653682+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-21T19:42:52.658611+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-21T19:42:54.705645+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-21T19:42:54.711441+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-21T19:42:54.758032+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-21T19:43:57.751773+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-21T19:43:57.811293+00:00"
+    }
+  }
+}

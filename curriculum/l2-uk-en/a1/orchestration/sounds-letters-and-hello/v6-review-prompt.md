@@ -1,3 +1,160 @@
+# V6 Review Prompt — Adversarial Module Quality Review
+
+You are reviewing a Ukrainian language module for quality. The writer used a different AI model — your job is adversarial: find every flaw. Be harsh but fair. Every issue you catch now prevents 54 bad modules later.
+
+## Module Under Review
+
+**Module:** 1: Sounds, Letters, and Hello (A1, A1.1 [Sounds, Letters, and First Contact])
+**Writer:** Claude Opus
+**Word target:** 1200
+
+## Plan (source of truth)
+
+<plan_content>
+module: a1-001
+level: A1
+sequence: 1
+slug: sounds-letters-and-hello
+version: '1.0'
+title: Sounds, Letters, and Hello
+subtitle: "33 літери, 38 звуків, Привіт!"
+focus: phonetics
+pedagogy: PPP
+phase: A1.1 [Sounds, Letters, and First Contact]
+word_target: 1200
+objectives:
+- Understand the difference between sounds (звуки) and letters (літери)
+- Recognize the two families of sounds — vowels (голосні) and consonants (приголосні)
+- Read your first Ukrainian words using Cyrillic letters
+- Say hello and respond to a greeting
+content_outline:
+- section: "Звуки і літери (Sounds and Letters)"
+  words: 250
+  points:
+  - "Golden rule from Большакова Grade 1 p.24 and Заболотний Grade 5 p.73:
+    'Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.'
+    33 letters (літери), 38 sounds (звуки). Letters are symbols on paper.
+    Sounds are what we hear and pronounce."
+  - "Two families of sounds:
+    Голосні (vowels) — made with voice only, mouth open, no obstruction.
+    Большакова teaches with a poem: 'Голосні почуєш в пісні.'
+    6 vowel sounds: [а], [о], [у], [е], [и], [і].
+    10 vowel letters: А, О, У, Е, И, І, Я, Ю, Є, Ї."
+  - "Приголосні (consonants) — made with voice + noise or noise only.
+    Lips, teeth, tongue create obstruction. 32 consonant sounds.
+    Большакова: 'Приголосні деренчать, і тихенько шелестять.'"
+- section: "Перші слова (First Words)"
+  words: 300
+  points:
+  - "Some Cyrillic letters look like Latin but may sound different.
+    Start with letters that look AND sound familiar: А, О, К, М, Т.
+    Read immediately: мама, тато, кома, атом, мак, око.
+    Important: Ukrainian Т is dental (tongue touches teeth, not gum ridge)
+    and К/Т are unaspirated (no puff of air). Close enough for now."
+  - "False friend letters — the biggest trap for English speakers:
+    В sounds [в] (not 'b'), Н sounds [н] (not 'h'),
+    Р sounds [р] rolled (not 'p'), С sounds [с] (not 'c/k'),
+    У sounds [у] (not 'y'), Х sounds [х] (not 'x').
+    Practice: вода (water), рука (hand), сон (dream), ніс (nose), хата (house)."
+  - "New shapes — letters with no Latin equivalent:
+    Б, Г, Ґ, Д, Ж, З, И, Й, Л, П, Ф, Ц, Ч, Ш, Щ.
+    Through words: банк, дім, зима, книга, школа.
+    Щ always makes TWO sounds [шч]. Ь has NO sound (softens the consonant before it)."
+  - "Special: Ї always = [йі], never softens. Unique to Ukrainian.
+    Я, Ю, Є can be two sounds OR soften a consonant.
+    Full exploration in M02 — for now, just recognize them."
+- section: "Привіт! (Hello!)"
+  words: 250
+  points:
+  - "Following Anna Ohoiko ULP Episode 1 — your first conversation.
+    Привіт! — Hi! (informal, use with friends, family, peers).
+    Як справи? — How are you? Answers: Добре. Чудово. Нормально.
+    А у тебе? — And you?"
+  - "Рада тебе бачити! (female) / Радий тебе бачити! (male) — Glad to see you!
+    Note: Ukrainian has gendered forms. Women say рада, men say радий.
+    This is your first encounter with gender in Ukrainian — it will become
+    a major topic starting M08."
+  - "Reading practice with the greeting:
+    Read each letter, blend into syllables: При-віт!
+    This word uses letters from all groups:
+    П (new), р (false friend!), и (new vowel), в (false friend!), і (vowel), т (familiar)."
+- section: "Читаємо (Reading Practice)"
+  words: 250
+  points:
+  - "Environmental reading — signs you see in Ukraine:
+    Аптека (pharmacy), Банк (bank), Кафе (cafe), Метро (metro),
+    Пошта (post office), Школа (school), Зупинка (bus stop).
+    Sound out each letter, blend into syllables, read the whole word."
+  - "Ukrainian city names:
+    Київ, Львів, Одеса, Харків, Дніпро, Полтава."
+  - "First sentences with Це (this is):
+    Це мама. Це банк. Це Київ. Що це? Хто це?"
+- section: "Підсумок — Summary"
+  words: 150
+  points:
+  - "Self-check: How many letters? How many sounds? Why are they different?
+    What are голосні? What are приголосні?
+    What does Привіт mean? How do you respond to Як справи?"
+vocabulary_hints:
+  required:
+  - мама (mother)
+  - тато (father)
+  - вода (water)
+  - рука (hand)
+  - книга (book)
+  - школа (school)
+  - привіт (hi, informal)
+  - як справи (how are you)
+  - добре (fine, good)
+  - чудово (great, wonderful)
+  recommended:
+  - банк (bank)
+  - аптека (pharmacy)
+  - метро (metro)
+  - пошта (post office)
+  - зупинка (bus stop)
+  - нормально (okay)
+activity_hints:
+- type: quiz
+  focus: "Sound or letter? (звук чи літера?)"
+  items: 6
+- type: match-up
+  focus: "Match false friend letters to their REAL sounds"
+  items: 6
+- type: fill-in
+  focus: "Complete the greeting dialogue"
+  items: 4
+- type: group-sort
+  focus: "Sort into голосні vs приголосні"
+  items: 8
+connects_to:
+- a1-002 (Reading Ukrainian)
+prerequisites: []
+grammar:
+- "Звуки vs літери — 33 letters, 38 sounds"
+- "Голосні (6 sounds, 10 letters) vs приголосні (32 sounds)"
+- "Cyrillic letter-sound mapping (familiar, false friends, new shapes)"
+- "Привіт greeting as first spoken Ukrainian"
+register: розмовний
+references:
+- title: "Большакова Grade 1 буквар, p.24"
+  notes: "Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.'"
+- title: "Захарійчук Grade 1 буквар (NUS 2025), p.13"
+  notes: "Sound notation: [•] for vowels, [–] for consonants."
+- title: "Заболотний Grade 5, p.73"
+  notes: "38 звуків: 6 голосних + 32 приголосні."
+- title: "ULP Season 1, Episode 1 — Informal Greetings"
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: "Привіт, Як справи?, response patterns."
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+
+</plan_content>
+
+## Generated Content
+
+<generated_module_content>
 ## Зву́ки і лі́тери (Sounds and Letters)
 
 Look at the text on this page. What you see are letters — symbols printed on a screen. Now say a word out loud. What you just produced are sounds — vibrations in the air. This distinction is the absolute foundation of Ukrainian, and every Ukrainian first-grader learns a golden rule:
@@ -281,3 +438,109 @@ title: "True or false?"
 - statement: "Привіт is an informal greeting."
   answer: true
 :::
+
+</generated_module_content>
+
+---
+
+## Review Protocol
+
+### Step 1: Scan for linguistic errors
+
+Scan the Ukrainian text for errors. Report ONLY problems found — do not echo correct text.
+
+Check for:
+- Russian characters (ы, э, ё, ъ) — these must NEVER appear
+- Russianisms (кот→кіт, хорошо→добре, конечно→звичайно)
+- Surzhyk (шо→що, чо→чому)
+- Calques (приймати душ→брати душ)
+- Incorrect gender assignment or case endings
+- Factually wrong claims about Ukrainian phonetics, grammar, or culture
+  - If you suspect a factual or phonetic error but are not 100% certain, flag it as `[NEEDS RAG VERIFICATION]` rather than marking it as critical/major
+
+If no errors found, state: "No linguistic errors found."
+
+**Do NOT check for stress marks** — stress annotation is handled by a separate deterministic tool after the review phase. Their absence is correct.
+
+### Step 2: Check exercises
+
+List every exercise block (`:::quiz`, `:::fill-in`, `:::match-up`, `:::group-sort`, `:::true-false`). These are filled exercises — a deterministic tool converted placeholders to real content.
+
+For each exercise, check:
+- Does the exercise test what was just taught? (language skill, not content recall)
+- Is the logic correct? (correct answers are actually correct, distractors are plausible but wrong)
+- Can a learner complete this with the knowledge taught so far in this module?
+- Does the exercise match one of the plan's `activity_hints` in type and focus?
+- Are there enough items per exercise? (check against plan's `activity_hints`)
+
+Also check: Are there enough exercises total? The plan's `activity_hints` specifies the expected count.
+
+**Note:** Exercises are generated by a deterministic tool from the writer's placeholders. If the exercise LOGIC is wrong (e.g., matching unrelated items), flag it — the tool's input data needs fixing. If the exercise FORMAT looks unusual, that is expected (the tool uses a specific DSL syntax).
+
+### Step 3: Score on 9 dimensions
+
+Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quote the actual text).
+
+| # | Dimension | Weight | What to check |
+|---|-----------|--------|---------------|
+| 1 | **Plan adherence** | 15% | Every content_outline point covered? Section word budgets respected (±10%)? All plan references used? |
+| 2 | **Linguistic accuracy** | 15% | All Ukrainian correct? No Russianisms/Surzhyk/calques? Correct phonetic descriptions? Gender/case correct? |
+| 3 | **Pedagogical quality** | 15% | PPP (Present→Practice→Produce) applied? Textbook pedagogy used (Большакова, Захарійчук)? Grammar scope respected (no A2 in A1)? |
+| 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
+| 5 | **Exercise quality** | 15% | Placeholders specific enough? Test the right skills? Placed after relevant teaching? Match plan's activity_hints? Sufficient items? |
+| 6 | **Engagement & tone** | 10% | Interesting for teens/adults? Authoritative but warm (like a skilled teacher)? No LLM filler ("Good news!", "Don't panic!", "Fun fact!")? Cultural hooks? |
+| 7 | **Structural integrity** | 5% | All H2 headings from plan present? Word count in range? No duplicate sections? No meta-commentary? Clean markdown? |
+| 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
+| 9 | **Dialogue & conversation quality** | 10% | Dialogues natural and culturally appropriate? Real situations, real responses? Speaker roles clear? Not stilted or textbook-robotic? |
+
+**Note:** Vocabulary tables (словник), video embeds, and external resource links are added by a downstream ENRICH step — do NOT penalize their absence.
+
+### Step 4: Output raw scores
+
+Output ONLY the raw 1-10 scores in the table below. Do NOT calculate the weighted total — the pipeline script handles the math deterministically. Just write your per-dimension scores.
+
+### Step 5: List findings
+
+For every issue found, provide:
+```
+[DIMENSION] [SEVERITY: critical/major/minor]
+Location: [specific section/paragraph — quote the actual text]
+Issue: [what's wrong]
+Fix: [exactly how to fix it]
+```
+
+Critical = module cannot ship. Major = quality below standard. Minor = polish item.
+
+### Step 6: Verdict
+
+Base your verdict on the **severity of findings** — the pipeline calculates the weighted score separately.
+
+| Verdict | Condition |
+|---------|-----------|
+| **PASS** | Zero critical findings, at most minor issues |
+| **REVISE** | Has major findings but no criticals — fixable without rewrite |
+| **REJECT** | Has any critical finding — fundamental problems requiring rewrite |
+
+---
+
+## Output Format
+
+```
+## Linguistic Scan
+[errors found, or "No linguistic errors found"]
+
+## Exercise Check
+[placeholder inventory and issues]
+
+## Scores
+| Dimension | Score | Evidence |
+|-----------|-------|----------|
+| 1. Plan adherence | X/10 | [specific evidence from the text] |
+| ... | ... | ... |
+
+## Findings
+[list all findings with dimension/severity/location/issue/fix]
+
+## Verdict: PASS / REVISE / REJECT
+[justification — reference both score gate and severity gate]
+```

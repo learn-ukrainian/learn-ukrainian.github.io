@@ -1,13 +1,3 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Привіт! (Hello!)'
-- FIX: Missing section heading: 'Читаємо (Reading Practice)'
-- FIX: Missing section heading: 'Підсумок — Summary'
-- FIX: Too short: 482 words (target: 1200, minimum: 1020)
-- FIX: Missing 8/10 required vocab: вода (water), рука (hand), книга (book), школа (school), привіт (hi, informal)
-</correction_directive>
-
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -20,58 +10,108 @@ Write the full prose content for module **1: Sounds, Letters, and Hello** (A1, A
 
 ---
 
-## 7 Hard Rules
+## 6 Hard Rules
 
-1. **NO stress marks (´)** — do not add stress marks to any Ukrainian word. A deterministic tool adds them after you write.
-2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
-4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-5. **Exercise placeholders ONLY** — mark where exercises go using the format below, but do NOT write exercise content. A separate tool fills them.
-6. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
-7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. Count as you go. Short modules fail review. Expand explanations, add more examples, include more dialogues — never pad with filler.
+1. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+2. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+3. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+4. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
+5. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
+6. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 
-## Exercise Placeholder Format
+**Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
-When you want an exercise, write a placeholder block. Be SPECIFIC about what the exercise should contain — include the actual questions, answers, and distractors. The more detail you provide, the better the exercise.
+## Exercises — Write Them Directly
 
+After each key teaching point, write an exercise directly in DSL format. Base your exercises on the `activity_hints` in the Plan — each hint should become one exercise.
+
+Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
+
+### DSL Format
+
+Use these exact formats. Each block starts with `:::type` and ends with `:::`.
+
+**Quiz** (multiple choice):
 ```
-:::exercise-placeholder
-type: quiz | fill-in | match-up | group-sort | true-false
-tests: [what skill this exercise tests — be specific]
-after: [what concept was just taught]
-items: [number of items]
-vocabulary: [comma-separated Ukrainian words to use as stems]
-questions: [specific questions with answers, e.g. "Що ми чуємо? → звуки" or "В=? → [в] не [б]"]
-groups: [for group-sort: group names and which items go where]
+:::quiz
+title: "Звук чи літера?"
+---
+- q: "Що ми чуємо і вимовляємо?"
+  o: ["звуки", "літери", "слова"]
+  a: 0
+- q: "Що ми бачимо і пишемо?"
+  o: ["літери", "звуки", "речення"]
+  a: 0
 :::
 ```
 
-**Good example:**
+**Fill-in** (complete the sentence):
 ```
-:::exercise-placeholder
-type: group-sort
-tests: classify letters as vowel or consonant
-after: голосні vs приголосні explanation
-items: 8
-groups: Голосні: А, О, У, І; Приголосні: М, К, Б, Ш
+:::fill-in
+title: "Complete the greeting"
+---
+- sentence: "Привіт! Як ___?"
+  answer: "справи"
+- sentence: "Дякую, ___."
+  answer: "добре"
 :::
 ```
 
-**Bad example (too vague):**
+**Match-up** (connect pairs):
 ```
-:::exercise-placeholder
-type: quiz
-tests: understanding
-items: 5
+:::match-up
+title: "Match false friend letters to their real sounds"
+---
+- left: "В"
+  right: "sounds like [в], not [b]"
+- left: "Н"
+  right: "sounds like [н], not [h]"
 :::
 ```
 
-Place 4–6 exercise placeholders throughout the module, after key teaching points. Never cluster them — spread them evenly.
+**Group-sort** (classify into categories):
+```
+:::group-sort
+title: "Classify letters"
+---
+groups:
+  - name: "Голосні"
+    items: ["А", "О", "У", "І"]
+  - name: "Приголосні"
+    items: ["М", "К", "Б", "Ш"]
+:::
+```
+
+**True-false**:
+```
+:::true-false
+title: "True or false?"
+---
+- statement: "В українській мові 33 літери."
+  answer: true
+- statement: "Голосних звуків більше, ніж приголосних."
+  answer: false
+:::
+```
+
+Spread exercises evenly throughout the module. Never cluster them.
+
+### Approved Exercise Patterns
+
+Use these Ukrainian textbook-inspired patterns (Заболотний, Авраменко) instead of generic "quiz" types:
+
+- **Знайди помилку (Find the error):** Give 3 correct sentences and 1 with an error. Learner identifies the mistake. Tests: grammar rules, calques, Russianisms.
+- **Обери правильне слово (Choose the right word):** Fill in the blank from 2-3 options (synonyms, paronyms, or confusable words). Tests: vocabulary nuance, register.
+- **Утвори пару (Match-up):** Match words to antonyms, translations, or grammatical pairs (e.g., masculine → feminine). Tests: vocabulary, morphology.
+- **Розподіли (Group-sort):** Sort items into 2-3 categories (e.g., голосні vs приголосні, hard vs soft consonants). Tests: foundational phonetics, grammar classification.
+- **Склади речення (Build a sentence):** Give scrambled words, learner arranges into correct order. Tests: word order, sentence structure.
+- **Знайди місце (Find the right place):** Give 4 sentences with blanks and 4 words — each word fits exactly one sentence. Tests: contextual meaning, collocations.
 
 ---
 
 ## Plan
 
+<plan_content>
 module: a1-001
 level: A1
 sequence: 1
@@ -211,6 +251,7 @@ pronunciation_videos:
   overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
 
+</plan_content>
 
 ---
 
@@ -218,6 +259,7 @@ pronunciation_videos:
 
 Use these as source material. Cite specific examples and adapt pedagogy from Ukrainian textbooks. Write original prose — do not copy excerpts verbatim.
 
+<knowledge_packet>
 # Verified Knowledge Packet: Sounds, Letters, and Hello
 **Module:** sounds-letters-and-hello | **Phase:** A1.1 [Sounds, Letters, and First Contact]
 **Textbook grades searched:** 1, 2
@@ -588,6 +630,7 @@ Use these as source material. Cite specific examples and adapt pedagogy from Ukr
 > акто
 
 ... (truncated for context window)
+</knowledge_packet>
 
 ---
 
@@ -642,6 +685,7 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero Russian**: No ы, э, ё, ъ. No Russian words (кот→кіт, хорошо→добре, конечно→звичайно)
 - **Zero Surzhyk**: No шо→що, чо→чому, тіпа→типу
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
+- **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
 ### Writing Quality
@@ -649,8 +693,18 @@ HARD GRAMMAR RULES (audit will reject violations):
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
 - Dialogues: natural, not stilted. Real situations, real responses.
-- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Avoid generic LLM cheerfulness ("Good news!", "Don't panic!", "Fun fact!"). Let the content be interesting on its own.
-- **Never make claims about specific Ukrainian words** without being 100% sure. If you're not certain about a letter, sound, or form — describe it generally rather than risk an error.
+- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
+- **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
+
+### Forbidden Tropes
+
+If you write any of these patterns, the module will be rejected in review:
+
+- **The Cheerleader:** "Great job!", "Don't worry, it's easy!", "You're doing amazing!", "Good news!" — respect the learner's intelligence; stay professional.
+- **The Announcer:** "In this section, we will explore...", "Now let's dive into...", "Let's take a look at...", "To summarize what we learned..." — never use formulaic transitions. Just teach the concept directly.
+- **The Translator:** "The Ukrainian word for 'cat' is 'кіт'." — instead, present naturally: "A domestic cat is a **кіт**."
+- **The Wall of Text:** 3+ paragraphs of English theory without a single Ukrainian example — every concept must be anchored in immediate Ukrainian examples.
+- **The Filler:** "This is a very important concept that you will use frequently in your daily life." — empty sentences that add words but not meaning. Every sentence must teach something.
 
 GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M03):
 NO CONJUGATED VERBS. NO IMPERATIVES. This is the phonetics phase.
@@ -681,6 +735,14 @@ Playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPX
 
 ---
 
+### Style Reference (match this tone and structure)
+
+Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the first grade: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери**. We hear and pronounce sounds, but we see and write letters.
+
+These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама**. It means mother, and you already know how to read it. Now look at **тато**. It means father.
+
+*Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*
+
 ## Output Format
 
 Write in Markdown. Use:
@@ -689,8 +751,8 @@ Write in Markdown. Use:
 - `**bold**` for Ukrainian words being taught
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
-- `:::exercise-placeholder` for exercise locations
+- `:::quiz` / `:::fill-in` / `:::match-up` / `:::group-sort` / `:::true-false` for exercises (using the DSL formats above)
 
-Do NOT write YAML, JSON, or MDX component syntax. Plain Markdown only.
+Do NOT write MDX component syntax or JSON. Plain Markdown with the exercise DSL blocks described above.
 
 Begin writing now. Start with the first section heading.
