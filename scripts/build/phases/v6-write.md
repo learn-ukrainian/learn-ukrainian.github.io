@@ -10,19 +10,22 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 
 ---
 
-## 7 Hard Rules
+## 6 Hard Rules
 
-1. **NO stress marks (´)** — do not add stress marks to any Ukrainian word. A deterministic tool adds them after you write.
-2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
-4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-5. **Exercise placeholders ONLY** — mark where exercises go using the format below, but do NOT write exercise content. A separate tool fills them.
-6. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
-7. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. Count as you go. Short modules fail review. Expand explanations, add more examples, include more dialogues — never pad with filler.
+1. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+2. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+3. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+4. **Exercise placeholders** — mark where exercises go using the format below. Write the specific questions, answers, vocabulary, and distractors INSIDE the placeholder block. A downstream tool converts them to interactive components.
+5. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
+6. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+
+**Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
 ## Exercise Placeholder Format
 
-When you want an exercise, write a placeholder block. Be SPECIFIC about what the exercise should contain — include the actual questions, answers, and distractors. The more detail you provide, the better the exercise.
+After each key teaching point, write an exercise placeholder. Base your placeholders on the `activity_hints` in the Plan below — each hint should become one placeholder.
+
+Be SPECIFIC — include the actual questions, answers, and distractors. The more detail you provide, the better the exercise.
 
 ```
 :::exercise-placeholder
@@ -31,8 +34,8 @@ tests: [what skill this exercise tests — be specific]
 after: [what concept was just taught]
 items: [number of items]
 vocabulary: [comma-separated Ukrainian words to use as stems]
-questions: [specific questions with answers, e.g. "Що ми чуємо? → звуки" or "В=? → [в] не [б]"]
-groups: [for group-sort: group names and which items go where]
+questions: [specific questions with answers, e.g. "Що ми чуємо? → звуки" or "В=v, Н=n, Р=r"]
+groups: [for group-sort: group names and which items go where, e.g. "Голосні: А, О, У; Приголосні: М, К, Б"]
 :::
 ```
 
@@ -47,7 +50,7 @@ groups: Голосні: А, О, У, І; Приголосні: М, К, Б, Ш
 :::
 ```
 
-**Bad example (too vague):**
+**Bad example (too vague — the downstream tool cannot generate real content from this):**
 ```
 :::exercise-placeholder
 type: quiz
@@ -56,7 +59,7 @@ items: 5
 :::
 ```
 
-Place 4–6 exercise placeholders throughout the module, after key teaching points. Never cluster them — spread them evenly.
+Spread placeholders evenly throughout the module. Never cluster them.
 
 ---
 
@@ -131,8 +134,8 @@ Write in Markdown. Use:
 - `**bold**` for Ukrainian words being taught
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
-- `:::exercise-placeholder` for exercise locations
+- `:::exercise-placeholder` for exercise locations (using the key-value format above)
 
-Do NOT write YAML, JSON, or MDX component syntax. Plain Markdown only.
+Do NOT write MDX component syntax, YAML frontmatter, or JSON. Plain Markdown with the exercise placeholder blocks described above.
 
 Begin writing now. Start with the first section heading.
