@@ -10,7 +10,7 @@ Orchestrates the V6 pipeline:
 6. ANNOTATE: Stress marks + deterministic fixes
 7b. ENRICH: Словник, videos, resources, dialogue formatting
 7. VERIFY: VESUM + grammar scope
-8. REVIEW: Cross-agent review (future)
+8. REVIEW: Cross-agent adversarial review
 9. PUBLISH: DSL→MDX conversion
 
 Usage:
@@ -620,6 +620,123 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     return len(issues) == 0
 
 
+def step_review(content_path: Path, level: str, module_num: int,
+                slug: str, writer: str = "claude") -> tuple[bool, float]:
+    """Step 8: Cross-agent adversarial review.
+
+    If Claude wrote → Gemini reviews (and vice versa).
+    Returns (passed, score).
+    """
+    _log(f"\n{'='*60}")
+    _log("  Step 8: REVIEW — Cross-agent adversarial review")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False, 0.0
+
+    # Load review template
+    template_path = PHASES_DIR / "v6-review.md"
+    if not template_path.exists():
+        _log(f"  ❌ Review template not found: {template_path}")
+        return False, 0.0
+
+    template = template_path.read_text("utf-8")
+
+    # Load plan and content
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan_content = plan_path.read_text("utf-8") if plan_path.exists() else ""
+    plan = yaml.safe_load(plan_content) if plan_content else {}
+    generated_content = content_path.read_text("utf-8")
+
+    # Build review prompt
+    writer_model = "Claude Opus" if writer == "claude" else "Gemini Pro"
+    prompt = template
+    replacements = {
+        "{MODULE_NUM}": str(module_num),
+        "{TOPIC_TITLE}": plan.get("title", slug),
+        "{LEVEL}": level.upper(),
+        "{PHASE}": plan.get("phase", ""),
+        "{WRITER_MODEL}": writer_model,
+        "{WORD_TARGET}": str(plan.get("word_target", 1200)),
+        "{PLAN_CONTENT}": plan_content,
+        "{GENERATED_CONTENT}": generated_content,
+    }
+    for key, value in replacements.items():
+        prompt = prompt.replace(key, value)
+
+    # Save review prompt
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    review_prompt_path = orch_dir / "v6-review-prompt.md"
+    review_prompt_path.write_text(prompt, "utf-8")
+
+    # Dispatch to reviewer (cross-agent: writer's opposite)
+    reviewer = "gemini" if writer == "claude" else "claude"
+    _log(f"  Reviewer: {reviewer} (writer was {writer})")
+
+    if reviewer == "gemini":
+        from batch_gemini_config import REVIEW_MODEL
+        from pipeline.core import dispatch_gemini
+        _log(f"  Dispatching to Gemini ({REVIEW_MODEL})...")
+        ok, raw = dispatch_gemini(
+            prompt, task_id=f"v6-review-{slug}",
+            model=REVIEW_MODEL,
+            stdout_only=True, timeout=600,
+        )
+    else:
+        import subprocess
+        _log("  Dispatching to Claude for review...")
+        try:
+            result = subprocess.run(
+                ["claude", "-p", "--model", "claude-opus-4-6",
+                 "--output-format", "text"],
+                input=prompt,
+                capture_output=True, text=True, timeout=600,
+                cwd=str(PROJECT_ROOT),
+            )
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+        except subprocess.TimeoutExpired:
+            _log("  ❌ Claude review timed out")
+            ok = False
+            raw = ""
+
+    if not ok or not raw:
+        _log("  ❌ Reviewer returned no output")
+        return False, 0.0
+
+    # Save review output
+    review_dir = CURRICULUM_ROOT / level / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    review_path = review_dir / f"{slug}-review.md"
+    review_path.write_text(raw, "utf-8")
+    _log(f"  Review saved → {review_path}")
+
+    # Parse score from review output
+    import re
+    score = 0.0
+    score_match = re.search(
+        r"\*\*(?:Weighted total|Final|Score)[^*]*\*\*\s*\|?\s*\*?\*?(\d+\.?\d*)",
+        raw,
+    )
+    if score_match:
+        score = float(score_match.group(1))
+
+    # Parse verdict
+    verdict = "UNKNOWN"
+    for v in ("PASS", "REVISE", "REJECT"):
+        if f"Verdict: {v}" in raw or f"Verdict:{v}" in raw:
+            verdict = v
+            break
+
+    passed = verdict == "PASS" and score >= 8.0
+    icon = "✅" if passed else "❌"
+    _log(f"  {icon} Review: {score}/10 — {verdict}")
+
+    return passed, score
+
+
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
     """Step 9: Convert DSL→MDX."""
     _log(f"\n{'='*60}")
@@ -682,7 +799,7 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini",
                         help="Default: gemini (Claude CLI truncates long-form content)")
-    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "enrich", "verify", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     args = parser.parse_args()
 
@@ -754,6 +871,16 @@ def main():
     if steps in ("all", "verify"):
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
+
+    # Step 8: REVIEW (cross-agent adversarial)
+    if steps in ("all", "review"):
+        passed, score = step_review(
+            content_path, args.level, args.module, slug,
+            writer=args.writer,
+        )
+        _save_v6_state(args.level, slug, "review")
+        if not passed:
+            _log(f"\n⚠️  Review scored {score}/10 — module needs revision")
 
     # Step 9: PUBLISH
     if steps in ("all", "publish"):
