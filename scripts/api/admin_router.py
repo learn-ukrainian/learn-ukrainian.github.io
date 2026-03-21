@@ -96,11 +96,18 @@ async def _qdrant_get(path: str) -> dict | None:
 
 
 async def _qdrant_post(path: str, timeout: float = 120) -> dict | None:
-    """POST request to Qdrant REST API. Returns None on failure."""
+    """POST request to Qdrant REST API. Returns None on failure.
+
+    Uses a dedicated client for long-running operations (e.g., /snapshots)
+    because the shared client's 10s timeout cannot be overridden per-request.
+    """
     try:
-        r = await _qdrant_client.post(path, timeout=timeout)
-        r.raise_for_status()
-        return r.json()
+        async with httpx.AsyncClient(
+            base_url=QDRANT_URL, timeout=httpx.Timeout(timeout)
+        ) as client:
+            r = await client.post(path)
+            r.raise_for_status()
+            return r.json()
     except (httpx.HTTPError, json.JSONDecodeError):
         return None
 
