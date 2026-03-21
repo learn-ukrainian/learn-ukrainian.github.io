@@ -1,0 +1,2 @@
+{"slug": "sounds-letters-and-hello", "error_type": "WORD_COUNT, VOCABULARY, STRUCTURE", "attempt": 1, "model": "gemini", "success": false, "timestamp": "2026-03-20T22:41:17.049374+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 2, "model": "gemini", "success": true, "timestamp": "2026-03-20T22:42:51.260938+00:00"}
