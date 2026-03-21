@@ -288,10 +288,10 @@ curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
 ```
 
 Returns:
-- `pipeline_version` — `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`
-- `phases` — v5/v4: named phases (`research`..`mdx`) with executor provenance; v3: letter-coded (`A`..`F`)
+- `pipeline_version` — `"v6"`, `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`
+- `phases` — v6: named phases (`check`..`publish`); v5/v4: named phases (`research`..`mdx`) with executor provenance; v3: letter-coded (`A`..`F`)
 - `audit` — status, word_count, word_target, blocking_issues
-- `research` — exists, quality score (0-10)
+- `research` — exists, quality score (0-10). Detects both V5 research (`{slug}-research.md`) and V6 knowledge packets (`{slug}-knowledge-packet.md`)
 - `review` — exists, **score** (numeric, e.g. 8.7), **verdict** (PASS/FAIL) *(#971)*
 - `friction` — **active** count, **resolved** count, **items** list with id/type/description *(#970/#971)*
 - `shippable` — **true/false** (audit PASS + review >= 8.0) *(#971)*
@@ -379,7 +379,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` (`"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module_v5.py --all`.
+Each entry includes `pipeline_version` (`"v6"`, `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num.
 
 ---
 
@@ -410,7 +410,7 @@ curl -s http://localhost:8765/api/state/failing | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/failing?track=a1" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V5/V4 failed phases use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
+Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V6 failed phases use named keys (e.g. `"write"`, `"verify"`); V5/V4 use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
 
 ---
 

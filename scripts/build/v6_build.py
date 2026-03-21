@@ -136,6 +136,33 @@ def step_research(level: str, module_num: int, slug: str) -> Path | None:
     _log(f"  ✅ Knowledge packet built ({result_count} textbook excerpts)")
     _log(f"  → {output_path}")
 
+    # Assess research quality (AC: assess_research.py can score the packet)
+    try:
+        from research.research_quality import assess_research_compat
+
+        assessment = assess_research_compat(output_path, level)
+        if assessment and assessment.get("score") is not None:
+            score = assessment["score"]
+            quality = assessment.get("quality", "unknown")
+            _log(f"  Research quality: {score}/10 ({quality})")
+
+            if score < 7:
+                _log("  ⚠️  Research quality below 7/10 — topic may have limited textbook coverage")
+
+            # Save assessment to orchestration directory
+            import json
+            orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+            orch_dir.mkdir(parents=True, exist_ok=True)
+            assess_path = orch_dir / "research-quality.json"
+            assess_path.write_text(
+                json.dumps(assessment, indent=2, ensure_ascii=False, default=str),
+                "utf-8",
+            )
+        else:
+            _log("  ℹ️  Research quality: no rubric for this track")
+    except Exception as e:
+        _log(f"  ⚠️  Research quality assessment failed: {e}")
+
     return output_path
 
 
@@ -399,6 +426,10 @@ def step_write_with_retry(
                 "utf-8",
             )
             _log(f"  → Error report: {report_path}")
+
+            # Auto-generate friction entry for failed build
+            _generate_friction(level, slug, results, max_retries + 1)
+
             return output  # Return the output anyway (human can fix)
 
         # Build correction directive for next attempt — injected into prompt
@@ -412,6 +443,48 @@ def step_write_with_retry(
         directive_path.write_text(current_directive, "utf-8")
 
     return None  # Should not reach here
+
+
+def _generate_friction(level: str, slug: str, results: list,
+                       attempts: int):
+    """Auto-generate friction entry when all retries are exhausted.
+
+    Creates or appends to orchestration/{slug}/friction.yaml so that
+    future builds can learn from repeated failures.
+    """
+    from datetime import datetime
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    friction_path = orch_dir / "friction.yaml"
+
+    error_types = sorted({r.check for r in results if r.severity == "ERROR"})
+
+    entry = {
+        "source": "auto-generated",
+        "date": datetime.now(tz=UTC).strftime("%Y-%m-%d"),
+        "error_types": error_types,
+        "status": "active",
+        "note": f"V6 build failed after {attempts} attempts",
+    }
+
+    # Load existing friction entries or start fresh
+    existing = []
+    if friction_path.exists():
+        try:
+            loaded = yaml.safe_load(friction_path.read_text("utf-8"))
+            if isinstance(loaded, list):
+                existing = loaded
+        except Exception:
+            pass
+
+    existing.append(entry)
+    friction_path.write_text(
+        yaml.dump(existing, allow_unicode=True, default_flow_style=False,
+                  sort_keys=False),
+        "utf-8",
+    )
+    _log(f"  → Friction entry added: {friction_path}")
 
 
 def _log_stats(stats_path: Path, slug: str, error_type: str,
