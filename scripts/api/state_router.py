@@ -358,6 +358,13 @@ async def build_status_all():
     return result
 
 
+@router.get("/build-stats")
+async def build_stats_all():
+    """V6 build stats aggregated across all tracks."""
+    from .state_build import compute_build_stats_all
+    return await asyncio.to_thread(compute_build_stats_all)
+
+
 @router.get("/build-stats/{track_id}")
 async def build_stats(track_id: str):
     """V6 build-stats.jsonl parsed: attempts, success rate, recent entries."""

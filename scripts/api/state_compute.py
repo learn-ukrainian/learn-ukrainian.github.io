@@ -209,6 +209,18 @@ def _get_stress_issues(orch_dir: Path) -> dict:
         return {"mismatches": 0, "unknown": 0, "details": []}
 
 
+def _get_quick_verify(orch_dir: Path) -> dict:
+    """Read V6 quick-verify.json results."""
+    qv_path = orch_dir / "quick-verify.json"
+    if not qv_path.exists():
+        return {}
+    try:
+        import json
+        return json.loads(qv_path.read_text("utf-8"))
+    except Exception:
+        return {}
+
+
 def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
     """Compute single module deep-dive data."""
     plan_slugs = get_plan_slugs(track_id)
@@ -221,7 +233,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
 
     version = detect_pipeline_version(orch_dir)
     # Read state once — reuse for phases + consultations (avoids duplicate I/O)
-    state_data = read_v2_state(orch_dir) if version == "v5" else {}
+    state_data = read_v2_state(orch_dir) if version in ("v5", "v6") else {}
     phases = get_phases_for_version(orch_dir, version, state_data=state_data)
 
     audit = get_audit_status(track_dir, slug)
@@ -233,7 +245,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
 
     return {
         "track": track_id, "num": num, "slug": slug,
-        "pipeline_version": version, "needs_rebuild": version != "v5",
+        "pipeline_version": version, "needs_rebuild": version not in ("v5", "v6"),
         "phases": phases,
         "audit": {
             "status": audit["status"], "word_count": audit.get("word_count", 0),
@@ -252,6 +264,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         "final_review": get_final_review_info(track_dir, slug),
         "enriched": plan_file.with_suffix(".yaml.bak").exists(),
+        "quick_verify": _get_quick_verify(orch_dir),
         "consultations": state_data.get("consultations", []),
         "comms": get_broker_messages_for_slug(slug, limit=15),
         "generated_at": datetime.now(UTC).isoformat(),
@@ -260,7 +273,16 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
 
 def get_phases_for_version(orch_dir, version, *, state_data: dict | None = None):
     """Get phase status dict appropriate for the pipeline version."""
-    if version == "v5":
+    if version == "v6":
+        from .state_build import V6_PHASE_ORDER
+        v6 = state_data if state_data is not None else read_v2_state(orch_dir)
+        phases = v6.get("phases", {})
+        return {
+            name: {"status": phases.get(name, {}).get("status", "pending"),
+                   "ts": phases.get(name, {}).get("ts")}
+            for name in V6_PHASE_ORDER
+        }
+    elif version == "v5":
         v5 = state_data if state_data is not None else read_v2_state(orch_dir)
         return {name: parse_v5_phase_status(v5, name) for name in V5_PHASE_ORDER}
     elif version == "v4":

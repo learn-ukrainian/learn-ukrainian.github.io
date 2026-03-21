@@ -372,6 +372,9 @@ def step_write_with_retry(
         results = quick_verify(content, plan)
         _log(format_results(results))
 
+        # Persist quick verify results for API access (AC10)
+        _save_quick_verify(level, slug, results, attempt)
+
         if not has_errors(results):
             _log(f"  ✅ Quick verify PASSED on attempt {attempt}")
             _log_stats(stats_path, slug, "PASS", attempt, current_writer, True)
@@ -428,6 +431,27 @@ def _log_stats(stats_path: Path, slug: str, error_type: str,
     }
     with open(stats_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def _save_quick_verify(level: str, slug: str, results: list, attempt: int):
+    """Persist quick verify results to orchestration for API access."""
+    import json
+    from datetime import datetime
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    qv_path = orch_dir / "quick-verify.json"
+
+    data = {
+        "attempt": attempt,
+        "passed": not any(r.severity == "ERROR" for r in results),
+        "errors": [{"check": r.check, "severity": r.severity, "message": r.message}
+                   for r in results if r.severity == "ERROR"],
+        "warnings": [{"check": r.check, "severity": r.severity, "message": r.message}
+                     for r in results if r.severity == "WARNING"],
+        "timestamp": datetime.now(tz=UTC).isoformat(),
+    }
+    qv_path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
 
 
 def step_exercises(content_path: Path) -> bool:

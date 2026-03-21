@@ -315,3 +315,34 @@ def compute_build_stats(track: str) -> dict:
         "success_rate": round(successes / total * 100, 1) if total else 0,
         "entries": entries[-50:],  # Last 50 entries
     }
+
+
+def compute_build_stats_all() -> dict:
+    """Aggregate V6 build stats across all tracks."""
+    all_stats = {}
+    total_attempts = 0
+    total_successes = 0
+    total_modules = 0
+
+    for level_cfg in LEVELS:
+        track_id = level_cfg["id"]
+        stats = compute_build_stats(track_id)
+        if stats.get("total_attempts", 0) > 0:
+            all_stats[track_id] = {
+                "total_attempts": stats["total_attempts"],
+                "successes": stats["successes"],
+                "unique_modules": stats["unique_modules"],
+                "success_rate": stats["success_rate"],
+            }
+            total_attempts += stats["total_attempts"]
+            total_successes += stats["successes"]
+            total_modules += stats["unique_modules"]
+
+    return {
+        "total_attempts": total_attempts,
+        "total_successes": total_successes,
+        "total_modules": total_modules,
+        "overall_success_rate": round(total_successes / total_attempts * 100, 1) if total_attempts else 0,
+        "tracks": all_stats,
+        "generated_at": datetime.now(UTC).isoformat(),
+    }
