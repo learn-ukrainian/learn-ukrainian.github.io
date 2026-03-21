@@ -147,6 +147,66 @@ IMMERSION_RULES: dict[str, str] = {
     ),
 }
 
+# Golden fragments — level-appropriate tone/style examples injected into writing prompts.
+# These show the LLM HOW to write, not just what rules to follow.
+# 4 bands mapped to immersion progression.
+GOLDEN_FRAGMENTS: dict[str, str] = {
+    "early-beginner": textwrap.dedent("""\
+        ### Style Reference (match this tone and structure)
+
+        Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the first grade: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери**. We hear and pronounce sounds, but we see and write letters.
+
+        These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама**. It means mother, and you already know how to read it. Now look at **тато**. It means father.
+
+        *Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*"""),
+
+    "late-beginner": textwrap.dedent("""\
+        ### Style Reference (match this tone and structure)
+
+        > **(У магазині / At the store)**
+        > — Добрий день! Скільки коштує хліб? (Good day! How much does the bread cost?)
+        > — Дванадцять гривень. (Twelve hryvnias.)
+        > — Дякую! Ось, будь ласка. (Thanks! Here you go.)
+
+        Notice that the shopkeeper uses **Добрий день** — the formal greeting for strangers. If this were a friend, they would say **Привіт** instead.
+
+        The word **скільки** (how much/how many) is one of the most useful question words. It always pairs with the genitive case: **скільки коштує** (how much does it cost), **скільки часу** (how much time).
+
+        *Note: Short dialogues in Ukrainian with per-line English glosses. Grammar explained in English. Ukrainian sentences in blockquotes and bulleted lists.*"""),
+
+    "intermediate": textwrap.dedent("""\
+        ### Style Reference (match this tone and structure)
+
+        Дієприкметники — це особлива форма дієслова, яка поєднує ознаки дієслова та прикметника. Вони відповідають на питання «який?» і змінюються за родами, числами та відмінками, як звичайні прикметники.
+
+        Порівняйте:
+        - **написаний лист** (a written letter) — пасивний дієприкметник
+        - **зігрітий чай** (warmed tea) — пасивний дієприкметник
+
+        :::tip
+        В українській мові активні дієприкметники теперішнього часу (на -учий/-ючий) вважаються стилістично небажаними. Замість «працюючий лікар» краще сказати «лікар, який працює».
+        :::
+
+        *Note: Grammar explained IN Ukrainian using Ukrainian linguistic terms. English appears only in parenthetical translations for disambiguation. Callout boxes in Ukrainian.*"""),
+
+    "advanced": textwrap.dedent("""\
+        ### Style Reference (match this tone and structure)
+
+        Функціональні стилі української мови — це різновиди літературної мови, що обслуговують певні сфери суспільного життя. Кожен стиль має власну лексику, синтаксичні конструкції та комунікативну мету.
+
+        Офіційно-діловий стиль характеризується чіткістю формулювань, стандартизованою лексикою та відсутністю емоційного забарвлення. Порівняймо:
+
+        | Розмовний стиль | Офіційно-діловий стиль |
+        |---|---|
+        | Я хочу звільнитися. | Прошу звільнити мене з посади за власним бажанням. |
+        | Дайте мені довідку. | Прошу надати довідку про місце проживання. |
+
+        Зверніть увагу на ключову відмінність: розмовний стиль використовує пряме звертання та скорочені конструкції, тоді як діловий стиль послуговується безособовими формами та канцелярськими зворотами.
+
+        *Note: 100% Ukrainian prose. Advanced syntax and register. Cultural and stylistic analysis in Ukrainian. No English.*"""),
+}
+
+
 LEVEL_CONSTRAINTS: dict[str, str] = {
     "a1": (
         "HARD GRAMMAR RULES (audit will reject violations):\n"
@@ -1013,6 +1073,28 @@ def get_immersion_rule(track: str, module_num: int) -> str:
             return IMMERSION_RULES["b1-core"]
     else:
         return IMMERSION_RULES["b2+"]
+
+
+def get_golden_fragment(track: str, module_num: int) -> str:
+    """Return a level-appropriate golden fragment for the writing prompt.
+
+    4 bands: early-beginner (A1.1-A1.2), late-beginner (A1.3-A2),
+    intermediate (B1), advanced (B2-C2).
+    Seminars use a static golden example (handled separately).
+    """
+    base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
+    if base in ("hist", "bio", "istorio", "lit", "oes", "ruth"):
+        return ""  # Seminars use their own template
+    if base == "a1":
+        if module_num <= 14:
+            return GOLDEN_FRAGMENTS["early-beginner"]
+        return GOLDEN_FRAGMENTS["late-beginner"]
+    elif base == "a2":
+        return GOLDEN_FRAGMENTS["late-beginner"]
+    elif base == "b1":
+        return GOLDEN_FRAGMENTS["intermediate"]
+    else:
+        return GOLDEN_FRAGMENTS["advanced"]
 
 
 def get_level_constraints(track: str, plan: dict | None = None) -> str:

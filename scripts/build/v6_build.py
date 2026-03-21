@@ -207,6 +207,7 @@ def step_write(level: str, module_num: int, slug: str,
 
     # Get constraints from config_tables
     from pipeline.config_tables import (
+        get_golden_fragment,
         get_immersion_rule,
         get_level_constraints,
         get_pedagogical_constraints,
@@ -232,6 +233,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
         "{PRONUNCIATION_VIDEOS}": "\n".join(pv_lines),
+        "{GOLDEN_FRAGMENT}": get_golden_fragment(level, module_num),
         "{SUMMARY_HEADING}": summary_heading,
     }
 

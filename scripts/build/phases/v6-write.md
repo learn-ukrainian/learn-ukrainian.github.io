@@ -61,6 +61,17 @@ items: 5
 
 Spread placeholders evenly throughout the module. Never cluster them.
 
+### Approved Exercise Patterns
+
+Use these Ukrainian textbook-inspired patterns (Заболотний, Авраменко) instead of generic "quiz" types:
+
+- **Знайди помилку (Find the error):** Give 3 correct sentences and 1 with an error. Learner identifies the mistake. Tests: grammar rules, calques, Russianisms.
+- **Обери правильне слово (Choose the right word):** Fill in the blank from 2-3 options (synonyms, paronyms, or confusable words). Tests: vocabulary nuance, register.
+- **Утвори пару (Match-up):** Match words to antonyms, translations, or grammatical pairs (e.g., masculine → feminine). Tests: vocabulary, morphology.
+- **Розподіли (Group-sort):** Sort items into 2-3 categories (e.g., голосні vs приголосні, hard vs soft consonants). Tests: foundational phonetics, grammar classification.
+- **Склади речення (Build a sentence):** Give scrambled words, learner arranges into correct order. Tests: word order, sentence structure.
+- **Знайди місце (Find the right place):** Give 4 sentences with blanks and 4 words — each word fits exactly one sentence. Tests: contextual meaning, collocations.
+
 ---
 
 ## Plan
@@ -115,8 +126,18 @@ Each section should follow the word budget specified. The total must reach {WORD
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
 - Dialogues: natural, not stilted. Real situations, real responses.
-- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Avoid generic LLM cheerfulness ("Good news!", "Don't panic!", "Fun fact!"). Let the content be interesting on its own.
+- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
 - **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
+
+### Forbidden Tropes
+
+If you write any of these patterns, the module will be rejected in review:
+
+- **The Cheerleader:** "Great job!", "Don't worry, it's easy!", "You're doing amazing!", "Good news!" — respect the learner's intelligence; stay professional.
+- **The Announcer:** "In this section, we will explore...", "Now let's dive into...", "Let's take a look at...", "To summarize what we learned..." — never use formulaic transitions. Just teach the concept directly.
+- **The Translator:** "The Ukrainian word for 'cat' is 'кіт'." — instead, present naturally: "A domestic cat is a **кіт**."
+- **The Wall of Text:** 3+ paragraphs of English theory without a single Ukrainian example — every concept must be anchored in immediate Ukrainian examples.
+- **The Filler:** "This is a very important concept that you will use frequently in your daily life." — empty sentences that add words but not meaning. Every sentence must teach something.
 
 {PEDAGOGICAL_CONSTRAINTS}
 
@@ -129,6 +150,8 @@ Each section should follow the word budget specified. The total must reach {WORD
 {PRONUNCIATION_VIDEOS}
 
 ---
+
+{GOLDEN_FRAGMENT}
 
 ## Output Format
 
