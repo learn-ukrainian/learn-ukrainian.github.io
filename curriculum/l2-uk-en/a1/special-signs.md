@@ -138,6 +138,9 @@ title: "Г чи Ґ? (Г or Ґ?)"
 :::
 
 
+
+
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
@@ -200,10 +203,10 @@ What comes next? Module 4 — **На́голос** (Stress and Melody). Now that
 | **ліс** | forest | ім. | ч. |
 | **лис** | fox | ім. | ч. |
 | **рік** | year | ім. | ч. |
-| **маленький** |  | прикм. |  |
-| **камінь** |  | ім. | ч. |
-| **камін** |  | ім. | ч. |
-| **ґудзик** |  | ім. | ч. |
+| **маленький** | small | прикм. |  |
+| **камінь** | stone | ім. | ч. |
+| **камін** | fireplace | ім. | ч. |
+| **ґудзик** | button | ім. | ч. |
 | **Наголос** | the heartbeat of Ukrainian — it makes words come alive | присл. |  |
 
 ### Вирази — Expressions

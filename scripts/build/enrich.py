@@ -104,6 +104,13 @@ def _find_translation_nearby(word: str, content: str) -> str:
         "вухо": "ear", "рот": "mouth", "ліс": "forest", "кіт": "cat",
         "пес": "dog", "вовк": "wolf", "лис": "fox",
         "з'їв": "ate", "їжа": "food", "молоко": "milk",
+        "наголос": "stress (accent)", "склад": "syllable",
+        "літера": "letter", "звук": "sound",
+        "голосний": "vowel", "приголосний": "consonant",
+        "камінь": "stone", "камін": "fireplace", "ґудзик": "button",
+        "маленький": "small", "великий": "big", "гарний": "beautiful",
+        "тверді": "hard", "м'які": "soft",
+        "м'який знак": "soft sign", "апостроф": "apostrophe",
     }
     if word in cognates:
         return cognates[word]
@@ -191,9 +198,17 @@ def _extract_prose_vocab(content: str) -> list[tuple[str, str]]:
             translation = ""
             if match.lastindex and match.lastindex >= 2:
                 raw_trans = match.group(2).strip().strip('"').strip()
-                # Only use if it looks like English (has Latin chars)
-                # and is short enough to be a translation (not context)
-                if re.search(r"[a-zA-Z]", raw_trans) and len(raw_trans) < 50:
+                # Validate: must be English, short, and look like a translation
+                is_english = bool(re.search(r"[a-zA-Z]", raw_trans))
+                is_short = len(raw_trans) < 30
+                # Only filter context words from LONG translations (4+ words)
+                # Short translations like "What is this?" are fine
+                word_count = len(raw_trans.split())
+                is_context = word_count >= 4 and bool(re.search(
+                    r"\b(the|which|when|where|how|because|although)\b",
+                    raw_trans.lower(),
+                ))
+                if is_english and is_short and not is_context:
                     translation = raw_trans
 
             results.append((word, translation))
