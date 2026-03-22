@@ -167,6 +167,8 @@ When sounding out an unfamiliar word, go letter by letter from left to right. Fi
 
 
 
+
+
 ### Відео — Video
 
 <YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
@@ -234,10 +236,10 @@ And you started reading real Ukrainian words — signs like **аптека** and
 | **приголосні** | consonants | прикм. |  |
 | **рада** | female | ім. | ж. |
 | **радий** | male | прикм. |  |
-| **кафе** |  | ім. | с. |
+| **кафе** | cafe | ім. | с. |
 | **ніс** | nose | ім. | ч. |
 | **сон** | dream | ім. | ч. |
-| **Київ** |  | ім. |  |
+| **Київ** | Kyiv | ім. |  |
 
 ### Вирази — Expressions
 
