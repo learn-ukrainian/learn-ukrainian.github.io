@@ -17,10 +17,65 @@ Issue: #1009, #1012
 from __future__ import annotations
 
 import re
+import sqlite3
 from pathlib import Path
 
 import yaml
 from build.text_utils import parse_vocab_hint
+
+# VESUM database for POS lookup
+_VESUM_DB = Path(__file__).resolve().parent.parent.parent / "data" / "vesum.db"
+
+# Ukrainian POS labels
+_POS_LABELS = {
+    "noun": "ім.",
+    "verb": "дієсл.",
+    "adj": "прикм.",
+    "adv": "присл.",
+    "numr": "числ.",
+    "prep": "прийм.",
+    "conj": "спол.",
+    "part": "част.",
+    "intj": "виг.",
+    "pron": "займ.",
+}
+
+# Gender from VESUM tags
+_GENDER_MAP = {":m:": "ч.", ":f:": "ж.", ":n:": "с."}
+
+
+def _vesum_lookup(word: str) -> tuple[str, str]:
+    """Look up a word in VESUM for POS and gender.
+
+    Returns (pos_label, gender_label) — empty strings if not found.
+    """
+    if not _VESUM_DB.exists():
+        return "", ""
+    try:
+        db = sqlite3.connect(str(_VESUM_DB))
+        row = db.execute(
+            "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
+            (word.lower(),),
+        ).fetchone()
+        if not row:
+            # Try as word_form (not lemma)
+            row = db.execute(
+                "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
+                (word.lower(),),
+            ).fetchone()
+        db.close()
+        if not row:
+            return "", ""
+        pos = _POS_LABELS.get(row[0], "")
+        gender = ""
+        if row[0] == "noun":
+            for tag, label in _GENDER_MAP.items():
+                if tag in row[1]:
+                    gender = label
+                    break
+        return pos, gender
+    except Exception:
+        return "", ""
 
 # Tab markers — PUBLISH step converts these to <Tabs>/<TabItem>
 TAB_MARKER = "<!-- TAB:{name} -->"
@@ -40,14 +95,21 @@ def _extract_prose_vocab(content: str) -> list[str]:
 
     Scans for **word** patterns in the content and returns Ukrainian words
     that the writer introduced but weren't in vocabulary_hints.
+    Filters out fragments, single letters, and non-word artifacts.
     """
-    # Match **word** patterns — Ukrainian text only
+    # Match **word** patterns — Ukrainian text only (min 2 chars)
     bold_pattern = re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ]+)\*\*")
     words = []
     seen: set[str] = set()
     for match in bold_pattern.finditer(content):
         word = match.group(1).strip()
-        if len(word) >= 2 and word.lower() not in seen:
+        # Skip fragments: must be 3+ chars and contain at least one vowel
+        if len(word) < 3:
+            continue
+        # Skip if it's just consonants (likely a fragment like "ий", "шч")
+        if not re.search(r"[аоуеиіяюєї]", word.lower()):
+            continue
+        if word.lower() not in seen:
             seen.add(word.lower())
             words.append(word)
     return words
@@ -138,11 +200,12 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             "",
             "### Додаткові слова з уроку — Additional words from the lesson",
             "",
-            "| Слово | Translation |",
-            "|-------|-------------|",
+            "| Слово | Частина мови | Рід |",
+            "|-------|-------------|-----|",
         ])
         for word in additional:
-            lines.append(f"| **{word}** |  |")
+            pos, gender = _vesum_lookup(word)
+            lines.append(f"| **{word}** | {pos} | {gender} |")
 
     lines.append("")
     return "\n".join(lines)
