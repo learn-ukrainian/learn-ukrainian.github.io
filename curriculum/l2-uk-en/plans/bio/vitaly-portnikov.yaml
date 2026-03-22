@@ -2,7 +2,7 @@ module: bio-160
 level: BIO
 sequence: 160
 slug: vitaly-portnikov
-version: '2.0'
+version: '3.0'
 title: 'Віталій Портников: Журналіст і аналітик'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of віталій портников: журналіст і аналітик'
 - Evaluate the contributions of голос української журналістики
 - Trace the career and influence of журналістика як місія
-sources:
-- name: Віталій Портников (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Espreso.TV
-  url: https://espreso.tv/
-  type: reference
-  notes: Публікації та виступи
-- name: Радіо Свобода
-  url: https://www.radiosvoboda.org/
-  type: reference
-  notes: Архів публікацій
 content_outline:
 - section: Вступ — Голос української журналістики
   points:
@@ -103,3 +90,18 @@ persona:
   role: Political Analyst
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Віталій Портников (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Espreso.TV
+  url: https://espreso.tv/
+  type: reference
+  notes: Публікації та виступи
+- name: Радіо Свобода
+  url: https://www.radiosvoboda.org/
+  type: reference
+  notes: Архів публікацій
+register: академічний
+grammar: []

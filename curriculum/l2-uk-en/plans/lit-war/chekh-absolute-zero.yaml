@@ -2,7 +2,7 @@ sequence: 7
 module: lit-war-007
 level: LIT.WAR
 slug: chekh-absolute-zero
-version: '2.0'
+version: '3.0'
 title: Chekh Absolute Zero
 subtitle: Chekh Absolute Zero
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Observer of the Void
 word_target: 5000
+references: []
+register: академічний
+grammar: []

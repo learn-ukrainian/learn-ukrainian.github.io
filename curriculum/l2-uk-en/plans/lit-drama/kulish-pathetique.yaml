@@ -2,7 +2,7 @@ sequence: 5
 module: lit-drama-005
 level: LIT
 slug: kulish-pathetique
-version: '2.0'
+version: '3.0'
 title: Kulish Pathetique
 subtitle: Kulish Pathetique
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-102
 module_type: literature
-sources:
-- name: Kulish Pathetique — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.3 Executed Renaissance 1917-1933
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: Musical Dramatist
 word_target: 5000
+references:
+- name: Kulish Pathetique — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

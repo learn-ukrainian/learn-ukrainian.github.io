@@ -2,7 +2,7 @@ module: bio-133
 level: BIO
 sequence: 133
 slug: mykola-pohribnyi
-version: '2.0'
+version: '3.0'
 title: 'Микола Погрібний: Українська редакторська школа'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of микола погрібний: українська редакторська школа'
 - Evaluate the contributions of голос української вимови
 - Trace the career and influence of останні роки та спадщина (1990-2003)
-sources:
-- name: Микола Погрібний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
-  type: primary
-  notes: Біографія, професійна діяльність, внесок у мовну культуру
-- name: Українське радіомовлення
-  url: https://uk.wikipedia.org/wiki/Українське_радіо
-  type: reference
-  notes: Контекст роботи на радіо
-- name: Культура української мови
-  url: https://uk.wikipedia.org/wiki/Культура_мови
-  type: reference
-  notes: Норми літературної мови та орфоепія
 content_outline:
 - section: Вступ — Голос української вимови
   points:
@@ -102,3 +89,18 @@ persona:
   role: Textbook Editor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Микола Погрібний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
+  type: primary
+  notes: Біографія, професійна діяльність, внесок у мовну культуру
+- name: Українське радіомовлення
+  url: https://uk.wikipedia.org/wiki/Українське_радіо
+  type: reference
+  notes: Контекст роботи на радіо
+- name: Культура української мови
+  url: https://uk.wikipedia.org/wiki/Культура_мови
+  type: reference
+  notes: Норми літературної мови та орфоепія
+register: академічний
+grammar: []

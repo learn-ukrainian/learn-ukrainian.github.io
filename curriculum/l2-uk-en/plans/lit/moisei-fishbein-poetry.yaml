@@ -2,7 +2,7 @@ module: lit-218
 level: LIT
 sequence: 218
 slug: moisei-fishbein-poetry
-version: '2.0'
+version: '3.0'
 title: 'Мойсей Фішбейн: Апокриф'
 subtitle: Moisei Fishbein — Jewish-Ukrainian Poetry
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати поезію Фішбейна — єврейсько-українську інтелектуальну традицію
 - Дослідити свідомий вибір української мови як творчого рішення
 - Зрозуміти Фішбейна як спростування міфу про «чужу» українську мову
-sources:
-- name: Мойсей Фішбейн — поезія та переклади
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -76,3 +72,9 @@ persona:
   role: Multicultural Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Мойсей Фішбейн — поезія та переклади
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-102
 level: LIT
 sequence: 102
 slug: yohansen-experimental
-version: '2.0'
+version: '3.0'
 title: Yohansen Experimental
 subtitle: Yohansen Experimental
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Yohansen Experimental у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Yohansen Experimental — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Literary Experimenter
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Yohansen Experimental — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

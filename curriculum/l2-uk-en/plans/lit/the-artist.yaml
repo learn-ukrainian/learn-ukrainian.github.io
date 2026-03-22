@@ -2,7 +2,7 @@ module: lit-017
 level: LIT
 sequence: 17
 slug: the-artist
-version: '2.0'
+version: '3.0'
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
 focus: biography
@@ -14,19 +14,6 @@ objectives:
 - Analyze the influence of Karl Bryullov on Shevchenko's style
 - Discuss the autobiographical elements in the novella 'The Artist'
 - Recognize key artistic terms in Ukrainian (etching, chiaroscuro)
-sources:
-- name: Художник — повість
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=43
-  type: primary
-  notes: Автобіографічна повість
-- name: Живопис Шевченка
-  url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
-  type: primary
-  notes: Огляд художньої спадщини
-- name: Шевченко і Брюллов
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
-  type: reference
-  notes: Контекст навчання
 content_outline:
 - section: Вступ — Поет чи художник?
   points:
@@ -104,3 +91,17 @@ grammar:
 - Biographical Narrative
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Художник — повість
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=43
+  type: primary
+  notes: Автобіографічна повість
+- name: Живопис Шевченка
+  url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
+  type: primary
+  notes: Огляд художньої спадщини
+- name: Шевченко і Брюллов
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: reference
+  notes: Контекст навчання
+register: академічний

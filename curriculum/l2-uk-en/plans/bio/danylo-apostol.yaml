@@ -2,7 +2,7 @@ module: bio-028
 level: BIO
 sequence: 28
 slug: danylo-apostol
-version: '2.0'
+version: '3.0'
 title: 'Данило Апостол: Останній обраний гетьман'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити реформаторської діяльність Данила Апостола
 - Проаналізувати правовий статус України за "Рішительними пунктами"
 - Дослідити економічне відродження Гетьманщини у 1727–1734 рр.
-sources:
-- name: Данило Апостол (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Данило_Апостол
-  type: primary
-  notes: Повна біографія
-- name: Рішительні пункти 1728
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Текст документа
 content_outline:
 - section: Вступ — Гетьман стабілізації
   points:
@@ -86,3 +77,13 @@ grammar:
 - Аналіз фінансової термінології
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Данило Апостол (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Данило_Апостол
+  type: primary
+  notes: Повна біографія
+- name: Рішительні пункти 1728
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Текст документа
+register: академічний

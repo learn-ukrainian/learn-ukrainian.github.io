@@ -2,7 +2,7 @@ module: istorio-042
 level: ISTORIO
 sequence: 42
 slug: memorandum-uhh
-version: '1.0'
+version: '3.0'
 title: Меморандум Української Гельсінської групи
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of меморандум української гельсінської групи
 - Evaluate the historical significance of права людини як зброя
-sources:
-- name: Українська Гельсінська група (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
-  type: reference
-  notes: Group overview
-- name: Установчий документ УГГ
-  url: https://khpg.org/
-  type: primary
-  notes: Founding documents
-- name: Гельсінські угоди
-  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
-  type: reference
-  notes: Helsinki Accords context
 content_outline:
 - section: Вступ — Права людини як зброя
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - ukrayinskyi-visnyk
 connects_to:
 - akt-nezalezhnosti-1991
+references:
+- name: Українська Гельсінська група (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
+  type: reference
+  notes: Group overview
+- name: Установчий документ УГГ
+  url: https://khpg.org/
+  type: primary
+  notes: Founding documents
+- name: Гельсінські угоди
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
+  type: reference
+  notes: Helsinki Accords context
+register: академічний
+grammar: []

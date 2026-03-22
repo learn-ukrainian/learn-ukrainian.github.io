@@ -2,7 +2,7 @@ module: lit-020
 level: LIT
 sequence: 20
 slug: cult-of-shevchenko
-version: '2.0'
+version: '3.0'
 title: 'Культ Шевченка: Рецепція і Міфи'
 subtitle: 'The Cult of Shevchenko: Modern Reception'
 focus: culture
@@ -13,19 +13,6 @@ objectives:
 - Analyze the evolution of Shevchenko's image from poet to national myth.
 - Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
 - Critically evaluate the risks and benefits of cultural canonization.
-sources:
-- name: Шевченко — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
-  type: primary
-  notes: Загальна інформація та рецепція
-- name: Пам'ятники Шевченку
-  url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
-  type: secondary
-  notes: Меморіальна культура
-- name: Шевченко в поп-культурі
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
-  type: reference
-  notes: Сучасні інтерпретації
 content_outline:
 - section: Вступ — Від Пророка до Ікони
   points:
@@ -103,3 +90,17 @@ grammar:
 - Modern essayistic style
 module_type: culture
 immersion: 100% Ukrainian
+references:
+- name: Шевченко — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: primary
+  notes: Загальна інформація та рецепція
+- name: Пам'ятники Шевченку
+  url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
+  type: secondary
+  notes: Меморіальна культура
+- name: Шевченко в поп-культурі
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
+  type: reference
+  notes: Сучасні інтерпретації
+register: академічний

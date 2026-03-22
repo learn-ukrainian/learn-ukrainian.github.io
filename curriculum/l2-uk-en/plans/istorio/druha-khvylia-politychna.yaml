@@ -2,7 +2,7 @@ module: istorio-065
 level: ISTORIO
 sequence: 65
 slug: druha-khvylia-politychna
-version: '1.0'
+version: '3.0'
 title: 'Друга хвиля: Політична (1920-1923)'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of друга хвиля: політична (1920-1923)'
 - Evaluate the historical significance of поразка і відступ
-sources:
-- name: Еміграція УНР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_еміграція
-  type: reference
-  notes: Political emigration
-- name: Уряд УНР в екзилі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі
-  type: reference
-  notes: Government in exile
-- name: Табори інтернованих (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР
-  type: reference
-  notes: Internment camps
 content_outline:
 - section: Вступ — Поразка і відступ
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - persha-khvylia-emihratsiyi
 connects_to:
 - tretia-khvylia-dipivtsi
+references:
+- name: Еміграція УНР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_еміграція
+  type: reference
+  notes: Political emigration
+- name: Уряд УНР в екзилі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі
+  type: reference
+  notes: Government in exile
+- name: Табори інтернованих (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР
+  type: reference
+  notes: Internment camps
+register: академічний
+grammar: []

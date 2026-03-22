@@ -2,7 +2,7 @@ module: istorio-087
 level: ISTORIO
 sequence: 87
 slug: yanukovych-tsykl
-version: '1.0'
+version: '3.0'
 title: 'Янукович: Сучасна версія циклу'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of янукович: сучасна версія циклу'
 - Evaluate the historical significance of цикл у xxi столітті
-sources:
-- name: Віктор Янукович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
-  type: reference
-  notes: Biography
-- name: Революція гідності (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_гідності
-  type: reference
-  notes: 2014 revolution
-- name: Харківські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харківські_угоди
-  type: reference
-  notes: 2010 agreements
 content_outline:
 - section: Вступ — Цикл у XXI столітті
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - khrushchov-shelest-tsykl
 connects_to:
 - syntez-tsykl-zrady
+references:
+- name: Віктор Янукович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
+  type: reference
+  notes: Biography
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 revolution
+- name: Харківські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  type: reference
+  notes: 2010 agreements
+register: академічний
+grammar: []

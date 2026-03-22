@@ -2,7 +2,7 @@ module: bio-180
 level: BIO
 sequence: 180
 slug: anatolii-dimarov
-version: '2.0'
+version: '3.0'
 title: 'Анатолій Дімаров: Прожити й розповісти'
 focus: biography
 pedagogy: immersion
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати життєвий шлях Анатолія Дімарова як свідка ключових катастроф XX століття
 - Дослідити вплив радянської цензури на українську прозу через призму творчості Дімарова
 - Оцінити моральну позицію письменника від зміни прізвища до відмови від державних нагород
-sources:
-- name: Анатолій Дімаров (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Анатолій_Дімаров
-  type: primary
-  notes: Біографія, творчість, Голодомор, відмова від нагороди Януковича
-- name: Незламні (УІНП)
-  url: https://uk.wikipedia.org/wiki/Незламні_(проєкт)
-  type: reference
-  notes: Проєкт Інституту національної пам'яті
 content_outline:
 - section: Вступ — Людина, яка не скорилася трьом режимам
   points:
@@ -113,3 +104,14 @@ persona:
   role: Soviet-Era Literary Resistance Specialist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Анатолій Дімаров (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Анатолій_Дімаров
+  type: primary
+  notes: Біографія, творчість, Голодомор, відмова від нагороди Януковича
+- name: Незламні (УІНП)
+  url: https://uk.wikipedia.org/wiki/Незламні_(проєкт)
+  type: reference
+  notes: Проєкт Інституту національної пам'яті
+register: академічний
+grammar: []

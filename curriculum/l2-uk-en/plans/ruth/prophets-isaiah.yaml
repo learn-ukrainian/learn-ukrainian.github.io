@@ -2,7 +2,7 @@ module: ruth-038
 level: RUTH
 sequence: 38
 slug: prophets-isaiah
-version: '2.0'
+version: '3.0'
 title: 'Пророки: Ісая'
 subtitle: 'Prophets: Isaiah'
 focus: Rhetorical complexity — Greek calques
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати риторичні прийоми в публічних промовах та дебатах
 - Продукувати усні та письмові висловлювання з ефективною аргументацією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

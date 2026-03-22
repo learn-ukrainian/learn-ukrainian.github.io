@@ -2,7 +2,7 @@ module: istorio-017
 level: ISTORIO
 sequence: 17
 slug: hramoty-ta-akty
-version: '1.0'
+version: '3.0'
 title: 'Грамоти та акти: Княжі документи'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of грамоти та акти: княжі документи'
 - Evaluate the historical significance of документи vs. літописи
-sources:
-- name: Грамота (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Грамота
-  type: reference
-  notes: Document types
-- name: Давньоруські грамоти
-  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
-  type: reference
-  notes: Overview of princely documents
-- name: Берестяні грамоти
-  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
-  type: reference
-  notes: Birch bark letters
 content_outline:
 - section: Вступ — Документи vs. літописи
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - halytsko-volynskyi-litopys-ii
 connects_to:
 - syntez-serednovichni-dzherela
+references:
+- name: Грамота (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Грамота
+  type: reference
+  notes: Document types
+- name: Давньоруські грамоти
+  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
+  type: reference
+  notes: Overview of princely documents
+- name: Берестяні грамоти
+  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
+  type: reference
+  notes: Birch bark letters
+register: академічний
+grammar: []

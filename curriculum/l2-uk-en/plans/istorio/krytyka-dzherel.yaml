@@ -2,7 +2,7 @@ module: istorio-009
 level: ISTORIO
 sequence: 9
 slug: krytyka-dzherel
-version: '1.0'
+version: '3.0'
 title: 'Критика джерел: Принципи та практика'
 focus: history
 pedagogy: seminar
@@ -11,23 +11,6 @@ objectives:
 - 'Analyze the causes and consequences of критика джерел: принципи та практика'
 - Evaluate the historical significance of чому джерела брешуть
 - Trace the development of особливості українських джерел
-sources:
-- name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
-  type: reference
-  notes: Source studies overview
-- name: Історичне джерело
-  url: https://uk.wikipedia.org/wiki/Історичне_джерело
-  type: reference
-  notes: Types of historical sources
-- name: Критика джерел
-  url: https://uk.wikipedia.org/wiki/Критика_джерел
-  type: reference
-  notes: Source criticism methods
-- name: Леопольд фон Ранке
-  url: https://uk.wikipedia.org/wiki/Ранке_Леопольд_фон
-  type: reference
-  notes: Founder of modern source criticism
 content_outline:
 - section: Вступ — Чому джерела брешуть
   points:
@@ -140,3 +123,22 @@ prerequisites:
 - metodolohiia-dekolonizatsii
 connects_to:
 - istorychna-pamiat-i-polityka
+references:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies overview
+- name: Історичне джерело
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  type: reference
+  notes: Types of historical sources
+- name: Критика джерел
+  url: https://uk.wikipedia.org/wiki/Критика_джерел
+  type: reference
+  notes: Source criticism methods
+- name: Леопольд фон Ранке
+  url: https://uk.wikipedia.org/wiki/Ранке_Леопольд_фон
+  type: reference
+  notes: Founder of modern source criticism
+register: академічний
+grammar: []

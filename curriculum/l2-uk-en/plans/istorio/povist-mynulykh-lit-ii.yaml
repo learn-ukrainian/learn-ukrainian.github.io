@@ -2,7 +2,7 @@ module: istorio-012
 level: ISTORIO
 sequence: 12
 slug: povist-mynulykh-lit-ii
-version: '1.0'
+version: '3.0'
 title: 'Повість минулих літ II: Ключові фрагменти'
 focus: history
 pedagogy: seminar
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the causes and consequences of повість минулих літ ii: ключові фрагменти'
 - Evaluate the historical significance of читаємо первинне джерело
 - Trace the development of ваш аналіз
-sources:
-- name: Повість минулих літ (повний текст)
-  url: https://litopys.org.ua/pvlyar/yar.htm
-  type: primary
-  notes: Full text with fragments
-- name: Покликання варягів
-  url: https://uk.wikipedia.org/wiki/Покликання_варягів
-  type: reference
-  notes: Varangian calling legend
-- name: Хрещення Русі
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-  type: reference
-  notes: Baptism narrative
 content_outline:
 - section: Вступ — Читаємо первинне джерело
   points:
@@ -122,3 +109,18 @@ prerequisites:
 - povist-mynulykh-lit-i
 connects_to:
 - kyievo-pecherskyi-pateryk
+references:
+- name: Повість минулих літ (повний текст)
+  url: https://litopys.org.ua/pvlyar/yar.htm
+  type: primary
+  notes: Full text with fragments
+- name: Покликання варягів
+  url: https://uk.wikipedia.org/wiki/Покликання_варягів
+  type: reference
+  notes: Varangian calling legend
+- name: Хрещення Русі
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Baptism narrative
+register: академічний
+grammar: []

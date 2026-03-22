@@ -2,7 +2,7 @@ module: lit-221
 level: LIT
 sequence: 221
 slug: yevhen-hutsalo-shistdesiatnyky
-version: '2.0'
+version: '3.0'
 title: 'Євген Гуцало: лірична проза шістдесятника'
 subtitle: Lyrical prose of the Sixtiers generation and the decolonial turn of Mentalnist ordy
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати лірику прози Євгена Гуцала в контексті руху шістдесятників
 - Дослідити еволюцію від камерної прози до публіцистики «Ментальності орди»
 - Зрозуміти роль Гуцала у збереженні селянського мовного пласту в модерній українській прозі
-sources:
-- name: Євген Гуцало — проза та публіцистика
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -86,3 +81,10 @@ persona:
   role: Chronicler of the Podolian Village
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Євген Гуцало — проза та публіцистика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-106
 level: ISTORIO
 sequence: 106
 slug: hazova-zbroia
-version: '1.0'
+version: '3.0'
 title: 'Газова зброя: Економічна війна 1991-2022'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
 - Evaluate the historical significance of газ як зброя
-sources:
-- name: Газові конфлікти Росія-Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною
-  type: reference
-  notes: Gas conflicts
-- name: Газопроводи через Україну (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Газотранспортна_система_України
-  type: reference
-  notes: Transit system
-- name: Nord Stream (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Nord_Stream
-  type: reference
-  notes: Bypass pipelines
 content_outline:
 - section: Вступ — Газ як зброя
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - holodomor-ekonomika
 connects_to:
 - syntez-ekonomichna-kolonizatsiia
+references:
+- name: Газові конфлікти Росія-Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною
+  type: reference
+  notes: Gas conflicts
+- name: Газопроводи через Україну (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газотранспортна_система_України
+  type: reference
+  notes: Transit system
+- name: Nord Stream (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Nord_Stream
+  type: reference
+  notes: Bypass pipelines
+register: академічний
+grammar: []

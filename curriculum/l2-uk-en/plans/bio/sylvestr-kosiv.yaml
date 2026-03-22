@@ -2,7 +2,7 @@ module: bio-023
 level: BIO
 sequence: 23
 slug: sylvestr-kosiv
-version: '2.0'
+version: '3.0'
 title: 'Сильвестр Косів: Освітянин і будівничий'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити роль Косіва у збереженні автономії української церкви
 - Проаналізувати його літературну спадщину
 - Дослідити позицію митрополита під час Переяславської ради
-sources:
-- name: Сильвестр Косів (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
-  type: primary
-  notes: Біографія та діяльність
-- name: Патерикон Сильвестра Косіва
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Літературна праця
 content_outline:
 - section: Вступ — Митрополит бурхливої епохи
   points:
@@ -84,3 +75,13 @@ grammar:
 - Текст-аналіз полеміки
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Сильвестр Косів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  type: primary
+  notes: Біографія та діяльність
+- name: Патерикон Сильвестра Косіва
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літературна праця
+register: академічний

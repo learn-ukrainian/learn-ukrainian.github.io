@@ -2,7 +2,7 @@ module: ruth-096
 level: RUTH
 sequence: 96
 slug: two-natures
-version: '2.0'
+version: '3.0'
 title: Дві природи
 subtitle: The Two Natures
 focus: Visible vs Invisible world
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

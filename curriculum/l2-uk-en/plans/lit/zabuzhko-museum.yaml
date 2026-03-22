@@ -2,7 +2,7 @@ module: lit-178
 level: LIT
 sequence: 178
 slug: zabuzhko-museum
-version: '2.0'
+version: '3.0'
 title: Zabuzhko Museum
 subtitle: Zabuzhko Museum
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Zabuzhko Museum у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Zabuzhko Museum — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Museum Archivist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Zabuzhko Museum — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

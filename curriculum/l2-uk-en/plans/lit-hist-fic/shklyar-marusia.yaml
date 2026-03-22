@@ -2,7 +2,7 @@ sequence: 14
 module: lit-hist-fic-014
 level: LIT.HIST.FIC
 slug: shklyar-marusia
-version: '2.0'
+version: '3.0'
 title: Shklyar Marusia
 subtitle: Shklyar Marusia
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cavalry Detachment Commander
 word_target: 5000
+references: []
+register: академічний
+grammar: []

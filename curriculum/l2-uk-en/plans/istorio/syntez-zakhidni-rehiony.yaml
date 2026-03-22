@@ -2,7 +2,7 @@ module: istorio-075
 level: ISTORIO
 sequence: 75
 slug: syntez-zakhidni-rehiony
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Західні землі'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: західні землі'
 - Evaluate the historical significance of чому «більш українські»?
-sources:
-- name: Західна Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Західна_Україна
-  type: reference
-  notes: Regional overview
-- name: Галичина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
-  type: reference
-  notes: Galicia summary
 content_outline:
 - section: Вступ — Чому «більш українські»?
   points:
@@ -119,3 +110,14 @@ prerequisites:
 - volyn-pamiat-i-travma
 connects_to:
 - slobozhanshchyna-identychnist
+references:
+- name: Західна Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Західна_Україна
+  type: reference
+  notes: Regional overview
+- name: Галичина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Galicia summary
+register: академічний
+grammar: []

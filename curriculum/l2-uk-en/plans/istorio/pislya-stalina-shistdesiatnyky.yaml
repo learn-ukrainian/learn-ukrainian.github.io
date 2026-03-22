@@ -2,7 +2,7 @@ module: istorio-124
 level: ISTORIO
 sequence: 124
 slug: pislya-stalina-shistdesiatnyky
-version: '1.0'
+version: '3.0'
 title: 'Після Сталіна: Шістдесятники'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of після сталіна: шістдесятники'
 - Evaluate the historical significance of відлига
-sources:
-- name: Шістдесятники (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Шістдесятники
-  type: reference
-  notes: Sixtiers overview
-- name: Українське дисидентське рух (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
-  type: reference
-  notes: Dissident movement
 content_outline:
 - section: Вступ — Відлига
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - pislya-emsa-halychyna
 connects_to:
 - syntez-pislya-2014
+references:
+- name: Шістдесятники (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шістдесятники
+  type: reference
+  notes: Sixtiers overview
+- name: Українське дисидентське рух (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  type: reference
+  notes: Dissident movement
+register: академічний
+grammar: []

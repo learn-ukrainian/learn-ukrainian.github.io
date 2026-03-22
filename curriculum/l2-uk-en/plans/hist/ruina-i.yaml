@@ -2,7 +2,7 @@ module: hist-058
 level: HIST
 sequence: 58
 slug: ruina-i
-version: '2.0'
+version: '3.0'
 title: 'Руїна I: Виговщина і розкол'
 subtitle: 'The Ruin I: Vyhovsky and the Split'
 focus: history
@@ -13,33 +13,27 @@ objectives:
 - Учень може пояснити причини громадянської війни (Руїни)
 - Учень може проаналізувати наслідки Конотопської битви
 - Учень може оцінити роль Чорної ради 1663 року в розколі України
-sources:
-- name: The Ruin - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
-  type: reference
-  notes: Overview of the period
-- name: Chronicle of Eyewitness
-  url: http://litopys.org.ua/samovyd/sam.htm
-  type: primary
-  notes: Primary source for the period
 content_outline:
 - section: 'Вступ: Епоха великих надій і розчарувань'
   points:
-  - Definition of 'The Ruin' (1657-1687) — term coined by Cossack chronicler Samiilo Velychko to describe the devastation
-  - The vacuum of power after Khmelnytsky — [!context] Ruin as state collapse due to internal strife plus external intervention
+  - Definition of 'The Ruin' (1657-1687) — term coined by Cossack chronicler Samiilo Velychko to describe the 
+    devastation
+  - The vacuum of power after Khmelnytsky — [!context] Ruin as state collapse due to internal strife plus external 
+    intervention
   words: 600
 - section: 'Гетьман Іван Виговський: Курс на Європу'
   points:
-  - Vyhovsky's biography and political program — General Chancellor, intellectual, architect of the Hadiach Union; [!myth-buster]
-    not a 'Polish lackey' but a statist
-  - The suppression of the Pushkar uprising — first act of civil war, inspired and financed by Moscow (Pushkar and Barabash)
+  - Vyhovsky's biography and political program — General Chancellor, intellectual, architect of the Hadiach Union; 
+    [!myth-buster] not a 'Polish lackey' but a statist
+  - The suppression of the Pushkar uprising — first act of civil war, inspired and financed by Moscow (Pushkar and 
+    Barabash)
   - 'Foreign policy: balancing between Moscow and Warsaw — seeking equal status for Ukraine in Europe'
   words: 600
 - section: Гадяцька унія і війна з Москвою
   points:
   - The failure of the alliance with Moscow — violation of Pereyaslav articles by the Tsar
-  - The signing of the Treaty of Hadiach (brief recap) — Grand Duchy of Rus as 3rd member of Commonwealth with own army, treasury,
-    and coin
+  - The signing of the Treaty of Hadiach (brief recap) — Grand Duchy of Rus as 3rd member of Commonwealth with own army,
+    treasury, and coin
   - The start of the Muscovite-Ukrainian war — Moscow declares Vyhovsky a traitor; open military aggression
   words: 600
 - section: 'Конотопська битва 1659: Втрачена перемога'
@@ -52,17 +46,17 @@ content_outline:
 - section: Падіння Виговського і початок хаосу
   points:
   - The uprising of Ivan Sirko in Zaporizhzhia — forced Tatar allies to return to Crimea, weakening Vyhovsky
-  - The election of Yurii Khmelnytsky — [!decolonization] Vyhovsky lost the information war to populist demagoguery about
-    'Polish serfdom'
+  - The election of Yurii Khmelnytsky — [!decolonization] Vyhovsky lost the information war to populist demagoguery 
+    about 'Polish serfdom'
   - The Chudniv campaign and the split of the state — cementing the division into Left and Right Banks
   words: 600
 - section: 'Чорна рада 1663: Тріумф охлократії'
   points:
   - The struggle for power on the Left Bank — vacuum filled by populism
-  - Somko vs. Briukhovetsky — [!culture] Panteleimon Kulish's novel 'Chorna rada' depicts this conflict between elite statist
-    (Somko) and demagogue (Briukhovetsky)
-  - The 'Black Council' in Nizhyn and its tragic outcome — 1663; participation of 'chern' (commoners); execution of Somko
-    and Zolota
+  - Somko vs. Briukhovetsky — [!culture] Panteleimon Kulish's novel 'Chorna rada' depicts this conflict between elite 
+    statist (Somko) and demagogue (Briukhovetsky)
+  - The 'Black Council' in Nizhyn and its tragic outcome — 1663; participation of 'chern' (commoners); execution of 
+    Somko and Zolota
   words: 600
 - section: 'Первинні джерела: Літопис Самовидця'
   points:
@@ -73,7 +67,8 @@ content_outline:
   points:
   - 'The myth of ''civil war'' vs. foreign intervention — Moscow''s hybrid war tactics: financing opposition to destabilize
     the Hetmanate'
-  - Moscow's role in deepening the split — [!quote] irony of Briukhovetsky promising rights but bringing Muscovite voyevodas
+  - Moscow's role in deepening the split — [!quote] irony of Briukhovetsky promising rights but bringing Muscovite 
+    voyevodas
   words: 800
 vocabulary_hints:
   required:
@@ -112,3 +107,12 @@ prerequisites:
 - yurii-nemyrych
 connects_to:
 - ruina-ii
+references:
+- name: The Ruin - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
+  type: reference
+  notes: Overview of the period
+- name: Chronicle of Eyewitness
+  url: http://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Primary source for the period

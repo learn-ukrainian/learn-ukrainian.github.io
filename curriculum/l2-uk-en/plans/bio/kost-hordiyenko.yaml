@@ -2,7 +2,7 @@ module: bio-029
 level: BIO
 sequence: 29
 slug: kost-hordiyenko
-version: '2.0'
+version: '3.0'
 title: 'Кость Гордієнко: Запорозький кошовий'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати політичну опозицію Гордієнка до Петра I
 - Оцінити значення союзу Січі та Гетьманщини
 - Дослідити козацький республіканізм у Конституції 1710 р.
-sources:
-- name: Кость Гордієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
-  type: primary
-  notes: Біографія та діяльність
-- name: Запорожці у вигнанні
-  url: http://resource.history.org.ua/
-  type: reference
-  notes: Олешківська та Кам'янська Січ
 content_outline:
 - section: Вступ — Лицар степу
   points:
@@ -86,3 +77,13 @@ grammar:
 - Риторика козацьких промов
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Кость Гордієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
+  type: primary
+  notes: Біографія та діяльність
+- name: Запорожці у вигнанні
+  url: http://resource.history.org.ua/
+  type: reference
+  notes: Олешківська та Кам'янська Січ
+register: академічний

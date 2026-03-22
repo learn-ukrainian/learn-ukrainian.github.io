@@ -2,7 +2,7 @@ sequence: 15
 module: lit-hist-fic-015
 level: LIT.HIST.FIC
 slug: lys-century-jacob
-version: '2.0'
+version: '3.0'
 title: Lys Century Jacob
 subtitle: Lys Century Jacob
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Volhynian Saga Keeper
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-170
 level: BIO
 sequence: 170
 slug: victoria-amelina
-version: '2.0'
+version: '3.0'
 title: Вікторія Амеліна
 subtitle: Вікторія Амеліна
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - kateryna-handziuk
 connects_to:
 - maksym-kryvtsov
+references: []
+register: академічний
+grammar: []

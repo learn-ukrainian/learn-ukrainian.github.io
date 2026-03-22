@@ -2,7 +2,7 @@ module: bio-107
 level: BIO
 sequence: 107
 slug: berta-rapoport
-version: '2.0'
+version: '3.0'
 title: 'Берта Рапопорт: Лікарка і громадська діячка'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of берта рапопорт: лікарка і громадська діячка'
 - Evaluate the contributions of жінка, що лікувала і надихала
 - Trace the career and influence of повернення з небуття
-sources:
-- name: Берта Рапопорт (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
-  type: primary
-  notes: Biography of the pioneering woman doctor and activist
-- name: Одеська медична спадщина
-  url: https://omu.odessa.ua/
-  type: reference
-  notes: Historical medical archives of Odesa
 content_outline:
 - section: Вступ — Жінка, що лікувала і надихала
   points:
@@ -98,3 +89,14 @@ persona:
   role: Chief Physician
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Берта Рапопорт (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
+  type: primary
+  notes: Biography of the pioneering woman doctor and activist
+- name: Одеська медична спадщина
+  url: https://omu.odessa.ua/
+  type: reference
+  notes: Historical medical archives of Odesa
+register: академічний
+grammar: []

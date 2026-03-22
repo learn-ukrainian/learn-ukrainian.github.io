@@ -2,7 +2,7 @@ module: bio-081
 level: BIO
 sequence: 81
 slug: oleksandr-bohomazov
-version: '2.0'
+version: '3.0'
 title: 'Олександр Богомазов: Український футурист'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of олександр богомазов: український футурист'
 - Evaluate the contributions of український пікассо
 - Trace the career and influence of останні роки та спадщина (1922-1930)
-sources:
-- name: Олександр Богомазов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович
-  type: primary
-  notes: Біографія, творчість, теоретичні праці
-- name: Національний художній музей України
-  url: https://namu.kyiv.ua
-  type: reference
-  notes: Колекція робіт та виставки
-- name: «Живопис та елементи» (трактат)
-  url: https://archives.gov.ua
-  type: reference
-  notes: Теоретична спадщина
 content_outline:
 - section: Вступ — Український Пікассо
   points:
@@ -103,3 +90,18 @@ persona:
   role: Art Theorist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олександр Богомазов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович
+  type: primary
+  notes: Біографія, творчість, теоретичні праці
+- name: Національний художній музей України
+  url: https://namu.kyiv.ua
+  type: reference
+  notes: Колекція робіт та виставки
+- name: «Живопис та елементи» (трактат)
+  url: https://archives.gov.ua
+  type: reference
+  notes: Теоретична спадщина
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-essay-063
 level: LIT.ESSAY
 sequence: 63
 slug: shumuk-memoirs
-version: '2.0'
+version: '3.0'
 title: 'Данило Шумук: Мемуари — УПА та Ґулаг'
 subtitle: Danylo Shumuk — Memoirs of UPA and Gulag
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати мемуари Шумука як унікальний документ двох систем терору
 - Дослідити трансформацію автора — від комуніста до борця за незалежність
 - Зрозуміти мемуарну прозу як літературний жанр
-sources:
-- name: Данило Шумук — мемуари
-  url: https://uk.wikipedia.org/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 1000
@@ -66,3 +62,9 @@ immersion: 100% Ukrainian
 persona:
   voice: Senior Specialist
   role: Testimony Literature Specialist
+references:
+- name: Данило Шумук — мемуари
+  url: https://uk.wikipedia.org/
+  type: primary
+register: академічний
+grammar: []

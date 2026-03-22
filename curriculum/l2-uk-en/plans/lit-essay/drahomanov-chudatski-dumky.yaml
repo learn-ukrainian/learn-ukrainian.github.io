@@ -2,7 +2,7 @@ sequence: 7
 module: lit-essay-007
 level: LIT.ESSAY
 slug: drahomanov-chudatski-dumky
-version: '2.0'
+version: '3.0'
 title: Drahomanov Chudatski Dumky
 subtitle: Drahomanov Chudatski Dumky
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Radical Publicist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

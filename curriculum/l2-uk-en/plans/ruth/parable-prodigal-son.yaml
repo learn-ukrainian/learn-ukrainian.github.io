@@ -2,7 +2,7 @@ module: ruth-031
 level: RUTH
 sequence: 31
 slug: parable-prodigal-son
-version: '2.0'
+version: '3.0'
 title: 'Притча: Блудний син'
 subtitle: 'The Parables II: Prodigal Son'
 focus: Family & emotional vocabulary
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

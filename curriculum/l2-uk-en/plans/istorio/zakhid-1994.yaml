@@ -2,7 +2,7 @@ module: istorio-098
 level: ISTORIO
 sequence: 98
 slug: zakhid-1994
-version: '1.0'
+version: '3.0'
 title: 'Будапештський меморандум: Гарантії без гарантій'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
 - Evaluate the historical significance of угода без зубів
-sources:
-- name: Будапештський меморандум (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
-  type: reference
-  notes: Memorandum text and context
-- name: Ядерне роззброєння України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
-  type: reference
-  notes: Nuclear disarmament
 content_outline:
 - section: Вступ — Угода без зубів
   points:
@@ -119,3 +110,14 @@ prerequisites:
 - chicken-kyiv
 connects_to:
 - chornomorskyi-flot
+references:
+- name: Будапештський меморандум (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
+  type: reference
+  notes: Memorandum text and context
+- name: Ядерне роззброєння України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
+  type: reference
+  notes: Nuclear disarmament
+register: академічний
+grammar: []

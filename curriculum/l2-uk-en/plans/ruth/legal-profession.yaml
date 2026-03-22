@@ -2,7 +2,7 @@ module: ruth-022
 level: RUTH
 sequence: 22
 slug: legal-profession
-version: '2.0'
+version: '3.0'
 title: Юридична професія
 subtitle: The Legal Profession
 focus: Прокуратор, Возний — Roles in court
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

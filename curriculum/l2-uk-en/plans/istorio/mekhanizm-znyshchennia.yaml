@@ -2,7 +2,7 @@ module: istorio-056
 level: ISTORIO
 sequence: 56
 slug: mekhanizm-znyshchennia
-version: '1.0'
+version: '3.0'
 title: 'Механізм знищення: 1930-1937'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of механізм знищення: 1930-1937'
 - Evaluate the historical significance of як знищували культуру
-sources:
-- name: Великий терор в Україні
-  url: https://uk.wikipedia.org/wiki/Великий_терор
-  type: reference
-  notes: Great Terror overview
-- name: Сталінські репресії
-  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
-  type: reference
-  notes: Ukrainian repressions
-- name: Список жертв Розстріляного відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Victims list
 content_outline:
 - section: Вступ — Як знищували культуру
   points:
@@ -130,3 +117,18 @@ prerequisites:
 - teatr-kurbasa
 connects_to:
 - syntez-rozstriliane
+references:
+- name: Великий терор в Україні
+  url: https://uk.wikipedia.org/wiki/Великий_терор
+  type: reference
+  notes: Great Terror overview
+- name: Сталінські репресії
+  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
+  type: reference
+  notes: Ukrainian repressions
+- name: Список жертв Розстріляного відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Victims list
+register: академічний
+grammar: []

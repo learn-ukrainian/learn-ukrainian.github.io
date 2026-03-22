@@ -2,7 +2,7 @@ module: istorio-063
 level: ISTORIO
 sequence: 63
 slug: syntez-relihiina-identychnist
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Релігія і національна ідентичність'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: релігія і національна ідентичність'
 - Evaluate the historical significance of релігія і нація
-sources:
-- name: Релігія в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
-  type: reference
-  notes: Overview
-- name: Православна церква України
-  url: https://uk.wikipedia.org/wiki/Православна_церква_України
-  type: reference
-  notes: 2018-19 autocephaly
 content_outline:
 - section: Вступ — Релігія і нація
   points:
@@ -123,3 +114,14 @@ prerequisites:
 - radianska-antyrelihiyna-polityka
 connects_to:
 - persha-khvylia-emihratsiyi
+references:
+- name: Релігія в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
+  type: reference
+  notes: Overview
+- name: Православна церква України
+  url: https://uk.wikipedia.org/wiki/Православна_церква_України
+  type: reference
+  notes: 2018-19 autocephaly
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: hist-014
 level: HIST
 sequence: 14
 slug: sofiya-kyivska
-version: '2.0'
+version: '3.0'
 title: Софія Київська та культурний розквіт
 focus: history
 pedagogy: seminar
@@ -12,19 +12,6 @@ objectives:
 - Understand significance of St Sophia
 - Analyze mosaics and frescoes
 - Discuss cultural blooming of Kyivan Rus
-sources:
-- name: Софійський собор (Київ) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
-  type: reference
-  notes: UNESCO World Heritage site
-- name: Національний заповідник "Софія Київська"
-  url: https://uk.wikipedia.org/wiki/Національний_заповідник_«Софія_Київська»
-  type: reference
-  notes: Museum complex
-- name: Мозаїки Софії Київської
-  url: https://uk.wikipedia.org/wiki/Мозаїки_Софійського_собору_в_Києві
-  type: reference
-  notes: Art analysis
 content_outline:
 - section: Вступ
   points:
@@ -42,7 +29,8 @@ content_outline:
   words: 450
 - section: 'Мозаїки та фрески: Біблія у кольорі'
   points:
-  - Світлоносна Мозаїка — смальта (177 відтінків), мерехтіння світла; Оранта «Нерушима стіна» — легенда про стійкість Києва
+  - Світлоносна Мозаїка — смальта (177 відтінків), мерехтіння світла; Оранта «Нерушима стіна» — легенда про стійкість 
+    Києва
   - 'Живописні Фрески — унікальні світські сюжети на стінах храму: полювання на вепра, скоморохи, іподром Константинополя
     (сходи на хори)'
   words: 450
@@ -60,8 +48,8 @@ content_outline:
   words: 450
 - section: Читання
   points:
-  - Інтелектуальний центр Русі — Іларіон Київський та його «Слово про Закон і Благодать» як маніфест політичної суверенності
-    від Візантії
+  - Інтелектуальний центр Русі — Іларіон Київський та його «Слово про Закон і Благодать» як маніфест політичної 
+    суверенності від Візантії
   words: 450
 - section: Первинні джерела
   points:
@@ -81,7 +69,8 @@ content_outline:
   words: 450
 - section: Деколонізаційний погляд
   points:
-  - Міфи та реальність — спростування імперського міфу про «спільну колиску»; Софія як доказ європейської суб'єктності Києва
+  - Міфи та реальність — спростування імперського міфу про «спільну колиску»; Софія як доказ європейської суб'єктності 
+    Києва
   - 'Сучасна Україна — повернення справжніх титулів (каган, цар) замість нав''язаних пізніше «князів»; engagement hook: [!decolonization]'
   words: 450
 - section: Потрібно більше практики?
@@ -135,3 +124,17 @@ grammar:
 - Historical narrative
 module_type: history
 immersion: 100% Ukrainian
+references:
+- name: Софійський собор (Київ) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+  type: reference
+  notes: UNESCO World Heritage site
+- name: Національний заповідник "Софія Київська"
+  url: https://uk.wikipedia.org/wiki/Національний_заповідник_«Софія_Київська»
+  type: reference
+  notes: Museum complex
+- name: Мозаїки Софії Київської
+  url: https://uk.wikipedia.org/wiki/Мозаїки_Софійського_собору_в_Києві
+  type: reference
+  notes: Art analysis
+register: академічний

@@ -2,7 +2,7 @@ sequence: 3
 module: lit-war-003
 level: LIT.WAR
 slug: wwii-bahrianyi-samchuk-war
-version: '2.0'
+version: '3.0'
 title: WWII Bahrianyi Samchuk War
 subtitle: WWII Bahrianyi Samchuk War
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Displaced Survivor
 word_target: 5000
+references: []
+register: академічний
+grammar: []

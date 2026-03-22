@@ -2,7 +2,7 @@ sequence: 21
 module: lit-war-021
 level: LIT.WAR
 slug: war-lit-synthesis
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Література чину'
 subtitle: 'Intellectual Synthesis: Literature of Action'
 content_outline:
@@ -60,3 +60,6 @@ persona:
   voice: Senior Specialist
   role: Theorist of the Heroic Deed
 word_target: 5000
+references: []
+register: академічний
+grammar: []

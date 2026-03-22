@@ -2,7 +2,7 @@ module: istorio-045
 level: ISTORIO
 sequence: 45
 slug: holodomor-istorio
-version: '1.0'
+version: '3.0'
 title: 'Голодомор: Історіографія теми'
 focus: history
 pedagogy: seminar
@@ -10,23 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of голодомор: історіографія теми'
 - Evaluate the historical significance of як вивчають голодомор
-sources:
-- name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
-  type: reference
-  notes: Overview
-- name: Роберт Конквест
-  url: https://uk.wikipedia.org/wiki/Роберт_Конквест
-  type: reference
-  notes: «Harvest of Sorrow» author
-- name: Джеймс Мейс
-  url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
-  type: reference
-  notes: US Commission researcher
-- name: Станіслав Кульчицький
-  url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
-  type: reference
-  notes: Ukrainian scholar
 content_outline:
 - section: Вступ — Як вивчають Голодомор
   points:
@@ -125,3 +108,22 @@ prerequisites:
 - syntez-dysydentski-dzherela
 connects_to:
 - holodomor-mekhanizmy-i
+references:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Overview
+- name: Роберт Конквест
+  url: https://uk.wikipedia.org/wiki/Роберт_Конквест
+  type: reference
+  notes: «Harvest of Sorrow» author
+- name: Джеймс Мейс
+  url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
+  type: reference
+  notes: US Commission researcher
+- name: Станіслав Кульчицький
+  url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
+  type: reference
+  notes: Ukrainian scholar
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: hist-019
 level: HIST
 sequence: 19
 slug: rus-ta-susidy
-version: '2.0'
+version: '3.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
 focus: history
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Trace the history of Russo-Byzantine relations
 - Understand the role of dynastic marriages in Rus foreign policy
 - Analyze the relations with western and steppe neighbors
-sources:
-- name: Зовнішня політика Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
-  type: reference
-  notes: Overview of foreign relations
-- name: Русько-візантійські договори
-  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
-  type: reference
-  notes: Treaties with Byzantium
-- name: Повість минулих літ — дипломатичні місії
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
 content_outline:
 - section: Вступ — Русь у міжнародному контексті
   points:
@@ -109,3 +96,17 @@ grammar:
 - Past tense narrative
 - Diplomatic and international relations terminology
 immersion: 100% Ukrainian
+references:
+- name: Зовнішня політика Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
+  type: reference
+  notes: Overview of foreign relations
+- name: Русько-візантійські договори
+  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
+  type: reference
+  notes: Treaties with Byzantium
+- name: Повість минулих літ — дипломатичні місії
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts
+register: академічний

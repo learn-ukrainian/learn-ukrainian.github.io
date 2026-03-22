@@ -2,7 +2,7 @@ module: hist-105
 level: HIST
 sequence: 105
 slug: druha-svitova-pochatok
-version: '2.0'
+version: '3.0'
 title: 'Друга світова: Початок'
 subtitle: 'WWII: The Beginning 1939-1941'
 focus: history
@@ -19,8 +19,8 @@ content_outline:
   points:
   - 'Україна в 1939 році: дві окупації — tragic situation of statelessness where Ukrainians fought in opposing armies (Polish
     vs. German); 1 September 1939 German attack vs 17 September Soviet invasion'
-  - Пакт Молотова-Ріббентропа та його таємний протокол — signed 23 August 1939; secret division of spheres of influence (Narva-Vistula-San
-    line); cynical partition of Europe between Hitler and Stalin
+  - Пакт Молотова-Ріббентропа та його таємний протокол — signed 23 August 1939; secret division of spheres of influence 
+    (Narva-Vistula-San line); cynical partition of Europe between Hitler and Stalin
   - 'Чому Україна стала «кривавими землями» — [!context] introduction of Timothy Snyder''s ''Bloodlands'' concept: Ukraine
     as the epicenter of two totalitarian regimes (Nazi and Soviet)'
   words: 850
@@ -28,14 +28,14 @@ content_outline:
   points:
   - '«Золотий вересень»: похід Червоної армії — invasion on 17 September 1939; [!myth-buster] debunking the ''Golden September''
     liberation myth; Polish state ''ceased to exist'' note'
-  - «Возз'єднання» та його ціна — legitimization via 'People's Assembly' (22 October 1939) elections held under gunpoint;
-    annexation of Northern Bukovina and Bessarabia (June 1940)
-  - Радянська окупація Західної України (1939-1941) — [!history-bite] cultural shock of Red Army soldiers in Lviv (poverty,
-    'nightgowns as evening dresses', looting shops)
+  - «Возз'єднання» та його ціна — legitimization via 'People's Assembly' (22 October 1939) elections held under 
+    gunpoint; annexation of Northern Bukovina and Bessarabia (June 1940)
+  - Радянська окупація Західної України (1939-1941) — [!history-bite] cultural shock of Red Army soldiers in Lviv 
+    (poverty, 'nightgowns as evening dresses', looting shops)
   - 'Радянізація: репресії, депортації, колективізація — 4 waves of deportation to Siberia (Feb 1940 - June 1941); affecting
     >1 million people (Poles, Ukrainians, Jews); nationalization of industry and banks'
-  - Катинь та інші злочини НКВС — mass murder of Polish officers (including Ukrainians); Lonsky prison in Lviv as a symbol
-    of torture and terror
+  - Катинь та інші злочини НКВС — mass murder of Polish officers (including Ukrainians); Lonsky prison in Lviv as a 
+    symbol of torture and terror
   - 'Українська реакція: між надією та опором — shift from initial curiosity to fear and hatred; [!quote] Fr. Havryil Kostelnyk
     or Karolina Lanckoronska on the ''proletarian'' look of Soviet troops'
   words: 850
@@ -44,17 +44,19 @@ content_outline:
   - '22 червня 1941: операція «Барбаросса» — German attack on USSR; collapse of the ''friendship'' treaty; chaos and panic
     in the Red Army retreat'
   - Швидкий наступ вермахту — rapid German advance; Soviet 'scorched earth' policy
-  - Відступ Червоної армії та масові розстріли в'язнів — massacres in Lviv, Lutsk, Stanislaviv prisons (June-July 1941); 22-24k
-    victims in one week; shock to the local population
+  - Відступ Червоної армії та масові розстріли в'язнів — massacres in Lviv, Lutsk, Stanislaviv prisons (June-July 1941);
+    22-24k victims in one week; shock to the local population
   - 'Українські надії на німецьку «визволителя» — [!decolonization] why Germans were initially welcomed: not pro-Nazism, but
     hope for rescue from Stalinist terror and restoration of statehood (like 1918)'
   words: 850
 - section: Первинні джерела
   points:
-  - Таємний протокол пакту Молотова-Ріббентропа — full text (denied by USSR for decades) showing cynical division of Europe
-  - Спогади очевидців радянських репресій — [!quote] Karolina Lanckoronska describing the first day of Soviet rule in Lviv;
-    fear and confusion
-  - Німецькі та радянські документи — contrast between propaganda ('liberation', 'brotherly aid') and reality (terror, deportations)
+  - Таємний протокол пакту Молотова-Ріббентропа — full text (denied by USSR for decades) showing cynical division of 
+    Europe
+  - Спогади очевидців радянських репресій — [!quote] Karolina Lanckoronska describing the first day of Soviet rule in 
+    Lviv; fear and confusion
+  - Німецькі та радянські документи — contrast between propaganda ('liberation', 'brotherly aid') and reality (terror, 
+    deportations)
   words: 850
 - section: Деколонізаційний погляд
   points:
@@ -62,16 +64,17 @@ content_outline:
     terminology shift: ''Golden September'' -> ''Soviet Occupation'''
   - 'Реальність: Зміна однієї окупації на іншу — [!analysis] comparing Katyn (USSR) and Auschwitz (Germany) as two sides of
     the same totalitarian coin; human-hating ideologies'
-  - Україна як об'єкт, а не суб'єкт історії — the tragedy of being a battleground without statehood; Ukrainians in Polish
-    army vs Ukrainians in Red Army
+  - Україна як об'єкт, а не суб'єкт історії — the tragedy of being a battleground without statehood; Ukrainians in 
+    Polish army vs Ukrainians in Red Army
   words: 850
 - section: 'Підсумок: Початок апокаліпсису'
   points:
-  - Масштаб втрат 1939-1941 років — destruction of the intelligentsia and church; illusion of Soviet 'humanity' shattered
-    forever
-  - Передумови подальших трагедій — OUN goes underground to fight both occupiers; stage set for the German occupation and
-    Holocaust
-  - Уроки для сучасності — parallels with modern Russian aggression (pseudo-referendums, forced deportations, filtration camps)
+  - Масштаб втрат 1939-1941 років — destruction of the intelligentsia and church; illusion of Soviet 'humanity' 
+    shattered forever
+  - Передумови подальших трагедій — OUN goes underground to fight both occupiers; stage set for the German occupation 
+    and Holocaust
+  - Уроки для сучасності — parallels with modern Russian aggression (pseudo-referendums, forced deportations, filtration
+    camps)
   words: 750
 vocabulary_hints:
   required:
@@ -113,3 +116,4 @@ grammar:
 - Пасивні конструкції для опису подій
 - Хронологічні конструкції
 register: публіцистичний
+references: []

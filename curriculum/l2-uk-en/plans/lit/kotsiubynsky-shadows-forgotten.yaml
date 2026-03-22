@@ -2,7 +2,7 @@ module: lit-066
 level: LIT
 sequence: 66
 slug: kotsiubynsky-shadows-forgotten
-version: '2.0'
+version: '3.0'
 title: '«Тіні забутих предків»: Гуцульський міф'
 subtitle: Kotsiubynsky Shadows Forgotten
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір «Тіні забутих предків»: Гуцульський міф у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: '«Тіні забутих предків»: Гуцульський міф — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Hutsul Mystic
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: '«Тіні забутих предків»: Гуцульський міф — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

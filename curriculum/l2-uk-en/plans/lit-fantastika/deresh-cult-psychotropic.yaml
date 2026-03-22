@@ -2,7 +2,7 @@ sequence: 23
 module: lit-fantastika-023
 level: LIT.FANTASTIKA
 slug: deresh-cult-psychotropic
-version: '2.0'
+version: '3.0'
 title: Deresh Cult Psychotropic
 subtitle: Deresh Cult Psychotropic
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Counter-Culture Guru
 word_target: 5000
+references: []
+register: академічний
+grammar: []

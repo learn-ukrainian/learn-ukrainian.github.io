@@ -2,7 +2,7 @@ module: bio-087
 level: BIO
 sequence: 87
 slug: nataliia-polonska-vasylenko
-version: '2.0'
+version: '3.0'
 title: 'Наталія Полонська-Василенко: Історикиня'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of наталія полонська-василенко: історикиня'
 - Evaluate the contributions of жінка, яка написала історію україни
 - Trace the career and influence of наукова спадщина та значення
-sources:
-- name: Наталія Полонська-Василенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
-  type: primary
-  notes: Біографія, наукова діяльність, еміграція
-- name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
-  type: reference
-  notes: Наукова спадщина та оцінка
-- name: Українська Вільна Академія Наук
-  url: https://uvan.org
-  type: reference
-  notes: Діяльність в еміграції
 content_outline:
 - section: Вступ — Жінка, яка написала історію України
   points:
@@ -102,3 +89,18 @@ persona:
   role: Archeologist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Наталія Полонська-Василенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  type: primary
+  notes: Біографія, наукова діяльність, еміграція
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Наукова спадщина та оцінка
+- name: Українська Вільна Академія Наук
+  url: https://uvan.org
+  type: reference
+  notes: Діяльність в еміграції
+register: академічний
+grammar: []

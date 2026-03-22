@@ -2,7 +2,7 @@ module: bio-015
 level: BIO
 sequence: 15
 slug: dmytro-vyshnevetsky
-version: '2.0'
+version: '3.0'
 title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
 subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
 focus: biography
@@ -12,13 +12,6 @@ word_target: 5000
 objectives:
 - Explore the origins of the Zaporozhian Sich
 - Understand the legend of Baida and its cultural impact
-sources:
-- name: Дмитро Вишневецький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
-  type: primary
-- name: Пісня про Байду
-  url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
-  type: primary
 content_outline:
 - section: Вступ — Князь і Козак
   points:
@@ -78,3 +71,11 @@ prerequisites:
 - roksolana
 connects_to:
 - kostiantyn-vasyl-ostrozky
+references:
+- name: Дмитро Вишневецький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
+  type: primary
+- name: Пісня про Байду
+  url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
+  type: primary
+register: академічний

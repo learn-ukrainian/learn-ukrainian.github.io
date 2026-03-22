@@ -2,7 +2,7 @@ module: lit-076
 level: LIT
 sequence: 76
 slug: lepkyi-mazepa-trilogy
-version: '2.0'
+version: '3.0'
 title: Lepkyi Mazepa Trilogy
 subtitle: Lepkyi Mazepa Trilogy
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Lepkyi Mazepa Trilogy у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Lepkyi Mazepa Trilogy — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Hetman's Advisor
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Lepkyi Mazepa Trilogy — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

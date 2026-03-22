@@ -2,19 +2,12 @@ module: bio-163
 level: BIO
 sequence: 163
 slug: pavlo-sheremet
-version: '2.0'
+version: '3.0'
 title: 'Павло Шеремет: Журналістика як місія свободи'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Павло Шеремет (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шеремет_Павло_Григорович
-  type: primary
-- name: Українська правда - Пам'яті Павла Шеремета
-  url: https://www.pravda.com.ua
-  type: secondary
 content_outline:
 - section: Вступ — Журналіст трьох країн
   points:
@@ -80,3 +73,12 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Внесок: Школа Шеремета» у власній мовній практиці'
+references:
+- name: Павло Шеремет (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шеремет_Павло_Григорович
+  type: primary
+- name: Українська правда - Пам'яті Павла Шеремета
+  url: https://www.pravda.com.ua
+  type: secondary
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-069
 level: BIO
 sequence: 69
 slug: yevhen-paton
-version: '2.0'
+version: '3.0'
 title: 'Євген Патон: Батько українського мостобудування'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of євген патон: батько українського мостобудування'
 - Evaluate the contributions of інженер, який з'єднав береги
 - Trace the career and influence of спадщина двох поколінь
-sources:
-- name: Євген Патон (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
-  type: primary
-  notes: Biography, engineering achievements, institute
-- name: Інститут електрозварювання
-  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
-  type: reference
-  notes: Institute he founded
-- name: Міст Патона
-  url: https://uk.wikipedia.org/wiki/Міст_Патона
-  type: reference
-  notes: Kyiv bridge named after him
 content_outline:
 - section: Вступ — Інженер, який з'єднав береги
   points:
@@ -105,3 +92,18 @@ persona:
   role: Bridge Engineer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Євген Патон (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+  type: primary
+  notes: Biography, engineering achievements, institute
+- name: Інститут електрозварювання
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+  type: reference
+  notes: Institute he founded
+- name: Міст Патона
+  url: https://uk.wikipedia.org/wiki/Міст_Патона
+  type: reference
+  notes: Kyiv bridge named after him
+register: академічний
+grammar: []

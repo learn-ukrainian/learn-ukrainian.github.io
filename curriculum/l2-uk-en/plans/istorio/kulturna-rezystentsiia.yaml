@@ -2,7 +2,7 @@ module: istorio-126
 level: ISTORIO
 sequence: 126
 slug: kulturna-rezystentsiia
-version: '1.0'
+version: '3.0'
 title: 'Культурна резистенція: Стратегії виживання'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of культурна резистенція: стратегії виживання'
 - Evaluate the historical significance of як виживає культура
-sources:
-- name: Самвидав (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Самвидав
-  type: reference
-  notes: Samvydav
-- name: Культурний спротив (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурний_спротив
-  type: reference
-  notes: Cultural resistance
 content_outline:
 - section: Вступ — Як виживає культура
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - syntez-pislya-2014
 connects_to:
 - hromadianske-suspilstvo
+references:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Samvydav
+- name: Культурний спротив (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурний_спротив
+  type: reference
+  notes: Cultural resistance
+register: академічний
+grammar: []

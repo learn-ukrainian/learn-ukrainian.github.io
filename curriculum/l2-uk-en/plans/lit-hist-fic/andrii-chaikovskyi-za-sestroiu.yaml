@@ -2,7 +2,7 @@ module: lit-hist-fic-019
 level: LIT-HIST-FIC
 sequence: 19
 slug: andrii-chaikovskyi-za-sestroiu
-version: '2.0'
+version: '3.0'
 title: 'Андрій Чайковський: За сестрою'
 subtitle: Galician historical prose banned in the USSR for breeding Ukrainian patriots
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати роман «За сестрою» як зразок галицької історичної прози
 - Дослідити заборону творів Чайковського в СРСР та її причини
 - Зрозуміти роль Чайковського у формуванні жанру українського пригодницького історичного роману
-sources:
-- name: Андрій Чайковський — проза
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -84,3 +79,10 @@ persona:
   role: Galician Advocate of Memory
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Андрій Чайковський — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-012
 level: BIO
 sequence: 12
 slug: yuriy-lvovych
-version: '2.0'
+version: '3.0'
 title: 'Юрій I Львович: Останній Король Русі'
 subtitle: 'Yuriy I Lvovych: The Last King of Rus'''
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Analyze the significance of the royal title 'Rex Russiae'
 - Evaluate the establishment of the Galician Metropolitanate
 - Master vocabulary related to medieval kingship and church organization
-sources:
-- name: Юрій I Львович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
-  type: primary
-  notes: Biography, royal title, Galician Metropolitanate
-- name: Галицька митрополія
-  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
-  type: primary
-  notes: Ecclesiastical organization
-- name: Королівство Русі
-  url: https://uk.wikipedia.org/wiki/Королівство_Русі
-  type: reference
-  notes: Royal tradition context
 content_outline:
 - section: Вступ — Король Русі
   points:
@@ -119,3 +106,17 @@ grammar:
 - Complex sentence structures
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій I Львович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
+  type: primary
+  notes: Biography, royal title, Galician Metropolitanate
+- name: Галицька митрополія
+  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
+  type: primary
+  notes: Ecclesiastical organization
+- name: Королівство Русі
+  url: https://uk.wikipedia.org/wiki/Королівство_Русі
+  type: reference
+  notes: Royal tradition context
+register: академічний

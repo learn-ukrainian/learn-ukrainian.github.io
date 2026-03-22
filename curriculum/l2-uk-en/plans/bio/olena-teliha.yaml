@@ -2,7 +2,7 @@ module: bio-118
 level: BIO
 sequence: 118
 slug: olena-teliha
-version: '2.0'
+version: '3.0'
 title: 'Олена Теліга: Поетка-патріотка'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of олена теліга: поетка-патріотка'
 - Evaluate the contributions of вогняна муза
 - Trace the career and influence of арешт та загибель (1942)
-sources:
-- name: Олена Теліга (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна
-  type: primary
-  notes: Біографія, творчість, загибель
-- name: Музей Олени Теліги (Київ)
-  url: https://teliha.kyiv.ua
-  type: reference
-  notes: Архів та експозиція
-- name: Бабин Яр
-  url: https://babynyar.org
-  type: reference
-  notes: Місце розстрілу
 content_outline:
 - section: Вступ — Вогняна муза
   points:
@@ -103,3 +90,18 @@ persona:
   role: Underground Poet
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олена Теліга (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна
+  type: primary
+  notes: Біографія, творчість, загибель
+- name: Музей Олени Теліги (Київ)
+  url: https://teliha.kyiv.ua
+  type: reference
+  notes: Архів та експозиція
+- name: Бабин Яр
+  url: https://babynyar.org
+  type: reference
+  notes: Місце розстрілу
+register: академічний
+grammar: []

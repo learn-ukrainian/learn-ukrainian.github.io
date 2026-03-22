@@ -2,7 +2,7 @@ module: hist-005
 level: HIST
 sequence: 5
 slug: slavic-tribes
-version: '2.0'
+version: '3.0'
 title: Слов'янські племена на українських землях
 subtitle: Mosaic of Tribal Unions
 focus: history
@@ -13,19 +13,6 @@ objectives:
 - Учень може ідентифікувати основні слов'янські племінні союзи на українських землях
 - Учень може пояснити географічне розселення племен
 - Учень може опанувати лексику, пов'язану з племінним життям та географією
-sources:
-- name: Східнослов'янські племена (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Східнослов%27янські_племена
-  type: reference
-  notes: Overview of East Slavic tribes
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Primary source on tribal locations
-- name: Поляни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Поляни_(плем%27я)
-  type: reference
-  notes: Detailed article on Polyany tribe
 content_outline:
 - section: Вступ
   points:
@@ -137,3 +124,17 @@ grammar:
 - Passive voice in archaeology
 module_type: history
 immersion: 100% Ukrainian
+references:
+- name: Східнослов'янські племена (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Східнослов%27янські_племена
+  type: reference
+  notes: Overview of East Slavic tribes
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Primary source on tribal locations
+- name: Поляни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Поляни_(плем%27я)
+  type: reference
+  notes: Detailed article on Polyany tribe
+register: академічний

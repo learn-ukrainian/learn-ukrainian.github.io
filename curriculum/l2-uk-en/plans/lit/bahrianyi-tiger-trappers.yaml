@@ -2,7 +2,7 @@ module: lit-124
 level: LIT
 sequence: 124
 slug: bahrianyi-tiger-trappers
-version: '2.0'
+version: '3.0'
 title: Bahrianyi Tiger Trappers
 subtitle: Bahrianyi Tiger Trappers
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Bahrianyi Tiger Trappers у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Bahrianyi Tiger Trappers — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Taiga Hunter
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Bahrianyi Tiger Trappers — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: ruth-076
 level: RUTH
 sequence: 76
 slug: poetic-history
-version: '2.0'
+version: '3.0'
 title: Поетична історія
 subtitle: Poetic History
 focus: Verse in chronicles
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

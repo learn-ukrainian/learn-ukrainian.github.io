@@ -2,7 +2,7 @@ module: ruth-081
 level: RUTH
 sequence: 81
 slug: battle-descriptions
-version: '2.0'
+version: '3.0'
 title: Описи битв
 subtitle: Battle Descriptions
 focus: Comparing chroniclers on same event (Berestechko)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

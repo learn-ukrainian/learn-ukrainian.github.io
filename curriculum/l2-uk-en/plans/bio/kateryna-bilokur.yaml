@@ -2,7 +2,7 @@ module: bio-113
 level: BIO
 sequence: 113
 slug: kateryna-bilokur
-version: '2.0'
+version: '3.0'
 title: 'Катерина Білокур: Геній наївного мистецтва'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of катерина білокур: геній наївного мистецтва'
 - Evaluate the contributions of квіти, народжені геєм
 - Trace the career and influence of геній із села
-sources:
-- name: Катерина Білокур (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
-  type: primary
-  notes: Biography of the self-taught folk artist
-- name: Національний музей українського народного декоративного мистецтва
-  url: https://mundm.kiev.ua/
-  type: reference
-  notes: Major collection of Bilokur's works
 content_outline:
 - section: Вступ — Квіти, народжені геєм
   points:
@@ -98,3 +89,14 @@ persona:
   role: Garden Painter
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Катерина Білокур (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
+  type: primary
+  notes: Biography of the self-taught folk artist
+- name: Національний музей українського народного декоративного мистецтва
+  url: https://mundm.kiev.ua/
+  type: reference
+  notes: Major collection of Bilokur's works
+register: академічний
+grammar: []

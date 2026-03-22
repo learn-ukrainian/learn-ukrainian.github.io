@@ -2,7 +2,7 @@ module: ruth-057
 level: RUTH
 sequence: 57
 slug: pedagogy-brotherhood
-version: '2.0'
+version: '3.0'
 title: Педагогіка
 subtitle: Pedagogy
 focus: How grammar was taught in brotherhood schools
@@ -50,3 +50,6 @@ objectives:
 - Демонструвати безпомилкове вживання складних граматичних конструкцій
 - Трансформувати граматичні структури між стилями та регістрами
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

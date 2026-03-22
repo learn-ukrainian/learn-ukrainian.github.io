@@ -2,7 +2,7 @@ module: lit-hist-fic-021
 level: LIT-HIST-FIC
 sequence: 21
 slug: natalena-koroleva-lehendy
-version: '2.0'
+version: '3.0'
 title: 'Наталена Королева: Легенди старокиївські'
 subtitle: An aristocratic, European, Catholic lens on early Ukrainian history
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати «Легенди старокиївські» як унікальний приклад аристократичної історичної прози
 - Дослідити європейський та католицький погляд Наталени Королевої на давньоукраїнську історію
 - Зрозуміти контраст між елітарним та популістським підходами до національного минулого
-sources:
-- name: Наталена Королева — проза
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -84,3 +79,10 @@ persona:
   role: Chronicler of the Kyivan Court
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Наталена Королева — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

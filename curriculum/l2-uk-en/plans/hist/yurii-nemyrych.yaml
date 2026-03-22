@@ -2,7 +2,7 @@ module: hist-057
 level: HIST
 sequence: 57
 slug: yurii-nemyrych
-version: '2.0'
+version: '3.0'
 title: 'Юрій Немирич: Гадяцька угода'
 subtitle: 'Yurii Nemyrych: The Treaty of Hadiach'
 focus: history
@@ -13,15 +13,6 @@ objectives:
 - Учень може пояснити суть проекту 'Великого Князівства Руського'
 - Учень може проаналізувати причини провалу Гадяцької угоди
 - Учень може оцінити роль Юрія Немирича як інтелектуала в політиці
-sources:
-- name: The Treaty of Hadiach - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
-  type: reference
-  notes: Academic summary
-- name: Yurii Nemyrych's Speech
-  url: http://litopys.org.ua/
-  type: primary
-  notes: Original text of the speech
 content_outline:
 - section: Вступ
   points:
@@ -31,23 +22,24 @@ content_outline:
   words: 500
 - section: 'Юрій Немирич: Портрет інтелектуала'
   points:
-  - Education in Europe (Leiden, Oxford, Paris) — 1630–1634; studying at Sorbonne and Cambridge, arguably the most educated
-    man in Ukraine
+  - Education in Europe (Leiden, Oxford, Paris) — 1630–1634; studying at Sorbonne and Cambridge, arguably the most 
+    educated man in Ukraine
   - 'Protestant faith (Arianism) and tolerance — conversion to Orthodoxy in 1657 for political legitimacy; cultural hook:
     [!biography] ''The Ukrainian Machiavelli'' or ''Protestant Humanist'' — how European education shaped his statecraft'
   - Political career in the Commonwealth — author of 'Discursus de bello Moscovitico' (1632)
   words: 500
 - section: 'Гадяцька угода 1658: Проект трьох народів'
   points:
-  - The concept of the Grand Duchy of Rus' — signed Sept 16, 1658; defining the state as a third equal partner alongside Poland
-    and Lithuania
+  - The concept of the Grand Duchy of Rus' — signed Sept 16, 1658; defining the state as a third equal partner alongside
+    Poland and Lithuania
   - 'Equality of rights: religion, language, administration — Nemyrych becomes Chancellor; own treasury, mint, and tribunal'
   - 'The vision of a federal state — army of 30k registered Cossacks + 10k mercenaries; cultural hook: [!myth-buster] The
     ''Polish Intrigue'' myth vs. Reality: A sovereign Ukrainian project for a federal Europe'
   words: 500
 - section: Освіта і культура в проекті Немирича
   points:
-  - Plans for two academies (universities) — elevating Kyiv-Mohyla to university status (equal to Krakow) + a second new academy
+  - Plans for two academies (universities) — elevating Kyiv-Mohyla to university status (equal to Krakow) + a second new
+    academy
   - Freedom of the press and schools — establishing printing presses and gymnasiums 'as many as needed'
   - 'Intellectual foundation for the state — cultural hook: [!culture] Education as a prerequisite for statehood in Nemyrych''s
     vision'
@@ -61,7 +53,8 @@ content_outline:
   words: 500
 - section: 'Крах великої ідеї: Чому не вийшло?'
   points:
-  - Internal opposition (Pushkar, Barabash) — social divide between the 'aristocratic' project and the egalitarian masses
+  - Internal opposition (Pushkar, Barabash) — social divide between the 'aristocratic' project and the egalitarian 
+    masses
   - Muscovite propaganda and incitement of the masses — early 'hybrid war' tactics using populism and money
   - The tragic death of Nemyrych — murdered in September 1659 near Svydivets; likely by pro-Moscow instigation
   words: 500
@@ -122,3 +115,12 @@ prerequisites:
 - pereyaslavska-uhoda
 connects_to:
 - ruina-i
+references:
+- name: The Treaty of Hadiach - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
+  type: reference
+  notes: Academic summary
+- name: Yurii Nemyrych's Speech
+  url: http://litopys.org.ua/
+  type: primary
+  notes: Original text of the speech

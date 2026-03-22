@@ -2,7 +2,7 @@ sequence: 24
 module: lit-fantastika-024
 level: LIT.FANTASTIKA
 slug: deresh-arche
-version: '2.0'
+version: '3.0'
 title: Deresh Arche
 subtitle: Deresh Arche
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Esoteric Student
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-155
 level: BIO
 sequence: 155
 slug: halyna-pahutyak
-version: '2.0'
+version: '3.0'
 title: 'Галина Пагутяк: Містична письменниця'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of галина пагутяк: містична письменниця'
 - Evaluate the contributions of голос з іншого світу
 - Trace the career and influence of архітекторка світів
-sources:
-- name: Галина Пагутяк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
-  type: primary
-  notes: Biography of the mystical prose writer
-- name: Видавництво «Піраміда»
-  url: https://www.pyramida.kiev.ua/
-  type: reference
-  notes: Publisher of Pahutyak's major works
 content_outline:
 - section: Вступ — Голос з іншого світу
   points:
@@ -98,3 +89,14 @@ persona:
   role: Gothic Novelist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Галина Пагутяк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+  type: primary
+  notes: Biography of the mystical prose writer
+- name: Видавництво «Піраміда»
+  url: https://www.pyramida.kiev.ua/
+  type: reference
+  notes: Publisher of Pahutyak's major works
+register: академічний
+grammar: []

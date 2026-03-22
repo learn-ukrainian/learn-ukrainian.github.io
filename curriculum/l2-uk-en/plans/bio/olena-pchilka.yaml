@@ -2,7 +2,7 @@ module: bio-050
 level: BIO
 sequence: 50
 slug: olena-pchilka
-version: '2.0'
+version: '3.0'
 title: 'Олена Пчілка: Письменниця і громадська діячка'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of олена пчілка: письменниця і громадська діячка'
 - Evaluate the contributions of мати українського відродження
 - Trace the career and influence of останні роки та спадщина (1920-1930)
-sources:
-- name: Олена Пчілка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
-  type: primary
-  notes: Біографія, творчість, громадська діяльність
-- name: Музей Лесі Українки
-  url: https://www.lesya.lutsk.ua
-  type: reference
-  notes: Родинна історія та спадщина
-- name: Інститут літератури НАНУ
-  url: https://ilnan.gov.ua
-  type: reference
-  notes: Літературознавчі дослідження
 content_outline:
 - section: Вступ — Мати українського відродження
   points:
@@ -104,3 +91,18 @@ persona:
   role: Cultural Matriarch
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олена Пчілка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
+  type: primary
+  notes: Біографія, творчість, громадська діяльність
+- name: Музей Лесі Українки
+  url: https://www.lesya.lutsk.ua
+  type: reference
+  notes: Родинна історія та спадщина
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 4
 module: lit-essay-004
 level: LIT.ESSAY
 slug: istoriia-rusiv-romantics-reception
-version: '2.0'
+version: '3.0'
 title: Istoriia Rusiv Romantics Reception
 subtitle: Istoriia Rusiv Romantics Reception
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Romantic Reader
 word_target: 5000
+references: []
+register: академічний
+grammar: []

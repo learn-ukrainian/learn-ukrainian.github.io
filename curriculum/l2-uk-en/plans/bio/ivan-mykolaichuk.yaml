@@ -2,7 +2,7 @@ module: bio-144
 level: BIO
 sequence: 144
 slug: ivan-mykolaichuk
-version: '2.0'
+version: '3.0'
 title: 'Іван Миколайчук: Душа українського кіно'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the contribution of Ivan Mykolaichuk to world cinema
 - Evaluate the style of Ukrainian Poetic Cinema
 - Discuss the impact of censorship on art
-sources:
-- name: Іван Миколайчук (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Миколайчук_Іван_Васильович
-  type: primary
-  notes: Біографія
-- name: Фільм "Тіні забутих предків"
-  url: https://takflix.com/
-  type: reference
-  notes: Першоджерело
 content_outline:
 - section: Вступ — Обличчя нації
   points:
@@ -98,3 +89,14 @@ persona:
   role: Cultural Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Миколайчук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Миколайчук_Іван_Васильович
+  type: primary
+  notes: Біографія
+- name: Фільм "Тіні забутих предків"
+  url: https://takflix.com/
+  type: reference
+  notes: Першоджерело
+register: академічний
+grammar: []

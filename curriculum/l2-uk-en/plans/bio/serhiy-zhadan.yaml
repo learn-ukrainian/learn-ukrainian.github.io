@@ -2,7 +2,7 @@ module: bio-164
 level: BIO
 sequence: 164
 slug: serhiy-zhadan
-version: '2.0'
+version: '3.0'
 title: 'Сергій Жадан: Голос Донбасу'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of сергій жадан: голос донбасу'
 - Evaluate the contributions of поет війни та миру
 - Trace the career and influence of повномасштабна війна та сьогодення (2022-)
-sources:
-- name: Сергій Жадан (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович
-  type: primary
-  notes: Біографія, творчість, громадська діяльність
-- name: Meridian Czernowitz
-  url: https://meridiancz.com
-  type: reference
-  notes: Літературні фестивалі та інтерв'ю
-- name: Гурт «Собаки в космосі»
-  url: https://sobakyvkosmosi.com.ua
-  type: reference
-  notes: Музична діяльність
 content_outline:
 - section: Вступ — Поет війни та миру
   points:
@@ -103,3 +90,18 @@ persona:
   role: Voice of the East
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Сергій Жадан (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович
+  type: primary
+  notes: Біографія, творчість, громадська діяльність
+- name: Meridian Czernowitz
+  url: https://meridiancz.com
+  type: reference
+  notes: Літературні фестивалі та інтерв'ю
+- name: Гурт «Собаки в космосі»
+  url: https://sobakyvkosmosi.com.ua
+  type: reference
+  notes: Музична діяльність
+register: академічний
+grammar: []

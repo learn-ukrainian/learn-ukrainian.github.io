@@ -2,7 +2,7 @@ module: bio-146
 level: BIO
 sequence: 146
 slug: natalia-yakovenko
-version: '2.0'
+version: '3.0'
 title: 'Наталя Яковенко: Матріарх критичної історії'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - Analyze the impact of Наталя Яковенко on historiography
 - Evaluate the concept of шляхетська культура
 - Discuss the importance of джерелознавство
-sources:
-- name: Наталя Яковенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Яковенко_Наталя_Миколаївна
-  type: primary
-  notes: Біографія
-- name: Інтерв'ю з Наталею Яковенко
-  url: https://krytyka.com/
-  type: reference
-  notes: Особисті погляди
-- name: Кафедра історії НаУКМА
-  url: https://ukma.edu.ua/
-  type: reference
-  notes: Академічний контекст
 content_outline:
 - section: Вступ — Зміна парадигми
   points:
@@ -103,3 +90,18 @@ persona:
   role: Senior Lecturer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Наталя Яковенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Яковенко_Наталя_Миколаївна
+  type: primary
+  notes: Біографія
+- name: Інтерв'ю з Наталею Яковенко
+  url: https://krytyka.com/
+  type: reference
+  notes: Особисті погляди
+- name: Кафедра історії НаУКМА
+  url: https://ukma.edu.ua/
+  type: reference
+  notes: Академічний контекст
+register: академічний
+grammar: []

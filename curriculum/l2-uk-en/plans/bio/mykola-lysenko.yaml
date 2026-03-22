@@ -2,7 +2,7 @@ module: bio-048
 level: BIO
 sequence: 48
 slug: mykola-lysenko
-version: '2.0'
+version: '3.0'
 title: 'Микола Лисенко: Батько української музики'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of микола лисенко: батько української музики'
 - Evaluate the contributions of засновник національної музики
 - Trace the career and influence of останні роки та спадщина (1905-1912)
-sources:
-- name: Микола Лисенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Лисенко
-  type: primary
-  notes: Біографія, музична та громадська діяльність
-- name: Тарас Бульба (опера)
-  url: https://uk.wikipedia.org/wiki/Тарас_Бульба_(опера)
-  type: reference
-  notes: Найвідоміша опера Лисенка
-- name: Українська національна музична школа
-  url: https://uk.wikipedia.org/wiki/Українська_музична_школа
-  type: reference
-  notes: Вклад у розвиток національної музики
 content_outline:
 - section: Вступ — Засновник національної музики
   points:
@@ -102,3 +89,18 @@ persona:
   role: Ethnomusicologist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Микола Лисенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Лисенко
+  type: primary
+  notes: Біографія, музична та громадська діяльність
+- name: Тарас Бульба (опера)
+  url: https://uk.wikipedia.org/wiki/Тарас_Бульба_(опера)
+  type: reference
+  notes: Найвідоміша опера Лисенка
+- name: Українська національна музична школа
+  url: https://uk.wikipedia.org/wiki/Українська_музична_школа
+  type: reference
+  notes: Вклад у розвиток національної музики
+register: академічний
+grammar: []

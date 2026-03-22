@@ -2,7 +2,7 @@ module: hist-108
 level: HIST
 sequence: 108
 slug: syntez-trahedii
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Трагедії XX століття'
 subtitle: 'Synthesis: 20th Century Tragedies'
 focus: history
@@ -107,3 +107,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
+references: []

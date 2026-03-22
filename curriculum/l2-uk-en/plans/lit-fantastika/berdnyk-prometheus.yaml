@@ -2,7 +2,7 @@ sequence: 8
 module: lit-fantastika-008
 level: LIT.FANTASTIKA
 slug: berdnyk-prometheus
-version: '2.0'
+version: '3.0'
 title: Berdnyk Prometheus
 subtitle: Berdnyk Prometheus
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Evolutionary Philosopher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

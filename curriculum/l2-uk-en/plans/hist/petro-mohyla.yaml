@@ -2,7 +2,7 @@ module: hist-035
 level: HIST
 sequence: 35
 slug: petro-mohyla
-version: '2.0'
+version: '3.0'
 title: 'Петро Могила: Реформатор церкви'
 subtitle: 'Petro Mohyla: The Church Reformer'
 focus: history
@@ -14,13 +14,6 @@ objectives:
 - Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
 - Discuss the 'Mohylian Era' in Ukrainian history
 - Use religious and educational terminology of the 17th century
-sources:
-- name: Історія України-Руси
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: secondary
-- name: Petro Mohyla (Encyclopedia of Ukraine)
-  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
-  type: reference
 content_outline:
 - section: Вступ
   points:
@@ -38,8 +31,8 @@ content_outline:
 - section: Заснування Академії
   points:
   - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla Collegium
-  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric) to defeat the enemy with their own
-    weapons
+  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric) to defeat the enemy with their 
+    own weapons
   - Resistance from traditionalists — conservative Cossacks and clergy feared 'Latinization'
   - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]: Myth: Mohyla ''Catholicized'' education.
     Reality: He used Latin tools for Orthodox defense.'
@@ -114,3 +107,11 @@ prerequisites:
 - pravoslavna-tserkva-17
 connects_to:
 - bratstva-i-osvita
+references:
+- name: Історія України-Руси
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Petro Mohyla (Encyclopedia of Ukraine)
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
+  type: reference
+register: академічний

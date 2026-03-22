@@ -2,7 +2,7 @@ module: bio-106
 level: BIO
 sequence: 106
 slug: vasyl-vyshyvanyi
-version: '2.0'
+version: '3.0'
 title: 'Василь Вишиваний: Князь-українець'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of василь вишиваний: князь-українець'
 - Evaluate the contributions of ерцгерцог, що обрав україну
 - Trace the career and influence of національний вибір проти крові
-sources:
-- name: Вільгельм Габсбург (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
-  type: primary
-  notes: Основна біографічна інформація
-- name: Тімоті Снайдер Червоний князь
-  url: https://bookclub.ua/
-  type: reference
-  notes: Біографічне дослідження
-- name: Архіви Січових Стрільців
-  url: https://archives.gov.ua/
-  type: reference
-  notes: Документи військової служби
 content_outline:
 - section: Вступ — Ерцгерцог, що обрав Україну
   points:
@@ -103,3 +90,18 @@ persona:
   role: Royal Colonel
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Вільгельм Габсбург (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
+  type: primary
+  notes: Основна біографічна інформація
+- name: Тімоті Снайдер Червоний князь
+  url: https://bookclub.ua/
+  type: reference
+  notes: Біографічне дослідження
+- name: Архіви Січових Стрільців
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Документи військової служби
+register: академічний
+grammar: []

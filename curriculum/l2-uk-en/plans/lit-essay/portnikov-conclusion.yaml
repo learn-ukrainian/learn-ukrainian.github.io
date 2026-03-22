@@ -2,7 +2,7 @@ sequence: 40
 module: lit-essay-040
 level: LIT.ESSAY
 slug: portnikov-conclusion
-version: '2.0'
+version: '3.0'
 title: Portnikov Conclusion
 subtitle: Portnikov Conclusion
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Grand Strategist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

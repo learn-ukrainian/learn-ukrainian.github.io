@@ -2,7 +2,7 @@ module: istorio-114
 level: ISTORIO
 sequence: 114
 slug: polska-i-ukraina-symbioz
-version: '1.0'
+version: '3.0'
 title: 'Польща і Україна: Симбіоз і конфлікт'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
 - Evaluate the historical significance of 600 років разом
-sources:
-- name: Польсько-українські відносини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
-  type: reference
-  notes: Relations overview
-- name: Річ Посполита (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Річ_Посполита
-  type: reference
-  notes: Commonwealth period
-- name: Козацько-польські війни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
-  type: reference
-  notes: Cossack-Polish wars
 content_outline:
 - section: Вступ — 600 років разом
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - syntez-informatsiina-viina
 connects_to:
 - 1918-1920-viina-i-soiuz
+references:
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Relations overview
+- name: Річ Посполита (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Річ_Посполита
+  type: reference
+  notes: Commonwealth period
+- name: Козацько-польські війни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
+  type: reference
+  notes: Cossack-Polish wars
+register: академічний
+grammar: []

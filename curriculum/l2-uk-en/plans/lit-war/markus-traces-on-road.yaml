@@ -2,7 +2,7 @@ sequence: 11
 module: lit-war-011
 level: LIT.WAR
 slug: markus-traces-on-road
-version: '2.0'
+version: '3.0'
 title: Markus Traces On Road
 subtitle: Markus Traces On Road
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Pilgrim of the Frontline
 word_target: 5000
+references: []
+register: академічний
+grammar: []

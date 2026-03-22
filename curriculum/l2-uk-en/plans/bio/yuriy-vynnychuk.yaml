@@ -2,7 +2,7 @@ module: bio-152
 level: BIO
 sequence: 152
 slug: yuriy-vynnychuk
-version: '2.0'
+version: '3.0'
 title: 'Юрій Винничук: Львівський казкар'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of юрій винничук: львівський казкар'
 - Evaluate the contributions of майстер львівської містики
 - Trace the career and influence of літературна містифікація як жанр
-sources:
-- name: Юрій Винничук (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Видавництво Фоліо
-  url: https://folio.com.ua/
-  type: reference
-  notes: Бібліографія
-- name: Літературна критика
-  url: https://litakcent.com/
-  type: reference
-  notes: Аналіз творчості
 content_outline:
 - section: Вступ — Майстер львівської містики
   points:
@@ -103,3 +90,18 @@ persona:
   role: Literary Hoaxer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Винничук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Фоліо
+  url: https://folio.com.ua/
+  type: reference
+  notes: Бібліографія
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: hist-013
 level: HIST
 sequence: 13
 slug: ruska-pravda
-version: '2.0'
+version: '3.0'
 title: 'Руська Правда: Перший законодавчий кодекс'
 focus: history
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Understand the structure of Ruska Pravda
 - Analyze the social hierarchy of Rus
 - Discuss the concept of justice in Kyivan Rus
-sources:
-- name: Руська Правда (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Руська_Правда
-  type: reference
-  notes: Overview of the legal code
-- name: Текст Руської Правди
-  url: https://litopys.org.ua/oldukr2/oldukr51.htm
-  type: primary
-  notes: Original text with translation
-- name: Правда Ярослава (Коротка редакція)
-  url: https://uk.wikipedia.org/wiki/Правда_Ярослава
-  type: reference
-  notes: First version of the code
 content_outline:
 - section: Вступ
   points:
@@ -40,7 +27,8 @@ content_outline:
 - section: Правда Ярославичів та соціальна структура
   points:
   - Скасування кровної помсти — 1072 р. у Вишгороді, остаточна заміна на штрафи в казну
-  - Соціальна ієрархія (віра 80/40/5) — [!history-bite] Життя «огнищанина» (80 грн) vs смерда (5 грн); 5 грн = ціна 16 коней
+  - Соціальна ієрархія (віра 80/40/5) — [!history-bite] Життя «огнищанина» (80 грн) vs смерда (5 грн); 5 грн = ціна 16 
+    коней
   - Статус закупів і холопів — холопи (повна несвобода), закупи (боргова кабала з правом викупу)
   - Майнові права — захист меж, знаків власності; штрафи за переорювання межі
   words: 450
@@ -52,8 +40,10 @@ content_outline:
   words: 450
 - section: Деколонізаційний погляд
   points:
-  - Міф про "російське право" — [!myth-buster] Імперська крадіжка назви «Русская Правда» (з двома «с») vs оригінальна «Руська»
-  - Мовні ознаки (протоукраїнські риси) — [!culture] повноголосся (голова, бородома), закінчення -ові/-еві, кличний відмінок
+  - Міф про "російське право" — [!myth-buster] Імперська крадіжка назви «Русская Правда» (з двома «с») vs оригінальна 
+    «Руська»
+  - Мовні ознаки (протоукраїнські риси) — [!culture] повноголосся (голова, бородома), закінчення -ові/-еві, кличний 
+    відмінок
   - Європейський контекст — гуманність (відсутність смертної кари) на відміну від візантійської та московської традицій
   words: 450
 - section: 'Читання: Ярослав Мудрий — законодавець'
@@ -72,8 +62,8 @@ content_outline:
   points:
   - Візантія та Германські правди — паралелі із Салічною правдою (Lex Salica) франків
   - Велика хартія вольностей — спільна європейська логіка обмеження свавілля
-  - Контраст із Московським правом (Домострой) — [!context] «Божий суд» (ордалії) в Русі vs тортури і смертна кара в Московщині
-    (Судебник 1497)
+  - Контраст із Московським правом (Домострой) — [!context] «Божий суд» (ордалії) в Русі vs тортури і смертна кара в 
+    Московщині (Судебник 1497)
   words: 450
 - section: Жінки, Суд та Мова
   points:
@@ -139,3 +129,17 @@ grammar:
 - Conditional sentences
 module_type: history
 immersion: 100% Ukrainian
+references:
+- name: Руська Правда (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Руська_Правда
+  type: reference
+  notes: Overview of the legal code
+- name: Текст Руської Правди
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Original text with translation
+- name: Правда Ярослава (Коротка редакція)
+  url: https://uk.wikipedia.org/wiki/Правда_Ярослава
+  type: reference
+  notes: First version of the code
+register: академічний

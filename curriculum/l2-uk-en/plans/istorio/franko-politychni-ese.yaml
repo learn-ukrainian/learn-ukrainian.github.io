@@ -2,7 +2,7 @@ module: istorio-033
 level: ISTORIO
 sequence: 33
 slug: franko-politychni-ese
-version: '1.0'
+version: '3.0'
 title: 'Франко: Політичні есе'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of франко: політичні есе'
 - Evaluate the historical significance of франко як мислитель
-sources:
-- name: Іван Франко (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Франко
-  type: reference
-  notes: Biography
-- name: Поза межами можливого
-  url: https://uk.wikisource.org/wiki/Поза_межами_можливого
-  type: primary
-  notes: Key political essay
-- name: Франко-публіцист
-  url: https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка
-  type: reference
-  notes: Publicistic works overview
 content_outline:
 - section: Вступ — Франко як мислитель
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - emskyi-ukaz-tekst
 connects_to:
 - universaly-unr
+references:
+- name: Іван Франко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Франко
+  type: reference
+  notes: Biography
+- name: Поза межами можливого
+  url: https://uk.wikisource.org/wiki/Поза_межами_можливого
+  type: primary
+  notes: Key political essay
+- name: Франко-публіцист
+  url: https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка
+  type: reference
+  notes: Publicistic works overview
+register: академічний
+grammar: []

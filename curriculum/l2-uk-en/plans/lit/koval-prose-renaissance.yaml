@@ -2,7 +2,7 @@ module: lit-192
 level: LIT
 sequence: 192
 slug: koval-prose-renaissance
-version: '2.0'
+version: '3.0'
 title: Koval Prose Renaissance
 subtitle: Koval Prose Renaissance
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Koval Prose Renaissance у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Koval Prose Renaissance — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Witty Essayist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Koval Prose Renaissance — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

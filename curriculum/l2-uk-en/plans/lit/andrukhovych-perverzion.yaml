@@ -2,7 +2,7 @@ module: lit-175
 level: LIT
 sequence: 175
 slug: andrukhovych-perverzion
-version: '2.0'
+version: '3.0'
 title: Andrukhovych Perverzion
 subtitle: Andrukhovych Perverzion
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Andrukhovych Perverzion у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Andrukhovych Perverzion — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Venetian Spy
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Andrukhovych Perverzion — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

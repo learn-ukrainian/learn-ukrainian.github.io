@@ -2,7 +2,7 @@ module: bio-136
 level: BIO
 sequence: 136
 slug: alla-horska
-version: '2.0'
+version: '3.0'
 title: 'Алла Горська: Художниця-дисидентка'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of алла горська: художниця-дисидентка'
 - Evaluate the contributions of вітраж, розбитий владою
 - Trace the career and influence of душа українського модернізму
-sources:
-- name: Алла Горська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна
-  type: primary
-  notes: Biography covering artistic career and dissident activity
-- name: Музей шістдесятництва
-  url: https://60museum.org.ua/
-  type: reference
-  notes: Archives of Shistdesiatnyky movement
 content_outline:
 - section: Вступ — Вітраж, розбитий владою
   points:
@@ -98,3 +89,14 @@ persona:
   role: Mosaicist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Алла Горська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна
+  type: primary
+  notes: Biography covering artistic career and dissident activity
+- name: Музей шістдесятництва
+  url: https://60museum.org.ua/
+  type: reference
+  notes: Archives of Shistdesiatnyky movement
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-215
 level: LIT
 sequence: 215
 slug: diaspora-connections
-version: '2.0'
+version: '3.0'
 title: Diaspora Connections
 subtitle: Diaspora Connections
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Diaspora Connections у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Diaspora Connections — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Diaspora Connector
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Diaspora Connections — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

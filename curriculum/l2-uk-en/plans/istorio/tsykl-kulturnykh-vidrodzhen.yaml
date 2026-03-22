@@ -2,7 +2,7 @@ module: istorio-122
 level: ISTORIO
 sequence: 122
 slug: tsykl-kulturnykh-vidrodzhen
-version: '1.0'
+version: '3.0'
 title: 'Цикл культурних відроджень: Теорія'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
 - Evaluate the historical significance of пригнічення → відродження
-sources:
-- name: Українське національне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
-  type: reference
-  notes: National revival overview
-- name: Культурна політика (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурна_політика
-  type: reference
-  notes: Cultural policy context
 content_outline:
 - section: Вступ — Пригнічення → Відродження
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - syntez-yevrei-ukraina
 connects_to:
 - pislya-emsa-halychyna
+references:
+- name: Українське національне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
+  type: reference
+  notes: National revival overview
+- name: Культурна політика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурна_політика
+  type: reference
+  notes: Cultural policy context
+register: академічний
+grammar: []

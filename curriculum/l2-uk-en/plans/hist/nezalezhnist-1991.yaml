@@ -2,7 +2,7 @@ module: hist-121
 level: HIST
 sequence: 121
 slug: nezalezhnist-1991
-version: '2.0'
+version: '3.0'
 title: 'Україна 1991-2004: Становлення'
 subtitle: 'Ukraine 1991-2004: Formation of a State'
 focus: history
@@ -28,26 +28,28 @@ content_outline:
   points:
   - 'Леонід Кравчук: перший президент — Ideologue turned statesman; policy of ''between raindrops'' (між крапельками); avoided
     civil conflict but stalled reforms; former CPU ideologue; «Маємо те, що маємо» — phrase symbolizing the era of uncertainty'
-  - Будапештський меморандум — 5 Dec 1994; Assurances (запевнення) vs Guarantees; pressure from US/Russia; Ukraine had 3rd
-    largest nuclear arsenal
+  - Будапештський меморандум — 5 Dec 1994; Assurances (запевнення) vs Guarantees; pressure from US/Russia; Ukraine had 
+    3rd largest nuclear arsenal
   - 'Ядерне роззброєння — Ukraine had 3rd largest arsenal; traded for paper promises; analyze text: «respect sovereignty»
     vs «defend»'
-  - Економічна криза та гіперінфляція — 10,000% inflation in 1993; 'Kravchuchka' (cart) as symbol of survival; Coupons/Karbonavtsi
-    era; prices changed daily; salaries in millions of coupons; [!history-bite] — Про «кравчучку» як символ епохи виживання
+  - Економічна криза та гіперінфляція — 10,000% inflation in 1993; 'Kravchuchka' (cart) as symbol of survival; 
+    Coupons/Karbonavtsi era; prices changed daily; salaries in millions of coupons; [!history-bite] — Про «кравчучку» як
+    символ епохи виживання
   words: 850
 - section: Ера Кучми (1994-2004)
   points:
-  - Конституція 1996 року — 28 June 1996 'Constitutional Night'; result of fierce political struggle vs 'gifted' myth; adopted
-    in one night (27-28 June) under threat of parliament dissolution; [!myth-buster] — Constitution was not «gifted», result
-    of struggle
+  - Конституція 1996 року — 28 June 1996 'Constitutional Night'; result of fierce political struggle vs 'gifted' myth; 
+    adopted in one night (27-28 June) under threat of parliament dissolution; [!myth-buster] — Constitution was not 
+    «gifted», result of struggle
   - 'Грошова реформа: гривня — Sept 1996; Viktor Yushchenko (NBU); exchange 100,000:1; stabilization of economy; 1 USD = 1.76
     UAH at launch'
-  - Формування олігархічної системи — Red directors privatizing assets using Soviet connections; rise of Donetsk and Dnipro
-    clans; [!decolonization] — «Red directors» became first oligarchs using Soviet ties; direct legacy of Soviet nomenklatura
-  - Авторитарні тенденції — 'Multi-vector' foreign policy (maneuvering between West/Russia); strong presidential power; [!context]
-    — «Multi-vector» policy as sitting on two chairs
-  - «Касетний скандал» та «Україна без Кучми» — Nov 2000; Gongadze case; Melnychenko tapes; first mass protests; crackdown
-    9 March 2001; rehearsal for Orange Revolution
+  - Формування олігархічної системи — Red directors privatizing assets using Soviet connections; rise of Donetsk and 
+    Dnipro clans; [!decolonization] — «Red directors» became first oligarchs using Soviet ties; direct legacy of Soviet 
+    nomenklatura
+  - Авторитарні тенденції — 'Multi-vector' foreign policy (maneuvering between West/Russia); strong presidential power; 
+    [!context] — «Multi-vector» policy as sitting on two chairs
+  - «Касетний скандал» та «Україна без Кучми» — Nov 2000; Gongadze case; Melnychenko tapes; first mass protests; 
+    crackdown 9 March 2001; rehearsal for Orange Revolution
   words: 850
 - section: Первинні джерела
   points:
@@ -60,10 +62,10 @@ content_outline:
   points:
   - 'Радянська спадщина в економіці — Lack of closed production cycles; vulnerability to Moscow blackmail (gas wars); imperial
     myth: economy unviable without Russia; reality: collapse caused by dependency on Soviet model'
-  - Пострадянські еліти — Nomenklatura remained in power; no lustration (unlike Baltics); 'Sovok' management style; lack of
-    lustration conserved «sovok» management
-  - Незавершеність — Formal vs Mental independence; cultural space dominated by Russia until 2014; formal independence did
-    not mean mental independence
+  - Пострадянські еліти — Nomenklatura remained in power; no lustration (unlike Baltics); 'Sovok' management style; lack
+    of lustration conserved «sovok» management
+  - Незавершеність — Formal vs Mental independence; cultural space dominated by Russia until 2014; formal independence 
+    did not mean mental independence
   words: 850
 - section: 'Підсумок: До Помаранчевої революції'
   points:
@@ -113,3 +115,4 @@ grammar:
 - Політична та економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
+references: []

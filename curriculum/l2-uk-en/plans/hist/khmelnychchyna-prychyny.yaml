@@ -2,7 +2,7 @@ module: hist-051
 level: HIST
 sequence: 51
 slug: khmelnychchyna-prychyny
-version: '2.0'
+version: '3.0'
 title: 'Хмельниччина I: причини та початок'
 subtitle: 'The Khmelnytsky Uprising: Causes and Outbreak'
 focus: history
@@ -13,20 +13,11 @@ objectives:
 - Учень може пояснити соціальні та релігійні причини повстання
 - Учень може аналізувати особисту трагедію Хмельницького як каталізатор подій
 - Учень може описати перші перемоги 1648 року (Жовті Води, Корсунь)
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Classic historical account
-- name: The Khmelnytsky Uprising
-  url: https://encyclopediaofukraine.com
-  type: academic
-  notes: Modern analysis
 content_outline:
 - section: 'Вступ: На порозі великих змін'
   points:
-  - The atmosphere in Ukraine in the mid-17th century — demographic boom and colonization of the 'Wild Fields' creating a
-    passionate free population
+  - The atmosphere in Ukraine in the mid-17th century — demographic boom and colonization of the 'Wild Fields' creating 
+    a passionate free population
   - Accumulated tensions and grievances — the 'Golden Peace' (1638-1648) as an illusion or 'calm before the storm'
   - '— include hook: [!context] World context 1648: End of Thirty Years'' War in Europe vs. start of Khmelnychchyna; global
     ''General Crisis'''
@@ -35,48 +26,50 @@ content_outline:
 - section: 'Соціально-економічні причини: Земля і воля'
   points:
   - Enserfment of peasants (pansshchyna) — reached 3-5 days a week on the Right Bank
-  - Restrictions on Cossack rights and registry — Ordination of 1638 limited registry to 6,000, turning others into serfs
-  - Economic exploitation by magnates — 'leaseholders' (orendatori) controlling church rites; lack of legal protection (sva-villia)
+  - Restrictions on Cossack rights and registry — Ordination of 1638 limited registry to 6,000, turning others into 
+    serfs
+  - Economic exploitation by magnates — 'leaseholders' (orendatori) controlling church rites; lack of legal protection 
+    (sva-villia)
   - '— include hook: [!history-bite] Taxes on everything, even church rites (baptisms, funerals)'
   words: 700
 - section: Релігійні та національне гноблення
   points:
   - The Union of Brest and religious conflict — split society; Orthodox 'disuniats' often outlawed
   - Discrimination against the Orthodox Church — banned from guilds and magistrates
-  - Polonization of the Ukrainian elite — Vyshnevetsky/Ostrozky families converting to Catholicism, leaving the people 'headless'
-    until Cossacks took the lead
+  - Polonization of the Ukrainian elite — Vyshnevetsky/Ostrozky families converting to Catholicism, leaving the people 
+    'headless' until Cossacks took the lead
   - '— include hook: [!culture] Baroque consciousness: religion was identity; changing faith equaled betrayal'
   words: 700
 - section: Політична криза Речі Посполитої
   points:
   - Weakness of royal power vs. magnate anarchy — King Wladyslaw IV wanted war with Turkey to strengthen power vs Sejm
   - Failed attempts at reform by Wladyslaw IV — secret talks with Cossacks (1646) promised rights, then betrayed
-  - The 'Golden Peace' period (1638-1648) — described in Polish historiography as 'Złoty spokój', in Ukrainian as 'decade
-    of heavies oppression'
+  - The 'Golden Peace' period (1638-1648) — described in Polish historiography as 'Złoty spokój', in Ukrainian as 
+    'decade of heavies oppression'
   - '— include hook: [!myth-buster] Myth of ''Strong Poland''; reality was ''Noble Anarchy'' where the King couldn''t punish
     even one noble (Chaplynsky)'
   - '— include quote: King Wladyslaw IV allegedly saying ''You have a saber at your side'' (ius resistendi)'
   words: 700
 - section: 'Первинні джерела: Скарги та універсали'
   points:
-  - Excerpts from contemporary chronicles describing oppression — Litopys Samovydtsia on treating Cossacks 'worse than Turkish
-    slaves'
-  - Early letters of Khmelnytsky stating grievances — focus on personal tragedy (Subotiv raid) resonating with general discontent
-    ('match in a powder keg')
+  - Excerpts from contemporary chronicles describing oppression — Litopys Samovydtsia on treating Cossacks 'worse than 
+    Turkish slaves'
+  - Early letters of Khmelnytsky stating grievances — focus on personal tragedy (Subotiv raid) resonating with general 
+    discontent ('match in a powder keg')
   - '— include quote: Khmelnytsky''s Universals (''...intolerable wrongs to our people...'')'
   words: 700
 - section: 'Деколонізаційний погляд: Не бунт, а революція'
   points:
   - 'Reframing the conflict: National Liberation War vs. Civil War — organized campaign with diplomacy (Crimea alliance) and
     state-building goals, not a chaotic peasant riot (Jacquerie)'
-  - Debunking myths about 'reunification' desires — 1654 thesis back-projected to 1648; Khmelnytsky sought allies everywhere
-    (Turkey, Crimea, Sweden) for survival
+  - Debunking myths about 'reunification' desires — 1654 thesis back-projected to 1648; Khmelnytsky sought allies 
+    everywhere (Turkey, Crimea, Sweden) for survival
   - '— include hook: [!decolonization] Imperial framing vs. Ukrainian reality of statehood'
   words: 700
 - section: Читання
   points:
-  - Intro to reading tasks — adapted excerpt from Khmelnytsky's letter or Litopys Samovydtsia analyzing vocabulary of oppression
-    (kryvda, volnosti)
+  - Intro to reading tasks — adapted excerpt from Khmelnytsky's letter or Litopys Samovydtsia analyzing vocabulary of 
+    oppression (kryvda, volnosti)
   words: 800
 vocabulary_hints:
   required:
@@ -117,3 +110,12 @@ prerequisites:
 - syntez-kozatstvo-vytoky
 connects_to:
 - bohdan-khmelnytskyi
+references:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Classic historical account
+- name: The Khmelnytsky Uprising
+  url: https://encyclopediaofukraine.com
+  type: academic
+  notes: Modern analysis

@@ -2,7 +2,7 @@ sequence: 9
 module: lit-fantastika-009
 level: LIT.FANTASTIKA
 slug: rosokhovatsky-cyborgs
-version: '2.0'
+version: '3.0'
 title: Rosokhovatsky Cyborgs
 subtitle: Rosokhovatsky Cyborgs
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Syhom Designer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

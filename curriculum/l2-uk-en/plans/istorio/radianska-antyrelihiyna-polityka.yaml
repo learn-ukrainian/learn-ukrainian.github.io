@@ -2,7 +2,7 @@ module: istorio-062
 level: ISTORIO
 sequence: 62
 slug: radianska-antyrelihiyna-polityka
-version: '1.0'
+version: '3.0'
 title: Радянська антирелігійна політика
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of радянська антирелігійна політика
 - Evaluate the historical significance of війна з богом
-sources:
-- name: Антирелігійна кампанія в СРСР
-  url: https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР
-  type: reference
-  notes: Campaign overview
-- name: Руйнування храмів в Україні
-  url: https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні
-  type: reference
-  notes: Church destruction
-- name: Підпільна церква в СРСР
-  url: https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР
-  type: reference
-  notes: Underground church
 content_outline:
 - section: Вступ — Війна з Богом
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - hreko-katolytska-tserkva
 connects_to:
 - syntez-relihiina-identychnist
+references:
+- name: Антирелігійна кампанія в СРСР
+  url: https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР
+  type: reference
+  notes: Campaign overview
+- name: Руйнування храмів в Україні
+  url: https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні
+  type: reference
+  notes: Church destruction
+- name: Підпільна церква в СРСР
+  url: https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР
+  type: reference
+  notes: Underground church
+register: академічний
+grammar: []

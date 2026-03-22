@@ -2,7 +2,7 @@ module: istorio-047
 level: ISTORIO
 sequence: 47
 slug: holodomor-mekhanizmy-ii
-version: '1.0'
+version: '3.0'
 title: 'Механізми Голодомору II: Чорні дошки'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of механізми голодомору ii: чорні дошки'
 - Evaluate the historical significance of механізм знищення
-sources:
-- name: Чорні дошки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Чорні_дошки
-  type: reference
-  notes: Blacklist system
-- name: Постанова про натуральні штрафи
-  url: https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи
-  type: reference
-  notes: Natural penalties decree
-- name: Блокада сіл (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933
-  type: reference
-  notes: Village blockades
 content_outline:
 - section: Вступ — Механізм знищення
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - holodomor-mekhanizmy-i
 connects_to:
 - holodomor-heohrafiia
+references:
+- name: Чорні дошки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  type: reference
+  notes: Blacklist system
+- name: Постанова про натуральні штрафи
+  url: https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи
+  type: reference
+  notes: Natural penalties decree
+- name: Блокада сіл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933
+  type: reference
+  notes: Village blockades
+register: академічний
+grammar: []

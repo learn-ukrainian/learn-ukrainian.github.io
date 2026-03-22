@@ -2,7 +2,7 @@ module: lit-039
 level: LIT
 sequence: 39
 slug: mykhailo-starytsky
-version: '2.0'
+version: '3.0'
 title: 'Михайло Старицький: Драматург та мовотворець'
 subtitle: Mykhailo Starytsky
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Михайло Старицький: Драматург та мовотворець у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Михайло Старицький: Драматург та мовотворець — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Theater Architect
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Михайло Старицький: Драматург та мовотворець — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

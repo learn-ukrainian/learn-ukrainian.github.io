@@ -2,7 +2,7 @@ module: istorio-105
 level: ISTORIO
 sequence: 105
 slug: holodomor-ekonomika
-version: '1.0'
+version: '3.0'
 title: Голодомор як економічна зброя
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of голодомор як економічна зброя
 - Evaluate the historical significance of голод як інструмент
-sources:
-- name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
-  type: reference
-  notes: Holodomor overview
-- name: Експорт зерна під час голоду (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Експорт_зерна_під_час_Голодомору
-  type: reference
-  notes: Grain export during famine
 content_outline:
 - section: Вступ — Голод як інструмент
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - radianska-industrializatsiia
 connects_to:
 - hazova-zbroia
+references:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Holodomor overview
+- name: Експорт зерна під час голоду (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Експорт_зерна_під_час_Голодомору
+  type: reference
+  notes: Grain export during famine
+register: академічний
+grammar: []

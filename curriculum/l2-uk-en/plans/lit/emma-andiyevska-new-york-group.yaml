@@ -2,7 +2,7 @@ module: lit-168
 level: LIT
 sequence: 168
 slug: emma-andiyevska-new-york-group
-version: '2.0'
+version: '3.0'
 title: 'Емма Андієвська: Нью-Йоркська група'
 subtitle: Emma Andiyevska — New York Group Surrealism
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати сюрреалістичну поезію та прозу Андієвської
 - Дослідити Нью-Йоркську групу як діаспорний авангард
 - Зрозуміти як діаспора зберегла експериментальну українську літературу
-sources:
-- name: Емма Андієвська — тексти та критика
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -76,3 +72,9 @@ persona:
   role: Diaspora Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Емма Андієвська — тексти та критика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

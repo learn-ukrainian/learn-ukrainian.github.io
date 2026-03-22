@@ -2,7 +2,7 @@ module: istorio-095
 level: ISTORIO
 sequence: 95
 slug: zakhid-1918
-version: '1.0'
+version: '3.0'
 title: '1918-1921: Чому Антанта не допомогла УНР?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of 1918-1921: чому антанта не допомогла унр?'
 - Evaluate the historical significance of забуті союзники
-sources:
-- name: Паризька мирна конференція (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Паризька_мирна_конференція
-  type: reference
-  notes: Peace conference
-- name: Антанта (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Антанта
-  type: reference
-  notes: Allied powers
-- name: Українська місія в Парижі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_місія_в_Парижі
-  type: reference
-  notes: Ukrainian delegation
 content_outline:
 - section: Вступ — Забуті союзники
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - syntez-rozdorizhzhia
 connects_to:
 - zakhid-1945
+references:
+- name: Паризька мирна конференція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Паризька_мирна_конференція
+  type: reference
+  notes: Peace conference
+- name: Антанта (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Антанта
+  type: reference
+  notes: Allied powers
+- name: Українська місія в Парижі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_місія_в_Парижі
+  type: reference
+  notes: Ukrainian delegation
+register: академічний
+grammar: []

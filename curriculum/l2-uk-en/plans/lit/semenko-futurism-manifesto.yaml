@@ -2,7 +2,7 @@ module: lit-078
 level: LIT
 sequence: 78
 slug: semenko-futurism-manifesto
-version: '2.0'
+version: '3.0'
 title: 'Михайль Семенко: Маніфест футуризму'
 subtitle: Semenko Futurism Manifesto
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Михайль Семенко: Маніфест футуризму у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Михайль Семенко: Маніфест футуризму — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Futurist Provocateur
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Михайль Семенко: Маніфест футуризму — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

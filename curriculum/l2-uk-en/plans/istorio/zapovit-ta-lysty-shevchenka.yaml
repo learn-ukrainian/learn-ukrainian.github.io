@@ -2,7 +2,7 @@ module: istorio-030
 level: ISTORIO
 sequence: 30
 slug: zapovit-ta-lysty-shevchenka
-version: '1.0'
+version: '3.0'
 title: «Заповіт» і листи Шевченка
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of «заповіт» і листи шевченка
 - Evaluate the historical significance of шевченко як джерело
-sources:
-- name: Заповіт (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
-  type: reference
-  notes: Poem overview
-- name: Тарас Шевченко (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
-  type: reference
-  notes: Biography
-- name: Листування Шевченка
-  url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
-  type: primary
-  notes: Letters collection
 content_outline:
 - section: Вступ — Шевченко як джерело
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - knyhy-butiia-shevchenko
 connects_to:
 - valuevskyi-tsyrkuliar-tekst
+references:
+- name: Заповіт (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
+  type: reference
+  notes: Poem overview
+- name: Тарас Шевченко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: reference
+  notes: Biography
+- name: Листування Шевченка
+  url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
+  type: primary
+  notes: Letters collection
+register: академічний
+grammar: []

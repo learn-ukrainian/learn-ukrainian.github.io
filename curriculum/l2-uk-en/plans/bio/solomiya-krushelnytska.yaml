@@ -2,7 +2,7 @@ module: bio-074
 level: BIO
 sequence: 74
 slug: solomiya-krushelnytska
-version: '2.0'
+version: '3.0'
 title: 'Соломія Крушельницька: Оперна діва'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of соломія крушельницька: оперна діва'
 - Evaluate the contributions of соловейко з україни
 - Trace the career and influence of радянський період та пам'ять (1939-1952)
-sources:
-- name: Соломія Крушельницька (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Крушельницька_Соломія_Амвросіївна
-  type: primary
-  notes: Біографія, оперна кар'єра, репертуар
-- name: Львівський національний театр опери та балету
-  url: https://opera.lviv.ua
-  type: reference
-  notes: Музей Крушельницької
-- name: La Scala Archives
-  url: https://teatroallascala.org
-  type: reference
-  notes: Виступи в Ла Скала
 content_outline:
 - section: Вступ — Соловейко з України
   points:
@@ -103,3 +90,18 @@ persona:
   role: Prima Donna
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Соломія Крушельницька (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Крушельницька_Соломія_Амвросіївна
+  type: primary
+  notes: Біографія, оперна кар'єра, репертуар
+- name: Львівський національний театр опери та балету
+  url: https://opera.lviv.ua
+  type: reference
+  notes: Музей Крушельницької
+- name: La Scala Archives
+  url: https://teatroallascala.org
+  type: reference
+  notes: Виступи в Ла Скала
+register: академічний
+grammar: []

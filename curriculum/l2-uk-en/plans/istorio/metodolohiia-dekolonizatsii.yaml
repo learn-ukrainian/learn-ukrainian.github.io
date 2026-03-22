@@ -2,7 +2,7 @@ module: istorio-008
 level: ISTORIO
 sequence: 8
 slug: metodolohiia-dekolonizatsii
-version: '1.0'
+version: '3.0'
 title: Методологія деколонізації
 focus: history
 pedagogy: seminar
@@ -10,23 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of методологія деколонізації
 - Evaluate the historical significance of що таке деколонізація?
-sources:
-- name: Деколонізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Деколонізація
-  type: reference
-  notes: General concept
-- name: Постколоніальні студії
-  url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
-  type: reference
-  notes: Theoretical framework
-- name: Едвард Саїд — Орієнталізм
-  url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
-  type: reference
-  notes: Foundational postcolonial text
-- name: Тамара Гундорова — Післячорнобильська бібліотека
-  url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
-  type: reference
-  notes: Ukrainian postcolonial scholar
 content_outline:
 - section: Вступ — Що таке деколонізація?
   points:
@@ -133,3 +116,22 @@ prerequisites:
 - nova-ukrainska-istorio
 connects_to:
 - krytyka-dzherel
+references:
+- name: Деколонізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Деколонізація
+  type: reference
+  notes: General concept
+- name: Постколоніальні студії
+  url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
+  type: reference
+  notes: Theoretical framework
+- name: Едвард Саїд — Орієнталізм
+  url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
+  type: reference
+  notes: Foundational postcolonial text
+- name: Тамара Гундорова — Післячорнобильська бібліотека
+  url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
+  type: reference
+  notes: Ukrainian postcolonial scholar
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-121
 level: LIT
 sequence: 121
 slug: synthesis-3
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Горизонти епохи 3'
 subtitle: 'Intellectual Synthesis: Horizons of Era 3'
 focus: literature
@@ -64,3 +64,6 @@ prerequisites:
 - kosynka-short-fiction
 connects_to:
 - lukash-translation-as-resistance
+references: []
+register: академічний
+grammar: []

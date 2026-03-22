@@ -2,7 +2,7 @@ module: istorio-069
 level: ISTORIO
 sequence: 69
 slug: syntez-diaspora
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Ковчег нації'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: ковчег нації'
 - Evaluate the historical significance of три хвилі, одна місія
-sources:
-- name: Українська діаспора (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_діаспора
-  type: reference
-  notes: Overview
-- name: Світовий конгрес українців
-  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
-  type: reference
-  notes: Global coordination
 content_outline:
 - section: Вступ — Три хвилі, одна місія
   points:
@@ -123,3 +114,14 @@ prerequisites:
 - diaspora-naukovtsi
 connects_to:
 - halychyna-pid-avstriieyu
+references:
+- name: Українська діаспора (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  type: reference
+  notes: Overview
+- name: Світовий конгрес українців
+  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  type: reference
+  notes: Global coordination
+register: академічний
+grammar: []

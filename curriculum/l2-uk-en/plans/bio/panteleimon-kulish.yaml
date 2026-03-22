@@ -2,7 +2,7 @@ module: bio-040
 level: BIO
 sequence: 40
 slug: panteleimon-kulish
-version: '2.0'
+version: '3.0'
 title: 'Пантелеймон Куліш: Європеєць на Хуторі'
 subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Evaluate Kulish's role as the "architect" of modern Ukrainian culture alongside Shevchenko.
 - Understand the "Khutor" philosophy as a path to Europeanization.
 - Analyze the impact of "Kulishivka" and his translations on Ukrainian identity.
-sources:
-- name: Пантелеймон Куліш — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1701
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Чорна рада — текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-  type: secondary
-  notes: Головний роман для контексту
-- name: Куліш і українська орфографія
-  url: https://uk.wikipedia.org/wiki/Кулішівка
-  type: reference
-  notes: Мовознавчий контекст
 content_outline:
 - section: Вступ — Інтелектуал епохи романтизму
   points:
@@ -104,3 +91,17 @@ grammar:
 - Intellectual lexicon
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Пантелеймон Куліш — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1701
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Чорна рада — текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  type: secondary
+  notes: Головний роман для контексту
+- name: Куліш і українська орфографія
+  url: https://uk.wikipedia.org/wiki/Кулішівка
+  type: reference
+  notes: Мовознавчий контекст
+register: академічний

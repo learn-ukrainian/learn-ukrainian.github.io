@@ -2,7 +2,7 @@ module: istorio-086
 level: ISTORIO
 sequence: 86
 slug: khrushchov-shelest-tsykl
-version: '1.0'
+version: '3.0'
 title: Хрущов — Шелест — Щербицький
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of хрущов — шелест — щербицький
 - Evaluate the historical significance of ще один цикл
-sources:
-- name: Петро Шелест (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Петро_Шелест
-  type: reference
-  notes: Ukrainian leader
-- name: Володимир Щербицький (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
-  type: reference
-  notes: Successor
-- name: Десталінізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Десталінізація
-  type: reference
-  notes: Thaw period
 content_outline:
 - section: Вступ — Ще один цикл
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - radianska-ukrainizatsiia
 connects_to:
 - yanukovych-tsykl
+references:
+- name: Петро Шелест (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Петро_Шелест
+  type: reference
+  notes: Ukrainian leader
+- name: Володимир Щербицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
+  type: reference
+  notes: Successor
+- name: Десталінізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Десталінізація
+  type: reference
+  notes: Thaw period
+register: академічний
+grammar: []

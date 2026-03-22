@@ -2,7 +2,7 @@ module: bio-014
 level: BIO
 sequence: 14
 slug: roksolana
-version: '2.0'
+version: '3.0'
 title: 'Роксолана: Від рабині до султанші'
 focus: biography
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Проаналізувати біографію Роксолани як приклад соціальної мобільності
 - Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
 - Вивчити дипломатичну лексику та епістолярний стиль XVI століття
-sources:
-- name: Роксолана (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Роксолана
-  type: primary
-  notes: Biography, rise to power, influence
-- name: Сулейман I (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сулейман_I
-  type: reference
-  notes: Context of Ottoman court
-- name: Гарем (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гарем
-  type: reference
-  notes: Structure of Ottoman harem system
 content_outline:
 - section: Вступ — Найвпливовіша жінка Османської імперії
   points:
@@ -118,3 +105,17 @@ grammar:
 - Epistolary formulas
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Роксолана (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роксолана
+  type: primary
+  notes: Biography, rise to power, influence
+- name: Сулейман I (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сулейман_I
+  type: reference
+  notes: Context of Ottoman court
+- name: Гарем (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гарем
+  type: reference
+  notes: Structure of Ottoman harem system
+register: академічний

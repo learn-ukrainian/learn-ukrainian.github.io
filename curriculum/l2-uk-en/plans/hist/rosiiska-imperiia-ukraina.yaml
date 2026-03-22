@@ -2,7 +2,7 @@ module: hist-075
 level: HIST
 sequence: 75
 slug: rosiiska-imperiia-ukraina
-version: '2.0'
+version: '3.0'
 title: 'Південь України: Колонізація та міфи'
 subtitle: 'Southern Ukraine: Colonization and Myths'
 focus: history
@@ -31,7 +31,8 @@ content_outline:
   words: 400
 - section: 'Міф про "Новоросію": Анатомія імперської брехні'
   points:
-  - Походження терміна "Новоросія" та його ідеологічна функція — 1764 рік, адміністративне стирання пам'яті про Гетьманщину
+  - Походження терміна "Новоросія" та його ідеологічна функція — 1764 рік, адміністративне стирання пам'яті про 
+    Гетьманщину
   - Заперечення попереднього населення та історії — [!decolonization] міф про tabula rasa
   - Створення міфу про "незаселені землі" — ігнорування 98% українського населення (перепис 1763)
   - Сучасне використання міфу в гібридній війні — посилання на матеріали УІНП
@@ -134,3 +135,4 @@ prerequisites:
 - kinets-hetmanshchyny
 connects_to:
 - habsburzka-halichyna
+references: []

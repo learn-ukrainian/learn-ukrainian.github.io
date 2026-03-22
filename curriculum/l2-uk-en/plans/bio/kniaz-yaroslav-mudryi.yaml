@@ -2,7 +2,7 @@ module: bio-004
 level: BIO
 sequence: 4
 slug: kniaz-yaroslav-mudryi
-version: '2.0'
+version: '3.0'
 title: 'Князь Ярослав Мудрий: Законодавець'
 focus: biography
 pedagogy: seminar
@@ -12,19 +12,6 @@ objectives:
 - Analyze the impact of Ruska Pravda on medieval society.
 - Discuss the strategic importance of dynastic marriages.
 - Evaluate the cultural achievements of the "Golden Age".
-sources:
-- name: Ярослав Мудрий (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
-  type: primary
-  notes: Biography, Ruska Pravda, cultural achievements
-- name: Руська правда (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Руська_правда
-  type: primary
-  notes: Legal code details and significance
-- name: Софійський собор (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
-  type: reference
-  notes: Architectural legacy
 content_outline:
 - section: Вступ — Будівничий держави
   points:
@@ -108,3 +95,17 @@ grammar:
 - Diplomatic register
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ярослав Мудрий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+  type: primary
+  notes: Biography, Ruska Pravda, cultural achievements
+- name: Руська правда (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Руська_правда
+  type: primary
+  notes: Legal code details and significance
+- name: Софійський собор (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+  type: reference
+  notes: Architectural legacy
+register: академічний

@@ -2,7 +2,7 @@ module: lit-191
 level: LIT
 sequence: 191
 slug: koval-storinky
-version: '2.0'
+version: '3.0'
 title: Koval Storinky
 subtitle: Koval Storinky
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Koval Storinky у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Koval Storinky — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Ironical Diarist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Koval Storinky — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

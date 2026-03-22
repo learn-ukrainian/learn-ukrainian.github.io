@@ -2,7 +2,7 @@ module: bio-132
 level: BIO
 sequence: 132
 slug: kateryna-yushchenko
-version: '2.0'
+version: '3.0'
 title: 'Катерина Ющенко: Піонерка кібернетики'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of катерина ющенко: піонерка кібернетики'
 - Evaluate the contributions of мати мови програмування
 - Trace the career and influence of забутий геній
-sources:
-- name: Катерина Ющенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
-  type: primary
-  notes: Biography of the pioneering computer scientist
-- name: Інститут кібернетики ім. В.М. Глушкова НАН України
-  url: https://icyb.kiev.ua/
-  type: reference
-  notes: Institute where Yushchenko worked
 content_outline:
 - section: Вступ — Мати мови програмування
   points:
@@ -98,3 +89,14 @@ persona:
   role: Algorithm Creator
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Катерина Ющенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
+  type: primary
+  notes: Biography of the pioneering computer scientist
+- name: Інститут кібернетики ім. В.М. Глушкова НАН України
+  url: https://icyb.kiev.ua/
+  type: reference
+  notes: Institute where Yushchenko worked
+register: академічний
+grammar: []

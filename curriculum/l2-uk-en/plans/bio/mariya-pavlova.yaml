@@ -2,7 +2,7 @@ module: bio-051
 level: BIO
 sequence: 51
 slug: mariya-pavlova
-version: '2.0'
+version: '3.0'
 title: 'Марія Павлова: Видатний палеонтолог'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
 - Evaluate the contributions of жінка, що читала кістки
 - Trace the career and influence of останні роки та спадщина (1920-1938)
-sources:
-- name: Марія Павлова (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
-  type: primary
-  notes: Біографія, наукова діяльність, внесок у палеонтологію
-- name: Палеонтологія
-  url: https://uk.wikipedia.org/wiki/Палеонтологія
-  type: reference
-  notes: Наукова галузь та її методи
-- name: Жінки в науці XIX століття
-  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
-  type: reference
-  notes: Контекст жіночої участі у науці
 content_outline:
 - section: Вступ — Жінка, що читала кістки
   points:
@@ -102,3 +89,18 @@ persona:
   role: Fossil Hunter
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Марія Павлова (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
+  type: primary
+  notes: Біографія, наукова діяльність, внесок у палеонтологію
+- name: Палеонтологія
+  url: https://uk.wikipedia.org/wiki/Палеонтологія
+  type: reference
+  notes: Наукова галузь та її методи
+- name: Жінки в науці XIX століття
+  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
+  type: reference
+  notes: Контекст жіночої участі у науці
+register: академічний
+grammar: []

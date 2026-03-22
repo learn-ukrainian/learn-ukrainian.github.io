@@ -2,7 +2,7 @@ module: lit-231
 level: LIT
 sequence: 231
 slug: vaplite-literary-avant-garde
-version: '2.0'
+version: '3.0'
 word_target: 5000
 content_outline:
 - section: Вступ та контекст
@@ -31,3 +31,6 @@ objectives:
 - Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+references: []
+register: академічний
+grammar: []

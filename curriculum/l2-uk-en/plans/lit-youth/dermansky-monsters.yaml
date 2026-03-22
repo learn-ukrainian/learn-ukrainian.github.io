@@ -2,7 +2,7 @@ sequence: 14
 module: lit-youth-014
 level: LIT.JUVENILE
 slug: dermansky-monsters
-version: '2.0'
+version: '3.0'
 title: Dermansky Monsters
 subtitle: Dermansky Monsters
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Creature Caretaker
 word_target: 5000
+references: []
+register: академічний
+grammar: []

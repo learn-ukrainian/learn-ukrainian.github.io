@@ -2,7 +2,7 @@ module: istorio-043
 level: ISTORIO
 sequence: 43
 slug: akt-nezalezhnosti-1991
-version: '1.0'
+version: '3.0'
 title: 'Акт проголошення незалежності: Текст і контекст'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
 - Evaluate the historical significance of найважливіший документ
-sources:
-- name: Акт проголошення незалежності України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
-  type: reference
-  notes: Overview
-- name: Текст Акту
-  url: https://zakon.rada.gov.ua/laws/show/1427-12
-  type: primary
-  notes: Official text
-- name: Референдум 1991
-  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
-  type: reference
-  notes: Confirmation referendum
 content_outline:
 - section: Вступ — Найважливіший документ
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - memorandum-uhh
 connects_to:
 - syntez-dysydentski-dzherela
+references:
+- name: Акт проголошення незалежності України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  type: reference
+  notes: Overview
+- name: Текст Акту
+  url: https://zakon.rada.gov.ua/laws/show/1427-12
+  type: primary
+  notes: Official text
+- name: Референдум 1991
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
+  type: reference
+  notes: Confirmation referendum
+register: академічний
+grammar: []

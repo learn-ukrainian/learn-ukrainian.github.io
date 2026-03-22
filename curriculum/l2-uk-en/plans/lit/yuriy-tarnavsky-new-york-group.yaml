@@ -2,7 +2,7 @@ module: lit-169
 level: LIT
 sequence: 169
 slug: yuriy-tarnavsky-new-york-group
-version: '2.0'
+version: '3.0'
 title: 'Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи'
 subtitle: Yuriy Tarnavsky — New York Group Existentialism
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати екзистенціалістську прозу та поезію Тарнавського
 - Дослідити урбаністичну тематику як новацію в українській літературі
 - Зрозуміти діалог Тарнавського із західним модернізмом
-sources:
-- name: Юрій Тарнавський — тексти та критика
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -75,3 +71,9 @@ persona:
   role: Diaspora Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Юрій Тарнавський — тексти та критика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-057
 level: ISTORIO
 sequence: 57
 slug: syntez-rozstriliane
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Культурний геноцид'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: культурний геноцид'
 - Evaluate the historical significance of що ми дізналися
-sources:
-- name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Overview
-- name: Культурний геноцид
-  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
-  type: reference
-  notes: Concept
 content_outline:
 - section: Вступ — Що ми дізналися
   points:
@@ -124,3 +115,14 @@ prerequisites:
 - mekhanizm-znyshchennia
 connects_to:
 - khreshchennia-spadshchyna
+references:
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Overview
+- name: Культурний геноцид
+  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
+  type: reference
+  notes: Concept
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-150
 level: LIT
 sequence: 150
 slug: teliha-poetry
-version: '2.0'
+version: '3.0'
 title: Teliha Poetry
 subtitle: Teliha Poetry
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - malaniuk-poetry
 connects_to:
 - olzhych-poetry
+references: []
+register: академічний
+grammar: []

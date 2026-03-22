@@ -2,7 +2,7 @@ module: lit-209
 level: LIT
 sequence: 209
 slug: war-poetry-full-scale
-version: '2.0'
+version: '3.0'
 title: War Poetry Full Scale
 subtitle: War Poetry Full Scale
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір War Poetry Full Scale у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: War Poetry Full Scale — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Invasion Witness
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: War Poetry Full Scale — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

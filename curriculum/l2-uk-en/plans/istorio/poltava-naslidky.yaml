@@ -2,7 +2,7 @@ module: istorio-090
 level: ISTORIO
 sequence: 90
 slug: poltava-naslidky
-version: '1.0'
+version: '3.0'
 title: 'Полтава 1709: Якби Мазепа переміг?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of полтава 1709: якби мазепа переміг?'
 - Evaluate the historical significance of доля європи на одному полі
-sources:
-- name: Полтавська битва (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
-  type: reference
-  notes: Battle context
-- name: Північна війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Північна_війна
-  type: reference
-  notes: War context
-- name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-  type: reference
-  notes: Mazepa's plan
 content_outline:
 - section: Вступ — Доля Європи на одному полі
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - pereiaslav-alternatyvy
 connects_to:
 - unr-vybory
+references:
+- name: Полтавська битва (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Battle context
+- name: Північна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Північна_війна
+  type: reference
+  notes: War context
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Mazepa's plan
+register: академічний
+grammar: []

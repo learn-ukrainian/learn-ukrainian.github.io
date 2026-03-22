@@ -2,7 +2,7 @@ sequence: 7
 module: lit-fantastika-007
 level: LIT.FANTASTIKA
 slug: berdnyk-star-corsair-2
-version: '2.0'
+version: '3.0'
 title: Berdnyk Star Corsair 2
 subtitle: Berdnyk Star Corsair 2
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Galactic Rebel
 word_target: 5000
+references: []
+register: академічний
+grammar: []

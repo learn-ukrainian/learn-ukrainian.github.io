@@ -2,7 +2,7 @@ module: lit-044
 level: LIT
 sequence: 44
 slug: franko-stolen-happiness
-version: '2.0'
+version: '3.0'
 title: '«Украдене щастя»: Соціально-психологічна драма'
 subtitle: Franko Stolen Happiness
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір «Украдене щастя»: Соціально-психологічна драма у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: '«Украдене щастя»: Соціально-психологічна драма — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Tragic Hero
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: '«Украдене щастя»: Соціально-психологічна драма — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

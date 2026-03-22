@@ -2,7 +2,7 @@ sequence: 12
 module: lit-humor-012
 level: LIT.HUMOR
 slug: vynnychuk-hoaxes
-version: '2.0'
+version: '3.0'
 title: Vynnychuk Hoaxes
 subtitle: Vynnychuk Hoaxes
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Literary Mystifier
 word_target: 5000
+references: []
+register: академічний
+grammar: []

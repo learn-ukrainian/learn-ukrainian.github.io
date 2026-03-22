@@ -2,7 +2,7 @@ module: lit-198
 level: LIT
 sequence: 198
 slug: tanja-maljartschuk-prose
-version: '2.0'
+version: '3.0'
 title: Tanja Maljartschuk Prose
 subtitle: Tanja Maljartschuk Prose
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Tanja Maljartschuk Prose у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Tanja Maljartschuk Prose — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Memory Keeper
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Tanja Maljartschuk Prose — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

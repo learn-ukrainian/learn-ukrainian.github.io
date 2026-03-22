@@ -2,7 +2,7 @@ module: bio-177
 level: BIO
 sequence: 177
 slug: iryna-vilde
-version: '2.0'
+version: '3.0'
 title: 'Ірина Вільде: Метелик на шпильках'
 focus: biography
 pedagogy: immersion
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати творчий шлях Ірини Вільде як першої жінки-лауреатки Шевченківської премії
 - Дослідити стратегії виживання галицької інтелігенції під чотирма режимами
 - Оцінити внесок Вільде у розвиток української жіночої прози та феміністичної традиції
-sources:
-- name: Ірина Вільде (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ірина_Вільде
-  type: primary
-  notes: Біографія, творчість, громадянська позиція, Шевченківська премія
-- name: Жінки в ОУН та УПА
-  url: https://uk.wikipedia.org/wiki/Жінки_в_ОУН_та_УПА
-  type: reference
-  notes: Контекст жінок у національному русі
 content_outline:
 - section: Вступ — Дика і нескорена
   points:
@@ -108,3 +99,14 @@ persona:
   role: Women's Literature Specialist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ірина Вільде (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ірина_Вільде
+  type: primary
+  notes: Біографія, творчість, громадянська позиція, Шевченківська премія
+- name: Жінки в ОУН та УПА
+  url: https://uk.wikipedia.org/wiki/Жінки_в_ОУН_та_УПА
+  type: reference
+  notes: Контекст жінок у національному русі
+register: академічний
+grammar: []

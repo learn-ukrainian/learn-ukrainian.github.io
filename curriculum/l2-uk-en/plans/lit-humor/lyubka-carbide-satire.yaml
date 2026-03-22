@@ -2,7 +2,7 @@ sequence: 11
 module: lit-humor-011
 level: LIT.HUMOR
 slug: lyubka-carbide-satire
-version: '2.0'
+version: '3.0'
 title: Lyubka Carbide Satire
 subtitle: Lyubka Carbide Satire
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Border Schemer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

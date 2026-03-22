@@ -2,7 +2,7 @@ module: lit-132
 level: LIT
 sequence: 132
 slug: osmachka-prose
-version: '2.0'
+version: '3.0'
 title: Osmachka Prose
 subtitle: Osmachka Prose
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - barka-yellow-prince
 connects_to:
 - symonenko-knights
+references: []
+register: академічний
+grammar: []

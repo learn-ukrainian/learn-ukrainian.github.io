@@ -2,7 +2,7 @@ module: istorio-076
 level: ISTORIO
 sequence: 76
 slug: slobozhanshchyna-identychnist
-version: '1.0'
+version: '3.0'
 title: 'Слобожанщина: Формування ідентичності'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
 - Evaluate the historical significance of вільні землі
-sources:
-- name: Слобідська Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
-  type: reference
-  notes: Regional overview
-- name: Слобідські козацькі полки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
-  type: reference
-  notes: Cossack regiments
-- name: Харків (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харків
-  type: reference
-  notes: City history
 content_outline:
 - section: Вступ — «Слободи» — вільні землі
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - syntez-zakhidni-rehiony
 connects_to:
 - donbas-industrializatsiia
+references:
+- name: Слобідська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
+  type: reference
+  notes: Regional overview
+- name: Слобідські козацькі полки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
+  type: reference
+  notes: Cossack regiments
+- name: Харків (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харків
+  type: reference
+  notes: City history
+register: академічний
+grammar: []

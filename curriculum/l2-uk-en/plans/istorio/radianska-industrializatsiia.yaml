@@ -2,7 +2,7 @@ module: istorio-104
 level: ISTORIO
 sequence: 104
 slug: radianska-industrializatsiia
-version: '1.0'
+version: '3.0'
 title: 'Радянська індустріалізація: Хто платив?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of радянська індустріалізація: хто платив?'
 - Evaluate the historical significance of для кого будували
-sources:
-- name: Індустріалізація УРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Індустріалізація_УРСР
-  type: reference
-  notes: Soviet industrialization
-- name: Донбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Донбас
-  type: reference
-  notes: Industrial region
-- name: Колективізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
-  type: reference
-  notes: Collectivization context
 content_outline:
 - section: Вступ — Для кого будували
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - ekonomika-imperii
 connects_to:
 - holodomor-ekonomika
+references:
+- name: Індустріалізація УРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_УРСР
+  type: reference
+  notes: Soviet industrialization
+- name: Донбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Донбас
+  type: reference
+  notes: Industrial region
+- name: Колективізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  type: reference
+  notes: Collectivization context
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-041
 level: LIT
 sequence: 41
 slug: synthesis-1
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Горизонти епохи 1'
 subtitle: 'Intellectual Synthesis: Horizons of Era 1'
 focus: literature
@@ -64,3 +64,6 @@ prerequisites:
 - borys-hrinchenko
 connects_to:
 - franko-biography
+references: []
+register: академічний
+grammar: []

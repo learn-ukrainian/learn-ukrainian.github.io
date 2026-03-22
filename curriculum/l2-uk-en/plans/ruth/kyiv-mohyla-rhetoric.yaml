@@ -2,7 +2,7 @@ module: ruth-070
 level: RUTH
 sequence: 70
 slug: kyiv-mohyla-rhetoric
-version: '2.0'
+version: '3.0'
 title: Риторика Могилянки
 subtitle: Kyiv-Mohyla Rhetoric
 focus: Loci Communes — The 5 Canons
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати риторичні прийоми в публічних промовах та дебатах
 - Продукувати усні та письмові висловлювання з ефективною аргументацією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-019
 level: LIT
 sequence: 19
 slug: shevchenkos-diary
-version: '2.0'
+version: '3.0'
 title: Щоденник ("Журнал") Шевченка
 subtitle: 'Shevchenko''s Diary: The Inner World'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Understand the psychological shift in Shevchenko's diary from exile to freedom.
 - Analyze the contrast between his public image ("prophet") and private self ("human").
 - Examine his intellectual breadth (arts, technology, literature) and emotional depth.
-sources:
-- name: Щоденник Шевченка — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=44
-  type: primary
-  notes: Щоденник 1857-1858 років
-- name: Аналіз "Журналу"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=44
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Заслання Шевченка
-  url: https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка
-  type: reference
-  notes: Історичний контекст
 content_outline:
 - section: Вступ — Публічний vs приватний Шевченко
   points:
@@ -103,3 +90,17 @@ grammar:
 - Conversational Russian of 19th c.
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Щоденник Шевченка — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=44
+  type: primary
+  notes: Щоденник 1857-1858 років
+- name: Аналіз "Журналу"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=44
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Заслання Шевченка
+  url: https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка
+  type: reference
+  notes: Історичний контекст
+register: академічний

@@ -2,7 +2,7 @@ module: lit-141
 level: LIT
 sequence: 141
 slug: kostenko-garden-of-unthawed-sculptures
-version: '2.0'
+version: '3.0'
 title: Kostenko Garden Of Unthawed Sculptures
 subtitle: Kostenko Garden Of Unthawed Sculptures
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Kostenko Garden Of Unthawed Sculptures у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kostenko Garden Of Unthawed Sculptures — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Sculptor of Words
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kostenko Garden Of Unthawed Sculptures — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-116
 level: ISTORIO
 sequence: 116
 slug: volyn-i-pamiat
-version: '1.0'
+version: '3.0'
 title: 'Волинь 1943: Трагедія і контекст'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of волинь 1943: трагедія і контекст'
 - Evaluate the historical significance of найболючіша тема
-sources:
-- name: Волинська трагедія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
-  type: reference
-  notes: Volhynia tragedy
-- name: ОУН-УПА (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
-  type: reference
-  notes: UPA context
-- name: Армія Крайова (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Армія_Крайова
-  type: reference
-  notes: AK context
 content_outline:
 - section: Вступ — Найболючіша тема
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - 1918-1920-viina-i-soiuz
 connects_to:
 - syntez-polska-ukraina-2022
+references:
+- name: Волинська трагедія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+  type: reference
+  notes: Volhynia tragedy
+- name: ОУН-УПА (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+  type: reference
+  notes: UPA context
+- name: Армія Крайова (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Армія_Крайова
+  type: reference
+  notes: AK context
+register: академічний
+grammar: []

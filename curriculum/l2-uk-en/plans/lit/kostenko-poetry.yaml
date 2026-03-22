@@ -2,7 +2,7 @@ module: lit-142
 level: LIT
 sequence: 142
 slug: kostenko-poetry
-version: '2.0'
+version: '3.0'
 title: Kostenko Poetry
 subtitle: Kostenko Poetry
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Kostenko Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kostenko Poetry — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Nation's Conscience
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kostenko Poetry — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

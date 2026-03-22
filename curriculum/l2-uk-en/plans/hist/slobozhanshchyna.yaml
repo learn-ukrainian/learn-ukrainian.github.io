@@ -2,7 +2,7 @@ module: hist-038
 level: HIST
 sequence: 38
 slug: slobozhanshchyna
-version: '2.0'
+version: '3.0'
 title: 'Слобожанщина: Заселення і розвиток'
 subtitle: Українська колонізація дикого степу
 focus: history
@@ -93,3 +93,5 @@ prerequisites:
 - bukovyna-zakarpattia
 connects_to:
 - liudy-ricchi-pospolytoi
+references: []
+register: академічний

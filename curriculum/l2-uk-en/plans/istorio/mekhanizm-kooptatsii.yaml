@@ -2,7 +2,7 @@ module: istorio-081
 level: ISTORIO
 sequence: 81
 slug: mekhanizm-kooptatsii
-version: '1.0'
+version: '3.0'
 title: 'Механізм кооптації: Теоретична рамка'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of механізм кооптації: теоретична рамка'
 - Evaluate the historical significance of цикл, що повторюється
-sources:
-- name: Кооптація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кооптація
-  type: reference
-  notes: General concept
-- name: Російський імперіалізм (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
-  type: reference
-  notes: Imperial patterns
-- name: Колоніальна політика (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колоніальна_політика
-  type: reference
-  notes: Colonial patterns
 content_outline:
 - section: Вступ — Цикл, що повторюється
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - syntez-rehionalna-riznomanitnist
 connects_to:
 - pereiaslav-tsykl
+references:
+- name: Кооптація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кооптація
+  type: reference
+  notes: General concept
+- name: Російський імперіалізм (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  type: reference
+  notes: Imperial patterns
+- name: Колоніальна політика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колоніальна_політика
+  type: reference
+  notes: Colonial patterns
+register: академічний
+grammar: []

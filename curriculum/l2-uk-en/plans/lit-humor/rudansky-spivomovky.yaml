@@ -2,7 +2,7 @@ sequence: 2
 module: lit-humor-002
 level: LIT.HUMOR
 slug: rudansky-spivomovky
-version: '2.0'
+version: '3.0'
 title: Rudansky Spivomovky
 subtitle: Rudansky Spivomovky
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Folk Raconteur
 word_target: 5000
+references: []
+register: академічний
+grammar: []

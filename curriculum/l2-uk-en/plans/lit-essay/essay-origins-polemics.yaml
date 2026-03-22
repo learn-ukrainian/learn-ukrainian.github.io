@@ -2,7 +2,7 @@ sequence: 1
 module: lit-essay-001
 level: LIT.ESSAY
 slug: essay-origins-polemics
-version: '2.0'
+version: '3.0'
 title: Essay Origins Polemics
 subtitle: Essay Origins Polemics
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Debate Moderator
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: hist-067
 level: HIST
 sequence: 67
 slug: pylyp-orlyk-konstytutsiia
-version: '2.0'
+version: '3.0'
 title: Пилип Орлик і перша Конституція
 subtitle: Pylyp Orlyk and the First Constitution
 focus: history
@@ -16,8 +16,8 @@ objectives:
 content_outline:
 - section: 'Вступ: Гетьман у вигнанні'
   points:
-  - Orlyk's background and education — Czech noble origin (Barons Orlyk), Jesuit college in Vilnius, Kyiv-Mohyla Academy (pupil
-    of Stefan Yavorsky); born 1672 in Kosuta (Belarus)
+  - Orlyk's background and education — Czech noble origin (Barons Orlyk), Jesuit college in Vilnius, Kyiv-Mohyla Academy
+    (pupil of Stefan Yavorsky); born 1672 in Kosuta (Belarus)
   - 'Election as Hetman in Bendery — April 5 (16), 1710; first election in emigration; cultural hook: [!history-bite] Orlyk
     was born in Belarus (Kosuta) but became a Ukrainian Hetman'
   - The tragic context of exile — post-Poltava defeat, death of Mazepa in Bendery, alliance with Charles XII
@@ -27,25 +27,27 @@ content_outline:
   - 'Structure of the document (Pacts and Constitutions) — Full title «Пакти й Конституції прав і вольностей Війська Запорозького»;
     Preamble (historical justification), 16 articles, Oath; cultural hook: [!context] 77 years before US Constitution, 81
     years before French Constitution'
-  - Separation of powers (Hetman, Council, Court) — General Council meets 3 times/year (Christmas, Easter, Pokrova); General
-    Court independent from Hetman; Hetman limited by law
-  - Protection of social groups — protection of Cossack widows/orphans, ban on Hetman seizing land/property from Cossacks
+  - Separation of powers (Hetman, Council, Court) — General Council meets 3 times/year (Christmas, Easter, Pokrova); 
+    General Court independent from Hetman; Hetman limited by law
+  - Protection of social groups — protection of Cossack widows/orphans, ban on Hetman seizing land/property from 
+    Cossacks
   words: 700
 - section: 'Демократичні ідеї: Україна vs Європа'
   points:
   - 'Comparison with European legal thought (Locke, Montesquieu) — cultural hook: [!myth-buster] Orlyk applied separation
     of powers *before* Montesquieu''s ''Spirit of Laws'' (1748)'
-  - The uniqueness of the contract between the Hetman and the Army — 'social contract' nature vs simple 'election capitulation'
-    (pacta conventa)
+  - The uniqueness of the contract between the Hetman and the Army — 'social contract' nature vs simple 'election 
+    capitulation' (pacta conventa)
   - Anti-tyranny safeguards — Hetman cannot execute without court, cannot unilaterally control treasury (skarbnytsia)
   words: 700
 - section: Дипломатична боротьба Орлика
   points:
   - 'Anti-Moscow coalition (Sweden, Turkey, Crimea) — first European anti-Russian coalition; cultural hook: [!decolonization]
     Ukraine viewed as the ''shield of Europe'' against tyranny'
-  - Campaign of 1711 onto the Right Bank — initial success vs Tatar betrayal and looting causing loss of support and retreat
-  - Years of wandering in Europe (Thessaloniki, Paris, London) — 12 years in Thessaloniki under surveillance; seeking support
-    from Louis XV and Vatican; death in Jassy (1742)
+  - Campaign of 1711 onto the Right Bank — initial success vs Tatar betrayal and looting causing loss of support and 
+    retreat
+  - Years of wandering in Europe (Thessaloniki, Paris, London) — 12 years in Thessaloniki under surveillance; seeking 
+    support from Louis XV and Vatican; death in Jassy (1742)
   words: 700
 - section: 'Читання: Текст Конституції'
   points:
@@ -63,12 +65,12 @@ content_outline:
   words: 700
 - section: 'Деколонізаційний погляд: Правова культура'
   points:
-  - Ukrainian constitutionalism vs Russian autocracy — refuting the imperial view of the Constitution as a 'fiction' or simple
-    'pact'; Ukraine as part of European legal tradition
-  - Myth of 'anarchy' debunked — Ukrainians sought legal order (Constitution), contrary to the 'mazepynstvo' anarchy narrative
-    invented by empire
-  - Orlyk as a symbol of European Ukraine — continuity with UNR Constitution (1918) and modern Ukraine; 'Ukraine is Europe,
-    Muscovy is Asia' dichotomy
+  - Ukrainian constitutionalism vs Russian autocracy — refuting the imperial view of the Constitution as a 'fiction' or 
+    simple 'pact'; Ukraine as part of European legal tradition
+  - Myth of 'anarchy' debunked — Ukrainians sought legal order (Constitution), contrary to the 'mazepynstvo' anarchy 
+    narrative invented by empire
+  - Orlyk as a symbol of European Ukraine — continuity with UNR Constitution (1918) and modern Ukraine; 'Ukraine is 
+    Europe, Muscovy is Asia' dichotomy
   words: 800
 vocabulary_hints:
   required:
@@ -119,3 +121,6 @@ learning_outcomes:
 - Учень знає біографію Пилипа Орлика як наступника Мазепи
 connects_to:
 - hryhorii-skovoroda
+references: []
+register: академічний
+grammar: []

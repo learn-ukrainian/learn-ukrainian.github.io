@@ -2,7 +2,7 @@ sequence: 10
 module: lit-humor-010
 level: LIT.HUMOR
 slug: poderviansky-hamlet-critique
-version: '2.0'
+version: '3.0'
 title: Poderviansky Hamlet Critique
 subtitle: Poderviansky Hamlet Critique
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Underground Playwright
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 54
 module: lit-essay-054
 level: LIT.ESSAY
 slug: lutsky-diaspora-bridge
-version: '2.0'
+version: '3.0'
 title: Lutsky Diaspora Bridge
 subtitle: Lutsky Diaspora Bridge
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Diaspora Liaison
 word_target: 5000
+references: []
+register: академічний
+grammar: []

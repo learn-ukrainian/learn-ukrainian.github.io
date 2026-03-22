@@ -1,7 +1,7 @@
 module: lit-essay-049
 level: LIT.ESSAY
 slug: kis-survival-as-victory
-version: '2.0'
+version: '3.0'
 title: 'Оксана Кісь: Вижити значить перемогти'
 subtitle: Антропологія жіночого досвіду ГУЛАГу
 content_outline:
@@ -62,3 +62,6 @@ persona:
   voice: Anthropologist
   role: Gender Researcher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

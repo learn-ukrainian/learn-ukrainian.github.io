@@ -2,7 +2,7 @@ module: lit-130
 level: LIT
 sequence: 130
 slug: samchuk-maria
-version: '2.0'
+version: '3.0'
 title: Samchuk Maria
 subtitle: Samchuk Maria
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - dovzhenko-cinema-as-literature
 connects_to:
 - barka-yellow-prince
+references: []
+register: академічний
+grammar: []

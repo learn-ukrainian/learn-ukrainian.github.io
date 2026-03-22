@@ -2,7 +2,7 @@ module: bio-143
 level: BIO
 sequence: 143
 slug: vasyl-stus
-version: '2.0'
+version: '3.0'
 title: 'Василь Стус: Вертикальне стояння духу'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of василь стус: вертикальне стояння духу'
 - Evaluate the contributions of поезія як форма спротиву
 - Trace the career and influence of ціна свободи
-sources:
-- name: Василь Стус (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Архів Українського правозахисного руху
-  url: https://archive.khpg.org/
-  type: reference
-  notes: Документи дисидентського руху
-- name: Музей Василя Стуса
-  url: https://stus.museum/
-  type: reference
-  notes: Матеріали про життя та творчість
 content_outline:
 - section: Вступ — Поезія як форма спротиву
   points:
@@ -103,3 +90,18 @@ persona:
   role: Human Rights Defender
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Василь Стус (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Архів Українського правозахисного руху
+  url: https://archive.khpg.org/
+  type: reference
+  notes: Документи дисидентського руху
+- name: Музей Василя Стуса
+  url: https://stus.museum/
+  type: reference
+  notes: Матеріали про життя та творчість
+register: академічний
+grammar: []

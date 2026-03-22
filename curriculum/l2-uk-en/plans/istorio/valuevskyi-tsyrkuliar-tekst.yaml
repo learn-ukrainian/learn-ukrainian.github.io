@@ -2,7 +2,7 @@ module: istorio-031
 level: ISTORIO
 sequence: 31
 slug: valuevskyi-tsyrkuliar-tekst
-version: '1.0'
+version: '3.0'
 title: 'Валуєвський циркуляр: Повний текст'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
 - Evaluate the historical significance of заборона мови
-sources:
-- name: Валуєвський циркуляр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
-  type: reference
-  notes: Overview
-- name: Текст циркуляра
-  url: https://uk.wikisource.org/wiki/Циркуляр_Валуєва
-  type: primary
-  notes: Full text
-- name: Петро Валуєв
-  url: https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович
-  type: reference
-  notes: Author biography
 content_outline:
 - section: Вступ — Заборона мови
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - zapovit-ta-lysty-shevchenka
 connects_to:
 - emskyi-ukaz-tekst
+references:
+- name: Валуєвський циркуляр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+  type: reference
+  notes: Overview
+- name: Текст циркуляра
+  url: https://uk.wikisource.org/wiki/Циркуляр_Валуєва
+  type: primary
+  notes: Full text
+- name: Петро Валуєв
+  url: https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович
+  type: reference
+  notes: Author biography
+register: академічний
+grammar: []

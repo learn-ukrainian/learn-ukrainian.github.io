@@ -2,7 +2,7 @@ module: lit-174
 level: LIT
 sequence: 174
 slug: andrukhovych-moscoviad
-version: '2.0'
+version: '3.0'
 title: Andrukhovych Moscoviad
 subtitle: Andrukhovych Moscoviad
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Andrukhovych Moscoviad у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Andrukhovych Moscoviad — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Empire Destroyer
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Andrukhovych Moscoviad — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 3
 module: lit-hist-fic-003
 level: LIT.HIST.FIC
 slug: lepkyi-mazepa
-version: '2.0'
+version: '3.0'
 title: Lepkyi Mazepa
 subtitle: Lepkyi Mazepa
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Hetman's Secret Envoy
 word_target: 5000
+references: []
+register: академічний
+grammar: []

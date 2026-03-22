@@ -2,7 +2,7 @@ module: lit-030
 level: LIT
 sequence: 30
 slug: mykola-dzherya
-version: '2.0'
+version: '3.0'
 title: 'Микола Джеря: Епос Кріпацької Долі'
 subtitle: 'Mykola Dzherya: Epic of Serf Fate'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Зрозуміти історичний контекст кріпацтва та реформи 1861 року
 - Дослідити жанрові особливості соціальної повісті
 - Підсумувати курс української літератури від Котляревського до Нечуя
-sources:
-- name: Микола Джеря — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-  type: primary
-  notes: Для детального аналізу
-- name: Микола Джеря — скорочено
-  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
-  type: secondary
-  notes: Для повторення сюжету
-- name: Микола Джеря — бунтар
-  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
-  type: reference
-  notes: Аналіз образу
 content_outline:
 - section: Вступ — Тема кріпацтва в літературі
   points:
@@ -104,3 +91,17 @@ grammar:
 - Social protest language
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Микола Джеря — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  type: primary
+  notes: Для детального аналізу
+- name: Микола Джеря — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
+  type: secondary
+  notes: Для повторення сюжету
+- name: Микола Джеря — бунтар
+  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
+  type: reference
+  notes: Аналіз образу
+register: академічний

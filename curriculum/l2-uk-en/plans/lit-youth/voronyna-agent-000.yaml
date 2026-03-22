@@ -2,7 +2,7 @@ sequence: 28
 module: lit-youth-028
 level: LIT.JUVENILE
 slug: voronyna-agent-000
-version: '2.0'
+version: '3.0'
 title: Voronyna Agent 000
 subtitle: Voronyna Agent 000
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Secret Agent
 word_target: 5000
+references: []
+register: академічний
+grammar: []

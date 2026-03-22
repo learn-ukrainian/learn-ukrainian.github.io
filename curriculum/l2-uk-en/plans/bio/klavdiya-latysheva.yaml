@@ -2,7 +2,7 @@ module: bio-108
 level: BIO
 sequence: 108
 slug: klavdiya-latysheva
-version: '2.0'
+version: '3.0'
 title: 'Клавдія Латишева: Піонерка авіації'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of клавдія латишева: піонерка авіації'
 - Evaluate the contributions of математик, що підкорила небо і рівняння
 - Trace the career and influence of жінка без обмежень
-sources:
-- name: Клавдія Латишева (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
-  type: primary
-  notes: Biography of the mathematician and aviation pioneer
-- name: Київський національний університет
-  url: https://www.univ.kiev.ua/
-  type: reference
-  notes: University where Latysheva studied and worked
 content_outline:
 - section: Вступ — Математик, що підкорила небо і рівняння
   points:
@@ -98,3 +89,14 @@ persona:
   role: Math Professor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Клавдія Латишева (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
+  type: primary
+  notes: Biography of the mathematician and aviation pioneer
+- name: Київський національний університет
+  url: https://www.univ.kiev.ua/
+  type: reference
+  notes: University where Latysheva studied and worked
+register: академічний
+grammar: []

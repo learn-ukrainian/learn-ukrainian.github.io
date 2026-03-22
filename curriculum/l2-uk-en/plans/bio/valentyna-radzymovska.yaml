@@ -2,7 +2,7 @@ module: bio-088
 level: BIO
 sequence: 88
 slug: valentyna-radzymovska
-version: '2.0'
+version: '3.0'
 title: 'Валентина Радзимовська: Жертва терору'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of валентина радзимовська: жертва терору'
 - Evaluate the contributions of наука як жертва режиму
 - Trace the career and influence of ціна репресій для нації
-sources:
-- name: Валентина Радзимовська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
-  type: primary
-  notes: Основна біографічна інформація
-- name: Меморіал жертв репресій
-  url: https://www.reabit.org.ua/
-  type: reference
-  notes: База даних репресованих
-- name: Історія української біохімії
-  url: https://biochemistry.org.ua/
-  type: reference
-  notes: Науковий контекст
 content_outline:
 - section: Вступ — Наука як жертва режиму
   points:
@@ -103,3 +90,18 @@ persona:
   role: Biochemist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Валентина Радзимовська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Меморіал жертв репресій
+  url: https://www.reabit.org.ua/
+  type: reference
+  notes: База даних репресованих
+- name: Історія української біохімії
+  url: https://biochemistry.org.ua/
+  type: reference
+  notes: Науковий контекст
+register: академічний
+grammar: []

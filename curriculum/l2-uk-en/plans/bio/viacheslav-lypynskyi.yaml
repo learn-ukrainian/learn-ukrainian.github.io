@@ -2,7 +2,7 @@ module: bio-084
 level: BIO
 sequence: 84
 slug: viacheslav-lypynskyi
-version: '2.0'
+version: '3.0'
 title: 'В''ячеслав Липинський: Консерватор-державник'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
 - Evaluate the contributions of український консерватизм як ідея
 - Trace the career and influence of консерватизм vs народництво
-sources:
-- name: В'ячеслав Липинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Інститут В'ячеслава Липинського
-  url: https://lipynsky.org/
-  type: reference
-  notes: Наукова спадщина та дослідження
-- name: Твори Липинського
-  url: https://diasporiana.org.ua/
-  type: reference
-  notes: Повні тексти праць
 content_outline:
 - section: Вступ — Український консерватизм як ідея
   points:
@@ -103,3 +90,18 @@ persona:
   role: Monarchist Philosopher
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: В'ячеслав Липинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут В'ячеслава Липинського
+  url: https://lipynsky.org/
+  type: reference
+  notes: Наукова спадщина та дослідження
+- name: Твори Липинського
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Повні тексти праць
+register: академічний
+grammar: []

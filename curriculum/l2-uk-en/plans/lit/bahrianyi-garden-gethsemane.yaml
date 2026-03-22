@@ -2,7 +2,7 @@ module: lit-125
 level: LIT
 sequence: 125
 slug: bahrianyi-garden-gethsemane
-version: '2.0'
+version: '3.0'
 title: Bahrianyi Garden Gethsemane
 subtitle: Bahrianyi Garden Gethsemane
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Bahrianyi Garden Gethsemane у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Bahrianyi Garden Gethsemane — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Gulag Survivor
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Bahrianyi Garden Gethsemane — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-007
 level: ISTORIO
 sequence: 7
 slug: nova-ukrainska-istorio
-version: '1.0'
+version: '3.0'
 title: Нова українська історіографія після 1991
 focus: history
 pedagogy: seminar
@@ -11,23 +11,6 @@ objectives:
 - Analyze the causes and consequences of нова українська історіографія після 1991
 - Evaluate the historical significance of історія для нової держави
 - Trace the development of виклики і перспективи
-sources:
-- name: Інститут історії України НАНУ
-  url: http://history.org.ua/
-  type: reference
-  notes: Main academic institution
-- name: Український інститут національної пам'яті
-  url: https://uinp.gov.ua/
-  type: reference
-  notes: State memory policy institution
-- name: Декомунізація в Україні
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
-  type: reference
-  notes: Legal framework for historical revision
-- name: Закони про декомунізацію (2015)
-  url: https://zakon.rada.gov.ua/laws/show/317-19
-  type: primary
-  notes: Decommunization law text
 content_outline:
 - section: Вступ — Історія для нової держави
   points:
@@ -134,3 +117,22 @@ prerequisites:
 - diaspora-ta-zakhidni-istoriky
 connects_to:
 - metodolohiia-dekolonizatsii
+references:
+- name: Інститут історії України НАНУ
+  url: http://history.org.ua/
+  type: reference
+  notes: Main academic institution
+- name: Український інститут національної пам'яті
+  url: https://uinp.gov.ua/
+  type: reference
+  notes: State memory policy institution
+- name: Декомунізація в Україні
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  type: reference
+  notes: Legal framework for historical revision
+- name: Закони про декомунізацію (2015)
+  url: https://zakon.rada.gov.ua/laws/show/317-19
+  type: primary
+  notes: Decommunization law text
+register: академічний
+grammar: []

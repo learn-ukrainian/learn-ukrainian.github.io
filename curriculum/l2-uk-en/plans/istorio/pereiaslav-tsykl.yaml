@@ -2,7 +2,7 @@ module: istorio-082
 level: ISTORIO
 sequence: 82
 slug: pereiaslav-tsykl
-version: '1.0'
+version: '3.0'
 title: 'Переяславський цикл: Хмельницький → Руїна'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of переяславський цикл: хмельницький → руїна'
 - Evaluate the historical significance of класичний цикл
-sources:
-- name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
-  type: reference
-  notes: 1654 agreement
-- name: Руїна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
-  type: reference
-  notes: Ruin period
-- name: Статті Богдана Хмельницького (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
-  type: reference
-  notes: Agreement articles
 content_outline:
 - section: Вступ — Класичний цикл
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - mekhanizm-kooptatsii
 connects_to:
 - mazepa-tsykl
+references:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: 1654 agreement
+- name: Руїна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  type: reference
+  notes: Ruin period
+- name: Статті Богдана Хмельницького (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
+  type: reference
+  notes: Agreement articles
+register: академічний
+grammar: []

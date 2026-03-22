@@ -2,7 +2,7 @@ module: hist-018
 level: HIST
 sequence: 18
 slug: ludy-rusi
-version: '2.0'
+version: '3.0'
 title: 'Люди Русі: Суспільство та побут'
 focus: history
 pedagogy: CBI
@@ -12,23 +12,11 @@ objectives:
 - Identify the main social classes of Kyivan Rus
 - Understand the legal status of smerds, zakups, and kholops
 - Describe the everyday life in cities and villages
-sources:
-- name: Суспільство Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
-  type: reference
-  notes: Social structure overview
-- name: Побут населення Київської Русі
-  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
-  type: reference
-  notes: Everyday life
-- name: Руська Правда — соціальні норми
-  url: https://litopys.org.ua/oldukr2/oldukr51.htm
-  type: primary
-  notes: Legal text on social classes
 content_outline:
 - section: Розминка
   points:
-  - Demographics of Kyiv vs London — Kyiv had 50,000–100,000 inhabitants while London/Paris had 15,000–20,000; include [!history-bite]
+  - Demographics of Kyiv vs London — Kyiv had 50,000–100,000 inhabitants while London/Paris had 15,000–20,000; include 
+    [!history-bite]
   - The concept of Estate (Stan) — rights and duties defined by birth and function, not modern class structure
   - 'Vocabulary: Vira, Izgoy, Votchyna — Vira (fine replacing blood feud), Izgoy (social dropout like illiterate priest''s
     son), Votchyna (hereditary land)'
@@ -116,3 +104,17 @@ prerequisites:
 - kniazivski-usobiytsi
 connects_to:
 - rus-ta-susidy
+references:
+- name: Суспільство Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
+  type: reference
+  notes: Social structure overview
+- name: Побут населення Київської Русі
+  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
+  type: reference
+  notes: Everyday life
+- name: Руська Правда — соціальні норми
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Legal text on social classes
+register: академічний

@@ -2,7 +2,7 @@ module: lit-023
 level: LIT
 sequence: 23
 slug: black-council-plot
-version: '2.0'
+version: '3.0'
 title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
 focus: literature
@@ -12,19 +12,6 @@ word_target: 5000
 objectives:
 - 'Analyze literary techniques in чорна рада: роман'
 - Interpret themes and motifs of перший український історичний роман
-sources:
-- name: Чорна рада — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-  type: primary
-  notes: Роман для детального аналізу
-- name: Аналіз "Чорної ради"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Вальтер Скотт — вплив
-  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
-  type: reference
-  notes: Літературний контекст
 content_outline:
 - section: Вступ — Перший український історичний роман
   points:
@@ -102,3 +89,17 @@ grammar:
 - Literary Archetypes
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Чорна рада — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  type: primary
+  notes: Роман для детального аналізу
+- name: Аналіз "Чорної ради"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Вальтер Скотт — вплив
+  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
+  type: reference
+  notes: Літературний контекст
+register: академічний

@@ -2,7 +2,7 @@ module: istorio-125
 level: ISTORIO
 sequence: 125
 slug: syntez-pislya-2014
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Після 2014 і 2022'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: після 2014 і 2022'
 - Evaluate the historical significance of новий цикл
-sources:
-- name: Декомунізація в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
-  type: reference
-  notes: Decommunization
-- name: Мовна політика України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
-  type: reference
-  notes: Language policy
-- name: Культура України під час війни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культура_України
-  type: reference
-  notes: Wartime culture
 content_outline:
 - section: Вступ — Новий цикл
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - pislya-stalina-shistdesiatnyky
 connects_to:
 - kulturna-rezystentsiia
+references:
+- name: Декомунізація в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  type: reference
+  notes: Decommunization
+- name: Мовна політика України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
+  type: reference
+  notes: Language policy
+- name: Культура України під час війни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культура_України
+  type: reference
+  notes: Wartime culture
+register: академічний
+grammar: []

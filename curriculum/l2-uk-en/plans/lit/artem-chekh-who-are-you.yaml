@@ -2,7 +2,7 @@ module: lit-201
 level: LIT
 sequence: 201
 slug: artem-chekh-who-are-you
-version: '2.0'
+version: '3.0'
 title: Artem Chekh Who Are You
 subtitle: Artem Chekh Who Are You
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Artem Chekh Who Are You у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Artem Chekh Who Are You — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Soldier Memoirist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Artem Chekh Who Are You — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

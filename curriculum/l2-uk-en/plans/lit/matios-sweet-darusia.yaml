@@ -2,7 +2,7 @@ module: lit-195
 level: LIT
 sequence: 195
 slug: matios-sweet-darusia
-version: '2.0'
+version: '3.0'
 title: Matios Sweet Darusia
 subtitle: Matios Sweet Darusia
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Matios Sweet Darusia у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Matios Sweet Darusia — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Village Witness
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Matios Sweet Darusia — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

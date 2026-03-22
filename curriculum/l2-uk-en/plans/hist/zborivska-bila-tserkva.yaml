@@ -2,7 +2,7 @@ module: hist-054
 level: HIST
 sequence: 54
 slug: zborivska-bila-tserkva
-version: '2.0'
+version: '3.0'
 title: Зборівська та Білоцерківська угоди
 subtitle: The Treaties of Zboriv and Bila Tserkva
 focus: history
@@ -13,22 +13,13 @@ objectives:
 - Учень може пояснити умови Зборівського та Білоцерківського договорів
 - Учень може проаналізувати причини дипломатичних поступок Хмельницького
 - Учень може порівняти територіальні межі автономії за різними угодами
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Detailed analysis of treaties
-- name: Diplomacy of Bohdan Khmelnytsky
-  url: https://history.org.ua
-  type: reference
-  notes: International context
 content_outline:
 - section: 'Вступ: Між перемогами та миром'
   points:
   - 'Diplomatic situation after Zboriv (1649) — context of the English Revolution (execution of Charles I) and the Fronde
     in France: a world in turmoil; cultural hook: [!context]'
-  - The goals of the Hetmanate vs. the Crown — shift from seeking 'pardon' to the goal of 'liberating the Rus' people from
-    Polish bondage'
+  - The goals of the Hetmanate vs. the Crown — shift from seeking 'pardon' to the goal of 'liberating the Rus' people 
+    from Polish bondage'
   words: 550
 - section: 'Зборівський договір (1649): Перше визнання'
   points:
@@ -36,12 +27,13 @@ content_outline:
     and Chernihiv voivodeships'
   - 'Legal status of the Hetmanate — factual recognition of a separate territory and administration (Orthodox nobility only);
     engagement hook: [!history-bite] regarding the ban on Jesuit colleges'
-  - The role of the Orthodox Church — the Metropolitan of Kyiv granted a seat in the Senate (though opposed by Catholic bishops)
+  - The role of the Orthodox Church — the Metropolitan of Kyiv granted a seat in the Senate (though opposed by Catholic 
+    bishops)
   words: 550
 - section: Берестечко та поворот подій
   points:
-  - The impact of the 1651 defeat — the scale of the battle (largest in 17th-century Europe); the tactical masterpiece of
-    Bohun's retreat
+  - The impact of the 1651 defeat — the scale of the battle (largest in 17th-century Europe); the tactical masterpiece 
+    of Bohun's retreat
   - 'Shift in the balance of power — the retreat of Islam-Girey and Khmelnytsky''s captivity; engagement hook: [!myth-buster]
     on the ''Tatar betrayal'' vs. geopolitical pragmatism'
   words: 550
@@ -76,8 +68,8 @@ content_outline:
   words: 550
 - section: Спадщина угод та історична пам'ять
   points:
-  - Impact on future legal acts — Zboriv as the prototype for the Union of Hadiach (1658); the lesson that diplomacy requires
-    a strong army (Berestechko -> Bila Tserkva)
+  - Impact on future legal acts — Zboriv as the prototype for the Union of Hadiach (1658); the lesson that diplomacy 
+    requires a strong army (Berestechko -> Bila Tserkva)
   words: 600
 vocabulary_hints:
   required:
@@ -118,3 +110,12 @@ prerequisites:
 - bitva-pid-zhovtymy-vodamy
 connects_to:
 - kozatska-derzhava
+references:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Detailed analysis of treaties
+- name: Diplomacy of Bohdan Khmelnytsky
+  url: https://history.org.ua
+  type: reference
+  notes: International context

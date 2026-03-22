@@ -2,7 +2,7 @@ module: bio-076
 level: BIO
 sequence: 76
 slug: oleksandr-hrekiv
-version: '2.0'
+version: '3.0'
 title: 'Олександр Греків: Полководець УНР'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of олександр греків: полководець унр'
 - Evaluate the contributions of генерал української незалежності
 - Trace the career and influence of еміграція та спадщина (1920-1958)
-sources:
-- name: Олександр Греків (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Греків_Олександр_Петрович
-  type: primary
-  notes: Біографія, військова кар'єра, еміграція
-- name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
-  type: reference
-  notes: Дослідження Української революції
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: Військова історія УНР
 content_outline:
 - section: Вступ — Генерал української незалежності
   points:
@@ -103,3 +90,18 @@ persona:
   role: Army General
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олександр Греків (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Греків_Олександр_Петрович
+  type: primary
+  notes: Біографія, військова кар'єра, еміграція
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Дослідження Української революції
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Військова історія УНР
+register: академічний
+grammar: []

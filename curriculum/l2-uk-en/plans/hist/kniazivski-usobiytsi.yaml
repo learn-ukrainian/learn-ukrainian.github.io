@@ -2,7 +2,7 @@ module: hist-017
 level: HIST
 sequence: 17
 slug: kniazivski-usobiytsi
-version: '2.0'
+version: '3.0'
 title: Княжі усобиці та роздроблення
 focus: history
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Understand the causes of Kyivan Rus fragmentation
 - Analyze the decisions of the Liubech Congress
 - Discuss the impact of Polovtsian threat on unity
-sources:
-- name: Роздроблення Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
-  type: reference
-  notes: Overview of fragmentation
-- name: Любецький з'їзд (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
-  type: reference
-  notes: Congress that formalized division
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
 content_outline:
 - section: Розминка
   points:
@@ -34,27 +21,30 @@ content_outline:
 - section: 'Читання: Тріумвірат Ярославичів'
   points:
   - The will of Yaroslav the Wise — attempt to create a system of checks and balances; rota system breakdown
-  - Battle of Alta (1068) — [!history-bite] citizens expelled Izyaslav not for tyranny but for failure to protect; first major
-    defeat by Polovtsians
-  - Kyiv Uprising — Vseslav Polotsky released from prison ('поруба') and elected by community; precedent of 'viche' power
+  - Battle of Alta (1068) — [!history-bite] citizens expelled Izyaslav not for tyranny but for failure to protect; first
+    major defeat by Polovtsians
+  - Kyiv Uprising — Vseslav Polotsky released from prison ('поруба') and elected by community; precedent of 'viche' 
+    power
   words: 550
 - section: Любецький з'їзд (1097)
   points:
   - Every man holds his own fatherland — «Кожен хай держить отчину свою»; shift from rota system to hereditary patrimony
-  - The blinding of Vasylko — [!myth-buster] 'Unity' oath immediately followed by brutal realpolitik violation; shock to society
+  - The blinding of Vasylko — [!myth-buster] 'Unity' oath immediately followed by brutal realpolitik violation; shock to
+    society
   - Consequences of the Congress — legalization of political fragmentation (federalization)
   words: 550
 - section: Володимир Мономах
   points:
   - Crusades against Polovtsians — successful campaigns of 1103 and 1111; securing the borders
-  - Monomakh's Reforms (Statute) — social compromise after 1113 uprising; limiting interest rates ('різи') and protecting
-    debtors ('закупи')
-  - Instruction (Povchannia) — [!quote] «Не проминіть ніколи людину, не привітавши її...»; image of ideal Christian ruler-humanist
+  - Monomakh's Reforms (Statute) — social compromise after 1113 uprising; limiting interest rates ('різи') and 
+    protecting debtors ('закупи')
+  - Instruction (Povchannia) — [!quote] «Не проминіть ніколи людину, не привітавши її...»; image of ideal Christian 
+    ruler-humanist
   words: 550
 - section: Соціальна структура та Економіка
   points:
-  - Economic causes of fragmentation — [!decolonization] growth of regional capitals (Chernihiv, Halych) made them independent
-    of Kyiv
+  - Economic causes of fragmentation — [!decolonization] growth of regional capitals (Chernihiv, Halych) made them 
+    independent of Kyiv
   - Boyars, Druzhina, Smerds — distinction between free peasants (smerds) and debt-dependent (zakupy)
   - Urban growth — Kyiv remains largest (50k pop), but regional centers rise; craft and trade expansion
   words: 550
@@ -73,13 +63,13 @@ content_outline:
   points:
   - Reframing Fragmentation as Decentralization — [!perspective] not 'collapse' but evolution into confederation
   - European parallels — comparison with Holy Roman Empire or France; standard feudal stage
-  - Myth of 'Feudal Disunity' — debunking Soviet/Imperial myth of 'disaster' leading to Moscow's rise; debunking 'Joint Cradle'
-    myth
+  - Myth of 'Feudal Disunity' — debunking Soviet/Imperial myth of 'disaster' leading to Moscow's rise; debunking 'Joint 
+    Cradle' myth
   words: 550
 - section: Підсумок
   points:
-  - Legacy of the era — unity requires high political culture; internal contradictions laid groundwork for vulnerability to
-    Mongols
+  - Legacy of the era — unity requires high political culture; internal contradictions laid groundwork for vulnerability
+    to Mongols
   words: 600
 vocabulary_hints:
   required:
@@ -123,3 +113,17 @@ grammar:
 - Past tense narrative
 - Political and military terminology
 immersion: 100% Ukrainian
+references:
+- name: Роздроблення Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
+  type: reference
+  notes: Overview of fragmentation
+- name: Любецький з'їзд (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+  type: reference
+  notes: Congress that formalized division
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts
+register: академічний

@@ -2,7 +2,7 @@ module: istorio-133
 level: ISTORIO
 sequence: 133
 slug: syntez-ahentsnist
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Від жертви до суб''єкта'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
 - Evaluate the historical significance of наратив агентності
-sources:
-- name: Історія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_України
-  type: reference
-  notes: History overview
-- name: Українська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
-  type: reference
-  notes: National identity
 content_outline:
 - section: Вступ — Наратив агентності
   points:
@@ -112,3 +103,14 @@ prerequisites:
 - ukrainska-m-iaka-syla
 connects_to:
 - ukrainske-pytannia-xxi
+references:
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: History overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
+  type: reference
+  notes: National identity
+register: академічний
+grammar: []

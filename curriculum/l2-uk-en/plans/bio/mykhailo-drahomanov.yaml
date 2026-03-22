@@ -2,7 +2,7 @@ module: bio-047
 level: BIO
 sequence: 47
 slug: mykhailo-drahomanov
-version: '2.0'
+version: '3.0'
 title: 'Михайло Драгоманов: Політичний мислитель'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of михайло драгоманов: політичний мислитель'
 - Evaluate the contributions of архітектор європейської україни
 - Trace the career and influence of останні роки та спадщина (1889-1895)
-sources:
-- name: Михайло Драгоманов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Михайло_Драгоманов
-  type: primary
-  notes: Біографія, політичні погляди, вплив на культуру
-- name: Федералізм
-  url: https://uk.wikipedia.org/wiki/Федералізм
-  type: reference
-  notes: Політична концепція Драгоманова
-- name: Українофільство
-  url: https://uk.wikipedia.org/wiki/Українофільство
-  type: reference
-  notes: Рух національного пробудження
 content_outline:
 - section: Вступ — Архітектор європейської України
   points:
@@ -102,3 +89,18 @@ persona:
   role: Political Exile
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Михайло Драгоманов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Михайло_Драгоманов
+  type: primary
+  notes: Біографія, політичні погляди, вплив на культуру
+- name: Федералізм
+  url: https://uk.wikipedia.org/wiki/Федералізм
+  type: reference
+  notes: Політична концепція Драгоманова
+- name: Українофільство
+  url: https://uk.wikipedia.org/wiki/Українофільство
+  type: reference
+  notes: Рух національного пробудження
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: oes-018
 level: OES
 sequence: 18
 slug: names-identity
-version: '2.0'
+version: '3.0'
 title: Імена та ідентичність
 subtitle: Names & Identity
 focus: Christian names vs Slavic nicknames (Ніженець)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

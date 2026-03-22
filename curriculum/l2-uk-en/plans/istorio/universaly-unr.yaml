@@ -2,7 +2,7 @@ module: istorio-034
 level: ISTORIO
 sequence: 34
 slug: universaly-unr
-version: '1.0'
+version: '3.0'
 title: Універсали УНР
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of універсали унр
 - Evaluate the historical significance of чотири кроки до незалежності
-sources:
-- name: Універсали Центральної Ради (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
-  type: reference
-  notes: Overview of four Universals
-- name: Перший універсал
-  url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
-  type: primary
-  notes: First Universal text
-- name: Четвертий універсал
-  url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
-  type: primary
-  notes: Fourth Universal text
 content_outline:
 - section: Вступ — Чотири кроки до незалежності
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - franko-politychni-ese
 connects_to:
 - akt-zluki
+references:
+- name: Універсали Центральної Ради (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
+  type: reference
+  notes: Overview of four Universals
+- name: Перший універсал
+  url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
+  type: primary
+  notes: First Universal text
+- name: Четвертий універсал
+  url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
+  type: primary
+  notes: Fourth Universal text
+register: академічний
+grammar: []

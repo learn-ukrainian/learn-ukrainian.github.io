@@ -2,7 +2,7 @@ module: lit-190
 level: LIT
 sequence: 190
 slug: andijewska-magic-realism
-version: '2.0'
+version: '3.0'
 title: Andijewska Magic Realism
 subtitle: Andijewska Magic Realism
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - izdryk-poetry
 connects_to:
 - koval-storinky
+references: []
+register: академічний
+grammar: []

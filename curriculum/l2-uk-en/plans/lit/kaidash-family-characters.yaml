@@ -2,7 +2,7 @@ module: lit-027
 level: LIT
 sequence: 27
 slug: kaidash-family-characters
-version: '2.0'
+version: '3.0'
 title: 'Кайдашева сім''я: Галерея Характерів'
 subtitle: 'Kaidash Family: A Gallery of Characters'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Зрозуміти архетипи української сільської родини
 - Дослідити психологічну мотивацію героїв
 - Порівняти персонажів з попередніми творами курсу
-sources:
-- name: Кайдашева сім'я — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-  type: primary
-  notes: Для цитат і аналізу
-- name: Аналіз "Кайдашевої сім'ї"
-  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
-  type: primary
-  notes: Літературознавчий аналіз
-- name: Кайдашева сім'я — скорочено
-  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
-  type: reference
-  notes: Для швидкого повторення сюжету
 content_outline:
 - section: Вступ — Сім'я як мікрокосм
   points:
@@ -104,3 +91,17 @@ grammar:
 - Psychological motivation
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Для цитат і аналізу
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Літературознавчий аналіз
+- name: Кайдашева сім'я — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+  type: reference
+  notes: Для швидкого повторення сюжету
+register: академічний

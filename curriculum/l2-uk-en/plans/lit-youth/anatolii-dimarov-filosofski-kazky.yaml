@@ -2,7 +2,7 @@ module: lit-youth-031
 level: LIT-YOUTH
 sequence: 31
 slug: anatolii-dimarov-filosofski-kazky
-version: '2.0'
+version: '3.0'
 title: 'Анатолій Дімаров: Для чого людині серце'
 subtitle: Philosophical tales and circumventing Soviet censorship through children's allegory
 focus: literature
@@ -78,3 +78,6 @@ persona:
   role: Guardian of the Hidden Word
 module_type: literature
 immersion: 100% Ukrainian
+references: []
+register: академічний
+grammar: []

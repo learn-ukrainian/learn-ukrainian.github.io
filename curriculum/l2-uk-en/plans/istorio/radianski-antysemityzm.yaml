@@ -2,7 +2,7 @@ module: istorio-120
 level: ISTORIO
 sequence: 120
 slug: radianski-antysemityzm
-version: '1.0'
+version: '3.0'
 title: Радянський антисемітизм
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of радянський антисемітизм
 - Evaluate the historical significance of антисемітизм «без антисемітів»
-sources:
-- name: Антисемітизм в СРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Антисемітизм_в_СРСР
-  type: reference
-  notes: Soviet antisemitism
-- name: Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бабин_Яр
-  type: reference
-  notes: Babi Yar memory suppression
-- name: «Справа лікарів» (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Справа_лікарів
-  type: reference
-  notes: Doctors' plot
 content_outline:
 - section: Вступ — Антисемітизм «без антисемітів»
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - holokost-v-ukraini
 connects_to:
 - syntez-yevrei-ukraina
+references:
+- name: Антисемітизм в СРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Антисемітизм_в_СРСР
+  type: reference
+  notes: Soviet antisemitism
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar memory suppression
+- name: «Справа лікарів» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Справа_лікарів
+  type: reference
+  notes: Doctors' plot
+register: академічний
+grammar: []

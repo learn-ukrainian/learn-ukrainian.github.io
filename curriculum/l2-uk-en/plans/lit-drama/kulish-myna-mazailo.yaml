@@ -2,7 +2,7 @@ sequence: 9
 module: lit-drama-009
 level: LIT
 slug: kulish-myna-mazailo
-version: '2.0'
+version: '3.0'
 title: 'Микола Куліш: «Мина Мазайло» — філологічна комедія'
 subtitle: Kulish Myna Mazailo
 content_outline:
@@ -67,19 +67,20 @@ prerequisites:
 connects_to:
 - lit-101
 module_type: literature
-sources:
-- name: 'Микола Куліш: «Мина Мазайло» — філологічна комедія — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.3 Executed Renaissance 1917-1933
 objectives:
-- 'Проаналізувати твір Микола Куліш: «Мина Мазайло» — філологічна комедія у контексті
-  епохи'
+- 'Проаналізувати твір Микола Куліш: «Мина Мазайло» — філологічна комедія у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
 persona:
   voice: Senior Philologist & Critic
   role: Philological Satirist
 word_target: 5000
+references:
+- name: 'Микола Куліш: «Мина Мазайло» — філологічна комедія — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

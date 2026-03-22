@@ -2,7 +2,7 @@ module: bio-057
 level: BIO
 sequence: 57
 slug: olha-kobylianska
-version: '2.0'
+version: '3.0'
 title: 'Ольга Кобилянська: Модерністка і феміністка'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of ольга кобилянська: модерністка і феміністка'
 - Evaluate the contributions of орлиця буковини
 - Trace the career and influence of останні роки та спадщина (1914-1942)
-sources:
-- name: Ольга Кобилянська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кобилянська_Ольга_Юліанівна
-  type: primary
-  notes: Біографія, творчість, світогляд
-- name: Музей Ольги Кобилянської (Чернівці)
-  url: https://kobylanska.cv.ua
-  type: reference
-  notes: Меморіальний музей та архів
-- name: Інститут літератури НАНУ
-  url: https://ilnan.gov.ua
-  type: reference
-  notes: Літературознавчі дослідження
 content_outline:
 - section: Вступ — Орлиця Буковини
   points:
@@ -103,3 +90,18 @@ persona:
   role: Salon Hostess
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ольга Кобилянська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кобилянська_Ольга_Юліанівна
+  type: primary
+  notes: Біографія, творчість, світогляд
+- name: Музей Ольги Кобилянської (Чернівці)
+  url: https://kobylanska.cv.ua
+  type: reference
+  notes: Меморіальний музей та архів
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
+register: академічний
+grammar: []

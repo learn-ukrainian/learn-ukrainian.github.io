@@ -2,19 +2,12 @@ module: bio-166
 level: BIO
 sequence: 166
 slug: oleg-sentsov
-version: '2.0'
+version: '3.0'
 title: 'Олег Сенцов: Режисер власної долі та воїн'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Олег Сенцов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
-  type: primary
-- name: Детектор Медіа
-  url: https://detector.media
-  type: secondary
 content_outline:
 - section: Вступ — Людина, яка не злякалася імперії
   points:
@@ -81,3 +74,12 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Творчість та опір: «Носоріг» і філософія незламності» у власній мовній практиці'
+references:
+- name: Олег Сенцов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
+  type: primary
+- name: Детектор Медіа
+  url: https://detector.media
+  type: secondary
+register: академічний
+grammar: []

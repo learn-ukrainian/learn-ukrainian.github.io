@@ -2,7 +2,7 @@ module: bio-008
 level: BIO
 sequence: 8
 slug: roman-mstyslavych
-version: '2.0'
+version: '3.0'
 title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
 subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Analyze the political strategy of uniting Galicia and Volhynia
 - Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
 - Master vocabulary related to medieval state formation
-sources:
-- name: Роман Мстиславич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
-  type: primary
-  notes: Biography, military campaigns, unification of principalities
-- name: Галицько-Волинське князівство
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
-  type: primary
-  notes: Context for state formation
-- name: Галицько-Волинський літопис
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
-  type: reference
-  notes: Primary chronicle source
 content_outline:
 - section: Вступ — Самодержець усієї Русі
   points:
@@ -119,3 +106,17 @@ grammar:
 - Participial constructions
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Роман Мстиславич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+  type: primary
+  notes: Biography, military campaigns, unification of principalities
+- name: Галицько-Волинське князівство
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  type: primary
+  notes: Context for state formation
+- name: Галицько-Волинський літопис
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Primary chronicle source
+register: академічний

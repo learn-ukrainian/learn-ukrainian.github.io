@@ -2,7 +2,7 @@ module: bio-153
 level: BIO
 sequence: 153
 slug: kvitka-tsisyk
-version: '2.0'
+version: '3.0'
 title: 'Квітка Цісик: Голос української діаспори'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of квітка цісик: голос української діаспори'
 - Evaluate the contributions of голос, що повернув україну американцям
 - Trace the career and influence of голос української душі
-sources:
-- name: Квітка Цісик (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
-  type: primary
-  notes: Biography of the Ukrainian-American singer
-- name: Kvitka Cisyk Official
-  url: https://www.kvitka.com/
-  type: reference
-  notes: Official site with discography and biography
 content_outline:
 - section: Вступ — Голос, що повернув Україну американцям
   points:
@@ -98,3 +89,14 @@ persona:
   role: Diaspora Muse
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Квітка Цісик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
+  type: primary
+  notes: Biography of the Ukrainian-American singer
+- name: Kvitka Cisyk Official
+  url: https://www.kvitka.com/
+  type: reference
+  notes: Official site with discography and biography
+register: академічний
+grammar: []

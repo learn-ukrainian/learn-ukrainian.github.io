@@ -2,7 +2,7 @@ module: bio-070
 level: BIO
 sequence: 70
 slug: yulian-bachynskyi
-version: '2.0'
+version: '3.0'
 title: 'Юліан Бачинський: Теоретик незалежності'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of юліан бачинський: теоретик незалежності'
 - Evaluate the contributions of пророк незалежності
 - Trace the career and influence of ідеї, що випереджають час
-sources:
-- name: Юліан Бачинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Україна irredenta
-  url: https://diasporiana.org.ua/
-  type: reference
-  notes: Головна праця
-- name: Історія української політичної думки
-  url: https://litopys.org.ua/
-  type: reference
-  notes: Контекст політичної думки
 content_outline:
 - section: Вступ — Пророк незалежності
   points:
@@ -103,3 +90,18 @@ persona:
   role: Marxist Theorist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юліан Бачинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Україна irredenta
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Головна праця
+- name: Історія української політичної думки
+  url: https://litopys.org.ua/
+  type: reference
+  notes: Контекст політичної думки
+register: академічний
+grammar: []

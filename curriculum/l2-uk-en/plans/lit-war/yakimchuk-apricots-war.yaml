@@ -2,7 +2,7 @@ sequence: 19
 module: lit-war-019
 level: LIT.WAR
 slug: yakimchuk-apricots-war
-version: '2.0'
+version: '3.0'
 title: Yakimchuk Apricots War
 subtitle: Yakimchuk Apricots War
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Geologist of Loss
 word_target: 5000
+references: []
+register: академічний
+grammar: []

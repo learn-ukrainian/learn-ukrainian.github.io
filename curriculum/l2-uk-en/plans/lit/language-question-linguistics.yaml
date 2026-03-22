@@ -2,7 +2,7 @@ module: lit-024
 level: LIT
 sequence: 24
 slug: language-question-linguistics
-version: '2.0'
+version: '3.0'
 title: Мовне питання
 subtitle: The Language Question
 focus: linguistics
@@ -12,19 +12,6 @@ word_target: 5000
 objectives:
 - Understand and apply мовне питання
 - Analyze and evaluate це політика?
-sources:
-- name: Кулішівка — стаття
-  url: https://uk.wikipedia.org/wiki/Кулішівка
-  type: primary
-  notes: Історія правопису
-- name: Історія українського правопису
-  url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
-  type: secondary
-  notes: Ширший контекст
-- name: Валуєвський циркуляр
-  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
-  type: reference
-  notes: Політичний контекст
 content_outline:
 - section: Вступ — Чому правопис — це політика?
   points:
@@ -103,3 +90,17 @@ grammar:
 - Historical Terminology
 module_type: linguistics
 immersion: 100% Ukrainian
+references:
+- name: Кулішівка — стаття
+  url: https://uk.wikipedia.org/wiki/Кулішівка
+  type: primary
+  notes: Історія правопису
+- name: Історія українського правопису
+  url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
+  type: secondary
+  notes: Ширший контекст
+- name: Валуєвський циркуляр
+  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+  type: reference
+  notes: Політичний контекст
+register: академічний

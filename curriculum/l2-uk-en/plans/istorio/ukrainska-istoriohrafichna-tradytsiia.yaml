@@ -2,7 +2,7 @@ module: istorio-002
 level: ISTORIO
 sequence: 2
 slug: ukrainska-istoriohrafichna-tradytsiia
-version: '1.0'
+version: '3.0'
 title: Українська історіографічна традиція
 focus: history
 pedagogy: seminar
@@ -10,23 +10,6 @@ word_target: 5000
 objectives:
 - Trace the evolution of Ukrainian historical thought
 - Assess the contribution of Mykhailo Hrushevsky
-sources:
-- name: Михайло Грушевський (біографія)
-  url: https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович
-  type: reference
-  notes: Key figure, founder of modern Ukrainian historiography
-- name: Історія України-Руси (повний текст)
-  url: https://litopys.org.ua/hrushukr/ihu.htm
-  type: primary
-  notes: Hrushevsky's magnum opus
-- name: Дмитро Дорошенко
-  url: https://uk.wikipedia.org/wiki/Дорошенко_Дмитро_Іванович
-  type: reference
-  notes: Diaspora historian, popularizer
-- name: Наталія Полонська-Василенко
-  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
-  type: reference
-  notes: Key diaspora historian
 content_outline:
 - section: Вступ — Чому українська історіографія особлива?
   points:
@@ -128,3 +111,22 @@ prerequisites:
 - shcho-take-istorio
 connects_to:
 - rosiiska-imperialna-istorio
+references:
+- name: Михайло Грушевський (біографія)
+  url: https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович
+  type: reference
+  notes: Key figure, founder of modern Ukrainian historiography
+- name: Історія України-Руси (повний текст)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
+  type: primary
+  notes: Hrushevsky's magnum opus
+- name: Дмитро Дорошенко
+  url: https://uk.wikipedia.org/wiki/Дорошенко_Дмитро_Іванович
+  type: reference
+  notes: Diaspora historian, popularizer
+- name: Наталія Полонська-Василенко
+  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  type: reference
+  notes: Key diaspora historian
+register: академічний
+grammar: []

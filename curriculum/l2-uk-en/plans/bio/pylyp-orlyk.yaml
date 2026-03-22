@@ -2,7 +2,7 @@ module: bio-031
 level: BIO
 sequence: 31
 slug: pylyp-orlyk
-version: '2.0'
+version: '3.0'
 title: 'Пилип Орлик: Автор першої конституції'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити державницький внесок Пилипа Орлика
 - Проаналізувати основні положення Конституції 1710 року
 - Дослідити роль української політичної еміграції XVIII століття
-sources:
-- name: Пилип Орлик (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
-  type: primary
-  notes: Biography, Constitution of 1710, exile
-- name: Конституція Пилипа Орлика
-  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
-  type: primary
-  notes: Text and analysis of Constitution
 content_outline:
 - section: Вступ — Батько українського конституціоналізму
   points:
@@ -106,3 +97,14 @@ persona:
   role: Constitution Drafter
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Пилип Орлик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  type: primary
+  notes: Biography, Constitution of 1710, exile
+- name: Конституція Пилипа Орлика
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  type: primary
+  notes: Text and analysis of Constitution
+register: академічний
+grammar: []

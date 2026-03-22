@@ -2,7 +2,7 @@ sequence: 24
 module: lit-essay-024
 level: LIT.ESSAY
 slug: shevelov-moscow-maros
-version: '2.0'
+version: '3.0'
 title: Shevelov Moscow Maros
 subtitle: Shevelov Moscow Maros
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Empire Watcher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

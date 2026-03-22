@@ -2,7 +2,7 @@ module: bio-138
 level: BIO
 sequence: 138
 slug: lina-kostenko
-version: '2.0'
+version: '3.0'
 title: 'Ліна Костенко: Королева поезії'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of ліна костенко: королева поезії'
 - Evaluate the contributions of голос, що не змовкає
 - Trace the career and influence of поетика та філософія
-sources:
-- name: Ліна Костенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ліна_Костенко
-  type: primary
-  notes: Біографія, творчість, громадська позиція
-- name: Маруся Чурай
-  url: https://uk.wikipedia.org/wiki/Маруся_Чурай_(роман)
-  type: reference
-  notes: Історичний роман у віршах
-- name: Шістдесятництво
-  url: https://uk.wikipedia.org/wiki/Шістдесятники
-  type: reference
-  notes: Літературний рух та роль Костенко
 content_outline:
 - section: Вступ — Голос, що не змовкає
   points:
@@ -102,3 +89,18 @@ persona:
   role: Moral Authority
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ліна Костенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ліна_Костенко
+  type: primary
+  notes: Біографія, творчість, громадська позиція
+- name: Маруся Чурай
+  url: https://uk.wikipedia.org/wiki/Маруся_Чурай_(роман)
+  type: reference
+  notes: Історичний роман у віршах
+- name: Шістдесятництво
+  url: https://uk.wikipedia.org/wiki/Шістдесятники
+  type: reference
+  notes: Літературний рух та роль Костенко
+register: академічний
+grammar: []

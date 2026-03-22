@@ -2,7 +2,7 @@ sequence: 11
 module: lit-youth-011
 level: LIT.JUVENILE
 slug: rutkivsky-dzhury
-version: '2.0'
+version: '3.0'
 title: Rutkivsky Dzhury
 subtitle: Rutkivsky Dzhury
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cossack Scout
 word_target: 5000
+references: []
+register: академічний
+grammar: []

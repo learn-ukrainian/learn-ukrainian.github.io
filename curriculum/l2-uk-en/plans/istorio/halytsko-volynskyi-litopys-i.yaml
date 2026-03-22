@@ -2,7 +2,7 @@ module: istorio-015
 level: ISTORIO
 sequence: 15
 slug: halytsko-volynskyi-litopys-i
-version: '1.0'
+version: '3.0'
 title: 'Галицько-Волинський літопис I: Про Данила'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of галицько-волинський літопис i: про данила'
 - Evaluate the historical significance of літопис королівства
-sources:
-- name: Галицько-Волинський літопис (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
-  type: reference
-  notes: Overview
-- name: Галицько-Волинський літопис (текст)
-  url: https://litopys.org.ua/hvlitop/hvl.htm
-  type: primary
-  notes: Full text
-- name: Данило Галицький
-  url: https://uk.wikipedia.org/wiki/Данило_Романович
-  type: reference
-  notes: King Danylo biography
 content_outline:
 - section: Вступ — Літопис королівства
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - slovo-o-polku-ihorevim
 connects_to:
 - halytsko-volynskyi-litopys-ii
+references:
+- name: Галицько-Волинський літопис (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Overview
+- name: Галицько-Волинський літопис (текст)
+  url: https://litopys.org.ua/hvlitop/hvl.htm
+  type: primary
+  notes: Full text
+- name: Данило Галицький
+  url: https://uk.wikipedia.org/wiki/Данило_Романович
+  type: reference
+  notes: King Danylo biography
+register: академічний
+grammar: []

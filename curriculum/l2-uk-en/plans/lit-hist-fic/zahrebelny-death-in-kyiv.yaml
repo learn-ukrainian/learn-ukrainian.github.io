@@ -2,7 +2,7 @@ sequence: 7
 module: lit-hist-fic-007
 level: LIT.HIST.FIC
 slug: zahrebelny-death-in-kyiv
-version: '2.0'
+version: '3.0'
 title: Zahrebelny Death In Kyiv
 subtitle: Zahrebelny Death In Kyiv
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Kyivan Rus Architect
 word_target: 5000
+references: []
+register: академічний
+grammar: []

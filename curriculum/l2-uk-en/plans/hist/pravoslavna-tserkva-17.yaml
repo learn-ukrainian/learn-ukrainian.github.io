@@ -2,7 +2,7 @@ module: hist-034
 level: HIST
 sequence: 34
 slug: pravoslavna-tserkva-17
-version: '2.0'
+version: '3.0'
 title: Православна церква XVII століття
 subtitle: 'The Orthodox Church in 17th Century: Struggle for Survival'
 focus: history
@@ -98,3 +98,4 @@ prerequisites:
 - beresteyska-uniia
 connects_to:
 - petro-mohyla
+references: []

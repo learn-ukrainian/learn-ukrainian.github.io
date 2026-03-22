@@ -2,7 +2,7 @@ module: lit-009
 level: LIT
 sequence: 9
 slug: ethnography
-version: '2.0'
+version: '3.0'
 title: 'Етнографія як Література: Український Світ Квітки'
 subtitle: 'LIT-009: Обряд як Сюжетний Каркас'
 focus: culture
@@ -13,19 +13,6 @@ objectives:
 - Analyze the role of rituals in Kvitka's prose
 - Compare wedding and funeral rites in "Marusya"
 - Evaluate the ethnographic accuracy of Kvitka's works
-sources:
-- name: Маруся — весілля та похорон
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-  type: primary
-  notes: Етнографічні описи в повісті
-- name: Сватання на Гончарівці
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=253
-  type: primary
-  notes: Весільний обряд у п'єсі
-- name: Українські народні обряди
-  url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
-  type: reference
-  notes: Етнографічний контекст
 content_outline:
 - section: Вступ — Обряд як структура оповіді
   points:
@@ -106,3 +93,17 @@ grammar:
 - Symbolism of material culture (clothing, food)
 module_type: culture
 immersion: 100% Ukrainian
+references:
+- name: Маруся — весілля та похорон
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  type: primary
+  notes: Етнографічні описи в повісті
+- name: Сватання на Гончарівці
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=253
+  type: primary
+  notes: Весільний обряд у п'єсі
+- name: Українські народні обряди
+  url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
+  type: reference
+  notes: Етнографічний контекст
+register: академічний

@@ -2,7 +2,7 @@ module: istorio-089
 level: ISTORIO
 sequence: 89
 slug: pereiaslav-alternatyvy
-version: '1.0'
+version: '3.0'
 title: 'Переяслав 1654: Які були альтернативи?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of переяслав 1654: які були альтернативи?'
 - Evaluate the historical significance of «що якби...»
-sources:
-- name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
-  type: reference
-  notes: 1654 context
-- name: Хмельниччина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хмельниччина
-  type: reference
-  notes: War context
-- name: Богдан Хмельницький (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
-  type: reference
-  notes: Decision-maker
 content_outline:
 - section: Вступ — «Що якби...»
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - syntez-tsykl-zrady
 connects_to:
 - poltava-naslidky
+references:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: 1654 context
+- name: Хмельниччина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  type: reference
+  notes: War context
+- name: Богдан Хмельницький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: reference
+  notes: Decision-maker
+register: академічний
+grammar: []

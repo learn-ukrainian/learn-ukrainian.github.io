@@ -2,7 +2,7 @@ module: lit-123
 level: LIT
 sequence: 123
 slug: translation-as-cultural-weapon
-version: '2.0'
+version: '3.0'
 title: Translation As Cultural Weapon
 subtitle: Translation As Cultural Weapon
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Translation As Cultural Weapon у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Translation As Cultural Weapon — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Cultural Weaponizer
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Translation As Cultural Weapon — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

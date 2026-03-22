@@ -2,7 +2,7 @@ module: bio-167
 level: BIO
 sequence: 167
 slug: yuriy-ruf
-version: '2.0'
+version: '3.0'
 title: Юрій Руф
 subtitle: Юрій Руф
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - oleg-sentsov
 connects_to:
 - oleksandra-matviichuk
+references: []
+register: академічний
+grammar: []

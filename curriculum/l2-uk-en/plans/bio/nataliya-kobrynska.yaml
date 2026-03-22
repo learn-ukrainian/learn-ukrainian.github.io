@@ -2,7 +2,7 @@ module: bio-053
 level: BIO
 sequence: 53
 slug: nataliya-kobrynska
-version: '2.0'
+version: '3.0'
 title: 'Наталія Кобринська: Піонерка фемінізму'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of наталія кобринська: піонерка фемінізму'
 - Evaluate the contributions of народження українського фемінізму
 - Trace the career and influence of останні роки та спадщина (1893-1920)
-sources:
-- name: Наталія Кобринська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна
-  type: primary
-  notes: Біографія, літературна та громадська діяльність
-- name: Франко та жіночий рух
-  url: https://franko.lnu.edu.ua
-  type: reference
-  notes: Співпраця з Іваном Франком
-- name: Архів жіночого руху
-  url: https://uma.lvivcenter.org
-  type: reference
-  notes: Матеріали про «Перший вінок»
 content_outline:
 - section: Вступ — Народження українського фемінізму
   points:
@@ -103,3 +90,18 @@ persona:
   role: Feminist Pioneer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Наталія Кобринська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна
+  type: primary
+  notes: Біографія, літературна та громадська діяльність
+- name: Франко та жіночий рух
+  url: https://franko.lnu.edu.ua
+  type: reference
+  notes: Співпраця з Іваном Франком
+- name: Архів жіночого руху
+  url: https://uma.lvivcenter.org
+  type: reference
+  notes: Матеріали про «Перший вінок»
+register: академічний
+grammar: []

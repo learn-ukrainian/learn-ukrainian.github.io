@@ -2,7 +2,7 @@ module: lit-104
 level: LIT
 sequence: 104
 slug: domontovych-dr-seraphicus
-version: '2.0'
+version: '3.0'
 title: Domontovych Dr Seraphicus
 subtitle: Domontovych Dr Seraphicus
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Domontovych Dr Seraphicus у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Domontovych Dr Seraphicus — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Rational Lover
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Domontovych Dr Seraphicus — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

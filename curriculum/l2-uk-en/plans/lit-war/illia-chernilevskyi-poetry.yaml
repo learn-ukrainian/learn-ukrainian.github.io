@@ -2,7 +2,7 @@ sequence: 25
 module: lit-war-025
 level: LIT.WAR
 slug: illia-chernilevskyi-poetry
-version: '2.0'
+version: '3.0'
 title: 'Ілля Чернілевський: Поезія несправдженого майбуття'
 subtitle: 'Ілля Чернілевський: Поезія несправдженого майбуття'
 content_outline:
@@ -40,10 +40,12 @@ pedagogy: seminar
 immersion: 100% Ukrainian
 phase: Executed Renaissance 2.0
 objectives:
-- 'Дослідити життя та внесок Ілля Чернілевський: Поезія несправдженого майбуття у
-  сучасну українську культуру'
+- 'Дослідити життя та внесок Ілля Чернілевський: Поезія несправдженого майбуття у сучасну українську культуру'
 - Проаналізувати історичну тяглість російських репресій проти української інтелігенції
 persona:
   voice: Senior Specialist
   role: Prophet of the Unlived Future
 word_target: 5000
+references: []
+register: академічний
+grammar: []

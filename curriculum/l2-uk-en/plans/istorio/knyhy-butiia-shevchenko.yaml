@@ -2,7 +2,7 @@ module: istorio-029
 level: ISTORIO
 sequence: 29
 slug: knyhy-butiia-shevchenko
-version: '1.0'
+version: '3.0'
 title: 'Книги Буття: Шевченко та Кирило-Мефодіївці'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
 - Evaluate the historical significance of перша політична програма
-sources:
-- name: Кирило-Мефодіївське братство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-  type: reference
-  notes: Brotherhood overview
-- name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-  type: reference
-  notes: Brotherhood manifesto
-- name: Текст "Книг буття"
-  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
-  type: primary
-  notes: Full text
 content_outline:
 - section: Вступ — Перша політична програма
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - syntez-kozatski-dzherela
 connects_to:
 - zapovit-ta-lysty-shevchenka
+references:
+- name: Кирило-Мефодіївське братство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: reference
+  notes: Brotherhood overview
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: reference
+  notes: Brotherhood manifesto
+- name: Текст "Книг буття"
+  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
+  type: primary
+  notes: Full text
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-131
 level: LIT
 sequence: 131
 slug: barka-yellow-prince
-version: '2.0'
+version: '3.0'
 title: Barka Yellow Prince
 subtitle: Barka Yellow Prince
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - samchuk-maria
 connects_to:
 - osmachka-prose
+references: []
+register: академічний
+grammar: []

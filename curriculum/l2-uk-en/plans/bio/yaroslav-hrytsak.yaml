@@ -2,7 +2,7 @@ module: bio-158
 level: BIO
 sequence: 158
 slug: yaroslav-hrytsak
-version: '2.0'
+version: '3.0'
 title: 'Ярослав Грицак: Публічний історик'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of ярослав грицак: публічний історик'
 - Evaluate the contributions of історик, який говорить з людьми
 - Trace the career and influence of обов'язок історика
-sources:
-- name: Ярослав Грицак (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Український католицький університет
-  url: https://ucu.edu.ua/
-  type: reference
-  notes: Академічна діяльність
-- name: Книги та публікації
-  url: https://krytyka.com/
-  type: reference
-  notes: Наукові праці
 content_outline:
 - section: Вступ — Історик, який говорить з людьми
   points:
@@ -103,3 +90,18 @@ persona:
   role: Public Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ярослав Грицак (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Український католицький університет
+  url: https://ucu.edu.ua/
+  type: reference
+  notes: Академічна діяльність
+- name: Книги та публікації
+  url: https://krytyka.com/
+  type: reference
+  notes: Наукові праці
+register: академічний
+grammar: []

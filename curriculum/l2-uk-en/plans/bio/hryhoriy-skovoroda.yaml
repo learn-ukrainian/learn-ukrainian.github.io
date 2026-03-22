@@ -2,7 +2,7 @@ module: bio-033
 level: BIO
 sequence: 33
 slug: hryhoriy-skovoroda
-version: '2.0'
+version: '3.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати філософську систему Сковороди
 - Оцінити стратегію інтелектуального спротиву імперії
 - Дослідити літературне новаторство (байки)
-sources:
-- name: Григорій Сковорода (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
-  type: primary
-  notes: Життєпис та вчення
-- name: Повне зібрання творів Сковороди
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Тексти творів
 content_outline:
 - section: Вступ — Український Сократ
   points:
@@ -89,3 +80,13 @@ grammar:
 - Аналіз афоризмів та метафор
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Григорій Сковорода (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
+  type: primary
+  notes: Життєпис та вчення
+- name: Повне зібрання творів Сковороди
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Тексти творів
+register: академічний

@@ -2,7 +2,7 @@ module: lit-069
 level: LIT
 sequence: 69
 slug: vynnychenko-black-panther
-version: '2.0'
+version: '3.0'
 title: Vynnychenko Black Panther
 subtitle: Vynnychenko Black Panther
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Vynnychenko Black Panther у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Vynnychenko Black Panther — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Artist Rebel
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Vynnychenko Black Panther — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

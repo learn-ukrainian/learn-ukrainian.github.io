@@ -2,7 +2,7 @@ module: hist-009
 level: HIST
 sequence: 9
 slug: oleh-ihor
-version: '2.0'
+version: '3.0'
 title: 'Олег та Ігор: Перші правителі'
 subtitle: 'Oleh and Ihor: First Rulers'
 focus: history
@@ -13,24 +13,11 @@ objectives:
 - Analyze the role of Varangians in state formation
 - Compare the policies of Oleh and Ihor
 - Evaluate the significance of Rus-Byzantine treaties
-sources:
-- name: Олег (князь київський) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
-  type: reference
-  notes: Overview of Prince Oleh
-- name: Ігор Рюрикович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
-  type: reference
-  notes: Overview of Prince Ihor
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts of early rulers
 content_outline:
 - section: 'Вступ: Варяги та Київ'
   points:
-  - Варязьке питання — [!myth-buster] Варяги не «створили» державу, а виступили каталізатором об’єднання вже існуючих центрів
-    (Славії та Куявії)
+  - Варязьке питання — [!myth-buster] Варяги не «створили» державу, а виступили каталізатором об’єднання вже існуючих 
+    центрів (Славії та Куявії)
   - Інфраструктура ранньої держави — використання розвиненої логістики полян
   - Загадка походження Олега — Хельгі як регент або узурпатор
   words: 500
@@ -42,7 +29,8 @@ content_outline:
   words: 500
 - section: Походи на Царгород і Договори
   points:
-  - Похід 907 року (легенда і реальність) — 2000 кораблів на колесах; [!history-bite] «Щит на воротах» як метафора тріумфу
+  - Похід 907 року (легенда і реальність) — 2000 кораблів на колесах; [!history-bite] «Щит на воротах» як метафора 
+    тріумфу
   - 'Договір 911 року: Умови — безмитна торгівля, право на лазні, юридичний паритет (смерть за смерть)'
   - Міжнародне визнання Русі — дипломатичний прорив і легітимізація на світовій арені
   words: 500
@@ -73,7 +61,8 @@ content_outline:
 - section: Деколонізаційний погляд
   points:
   - 'Норманська теорія: Український погляд — інтеграція в європейський контекст епохи вікінгів, а не «меншовартість»'
-  - Руський vs Російський — [!decolonization] Русь як суверенна європейська монархія, привласнення назви Росією у XVIII ст.
+  - Руський vs Російський — [!decolonization] Русь як суверенна європейська монархія, привласнення назви Росією у XVIII 
+    ст.
   - Тяглість державності — Київська Русь —> Галицько-Волинська держава —> Україна
   words: 500
 - section: Спадщина
@@ -128,3 +117,16 @@ grammar:
 - Narrative tenses
 - Treaty language
 register: публіцистичний
+references:
+- name: Олег (князь київський) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
+  type: reference
+  notes: Overview of Prince Oleh
+- name: Ігор Рюрикович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
+  type: reference
+  notes: Overview of Prince Ihor
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of early rulers

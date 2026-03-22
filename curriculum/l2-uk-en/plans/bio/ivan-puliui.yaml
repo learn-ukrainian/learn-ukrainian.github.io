@@ -2,7 +2,7 @@ module: bio-049
 level: BIO
 sequence: 49
 slug: ivan-puliui
-version: '2.0'
+version: '3.0'
 title: 'Іван Пулюй: Першовідкривач X-променів'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити науковий внесок Івана Пулюя
 - Проаналізувати його діяльність щодо популяризації української мови
 - Дослідити історію відкриття X-променів
-sources:
-- name: Іван Пулюй (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
-  type: primary
-  notes: Життя та відкриття
-- name: Пулюй та Рентген
-  url: https://puliui.org.ua/
-  type: reference
-  notes: Музей та архіви
 content_outline:
 - section: Вступ — Світовий геній української науки
   points:
@@ -84,3 +75,13 @@ grammar:
 - Обговорення пріоритету та етики в науці
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Пулюй (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+  type: primary
+  notes: Життя та відкриття
+- name: Пулюй та Рентген
+  url: https://puliui.org.ua/
+  type: reference
+  notes: Музей та архіви
+register: академічний

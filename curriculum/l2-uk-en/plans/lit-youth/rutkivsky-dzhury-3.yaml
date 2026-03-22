@@ -2,7 +2,7 @@ sequence: 27
 module: lit-youth-027
 level: LIT.JUVENILE
 slug: rutkivsky-dzhury-3
-version: '2.0'
+version: '3.0'
 title: Rutkivsky Dzhury 3
 subtitle: Rutkivsky Dzhury 3
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cossack Chieftain
 word_target: 5000
+references: []
+register: академічний
+grammar: []

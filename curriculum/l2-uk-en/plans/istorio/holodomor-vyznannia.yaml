@@ -2,7 +2,7 @@ module: istorio-050
 level: ISTORIO
 sequence: 50
 slug: holodomor-vyznannia
-version: '1.0'
+version: '3.0'
 title: 'Визнання геноцидом: Правовий аспект'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of визнання геноцидом: правовий аспект'
 - Evaluate the historical significance of від історії до права
-sources:
-- name: Визнання Голодомору геноцидом
-  url: https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом
-  type: reference
-  notes: Recognition overview
-- name: Конвенція ООН про геноцид
-  url: https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього
-  type: reference
-  notes: UN Convention
-- name: Закон України про Голодомор
-  url: https://zakon.rada.gov.ua/laws/show/376-16
-  type: primary
-  notes: 2006 law text
 content_outline:
 - section: Вступ — Від історії до права
   points:
@@ -121,3 +108,18 @@ prerequisites:
 - holodomor-svidky
 connects_to:
 - syntez-holodomor-studiyi
+references:
+- name: Визнання Голодомору геноцидом
+  url: https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом
+  type: reference
+  notes: Recognition overview
+- name: Конвенція ООН про геноцид
+  url: https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього
+  type: reference
+  notes: UN Convention
+- name: Закон України про Голодомор
+  url: https://zakon.rada.gov.ua/laws/show/376-16
+  type: primary
+  notes: 2006 law text
+register: академічний
+grammar: []

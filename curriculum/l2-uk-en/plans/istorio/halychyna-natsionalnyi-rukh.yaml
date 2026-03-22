@@ -2,7 +2,7 @@ module: istorio-071
 level: ISTORIO
 sequence: 71
 slug: halychyna-natsionalnyi-rukh
-version: '1.0'
+version: '3.0'
 title: Галицький національний рух
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of галицький національний рух
 - Evaluate the historical significance of боротьба за душу галичини
-sources:
-- name: Українофіли (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українофіли
-  type: reference
-  notes: Ukrainophile movement
-- name: Москвофіли (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Москвофіли
-  type: reference
-  notes: Russophile movement
-- name: Товариство «Просвіта» (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
-  type: reference
-  notes: Prosvita society
 content_outline:
 - section: Вступ — Боротьба за душу Галичини
   points:
@@ -123,3 +110,18 @@ prerequisites:
 - halychyna-pid-avstriieyu
 connects_to:
 - bukovyna-mizh-imperiiamy
+references:
+- name: Українофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українофіли
+  type: reference
+  notes: Ukrainophile movement
+- name: Москвофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Москвофіли
+  type: reference
+  notes: Russophile movement
+- name: Товариство «Просвіта» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
+  type: reference
+  notes: Prosvita society
+register: академічний
+grammar: []

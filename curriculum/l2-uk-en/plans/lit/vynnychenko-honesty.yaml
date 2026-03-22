@@ -2,7 +2,7 @@ module: lit-071
 level: LIT
 sequence: 71
 slug: vynnychenko-honesty
-version: '2.0'
+version: '3.0'
 title: Vynnychenko Honesty
 subtitle: Vynnychenko Honesty
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Vynnychenko Honesty у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Vynnychenko Honesty — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Honest Self
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Vynnychenko Honesty — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-037
 level: ISTORIO
 sequence: 37
 slug: svidchennia-holodomoru-ii
-version: '1.0'
+version: '3.0'
 title: 'Свідчення Голодомору II: Документи'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of свідчення голодомору ii: документи'
 - Evaluate the historical significance of документальні докази
-sources:
-- name: Архівні документи Голодомору
-  url: https://cdiak.archives.gov.ua/
-  type: primary
-  notes: Central State Archive
-- name: Чорні дошки
-  url: https://uk.wikipedia.org/wiki/Чорні_дошки
-  type: reference
-  notes: Blacklists
-- name: Закон про п'ять колосків
-  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
-  type: reference
-  notes: August 7, 1932 law
 content_outline:
 - section: Вступ — Документальні докази
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - svidchennia-holodomoru-i
 connects_to:
 - syntez-moderni-dzherela
+references:
+- name: Архівні документи Голодомору
+  url: https://cdiak.archives.gov.ua/
+  type: primary
+  notes: Central State Archive
+- name: Чорні дошки
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  type: reference
+  notes: Blacklists
+- name: Закон про п'ять колосків
+  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
+  type: reference
+  notes: August 7, 1932 law
+register: академічний
+grammar: []

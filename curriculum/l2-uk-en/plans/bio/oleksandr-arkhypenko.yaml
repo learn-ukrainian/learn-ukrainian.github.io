@@ -2,7 +2,7 @@ module: bio-090
 level: BIO
 sequence: 90
 slug: oleksandr-arkhypenko
-version: '2.0'
+version: '3.0'
 title: 'Олександр Архипенко: Скульптор авангарду'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of олександр архипенко: скульптор авангарду'
 - Evaluate the contributions of революціонер у скульптурі
 - Trace the career and influence of спадщина та вплив
-sources:
-- name: Олександр Архипенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
-  type: primary
-  notes: Біографія, творчий шлях, інновації
-- name: Archipenko Foundation
-  url: https://www.archipenko.org
-  type: reference
-  notes: Каталог творів та біографічні матеріали
-- name: MoMA Collection
-  url: https://www.moma.org/artists/229
-  type: reference
-  notes: Роботи в колекції Музею сучасного мистецтва
 content_outline:
 - section: Вступ — Революціонер у скульптурі
   points:
@@ -103,3 +90,18 @@ persona:
   role: Cubist Sculptor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олександр Архипенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
+  type: primary
+  notes: Біографія, творчий шлях, інновації
+- name: Archipenko Foundation
+  url: https://www.archipenko.org
+  type: reference
+  notes: Каталог творів та біографічні матеріали
+- name: MoMA Collection
+  url: https://www.moma.org/artists/229
+  type: reference
+  notes: Роботи в колекції Музею сучасного мистецтва
+register: академічний
+grammar: []

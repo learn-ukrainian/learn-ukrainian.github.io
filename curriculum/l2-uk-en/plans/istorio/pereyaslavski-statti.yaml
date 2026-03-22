@@ -2,7 +2,7 @@ module: istorio-024
 level: ISTORIO
 sequence: 24
 slug: pereyaslavski-statti
-version: '1.0'
+version: '3.0'
 title: 'Переяславські статті: Текст і контекст'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of переяславські статті: текст і контекст'
 - Evaluate the historical significance of найконтроверсійніший документ
-sources:
-- name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
-  type: reference
-  notes: Overview
-- name: Березневі статті
-  url: https://uk.wikipedia.org/wiki/Березневі_статті
-  type: reference
-  notes: March Articles (actual agreement)
-- name: Текст статей
-  url: https://litopys.org.ua/
-  type: primary
-  notes: Document text
 content_outline:
 - section: Вступ — Найконтроверсійніший документ
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - universaly-khmelnytkoho
 connects_to:
 - konstytutsiia-orlyka
+references:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: Overview
+- name: Березневі статті
+  url: https://uk.wikipedia.org/wiki/Березневі_статті
+  type: reference
+  notes: March Articles (actual agreement)
+- name: Текст статей
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Document text
+register: академічний
+grammar: []

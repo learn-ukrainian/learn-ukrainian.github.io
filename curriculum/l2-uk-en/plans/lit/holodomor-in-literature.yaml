@@ -2,7 +2,7 @@ module: lit-161
 level: LIT
 sequence: 161
 slug: holodomor-in-literature
-version: '2.0'
+version: '3.0'
 title: Holodomor In Literature
 subtitle: Holodomor In Literature
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Holodomor In Literature у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Holodomor In Literature — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Famine Chronicler
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Holodomor In Literature — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

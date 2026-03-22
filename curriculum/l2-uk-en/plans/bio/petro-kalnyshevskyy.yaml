@@ -2,7 +2,7 @@ module: bio-032
 level: BIO
 sequence: 32
 slug: petro-kalnyshevskyy
-version: '2.0'
+version: '3.0'
 title: 'Петро Калнишевський: Останній кошовий'
 focus: biography
 phase: BIO
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the life and legacy of петро калнишевський: останній кошовий'
 - Evaluate the contributions of останній лицар степу
-sources:
-- name: Петро Калнишевський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
-  type: primary
-  notes: Biography, last koshovyi, imprisonment
-- name: Знищення Запорозької Січі
-  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
-  type: primary
-  notes: Events of 1775
-- name: Соловецький монастир
-  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
-  type: reference
-  notes: Place of imprisonment
 content_outline:
 - section: Вступ — Останній лицар степу
   points:
@@ -114,3 +101,18 @@ persona:
   role: Solovky Exile
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Петро Калнишевський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+  type: primary
+  notes: Biography, last koshovyi, imprisonment
+- name: Знищення Запорозької Січі
+  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+  type: primary
+  notes: Events of 1775
+- name: Соловецький монастир
+  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+  type: reference
+  notes: Place of imprisonment
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: hist-030
 level: HIST
 sequence: 30
 slug: ukrainski-zemli-u-vkl
-version: '2.0'
+version: '3.0'
 title: Українські землі у ВКЛ
 subtitle: Регіональна автономія та магнатська влада
 focus: history
@@ -89,3 +89,5 @@ prerequisites:
 - velyke-kniazivstvo-lytovske
 connects_to:
 - liublinska-uniia
+references: []
+register: академічний

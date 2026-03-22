@@ -2,7 +2,7 @@ module: istorio-123
 level: ISTORIO
 sequence: 123
 slug: pislya-emsa-halychyna
-version: '1.0'
+version: '3.0'
 title: 'Після Емса: Галицький розквіт'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of після емса: галицький розквіт'
 - Evaluate the historical significance of культура переїжджає
-sources:
-- name: Емський указ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Емський_указ
-  type: reference
-  notes: Ems Decree
-- name: Галицьке українство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
-  type: reference
-  notes: Galician Ukrainians
-- name: НТШ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
-  type: reference
-  notes: Shevchenko Scientific Society
 content_outline:
 - section: Вступ — Культура переїжджає
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - tsykl-kulturnykh-vidrodzhen
 connects_to:
 - pislya-stalina-shistdesiatnyky
+references:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Ems Decree
+- name: Галицьке українство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Galician Ukrainians
+- name: НТШ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  type: reference
+  notes: Shevchenko Scientific Society
+register: академічний
+grammar: []

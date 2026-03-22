@@ -2,7 +2,7 @@ module: hist-087
 level: HIST
 sequence: 87
 slug: hrushevskyi
-version: '2.0'
+version: '3.0'
 title: Михайло Грушевський
 subtitle: 'Mykhailo Hrushevsky: Father of Ukrainian Historiography'
 focus: history
@@ -97,3 +97,4 @@ grammar:
 - Наукова термінологія
 - Непряма мова для передачі ідей
 register: публіцистичний
+references: []

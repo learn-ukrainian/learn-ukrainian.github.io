@@ -2,7 +2,7 @@ module: lit-223
 level: LIT
 sequence: 223
 slug: mykhailo-stelmakh-shchedryi-vechir
-version: '2.0'
+version: '3.0'
 title: 'Михайло Стельмах: Щедрий вечір'
 subtitle: Autobiographical prose, masterful Ukrainian lyrical sentence, and ethnography within Soviet constraints
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати автобіографічну прозу Стельмаха як зразок «дозволеної» української лірики
 - Дослідити стилістичну майстерність «Щедрого вечора» — ритм, синестезія, етнографічна деталь
 - Зрозуміти стратегію збереження українського мовного багатства в умовах соцреалізму
-sources:
-- name: Михайло Стельмах — проза
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -84,3 +79,10 @@ persona:
   role: Keeper of the Christmas Eve Candle
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Михайло Стельмах — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

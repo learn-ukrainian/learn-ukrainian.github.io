@@ -2,7 +2,7 @@ module: istorio-102
 level: ISTORIO
 sequence: 102
 slug: syntez-zakhid-2022
-version: '1.0'
+version: '3.0'
 title: 'Синтез: 2022 — Зміна парадигми?'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: 2022 — зміна парадигми?'
 - Evaluate the historical significance of щось змінилося?
-sources:
-- name: Вторгнення Росії в Україну (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
-  type: reference
-  notes: War context
-- name: Допомога Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Допомога_Україні
-  type: reference
-  notes: Western aid
 content_outline:
 - section: Вступ — Щось змінилося?
   points:
@@ -124,3 +115,14 @@ prerequisites:
 - zakhid-2014
 connects_to:
 - ekonomika-imperii
+references:
+- name: Вторгнення Росії в Україну (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: War context
+- name: Допомога Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Допомога_Україні
+  type: reference
+  notes: Western aid
+register: академічний
+grammar: []

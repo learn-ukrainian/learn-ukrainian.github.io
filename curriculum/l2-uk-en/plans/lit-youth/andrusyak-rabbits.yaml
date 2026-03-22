@@ -2,7 +2,7 @@ sequence: 21
 module: lit-youth-021
 level: LIT.JUVENILE
 slug: andrusyak-rabbits
-version: '2.0'
+version: '3.0'
 title: Andrusyak Rabbits
 subtitle: Andrusyak Rabbits
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Forest Diplomat
 word_target: 5000
+references: []
+register: академічний
+grammar: []

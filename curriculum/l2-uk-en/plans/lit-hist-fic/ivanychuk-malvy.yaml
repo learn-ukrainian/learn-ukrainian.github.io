@@ -2,7 +2,7 @@ sequence: 8
 module: lit-hist-fic-008
 level: LIT.HIST.FIC
 slug: ivanychuk-malvy
-version: '2.0'
+version: '3.0'
 title: Ivanychuk Malvy
 subtitle: Ivanychuk Malvy
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Janissary Dragoman
 word_target: 5000
+references: []
+register: академічний
+grammar: []

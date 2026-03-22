@@ -2,7 +2,7 @@ module: lit-002
 level: LIT
 sequence: 2
 slug: eneida-part-1
-version: '2.0'
+version: '3.0'
 title: 'Енеїда: Сміх над Безоднею (Частина I)'
 subtitle: Eneida Part I
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the structure of Eneida Part 1
 - Understand the transformation of Roman heroes into Cossacks
 - Identify satirical elements of the Olympian bureaucracy
-sources:
-- name: Енеїда — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-  type: primary
-  notes: Частина I для детального аналізу
-- name: Аналіз "Енеїди"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-  type: secondary
-  notes: Літературознавчий аналіз твору
-- name: Вергілій — Енеїда (оригінал)
-  url: https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)
-  type: reference
-  notes: Для порівняння з оригіналом
 content_outline:
 - section: Вступ — Чому перша частина є фундаментом?
   points:
@@ -104,3 +91,17 @@ grammar:
 - Synonymic series construction
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Частина I для детального аналізу
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Літературознавчий аналіз твору
+- name: Вергілій — Енеїда (оригінал)
+  url: https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)
+  type: reference
+  notes: Для порівняння з оригіналом
+register: академічний

@@ -2,7 +2,7 @@ module: hist-020
 level: HIST
 sequence: 20
 slug: syntez-kyivska-rus
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Київська Русь — спадщина'
 focus: history
 pedagogy: CBI
@@ -12,15 +12,6 @@ objectives:
 - Summarize the political and cultural development of Kyivan Rus
 - Evaluate the legacy of Rus in modern Ukrainian identity
 - Critically analyze conflicting historical claims to the Rus heritage
-sources:
-- name: Київська Русь (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Київська_Русь
-  type: reference
-  notes: Comprehensive overview for synthesis
-- name: Спадщина Київської Русі
-  url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
-  type: reference
-  notes: Legacy and claims
 content_outline:
 - section: Вступ — Три століття Русі
   points:
@@ -33,8 +24,8 @@ content_outline:
   points:
   - Етапи державотворення — 882 (Олег), 988 (Володимир), 1019–1054 (Ярослав)
   - Від Олега до Мономаха — піднесення — останнє посилення за Мономаха (1113–1125)
-  - Роздроблення — криза чи розвиток? — [!myth-buster] «Феодальна роздробленість» як європейська норма децентралізації, а
-    не катастрофа
+  - Роздроблення — криза чи розвиток? — [!myth-buster] «Феодальна роздробленість» як європейська норма децентралізації, 
+    а не катастрофа
   - Система влади — князь, віче, бояри — демократична роль віче та боярської ради як обмеження князівської влади
   words: 700
 - section: Культурні досягнення
@@ -62,7 +53,8 @@ content_outline:
   points:
   - Український погляд — пряма спадкоємність — схема М. Грушевського (Русь -> ГВК -> Литовсько-Руська держава)
   - Російські претензії — критичний аналіз — [!decolonization] Розвінчання міфу про «колиску трьох братніх народів»
-  - Схема Грушевського vs імперська схема — штучність перенесення столиці у Володимир-на-Клязьмі (колонізована периферія)
+  - Схема Грушевського vs імперська схема — штучність перенесення столиці у Володимир-на-Клязьмі (колонізована 
+    периферія)
   - Русь як спільна спадщина? — політична традиція віче перейшла лише Україні, Московія обрала деспотію
   words: 700
 - section: Ключові терміни та дати
@@ -115,3 +107,13 @@ grammar:
 - Synthesis and review register
 - Academic historical terminology
 immersion: 100% Ukrainian
+references:
+- name: Київська Русь (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Київська_Русь
+  type: reference
+  notes: Comprehensive overview for synthesis
+- name: Спадщина Київської Русі
+  url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
+  type: reference
+  notes: Legacy and claims
+register: академічний

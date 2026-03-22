@@ -2,7 +2,7 @@ module: bio-018
 level: BIO
 sequence: 18
 slug: severyn-nalyvaiko
-version: '2.0'
+version: '3.0'
 title: 'Северин Наливайко: Лідер козацького повстання'
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 focus: biography
@@ -12,13 +12,6 @@ word_target: 5000
 objectives:
 - Understand the causes of the first Cossack rebellions
 - Analyze Nalyvaiko's tactics and goals
-sources:
-- name: Северин Наливайко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
-  type: primary
-- name: Повстання Наливайка
-  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
-  type: primary
 content_outline:
 - section: Вступ — Перший бунтар
   points:
@@ -75,3 +68,11 @@ prerequisites:
 - iov-boretskyi
 connects_to:
 - meletii-smotrytskyi
+references:
+- name: Северин Наливайко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  type: primary
+- name: Повстання Наливайка
+  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  type: primary
+register: академічний

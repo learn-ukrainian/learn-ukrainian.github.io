@@ -2,7 +2,7 @@ module: hist-124
 level: HIST
 sequence: 124
 slug: yanukovych
-version: '2.0'
+version: '3.0'
 title: 'Епоха Януковича: Реванш'
 subtitle: 'The Yanukovych Era: The Revanche'
 focus: history
@@ -94,3 +94,4 @@ grammar:
 - Політична лексика
 - Складнопідрядні речення
 register: публіцистичний
+references: []

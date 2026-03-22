@@ -2,7 +2,7 @@ module: ruth-061
 level: RUTH
 sequence: 61
 slug: baroque-lists
-version: '2.0'
+version: '3.0'
 title: Барокові списки
 subtitle: Baroque Lists
 focus: The heaping technique — Нагромадження
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

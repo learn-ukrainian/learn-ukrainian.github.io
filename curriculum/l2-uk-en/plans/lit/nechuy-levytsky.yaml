@@ -2,7 +2,7 @@ module: lit-026
 level: LIT
 sequence: 26
 slug: nechuy-levytsky
-version: '2.0'
+version: '3.0'
 title: 'Іван Нечуй-Левицький: Літописець Українського Села'
 subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Проаналізувати біографічні фактори, що вплинули на творчість
 - Дослідити особливості "візуального" стилю письма
 - Оцінити внесок у зображення сільського життя
-sources:
-- name: Біографія Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Життя та творчість Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
-  type: primary
-  notes: Розширена біографічна стаття
-- name: Нечуй-Левицький — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
-  type: reference
-  notes: Загальний контекст
 content_outline:
 - section: Вступ — Від Куліша до Нечуя
   points:
@@ -104,3 +91,17 @@ grammar:
 - Ethnographic detail
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Біографія Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Життя та творчість Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+  type: primary
+  notes: Розширена біографічна стаття
+- name: Нечуй-Левицький — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Загальний контекст
+register: академічний

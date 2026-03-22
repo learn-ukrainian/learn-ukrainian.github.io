@@ -2,7 +2,7 @@ module: hist-011
 level: HIST
 sequence: 11
 slug: volodymyr-khreshchennia
-version: '2.0'
+version: '3.0'
 title: Володимир і Хрещення Русі
 focus: history
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Understand the significance of 988
 - Analyze the political reasons for baptism
 - Discuss the cultural impact of Christianization
-sources:
-- name: Володимир Великий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Великий
-  type: reference
-  notes: Overview of Volodymyr the Great
-- name: Хрещення Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-  type: reference
-  notes: Overview of Christianization
-- name: Повість минулих літ — про хрещення
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle account of baptism
 content_outline:
 - section: Розминка
   points:
@@ -34,17 +21,18 @@ content_outline:
 - section: 'Читання: Князь Володимир: від язичника до святого'
   points:
   - Історичне тло — 980 рік, спроба язичницької реформи (Пантеон богів), криза старої ідеології
-  - Хронологія вибору віри — легенда про «вибір віри» (посли до булгар, німців, греків); прагматизм відмови від ісламу та
-    юдаїзму
+  - Хронологія вибору віри — легенда про «вибір віри» (посли до булгар, німців, греків); прагматизм відмови від ісламу 
+    та юдаїзму
   - Наслідки — вибір візантійського обряду як шлях до імперської величі («не знали, на небі ми чи на землі»)
   - 'Engagement hook: [!history-bite] — Про «гарем» Володимира (800 наложниць) і його радикальну трансформацію після хрещення'
   words: 700
 - section: Корсунська кампанія і шлюб із Анною
   points:
-  - Військова акція як дипломатія — допомога Василію II проти Варди Фоки (6000 варягів); облога Корсуня (Херсонеса) як тиск
+  - Військова акція як дипломатія — допомога Василію II проти Варди Фоки (6000 варягів); облога Корсуня (Херсонеса) як 
+    тиск
   - Шлюб із Анною — принцеса-багрянородна (porphyrogenita); шлюб рівних, а не васалітет
-  - Хрещення Володимира та його військо — легенда про зцілення від сліпоти в Корсуні; [!myth-buster] Хрещення не було «подарунком»
-    Візантії, а вибороне силою
+  - Хрещення Володимира та його військо — легенда про зцілення від сліпоти в Корсуні; [!myth-buster] Хрещення не було 
+    «подарунком» Візантії, а вибороне силою
   words: 700
 - section: Первинні джерела
   points:
@@ -54,8 +42,8 @@ content_outline:
   words: 700
 - section: Деколонізаційний погляд
   points:
-  - Міфи та реальність — [!decolonization] Спростування російського міфу про «спільну колиску»; Корсунь як частина історії
-    України (Криму), а не «сакральне місце Росії»
+  - Міфи та реальність — [!decolonization] Спростування російського міфу про «спільну колиску»; Корсунь як частина 
+    історії України (Криму), а не «сакральне місце Росії»
   - Сучасна Україна — Тризуб Володимира на монетах (златники/срібники) як прообраз сучасного Герба України
   words: 700
 - section: Значення хрещення для культури
@@ -121,3 +109,17 @@ grammar:
 - Religious terminology
 module_type: history
 immersion: 100% Ukrainian
+references:
+- name: Володимир Великий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Великий
+  type: reference
+  notes: Overview of Volodymyr the Great
+- name: Хрещення Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Overview of Christianization
+- name: Повість минулих літ — про хрещення
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle account of baptism
+register: академічний

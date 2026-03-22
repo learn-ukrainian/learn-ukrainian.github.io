@@ -2,7 +2,7 @@ sequence: 10
 module: lit-war-010
 level: LIT.WAR
 slug: zhadan-life-maria
-version: '2.0'
+version: '3.0'
 title: Zhadan Life Maria
 subtitle: Zhadan Life Maria
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Hagiographer of the Grey Zone
 word_target: 5000
+references: []
+register: академічний
+grammar: []

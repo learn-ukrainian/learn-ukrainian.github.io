@@ -2,7 +2,7 @@ module: bio-139
 level: BIO
 sequence: 139
 slug: ivan-dziuba
-version: '2.0'
+version: '3.0'
 title: 'Іван Дзюба: Інтернаціоналізм чи русифікація?'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Іван Дзюба as a dissident intellectual
 - Evaluate the argumentative strategy of Internationalism or Russification
 - Trace the moral arc from dissident to minister of culture
-sources:
-- name: Іван Дзюба (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
-  type: primary
-  notes: Comprehensive biography of the dissident intellectual
-- name: «Інтернаціоналізм чи русифікація?»
-  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
-  type: reference
-  notes: Analysis of the landmark text against Russification
 content_outline:
 - section: Вступ — Інтелектуальний бунтар
   points:
@@ -99,3 +90,14 @@ persona:
   role: Literary Dissident
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Дзюба (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
+  type: primary
+  notes: Comprehensive biography of the dissident intellectual
+- name: «Інтернаціоналізм чи русифікація?»
+  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
+  type: reference
+  notes: Analysis of the landmark text against Russification
+register: академічний
+grammar: []

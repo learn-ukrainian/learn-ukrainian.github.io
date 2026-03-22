@@ -2,7 +2,7 @@ module: bio-035
 level: BIO
 sequence: 35
 slug: dmytro-bortnyanskyy
-version: '2.0'
+version: '3.0'
 title: 'Дмитро Бортнянський: Придворний маестро'
 focus: biography
 phase: BIO
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the life and legacy of дмитро бортнянський: придворний маестро'
 - Evaluate the contributions of між україною та імперією
-sources:
-- name: Дмитро Бортнянський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
-  type: primary
-  notes: Biography, court career, choral works
-- name: Придворна співацька капела
-  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
-  type: reference
-  notes: Institutional context
-- name: Глухівська співацька школа
-  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
-  type: reference
-  notes: Early education
 content_outline:
 - section: Вступ — Між Україною та імперією
   points:
@@ -113,3 +100,18 @@ persona:
   role: Choir Master
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Дмитро Бортнянський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
+  type: primary
+  notes: Biography, court career, choral works
+- name: Придворна співацька капела
+  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
+  type: reference
+  notes: Institutional context
+- name: Глухівська співацька школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Early education
+register: академічний
+grammar: []

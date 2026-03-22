@@ -2,7 +2,7 @@ sequence: 13
 module: lit-humor-013
 level: LIT.HUMOR
 slug: modern-memes-as-folklore
-version: '2.0'
+version: '3.0'
 title: Modern Memes As Folklore
 subtitle: Modern Memes As Folklore
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Digital Anthropologist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

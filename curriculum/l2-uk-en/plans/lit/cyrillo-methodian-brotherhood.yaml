@@ -2,7 +2,7 @@ module: lit-025
 level: LIT
 sequence: 25
 slug: cyrillo-methodian-brotherhood
-version: '2.0'
+version: '3.0'
 title: Кирило-Мефодіївське братство
 subtitle: The Cyrillo-Methodian Brotherhood
 focus: history
@@ -12,19 +12,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of кирило-мефодіївське братство
 - Evaluate the historical significance of перша політична організація
-sources:
-- name: Кирило-Мефодіївське братство — стаття
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-  type: primary
-  notes: Історія організації
-- name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-  type: primary
-  notes: Програмний документ
-- name: Микола Костомаров — біографія
-  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
-  type: secondary
-  notes: Біографія одного з лідерів
 content_outline:
 - section: Вступ — Перша політична організація
   points:
@@ -104,3 +91,17 @@ grammar:
 - Historical Narrative
 module_type: history
 immersion: 100% Ukrainian
+references:
+- name: Кирило-Мефодіївське братство — стаття
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: primary
+  notes: Історія організації
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: primary
+  notes: Програмний документ
+- name: Микола Костомаров — біографія
+  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+  type: secondary
+  notes: Біографія одного з лідерів
+register: академічний

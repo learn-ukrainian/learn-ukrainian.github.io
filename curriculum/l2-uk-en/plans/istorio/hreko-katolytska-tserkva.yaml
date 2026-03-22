@@ -2,7 +2,7 @@ module: istorio-061
 level: ISTORIO
 sequence: 61
 slug: hreko-katolytska-tserkva
-version: '1.0'
+version: '3.0'
 title: 'Греко-католицька церква: Між Сходом і Заходом'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
 - Evaluate the historical significance of унікальна церква
-sources:
-- name: УГКЦ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
-  type: reference
-  notes: Church history
-- name: Андрей Шептицький (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
-  type: reference
-  notes: Key 20th century figure
-- name: Львівський собор 1946
-  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
-  type: reference
-  notes: Soviet liquidation
 content_outline:
 - section: Вступ — Унікальна церква
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - pravoslavna-identychnist
 connects_to:
 - radianska-antyrelihiyna-polityka
+references:
+- name: УГКЦ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: Church history
+- name: Андрей Шептицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  type: reference
+  notes: Key 20th century figure
+- name: Львівський собор 1946
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
+  type: reference
+  notes: Soviet liquidation
+register: академічний
+grammar: []

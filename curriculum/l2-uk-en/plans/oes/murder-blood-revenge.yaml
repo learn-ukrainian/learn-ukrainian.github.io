@@ -2,7 +2,7 @@ module: oes-050
 level: OES
 sequence: 50
 slug: murder-blood-revenge
-version: '2.0'
+version: '3.0'
 title: Вбивство та кровна помста
 subtitle: Murder & Blood Revenge
 focus: The concept of Vyra (Weregild)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-132
 level: ISTORIO
 sequence: 132
 slug: ukrainska-m-iaka-syla
-version: '1.0'
+version: '3.0'
 title: 'Українська м''яка сила: Культурна дипломатія'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
 - Evaluate the historical significance of культура як зброя
-sources:
-- name: М'яка сила України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/М%27яка_сила
-  type: reference
-  notes: Soft power concept
-- name: Kalush Orchestra (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
-  type: reference
-  notes: Eurovision 2022
-- name: Культурна дипломатія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
-  type: reference
-  notes: Cultural diplomacy
 content_outline:
 - section: Вступ — Культура як зброя
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - chomu-2022-spratsiuvalo
 connects_to:
 - syntez-ahentsnist
+references:
+- name: М'яка сила України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/М%27яка_сила
+  type: reference
+  notes: Soft power concept
+- name: Kalush Orchestra (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
+  type: reference
+  notes: Eurovision 2022
+- name: Культурна дипломатія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
+  type: reference
+  notes: Cultural diplomacy
+register: академічний
+grammar: []

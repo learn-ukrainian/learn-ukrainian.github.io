@@ -2,7 +2,7 @@ module: lit-151
 level: LIT
 sequence: 151
 slug: olzhych-poetry
-version: '2.0'
+version: '3.0'
 title: Olzhych Poetry
 subtitle: Olzhych Poetry
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - teliha-poetry
 connects_to:
 - vinhranovskyi-poetry
+references: []
+register: академічний
+grammar: []

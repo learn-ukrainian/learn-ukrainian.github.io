@@ -2,7 +2,7 @@ module: bio-151
 level: BIO
 sequence: 151
 slug: vasyl-shkliar
-version: '2.0'
+version: '3.0'
 title: 'Василь Шкляр: Майстер історичного роману'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of василь шкляр: майстер історичного роману'
 - Evaluate the contributions of бестселер як національний феномен
 - Trace the career and influence of історична правда vs художня вигадка
-sources:
-- name: Василь Шкляр (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Видавництво Клуб сімейного дозвілля
-  url: https://www.bookclub.ua/
-  type: reference
-  notes: Бібліографія та видання
-- name: Літературна критика
-  url: https://litakcent.com/
-  type: reference
-  notes: Рецензії та аналіз творчості
 content_outline:
 - section: Вступ — Бестселер як національний феномен
   points:
@@ -103,3 +90,18 @@ persona:
   role: Partisan Chronicler
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Василь Шкляр (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Клуб сімейного дозвілля
+  url: https://www.bookclub.ua/
+  type: reference
+  notes: Бібліографія та видання
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Рецензії та аналіз творчості
+register: академічний
+grammar: []

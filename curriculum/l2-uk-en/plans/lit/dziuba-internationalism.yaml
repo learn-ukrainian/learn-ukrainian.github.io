@@ -2,7 +2,7 @@ module: lit-158
 level: LIT
 sequence: 158
 slug: dziuba-internationalism
-version: '2.0'
+version: '3.0'
 title: Dziuba Internationalism
 subtitle: Dziuba Internationalism
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Dziuba Internationalism у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Dziuba Internationalism — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Political Dissident
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Dziuba Internationalism — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

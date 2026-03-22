@@ -2,7 +2,7 @@ module: lit-116
 level: LIT
 sequence: 116
 slug: antonenko-davydovych-smert
-version: '2.0'
+version: '3.0'
 title: Antonenko Davydovych Smert
 subtitle: Antonenko Davydovych Smert
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Antonenko Davydovych Smert у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Antonenko Davydovych Smert — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Ethical Judge
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Antonenko Davydovych Smert — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

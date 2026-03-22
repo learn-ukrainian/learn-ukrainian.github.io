@@ -2,7 +2,7 @@ module: lit-083
 level: LIT
 sequence: 83
 slug: tychyna-tragic-turn
-version: '2.0'
+version: '3.0'
 title: 'Павло Тичина: Трагічний поворот до соцреалізму'
 subtitle: Tychyna Tragic Turn
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Павло Тичина: Трагічний поворот до соцреалізму у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Павло Тичина: Трагічний поворот до соцреалізму — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Broken Genius
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Павло Тичина: Трагічний поворот до соцреалізму — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

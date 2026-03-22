@@ -2,7 +2,7 @@ sequence: 3
 module: lit-youth-003
 level: LIT.JUVENILE
 slug: zavadovych-adventures
-version: '2.0'
+version: '3.0'
 title: Zavadovych Adventures
 subtitle: Zavadovych Adventures
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Trailblazer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

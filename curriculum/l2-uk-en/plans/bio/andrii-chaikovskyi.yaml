@@ -2,7 +2,7 @@ module: bio-176
 level: BIO
 sequence: 176
 slug: andrii-chaikovskyi
-version: '2.0'
+version: '3.0'
 title: 'Андрій Чайковський: Адвокат нації'
 focus: biography
 pedagogy: immersion
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати роль Андрія Чайковського у галицькому національному русі та ЗУНР
 - Дослідити зв'язок між юридичною діяльністю та літературною творчістю Чайковського
 - Оцінити деколонізаційний потенціал його історичної прози про Козаччину
-sources:
-- name: Чайковський Андрій Якович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Чайковський_Андрій_Якович
-  type: primary
-  notes: Біографія, творчість, громадська діяльність, ЗУНР
-- name: Іван Франко і Тернопільщина
-  url: https://uk.wikipedia.org/wiki/Іван_Франко
-  type: reference
-  notes: Дружба з Франком, літературний контекст
 content_outline:
 - section: Вступ — Адвокат, який захищав цілий народ
   points:
@@ -107,3 +98,14 @@ persona:
   role: Galician Statehood Specialist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Чайковський Андрій Якович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Чайковський_Андрій_Якович
+  type: primary
+  notes: Біографія, творчість, громадська діяльність, ЗУНР
+- name: Іван Франко і Тернопільщина
+  url: https://uk.wikipedia.org/wiki/Іван_Франко
+  type: reference
+  notes: Дружба з Франком, літературний контекст
+register: академічний
+grammar: []

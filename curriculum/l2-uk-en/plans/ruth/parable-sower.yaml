@@ -2,7 +2,7 @@ module: ruth-030
 level: RUTH
 sequence: 30
 slug: parable-sower
-version: '2.0'
+version: '3.0'
 title: 'Притча: Сіяч'
 subtitle: 'The Parables I: Sower'
 focus: Agricultural vocabulary — Ролія, Зерно
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

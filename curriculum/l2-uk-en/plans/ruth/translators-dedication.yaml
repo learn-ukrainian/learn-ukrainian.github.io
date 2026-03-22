@@ -2,7 +2,7 @@ module: ruth-025
 level: RUTH
 sequence: 25
 slug: translators-dedication
-version: '2.0'
+version: '3.0'
 title: Перекладачі
 subtitle: The Translators
 focus: Archimandrite Hryhorii & Mykhailo
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати перекладацькі рішення та оцінювати їхню адекватність
 - Продукувати переклади, що зберігають стилістичну специфіку оригіналу
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

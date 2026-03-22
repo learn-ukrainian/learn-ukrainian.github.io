@@ -2,7 +2,7 @@ module: lit-152
 level: LIT
 sequence: 152
 slug: vinhranovskyi-poetry
-version: '2.0'
+version: '3.0'
 title: Vinhranovskyi Poetry
 subtitle: Vinhranovskyi Poetry
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Vinhranovskyi Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Vinhranovskyi Poetry — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Cosmic Poet
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Vinhranovskyi Poetry — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

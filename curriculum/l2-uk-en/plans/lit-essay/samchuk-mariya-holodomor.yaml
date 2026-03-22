@@ -2,7 +2,7 @@ module: lit-essay-060
 level: LIT.ESSAY
 sequence: 60
 slug: samchuk-mariya-holodomor
-version: '2.0'
+version: '3.0'
 title: 'Улас Самчук: «Марія» — Голодомор як свідчення'
 subtitle: Ulas Samchuk — Maria (Holodomor Testimony)
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати роман «Марія» як перший літературний свідок Голодомору
 - Дослідити тестимоніальну прозу як жанр — документ і художній текст
 - Зрозуміти Самчука як голос волинського селянства
-sources:
-- name: Улас Самчук — «Марія»
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 1000
@@ -64,3 +60,9 @@ immersion: 100% Ukrainian
 persona:
   voice: Senior Specialist
   role: Holodomor Literature Specialist
+references:
+- name: Улас Самчук — «Марія»
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-001
 level: BIO
 sequence: 1
 slug: knyahynia-olha
-version: '2.0'
+version: '3.0'
 title: 'Княгиня Ольга: Дипломатія та реформи'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати адміністративні реформи Ольги
 - Оцінити дипломатичні успіхи у відносинах з Візантією
 - Дослідити причини та наслідки прийняття християнства
-sources:
-- name: Княгиня Ольга (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
-  type: primary
-  notes: Основне джерело фактів
-- name: Повість минулих літ
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Літописні легенди
 content_outline:
 - section: Вступ — Мудра володарка Києва
   points:
@@ -30,8 +21,8 @@ content_outline:
   words: 700
 - section: Життєпис
   points:
-  - Походження (легенди про Псков та болгарське коріння) — [!myth-buster] гіпотеза про Пліску (Болгарія) vs радянський міф
-    про «селянське» походження
+  - Походження (легенди про Псков та болгарське коріння) — [!myth-buster] гіпотеза про Пліску (Болгарія) vs радянський 
+    міф про «селянське» походження
   - Шлюб з Ігорем — дискусійність дати 903 р. та вікова диспропорція
   - 'Трагедія 945 р. та помста древлянам — 4 етапи помсти як ритуальне ствердження влади; include quote: «І посікли їх п''ять
     тисяч...»'
@@ -93,3 +84,13 @@ grammar:
 - Офіційний регістр (опис реформ)
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Княгиня Ольга (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
+  type: primary
+  notes: Основне джерело фактів
+- name: Повість минулих літ
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літописні легенди
+register: академічний

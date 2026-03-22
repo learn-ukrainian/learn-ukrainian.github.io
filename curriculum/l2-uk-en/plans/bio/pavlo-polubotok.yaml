@@ -2,7 +2,7 @@ module: bio-030
 level: BIO
 sequence: 30
 slug: pavlo-polubotok
-version: '2.0'
+version: '3.0'
 title: 'Павло Полуботок: Мученик за автономію'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Аналізувати форми опору імперській централізації
 - Оцінити роль особистості в захисті автономії
 - Порівняти з іншими постатями-мучениками
-sources:
-- name: Павло Полуботок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Павло_Полуботок
-  type: primary
-  notes: Біографія та діяльність
-- name: Малоросійська колегія (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Малоросійська_колегія
-  type: reference
-  notes: Контекст імперської політики
 content_outline:
 - section: Вступ — Символ нескореності
   points:
@@ -84,3 +75,13 @@ grammar:
 - Емоційний регістр (легенди)
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Павло Полуботок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Павло_Полуботок
+  type: primary
+  notes: Біографія та діяльність
+- name: Малоросійська колегія (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Малоросійська_колегія
+  type: reference
+  notes: Контекст імперської політики
+register: академічний

@@ -2,7 +2,7 @@ module: ruth-048
 level: RUTH
 sequence: 48
 slug: comparative-lab-parallel
-version: '2.0'
+version: '3.0'
 title: Порівняльна лабораторія
 subtitle: Comparative Lab
 focus: Analyzing one verse across 4 versions
@@ -56,3 +56,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

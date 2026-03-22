@@ -2,7 +2,7 @@ module: istorio-058
 level: ISTORIO
 sequence: 58
 slug: khreshchennia-spadshchyna
-version: '1.0'
+version: '3.0'
 title: 'Спадщина Хрещення: Візантійська традиція'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
 - Evaluate the historical significance of релігія і нація
-sources:
-- name: Хрещення Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-  type: reference
-  notes: Baptism of Rus
-- name: Візантійський обряд
-  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
-  type: reference
-  notes: Byzantine rite
-- name: Православ'я в Україні
-  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
-  type: reference
-  notes: Orthodoxy overview
 content_outline:
 - section: Вступ — Релігія і нація
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - syntez-rozstriliane
 connects_to:
 - beresteyska-uniia-analiz
+references:
+- name: Хрещення Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Baptism of Rus
+- name: Візантійський обряд
+  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
+  type: reference
+  notes: Byzantine rite
+- name: Православ'я в Україні
+  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
+  type: reference
+  notes: Orthodoxy overview
+register: академічний
+grammar: []

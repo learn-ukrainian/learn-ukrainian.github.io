@@ -2,7 +2,7 @@ module: oes-068
 level: OES
 sequence: 68
 slug: review-social-pyramid
-version: '2.0'
+version: '3.0'
 title: 'Огляд: Соціальна піраміда'
 subtitle: 'Review: Social Pyramid'
 focus: Consolidation of social terms
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

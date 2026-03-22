@@ -2,7 +2,7 @@ module: bio-024
 level: BIO
 sequence: 24
 slug: ivan-vyhovskyi
-version: '2.0'
+version: '3.0'
 title: 'Іван Виговський: Гетьман-дипломат'
 focus: biography
 pedagogy: seminar
@@ -12,19 +12,6 @@ objectives:
 - Аналізувати альтернативні моделі української державності
 - Оцінити значення Гадяцької угоди
 - Порівняти з іншими федеративними проектами
-sources:
-- name: Іван Виговський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Виговський
-  type: primary
-  notes: Біографія та гетьманування
-- name: Гадяцький договір (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
-  type: primary
-  notes: Зміст та значення угоди
-- name: Конотопська битва (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Конотопська_битва
-  type: reference
-  notes: Військова перемога
 content_outline:
 - section: Вступ — Архітектор Гадяцької унії
   points:
@@ -96,3 +83,17 @@ grammar:
 - Правовий регістр
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Виговський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Виговський
+  type: primary
+  notes: Біографія та гетьманування
+- name: Гадяцький договір (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
+  type: primary
+  notes: Зміст та значення угоди
+- name: Конотопська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Конотопська_битва
+  type: reference
+  notes: Військова перемога
+register: академічний

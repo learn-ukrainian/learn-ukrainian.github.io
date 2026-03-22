@@ -2,7 +2,7 @@ module: istorio-112
 level: ISTORIO
 sequence: 112
 slug: ukrainski-kontrnararyvy
-version: '1.0'
+version: '3.0'
 title: Українські контрнаративи
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of українські контрнаративи
 - Evaluate the historical significance of боротьба за наратив
-sources:
-- name: Інформаційна політика України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Інформаційна_політика_України
-  type: reference
-  notes: Ukraine's information policy
-- name: NAFO (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/NAFO
-  type: reference
-  notes: NAFO phenomenon
 content_outline:
 - section: Вступ — Боротьба за наратив
   points:
@@ -121,3 +112,14 @@ prerequisites:
 - zakhidni-media
 connects_to:
 - syntez-informatsiina-viina
+references:
+- name: Інформаційна політика України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_політика_України
+  type: reference
+  notes: Ukraine's information policy
+- name: NAFO (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/NAFO
+  type: reference
+  notes: NAFO phenomenon
+register: академічний
+grammar: []

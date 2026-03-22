@@ -2,7 +2,7 @@ module: istorio-036
 level: ISTORIO
 sequence: 36
 slug: svidchennia-holodomoru-i
-version: '1.0'
+version: '3.0'
 title: 'Свідчення Голодомору I: Усна історія'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of свідчення голодомору i: усна історія'
 - Evaluate the historical significance of голоси вижилих
-sources:
-- name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
-  type: reference
-  notes: Overview
-- name: Архів свідчень Голодомору (UCRDC)
-  url: https://ucrdc.org/
-  type: primary
-  notes: Testimony archive
-- name: Усна історія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Усна_історія
-  type: reference
-  notes: Methodology
 content_outline:
 - section: Вступ — Голоси вижилих
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - akt-zluki
 connects_to:
 - svidchennia-holodomoru-ii
+references:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Overview
+- name: Архів свідчень Голодомору (UCRDC)
+  url: https://ucrdc.org/
+  type: primary
+  notes: Testimony archive
+- name: Усна історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Усна_історія
+  type: reference
+  notes: Methodology
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-222
 level: LIT
 sequence: 222
 slug: mykhailo-petrenko-romantyka
-version: '2.0'
+version: '3.0'
 title: 'Михайло Петренко: Дивлюсь я на небо'
 subtitle: Romantic poetry, national identity formation, and the first Ukrainian song in space
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати поетику Михайла Петренка в контексті українського романтизму
 - Дослідити феномен перетворення вірша «Дивлюсь я на небо» на народну пісню
 - Зрозуміти роль Харківського університету у формуванні української романтичної традиції
-sources:
-- name: Михайло Петренко — поезії
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -84,3 +79,10 @@ persona:
   role: Stargazer of the Romantic Age
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Михайло Петренко — поезії
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

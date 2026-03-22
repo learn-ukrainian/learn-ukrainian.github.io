@@ -2,7 +2,7 @@ module: hist-052
 level: HIST
 sequence: 52
 slug: bohdan-khmelnytskyi
-version: '2.0'
+version: '3.0'
 title: 'Богдан Хмельницький: Постать в історії'
 subtitle: 'Bohdan Khmelnytsky: A Figure in History'
 focus: biography
@@ -13,20 +13,11 @@ objectives:
 - Учень може описати життєвий шлях Богдана Хмельницького
 - Учень може проаналізувати роль особистості в історії
 - Учень може оцінити внесок гетьмана у розбудову держави
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Classic historical account
-- name: The Khmelnytsky Uprising
-  url: https://encyclopediaofukraine.com
-  type: secondary
-  notes: Modern analysis
 content_outline:
 - section: 'Вступ: Батько нації чи суперечлива фігура?'
   points:
-  - Khmelnytsky's place in Ukrainian historical memory — from 'Moses' in Cossack chronicles to 'traitor' in Shevchenko's early
-    works
+  - Khmelnytsky's place in Ukrainian historical memory — from 'Moses' in Cossack chronicles to 'traitor' in Shevchenko's
+    early works
   - 'Different interpretations of his legacy — comparison to Oliver Cromwell (revolutionary dictator) and George Washington
     (founding father); cultural hook: [!context] — Хмельницький як ''український Кромвель'''
   words: 600
@@ -53,8 +44,8 @@ content_outline:
   words: 600
 - section: Будівничий держави
   points:
-  - Creation of the Hetmanate's administrative system — division into regiments (polky) and hundreds (sotni) combining military
-    and civil power
+  - Creation of the Hetmanate's administrative system — division into regiments (polky) and hundreds (sotni) combining 
+    military and civil power
   - Social and economic reforms — de facto abolition of serfdom, 'Cossackization' of peasants, independent treasury
   - 'Chyhyryn as a diplomatic center — receiving ambassadors from Austria, Turkey, Moscow, Sweden; cultural hook: [!fact]
     — За Хмельницького Київ був духовним центром, а Чигирин — політичною столицею'
@@ -113,3 +104,12 @@ prerequisites:
 - khmelnychchyna-prychyny
 connects_to:
 - bitva-pid-zhovtymy-vodamy
+references:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Classic historical account
+- name: The Khmelnytsky Uprising
+  url: https://encyclopediaofukraine.com
+  type: secondary
+  notes: Modern analysis

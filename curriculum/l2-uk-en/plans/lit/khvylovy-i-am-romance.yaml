@@ -2,7 +2,7 @@ module: lit-095
 level: LIT
 sequence: 95
 slug: khvylovy-i-am-romance
-version: '2.0'
+version: '3.0'
 title: 'Микола Хвильовий: «Я (Романтика)»'
 subtitle: Khvylovy I Am Romance
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Микола Хвильовий: «Я (Романтика)» у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Микола Хвильовий: «Я (Романтика)» — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Cheka Executioner
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Микола Хвильовий: «Я (Романтика)» — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

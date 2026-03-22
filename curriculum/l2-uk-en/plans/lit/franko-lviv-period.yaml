@@ -2,7 +2,7 @@ module: lit-046
 level: LIT
 sequence: 46
 slug: franko-lviv-period
-version: '2.0'
+version: '3.0'
 title: Franko Lviv Period
 subtitle: Franko Lviv Period
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Franko Lviv Period у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Franko Lviv Period — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Lviv Journalist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Franko Lviv Period — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

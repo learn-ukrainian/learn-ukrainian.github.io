@@ -2,7 +2,7 @@ module: istorio-077
 level: ISTORIO
 sequence: 77
 slug: donbas-industrializatsiia
-version: '1.0'
+version: '3.0'
 title: 'Донбас: Індустріалізація та ідентичність'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
 - Evaluate the historical significance of регіон, якого не було
-sources:
-- name: Донбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Донбас
-  type: reference
-  notes: Regional overview
-- name: Індустріалізація Донбасу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
-  type: reference
-  notes: Industrial history
-- name: Джон Юз (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джон_Юз
-  type: reference
-  notes: John Hughes founder
 content_outline:
 - section: Вступ — Регіон, якого не було
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - slobozhanshchyna-identychnist
 connects_to:
 - krym-bahatosharovyi
+references:
+- name: Донбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Донбас
+  type: reference
+  notes: Regional overview
+- name: Індустріалізація Донбасу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
+  type: reference
+  notes: Industrial history
+- name: Джон Юз (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джон_Юз
+  type: reference
+  notes: John Hughes founder
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-097
 level: BIO
 sequence: 97
 slug: milena-rudnytska
-version: '2.0'
+version: '3.0'
 title: 'Мілена Рудницька: Голос українського фемінізму'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of мілена рудницька: голос українського фемінізму'
 - Evaluate the contributions of піонерка жіночого руху
 - Trace the career and influence of спадщина та визнання
-sources:
-- name: Мілена Рудницька (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
-  type: primary
-  notes: Biography, activism, political career
-- name: Союз українок
-  url: https://uk.wikipedia.org/wiki/Союз_українок
-  type: reference
-  notes: Organization she led
-- name: УНДО
-  url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
-  type: reference
-  notes: Political party she represented
 content_outline:
 - section: Вступ — Піонерка жіночого руху
   points:
@@ -105,3 +92,18 @@ persona:
   role: Parliamentary Delegate
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Мілена Рудницька (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
+  type: primary
+  notes: Biography, activism, political career
+- name: Союз українок
+  url: https://uk.wikipedia.org/wiki/Союз_українок
+  type: reference
+  notes: Organization she led
+- name: УНДО
+  url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
+  type: reference
+  notes: Political party she represented
+register: академічний
+grammar: []

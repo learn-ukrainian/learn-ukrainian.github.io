@@ -2,7 +2,7 @@ module: bio-141
 level: BIO
 sequence: 141
 slug: vasyl-symonenko
-version: '2.0'
+version: '3.0'
 title: 'Василь Симоненко: Ніжний бунтар'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of василь симоненко: ніжний бунтар'
 - Evaluate the contributions of поет, який не встиг постаріти
 - Trace the career and influence of чому молоді поети стають символами?
-sources:
-- name: Василь Симоненко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Літературний музей
-  url: https://litmuseum.org.ua/
-  type: reference
-  notes: Архівні матеріали
-- name: Збірки поезій
-  url: https://ukrlib.com.ua/
-  type: reference
-  notes: Повні тексти творів
 content_outline:
 - section: Вступ — Поет, який не встиг постаріти
   points:
@@ -103,3 +90,18 @@ persona:
   role: Investigative Journalist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Василь Симоненко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Літературний музей
+  url: https://litmuseum.org.ua/
+  type: reference
+  notes: Архівні матеріали
+- name: Збірки поезій
+  url: https://ukrlib.com.ua/
+  type: reference
+  notes: Повні тексти творів
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-115
 level: ISTORIO
 sequence: 115
 slug: 1918-1920-viina-i-soiuz
-version: '1.0'
+version: '3.0'
 title: '1918-1920: Війна і союз одночасно'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of 1918-1920: війна і союз одночасно'
 - Evaluate the historical significance of парадокс 1918-1920
-sources:
-- name: Українсько-польська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-польська_війна
-  type: reference
-  notes: War in Galicia
-- name: Варшавський договір 1920 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Варшавський_договір_(1920)
-  type: reference
-  notes: Petliura-Piłsudski alliance
-- name: Радянсько-польська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Радянсько-польська_війна
-  type: reference
-  notes: Soviet-Polish war
 content_outline:
 - section: Вступ — Парадокс 1918-1920
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - polska-i-ukraina-symbioz
 connects_to:
 - volyn-i-pamiat
+references:
+- name: Українсько-польська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-польська_війна
+  type: reference
+  notes: War in Galicia
+- name: Варшавський договір 1920 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Варшавський_договір_(1920)
+  type: reference
+  notes: Petliura-Piłsudski alliance
+- name: Радянсько-польська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Радянсько-польська_війна
+  type: reference
+  notes: Soviet-Polish war
+register: академічний
+grammar: []

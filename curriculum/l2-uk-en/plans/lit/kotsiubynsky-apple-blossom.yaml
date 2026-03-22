@@ -2,7 +2,7 @@ module: lit-067
 level: LIT
 sequence: 67
 slug: kotsiubynsky-apple-blossom
-version: '2.0'
+version: '3.0'
 title: Kotsiubynsky Apple Blossom
 subtitle: Kotsiubynsky Apple Blossom
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Kotsiubynsky Apple Blossom у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kotsiubynsky Apple Blossom — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Impressionist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kotsiubynsky Apple Blossom — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

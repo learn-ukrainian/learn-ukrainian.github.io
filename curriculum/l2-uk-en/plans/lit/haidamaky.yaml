@@ -2,7 +2,7 @@ module: lit-013
 level: LIT
 sequence: 13
 slug: haidamaky
-version: '2.0'
+version: '3.0'
 title: 'Гайдамаки: Кривава Свобода'
 subtitle: 'LIT-013: Епос Гніву і Спокути'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the historical context of Koliivshchyna
 - evaluate the ethical conflict of Gonta
 - Discuss the concept of "Holy Knife"
-sources:
-- name: Гайдамаки — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=10
-  type: primary
-  notes: Поема для детального аналізу
-- name: Аналіз "Гайдамаків"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Коліївщина — історія
-  url: https://uk.wikipedia.org/wiki/Коліївщина
-  type: reference
-  notes: Історичний контекст
 content_outline:
 - section: Вступ — Коліївщина 1768 року
   points:
@@ -105,3 +92,17 @@ grammar:
 - Rhetorical questions and exclamations
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Гайдамаки — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=10
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Гайдамаків"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Коліївщина — історія
+  url: https://uk.wikipedia.org/wiki/Коліївщина
+  type: reference
+  notes: Історичний контекст
+register: академічний

@@ -2,7 +2,7 @@ module: ruth-032
 level: RUTH
 sequence: 32
 slug: the-passion
-version: '2.0'
+version: '3.0'
 title: Страсті
 subtitle: The Passion
 focus: Dramatic narrative — Polish loanwords in legal terms
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

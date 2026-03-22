@@ -2,7 +2,7 @@ module: istorio-039
 level: ISTORIO
 sequence: 39
 slug: samvydav-shcho-tse
-version: '1.0'
+version: '3.0'
 title: 'Самвидав: Що це було?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of самвидав: що це було?'
 - Evaluate the historical significance of підпільна література
-sources:
-- name: Самвидав (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Самвидав
-  type: reference
-  notes: Overview
-- name: Український самвидав
-  url: https://uk.wikipedia.org/wiki/Український_самвидав
-  type: reference
-  notes: Ukrainian samizdat specifically
-- name: Архів самвидаву
-  url: https://diasporiana.org.ua/
-  type: primary
-  notes: Diaspora digital archive
 content_outline:
 - section: Вступ — Підпільна література
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - syntez-moderni-dzherela
 connects_to:
 - lysty-stusa
+references:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Overview
+- name: Український самвидав
+  url: https://uk.wikipedia.org/wiki/Український_самвидав
+  type: reference
+  notes: Ukrainian samizdat specifically
+- name: Архів самвидаву
+  url: https://diasporiana.org.ua/
+  type: primary
+  notes: Diaspora digital archive
+register: академічний
+grammar: []

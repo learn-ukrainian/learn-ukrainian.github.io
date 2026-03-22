@@ -2,7 +2,7 @@ sequence: 2
 module: lit-youth-002
 level: LIT.JUVENILE
 slug: pchilka-fables
-version: '2.0'
+version: '3.0'
 title: Pchilka Fables
 subtitle: Pchilka Fables
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Fable Moralist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 6
 module: lit-fantastika-006
 level: LIT.FANTASTIKA
 slug: berdnyk-star-corsair-1
-version: '2.0'
+version: '3.0'
 title: Berdnyk Star Corsair 1
 subtitle: Berdnyk Star Corsair 1
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cosmic Navigator
 word_target: 5000
+references: []
+register: академічний
+grammar: []

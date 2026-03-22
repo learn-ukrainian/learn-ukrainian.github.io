@@ -2,7 +2,7 @@ module: istorio-088
 level: ISTORIO
 sequence: 88
 slug: syntez-tsykl-zrady
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Чому цикл повторюється?'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
 - Evaluate the historical significance of паттерн через віки
-sources:
-- name: Російський імперіалізм (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
-  type: reference
-  notes: Imperial patterns
-- name: Українсько-російські відносини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
-  type: reference
-  notes: Bilateral history
 content_outline:
 - section: Вступ — Паттерн через віки
   points:
@@ -123,3 +114,14 @@ prerequisites:
 - yanukovych-tsykl
 connects_to:
 - pereiaslav-alternatyvy
+references:
+- name: Російський імперіалізм (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  type: reference
+  notes: Imperial patterns
+- name: Українсько-російські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
+  type: reference
+  notes: Bilateral history
+register: академічний
+grammar: []

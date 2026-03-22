@@ -2,7 +2,7 @@ module: lit-049
 level: LIT
 sequence: 49
 slug: franko-letters
-version: '2.0'
+version: '3.0'
 title: Franko Letters
 subtitle: Franko Letters
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Franko Letters у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Franko Letters — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Letter Writer
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Franko Letters — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

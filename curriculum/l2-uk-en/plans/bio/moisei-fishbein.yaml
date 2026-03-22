@@ -2,7 +2,7 @@ module: bio-178
 level: BIO
 sequence: 178
 slug: moisei-fishbein
-version: '2.0'
+version: '3.0'
 title: 'Мойсей Фішбейн: Пророк українською'
 focus: biography
 pedagogy: immersion
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати свідомий вибір української мови Мойсеєм Фішбейном як політичний та культурний акт
 - Дослідити роль єврейських інтелектуалів у формуванні сучасної української культури
 - Оцінити перекладацьку діяльність Фішбейна як будування мостів між культурами
-sources:
-- name: Фішбейн Мойсей Абрамович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Фішбейн_Мойсей_Абрамович
-  type: primary
-  notes: Біографія, творчість, погляди, еміграція та повернення
-- name: Премія імені Василя Стуса
-  url: https://uk.wikipedia.org/wiki/Премія_імені_Василя_Стуса
-  type: reference
-  notes: Контекст нагороди
 content_outline:
 - section: Вступ — Єврей, який обрав українську
   points:
@@ -108,3 +99,14 @@ persona:
   role: Jewish-Ukrainian Cultural Bridge Specialist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Фішбейн Мойсей Абрамович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Фішбейн_Мойсей_Абрамович
+  type: primary
+  notes: Біографія, творчість, погляди, еміграція та повернення
+- name: Премія імені Василя Стуса
+  url: https://uk.wikipedia.org/wiki/Премія_імені_Василя_Стуса
+  type: reference
+  notes: Контекст нагороди
+register: академічний
+grammar: []

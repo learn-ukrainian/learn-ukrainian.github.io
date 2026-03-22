@@ -2,7 +2,7 @@ module: bio-122
 level: BIO
 sequence: 122
 slug: george-shevelov
-version: '2.0'
+version: '3.0'
 title: 'Юрій Шевельов: Архітектор української лінгвістики'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of юрій шевельов: архітектор української лінгвістики'
 - Evaluate the contributions of голос української мови у світі
 - Trace the career and influence of спадщина та повернення в україну
-sources:
-- name: Юрій Шевельов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
-  type: primary
-  notes: Biography, academic career, works
-- name: Encyclopedia of Ukraine - Shevelov
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
-  type: reference
-  notes: Detailed academic biography
-- name: Історична фонологія української мови
-  url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
-  type: reference
-  notes: His magnum opus
 content_outline:
 - section: Вступ — Голос української мови у світі
   points:
@@ -105,3 +92,18 @@ persona:
   role: Philologist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Шевельов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
+  type: primary
+  notes: Biography, academic career, works
+- name: Encyclopedia of Ukraine - Shevelov
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+  type: reference
+  notes: Detailed academic biography
+- name: Історична фонологія української мови
+  url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
+  type: reference
+  notes: His magnum opus
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-128
 level: ISTORIO
 sequence: 128
 slug: hranitna-revoliutsiia
-version: '1.0'
+version: '3.0'
 title: Гранітна революція 1990
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of гранітна революція 1990
 - Evaluate the historical significance of забута революція
-sources:
-- name: Революція на граніті (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
-  type: reference
-  notes: Granite Revolution
-- name: Студентське голодування 1990 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
-  type: reference
-  notes: Student hunger strike
 content_outline:
 - section: Вступ — Забута революція
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - hromadianske-suspilstvo
 connects_to:
 - 2004-krymska-kryza
+references:
+- name: Революція на граніті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
+  type: reference
+  notes: Granite Revolution
+- name: Студентське голодування 1990 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
+  type: reference
+  notes: Student hunger strike
+register: академічний
+grammar: []

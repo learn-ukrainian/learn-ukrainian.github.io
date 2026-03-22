@@ -2,19 +2,12 @@ module: bio-168
 level: BIO
 sequence: 168
 slug: oleksandra-matviichuk
-version: '2.0'
+version: '3.0'
 title: 'Олександра Матвійчук: Право на справедливість та Нобелівський голос'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Олександра Матвійчук (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Матвійчук_Олександра_В'ячеславівна
-  type: primary
-- name: Центр Громадянських Свобод
-  url: https://ccl.org.ua
-  type: secondary
 content_outline:
 - section: Вступ — Обличчя українського правосуддя у світі
   points:
@@ -82,3 +75,12 @@ objectives:
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Правозахисна архітектура: Центр громадянських свобод та документування злочинів» у власній
   мовній практиці'
+references:
+- name: Олександра Матвійчук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Матвійчук_Олександра_В'ячеславівна
+  type: primary
+- name: Центр Громадянських Свобод
+  url: https://ccl.org.ua
+  type: secondary
+register: академічний
+grammar: []

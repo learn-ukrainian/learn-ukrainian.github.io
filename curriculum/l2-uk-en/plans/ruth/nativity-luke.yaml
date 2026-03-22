@@ -2,7 +2,7 @@ module: ruth-027
 level: RUTH
 sequence: 27
 slug: nativity-luke
-version: '2.0'
+version: '3.0'
 title: Різдво (Лука 2)
 subtitle: The Nativity
 focus: Narrative style comparison
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

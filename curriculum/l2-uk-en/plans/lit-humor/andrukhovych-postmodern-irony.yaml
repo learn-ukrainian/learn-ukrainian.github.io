@@ -2,7 +2,7 @@ sequence: 9
 module: lit-humor-009
 level: LIT.HUMOR
 slug: andrukhovych-postmodern-irony
-version: '2.0'
+version: '3.0'
 title: Andrukhovych Postmodern Irony
 subtitle: Andrukhovych Postmodern Irony
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Carnival Master
 word_target: 5000
+references: []
+register: академічний
+grammar: []

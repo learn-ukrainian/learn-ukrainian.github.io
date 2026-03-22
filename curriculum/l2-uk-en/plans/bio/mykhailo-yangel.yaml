@@ -2,19 +2,12 @@ module: bio-125
 level: BIO
 sequence: 125
 slug: mykhailo-yangel
-version: '2.0'
+version: '3.0'
 title: 'Михайло Янгель: Творець ракетного щита та космічної міці'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Михайло Янгель (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Янгель_Михайло_Кузьмич
-  type: primary
-- name: КБ «Південне» — Історія
-  url: https://www.yuzhnoye.com
-  type: primary
 content_outline:
 - section: Вступ — Архітектор ракетної столиці
   points:
@@ -81,3 +74,12 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Внесок: Ракетна школа Янгеля» у власній мовній практиці'
+references:
+- name: Михайло Янгель (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Янгель_Михайло_Кузьмич
+  type: primary
+- name: КБ «Південне» — Історія
+  url: https://www.yuzhnoye.com
+  type: primary
+register: академічний
+grammar: []

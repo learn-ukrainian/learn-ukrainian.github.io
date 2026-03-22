@@ -2,7 +2,7 @@ module: lit-203
 level: LIT
 sequence: 203
 slug: deresh-intention
-version: '2.0'
+version: '3.0'
 title: Deresh Intention
 subtitle: Deresh Intention
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Deresh Intention у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Deresh Intention — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Mystic Seeker
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Deresh Intention — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

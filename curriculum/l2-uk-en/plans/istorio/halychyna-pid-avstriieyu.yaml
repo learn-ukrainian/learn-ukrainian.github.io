@@ -2,7 +2,7 @@ module: istorio-070
 level: ISTORIO
 sequence: 70
 slug: halychyna-pid-avstriieyu
-version: '1.0'
+version: '3.0'
 title: 'Галичина під Австрією: Особлива доля'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of галичина під австрією: особлива доля'
 - Evaluate the historical significance of інший шлях
-sources:
-- name: Галичина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
-  type: reference
-  notes: Regional overview
-- name: Королівство Галичини та Володимирії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
-  type: reference
-  notes: Habsburg period
-- name: Українці в Австро-Угорщині (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
-  type: reference
-  notes: Ukrainian status
 content_outline:
 - section: Вступ — Інший шлях
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - syntez-diaspora
 connects_to:
 - halychyna-natsionalnyi-rukh
+references:
+- name: Галичина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Regional overview
+- name: Королівство Галичини та Володимирії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
+  type: reference
+  notes: Habsburg period
+- name: Українці в Австро-Угорщині (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
+  type: reference
+  notes: Ukrainian status
+register: академічний
+grammar: []

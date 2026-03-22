@@ -2,7 +2,7 @@ module: lit-120
 level: LIT
 sequence: 120
 slug: kosynka-short-fiction
-version: '2.0'
+version: '3.0'
 title: Kosynka Short Fiction
 subtitle: Kosynka Short Fiction
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати коротку прозу Косинки у контексті експресіонізму
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kosynka Short Fiction — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Village Chronicler
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kosynka Short Fiction — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: oes-077
 level: OES
 sequence: 77
 slug: slovo-defeat
-version: '2.0'
+version: '3.0'
 title: 'Слово: Поразка'
 subtitle: 'Slovo: The Defeat'
 focus: Metaphor — "Sowing fields with bones"
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

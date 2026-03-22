@@ -2,7 +2,7 @@ module: oes-023
 level: OES
 sequence: 23
 slug: lab-death-of-tsar
-version: '2.0'
+version: '3.0'
 title: 'Лабораторія: Смерть царя'
 subtitle: 'Lab: The Death of a Tsar'
 focus: Analyzing the 1054 graffiti on Yaroslav's death
@@ -53,3 +53,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

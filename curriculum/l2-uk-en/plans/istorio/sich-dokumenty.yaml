@@ -2,7 +2,7 @@ module: istorio-027
 level: ISTORIO
 sequence: 27
 slug: sich-dokumenty
-version: '1.0'
+version: '3.0'
 title: 'Документи Січі: Козацьке самоврядування'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
 - Evaluate the historical significance of січ як держава
-sources:
-- name: Запорозька Січ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
-  type: reference
-  notes: Overview
-- name: Козацьке право
-  url: https://uk.wikipedia.org/wiki/Козацьке_право
-  type: reference
-  notes: Cossack law
-- name: Козацька рада
-  url: https://uk.wikipedia.org/wiki/Козацька_рада
-  type: reference
-  notes: Cossack council
 content_outline:
 - section: Вступ — Січ як держава
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - lysty-mazepy
 connects_to:
 - syntez-kozatski-dzherela
+references:
+- name: Запорозька Січ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+  type: reference
+  notes: Overview
+- name: Козацьке право
+  url: https://uk.wikipedia.org/wiki/Козацьке_право
+  type: reference
+  notes: Cossack law
+- name: Козацька рада
+  url: https://uk.wikipedia.org/wiki/Козацька_рада
+  type: reference
+  notes: Cossack council
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-005
 level: LIT
 sequence: 5
 slug: natalka-poltavka
-version: '2.0'
+version: '3.0'
 title: 'Наталка Полтавка: Анатомія Почуттів'
 subtitle: 'LIT-005: Від Сміху до Сліз'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the transition from burlesque to sentimentalism
 - Characterize Natalka as a moral ideal
 - Interpret social conflict in the play
-sources:
-- name: Наталка Полтавка — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=50
-  type: primary
-  notes: П'єса для детального аналізу
-- name: Аналіз "Наталки Полтавки"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Віють вітри — пісня
-  url: https://uk.wikipedia.org/wiki/Віють_вітри
-  type: reference
-  notes: Контекст народної пісні
 content_outline:
 - section: Вступ — Від реготу до сльози
   points:
@@ -104,3 +91,17 @@ grammar:
 - Folk song integration
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Наталка Полтавка — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=50
+  type: primary
+  notes: П'єса для детального аналізу
+- name: Аналіз "Наталки Полтавки"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Віють вітри — пісня
+  url: https://uk.wikipedia.org/wiki/Віють_вітри
+  type: reference
+  notes: Контекст народної пісні
+register: академічний

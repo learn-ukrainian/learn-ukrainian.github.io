@@ -2,7 +2,7 @@ module: lit-185
 level: LIT
 sequence: 185
 slug: zhadan-kharkiv-landscape
-version: '2.0'
+version: '3.0'
 title: Zhadan Kharkiv Landscape
 subtitle: Zhadan Kharkiv Landscape
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Zhadan Kharkiv Landscape у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Zhadan Kharkiv Landscape — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: City Defender
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Zhadan Kharkiv Landscape — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

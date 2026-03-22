@@ -2,7 +2,7 @@ module: istorio-053
 level: ISTORIO
 sequence: 53
 slug: literaturna-dyskusiia
-version: '1.0'
+version: '3.0'
 title: Літературна дискусія 1925-1928
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of літературна дискусія 1925-1928
 - Evaluate the historical significance of битва за культуру
-sources:
-- name: Літературна дискусія 1925-1928 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928
-  type: reference
-  notes: Overview
-- name: ВАПЛІТЕ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/ВАПЛІТЕ
-  type: reference
-  notes: Literary organization
-- name: Микола Хвильовий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
-  type: reference
-  notes: Key figure
 content_outline:
 - section: Вступ — Битва за культуру
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - rozstriliane-kontekst
 connects_to:
 - khvylovyi-kulish-debaty
+references:
+- name: Літературна дискусія 1925-1928 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928
+  type: reference
+  notes: Overview
+- name: ВАПЛІТЕ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/ВАПЛІТЕ
+  type: reference
+  notes: Literary organization
+- name: Микола Хвильовий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  type: reference
+  notes: Key figure
+register: академічний
+grammar: []

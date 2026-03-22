@@ -2,7 +2,7 @@ module: bio-123
 level: BIO
 sequence: 123
 slug: bohdan-ihor-antonych
-version: '2.0'
+version: '3.0'
 title: 'Богдан-Ігор Антонич: Зелена Євангелія'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Богдан-Ігор Антонич as a modernist poet
 - Evaluate the unique synthesis of pantheism and avant-garde in his poetry
 - Trace the influence of Lemko origins on literary identity
-sources:
-- name: Богдан-Ігор Антонич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
-  type: primary
-  notes: Comprehensive biography of the Lemko-born modernist poet
-- name: Антонич у бібліотеці
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
-  type: reference
-  notes: Bio and works in Ukrainian digital library
 content_outline:
 - section: Вступ — Поет космічного організму
   points:
@@ -99,3 +90,14 @@ persona:
   role: Mystic Poet
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Богдан-Ігор Антонич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
+  type: primary
+  notes: Comprehensive biography of the Lemko-born modernist poet
+- name: Антонич у бібліотеці
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
+  type: reference
+  notes: Bio and works in Ukrainian digital library
+register: академічний
+grammar: []

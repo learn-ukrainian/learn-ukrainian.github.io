@@ -2,7 +2,7 @@ module: istorio-079
 level: ISTORIO
 sequence: 79
 slug: pivden-kolonizatsiia-mify
-version: '1.0'
+version: '3.0'
 title: 'Південь: Колонізація та міфи «Новоросії»'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
 - Evaluate the historical significance of що це?
-sources:
-- name: Новоросія (історичний регіон) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
-  type: reference
-  notes: Historical region
-- name: Одеса (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Одеса
-  type: reference
-  notes: City history
-- name: Українці на Півдні України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці
-  type: reference
-  notes: Ukrainian presence
 content_outline:
 - section: Вступ — «Новоросія» — що це?
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - krym-bahatosharovyi
 connects_to:
 - syntez-rehionalna-riznomanitnist
+references:
+- name: Новоросія (історичний регіон) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
+  type: reference
+  notes: Historical region
+- name: Одеса (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Одеса
+  type: reference
+  notes: City history
+- name: Українці на Півдні України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці
+  type: reference
+  notes: Ukrainian presence
+register: академічний
+grammar: []

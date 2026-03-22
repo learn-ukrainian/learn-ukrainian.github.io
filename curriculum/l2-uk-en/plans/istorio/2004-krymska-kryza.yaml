@@ -2,7 +2,7 @@ module: istorio-129
 level: ISTORIO
 sequence: 129
 slug: 2004-krymska-kryza
-version: '1.0'
+version: '3.0'
 title: '2004: Кримська криза під час Помаранчевої'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of 2004: кримська криза під час помаранчевої'
 - Evaluate the historical significance of забута загроза
-sources:
-- name: Помаранчева революція (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
-  type: reference
-  notes: Orange Revolution
-- name: Сепаратизм в Криму (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму
-  type: reference
-  notes: Crimean separatism
 content_outline:
 - section: Вступ — Забута загроза
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - hranitna-revoliutsiia
 connects_to:
 - zhinky-v-revoiuutsiiakh
+references:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: Orange Revolution
+- name: Сепаратизм в Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму
+  type: reference
+  notes: Crimean separatism
+register: академічний
+grammar: []

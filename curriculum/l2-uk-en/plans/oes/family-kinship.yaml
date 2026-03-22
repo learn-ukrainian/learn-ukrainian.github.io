@@ -2,7 +2,7 @@ module: oes-022
 level: OES
 sequence: 22
 slug: family-kinship
-version: '2.0'
+version: '3.0'
 title: Родина та спорідненість
 subtitle: Family & Kinship
 focus: Небіж, мати, брат in graffiti contexts
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

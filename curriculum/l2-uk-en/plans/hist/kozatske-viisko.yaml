@@ -2,7 +2,7 @@ module: hist-048
 level: HIST
 sequence: 48
 slug: kozatske-viisko
-version: '2.0'
+version: '3.0'
 title: Козацьке військо та озброєння
 subtitle: Cossack Army and Weaponry
 focus: history
@@ -13,66 +13,60 @@ objectives:
 - Учень може описати структуру та ієрархію козацького війська
 - Учень може аналізувати типи озброєння та їхнє походження
 - Учень може пояснити тактичні переваги козацької піхоти та кавалерії
-sources:
-- name: Military Art of Ukrainian Cossacks
-  url: https://resource.history.org.ua/item/0002345
-  type: academic
-  notes: Detailed analysis of tactics
-- name: Cossack Weaponry - Museum Project
-  url: https://warmuseum.kyiv.ua
-  type: reference
-  notes: Visual and technical details
 content_outline:
 - section: 'Вступ: Феномен козацького війська'
   points:
   - Universal military service and democracy — concept of 'Лицарський люд' (Knightly people) and distinct social status
-  - International reputation of Cossack mercenaries — valued from France (Dunkirk) to Persia; [!history-bite] about Thirty
-    Years' War participation
+  - International reputation of Cossack mercenaries — valued from France (Dunkirk) to Persia; [!history-bite] about 
+    Thirty Years' War participation
   words: 600
 - section: 'Структура та Ієрархія: Від коша до полку'
   points:
-  - The role of the Hetman and General Staff — Oboznyi (logistics), Suddia (justice), Pysar (intelligence/records), Osavuly
-    (aides), Khorunzhyi (flag-bearer)
-  - Territorial and functional divisions — [!context] Administrative division of Hetmanate (regiments/hundreds) duplicated
-    military structure; state as 'military camp'
+  - The role of the Hetman and General Staff — Oboznyi (logistics), Suddia (justice), Pysar (intelligence/records), 
+    Osavuly (aides), Khorunzhyi (flag-bearer)
+  - Territorial and functional divisions — [!context] Administrative division of Hetmanate (regiments/hundreds) 
+    duplicated military structure; state as 'military camp'
   - Discipline and military code — strict alcohol ban during campaigns; death penalty for disobedience
   words: 600
 - section: 'Озброєння: Шабля, самопал та гармата'
   points:
   - 'Individual weaponry: fire and steel — priority of firearms (muskets/samopaly); 3-rank volley fire tactic (fire-pass-load)'
-  - The cult of the sabre (shablya) — [!myth-buster] Sabre as 'weapon of last resort' or cavalry, while infantry relied on
-    fire; curved eastern type
+  - The cult of the sabre (shablya) — [!myth-buster] Sabre as 'weapon of last resort' or cavalry, while infantry relied 
+    on fire; curved eastern type
   - 'Artillery: mobility and psychological impact — light field falconets transported on wagons; high status of artillery
     masters'
   words: 600
 - section: 'Тактика бою: Козацький табір та розвідка'
   points:
-  - The 'tabor' as a defensive fort — [!decolonization] Wagenburg (moving fortress of chained wagons) as prototype of modern
-    armored units
+  - The 'tabor' as a defensive fort — [!decolonization] Wagenburg (moving fortress of chained wagons) as prototype of 
+    modern armored units
   - 'Cossack ''plastuny'' (scouts) — special operations skills: underwater breathing (reeds), camouflage in steppe'
-  - Siege warfare and river raids — use of 'chaika' boats for sea raids (e.g., Kafa); engineering skills (mining, earthworks)
+  - Siege warfare and river raids — use of 'chaika' boats for sea raids (e.g., Kafa); engineering skills (mining, 
+    earthworks)
   words: 600
 - section: 'Символіка та Клейноди: Знаки влади'
   points:
   - Bulava, bunchuk, and seals — Bulava (Hetman), Bunchuk (horse tail command symbol), Seal ('Knight with Musket')
-  - The sacred meaning of the banner (khoruhva) — [!culture] Loss of khoruhva equated to defeat/shame; Crimson banner with
-    Archangel Michael
+  - The sacred meaning of the banner (khoruhva) — [!culture] Loss of khoruhva equated to defeat/shame; Crimson banner 
+    with Archangel Michael
   words: 600
 - section: 'Читання: Опис козацького вишколу'
   points:
-  - Account of a foreign observer on Cossack training — Guillaume Le Vasseur de Beauplan on endurance, orientation, and gunpowder
-    making
+  - Account of a foreign observer on Cossack training — Guillaume Le Vasseur de Beauplan on endurance, orientation, and 
+    gunpowder making
   words: 600
 - section: 'Первинні джерела: Голоси епохи'
   points:
-  - Analysis of official documents and letters — Khmelnytskyi's diplomatic correspondence vs Cossack chronicles (Hrabianka/Velychko)
+  - Analysis of official documents and letters — Khmelnytskyi's diplomatic correspondence vs Cossack chronicles 
+    (Hrabianka/Velychko)
   words: 600
 - section: Деколонізаційний погляд
   points:
-  - Cossacks as a modern professional army, not a 'rabble' — debunking 'anarchy/bandit' myths; 'Christian Republic' concept
+  - Cossacks as a modern professional army, not a 'rabble' — debunking 'anarchy/bandit' myths; 'Christian Republic' 
+    concept
   - Influence on European military science — adoption of Cossack infantry tactics and light cavalry models by Europe
-  - Ukraine's military subjectivity — [!perspective] 'Antemurale Christianitatis' (Bulwark of Christianity); recognized by
-    European monarchs and Pope
+  - Ukraine's military subjectivity — [!perspective] 'Antemurale Christianitatis' (Bulwark of Christianity); recognized 
+    by European monarchs and Pope
   words: 800
 vocabulary_hints:
   required:
@@ -115,3 +109,12 @@ prerequisites:
 - kozatska-kultura
 connects_to:
 - morski-pokhody
+references:
+- name: Military Art of Ukrainian Cossacks
+  url: https://resource.history.org.ua/item/0002345
+  type: academic
+  notes: Detailed analysis of tactics
+- name: Cossack Weaponry - Museum Project
+  url: https://warmuseum.kyiv.ua
+  type: reference
+  notes: Visual and technical details

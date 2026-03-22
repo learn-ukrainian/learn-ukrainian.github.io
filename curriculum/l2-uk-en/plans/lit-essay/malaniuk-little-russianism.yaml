@@ -2,7 +2,7 @@ sequence: 22
 module: lit-essay-022
 level: LIT.ESSAY
 slug: malaniuk-little-russianism
-version: '2.0'
+version: '3.0'
 title: Malaniuk Little Russianism
 subtitle: Malaniuk Little Russianism
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Empire Diagnostician
 word_target: 5000
+references: []
+register: академічний
+grammar: []

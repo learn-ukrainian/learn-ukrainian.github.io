@@ -2,7 +2,7 @@ module: bio-179
 level: BIO
 sequence: 179
 slug: oleh-olzhych
-version: '2.0'
+version: '3.0'
 title: 'Олег Ольжич: Камінь з Божої пращі'
 focus: biography
 pedagogy: immersion
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати поєднання наукової, поетичної та політичної діяльності Олега Ольжича
 - Дослідити археологічні досягнення Ольжича у контексті тяглості української цивілізації
 - Оцінити моральний вибір інтелектуала між безпекою еміграції та підпільною боротьбою
-sources:
-- name: Олег Ольжич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Олег_Ольжич
-  type: primary
-  notes: Біографія, наукова та політична діяльність, загибель у Заксенгаузені
-- name: Заксенгаузен (концтабір)
-  url: https://uk.wikipedia.org/wiki/Заксенгаузен_(концтабір)
-  type: reference
-  notes: Місце загибелі
 content_outline:
 - section: Вступ — Інтелектуал, який обрав смерть
   points:
@@ -110,3 +101,14 @@ persona:
   role: Resistance Intellectual Specialist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олег Ольжич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Олег_Ольжич
+  type: primary
+  notes: Біографія, наукова та політична діяльність, загибель у Заксенгаузені
+- name: Заксенгаузен (концтабір)
+  url: https://uk.wikipedia.org/wiki/Заксенгаузен_(концтабір)
+  type: reference
+  notes: Місце загибелі
+register: академічний
+grammar: []

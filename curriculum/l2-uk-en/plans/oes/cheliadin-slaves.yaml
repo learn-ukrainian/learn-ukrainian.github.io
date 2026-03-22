@@ -2,7 +2,7 @@ module: oes-055
 level: OES
 sequence: 55
 slug: cheliadin-slaves
-version: '2.0'
+version: '3.0'
 title: Челядь (невільники)
 subtitle: The Cheliadin (Slaves)
 focus: Social hierarchy intro
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

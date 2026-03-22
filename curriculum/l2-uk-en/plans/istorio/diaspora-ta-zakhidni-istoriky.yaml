@@ -2,7 +2,7 @@ module: istorio-006
 level: ISTORIO
 sequence: 6
 slug: diaspora-ta-zakhidni-istoriky
-version: '1.0'
+version: '3.0'
 title: Діаспора та західні історики
 focus: history
 pedagogy: seminar
@@ -11,23 +11,6 @@ objectives:
 - Analyze the causes and consequences of діаспора та західні історики
 - Evaluate the historical significance of історія в екзилі
 - Trace the development of діалог із україною після 1991
-sources:
-- name: Harvard Ukrainian Research Institute (HURI)
-  url: https://huri.harvard.edu/
-  type: reference
-  notes: Key Western academic institution
-- name: Омелян Пріцак
-  url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
-  type: reference
-  notes: Founder of HURI
-- name: Орест Субтельний
-  url: https://uk.wikipedia.org/wiki/Субтельний_Орест
-  type: reference
-  notes: Author of most popular English-language history
-- name: 'Ukraine: A History (book info)'
-  url: https://www.utpress.utoronto.ca/9781442609914/ukraine
-  type: secondary
-  notes: Subtelny's standard text
 content_outline:
 - section: Вступ — Історія в екзилі
   points:
@@ -133,3 +116,22 @@ prerequisites:
 - polskyi-pohliad
 connects_to:
 - nova-ukrainska-istorio
+references:
+- name: Harvard Ukrainian Research Institute (HURI)
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Key Western academic institution
+- name: Омелян Пріцак
+  url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
+  type: reference
+  notes: Founder of HURI
+- name: Орест Субтельний
+  url: https://uk.wikipedia.org/wiki/Субтельний_Орест
+  type: reference
+  notes: Author of most popular English-language history
+- name: 'Ukraine: A History (book info)'
+  url: https://www.utpress.utoronto.ca/9781442609914/ukraine
+  type: secondary
+  notes: Subtelny's standard text
+register: академічний
+grammar: []

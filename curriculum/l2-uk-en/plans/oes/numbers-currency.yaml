@@ -2,7 +2,7 @@ module: oes-014
 level: OES
 sequence: 14
 slug: numbers-currency
-version: '2.0'
+version: '3.0'
 title: Числа та валюта
 subtitle: Numbers & Currency
 focus: 'Куни, ногати, гривні (Zvenyhorod #1)'
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

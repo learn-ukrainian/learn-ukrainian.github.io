@@ -2,7 +2,7 @@ module: ruth-039
 level: RUTH
 sequence: 39
 slug: nt-contrast-logos
-version: '2.0'
+version: '3.0'
 title: 'Контраст: Логос'
 subtitle: New Testament Contrast
 focus: Ostrih vs Peresopnytsia (John 1)
@@ -53,3 +53,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

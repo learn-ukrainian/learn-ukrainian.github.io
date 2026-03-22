@@ -2,7 +2,7 @@ sequence: 17
 module: lit-essay-017
 level: LIT.ESSAY
 slug: dontsov-chaos
-version: '2.0'
+version: '3.0'
 title: Dontsov Chaos
 subtitle: Dontsov Chaos
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Voluntarist Agitator
 word_target: 5000
+references: []
+register: академічний
+grammar: []

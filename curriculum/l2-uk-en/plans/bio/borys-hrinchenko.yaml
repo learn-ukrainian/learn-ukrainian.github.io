@@ -2,7 +2,7 @@ module: bio-056
 level: BIO
 sequence: 56
 slug: borys-hrinchenko
-version: '2.0'
+version: '3.0'
 title: 'Борис Грінченко: Лексикограф і просвітник'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of борис грінченко: лексикограф і просвітник'
 - Evaluate the contributions of вартовий українського слова
 - Trace the career and influence of каменяр словникарства
-sources:
-- name: Борис Грінченко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
-  type: primary
-  notes: Comprehensive biography of lexicographer and educator
-- name: Словник Грінченка онлайн
-  url: https://hrinchenko.com/
-  type: reference
-  notes: Digital version of the famous dictionary
 content_outline:
 - section: Вступ — Вартовий українського слова
   points:
@@ -98,3 +89,14 @@ persona:
   role: Dictionary Compiler
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Борис Грінченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
+  type: primary
+  notes: Comprehensive biography of lexicographer and educator
+- name: Словник Грінченка онлайн
+  url: https://hrinchenko.com/
+  type: reference
+  notes: Digital version of the famous dictionary
+register: академічний
+grammar: []

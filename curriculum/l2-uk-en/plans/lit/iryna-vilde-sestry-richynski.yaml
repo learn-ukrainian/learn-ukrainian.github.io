@@ -2,7 +2,7 @@ module: lit-167
 level: LIT
 sequence: 167
 slug: iryna-vilde-sestry-richynski
-version: '2.0'
+version: '3.0'
 title: 'Ірина Вільде: Сестри Річинські'
 subtitle: Iryna Vilde — The Richynsky Sisters
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати епічну сагу «Сестри Річинські» як зразок галицького психологічного реалізму
 - Дослідити жіноче письмо Вільде у контексті феміністичної традиції
 - Зрозуміти Галичину як окремий літературний простір
-sources:
-- name: Ірина Вільде — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -76,3 +72,9 @@ persona:
   role: Feminist Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Ірина Вільде — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

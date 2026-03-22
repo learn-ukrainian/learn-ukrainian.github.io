@@ -2,7 +2,7 @@ module: oes-020
 level: OES
 sequence: 20
 slug: adjectives-agreement
-version: '2.0'
+version: '3.0'
 title: Прикметники та узгодження
 subtitle: Adjectives & Agreement
 focus: Куни лодійні — Agreement in case/gender
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

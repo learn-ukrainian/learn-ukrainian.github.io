@@ -2,7 +2,7 @@ module: lit-070
 level: LIT
 sequence: 70
 slug: vynnychenko-solar-machine
-version: '2.0'
+version: '3.0'
 title: 'Володимир Винниченко: «Сонячна машина» — перша утопія'
 subtitle: Vynnychenko Solar Machine
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Володимир Винниченко: «Сонячна машина» — перша утопія у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Володимир Винниченко: «Сонячна машина» — перша утопія — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Utopian Architect
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Володимир Винниченко: «Сонячна машина» — перша утопія — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

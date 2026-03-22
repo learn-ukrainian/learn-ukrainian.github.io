@@ -2,7 +2,7 @@ module: ruth-071
 level: RUTH
 sequence: 71
 slug: panegyric-style
-version: '2.0'
+version: '3.0'
 title: Панегіричний стиль
 subtitle: Panegyric Style
 focus: Praising patrons (Mazepa, Mohyla)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

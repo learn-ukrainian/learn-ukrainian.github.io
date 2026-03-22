@@ -2,7 +2,7 @@ module: bio-054
 level: BIO
 sequence: 54
 slug: ivan-franko
-version: '2.0'
+version: '3.0'
 title: 'Іван Франко: Каменяр'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of іван франко: каменяр'
 - Evaluate the contributions of титан праці
 - Trace the career and influence of вічний каменяр
-sources:
-- name: Іван Франко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
-  type: primary
-  notes: Comprehensive biography of the titan of Ukrainian culture
-- name: Інститут Івана Франка НАН України
-  url: https://ifnan.gov.ua/
-  type: reference
-  notes: Academic institution dedicated to Franko studies
 content_outline:
 - section: Вступ — Титан праці
   points:
@@ -98,3 +89,14 @@ persona:
   role: Intellectual Titan
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Франко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  type: primary
+  notes: Comprehensive biography of the titan of Ukrainian culture
+- name: Інститут Івана Франка НАН України
+  url: https://ifnan.gov.ua/
+  type: reference
+  notes: Academic institution dedicated to Franko studies
+register: академічний
+grammar: []

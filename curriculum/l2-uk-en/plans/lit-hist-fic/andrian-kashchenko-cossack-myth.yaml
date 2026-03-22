@@ -2,7 +2,7 @@ module: lit-hist-fic-020
 level: LIT-HIST-FIC
 sequence: 20
 slug: andrian-kashchenko-cossack-myth
-version: '2.0'
+version: '3.0'
 title: 'Андріан Кащенко: Над Кодацьким порогом'
 subtitle: Popularizing the Zaporozhian Sich myth and banned for bourgeois nationalism
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати творчість Андріана Кащенка як основоположника популярної козацької прози
 - Дослідити роль оповідань «Над Кодацьким порогом» та «З Дніпра на Дунай» у формуванні козацького міфу
 - Зрозуміти причини заборони Кащенка в СРСР як «буржуазного націоналіста»
-sources:
-- name: Андріан Кащенко — проза
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -84,3 +79,10 @@ persona:
   role: Keeper of the Sich Gate
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Андріан Кащенко — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

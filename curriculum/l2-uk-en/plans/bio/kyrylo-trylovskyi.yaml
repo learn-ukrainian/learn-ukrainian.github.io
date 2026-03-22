@@ -2,7 +2,7 @@ module: bio-060
 level: BIO
 sequence: 60
 slug: kyrylo-trylovskyi
-version: '2.0'
+version: '3.0'
 title: 'Кирило Трильовський: Засновник Січі'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of кирило трильовський: засновник січі'
 - Evaluate the contributions of батько «січі»
 - Trace the career and influence of батько українського спорту
-sources:
-- name: Кирило Трильовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
-  type: primary
-  notes: Biography of the founder of the Sich movement
-- name: Українські Січові Стрільці
-  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
-  type: reference
-  notes: History of the movement Trylovsky founded
 content_outline:
 - section: Вступ — Батько «Січі»
   points:
@@ -98,3 +89,14 @@ persona:
   role: Sich Organizer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Кирило Трильовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+  type: primary
+  notes: Biography of the founder of the Sich movement
+- name: Українські Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+  type: reference
+  notes: History of the movement Trylovsky founded
+register: академічний
+grammar: []

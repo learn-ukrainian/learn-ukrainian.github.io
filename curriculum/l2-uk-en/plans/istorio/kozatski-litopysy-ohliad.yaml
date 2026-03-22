@@ -2,7 +2,7 @@ module: istorio-019
 level: ISTORIO
 sequence: 19
 slug: kozatski-litopysy-ohliad
-version: '1.0'
+version: '3.0'
 title: 'Козацькі літописи: Огляд традиції'
 focus: history
 pedagogy: seminar
@@ -10,23 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of козацькі літописи: огляд традиції'
 - Evaluate the historical significance of козацька історіографія
-sources:
-- name: Козацькі літописи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
-  type: reference
-  notes: Overview of Cossack chronicles
-- name: Літопис Самовидця
-  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
-  type: reference
-  notes: Eyewitness chronicle
-- name: Літопис Григорія Граб'янки
-  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
-  type: reference
-  notes: Hrabianka chronicle
-- name: Літопис Самійла Величка
-  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
-  type: reference
-  notes: Velychko chronicle
 content_outline:
 - section: Вступ — Козацька історіографія
   points:
@@ -129,3 +112,22 @@ prerequisites:
 - syntez-serednovichni-dzherela
 connects_to:
 - litopys-samovidtsia
+references:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview of Cossack chronicles
+- name: Літопис Самовидця
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Eyewitness chronicle
+- name: Літопис Григорія Граб'янки
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Hrabianka chronicle
+- name: Літопис Самійла Величка
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  type: reference
+  notes: Velychko chronicle
+register: академічний
+grammar: []

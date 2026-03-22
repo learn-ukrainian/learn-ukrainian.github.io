@@ -2,7 +2,7 @@ module: istorio-054
 level: ISTORIO
 sequence: 54
 slug: khvylovyi-kulish-debaty
-version: '1.0'
+version: '3.0'
 title: 'Хвильовий: «Геть від Москви!»'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
 - Evaluate the historical significance of найсміливіший голос
-sources:
-- name: Хвильовий Микола — памфлети
-  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
-  type: primary
-  notes: Pamphlet texts
-- name: Микола Хвильовий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
-  type: reference
-  notes: Biography
-- name: «Камо грядеши» та інші памфлети
-  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
-  type: reference
-  notes: Key work
 content_outline:
 - section: Вступ — Найсміливіший голос
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - literaturna-dyskusiia
 connects_to:
 - teatr-kurbasa
+references:
+- name: Хвильовий Микола — памфлети
+  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
+  type: primary
+  notes: Pamphlet texts
+- name: Микола Хвильовий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  type: reference
+  notes: Biography
+- name: «Камо грядеши» та інші памфлети
+  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
+  type: reference
+  notes: Key work
+register: академічний
+grammar: []

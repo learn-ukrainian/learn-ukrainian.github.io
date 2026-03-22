@@ -2,7 +2,7 @@ module: bio-154
 level: BIO
 sequence: 154
 slug: serhii-plokhy
-version: '2.0'
+version: '3.0'
 title: 'Сергій Плохій: Історик, який пояснив Україну світові'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of сергій плохій: історик, який пояснив україну світові'
 - Evaluate the contributions of голос україни в гарварді
 - Trace the career and influence of значення для україни
-sources:
-- name: Сергій Плохій (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
-  type: primary
-  notes: Biography, academic career, books
-- name: Harvard Ukrainian Research Institute
-  url: https://huri.harvard.edu/
-  type: reference
-  notes: Institute he directs
-- name: Брама Європи
-  url: https://uk.wikipedia.org/wiki/Брама_Європи
-  type: reference
-  notes: His major work on Ukrainian history
 content_outline:
 - section: Вступ — Голос України в Гарварді
   points:
@@ -105,3 +92,18 @@ persona:
   role: Archival Detective
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Сергій Плохій (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
+  type: primary
+  notes: Biography, academic career, books
+- name: Harvard Ukrainian Research Institute
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Institute he directs
+- name: Брама Європи
+  url: https://uk.wikipedia.org/wiki/Брама_Європи
+  type: reference
+  notes: His major work on Ukrainian history
+register: академічний
+grammar: []

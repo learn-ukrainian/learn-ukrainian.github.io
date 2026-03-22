@@ -2,7 +2,7 @@ module: lit-105
 level: LIT
 sequence: 105
 slug: domontovych-intellectuals
-version: '2.0'
+version: '3.0'
 title: Domontovych Intellectuals
 subtitle: Domontovych Intellectuals
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Domontovych Intellectuals у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Domontovych Intellectuals — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Intellectual Skeptic
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Domontovych Intellectuals — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

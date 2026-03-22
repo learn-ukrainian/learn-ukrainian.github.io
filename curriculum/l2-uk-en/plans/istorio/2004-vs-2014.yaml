@@ -2,7 +2,7 @@ module: istorio-093
 level: ISTORIO
 sequence: 93
 slug: 2004-vs-2014
-version: '1.0'
+version: '3.0'
 title: 'Помаранчева vs Гідності: Чому різні результати?'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
 - Evaluate the historical significance of дві революції, різні наслідки
-sources:
-- name: Помаранчева революція (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
-  type: reference
-  notes: 2004 events
-- name: Революція гідності (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_гідності
-  type: reference
-  notes: 2014 events
-- name: Віктор Ющенко (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
-  type: reference
-  notes: 2004 leader
 content_outline:
 - section: Вступ — Дві революції, різні наслідки
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - 1991-referendum
 connects_to:
 - syntez-rozdorizhzhia
+references:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: 2004 events
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 events
+- name: Віктор Ющенко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
+  type: reference
+  notes: 2004 leader
+register: академічний
+grammar: []

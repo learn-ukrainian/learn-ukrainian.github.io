@@ -2,7 +2,7 @@ module: oes-009
 level: OES
 sequence: 9
 slug: pronouns-self-other
-version: '2.0'
+version: '3.0'
 title: 'Займенники: Я та інші'
 subtitle: 'Pronouns: Self and Other'
 focus: Я, ти, мьнѣ, тобѣ in personal letters
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

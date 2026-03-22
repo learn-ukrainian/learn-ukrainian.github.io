@@ -2,7 +2,7 @@ module: istorio-001
 level: ISTORIO
 sequence: 1
 slug: shcho-take-istorio
-version: '1.0'
+version: '3.0'
 title: Що таке історіографія?
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the difference between history and historiography
 - Evaluate the impact of bias and narrative on historical writing
-sources:
-- name: Історіографія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історіографія_України
-  type: reference
-  notes: Overview of Ukrainian historiographical tradition
-- name: Грушевський — Історія України-Руси (вступ)
-  url: https://litopys.org.ua/hrushukr/ihu.htm
-  type: primary
-  notes: Hrushevsky's methodological introduction
-- name: What is Historiography? (academic intro)
-  url: https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
-  type: reference
-  notes: English reference for conceptual framework
 content_outline:
 - section: Вступ — Історія vs. Історіографія
   points:
@@ -122,3 +109,19 @@ persona:
   role: Historical Methodologist
 connects_to:
 - ukrainska-istoriohrafichna-tradytsiia
+references:
+- name: Історіографія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  type: reference
+  notes: Overview of Ukrainian historiographical tradition
+- name: Грушевський — Історія України-Руси (вступ)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
+  type: primary
+  notes: Hrushevsky's methodological introduction
+- name: What is Historiography? (academic intro)
+  url: 
+    https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
+  type: reference
+  notes: English reference for conceptual framework
+register: академічний
+grammar: []

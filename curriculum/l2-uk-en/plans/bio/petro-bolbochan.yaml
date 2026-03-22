@@ -2,7 +2,7 @@ module: bio-086
 level: BIO
 sequence: 86
 slug: petro-bolbochan
-version: '2.0'
+version: '3.0'
 title: 'Петро Болбочан: Полковник-герой'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of петро болбочан: полковник-герой'
 - Evaluate the contributions of герой криму
 - Trace the career and influence of страта та реабілітація
-sources:
-- name: Петро Болбочан (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
-  type: primary
-  notes: Біографія, Кримський похід, трагічна доля
-- name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
-  type: reference
-  notes: Дослідження Української революції
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: Військова історія УНР
 content_outline:
 - section: Вступ — Герой Криму
   points:
@@ -103,3 +90,18 @@ persona:
   role: Liberator of Crimea
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Петро Болбочан (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
+  type: primary
+  notes: Біографія, Кримський похід, трагічна доля
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Дослідження Української революції
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Військова історія УНР
+register: академічний
+grammar: []

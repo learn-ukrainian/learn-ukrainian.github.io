@@ -2,7 +2,7 @@ module: istorio-044
 level: ISTORIO
 sequence: 44
 slug: syntez-dysydentski-dzherela
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Голоси опору'
 focus: history
 pedagogy: seminar
@@ -10,11 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: голоси опору'
 - Evaluate the historical significance of від самвидаву до незалежності
-sources:
-- name: Дисидентський рух в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
-  type: reference
-  notes: Overview
 content_outline:
 - section: Вступ — Від самвидаву до незалежності
   points:
@@ -118,3 +113,10 @@ prerequisites:
 - akt-nezalezhnosti-1991
 connects_to:
 - holodomor-istorio
+references:
+- name: Дисидентський рух в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  type: reference
+  notes: Overview
+register: академічний
+grammar: []

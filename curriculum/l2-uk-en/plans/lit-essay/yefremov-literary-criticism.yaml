@@ -2,7 +2,7 @@ sequence: 21
 module: lit-essay-021
 level: LIT.ESSAY
 slug: yefremov-literary-criticism
-version: '2.0'
+version: '3.0'
 title: Yefremov Literary Criticism
 subtitle: Yefremov Literary Criticism
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Literary Critic Under Sentence
 word_target: 5000
+references: []
+register: академічний
+grammar: []

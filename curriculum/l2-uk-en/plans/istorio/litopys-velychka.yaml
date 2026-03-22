@@ -2,7 +2,7 @@ module: istorio-022
 level: ISTORIO
 sequence: 22
 slug: litopys-velychka
-version: '1.0'
+version: '3.0'
 title: 'Літопис Величка: Барокова історія'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of літопис величка: барокова історія'
 - Evaluate the historical significance of найповніший козацький літопис
-sources:
-- name: Літопис Самійла Величка (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
-  type: reference
-  notes: Overview
-- name: Літопис Величка (текст)
-  url: https://litopys.org.ua/velichko/vel.htm
-  type: primary
-  notes: Full text (partial)
-- name: Величко Самійло Васильович
-  url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
-  type: reference
-  notes: Author biography
 content_outline:
 - section: Вступ — Найповніший козацький літопис
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - litopys-hrabianky
 connects_to:
 - universaly-khmelnytkoho
+references:
+- name: Літопис Самійла Величка (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  type: reference
+  notes: Overview
+- name: Літопис Величка (текст)
+  url: https://litopys.org.ua/velichko/vel.htm
+  type: primary
+  notes: Full text (partial)
+- name: Величко Самійло Васильович
+  url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
+  type: reference
+  notes: Author biography
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-149
 level: LIT
 sequence: 149
 slug: malaniuk-poetry
-version: '2.0'
+version: '3.0'
 title: Malaniuk Poetry
 subtitle: Malaniuk Poetry
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - malyshko-songs
 connects_to:
 - teliha-poetry
+references: []
+register: академічний
+grammar: []

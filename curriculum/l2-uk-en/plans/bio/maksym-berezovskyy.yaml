@@ -2,7 +2,7 @@ module: bio-034
 level: BIO
 sequence: 34
 slug: maksym-berezovskyy
-version: '2.0'
+version: '3.0'
 title: 'Максим Березовський: Композитор барокко'
 focus: biography
 phase: BIO
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the life and legacy of максим березовський: композитор барокко'
 - Evaluate the contributions of трагічний геній
-sources:
-- name: Максим Березовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Максим_Березовський
-  type: primary
-  notes: Biography, musical works, tragic death
-- name: Українське барокове мистецтво
-  url: https://uk.wikipedia.org/wiki/Українське_бароко
-  type: reference
-  notes: Cultural context
-- name: Глухівська музична школа
-  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
-  type: reference
-  notes: Musical education context
 content_outline:
 - section: Вступ — Трагічний геній
   points:
@@ -112,3 +99,18 @@ persona:
   role: Court Composer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Максим Березовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Максим_Березовський
+  type: primary
+  notes: Biography, musical works, tragic death
+- name: Українське барокове мистецтво
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  type: reference
+  notes: Cultural context
+- name: Глухівська музична школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Musical education context
+register: академічний
+grammar: []

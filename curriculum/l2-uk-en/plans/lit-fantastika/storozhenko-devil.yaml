@@ -2,7 +2,7 @@ sequence: 2
 module: lit-fantastika-002
 level: LIT.FANTASTIKA
 slug: storozhenko-devil
-version: '2.0'
+version: '3.0'
 title: Storozhenko Devil
 subtitle: Storozhenko Devil
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cossack Characternik
 word_target: 5000
+references: []
+register: академічний
+grammar: []

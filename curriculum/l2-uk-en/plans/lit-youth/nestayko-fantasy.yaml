@@ -2,7 +2,7 @@ sequence: 8
 module: lit-youth-008
 level: LIT.JUVENILE
 slug: nestayko-fantasy
-version: '2.0'
+version: '3.0'
 title: Nestayko Fantasy
 subtitle: Nestayko Fantasy
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Fantasy Weaver
 word_target: 5000
+references: []
+register: академічний
+grammar: []

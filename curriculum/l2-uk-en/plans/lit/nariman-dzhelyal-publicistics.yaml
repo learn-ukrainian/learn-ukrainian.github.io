@@ -2,7 +2,7 @@ module: lit-220
 level: LIT
 sequence: 220
 slug: nariman-dzhelyal-publicistics
-version: '2.0'
+version: '3.0'
 title: 'Наріман Джеляль: Листи з ув''язнення'
 subtitle: Nariman Dzhelyal — Letters from Captivity
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати публіцистику Джеляля як зразок літератури опору
 - Дослідити жанр листа з ув'язнення в українській традиції (Стус → Джеляль)
 - Зрозуміти окупацію Криму через голос політв'язня
-sources:
-- name: Наріман Джеляль — публіцистика
-  url: https://uk.wikipedia.org/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -75,3 +71,9 @@ persona:
   role: Human Rights Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Наріман Джеляль — публіцистика
+  url: https://uk.wikipedia.org/
+  type: primary
+register: академічний
+grammar: []

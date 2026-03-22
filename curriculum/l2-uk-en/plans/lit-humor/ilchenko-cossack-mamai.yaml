@@ -2,7 +2,7 @@ sequence: 8
 module: lit-humor-008
 level: LIT.HUMOR
 slug: ilchenko-cossack-mamai
-version: '2.0'
+version: '3.0'
 title: Ilchenko Cossack Mamai
 subtitle: Ilchenko Cossack Mamai
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cossack Charakternyk
 word_target: 5000
+references: []
+register: академічний
+grammar: []

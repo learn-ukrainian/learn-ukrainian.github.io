@@ -2,7 +2,7 @@ module: lit-008
 level: LIT
 sequence: 8
 slug: konotop-witch
-version: '2.0'
+version: '3.0'
 title: 'Конотопська Відьма: Сатира на Руїну'
 subtitle: 'LIT-008: Гумор як Дзеркало Деградації'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the satire in "Konotop Witch"
 - Contrast satire with sentimentalism
 - Evaluate the historical context of the Hetmanate's decline
-sources:
-- name: Конотопська відьма — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
-  type: primary
-  notes: Повість для детального аналізу
-- name: Аналіз "Конотопської відьми"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Козацька старшина XVIII ст.
-  url: https://uk.wikipedia.org/wiki/Козацька_старшина
-  type: reference
-  notes: Історичний контекст
 content_outline:
 - section: Вступ — Найтемніша і найсмішніша повість
   points:
@@ -104,3 +91,17 @@ grammar:
 - Archaic bureaucratic vocabulary (Kantseliaryt)
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Конотопська відьма — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
+  type: primary
+  notes: Повість для детального аналізу
+- name: Аналіз "Конотопської відьми"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Козацька старшина XVIII ст.
+  url: https://uk.wikipedia.org/wiki/Козацька_старшина
+  type: reference
+  notes: Історичний контекст
+register: академічний

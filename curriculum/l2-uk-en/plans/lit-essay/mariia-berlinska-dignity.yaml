@@ -2,7 +2,7 @@ sequence: 45
 module: lit-essay-045
 level: LIT.ESSAY
 slug: mariia-berlinska-dignity
-version: '2.0'
+version: '3.0'
 title: Mariia Berlinska Dignity
 subtitle: Mariia Berlinska Dignity
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Civil Society Leader
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-161
 level: BIO
 sequence: 161
 slug: taras-prokhasko
-version: '2.0'
+version: '3.0'
 title: 'Тарас Прохасько: Станіславівський феномен'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of тарас прохасько: станіславівський феномен'
 - Evaluate the contributions of письменник як ботанік і філософ
 - Trace the career and influence of література як спосіб бачити світ
-sources:
-- name: Тарас Прохасько (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Видавництво Кальварія
-  url: https://www.calvaria.com.ua/
-  type: reference
-  notes: Бібліографія та видання
-- name: Літературна критика
-  url: https://litakcent.com/
-  type: reference
-  notes: Аналіз творчості
 content_outline:
 - section: Вступ — Письменник як ботанік і філософ
   points:
@@ -103,3 +90,18 @@ persona:
   role: Carpathian Philosopher
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Тарас Прохасько (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Кальварія
+  url: https://www.calvaria.com.ua/
+  type: reference
+  notes: Бібліографія та видання
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
+register: академічний
+grammar: []

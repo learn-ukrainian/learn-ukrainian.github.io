@@ -2,7 +2,7 @@ module: bio-007
 level: BIO
 sequence: 7
 slug: nestor-litopysets
-version: '2.0'
+version: '3.0'
 title: 'Нестор Літописець: Батько української історіографії'
 focus: biography
 pedagogy: seminar
@@ -12,13 +12,6 @@ objectives:
 - Analyze primary sources
 - Evaluate historiography
 - Understand monastic culture
-sources:
-- name: Povist mynulykh lit
-  url: http://litopys.org.ua
-  type: primary
-- name: Pateryk
-  url: http://litopys.org.ua
-  type: primary
 content_outline:
 - section: Вступ
   points:
@@ -68,3 +61,11 @@ grammar:
 - Archaic syntax
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Povist mynulykh lit
+  url: http://litopys.org.ua
+  type: primary
+- name: Pateryk
+  url: http://litopys.org.ua
+  type: primary
+register: академічний

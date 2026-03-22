@@ -2,7 +2,7 @@ module: lit-youth-030
 level: LIT-YOUTH
 sequence: 30
 slug: sashko-dermanskyi-chudove-chudovysko
-version: '2.0'
+version: '3.0'
 title: 'Сашко Дерманський: Чудове Чудовисько та інші світи'
 subtitle: Modern Ukrainian children's fantasy and the most popular contemporary YA author
 focus: literature
@@ -78,3 +78,6 @@ persona:
   role: Curator of Marvels
 module_type: literature
 immersion: 100% Ukrainian
+references: []
+register: академічний
+grammar: []

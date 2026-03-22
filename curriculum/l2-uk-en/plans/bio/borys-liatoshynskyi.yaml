@@ -2,7 +2,7 @@ module: bio-104
 level: BIO
 sequence: 104
 slug: borys-liatoshynskyi
-version: '2.0'
+version: '3.0'
 title: 'Борис Лятошинський: Симфоніст'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of борис лятошинський: симфоніст'
 - Evaluate the contributions of голос української симфонії
 - Trace the career and influence of батько української симфонії
-sources:
-- name: Борис Лятошинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
-  type: primary
-  notes: Biography of the leading Ukrainian symphonic composer
-- name: Національна музична академія України
-  url: https://knmau.com.ua/
-  type: reference
-  notes: Archives of the academy where Lyatoshynsky taught
 content_outline:
 - section: Вступ — Голос української симфонії
   points:
@@ -98,3 +89,14 @@ persona:
   role: Symphony Conductor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Борис Лятошинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
+  type: primary
+  notes: Biography of the leading Ukrainian symphonic composer
+- name: Національна музична академія України
+  url: https://knmau.com.ua/
+  type: reference
+  notes: Archives of the academy where Lyatoshynsky taught
+register: академічний
+grammar: []

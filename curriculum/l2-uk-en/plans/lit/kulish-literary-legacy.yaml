@@ -2,7 +2,7 @@ module: lit-021
 level: LIT
 sequence: 21
 slug: kulish-literary-legacy
-version: '2.0'
+version: '3.0'
 title: Kulish Literary Legacy
 subtitle: Kulish Literary Legacy
 focus: literature
@@ -52,3 +52,6 @@ prerequisites:
 - cult-of-shevchenko
 connects_to:
 - black-council-history
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-100
 level: ISTORIO
 sequence: 100
 slug: zakhid-2008
-version: '1.0'
+version: '3.0'
 title: 'Бухарест 2008: NATO каже «ні»'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
 - Evaluate the historical significance of вето на безпеку
-sources:
-- name: Бухарестський саміт (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
-  type: reference
-  notes: Summit decisions
-- name: План дій щодо членства (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
-  type: reference
-  notes: MAP explanation
-- name: Розширення НАТО (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
-  type: reference
-  notes: Enlargement context
 content_outline:
 - section: Вступ — Вето на безпеку
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - chornomorskyi-flot
 connects_to:
 - zakhid-2014
+references:
+- name: Бухарестський саміт (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
+  type: reference
+  notes: Summit decisions
+- name: План дій щодо членства (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
+  type: reference
+  notes: MAP explanation
+- name: Розширення НАТО (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
+  type: reference
+  notes: Enlargement context
+register: академічний
+grammar: []

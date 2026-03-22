@@ -2,7 +2,7 @@ module: oes-093
 level: OES
 sequence: 93
 slug: ilarion-sermon-intro
-version: '2.0'
+version: '3.0'
 title: 'Проповідь Іларіона: Вступ'
 subtitle: Ilarion's Sermon (Intro)
 focus: Law (Moses) vs Grace (Jesus)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

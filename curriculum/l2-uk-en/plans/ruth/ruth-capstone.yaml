@@ -2,7 +2,7 @@ module: ruth-115
 level: RUTH
 sequence: 115
 slug: ruth-capstone
-version: '2.0'
+version: '3.0'
 title: Капстоун RUTH
 subtitle: RUTH Capstone
 focus: Tracing a word from 1529 to 1794
@@ -51,3 +51,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

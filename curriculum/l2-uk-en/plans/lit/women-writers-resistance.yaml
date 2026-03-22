@@ -2,7 +2,7 @@ module: lit-163
 level: LIT
 sequence: 163
 slug: women-writers-resistance
-version: '2.0'
+version: '3.0'
 title: Women Writers Resistance
 subtitle: Women Writers Resistance
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Women Writers Resistance у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Women Writers Resistance — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Resistance Fighter
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Women Writers Resistance — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

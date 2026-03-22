@@ -1,7 +1,7 @@
 module: lit-essay-050
 level: LIT.ESSAY
 slug: mokryk-rebellion-against-empire
-version: '2.0'
+version: '3.0'
 title: 'Радомир Мокрик: Бунт проти імперії'
 subtitle: Шістдесятники як предтечі незалежності
 content_outline:
@@ -62,3 +62,6 @@ persona:
   voice: Literary Historian
   role: Cultural Critic
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-091
 level: ISTORIO
 sequence: 91
 slug: unr-vybory
-version: '1.0'
+version: '3.0'
 title: 'УНР 1917-1921: Стратегічні помилки'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of унр 1917-1921: стратегічні помилки'
 - Evaluate the historical significance of втрачена незалежність
-sources:
-- name: Українська Народна Республіка (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
-  type: reference
-  notes: UNR history
-- name: Українсько-радянська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
-  type: reference
-  notes: War context
-- name: Центральна Рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
-  type: reference
-  notes: Government
 content_outline:
 - section: Вступ — Втрачена незалежність
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - poltava-naslidky
 connects_to:
 - 1991-referendum
+references:
+- name: Українська Народна Республіка (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
+  type: reference
+  notes: UNR history
+- name: Українсько-радянська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
+  type: reference
+  notes: War context
+- name: Центральна Рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  type: reference
+  notes: Government
+register: академічний
+grammar: []

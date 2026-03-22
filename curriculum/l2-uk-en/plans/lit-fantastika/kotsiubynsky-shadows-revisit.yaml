@@ -2,7 +2,7 @@ sequence: 3
 module: lit-fantastika-003
 level: LIT.FANTASTIKA
 slug: kotsiubynsky-shadows-revisit
-version: '2.0'
+version: '3.0'
 title: Kotsiubynsky Shadows Revisit
 subtitle: Kotsiubynsky Shadows Revisit
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Carpathian Molfar
 word_target: 5000
+references: []
+register: академічний
+grammar: []

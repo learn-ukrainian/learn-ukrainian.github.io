@@ -2,19 +2,12 @@ module: bio-169
 level: BIO
 sequence: 169
 slug: kateryna-handziuk
-version: '2.0'
+version: '3.0'
 title: 'Катерина Гандзюк: Голос правди та боротьба проти свавілля'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Катерина Гандзюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гандзюк_Катерина_Вікторівна
-  type: primary
-- name: Сайт пам'яті Катерини Гандзюк
-  url: https://gandziuk.org
-  type: primary
 content_outline:
 - section: Вступ — Символ нескореності
   points:
@@ -80,3 +73,12 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Внесок: Пробудження суспільства» у власній мовній практиці'
+references:
+- name: Катерина Гандзюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гандзюк_Катерина_Вікторівна
+  type: primary
+- name: Сайт пам'яті Катерини Гандзюк
+  url: https://gandziuk.org
+  type: primary
+register: академічний
+grammar: []

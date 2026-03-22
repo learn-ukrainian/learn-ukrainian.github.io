@@ -2,7 +2,7 @@ module: istorio-051
 level: ISTORIO
 sequence: 51
 slug: syntez-holodomor-studiyi
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Голодомор як об''єкт дослідження'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: голодомор як об''єкт дослідження'
 - Evaluate the historical significance of що ми дізналися
-sources:
-- name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
-  type: reference
-  notes: Comprehensive overview
-- name: Harvard Ukrainian Research Institute — Holodomor
-  url: https://huri.harvard.edu/
-  type: reference
-  notes: Research center
 content_outline:
 - section: Вступ — Що ми дізналися
   points:
@@ -121,3 +112,14 @@ prerequisites:
 - holodomor-vyznannia
 connects_to:
 - rozstriliane-kontekst
+references:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Comprehensive overview
+- name: Harvard Ukrainian Research Institute — Holodomor
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Research center
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 18
 module: lit-war-018
 level: LIT.WAR
 slug: kalytko-borders-lit
-version: '2.0'
+version: '3.0'
 title: Kalytko Borders Lit
 subtitle: Kalytko Borders Lit
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Cartographer of Severed Ties
 word_target: 5000
+references: []
+register: академічний
+grammar: []

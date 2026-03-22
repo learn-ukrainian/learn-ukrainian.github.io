@@ -2,7 +2,7 @@ module: bio-128
 level: BIO
 sequence: 128
 slug: vasyl-kuk
-version: '2.0'
+version: '3.0'
 title: 'Василь Кук: Останній командир'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - Analyze the leadership of Василь Кук in the final years of UPA
 - Evaluate the KGB tactics used against the Ukrainian underground
 - Discuss the moral complexities of survival and resistance
-sources:
-- name: Аліна Понипаляк "Останній командир УПА"
-  url: https://nashformat.ua/
-  type: primary
-  notes: Основна біографія
-- name: Володимир В'ятрович "Генерал Кук"
-  url: https://vivat.com.ua/
-  type: primary
-  notes: Нове детальне дослідження
-- name: Архів СБУ
-  url: https://avr.org.ua/
-  type: reference
-  notes: Розсекречені документи
 content_outline:
 - section: Вступ — Символ незламності
   points:
@@ -103,3 +90,18 @@ persona:
   role: Archive Researcher
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Аліна Понипаляк "Останній командир УПА"
+  url: https://nashformat.ua/
+  type: primary
+  notes: Основна біографія
+- name: Володимир В'ятрович "Генерал Кук"
+  url: https://vivat.com.ua/
+  type: primary
+  notes: Нове детальне дослідження
+- name: Архів СБУ
+  url: https://avr.org.ua/
+  type: reference
+  notes: Розсекречені документи
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-038
 level: BIO
 sequence: 38
 slug: semen-hulak-artemovskyy
-version: '2.0'
+version: '3.0'
 title: 'Семен Гулак-Артемовський: Оперний співак'
 focus: biography
 phase: BIO
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the life and legacy of семен гулак-артемовський: оперний співак'
 - Evaluate the contributions of творець першої української опери
-sources:
-- name: Семен Гулак-Артемовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
-  type: primary
-  notes: Biography, opera career, composition
-- name: Запорожець за Дунаєм (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
-  type: primary
-  notes: First Ukrainian opera details
-- name: Михайло Глінка
-  url: https://uk.wikipedia.org/wiki/Михайло_Глінка
-  type: reference
-  notes: Mentorship context
 content_outline:
 - section: Вступ — Творець першої української опери
   points:
@@ -113,3 +100,18 @@ persona:
   role: Baritone
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Семен Гулак-Артемовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
+  type: primary
+  notes: Biography, opera career, composition
+- name: Запорожець за Дунаєм (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
+  type: primary
+  notes: First Ukrainian opera details
+- name: Михайло Глінка
+  url: https://uk.wikipedia.org/wiki/Михайло_Глінка
+  type: reference
+  notes: Mentorship context
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-140
 level: LIT
 sequence: 140
 slug: kostenko-marusia-churai-2
-version: '2.0'
+version: '3.0'
 title: Kostenko Marusia Churai 2
 subtitle: Kostenko Marusia Churai 2
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Kostenko Marusia Churai 2 у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kostenko Marusia Churai 2 — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Court Chronicler
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kostenko Marusia Churai 2 — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

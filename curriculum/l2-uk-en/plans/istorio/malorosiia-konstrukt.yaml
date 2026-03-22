@@ -2,7 +2,7 @@ module: istorio-108
 level: ISTORIO
 sequence: 108
 slug: malorosiia-konstrukt
-version: '1.0'
+version: '3.0'
 title: '«Малоросія»: Як створювався міф'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of «малоросія»: як створювався міф'
 - Evaluate the historical significance of назви мають силу
-sources:
-- name: Малоросія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросія
-  type: reference
-  notes: Term history
-- name: Малоросійська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
-  type: reference
-  notes: Identity construction
-- name: Русифікація України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русифікація_України
-  type: reference
-  notes: Russification policies
 content_outline:
 - section: Вступ — Назви мають силу
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - syntez-ekonomichna-kolonizatsiia
 connects_to:
 - radianska-propaganda
+references:
+- name: Малоросія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросія
+  type: reference
+  notes: Term history
+- name: Малоросійська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
+  type: reference
+  notes: Identity construction
+- name: Русифікація України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русифікація_України
+  type: reference
+  notes: Russification policies
+register: академічний
+grammar: []

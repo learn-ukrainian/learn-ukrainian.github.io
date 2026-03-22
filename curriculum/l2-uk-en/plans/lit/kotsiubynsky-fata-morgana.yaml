@@ -2,7 +2,7 @@ module: lit-068
 level: LIT
 sequence: 68
 slug: kotsiubynsky-fata-morgana
-version: '2.0'
+version: '3.0'
 title: Kotsiubynsky Fata Morgana
 subtitle: Kotsiubynsky Fata Morgana
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Kotsiubynsky Fata Morgana у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Kotsiubynsky Fata Morgana — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Revolt Leader
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Kotsiubynsky Fata Morgana — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

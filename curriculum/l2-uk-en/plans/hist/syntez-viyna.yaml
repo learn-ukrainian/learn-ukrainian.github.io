@@ -2,7 +2,7 @@ module: hist-140
 level: HIST
 sequence: 140
 slug: syntez-viyna
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Війна за існування'
 subtitle: 'Synthesis: War for Existence'
 focus: history
@@ -108,3 +108,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
+references: []

@@ -2,7 +2,7 @@ module: istorio-096
 level: ISTORIO
 sequence: 96
 slug: zakhid-1945
-version: '1.0'
+version: '3.0'
 title: '1945: Ялта і зрада'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of 1945: ялта і зрада'
 - Evaluate the historical significance of друга зрада
-sources:
-- name: Ялтинська конференція (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
-  type: reference
-  notes: Yalta conference
-- name: Примусова репатріація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
-  type: reference
-  notes: Forced repatriation
-- name: Операція «Кіл Хаул» (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
-  type: reference
-  notes: Operation Keelhaul
 content_outline:
 - section: Вступ — Друга зрада
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - zakhid-1918
 connects_to:
 - chicken-kyiv
+references:
+- name: Ялтинська конференція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
+  type: reference
+  notes: Yalta conference
+- name: Примусова репатріація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
+  type: reference
+  notes: Forced repatriation
+- name: Операція «Кіл Хаул» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
+  type: reference
+  notes: Operation Keelhaul
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-014
 level: LIT
 sequence: 14
 slug: son
-version: '2.0'
+version: '3.0'
 title: 'Політична Сатира: Сон'
 subtitle: 'LIT-014: Сміхове руйнування влади'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the political satire in "The Dream"
 - Deconstruct the myth of the "Good Tsar"
 - Compare Shevchenko's view with Pushkin's
-sources:
-- name: Сон — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
-  type: primary
-  notes: Поема для детального аналізу
-- name: Аналіз "Сну"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Російська імперія — контекст
-  url: https://uk.wikipedia.org/wiki/Російська_імперія
-  type: reference
-  notes: Політичний контекст 1844 року
 content_outline:
 - section: Вступ Політична сатира та жанр комедії
   points:
@@ -104,3 +91,17 @@ grammar:
 - Political rhetoric
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  type: reference
+  notes: Політичний контекст 1844 року
+register: академічний

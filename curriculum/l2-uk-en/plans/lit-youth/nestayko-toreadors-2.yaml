@@ -2,7 +2,7 @@ sequence: 5
 module: lit-youth-005
 level: LIT.JUVENILE
 slug: nestayko-toreadors-2
-version: '2.0'
+version: '3.0'
 title: Nestayko Toreadors 2
 subtitle: Nestayko Toreadors 2
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Film Director
 word_target: 5000
+references: []
+register: академічний
+grammar: []

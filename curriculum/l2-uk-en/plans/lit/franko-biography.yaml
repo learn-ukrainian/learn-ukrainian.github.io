@@ -2,7 +2,7 @@ module: lit-042
 level: LIT
 sequence: 42
 slug: franko-biography
-version: '2.0'
+version: '3.0'
 title: 'Іван Франко: Титан праці'
 subtitle: Franko Biography
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Іван Франко: Титан праці у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Іван Франко: Титан праці — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Intellectual Titan
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Іван Франко: Титан праці — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

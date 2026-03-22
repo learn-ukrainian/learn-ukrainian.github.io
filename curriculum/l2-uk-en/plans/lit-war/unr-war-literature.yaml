@@ -2,7 +2,7 @@ sequence: 2
 module: lit-war-002
 level: LIT.WAR
 slug: unr-war-literature
-version: '2.0'
+version: '3.0'
 title: UNR War Literature
 subtitle: UNR War Literature
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: UNR Chronicler
 word_target: 5000
+references: []
+register: академічний
+grammar: []

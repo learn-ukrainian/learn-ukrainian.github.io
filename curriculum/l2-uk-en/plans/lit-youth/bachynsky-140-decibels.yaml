@@ -2,7 +2,7 @@ sequence: 19
 module: lit-youth-019
 level: LIT.JUVENILE
 slug: bachynsky-140-decibels
-version: '2.0'
+version: '3.0'
 title: Bachynsky 140 Decibels
 subtitle: Bachynsky 140 Decibels
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Acoustic Engineer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

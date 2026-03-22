@@ -2,7 +2,7 @@ module: istorio-032
 level: ISTORIO
 sequence: 32
 slug: emskyi-ukaz-tekst
-version: '1.0'
+version: '3.0'
 title: 'Емський указ: Повний текст'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of емський указ: повний текст'
 - Evaluate the historical significance of суворіший за валуєва
-sources:
-- name: Емський указ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Емський_указ
-  type: reference
-  notes: Overview
-- name: Текст указу
-  url: https://uk.wikisource.org/wiki/Емський_указ
-  type: primary
-  notes: Full text
-- name: Олександр II
-  url: https://uk.wikipedia.org/wiki/Олександр_II
-  type: reference
-  notes: Emperor context
 content_outline:
 - section: Вступ — Суворіший за Валуєва
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - valuevskyi-tsyrkuliar-tekst
 connects_to:
 - franko-politychni-ese
+references:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Overview
+- name: Текст указу
+  url: https://uk.wikisource.org/wiki/Емський_указ
+  type: primary
+  notes: Full text
+- name: Олександр II
+  url: https://uk.wikipedia.org/wiki/Олександр_II
+  type: reference
+  notes: Emperor context
+register: академічний
+grammar: []

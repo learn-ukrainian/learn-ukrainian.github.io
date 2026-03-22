@@ -2,7 +2,7 @@ module: oes-039
 level: OES
 sequence: 39
 slug: death-of-monomakh
-version: '2.0'
+version: '3.0'
 title: Смерть Мономаха
 subtitle: Death of Monomakh
 focus: Eulogy style
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

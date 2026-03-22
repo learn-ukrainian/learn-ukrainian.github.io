@@ -2,7 +2,7 @@ module: bio-020
 level: BIO
 sequence: 20
 slug: petro-sahaidachny
-version: '2.0'
+version: '3.0'
 title: 'Петро Сагайдачний: Гетьман-Державник'
 subtitle: 'Petro Sahaidachny: The Statesman Hetman'
 focus: biography
@@ -13,13 +13,6 @@ objectives:
 - Analyze Sahaidachny's reforms of the Cossack army
 - Evaluate the restoration of the Orthodox hierarchy (1620)
 - Discuss the Battle of Khotyn (1621)
-sources:
-- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
-  type: primary
-- name: Хотинська битва 1621
-  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
-  type: primary
 content_outline:
 - section: Вступ — Меч і Хрест
   points:
@@ -82,3 +75,11 @@ prerequisites:
 - meletii-smotrytskyi
 connects_to:
 - bohdan-khmelnytskyy
+references:
+- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  type: primary
+- name: Хотинська битва 1621
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  type: primary
+register: академічний

@@ -2,7 +2,7 @@ module: hist-065
 level: HIST
 sequence: 65
 slug: kost-hordiyenko-sich
-version: '2.0'
+version: '3.0'
 title: Кость Гордієнко та Січ
 subtitle: Kost Hordiyenko and the Sich
 focus: history
@@ -26,8 +26,8 @@ content_outline:
 - section: 'Запорозька Січ: Острів свободи в морі імперій'
   points:
   - The internal structure of the Sich — Chortomlyk Sich (1652–1709) as a 'Christian Republic' with direct democracy
-  - Democratic traditions and Cossack law — equality of rights vs. Moscow's autocracy; include quote from Adlerfelt on their
-    love for freedom
+  - Democratic traditions and Cossack law — equality of rights vs. Moscow's autocracy; include quote from Adlerfelt on 
+    their love for freedom
   - 'Conflicts with Moscow''s centralization policy — protests against colonization and fortress construction; context: Kamiany
     Zaton as a ''stranglehold'' on the Sich'
   words: 700
@@ -35,36 +35,37 @@ content_outline:
   points:
   - 'Motives for joining the anti-Moscow coalition — ''Moscow wants to enslave us'' (pragmatic alliance to save the Motherland);
     quote from 1708 letter: «Злість московська здавна на Вітчизну, нашу матір...»'
-  - Meeting between Hordiyenko and Mazepa — Dykanka (or Velyki Budyshcha), March 1709; overcoming personal enmity for national
-    interest
+  - Meeting between Hordiyenko and Mazepa — Dykanka (or Velyki Budyshcha), March 1709; overcoming personal enmity for 
+    national interest
   - 'The strategic importance of the Sich for the Swedish campaign — 8000 seasoned warriors joined; myth-buster: Mazepa was
     not alone'
   words: 700
 - section: 'Трагедія 1709: Зруйнування Чортомлицької Січі'
   points:
   - The campaign of Menshikov and Yakovlev — May 14 (25), 1709; punitive expedition by Colonel Yakovlev
-  - The heroic defense and the betrayal — defense led by Yakym Bohush; betrayal by Hnat Halahan (false promise of pardon)
+  - The heroic defense and the betrayal — defense led by Yakym Bohush; betrayal by Hnat Halahan (false promise of 
+    pardon)
   - 'Symbolism of the Sich''s destruction — massacre of 156 prisoners, bodies on rafts sent down Dnipro; cultural hook: absolute
     ruthlessness of empire; quote: «Все прибрежжя Дніпра... було завалене трупами»'
   words: 700
 - section: 'Читання: Козацький дух у документах'
   points:
-  - Analysis of Hordiyenko's letters — letter to Mazepa (1708) citing 'Moscow's malice'; focus on rhetorical style and usage
-    of «Вітчизна-мати»
-  - Provisions of the Constitution of Pylyp Orlyk related to the Sich — Hordiyenko signed as representative (April 5, 1710);
-    guarantees of territorial rights and restoration of lands
+  - Analysis of Hordiyenko's letters — letter to Mazepa (1708) citing 'Moscow's malice'; focus on rhetorical style and 
+    usage of «Вітчизна-мати»
+  - Provisions of the Constitution of Pylyp Orlyk related to the Sich — Hordiyenko signed as representative (April 5, 
+    1710); guarantees of territorial rights and restoration of lands
   words: 700
 - section: 'Первинні джерела: Свідчення очевидців'
   points:
-  - Swedish descriptions of the Cossacks — memoirs of Adlerfelt and Nordberg; distinctness from Russian troops and recognition
-    of their separate identity
-  - Folk songs about Hordiyenko — Duma about the destruction of the Sich ('Ой встань, Петре...'); emotional contrast to military
-    reports
+  - Swedish descriptions of the Cossacks — memoirs of Adlerfelt and Nordberg; distinctness from Russian troops and 
+    recognition of their separate identity
+  - Folk songs about Hordiyenko — Duma about the destruction of the Sich ('Ой встань, Петре...'); emotional contrast to 
+    military reports
   words: 700
 - section: 'Деколонізаційний погляд: Січ як анти-імперський проект'
   points:
-  - Sich as a democratic alternative to Moscow's autocracy — 'Republic' vs 'Tsardom'; debunking the imperial myth of 'bandits
-    and drunkards'
+  - Sich as a democratic alternative to Moscow's autocracy — 'Republic' vs 'Tsardom'; debunking the imperial myth of 
+    'bandits and drunkards'
   - The myth of 'unlimited loyalty' vs contractual rights — right to rebellion when the sovereign violates the contract
   - Legacy of Hordiyenko in the fight for independence — exile in Oleshky/Kamianka, resistance until death (1733)
   words: 800
@@ -117,3 +118,6 @@ learning_outcomes:
 - Учень знає про трагедію Чортомлицької Січі 1709 року
 connects_to:
 - ivan-mazepa-poltava
+references: []
+register: академічний
+grammar: []

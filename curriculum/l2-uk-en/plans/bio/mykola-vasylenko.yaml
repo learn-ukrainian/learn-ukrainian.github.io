@@ -2,7 +2,7 @@ module: bio-066
 level: BIO
 sequence: 66
 slug: mykola-vasylenko
-version: '2.0'
+version: '3.0'
 title: 'Микола Василенко: Юрист і державник'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of микола василенко: юрист і державник'
 - Evaluate the contributions of архітектор української юриспруденції
 - Trace the career and influence of останні роки та спадщина (1935)
-sources:
-- name: Микола Василенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Василенко
-  type: primary
-  notes: Біографія, юридична та наукова діяльність
-- name: Гетьманат Павла Скоропадського
-  url: https://uk.wikipedia.org/wiki/Українська_Держава
-  type: reference
-  notes: Політичний контекст 1918 року
-- name: Академія наук України
-  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
-  type: reference
-  notes: Роль у заснуванні Академії
 content_outline:
 - section: Вступ — Архітектор української юриспруденції
   points:
@@ -102,3 +89,18 @@ persona:
   role: Minister of Education
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Микола Василенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Василенко
+  type: primary
+  notes: Біографія, юридична та наукова діяльність
+- name: Гетьманат Павла Скоропадського
+  url: https://uk.wikipedia.org/wiki/Українська_Держава
+  type: reference
+  notes: Політичний контекст 1918 року
+- name: Академія наук України
+  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
+  type: reference
+  notes: Роль у заснуванні Академії
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ sequence: 14
 module: lit-essay-014
 level: LIT.ESSAY
 slug: lypynsky-letters-brothers
-version: '2.0'
+version: '3.0'
 title: Lypynsky Letters Brothers
 subtitle: Lypynsky Letters Brothers
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Conservative Theorist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

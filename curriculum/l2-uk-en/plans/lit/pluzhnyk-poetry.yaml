@@ -2,7 +2,7 @@ module: lit-113
 level: LIT
 sequence: 113
 slug: pluzhnyk-poetry
-version: '2.0'
+version: '3.0'
 title: Pluzhnyk Poetry
 subtitle: Pluzhnyk Poetry
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Pluzhnyk Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Pluzhnyk Poetry — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Quiet Philosopher
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Pluzhnyk Poetry — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

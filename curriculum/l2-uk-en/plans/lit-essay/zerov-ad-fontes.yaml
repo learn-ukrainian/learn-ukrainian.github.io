@@ -2,7 +2,7 @@ sequence: 20
 module: lit-essay-020
 level: LIT.ESSAY
 slug: zerov-ad-fontes
-version: '2.0'
+version: '3.0'
 title: Zerov Ad Fontes
 subtitle: Zerov Ad Fontes
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Neoclassical Professor
 word_target: 5000
+references: []
+register: академічний
+grammar: []

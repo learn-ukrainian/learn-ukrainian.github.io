@@ -2,7 +2,7 @@ module: bio-165
 level: BIO
 sequence: 165
 slug: volodymyr-vakulenko
-version: '2.0'
+version: '3.0'
 title: Володимир Вакуленко
 subtitle: Володимир Вакуленко
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - serhiy-zhadan
 connects_to:
 - oleg-sentsov
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-039
 level: BIO
 sequence: 39
 slug: taras-shevchenko
-version: '2.0'
+version: '3.0'
 title: 'Тарас Шевченко: Національний Пророк'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of тарас шевченко: національний пророк'
 - Evaluate the contributions of більше ніж поет
 - Trace the career and influence of шевченко в деколонізаційному дискурсі
-sources:
-- name: Тарас Шевченко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Інститут літератури НАН України
-  url: https://shevchenko.inst.gov.ua/
-  type: reference
-  notes: Академічні дослідження творчості
-- name: Музей Тараса Шевченка
-  url: https://museumshevchenko.org.ua/
-  type: reference
-  notes: Архівні матеріали та експозиції
 content_outline:
 - section: Вступ — Більше ніж поет
   points:
@@ -103,3 +90,18 @@ persona:
   role: The Kobzar
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Тарас Шевченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут літератури НАН України
+  url: https://shevchenko.inst.gov.ua/
+  type: reference
+  notes: Академічні дослідження творчості
+- name: Музей Тараса Шевченка
+  url: https://museumshevchenko.org.ua/
+  type: reference
+  notes: Архівні матеріали та експозиції
+register: академічний
+grammar: []

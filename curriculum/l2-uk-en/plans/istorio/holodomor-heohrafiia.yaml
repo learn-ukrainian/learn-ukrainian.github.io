@@ -2,7 +2,7 @@ module: istorio-048
 level: ISTORIO
 sequence: 48
 slug: holodomor-heohrafiia
-version: '1.0'
+version: '3.0'
 title: 'Географія Голодомору: Регіональні відмінності'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
 - Evaluate the historical significance of голодомор на карті
-sources:
-- name: Втрати населення в Голодомор
-  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
-  type: reference
-  notes: Casualty estimates
-- name: Регіональний розподіл Голодомору
-  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
-  type: reference
-  notes: Regional breakdown
-- name: Карти Голодомору
-  url: https://ucrdc.org/
-  type: reference
-  notes: UCRDC mapping projects
 content_outline:
 - section: Вступ — Голодомор на карті
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - holodomor-mekhanizmy-ii
 connects_to:
 - holodomor-svidky
+references:
+- name: Втрати населення в Голодомор
+  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
+  type: reference
+  notes: Casualty estimates
+- name: Регіональний розподіл Голодомору
+  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
+  type: reference
+  notes: Regional breakdown
+- name: Карти Голодомору
+  url: https://ucrdc.org/
+  type: reference
+  notes: UCRDC mapping projects
+register: академічний
+grammar: []

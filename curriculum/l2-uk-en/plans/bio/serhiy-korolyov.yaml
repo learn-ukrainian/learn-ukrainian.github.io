@@ -2,7 +2,7 @@ module: bio-121
 level: BIO
 sequence: 121
 slug: serhiy-korolyov
-version: '2.0'
+version: '3.0'
 title: 'Сергій Корольов: Батько космічної ери'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of сергій корольов: батько космічної ери'
 - Evaluate the contributions of українець, який відкрив космос
 - Trace the career and influence of спадщина та повернення в україну
-sources:
-- name: Сергій Корольов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
-  type: primary
-  notes: Biography, space achievements, Ukrainian origins
-- name: Музей космонавтики Корольова в Житомирі
-  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
-  type: reference
-  notes: Museum in his birthplace
-- name: ГУЛАГ
-  url: https://uk.wikipedia.org/wiki/ГУЛАГ
-  type: reference
-  notes: His imprisonment
 content_outline:
 - section: Вступ — Українець, який відкрив космос
   points:
@@ -105,3 +92,18 @@ persona:
   role: Chief Constructor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Сергій Корольов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
+  type: primary
+  notes: Biography, space achievements, Ukrainian origins
+- name: Музей космонавтики Корольова в Житомирі
+  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
+  type: reference
+  notes: Museum in his birthplace
+- name: ГУЛАГ
+  url: https://uk.wikipedia.org/wiki/ГУЛАГ
+  type: reference
+  notes: His imprisonment
+register: академічний
+grammar: []

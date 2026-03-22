@@ -2,7 +2,7 @@ module: ruth-085
 level: RUTH
 sequence: 85
 slug: velychko-ruin-baroque-2
-version: '2.0'
+version: '3.0'
 title: Самійло Величко II — Голоси Доби
 subtitle: Samiilo Velychko II — Voices of the Era
 focus: Close reading of key passages — Berestechko, Khmelnytsky speech, Lament
@@ -56,3 +56,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

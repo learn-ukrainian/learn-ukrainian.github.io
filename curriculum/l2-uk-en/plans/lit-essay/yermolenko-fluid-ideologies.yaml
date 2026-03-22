@@ -2,7 +2,7 @@ sequence: 41
 module: lit-essay-041
 level: LIT.ESSAY
 slug: yermolenko-fluid-ideologies
-version: '2.0'
+version: '3.0'
 title: Yermolenko Fluid Ideologies
 subtitle: Yermolenko Fluid Ideologies
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Fluidity Philosopher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

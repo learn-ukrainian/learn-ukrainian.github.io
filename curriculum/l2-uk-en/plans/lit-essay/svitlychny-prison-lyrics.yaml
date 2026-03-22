@@ -2,7 +2,7 @@ module: lit-essay-062
 level: LIT.ESSAY
 sequence: 62
 slug: svitlychny-prison-lyrics
-version: '2.0'
+version: '3.0'
 title: 'Іван Світличний: Табірна лірика і листи'
 subtitle: Ivan Svitlychny — Prison Lyrics and Letters
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати табірну лірику Світличного як літературний жанр
 - Дослідити листи з ув'язнення як форму інтелектуального спротиву
 - Зрозуміти Світличного як «невидимого лідера» шістдесятників
-sources:
-- name: Іван Світличний — вибрані твори
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 1000
@@ -64,3 +60,9 @@ immersion: 100% Ukrainian
 persona:
   voice: Senior Specialist
   role: Dissident Literature Specialist
+references:
+- name: Іван Світличний — вибрані твори
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

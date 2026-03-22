@@ -2,7 +2,7 @@ module: bio-027
 level: BIO
 sequence: 27
 slug: ivan-mazepa
-version: '2.0'
+version: '3.0'
 title: 'Іван Мазепа: Меценат і трагічний герой'
 focus: biography
 phase: BIO
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
 - Evaluate the contributions of між зрадою та героїзмом
-sources:
-- name: Іван Мазепа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-  type: primary
-  notes: Biography, hetmanate, Poltava
-- name: Полтавська битва (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
-  type: reference
-  notes: Military context and consequences
-- name: Мазепинське бароко
-  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
-  type: reference
-  notes: Cultural patronage
 content_outline:
 - section: Вступ — Між зрадою та героїзмом
   points:
@@ -113,3 +100,18 @@ persona:
   role: Patron of Arts
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Мазепа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: primary
+  notes: Biography, hetmanate, Poltava
+- name: Полтавська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Military context and consequences
+- name: Мазепинське бароко
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  type: reference
+  notes: Cultural patronage
+register: академічний
+grammar: []

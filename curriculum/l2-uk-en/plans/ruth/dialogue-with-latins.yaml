@@ -2,7 +2,7 @@ module: ruth-062
 level: RUTH
 sequence: 62
 slug: dialogue-with-latins
-version: '2.0'
+version: '3.0'
 title: Діалог з латинами
 subtitle: Dialogue with Latins
 focus: Arguments against Union of Brest
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

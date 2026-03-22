@@ -2,7 +2,7 @@ module: bio-135
 level: BIO
 sequence: 135
 slug: yevhen-sverstiuk
-version: '2.0'
+version: '3.0'
 title: 'Євген Сверстюк: Моральний авторитет нації'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Євген Сверстюк as a moral authority
 - Evaluate the role of philosophical thought in resistance movements
 - Trace the trajectory from academic to dissident to moral compass of a nation
-sources:
-- name: Євген Сверстюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович
-  type: primary
-  notes: Comprehensive biography of the moral authority of Ukrainian dissent
-- name: ПЕН Україна — Євген Сверстюк
-  url: https://pen.org.ua/
-  type: reference
-  notes: Literary and human rights context
 content_outline:
 - section: Вступ — Філософ свободи
   points:
@@ -99,3 +90,14 @@ persona:
   role: Moral Essayist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Євген Сверстюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович
+  type: primary
+  notes: Comprehensive biography of the moral authority of Ukrainian dissent
+- name: ПЕН Україна — Євген Сверстюк
+  url: https://pen.org.ua/
+  type: reference
+  notes: Literary and human rights context
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-064
 level: BIO
 sequence: 64
 slug: sofiya-okunevska
-version: '2.0'
+version: '3.0'
 title: 'Софія Окуневська: Перша жінка-лікар'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of софія окуневська: перша жінка-лікар'
 - Evaluate the contributions of першопрохідниця медицини
 - Trace the career and influence of останні роки та спадщина (1920-1926)
-sources:
-- name: Софія Окуневська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна
-  type: primary
-  notes: Біографія, медична кар'єра, громадська діяльність
-- name: Львівський медичний університет
-  url: https://meduniv.lviv.ua
-  type: reference
-  notes: Історія жінок у медицині
-- name: Архів жіночого руху
-  url: https://uma.lvivcenter.org
-  type: reference
-  notes: Жіночий рух на Галичині
 content_outline:
 - section: Вступ — Першопрохідниця медицини
   points:
@@ -103,3 +90,18 @@ persona:
   role: Medical Pioneer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Софія Окуневська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна
+  type: primary
+  notes: Біографія, медична кар'єра, громадська діяльність
+- name: Львівський медичний університет
+  url: https://meduniv.lviv.ua
+  type: reference
+  notes: Історія жінок у медицині
+- name: Архів жіночого руху
+  url: https://uma.lvivcenter.org
+  type: reference
+  notes: Жіночий рух на Галичині
+register: академічний
+grammar: []

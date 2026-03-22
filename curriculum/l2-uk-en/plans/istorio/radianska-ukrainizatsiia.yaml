@@ -2,7 +2,7 @@ module: istorio-085
 level: ISTORIO
 sequence: 85
 slug: radianska-ukrainizatsiia
-version: '1.0'
+version: '3.0'
 title: 'Радянська українізація: Пастка 1920-х'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of радянська українізація: пастка 1920-х'
 - Evaluate the historical significance of підступна обіцянка
-sources:
-- name: Українізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українізація
-  type: reference
-  notes: Ukrainization policy
-- name: Коренізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Коренізація
-  type: reference
-  notes: Broader policy
-- name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Cultural outcome
 content_outline:
 - section: Вступ — Підступна обіцянка
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - rozumovskyi-tsykl
 connects_to:
 - khrushchov-shelest-tsykl
+references:
+- name: Українізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українізація
+  type: reference
+  notes: Ukrainization policy
+- name: Коренізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Коренізація
+  type: reference
+  notes: Broader policy
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Cultural outcome
+register: академічний
+grammar: []

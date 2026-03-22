@@ -2,7 +2,7 @@ module: istorio-073
 level: ISTORIO
 sequence: 73
 slug: zakarpattia-tysiacholittia
-version: '1.0'
+version: '3.0'
 title: 'Закарпаття: Тисячоліття на перехресті'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
 - Evaluate the historical significance of найзахідніший схід
-sources:
-- name: Закарпаття (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Закарпаття
-  type: reference
-  notes: Regional overview
-- name: Карпатська Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
-  type: reference
-  notes: 1939 independence
-- name: Русини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русини
-  type: reference
-  notes: Rusyn identity question
 content_outline:
 - section: Вступ — Найзахідніший схід
   points:
@@ -127,3 +114,18 @@ prerequisites:
 - bukovyna-mizh-imperiiamy
 connects_to:
 - volyn-pamiat-i-travma
+references:
+- name: Закарпаття (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Закарпаття
+  type: reference
+  notes: Regional overview
+- name: Карпатська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
+  type: reference
+  notes: 1939 independence
+- name: Русини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русини
+  type: reference
+  notes: Rusyn identity question
+register: академічний
+grammar: []

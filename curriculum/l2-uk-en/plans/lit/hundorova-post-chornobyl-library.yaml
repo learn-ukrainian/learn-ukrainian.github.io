@@ -2,7 +2,7 @@ module: lit-187
 level: LIT
 sequence: 187
 slug: hundorova-post-chornobyl-library
-version: '2.0'
+version: '3.0'
 title: Hundorova Post Chornobyl Library
 subtitle: Hundorova Post Chornobyl Library
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Hundorova Post Chornobyl Library у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Hundorova Post Chornobyl Library — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Library Curator
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Hundorova Post Chornobyl Library — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

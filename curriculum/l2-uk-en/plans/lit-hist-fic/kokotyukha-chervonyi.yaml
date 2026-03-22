@@ -2,7 +2,7 @@ sequence: 17
 module: lit-hist-fic-017
 level: LIT.HIST.FIC
 slug: kokotyukha-chervonyi
-version: '2.0'
+version: '3.0'
 title: Kokotyukha Chervonyi
 subtitle: Kokotyukha Chervonyi
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Gulag Resistance Coordinator
 word_target: 5000
+references: []
+register: академічний
+grammar: []

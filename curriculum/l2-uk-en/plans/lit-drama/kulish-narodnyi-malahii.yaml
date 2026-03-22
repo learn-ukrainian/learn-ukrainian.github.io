@@ -2,7 +2,7 @@ sequence: 6
 module: lit-drama-006
 level: LIT
 slug: kulish-narodnyi-malahii
-version: '2.0'
+version: '3.0'
 title: Kulish Narodnyi Malahii
 subtitle: Kulish Narodnyi Malahii
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-103
 module_type: literature
-sources:
-- name: Kulish Narodnyi Malahii — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.3 Executed Renaissance 1917-1933
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: False Messiah
 word_target: 5000
+references:
+- name: Kulish Narodnyi Malahii — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

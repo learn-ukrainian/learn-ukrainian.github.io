@@ -2,7 +2,7 @@ module: istorio-028
 level: ISTORIO
 sequence: 28
 slug: syntez-kozatski-dzherela
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Голоси козацької доби'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: голоси козацької доби'
 - Evaluate the historical significance of що ми вивчили
-sources:
-- name: Козацькі літописи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
-  type: reference
-  notes: Overview
-- name: Джерелознавство
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
-  type: reference
-  notes: Source studies
 content_outline:
 - section: Вступ — Що ми вивчили
   points:
@@ -122,3 +113,14 @@ prerequisites:
 - sich-dokumenty
 connects_to:
 - knyhy-butiia-shevchenko
+references:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview
+- name: Джерелознавство
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+register: академічний
+grammar: []

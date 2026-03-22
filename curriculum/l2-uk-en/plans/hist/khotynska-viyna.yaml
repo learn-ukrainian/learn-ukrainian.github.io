@@ -2,7 +2,7 @@ module: hist-046
 level: HIST
 sequence: 46
 slug: khotynska-viyna
-version: '2.0'
+version: '3.0'
 title: 'Хотинська війна 1621: Козацький щит Європи'
 subtitle: The Battle That Saved Christian Civilization
 focus: history
@@ -18,22 +18,23 @@ content_outline:
   points:
   - 'The geopolitical context: Ottoman expansion — Ambition of Osman II: revival of Suleiman''s grandeur; ''breakfast in Vienna,
     lunch in Rome'' context'
-  - The disaster at Cecora (1620) as a prelude — Stanisław Żółkiewski's defeat and death; panic in Warsaw; King Sigismund
-    III ready to flee; [!context] Пояснити масштаб загрози
+  - The disaster at Cecora (1620) as a prelude — Stanisław Żółkiewski's defeat and death; panic in Warsaw; King 
+    Sigismund III ready to flee; [!context] Пояснити масштаб загрози
   words: 600
 - section: 'Мобілізація сил: Підготовка до апокаліпсису'
   points:
   - Sultan Osman II's grand army — 150-200k troops (Ottomans + Tatars) vs 76k allies (41k Cossacks)
-  - The desperate situation of Poland-Lithuania — The mission of Patriarch Theophanes; legitimization of Cossack hierarchy
-  - The cossack council and Sahaidachnyi's decision — Council at Sukha Dibrova (June 1621); 40k Cossacks; demand for religious
-    rights; Sahaidachnyi's breakthrough to Warsaw; [!myth-buster] Козаки не були 'найманцями'
+  - The desperate situation of Poland-Lithuania — The mission of Patriarch Theophanes; legitimization of Cossack 
+    hierarchy
+  - The cossack council and Sahaidachnyi's decision — Council at Sukha Dibrova (June 1621); 40k Cossacks; demand for 
+    religious rights; Sahaidachnyi's breakthrough to Warsaw; [!myth-buster] Козаки не були 'найманцями'
   words: 600
 - section: 'Тактика і Стратегія: Секрети перемоги'
   points:
-  - The layout of the camp and fortifications — Cossacks entrenched faster than Poles; the 'tabor' wagon fort impregnable
-    to cavalry; [!history-bite] 'Табір' як неприступна фортеця
-  - The decisive role of the cossack 'tabor' and artillery — Volley fire tactics (шеренги); night raids ('вилагазки') creating
-    psychological terror
+  - The layout of the camp and fortifications — Cossacks entrenched faster than Poles; the 'tabor' wagon fort 
+    impregnable to cavalry; [!history-bite] 'Табір' як неприступна фортеця
+  - The decisive role of the cossack 'tabor' and artillery — Volley fire tactics (шеренги); night raids ('вилагазки') 
+    creating psychological terror
   - 'Logistics and survival in the camp — Contrast: Ottoman luxury vs Ally asceticism; disease and hunger in besieged camp
     (eating horses, lack of water)'
   words: 600
@@ -44,15 +45,16 @@ content_outline:
   words: 600
 - section: 'Герої та Жертви: Ціна перемоги'
   points:
-  - The leadership of Petro Sahaidachnyi — Commanded while mortally wounded (poisoned arrow); effective leader after Chodkiewicz's
-    death (Sept 24); [!biography] Петро Сагайдачний
+  - The leadership of Petro Sahaidachnyi — Commanded while mortally wounded (poisoned arrow); effective leader after 
+    Chodkiewicz's death (Sept 24); [!biography] Петро Сагайдачний
   - 'The psychological breaking point of the Ottoman army — Janissary mutiny; Osman II''s shock: ''I can only destroy them,
     not defeat them'' (apocryphal)'
   words: 600
 - section: Геополітичні наслідки та пам'ять
   points:
   - The decline of the Ottoman Empire — Start of Janissary corps decline; assassination of Osman II in Istanbul
-  - The rise of the Cossack myth in Europe — Ivan Gundulić's poem 'Osman'; Europe applauded 'Polish victory' ignoring Cossacks
+  - The rise of the Cossack myth in Europe — Ivan Gundulić's poem 'Osman'; Europe applauded 'Polish victory' ignoring 
+    Cossacks
   - Khotyn in Ukrainian literature and art — Kasiyan Sakovych's 'Verses on the Sorrowful Funeral of Sahaidachnyi'
   words: 600
 - section: Первинні джерела
@@ -64,7 +66,8 @@ content_outline:
   words: 600
 - section: Деколонізаційний погляд
   points:
-  - Ukraine as a subject of international politics — Sahaidachnyi as equal partner to the King; 'Shield of Europe' concept
+  - Ukraine as a subject of international politics — Sahaidachnyi as equal partner to the King; 'Shield of Europe' 
+    concept
   - 'Debunking the myth of ''Polish victory'' — Polish historiography credits Chodkiewicz/Hussars; reality: Cossack infantry
     bore the brunt'
   - 'European context: The Thirty Years'' War — While Europe destroyed itself, Ukraine held the Eastern front; ''Betrayal''
@@ -105,3 +108,4 @@ prerequisites:
 - petro-sahaidachnyi
 connects_to:
 - kozatska-kultura
+references: []

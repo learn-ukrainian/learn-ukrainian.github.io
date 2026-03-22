@@ -2,7 +2,7 @@ sequence: 21
 module: lit-fantastika-021
 level: LIT.FANTASTIKA
 slug: kidruk-bot-thriller
-version: '2.0'
+version: '3.0'
 title: Kidruk Bot Thriller
 subtitle: Kidruk Bot Thriller
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Nanotech Specialist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

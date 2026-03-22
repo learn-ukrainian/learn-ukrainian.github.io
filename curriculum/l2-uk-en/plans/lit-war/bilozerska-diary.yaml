@@ -2,7 +2,7 @@ sequence: 15
 module: lit-war-015
 level: LIT.WAR
 slug: bilozerska-diary
-version: '2.0'
+version: '3.0'
 title: Bilozerska Diary
 subtitle: Bilozerska Diary
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Sniper Instructor
 word_target: 5000
+references: []
+register: академічний
+grammar: []

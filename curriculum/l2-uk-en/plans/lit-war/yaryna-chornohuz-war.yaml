@@ -2,7 +2,7 @@ sequence: 23
 module: lit-war-023
 level: LIT.WAR
 slug: yaryna-chornohuz-war
-version: '2.0'
+version: '3.0'
 title: Yaryna Chornohuz War
 subtitle: Yaryna Chornohuz War
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Combat Medic Philosopher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

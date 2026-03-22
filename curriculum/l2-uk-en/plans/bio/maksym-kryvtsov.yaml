@@ -2,7 +2,7 @@ module: bio-171
 level: BIO
 sequence: 171
 slug: maksym-kryvtsov
-version: '2.0'
+version: '3.0'
 title: Максим Кривцов
 subtitle: Максим Кривцов
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - victoria-amelina
 connects_to:
 - illia-chernilevskyi
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-148
 level: BIO
 sequence: 148
 slug: myroslav-marynovych
-version: '2.0'
+version: '3.0'
 title: 'Мирослав Маринович: Совість нації'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of мирослав маринович: совість нації'
 - Evaluate the contributions of голос совісті в часи мовчання
 - Trace the career and influence of спадщина та сучасність (2000-сьогодні)
-sources:
-- name: Мирослав Маринович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович
-  type: primary
-  notes: Біографія, дисидентська діяльність, роль в УГГ
-- name: Український католицький університет
-  url: https://ucu.edu.ua/about/leadership/marynovych/
-  type: reference
-  notes: Сучасна діяльність, роль в УКУ
-- name: Amnesty International
-  url: https://www.amnesty.org
-  type: reference
-  notes: Документація справ в'язнів сумління
 content_outline:
 - section: Вступ — Голос совісті в часи мовчання
   points:
@@ -103,3 +90,18 @@ persona:
   role: Gulag Survivor
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Мирослав Маринович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович
+  type: primary
+  notes: Біографія, дисидентська діяльність, роль в УГГ
+- name: Український католицький університет
+  url: https://ucu.edu.ua/about/leadership/marynovych/
+  type: reference
+  notes: Сучасна діяльність, роль в УКУ
+- name: Amnesty International
+  url: https://www.amnesty.org
+  type: reference
+  notes: Документація справ в'язнів сумління
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-041
 level: BIO
 sequence: 41
 slug: hanna-barvinok
-version: '2.0'
+version: '3.0'
 title: 'Ганна Барвінок: Письменниця і етнографка'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of ганна барвінок: письменниця і етнографка'
 - Evaluate the contributions of перша з жінок української літератури
 - Trace the career and influence of голос селянської україни
-sources:
-- name: Ганна Барвінок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
-  type: primary
-  notes: Biography of the pioneering woman writer
-- name: Інститут літератури ім. Т.Г. Шевченка
-  url: https://ilnan.gov.ua/
-  type: reference
-  notes: Literary archive materials
 content_outline:
 - section: Вступ — Перша з жінок української літератури
   points:
@@ -98,3 +89,14 @@ persona:
   role: Folklorist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ганна Барвінок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
+  type: primary
+  notes: Biography of the pioneering woman writer
+- name: Інститут літератури ім. Т.Г. Шевченка
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Literary archive materials
+register: академічний
+grammar: []

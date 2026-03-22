@@ -2,7 +2,7 @@ module: bio-036
 level: BIO
 sequence: 36
 slug: ivan-kotliarevskyi
-version: '2.0'
+version: '3.0'
 title: 'Іван Котляревський: Батько нової літератури'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of іван котляревський: батько нової літератури'
 - Evaluate the contributions of народження нової літератури
 - Trace the career and influence of батько нової літератури
-sources:
-- name: Іван Котляревський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
-  type: primary
-  notes: Biography of the founder of modern Ukrainian literature
-- name: Полтавський літературно-меморіальний музей
-  url: https://kotliarevskyi.poltava.ua/
-  type: reference
-  notes: Museum dedicated to Kotliarevsky's life and work
 content_outline:
 - section: Вступ — Народження нової літератури
   points:
@@ -97,3 +88,14 @@ persona:
   role: Eneida Author
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Котляревський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
+  type: primary
+  notes: Biography of the founder of modern Ukrainian literature
+- name: Полтавський літературно-меморіальний музей
+  url: https://kotliarevskyi.poltava.ua/
+  type: reference
+  notes: Museum dedicated to Kotliarevsky's life and work
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-089
 level: BIO
 sequence: 89
 slug: les-kurbas
-version: '2.0'
+version: '3.0'
 title: 'Лесь Курбас: Реформатор театру'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of лесь курбас: реформатор театру'
 - Evaluate the contributions of людина, що перевернула театр
 - Trace the career and influence of спадщина та реабілітація
-sources:
-- name: Лесь Курбас (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лесь_Курбас
-  type: primary
-  notes: Основна біографія, театральна діяльність, репресії
-- name: Театр «Березіль»
-  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
-  type: reference
-  notes: Історія театру та його інноваційні постановки
-- name: Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Контекст репресій проти української інтелігенції
 content_outline:
 - section: Вступ — Людина, що перевернула театр
   points:
@@ -102,3 +89,18 @@ persona:
   role: Theatre Reformer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Лесь Курбас (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лесь_Курбас
+  type: primary
+  notes: Основна біографія, театральна діяльність, репресії
+- name: Театр «Березіль»
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+  type: reference
+  notes: Історія театру та його інноваційні постановки
+- name: Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Контекст репресій проти української інтелігенції
+register: академічний
+grammar: []

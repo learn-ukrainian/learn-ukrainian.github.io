@@ -2,7 +2,7 @@ sequence: 22
 module: lit-war-022
 level: LIT.WAR
 slug: maksym-kryvtsov-poetry
-version: '2.0'
+version: '3.0'
 title: Maksym Kryvtsov Poetry
 subtitle: Maksym Kryvtsov Poetry
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Photographer of the Loophole
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-026
 level: ISTORIO
 sequence: 26
 slug: lysty-mazepy
-version: '1.0'
+version: '3.0'
 title: 'Листи Мазепи: Дипломат і меценат'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of листи мазепи: дипломат і меценат'
 - Evaluate the historical significance of мазепа у листах
-sources:
-- name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-  type: reference
-  notes: Hetman biography
-- name: Листування Мазепи
-  url: https://litopys.org.ua/
-  type: primary
-  notes: Correspondence collection
-- name: Мазепа як меценат
-  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
-  type: reference
-  notes: Cultural patronage
 content_outline:
 - section: Вступ — Мазепа у листах
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - konstytutsiia-orlyka
 connects_to:
 - sich-dokumenty
+references:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Hetman biography
+- name: Листування Мазепи
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Correspondence collection
+- name: Мазепа як меценат
+  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+  type: reference
+  notes: Cultural patronage
+register: академічний
+grammar: []

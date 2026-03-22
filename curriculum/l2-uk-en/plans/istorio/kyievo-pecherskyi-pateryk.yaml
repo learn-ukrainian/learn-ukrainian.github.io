@@ -2,7 +2,7 @@ module: istorio-013
 level: ISTORIO
 sequence: 13
 slug: kyievo-pecherskyi-pateryk
-version: '1.0'
+version: '3.0'
 title: Києво-Печерський патерик
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of києво-печерський патерик
 - Evaluate the historical significance of агіографія як джерело
-sources:
-- name: Києво-Печерський патерик (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
-  type: reference
-  notes: Overview
-- name: Патерик (повний текст)
-  url: https://litopys.org.ua/paterikon/pat.htm
-  type: primary
-  notes: Full text
-- name: Києво-Печерська лавра
-  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
-  type: reference
-  notes: Monastery history
 content_outline:
 - section: Вступ — Агіографія як джерело
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - povist-mynulykh-lit-ii
 connects_to:
 - slovo-o-polku-ihorevim
+references:
+- name: Києво-Печерський патерик (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
+  type: reference
+  notes: Overview
+- name: Патерик (повний текст)
+  url: https://litopys.org.ua/paterikon/pat.htm
+  type: primary
+  notes: Full text
+- name: Києво-Печерська лавра
+  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
+  type: reference
+  notes: Monastery history
+register: академічний
+grammar: []

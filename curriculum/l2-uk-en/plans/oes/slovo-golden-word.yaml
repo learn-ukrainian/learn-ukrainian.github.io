@@ -2,7 +2,7 @@ module: oes-079
 level: OES
 sequence: 79
 slug: slovo-golden-word
-version: '2.0'
+version: '3.0'
 title: 'Слово: Золоте слово'
 subtitle: 'Slovo: The Golden Word'
 focus: Rhetoric — The plea for unity
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати риторичні прийоми в публічних промовах та дебатах
 - Продукувати усні та письмові висловлювання з ефективною аргументацією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

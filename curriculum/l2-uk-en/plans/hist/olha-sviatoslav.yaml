@@ -2,7 +2,7 @@ module: hist-010
 level: HIST
 sequence: 10
 slug: olha-sviatoslav
-version: '2.0'
+version: '3.0'
 title: Ольга та Святослав
 focus: history
 pedagogy: CBI
@@ -12,19 +12,6 @@ objectives:
 - Analyze Olha reforms
 - Evaluate Sviatoslav military strategy
 - Contrast diplomactic vs military approach
-sources:
-- name: Ольга (княгиня київська) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
-  type: reference
-  notes: Overview of Princess Olha
-- name: Святослав Ігорович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
-  type: reference
-  notes: Overview of Sviatoslav
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
 content_outline:
 - section: Вступ
   points:
@@ -120,3 +107,16 @@ grammar:
 - Narrative tenses
 - Action verbs
 register: публіцистичний
+references:
+- name: Ольга (княгиня київська) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
+  type: reference
+  notes: Overview of Princess Olha
+- name: Святослав Ігорович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+  type: reference
+  notes: Overview of Sviatoslav
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts

@@ -2,7 +2,7 @@ module: lit-040
 level: LIT
 sequence: 40
 slug: borys-hrinchenko
-version: '2.0'
+version: '3.0'
 title: 'Борис Грінченко: Вартовий рідного слова'
 subtitle: Borys Hrinchenko
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Борис Грінченко: Вартовий рідного слова у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Борис Грінченко: Вартовий рідного слова — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Lexicographer
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Борис Грінченко: Вартовий рідного слова — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

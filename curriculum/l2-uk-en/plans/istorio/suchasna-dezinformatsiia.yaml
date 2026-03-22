@@ -2,7 +2,7 @@ module: istorio-110
 level: ISTORIO
 sequence: 110
 slug: suchasna-dezinformatsiia
-version: '1.0'
+version: '3.0'
 title: Сучасна російська дезінформація
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of сучасна російська дезінформація
 - Evaluate the historical significance of війна без зброї
-sources:
-- name: Російська дезінформація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
-  type: reference
-  notes: Disinformation overview
-- name: Russia Today (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Russia_Today
-  type: reference
-  notes: RT network
-- name: Тролі з Ольгіна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
-  type: reference
-  notes: Troll farms
 content_outline:
 - section: Вступ — Війна без зброї
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - radianska-propaganda
 connects_to:
 - zakhidni-media
+references:
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: Disinformation overview
+- name: Russia Today (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Russia_Today
+  type: reference
+  notes: RT network
+- name: Тролі з Ольгіна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
+  type: reference
+  notes: Troll farms
+register: академічний
+grammar: []

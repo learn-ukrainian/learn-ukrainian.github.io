@@ -2,7 +2,7 @@ module: lit-004
 level: LIT
 sequence: 4
 slug: eneida-war
-version: '2.0'
+version: '3.0'
 title: 'Енеїда: Словник Війни'
 subtitle: 'LIT-004: Анатомія Козацького Бою'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the depiction of war in Eneida
 - Identify military vocabulary and weaponry
 - Interpret the humor in battle scenes
-sources:
-- name: Енеїда — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-  type: primary
-  notes: Частини IV-VI для аналізу батальних сцен
-- name: Аналіз "Енеїди"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-  type: secondary
-  notes: Військова тематика
-- name: Козацьке військо
-  url: https://uk.wikipedia.org/wiki/Запорозьке_військо
-  type: reference
-  notes: Історичний контекст озброєння
 content_outline:
 - section: Вступ — Війна як ремесло
   points:
@@ -104,3 +91,17 @@ grammar:
 - Burlesque metaphors
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Частини IV-VI для аналізу батальних сцен
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Військова тематика
+- name: Козацьке військо
+  url: https://uk.wikipedia.org/wiki/Запорозьке_військо
+  type: reference
+  notes: Історичний контекст озброєння
+register: академічний

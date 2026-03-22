@@ -2,7 +2,7 @@ module: istorio-004
 level: ISTORIO
 sequence: 4
 slug: radyanska-istorio
-version: '1.0'
+version: '3.0'
 title: 'Радянська історіографія: Деформації'
 focus: history
 pedagogy: seminar
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the causes and consequences of радянська історіографія: деформації'
 - Evaluate the historical significance of історія на службі партії
 - Trace the development of спадщина радянської історіографії
-sources:
-- name: Радянська історіографія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Радянська_історіографія
-  type: reference
-  notes: Overview of Soviet historical writing
-- name: Тези про 300-річчя возз'єднання (1954)
-  url: https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією
-  type: primary
-  notes: Official Soviet interpretation of 1654
-- name: Декомунізація в Україні
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
-  type: reference
-  notes: Post-Soviet revision context
 content_outline:
 - section: Вступ — Історія на службі партії
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - rosiiska-imperialna-istorio
 connects_to:
 - polskyi-pohliad
+references:
+- name: Радянська історіографія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Радянська_історіографія
+  type: reference
+  notes: Overview of Soviet historical writing
+- name: Тези про 300-річчя возз'єднання (1954)
+  url: https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією
+  type: primary
+  notes: Official Soviet interpretation of 1654
+- name: Декомунізація в Україні
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  type: reference
+  notes: Post-Soviet revision context
+register: академічний
+grammar: []

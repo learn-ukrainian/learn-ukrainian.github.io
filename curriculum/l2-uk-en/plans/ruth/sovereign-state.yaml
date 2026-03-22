@@ -2,7 +2,7 @@ module: ruth-002
 level: RUTH
 sequence: 2
 slug: sovereign-state
-version: '2.0'
+version: '3.0'
 title: Господар і держава
 subtitle: Sovereign & State
 focus: Господар, Панство — Concepts of statehood
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

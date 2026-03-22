@@ -2,7 +2,7 @@ module: istorio-084
 level: ISTORIO
 sequence: 84
 slug: rozumovskyi-tsykl
-version: '1.0'
+version: '3.0'
 title: 'Розумовський цикл: Останній гетьман'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
 - Evaluate the historical significance of фаворит, що скасував себе
-sources:
-- name: Кирило Розумовський (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кирило_Розумовський
-  type: reference
-  notes: Biography
-- name: Ліквідація Гетьманщини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини
-  type: reference
-  notes: End of Hetmanate
-- name: Олексій Розумовський (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Олексій_Розумовський
-  type: reference
-  notes: Brother context
 content_outline:
 - section: Вступ — Фаворит, що скасував себе
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - mazepa-tsykl
 connects_to:
 - radianska-ukrainizatsiia
+references:
+- name: Кирило Розумовський (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило_Розумовський
+  type: reference
+  notes: Biography
+- name: Ліквідація Гетьманщини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини
+  type: reference
+  notes: End of Hetmanate
+- name: Олексій Розумовський (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олексій_Розумовський
+  type: reference
+  notes: Brother context
+register: академічний
+grammar: []

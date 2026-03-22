@@ -2,7 +2,7 @@ module: bio-172
 level: BIO
 sequence: 172
 slug: illia-chernilevskyi
-version: '2.0'
+version: '3.0'
 title: Ілля Чернілевський
 subtitle: Ілля Чернілевський
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - maksym-kryvtsov
 connects_to:
 - andriy-pilshchykov
+references: []
+register: академічний
+grammar: []

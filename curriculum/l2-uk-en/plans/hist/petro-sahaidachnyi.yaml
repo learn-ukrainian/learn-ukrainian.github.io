@@ -2,7 +2,7 @@ module: hist-045
 level: HIST
 sequence: 45
 slug: petro-sahaidachnyi
-version: '2.0'
+version: '3.0'
 title: 'Петро Сагайдачний: Гетьман і меценат'
 subtitle: The Knight of Orthodox Culture and Naval Glory
 focus: history
@@ -16,14 +16,15 @@ objectives:
 content_outline:
 - section: Вступ
   points:
-  - Sahaidachnyi as a statesman-leader — architect of Cossack statehood; combining Sich energy with discipline and education
-  - The transition to a professional cossack army — from disorganized bands to a regular army; symbol of transformation into
-    a political nation
+  - Sahaidachnyi as a statesman-leader — architect of Cossack statehood; combining Sich energy with discipline and 
+    education
+  - The transition to a professional cossack army — from disorganized bands to a regular army; symbol of transformation 
+    into a political nation
   words: 600
 - section: Шлях від Кульчиць до Січі
   points:
-  - Origins and education in Ostroh — noble birth (Pobuh coat of arms); contemporary of Meletiy Smotrytskyi; [!history-bite]
-    intellectual with a sword
+  - Origins and education in Ostroh — noble birth (Pobuh coat of arms); contemporary of Meletiy Smotrytskyi; 
+    [!history-bite] intellectual with a sword
   - 'Military reforms: discipline and training — division into regiments/hundreds; firearms drills; ban on alcohol during
     campaigns (''overboard if caught'')'
   - 'The ''Marine'' strategy: Campaigns against Istanbul — turning Cossacks into Europe''s special forces; intellect winning
@@ -31,11 +32,12 @@ content_outline:
   words: 600
 - section: 'Військова слава: Кафа та Москва — шлях переможця'
   points:
-  - The liberation of slaves in Caffa (1616) — blow to heart of slave trade; destruction of Turkish fleet; psychological impact
-    on Ottomans
-  - The campaign of 1618 and the siege of Moscow — saving Prince Wladyslaw; lightning march (Livny, Yelets); standing at Arbat
-    gates; [!military] wolf pack tactics
-  - Tactical innovations of the cossack fleet — night assaults; Deulino Truce triumph as Polish victory by Ukrainian hands
+  - The liberation of slaves in Caffa (1616) — blow to heart of slave trade; destruction of Turkish fleet; psychological
+    impact on Ottomans
+  - The campaign of 1618 and the siege of Moscow — saving Prince Wladyslaw; lightning march (Livny, Yelets); standing at
+    Arbat gates; [!military] wolf pack tactics
+  - Tactical innovations of the cossack fleet — night assaults; Deulino Truce triumph as Polish victory by Ukrainian 
+    hands
   words: 600
 - section: 'Читання: Голос барокової епохи'
   points:
@@ -44,19 +46,19 @@ content_outline:
   words: 600
 - section: 'Меценатство та Освіта: Революція духу'
   points:
-  - Support for the Kyiv Brotherhood — enrollment of entire Zaporozhian Host; protection of culture/school; [!myth-buster]
-    Cossacks as collective patron
-  - Restoration of the Orthodox hierarchy (1620) — Patriarch Theophanes III; consecration of Job Boretsky; restoration of
-    spiritual statehood
-  - The union of the 'sword and the book' — alliance of military force and intellectual elite; legitimizing Cossacks as 'knights'
-    of the people
+  - Support for the Kyiv Brotherhood — enrollment of entire Zaporozhian Host; protection of culture/school; 
+    [!myth-buster] Cossacks as collective patron
+  - Restoration of the Orthodox hierarchy (1620) — Patriarch Theophanes III; consecration of Job Boretsky; restoration 
+    of spiritual statehood
+  - The union of the 'sword and the book' — alliance of military force and intellectual elite; legitimizing Cossacks as 
+    'knights' of the people
   words: 600
 - section: 'Хотинська епопея (1621): Битва за майбутнє Європи'
   points:
-  - The clash of civilizations at Khotyn — Sultan Osman II vs Poland; stopping largest army in the world; [!context] Khotyn
-    as 17th-century Thermopylae
-  - The decisive role of cossacks in saving Europe — wagon fort (wagenburg) tactics; night raids; sniper fire; saving Europe
-    from Islamic expansion
+  - The clash of civilizations at Khotyn — Sultan Osman II vs Poland; stopping largest army in the world; [!context] 
+    Khotyn as 17th-century Thermopylae
+  - The decisive role of cossacks in saving Europe — wagon fort (wagenburg) tactics; night raids; sniper fire; saving 
+    Europe from Islamic expansion
   - The fatal wound and death of the Hetman — poisoned arrow wound; death in Kyiv (1622); burial at Bratsky Monastery
   words: 600
 - section: 'Первинні джерела: Свідчення очевидців та славослів''я'
@@ -66,10 +68,10 @@ content_outline:
   words: 600
 - section: 'Деколонізаційний погляд: Повернення справжнього гетьмана'
   points:
-  - Sahaidachnyi as a European-style knight, not an imperial servant — autonomous geopolitical player; blackmailing Warsaw;
-    building Hetmanate foundation
-  - Reclaiming the naval heritage of Ukraine — [!decolonization] dominance of Black Sea before Russian Empire; scale of Cromwell
-    or Wallenstein
+  - Sahaidachnyi as a European-style knight, not an imperial servant — autonomous geopolitical player; blackmailing 
+    Warsaw; building Hetmanate foundation
+  - Reclaiming the naval heritage of Ukraine — [!decolonization] dominance of Black Sea before Russian Empire; scale of 
+    Cromwell or Wallenstein
   words: 800
 vocabulary_hints:
   required:
@@ -106,3 +108,4 @@ prerequisites:
 - kozatski-povstannia-16
 connects_to:
 - khotynska-viyna
+references: []

@@ -2,7 +2,7 @@ module: istorio-059
 level: ISTORIO
 sequence: 59
 slug: beresteyska-uniia-analiz
-version: '1.0'
+version: '3.0'
 title: 'Берестейська унія: Глибокий аналіз'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
 - Evaluate the historical significance of розкол, що визначив історію
-sources:
-- name: Берестейська унія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія
-  type: reference
-  notes: Overview
-- name: Греко-католицька церква (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
-  type: reference
-  notes: UGCC history
-- name: Православна опозиція унії
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
-  type: reference
-  notes: Opposition
 content_outline:
 - section: Вступ — Розкол, що визначив історію
   points:
@@ -129,3 +116,18 @@ prerequisites:
 - khreshchennia-spadshchyna
 connects_to:
 - pravoslavna-identychnist
+references:
+- name: Берестейська унія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  type: reference
+  notes: Overview
+- name: Греко-католицька церква (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: UGCC history
+- name: Православна опозиція унії
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
+  type: reference
+  notes: Opposition
+register: академічний
+grammar: []

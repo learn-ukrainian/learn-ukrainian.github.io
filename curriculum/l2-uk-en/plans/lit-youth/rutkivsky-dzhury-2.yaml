@@ -2,7 +2,7 @@ sequence: 12
 module: lit-youth-012
 level: LIT.JUVENILE
 slug: rutkivsky-dzhury-2
-version: '2.0'
+version: '3.0'
 title: Rutkivsky Dzhury 2
 subtitle: Rutkivsky Dzhury 2
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Mystic Sorcerer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

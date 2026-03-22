@@ -2,7 +2,7 @@ sequence: 32
 module: lit-youth-032
 level: LIT.JUVENILE
 slug: juvenile-synthesis
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Формування майбутнього'
 subtitle: 'Intellectual Synthesis: Shaping the Future'
 content_outline:
@@ -60,3 +60,6 @@ persona:
   voice: Senior Specialist
   role: Literary Critic
 word_target: 5000
+references: []
+register: академічний
+grammar: []

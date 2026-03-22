@@ -2,7 +2,7 @@ module: bio-078
 level: BIO
 sequence: 78
 slug: hnat-khotkevych
-version: '2.0'
+version: '3.0'
 title: 'Гнат Хоткевич: Бандурист, письменник, жертва Розстріляного відродження'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Гнат Хоткевич as a multi-talented Ukrainian cultural figure
 - Evaluate the significance of bandura revival for Ukrainian national identity
 - Trace the destruction of Ukrainian cultural figures during the Executed Renaissance
-sources:
-- name: Хоткевич Гнат Мартинович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Хоткевич_Гнат_Мартинович
-  type: primary
-  notes: Comprehensive biography of the writer, bandura player and ethnographer
-- name: Гнат Хоткевич — життя геніального бандуриста
-  url: https://uain.press/blogs/gnat-hotkevich-zhittya-genialnogo-bandurista-646242
-  type: reference
-  notes: Detailed biographical article with focus on bandura legacy
 content_outline:
 - section: Вступ — Людина-оркестр
   points:
@@ -99,3 +90,14 @@ persona:
   role: Cultural Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Хоткевич Гнат Мартинович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Хоткевич_Гнат_Мартинович
+  type: primary
+  notes: Comprehensive biography of the writer, bandura player and ethnographer
+- name: Гнат Хоткевич — життя геніального бандуриста
+  url: https://uain.press/blogs/gnat-hotkevich-zhittya-genialnogo-bandurista-646242
+  type: reference
+  notes: Detailed biographical article with focus on bandura legacy
+register: академічний
+grammar: []

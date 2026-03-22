@@ -2,7 +2,7 @@ module: istorio-130
 level: ISTORIO
 sequence: 130
 slug: zhinky-v-revoiuutsiiakh
-version: '1.0'
+version: '3.0'
 title: 'Жінки в революціях: Прихована історія'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of жінки в революціях: прихована історія'
 - Evaluate the historical significance of невидимі героїні
-sources:
-- name: Жіночий рух в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
-  type: reference
-  notes: Women's movement
-- name: Євромайдан (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євромайдан
-  type: reference
-  notes: Women at Euromaidan
 content_outline:
 - section: Вступ — Невидимі героїні
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - 2004-krymska-kryza
 connects_to:
 - chomu-2022-spratsiuvalo
+references:
+- name: Жіночий рух в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
+  type: reference
+  notes: Women's movement
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Women at Euromaidan
+register: академічний
+grammar: []

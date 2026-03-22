@@ -2,7 +2,7 @@ module: bio-126
 level: BIO
 sequence: 126
 slug: petro-veskliaov
-version: '2.0'
+version: '3.0'
 title: 'Дід Панас: Казкар нації'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the cultural phenomenon of "Did Panas"
 - Evaluate the role of Ukrainian language on Soviet TV
 - Discuss the art of storytelling
-sources:
-- name: Петро Вескляров (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вескляров_Петро_Юхимович
-  type: primary
-  notes: Біографія
-- name: Записи "Вечірньої казки"
-  url: https://www.youtube.com/
-  type: reference
-  notes: Відеоархів
 content_outline:
 - section: Вступ — Дідусь усіх українських дітей
   points:
@@ -98,3 +89,14 @@ persona:
   role: Cultural Anthropologist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Петро Вескляров (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вескляров_Петро_Юхимович
+  type: primary
+  notes: Біографія
+- name: Записи "Вечірньої казки"
+  url: https://www.youtube.com/
+  type: reference
+  notes: Відеоархів
+register: академічний
+grammar: []

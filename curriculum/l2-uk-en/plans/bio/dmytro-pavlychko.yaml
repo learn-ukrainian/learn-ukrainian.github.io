@@ -2,7 +2,7 @@ module: bio-137
 level: BIO
 sequence: 137
 slug: dmytro-pavlychko
-version: '2.0'
+version: '3.0'
 title: 'Дмитро Павличко: Поет і дипломат'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of дмитро павличко: поет і дипломат'
 - Evaluate the contributions of два кольори однієї душі
 - Trace the career and influence of голос україни
-sources:
-- name: Дмитро Павличко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
-  type: primary
-  notes: Biography of the poet, translator, and diplomat
-- name: Національна спілка письменників України
-  url: https://nspu.org.ua/
-  type: reference
-  notes: Literary biography and works
 content_outline:
 - section: Вступ — Два кольори однієї душі
   points:
@@ -98,3 +89,14 @@ persona:
   role: Poet Diplomat
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Дмитро Павличко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
+  type: primary
+  notes: Biography of the poet, translator, and diplomat
+- name: Національна спілка письменників України
+  url: https://nspu.org.ua/
+  type: reference
+  notes: Literary biography and works
+register: академічний
+grammar: []

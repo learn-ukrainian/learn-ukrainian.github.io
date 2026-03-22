@@ -2,7 +2,7 @@ module: lit-219
 level: LIT
 sequence: 219
 slug: aliev-musayeva-crimean-tatar-ukrainian
-version: '2.0'
+version: '3.0'
 title: 'Алієв і Мусаєва: Кримськотатарські голоси українською'
 subtitle: Aliev and Musayeva — Crimean Tatar Voices in Ukrainian
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати українськомовну творчість кримськотатарських авторів
 - Дослідити книгу «Мустафа Джемілєв. Незламний» як зразок біографічної прози
 - Зрозуміти кримськотатарсько-українську солідарність через літературу
-sources:
-- name: Алієв, Мусаєва — публікації
-  url: https://uk.wikipedia.org/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -76,3 +72,9 @@ persona:
   role: Indigenous Voices Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Алієв, Мусаєва — публікації
+  url: https://uk.wikipedia.org/
+  type: primary
+register: академічний
+grammar: []

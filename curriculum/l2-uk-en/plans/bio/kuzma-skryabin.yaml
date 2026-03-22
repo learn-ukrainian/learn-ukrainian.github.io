@@ -2,7 +2,7 @@ module: bio-162
 level: BIO
 sequence: 162
 slug: kuzma-skryabin
-version: '2.0'
+version: '3.0'
 title: 'Кузьма Скрябін: Голос народу'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the cultural impact of Kuzma Skryabin
 - Evaluate his use of language and humor
 - Discuss the civic responsibility of artists
-sources:
-- name: Андрій Кузьменко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кузьменко_Андрій_Вікторович
-  type: primary
-  notes: Біографія
-- name: Книга "Я, Побєда і Берлін"
-  url: https://starylev.com.ua/
-  type: reference
-  notes: Літературний твір
 content_outline:
 - section: Вступ — Свій хлопець
   points:
@@ -99,3 +90,14 @@ persona:
   role: Cultural Critic
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Андрій Кузьменко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кузьменко_Андрій_Вікторович
+  type: primary
+  notes: Біографія
+- name: Книга "Я, Побєда і Берлін"
+  url: https://starylev.com.ua/
+  type: reference
+  notes: Літературний твір
+register: академічний
+grammar: []

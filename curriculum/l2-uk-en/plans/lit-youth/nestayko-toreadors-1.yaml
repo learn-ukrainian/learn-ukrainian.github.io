@@ -2,7 +2,7 @@ sequence: 4
 module: lit-youth-004
 level: LIT.JUVENILE
 slug: nestayko-toreadors-1
-version: '2.0'
+version: '3.0'
 title: Nestayko Toreadors 1
 subtitle: Nestayko Toreadors 1
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Subway Engineer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

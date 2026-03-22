@@ -2,7 +2,7 @@ module: istorio-078
 level: ISTORIO
 sequence: 78
 slug: krym-bahatosharovyi
-version: '1.0'
+version: '3.0'
 title: 'Крим: Багатошарова історія'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of крим: багатошарова історія'
 - Evaluate the historical significance of шари історії
-sources:
-- name: Крим (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Крим
-  type: reference
-  notes: Regional overview
-- name: Кримське ханство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кримське_ханство
-  type: reference
-  notes: Tatar state
-- name: Кримські татари (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кримські_татари
-  type: reference
-  notes: Crimean Tatars
 content_outline:
 - section: Вступ — Шари історії
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - donbas-industrializatsiia
 connects_to:
 - pivden-kolonizatsiia-mify
+references:
+- name: Крим (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Крим
+  type: reference
+  notes: Regional overview
+- name: Кримське ханство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кримське_ханство
+  type: reference
+  notes: Tatar state
+- name: Кримські татари (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кримські_татари
+  type: reference
+  notes: Crimean Tatars
+register: академічний
+grammar: []

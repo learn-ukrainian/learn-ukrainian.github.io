@@ -2,7 +2,7 @@ module: istorio-018
 level: ISTORIO
 sequence: 18
 slug: syntez-serednovichni-dzherela
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Методи роботи з літописами'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: методи роботи з літописами'
 - Evaluate the historical significance of що ми вивчили
-sources:
-- name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
-  type: reference
-  notes: Source studies overview
-- name: Критика джерел
-  url: https://uk.wikipedia.org/wiki/Критика_джерел
-  type: reference
-  notes: Source criticism methods
-- name: Шахматов О.О.
-  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
-  type: reference
-  notes: Chronicle studies pioneer
 content_outline:
 - section: Вступ — Що ми вивчили
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - hramoty-ta-akty
 connects_to:
 - kozatski-litopysy-ohliad
+references:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies overview
+- name: Критика джерел
+  url: https://uk.wikipedia.org/wiki/Критика_джерел
+  type: reference
+  notes: Source criticism methods
+- name: Шахматов О.О.
+  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
+  type: reference
+  notes: Chronicle studies pioneer
+register: академічний
+grammar: []

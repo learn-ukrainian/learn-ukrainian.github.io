@@ -2,7 +2,7 @@ module: bio-058
 level: BIO
 sequence: 58
 slug: volodymyr-vernadskyi
-version: '2.0'
+version: '3.0'
 title: 'Володимир Вернадський: Батько української науки'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати концепцію ноосфери Вернадського
 - Оцінити його роль у створенні Української академії наук
 - Дослідити зв'язок між науковим знанням та етикою за Вернадським
-sources:
-- name: Володимир Вернадський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
-  type: primary
-  notes: Життєпис та вчення
-- name: Праці В.І. Вернадського
-  url: http://vernadsky.lib.ru/
-  type: reference
-  notes: Наукові тексти
 content_outline:
 - section: Вступ — Вчений, який змінив науку
   points:
@@ -87,3 +78,13 @@ grammar:
 - Опис системних зв'язків (причини та наслідки)
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Володимир Вернадський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
+  type: primary
+  notes: Життєпис та вчення
+- name: Праці В.І. Вернадського
+  url: http://vernadsky.lib.ru/
+  type: reference
+  notes: Наукові тексти
+register: академічний

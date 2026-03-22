@@ -2,7 +2,7 @@ module: bio-005
 level: BIO
 sequence: 5
 slug: knyazhna-anna-yaroslavna
-version: '2.0'
+version: '3.0'
 title: 'Анна Ярославна: Королева Франції'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити роль Анни Ярославни у зміцненні міжнародного авторитету Русі
 - Проаналізувати культурні відмінності між Києвом та Парижем XI ст.
 - Дослідити легенди про "Реймське Євангеліє"
-sources:
-- name: Анна Ярославна (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
-  type: primary
-  notes: Основні факти
-- name: Реймське Євангеліє
-  url: https://archives.marne.fr/
-  type: reference
-  notes: Артефакт
 content_outline:
 - section: Вступ — Руська княжна на престолі Франції
   points:
@@ -85,3 +76,13 @@ grammar:
 - Епістолярний стиль (реальний та легендарний)
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Анна Ярославна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+  type: primary
+  notes: Основні факти
+- name: Реймське Євангеліє
+  url: https://archives.marne.fr/
+  type: reference
+  notes: Артефакт
+register: академічний

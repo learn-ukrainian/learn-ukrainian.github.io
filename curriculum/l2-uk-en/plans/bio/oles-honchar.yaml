@@ -2,7 +2,7 @@ module: bio-130
 level: BIO
 sequence: 130
 slug: oles-honchar
-version: '2.0'
+version: '3.0'
 title: 'Олесь Гончар: Собор непокори'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Олесь Гончар as a writer between system and conscience
 - Evaluate the cultural significance of the novel Sobor
 - Trace the evolution from Soviet-approved writer to defender of Ukrainian identity
-sources:
-- name: Олесь Гончар (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гончар_Олесь_Терентійович
-  type: primary
-  notes: Comprehensive biography of the Soviet-era Ukrainian writer
-- name: Роман «Собор» (аналіз)
-  url: https://uk.wikipedia.org/wiki/Собор_(роман)
-  type: reference
-  notes: Analysis of the banned novel that became a symbol of resistance
 content_outline:
 - section: Вступ — Між системою та сумлінням
   points:
@@ -98,3 +89,14 @@ persona:
   role: Cathedral Defender
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Олесь Гончар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гончар_Олесь_Терентійович
+  type: primary
+  notes: Comprehensive biography of the Soviet-era Ukrainian writer
+- name: Роман «Собор» (аналіз)
+  url: https://uk.wikipedia.org/wiki/Собор_(роман)
+  type: reference
+  notes: Analysis of the banned novel that became a symbol of resistance
+register: академічний
+grammar: []

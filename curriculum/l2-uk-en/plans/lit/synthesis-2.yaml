@@ -2,7 +2,7 @@ module: lit-077
 level: LIT
 sequence: 77
 slug: synthesis-2
-version: '2.0'
+version: '3.0'
 title: 'Синтез: Горизонти епохи 2'
 subtitle: 'Intellectual Synthesis: Horizons of Era 2'
 focus: literature
@@ -64,3 +64,6 @@ prerequisites:
 - lepkyi-mazepa-trilogy
 connects_to:
 - semenko-futurism-manifesto
+references: []
+register: академічний
+grammar: []

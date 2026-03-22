@@ -2,7 +2,7 @@ module: istorio-067
 level: ISTORIO
 sequence: 67
 slug: diaspora-orhanizatsiyi
-version: '1.0'
+version: '3.0'
 title: 'Діаспорні організації: UCC, UCCA, OUN'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
 - Evaluate the historical significance of держава в еміграції
-sources:
-- name: Конгрес українців Канади (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
-  type: reference
-  notes: UCC history
-- name: Український конгресовий комітет Америки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
-  type: reference
-  notes: UCCA history
-- name: Світовий конгрес українців (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
-  type: reference
-  notes: World Congress
 content_outline:
 - section: Вступ — Держава в еміграції
   points:
@@ -123,3 +110,18 @@ prerequisites:
 - tretia-khvylia-dipivtsi
 connects_to:
 - diaspora-naukovtsi
+references:
+- name: Конгрес українців Канади (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
+  type: reference
+  notes: UCC history
+- name: Український конгресовий комітет Америки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
+  type: reference
+  notes: UCCA history
+- name: Світовий конгрес українців (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  type: reference
+  notes: World Congress
+register: академічний
+grammar: []

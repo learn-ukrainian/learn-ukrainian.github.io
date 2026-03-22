@@ -2,7 +2,7 @@ module: istorio-080
 level: ISTORIO
 sequence: 80
 slug: syntez-rehionalna-riznomanitnist
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Регіональна різноманітність'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: регіональна різноманітність'
 - Evaluate the historical significance of єдність у різноманітності
-sources:
-- name: Регіони України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Регіони_України
-  type: reference
-  notes: Regional overview
-- name: Українська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
-  type: reference
-  notes: Identity studies
 content_outline:
 - section: Вступ — Єдність у різноманітності
   points:
@@ -120,3 +111,14 @@ prerequisites:
 - pivden-kolonizatsiia-mify
 connects_to:
 - mekhanizm-kooptatsii
+references:
+- name: Регіони України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Регіони_України
+  type: reference
+  notes: Regional overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
+  type: reference
+  notes: Identity studies
+register: академічний
+grammar: []

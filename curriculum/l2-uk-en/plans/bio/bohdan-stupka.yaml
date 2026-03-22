@@ -2,7 +2,7 @@ module: bio-145
 level: BIO
 sequence: 145
 slug: bohdan-stupka
-version: '2.0'
+version: '3.0'
 title: 'Богдан Ступка: Гетьман сцени'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the acting method of Bohdan Stupka
 - Evaluate his influence on Ukrainian theater
 - Discuss the cultural diplomacy through cinema
-sources:
-- name: Богдан Ступка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ступка_Богдан_Сильвестрович
-  type: primary
-  notes: Біографія
-- name: Театр імені Франка
-  url: https://ft.org.ua/
-  type: reference
-  notes: Репертуар
 content_outline:
 - section: Вступ — Актор №1
   points:
@@ -98,3 +89,14 @@ persona:
   role: Cultural Journalist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Богдан Ступка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ступка_Богдан_Сильвестрович
+  type: primary
+  notes: Біографія
+- name: Театр імені Франка
+  url: https://ft.org.ua/
+  type: reference
+  notes: Репертуар
+register: академічний
+grammar: []

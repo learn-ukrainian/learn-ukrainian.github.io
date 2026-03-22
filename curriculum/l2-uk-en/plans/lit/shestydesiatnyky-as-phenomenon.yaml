@@ -2,7 +2,7 @@ module: lit-164
 level: LIT
 sequence: 164
 slug: shestydesiatnyky-as-phenomenon
-version: '2.0'
+version: '3.0'
 title: Shestydesiatnyky As Phenomenon
 subtitle: Shestydesiatnyky As Phenomenon
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Shestydesiatnyky As Phenomenon у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Shestydesiatnyky As Phenomenon — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Sixties Activist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Shestydesiatnyky As Phenomenon — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

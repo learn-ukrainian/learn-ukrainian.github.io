@@ -2,7 +2,7 @@ module: lit-208
 level: LIT
 sequence: 208
 slug: war-poetry-2014-2022
-version: '2.0'
+version: '3.0'
 title: War Poetry 2014 2022
 subtitle: War Poetry 2014 2022
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір War Poetry 2014 2022 у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: War Poetry 2014 2022 — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Frontline Voice
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: War Poetry 2014 2022 — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

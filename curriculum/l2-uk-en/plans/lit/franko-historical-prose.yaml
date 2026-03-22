@@ -2,7 +2,7 @@ module: lit-048
 level: LIT
 sequence: 48
 slug: franko-historical-prose
-version: '2.0'
+version: '3.0'
 title: Franko Historical Prose
 subtitle: Franko Historical Prose
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Franko Historical Prose у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Franko Historical Prose — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Historical Novelist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Franko Historical Prose — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

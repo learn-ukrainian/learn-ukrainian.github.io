@@ -2,7 +2,7 @@ module: bio-046
 level: BIO
 sequence: 46
 slug: mykhailo-starytsky
-version: '2.0'
+version: '3.0'
 title: 'Михайло Старицький: Корифей українського театру'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Михайло Старицький as founder of Ukrainian professional theater
 - Evaluate the role of theater in preserving Ukrainian culture under imperial censorship
 - Trace the connections between Starytsky and the broader Ukrainian cultural movement
-sources:
-- name: Старицький Михайло Петрович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Старицький_Михайло_Петрович
-  type: primary
-  notes: Comprehensive biography of the theater founder
-- name: УІНП — 1840 народився Михайло Старицький
-  url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/14/1840-narodyvsya-myhaylo-staryckyy
-  type: reference
-  notes: Ukrainian Institute of National Memory biographical entry
 content_outline:
 - section: Вступ — Архітектор національної сцени
   points:
@@ -99,3 +90,14 @@ persona:
   role: Theater Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Старицький Михайло Петрович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Старицький_Михайло_Петрович
+  type: primary
+  notes: Comprehensive biography of the theater founder
+- name: УІНП — 1840 народився Михайло Старицький
+  url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/14/1840-narodyvsya-myhaylo-staryckyy
+  type: reference
+  notes: Ukrainian Institute of National Memory biographical entry
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-157
 level: BIO
 sequence: 157
 slug: oksana-zabuzhko
-version: '2.0'
+version: '3.0'
 title: 'Оксана Забужко: Інтелектуал і феміністка'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of оксана забужко: інтелектуал і феміністка'
 - Evaluate the contributions of голос українського інтелектуалізму
 - Trace the career and influence of громадська позиція та сучасність
-sources:
-- name: Оксана Забужко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
-  type: primary
-  notes: Біографія, літературна діяльність, філософія
-- name: Офіційний сайт Оксани Забужко
-  url: https://zabuzhko.com
-  type: reference
-  notes: Бібліографія та есеїстика
-- name: PEN Ukraine
-  url: https://pen.org.ua
-  type: reference
-  notes: Громадська позиція та правозахисна діяльність
 content_outline:
 - section: Вступ — Голос українського інтелектуалізму
   points:
@@ -104,3 +91,18 @@ persona:
   role: Public Intellectual
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Оксана Забужко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
+  type: primary
+  notes: Біографія, літературна діяльність, філософія
+- name: Офіційний сайт Оксани Забужко
+  url: https://zabuzhko.com
+  type: reference
+  notes: Бібліографія та есеїстика
+- name: PEN Ukraine
+  url: https://pen.org.ua
+  type: reference
+  notes: Громадська позиція та правозахисна діяльність
+register: академічний
+grammar: []

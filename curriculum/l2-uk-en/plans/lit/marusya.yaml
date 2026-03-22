@@ -2,7 +2,7 @@ module: lit-007
 level: LIT
 sequence: 7
 slug: marusya
-version: '2.0'
+version: '3.0'
 title: 'Маруся: Ідеал Української Душі'
 subtitle: 'LIT-007: Сентименталізм у дії'
 focus: literature
@@ -13,19 +13,6 @@ objectives:
 - Analyze the plot and characters of "Marusya"
 - Contrast "Marusya" with "Natalka Poltavka"
 - Identify features of Ukrainian Sentimentalism
-sources:
-- name: Маруся — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-  type: primary
-  notes: Повість для детального аналізу
-- name: Аналіз "Марусі"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Біографія Квітки
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-  type: reference
-  notes: Авторський контекст
 content_outline:
 - section: Вступ — Твір, що емансипував українську мову
   points:
@@ -104,3 +91,17 @@ grammar:
 - Narrative syntax (rhetorical questions, exclamations)
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Маруся — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  type: primary
+  notes: Повість для детального аналізу
+- name: Аналіз "Марусі"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Біографія Квітки
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: reference
+  notes: Авторський контекст
+register: академічний

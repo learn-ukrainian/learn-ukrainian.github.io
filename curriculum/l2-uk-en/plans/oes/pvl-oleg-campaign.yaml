@@ -2,7 +2,7 @@ module: oes-027
 level: OES
 sequence: 27
 slug: pvl-oleg-campaign
-version: '2.0'
+version: '3.0'
 title: 'ПВЛ: Похід Олега'
 subtitle: 'PVL: Oleg''s Campaign'
 focus: Military vocab — "Oleg ide na Greky"
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

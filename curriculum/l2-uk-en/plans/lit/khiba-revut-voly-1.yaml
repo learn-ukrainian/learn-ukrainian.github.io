@@ -2,7 +2,7 @@ module: lit-032
 level: LIT
 sequence: 32
 slug: khiba-revut-voly-1
-version: '2.0'
+version: '3.0'
 title: 'Хіба ревуть воли...: Генезис та сюжет'
 subtitle: Khiba Revut Voly 1
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Хіба ревуть воли...: Генезис та сюжет у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Хіба ревуть воли...: Генезис та сюжет — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Genealogist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Хіба ревуть воли...: Генезис та сюжет — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-019
 level: BIO
 sequence: 19
 slug: meletii-smotrytskyi
-version: '2.0'
+version: '3.0'
 title: 'Мелетій Смотрицький: Творець граматики'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити філологічний внесок Мелетія Смотрицького
 - Проаналізувати його роль у міжконфесійному діалозі
 - Дослідити вплив "Граматики" на слов'янський світ
-sources:
-- name: Мелетій Смотрицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
-  type: primary
-  notes: Життя та праці
-- name: Граматика Смотрицького
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Електронне видання 1619 р.
 content_outline:
 - section: Вступ — Інтелектуальний титан доби бароко
   points:
@@ -85,3 +76,13 @@ grammar:
 - Опис лінгвістичних реформ
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Мелетій Смотрицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
+  type: primary
+  notes: Життя та праці
+- name: Граматика Смотрицького
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Електронне видання 1619 р.
+register: академічний

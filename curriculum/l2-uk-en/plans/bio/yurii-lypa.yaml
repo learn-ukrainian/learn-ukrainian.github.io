@@ -2,7 +2,7 @@ module: bio-114
 level: BIO
 sequence: 114
 slug: yurii-lypa
-version: '2.0'
+version: '3.0'
 title: 'Юрій Липа: Геополітик Чорного моря'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Юрій Липа as a geopolitical thinker
 - Evaluate the Black Sea doctrine and its contemporary relevance
 - Trace the father-son intellectual dynasty of the Lypa family
-sources:
-- name: Юрій Липа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович
-  type: primary
-  notes: Biography of the geopolitician, poet, and physician
-- name: «Призначення України» (електронна бібліотека)
-  url: https://uk.wikisource.org/wiki/Призначення_України
-  type: reference
-  notes: Full text of Lypa's major geopolitical work
 content_outline:
 - section: Вступ — Пророк Чорноморської доктрини
   points:
@@ -99,3 +90,14 @@ persona:
   role: Geopolitician
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Липа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович
+  type: primary
+  notes: Biography of the geopolitician, poet, and physician
+- name: «Призначення України» (електронна бібліотека)
+  url: https://uk.wikisource.org/wiki/Призначення_України
+  type: reference
+  notes: Full text of Lypa's major geopolitical work
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-061
 level: BIO
 sequence: 61
 slug: mykhailo-kotsiubynsky
-version: '2.0'
+version: '3.0'
 title: 'Михайло Коцюбинський: Імпресіоніст українського слова'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Михайло Коцюбинський as an impressionist writer
 - Evaluate the contributions of the pioneer of Ukrainian literary modernism
 - Trace the evolution from ethnographic realism to impressionist prose
-sources:
-- name: Михайло Коцюбинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович
-  type: primary
-  notes: Comprehensive biography of the impressionist prose master
-- name: Музей Коцюбинського у Чернігові
-  url: https://kotsyubynsky.org.ua/
-  type: reference
-  notes: Memorial museum dedicated to Kotsiubynsky's life and work
 content_outline:
 - section: Вступ — Чарівник настрою
   points:
@@ -99,3 +90,14 @@ persona:
   role: Nature Observer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Михайло Коцюбинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович
+  type: primary
+  notes: Comprehensive biography of the impressionist prose master
+- name: Музей Коцюбинського у Чернігові
+  url: https://kotsyubynsky.org.ua/
+  type: reference
+  notes: Memorial museum dedicated to Kotsiubynsky's life and work
+register: академічний
+grammar: []

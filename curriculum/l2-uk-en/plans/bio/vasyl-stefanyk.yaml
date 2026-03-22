@@ -2,7 +2,7 @@ module: bio-073
 level: BIO
 sequence: 73
 slug: vasyl-stefanyk
-version: '2.0'
+version: '3.0'
 title: 'Василь Стефаник: Слово як крик душі'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Василь Стефаник as an expressionist writer
 - Evaluate the artistic significance of laconism and dialect in literature
 - Trace the connection between Pokuttian peasant life and literary innovation
-sources:
-- name: Василь Стефаник (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович
-  type: primary
-  notes: Comprehensive biography of the expressionist master
-- name: Музей Василя Стефаника
-  url: https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника
-  type: reference
-  notes: Literary-memorial museum in Rusiv
 content_outline:
 - section: Вступ — Найсильніший новеліст
   points:
@@ -98,3 +89,14 @@ persona:
   role: Expressionist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Василь Стефаник (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович
+  type: primary
+  notes: Comprehensive biography of the expressionist master
+- name: Музей Василя Стефаника
+  url: https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника
+  type: reference
+  notes: Literary-memorial museum in Rusiv
+register: академічний
+grammar: []

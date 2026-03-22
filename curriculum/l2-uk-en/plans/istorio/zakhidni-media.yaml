@@ -2,7 +2,7 @@ module: istorio-111
 level: ISTORIO
 sequence: 111
 slug: zakhidni-media
-version: '1.0'
+version: '3.0'
 title: 'Західні медіа: Сліпі плями'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of західні медіа: сліпі плями'
 - Evaluate the historical significance of ненавмисна допомога
-sources:
-- name: Висвітлення України в західних ЗМІ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ
-  type: reference
-  notes: Western media coverage
-- name: Російська дезінформація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
-  type: reference
-  notes: How disinformation spreads
 content_outline:
 - section: Вступ — Ненавмисна допомога
   points:
@@ -121,3 +112,14 @@ prerequisites:
 - suchasna-dezinformatsiia
 connects_to:
 - ukrainski-kontrnararyvy
+references:
+- name: Висвітлення України в західних ЗМІ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ
+  type: reference
+  notes: Western media coverage
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: How disinformation spreads
+register: академічний
+grammar: []

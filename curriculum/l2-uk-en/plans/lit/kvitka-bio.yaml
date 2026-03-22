@@ -2,7 +2,7 @@ module: lit-006
 level: LIT
 sequence: 6
 slug: kvitka-bio
-version: '2.0'
+version: '3.0'
 title: 'Батько Прози: Квітка-Основ''яненко'
 subtitle: 'LIT-006: Слобожанський контекст'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Outline Kvitka's biography
 - Compare his two literary styles
 - Analyze his role in Kharkiv culture
-sources:
-- name: Григорій Квітка-Основ'яненко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Маруся — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-  type: secondary
-  notes: Для контексту творчості
-- name: Слобожанщина — історія
-  url: https://uk.wikipedia.org/wiki/Слобожанщина
-  type: reference
-  notes: Регіональний контекст
 content_outline:
 - section: Вступ — Хто такий \"батько української прози\"?
   points:
@@ -106,3 +93,17 @@ grammar:
 - Literary pseudonym usage
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Григорій Квітка-Основ'яненко — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Маруся — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  type: secondary
+  notes: Для контексту творчості
+- name: Слобожанщина — історія
+  url: https://uk.wikipedia.org/wiki/Слобожанщина
+  type: reference
+  notes: Регіональний контекст
+register: академічний

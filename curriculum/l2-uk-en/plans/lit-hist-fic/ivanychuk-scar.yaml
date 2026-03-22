@@ -2,7 +2,7 @@ sequence: 10
 module: lit-hist-fic-010
 level: LIT.HIST.FIC
 slug: ivanychuk-scar
-version: '2.0'
+version: '3.0'
 title: Ivanychuk Scar
 subtitle: Ivanychuk Scar
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Memory Restoration Expert
 word_target: 5000
+references: []
+register: академічний
+grammar: []

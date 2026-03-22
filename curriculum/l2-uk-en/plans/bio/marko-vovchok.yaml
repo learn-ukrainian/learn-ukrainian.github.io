@@ -2,7 +2,7 @@ module: bio-042
 level: BIO
 sequence: 42
 slug: marko-vovchok
-version: '2.0'
+version: '3.0'
 title: 'Марко Вовчок: Голос пригноблених'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of марко вовчок: голос пригноблених'
 - Evaluate the contributions of росіянка, що стала українською письменницею
 - Trace the career and influence of спадщина та значення
-sources:
-- name: Марко Вовчок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марко_Вовчок
-  type: primary
-  notes: Біографія, літературна діяльність, псевдонім
-- name: Народні оповідання
-  url: https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)
-  type: reference
-  notes: Головний твір та його значення
-- name: Український реалізм
-  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
-  type: reference
-  notes: Літературний контекст творчості
 content_outline:
 - section: Вступ — Росіянка, що стала українською письменницею
   points:
@@ -102,3 +89,18 @@ persona:
   role: Social Critic
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Марко Вовчок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марко_Вовчок
+  type: primary
+  notes: Біографія, літературна діяльність, псевдонім
+- name: Народні оповідання
+  url: https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)
+  type: reference
+  notes: Головний твір та його значення
+- name: Український реалізм
+  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
+  type: reference
+  notes: Літературний контекст творчості
+register: академічний
+grammar: []

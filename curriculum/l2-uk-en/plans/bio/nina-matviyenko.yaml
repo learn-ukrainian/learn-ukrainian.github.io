@@ -2,7 +2,7 @@ module: bio-147
 level: BIO
 sequence: 147
 slug: nina-matviyenko
-version: '2.0'
+version: '3.0'
 title: 'Ніна Матвієнко: Голос душі'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the vocal style of Nina Matviyenko
 - Evaluate the role of folk music in national identity
 - Discuss the preservation of cultural heritage
-sources:
-- name: Ніна Матвієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Матвієнко_Ніна_Митрофанівна
-  type: primary
-  notes: Біографія
-- name: Золота колекція
-  url: https://music.youtube.com/
-  type: reference
-  notes: Аудіозаписи
 content_outline:
 - section: Вступ — Берегиня пісні
   points:
@@ -98,3 +89,14 @@ persona:
   role: Cultural Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Ніна Матвієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Матвієнко_Ніна_Митрофанівна
+  type: primary
+  notes: Біографія
+- name: Золота колекція
+  url: https://music.youtube.com/
+  type: reference
+  notes: Аудіозаписи
+register: академічний
+grammar: []

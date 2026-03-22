@@ -2,7 +2,7 @@ module: bio-117
 level: BIO
 sequence: 117
 slug: serge-lifar
-version: '2.0'
+version: '3.0'
 title: 'Серж Лифар: Зірка балету'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of серж лифар: зірка балету'
 - Evaluate the contributions of бог танцю з києва
 - Trace the career and influence of останні роки та пам'ять (1958-1986)
-sources:
-- name: Серж Лифар (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
-  type: primary
-  notes: Біографія, балетна кар'єра, хореографія
-- name: Opéra national de Paris
-  url: https://www.operadeparis.fr
-  type: reference
-  notes: Паризька опера та балет
-- name: Archives du XXe siècle
-  url: https://ina.fr
-  type: reference
-  notes: Документальні матеріали
 content_outline:
 - section: Вступ — Бог танцю з Києва
   points:
@@ -103,3 +90,18 @@ persona:
   role: Ballet Master
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Серж Лифар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
+  type: primary
+  notes: Біографія, балетна кар'єра, хореографія
+- name: Opéra national de Paris
+  url: https://www.operadeparis.fr
+  type: reference
+  notes: Паризька опера та балет
+- name: Archives du XXe siècle
+  url: https://ina.fr
+  type: reference
+  notes: Документальні матеріали
+register: академічний
+grammar: []

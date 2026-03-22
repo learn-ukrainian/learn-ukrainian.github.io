@@ -2,7 +2,7 @@ module: lit-118
 level: LIT
 sequence: 118
 slug: sandarmokh-tragedy-erasure
-version: '2.0'
+version: '3.0'
 title: 'Сандармох: Трагедія знищеного покоління'
 subtitle: Sandarmokh Tragedy Erasure
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Сандармох: Трагедія знищеного покоління у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Сандармох: Трагедія знищеного покоління — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Sandarmokh Witness
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Сандармох: Трагедія знищеного покоління — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

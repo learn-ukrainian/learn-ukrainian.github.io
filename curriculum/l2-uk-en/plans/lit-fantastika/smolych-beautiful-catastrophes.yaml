@@ -2,7 +2,7 @@ sequence: 5
 module: lit-fantastika-005
 level: LIT.FANTASTIKA
 slug: smolych-beautiful-catastrophes
-version: '2.0'
+version: '3.0'
 title: Smolych Beautiful Catastrophes
 subtitle: Smolych Beautiful Catastrophes
 content_outline:
@@ -42,10 +42,12 @@ pedagogy: literature
 immersion: 100% Ukrainian
 phase: LIT Expansion
 objectives:
-- Проаналізувати творчість Smolych Beautiful Catastrophes у контексті української
-  літератури
+- Проаналізувати творчість Smolych Beautiful Catastrophes у контексті української літератури
 - Дослідити вплив автора на формування національної ідентичності
 persona:
   voice: Senior Specialist
   role: Satirical Futurist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-098
 level: LIT
 sequence: 98
 slug: pidmohylny-city-1
-version: '2.0'
+version: '3.0'
 title: 'Валер''ян Підмогильний: «Місто» — урбаністичний роман'
 subtitle: Pidmohylny City 1
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Валер''ян Підмогильний: «Місто» — урбаністичний роман у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Валер''ян Підмогильний: «Місто» — урбаністичний роман — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Urban Aspirant
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Валер''ян Підмогильний: «Місто» — урбаністичний роман — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-029
 level: LIT
 sequence: 29
 slug: language-of-realism
-version: '2.0'
+version: '3.0'
 title: 'Мова Реалізму: Стиль Нечуя-Левицького'
 subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Порівняти мову Нечуя з попередніми авторами курсу
 - Зрозуміти дискусію про "галицьку" vs "наддніпрянську" норму
 - Оцінити внесок Нечуя в розвиток літературної мови
-sources:
-- name: Кайдашева сім'я — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-  type: primary
-  notes: Зразки діалектної та розмовної мови
-- name: Микола Джеря — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-  type: primary
-  notes: Порівняння стилю
-- name: Мовознавчі погляди Нечуя
-  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
-  type: reference
-  notes: Контекст дискусії
 content_outline:
 - section: Вступ — Від поезії до прози
   points:
@@ -105,3 +92,17 @@ grammar:
 - Stylistic analysis
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Зразки діалектної та розмовної мови
+- name: Микола Джеря — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  type: primary
+  notes: Порівняння стилю
+- name: Мовознавчі погляди Нечуя
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Контекст дискусії
+register: академічний

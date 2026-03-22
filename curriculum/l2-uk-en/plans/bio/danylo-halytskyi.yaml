@@ -2,7 +2,7 @@ module: bio-010
 level: BIO
 sequence: 10
 slug: danylo-halytskyi
-version: '2.0'
+version: '3.0'
 title: 'Данило Галицький: Король Русі'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Аналізувати дипломатичні успіхи та поразки Данила
 - Оцінити значення коронації для української історії
 - Порівняти стратегії виживання в умовах монгольської навали
-sources:
-- name: Данило Галицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Данило_Галицький
-  type: primary
-  notes: Біографія та діяльність
-- name: Галицько-Волинський літопис (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ — Єдиний коронований король Русі
   points:
@@ -75,3 +66,13 @@ grammar:
 - Військова термінологія
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Данило Галицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Данило_Галицький
+  type: primary
+  notes: Біографія та діяльність
+- name: Галицько-Волинський літопис (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: primary
+  notes: Основне джерело
+register: академічний

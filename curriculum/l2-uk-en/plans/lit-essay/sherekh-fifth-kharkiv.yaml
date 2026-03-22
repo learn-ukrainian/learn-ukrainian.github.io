@@ -2,7 +2,7 @@ sequence: 23
 module: lit-essay-023
 level: LIT.ESSAY
 slug: sherekh-fifth-kharkiv
-version: '2.0'
+version: '3.0'
 title: Sherekh Fifth Kharkiv
 subtitle: Sherekh Fifth Kharkiv
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Urban Intellectual
 word_target: 5000
+references: []
+register: академічний
+grammar: []

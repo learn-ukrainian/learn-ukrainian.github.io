@@ -2,7 +2,7 @@ module: lit-179
 level: LIT
 sequence: 179
 slug: zabuzhko-notre-dame-lit
-version: '2.0'
+version: '3.0'
 title: Zabuzhko Notre Dame Lit
 subtitle: Zabuzhko Notre Dame Lit
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Zabuzhko Notre Dame Lit у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Zabuzhko Notre Dame Lit — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Cultural Critic
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Zabuzhko Notre Dame Lit — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-103
 level: ISTORIO
 sequence: 103
 slug: ekonomika-imperii
-version: '1.0'
+version: '3.0'
 title: 'Економіка імперії: Україна як житниця'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of економіка імперії: україна як житниця'
 - Evaluate the historical significance of колонія ресурсів
-sources:
-- name: Економіка Російської імперії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Економіка_Російської_імперії
-  type: reference
-  notes: Imperial economy
-- name: Кріпацтво в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні
-  type: reference
-  notes: Serfdom
-- name: Експорт зерна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Експорт_зерна_з_України
-  type: reference
-  notes: Grain export
 content_outline:
 - section: Вступ — Колонія ресурсів
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - syntez-zakhid-2022
 connects_to:
 - radianska-industrializatsiia
+references:
+- name: Економіка Російської імперії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Економіка_Російської_імперії
+  type: reference
+  notes: Imperial economy
+- name: Кріпацтво в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні
+  type: reference
+  notes: Serfdom
+- name: Експорт зерна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Експорт_зерна_з_України
+  type: reference
+  notes: Grain export
+register: академічний
+grammar: []

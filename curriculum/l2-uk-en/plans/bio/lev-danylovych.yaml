@@ -2,7 +2,7 @@ module: bio-011
 level: BIO
 sequence: 11
 slug: lev-danylovych
-version: '2.0'
+version: '3.0'
 title: 'Лев Данилович: Будівничий Львова'
 subtitle: 'Lev Danylovych: Builder of Lviv'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Analyze Lev's role in transforming Lviv into a major European city
 - Evaluate the continuation of Galicia-Volhynia under Mongol suzerainty
 - Master vocabulary related to urban development and territorial expansion
-sources:
-- name: Лев Данилович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лев_Данилович
-  type: primary
-  notes: Biography, reign, capital transfer to Lviv
-- name: Львів
-  url: https://uk.wikipedia.org/wiki/Історія_Львова
-  type: primary
-  notes: History of the city
-- name: Галицько-Волинське князівство
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
-  type: reference
-  notes: Political context
 content_outline:
 - section: Вступ — Князь, що дав місту своє ім'я
   points:
@@ -114,3 +101,17 @@ grammar:
 - Comparative constructions
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Лев Данилович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лев_Данилович
+  type: primary
+  notes: Biography, reign, capital transfer to Lviv
+- name: Львів
+  url: https://uk.wikipedia.org/wiki/Історія_Львова
+  type: primary
+  notes: History of the city
+- name: Галицько-Волинське князівство
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  type: reference
+  notes: Political context
+register: академічний

@@ -2,7 +2,7 @@ sequence: 44
 module: lit-essay-044
 level: LIT.ESSAY
 slug: snyder-dialogues
-version: '2.0'
+version: '3.0'
 title: Snyder Dialogues
 subtitle: Snyder Dialogues
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Global Dialogue Partner
 word_target: 5000
+references: []
+register: академічний
+grammar: []

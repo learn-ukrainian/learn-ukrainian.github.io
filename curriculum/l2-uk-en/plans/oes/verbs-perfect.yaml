@@ -2,7 +2,7 @@ module: oes-012
 level: OES
 sequence: 12
 slug: verbs-perfect
-version: '2.0'
+version: '3.0'
 title: 'Дієслова III: Перфект'
 subtitle: 'Verbs III: The Perfect'
 focus: '"Вкрав єси..." — Origin of modern past tense'
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

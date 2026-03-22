@@ -2,7 +2,7 @@ module: istorio-040
 level: ISTORIO
 sequence: 40
 slug: lysty-stusa
-version: '1.0'
+version: '3.0'
 title: Листи Василя Стуса з таборів
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of листи василя стуса з таборів
 - Evaluate the historical significance of голос із гулагу
-sources:
-- name: Василь Стус (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Василь_Стус
-  type: reference
-  notes: Biography
-- name: Листи Стуса
-  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
-  type: primary
-  notes: Letters collection
-- name: Табори для політв'язнів
-  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
-  type: reference
-  notes: Gulag context
 content_outline:
 - section: Вступ — Голос із ГУЛАГу
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - samvydav-shcho-tse
 connects_to:
 - ukrayinskyi-visnyk
+references:
+- name: Василь Стус (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Василь_Стус
+  type: reference
+  notes: Biography
+- name: Листи Стуса
+  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
+  type: primary
+  notes: Letters collection
+- name: Табори для політв'язнів
+  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
+  type: reference
+  notes: Gulag context
+register: академічний
+grammar: []

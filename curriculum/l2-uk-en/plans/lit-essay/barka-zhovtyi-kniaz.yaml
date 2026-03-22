@@ -2,7 +2,7 @@ module: lit-essay-061
 level: LIT.ESSAY
 sequence: 61
 slug: barka-zhovtyi-kniaz
-version: '2.0'
+version: '3.0'
 title: 'Василь Барка: «Жовтий князь» — епос Голодомору'
 subtitle: Vasyl Barka — The Yellow Prince (Holodomor Epic)
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати «Жовтий князь» як найважливіший роман про Голодомор
 - Дослідити символіку та поетику Барки — біблійні та фольклорні пласти
 - Порівняти із Самчуком — два підходи до Голодомору
-sources:
-- name: Василь Барка — «Жовтий князь»
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 1000
@@ -64,3 +60,9 @@ immersion: 100% Ukrainian
 persona:
   voice: Senior Specialist
   role: Holodomor Literature Specialist
+references:
+- name: Василь Барка — «Жовтий князь»
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

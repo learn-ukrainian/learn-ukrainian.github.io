@@ -2,7 +2,7 @@ module: ruth-077
 level: RUTH
 sequence: 77
 slug: monumental-style
-version: '2.0'
+version: '3.0'
 title: Монументальний стиль
 subtitle: The Monumental Style
 focus: Velychko — Documents as text
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

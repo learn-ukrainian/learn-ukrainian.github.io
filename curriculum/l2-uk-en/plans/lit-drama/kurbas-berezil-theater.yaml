@@ -2,7 +2,7 @@ sequence: 8
 module: lit-drama-008
 level: LIT
 slug: kurbas-berezil-theater
-version: '2.0'
+version: '3.0'
 title: Kurbas Berezil Theater
 subtitle: Kurbas Berezil Theater
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-98
 module_type: literature
-sources:
-- name: Kurbas Berezil Theater — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.3 Executed Renaissance 1917-1933
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: Theater Reformer
 word_target: 5000
+references:
+- name: Kurbas Berezil Theater — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

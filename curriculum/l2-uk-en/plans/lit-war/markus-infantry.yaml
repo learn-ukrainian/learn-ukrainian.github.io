@@ -2,7 +2,7 @@ sequence: 12
 module: lit-war-012
 level: LIT.WAR
 slug: markus-infantry
-version: '2.0'
+version: '3.0'
 title: Markus Infantry
 subtitle: Markus Infantry
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Tactical Drill Sergeant
 word_target: 5000
+references: []
+register: академічний
+grammar: []

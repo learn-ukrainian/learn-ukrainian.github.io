@@ -2,7 +2,7 @@ module: bio-131
 level: BIO
 sequence: 131
 slug: vasyl-sukhomlynskyi
-version: '2.0'
+version: '3.0'
 title: 'Василь Сухомлинський: Педагог серця'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of василь сухомлинський: педагог серця'
 - Evaluate the contributions of найвидатніший педагог україни
 - Trace the career and influence of спадщина та вплив
-sources:
-- name: Василь Сухомлинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович
-  type: primary
-  notes: Biography, educational philosophy, works
-- name: Павлиська школа
-  url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
-  type: reference
-  notes: School he directed for 22 years
-- name: '"Серце віддаю дітям"'
-  url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
-  type: reference
-  notes: His most famous work
 content_outline:
 - section: Вступ — Найвидатніший педагог України
   points:
@@ -105,3 +92,18 @@ persona:
   role: School Principal
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Василь Сухомлинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович
+  type: primary
+  notes: Biography, educational philosophy, works
+- name: Павлиська школа
+  url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
+  type: reference
+  notes: School he directed for 22 years
+- name: '"Серце віддаю дітям"'
+  url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
+  type: reference
+  notes: His most famous work
+register: академічний
+grammar: []

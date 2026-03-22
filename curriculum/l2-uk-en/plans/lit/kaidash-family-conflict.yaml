@@ -2,7 +2,7 @@ module: lit-028
 level: LIT
 sequence: 28
 slug: kaidash-family-conflict
-version: '2.0'
+version: '3.0'
 title: 'Кайдашева сім''я: Анатомія Конфлікту'
 subtitle: 'Kaidash Family: Anatomy of Conflict'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Зрозуміти соціальні причини сімейних сварок
 - Дослідити роль побутових деталей у розвитку сюжету
 - Оцінити актуальність твору для сучасності
-sources:
-- name: Кайдашева сім'я — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-  type: primary
-  notes: Ключові сцени конфліктів
-- name: Аналіз "Кайдашевої сім'ї"
-  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
-  type: primary
-  notes: Проблематика твору
-- name: Роздуми над повістю
-  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8391
-  type: reference
-  notes: Інтерпретації читачів
 content_outline:
 - section: Вступ — Чому вони сваряться?
   points:
@@ -104,3 +91,17 @@ grammar:
 - Emotional register
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Ключові сцени конфліктів
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Проблематика твору
+- name: Роздуми над повістю
+  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8391
+  type: reference
+  notes: Інтерпретації читачів
+register: академічний

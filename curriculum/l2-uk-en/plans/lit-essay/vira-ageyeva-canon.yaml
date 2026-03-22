@@ -2,7 +2,7 @@ sequence: 59
 module: lit-essay-059
 level: LIT.ESSAY
 slug: vira-ageyeva-canon
-version: '2.0'
+version: '3.0'
 title: Vira Ageyeva Canon
 subtitle: Vira Ageyeva Canon
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Literary Revisionist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

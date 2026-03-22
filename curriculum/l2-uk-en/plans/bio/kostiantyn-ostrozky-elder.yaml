@@ -2,7 +2,7 @@ module: bio-013
 level: BIO
 sequence: 13
 slug: kostiantyn-ostrozky-elder
-version: '2.0'
+version: '3.0'
 title: 'Костянтин Іванович Острозький: Гетьман двох народів'
 subtitle: 'Kostiantyn Ostrozky: Hetman of Two Nations'
 focus: biography
@@ -12,13 +12,6 @@ word_target: 5000
 objectives:
 - Analyze the significance of the Battle of Orsha
 - Evaluate Ostrozky's role as a patron of the Orthodox Church
-sources:
-- name: Костянтин Іванович Острозький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
-  type: primary
-- name: Битва під Оршею
-  url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
-  type: primary
 content_outline:
 - section: Вступ — Гетьман двох народів
   points:
@@ -80,3 +73,11 @@ prerequisites:
 - yuriy-lvovych
 connects_to:
 - roksolana
+references:
+- name: Костянтин Іванович Острозький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
+  type: primary
+- name: Битва під Оршею
+  url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
+  type: primary
+register: академічний

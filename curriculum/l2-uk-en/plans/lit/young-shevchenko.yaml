@@ -2,7 +2,7 @@ module: lit-011
 level: LIT
 sequence: 11
 slug: young-shevchenko
-version: '2.0'
+version: '3.0'
 title: 'Тарас Шевченко: Від Кріпака до Пророка'
 subtitle: 'LIT-011: Анатомія Генія'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Outline Shevchenko's path to freedom
 - Analyze the role of the 1838 lottery
 - Explore the "Romantic Hero" image
-sources:
-- name: Тарас Шевченко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-  type: secondary
-  notes: Для контексту ранньої творчості
-- name: Шевченко і Академія мистецтв
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
-  type: reference
-  notes: Петербурзький період
 content_outline:
 - section: Вступ — Світ кріпацтва
   points:
@@ -104,3 +91,17 @@ grammar:
 - Art and freedom vocabulary
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Тарас Шевченко — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Для контексту ранньої творчості
+- name: Шевченко і Академія мистецтв
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: reference
+  notes: Петербурзький період
+register: академічний

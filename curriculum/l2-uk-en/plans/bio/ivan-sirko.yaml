@@ -2,7 +2,7 @@ module: bio-025
 level: BIO
 sequence: 25
 slug: ivan-sirko
-version: '2.0'
+version: '3.0'
 title: 'Іван Сірко: Легендарний кошовий отаман'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати військові стратегії Івана Сірка
 - Оцінити роль Запорозької Січі в епоху Руїни
 - Дослідити міфологізацію постаті Сірка в народній культурі
-sources:
-- name: Іван Сірко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Сірко
-  type: primary
-  notes: Біографія та походи
-- name: Дмитро Яворницький "Історія запорозьких козаків"
-  url: http://izbornyk.org.ua/
-  type: reference
-  notes: Класичне дослідження
 content_outline:
 - section: Вступ — Легенда Запорозької Січі
   points:
@@ -85,3 +76,13 @@ grammar:
 - Термінологія козацького звичаєвого права
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Сірко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Сірко
+  type: primary
+  notes: Біографія та походи
+- name: Дмитро Яворницький "Історія запорозьких козаків"
+  url: http://izbornyk.org.ua/
+  type: reference
+  notes: Класичне дослідження
+register: академічний

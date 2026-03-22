@@ -2,7 +2,7 @@ module: bio-006
 level: BIO
 sequence: 6
 slug: volodymyr-monomakh
-version: '2.0'
+version: '3.0'
 title: 'Володимир Мономах: Укріплювач Русі'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати політичну стратегію Мономаха щодо єдності Русі
 - Дослідити етичні засади "Повчання дітям"
 - Оцінити роль князя у захисті від степових кочовиків
-sources:
-- name: Володимир Мономах (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
-  type: primary
-  notes: Детальний життєпис
-- name: '"Повчання" Володимира Мономаха'
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Оригінальний текст та коментарі
 content_outline:
 - section: Вступ — Останній великий самодержець Києва
   points:
@@ -86,3 +77,13 @@ grammar:
 - Офіційно-діловий стиль (статути)
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Володимир Мономах (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+  type: primary
+  notes: Детальний життєпис
+- name: '"Повчання" Володимира Мономаха'
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальний текст та коментарі
+register: академічний

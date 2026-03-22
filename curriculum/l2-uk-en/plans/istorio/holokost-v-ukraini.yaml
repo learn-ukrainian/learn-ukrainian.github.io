@@ -2,7 +2,7 @@ module: istorio-119
 level: ISTORIO
 sequence: 119
 slug: holokost-v-ukraini
-version: '1.0'
+version: '3.0'
 title: 'Голокост в Україні: Співучасть і рятування'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
 - Evaluate the historical significance of найтемніша сторінка
-sources:
-- name: Голокост в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
-  type: reference
-  notes: Holocaust overview
-- name: Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бабин_Яр
-  type: reference
-  notes: Babi Yar
-- name: Праведники народів світу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
-  type: reference
-  notes: Righteous Among Nations
 content_outline:
 - section: Вступ — Найтемніша сторінка
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - yevrei-v-ukraini-do-1917
 connects_to:
 - radianski-antysemityzm
+references:
+- name: Голокост в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  type: reference
+  notes: Holocaust overview
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar
+- name: Праведники народів світу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  type: reference
+  notes: Righteous Among Nations
+register: академічний
+grammar: []

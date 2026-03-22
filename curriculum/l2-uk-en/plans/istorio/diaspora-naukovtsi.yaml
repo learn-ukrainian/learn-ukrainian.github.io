@@ -2,7 +2,7 @@ module: istorio-068
 level: ISTORIO
 sequence: 68
 slug: diaspora-naukovtsi
-version: '1.0'
+version: '3.0'
 title: 'Діаспорні науковці: Збереження спадщини'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
 - Evaluate the historical significance of наука в еміграції
-sources:
-- name: Український науковий інститут Гарварду (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
-  type: reference
-  notes: HURI history
-- name: УВАН (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
-  type: reference
-  notes: UVAN history
-- name: НТШ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
-  type: reference
-  notes: Shevchenko Society
 content_outline:
 - section: Вступ — Наука в еміграції
   points:
@@ -128,3 +115,18 @@ prerequisites:
 - diaspora-orhanizatsiyi
 connects_to:
 - syntez-diaspora
+references:
+- name: Український науковий інститут Гарварду (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
+  type: reference
+  notes: HURI history
+- name: УВАН (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
+  type: reference
+  notes: UVAN history
+- name: НТШ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  type: reference
+  notes: Shevchenko Society
+register: академічний
+grammar: []

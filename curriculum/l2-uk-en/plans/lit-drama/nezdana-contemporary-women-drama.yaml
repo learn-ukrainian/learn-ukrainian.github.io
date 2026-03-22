@@ -2,7 +2,7 @@ sequence: 16
 module: lit-drama-016
 level: LIT
 slug: nezdana-contemporary-women-drama
-version: '2.0'
+version: '3.0'
 title: Nezdana Contemporary Women Drama
 subtitle: Nezdana Contemporary Women Drama
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-215
 module_type: literature
-sources:
-- name: Nezdana Contemporary Women Drama — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.5 Independence Era 1991-Present
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: Contemporary Women's Voice
 word_target: 5000
+references:
+- name: Nezdana Contemporary Women Drama — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-101
 level: BIO
 sequence: 101
 slug: vira-kholodna
-version: '2.0'
+version: '3.0'
 title: 'Віра Холодна: Королева німого кіно'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of віра холодна: королева німого кіно'
 - Evaluate the contributions of зірка, яка згасла зарано
 - Trace the career and influence of легенда та реальність
-sources:
-- name: Віра Холодна (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
-  type: primary
-  notes: Основна біографічна інформація
-- name: Історія українського кіно
-  url: https://kinokolo.ua/
-  type: reference
-  notes: Контекст раннього кінематографу
-- name: Фільмографія
-  url: https://www.imdb.com/
-  type: reference
-  notes: Список фільмів
 content_outline:
 - section: Вступ — Зірка, яка згасла зарано
   points:
@@ -103,3 +90,18 @@ persona:
   role: Silent Film Star
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Віра Холодна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Історія українського кіно
+  url: https://kinokolo.ua/
+  type: reference
+  notes: Контекст раннього кінематографу
+- name: Фільмографія
+  url: https://www.imdb.com/
+  type: reference
+  notes: Список фільмів
+register: академічний
+grammar: []

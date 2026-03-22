@@ -2,7 +2,7 @@ sequence: 5
 module: lit-humor-005
 level: LIT.HUMOR
 slug: ostap-vyshnia-smiles-2
-version: '2.0'
+version: '3.0'
 title: Ostap Vyshnia Smiles 2
 subtitle: Ostap Vyshnia Smiles 2
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Rural Correspondent
 word_target: 5000
+references: []
+register: академічний
+grammar: []

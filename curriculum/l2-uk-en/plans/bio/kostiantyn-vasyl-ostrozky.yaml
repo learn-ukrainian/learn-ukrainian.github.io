@@ -2,7 +2,7 @@ module: bio-016
 level: BIO
 sequence: 16
 slug: kostiantyn-vasyl-ostrozky
-version: '2.0'
+version: '3.0'
 title: 'Костянтин-Василь Острозький: Князь-Просвітник'
 subtitle: 'Kostiantyn-Vasyl Ostrozky: The Enlightener Prince'
 focus: biography
@@ -12,16 +12,6 @@ word_target: 5000
 objectives:
 - Analyze the cultural impact of Ostroh Academy
 - Discuss the significance of the Ostroh Bible
-sources:
-- name: Костянтин-Василь Острозький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
-  type: primary
-- name: Острозька академія
-  url: https://uk.wikipedia.org/wiki/Острозька_академія
-  type: primary
-- name: Острозька Біблія
-  url: https://uk.wikipedia.org/wiki/Острозька_Біблія
-  type: primary
 content_outline:
 - section: Вступ — Некоронований король Русі
   points:
@@ -82,3 +72,14 @@ prerequisites:
 - dmytro-vyshnevetsky
 connects_to:
 - iov-boretskyi
+references:
+- name: Костянтин-Василь Острозький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
+  type: primary
+- name: Острозька академія
+  url: https://uk.wikipedia.org/wiki/Острозька_академія
+  type: primary
+- name: Острозька Біблія
+  url: https://uk.wikipedia.org/wiki/Острозька_Біблія
+  type: primary
+register: академічний

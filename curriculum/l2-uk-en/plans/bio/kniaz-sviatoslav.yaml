@@ -2,7 +2,7 @@ module: bio-002
 level: BIO
 sequence: 2
 slug: kniaz-sviatoslav
-version: '2.0'
+version: '3.0'
 title: 'Князь Святослав: Воїн-завойовник'
 subtitle: 'Prince Sviatoslav: The Warrior Conqueror'
 focus: biography
@@ -14,27 +14,14 @@ objectives:
 - Learner can analyze the impact of the destruction of the Khazar Khaganate
 - Learner masters biographical and military terminology at C1 level
 - Learner can compare the leadership styles of Olga and Sviatoslav
-sources:
-- name: Святослав Ігорович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
-  type: primary
-  notes: Military campaigns, death, historical significance
-- name: Повість минулих літ
-  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
-  type: primary
-  notes: Chronicle accounts of campaigns
-- name: Хозарський каганат
-  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
-  type: reference
-  notes: Context for Khazar campaign
 content_outline:
 - section: Вступ — Воїн на троні
   points:
   - Контраст між 'м'якою силою' Ольги та 'твердою силою' Святослава — архетип воїна-захисника
   - 'Значення постаті: Святослав як ''український Александр Македонський'' — єдиний син Ігоря та Ольги, перший князь зі слов''янським
     іменем'
-  - Чому він важливий для сучасної мілітарної ідентичності (гасло ССО) — [!history-bite] Опис зовнішності Левом Дияконом (оселедець,
-    сережка, біла сорочка)
+  - Чому він важливий для сучасної мілітарної ідентичності (гасло ССО) — [!history-bite] Опис зовнішності Левом Дияконом
+    (оселедець, сережка, біла сорочка)
   words: 450
 - section: Життєпис
   points:
@@ -63,8 +50,8 @@ content_outline:
 - section: 'Останні роки: Загибель на порогах'
   points:
   - 'Повернення до Києва: зимівля в Білобережжі та голод — ціна конячої голови пів гривні'
-  - Пастка печенігів біля порогів та роль візантійської дипломатії — [!myth-buster] Це не випадкова засідка, а спланована
-    операція Візантії
+  - Пастка печенігів біля порогів та роль візантійської дипломатії — [!myth-buster] Це не випадкова засідка, а 
+    спланована операція Візантії
   - 'Легенда про чашу з черепа: визнання доблесті ворогом — напис хана Курі «Чужого шукаючи, своє втратив»'
   - Попередження воєводи Свенельда — «Обійди, княже, пороги на конях»
   words: 450
@@ -141,3 +128,17 @@ grammar:
 - Participial constructions in formal descriptions
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Святослав Ігорович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+  type: primary
+  notes: Military campaigns, death, historical significance
+- name: Повість минулих літ
+  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  type: primary
+  notes: Chronicle accounts of campaigns
+- name: Хозарський каганат
+  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
+  type: reference
+  notes: Context for Khazar campaign
+register: академічний

@@ -2,7 +2,7 @@ module: istorio-011
 level: ISTORIO
 sequence: 11
 slug: povist-mynulykh-lit-i
-version: '1.0'
+version: '3.0'
 title: 'Повість минулих літ I: Структура та автори'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
 - Evaluate the historical significance of найстаріший літопис русі
-sources:
-- name: Повість минулих літ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
-  type: reference
-  notes: Overview of the chronicle
-- name: Повість минулих літ (повний текст)
-  url: https://litopys.org.ua/pvlyar/yar.htm
-  type: primary
-  notes: Full text of Laurentian redaction
-- name: Нестор Літописець
-  url: https://uk.wikipedia.org/wiki/Нестор_Літописець
-  type: reference
-  notes: Traditional attribution
 content_outline:
 - section: Вступ — Найстаріший літопис Русі
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - istorychna-pamiat-i-polityka
 connects_to:
 - povist-mynulykh-lit-ii
+references:
+- name: Повість минулих літ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  type: reference
+  notes: Overview of the chronicle
+- name: Повість минулих літ (повний текст)
+  url: https://litopys.org.ua/pvlyar/yar.htm
+  type: primary
+  notes: Full text of Laurentian redaction
+- name: Нестор Літописець
+  url: https://uk.wikipedia.org/wiki/Нестор_Літописець
+  type: reference
+  notes: Traditional attribution
+register: академічний
+grammar: []

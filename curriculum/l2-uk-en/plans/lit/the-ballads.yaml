@@ -2,7 +2,7 @@ module: lit-012
 level: LIT
 sequence: 12
 slug: the-ballads
-version: '2.0'
+version: '3.0'
 title: 'Балади: Між Світами'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
 focus: literature
@@ -13,23 +13,6 @@ objectives:
 - Analyze the genre of Romantic Ballad
 - Explore the "Metamorphosis" motif
 - Compare "Priichynna" and "Topolya"
-sources:
-- name: Причинна
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
-  type: primary
-  notes: Балада для аналізу
-- name: Тополя
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
-  type: primary
-  notes: Балада для аналізу
-- name: Утоплена
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
-  type: primary
-  notes: Балада для аналізу
-- name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-  type: secondary
-  notes: Контекст ранньої поезії
 content_outline:
 - section: Вступ — Жанр романтичної балади
   points:
@@ -108,3 +91,21 @@ grammar:
 - Gothic atmosphere vocabulary
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Причинна
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+  type: primary
+  notes: Балада для аналізу
+- name: Тополя
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+  type: primary
+  notes: Балада для аналізу
+- name: Утоплена
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+  type: primary
+  notes: Балада для аналізу
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Контекст ранньої поезії
+register: академічний

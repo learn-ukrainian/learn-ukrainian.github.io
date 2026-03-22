@@ -2,7 +2,7 @@ module: oes-033
 level: OES
 sequence: 33
 slug: pvl-yaroslav-wise
-version: '2.0'
+version: '3.0'
 title: 'ПВЛ: Ярослав Мудрий'
 subtitle: 'PVL: Yaroslav the Wise'
 focus: Law & Culture — Ruska Pravda context
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати взаємозв'язки між мовою та культурною ідентичністю
 - Демонструвати культурну компетентність у професійній комунікації
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

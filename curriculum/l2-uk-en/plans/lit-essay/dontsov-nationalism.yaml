@@ -2,7 +2,7 @@ sequence: 16
 module: lit-essay-016
 level: LIT.ESSAY
 slug: dontsov-nationalism
-version: '2.0'
+version: '3.0'
 title: Dontsov Nationalism
 subtitle: Dontsov Nationalism
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Integral Nationalist
 word_target: 5000
+references: []
+register: академічний
+grammar: []

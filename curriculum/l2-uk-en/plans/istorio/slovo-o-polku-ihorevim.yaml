@@ -2,7 +2,7 @@ module: istorio-014
 level: ISTORIO
 sequence: 14
 slug: slovo-o-polku-ihorevim
-version: '1.0'
+version: '3.0'
 title: 'Слово о полку Ігоревім: Автентичність і значення'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of слово о полку ігоревім: автентичність і значення'
 - Evaluate the historical significance of найзагадковіша пам'ятка
-sources:
-- name: Слово о полку Ігоревім (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім
-  type: reference
-  notes: Overview and debates
-- name: Слово о полку Ігоревім (текст)
-  url: https://litopys.org.ua/slovo/slov.htm
-  type: primary
-  notes: Full text with translation
-- name: Ігор Святославич
-  url: https://uk.wikipedia.org/wiki/Ігор_Святославич
-  type: reference
-  notes: Historical context of 1185 campaign
 content_outline:
 - section: Вступ — Найзагадковіша пам'ятка
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - kyievo-pecherskyi-pateryk
 connects_to:
 - halytsko-volynskyi-litopys-i
+references:
+- name: Слово о полку Ігоревім (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім
+  type: reference
+  notes: Overview and debates
+- name: Слово о полку Ігоревім (текст)
+  url: https://litopys.org.ua/slovo/slov.htm
+  type: primary
+  notes: Full text with translation
+- name: Ігор Святославич
+  url: https://uk.wikipedia.org/wiki/Ігор_Святославич
+  type: reference
+  notes: Historical context of 1185 campaign
+register: академічний
+grammar: []

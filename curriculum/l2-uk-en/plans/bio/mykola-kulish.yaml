@@ -2,7 +2,7 @@ module: bio-098
 level: BIO
 sequence: 98
 slug: mykola-kulish
-version: '2.0'
+version: '3.0'
 title: 'Микола Куліш: Геній українського театру'
 focus: biography
 phase: BIO
@@ -12,17 +12,6 @@ objectives:
 - Проаналізувати його найважливіші п'єси
 - Зрозуміти значення Куліша для українського театру
 - Осмислити трагедію Розстріляного відродження
-sources:
-- name: Микола Куліш (Енциклопедія історії України)
-  url: https://esu.com.ua/article-7980
-  type: primary
-  notes: Академічна біографія
-- name: Куліш М. П'єси
-  type: primary
-  notes: Збірка драматичних творів
-- name: Жулинський М. Микола Куліш
-  type: reference
-  notes: Монографія про творчість
 content_outline:
 - section: Вступ — Найбільший драматург XX століття
   points:
@@ -122,3 +111,16 @@ notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20t
   the same day (November 3, 1937) in the Sandarmokh mass execution.
 
   '
+references:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+register: академічний
+grammar: []

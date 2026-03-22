@@ -2,7 +2,7 @@ module: oes-073
 level: OES
 sequence: 73
 slug: slovo-bard-intro
-version: '2.0'
+version: '3.0'
 title: 'Слово: Вступ барда'
 subtitle: 'Slovo: The Bard''s Intro'
 focus: '"Ne lěpo li ny..." — Poetic vs Historical truth'
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

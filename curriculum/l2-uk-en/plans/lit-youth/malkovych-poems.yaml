@@ -2,7 +2,7 @@ sequence: 13
 module: lit-youth-013
 level: LIT.JUVENILE
 slug: malkovych-poems
-version: '2.0'
+version: '3.0'
 title: Malkovych Poems
 subtitle: Malkovych Poems
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Master Publisher
 word_target: 5000
+references: []
+register: академічний
+grammar: []

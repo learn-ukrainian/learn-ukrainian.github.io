@@ -2,7 +2,7 @@ module: bio-059
 level: BIO
 sequence: 59
 slug: volodymyr-samiilenko
-version: '2.0'
+version: '3.0'
 title: 'Володимир Самійленко: Поет, сатирик і будівничий мови'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Володимир Самійленко as poet, satirist and translator
 - Evaluate the role of literary translation in building the Ukrainian literary language
 - Trace how satire functioned as resistance under imperial censorship
-sources:
-- name: Самійленко Володимир Іванович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Самійленко_Володимир_Іванович
-  type: primary
-  notes: Comprehensive biography of the poet, satirist and translator
-- name: УІНП — 1864 народився Володимир Самійленко
-  url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/3/1864-narodyvsya-volodymyr-samiylenko
-  type: reference
-  notes: Ukrainian Institute of National Memory biographical entry
 content_outline:
 - section: Вступ — Голос, якого не почули
   points:
@@ -97,3 +88,14 @@ persona:
   role: Literary Historian
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Самійленко Володимир Іванович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Самійленко_Володимир_Іванович
+  type: primary
+  notes: Comprehensive biography of the poet, satirist and translator
+- name: УІНП — 1864 народився Володимир Самійленко
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/3/1864-narodyvsya-volodymyr-samiylenko
+  type: reference
+  notes: Ukrainian Institute of National Memory biographical entry
+register: академічний
+grammar: []

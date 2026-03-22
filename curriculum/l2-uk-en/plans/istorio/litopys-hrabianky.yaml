@@ -2,7 +2,7 @@ module: istorio-021
 level: ISTORIO
 sequence: 21
 slug: litopys-hrabianky
-version: '1.0'
+version: '3.0'
 title: 'Літопис Грабянки: Козацький патріотизм'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
 - Evaluate the historical significance of патріотичний літопис
-sources:
-- name: Літопис Григорія Граб'янки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
-  type: reference
-  notes: Overview
-- name: Літопис Грабянки (текст)
-  url: https://litopys.org.ua/grab/hrab.htm
-  type: primary
-  notes: Full text
-- name: Граб'янка Григорій Іванович
-  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
-  type: reference
-  notes: Author biography
 content_outline:
 - section: Вступ — Патріотичний літопис
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - litopys-samovidtsia
 connects_to:
 - litopys-velychka
+references:
+- name: Літопис Григорія Граб'янки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Overview
+- name: Літопис Грабянки (текст)
+  url: https://litopys.org.ua/grab/hrab.htm
+  type: primary
+  notes: Full text
+- name: Граб'янка Григорій Іванович
+  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
+  type: reference
+  notes: Author biography
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-109
 level: BIO
 sequence: 109
 slug: yuriy-kondratiuk
-version: '2.0'
+version: '3.0'
 title: 'Юрій Кондратюк: Пророк космічних трас'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити науковий внесок Юрія Кондратюка в космонавтику
 - Проаналізувати причини його життя під чужим ім'ям
 - Дослідити вплив його ідей на світову науку
-sources:
-- name: Юрій Кондратюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
-  type: primary
-  notes: Біографія та теорія польотів
-- name: Траса Кондратюка
-  url: https://space.com.ua/
-  type: reference
-  notes: Науковий контекст
 content_outline:
 - section: Вступ — Забутий геній космонавтики
   points:
@@ -85,3 +76,13 @@ grammar:
 - Розповідь у минулому часі з акцентом на драматизм
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Кондратюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
+  type: primary
+  notes: Біографія та теорія польотів
+- name: Траса Кондратюка
+  url: https://space.com.ua/
+  type: reference
+  notes: Науковий контекст
+register: академічний

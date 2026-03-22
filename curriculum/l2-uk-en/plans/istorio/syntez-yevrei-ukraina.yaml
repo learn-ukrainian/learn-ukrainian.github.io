@@ -2,7 +2,7 @@ module: istorio-121
 level: ISTORIO
 sequence: 121
 slug: syntez-yevrei-ukraina
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Зеленський і нова сторінка'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: зеленський і нова сторінка'
 - Evaluate the historical significance of символічний момент
-sources:
-- name: Володимир Зеленський (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Зеленський
-  type: reference
-  notes: Zelensky biography
-- name: Меморіальний центр Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Меморіальний_центр_«Бабин_Яр»
-  type: reference
-  notes: Babi Yar memorial
-- name: Єврейська громада України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євреї_України
-  type: reference
-  notes: Jewish community today
 content_outline:
 - section: Вступ — Символічний момент
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - radianski-antysemityzm
 connects_to:
 - tsykl-kulturnykh-vidrodzhen
+references:
+- name: Володимир Зеленський (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Зеленський
+  type: reference
+  notes: Zelensky biography
+- name: Меморіальний центр Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Меморіальний_центр_«Бабин_Яр»
+  type: reference
+  notes: Babi Yar memorial
+- name: Єврейська громада України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євреї_України
+  type: reference
+  notes: Jewish community today
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-022
 level: BIO
 sequence: 22
 slug: petro-mohyla
-version: '2.0'
+version: '3.0'
 title: 'Петро Могила: Засновник академії та реформатор церкви'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати освітню реформу Петра Могили
 - Оцінити стратегію модернізації православної церкви
 - Дослідити вплив Академії на формування української еліти
-sources:
-- name: Петро Могила (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Могила
-  type: primary
-  notes: Основні факти життя
-- name: Києво-Могилянська академія
-  url: https://ukma.edu.ua/
-  type: reference
-  notes: Історія інституції
 content_outline:
 - section: Вступ — Архітектор українського бароко
   points:
@@ -86,3 +77,13 @@ grammar:
 - Опис барокової естетики
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Петро Могила (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Могила
+  type: primary
+  notes: Основні факти життя
+- name: Києво-Могилянська академія
+  url: https://ukma.edu.ua/
+  type: reference
+  notes: Історія інституції
+register: академічний

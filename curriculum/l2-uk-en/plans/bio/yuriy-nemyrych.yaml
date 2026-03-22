@@ -2,7 +2,7 @@ module: bio-026
 level: BIO
 sequence: 26
 slug: yuriy-nemyrych
-version: '2.0'
+version: '3.0'
 title: 'Юрій Немирич: Дипломат і мислитель'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Оцінити інтелектуальний внесок Юрія Немирича в українську дипломатію
 - Проаналізувати проект Великого Князівства Руського
 - Дослідити вплив європейської політичної думки на Немирича
-sources:
-- name: Юрій Немирич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Юрій_Немирич
-  type: primary
-  notes: Повна біографія
-- name: Гадяцький договір 1658
-  url: http://izbornyk.org.ua/
-  type: reference
-  notes: Аналіз документа
 content_outline:
 - section: Вступ — Архітектор нездійсненної держави
   points:
@@ -85,3 +76,13 @@ grammar:
 - Латинізми в українському політичному контексті
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Немирич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Юрій_Немирич
+  type: primary
+  notes: Повна біографія
+- name: Гадяцький договір 1658
+  url: http://izbornyk.org.ua/
+  type: reference
+  notes: Аналіз документа
+register: академічний

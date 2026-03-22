@@ -2,7 +2,7 @@ module: lit-079
 level: LIT
 sequence: 79
 slug: semenko-kobzar-burning
-version: '2.0'
+version: '3.0'
 title: Semenko Kobzar Burning
 subtitle: Semenko Kobzar Burning
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Semenko Kobzar Burning у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Semenko Kobzar Burning — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Iconoclast
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Semenko Kobzar Burning — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

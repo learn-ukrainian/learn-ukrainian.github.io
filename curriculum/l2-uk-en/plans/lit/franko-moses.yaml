@@ -2,7 +2,7 @@ module: lit-045
 level: LIT
 sequence: 45
 slug: franko-moses
-version: '2.0'
+version: '3.0'
 title: '«Мойсей»: Філософська поема про пророка'
 subtitle: Franko Moses
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір «Мойсей»: Філософська поема про пророка у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: '«Мойсей»: Філософська поема про пророка — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: People's Leader
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: '«Мойсей»: Філософська поема про пророка — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

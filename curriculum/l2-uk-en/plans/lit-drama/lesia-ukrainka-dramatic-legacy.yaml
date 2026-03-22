@@ -2,7 +2,7 @@ sequence: 2
 module: lit-drama-002
 level: LIT
 slug: lesia-ukrainka-dramatic-legacy
-version: '2.0'
+version: '3.0'
 title: Lesia Ukrainka Dramatic Legacy
 subtitle: Lesia Ukrainka Dramatic Legacy
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-214
 module_type: literature
-sources:
-- name: Lesia Ukrainka Dramatic Legacy — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.2 The Long Nineteenth Century 1860-1917
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: Dramatic Modernist
 word_target: 5000
+references:
+- name: Lesia Ukrainka Dramatic Legacy — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

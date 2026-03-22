@@ -2,24 +2,13 @@ module: bio-094
 level: BIO
 sequence: 94
 slug: pavlo-fylypovych
-version: '2.0'
+version: '3.0'
 title: 'Павло Филипович: <!-- Title -->'
 focus: biography
 phase: BIO
 word_target: 5000
 objectives:
 - Дізнатися про життя та творчість Павло Филипович
-sources:
-- name: Микола Куліш (Енциклопедія історії України)
-  url: https://esu.com.ua/article-7980
-  type: primary
-  notes: Академічна біографія
-- name: Куліш М. П'єси
-  type: primary
-  notes: Збірка драматичних творів
-- name: Жулинський М. Микола Куліш
-  type: reference
-  notes: Монографія про творчість
 content_outline:
 - section: Вступ — Poet, Neoclassicist
   points:
@@ -88,3 +77,16 @@ notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20t
   the same day (November 3, 1937) in the Sandarmokh mass execution.
 
   '
+references:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+register: академічний
+grammar: []

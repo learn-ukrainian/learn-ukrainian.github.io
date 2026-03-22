@@ -2,7 +2,7 @@ module: istorio-127
 level: ISTORIO
 sequence: 127
 slug: hromadianske-suspilstvo
-version: '1.0'
+version: '3.0'
 title: 'Громадянське суспільство: Держава без держави'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
 - Evaluate the historical significance of самоорганізація
-sources:
-- name: Громадянське суспільство в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
-  type: reference
-  notes: Civil society overview
-- name: Євромайдан (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євромайдан
-  type: reference
-  notes: Euromaidan self-organization
 content_outline:
 - section: Вступ — Самоорганізація
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - kulturna-rezystentsiia
 connects_to:
 - hranitna-revoliutsiia
+references:
+- name: Громадянське суспільство в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  type: reference
+  notes: Civil society overview
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Euromaidan self-organization
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-052
 level: ISTORIO
 sequence: 52
 slug: rozstriliane-kontekst
-version: '1.0'
+version: '3.0'
 title: 'Розстріляне відродження: Контекст 1920-х'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
 - Evaluate the historical significance of парадокс 1920-х
-sources:
-- name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Overview
-- name: Українізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українізація
-  type: reference
-  notes: Ukrainization policy
-- name: Юрій Лавріненко — Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
-  type: reference
-  notes: Term originator
 content_outline:
 - section: Вступ — Парадокс 1920-х
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - syntez-holodomor-studiyi
 connects_to:
 - literaturna-dyskusiia
+references:
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Overview
+- name: Українізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українізація
+  type: reference
+  notes: Ukrainization policy
+- name: Юрій Лавріненко — Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
+  type: reference
+  notes: Term originator
+register: академічний
+grammar: []

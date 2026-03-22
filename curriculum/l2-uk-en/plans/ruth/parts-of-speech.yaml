@@ -2,7 +2,7 @@ module: ruth-051
 level: RUTH
 sequence: 51
 slug: parts-of-speech
-version: '2.0'
+version: '3.0'
 title: Частини мови
 subtitle: Parts of Speech
 focus: Noun declensions (standardized)
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

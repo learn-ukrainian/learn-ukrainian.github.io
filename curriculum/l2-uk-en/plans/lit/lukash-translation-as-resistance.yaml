@@ -2,7 +2,7 @@ module: lit-122
 level: LIT
 sequence: 122
 slug: lukash-translation-as-resistance
-version: '2.0'
+version: '3.0'
 title: Lukash Translation As Resistance
 subtitle: Lukash Translation As Resistance
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Lukash Translation As Resistance у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Lukash Translation As Resistance — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: Polyglot Resister
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Lukash Translation As Resistance — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-118
 level: ISTORIO
 sequence: 118
 slug: yevrei-v-ukraini-do-1917
-version: '1.0'
+version: '3.0'
 title: Євреї в Україні до 1917
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - Analyze the causes and consequences of євреї в україні до 1917
 - Evaluate the historical significance of спільна земля
-sources:
-- name: Історія євреїв в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
-  type: reference
-  notes: Jewish history overview
-- name: Погроми в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
-  type: reference
-  notes: Pogroms
-- name: Штетл (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Штетл
-  type: reference
-  notes: Shtetl life
 content_outline:
 - section: Вступ — Спільна земля
   points:
@@ -118,3 +105,18 @@ prerequisites:
 - syntez-polska-ukraina-2022
 connects_to:
 - holokost-v-ukraini
+references:
+- name: Історія євреїв в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
+  type: reference
+  notes: Jewish history overview
+- name: Погроми в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
+  type: reference
+  notes: Pogroms
+- name: Штетл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Штетл
+  type: reference
+  notes: Shtetl life
+register: академічний
+grammar: []

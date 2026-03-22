@@ -2,7 +2,7 @@ module: istorio-135
 level: ISTORIO
 sequence: 135
 slug: continuity-of-cultural-genocide
-version: '2.0'
+version: '3.0'
 title: 'Тяглість культурного геноциду: 1937 vs 2022'
 subtitle: 'Тяглість культурного геноциду: 1937 vs 2022'
 focus: history
@@ -50,3 +50,6 @@ prerequisites:
 - ukrainske-pytannia-xxi
 connects_to:
 - finalnyi-syntez
+references: []
+register: академічний
+grammar: []

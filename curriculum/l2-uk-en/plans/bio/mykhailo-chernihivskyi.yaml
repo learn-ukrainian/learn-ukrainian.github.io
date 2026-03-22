@@ -2,7 +2,7 @@ module: bio-009
 level: BIO
 sequence: 9
 slug: mykhailo-chernihivskyi
-version: '2.0'
+version: '3.0'
 title: 'Михайло Чернігівський: Князь-мученик'
 focus: biography
 pedagogy: seminar
@@ -12,15 +12,6 @@ objectives:
 - Проаналізувати мотиви Михайла Чернігівського у протистоянні з Ордою
 - Оцінити вплив його вчинку на формування національної свідомості
 - Дослідити джерела (літописи, свідчення мандрівників) про його смерть
-sources:
-- name: Михайло Всеволодович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
-  type: primary
-  notes: Життєпис та канонізація
-- name: Сказання про вбивство в Орді
-  url: http://izbornyk.org.ua/
-  type: primary
-  notes: Оригінальне джерело
 content_outline:
 - section: Вступ — Вибір між життям і вірою
   points:
@@ -75,3 +66,13 @@ grammar:
 - Теологічна лексика
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Михайло Всеволодович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
+  type: primary
+  notes: Життєпис та канонізація
+- name: Сказання про вбивство в Орді
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальне джерело
+register: академічний

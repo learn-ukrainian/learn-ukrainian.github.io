@@ -2,7 +2,7 @@ module: lit-016
 level: LIT
 sequence: 16
 slug: biblical-themes
-version: '2.0'
+version: '3.0'
 title: 'Біблійні теми: Давидові псалми і "Марія"'
 subtitle: 'Biblical Themes: Psalms of David and "Maria"'
 focus: literature
@@ -14,19 +14,6 @@ objectives:
 - Analyze the 'humanization' of divine figures in 'Maria'
 - Identify political subtext in 'Psalms of David'
 - Recognize and interpret Church Slavonicisms in modern Ukrainian text
-sources:
-- name: Давидові псалми — переспіви
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=40
-  type: primary
-  notes: Біблійні переспіви Шевченка
-- name: Марія — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=42
-  type: primary
-  notes: Поема про Богородицю
-- name: Церковнослов'янізми в українській мові
-  url: https://uk.wikipedia.org/wiki/Церковнослов'янізми
-  type: reference
-  notes: Мовний контекст
 content_outline:
 - section: Вступ — Шевченко і Біблія
   points:
@@ -104,3 +91,17 @@ grammar:
 - High style syntax
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Давидові псалми — переспіви
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=40
+  type: primary
+  notes: Біблійні переспіви Шевченка
+- name: Марія — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=42
+  type: primary
+  notes: Поема про Богородицю
+- name: Церковнослов'янізми в українській мові
+  url: https://uk.wikipedia.org/wiki/Церковнослов'янізми
+  type: reference
+  notes: Мовний контекст
+register: академічний

@@ -2,7 +2,7 @@ sequence: 16
 module: lit-fantastika-016
 level: LIT.FANTASTIKA
 slug: korniy-forest
-version: '2.0'
+version: '3.0'
 title: Korniy Forest
 subtitle: Korniy Forest
 content_outline:
@@ -48,3 +48,6 @@ persona:
   voice: Senior Specialist
   role: Mavka Whisperer
 word_target: 5000
+references: []
+register: академічний
+grammar: []

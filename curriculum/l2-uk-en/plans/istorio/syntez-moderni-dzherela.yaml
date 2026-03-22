@@ -2,7 +2,7 @@ module: istorio-038
 level: ISTORIO
 sequence: 38
 slug: syntez-moderni-dzherela
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Джерела нової доби'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: джерела нової доби'
 - Evaluate the historical significance of від козаків до xx століття
-sources:
-- name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
-  type: reference
-  notes: Source studies
-- name: Історичне джерело
-  url: https://uk.wikipedia.org/wiki/Історичне_джерело
-  type: reference
-  notes: Source types
 content_outline:
 - section: Вступ — Від козаків до XX століття
   points:
@@ -122,3 +113,14 @@ prerequisites:
 - svidchennia-holodomoru-ii
 connects_to:
 - samvydav-shcho-tse
+references:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+- name: Історичне джерело
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  type: reference
+  notes: Source types
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: istorio-020
 level: ISTORIO
 sequence: 20
 slug: litopys-samovidtsia
-version: '1.0'
+version: '3.0'
 title: 'Літопис Самовидця: Голос очевидця'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of літопис самовидця: голос очевидця'
 - Evaluate the historical significance of найстаріший козацький літопис
-sources:
-- name: Літопис Самовидця (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
-  type: reference
-  notes: Overview
-- name: Літопис Самовидця (текст)
-  url: https://litopys.org.ua/samovyd/sam.htm
-  type: primary
-  notes: Full text
-- name: Хмельниччина
-  url: https://uk.wikipedia.org/wiki/Хмельниччина
-  type: reference
-  notes: Historical context
 content_outline:
 - section: Вступ — Найстаріший козацький літопис
   points:
@@ -126,3 +113,18 @@ prerequisites:
 - kozatski-litopysy-ohliad
 connects_to:
 - litopys-hrabianky
+references:
+- name: Літопис Самовидця (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Overview
+- name: Літопис Самовидця (текст)
+  url: https://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Full text
+- name: Хмельниччина
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  type: reference
+  notes: Historical context
+register: академічний
+grammar: []

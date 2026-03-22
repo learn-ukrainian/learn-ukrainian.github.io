@@ -2,7 +2,7 @@ module: istorio-083
 level: ISTORIO
 sequence: 83
 slug: mazepa-tsykl
-version: '1.0'
+version: '3.0'
 title: 'Мазепинський цикл: 20 років вірності → анафема'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of мазепинський цикл: 20 років вірності → анафема'
 - Evaluate the historical significance of вірний слуга стає «зрадником»
-sources:
-- name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-  type: reference
-  notes: Biography
-- name: Анафема Мазепі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі
-  type: reference
-  notes: Church anathema
-- name: Полтавська битва (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
-  type: reference
-  notes: Battle of Poltava
 content_outline:
 - section: Вступ — Вірний слуга стає «зрадником»
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - pereiaslav-tsykl
 connects_to:
 - rozumovskyi-tsykl
+references:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Biography
+- name: Анафема Мазепі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі
+  type: reference
+  notes: Church anathema
+- name: Полтавська битва (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Battle of Poltava
+register: академічний
+grammar: []

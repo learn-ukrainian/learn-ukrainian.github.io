@@ -2,7 +2,7 @@ module: lit-081
 level: LIT
 sequence: 81
 slug: yanovsky-four-sabres
-version: '2.0'
+version: '3.0'
 title: Yanovsky Four Sabres
 subtitle: Yanovsky Four Sabres
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Yanovsky Four Sabres у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Yanovsky Four Sabres — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Epic Storyteller
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Yanovsky Four Sabres — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

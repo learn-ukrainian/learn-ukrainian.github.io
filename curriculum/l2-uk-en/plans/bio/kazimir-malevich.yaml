@@ -2,7 +2,7 @@ module: bio-079
 level: BIO
 sequence: 79
 slug: kazimir-malevich
-version: '2.0'
+version: '3.0'
 title: 'Казимир Малевич: Революція в мистецтві'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - 'Analyze the life and legacy of казимир малевич: революція в мистецтві'
 - Evaluate the contributions of чорний квадрат і нуль форми
 - Trace the career and influence of українець у світовому мистецтві
-sources:
-- name: Казимир Малевич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
-  type: primary
-  notes: Biography covering Ukrainian roots and artistic revolution
-- name: MoMA - Kazimir Malevich
-  url: https://www.moma.org/artists/3710
-  type: reference
-  notes: International context of Malevich's work
 content_outline:
 - section: Вступ — Чорний квадрат і нуль форми
   points:
@@ -98,3 +89,14 @@ persona:
   role: Suprematist
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Казимир Малевич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
+  type: primary
+  notes: Biography covering Ukrainian roots and artistic revolution
+- name: MoMA - Kazimir Malevich
+  url: https://www.moma.org/artists/3710
+  type: reference
+  notes: International context of Malevich's work
+register: академічний
+grammar: []

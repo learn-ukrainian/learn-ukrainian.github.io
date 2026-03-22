@@ -2,7 +2,7 @@ module: istorio-113
 level: ISTORIO
 sequence: 113
 slug: syntez-informatsiina-viina
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Хто виграє війну наративів?'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
 - Evaluate the historical significance of війна за правду
-sources:
-- name: Інформаційна війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
-  type: reference
-  notes: Information warfare overview
-- name: Російсько-українська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
-  type: reference
-  notes: Current war context
 content_outline:
 - section: Вступ — Війна за правду
   points:
@@ -114,3 +105,14 @@ prerequisites:
 - ukrainski-kontrnararyvy
 connects_to:
 - polska-i-ukraina-symbioz
+references:
+- name: Інформаційна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  type: reference
+  notes: Information warfare overview
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: Current war context
+register: академічний
+grammar: []

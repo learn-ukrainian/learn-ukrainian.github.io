@@ -2,7 +2,7 @@ module: ruth-017
 level: RUTH
 sequence: 17
 slug: sovereignty-1588
-version: '2.0'
+version: '3.0'
 title: Суверенітет (1588)
 subtitle: Sovereignty
 focus: GDL independence rhetoric
@@ -50,3 +50,6 @@ objectives:
 - Аналізувати риторичні прийоми в публічних промовах та дебатах
 - Продукувати усні та письмові висловлювання з ефективною аргументацією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

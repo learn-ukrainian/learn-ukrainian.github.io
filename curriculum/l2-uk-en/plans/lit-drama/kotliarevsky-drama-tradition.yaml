@@ -2,7 +2,7 @@ sequence: 1
 module: lit-drama-001
 level: LIT
 slug: kotliarevsky-drama-tradition
-version: '2.0'
+version: '3.0'
 title: Kotliarevsky Drama Tradition
 subtitle: Kotliarevsky Drama Tradition
 content_outline:
@@ -67,11 +67,6 @@ prerequisites:
 connects_to:
 - lit-213
 module_type: literature
-sources:
-- name: Kotliarevsky Drama Tradition — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: LIT.1 Foundation 1798-1860
 objectives:
@@ -82,3 +77,10 @@ persona:
   voice: Senior Philologist & Critic
   role: Theatrical Founder
 word_target: 5000
+references:
+- name: Kotliarevsky Drama Tradition — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

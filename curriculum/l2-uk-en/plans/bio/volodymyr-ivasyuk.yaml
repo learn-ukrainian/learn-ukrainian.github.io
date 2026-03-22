@@ -2,7 +2,7 @@ module: bio-149
 level: BIO
 sequence: 149
 slug: volodymyr-ivasyuk
-version: '2.0'
+version: '3.0'
 title: 'Володимир Івасюк: Автор Червоної рути'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of володимир івасюк: автор червоної рути'
 - Evaluate the contributions of пісня, яка стала гімном
 - Trace the career and influence of мистецтво як опір
-sources:
-- name: Володимир Івасюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Музей Володимира Івасюка
-  url: https://ivasyuk.org.ua/
-  type: reference
-  notes: Архівні матеріали та творча спадщина
-- name: Фестиваль Червона рута
-  url: https://chervona-ruta.org/
-  type: reference
-  notes: Культурний вплив
 content_outline:
 - section: Вступ — Пісня, яка стала гімном
   points:
@@ -103,3 +90,18 @@ persona:
   role: Pop Composer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Володимир Івасюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Музей Володимира Івасюка
+  url: https://ivasyuk.org.ua/
+  type: reference
+  notes: Архівні матеріали та творча спадщина
+- name: Фестиваль Червона рута
+  url: https://chervona-ruta.org/
+  type: reference
+  notes: Культурний вплив
+register: академічний
+grammar: []

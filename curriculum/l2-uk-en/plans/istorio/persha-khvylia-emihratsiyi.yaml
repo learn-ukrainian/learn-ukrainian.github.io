@@ -2,7 +2,7 @@ module: istorio-064
 level: ISTORIO
 sequence: 64
 slug: persha-khvylia-emihratsiyi
-version: '1.0'
+version: '3.0'
 title: 'Перша хвиля еміграції: Трудова (1880-1914)'
 focus: history
 pedagogy: seminar
@@ -10,23 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
 - Evaluate the historical significance of чому виїжджали?
-sources:
-- name: Українська діаспора (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_діаспора
-  type: reference
-  notes: General overview
-- name: Українці в Канаді (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
-  type: reference
-  notes: Canadian settlement
-- name: Українці в США (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_США
-  type: reference
-  notes: American settlement
-- name: Еміграція з України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
-  type: reference
-  notes: Emigration waves
 content_outline:
 - section: Вступ — Чому виїжджали?
   points:
@@ -130,3 +113,22 @@ prerequisites:
 - syntez-relihiina-identychnist
 connects_to:
 - druha-khvylia-politychna
+references:
+- name: Українська діаспора (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  type: reference
+  notes: General overview
+- name: Українці в Канаді (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
+  type: reference
+  notes: Canadian settlement
+- name: Українці в США (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_США
+  type: reference
+  notes: American settlement
+- name: Еміграція з України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
+  type: reference
+  notes: Emigration waves
+register: академічний
+grammar: []

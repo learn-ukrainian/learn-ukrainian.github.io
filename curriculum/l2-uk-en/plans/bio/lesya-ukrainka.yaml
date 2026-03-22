@@ -2,7 +2,7 @@ module: bio-072
 level: BIO
 sequence: 72
 slug: lesya-ukrainka
-version: '2.0'
+version: '3.0'
 title: 'Леся Українка: Прометей української літератури'
 subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
 focus: biography
@@ -13,19 +13,6 @@ objectives:
 - Analyze the evolution of Lesya Ukrainka's work from lyricism to world-class drama
 - Evaluate the anti-colonial and feminist discourses in her major dramatic poems
 - Discuss the impact of her physical struggle on her creative indomitability
-sources:
-- name: Леся Українка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Леся_Українка
-  type: primary
-  notes: Основна біографія, творчість, хвороба
-- name: Драматургія Лесі Українки
-  url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
-  type: reference
-  notes: Аналіз драматичних творів
-- name: Родина Косачів
-  url: https://uk.wikipedia.org/wiki/Косачі
-  type: reference
-  notes: Літературна родина та виховання
 content_outline:
 - section: Вступ — Прометей у жіночій подобі
   points:
@@ -111,3 +98,17 @@ grammar:
 - Sophisticated modal structures
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Леся Українка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Леся_Українка
+  type: primary
+  notes: Основна біографія, творчість, хвороба
+- name: Драматургія Лесі Українки
+  url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+  type: reference
+  notes: Аналіз драматичних творів
+- name: Родина Косачів
+  url: https://uk.wikipedia.org/wiki/Косачі
+  type: reference
+  notes: Літературна родина та виховання
+register: академічний

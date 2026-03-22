@@ -2,7 +2,7 @@ module: bio-140
 level: BIO
 sequence: 140
 slug: liubomyr-huzar
-version: '2.0'
+version: '3.0'
 title: 'Любомир Гузар: Моральний авторитет нації'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the spiritual leadership of Lyubomyr Huzar
 - Evaluate the concept of human dignity in his teachings
 - Discuss the role of the church in modern Ukrainian society
-sources:
-- name: Любомир Гузар (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Любомир_(Гузар)
-  type: primary
-  notes: Біографія
-- name: Офіційний сайт УГКЦ
-  url: https://ugcc.ua/
-  type: reference
-  notes: Проповіді та послання
 content_outline:
 - section: Вступ — Патріарх свободи
   points:
@@ -98,3 +89,14 @@ persona:
   role: Moral Philosopher
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Любомир Гузар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Любомир_(Гузар)
+  type: primary
+  notes: Біографія
+- name: Офіційний сайт УГКЦ
+  url: https://ugcc.ua/
+  type: reference
+  notes: Проповіді та послання
+register: академічний
+grammar: []

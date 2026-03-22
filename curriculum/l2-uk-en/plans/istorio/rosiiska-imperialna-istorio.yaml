@@ -2,7 +2,7 @@ module: istorio-003
 level: ISTORIO
 sequence: 3
 slug: rosiiska-imperialna-istorio
-version: '1.0'
+version: '3.0'
 title: Російська імперіальна історіографія
 focus: history
 pedagogy: seminar
@@ -11,23 +11,6 @@ objectives:
 - Analyze the causes and consequences of російська імперіальна історіографія
 - Evaluate the historical significance of імперська історіографія як зброя
 - Trace the development of критичний аналіз і деконструкція
-sources:
-- name: Михайло Погодін (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Погодін_Михайло_Петрович
-  type: reference
-  notes: Creator of "Pogodin theory" denying Ukrainian distinctiveness
-- name: Теорія Погодіна
-  url: https://uk.wikipedia.org/wiki/Теорія_Погодіна
-  type: reference
-  notes: The theory itself explained
-- name: Малоросійство
-  url: https://uk.wikipedia.org/wiki/Малоросійство
-  type: reference
-  notes: «Little Russia» ideology analysis
-- name: Serhii Plokhy - Lost Kingdom
-  url: https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation
-  type: secondary
-  notes: Modern analysis of Russian imperial nationalism
 content_outline:
 - section: Вступ — Імперська історіографія як зброя
   points:
@@ -128,3 +111,22 @@ prerequisites:
 - ukrainska-istoriohrafichna-tradytsiia
 connects_to:
 - radyanska-istorio
+references:
+- name: Михайло Погодін (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Погодін_Михайло_Петрович
+  type: reference
+  notes: Creator of "Pogodin theory" denying Ukrainian distinctiveness
+- name: Теорія Погодіна
+  url: https://uk.wikipedia.org/wiki/Теорія_Погодіна
+  type: reference
+  notes: The theory itself explained
+- name: Малоросійство
+  url: https://uk.wikipedia.org/wiki/Малоросійство
+  type: reference
+  notes: «Little Russia» ideology analysis
+- name: Serhii Plokhy - Lost Kingdom
+  url: https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation
+  type: secondary
+  notes: Modern analysis of Russian imperial nationalism
+register: академічний
+grammar: []

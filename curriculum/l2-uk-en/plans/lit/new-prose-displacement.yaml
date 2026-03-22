@@ -2,7 +2,7 @@ module: lit-211
 level: LIT
 sequence: 211
 slug: new-prose-displacement
-version: '2.0'
+version: '3.0'
 title: New Prose Displacement
 subtitle: New Prose Displacement
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір New Prose Displacement у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: New Prose Displacement — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Displaced Narrator
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: New Prose Displacement — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

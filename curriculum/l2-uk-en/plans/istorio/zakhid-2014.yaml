@@ -2,7 +2,7 @@ module: istorio-101
 level: ISTORIO
 sequence: 101
 slug: zakhid-2014
-version: '1.0'
+version: '3.0'
 title: '2014: Анексія без відповіді'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of 2014: анексія без відповіді'
 - Evaluate the historical significance of безкарність
-sources:
-- name: Анексія Криму (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
-  type: reference
-  notes: Annexation
-- name: Санкції проти Росії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
-  type: reference
-  notes: Western response
-- name: Мінські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Мінські_угоди
-  type: reference
-  notes: Minsk process
 content_outline:
 - section: Вступ — Безкарність
   points:
@@ -124,3 +111,18 @@ prerequisites:
 - zakhid-2008
 connects_to:
 - syntez-zakhid-2022
+references:
+- name: Анексія Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
+  type: reference
+  notes: Annexation
+- name: Санкції проти Росії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
+  type: reference
+  notes: Western response
+- name: Мінські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мінські_угоди
+  type: reference
+  notes: Minsk process
+register: академічний
+grammar: []

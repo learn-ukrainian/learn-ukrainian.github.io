@@ -1,7 +1,7 @@
 module: lit-essay-037
 level: LIT.ESSAY
 slug: yakovenko-mirror-of-history
-version: '2.0'
+version: '3.0'
 title: 'Наталя Яковенко: Дзеркала історії'
 subtitle: Методологія як мистецтво
 content_outline:
@@ -62,3 +62,6 @@ persona:
   voice: Literary Critic
   role: Methodology Expert
 word_target: 5000
+references: []
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: bio-055
 level: BIO
 sequence: 55
 slug: yevhen-chykalenko
-version: '2.0'
+version: '3.0'
 title: 'Євген Чикаленко: Меценат і видавець'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of євген чикаленко: меценат і видавець'
 - Evaluate the contributions of людина, яка платила за україну
 - Trace the career and influence of роль меценатства в національному русі
-sources:
-- name: Євген Чикаленко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Щоденники Чикаленка
-  url: https://diasporiana.org.ua/
-  type: reference
-  notes: Первинні джерела
-- name: Газета Рада
-  url: https://archives.gov.ua/
-  type: reference
-  notes: Видавнича діяльність
 content_outline:
 - section: Вступ — Людина, яка платила за Україну
   points:
@@ -103,3 +90,18 @@ persona:
   role: Agronomist Publisher
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Євген Чикаленко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Щоденники Чикаленка
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Первинні джерела
+- name: Газета Рада
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Видавнича діяльність
+register: академічний
+grammar: []

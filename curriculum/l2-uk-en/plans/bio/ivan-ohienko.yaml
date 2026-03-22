@@ -2,7 +2,7 @@ module: bio-082
 level: BIO
 sequence: 82
 slug: ivan-ohienko
-version: '2.0'
+version: '3.0'
 title: 'Іван Огієнко: Митрополит і Захисник Мови'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of іван огієнко: митрополит і захисник мови'
 - Evaluate the contributions of людина багатьох покликань
 - Trace the career and influence of мова і віра як основи нації
-sources:
-- name: Іван Огієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Переклад Біблії
-  url: https://bible.ua/
-  type: reference
-  notes: Біблійний переклад
-- name: Митрополія УАПЦ
-  url: https://uaoc.org.ua/
-  type: reference
-  notes: Церковна діяльність
 content_outline:
 - section: Вступ — Людина багатьох покликань
   points:
@@ -102,3 +89,18 @@ persona:
   role: Language Standardizer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Іван Огієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Переклад Біблії
+  url: https://bible.ua/
+  type: reference
+  notes: Біблійний переклад
+- name: Митрополія УАПЦ
+  url: https://uaoc.org.ua/
+  type: reference
+  notes: Церковна діяльність
+register: академічний
+grammar: []

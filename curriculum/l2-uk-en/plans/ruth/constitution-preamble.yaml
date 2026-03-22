@@ -2,7 +2,7 @@ module: ruth-086
 level: RUTH
 sequence: 86
 slug: constitution-preamble
-version: '2.0'
+version: '3.0'
 title: 'Конституція: Преамбула'
 subtitle: The Constitution
 focus: Historical justification of Cossack rights
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

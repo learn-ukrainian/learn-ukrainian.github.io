@@ -2,7 +2,7 @@ module: hist-055
 level: HIST
 sequence: 55
 slug: kozatska-derzhava
-version: '2.0'
+version: '3.0'
 title: 'Хмельниччина: Козацька держава'
 subtitle: 'The Cossack State: Structure and Administration of the Hetmanate'
 focus: history
@@ -13,27 +13,18 @@ objectives:
 - Учень може описати полково-сотенний устрій Гетьманщини
 - Учень може пояснити функції Генеральної старшини
 - Учень може проаналізувати значення Чигирина як політичного центру
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Analysis of the Hetmanate structure
-- name: The Cossack Myth
-  url: https://history.org.ua
-  type: reference
-  notes: State-building and identity
 content_outline:
 - section: 'Вступ: Народилася Гетьманщина'
   points:
-  - The challenge of state-building after victories — після перемог 1648 року постало питання організації влади на визволених
-    землях
+  - The challenge of state-building after victories — після перемог 1648 року постало питання організації влади на 
+    визволених землях
   - 'Cossack democracy vs. European legal standards — еволюція від «козацьких вольностей» до ідеї суверенної «держави руського
     народу»; cultural hook: [!context] — Швидкість трансформації повстання у повноцінну державу'
   words: 600
 - section: 'Структура влади: Гетьман та Генеральна старшина'
   points:
-  - The role of the Hetman as head of state — поєднання військової, адміністративної та судової влади, фактично монархічні
-    повноваження
+  - The role of the Hetman as head of state — поєднання військової, адміністративної та судової влади, фактично 
+    монархічні повноваження
   - 'Functions of the General Staff (Scribe, Quartermaster, Judge, Treasurer) — Генеральний писар (Іван Виговський) як голова
     МЗС; cultural hook: [!history-bite] — Генеральна старшина як прообраз сучасного Кабінету Міністрів'
   words: 600
@@ -66,8 +57,8 @@ content_outline:
   words: 600
 - section: 'Деколонізаційний погляд: Державність проти анархії'
   points:
-  - Debunking imperial myths of 'Cossack chaos' — протиставлення імперського міфу про «селян-втікачів» реальності модерної
-    держави
+  - Debunking imperial myths of 'Cossack chaos' — протиставлення імперського міфу про «селян-втікачів» реальності 
+    модерної держави
   - 'The Hetmanate as a mature political project — наявність території, влади, війська, податків та дипломатії; cultural hook:
     [!analysis] — Чому імперії вигідно зображати козаків як «розбійників»'
   words: 800
@@ -108,3 +99,12 @@ prerequisites:
 - zborivska-bila-tserkva
 connects_to:
 - pereyaslavska-uhoda
+references:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Analysis of the Hetmanate structure
+- name: The Cossack Myth
+  url: https://history.org.ua
+  type: reference
+  notes: State-building and identity

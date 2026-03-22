@@ -2,19 +2,12 @@ module: bio-175
 level: BIO
 sequence: 175
 slug: roman-ratushny
-version: '2.0'
+version: '3.0'
 title: 'Роман Ратушний: Громадянин, активіст, воїн'
 focus: biography
 pedagogy: immersion
 phase: BIO
 word_target: 5000
-sources:
-- name: Роман Ратушний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ратушний_Роман_Тарасович
-  type: primary
-- name: Рух ЧЕСНО
-  url: https://www.chesno.org/post/5182/
-  type: secondary
 content_outline:
 - section: Вступ — Голос Протасового Яру
   points:
@@ -79,3 +72,12 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - 'Застосовувати знання з теми «Внесок: Філософія дії та захист «легенів» столиці» у власній мовній практиці'
+references:
+- name: Роман Ратушний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ратушний_Роман_Тарасович
+  type: primary
+- name: Рух ЧЕСНО
+  url: https://www.chesno.org/post/5182/
+  type: secondary
+register: академічний
+grammar: []

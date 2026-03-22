@@ -2,7 +2,7 @@ module: lit-135
 level: LIT
 sequence: 135
 slug: stus-palimpsests
-version: '2.0'
+version: '3.0'
 title: 'Василь Стус: «Палімпсести»'
 subtitle: Stus Palimpsests
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - 'Проаналізувати твір Василь Стус: «Палімпсести» у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: 'Василь Стус: «Палімпсести» — тексти та аналіз'
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -82,3 +77,10 @@ persona:
   role: Existential Archaeologist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: 'Василь Стус: «Палімпсести» — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

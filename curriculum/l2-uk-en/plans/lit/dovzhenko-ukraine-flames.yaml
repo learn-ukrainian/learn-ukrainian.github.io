@@ -2,7 +2,7 @@ module: lit-128
 level: LIT
 sequence: 128
 slug: dovzhenko-ukraine-flames
-version: '2.0'
+version: '3.0'
 title: Dovzhenko Ukraine Flames
 subtitle: Dovzhenko Ukraine Flames
 focus: literature
@@ -13,11 +13,6 @@ objectives:
 - Проаналізувати твір Dovzhenko Ukraine Flames у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-sources:
-- name: Dovzhenko Ukraine Flames — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
 content_outline:
 - section: Вступ та культурний контекст
   points:
@@ -81,3 +76,10 @@ persona:
   role: War Diarist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Dovzhenko Ukraine Flames — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

@@ -2,7 +2,7 @@ module: lit-166
 level: LIT
 sequence: 166
 slug: valeriy-shevchuk-prose
-version: '2.0'
+version: '3.0'
 title: 'Валерій Шевчук: Три листки за вікном та інша проза'
 subtitle: Valeriy Shevchuk — Three Leaves and Other Prose
 focus: literature
@@ -13,10 +13,6 @@ objectives:
 - Проаналізувати ширший прозовий доробок Шевчука — «Три листки за вікном», «Око Прірви»
 - Дослідити готичний містицизм як форму інтелектуального спротиву
 - Порівняти із сучасними наступниками (Виннічук, Іздрик)
-sources:
-- name: Валерій Шевчук — проза
-  url: https://www.ukrlib.com.ua/
-  type: primary
 content_outline:
 - section: Вступ та контекст
   words: 850
@@ -75,3 +71,9 @@ persona:
   role: Gothic Literature Specialist
 module_type: literature
 immersion: 100% Ukrainian
+references:
+- name: Валерій Шевчук — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

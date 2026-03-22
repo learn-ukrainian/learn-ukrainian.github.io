@@ -2,7 +2,7 @@ module: oes-070
 level: OES
 sequence: 70
 slug: trade-rights
-version: '2.0'
+version: '3.0'
 title: Торговельні права
 subtitle: Trade Rights
 focus: '"Mesyachnoe" (Monthly allowance)'
@@ -50,3 +50,6 @@ objectives:
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

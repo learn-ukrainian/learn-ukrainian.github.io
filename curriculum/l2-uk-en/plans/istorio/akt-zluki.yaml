@@ -2,7 +2,7 @@ module: istorio-035
 level: ISTORIO
 sequence: 35
 slug: akt-zluki
-version: '1.0'
+version: '3.0'
 title: 'Акт Злуки 1919: Символ єдності'
 focus: history
 pedagogy: seminar
@@ -10,19 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
 - Evaluate the historical significance of найважливіший день
-sources:
-- name: Акт Злуки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Акт_Злуки
-  type: reference
-  notes: Overview
-- name: Текст Акту Злуки
-  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
-  type: primary
-  notes: Full text
-- name: День Соборності
-  url: https://uk.wikipedia.org/wiki/День_Соборності_України
-  type: reference
-  notes: Modern commemoration
 content_outline:
 - section: Вступ — Найважливіший день
   points:
@@ -125,3 +112,18 @@ prerequisites:
 - universaly-unr
 connects_to:
 - svidchennia-holodomoru-i
+references:
+- name: Акт Злуки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_Злуки
+  type: reference
+  notes: Overview
+- name: Текст Акту Злуки
+  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
+  type: primary
+  notes: Full text
+- name: День Соборності
+  url: https://uk.wikipedia.org/wiki/День_Соборності_України
+  type: reference
+  notes: Modern commemoration
+register: академічний
+grammar: []

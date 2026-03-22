@@ -2,7 +2,7 @@ module: istorio-010
 level: ISTORIO
 sequence: 10
 slug: istorychna-pamiat-i-polityka
-version: '1.0'
+version: '3.0'
 title: Історична пам'ять і політика
 focus: history
 pedagogy: seminar
@@ -11,23 +11,6 @@ objectives:
 - Analyze the causes and consequences of історична пам'ять і політика
 - Evaluate the historical significance of пам'ять як поле битви
 - Trace the development of виклики і перспективи
-sources:
-- name: Історична пам'ять (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історична_пам'ять
-  type: reference
-  notes: Concept overview
-- name: Політика пам'яті
-  url: https://uk.wikipedia.org/wiki/Політика_пам'яті
-  type: reference
-  notes: Memory politics
-- name: П'єр Нора — Місця пам'яті
-  url: https://uk.wikipedia.org/wiki/Нора_П'єр
-  type: reference
-  notes: Key theorist of memory
-- name: Закон про Голодомор (2006)
-  url: https://zakon.rada.gov.ua/laws/show/376-16
-  type: primary
-  notes: Example of memory legislation
 content_outline:
 - section: Вступ — Пам'ять як поле битви
   points:
@@ -137,3 +120,22 @@ prerequisites:
 - krytyka-dzherel
 connects_to:
 - povist-mynulykh-lit-i
+references:
+- name: Історична пам'ять (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історична_пам'ять
+  type: reference
+  notes: Concept overview
+- name: Політика пам'яті
+  url: https://uk.wikipedia.org/wiki/Політика_пам'яті
+  type: reference
+  notes: Memory politics
+- name: П'єр Нора — Місця пам'яті
+  url: https://uk.wikipedia.org/wiki/Нора_П'єр
+  type: reference
+  notes: Key theorist of memory
+- name: Закон про Голодомор (2006)
+  url: https://zakon.rada.gov.ua/laws/show/376-16
+  type: primary
+  notes: Example of memory legislation
+register: академічний
+grammar: []

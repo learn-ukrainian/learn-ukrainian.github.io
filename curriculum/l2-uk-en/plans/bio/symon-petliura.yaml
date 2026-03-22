@@ -2,7 +2,7 @@ module: bio-080
 level: BIO
 sequence: 80
 slug: symon-petliura
-version: '2.0'
+version: '3.0'
 title: 'Симон Петлюра: Головний Отаман'
 focus: biography
 phase: BIO
@@ -11,19 +11,6 @@ objectives:
 - 'Analyze the life and legacy of симон петлюра: головний отаман'
 - Evaluate the contributions of людина, яка стала символом боротьби
 - Trace the career and influence of петлюра в історичній памяті
-sources:
-- name: Симон Петлюра (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
-  type: primary
-  notes: Основна біографічна інформація, хронологія подій
-- name: Енциклопедія історії України
-  url: http://www.history.org.ua/
-  type: reference
-  notes: Академічний контекст УНР та визвольних змагань
-- name: Архів УНР
-  url: https://archives.gov.ua/
-  type: reference
-  notes: Документи періоду Директорії
 content_outline:
 - section: Вступ — Людина, яка стала символом боротьби
   points:
@@ -103,3 +90,18 @@ persona:
   role: Supreme Commander
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Симон Петлюра (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
+  type: primary
+  notes: Основна біографічна інформація, хронологія подій
+- name: Енциклопедія історії України
+  url: http://www.history.org.ua/
+  type: reference
+  notes: Академічний контекст УНР та визвольних змагань
+- name: Архів УНР
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Документи періоду Директорії
+register: академічний
+grammar: []

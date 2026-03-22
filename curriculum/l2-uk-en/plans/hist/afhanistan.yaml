@@ -2,7 +2,7 @@ module: hist-116
 level: HIST
 sequence: 116
 slug: afhanistan
-version: '2.0'
+version: '3.0'
 title: Українці в Афганістані
 focus: history
 pedagogy: CBI
@@ -37,10 +37,10 @@ content_outline:
   words: 1250
 - section: Первинні джерела
   points:
-  - Letters from Ukrainian soldiers to their families (censorship vs. reality) — [!quote] Include excerpt 'Мамо. Вибач, я
-    не зумів...'; censorship forbade mentioning location, losses, or true conditions; Naurok.com.ua source
-  - Memoirs of veterans describing the disconnect between propaganda and the front — focus on daily survival, thirst, and
-    absurdity rather than combat glory; Radio Svoboda interview with Hennadiy (Naik Muhammad)
+  - Letters from Ukrainian soldiers to their families (censorship vs. reality) — [!quote] Include excerpt 'Мамо. Вибач, 
+    я не зумів...'; censorship forbade mentioning location, losses, or true conditions; Naurok.com.ua source
+  - Memoirs of veterans describing the disconnect between propaganda and the front — focus on daily survival, thirst, 
+    and absurdity rather than combat glory; Radio Svoboda interview with Hennadiy (Naik Muhammad)
   - 'Official Soviet reports masking casualties — narrative of ''building schools/hospitals'' vs reality of brutal counter-insurgency;
     14 Apr 1988: Geneva Accords signed'
   words: 1250
@@ -55,10 +55,10 @@ content_outline:
     that was changing and didn''t value their sacrifice; contested term: «Герої» vs «Жертви політичних амбіцій»'
   - 'Parallel: How Russia uses non-Russians in modern wars (e.g., against Ukraine) — historical continuity of Moscow''s colonial
     military policy'
-  - The role of the Afghan war in delegitimizing the Soviet system — Zinc coffins arriving in Ukrainian villages provoked
-    the question 'Why?'; eroded trust in Soviet power and accelerated collapse
-  - The social and psychological legacy of the war in 1990s Ukraine — [!culture] 'Afghan songs' and films as a way to process
-    collective trauma outside official channels
+  - The role of the Afghan war in delegitimizing the Soviet system — Zinc coffins arriving in Ukrainian villages 
+    provoked the question 'Why?'; eroded trust in Soviet power and accelerated collapse
+  - The social and psychological legacy of the war in 1990s Ukraine — [!culture] 'Afghan songs' and films as a way to 
+    process collective trauma outside official channels
   - Commemoration vs. glorification — shift from 'internationalist heroes' to 'victims of Kremlin's political ambitions'
   words: 1250
 vocabulary_hints:
@@ -99,3 +99,6 @@ persona:
 learning_outcomes: '[]'
 connects_to:
 - chornobyl
+references: []
+register: академічний
+grammar: []

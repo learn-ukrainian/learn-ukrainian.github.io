@@ -2,7 +2,7 @@ module: bio-159
 level: BIO
 sequence: 159
 slug: yuri-andrukhovych
-version: '2.0'
+version: '3.0'
 title: 'Юрій Андрухович: Карнавал на руїнах імперії'
 focus: biography
 phase: BIO
@@ -11,15 +11,6 @@ objectives:
 - Analyze the life and legacy of Юрій Андрухович as founder of Ukrainian postmodernism
 - Evaluate the role of carnival aesthetics in cultural decolonization
 - Trace the evolution from Bu-Ba-Bu provocateur to European public intellectual
-sources:
-- name: Юрій Андрухович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович
-  type: primary
-  notes: Comprehensive biography of the postmodernist writer
-- name: Літературний фестиваль «Meridian Czernowitz»
-  url: https://meridiancz.com/
-  type: reference
-  notes: Literary festival co-founded by Andrukhovych
 content_outline:
 - section: Вступ — Enfant terrible української літератури
   points:
@@ -100,3 +91,14 @@ persona:
   role: Postmodern Performer
 module_type: biography
 immersion: 100% Ukrainian
+references:
+- name: Юрій Андрухович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович
+  type: primary
+  notes: Comprehensive biography of the postmodernist writer
+- name: Літературний фестиваль «Meridian Czernowitz»
+  url: https://meridiancz.com/
+  type: reference
+  notes: Literary festival co-founded by Andrukhovych
+register: академічний
+grammar: []

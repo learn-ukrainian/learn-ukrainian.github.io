@@ -2,7 +2,7 @@ module: istorio-094
 level: ISTORIO
 sequence: 94
 slug: syntez-rozdorizhzhia
-version: '1.0'
+version: '3.0'
 title: 'Синтез: Закономірність чи випадок?'
 focus: history
 pedagogy: seminar
@@ -10,15 +10,6 @@ word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: закономірність чи випадок?'
 - Evaluate the historical significance of паттерни на роздоріжжях
-sources:
-- name: Історія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_України
-  type: reference
-  notes: General history
-- name: Контрфактична історія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
-  type: reference
-  notes: Methodology
 content_outline:
 - section: Вступ — Паттерни на роздоріжжях
   points:
@@ -120,3 +111,14 @@ prerequisites:
 - 2004-vs-2014
 connects_to:
 - zakhid-1918
+references:
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: General history
+- name: Контрфактична історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
+  type: reference
+  notes: Methodology
+register: академічний
+grammar: []
