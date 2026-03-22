@@ -337,6 +337,86 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
     return "\n".join(lines)
 
 
+def _load_external_resources(slug: str, plan: dict) -> list[dict]:
+    """Load curated external resources from external_resources.yaml.
+
+    Tries exact slug match first, then topic-based fuzzy match using
+    plan title and focus keywords.
+    """
+    er_path = Path(__file__).resolve().parent.parent.parent / "docs" / "resources" / "external_resources.yaml"
+    if not er_path.exists():
+        return []
+
+    try:
+        er_data = yaml.safe_load(er_path.read_text("utf-8"))
+        resources = er_data.get("resources", {})
+    except Exception:
+        return []
+
+    # 1. Try exact slug match
+    if slug in resources:
+        return _flatten_resources(resources[slug])
+
+    # 2. Try with level prefix
+    level = plan.get("level", "").lower()
+    prefixed = f"{level}-{slug}"
+    if prefixed in resources:
+        return _flatten_resources(resources[prefixed])
+
+    # 3. Topic-based fuzzy match — use plan title + vocab keywords
+    title = plan.get("title", "").lower()
+    focus = plan.get("focus", "").lower()
+    vocab_words = " ".join(str(v) for v in plan.get("vocabulary_hints", {}).get("required", []))
+    keywords = set(re.split(r"[\s,()]+", f"{title} {focus} {vocab_words}".lower()))
+    keywords -= {"and", "the", "of", "in", "a", "", "—"}
+
+    # Collect ALL matching slugs (score >= 1), return resources from best matches
+    matches: list[tuple[int, str]] = []
+    for er_slug, _er_content in resources.items():
+        if not er_slug.startswith(f"{level}-"):
+            continue
+        slug_words = set(er_slug.replace(f"{level}-", "").split("-"))
+        overlap = len(keywords & slug_words)
+        if overlap >= 1:
+            matches.append((overlap, er_slug))
+
+    if matches:
+        # Sort by score descending
+        matches.sort(reverse=True)
+        best_score = matches[0][0]
+        # Only use matches with score >= 2, or the single best if all are 1
+        top_matches = (
+            [(s, slug) for s, slug in matches if s >= 2]
+            if best_score >= 2
+            else [matches[0]]
+        )
+
+        all_resources = []
+        seen_urls: set[str] = set()
+        for _score, match_slug in top_matches[:3]:
+            for item in _flatten_resources(resources[match_slug]):
+                if item["url"] and item["url"] not in seen_urls:
+                    seen_urls.add(item["url"])
+                    all_resources.append(item)
+        return all_resources
+
+    return []
+
+
+def _flatten_resources(resource_data: dict) -> list[dict]:
+    """Flatten a resource entry (articles, youtube, podcasts) into a flat list."""
+    items = []
+    for category in ("articles", "youtube", "podcasts"):
+        for item in resource_data.get(category, []):
+            items.append({
+                "title": item.get("title", ""),
+                "url": item.get("url", ""),
+                "source": item.get("source", item.get("channel", "")),
+                "type": category,
+            })
+    return items
+
+
 def _build_video_embeds(plan: dict) -> str:
     """Generate YouTube video embed section from plan pronunciation_videos."""
     pv = plan.get("pronunciation_videos", {})
@@ -371,25 +451,62 @@ def _build_video_embeds(plan: dict) -> str:
     return "\n".join(lines)
 
 
-def _build_resources(plan: dict) -> str:
-    """Generate external resources section from plan references."""
+def _build_resources(plan: dict, slug: str = "") -> str:
+    """Generate external resources section from plan references + external_resources.yaml."""
     refs = plan.get("references", [])
-    if not refs:
+    ext_resources = _load_external_resources(slug, plan) if slug else []
+
+    if not refs and not ext_resources:
         return ""
 
     lines = []
 
-    for ref in refs:
-        title = ref.get("title", "")
-        url = ref.get("url", "")
-        notes = ref.get("notes", "")
+    # Plan references (textbook citations, ULP episodes)
+    if refs:
+        lines.append("**Джерела — References**")
+        lines.append("")
+        for ref in refs:
+            title = ref.get("title", "")
+            url = ref.get("url", "")
+            notes = ref.get("notes", "")
+            if url:
+                lines.append(f"- [{title}]({url})")
+            else:
+                lines.append(f"- {title}")
+            if notes:
+                lines.append(f"  _{notes}_")
+        lines.append("")
 
-        if url:
-            lines.append(f"- [{title}]({url})")
-        else:
-            lines.append(f"- {title}")
-        if notes:
-            lines.append(f"  _{notes}_")
+    # External curated resources (ULP blog, Dobra Forma, Talk Ukrainian, etc.)
+    if ext_resources:
+        # Group by type
+        articles = [r for r in ext_resources if r["type"] == "articles"]
+        videos = [r for r in ext_resources if r["type"] == "youtube"]
+        podcasts = [r for r in ext_resources if r["type"] == "podcasts"]
+
+        if articles:
+            lines.append("**Статті — Articles**")
+            lines.append("")
+            for r in articles:
+                source = f" ({r['source']})" if r["source"] else ""
+                lines.append(f"- [{r['title']}]({r['url']}){source}")
+            lines.append("")
+
+        if videos:
+            lines.append("**Відео — Videos**")
+            lines.append("")
+            for r in videos:
+                source = f" ({r['source']})" if r["source"] else ""
+                lines.append(f"- [{r['title']}]({r['url']}){source}")
+            lines.append("")
+
+        if podcasts:
+            lines.append("**Подкасти — Podcasts**")
+            lines.append("")
+            for r in podcasts:
+                source = f" ({r['source']})" if r["source"] else ""
+                lines.append(f"- [{r['title']}]({r['url']}){source}")
+            lines.append("")
 
     lines.append("")
     return "\n".join(lines)
@@ -416,7 +533,7 @@ def _format_dialogues(content: str) -> str:
     return dialogue_pattern.sub(_wrap, content)
 
 
-def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
+def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     """Enrich content with tab structure, vocabulary, videos, resources, dialogues.
 
     Organizes content into 4 tabs:
@@ -471,7 +588,7 @@ def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
     # 3. Build tab content
     slovnyk = _build_slovnyk(plan, content)
     videos = _build_video_embeds(plan)
-    resources = _build_resources(plan)
+    resources = _build_resources(plan, slug=slug)
 
     # 4. Insert inline videos into the prose (Урок tab)
     # Videos go right before Summary if it exists, otherwise at end of prose
@@ -524,8 +641,9 @@ def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
     """Enrich a content file using its plan. Returns list of actions taken."""
     content = content_path.read_text("utf-8")
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    slug = plan.get("slug", plan_path.stem)
 
-    enriched, actions = enrich(content, plan)
+    enriched, actions = enrich(content, plan, slug=slug)
 
     if actions:
         content_path.write_text(enriched, "utf-8")
