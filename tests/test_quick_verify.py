@@ -381,7 +381,7 @@ def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
     monkeypatch.setattr(v6_mod, "CURRICULUM_ROOT", curriculum_root)
 
     def fake_step_write(level, module_num, slug, packet_path,
-                        writer="gemini", correction_directive=""):
+                        writer="gemini", correction_directive="", skeleton=""):
         """Always return the bad content file."""
         content_path.write_text(bad_md, "utf-8")
         return content_path

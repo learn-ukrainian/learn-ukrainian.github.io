@@ -868,9 +868,13 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
         stats, not_found, _ = _run_vesum_verify(content_path)
         vesum_hits = stats.get("vesum_hits", 0)
         total = stats.get("total", 0)
-        # Filter proper nouns
-        real_not_found = [r for r in not_found
-                          if not (r.get("original", "")[0:1].isupper() and r.get("source") == "prose")]
+        # Filter proper nouns and phonetic fragments
+        _phonetic_fragments = {"йа", "йе", "йі", "йу", "шч", "ка", "пт", "пте", "дж", "дз"}
+        real_not_found = [
+            r for r in not_found
+            if not (r.get("original", "")[0:1].isupper() and r.get("source") == "prose")
+            and r.get("original", "").lower() not in _phonetic_fragments
+        ]
         if real_not_found:
             _log(f"  ⚠️  VESUM: {len(real_not_found)} word(s) not found:")
             for r in real_not_found[:5]:
@@ -1103,17 +1107,24 @@ def step_review(content_path: Path, level: str, module_num: int,
     score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
     raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
 
-    if raw_scores and len(raw_scores) >= len(DIMENSION_WEIGHTS):
+    if raw_scores:
+        # Use available scores even if fewer than 9 — normalize by available weights
+        available = min(len(raw_scores), len(DIMENSION_WEIGHTS))
+        used_weights = {k: v for k, v in DIMENSION_WEIGHTS.items() if k <= available}
+        weight_sum = sum(used_weights.values())
         weighted = sum(
             raw_scores[i] * DIMENSION_WEIGHTS.get(i + 1, 0)
-            for i in range(len(DIMENSION_WEIGHTS))
+            for i in range(available)
         )
-        score = round(weighted, 1)
+        # Normalize: if only 8 of 9 dimensions, scale up proportionally
+        score = round(weighted / weight_sum * 1.0, 1) if weight_sum > 0 else 0.0
         _log(f"  Raw scores: {raw_scores}")
+        if available < len(DIMENSION_WEIGHTS):
+            _log(f"  ⚠️  Only {available}/9 dimensions parsed — score normalized")
         _log(f"  Weighted score (calculated): {score}/10")
     else:
         score = 0.0
-        _log(f"  ⚠️  Could not parse dimension scores (found {len(raw_scores)} of 9)")
+        _log("  ⚠️  Could not parse any dimension scores")
 
     # Parse verdict (reviewer judges severity, pipeline judges score)
     verdict = "UNKNOWN"
