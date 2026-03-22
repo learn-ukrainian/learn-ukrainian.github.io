@@ -1,0 +1,230 @@
+module: b1-077
+level: B1
+sequence: 77
+slug: text-register-formal
+version: '3.0'
+title: "Офіційний стиль"
+subtitle: "Офіційно-діловий стиль мовлення: документи, заяви, ділове листування"
+focus: grammar
+pedagogy: PPP
+phase: "B1.9 [Text and Register]"
+word_target: 4000
+objectives:
+- "Learner can identify and describe the key characteristics of офіційно-діловий
+  стиль (precision, formality, standardized structures, absence of emotional
+  vocabulary) using Ukrainian metalanguage"
+- "Learner can distinguish офіційно-діловий стиль from розмовний, науковий,
+  публіцистичний, and художній стилі in authentic Ukrainian texts"
+- "Learner can compose basic Ukrainian ділові папери: заява, автобіографія,
+  оголошення following standard formatting conventions"
+- "Learner can conduct a formal dialogue in Ukrainian (telephone call to an
+  institution, official request, professional introduction) using appropriate
+  register markers"
+- "Learner can identify and avoid common register errors: using розмовна лексика
+  in formal contexts and канцеляризми in informal speech"
+content_outline:
+- section: "Що таке офіційно-діловий стиль? (What is the official-business style?)"
+  words: 600
+  points:
+  - "Definition grounded in Заболотний Grade 8 p.260:
+    Офіційно-діловий стиль задовольняє потреби суспільства в офіційній
+    сфері спілкування. Iснує у двох формах: усній i писемній.
+    Писемна: закони, постанови, накази, заяви, протоколи, контракти.
+    Усна: промови, доповіді, переговори, дискусії, бесіди офіційного
+    характеру."
+  - "Key characteristics from Заболотний Grade 6 p.230:
+    Офіційність, конкретність, стислість, точність формулювань,
+    логічна послідовність, використання спеціальної лексики.
+    Texts of this style do not allow двозначність or емоційно забарвлена
+    лексика."
+  - "Comparison with other styles: learners read four short texts (the same
+    information presented in офіційно-діловий, науковий, публіцистичний,
+    and розмовний стилях) and identify the style markers in each.
+    Key distinctions: офіційно-діловий uses канцеляризми and стандартні
+    формулювання; науковий uses терміни; публіцистичний uses емоційно
+    забарвлена лексика; розмовний uses розмовна лексика."
+  - "Cultural note: the importance of офіційно-діловий стиль in Ukrainian
+    public life. Government, military (ЗСУ), education, and civil society
+    all operate through formal documents. Competence in this register is
+    essential for integration into Ukrainian-speaking professional environments."
+- section: "Лексика офіційно-ділового стилю (Vocabulary of the official style)"
+  words: 650
+  points:
+  - "Characteristic vocabulary categories:
+    Канцеляризми: вищезазначений, нижчепідписаний, відповідно до,
+    згідно з, у зв'язку з тим що, з метою, мати на меті.
+    Штампи (set phrases): доводжу до вашого відома, прошу надати,
+    відповідно до чинного законодавства.
+    Терміни: позивач, відповідач, повноваження, розпорядження."
+  - "Grammatical features of the style:
+    Preference for іменникові конструкції over verbs: 'здійснення контролю'
+    instead of 'контролювати.' Passive and impersonal constructions:
+    'наказ видано,' 'було розглянуто.' Complex prepositions: згідно з
+    (+ instrumental), відповідно до (+ genitive), у зв'язку з (+ instrumental)."
+  - "Common errors and Russianisms in official Ukrainian:
+    Correct: згідно з наказом (not *згідно наказу — Russian calque).
+    Correct: відповідно до закону (not *відповідно закону).
+    Correct: по закінченні (not *по закінченню — Russian prepositional case).
+    Practice: learners identify and correct register errors in sample texts."
+  - "Reading practice: an authentic-style Ukrainian заява with analysis
+    of all style markers. Learners annotate the text, identifying
+    канцеляризми, штампи, and стандартні формулювання."
+- section: "Ділові папери: заява та автобіографія (Business documents: application and autobiography)"
+  words: 700
+  points:
+  - "Заява — structure and formatting from Заболотний Grade 6 p.230:
+    1. Адресат (кому — посада, прізвище, ім'я, по батькові — давальний відмінок).
+    2. Адресант (від кого — родовий відмінок).
+    3. Назва документа (ЗАЯВА — centered).
+    4. Текст (прохання з обгрунтуванням).
+    5. Дата i підпис.
+    Model заява with annotations explaining each element."
+  - "Автобіографія — structure from Авраменко Grade 8 p.124:
+    Chronological account of key life events in офіційно-діловий стиль.
+    Standard opening: 'Я, (прізвище, ім'я, по батькові), народився/народилася...'
+    Key sections: народження, освіта, трудова діяльність, сімейний стан.
+    Practice: learners write their own автобіографія following the model."
+  - "Оголошення — brief announcement structure:
+    Heading, body (what, when, where, who), contact information.
+    Practice: compose an оголошення for a school event or community gathering."
+  - "Common formatting rules: дата (число, місяць, рік), підпис placement,
+    відступи (indentation), use of великі літери for посади та назви."
+- section: "Усний діалог в офіційно-діловому стилі (Oral dialogue in the official style)"
+  words: 650
+  points:
+  - "Formal telephone conversation from Авраменко Grade 8 p.80:
+    Model dialogue — a student calling to report an absence:
+    'Добрий день, Мирославо Михайлівно! Перепрошую за дзвінок,
+    але змушений попередити про те, що завтра пропущу навчальні
+    заняття, оскільки мені призначено візит до лікаря.'
+    Analysis of register markers: формули ввічливості, офіційна лексика."
+  - "Professional interaction patterns:
+    Звернення: 'Добрий день! Чи можу я поговорити з...?'
+    Прохання: 'Будь ласка, підкажіть...' / 'Чи не могли б ви...?'
+    Подяка: 'Щиро дякую за інформацію.'
+    Прощання: 'Дякую, що приділили час. На все добре!'
+    Practice: role-play formal phone calls to institutions."
+  - "Офіційне спілкування vs розмовне:
+    Same situation in two registers — learners compare and identify
+    the specific lexical and grammatical shifts.
+    Example: 'Скажіть, будь ласка, коли прийом?' (розмовний) vs
+    'Перепрошую, чи не могли б ви повідомити про години прийому?'
+    (офіційно-діловий)."
+- section: "Писемне повідомлення та ділове листування (Written communication and business correspondence)"
+  words: 700
+  points:
+  - "Повідомлення — written message in official style from Авраменко
+    Grade 8 p.124:
+    Будова: 1. Вступ (мета). 2. Мотивувальна частина. 3. Заключна частина.
+    Practice: learners compose a повідомлення about a school or community event."
+  - "Електронне ділове листування — modern business email structure:
+    Тема листа (subject line), привітання (Шановний/Шановна...),
+    основний текст (formal register), підпис (З повагою, ...).
+    Common errors: mixing розмовний and офіційний registers in the same
+    email, inappropriate use of скорочення or emoji in formal texts."
+  - "Practice: learners write a formal email requesting information about
+    a Ukrainian language course, using all the conventions studied.
+    Peer review: identify register violations in each other's texts."
+  - "Контрольний текст: a formal Ukrainian document (витяг з протоколу
+    or наказ) for comprehensive analysis — learners identify all
+    характерні ознаки офіційно-ділового стилю."
+- section: "Підсумок: офіційна мова в житті (Summary: formal language in life)"
+  words: 350
+  points:
+  - "Complete vocabulary reference — key terms organized by function:
+    канцеляризми, штампи, формули ввічливості, типи ділових паперів.
+    Glossary with Ukrainian definitions."
+  - "Self-check in Ukrainian:
+    1. Назвіть 5 ознак офіційно-ділового стилю.
+    2. Яка різниця між заявою та автобіографією?
+    3. Напишіть формальне звернення до директора школи.
+    4. Перетворіть розмовне речення на офіційно-ділове."
+  - "Preview of next module: Розмовний стиль (M78) — the opposite end
+    of the register spectrum. Understanding both extremes helps learners
+    navigate the full range of Ukrainian communication."
+vocabulary_hints:
+  required:
+  - "офіційно-діловий стиль (official-business style — formal register for documents)"
+  - "канцеляризм (bureaucratic expression — fixed formal phrase)"
+  - "штамп (cliche/set phrase — standardized expression in official texts)"
+  - "заява (application/statement — formal written request)"
+  - "автобіографія (autobiography — formal chronological life account)"
+  - "оголошення (announcement — public notice)"
+  - "повідомлення (notification/message — formal written communication)"
+  - "відповідно до (in accordance with — formal preposition + genitive)"
+  - "згідно з (according to — formal preposition + instrumental)"
+  - "доводжу до вашого відома (I bring to your attention — formal formula)"
+  - "з метою (with the purpose of — formal expression of purpose)"
+  - "чинний (current/valid — of laws, regulations)"
+  - "розпорядження (order/directive — official instruction)"
+  - "формула ввічливості (politeness formula — set phrase for courtesy)"
+  - "реквізити (requisites — mandatory elements of a document)"
+  recommended:
+  - "вищезазначений (above-mentioned — bureaucratic reference)"
+  - "нижчепідписаний (undersigned — formal self-reference)"
+  - "у зв'язку з (in connection with — formal causal expression)"
+  - "позивач (plaintiff — legal term)"
+  - "повноваження (authority/powers — official capacity)"
+  - "витяг (excerpt — extract from a document)"
+  - "протокол (minutes/protocol — record of a meeting)"
+  - "наказ (order — official directive)"
+  - "ділове листування (business correspondence)"
+  - "шановний (esteemed/dear — formal address)"
+activity_hints:
+- type: quiz
+  focus: "Identify which text belongs to офіційно-діловий стиль vs other styles,
+    and recognize характерні ознаки of the formal register."
+  items: 8
+- type: match-up
+  focus: "Match канцеляризми and штампи to their розмовні equivalents
+    (e.g., доводжу до вашого відома ↔ хочу сказати)."
+  items: 8
+- type: fill-in
+  focus: "Complete a заява or автобіографія template with correct formal
+    vocabulary and case forms."
+  items: 8
+- type: error-correction
+  focus: "Find and correct register violations in formal Ukrainian documents
+    (розмовна лексика in official texts, wrong preposition cases)."
+  items: 6
+- type: free-write
+  focus: "Write a formal заява or діловий лист requesting information,
+    following all офіційно-діловий стиль conventions."
+  items: 1
+- type: role-play
+  focus: "Conduct a formal telephone dialogue with an institution
+    (making an appointment, requesting information)."
+  items: 4
+connects_to:
+- "b1-078 (Розмовний стиль — contrasting register, informal communication)"
+- "b1-079 (Абревіатури та скорочення — abbreviations common in official texts)"
+- "b1-082 (Природа i довкілля — applying register awareness to thematic content)"
+- "b1-084 (Контрольна робота 9 — checkpoint testing register competence)"
+prerequisites:
+- "b1-076 (checkpoint-syntax — mastery of complex sentence structures)"
+- "b1-006 (people-and-relationships — basic introduction formulas)"
+- "b1-025 (daily-life-and-routines — everyday communication patterns)"
+grammar:
+- "Офіційно-діловий стиль: ознаки, сфера використання, мовні засоби"
+- "Iменникові конструкції replacing verbal ones (здійснення контролю vs контролювати)"
+- "Complex prepositions with correct case government: згідно з + Ор., відповідно до + Р."
+- "Passive and impersonal constructions in official texts (наказ видано, було розглянуто)"
+- "Давальний відмінок for addressee, родовий for sender in document headers"
+register: академічний
+references:
+- title: "Заболотний Grade 8, p.260"
+  notes: "Офіційно-діловий стиль: definition, two forms (усна/писемна),
+    найважливіші ознаки, types of documents."
+- title: "Заболотний Grade 6, p.230"
+  notes: "Характерні ознаки офіційно-ділового стилю: офіційність,
+    конкретність, стислість, точність, логічна послідовність.
+    Ділові папери: заява, план роботи, оголошення, автобіографія."
+- title: "Авраменко Grade 8, p.80"
+  notes: "Усний діалог в офіційно-діловому стилі на теми шкільного
+    життя — model formal telephone conversation."
+- title: "Авраменко Grade 8, p.124"
+  notes: "Письмове повідомлення в офіційно-діловому стилі:
+    будова, мета, приклад."
+- title: "Глазова Grade 10, p.143"
+  notes: "Правила графічних скорочень слів — formatting conventions
+    for official documents."

@@ -1,0 +1,177 @@
+module: b1-050
+level: B1
+sequence: 50
+slug: prepositions-temporal
+version: '3.0'
+title: "Часові прийменники"
+subtitle: "Через, за, на, перед, після, до — точне вираження часу"
+focus: grammar
+pedagogy: PPP
+phase: "B1.6 [Advanced Case Usages & Prepositions]"
+word_target: 4000
+objectives:
+- "Learner can use через + Зн.в. to express 'after a period' (через годину,
+  через два дні) and 'because of' (через хворобу — but this is cause, not time)"
+- "Learner can use за + Зн.в. to express time needed for completion
+  (зробити за годину) and distinguish it from через"
+- "Learner can use temporal prepositions перед + Ор.в., після + Р.в.,
+  до + Р.в., під час + Р.в. correctly"
+- "Learner can use prepositions for duration: протягом + Р.в., впродовж + Р.в.,
+  на + Зн.в. (на тиждень, на рік)"
+- "Learner can distinguish по + М.в. (after, in temporal sense) from по + Зн.в.
+  (purpose) and avoid Russicisms in temporal expressions"
+content_outline:
+- section: "Через + Зн.в. та за + Зн.в. (In/after a period)"
+  words: 800
+  points:
+  - "через + Зн.в. — 'after a time period from now':
+    Я прийду через годину (I will come in an hour).
+    Ми побачимося через два дні. Літо почнеться через місяць.
+    The focus is on the waiting time: the event happens AFTER this period.
+    Important: через can also mean 'because of' (cause, not time) —
+    through context only: через хворобу я не прийшов (because of illness)."
+  - "за + Зн.в. — 'within a time period' (completion):
+    Я зробив це за годину (I did it in/within an hour).
+    Вона прочитала книжку за два дні.
+    The focus is on how long the ACTION took, not when it happens."
+  - "Key distinction (Авраменко Grade 11 p.42):
+    через = 'after X time from now' (future reference point)
+    за = 'within X time' (duration of action, any tense)
+    Через годину я піду (in an hour I will go).
+    За годину я все зробив (within an hour I finished everything).
+    Practice: 10 sentences requiring через or за."
+- section: "Перед, після, до, під час (Before, after, until, during)"
+  words: 700
+  points:
+  - "перед + Ор.в. — 'before':
+    перед обідом, перед зустріччю, перед екзаменом.
+    Він прийшов перед початком уроку."
+  - "після + Р.в. — 'after':
+    після обіду, після зустрічі, після екзамену.
+    Ми поговоримо після роботи."
+  - "до + Р.в. — 'until/before (deadline)':
+    до обіду (before/by lunch), до п'ятої години (by 5 o'clock),
+    до кінця тижня (by the end of the week).
+    Зроби це до завтра (Do it by tomorrow)."
+  - "під час + Р.в. — 'during':
+    під час обіду, під час уроку, під час війни.
+    Practice: describe a typical day using перед/після/до/під час:
+    'Перед сніданком я роблю зарядку. Під час обіду читаю.
+    Після роботи гуляю. До вечері все зроблю.'"
+- section: "Тривалість: протягом, впродовж, на (Duration)"
+  words: 600
+  points:
+  - "протягом/упродовж + Р.в. — 'throughout/for the duration of':
+    протягом дня, упродовж тижня, протягом трьох місяців.
+    Both are synonyms; протягом is slightly more common in writing.
+    From Литвінова Grade 7 p.187: 'Упродовж трьох місяців мій брат
+    готувався до екзамену з фізики.'"
+  - "на + Зн.в. — 'for a period (planned duration)':
+    Я приїхав на тиждень (I came for a week).
+    Вона поїхала на рік. Візьміть це на годину.
+    The period is planned/intended, not yet elapsed."
+  - "Common error prevention (Заболотний Grade 7 p.193):
+    NOT *на протязі (calque from Russian на протяжении) — use протягом.
+    NOT *після п'яти (calque) — after 5 o'clock: після п'ятої.
+    Practice: 8 sentences using duration prepositions correctly."
+- section: "Позначення часу доби і пір року (Time of day and seasons)"
+  words: 500
+  points:
+  - "Seasons: взимку, навесні, влітку, восени (adverbs, no preposition).
+    But with adjectives: цієї зими (Р.в.), минулого літа (Р.в.),
+    наступної весни (Р.в.), минулої осені (Р.в.)."
+  - "Time of day: вранці/зранку, вдень/удень, увечері, вночі (adverbs).
+    With specification: о п'ятій годині, о пів на шосту,
+    за десять шоста (= десять хвилин до шостої).
+    From Авраменко Grade 11 p.42: avoid *без десяти шість (Russicism),
+    correct: за десять хвилин шоста."
+  - "Days and dates: у понеділок (Зн.в.), у середу, в п'ятницю.
+    Цього понеділка (Р.в., this Monday).
+    Practice: schedule a week using temporal expressions."
+- section: "По + М.в. та інші нюанси (Post-temporal по and other nuances)"
+  words: 500
+  points:
+  - "по + М.в. — 'after' (temporal, formal):
+    по обіді, по закінченні, по смерті, по завершенні.
+    This is correct literary Ukrainian, NOT a Russicism.
+    From Авраменко Grade 11 p.72: по + М.в. for temporal 'after.'"
+  - "Distinguishing по:
+    по + М.в. (після): по обіді (after lunch)
+    по + Зн.в. (мета): піти по гриби (go for mushrooms)
+    по + М.в. (розподіл): по крамницях (around shops)
+    Context determines meaning."
+  - "Practice: mixed temporal preposition exercise — choose the correct
+    preposition and case for 12 time-related sentences."
+- section: "Підсумок (Summary)"
+  words: 400
+  points:
+  - "Reference table:
+    через + Зн.в. (after a period), за + Зн.в. (within a period),
+    перед + Ор.в. (before), після + Р.в. (after),
+    до + Р.в. (until/by), під час + Р.в. (during),
+    протягом/упродовж + Р.в. (throughout), на + Зн.в. (for a duration),
+    по + М.в. (after — formal)."
+  - "Common Russicisms to avoid: *на протязі, *без десяти шість.
+    Preview: next module — прийменники причини і мети."
+vocabulary_hints:
+  required:
+  - "прийменник (preposition)"
+  - "часовий (temporal — relating to time)"
+  - "тривалість (duration)"
+  - "через (in/after — temporal; because of — causal)"
+  - "протягом (throughout/during — governs Р.в.)"
+  - "впродовж (throughout — synonym of протягом)"
+  - "під час (during — governs Р.в.)"
+  - "перед (before — governs Ор.в.)"
+  - "після (after — governs Р.в.)"
+  recommended:
+  - "до (until/by — temporal; to — directional)"
+  - "взимку (in winter — temporal adverb)"
+  - "навесні (in spring — temporal adverb)"
+  - "вранці (in the morning — temporal adverb)"
+  - "зранку (from the morning — temporal adverb)"
+  - "о (at — clock time: о п'ятій годині)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct temporal preposition + case for given time expressions"
+  items: 8
+- type: fill-in
+  focus: "Complete sentences with через/за/протягом/перед/після + correct case"
+  items: 8
+- type: match-up
+  focus: "Match temporal preposition to its governed case and meaning"
+  items: 8
+- type: error-correction
+  focus: "Fix Russicisms and preposition errors in temporal sentences"
+  items: 6
+- type: sentence-builder
+  focus: "Build a daily schedule using various temporal prepositions"
+  items: 6
+- type: group-sort
+  focus: "Sort temporal expressions by preposition + case pattern"
+  items: 10
+connects_to:
+- "b1-051 (Прийменники причини і мети — cause and purpose prepositions)"
+- "b1-046 (Родовий відмінок деталі — genitive used with most temporal preps)"
+- "b1-048 (Орудний відмінок деталі — перед + Ор.в.)"
+prerequisites:
+- "A2 completion (basic time expressions, clock time)"
+- "b1-046 through b1-048 (advanced case knowledge for correct preposition usage)"
+grammar:
+- "через + Зн.в. (після періоду) vs за + Зн.в. (упродовж періоду)"
+- "перед + Ор.в., після + Р.в., до + Р.в., під час + Р.в."
+- "протягом/упродовж + Р.в., на + Зн.в. (тривалість)"
+- "по + М.в. (після — літературна форма)"
+- "Часові прислівники: взимку, навесні, вранці, увечері"
+register: науково-навчальний
+references:
+- title: "Авраменко Grade 11, p.42"
+  notes: "Time expressions, clock time rules, avoid *без десяти."
+- title: "Заболотний Grade 7, p.193"
+  notes: "завдяки vs через (причина), NOT *на протязі."
+- title: "Литвінова Grade 7, p.187"
+  notes: "Впродовж/протягом usage examples."
+- title: "Авраменко Grade 11, p.72"
+  notes: "Preposition по: temporal, purposive, distributive meanings."
+- title: "Глазова Grade 11, p.84"
+  notes: "Preposition по with various cases and meanings."

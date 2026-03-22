@@ -1,0 +1,156 @@
+module: b1-068
+level: B1
+sequence: 68
+slug: complex-subordinate-relative
+version: '3.0'
+title: "Означальні речення"
+subtitle: "Підрядні з який/яка/яке у різних відмінках"
+focus: grammar
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can construct означальні підрядні речення that describe a noun
+  in the main clause, answering який? яка? яке? які?"
+- "Learner can use the relative pronoun який/яка/яке/які in all cases,
+  with correct agreement with its antecedent in gender and number"
+- "Learner can use alternative connectors: що, де, куди, коли as
+  сполучні слова in означальні речення"
+- "Learner can connect означальні речення to дієприкметниковий зворот (M59):
+  both express attributes, but the clause is more natural in speech"
+- "Learner can correctly punctuate означальні речення (always commas)"
+content_outline:
+- section: "Означальні підрядні речення (Attributive subordinate clauses)"
+  words: 650
+  points:
+  - "Definition from Заболотний Grade 9 p.84: означальна підрядна частина
+    характеризує іменник (або займенник) у головній частині і відповідає
+    на питання який? яка? яке? які? чий?
+    Місто, яке я відвідав, мене вразило.
+    Людина, яка багато читає, має широкий кругозір."
+  - "The підрядна означальна refers to a SPECIFIC noun (означуване слово)
+    in the main clause and always stands AFTER that noun:
+    Книга, яку я прочитав, лежить на столі.
+    Not: *Яку я прочитав, книга лежить на столі. (ungrammatical)"
+  - "Connection to M59 (дієприкметниковий зворот):
+    Книга, прочитана мною, лежить на столі. (participle phrase)
+    = Книга, яку я прочитав, лежить на столі. (означальне речення)
+    The clause is MORE NATURAL in spoken Ukrainian."
+- section: "Який у різних відмінках (Який in different cases)"
+  words: 800
+  points:
+  - "The relative pronoun який declines like an adjective and must agree
+    with its antecedent in gender and number, but its CASE is determined
+    by its role in the subordinate clause:
+    Н.в.: Студент, який вивчає українську, живе в Києві. (який = subject)
+    Р.в.: Студент, якого я знаю, живе в Києві. (якого = object)
+    Д.в.: Студент, якому я допоміг, живе в Києві. (якому = indirect object)
+    Зн.в.: Книга, яку я прочитав, лежить на столі. (яку = direct object)
+    Ор.в.: Людина, якою я захоплююсь, живе далеко. (якою = instrumental)
+    М.в.: Місто, в якому я живу, дуже красиве. (в якому = locative)"
+  - "Gender and number agreement:
+    Хлопець, який... (ч.р., одн.) Дівчина, яка... (ж.р., одн.)
+    Місто, яке... (с.р., одн.) Люди, які... (мн.)
+    The case of який depends on the clause, not the main sentence:
+    Я знаю людину (Зн.в.), яка (Н.в.) тут працює.
+    (людину is in Зн. because of знаю, яка is in Н. because it's the subject)"
+  - "Practice: complete 12 sentences choosing correct form of який
+    (right gender from antecedent, right case from clause function)."
+- section: "Інші сполучні слова в означальних (Other connectors)"
+  words: 550
+  points:
+  - "Що as alternative to який (colloquial/neutral):
+    Книга, що лежить на столі... = Книга, яка лежить на столі...
+    Що is uninflected and works for all genders/numbers/cases:
+    Хлопець, що прийшов... Дівчина, що прийшла...
+    But що cannot be used with prepositions: NOT *місто, в що я живу."
+  - "Де/куди/коли/звідки for place and time:
+    Місто, де я живу... (= в якому я живу)
+    Країна, куди я їду... (= в яку я їду)
+    День, коли ми зустрілися... (= в який ми зустрілися)
+    These are often simpler and more natural than який з прийменником."
+  - "Чий for possession:
+    Людина, чию книгу я читаю... (= якої книгу я читаю)
+    Practice: choose between який, що, де, куди, коли in 8 sentences."
+- section: "Пунктуація та позиція (Punctuation and position)"
+  words: 500
+  points:
+  - "Rule: означальна підрядна ALWAYS requires commas:
+    Місто, яке я відвідав, мене вразило.
+    Unlike дієприкметниковий зворот, position doesn't matter —
+    означальне речення is always in постпозиція to its noun."
+  - "Multiple означальні in one sentence:
+    Студент, який вивчає мову, яку я викладаю, отримав стипендію.
+    (nested — який refers to студент, яку refers to мову)"
+  - "Practice: punctuate 8 sentences with означальними реченнями."
+- section: "Практика: означальні у мовленні (Practice: relative clauses in speech)"
+  words: 600
+  points:
+  - "High-frequency speech patterns:
+    Це людина, яка... / Це місце, де... / Це час, коли...
+    Describing people, places, and moments using means реченнями.
+    Dialogue with natural usage in context."
+  - "Production: learners describe 5 people/places/things using
+    означальні речення. Each must use який in a different відмінок."
+  - "Comparison exercise: rewrite 5 означальних речень as
+    дієприкметникові звороти (where possible) and note which is more natural."
+- section: "Підсумок та перехід до M69 (Summary and transition)"
+  words: 300
+  points:
+  - "Summary: означальні = який?/яка?/яке?/які? Який declines by
+    рід/число (from antecedent) and відмінок (from clause role).
+    Alternatives: що (uninflected), де/куди/коли (for place/time).
+    Завжди коми. Self-check: Я правильно вживаю який у відмінках ✓/✗."
+  - "Preview: M69 — Часові речення. When things happen relative to
+    each other: коли, поки, доки, щойно."
+vocabulary_hints:
+  required:
+  - "означальне речення (attributive/relative clause)"
+  - "який/яка/яке/які (which/that — relative pronoun, declines)"
+  - "означуване слово (antecedent — noun the clause describes)"
+  - "сполучне слово (connective word — який, що, де, куди, коли)"
+  - "відмінок (case — determines the form of який in the clause)"
+  recommended:
+  - "чий (whose — possessive relative pronoun)"
+  - "котрий (which — literary synonym of який)"
+  - "антецедент (antecedent — formal term for означуване слово)"
+  - "постпозиція (postposition — clause always after the noun)"
+activity_hints:
+- type: fill-in
+  focus: "Insert correct form of який (gender + case) in означальних реченнях"
+  items: 12
+- type: quiz
+  focus: "Choose between який/що/де/куди/коли as the connector"
+  items: 8
+- type: sentence-builder
+  focus: "Construct означальні речення to describe given nouns"
+  items: 8
+- type: match-up
+  focus: "Match sentence halves: main clause + correct означальне"
+  items: 8
+- type: error-correction
+  focus: "Fix case/gender errors in який and punctuation mistakes"
+  items: 6
+connects_to:
+- "b1-067 (З'ясувальні речення — first subordinate type)"
+- "b1-059 (Дієприкметниковий зворот — alternative means of expressing attributes)"
+- "b1-069 (Часові речення — next subordinate type)"
+prerequisites:
+- "b1-067 (Object clauses — складнопідрядне concept introduced)"
+grammar:
+- "Означальні підрядні: відповідають на який? яка? яке? які?"
+- "Який: declension by gender/number (from antecedent) and case (from clause role)"
+- "Alternative connectors: що (uninflected), де, куди, коли, чий"
+- "Punctuation: always commas around означальне речення"
+- "Comparison with дієприкметниковий зворот"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 9, p.84-94"
+  notes: "Означальні підрядні: definition, який declension,
+    position relative to означуване слово."
+- title: "Ворон Grade 9, p.57-69"
+  notes: "Означальні речення: що as alternative, де/куди/коли,
+    nested означальні."
+- title: "Ворон Grade 11, p.176"
+  notes: "Підрядні означальне, з'ясувальне: review classification,
+    dependency from specific words in the main clause."

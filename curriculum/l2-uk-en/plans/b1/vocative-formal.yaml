@@ -1,0 +1,169 @@
+module: b1-049
+level: B1
+sequence: 49
+slug: vocative-formal
+version: '3.0'
+title: "Кличний відмінок (офіційний)"
+subtitle: "Звертання у формальному, діловому та офіційному контексті"
+focus: grammar
+pedagogy: PPP
+phase: "B1.6 [Advanced Case Usages & Prepositions]"
+word_target: 4000
+objectives:
+- "Learner can form vocative correctly for all noun classes including
+  patronymics (Іване Вікторовичу, Тамаро Іванівно)"
+- "Learner can use formal address patterns: пане Євгене, пані Оксано,
+  добродію, добродійко, шановний(-а)"
+- "Learner can apply vocative rules in compound address:
+  both words in vocative for ім'я + по батькові (Маріє Степанівно),
+  first word vocative + second nominative for title + прізвище (кореспонденте Левчук)"
+- "Learner can use vocative in formal written communication:
+  business letters, official emails, invitations"
+- "Learner can distinguish vocative usage levels: informal (Оксано!),
+  neutral (пані Оксано), formal (шановна Оксано Петрівно)"
+content_outline:
+- section: "Повторення: кличний відмінок (Vocative review)"
+  words: 500
+  points:
+  - "Quick review of vocative formation from A2 (Авраменко Grade 6 p.106):
+    І відміна тверда: -о (мамо, Миколо, Галино)
+    І відміна м'яка: -е, -є (Надіє, Анастасіє, подрузе)
+    ІІ відміна тверда: -е (Іване, Денисе, Олександре)
+    ІІ відміна м'яка: -ю (Ігорю, Сергію, Андрію)
+    Чоловічі імена на -а: -о (Микито, Сашо, Ілько)"
+  - "Important patterns learners may have missed:
+    -ко ending: Тарасику, братику (diminutive)
+    Nouns in -ець: -цю (хлопцю, молодцю)
+    Names ending in -ій: -ію (Василію, Дмитрію) or -іє (Василіє — archaic)"
+- section: "Офіційні звертання (Formal address patterns)"
+  words: 800
+  points:
+  - "From Литвінова Grade 6 p.141:
+    пан + ім'я: пане Євгене, пане Миколо
+    пані + ім'я: пані Оксано (but also: пані Оксана — Н.в. tolerated)
+    добродій → добродію, добродійка → добродійко
+    These are the standard Ukrainian formal address forms."
+  - "Ім'я + по батькові — both words in Кл.в. (Заболотний Grade 11 p.98):
+    Іване Вікторовичу, Маріє Степанівно, Олексію Миколайовичу.
+    Masculine по батькові: -овичу (Петровичу, Івановичу)
+    Feminine по батькові: -івно (Петрівно, Іванівно)"
+  - "Загальна назва + прізвище — ONLY first word in Кл.в.
+    (Заболотний Grade 11 p.98):
+    кореспонденте Левчук (not *кореспонденте Левчуку)
+    професоре Ковальчук, лікарю Петренко
+    But: друже Іване (both vocative when both are common or given names)"
+  - "шановний/шановна: шановний Іване Петровичу,
+    шановна Маріє Степанівно. In letters: Шановний пане Директоре!
+    Note: шановний takes Н.в. form (not *шановному)."
+- section: "Кличний відмінок у діловому листуванні (Vocative in business writing)"
+  words: 700
+  points:
+  - "Business letter opening:
+    Шановний пане Директоре! Шановна пані Головою!
+    Шановні колеги! (plural — Н.в. and Кл.в. coincide)
+    Вельмишановний добродію! (very formal)"
+  - "Email format:
+    Добрий день, Олександре Миколайовичу!
+    Вітаю, пане Петре!
+    Шановна Маріє Степанівно, пишу з приводу...
+    The vocative is MANDATORY in Ukrainian formal address —
+    using Н.в. (*Олександр Миколайович!) sounds unnatural."
+  - "Practice: write three email openings for different scenarios:
+    to a teacher, to a business partner, to a government official.
+    Each must use correct vocative forms."
+- section: "Звертання до груп і титулів (Addressing groups and titles)"
+  words: 500
+  points:
+  - "Plural address: Шановні депутати! Дорогі друзі! Панове!
+    Plural vocative = plural nominative for most nouns.
+    Exception: панове (vocative of пани in address context)."
+  - "Religious and military titles:
+    отче (отець), владико (владика), генерале (генерал).
+    Historical: козаче (козак), гетьмане (гетьман).
+    Modern: пане Президенте, пані Міністре (or: пані Міністерко)."
+  - "Cultural note: Ukrainian vocative is ALIVE and productive,
+    unlike many European languages. Using it correctly signals
+    respect and cultural competence. NOT using it (substituting Н.в.)
+    sounds foreign or rude in formal contexts."
+- section: "Практика в контексті (Practice in context)"
+  words: 700
+  points:
+  - "Role play: formal meeting. Learners address each other using
+    full formal address: ім'я + по батькові in vocative.
+    'Шановний Андрію Олексійовичу, дозвольте представити вам
+    нашу колегу, Олену Вікторівну. Олено Вікторівно, це Андрій Олексійович.'"
+  - "Letter writing: write a formal complaint to a company,
+    a thank-you letter to a teacher, or an invitation to an event.
+    Each must begin with correct vocative address."
+  - "Error analysis: common mistakes by L2 speakers:
+    *Шановний Іван Петрович! (should be Іване Петровичу)
+    *Пані Оксано Петрівно! (correct — both in vocative)
+    *Докторе Ковальчуку! (should be Ковальчук — прізвище stays Н.в.)"
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Vocative decision tree:
+    Informal: Оксано! Андрію!
+    Neutral: пане/пані + ім'я в Кл.в.
+    Formal: Шановний(-а) + пане/пані + посада/ім'я + по батькові в Кл.в.
+    Title + прізвище: тільки перше слово в Кл.в."
+  - "Preview: next modules — часові прийменники, причина і мета."
+vocabulary_hints:
+  required:
+  - "кличний відмінок (vocative case)"
+  - "звертання (address/salutation)"
+  - "по батькові (patronymic)"
+  - "пан/пані (Mr./Ms. — formal address)"
+  - "добродій/добродійка (Sir/Madam — very formal)"
+  - "шановний/шановна (respected/dear — formal letter opening)"
+  - "вельмишановний (most respected — very formal)"
+  - "колега (colleague — common address in workplace)"
+  recommended:
+  - "прізвище (surname)"
+  - "посада (position/title)"
+  - "офіційний (official/formal)"
+  - "діловий (business-related)"
+  - "листування (correspondence)"
+  - "панове (gentlemen — plural formal address)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct vocative form for names, patronymics, and titles"
+  items: 8
+- type: fill-in
+  focus: "Form vocative for given names with patronymics in formal address"
+  items: 8
+- type: match-up
+  focus: "Match formality level to correct address pattern"
+  items: 8
+- type: error-correction
+  focus: "Fix vocative errors in formal letters and emails"
+  items: 6
+- type: free-write
+  focus: "Write a formal letter opening with correct vocative address"
+  items: 2
+- type: sentence-builder
+  focus: "Build formal greetings and introductions using vocative"
+  items: 6
+connects_to:
+- "b1-046 through b1-048 (case nuances — genitive, dative, instrumental)"
+- "b1-082 (Офіційне спілкування — formal communication in Phase 9)"
+prerequisites:
+- "A2 completion (basic vocative forms for first names)"
+grammar:
+- "Кличний відмінок: повторення форм І, ІІ, ІІІ відмін"
+- "Звертання з по батькові: обидва слова в Кл.в."
+- "Загальна назва + прізвище: перше в Кл.в., друге в Н.в."
+- "Офіційні форми: пане/пані, добродію/добродійко, шановний/вельмишановний"
+- "Кличний у листуванні: правила формального звертання"
+register: офіційно-діловий
+references:
+- title: "Литвінова Grade 6, p.141"
+  notes: "Vocative in formal address: пане, пані, добродій, варіанти звертань."
+- title: "Авраменко Grade 6, p.106"
+  notes: "Vocative formation by declension class with examples."
+- title: "Заболотний Grade 11, p.98"
+  notes: "Compound vocative rules: ім'я + по батькові, загальна назва + прізвище."
+- title: "Авраменко Grade 8, p.133"
+  notes: "Vocative in звертання, comma rules, formal patterns."
+- title: "Глазова Grade 10, p.208"
+  notes: "Vocative case specifics, historical and modern usage."
