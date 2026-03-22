@@ -35,23 +35,93 @@ def _vocab_table_rows(items: list) -> list[str]:
     return rows
 
 
-def _build_slovnyk(plan: dict) -> str:
-    """Generate словник (vocabulary table) from plan vocabulary_hints."""
+def _extract_prose_vocab(content: str) -> list[str]:
+    """Extract bold Ukrainian words/phrases from prose that aren't in plan vocabulary.
+
+    Scans for **word** patterns in the content and returns Ukrainian words
+    that the writer introduced but weren't in vocabulary_hints.
+    """
+    # Match **word** patterns — Ukrainian text only
+    bold_pattern = re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ]+)\*\*")
+    words = []
+    seen: set[str] = set()
+    for match in bold_pattern.finditer(content):
+        word = match.group(1).strip()
+        if len(word) >= 2 and word.lower() not in seen:
+            seen.add(word.lower())
+            words.append(word)
+    return words
+
+
+def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
+    """Collect all vocabulary from previous modules' plans to avoid repetition."""
+    plans_dir = Path(__file__).resolve().parent.parent.parent / "curriculum" / "l2-uk-en" / "plans" / level
+    if not plans_dir.is_dir():
+        return set()
+
+    previous_words: set[str] = set()
+    for plan_file in plans_dir.glob("*.yaml"):
+        try:
+            plan_data = yaml.safe_load(plan_file.read_text("utf-8"))
+            if not isinstance(plan_data, dict):
+                continue
+            seq = plan_data.get("sequence", 999)
+            if seq >= current_seq:
+                continue
+            vocab = plan_data.get("vocabulary_hints", {})
+            for category in ("required", "recommended"):
+                for item in vocab.get(category, []):
+                    word, _ = parse_vocab_hint(item)
+                    previous_words.add(word.lower())
+        except Exception:
+            continue
+
+    return previous_words
+
+
+def _build_slovnyk(plan: dict, content: str = "") -> str:
+    """Generate словник (vocabulary table) from plan vocabulary_hints + prose extraction.
+
+    Deduplicates against vocabulary from previous modules to only show NEW words.
+    """
     vocab = plan.get("vocabulary_hints", {})
     required = vocab.get("required", [])
     recommended = vocab.get("recommended", [])
 
-    if not required and not recommended:
+    # Get words already taught in previous modules
+    level = plan.get("level", "").lower()
+    current_seq = plan.get("sequence", 1)
+    previous_vocab = _get_previous_vocab(level, current_seq) if level else set()
+
+    # Extract words from prose that aren't in the plan vocabulary
+    prose_words = _extract_prose_vocab(content) if content else []
+
+    # Build set of known words (lowercase) for deduplication
+    known_words: set[str] = set()
+    for item in required + recommended:
+        word, _ = parse_vocab_hint(item)
+        known_words.add(word.lower())
+
+    # Words from prose not in plan AND not in previous modules
+    additional = [
+        w for w in prose_words
+        if w.lower() not in known_words and w.lower() not in previous_vocab
+    ]
+
+    if not required and not recommended and not additional:
         return ""
 
-    lines = [
-        "",
-        "### Обов'язкові слова — Required words",
-        "",
-        "| Слово | Translation |",
-        "|-------|-------------|",
-        *_vocab_table_rows(required),
-    ]
+    lines = []
+
+    if required:
+        lines.extend([
+            "",
+            "### Обов'язкові слова — Required words",
+            "",
+            "| Слово | Translation |",
+            "|-------|-------------|",
+            *_vocab_table_rows(required),
+        ])
 
     if recommended:
         lines.extend([
@@ -62,6 +132,17 @@ def _build_slovnyk(plan: dict) -> str:
             "|-------|-------------|",
             *_vocab_table_rows(recommended),
         ])
+
+    if additional:
+        lines.extend([
+            "",
+            "### Додаткові слова з уроку — Additional words from the lesson",
+            "",
+            "| Слово | Translation |",
+            "|-------|-------------|",
+        ])
+        for word in additional:
+            lines.append(f"| **{word}** |  |")
 
     lines.append("")
     return "\n".join(lines)
@@ -174,7 +255,7 @@ def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
         content = new_content
 
     # 2. Build tab content
-    slovnyk = _build_slovnyk(plan)
+    slovnyk = _build_slovnyk(plan, content)
     videos = _build_video_embeds(plan)
     resources = _build_resources(plan)
 
