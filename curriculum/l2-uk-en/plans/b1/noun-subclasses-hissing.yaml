@@ -1,0 +1,223 @@
+module: b1-013
+level: B1
+sequence: 13
+slug: noun-subclasses-hissing
+version: '3.0'
+title: "Іменники на ж, ч, ш, щ"
+subtitle: "Мішана група II відміни — від сторожа до товариша"
+focus: grammar
+pedagogy: PPP
+phase: "B1.2 [Morphophonemics & Noun Subclasses]"
+word_target: 4000
+objectives:
+- "Learner can identify nouns with hissing consonant stems (ж, ч, ш, щ)
+  as belonging to the мішана група of II відміна"
+- "Learner can correctly decline masculine nouns of the мішана група
+  across all seven відмінки in однина and множина"
+- "Learner can apply the correct орудний відмінок ending (-ем for singular,
+  -ами for plural) and explain why it differs from тверда група (-ом)"
+- "Learner can produce the кличний відмінок forms of мішана група nouns
+  (стороже, товаришу, слухачу) and explain the pattern"
+- "Learner can distinguish between мішана група nouns with animate vs
+  inanimate знахідний відмінок (бачу сторожа vs бачу ніж)"
+content_outline:
+- section: "Що таке мішана група? (What is the mixed group?)"
+  words: 550
+  points:
+  - "Review from Phase 1: II відміна has three groups based on the final
+    consonant of the stem — тверда (hard: батько, завод), м'яка (soft:
+    вчитель, край), and мішана (hissing: сторож, товариш).
+    From Голуб Grade 6 p.75: 'Іменники I та II відмін за кінцевим
+    приголосним основи поділяють на три групи: тверду, м'яку і мішану
+    (основа закінчується шиплячим).'"
+  - "The шиплячі consonants: [ж], [ч], [ш], [дж] — these are neither
+    fully hard nor fully soft. They behave like hard consonants in some
+    forms and like soft consonants in others. That is why the group is
+    called мішана — mixed. Key examples: сторож (watchman), слухач
+    (listener), товариш (companion), борщ (borscht), ніж (knife),
+    плащ (raincoat), читач (reader)."
+  - "Why мішана група matters: the endings are a hybrid of тверда and
+    м'яка patterns. Getting this wrong creates errors that sound
+    distinctly non-native. Comparison: завод-ом (тверда) vs вчител-ем
+    (м'яка) vs сторож-ем (мішана — follows м'яка here)."
+- section: "Відмінювання в однині (Singular declension)"
+  words: 750
+  points:
+  - "Full paradigm from Литвінова Grade 6 p.153 and Заболотний Grade 6 p.102:
+    Н. товариш, сторож, слухач
+    Р. товариша, сторожа, слухача
+    Д. товаришу(еві), сторожу(еві), слухачу(еві)
+    Зн. товариша (animate) / ніж (inanimate)
+    Ор. товаришем, сторожем, слухачем
+    М. (на) товаришу(еві), (на) сторожу(еві), (на) слухачу(еві)
+    Кл. товаришу, стороже, слухачу"
+  - "Key pattern: орудний відмінок always takes -ем (not -ом!).
+    From Захарійчук Grade 4 p.62: 'Закінчення -ем мають іменники
+    з основою на м'який приголосний і [ж], [ч], [ш].'
+    Practice: ніж — ножем, читач — читачем, виграш — виграшем.
+    Common error: *сторожом — this is a Russicism. Ukrainian: сторожем."
+  - "Давальний and місцевий have паралельні закінчення for animate nouns:
+    -у/-еві. Both are correct: товаришу = товаришеві.
+    From Литвінова Grade 6 p.153: 'У давальному й місцевому відмінках
+    назви істот мають паралельні закінчення.'"
+  - "Кличний відмінок — two patterns:
+    Безсуфіксні nouns take -е with чергування: сторож — стороже.
+    Nouns with suffixes -ач, -ар take -у: слухач — слухачу, товариш — товаришу.
+    From Литвінова Grade 6 p.159: 'Мішана група: закінчення -е для
+    більшості іменників: стороже, Довбуше, пісняре.'"
+- section: "Відмінювання у множині (Plural declension)"
+  words: 600
+  points:
+  - "Full plural paradigm:
+    Н. товариші, сторожі, слухачі
+    Р. товаришів, сторожів, слухачів
+    Д. товаришам, сторожам, слухачам
+    Зн. товаришів (animate) / ножі (inanimate)
+    Ор. товаришами, сторожами, слухачами
+    М. (на) товаришах, (на) сторожах, (на) слухачах
+    Кл. товариші, сторожі, слухачі"
+  - "From Глазова Grade 10 p.209: 'В орудному відмінку множини іменники
+    чоловічого роду II відміни твердої і мішаної груп мають закінчення
+    -ами: вагонами, товаришами.' Note the difference: singular -ем
+    (follows м'яка) but plural -ами (follows тверда). This is why
+    the group is мішана!"
+  - "Reading practice: a Ukrainian text featuring мішана група nouns in
+    various відмінки. Learners identify the case and explain the ending.
+    Example passage about a нічний сторож who meets a товариш."
+- section: "Середній рід мішаної групи (Neuter nouns in мішана група)"
+  words: 550
+  points:
+  - "Neuter nouns ending in шиплячий + -е also belong to мішана група:
+    плече (shoulder), прізвище (surname), серце (heart — note: [ц'] is
+    свистячий, not шиплячий, but серце is IV відміна).
+    Paradigm for плече:
+    Н. плече — Р. плеча — Д. плечу — Зн. плече — Ор. плечем — М. на плечі"
+  - "The орудний ending for neuter мішана група: -ем (same as masculine).
+    Compare: озер-ом (тверда) vs пол-ем (м'яка) vs плеч-ем (мішана).
+    Литвінова Grade 6 p.153 shows плечем in the мішана група paradigm."
+  - "Common neuter мішана група nouns in daily use: плече, прізвище,
+    видовище (spectacle), кладовище (cemetery), вогнище (bonfire).
+    Practice: decline these nouns in context-rich sentences."
+- section: "Чергування в мішаній групі (Alternations in мішана група)"
+  words: 600
+  points:
+  - "Connection to M09-M11: hissing consonants are themselves the RESULT
+    of historical чергування. [г] → [ж]: друг — дружити — у дрУжбі.
+    [к] → [ч]: рука — ручний. [х] → [ш]: горох — горошина.
+    This is why so many мішана група nouns exist — they come from
+    productive word-formation patterns."
+  - "Чергування [о], [е] → [і] in мішана група nouns:
+    ніж — ножа — на ножі (о→і in закритий склад).
+    сторож — на сторожі. ковш — ковша — у ковші.
+    From M08 (alternation-vowels): this is the same [о] → [і] pattern,
+    now applied specifically to мішана група nouns."
+  - "Fleeting vowels in мішана група: вівчар — вівчаря (no fleeting vowel
+    here, unlike учень — учня). But: хлопець — хлопця shows the pattern
+    in свистячі. Learners practice identifying which мішана група nouns
+    have stable stems and which have alternations."
+- section: "Типові помилки та практика (Common errors and practice)"
+  words: 600
+  points:
+  - "Error 1 — Russicism in орудний: *сторожом, *ножом instead of
+    сторожем, ножем. Rule: мішана група always -ем in singular орудний.
+    Error 2 — Wrong кличний: *товарише instead of товаришу.
+    Error 3 — Confusing мішана and тверда: writing *товаришом."
+  - "Diagnostic exercise: given a noun, determine its група (тверда/м'яка/
+    мішана) and predict the орудний and кличний forms.
+    Practice set: борщ, меч, плащ, грач, м'яч, ніж, товариш, сторож,
+    вояж, монтаж, масаж, пейзаж."
+  - "Reading comprehension passage in Ukrainian: a story about товариші
+    на війні featuring мішана група nouns in all відмінки. Learners
+    extract and classify the noun forms."
+- section: "Підсумок (Summary)"
+  words: 350
+  points:
+  - "Key rule summary:
+    1. Мішана група = stem ends in шиплячий (ж, ч, ш, щ/дж).
+    2. Орудний однина: -ем (never -ом).
+    3. Кличний: -е for безсуфіксні (стороже), -у for суфіксні (слухачу).
+    4. Множина орудний: -ами (like тверда група).
+    5. Чергування [о/е] → [і] applies as usual (ніж — ножі — на ножі)."
+  - "Self-check: Дайте відповіді на запитання:
+    1. Які приголосні називаються шиплячими?
+    2. Чому мішану групу називають саме 'мішаною'?
+    3. Яке закінчення має орудний відмінок однини?
+    4. Провідміняйте: товариш, ніж, плече.
+    Preview: M14 — жіночий рід з нульовим закінченням (III відміна)."
+vocabulary_hints:
+  required:
+  - "сторож (watchman — мішана група, masculine II відміна)"
+  - "слухач (listener — мішана група, suffix -ач)"
+  - "товариш (companion — мішана група)"
+  - "мішана група (mixed group — nouns with шиплячий stem)"
+  - "шиплячий (hissing consonant — ж, ч, ш, дж)"
+  - "закінчення (ending — grammatical suffix in a word form)"
+  - "відмінок (grammatical case)"
+  - "орудний відмінок (instrumental case)"
+  - "кличний відмінок (vocative case)"
+  - "однина (singular number)"
+  - "множина (plural number)"
+  - "ніж (knife — мішана група, inanimate)"
+  - "читач (reader — мішана група, suffix -ач)"
+  - "плече (shoulder — neuter мішана група)"
+  - "борщ (borscht — мішана група)"
+  - "плащ (raincoat — мішана група, inanimate)"
+  recommended:
+  - "паралельні закінчення (parallel endings — давальний and місцевий)"
+  - "безсуфіксний (without suffix — affects кличний form)"
+  - "істота (animate being — affects знахідний)"
+  - "неістота (inanimate — affects знахідний)"
+  - "пейзаж (landscape — мішана група)"
+  - "монтаж (montage/editing — мішана група)"
+  - "м'яч (ball — мішана група)"
+  - "грач (rook/player — мішана група)"
+  - "видовище (spectacle — neuter мішана група)"
+  - "прізвище (surname — neuter мішана група)"
+activity_hints:
+- type: quiz
+  focus: "Identify the група (тверда/м'яка/мішана) for given nouns"
+  items: 8
+- type: fill-in
+  focus: "Insert the correct відмінок ending for мішана група nouns in sentences"
+  items: 8
+- type: match-up
+  focus: "Match nominative forms to their орудний and кличний forms"
+  items: 8
+- type: error-correction
+  focus: "Find and fix Russicisms in мішана група noun endings (*сторожом → сторожем)"
+  items: 6
+- type: group-sort
+  focus: "Sort nouns into тверда / м'яка / мішана groups"
+  items: 10
+connects_to:
+- "b1-009 (Чергування приголосних в іменниках — source of шиплячі from [г/к/х])"
+- "b1-012 (Іменники на -ар, -яр, -ин — other masculine II відміна subclasses)"
+- "b1-014 (Жіночий рід з нульовим закінченням — III відміна, also features шиплячі)"
+- "b1-016 (Здоров'я і медицина — applies мішана група in medical vocabulary)"
+prerequisites:
+- "b1-012 (Noun subclasses: masculine -ар, -яр, -ин — II відміна foundation)"
+- "b1-009 (Чергування приголосних в іменниках — understanding of шиплячі origins)"
+grammar:
+- "Мішана група identification: stem-final шиплячий (ж, ч, ш, щ/дж)"
+- "Singular declension: орудний -ем, давальний/місцевий -у/-еві, кличний -е/-у"
+- "Plural declension: орудний -ами (switches to тверда pattern)"
+- "Neuter мішана група: плече, прізвище — same -ем in орудний"
+- "Animate vs inanimate знахідний: сторожа (= Р.в.) vs ніж (= Н.в.)"
+- "Чергування [о/е] → [і] in мішана група: ніж — ножа — на ножі"
+register: академічний
+references:
+- title: "Литвінова Grade 6, pp.152-160"
+  notes: "Full II відміна paradigms including мішана група, паралельні закінчення,
+    кличний відмінок rules, родовий множини patterns."
+- title: "Заболотний Grade 6, pp.96-106"
+  notes: "Відміни classification table, II відміна declension with мішана група
+    examples (товариш, читач), орудний endings."
+- title: "Захарійчук Grade 4, p.62"
+  notes: "Foundational rule: орудний -ем for stems ending in м'який приголосний
+    and [ж], [ч], [ш]. Includes сторож and слухач in exercises."
+- title: "Глазова Grade 10, p.209"
+  notes: "Кличний відмінок чергування in II відміна: [г]-[ж], [к]-[ч], [х]-[ш].
+    Орудний множини: -ами for тверда and мішана груп."
+- title: "Голуб Grade 6, p.75"
+  notes: "Three-group classification of I and II відміна nouns by stem-final
+    consonant: тверда, м'яка, мішана."

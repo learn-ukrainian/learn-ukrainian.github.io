@@ -1,0 +1,237 @@
+module: b1-010
+level: B1
+sequence: 10
+slug: alternation-consonants-verbs
+version: '3.0'
+title: "Чергування приголосних (дiєслова)"
+subtitle: "Сидiти — сиджу, плакати — плачу: приголоснi в дiєсловах"
+focus: grammar
+pedagogy: PPP
+phase: "B1.2 [Morphophonemics & Noun Subclasses]"
+word_target: 4000
+objectives:
+- "Learner can predict and produce consonant alternations in
+  the 1st person singular (я-form) of II дiєвiдмiна verbs:
+  [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш], [ст]->[шч(щ)]
+  (водити — воджу, крутити — кручу, носити — ношу)"
+- "Learner can predict consonant alternations when forming
+  imperfective verbs with suffixes -ати/-увати:
+  зарядити — заряджати, погасити — погашати"
+- "Learner can produce the губний + [л] alternation in
+  1st person singular: робити — роблю, купити — куплю,
+  ловити — ловлю"
+- "Learner can conjugate common II дiєвiдмiна verbs correctly
+  across all persons, recognizing that alternation occurs ONLY
+  in the 1st person singular"
+content_outline:
+- section: "Вiд iменникiв до дiєслiв (From nouns to verbs)"
+  words: 500
+  points:
+  - "Bridge from M09 (alternation-consonants-nouns): the same
+    consonants [г/к/х] that alternate in nouns also alternate in verbs,
+    but the triggers are different. In nouns: case endings.
+    In verbs: conjugation (especially 1st person singular).
+    Караман Grade 10 p.52: 'Закономiрними для української мови
+    стали чергування приголосних звукiв, що вiдбулися перед
+    давнiм суфiксом j.'"
+  - "Why the 1st person singular? Historically, the -у/-ю ending
+    of the 1st person contained a [й] sound that triggered
+    palatalization of the preceding consonant. This is why
+    the alternation appears ONLY in я-forms, not in ти-, вiн-forms.
+    Modern result: сидiти — сиджу (я), сидиш (ти), сидить (вiн)."
+  - "Overview of the three alternation groups in this module:
+    1. Задньоязиковi: [г]->[ж], [к]->[ч], [х]->[ш] (same as nouns)
+    2. Зубнi/свистячi: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
+    3. Губнi + [л]: [б]->[бл], [п]->[пл], [в]->[вл], [м]->[мл], [ф]->[фл]"
+- section: "Чергування зубних i свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
+  words: 800
+  points:
+  - "From Глазова Grade 10 p.107:
+    [д] -> [дж]: водити — воджу, сидiти — сиджу, ходити — ходжу,
+    родити — роджу, будити — буджу, садити — саджу.
+    [т] -> [ч]: крутити — кручу, летiти — лечу, свiтити — свiчу,
+    платити — плачу (note: плакати — плачу is [к]->[ч], different!).
+    [з] -> [ж]: возити — вожу, морозити — морожу, гасити — гашу.
+    [с] -> [ш]: носити — ношу, просити — прошу, косити — кошу,
+    мiсити — мiшу."
+  - "Compound alternations:
+    [зд] -> [ждж]: їздити — їжджу, бороздити — борожджу.
+    [ст] -> [шч] (written as щ): мостити — мощу, простити — прощу,
+    чистити — чищу, пустити — пущу.
+    These are regular extensions of the basic alternations."
+  - "Practice conjugation: learners conjugate 8-10 common verbs
+    in теперiшнiй час, all persons. Key insight: the alternation
+    ONLY affects я-form. Compare:
+    я воджу, ти водиш, вiн водить, ми водимо, ви водите, вони водять.
+    Pattern: alternation in 1st sg., base consonant everywhere else."
+  - "Common errors: mixing up [д]->[дж] with [д]->[ж] (the correct
+    alternation is [д]->[дж] with the affricate, not simple [ж]).
+    Writing *сижу instead of сиджу. The дж is one sound, one letter
+    combination."
+- section: "Чергування задньоязикових у дiєсловах: [г]->[ж], [к]->[ч], [х]->[ш]"
+  words: 600
+  points:
+  - "Same consonants as in nouns, same targets:
+    [к] -> [ч]: плакати — плачу, тикати — тичу, пекти — печу.
+    [г] -> [ж]: могти — можу, берегти — бережу, стригти — стрижу.
+    [х] -> [ш]: колихати — колишу, махати — машу.
+    These verbs belong to I дiєвiдмiна (unlike the зубнi group above)."
+  - "Comparison with noun alternations from M09:
+    Noun: друг -> друже (кличний) — same [г]->[ж].
+    Verb: берегти -> бережу (1st sg.) — same [г]->[ж].
+    The consonant change is identical; only the trigger differs
+    (case ending vs. verb person ending)."
+  - "Practice: learners identify whether a given alternation
+    ([г]->[ж], [к]->[ч]) comes from a noun or verb context,
+    reinforcing the shared phonological system."
+- section: "Чергування губних + [л]: робити — роблю"
+  words: 600
+  points:
+  - "From Караман Grade 10 p.52:
+    [б] -> [бл']: робити — роблю, любити — люблю, губити — гублю.
+    [п] -> [пл']: лiпити — лiплю, купити — куплю, сипати — сиплю.
+    [в] -> [вл']: ловити — ловлю, ставити — ставлю, правити — правлю.
+    [м] -> [мл']: дрiмати — дрiмлю, ломити — ломлю.
+    [ф] -> [фл']: графити — графлю (rare)."
+  - "This alternation is unique: instead of replacing the consonant,
+    it INSERTS [л'] after the губний. The labial consonant stays,
+    but gains a lateral partner. This is why it only affects
+    1st person singular — the historical [й] caused [л'] insertion."
+  - "Practice: learners conjugate common verbs with губнi stems
+    across all persons, confirming that [л'] appears only in я-form:
+    я ловлю, ти ловиш, вiн ловить, ми ловимо..."
+- section: "Чергування при утвореннi недоконаних дiєслiв"
+  words: 550
+  points:
+  - "From Глазова Grade 10 p.107:
+    When forming imperfective verbs with -ати/-увати from perfective
+    stems, the same alternations apply:
+    [д] -> [дж]: зарядити — заряджати, засудити — засуджувати.
+    [з] -> [ж]: знизити — знижати, знижувати.
+    [с] -> [ш]: погасити — погашати, погашувати.
+    [т] -> [ч]: скоротити — скорочувати, збагатити — збагачувати."
+  - "Why this matters for word formation:
+    When learners encounter an unfamiliar imperfective verb with
+    [ж], [ч], [ш], or [дж] in the root, they can reconstruct the
+    perfective stem: прощати <- простити ([ст]->[шч(щ)]).
+    This is a powerful decoding strategy for reading."
+  - "Practice: given perfective verbs, learners form the imperfective
+    with -ати/-увати, applying the correct consonant alternation."
+- section: "Повна парадигма: вiд iнфiнiтива до всiх форм"
+  words: 550
+  points:
+  - "Bringing it all together: complete conjugation of representative
+    verbs showing where alternation does and does not occur.
+    водити: воджу, водиш, водить, водимо, водите, водять;
+    водив, водила, водило, водили; водитиму; водь! водiть!
+    Alternation ONLY in теперiшнiй час, 1st person singular."
+  - "Contrast with наказовий спосiб (imperative):
+    No consonant alternation in imperatives: носи! просiть! сидь!
+    (not *нош!, *прош!, *сидж!). This confirms the alternation
+    is specific to the 1-st person present/future context."
+  - "Decision flowchart for learners:
+    1. Is the verb II дiєвiдмiна? -> check for [д/т/з/с/б/п/в/м]
+    2. Is it 1st person singular? -> apply alternation
+    3. Is it any other form? -> use the base consonant
+    4. Are you forming imperfective with -ати/-увати? -> apply alternation"
+- section: "Пiдсумок: таблиця дiєслiвних чергувань"
+  words: 400
+  points:
+  - "Complete reference table:
+    | Base | Alternation | Examples |
+    | [д] | [дж] | водити-воджу, сидiти-сиджу |
+    | [т] | [ч] | крутити-кручу, летiти-лечу |
+    | [з] | [ж] | возити-вожу, морозити-морожу |
+    | [с] | [ш] | носити-ношу, просити-прошу |
+    | [зд]| [ждж]| їздити-їжджу |
+    | [ст]| [шч(щ)]| простити-прощу, чистити-чищу |
+    | [б] | [бл'] | робити-роблю, любити-люблю |
+    | [п] | [пл'] | купити-куплю, лiпити-лiплю |
+    | [в] | [вл'] | ловити-ловлю, ставити-ставлю |
+    | [м] | [мл'] | ломити-ломлю |"
+  - "Self-check: Дайте вiдповiдi на запитання:
+    1. Яке чергування вiдбувається у формi 'я сиджу'?
+    2. Чому в дiєсловi 'роблю' з'являється звук [л']?
+    3. Провiдмiнюйте дiєслово 'просити' в теперiшньому часi.
+    4. Утворiть недоконаний вид: простити, зарядити, знизити."
+  - "Preview: Спрощення приголосних (M11) — when consonant clusters
+    simplify by dropping a sound entirely."
+vocabulary_hints:
+  required:
+  - "чергування (alternation — systematic sound change)"
+  - "дiєслово (verb)"
+  - "дiєвiдмiна (conjugation class — verb classification)"
+  - "особа (grammatical person — я/ти/вiн)"
+  - "теперiшнiй час (present tense)"
+  - "iнфiнiтив (infinitive — base verb form)"
+  - "зубний (dental — consonant formed at the teeth: д, т)"
+  - "свистячий (sibilant — whistling consonant: з, с, ц, дз)"
+  - "губний (labial — consonant formed with lips: б, п, в, м, ф)"
+  - "задньоязиковий (velar — consonant formed at back of mouth: г, к, х)"
+  - "доконаний вид (perfective aspect)"
+  - "недоконаний вид (imperfective aspect)"
+  - "парадигма (paradigm — full set of inflected forms)"
+  - "палаталiзацiя (palatalization — softening of consonant)"
+  recommended:
+  - "африката (affricate — compound sound: дж, дз)"
+  - "наказовий спосiб (imperative mood)"
+  - "провiдмiнювати (to conjugate/decline through all forms)"
+  - "основа (stem — word minus its ending)"
+  - "суфiкс (suffix)"
+  - "словотворення (word formation)"
+  - "продуктивний (productive — applicable to new words)"
+  - "вимова (pronunciation)"
+  - "закономiрнiсть (regularity — systematic pattern)"
+activity_hints:
+- type: fill-in
+  focus: "Write the correct 1st person singular form of II дiєвiдмiна
+    verbs (e.g., сидiти -> я сидж___, носити -> я нош___)"
+  items: 10
+- type: quiz
+  focus: "Identify which alternation type applies to a given verb:
+    зубний, задньоязиковий, or губний + [л]"
+  items: 8
+- type: match-up
+  focus: "Match infinitive forms with their 1st person singular
+    (e.g., водити <-> воджу, купити <-> куплю)"
+  items: 10
+- type: group-sort
+  focus: "Sort verbs by alternation type: [д]->[дж], [т]->[ч],
+    [з]->[ж], [с]->[ш], губний+[л]"
+  items: 10
+- type: fill-in
+  focus: "Form imperfective verbs with -ати/-увати from perfective
+    stems (e.g., простити -> прощ___ти, знизити -> знижув___ти)"
+  items: 6
+- type: error-correction
+  focus: "Find and fix conjugation errors in sentences
+    (e.g., *я сижу -> я сиджу, *я робю -> я роблю)"
+  items: 6
+connects_to:
+- "b1-009 (alternation-consonants-nouns — same consonants, noun context)"
+- "b1-008 (alternation-vowels — vowel alternations in verb roots)"
+- "b1-011 (simplification-consonants — consonant cluster simplification)"
+prerequisites:
+- "A2 completion (learner can conjugate basic verbs in present tense)"
+- "b1-009 (alternation-consonants-nouns — first/second palatalization concept)"
+grammar:
+- "Зубнi/свистячi alternations: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
+- "Compound alternations: [зд]->[ждж], [ст]->[шч(щ)]"
+- "Задньоязиковi alternations in verbs: [г]->[ж], [к]->[ч], [х]->[ш]"
+- "Губнi + [л'] insertion: [б]->[бл'], [п]->[пл'], [в]->[вл'], [м]->[мл']"
+- "Alternation in imperfective formation with -ати/-увати"
+- "Alternation scope: 1st person singular only in conjugation"
+register: академічний
+references:
+- title: "Глазова Grade 10, p.107"
+  notes: "Complete table of verb consonant alternations: зубнi,
+    задньоязиковi, compound groups with examples."
+- title: "Караман Grade 10, p.52"
+  notes: "Historical explanation: alternations before давнiй суфiкс j,
+    full list including губнi + [л'] insertion."
+- title: "Авраменко Grade 5, p.114-115"
+  notes: "Чергування приголосних звукiв: exercises with verb forms
+    in прислiв'я context."
+- title: "Заболотний Grade 5, p.116-119"
+  notes: "Чергування приголосних (section 28): systematic presentation
+    with cross-references to чергування голосних."

@@ -1,0 +1,235 @@
+module: b1-014
+level: B1
+sequence: 14
+slug: noun-subclasses-feminine
+version: '3.0'
+title: "Жіночий рід (нульове закінчення)"
+subtitle: "III відміна — від любові до подорожі"
+focus: grammar
+pedagogy: PPP
+phase: "B1.2 [Morphophonemics & Noun Subclasses]"
+word_target: 4000
+objectives:
+- "Learner can identify III відміна nouns — feminine nouns with нульове
+  закінчення in називний відмінок (любов, осінь, радість, подорож, ніч)"
+- "Learner can correctly decline III відміна nouns across all відмінки
+  in both однина and множина, including the special case of мати"
+- "Learner can apply the подвоєння rule in орудний однини: single final
+  consonant → подвоєння (ніч — ніччю, сіль — сіллю), but consonant
+  cluster or [б/п/в/м/ф/р] → no подвоєння (радість — радістю, кров — кров'ю)"
+- "Learner can use the parallel родовий однини endings -і/-и for nouns
+  on -ть after a consonant (радості/радости) and for кров, любов, осінь, сіль"
+- "Learner can distinguish III відміна nouns from similar-looking II відміна
+  masculine nouns (путь is archaic, гість is II відміна masculine)"
+content_outline:
+- section: "Що таке III відміна? (What is the 3rd declension?)"
+  words: 550
+  points:
+  - "Definition from Литвінова Grade 6 p.144: 'III відміна — іменники
+    жіночого роду з нульовим закінченням: любов, сіль; іменник мати.'
+    These are feminine nouns that end in a consonant in називний відмінок —
+    no -а/-я ending like I відміна (жінка, земля)."
+  - "From Заболотний Grade 6 p.96: the four відміни system.
+    III відміна is exclusively жіночий рід + нульове закінчення.
+    The one exception: мати (which has a unique paradigm with -ер- stem
+    expansion). Key examples: ніч, піч, сіль, любов, осінь, радість,
+    подорож, молодь, мідь, кров, тінь, річ."
+  - "Semantic groups of III відміна nouns:
+    — Abstract qualities: радість, гордість, мудрість, ніжність, гідність.
+    — Natural phenomena: осінь, ніч, тінь.
+    — Substances: сіль, мідь, кров.
+    — Objects: піч, річ.
+    — Journeys: подорож.
+    From Авраменко Grade 6 p.102: sorting exercise with олень (II відміна,
+    masculine!) vs осінь (III відміна, feminine)."
+- section: "Відмінювання III відміни в однині (Singular declension)"
+  words: 700
+  points:
+  - "Full singular paradigm from Авраменко Grade 6 p.102:
+    Н. ніч, любов, радість
+    Р. ночі, любові (любови), радості (радости)
+    Д. ночі, любові (любови), радості (радости)
+    Зн. ніч, любов, радість
+    Ор. ніччю, любов'ю, радістю
+    М. на ночі, у любові, у радості
+    Кл. ноче, любове, радосте"
+  - "Родовий відмінок parallel endings -і/-и:
+    From Заболотний Grade 6 p.109: 'Іменники на -ть після приголосного,
+    а також слова кров, любов, осінь, сіль, Русь, Білорусь у родовому
+    відмінку однини мають закінчення -і або -и.'
+    Both радості and радости are correct. Similarly: любові/любови,
+    осені/осени, крові/крови, солі/соли."
+  - "Чергування [і] → [о/е] in III відміна:
+    ніч — ночі (і → о), піч — печі (і → е), річ — речі (і → е).
+    This connects directly to M08 (alternation-vowels): the same
+    [о/е] → [і] pattern in закритий склад, reversed when the syllable
+    opens: ніч [закритий] → но-чі [відкритий]."
+- section: "Подвоєння в орудному відмінку (Doubling in instrumental case)"
+  words: 700
+  points:
+  - "The signature feature of III відміна — подвоєння in орудний однини.
+    From Авраменко Grade 10 p.168: 'У формі орудного відмінка однини
+    треба писати подвоєні приголосні, якщо основа закінчується одним
+    приголосним (крім б, п, в, м, ф і р): річ — річчю, розкіш — розкішшю,
+    відповідь — відповіддю, лють — люттю.'"
+  - "When there is NO подвоєння:
+    1. Stem ends in a consonant cluster: радість — радістю (not *радіссттю),
+       гордість — гордістю, жовчність — жовчністю.
+    2. Stem ends in губний (б, п, в, м, ф) or [р]: кров — кров'ю,
+       любов — любов'ю, матір — матір'ю.
+    From Голуб Grade 6 p.82: 'Чому пишемо річчю, миттю, але
+    радістю, матір'ю, нехворощю?'"
+  - "Practice grid — learners form орудний for:
+    сіль → сіллю (подвоєння), ніч → ніччю (подвоєння),
+    мідь → міддю (подвоєння), тінь → тінню (подвоєння),
+    кров → кров'ю (губний, апостроф), осінь → осінню (подвоєння),
+    подорож → подорожжю (подвоєння), радість → радістю (cluster)."
+- section: "Відмінювання у множині (Plural declension)"
+  words: 550
+  points:
+  - "Full plural paradigm from Авраменко Grade 6 p.102:
+    Н. ночі, матері
+    Р. ночей, матерів
+    Д. ночам, матерям
+    Зн. ночі, матерів
+    Ор. ночами, матерями
+    М. на ночах, на матерях
+    Кл. ночі, матері"
+  - "Родовий множини endings:
+    -ей: ночей, печей, речей, мишей.
+    -ів: матерів (unique to мати).
+    Нульове: Not typical for III відміна.
+    Most III відміна nouns follow the -ей pattern."
+  - "Мати — the unique paradigm: мати → матері → матері → матір →
+    матір'ю → на матері. Stem expands with -ер-/-ір-.
+    From Заболотний Grade 6 p.109: full paradigm table for мати
+    in both однина and множина."
+- section: "III відміна vs інші відміни (Distinguishing III відміна)"
+  words: 500
+  points:
+  - "Trap 1 — masculine nouns that look like III відміна:
+    гість, звір, біль, степ, кінь — these end in a consonant but are
+    MASCULINE → II відміна. Test: check the рід. If чоловічий → II відміна.
+    From Авраменко Grade 6 p.102: олень is masculine (II відміна),
+    not feminine (III відміна)."
+  - "Trap 2 — feminine nouns with -а/-я ending:
+    подруга, земля, пісня — these are feminine but have -а/-я ending
+    → I відміна (not III). III відміна requires нульове закінчення."
+  - "Diagnostic algorithm:
+    1. Is the noun feminine? If no → not III відміна.
+    2. Does it have нульове закінчення in Н.в.? If no → I відміна.
+    3. Is it мати? → III відміна (special paradigm).
+    4. Yes to both 1 and 2 → III відміна.
+    Practice: classify піч, ніч, тінь, день, кість, гість, міць, путь."
+- section: "Словотворення іменників III відміни (Word formation)"
+  words: 600
+  points:
+  - "Productive suffix -ість/-ність for abstract nouns from adjectives:
+    гордий → гордість, мудрий → мудрість, надійний → надійність,
+    гідний → гідність, щедрий → щедрість.
+    From Голуб Grade 6 p.82: exercise forming III відміна nouns from
+    adjectives to practice the declension."
+  - "Connection to morphophonemics: when suffix -ість is added,
+    the resulting noun always has a consonant cluster before -тю
+    in орудний → no подвоєння: гордість — гордістю, мудрість — мудрістю.
+    But suffix -ть after a single consonant → подвоєння:
+    мить — миттю, відповідь — відповіддю."
+  - "Reading practice passage in Ukrainian about autumn (осінь) featuring
+    III відміна nouns: ніч, тінь, подорож, радість, мудрість. Learners
+    identify the відмінок of each III відміна noun in the passage."
+- section: "Підсумок (Summary)"
+  words: 400
+  points:
+  - "Key rules:
+    1. III відміна = жіночий рід + нульове закінчення + мати.
+    2. Орудний: подвоєння after single consonant (ніччю, сіллю),
+       NO подвоєння after clusters (радістю) or б/п/в/м/ф/р (кров'ю).
+    3. Родовий: -і/-и both valid for -ть stems and кров/любов/осінь/сіль.
+    4. Чергування [і] → [о/е]: ніч-ночі, піч-печі, річ-речі."
+  - "Self-check: Дайте відповіді на запитання:
+    1. Які іменники належать до III відміни?
+    2. Коли пишемо подвоєння в орудному відмінку?
+    3. Утворіть орудний: ніч, кров, радість, сіль, любов.
+    4. Чому олень — це не III відміна?
+    Preview: M15 — іменники, що вживаються тільки у множині."
+vocabulary_hints:
+  required:
+  - "любов (love — III відміна, орудний: любов'ю)"
+  - "осінь (autumn — III відміна, орудний: осінню)"
+  - "радість (joy — III відміна, орудний: радістю, no подвоєння)"
+  - "подорож (journey — III відміна, орудний: подорожжю)"
+  - "ніч (night — III відміна, орудний: ніччю, чергування і→о)"
+  - "піч (oven — III відміна, орудний: піччю, чергування і→е)"
+  - "сіль (salt — III відміна, орудний: сіллю)"
+  - "кров (blood — III відміна, орудний: кров'ю, no подвоєння)"
+  - "мати (mother — III відміна, unique stem expansion -ер-/-ір-)"
+  - "подвоєння (doubling — consonant doubling in орудний)"
+  - "нульове закінчення (zero ending — no visible suffix in називний)"
+  - "відміна (declension type — I through IV)"
+  - "гордість (pride — abstract noun from гордий)"
+  - "мудрість (wisdom — abstract noun from мудрий)"
+  - "тінь (shadow — III відміна, орудний: тінню)"
+  - "річ (thing — III відміна, чергування і→е, орудний: річчю)"
+  recommended:
+  - "мідь (copper — III відміна, орудний: міддю)"
+  - "молодь (youth — collective noun, III відміна)"
+  - "суміш (mixture — III відміна, орудний: сумішшю)"
+  - "розкіш (luxury — III відміна, орудний: розкішшю)"
+  - "відповідь (answer — III відміна, орудний: відповіддю)"
+  - "лють (fury — III відміна, орудний: люттю)"
+  - "мить (instant — III відміна, орудний: миттю)"
+  - "гідність (dignity — abstract noun from гідний)"
+  - "ніжність (tenderness — abstract noun from ніжний)"
+  - "щедрість (generosity — abstract noun from щедрий)"
+activity_hints:
+- type: quiz
+  focus: "Determine відміна for nouns: III відміна or not? (гість vs ніч, день vs тінь)"
+  items: 8
+- type: fill-in
+  focus: "Form the орудний відмінок: apply подвоєння or not (ніч→ніччю, кров→кров'ю)"
+  items: 8
+- type: match-up
+  focus: "Match називний forms to their орудний and родовий forms"
+  items: 8
+- type: error-correction
+  focus: "Fix incorrect орудний forms (*радіссттю, *кровю, *ніч'ю)"
+  items: 6
+- type: group-sort
+  focus: "Sort nouns by подвоєння rule: подвоєння vs no подвоєння in орудний"
+  items: 10
+- type: sentence-builder
+  focus: "Build sentences using III відміна nouns in different відмінки"
+  items: 6
+connects_to:
+- "b1-008 (Чергування голосних — [о/е]→[і] pattern in ніч-ночі, піч-печі)"
+- "b1-013 (Іменники на ж, ч, ш, щ — шиплячі stems also appear in III відміна: подорож, суміш)"
+- "b1-015 (Іменники у множині — some III відміна nouns only exist in plural: радощі)"
+- "b1-044 (Творення назв осіб — suffix -ість produces III відміна abstract nouns)"
+prerequisites:
+- "b1-013 (Noun subclasses: мішана група — understanding шиплячі in declension)"
+- "b1-008 (Чергування голосних — [о/е]→[і] alternation foundation)"
+grammar:
+- "III відміна identification: жіночий рід + нульове закінчення + мати"
+- "Singular declension paradigm with parallel -і/-и in родовий/давальний"
+- "Подвоєння rule in орудний: single final consonant → doubled (ніччю, сіллю)"
+- "No подвоєння: consonant clusters (радістю) and губні/[р] (кров'ю, матір'ю)"
+- "Чергування [і]→[о/е]: ніч-ночі, піч-печі, річ-речі"
+- "Мати: unique paradigm with stem expansion -ер-/-ір-"
+- "Word formation: adjective + -ість/-ність → III відміна abstract noun"
+register: академічний
+references:
+- title: "Авраменко Grade 6, pp.102-108"
+  notes: "III відміна paradigm table (однина + множина), sorting exercise
+    distinguishing masculine II від feminine III (олень vs осінь)."
+- title: "Литвінова Grade 6, pp.144, 162-163"
+  notes: "Відміни classification with III відміна definition. Full III відміна
+    declension section with пісня The HARDKISS as context."
+- title: "Заболотний Grade 6, pp.96, 109"
+  notes: "Four відміни table. III відміна: parallel -і/-и in родовий for
+    -ть stems and кров/любов/осінь/сіль. Full мати paradigm."
+- title: "Авраменко Grade 10, p.168"
+  notes: "Подвоєння rule in орудний: single consonant → подвоєння;
+    clusters and б/п/в/м/ф/р → no подвоєння. Examples with правила."
+- title: "Голуб Grade 6, p.82"
+  notes: "Explicit question framing: 'Чому пишемо річчю, миттю, але
+    радістю, матір'ю?' Exercise forming III відміна nouns from adjectives."

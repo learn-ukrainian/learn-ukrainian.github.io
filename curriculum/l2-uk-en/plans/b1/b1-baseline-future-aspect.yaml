@@ -1,0 +1,248 @@
+module: b1-005
+level: B1
+sequence: 5
+slug: b1-baseline-future-aspect
+version: '3.0'
+title: "Майбутнiй час i вид дiєслова"
+subtitle: "Три форми майбутнього часу та видовi пари"
+focus: review
+pedagogy: PPP
+phase: "B1.1 [Metalanguage Bridge & Foundation]"
+word_target: 4000
+objectives:
+- "Learner can distinguish and produce all three forms of the Ukrainian future
+  tense: проста (доконаного виду), складна (синтетична: -тиму, -тимеш),
+  and складена (аналiтична: буду + iнфiнiтив)"
+- "Learner can explain the concept of вид дiєслова (aspect) using Ukrainian
+  metalanguage and correctly identify доконаний vs недоконаний вид"
+- "Learner can form видовi пари for common verbs and choose the correct
+  aspect in context (completed action vs ongoing/habitual)"
+- "Learner can conjugate future-tense verbs across all persons and numbers,
+  including irregular patterns"
+- "Learner can use future tense and aspect together in connected speech
+  to describe plans, predictions, and intentions"
+content_outline:
+- section: "Що таке вид дiєслова? (What is verbal aspect?)"
+  words: 650
+  points:
+  - "Core concept from Литвiнова Grade 7 p.30:
+    Дiєслова мають категорiю виду. Доконаний вид (вiд слова доконати,
+    тобто здiйснити що-небудь, виконати до кiнця) позначає завершену,
+    обмежену в часi дiю: що зробити? що зробив? що зробить?
+    Недоконаний вид позначає тривалу, повторювану або незавершену дiю:
+    що робити? що робив? що робить? що робитиме?"
+  - "Видовi пари — aspect pairs connected by meaning but differing in
+    completeness. Formation patterns from Литвiнова Grade 7 p.32:
+    — Prefix addition: писати (недок.) → написати (док.),
+      читати → прочитати, робити → зробити.
+    — Suffix change: вiдповiдати (недок.) → вiдповiсти (док.),
+      показувати → показати.
+    — Suppletion: брати (недок.) → взяти (док.),
+      говорити → сказати, класти → покласти."
+  - "Special categories from Литвiнова Grade 7 p.32:
+    Двовидовi дiєслова: атакувати, велiти, женити, телеграфувати —
+    aspect determined only by context.
+    Одновидовi дiєслова: only доконаний (придбати, схаменутися) or
+    only недоконаний (сподiватися, потрiскувати)."
+  - "Reading practice: short Ukrainian text about weekend plans using both
+    aspects. Learners identify кожне дiєслово and its вид."
+- section: "Проста форма майбутнього часу (Simple future — perfective)"
+  words: 600
+  points:
+  - "From Литвiнова Grade 7 p.48:
+    Дiєслова доконаного виду утворюють просту форму майбутнього часу
+    додаванням вiдповiдних закiнчень. Цi закiнчення такi самi, як i
+    в дiєслiв недоконаного виду в теперiшньому часi.
+    Conjugation table:
+    1-ша: напишу, зроблю / напишемо, зробимо
+    2-га: напишеш, зробиш / напишете, зробите
+    3-тя: напише, зробить / напишуть, зроблять"
+  - "Key insight for learners: the perfective future LOOKS like present tense
+    conjugation, but with a perfective verb it automatically means future.
+    Compare: я пишу (I write — present, недок.) vs я напишу (I will write —
+    future, док.). The prefix на- makes it perfective, and perfective verbs
+    cannot have present tense."
+  - "Practice with common perfective verbs:
+    зробити (зроблю, зробиш...), прочитати (прочитаю, прочитаєш...),
+    побачити (побачу, побачиш...), сказати (скажу, скажеш...),
+    приїхати (приїду, приїдеш...), вiдповiсти (вiдповiм, вiдповiси...).
+    Learners conjugate and use in sentences about future events."
+- section: "Складна (синтетична) форма майбутнього часу (Synthetic future)"
+  words: 600
+  points:
+  - "From Литвiнова Grade 7 p.49:
+    Дiєслова недоконаного виду утворюють просту (синтетичну) форму
+    майбутнього часу: основа iнфiнiтива + суфiкс -м- + особове закiнчення.
+    This is also called складна форма (compound morphological form).
+    Conjugation:
+    1-ша: писатиму, робитиму / писатимемо, робитимемо
+    2-га: писатимеш, робитимеш / писатимете, робитимете
+    3-тя: писатиме, робитиме / писатимуть, робитимуть"
+  - "Morphological analysis: the -тиму/-тимеш endings are historically
+    from iнфiнiтив + иму (скорочена форма дiєслова мати):
+    писати + иму → писатиму. This explains why the iнфiнiтив base
+    is preserved in the form."
+  - "Contrastive practice: складна vs проста форма.
+    Я писатиму листа (ongoing writing) vs Я напишу листа (will complete).
+    Ми працюватимемо (we will be working) vs Ми зробимо (we will do/finish).
+    Learners choose the correct form based on context clues in sentences."
+- section: "Складена (аналiтична) форма майбутнього часу (Analytic future)"
+  words: 550
+  points:
+  - "From Кравцова Grade 4 p.108 and Литвiнова Grade 7 p.49:
+    Дiєслово бути в особовiй формi + iнфiнiтив основного дiєслова.
+    Conjugation of бути:
+    1-ша: буду / будемо
+    2-га: будеш / будете
+    3-тя: буде / будуть
+    Example: буду писати, будеш читати, буде працювати."
+  - "Key distinction: only the допомiжне дiєслово бути changes form —
+    the основне дiєслово stays in the iнфiнiтив. Compare with the
+    складна форма where the verb itself carries the ending."
+  - "Usage note: складена форма is more common in spoken Ukrainian
+    and in Western dialects. Складна форма is equally correct and common
+    in literary/written Ukrainian. Both express the same meaning — imperfective
+    future. Learners should recognize and produce both."
+  - "Reading practice: dialogue between two friends planning a trip, using
+    all three future forms. Learners identify which form is used and why."
+- section: "Вид i час — як вони працюють разом (Aspect and tense interaction)"
+  words: 650
+  points:
+  - "The aspect-tense matrix from Авраменко Grade 7 p.54:
+    Недоконаний вид has three tenses: минулий (читав), теперiшнiй (читаю),
+    майбутнiй (читатиму / буду читати).
+    Доконаний вид has only two: минулий (прочитав), майбутнiй (прочитаю).
+    Critical insight: дiєслова доконаного виду НЕ МАЮТЬ теперiшнього часу.
+    All learners at B1 must internalize this rule."
+  - "Common errors and how to avoid them:
+    — Using perfective with теперiшнiй час: *я прочитаю зараз (WRONG as
+      present). прочитаю = future only. For 'I am reading now' → я читаю.
+    — Confusing складна and складена: писатиму (one word, synthetic) vs
+      буду писати (two words, analytic). Both = imperfective future.
+    — Forgetting aspect in narrative: Вчора я *писав листа i *написав його.
+      → Вчора я писав листа i написав його (mixing aspects correctly:
+      process then completion)."
+  - "Extended practice: learners retell a Ukrainian folk tale using correct
+    aspect-tense combinations. Model text provided with aspect annotations.
+    Focus on narrative flow: background (недок.) vs completed events (док.)."
+- section: "Дiєвiдмiнювання у майбутньому часi (Conjugation patterns)"
+  words: 550
+  points:
+  - "From Заболотний Grade 7 p.65:
+    Three forms side by side for the same verb root:
+    проста (perfective): принесу, принесеш, принесе...
+    складна (synthetic imperfective): носитиму, носитимеш, носитиме...
+    складена (analytic imperfective): буду носити, будеш носити...
+    Practice table with 5 verb pairs for full conjugation."
+  - "Spelling traps in future forms:
+    — Consonant alternations in perfective: сидiти → сиджу (not *сидю),
+      водити → воджу, просити → прошу. These alternations from A2
+      apply in the future too: я попрошу, ти попросиш.
+    — The -тиму forms preserve the full iнфiнiтив base:
+      малювати → малюватиму (not *малютиму)."
+  - "Contextual practice: learners complete a letter to a friend about
+    summer plans, choosing between all three future forms based on
+    whether actions are completed goals or ongoing activities."
+- section: "Пiдсумок: вид i майбутнє у дiї (Summary: aspect and future in action)"
+  words: 400
+  points:
+  - "Decision tree for choosing the right future form:
+    1. Is the action completed/one-time? → доконаний вид → проста форма
+       (зроблю, напишу, прочитаю).
+    2. Is the action ongoing/habitual? → недоконаний вид → pick one:
+       a) складна форма (робитиму, писатиму) — equally common;
+       b) складена форма (буду робити, буду писати) — equally common.
+    Both 2a and 2b are correct; neither is 'more formal' or 'more casual.'"
+  - "Self-check questions in Ukrainian:
+    1. Якi три форми майбутнього часу є в українськiй мовi?
+    2. Чому дiєслова доконаного виду не мають теперiшнього часу?
+    3. Утворiть видову пару: писати → ? / читати → ? / говорити → ?
+    4. Вiдмiнiть у майбутньому часi: зробити, працювати."
+  - "Preview of next module: Людина i стосунки (M06) — describing people
+    and relationships, applying future tense in context ('Я познайомлю
+    тебе з моєю подругою,' 'Ми будемо зустрiчатися щотижня')."
+vocabulary_hints:
+  required:
+  - "вид дiєслова (verbal aspect — grammatical category of completion)"
+  - "доконаний вид (perfective aspect — completed, bounded action)"
+  - "недоконаний вид (imperfective aspect — ongoing, unbounded action)"
+  - "видова пара (aspect pair — two verbs differing only in aspect)"
+  - "майбутнiй час (future tense)"
+  - "проста форма (simple form — perfective future: напишу)"
+  - "складна форма (synthetic/compound form — imperfective future: писатиму)"
+  - "складена форма (analytic form — imperfective future: буду писати)"
+  - "iнфiнiтив (infinitive — base verb form ending in -ти/-тися)"
+  - "дiєвiдмiна (verb conjugation class — I or II)"
+  - "особове закiнчення (personal ending — verb suffix marking person/number)"
+  - "дiєвiдмiнювання (conjugation — changing verb form by person/number)"
+  - "двовидовий (biaspectual — verb that can be either aspect: атакувати)"
+  - "одновидовий (single-aspect — verb existing in only one aspect)"
+  recommended:
+  - "тривала дiя (ongoing action — characteristic of imperfective)"
+  - "завершена дiя (completed action — characteristic of perfective)"
+  - "допомiжне дiєслово (auxiliary verb — бути in analytic future)"
+  - "суфiкс (suffix — word-building element after the root)"
+  - "дiйсний спосiб (indicative mood — states facts, has all three tenses)"
+  - "основа iнфiнiтива (infinitive stem — base for building future forms)"
+  - "часова форма (tense form — specific conjugated form of a verb)"
+  - "повторювана дiя (repeated action — characteristic of imperfective)"
+  - "наголос (stress — emphasized syllable, may shift in conjugation)"
+  - "чергування приголосних (consonant alternation — e.g., просити → прошу)"
+activity_hints:
+- type: quiz
+  focus: "Identify вид дiєслова: доконаний чи недоконаний? Given verb forms
+    in context, learner classifies aspect."
+  items: 8
+- type: match-up
+  focus: "Match видовi пари: connect imperfective verbs to their perfective
+    partners (писати↔написати, говорити↔сказати, брати↔взяти)."
+  items: 8
+- type: fill-in
+  focus: "Complete sentences with the correct future form (проста, складна,
+    or складена) based on context clues about completion vs ongoing action."
+  items: 8
+- type: group-sort
+  focus: "Sort verb forms into three groups: проста / складна / складена
+    форма майбутнього часу."
+  items: 10
+- type: error-correction
+  focus: "Find and fix aspect/tense errors in Ukrainian sentences
+    (e.g., using perfective as present, wrong future form choice)."
+  items: 6
+- type: free-write
+  focus: "Write 5-7 sentences about your plans for next week using all
+    three future forms and both aspects."
+  items: 1
+connects_to:
+- "b1-004 (Минуле i теперiшнє — past/present review, complements future)"
+- "b1-007 (Контрольна робота 1 — checkpoint testing all Phase 1 material)"
+- "b1-010 (Чергування приголосних у дiєсловах — consonant alternations in verb conjugation)"
+prerequisites:
+- "A2 completion (learner knows basic verb conjugation, past and present tense)"
+- "b1-004 (Минуле i теперiшнє — past/present baseline review)"
+grammar:
+- "Вид дiєслова: доконаний vs недоконаний, видовi пари, двовидовi/одновидовi"
+- "Проста форма майбутнього часу (perfective future): напишу, зроблю"
+- "Складна (синтетична) форма: основа iнфiнiтива + -тиму/-тимеш/-тиме..."
+- "Складена (аналiтична) форма: буду/будеш/буде + iнфiнiтив"
+- "Aspect-tense interaction: perfective has no present tense"
+- "Consonant alternations in perfective future conjugation"
+register: науково-навчальний
+references:
+- title: "Литвiнова Grade 7, p.30-32"
+  notes: "Core chapter on вид дiєслова: definitions, видовi пари, двовидовi/одновидовi."
+- title: "Литвiнова Grade 7, p.48-49"
+  notes: "Майбутнiй час: проста (perfective), складна, складена forms with
+    conjugation tables and formation rules."
+- title: "Заболотний Grade 7, p.54-65"
+  notes: "Часи дiєслова chapter: aspect-tense interaction, all three future
+    forms with exercises, literary examples from Сосюра and Гончар."
+- title: "Авраменко Grade 7, p.54-68"
+  notes: "Вид дiєслова and майбутнiй час: classification exercises, test-format
+    practice, note that present-tense verbs are always imperfective."
+- title: "Кравцова Grade 4, p.108"
+  notes: "Змiнювання дiєслiв у майбутньому часi: early introduction of
+    one-word vs two-word future forms."
+- title: "Караман Grade 10, p.181-183"
+  notes: "Часи дiєслiв, їх творення: systematic review at senior level,
+    двовидовi дiєслова examples."

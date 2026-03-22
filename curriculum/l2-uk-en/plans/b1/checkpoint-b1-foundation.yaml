@@ -1,0 +1,223 @@
+module: b1-007
+level: B1
+sequence: 7
+slug: checkpoint-b1-foundation
+version: '3.0'
+title: "Контрольна робота 1"
+subtitle: "Перевiрка знань: фонетика, морфологiя, синтаксис, часи, вид, опис людини"
+focus: review
+pedagogy: PPP
+phase: "B1.1 [Metalanguage Bridge & Foundation]"
+word_target: 4000
+objectives:
+- "Learner can demonstrate mastery of Ukrainian phonetic metalanguage
+  (звук/лiтера, голосний/приголосний, дзвiнкий/глухий/сонорний,
+  наголос, транскрипцiя) through targeted exercises"
+- "Learner can analyze word structure (корiнь, префiкс, суфiкс, закiнчення)
+  and identify частини мови using Ukrainian terminology"
+- "Learner can correctly use all three future tense forms (проста, складна,
+  складена) and choose appropriate aspect (доконаний/недоконаний) in context"
+- "Learner can describe a person's appearance, character, and relationships
+  using портретна лексика and appropriate register"
+- "Learner can identify and correct errors in Ukrainian texts involving
+  metalanguage terms, verb forms, and descriptive vocabulary"
+content_outline:
+- section: "Вступ: як працювати з контрольною (Introduction: how to approach this test)"
+  words: 350
+  points:
+  - "Overview of the checkpoint structure: this module tests everything
+    from M01-M06 (Phase 1: Metalanguage Bridge & Foundation).
+    Six content areas: фонетика (M01), морфологiя (M02),
+    синтаксис i вiдмiнки (M03), минуле i теперiшнє (M04),
+    майбутнє i вид дiєслова (M05), людина i стосунки (M06)."
+  - "Instructions in Ukrainian: 'Виконайте всi завдання по черзi.
+    Для кожного завдання є пiдказка, який модуль повторити, якщо
+    вiдповiдь виявиться складною. Не поспiшайте — головне розумiння,
+    а не швидкiсть.'"
+  - "Self-assessment framework: after each section, learners rate their
+    confidence (впевнено / потребую повторення / не розумiю) to identify
+    areas for review before moving to Phase 2."
+- section: "Блок 1: Фонетика та графiка (Block 1: Phonetics and graphics — M01)"
+  words: 650
+  points:
+  - "Passage-based assessment: a Ukrainian text (150-200 words) about
+    Ukrainian nature or culture, followed by phonetic analysis tasks:
+    — Count голоснi та приголоснi звуки in selected words.
+    — Classify приголоснi as дзвiнкi, глухi, or сонорнi.
+    — Identify м'якi та твердi приголоснi and explain why.
+    — Mark наголос in 8-10 words from the passage."
+  - "Transcription exercises: learners produce фонетична транскрипцiя
+    for 5 words of increasing complexity, applying rules from M01:
+    яблуко → [йаблуко], воля → [вол'а], щастя → [шчас'т'а],
+    об'їжджати → [обйiж:ати]. Error-check: learners find mistakes
+    in provided transcriptions."
+  - "Metalanguage definitions: match Ukrainian terms to their meanings:
+    фонетика, графiка, орфоепiя, фонема, наголос, транскрипцiя.
+    Short-answer: explain the difference between звук and лiтера."
+- section: "Блок 2: Морфологiя та будова слова (Block 2: Morphology and word structure — M02)"
+  words: 600
+  points:
+  - "Word structure analysis: learners break down 6-8 words into
+    корiнь, префiкс, суфiкс, закiнчення, основа.
+    Example words selected to test prefix/suffix identification:
+    пришкiльний (при-школ-н-ий), безхмарний (без-хмар-н-ий),
+    перечитати (пере-чит-а-ти)."
+  - "Частини мови identification: given a mixed list of 12-15 words,
+    learners sort them into самостiйнi and службовi частини мови,
+    then identify specific parts of speech: iменник, прикметник,
+    дiєслово, прислiвник, числiвник, займенник, прийменник,
+    сполучник, частка."
+  - "Practical application: learners analyze a short Ukrainian sentence,
+    identifying the частина мови and морфемна будова of each word."
+- section: "Блок 3: Синтаксис та вiдмiнки (Block 3: Syntax and cases — M03)"
+  words: 600
+  points:
+  - "Sentence analysis: learners identify члени речення (пiдмет, присудок,
+    додаток, означення, обставина) in 4-5 Ukrainian sentences.
+    Sentences designed to test: складнi випадки (compound predicates,
+    implied subjects, adverbial phrases)."
+  - "Case identification and usage: given sentences with highlighted nouns,
+    learners determine the вiдмiнок and explain the grammatical role.
+    Focus on cases that cause difficulty: родовий vs знахiдний for
+    animate masculines, мiсцевий vs давальний with прийменники."
+  - "Simple vs compound sentence recognition: learners classify 6 sentences
+    as просте or складне речення and identify conjunctions/connectors.
+    Practice distinguishing складносурядне from складнопiдрядне речення."
+- section: "Блок 4: Часи дiєслова — минулий, теперiшнiй, майбутнiй (Block 4: Verb tenses — M04-M05)"
+  words: 700
+  points:
+  - "Tense identification: learners sort 15-20 verb forms into three
+    columns: минулий час, теперiшнiй час, майбутнiй час.
+    Mixed forms including all three future types.
+    Example verb forms: працюватимеш, крикнув, обробиш, упорядковую,
+    ламатимуть, iснувала, живете, буде шепотiти, перетворюватиме."
+  - "Future tense mastery: for 6 verbs, learners produce all possible
+    future forms (проста, складна, складена where applicable) and
+    identify which are доконаний, which недоконаний.
+    Test verbs: читати/прочитати, робити/зробити, бачити/побачити."
+  - "Aspect in context: 6 sentences where learners must choose between
+    доконаний and недоконаний вид based on whether the action is
+    completed or ongoing. One sentence uses a двовидовий verb.
+    Error correction: 4 sentences with incorrect aspect/tense usage."
+  - "Conjugation exercise: full conjugation of one perfective verb
+    (написати) and one imperfective verb (читати) across all persons
+    and numbers in the future tense."
+- section: "Блок 5: Людина i стосунки (Block 5: People and relationships — M06)"
+  words: 650
+  points:
+  - "Portrait vocabulary: given a literary portrait excerpt (100-150 words),
+    learners identify and categorize портретна лексика:
+    зовнiшнiсть (appearance words), характер (character words),
+    художнi засоби (artistic devices: епiтети, порiвняння)."
+  - "Character description: learners choose the correct adjective from
+    pairs of near-synonyms to complete descriptions:
+    щирий/чесний, лагiдний/нiжний, кремезний/товстий, стрункий/худий.
+    Each pair tests precise semantic knowledge."
+  - "Family and relationship vocabulary: fill-in exercises testing
+    Ukrainian kinship terms (свекруха vs теща, зять vs невiстка)
+    and the стосунки/вiдносини/ставлення distinction."
+  - "Introduction role-play: learners write a short dialogue (8-10 lines)
+    where they introduce a friend to a colleague using formal register,
+    applying кличний вiдмiнок and appropriate formulas."
+- section: "Пiдсумок та самооцiнка (Summary and self-assessment)"
+  words: 450
+  points:
+  - "Integrated reading comprehension: a Ukrainian text (200-250 words)
+    combining all tested topics — a narrative about meeting a person,
+    describing them, and making future plans. Learners answer 5-6
+    comprehension questions that require metalanguage, grammar, and
+    vocabulary knowledge."
+  - "Self-assessment checklist in Ukrainian:
+    Фонетика: Чи можу я зробити фонетичну транскрипцiю?
+    Морфологiя: Чи можу я розiбрати слово за будовою?
+    Синтаксис: Чи можу я визначити члени речення?
+    Часи: Чи можу я правильно вживати три форми майбутнього часу?
+    Вид: Чи розумiю я рiзницю мiж доконаним i недоконаним видом?
+    Опис: Чи можу я описати людину українською мовою?"
+  - "Recommendations for review: if a learner scored below 70% on any
+    block, return to the corresponding module. Phase 2 (Morphophonemics)
+    builds directly on metalanguage from Phase 1."
+  - "Preview of Phase 2: Чергування голосних (M08) —
+    vowel alternations driven by наголос and word structure.
+    Success in Phase 2 requires solid Phase 1 foundations."
+vocabulary_hints:
+  required:
+  - "контрольна робота (test/assessment — formal evaluation of knowledge)"
+  - "фонетика (phonetics — the study of speech sounds)"
+  - "морфологiя (morphology — the study of word forms)"
+  - "синтаксис (syntax — the study of sentence structure)"
+  - "вид дiєслова (verbal aspect — perfective vs imperfective)"
+  - "доконаний (perfective — completed action)"
+  - "недоконаний (imperfective — ongoing action)"
+  - "транскрипцiя (transcription — phonetic notation)"
+  - "наголос (stress — emphasized syllable)"
+  - "зовнiшнiсть (appearance)"
+  - "характер (character — personality traits)"
+  - "стосунки (relationships)"
+  recommended:
+  - "самооцiнка (self-assessment)"
+  - "повторення (review/revision)"
+  - "завдання (task/exercise)"
+  - "впевнено (confidently)"
+  - "складний (difficult/complex)"
+  - "виправити (to correct — finding errors)"
+  - "проаналiзувати (to analyze — breaking down language)"
+  - "визначити (to determine/identify)"
+  - "пiдсумок (summary/conclusion)"
+  - "оцiнювання (evaluation/grading)"
+activity_hints:
+- type: quiz
+  focus: "Mixed metalanguage quiz: phonetic classification, morphological
+    terms, aspect identification — questions drawn from all six modules."
+  items: 10
+- type: fill-in
+  focus: "Conjugation and form completion: produce correct verb forms
+    (past, present, future) and fill in missing words in descriptions."
+  items: 8
+- type: match-up
+  focus: "Match Ukrainian linguistic terms to their definitions
+    across all metalanguage categories (phonetics, morphology, syntax)."
+  items: 10
+- type: error-correction
+  focus: "Find and correct errors in Ukrainian sentences: wrong aspect,
+    incorrect transcription, misused descriptive vocabulary."
+  items: 8
+- type: group-sort
+  focus: "Sort verb forms by tense (минулий/теперiшнiй/майбутнiй) and
+    by future form type (проста/складна/складена)."
+  items: 12
+- type: free-write
+  focus: "Integrated writing task: describe a person you will meet next
+    week, combining portrait vocabulary, character description, and future
+    tense forms in a connected paragraph (10-12 sentences)."
+  items: 1
+connects_to:
+- "b1-001 to b1-006 (all Phase 1 modules — this checkpoint tests them)"
+- "b1-008 (Чергування голосних — first module of Phase 2, builds on Phase 1)"
+prerequisites:
+- "b1-001 (metalanguage-phonetics)"
+- "b1-002 (metalanguage-morphology)"
+- "b1-003 (metalanguage-syntax-cases)"
+- "b1-004 (b1-baseline-past-present)"
+- "b1-005 (b1-baseline-future-aspect)"
+- "b1-006 (people-and-relationships)"
+grammar:
+- "Review: фонетична транскрипцiя and sound classification"
+- "Review: морфемна будова слова and частини мови"
+- "Review: члени речення and sentence types"
+- "Review: past, present, and all three future tense forms"
+- "Review: вид дiєслова — доконаний vs недоконаний"
+- "Review: портретна лексика, character adjectives, kinship terms"
+- "Integration: using metalanguage, grammar, and vocabulary together"
+register: науково-навчальний
+references:
+- title: "All Phase 1 module references"
+  notes: "This checkpoint draws on textbook sources cited in M01-M06:
+    Заболотний Grade 5/7, Авраменко Grade 5/7, Литвiнова Grade 5/7,
+    Караман Grade 10, Кравцова Grade 4, Ворон Grade 9."
+- title: "Заболотний Grade 7, p.54-65"
+  notes: "Часи дiєслова, вид дiєслова — primary source for Block 4 exercises."
+- title: "Авраменко Grade 7, p.100-101"
+  notes: "Опис зовнiшностi людини — primary source for Block 5 portrait analysis."
+- title: "Литвiнова Grade 7, p.30-49"
+  notes: "Вид дiєслова and майбутнiй час — source for aspect and future tense review."

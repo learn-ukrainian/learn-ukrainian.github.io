@@ -1,0 +1,227 @@
+module: b1-009
+level: B1
+sequence: 9
+slug: alternation-consonants-nouns
+version: '3.0'
+title: "Чергування приголосних (iменники)"
+subtitle: "Друг — друже — друзi: як змiнюються приголоснi в iменниках"
+focus: grammar
+pedagogy: PPP
+phase: "B1.2 [Morphophonemics & Noun Subclasses]"
+word_target: 4000
+objectives:
+- "Learner can predict and produce the first palatalization
+  [г/к/х] -> [ж/ч/ш] in кличний вiдмiнок and word formation
+  (друг — друже, козак — козаче, пастух — пастуше)"
+- "Learner can predict and produce the second palatalization
+  [г/к/х] -> [з'/ц'/с'] in давальний and мiсцевий вiдмiнки
+  (нога — на нозi, рука — на руцi, Ольга — Ользi)"
+- "Learner can identify which case or word-formation context
+  triggers which alternation type (first vs. second palatalization)"
+- "Learner can apply consonant alternation rules to unfamiliar
+  nouns and proper names, avoiding common errors in case forms"
+content_outline:
+- section: "Що таке чергування приголосних? (What is consonant alternation?)"
+  words: 500
+  points:
+  - "Bridge from M08 (alternation-vowels): learners now understand
+    that sounds change systematically in Ukrainian word forms.
+    Vowel alternations affect the root vowel; consonant alternations
+    affect the final consonant of the root or stem.
+    Авраменко Grade 5 p.114: 'Найпоширенiшими є такi чергування
+    приголосних: [г] — [з] — [ж], [к] — [ц] — [ч], [х] — [с] — [ш].'"
+  - "The three-way pattern: each задньоязиковий consonant [г], [к], [х]
+    has TWO possible alternation targets depending on the phonetic
+    environment. This module teaches learners to predict which one
+    appears where. The system is regular and productive."
+  - "Historical context (brief): these alternations trace back to
+    давньоукраїнська мова and the effect of front vowels on
+    back consonants. Understanding the history is optional but
+    helps learners see the logic, not just memorize."
+- section: "Перша палаталiзацiя: [г/к/х] -> [ж/ч/ш]"
+  words: 750
+  points:
+  - "The pattern from Заболотний Grade 5 p.116 (section 28):
+    [г] -> [ж]: друг — дружити, нога — нiжка, ворог — вороже
+    [к] -> [ч]: рука — ручка, молоко — молочний, козак — козаче
+    [х] -> [ш]: кожух — кожушок, вухо — вушко, пастух — пастуше
+    This alternation appears in word formation (suffixes -к-, -н-)
+    and in кличний вiдмiнок."
+  - "Кличний вiдмiнок with first palatalization
+    (Глазова Grade 10 p.209):
+    друг — друже, козак — козаче, чоловiк — чоловiче,
+    хлопець — хлопче (also [ц'] -> [ч]),
+    юнак — юначе, вiтязь — вiтязю (м'яка група — no alternation).
+    Rule: II вiдмiна, тверда група, закiнчення -е triggers the
+    alternation. М'яка група takes -ю with no alternation."
+  - "Word formation with first palatalization:
+    нога — нiжка — нiженька, рука — ручка — рученька,
+    книга — книжка — книжковий, молоко — молочний — молочар.
+    Adjective suffixes -н-, -ськ- also trigger it:
+    Прага — празький, Норвегiя — норвезький."
+  - "Reading practice: Ukrainian folk sayings and прислiв'я that
+    use кличний вiдмiнок naturally. Learners identify the alternation
+    in each: 'Терпи, козаче, отаманом будеш' (козак -> козаче)."
+- section: "Друга палаталiзацiя: [г/к/х] -> [з'/ц'/с']"
+  words: 750
+  points:
+  - "The pattern from Авраменко Grade 5 p.114:
+    [г] -> [з']: нога — на нозi, Ольга — Ользi, дорога — на дорозi
+    [к] -> [ц']: рука — на руцi, рiка — на рiцi, дочка — дочцi
+    [х] -> [с']: муха — мусi, свекруха — свекрусi, стрiха — на стрiсi
+    This alternation appears in давальний and мiсцевий однини
+    of I вiдмiна (feminine nouns ending in -а/-я)."
+  - "Why давальний and мiсцевий? The endings -i trigger this
+    alternation before them. Compare:
+    нога: Н.в. нога, Р.в. ноги, Д.в. нозi, Зн.в. ногу, Ор.в. ногою,
+    М.в. (на) нозi, Кл.в. ного!
+    The alternation ONLY appears before -i in Д.в. and М.в."
+  - "Proper names follow the same pattern:
+    Ольга — Ользi, Палажка — Палажцi, Одарка — Одарцi.
+    Geographic names: Прага — у Празi, Рига — у Ризi,
+    Америка — в Америцi (but: Африка — в Африцi).
+    Practice: learners decline proper names in давальний and мiсцевий."
+  - "Common errors to avoid:
+    Mixing up the two palatalizations: *на нозi is correct (second),
+    but *на ножi would be wrong (that is first palatalization, wrong
+    context). The кличний uses first ([ж/ч/ш]), while давальний/мiсцевий
+    use second ([з'/ц'/с'])."
+- section: "Чергування [ц'] -> [ч] та iншi"
+  words: 500
+  points:
+  - "From Глазова Grade 10 p.209:
+    хлопець — хлопче, швець — шевче, молодець — молодче.
+    The soft [ц'] alternates with [ч] in кличний вiдмiнок.
+    This is a separate alternation from the [к]->[ч] pattern."
+  - "Minor alternations in nouns:
+    [с] -> [ш]: колесо — на колiшнi (rare, mostly in fixed forms)
+    [з] -> [ж]: князь — княже (кличний вiдмiнок)
+    These are less productive but appear in common words."
+  - "Practice: learners build a complete table of alternation types,
+    contexts, and examples. The table becomes a reference for
+    future modules on verb alternations (M10)."
+- section: "Чергування у вiдмiнюваннi iменникiв II вiдмiни"
+  words: 550
+  points:
+  - "Systematic view: how consonant alternations interact with
+    the full declension paradigm of II вiдмiна masculine nouns.
+    Using друг as a model: Н.в. друг, Р.в. друга, Д.в. другу/друговi,
+    Зн.в. друга, Ор.в. другом, М.в. (на) другу/друговi, Кл.в. друже.
+    Only the кличний shows alternation in masculine nouns."
+  - "Comparison with I вiдмiна feminine nouns:
+    нога: alternation in Д.в. (нозi) and М.в. (на нозi).
+    This contrast helps learners predict WHERE to expect the change:
+    masculine nouns — кличний; feminine nouns — давальний/мiсцевий."
+  - "Литвiнова Grade 6 p.159: закiнчення iменникiв II вiдмiни
+    в кличному вiдмiнку однини — systematic table of endings
+    by group (тверда, м'яка, мiшана) with alternation rules."
+- section: "Чергування у власних назвах i географiчних iменах"
+  words: 500
+  points:
+  - "Ukrainian place names and personal names follow the same rules:
+    Прага — у Празi, Рига — у Ризi, Одарка — Одарцi.
+    But some foreign names resist alternation:
+    Пенелопа — Пенелопi (no alternation — foreign name).
+    Learners need to know which names follow Ukrainian patterns."
+  - "Cultural context: кличний вiдмiнок in everyday Ukrainian.
+    Addressing people: Олеже! Марiчко! Iгоре! Тарасе!
+    Understanding alternation = correct forms of address.
+    Common mistakes by L2 speakers: *Олего! (wrong — should be Олеже)."
+  - "Practice: learners write short dialogues using кличний вiдмiнок
+    with proper names, applying the correct alternation."
+- section: "Пiдсумок: таблиця чергувань (Summary: alternation table)"
+  words: 450
+  points:
+  - "Complete reference table:
+    | Consonant | First (Кл.в., word formation) | Second (Д.в./М.в.) |
+    | [г] | [ж] | [з'] |
+    | [к] | [ч] | [ц'] |
+    | [х] | [ш] | [с'] |
+    | [ц'] | [ч] (Кл.в. only) | — |"
+  - "Self-check in Ukrainian: Дайте вiдповiдi на запитання:
+    1. Якi приголоснi чергуються у кличному вiдмiнку слова 'друг'?
+    2. Яке чергування вiдбувається у словi 'на нозi'?
+    3. Утворiть кличний вiдмiнок: козак, юнак, хлопець.
+    4. Поставте у давальний вiдмiнок: Ольга, книга, рука."
+  - "Preview of next module: Чергування приголосних (дiєслова) —
+    the same consonants alternate in verb conjugation,
+    but with different triggers and patterns."
+vocabulary_hints:
+  required:
+  - "чергування (alternation — systematic sound change between forms)"
+  - "приголосний (consonant — sound made with obstruction)"
+  - "палаталiзацiя (palatalization — softening of a consonant)"
+  - "кличний вiдмiнок (vocative case — used for direct address)"
+  - "давальний вiдмiнок (dative case)"
+  - "мiсцевий вiдмiнок (locative case)"
+  - "задньоязиковий (velar — consonant formed at the back of the mouth)"
+  - "вiдмiна (declension class — noun classification by ending pattern)"
+  - "тверда група (hard group — nouns with hard stem-final consonant)"
+  - "м'яка група (soft group — nouns with soft stem-final consonant)"
+  - "мiшана група (mixed group — nouns with шиплячий stem-final)"
+  - "закiнчення (ending — inflectional morpheme)"
+  - "звертання (form of address — using кличний вiдмiнок)"
+  - "корiнь (root — core morpheme of a word)"
+  recommended:
+  - "шиплячий (hushing consonant — ж, ч, ш, дж)"
+  - "свистячий (sibilant — з, ц, с, дз)"
+  - "словотворення (word formation — creating new words from roots)"
+  - "прислiв'я (proverb — traditional folk saying)"
+  - "орфограма (orthographic rule — spelling pattern)"
+  - "спiльнокореневий (cognate — sharing the same root)"
+  - "однина (singular number)"
+  - "множина (plural number)"
+  - "продуктивний (productive — pattern applicable to new words)"
+  - "непродуктивний (unproductive — pattern limited to existing words)"
+activity_hints:
+- type: quiz
+  focus: "Identify which palatalization type is present: first ([ж/ч/ш])
+    or second ([з'/ц'/с']), given a word pair (друг-друже vs. нога-нозi)"
+  items: 8
+- type: fill-in
+  focus: "Write the correct кличний вiдмiнок form of masculine nouns
+    (e.g., козак -> козач___, друг -> друж___)"
+  items: 8
+- type: fill-in
+  focus: "Write the correct давальний/мiсцевий form of feminine nouns
+    (e.g., нога -> на ноз___, рука -> руц___)"
+  items: 6
+- type: match-up
+  focus: "Match base forms with their alternated case forms
+    (e.g., Ольга <-> Ользi, козак <-> козаче)"
+  items: 8
+- type: error-correction
+  focus: "Find and fix consonant alternation errors in sentences
+    (e.g., *на ножi -> на нозi, *козаже -> козаче)"
+  items: 6
+connects_to:
+- "b1-008 (alternation-vowels — vowel alternations as the first morphophonemic rule)"
+- "b1-010 (alternation-consonants-verbs — same consonants alternate in verbs)"
+- "b1-012 (noun-subclasses-masculine — declension of -ар/-яр/-ин nouns)"
+prerequisites:
+- "A2 completion (learner knows noun declension basics, all 7 cases)"
+- "b1-001 (metalanguage-phonetics — приголосний classification)"
+- "b1-008 (alternation-vowels — concept of чергування)"
+grammar:
+- "First palatalization: [г/к/х] -> [ж/ч/ш] in кличний and word formation"
+- "Second palatalization: [г/к/х] -> [з'/ц'/с'] in давальний/мiсцевий"
+- "Alternation [ц'] -> [ч] in кличний вiдмiнок"
+- "Interaction of alternations with declension paradigms (I and II вiдмiна)"
+- "Application to proper names and geographic names"
+register: академічний
+references:
+- title: "Авраменко Grade 5, p.114-115"
+  notes: "Чергування приголосних звукiв (section 50): three-way pattern
+    [г]-[з]-[ж], [к]-[ц]-[ч], [х]-[с]-[ш] with examples and exercises."
+- title: "Заболотний Grade 5, p.116-119"
+  notes: "Чергування приголосних звукiв (section 28): systematic
+    presentation with друг-друзi-дружити, молоко-молоцi-молочний."
+- title: "Глазова Grade 10, p.209"
+  notes: "Особливостi кличного вiдмiнка: complete table of consonant
+    alternations before -е in кличний, including [ц']->[ч]."
+- title: "Литвiнова Grade 6, p.159"
+  notes: "Закiнчення iменникiв II вiдмiни в кличному вiдмiнку однини:
+    systematic by group (тверда, м'яка, мiшана)."
+- title: "Авраменко Grade 10, p.175"
+  notes: "Особливостi кличного вiдмiнка: dialogue-based presentation,
+    Валерiє vs. Валерiю gender distinction."
