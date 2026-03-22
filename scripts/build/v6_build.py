@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""V6 Pipeline Build — single-session content generation.
+"""V6 Pipeline Build — two-call Skeleton->Flesh content generation.
 
 Orchestrates the V6 pipeline:
 1. CHECK: Plan checker validation
 2. RESEARCH: Build knowledge packet from RAG
-3. PREFLIGHT: Validate assembled prompt
-4. WRITE: Single LLM session (prose + exercise placeholders)
+3. SKELETON: Paragraph-level structure plan (auto for word_target >= 3000)
+4. WRITE: LLM session constrained by skeleton (prose + exercises)
 5b. EXERCISES: Fill placeholders with DSL
 6. ANNOTATE: Stress marks + deterministic fixes
 7b. ENRICH: Словник, videos, resources, dialogue formatting
@@ -13,13 +13,23 @@ Orchestrates the V6 pipeline:
 8. REVIEW: Cross-agent adversarial review
 9. PUBLISH: DSL→MDX conversion
 
+The Skeleton->Flesh architecture (#998) splits content generation into two calls
+for modules with word_target >= 3000:
+- Call 1 (Skeleton): Short output (~500-800 words) planning every paragraph
+- Call 2 (Flesh): Full prose following the skeleton exactly
+
+This prevents frontloading early sections and rushing later ones.
+Modules under 3000 words (e.g., A1) skip the skeleton step.
+
 Usage:
     .venv/bin/python scripts/build/v6_build.py a1 1
+    .venv/bin/python scripts/build/v6_build.py b1 1 --skeleton    # force skeleton
+    .venv/bin/python scripts/build/v6_build.py b1 1 --no-skeleton # skip skeleton
     .venv/bin/python scripts/build/v6_build.py a1 1 --step write  # run single step
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini  # default
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude
 
-Issue: #993
+Issue: #993, #998
 """
 
 from __future__ import annotations
@@ -166,9 +176,139 @@ def step_research(level: str, module_num: int, slug: str) -> Path | None:
     return output_path
 
 
+def step_skeleton(level: str, module_num: int, slug: str,
+                  packet_path: Path, writer: str = "gemini") -> str | None:
+    """Step 4: Generate paragraph-level skeleton for large modules.
+
+    Produces a detailed structural plan (~500-800 words) that constrains
+    the writer to balanced sections, preventing frontloading and rushed endings.
+
+    Returns the skeleton text, or None on failure.
+    """
+    _log(f"\n{'='*60}")
+    _log(f"  Step 4: SKELETON — Structure planning ({writer})")
+    _log(f"{'='*60}")
+
+    # Load template
+    template_path = PHASES_DIR / "v6-skeleton.md"
+    if not template_path.exists():
+        _log(f"  ❌ Template not found: {template_path}")
+        return None
+
+    template = template_path.read_text("utf-8")
+
+    # Load plan
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan_content = plan_path.read_text("utf-8")
+    plan = yaml.safe_load(plan_content)
+
+    # Load knowledge packet
+    packet = ""
+    if packet_path and packet_path.exists():
+        packet = packet_path.read_text("utf-8")
+        if len(packet) > 8000:
+            packet = packet[:8000] + "\n\n... (truncated for context window)"
+
+    word_target = plan.get("word_target", 1200)
+    phase = plan.get("phase", "")
+
+    # Summary heading (same logic as step_write)
+    summary_heading = (
+        "Summary" if module_num <= 3
+        else "Підсумок — Summary" if module_num <= 14
+        else "Підсумок"
+    )
+
+    # Fill template
+    prompt = template
+    replacements = {
+        "{TOPIC_TITLE}": plan.get("title", slug),
+        "{MODULE_NUM}": str(module_num),
+        "{LEVEL}": level.upper(),
+        "{PHASE}": phase,
+        "{WORD_TARGET}": str(word_target),
+        "{WORD_OVERSHOOT}": str(int(word_target * 1.1)),
+        "{PLAN_CONTENT}": plan_content,
+        "{KNOWLEDGE_PACKET}": packet,
+        "{SUMMARY_HEADING}": summary_heading,
+    }
+
+    for key, value in replacements.items():
+        prompt = prompt.replace(key, value)
+
+    # Save prompt for inspection
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    prompt_path = orch_dir / "v6-skeleton-prompt.md"
+    prompt_path.write_text(prompt, "utf-8")
+    _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
+
+    # Dispatch to writer
+    if writer == "gemini":
+        from batch_gemini_config import PRO_MODEL
+        from pipeline.core import dispatch_gemini
+        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
+        ok, raw = dispatch_gemini(
+            prompt, task_id=f"v6-skeleton-{slug}",
+            model=PRO_MODEL,
+            stdout_only=True, timeout=300,
+        )
+    elif writer == "claude":
+        import subprocess
+
+        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
+
+        model = CLAUDE_MODEL_CORE_CONTENT
+        _log(f"  Dispatching to Claude ({model})...")
+        try:
+            result = subprocess.run(
+                ["claude", "-p", "--model", model,
+                 "--output-format", "text"],
+                input=prompt,
+                capture_output=True, text=True, timeout=300,
+                cwd=str(PROJECT_ROOT),
+            )
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+            if not ok:
+                _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
+        except subprocess.TimeoutExpired:
+            _log("  ❌ Claude timed out (300s)")
+            ok = False
+            raw = ""
+    else:
+        _log(f"  ❌ Unknown writer: {writer}")
+        return None
+
+    if not ok or not raw:
+        _log("  ❌ Writer returned no skeleton output")
+        return None
+
+    # Extract skeleton from <skeleton> tags
+    import re as _re
+    skeleton_match = _re.search(r"<skeleton>(.*?)</skeleton>", raw, _re.DOTALL)
+    if skeleton_match:
+        skeleton_text = skeleton_match.group(1).strip()
+    else:
+        # Fall back to entire output if no tags found
+        skeleton_text = raw.strip()
+        _log("  ⚠️  No <skeleton> tags found — using full output")
+
+    # Save skeleton
+    skeleton_path = orch_dir / "skeleton.md"
+    skeleton_path.write_text(skeleton_text, "utf-8")
+    skeleton_words = len(skeleton_text.split())
+    _log(f"  ✅ Skeleton generated ({skeleton_words} words)")
+    _log(f"  → {skeleton_path}")
+
+    _save_v6_state(level, slug, "skeleton")
+    return skeleton_text
+
+
 def step_write(level: str, module_num: int, slug: str,
                packet_path: Path, writer: str = "gemini",
-               correction_directive: str = "") -> Path | None:
+               correction_directive: str = "",
+               skeleton: str = "") -> Path | None:
     """Step 5: Single LLM session — generate prose + exercise placeholders."""
     _log(f"\n{'='*60}")
     _log(f"  Step 5: WRITE — Content generation ({writer})")
@@ -267,6 +407,34 @@ def step_write(level: str, module_num: int, slug: str,
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
+    # Inject skeleton section when provided (Skeleton->Flesh architecture)
+    if skeleton:
+        skeleton_section = (
+            "\n\n---\n\n"
+            "## Skeleton — Follow This Structure Exactly\n\n"
+            "A detailed paragraph-level skeleton was generated for this module. "
+            "You MUST follow it precisely:\n"
+            "- Write every paragraph listed, in the order listed\n"
+            "- Hit each paragraph's word budget (+-10%)\n"
+            "- Place exercises exactly where the skeleton says\n"
+            "- Use the specific examples named in the skeleton\n"
+            "- Do NOT skip paragraphs, reorder sections, or add unplanned content\n\n"
+            "The skeleton replaces Step 1 (Pacing Plan) — do NOT output a "
+            "<pacing_plan> block. Start writing immediately from the first section.\n\n"
+            "<skeleton>\n"
+            f"{skeleton}\n"
+            "</skeleton>\n"
+        )
+        # Insert before "## Output Format" so it's the last constraint seen
+        if "## Output Format" in prompt:
+            prompt = prompt.replace(
+                "## Output Format",
+                skeleton_section + "\n## Output Format",
+            )
+        else:
+            prompt += skeleton_section
+        _log(f"  📐 Skeleton injected ({len(skeleton)} chars)")
+
     # Inject correction directive at top of prompt (for retries)
     if correction_directive:
         prompt = correction_directive + "\n\n" + prompt
@@ -349,8 +517,9 @@ def step_write(level: str, module_num: int, slug: str,
     else:
         final_content = "\n".join(lines[content_start:])
 
-    # Strip any pacing_plan tags that leaked into content
+    # Strip any pacing_plan/skeleton tags that leaked into content
     final_content = _re.sub(r"</?pacing_plan>", "", final_content)
+    final_content = _re.sub(r"</?skeleton>", "", final_content)
 
     output_path.write_text(final_content, "utf-8")
     word_count = len(final_content.split())
@@ -365,6 +534,7 @@ def step_write_with_retry(
     packet_path: Path,
     writer: str = "gemini",
     max_retries: int = 2,
+    skeleton: str = "",
 ) -> Path | None:
     """Write content with quick verify and retry loop.
 
@@ -400,6 +570,7 @@ def step_write_with_retry(
             level, module_num, slug, packet_path,
             writer=current_writer,
             correction_directive=current_directive,
+            skeleton=skeleton,
         )
         if output is None:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
@@ -1044,8 +1215,13 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini",
                         help="Default: gemini (Claude CLI truncates long-form content)")
-    parser.add_argument("--step", choices=["check", "research", "write", "exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
+    skeleton_group = parser.add_mutually_exclusive_group()
+    skeleton_group.add_argument("--skeleton", action="store_true", default=None,
+                                help="Force skeleton step (default: auto for word_target >= 3000)")
+    skeleton_group.add_argument("--no-skeleton", action="store_true",
+                                help="Skip skeleton step even for large modules")
     args = parser.parse_args()
 
     # Resolve slug
@@ -1083,12 +1259,45 @@ def main():
         if not packet_path.exists():
             packet_path = None
 
+    # Step 4: SKELETON (auto for word_target >= 3000, or forced via --skeleton)
+    skeleton_text = ""
+    plan_path = CURRICULUM_ROOT / "plans" / args.level / f"{slug}.yaml"
+    word_target = yaml.safe_load(plan_path.read_text("utf-8")).get("word_target", 1200) if plan_path.exists() else 1200
+
+    use_skeleton = (
+        args.skeleton
+        or (not args.no_skeleton and word_target >= 3000)
+    )
+
+    if steps in ("all", "skeleton") and use_skeleton:
+        skeleton_text = step_skeleton(
+            args.level, args.module, slug, packet_path,
+            writer=args.writer,
+        ) or ""
+        if not skeleton_text and steps == "skeleton":
+            _log("\n  SKELETON step returned empty — continuing without skeleton")
+    elif steps == "skeleton":
+        _log(f"\n  ℹ️  Skeleton skipped (word_target={word_target} < 3000, use --skeleton to force)")
+
+    if use_skeleton and skeleton_text:
+        _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
+    elif use_skeleton and not skeleton_text:
+        _log("\n  ⚠️  Skeleton was requested but generation failed — writing without skeleton")
+
+    # Try to load existing skeleton from disk if running single step
+    if steps == "write" and not skeleton_text and use_skeleton:
+        existing_skeleton = CURRICULUM_ROOT / args.level / "orchestration" / slug / "skeleton.md"
+        if existing_skeleton.exists():
+            skeleton_text = existing_skeleton.read_text("utf-8")
+            _log(f"  📐 Loaded existing skeleton ({len(skeleton_text.split())} words)")
+
     # Step 5: WRITE + QUICK VERIFY + RETRY
     content_path = None
     if steps in ("all", "write"):
         content_path = step_write_with_retry(
             args.level, args.module, slug, packet_path,
             writer=args.writer, max_retries=2,
+            skeleton=skeleton_text,
         )
         if not content_path:
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
@@ -1153,6 +1362,7 @@ def main():
                 args.level, args.module, slug, packet_path,
                 writer=args.writer,
                 correction_directive=correction,
+                skeleton=skeleton_text,
             )
             if not content_path:
                 _log("  ❌ Rebuild failed — writer returned no output")
