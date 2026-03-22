@@ -1,0 +1,177 @@
+module: b1-089
+level: B1
+sequence: 89
+slug: practice-exam-reading
+version: '3.0'
+title: "Екзамен (Читання i Слухання)"
+subtitle: "Пробний екзамен B1 — рецептивні навички"
+focus: review
+pedagogy: PPP
+phase: "B1.10 [Synthesis & Graduation]"
+word_target: 4000
+objectives:
+- "Learner can demonstrate B1-level reading comprehension by answering
+  questions on texts of various genres (news, literary, formal, informal)"
+- "Learner can extract основну думку and деталі from Ukrainian texts
+  of 200-400 words across multiple стилі мовлення"
+- "Learner can demonstrate B1-level listening comprehension by answering
+  questions on audio/text-based listening simulations"
+- "Learner can analyze language features in texts: стиль, граматика,
+  лексика, художні засоби, using Ukrainian metalanguage"
+- "Learner can complete exam-format tasks (multiple choice, true/false,
+  fill-in, matching) within time constraints"
+content_outline:
+- section: "Вступ: формат екзамену (Introduction: exam format)"
+  words: 300
+  points:
+  - "Overview of the B1 practice exam structure:
+    Part 1: Читання (Reading) — 3 texts with comprehension tasks.
+    Part 2: Слухання (Listening) — 2 texts with comprehension tasks.
+    Time guidance and scoring overview."
+  - "Exam strategies:
+    Читання: read questions first, then the text. Look for keywords.
+    Слухання: focus on основну думку on first listen, деталі on second.
+    Don't panic over unknown words — use context."
+  - "Self-assessment: after each section, rate difficulty and identify
+    areas needing more practice before the real exam."
+- section: "Читання 1: Публіцистичний текст (Reading 1: Media text)"
+  words: 650
+  points:
+  - "A B1-level Ukrainian news article or magazine excerpt (250-300 words)
+    about a current social topic (education, environment, technology,
+    Ukrainian culture). Contains абревіатури, вставні слова,
+    складні речення, публіцистична лексика."
+  - "Comprehension tasks:
+    1. Multiple choice: основна думка (4 options).
+    2. True/false/not stated: 6 statements about the text.
+    3. Vocabulary in context: determine meaning of 4 highlighted words.
+    4. Style analysis: identify стиль мовлення and cite markers."
+  - "Post-task analysis: review answers, identify why incorrect options
+    are wrong. This teaches exam logic, not just content knowledge."
+  - "Grammar in context: identify вставні слова, складнопідрядні речення,
+    and абревіатури in the text. This integrates reading with grammar review."
+- section: "Читання 2: Художній текст (Reading 2: Literary text)"
+  words: 650
+  points:
+  - "A B1-level adapted literary excerpt (200-250 words) — prose passage
+    about nature, a character, or an event. Contains епітети, метафори,
+    порівняння, дієприкметникові звороти."
+  - "Comprehension tasks:
+    1. Sequence ordering: put 5 events in correct order.
+    2. Character/setting questions: who, where, when, what mood.
+    3. Художні засоби: identify and name 3 literary devices in the text.
+    4. Personal response: 3-4 sentence opinion in Ukrainian."
+  - "Vocabulary tasks: match 5 words from the text to definitions.
+    Focus on words that can be guessed from context."
+  - "Grammar identification: find дієприкметниковий зворот,
+    дієприслівниковий зворот, подвійне заперечення in the text."
+- section: "Читання 3: Офіційний текст (Reading 3: Formal text)"
+  words: 550
+  points:
+  - "A B1-level formal Ukrainian text (150-200 words): оголошення,
+    інструкція, or офіційний лист. Contains канцеляризми, скорочення,
+    formal case constructions."
+  - "Comprehension tasks:
+    1. Information extraction: answer 4 specific questions (хто, що, коли, де).
+    2. Register analysis: identify 3 features of офіційно-діловий стиль.
+    3. Abbreviation decoding: expand 3 абревіатури or скорочення.
+    4. Register transformation: rewrite 2 sentences in розмовний стиль."
+  - "Practice: learners compare their answers with model answers
+    and identify areas of difficulty."
+- section: "Слухання 1: Діалог (Listening 1: Dialogue)"
+  words: 550
+  points:
+  - "A B1-level Ukrainian dialogue (150-200 words, presented as text
+    to be read aloud or imagined as audio): a conversation between
+    friends or colleagues about plans, opinions, or daily life.
+    Contains розмовна лексика, вигуки, неповні речення."
+  - "Comprehension tasks:
+    1. Multiple choice: main topic of conversation (4 options).
+    2. Speaker attribution: who says what (match statements to speakers).
+    3. Inference: what can we conclude about the speakers' relationship?
+    4. Detail questions: answer 3 specific questions about the dialogue."
+  - "Follow-up: learners practice reading the dialogue aloud with
+    correct інтонація and pronunciation."
+  - "Grammar in context: identify розмовні конструкції, вставні слова
+    used as discourse markers, and any відмінкові форми."
+- section: "Слухання 2: Монолог (Listening 2: Monologue)"
+  words: 550
+  points:
+  - "A B1-level Ukrainian monologue (200-250 words, presented as text):
+    a presentation, announcement, or mini-lecture. Contains вставні слова,
+    аргументація structure, числівники, абревіатури."
+  - "Comprehension tasks:
+    1. Gap-fill: complete 5 missing words/phrases from the monologue.
+    2. Main idea: summarize in 2-3 Ukrainian sentences.
+    3. Detail extraction: answer 4 factual questions.
+    4. Speaker's attitude: identify the speaker's позиція and evidence."
+  - "Post-task reflection: what made this task difficult?
+    Vocabulary gaps? Speed? Grammar complexity?
+    Learners note areas for targeted review."
+- section: "Підсумок i аналіз результатів (Summary and results analysis)"
+  words: 350
+  points:
+  - "Self-scoring guide: how many correct answers in each section.
+    Reading threshold: 70%+ = B1 ready.
+    Listening threshold: 60%+ = B1 ready (listening is harder).
+    Below threshold: review recommended modules."
+  - "Error analysis: learners categorize their mistakes:
+    Vocabulary gap? Grammar error? Comprehension strategy?
+    Create a targeted review plan for weak areas."
+  - "Preview: Екзамен (Письмо i Говоріння) (M90) — productive skills exam.
+    Reading/listening skills support writing/speaking."
+vocabulary_hints:
+  required:
+  - "екзамен (exam — formal assessment of knowledge)"
+  - "читання (reading — receptive skill)"
+  - "слухання (listening — receptive skill)"
+  - "розуміння (comprehension — ability to understand)"
+  - "основна думка (main idea — central message of a text)"
+  - "деталі (details — specific information in a text)"
+  - "завдання (task — exercise to complete)"
+  - "відповідь (answer — response to a question)"
+  recommended:
+  - "пробний (practice/trial — not the real exam)"
+  - "поріг (threshold — minimum passing level)"
+  - "аналіз помилок (error analysis — studying mistakes)"
+  - "стратегія (strategy — approach to a task)"
+  - "висновок (conclusion — inference from text)"
+activity_hints:
+- type: quiz
+  focus: "Exam-format multiple choice and true/false questions on reading
+    and listening comprehension across all text types."
+  items: 15
+- type: fill-in
+  focus: "Gap-fill exercises from listening and reading texts: complete
+    missing words based on context."
+  items: 10
+- type: match-up
+  focus: "Match vocabulary to definitions, statements to speakers,
+    events to correct sequence."
+  items: 10
+- type: group-sort
+  focus: "Sort text features by стиль мовлення, categorize errors
+    by type (vocabulary, grammar, comprehension)."
+  items: 8
+- type: free-write
+  focus: "Write a brief personal response (5-7 sentences) to one of the
+    reading texts, demonstrating comprehension and opinion."
+  items: 1
+connects_to:
+- "b1-088 (comprehensive-b1-review — preparation for this exam)"
+- "b1-090 (practice-exam-writing — productive skills exam)"
+- "b1-091 (b1-finale — capstone project)"
+prerequisites:
+- "b1-088 (comprehensive-b1-review — grammar review completed)"
+grammar:
+- "Integration: all B1 grammar tested through reading/listening comprehension"
+- "Metalanguage: used to analyze texts during exam"
+- "Register identification in authentic texts"
+register: розмовний
+references:
+- title: "CEFR B1 reading/listening descriptors"
+  notes: "Can understand the main points of clear standard input on
+    familiar matters. Can understand texts consisting mainly of
+    high-frequency everyday or job-related language."
+- title: "All B1 module references"
+  notes: "Exam tasks draw on grammar and vocabulary from all B1 phases."
