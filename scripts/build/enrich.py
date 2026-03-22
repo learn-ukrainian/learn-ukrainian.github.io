@@ -110,7 +110,9 @@ def _extract_prose_vocab(content: str) -> list[tuple[str, str]]:
         re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*\s*\(([^)]+)\)"),
         # **word** — "translation" or **word** — translation
         re.compile(r'\*\*([а-яА-ЯіІїЇєЄґҐ\'ʼ ?!.,]+)\*\*\s*[—–-]\s*["\"]?([^""\n.!?]+)["\"]?'),
-        # **word** alone (no translation)
+        # **word** means "translation"
+        re.compile(r'\*\*([а-яА-ЯіІїЇєЄґҐ\'ʼ ?!.,]+)\*\*\s+means?\s+["\"]?([^""\n.!?]+)["\"]?'),
+        # **word** alone (no translation) — lowest priority
         re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*"),
     ]
 
@@ -229,8 +231,14 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
 
     if additional:
         # Split into single words and expressions (multi-word phrases)
+        # Only include REAL expressions — not example sentences like "Це мама"
         single_words = [(w, t) for w, t in additional if " " not in w]
-        expressions = [(w, t) for w, t in additional if " " in w]
+        expressions = [
+            (w, t) for w, t in additional
+            if " " in w
+            and not w.startswith("Це ")  # Skip "Це X" example sentences
+            and len(w.split()) <= 5  # Max 5 words — longer is a sentence
+        ]
 
         if single_words:
             lines.extend([
