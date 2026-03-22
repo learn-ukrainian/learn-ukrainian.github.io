@@ -875,7 +875,59 @@ def step_review(content_path: Path, level: str, module_num: int,
     icon = "✅" if passed else "❌"
     _log(f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — {verdict} (severity gate: {'✅' if severity_pass else '❌'})")
 
-    return passed, score
+    return passed, score, raw
+
+
+def _build_review_correction(review_text: str) -> str:
+    """Extract findings from a review and build a correction directive for retry.
+
+    Parses [DIMENSION] [SEVERITY] findings and formats them as a
+    correction directive that goes at the top of the retry prompt.
+    """
+    import re
+
+    lines = [
+        "<correction_directive>",
+        "CRITICAL: Your previous module was reviewed and scored below 8.0/10.",
+        "You must rewrite the module FROM SCRATCH, fixing ALL issues below.",
+        "All original constraints from the writing prompt still apply.\n",
+    ]
+
+    # Extract the raw findings section
+    findings_section = re.search(
+        r"## Findings\n(.*?)(?=\n## Verdict|\Z)",
+        review_text,
+        re.DOTALL,
+    )
+
+    if findings_section:
+        for line in findings_section.group(1).strip().split("\n"):
+            line = line.strip()
+            if line and not line.startswith("```"):
+                if "critical" in line.lower() or "major" in line.lower():
+                    lines.append(f"- FIX: {line}")
+                elif "minor" in line.lower():
+                    lines.append(f"- NOTE: {line}")
+                elif line.startswith("Location:") or line.startswith("Issue:") or line.startswith("Fix:"):
+                    lines.append(f"  {line}")
+
+    # Also extract the linguistic scan errors
+    linguistic_section = re.search(
+        r"## Linguistic Scan\n(.*?)(?=\n## |\Z)",
+        review_text,
+        re.DOTALL,
+    )
+    if linguistic_section:
+        scan_text = linguistic_section.group(1).strip()
+        if scan_text and "no linguistic errors" not in scan_text.lower():
+            lines.append(f"\n- FIX (Linguistic): {scan_text[:500]}")
+
+    if len(lines) <= 4:
+        # No specific findings extracted — use generic directive
+        lines.append("- The reviewer found quality issues. Write more carefully.")
+
+    lines.append("</correction_directive>")
+    return "\n".join(lines)
 
 
 def _convert_tab_markers(content: str) -> str:
@@ -1053,15 +1105,51 @@ def main():
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
 
-    # Step 8: REVIEW (cross-agent adversarial)
+    # Step 8: REVIEW with retry loop
+    # If review fails, inject findings as correction directive and rebuild
+    max_review_retries = 2
     if steps in ("all", "review"):
-        passed, score = step_review(
-            content_path, args.level, args.module, slug,
-            writer=args.writer,
-        )
-        _save_v6_state(args.level, slug, "review")
-        if not passed:
-            _log(f"\n⚠️  Review scored {score}/10 — module needs revision")
+        for review_attempt in range(1, max_review_retries + 1):
+            _log(f"\n  📋 Review attempt {review_attempt}/{max_review_retries}")
+
+            passed, score, review_text = step_review(
+                content_path, args.level, args.module, slug,
+                writer=args.writer,
+            )
+            _save_v6_state(args.level, slug, "review")
+
+            if passed:
+                _log(f"\n✅ Review PASSED on attempt {review_attempt} ({score}/10)")
+                break
+
+            if review_attempt >= max_review_retries:
+                _log(f"\n⚠️  Review failed after {max_review_retries} attempts ({score}/10) — flag for human")
+                break
+
+            # Build correction directive from review findings
+            correction = _build_review_correction(review_text)
+            _log(f"  🔄 Rebuilding with review correction directive ({len(correction)} chars)...")
+
+            # Save correction for inspection
+            orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+            orch_dir.mkdir(parents=True, exist_ok=True)
+            corr_path = orch_dir / f"review-correction-{review_attempt}.md"
+            corr_path.write_text(correction, "utf-8")
+
+            # Re-run WRITE → EXERCISES → ANNOTATE → ENRICH → VERIFY
+            content_path = step_write(
+                args.level, args.module, slug, packet_path,
+                writer=args.writer,
+                correction_directive=correction,
+            )
+            if not content_path:
+                _log("  ❌ Rebuild failed — writer returned no output")
+                break
+
+            step_exercises(content_path)
+            step_annotate(content_path)
+            step_enrich(content_path, args.level, slug)
+            step_verify(content_path, args.level, args.module)
 
     # Step 9: PUBLISH
     if steps in ("all", "publish"):
