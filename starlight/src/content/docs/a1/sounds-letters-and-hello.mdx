@@ -20,60 +20,87 @@ import YouTubeVideo from '@site/src/components/YouTubeVideo';
 
 ## Зву́ки і лі́тери (Sounds and Letters)
 
-Look at the text on this page. What you see are letters — symbols printed on a screen. Now say a word out loud. Anything. What you just produced are sounds — vibrations in the air. This distinction is the absolute foundation of how Ukrainian teaches its own language. Every Ukrainian first-grader learns a golden rule:
+Look at the text on this page. What you see are letters — symbols printed on a screen. Now say a word out loud. Anything. What you just produced are sounds — vibrations in the air that carry meaning. This distinction is the absolute foundation of the Ukrainian language, and every Ukrainian child learns it in the first grade. There is a golden rule:
 
 > **Ми чу́ємо і вимовля́ємо звуки, а ба́чимо і пи́шемо літери.**
 
-We hear and pronounce sounds. We see and write letters. Sounds and letters are not the same thing. The Ukrainian alphabet has 33 letters (**літери**), but the language uses 38 sounds (**звуки**). Why the mismatch? Because some letters represent more than one sound, and one special letter — **Ь** — represents no sound at all. It only softens the consonant before it.
+We hear and pronounce sounds. We see and write letters. Sounds and letters are not the same thing. Ukrainian has **33 літери** (letters) but **38 зву́ків** (sounds). Why the mismatch? Because some letters represent more than one sound, and some sounds share a letter. You will discover exactly how as you move through the curriculum — for now, hold onto that number: 33 letters, 38 sounds.
 
-Ukrainian sounds split into two families. The first family is **голосні́** — vowels. These are sounds made with voice alone. Your mouth stays open, nothing blocks the air. A poem from Ukrainian first-grade textbooks captures it perfectly: «Голосні почу́єш в пісні́» — you hear vowels in a song. There are 6 vowel sounds, but 10 vowel letters. The six sounds are the pure ones: the sounds behind **А**, **О**, **У**, **Е**, **И**, **І**. The four extra letters — **Я**, **Ю**, **Є**, **Ї** — are special. They can represent two sounds at once or soften a preceding consonant. More on those in Module 2.
+Ukrainian sounds split into two families. The first family is **голосні́** — vowels. These are sounds made with your voice alone, mouth open, air flowing freely with no obstruction from your lips, teeth, or tongue. Ukrainian schoolchildren learn them through a poem: **Голосні почу́єш в пісні́** — "You'll hear vowels in a song." There are **6 голосни́х звуків** (vowel sounds), but **10 голосних лі́тер** (vowel letters): **А, О, У, Е, И, І, Я, Ю, Є, Ї**. The extra four letters (Я, Ю, Є, Ї) have a special trick — they can represent two sounds at once. More on that in Module 2.
 
-The second family is **при́голосні** — consonants. These sounds are made when something in your mouth — lips, teeth, tongue — creates an obstruction. Air hits a barrier. Another textbook poem: «Приголосні деренча́ть, і тихе́нько шелестя́ть» — consonants rattle and quietly rustle. There are 32 consonant sounds in Ukrainian.
+The second family is **при́голосні** — consonants. These sounds are made when something in your mouth — lips, teeth, tongue — creates an obstruction. Air pushes through or around that obstruction, producing noise. Some consonants use voice and noise together; others use noise alone. Ukrainian has **32 при́голосних звуки** (consonant sounds). A schoolroom rhyme captures the difference: **Приголосні деренча́ть і тихе́нько шелестя́ть** — "Consonants rattle and softly rustle."
 
-<Quiz client:only="react" questions={[{"question": "What do we hear and pronounce?", "options": [{"text": "звуки (sounds)", "correct": true}, {"text": "літери (letters)", "correct": false}, {"text": "слова́ (words)", "correct": false}]}, {"question": "What do we see and write?", "options": [{"text": "літери (letters)", "correct": true}, {"text": "звуки (sounds)", "correct": false}, {"text": "речення (sentences)", "correct": false}]}, {"question": "How many letters does Ukrainian have?", "options": [{"text": "33", "correct": true}, {"text": "38", "correct": false}, {"text": "26", "correct": false}]}, {"question": "How many vowel sounds are there?", "options": [{"text": "6", "correct": true}, {"text": "10", "correct": false}, {"text": "8", "correct": false}]}, {"question": "Which family of sounds is made with voice alone, mouth open?", "options": [{"text": "голосні", "correct": true}, {"text": "приголосні", "correct": false}, {"text": "літери", "correct": false}]}, {"question": "Why does Ukrainian have more sounds than letters?", "options": [{"text": "Some letters represent more than one sound", "correct": true}, {"text": "Some sounds have no letters", "correct": false}, {"text": "Ukrainian borrowed extra sounds", "correct": false}]}]} />
+One more character: the letter **Ь** (soft sign). It has no sound of its own. It tells you to soften the consonant before it. Think of it as an instruction mark, not a sound.
+
+<Quiz client:only="react" questions={[{"question": "What do we hear and pronounce?", "options": [{"text": "звуки (sounds)", "correct": true}, {"text": "літери (letters)", "correct": false}, {"text": "слова́ (words)", "correct": false}]}, {"question": "What do we see and write?", "options": [{"text": "літери (letters)", "correct": true}, {"text": "звуки (sounds)", "correct": false}, {"text": "речення (sentences)", "correct": false}]}, {"question": "How many letters does the Ukrainian alphabet have?", "options": [{"text": "33", "correct": true}, {"text": "38", "correct": false}, {"text": "26", "correct": false}]}, {"question": "How many vowel sounds are there in Ukrainian?", "options": [{"text": "6", "correct": true}, {"text": "10", "correct": false}, {"text": "8", "correct": false}]}, {"question": "What are голосні?", "options": [{"text": "Vowels", "correct": true}, {"text": "Consonants", "correct": false}, {"text": "Letters", "correct": false}]}, {"question": "What are приголосні?", "options": [{"text": "Consonants", "correct": true}, {"text": "Vowels", "correct": false}, {"text": "Syllables", "correct": false}]}]} />
+
+<GroupSort client:only="react" groups={[{"name": "Голосні", "items": ["А", "О", "У", "І"]}, {"name": "Приголосні", "items": ["М", "К", "Б", "Ш"]}]} />
 
 ## Пе́рші слова (First Words)
 
-Some Cyrillic letters look identical to Latin ones — and some of those even sound similar. Start with the friendliest group: **А**, **О**, **К**, **М**, **Т**. These look familiar and sound close enough to what you expect. With just these five letters, you can already read real Ukrainian words:
+Some Ukrainian letters will feel like old friends. **А** looks like A and sounds like the "a" in "father." **О** looks like O and sounds like a clear, round "o" — never a lazy "uh." **К** looks like K and sounds like K. **М** looks like M and sounds like M. **Т** looks like T and sounds like T.
 
-> **Ма́ма.** **Та́то.** **Мак.** **Око́.** **А́том.**
+With just these five letters, you can already read real Ukrainian words:
 
-**Мама** — mother. **Тато** — father. **Мак** — poppy (the national flower you see on Ukrainian embroidery). **Око** — eye (a poetic word). **Атом** — atom. You are reading Ukrainian.
+| Word | Meaning |
+|------|---------|
+| **ма́ма** | mother |
+| **та́то** | father |
+| **ко́ма** | comma |
+| **а́том** | atom |
+| **мак** | poppy |
+| **о́ко** | eye |
+| **там** | there |
+| **тут** | here |
 
-One small detail: Ukrainian **Т** is dental — your tongue touches the back of your teeth, not the gum ridge behind them. And **К** and **Т** have no puff of air after them, unlike English. Close enough for now. You will refine this naturally.
+Try it. Look at **мама**: М-А-М-А. You already know every letter. Now **тато**: Т-А-Т-О. You just read your first Ukrainian words.
+
+:::tip
+Ukrainian **Т** is dental — your tongue touches the back of your upper teeth, not the gum ridge behind them. And Ukrainian **К** and **Т** have no puff of air after them, unlike their English cousins. These are small differences. Close enough for now — awareness is the first step.
+:::
 
 ### False Friends — The Biggest Trap
 
-Now for the letters that will trick you. These look like Latin letters but make completely different sounds:
+Now for the letters that will betray you. These look like Latin letters but make completely different sounds:
 
 | Letter | Looks like | Actually sounds like |
 |--------|-----------|---------------------|
-| **В** | B | **В** as in "vest" |
-| **Н** | H | **Н** as in "no" |
-| **Р** | P | **Р** — a rolled "r" |
-| **С** | C | **С** as in "sun" |
-| **У** | Y | **У** as in "moon" |
-| **Х** | X | **Х** like "ch" in Scottish "loch" |
+| **В** | B | "v" as in "van" |
+| **Н** | H | "n" as in "no" |
+| **Р** | P | a rolled "r" (tongue taps the roof of your mouth) |
+| **С** | C | "s" as in "sun" |
+| **У** | Y | "oo" as in "moon" |
+| **Х** | X | like "ch" in Scottish "loch" |
 
-Read these words carefully, fighting every instinct to use English sounds:
+These false friends are responsible for more reading errors than anything else in early Ukrainian. Burn this table into your memory. When you see **В**, your brain will scream "B!" — override it. It is "v."
 
-> **Вода́.** **Рука́.** **Сон.** **Ніс.** **Ха́та.**
+Practice with real words:
 
-**Вода** — water (not "boda"). **Рука** — hand (not "pyka"). **Сон** — dream. **Ніс** — nose. **Хата** — a traditional Ukrainian house.
-
-<MatchUp client:only="react" pairs={[{"left": "В", "right": "sounds like V in 'vest"}, {"left": "Н", "right": "sounds like N in 'no"}, {"left": "Р", "right": "a rolled R sound"}, {"left": "С", "right": "sounds like S in 'sun"}, {"left": "У", "right": "sounds like OO in 'moon"}, {"left": "Х", "right": "sounds like CH in Scottish 'loch"}]} />
+| Word | Meaning | Watch out for |
+|------|---------|--------------|
+| **вода́** | water | В = "v", not "b" |
+| **рука́** | hand | Р = rolled "r", not "p" |
+| **сон** | dream | С = "s", not "k" |
+| **ніс** | nose | Н = "n", not "h" |
+| **ха́та** | house | Х = "ch" in "loch", not "ks" |
 
 ### New Shapes
 
-Finally, there are letters with no Latin look-alike at all: **Б**, **Г**, **Ґ**, **Д**, **Ж**, **З**, **И**, **Й**, **Л**, **П**, **Ф**, **Ц**, **Ч**, **Ш**, **Щ**. Do not try to memorize them in a list. Learn them through words:
+Finally, some letters have no Latin lookalike at all. They are entirely new shapes: **Б, Г, Ґ, Д, Ж, З, И, Й, Л, П, Ф, Ц, Ч, Ш, Щ**. No false friends here — your brain has nothing to confuse them with, so they are actually easier to learn.
 
-> **Банк.** **Дім.** **Зима́.** **Кни́га.** **Шко́ла.**
+Meet a few through words:
 
-**Банк** — bank. **Дім** — home, house. **Зима** — winter. **Книга** — book. **Школа** — school. Notice how **Щ** always makes two sounds together — like "shch" blended quickly. And remember **Ь** — the soft sign — has no sound of its own. It only tells you to soften the consonant before it, as in **дім** (the **Ь** is hiding inside the letter **і** here, but you will meet it clearly in words like **день** — day).
+| Word | Meaning |
+|------|---------|
+| **банк** | bank |
+| **дім** | home, house |
+| **зима́** | winter |
+| **кни́га** | book |
+| **шко́ла** | school |
 
-One more special letter: **Ї** always represents two sounds blended together. It is unique to Ukrainian — no other Slavic language has it. The letters **Я**, **Ю**, **Є** can also represent two sounds or soften a consonant, but that is a story for Module 2.
+One letter deserves special attention: **Щ** always makes two sounds together — "sh" followed immediately by "ch." And **Ї** is unique to Ukrainian — no other Slavic language has it. It always represents two sounds: a "y" glide followed by "ee."
 
-<GroupSort client:only="react" groups={[{"name": "Голосні (vowels)", "items": ["А", "О", "У", "І"]}, {"name": "Приголосні (consonants)", "items": ["М", "К", "Б", "Ш"]}]} />
+<MatchUp client:only="react" pairs={[{"left": "В", "right": "v (as in «van»)"}, {"left": "Н", "right": "n (as in «no»)"}, {"left": "Р", "right": "rolled r"}, {"left": "С", "right": "s (as in «sun»)"}, {"left": "У", "right": "oo (as in «moon»)"}, {"left": "Х", "right": "ch (as in Scottish «loch»)"}]} />
 
 ## Приві́т! (Hello!)
 
@@ -84,63 +111,77 @@ Time for your first Ukrainian conversation. Two friends meet on the street:
 > — **До́бре. А у тебе́?**
 > — **Чудо́во!**
 
-**Привіт** — hi. This is informal, used with friends, family, people your age. **Як справи?** — how are you? (literally: how are things?). The answers:
+That is a complete, natural greeting in Ukrainian. Let's break it apart.
 
-| Ukrainian | English |
-|-----------|---------|
-| **Добре.** | Fine. Good. |
-| **Чудово!** | Great! Wonderful! |
-| **Норма́льно.** | Okay. Not bad. |
+**Привіт!** means "Hi!" — informal, used with friends, family, peers, anyone you would address with "ти" (you, singular informal). This is the word you will use most in your first weeks.
 
-After answering, bounce the question back: **А у тебе?** — and you?
+**Як справи?** means "How are you?" — literally "How are things?" Common responses:
 
-:::tip
-Ukrainian has gendered speech. A woman says **ра́да тебе ба́чити** (glad to see you), a man says **ра́дий тебе бачити**. This is your very first encounter with grammatical gender — it will become a major topic starting in Module 8. For now, just notice that the endings are different.
+| Response | Meaning |
+|----------|---------|
+| **Добре.** | Fine. / Good. |
+| **Чудово!** | Great! / Wonderful! |
+| **Норма́льно.** | Okay. / All right. |
+
+**А у тебе?** means "And you?" — a natural way to return the question.
+
+:::caution
+Ukrainian has gendered forms. A woman says **Ра́да тебе ба́чити!** ("Glad to see you!"). A man says **Ра́дий тебе бачити!** The ending changes: **рада** (feminine) versus **радий** (masculine). This is your very first encounter with gender in Ukrainian — a topic that becomes central starting in Module 8.
 :::
 
-Now, look at the word **привіт** letter by letter. It uses letters from every group you have learned:
-
-- **П** — new shape (no Latin equivalent)
-- **Р** — false friend (not "P"!)
-- **И** — new vowel (no English match — between "i" and "e")
-- **В** — false friend (not "B"!)
-- **І** — vowel (like "ee" in "see")
-- **Т** — familiar (dental, remember?)
-
-Reading this one word is a workout through the entire alphabet system.
+Now try reading **Привіт** letter by letter. This single word uses letters from every category you just learned: **П** (new shape), **р** (false friend — rolled "r," not "p"!), **и** (new vowel), **в** (false friend — "v," not "b"!), **і** (vowel), **т** (familiar). If you can read **Привіт**, you have already practiced all three letter groups.
 
 <FillIn client:only="react" items={[{"sentence": "— Привіт! Як ___?", "answer": "справи"}, {"sentence": "— Добре. А у ___?", "answer": "тебе"}, {"sentence": "— ___! Рада тебе бачити!", "answer": "Привіт"}, {"sentence": "— Як справи? — ___.", "answer": "Чудово"}]} />
 
 ## Чита́ємо (Reading Practice)
 
-You are now walking through a Ukrainian city. Signs surround you. Sound out each letter, blend them into syllables, read the whole word:
+Imagine you just landed at Бори́спіль airport and you are taking a bus into Ки́їв. Signs are everywhere. You can read them.
 
-> **Апте́ка.** **Банк.** **Кафе́.** **Метро́.** **По́шта.** **Школа.** **Зупи́нка.**
+### Signs You See in Ukraine
 
-**Аптека** — pharmacy. **Банк** — bank. **Кафе** — cafe. **Метро** — metro. **Пошта** — post office. **Школа** — school. **Зупинка** — bus stop. These are the signs you will see every day in Ukraine. Notice that some words look nearly identical to English (**банк**, **метро**, **кафе**) — these are international words that Ukrainian absorbed and adapted.
+Sound out each letter. Blend them into syllables. Read the whole word.
+
+| Sign | Meaning |
+|------|---------|
+| **Апте́ка** | pharmacy |
+| **Банк** | bank |
+| **Кафе́** | cafe |
+| **Метро́** | metro |
+| **По́шта** | post office |
+| **Школа** | school |
+| **Зупи́нка** | bus stop |
+
+Notice how many of these are recognizable from English or other European languages — **банк**, **метро**, **кафе**. Ukrainian has absorbed international words, just like every other language. But they are written in Cyrillic and follow Ukrainian pronunciation rules.
 
 ### Ukrainian Cities
 
-Now read the names of real Ukrainian cities:
+Now try city names. These are words you will hear in news, weather forecasts, and everyday conversation:
 
-> **Ки́їв.** **Львів.** **Оде́са.** **Харків.** **Дніпро́.** **Полта́ва.**
+**Київ** · **Львів** · **Оде́са** · **Харків** · **Дніпро́** · **Полта́ва**
 
-**Київ** — Kyiv, the capital. **Львів** — Lviv, the cultural heart of western Ukraine. **Одеса** — Odesa, the Black Sea port. **Харків** — Kharkiv, the eastern metropolis. **Дніпро** — Dnipro, named after the great river. **Полтава** — Poltava, famous for its history and its Ukrainian dialect considered the "purest."
+Start with **Київ**: К-и-ї-в. The **Ї** makes a "yi" sound, and the **в** at the end sounds like "v." **Львів** is trickier — two consonant clusters and that unique **Ї** again.
 
 ### First Sentences
 
-Ukrainian has a powerful little word: **це** — "this is." With it, you can make your first sentences:
+Ukrainian has a powerful little word: **Це** — "This is." With **Це** and a noun, you can make your first Ukrainian sentences:
 
-> **Це мама.** **Це банк.** **Це Київ.**
+> **Це мама.** — This is mom.
+> **Це банк.** — This is a bank.
+> **Це Київ.** — This is Kyiv.
 
-To ask questions: **Що це?** — what is this? **Хто це?** — who is this? **Що** is for things, **хто** is for people.
+And your first questions:
+
+> **Що це?** — What is this?
+> **Хто це?** — Who is this?
+
+**Що** means "what." **Хто** means "who." With these two question words, **Це**, and the vocabulary you already know, you can point at anything in Ukraine and start a conversation.
 
 > — **Що це?**
-> — **Це школа.**
-> — **Хто це?**
-> — **Це мама.**
+> — **Це аптека.**
+> — **А це?**
+> — **Це пошта.**
 
-<TrueFalse client:only="react" items={[{"statement": "The Ukrainian alphabet has 33 letters.", "answer": true}, {"statement": "There are more vowel sounds than consonant sounds in Ukrainian.", "answer": false}, {"statement": "The letter В sounds like B in English.", "answer": false}, {"statement": "Привіт is a formal greeting.", "answer": false}, {"statement": "Що це? means 'What is this?", "answer": true}]} />
+<TrueFalse client:only="react" items={[{"statement": "The Ukrainian alphabet has 33 letters.", "answer": true}, {"statement": "Ukrainian has more vowel sounds than consonant sounds.", "answer": false}, {"statement": "The letter В sounds like «b» in English.", "answer": false}, {"statement": "Щ represents two sounds together.", "answer": true}, {"statement": "Ї is a letter found in many Slavic languages.", "answer": false}]} />
 
 
 ### Відео — Video
@@ -152,11 +193,11 @@ To ask questions: **Що це?** — what is this? **Хто це?** — who is t
 
 ## Підсумок — Summary
 
-You have learned the foundation of the Ukrainian sound system. 33 **літери** on paper, 38 **звуки** in the air. Letters are what you see and write. Sounds are what you hear and pronounce. **Голосні** — vowels — are made with voice alone: six sounds, ten letters. **Приголосні** — consonants — are made when your mouth creates an obstruction: 32 sounds.
+Here is what you now know. The Ukrainian alphabet has **33 літери** and **38 звуків**. Letters and sounds are not the same: **ми чуємо звуки, а бачимо літери**. Sounds split into two families: **голосні** (vowels — 6 sounds, 10 letters) and **приголосні** (consonants — 32 sounds). Some Cyrillic letters look like Latin but sound completely different — these false friends (**В, Н, Р, С, У, Х**) require constant vigilance.
 
-You can now read Ukrainian words using three groups of letters: familiar ones (**А**, **О**, **К**, **М**, **Т**), false friends that look Latin but sound different (**В**, **Н**, **Р**, **С**, **У**, **Х**), and new shapes with no Latin equivalent (**Б**, **Д**, **Ж**, **З**, **Ш**, **Щ**).
+You learned your first greeting: **Привіт! Як справи? — Добре.** You learned to read signs (**Аптека, Банк, Метро**), city names (**Київ, Львів, Одеса**), and to make simple sentences with **Це**: **Це школа. Що це? Хто це?**
 
-You know your first greeting: **Привіт! Як справи? — Добре!** You can read city signs: **аптека**, **банк**, **школа**, **метро**. You can build simple sentences with **це**: **Це Київ. Що це? Хто це?**
+You can now read and pronounce basic Ukrainian words. You can greet someone and respond to a greeting. And you understand the most fundamental concept in Ukrainian phonetics — the difference between **звуки** and **літери**.
 
 </TabItem>
 <TabItem label="Словник">
