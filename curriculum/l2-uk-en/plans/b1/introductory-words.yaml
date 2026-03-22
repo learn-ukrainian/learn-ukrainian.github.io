@@ -1,0 +1,237 @@
+module: b1-081
+level: B1
+sequence: 81
+slug: introductory-words
+version: '3.0'
+title: "Вставні слова"
+subtitle: "Мабуть, можливо, здається, на жаль — слова, що виражають ставлення мовця"
+focus: grammar
+pedagogy: PPP
+phase: "B1.9 [Text and Register]"
+word_target: 4000
+objectives:
+- "Learner can explain what вставні конструкції are (express the speaker's attitude,
+  are NOT members of the sentence, can be removed without changing the core meaning)
+  and distinguish them from members of the sentence"
+- "Learner can classify вставні слова by their semantic groups: впевненість,
+  невпевненість, емоції, джерело інформації, порядок думок, привернення уваги"
+- "Learner can correctly punctuate sentences with вставні слова using commas
+  and dashes according to Ukrainian punctuation rules"
+- "Learner can identify words that are ALWAYS вставні (отже, мабуть, по-перше)
+  and words that NEVER are (адже, навіть, принаймні, нібито)"
+- "Learner can use вставні слова naturally in both written and spoken Ukrainian
+  to express attitude, organize discourse, and engage the listener"
+content_outline:
+- section: "Що таке вставні слова? (What are parenthetical words?)"
+  words: 600
+  points:
+  - "Definition from Заболотний Grade 8 p.178:
+    Вставні слова (сполучення слів, речення) виражають ставлення
+    мовця до висловленого. They are NOT members of the sentence
+    and can be removed without changing the grammatical structure.
+    Comparison: 'Земля щороку, на жаль, утрачає лісові масиви' vs
+    'Земля щороку утрачає лісові масиви' — same core meaning."
+  - "From Авраменко Grade 11 p.109:
+    Вставні конструкції (слова, словосполучення та речення)
+    виражають ставлення мовця до сказаного й не несуть нової
+    інформації. They add модальність — the speaker's perspective."
+  - "The key test: can you remove it and the sentence still works
+    grammatically? If yes — it is вставне. If no — it is a member
+    of the sentence.
+    'Здається, дощ уже йде' (вставне — можна забрати).
+    'Мені здається, що дощ уже йде' (присудок — не можна забрати).
+    Practice: learners test sentences using this method."
+  - "Position in the sentence: вставні слова can appear at the
+    beginning, middle, or end: 'Мабуть, дощ уже йде.'
+    'Дощ, мабуть, уже йде.' 'Дощ уже йде, мабуть.'
+    Position affects emphasis and rhythm."
+- section: "Групи вставних слів за значенням (Semantic groups of parenthetical words)"
+  words: 800
+  points:
+  - "1. Впевненість (certainty):
+    звичайно (of course), безумовно (undoubtedly), безперечно (certainly),
+    справді (indeed), без сумніву (without doubt), певна річ (certainly).
+    Example: 'Безумовно, це правильне рішення.'
+    2. Невпевненість (uncertainty):
+    мабуть (probably), можливо (possibly), здається (it seems),
+    певно (probably), либонь (perhaps), нібито (allegedly).
+    Example: 'Мабуть, дощ уже йде.'"
+  - "3. Емоції (emotions):
+    на жаль (unfortunately), на щастя (fortunately), на диво (surprisingly),
+    на сором (shamefully), як на зло (as if to spite).
+    Example: 'На жаль, я не зможу прийти.'
+    4. Джерело інформації (source):
+    за даними (according to data), на думку (in the opinion of),
+    як відомо (as is known), за словами (according to the words of),
+    кажуть (they say), мовляв (reportedly).
+    Example: 'За даними екологів, ситуація погіршується.'"
+  - "5. Порядок думок (ordering thoughts):
+    по-перше (firstly), по-друге (secondly), отже (therefore),
+    нарешті (finally), навпаки (on the contrary), зрештою (after all),
+    до речі (by the way), наприклад (for example).
+    Example: 'По-перше, це дорого. По-друге, це непотрібно.'
+    6. Привернення уваги (attracting attention):
+    бачиш (you see), знаєш (you know), уяви собі (imagine),
+    розумієш (you understand), послухай (listen), майте на увазі (bear in mind).
+    Example: 'Уяви собі, він таки прийшов!'"
+  - "Practice: learners read a Ukrainian text and classify all вставні слова
+    by semantic group. Then compose sentences using one word from each group."
+- section: "Завжди вставні vs ніколи не вставні (Always parenthetical vs never parenthetical)"
+  words: 550
+  points:
+  - "Words that are ALWAYS вставні from Авраменко Grade 9 p.13:
+    отже (therefore), мабуть (probably), по-перше (firstly),
+    по-друге (secondly), щоправда (to be fair), а втім (however).
+    These ALWAYS require commas."
+  - "Words that are NEVER вставні from Авраменко Grade 9 p.13:
+    адже (because/after all), навіть (even), принаймні (at least),
+    усе-таки (nevertheless), начебто (as if), нібито (allegedly —
+    some sources allow it as вставне, but Авраменко lists it here).
+    These NEVER take вставні commas."
+  - "Tricky cases — words that can be either вставні or members:
+    'Здається, дощ іде' (вставне) vs 'Він здається розумним' (присудок).
+    'Можливо, він правий' (вставне) vs 'Це можливо' (присудок).
+    'Правда, я запізнився' (вставне) vs 'Це правда' (підмет).
+    Practice: learners determine whether a highlighted word is вставне
+    or a sentence member, applying the removal test."
+  - "Common error: treating навіть, адже, принаймні as вставні
+    and adding unnecessary commas. Practice: learners remove
+    incorrect commas from sentences."
+- section: "Пунктуація вставних слів (Punctuation of parenthetical words)"
+  words: 600
+  points:
+  - "Basic rule: вставні слова are set off by commas:
+    На початку речення: 'Мабуть, завтра буде дощ.'
+    У середині: 'Завтра, мабуть, буде дощ.'
+    У кінці: 'Завтра буде дощ, мабуть.'
+    Вставні словосполучення: 'За словами лікаря, все добре.'
+    Вставні речення: 'Дощ, як мені здається, уже йде.'"
+  - "Дужки та тире for вставні речення:
+    When the вставна конструкція is longer or adds significant
+    commentary, use тире or дужки:
+    'Цей фільм — я бачив його тричі — справді чудовий.'
+    'Цей фільм (я бачив його тричі) справді чудовий.'
+    Practice: learners punctuate sentences with вставні конструкції."
+  - "Вставні слова vs сполучники:
+    'Отже, підемо далі' (вставне — comma after отже).
+    'I, власне, це все' (вставне — commas around власне).
+    But: 'I навіть не подумав' (навіть is NOT вставне — no comma).
+    Practice: punctuation exercises with mixed вставні and non-вставні words."
+  - "Reading practice: a Ukrainian newspaper excerpt with вставні слова.
+    Learners identify all вставні конструкції, classify them by group,
+    and verify the punctuation."
+- section: "Вставні слова у мовленні та на письмі (Parenthetical words in speech and writing)"
+  words: 550
+  points:
+  - "Вставні слова in розмовному стилі — discourse markers:
+    'Знаєш, я тут подумав...' 'Слухай, а може...'
+    'Бачиш, як воно...' 'Розумієш, проблема в тому, що...'
+    These maintain dialogue flow and express engagement.
+    Practice: learners use discourse markers in dialogues."
+  - "Вставні слова in публіцистичному стилі — structuring arguments:
+    'По-перше, ... По-друге, ... Отже, ...'
+    'На думку експертів, ...' 'За даними дослідження, ...'
+    Practice: learners write a short argumentative paragraph using
+    вставні слова to organize their reasoning."
+  - "Вставні слова for expressing uncertainty and politeness:
+    'Мабуть, варто зачекати' (softening a suggestion).
+    'Може, підемо?' (polite proposal).
+    'Здається, тут помилка' (diplomatic correction).
+    This pragmatic function is essential for natural Ukrainian."
+  - "Overuse warning: too many вставні слова make text heavy.
+    Compare: 'Мабуть, можливо, здається, це, на мою думку, правильно'
+    (overloaded) vs 'Мабуть, це правильно' (natural).
+    Practice: learners edit texts to reduce вставне-word overuse."
+- section: "Підсумок: слова-компаси (Summary: compass words)"
+  words: 300
+  points:
+  - "Complete reference: all semantic groups with examples,
+    пунктуація rules, ALWAYS/NEVER вставні lists."
+  - "Self-check in Ukrainian:
+    1. Що таке вставні слова? Чим вони відрізняються від членів речення?
+    2. Назвіть шість груп вставних слів за значенням.
+    3. Які слова завжди вставні? Які ніколи не бувають вставними?
+    4. Розставте розділові знаки: Мабуть завтра на жаль буде дощ."
+  - "Preview: Природа i довкілля (M82) — nature and environment vocabulary,
+    where вставні слова will help learners express opinions about ecology."
+vocabulary_hints:
+  required:
+  - "вставне слово (parenthetical word — expresses speaker's attitude)"
+  - "вставна конструкція (parenthetical construction — word, phrase, or clause)"
+  - "мабуть (probably — uncertainty)"
+  - "можливо (possibly — uncertainty)"
+  - "здається (it seems — uncertainty)"
+  - "на жаль (unfortunately — negative emotion)"
+  - "на щастя (fortunately — positive emotion)"
+  - "отже (therefore — ordering thoughts)"
+  - "по-перше (firstly — ordering thoughts)"
+  - "наприклад (for example — illustration)"
+  - "безумовно (undoubtedly — certainty)"
+  - "до речі (by the way — connecting thoughts)"
+  - "за даними (according to data — source of information)"
+  - "на думку (in the opinion of — source of information)"
+  recommended:
+  - "безперечно (certainly — strong certainty)"
+  - "справді (indeed — confirmation)"
+  - "либонь (perhaps — literary uncertainty)"
+  - "на диво (surprisingly — unexpected emotion)"
+  - "зрештою (after all — concluding thoughts)"
+  - "власне (actually/in fact — clarification)"
+  - "мовляв (reportedly — reported speech marker)"
+  - "щоправда (to be fair — concession)"
+  - "навпаки (on the contrary — contrast)"
+  - "уяви собі (imagine — attention-drawing)"
+activity_hints:
+- type: quiz
+  focus: "Classify вставні слова by semantic group and identify which words
+    are always вставні, never вставні, or context-dependent."
+  items: 10
+- type: fill-in
+  focus: "Insert appropriate вставні слова into Ukrainian sentences
+    to express specified attitudes (certainty, doubt, emotion, source)."
+  items: 8
+- type: error-correction
+  focus: "Fix punctuation errors: add missing commas around вставні слова,
+    remove incorrect commas from non-вставні words (адже, навіть)."
+  items: 8
+- type: match-up
+  focus: "Match вставні слова to their semantic groups and to their
+    communicative functions."
+  items: 8
+- type: group-sort
+  focus: "Sort words into three categories: завжди вставні, ніколи не вставні,
+    залежить від контексту."
+  items: 12
+- type: free-write
+  focus: "Write an opinion paragraph (10-12 sentences) on a given topic
+    using at least 5 different вставні слова from different semantic groups."
+  items: 1
+connects_to:
+- "b1-078 (Розмовний стиль — вставні слова as discourse markers)"
+- "b1-080 (Подвійне заперечення — both modify sentence meaning)"
+- "b1-086 (Аргументація — вставні слова for structuring arguments)"
+- "b1-084 (Контрольна робота 9 — checkpoint testing вставні слова)"
+prerequisites:
+- "b1-003 (metalanguage-syntax-cases — sentence structure foundation)"
+- "b1-065 (complex-compound — complex sentence punctuation)"
+- "b1-080 (double-negation — grammatical modification of sentences)"
+grammar:
+- "Вставні слова vs члени речення: the removal test"
+- "Шість семантичних груп вставних слів"
+- "Пунктуація: коми, тире, дужки з вставними конструкціями"
+- "Слова, що завжди/ніколи не бувають вставними"
+- "Омонімія: здається (вставне) vs здається (присудок)"
+register: академічний
+references:
+- title: "Заболотний Grade 8, p.178-182"
+  notes: "Вставні слова (сполучення слів, речення): definition, semantic groups,
+    comparison with sentence members, punctuation rules."
+- title: "Авраменко Grade 11, p.109-112"
+  notes: "Вставні конструкції: definition, groups, punctuation,
+    ZNO-format exercises for practice."
+- title: "Авраменко Grade 9, p.12-13"
+  notes: "Lists of words that are always вставні and never вставні.
+    Повторення вставних конструкцій."
+- title: "Заболотний Grade 5, p.192"
+  notes: "Найбільш уживані вставні слова та сполучення слів — Grade 5
+    introduction to the concept."

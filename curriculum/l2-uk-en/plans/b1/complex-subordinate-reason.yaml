@@ -1,0 +1,156 @@
+module: b1-070
+level: B1
+sequence: 70
+slug: complex-subordinate-reason
+version: '3.0'
+title: "Речення причини"
+subtitle: "Чому? Бо, тому що, через те що, оскільки"
+focus: grammar
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can construct підрядні обставинні причини explaining why the main
+  action happens, using бо, тому що, через те що, оскільки, у зв'язку з тим що"
+- "Learner can distinguish causal conjunctions by register: бо (neutral/colloquial),
+  тому що (neutral), оскільки (formal), через те що (emphasizing cause)"
+- "Learner can correctly place commas: before бо, before що in тому що/через те що,
+  and handle the split construction тому..., що"
+- "Learner can combine причинні речення with other clause types for complex
+  multi-clause sentences"
+- "Learner can express causation naturally in both spoken and written Ukrainian"
+content_outline:
+- section: "Підрядні обставинні причини (Causal subordinate clauses)"
+  words: 600
+  points:
+  - "Definition from Авраменко Grade 9 p.86: складнопідрядне речення
+    з підрядним причини — таке, в якому підрядна частина вказує на
+    причину дії, про яку йдеться в головній частині.
+    Одягай пальто, бо буде холодно. (Чому одягай? — бо буде холодно.)"
+  - "Causal clauses relate to the WHOLE main clause (not a specific word):
+    Ми не пішли на прогулянку, бо пішов дощ.
+    Тому що він запізнився, ми почали без нього.
+    They answer чому? через що? з якої причини?"
+  - "Position: typically AFTER main clause (natural order),
+    but can precede for emphasis: Оскільки погода погіршилася,
+    ми вирішили залишитися вдома."
+- section: "Сполучники причини (Causal conjunctions)"
+  words: 750
+  points:
+  - "Бо — the most common, neutral/slightly colloquial:
+    Я не прийшов, бо був хворий. Вона усміхається, бо рада.
+    Always comes BETWEEN clauses (post-main position).
+    This is what Ukrainian speakers use most in daily speech."
+  - "Тому що — neutral, slightly more formal than бо:
+    Я не прийшов, тому що був хворий.
+    Important: comma placement depends on emphasis:
+    Standard: Я не прийшов, тому що був хворий. (comma before тому що)
+    Split: Я не прийшов тому, що був хворий. (comma splits тому...що,
+    emphasizing the cause)"
+  - "Оскільки — formal, often begins the sentence:
+    Оскільки погода погіршилася, ми вирішили залишитися.
+    У зв'язку з тим що — very formal, official documents:
+    У зв'язку з тим що проєкт завершено, пропонуємо звіт."
+  - "Через те що — emphasizes the cause as an obstacle:
+    Через те що йшов дощ, матч перенесли. (because of the rain...)
+    Завдяки тому що — positive cause:
+    Завдяки тому що він допоміг, ми встигли. (thanks to the fact that...)"
+  - "Register guide and practice: 8 sentences — choose the most
+    appropriate conjunction based on register and context."
+- section: "Причина vs умова (Cause vs condition)"
+  words: 500
+  points:
+  - "Contrast with conditional (M71):
+    Причина: Одягай пальто, бо буде холодно. (it WILL be cold — fact)
+    Умова: Одягай пальто, якщо буде холодно. (IF it is cold — hypothetical)
+    From Авраменко Grade 9 p.86: 'Чи однакові за змістом речення?'
+    Students must distinguish the real difference: причина = known fact,
+    умова = possibility."
+  - "Practice: classify 6 sentence pairs as причинні or умовні."
+- section: "Пунктуація причинних речень (Punctuation of causal clauses)"
+  words: 550
+  points:
+  - "Rules:
+    Бо: comma before бо. Він не прийшов, бо захворів.
+    Тому що: comma before тому що (as a unit) or тому, що (split).
+    Оскільки: comma after підрядне if it precedes main.
+    Через те що / у зв'язку з тим що: comma before the whole conjunction
+    or split: через те, що."
+  - "Split vs unsplit constructions:
+    Unsplit (entire conjunction as unit): Я не прийшов, тому що захворів.
+    Split (emphatic): Я не прийшов тому, що захворів.
+    The split version puts тому in the main clause as a correlative word."
+  - "Practice: punctuate 10 sentences with причинними реченнями."
+- section: "Причинні речення у мовленні (Causal clauses in speech)"
+  words: 700
+  points:
+  - "Reading passage: a text explaining reasons for events using
+    various причинні сполучники. Learners identify all причинні
+    підрядні and note register of each conjunction."
+  - "Dialogue: explaining reasons and justifying decisions.
+    Uses бо (casual) and тому що (slightly formal) naturally."
+  - "Production: write 6-8 sentences explaining why things happened
+    in your life, using at least 3 different причинні сполучники.
+    Then rewrite 2 of them using дієприслівникові звороти:
+    Бо він запізнився, ми почали без нього.
+    → Запізнившись, він пропустив початок."
+- section: "Підсумок та перехід до M71 (Summary and transition)"
+  words: 300
+  points:
+  - "Summary: причинні = чому? через що? Сполучники: бо (розмовний),
+    тому що (нейтральний), оскільки (офіційний), через те що (перешкода).
+    Пунктуація: кома перед сполучником або розщеплення тому...що.
+    Self-check: Я розрізняю причинні сполучники за стилем ✓/✗."
+  - "Preview: M71 — Речення умови. If: якщо, коли (=якщо), як."
+vocabulary_hints:
+  required:
+  - "підрядне обставинне причини (causal subordinate clause)"
+  - "бо (because — neutral/colloquial)"
+  - "тому що (because — neutral)"
+  - "оскільки (since, because — formal)"
+  - "через те що (because of the fact that — obstacle emphasis)"
+  - "причина (cause, reason)"
+  recommended:
+  - "у зв'язку з тим що (in connection with the fact that — very formal)"
+  - "завдяки тому що (thanks to the fact that — positive cause)"
+  - "з тієї причини що (for the reason that)"
+  - "кореляція (correlation — тому in main clause)"
+activity_hints:
+- type: fill-in
+  focus: "Insert correct causal conjunction based on register and context"
+  items: 10
+- type: quiz
+  focus: "Classify: причинне чи умовне речення?"
+  items: 8
+- type: sentence-builder
+  focus: "Construct causal sentences from given events and reasons"
+  items: 8
+- type: error-correction
+  focus: "Fix punctuation errors in причинних реченнях (split vs unsplit)"
+  items: 6
+- type: match-up
+  focus: "Match causal conjunctions to their register level and usage patterns"
+  items: 8
+connects_to:
+- "b1-069 (Часові речення)"
+- "b1-071 (Речення умови)"
+- "b1-051 (Причина і мета — prepositions of cause, Phase 6)"
+prerequisites:
+- "b1-069 (Temporal clauses — обставинні clause pattern established)"
+grammar:
+- "Підрядні обставинні причини: відповідають на чому? через що?"
+- "Causal conjunctions: бо, тому що, оскільки, через те що, завдяки тому що"
+- "Register differentiation of причинні сполучники"
+- "Split construction: тому, що vs тому що"
+- "Contrast with conditional clauses (причина vs умова)"
+register: науково-навчальний
+references:
+- title: "Авраменко Grade 9, p.86"
+  notes: "Складнопідрядні речення з підрядними причини: definition,
+    contrast with conditional, exercises."
+- title: "Заболотний Grade 9, p.112"
+  notes: "§21 Підрядні частини мети, умови, допусту: context for
+    causal clause comparison."
+- title: "Ворон Grade 9, p.80"
+  notes: "Підрядні обставинні причини: від того що, тому що,
+    через те що conjunction inventory."

@@ -1,0 +1,159 @@
+module: b1-074
+level: B1
+sequence: 74
+slug: reported-speech
+version: '3.0'
+title: "Пряма і непряма мова"
+subtitle: "Передача чужого мовлення: пряма мова, непряма мова, діалог"
+focus: grammar
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can define пряма мова as exact quotation with слова автора
+  and apply correct punctuation (four position patterns)"
+- "Learner can transform пряма мова into непряма мова using з'ясувальні
+  речення with що, щоб, чи (connecting to M67)"
+- "Learner can handle pronoun and tense shifts when converting:
+  я→він/вона, мій→його/її, тут→там, зараз→тоді"
+- "Learner can punctuate діалог correctly with тире"
+- "Learner can use both пряма and непряма мова naturally in storytelling
+  and reporting at B1 level"
+content_outline:
+- section: "Пряма мова: будова і розділові знаки (Direct speech: structure and punctuation)"
+  words: 800
+  points:
+  - "Definition from Заболотний Grade 9 p.31: пряма мова — це точно
+    відтворене чуже мовлення. It consists of two parts:
+    слова автора (author's words) and пряма мова (the quote).
+    Four punctuation patterns:
+    1. А: «П.» — Тарас сказав: «Я приїду завтра.»
+    2. «П,» — а. — «Я приїду завтра,» — сказав Тарас.
+    3. А: «П,» — а. — Тарас сказав: «Я приїду,» — і вийшов.
+    4. «П, — а, — п.» — «Я приїду, — сказав Тарас, — завтра.»"
+  - "Ukrainian quotation marks: « » (кутові лапки) — not English quotes.
+    Тире (—) separates автор from пряма мова in patterns 2-4.
+    The слова автора contain a verb of speech: сказав, запитав,
+    відповів, крикнув, прошепотів, подумав."
+  - "Practice: punctuate 8 sentences with пряма мова in all four patterns."
+- section: "Непряма мова: перетворення (Indirect speech: transformation)"
+  words: 800
+  points:
+  - "Definition from Заболотний Grade 9 p.31: непряма мова — це чуже
+    мовлення, яке передають не дослівно, а лише зі збереженням змісту.
+    Непряма мова uses складнопідрядне речення structure:
+    Тарас сказав, що він приїде завтра.
+    (пряма: «Я приїду завтра» → непряма: що він приїде завтра)"
+  - "Conjunction choice based on sentence type in пряма мова:
+    Розповідне → що: Він сказав: «Я знаю.» → Він сказав, що знає.
+    Спонукальне → щоб: Мама сказала: «Помий руки.» → Мама сказала, щоб я помив руки.
+    Питальне (з чи) → чи: Він запитав: «Ти прийдеш?» → Він запитав, чи я прийду.
+    Питальне (зі сл. словом) → the question word itself:
+    Він запитав: «Де ти живеш?» → Він запитав, де я живу."
+  - "Pronoun and deictic shifts:
+    я → він/вона, ми → вони, мій → його/її/їхній,
+    тут → там, зараз → тоді, сьогодні → того дня,
+    вчора → напередодні, завтра → наступного дня.
+    These shifts are systematic, not random."
+  - "Practice: transform 10 sentences from пряма to непряма мова."
+- section: "Складні випадки перетворення (Complex transformation cases)"
+  words: 550
+  points:
+  - "Imperative → щоб + past tense:
+    Вчитель сказав: «Відкрийте підручники.» →
+    Вчитель сказав, щоб учні відкрили підручники.
+    Note: imperative becomes past-tense form after щоб (same rule as M72)."
+  - "Questions with question words:
+    Мама запитала: «Куди ти йдеш?» → Мама запитала, куди я йду.
+    Він поцікавився: «Скільки це коштує?» → Він поцікавився, скільки це коштує."
+  - "Exclamations and emotional speech — what gets lost:
+    Він крикнув: «Яка краса!» → Він сказав, що це дуже красиво.
+    Вигуки, звертання, частки — disappear in непряма мова.
+    This is why пряма мова is more expressive."
+- section: "Діалог: оформлення (Dialogue: formatting)"
+  words: 450
+  points:
+  - "Ukrainian dialogue formatting with тире:
+    — Привіт! Як справи? — запитала Оксана.
+    — Дякую, добре. А в тебе? — відповів Андрій.
+    — Чудово! Ти вже читав цю книгу?
+    — Ні, ще не читав. А варто?
+    Each new speaker starts with тире on a new line."
+  - "Dialogue in narrative text: combining авторські ремарки with speech.
+    Practice: format a short dialogue (6-8 exchanges) with correct punctuation."
+- section: "Практика: пряма і непряма мова у тексті (Practice in text)"
+  words: 700
+  points:
+  - "Reading passage: a narrative containing both пряма and непряма мова.
+    Learners identify each, explain why the author chose one over the other."
+  - "Transformation exercise: convert a dialogue (6 exchanges) to
+    непряма мова, then convert a narrative passage with непряма мова
+    back to пряма мова with correct punctuation."
+  - "Production: write a short narrative (8-10 sentences) about a
+    conversation you had. Use at least 3 instances of пряма мова
+    and 3 of непряма мова, with correct punctuation throughout."
+- section: "Підсумок та перехід до M75 (Summary and transition)"
+  words: 300
+  points:
+  - "Summary: пряма мова = дослівна передача + лапки + автор.
+    Непряма = переказ + складнопідрядне (що/щоб/чи).
+    Зміни: займенники, час, місце. Діалог = тире.
+    Self-check: Я правильно оформлюю пряму мову ✓/✗,
+    Я перетворюю пряму на непряму і навпаки ✓/✗."
+  - "Preview: M75 — Дозвілля, культура і свята. Communication module
+    putting Phase 8 syntax into practice."
+vocabulary_hints:
+  required:
+  - "пряма мова (direct speech)"
+  - "непряма мова (indirect/reported speech)"
+  - "слова автора (author's words — reporting clause)"
+  - "лапки (quotation marks — « »)"
+  - "тире (dash — dialogue marker)"
+  - "діалог (dialogue)"
+  - "перетворення (transformation — direct to indirect)"
+  - "дієслово мовлення (verb of speech — сказати, запитати)"
+  recommended:
+  - "вигук (exclamation — lost in indirect speech)"
+  - "звертання (vocative/address — lost in indirect speech)"
+  - "дослівно (verbatim, word for word)"
+  - "переказ (retelling)"
+  - "авторська ремарка (author's remark in dialogue)"
+activity_hints:
+- type: fill-in
+  focus: "Punctuate sentences with пряма мова in all four patterns"
+  items: 10
+- type: sentence-builder
+  focus: "Transform пряма мова to непряма and vice versa"
+  items: 10
+- type: quiz
+  focus: "Choose correct conjunction for indirect speech (що/щоб/чи/question word)"
+  items: 8
+- type: error-correction
+  focus: "Fix punctuation and pronoun/tense shift errors in reported speech"
+  items: 8
+- type: match-up
+  focus: "Match пряма мова sentences to their непряма мова equivalents"
+  items: 8
+connects_to:
+- "b1-067 (З'ясувальні речення — непряма мова uses з'ясувальні)"
+- "b1-072 (Речення мети — щоб after imperative in indirect speech)"
+- "b1-075 (Дозвілля — communication applying Phase 8 syntax)"
+prerequisites:
+- "b1-073 (Concessive clauses — all subordinate types covered)"
+grammar:
+- "Пряма мова: four punctuation patterns with « » and тире"
+- "Непряма мова: transformation using що, щоб, чи, question words"
+- "Pronoun and deictic shifts (я→він, тут→там, зараз→тоді)"
+- "Imperative → щоб + past-tense form in indirect speech"
+- "Діалог formatting with тире"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 9, p.31-43"
+  notes: "Пряма й непряма мова: definition, punctuation patterns,
+    transformation rules, dialogue formatting, exercises."
+- title: "Ворон Grade 11, p.222"
+  notes: "Невласне пряма мова: intermediate type combining features
+    of direct and indirect speech (художній стиль)."
+- title: "Глазова Grade 11, p.146"
+  notes: "Пунктуаційна норма: пряма мова punctuation rules,
+    distinction from непряма мова."

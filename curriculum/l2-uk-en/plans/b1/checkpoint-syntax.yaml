@@ -1,0 +1,138 @@
+module: b1-076
+level: B1
+sequence: 76
+slug: checkpoint-syntax
+version: '3.0'
+title: "Контрольна робота 8"
+subtitle: "Перевірка знань: складні речення, пряма і непряма мова, дозвілля і культура"
+focus: review
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can demonstrate mastery of складносурядні речення with correct
+  сполучник choice and punctuation"
+- "Learner can construct all types of складнопідрядні речення: з'ясувальні,
+  означальні, and обставинні (часу, причини, умови, мети, допусту)"
+- "Learner can transform пряма мова to непряма мова and correctly format діалог"
+- "Learner can classify складні речення by type and identify сполучники"
+- "Learner can use complex syntax naturally in communicative contexts
+  about leisure, culture, and holidays"
+content_outline:
+- section: "Вступ: як працювати з контрольною (Introduction)"
+  words: 350
+  points:
+  - "Overview: this checkpoint tests everything from M66-M75 (Phase 8):
+    складносурядне (M66), з'ясувальне (M67), означальне (M68),
+    часове (M69), причини (M70), умови (M71), мети (M72),
+    допусту (M73), пряма/непряма мова (M74), дозвілля (M75)."
+  - "Self-assessment framework: after each block, rate confidence."
+- section: "Блок 1: Складносурядне речення (Block 1: Compound sentences — M66)"
+  words: 500
+  points:
+  - "Conjunction classification: given 8 складносурядних речень,
+    classify сполучники as єднальні, протиставні, or розділові."
+  - "Punctuation: place commas, semicolons, and dashes in 6 compound
+    sentences, including shared-member exceptions."
+  - "Construction: combine 4 pairs of simple sentences using appropriate
+    сурядні сполучники."
+- section: "Блок 2: Складнопідрядні речення (Block 2: Subordinate clauses — M67-M73)"
+  words: 700
+  points:
+  - "Classification: given 10 складнопідрядних речень, determine the type
+    of підрядне: з'ясувальне, означальне, часове, причини, умови, мети, допусту."
+  - "Conjunction selection: fill in correct conjunction in 8 sentences
+    (що/який/коли/бо/якщо/щоб/хоча). Test register awareness."
+  - "Який declension: complete 6 sentences with correct form of який
+    (agreeing in gender/number with antecedent, case from clause role)."
+  - "Construction: build 4 складнопідрядні речення of specified types
+    from given information."
+- section: "Блок 3: Пряма і непряма мова (Block 3: Reported speech — M74)"
+  words: 550
+  points:
+  - "Punctuation: correctly punctuate 6 sentences with пряма мова
+    in various patterns (слова автора before/after/in the middle)."
+  - "Transformation: convert 6 sentences from пряма to непряма мова,
+    applying correct conjunction choice and pronoun/tense shifts."
+  - "Reverse: convert 4 sentences from непряма to пряма мова."
+- section: "Блок 4: Дозвілля, культура і свята (Block 4: Communication — M75)"
+  words: 500
+  points:
+  - "Vocabulary: match 10 cultural/holiday terms to their descriptions."
+  - "Reading comprehension: a short text about a Ukrainian holiday
+    using complex syntax. Questions test language identification:
+    classify each складне речення in the text."
+  - "Production: write 4-6 sentences about a cultural event or holiday
+    using at least 3 types of складні речення."
+- section: "Блок 5: Інтегроване завдання (Block 5: Integrated task)"
+  words: 600
+  points:
+  - "Cloze passage: a narrative text with 12 blanks where learners
+    fill in correct conjunctions, forms of який, punctuation marks,
+    and reported speech transformations."
+  - "Classification task: given 8 mixed складні речення, classify
+    each as складносурядне or складнопідрядне, then identify the
+    specific subtype."
+  - "Production: write an opinion paragraph (6-8 sentences) about
+    whether traditional celebrations are important, using at least
+    складносурядне, з'ясувальне, означальне, причинне, and допустове."
+- section: "Підсумок та самооцінка (Summary and self-assessment)"
+  words: 400
+  points:
+  - "Self-assessment checklist:
+    Складносурядне: Чи розрізняю єднальні/протиставні/розділові?
+    Складнопідрядне: Чи визначаю тип підрядного?
+    Який: Чи правильно вживаю який у відмінках?
+    Пряма/непряма мова: Чи правильно перетворюю?
+    Комунікація: Чи можу висловити думку складними реченнями?"
+  - "Recommendations: if any block scores below 70%, return to the
+    corresponding module. Phase 9 (Text and Register) builds on syntax
+    mastery to refine Ukrainian style and expressiveness."
+vocabulary_hints:
+  required:
+  - "контрольна робота (test/assessment)"
+  - "складносурядне речення (compound sentence)"
+  - "складнопідрядне речення (complex sentence)"
+  - "сполучник (conjunction)"
+  - "підрядне речення (subordinate clause)"
+  - "пряма мова (direct speech)"
+  - "непряма мова (indirect speech)"
+  recommended:
+  - "самооцінка (self-assessment)"
+  - "повторення (review)"
+  - "класифікація (classification)"
+  - "перетворення (transformation)"
+activity_hints:
+- type: quiz
+  focus: "Mixed: classify sentence types, choose conjunctions, identify subordinate clause types"
+  items: 12
+- type: fill-in
+  focus: "Insert correct conjunctions and forms of який in complex sentences"
+  items: 10
+- type: sentence-builder
+  focus: "Transform пряма мова ↔ непряма мова"
+  items: 8
+- type: error-correction
+  focus: "Fix conjunction, punctuation, and pronoun-shift errors in complex sentences"
+  items: 8
+- type: match-up
+  focus: "Match sentence types to their definitions and example patterns"
+  items: 10
+- type: free-write
+  focus: "Write an opinion paragraph using all Phase 8 syntax types about Ukrainian culture"
+  items: 1
+connects_to:
+- "b1-066 to b1-075 (all Phase 8 modules)"
+- "b1-077 (Лексична стилістика — first module of Phase 9)"
+prerequisites:
+- "b1-075 (Leisure, culture, festivals — all Phase 8 complete)"
+grammar:
+- "Review: складносурядне (єднальні/протиставні/розділові)"
+- "Review: складнопідрядне (з'ясувальне, означальне, часу, причини, умови, мети, допусту)"
+- "Review: пряма і непряма мова (transformation, punctuation, dialogue)"
+- "Integration: all Phase 8 syntax in communicative context"
+register: науково-навчальний
+references:
+- title: "All Phase 8 module references"
+  notes: "This checkpoint draws on textbook sources cited in M66-M75:
+    Заболотний Grade 9, Ворон Grade 9/11, Авраменко Grade 9, Глазова Grade 11."

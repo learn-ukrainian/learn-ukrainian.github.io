@@ -1,0 +1,158 @@
+module: b1-052
+level: B1
+sequence: 52
+slug: cases-with-ordinal-numerals
+version: '3.0'
+title: "Порядкові числівники і відмінки"
+subtitle: "Відмінювання порядкових числівників, дати, час, поверхи"
+focus: grammar
+pedagogy: PPP
+phase: "B1.6 [Advanced Case Usages & Prepositions]"
+word_target: 4000
+objectives:
+- "Learner can decline ordinal numerals like adjectives (перший-першого-першому)
+  and correctly agree them with nouns in gender, number, and case"
+- "Learner can use ordinal numerals in dates: Р.в. for 'on a date'
+  (п'ятнадцятого березня), Н.в. for 'today is' (сьогодні п'ятнадцяте березня)"
+- "Learner can use ordinal numerals in clock time expressions:
+  о третій годині, за десять хвилин четверта, о пів на п'яту"
+- "Learner can use ordinals in everyday contexts: floors (на третьому поверсі),
+  order (перший раз, другий раз), centuries (у двадцять першому столітті)"
+- "Learner can decline compound ordinal numerals where only the last word
+  changes (двісті двадцять п'ята — двісті двадцять п'ятої)"
+content_outline:
+- section: "Відмінювання порядкових числівників (Declension of ordinals)"
+  words: 700
+  points:
+  - "From Литвінова Grade 6 p.237:
+    Ordinal numerals decline like adjectives.
+    Твердий тип: перший, другий, четвертий, п'ятий, шостий...
+    М'який тип: третій, третя, третє, треті.
+    Full paradigm for перший (m/f/n/pl) and третій (m/f/n/pl)."
+  - "Agreement: ordinal + noun must agree in gender, number, case.
+    перший урок (m. Н.в.), першу книжку (f. Зн.в.),
+    першого вересня (n. Р.в.), перших учнів (pl. Р.в.).
+    Practice: decline 'п'ятий клас' through all 7 cases."
+  - "Compound ordinals (Заболотний Grade 6 p.179):
+    ONLY the last word declines:
+    двадцять третій день → двадцять третього дня → двадцять третьому дню.
+    Practice: decline 'сто п'ятнадцята сторінка' through all cases."
+- section: "Дати (Dates)"
+  words: 700
+  points:
+  - "Saying 'today is': Сьогодні + ordinal in Н.в. + month in Р.в.:
+    Сьогодні п'яте березня. Сьогодні тридцять перше грудня.
+    Note: the ordinal is NEUTER (число = neuter noun implied)."
+  - "Saying 'on a date': ordinal in Р.в. + month in Р.в.:
+    п'ятого березня, тридцять першого грудня.
+    Він народився п'ятнадцятого вересня тисяча дев'ятсот дев'яностого року.
+    Year: тисяча дев'ятсот дев'яностого року (only last word declines)."
+  - "Writing dates with digits: 15 березня 2024 року.
+    With ordinal ending: 15-го березня, 1-ша сторінка, 5-й клас.
+    But dates in calendar format: 15.03.2024 (no ending).
+    Practice: read and write 10 dates in full Ukrainian word form."
+- section: "Час (Clock time with ordinals)"
+  words: 600
+  points:
+  - "From Авраменко Grade 11 p.42:
+    Full hours: о першій годині, о другій, о третій, о п'ятій.
+    Note: годині is in М.в. (о + М.в.).
+    Half hours: о пів на п'яту (at half past four — lit. 'half toward fifth')."
+  - "Minutes past: десять хвилин на п'яту (4:10 — 'ten minutes toward fifth').
+    Minutes to: за десять хвилин п'ята (4:50 — 'in ten minutes, the fifth').
+    NOT *без десяти п'ять (Russicism from без десяти пять).
+    Correct: за десять хвилин п'ята or чотири п'ятдесят."
+  - "Practice: express these times in Ukrainian:
+    3:15, 7:30, 11:45, 1:20, 9:55, 12:00, 6:05.
+    Then: answer 'Котра година?' for each."
+- section: "Поверхи, номери, порядок (Floors, numbers, order)"
+  words: 500
+  points:
+  - "Floors: на першому поверсі (М.в.), з другого поверху (Р.в.),
+    на п'ятий поверх (Зн.в. — direction).
+    Маршрути: автобус номер сьомий, тролейбус п'ятнадцятий."
+  - "Order: перший раз, вдруге (adverb — for the second time),
+    утретє, вчетверте. В першу чергу (first of all).
+    Centuries: у двадцять першому столітті (М.в.),
+    двадцяте століття (Н.в.)."
+  - "Practice: describe your building (which floor), give directions
+    (take bus number X), discuss historical periods (in the Y century)."
+- section: "Порядкові числівники в контексті (Ordinals in real usage)"
+  words: 700
+  points:
+  - "Reading passage: a schedule/invitation containing multiple dates,
+    times, floor numbers, and ordinals. Learners extract information
+    and answer questions requiring correct ordinal declension.
+    'Зустріч відбудеться п'ятнадцятого березня о третій годині
+    на четвертому поверсі, у кімнаті двісті двадцять п'ятій.'"
+  - "Dialogue: making an appointment — agreeing on date, time, location.
+    'Коли вам зручно? Може, двадцять першого? О котрій годині?
+    О пів на другу? Добре, на якому поверсі ваш офіс?'"
+  - "Self-check: dates of major Ukrainian historical events:
+    24 серпня 1991 (День Незалежності), 28 червня 1996 (Конституція).
+    Write in full word form with correct cases."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Key patterns: ordinals decline like adjectives; compound ordinals —
+    only last word declines; dates in Р.в.; clock time uses ordinals in М.в.;
+    NOT *без десяти → за десять хвилин."
+  - "Preview: кількісні вирази — agreement between quantity words and nouns."
+vocabulary_hints:
+  required:
+  - "порядковий числівник (ordinal numeral — перший, другий, третій)"
+  - "дата (date — uses ordinal in Р.в.)"
+  - "котра година (what time is it)"
+  - "поверх (floor/storey)"
+  - "століття (century)"
+  - "половина (half — о пів на п'яту)"
+  - "хвилина (minute)"
+  - "рік (year — року in Р.в.)"
+  recommended:
+  - "складений числівник (compound numeral — двадцять п'ятий)"
+  - "вдруге (for the second time — adverb)"
+  - "утретє (for the third time — adverb)"
+  - "в першу чергу (first of all)"
+  - "двадцять перше століття (twenty-first century)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct ordinal form for dates, times, and contexts"
+  items: 8
+- type: fill-in
+  focus: "Write dates and times in full Ukrainian word form"
+  items: 8
+- type: match-up
+  focus: "Match digital clock time to written Ukrainian expression"
+  items: 8
+- type: error-correction
+  focus: "Fix Russicisms in time and date expressions (*без десяти)"
+  items: 6
+- type: sentence-builder
+  focus: "Build sentences about schedules using ordinals in correct cases"
+  items: 6
+- type: dialogue-completion
+  focus: "Complete appointment-making dialogue with dates and times"
+  items: 6
+connects_to:
+- "b1-053 (Кількісні вирази — quantity expressions with cases)"
+- "b1-046 (Родовий відмінок — dates use Р.в.)"
+- "b1-050 (Часові прийменники — time expressions)"
+prerequisites:
+- "A2 completion (numbers 1-1000, basic time telling)"
+- "b1-046 (Родовий відмінок деталі — Р.в. for dates)"
+grammar:
+- "Відмінювання порядкових числівників як прикметників"
+- "Складені порядкові: тільки останнє слово відмінюється"
+- "Дати: Н.в. (сьогодні п'яте) vs Р.в. (п'ятого березня)"
+- "Час: о третій годині, о пів на п'яту, за десять хвилин четверта"
+- "Помилки: *без десяти → за десять хвилин"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 6, p.179"
+  notes: "Ordinal numeral declension, compound ordinals, date and time rules."
+- title: "Литвінова Grade 6, p.237"
+  notes: "Ordinals decline like adjectives, третій as м'який тип, digit notation."
+- title: "Авраменко Grade 11, p.42"
+  notes: "Clock time rules: о пів на, за десять хвилин, avoid *без десяти."
+- title: "Авраменко Grade 11, p.37"
+  notes: "Numeral declension overview including ordinals."

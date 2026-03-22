@@ -1,0 +1,164 @@
+module: b1-075
+level: B1
+sequence: 75
+slug: leisure-culture-festivals
+version: '3.0'
+title: "Дозвілля, культура і свята"
+subtitle: "Вільний час, мистецтво, традиції та святкування"
+focus: communication
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can discuss leisure activities, hobbies, sports, and entertainment
+  using Phase 8 complex syntax (складносурядні and складнопідрядні)"
+- "Learner can describe Ukrainian cultural events, museums, theatre, and music
+  using означальні, причинні, and допустові clauses naturally"
+- "Learner can talk about Ukrainian holidays and traditions: Різдво,
+  Великдень, Івана Купала, День Незалежності, using reported speech"
+- "Learner can express opinions about cultural events using argumentation
+  patterns: Хоча..., проте... / Я вважаю, що... тому що..."
+- "Learner can use all Phase 8 syntax structures in connected communicative discourse"
+content_outline:
+- section: "Дозвілля і захоплення (Leisure and hobbies)"
+  words: 700
+  points:
+  - "Leisure vocabulary cluster:
+    дозвілля (leisure), захоплення/хобі (hobby), спорт (sport),
+    кіно (cinema), театр (theatre), концерт (concert), музей (museum),
+    виставка (exhibition), подорож (travel), настільні ігри (board games).
+    Integration with complex syntax:
+    Мій друг, який захоплюється фотографією, показав мені свої роботи.
+    (означальне — M68)"
+  - "Dialogue 1: discussing hobbies and weekend plans.
+    Uses складнопідрядні речення naturally:
+    — Чим ти зазвичай займаєшся у вільний час?
+    — Я люблю читати, хоча останнім часом більше дивлюся серіали.
+    — А я вважаю, що найкраще дозвілля — це спорт, тому що...
+    Integration of допустове (хоча), з'ясувальне (що), причинне (тому що)."
+  - "Sports vocabulary: футбол, баскетбол, плавання, біг, йога,
+    тренування (training), змагання (competition), перемога (victory).
+    Using reported speech: Тренер сказав, що завтра буде тренування."
+- section: "Культура і мистецтво (Culture and art)"
+  words: 650
+  points:
+  - "Cultural vocabulary:
+    мистецтво (art), живопис (painting), скульптура (sculpture),
+    музика (music), пісня (song), танець (dance), вистава (performance),
+    фільм (film), книга (book), поезія (poetry), художник (artist).
+    Ukrainian cultural landmarks: Львівська опера, Софійський собор,
+    Мистецький арсенал, Олеський замок."
+  - "Describing cultural events with складними реченнями:
+    Виставка, яку ми відвідали, була присвячена сучасному мистецтву.
+    Хоча квитки були дорогі, вистава того варта.
+    Ми пішли в музей, щоб побачити нову експозицію.
+    (means реченнями, допустове, мети)"
+  - "Dialogue 2: discussing a cultural event — what you saw, your opinion.
+    Uses пряма і непряма мова (M74):
+    Критик написав, що ця виставка — «найважливіша подія року».
+    Подруга сказала: «Тобі обов'язково треба це побачити!»"
+- section: "Українські свята і традиції (Ukrainian holidays and traditions)"
+  words: 700
+  points:
+  - "Major Ukrainian holidays:
+    Різдво (Christmas — January 7/25), Великдень (Easter),
+    Івана Купала (Midsummer — July 7), День Незалежності (August 24),
+    День Конституції (June 28), День захисників і захисниць (October 1).
+    Cultural context: Ukrainian holiday traditions vs Western equivalents."
+  - "Holiday traditions vocabulary:
+    колядки (Christmas carols), кутя (kutia — Christmas dish),
+    писанки (Easter eggs), вінок (wreath), купальська ніч (Kupala Night),
+    вишиванка (embroidered shirt), рушник (embroidered towel).
+    Describing traditions with complex syntax:
+    Коли настає Різдво, родина збирається разом, щоб святкувати.
+    Дарма що ця традиція дуже давня, вона не втрачає популярності."
+  - "Reading passage: a text about one Ukrainian holiday with rich
+    complex syntax. Comprehension questions test LANGUAGE:
+    — Знайдіть усі складнопідрядні речення і визначте їх тип.
+    — Перетворіть пряму мову в тексті на непряму."
+- section: "Вираження думок і аргументація (Expressing opinions and argumentation)"
+  words: 600
+  points:
+  - "Opinion patterns using Phase 8 syntax:
+    Я вважаю, що... (з'ясувальне) тому що... (причинне).
+    Хоча деякі люди думають, що..., я переконаний, що... (допустове + з'ясувальне).
+    Якщо порівняти X і Y, то... (умовне).
+    За словами експертів, ... (непряма мова)."
+  - "Dialogue 3: debating whether traditional or modern holidays
+    are more important. Uses argumentation with Phase 8 structures."
+  - "Production: write an opinion paragraph (6-8 sentences) about
+    a cultural event or holiday, using at least 4 different types
+    of складні речення."
+- section: "Підсумок фази 8 та перехід до M76 (Phase 8 summary and transition)"
+  words: 350
+  points:
+  - "Summary of Phase 8 grammar applied in communicative contexts:
+    M66: складносурядне (і, але, або) — connecting equal ideas.
+    M67: з'ясувальне (що, щоб, чи) — reporting thoughts/speech.
+    M68: означальне (який) — describing nouns.
+    M69-73: обставинні (коли, бо, якщо, щоб, хоча) — time/cause/condition/purpose/concession.
+    M74: пряма і непряма мова — quoting and reporting."
+  - "Self-check: Я можу розповісти про свято ✓/✗,
+    Я вживаю різні складні речення ✓/✗.
+    Preview: M76 — Контрольна робота 8, reviewing all of Phase 8."
+vocabulary_hints:
+  required:
+  - "дозвілля (leisure, free time)"
+  - "захоплення (hobby, passion)"
+  - "мистецтво (art)"
+  - "виставка (exhibition)"
+  - "вистава (performance, show)"
+  - "Різдво (Christmas)"
+  - "Великдень (Easter)"
+  - "свято (holiday, celebration)"
+  - "традиція (tradition)"
+  - "культура (culture)"
+  - "святкувати (to celebrate)"
+  - "колядка (Christmas carol)"
+  - "писанка (decorated Easter egg)"
+  recommended:
+  - "Івана Купала (Midsummer holiday)"
+  - "кутя (kutia — traditional Christmas dish)"
+  - "вінок (wreath)"
+  - "рушник (embroidered towel)"
+  - "вишиванка (embroidered shirt)"
+  - "живопис (painting — art form)"
+  - "скульптура (sculpture)"
+  - "змагання (competition)"
+  - "перемога (victory)"
+  - "експозиція (exposition, exhibit)"
+activity_hints:
+- type: fill-in
+  focus: "Complete texts about holidays and culture using correct складні речення"
+  items: 10
+- type: quiz
+  focus: "Match Ukrainian holidays to their traditions and dates"
+  items: 8
+- type: sentence-builder
+  focus: "Express opinions about cultural events using Phase 8 syntax patterns"
+  items: 8
+- type: match-up
+  focus: "Match leisure/cultural vocabulary to descriptions"
+  items: 8
+- type: error-correction
+  focus: "Fix syntax and conjunction errors in texts about culture"
+  items: 6
+- type: free-write
+  focus: "Write about a holiday or cultural event using all Phase 8 syntax types"
+  items: 1
+connects_to:
+- "b1-066 to b1-074 (all Phase 8 grammar modules)"
+- "b1-076 (Контрольна робота 8 — Phase 8 review)"
+prerequisites:
+- "b1-074 (Reported speech — all Phase 8 grammar complete)"
+grammar:
+- "Integration of M66-74 grammar in communicative context"
+- "Складносурядні речення for connecting ideas about leisure"
+- "Складнопідрядні речення for describing culture and expressing opinions"
+- "Пряма і непряма мова for reporting and quoting"
+- "Argumentation patterns using Phase 8 syntax"
+register: розмовний
+references:
+- title: "Phase 8 module references (M66-M74)"
+  notes: "All textbook sources from Заболотний Grade 9, Ворон Grade 9/11,
+    Авраменко Grade 9, Глазова Grade 11."

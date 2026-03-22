@@ -1,0 +1,178 @@
+module: b1-054
+level: B1
+sequence: 54
+slug: advanced-pronouns
+version: '3.0'
+title: "Займенники (деталі)"
+subtitle: "Питально-відносні, зворотний себе, неозначені та заперечні займенники"
+focus: grammar
+pedagogy: PPP
+phase: "B1.6 [Advanced Case Usages & Prepositions]"
+word_target: 4000
+objectives:
+- "Learner can use interrogative-relative pronouns (хто, що, який, чий, котрий)
+  in both questions and relative clauses, declining them through all cases"
+- "Learner can use the reflexive pronoun себе correctly in all cases
+  (себе, собі, собою) and distinguish it from possessive свій"
+- "Learner can form and use indefinite pronouns: хтось, щось, будь-хто,
+  хто-небудь, дехто, дещо, якийсь — knowing spelling rules (hyphen, together)"
+- "Learner can form and use negative pronouns: ніхто, ніщо, нічий, ніякий —
+  including their behaviour with prepositions (ні з ким, ні в чому)"
+- "Learner can distinguish stress-dependent meanings in negative pronouns:
+  нікого (nobody around) vs нікого (nobody to turn to)"
+content_outline:
+- section: "Питально-відносні займенники (Interrogative-relative pronouns)"
+  words: 700
+  points:
+  - "Core pronouns: хто, що, який (яка, яке, які), чий (чия, чиє, чиї), котрий.
+    As interrogative: Хто це? Що ти робиш? Який фільм?
+    As relative (connecting clauses): Людина, яка прийшла... Те, що ти сказав..."
+  - "Declension of хто and що:
+    хто: кого, кому, кого, ким, (на) кому.
+    що: чого, чому, що, чим, (на) чому.
+    Practice: use in questions and relative clauses in all cases.
+    'Кого ти бачив? Людина, кого я бачив...'
+    'Чим ти цікавишся? Те, чим я цікавлюся...'"
+  - "який declines like an adjective (for all genders and cases).
+    котрий is a synonym for який in relative clauses, more literary.
+    чий declines: чийого, чийому, чиїм, etc.
+    Practice: complete 10 sentences with correct form of який/чий."
+- section: "Зворотний займенник себе (Reflexive pronoun)"
+  words: 600
+  points:
+  - "себе has NO nominative form and no gender/number distinction.
+    Р.в. себе, Д.в. собі, Зн.в. себе, Ор.в. собою, М.в. (на) собі.
+    It refers back to the subject, regardless of person:
+    Я бачу себе. Ти бачиш себе. Вони бачать себе."
+  - "Common expressions with себе/собі/собою:
+    почуватися/почувати себе (feel — health/state),
+    уявити собі (imagine to oneself),
+    бути задоволеним собою (be satisfied with oneself),
+    сам по собі (by itself/on its own),
+    так собі (so-so), від себе (on one's own behalf)."
+  - "Distinction: себе (pronoun, declines) vs свій (possessive, declines
+    like an adjective): Я бачу себе (I see myself) vs Я бачу свою книжку
+    (I see my own book). Both are reflexive but function differently."
+- section: "Неозначені займенники (Indefinite pronouns)"
+  words: 700
+  points:
+  - "Formation from Заболотний Grade 6 p.203:
+    From interrogative pronouns + particles:
+    хтось, щось, якийсь, чийсь (-сь suffix: someone/something known
+    to the speaker but unspecified to the listener).
+    будь-хто, будь-що, будь-який (будь- prefix: anyone at all).
+    хто-небудь, що-небудь, який-небудь (-небудь suffix: anyone, it doesn't matter).
+    дехто, дещо, деякий (де- prefix: some, a certain)."
+  - "Spelling rules:
+    -сь: always joined: хтось, щось, якийсь.
+    будь-: always hyphenated: будь-хто, будь-що, будь-який.
+    -небудь: always hyphenated: хто-небудь, що-небудь.
+    де-: always joined: дехто, дещо, деякий.
+    абияк: joined: абиякий, абихто."
+  - "Semantic distinctions:
+    хтось = someone specific (the speaker knows or suspects who):
+    Хтось стукає у двері.
+    будь-хто = anyone at all (no specificity): Будь-хто може це зробити.
+    хто-небудь = anyone (in questions/hypotheticals): Чи є тут хто-небудь?
+    Practice: choose correct indefinite pronoun for 10 contexts."
+- section: "Заперечні займенники (Negative pronouns)"
+  words: 700
+  points:
+  - "Formation from Заболотний Grade 6 p.203:
+    ні- + interrogative: ніхто, ніщо, нічий, ніякий.
+    Declension follows the base interrogative pronoun:
+    ніхто: нікого, нікому, нікого, ніким, ні на кому.
+    ніщо: нічого, нічому, ніщо, нічим, ні на чому."
+  - "Prepositions SPLIT the negative pronoun (Заболотний Grade 6 p.204):
+    ні з ким (not *нізким), ні в чому (not *нівчому),
+    ні до кого, ні від чого, ні з чим.
+    This is a distinctive Ukrainian feature — the preposition goes BETWEEN
+    ні and the pronoun base."
+  - "Stress-dependent meaning (Литвінова Grade 6 p.269):
+    нікого (stressed on root) = nobody is present: Нікого немає.
+    нікого (stressed on prefix) = nobody to turn to: Нікого й спитати.
+    нічого (stressed on root) = nothing visible: Нічого не видно.
+    нічого (stressed on prefix) = nothing to eat: Нічого їсти.
+    Practice: distinguish meanings in 8 sentences."
+- section: "Займенники в контексті (Pronouns in context)"
+  words: 600
+  points:
+  - "Reading passage: a detective story excerpt using all pronoun types.
+    'Хтось стукає. Відкриваю двері — нікого. Дивлюся навколо —
+    ніщо не змінилося. Але щось не так. Чиясь тінь зникла за рогом.
+    Я запитав себе: хто це міг бути? Яка людина ходить так тихо?'
+    Learners identify and classify each pronoun."
+  - "Dialogue practice: a conversation about a mysterious event,
+    using indefinite and negative pronouns naturally.
+    'Хтось тобі дзвонив?' 'Ні, мені ніхто не дзвонив.'
+    'Може, хто-небудь із сусідів?' 'Ні, ні з ким я не розмовляв.'"
+  - "Self-check: classify 15 pronouns by type (interrogative, indefinite,
+    negative, reflexive), form correct case for each in context."
+- section: "Підсумок (Summary)"
+  words: 200
+  points:
+  - "Pronoun type summary: питально-відносні (хто, який), зворотний (себе),
+    неозначені (хтось, будь-хто), заперечні (ніхто, ніщо).
+    Key rules: spelling of particles, preposition splitting, stress meaning.
+    Preview: next module — житло і оренда (communication module)."
+vocabulary_hints:
+  required:
+  - "займенник (pronoun)"
+  - "питально-відносний (interrogative-relative)"
+  - "зворотний (reflexive — себе)"
+  - "неозначений (indefinite — хтось, будь-хто)"
+  - "заперечний (negative — ніхто, ніщо)"
+  - "себе (oneself — reflexive pronoun, no Н.в.)"
+  - "хтось (someone — known to speaker)"
+  - "будь-хто (anyone — no specificity)"
+  - "ніхто (nobody)"
+  - "ніщо (nothing)"
+  recommended:
+  - "хто-небудь (anyone — in questions/hypotheticals)"
+  - "дехто (some people — де- prefix)"
+  - "абиякий (any old — casual/dismissive indefinite)"
+  - "котрий (which — literary synonym of який)"
+  - "собою (with oneself — Ор.в. of себе)"
+  - "свій (one's own — reflexive possessive)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct pronoun type and form for given contexts"
+  items: 8
+- type: fill-in
+  focus: "Decline pronouns (себе, хтось, ніхто) in sentence contexts"
+  items: 8
+- type: match-up
+  focus: "Match indefinite pronoun to its semantic meaning (specific, any, hypothetical)"
+  items: 8
+- type: error-correction
+  focus: "Fix spelling errors: *нізким → ні з ким, *хто-сь → хтось"
+  items: 6
+- type: group-sort
+  focus: "Sort pronouns into type categories: indefinite, negative, reflexive, relative"
+  items: 10
+- type: sentence-builder
+  focus: "Build sentences using negative pronouns with split prepositions"
+  items: 6
+connects_to:
+- "b1-067 (Означальні речення — relative clauses use який/котрий)"
+- "b1-066 (З'ясувальні речення — object clauses use що, хто, куди)"
+- "b1-055 (Житло і оренда — communication module applying Phase 6 grammar)"
+prerequisites:
+- "A2 completion (personal pronouns, basic який/чий)"
+- "b1-046 through b1-048 (advanced case knowledge for pronoun declension)"
+grammar:
+- "Питально-відносні: хто, що, який, чий, котрий — відмінювання"
+- "Зворотний себе: немає Н.в., себе/собі/собою"
+- "Неозначені: хтось (-сь), будь-хто (будь-), хто-небудь (-небудь), дехто (де-)"
+- "Заперечні: ніхто, ніщо — прийменник розриває (ні з ким)"
+- "Наголос заперечних: нікого (відсутність) vs нікого (неможливість)"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 6, p.203-204"
+  notes: "Negative and indefinite pronoun formation, spelling, declension."
+- title: "Литвінова Grade 6, p.269"
+  notes: "Stress-dependent meaning in negative pronouns нікого/нічого."
+- title: "Глазова Grade 11, p.84"
+  notes: "Relative pronoun usage in complex sentences."
+- title: "Авраменко Grade 6, p.106"
+  notes: "Pronoun classification and examples in context."

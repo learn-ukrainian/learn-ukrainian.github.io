@@ -1,0 +1,157 @@
+module: b1-071
+level: B1
+sequence: 71
+slug: complex-subordinate-condition
+version: '3.0'
+title: "Речення умови"
+subtitle: "Якщо, коли (=якщо), як: реальні умови у складному реченні"
+focus: grammar
+pedagogy: PPP
+phase: "B1.8 [Complex Syntax]"
+word_target: 4000
+objectives:
+- "Learner can construct підрядні обставинні умови expressing conditions
+  using якщо, коли (=якщо), як, за умови що, у випадку якщо"
+- "Learner can connect conditionals from M18-M19 (real/unreal) with
+  складнопідрядне syntax: якщо + indicator/future, якби + conditional"
+- "Learner can distinguish часове коли from умовне коли in context"
+- "Learner can use correlative words in the main clause: то, тоді
+  (Якщо прийдеш, то зателефонуй)"
+- "Learner can construct both реальні and нереальні умови in complex syntax"
+content_outline:
+- section: "Підрядні обставинні умови (Conditional subordinate clauses)"
+  words: 650
+  points:
+  - "Definition from Заболотний Grade 9 p.112: підрядне обставинне умови
+    вказує на умову, за якої здійснюється дія головної частини.
+    Conjunctions: якщо, коли (=якщо), як, за умови що, у випадку якщо.
+    Як не буде птахів, то і людське серце стане черствішим (М. Стельмах)."
+  - "Connection to M18-19 (умовний спосіб):
+    M18 taught реальні умови: Якщо матимеш час, приїжджай.
+    M19 taught нереальні умови: Якби я знав, я б допоміг.
+    This module systematizes these in складнопідрядне речення framework."
+  - "Відмінність від причини (M70):
+    Умова: Якщо буде холодно, одягни пальто. (maybe cold, maybe not)
+    Причина: Одягни пальто, бо холодно. (it IS cold — fact)"
+- section: "Реальна умова (Real condition)"
+  words: 700
+  points:
+  - "Якщо + present/future for real possibilities:
+    Якщо підеш у магазин, купи хліба.
+    Якщо матимеш час, приїжджай у гості.
+    Якщо вона зателефонує, скажи, що мене немає."
+  - "Коли = якщо (conditional meaning):
+    Коли хочеш знати правду, запитай його.
+    Test: can this коли be replaced with якщо? If yes → conditional.
+    Compare: Коли ми прийшли, почався дощ. (temporal — not replaceable)"
+  - "Як = якщо (colloquial/folk):
+    Як не буде птахів, то серце стане черствішим.
+    Як хочеш — приходь. (colloquial: if you want — come)
+    Register: як is more folk/colloquial than якщо."
+  - "Correlative words то, тоді in the main clause:
+    Якщо підеш, то зателефонуй. (то emphasizes consequence)
+    Якщо хочеш, тоді приходь. (тоді = then)
+    Practice: 10 sentences using real conditionals with varied conjunctions."
+- section: "Нереальна умова (Unreal condition)"
+  words: 600
+  points:
+  - "Якби + conditional mood (review from M19):
+    Якби я знав, я б допоміг. (but I didn't know)
+    Якби ти прийшов раніше, ми б встигли.
+    Якби я мав більше часу, подорожував би частіше."
+  - "The grammatical structure:
+    Якби + минулий час, підмет + б(и) + минулий час.
+    The б/би particle attaches to the first word or the verb:
+    Я б пішов. / Пішов би я. / Якби я пішов."
+  - "Contrast real vs unreal:
+    Якщо я знатиму (real — I might know) → consequence in future.
+    Якби я знав (unreal — I don't know) → consequence in conditional.
+    Practice: 6 pairs contrasting real and unreal conditionals."
+- section: "Офіційні та формальні конструкції (Formal constructions)"
+  words: 500
+  points:
+  - "За умови що — formal:
+    За умови що ви подасте документи вчасно, ваша заявка буде розглянута.
+    У випадку якщо — formal, contingency:
+    У випадку якщо виникнуть проблеми, зверніться до адміністратора.
+    Якщо тільки — restrictive:
+    Я прийду, якщо тільки не буде дощу."
+  - "Register pyramid:
+    як (folk/colloquial) → якщо (neutral) → коли (literary) →
+    за умови що (formal) → у випадку якщо (official).
+    Practice: rewrite the same condition in 3 registers."
+- section: "Практика: умовні речення у контексті (Practice in context)"
+  words: 650
+  points:
+  - "Reading passage: a text mixing причинні, часові, and умовні clauses.
+    Learners classify each підрядне by type (причина/час/умова)."
+  - "Dialogue: making plans contingent on conditions.
+    — Якщо погода буде гарна, поїдемо на море.
+    — А якщо ні?
+    — Тоді залишимося вдома.
+    — Якби у нас був човен, могли б пливти на острів!
+    Mix of real and unreal conditionals."
+  - "Production: write 6-8 conditional sentences about plans, dreams,
+    and hypotheticals. Mix real (якщо) and unreal (якби)."
+- section: "Підсумок та перехід до M72 (Summary and transition)"
+  words: 300
+  points:
+  - "Summary: умовні = за якої умови? Якщо/коли/як (реальна),
+    якби (нереальна). Correlatives: то, тоді. Формальні: за умови що.
+    Self-check: Я розрізняю реальну і нереальну умову ✓/✗."
+  - "Preview: M72 — Речення мети. Purpose: щоб, для того щоб."
+vocabulary_hints:
+  required:
+  - "підрядне обставинне умови (conditional subordinate clause)"
+  - "якщо (if — neutral conditional conjunction)"
+  - "якби (if — unreal conditional conjunction)"
+  - "реальна умова (real condition)"
+  - "нереальна умова (unreal condition)"
+  - "умовний спосіб (conditional mood — review from M18-19)"
+  recommended:
+  - "за умови що (on the condition that — formal)"
+  - "у випадку якщо (in case — formal)"
+  - "якщо тільки (if only / provided that)"
+  - "то (then — correlative in main clause)"
+  - "тоді (then — correlative, emphatic)"
+activity_hints:
+- type: fill-in
+  focus: "Complete conditional sentences with correct conjunction and verb form"
+  items: 10
+- type: quiz
+  focus: "Real or unreal condition? Temporal or conditional коли?"
+  items: 10
+- type: sentence-builder
+  focus: "Construct conditional sentences from given situations (both real and unreal)"
+  items: 8
+- type: error-correction
+  focus: "Fix verb form errors in conditionals (aspect, mood, б/би placement)"
+  items: 6
+- type: group-sort
+  focus: "Sort conditional conjunctions by register: colloquial → neutral → formal"
+  items: 8
+connects_to:
+- "b1-018 (Умовний спосіб реальний — real conditionals, Phase 3)"
+- "b1-019 (Умовний спосіб нереальний — unreal conditionals, Phase 3)"
+- "b1-070 (Речення причини — cause vs condition distinction)"
+- "b1-072 (Речення мети — purpose clauses)"
+prerequisites:
+- "b1-070 (Causal clauses — обставинне clause pattern continues)"
+grammar:
+- "Підрядні обставинні умови: якщо, коли, як, якби"
+- "Real condition: якщо + present/future"
+- "Unreal condition: якби + conditional mood (б/би)"
+- "Correlative words: то, тоді"
+- "Register differentiation: як → якщо → за умови що"
+- "Contrast: conditional коли vs temporal коли"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 9, p.112"
+  notes: "§21 Підрядні частини мети, умови, допусту: definition,
+    conjunctions, contrast between condition and cause."
+- title: "Авраменко Grade 9, p.86-87"
+  notes: "§24 Складнопідрядні речення з підрядними причини, мети, умови:
+    classification, exercises, test format."
+- title: "Ворон Grade 9, p.80"
+  notes: "Підрядні обставинні умови: conjunction inventory,
+    correlative words, position flexibility."
