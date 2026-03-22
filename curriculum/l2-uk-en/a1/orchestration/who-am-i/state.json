@@ -1,0 +1,47 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "who-am-i",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-22T23:03:35.081372+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-22T23:03:46.155828+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-22T23:04:53.720795+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-22T23:06:01.290280+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-22T23:06:01.297401+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-22T23:06:03.384854+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-22T23:06:03.833575+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-22T23:06:03.886518+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-22T23:09:30.447936+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-22T23:09:30.498063+00:00"
+    }
+  }
+}
