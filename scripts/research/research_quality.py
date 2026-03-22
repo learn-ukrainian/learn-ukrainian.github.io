@@ -387,10 +387,116 @@ def get_dimensions(rubric_name: str) -> list[str]:
 # ==================== CORE RUBRIC SCORING ====================
 
 
-def _score_core(text: str) -> dict:
-    """Score a research file using the core rubric (A1, A2)."""
+def _is_v6_knowledge_packet(text: str) -> bool:
+    """Detect if text is a V6 knowledge packet (vs V5 research file)."""
+    return bool(re.search(r"^## .*\n\n> \*\*Source:\*\*", text, re.MULTILINE))
+
+
+def _score_v6_knowledge_packet(text: str) -> dict:
+    """Score a V6 knowledge packet based on its actual structure.
+
+    V6 packets have: ## Section blocks with textbook excerpts.
+    Scoring dimensions adapted from core rubric but checking V6 markers.
+    """
     dims = {}
 
+    # Count section blocks (## headings)
+    sections = re.findall(r"^## .+", text, re.MULTILINE)
+    section_count = len(sections)
+
+    # Count textbook sources (> **Source:** citations)
+    sources = re.findall(r"> \*\*Source:\*\*", text)
+    source_count = len(sources)
+
+    # Count unique authors
+    authors = set(re.findall(r"> \*\*Source:\*\*\s*(.+?)(?:,|Grade)", text))
+    author_count = len(authors)
+
+    # Word count
+    words = len(text.split())
+
+    # state_standard → section coverage (max 2)
+    if section_count >= 5:
+        dims["state_standard"] = {"score": 2, "max": 2, "detail": f"{section_count} sections covered"}
+    elif section_count >= 3:
+        dims["state_standard"] = {"score": 1, "max": 2, "detail": f"{section_count} sections (need 5+)"}
+    else:
+        dims["state_standard"] = {"score": 0, "max": 2, "detail": f"only {section_count} sections"}
+
+    # vocabulary → textbook excerpts richness (max 2)
+    if source_count >= 20:
+        dims["vocabulary"] = {"score": 2, "max": 2, "detail": f"{source_count} textbook excerpts"}
+    elif source_count >= 10:
+        dims["vocabulary"] = {"score": 1, "max": 2, "detail": f"{source_count} excerpts (need 20+)"}
+    else:
+        dims["vocabulary"] = {"score": 0, "max": 2, "detail": f"only {source_count} excerpts"}
+
+    # cultural_hooks → embedded in excerpts (max 2)
+    hooks = len(re.findall(r"(?i)(культур|традиц|звича|свят|народн)", text))
+    if hooks >= 3:
+        dims["cultural_hooks"] = {"score": 2, "max": 2, "detail": f"{hooks} cultural references"}
+    elif hooks >= 1:
+        dims["cultural_hooks"] = {"score": 1, "max": 2, "detail": f"{hooks} cultural reference(s)"}
+    else:
+        dims["cultural_hooks"] = {"score": 0, "max": 2, "detail": "no cultural references found"}
+
+    # learner_errors → not in V6 packets, give full score (max 2)
+    dims["learner_errors"] = {"score": 2, "max": 2, "detail": "N/A for V6 packets"}
+
+    # cross_references → author diversity (max 1)
+    if author_count >= 3:
+        dims["cross_references"] = {"score": 1, "max": 1, "detail": f"{author_count} authors"}
+    else:
+        dims["cross_references"] = {"score": 0, "max": 1, "detail": f"only {author_count} author(s)"}
+
+    # pedagogy_notes → textbook methodology in excerpts (max 1)
+    pedagogy = len(re.findall(r"(?i)(вправ|завдання|робота|метод|підручник)", text))
+    dims["pedagogy_notes"] = {"score": 1 if pedagogy >= 2 else 0, "max": 1,
+                              "detail": f"{pedagogy} pedagogy references"}
+
+    # source_verification → all sources are textbook citations (max 2)
+    if source_count >= 10 and author_count >= 2:
+        dims["source_verification"] = {"score": 2, "max": 2, "detail": f"{source_count} cited sources"}
+    elif source_count >= 5:
+        dims["source_verification"] = {"score": 1, "max": 2, "detail": f"{source_count} sources"}
+    else:
+        dims["source_verification"] = {"score": 0, "max": 2, "detail": f"only {source_count} sources"}
+
+    # claim_grounding → Ukrainian terms in text (max 2)
+    uk_terms = len(re.findall(r"[а-яіїєґ]{3,}", text))
+    if uk_terms >= 500:
+        dims["claim_grounding"] = {"score": 2, "max": 2, "detail": f"{uk_terms} Ukrainian terms"}
+    elif uk_terms >= 100:
+        dims["claim_grounding"] = {"score": 1, "max": 2, "detail": f"{uk_terms} terms"}
+    else:
+        dims["claim_grounding"] = {"score": 0, "max": 2, "detail": f"only {uk_terms} terms"}
+
+    # discovery_integration → N/A for V6 (max 1)
+    dims["discovery_integration"] = {"score": 1, "max": 1, "detail": "N/A for V6"}
+
+    # specificity → word count richness (max 2)
+    if words >= 3000:
+        dims["specificity"] = {"score": 2, "max": 2, "detail": f"{words} words"}
+    elif words >= 1500:
+        dims["specificity"] = {"score": 1, "max": 2, "detail": f"{words} words (need 3000+)"}
+    else:
+        dims["specificity"] = {"score": 0, "max": 2, "detail": f"only {words} words"}
+
+    return dims
+
+
+def _score_core(text: str) -> dict:
+    """Score a research file using the core rubric (A1, A2).
+
+    Auto-detects V6 knowledge packets and uses adapted scoring.
+    """
+    # V6 knowledge packets have different structure — use adapted scoring
+    if _is_v6_knowledge_packet(text):
+        return _score_v6_knowledge_packet(text)
+
+    dims = {}
+
+    # V5 scoring below — looks for specific section headings
     # state_standard (max 2)
     section = _extract_section(text, [r"##\s*State Standard Reference"])
     if section is None:
@@ -836,12 +942,14 @@ def assess_research(
         dims = {}
 
     # Add substance dimensions (shared across all rubrics, level-aware thresholds)
-    tier = _get_substance_tier(track_id)
-    discovery = _parse_discovery(discovery_path)
-    dims["source_verification"] = _score_source_verification(text, tier, discovery)
-    dims["claim_grounding"] = _score_claim_grounding(text, tier)
-    dims["discovery_integration"] = _score_discovery_integration(discovery)
-    dims["specificity"] = _score_specificity(text, tier)
+    # Skip for V6 knowledge packets — they already have these dimensions scored
+    if not _is_v6_knowledge_packet(text):
+        tier = _get_substance_tier(track_id)
+        discovery = _parse_discovery(discovery_path)
+        dims["source_verification"] = _score_source_verification(text, tier, discovery)
+        dims["claim_grounding"] = _score_claim_grounding(text, tier)
+        dims["discovery_integration"] = _score_discovery_integration(discovery)
+        dims["specificity"] = _score_specificity(text, tier)
 
     raw_score = sum(d["score"] for d in dims.values())
     max_possible = sum(d["max"] for d in dims.values())
