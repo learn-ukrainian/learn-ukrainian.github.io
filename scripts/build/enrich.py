@@ -91,29 +91,60 @@ def _vocab_table_rows(items: list) -> list[str]:
     return rows
 
 
-def _extract_prose_vocab(content: str) -> list[str]:
-    """Extract bold Ukrainian words/phrases from prose that aren't in plan vocabulary.
+def _extract_prose_vocab(content: str) -> list[tuple[str, str]]:
+    """Extract bold Ukrainian words/phrases WITH translations from prose.
 
-    Scans for **word** patterns in the content and returns Ukrainian words
-    that the writer introduced but weren't in vocabulary_hints.
+    Scans for patterns like:
+    - **word** (translation)
+    - **word** — "translation"
+    - **word** — translation.
+    - **expression?** — "translation"
+
+    Returns list of (word, translation) tuples. Translation may be empty.
     Filters out fragments, single letters, and non-word artifacts.
     """
-    # Match **word** patterns — Ukrainian text only (min 2 chars)
-    bold_pattern = re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ]+)\*\*")
-    words = []
+    # Pattern: **Ukrainian text** followed by optional translation
+    # Captures: group(1)=Ukrainian word/phrase, group(2)=translation (if present)
+    patterns = [
+        # **word** (translation) — most common
+        re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*\s*\(([^)]+)\)"),
+        # **word** — "translation" or **word** — translation
+        re.compile(r'\*\*([а-яА-ЯіІїЇєЄґҐ\'ʼ ?!.,]+)\*\*\s*[—–-]\s*["\"]?([^""\n.!?]+)["\"]?'),
+        # **word** alone (no translation)
+        re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*"),
+    ]
+
+    results: list[tuple[str, str]] = []
     seen: set[str] = set()
-    for match in bold_pattern.finditer(content):
-        word = match.group(1).strip()
-        # Skip fragments: must be 3+ chars and contain at least one vowel
-        if len(word) < 3:
-            continue
-        # Skip if it's just consonants (likely a fragment like "ий", "шч")
-        if not re.search(r"[аоуеиіяюєї]", word.lower()):
-            continue
-        if word.lower() not in seen:
+
+    # Try patterns in priority order — first match wins for each word
+    for pattern in patterns:
+        for match in pattern.finditer(content):
+            word = match.group(1).strip().rstrip(".,!?")
+            # Skip fragments: must be 3+ chars and contain at least one vowel
+            if len(word) < 3:
+                continue
+            if not re.search(r"[аоуеиіяюєї]", word.lower()):
+                continue
+            # Skip overly long phrases (>50 chars = sentence, not expression)
+            if len(word) > 50:
+                continue
+            if word.lower() in seen:
+                continue
             seen.add(word.lower())
-            words.append(word)
-    return words
+
+            # Extract translation if captured
+            translation = ""
+            if match.lastindex and match.lastindex >= 2:
+                raw_trans = match.group(2).strip().strip('"').strip()
+                # Only use if it looks like English (has Latin chars)
+                # and is short enough to be a translation (not context)
+                if re.search(r"[a-zA-Z]", raw_trans) and len(raw_trans) < 50:
+                    translation = raw_trans
+
+            results.append((word, translation))
+
+    return results
 
 
 def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
@@ -156,8 +187,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
     current_seq = plan.get("sequence", 1)
     previous_vocab = _get_previous_vocab(level, current_seq) if level else set()
 
-    # Extract words from prose that aren't in the plan vocabulary
-    prose_words = _extract_prose_vocab(content) if content else []
+    # Extract words+translations from prose
+    prose_entries = _extract_prose_vocab(content) if content else []
 
     # Build set of known words (lowercase) for deduplication
     known_words: set[str] = set()
@@ -166,9 +197,9 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
         known_words.add(word.lower())
 
     # Words from prose not in plan AND not in previous modules
-    additional = [
-        w for w in prose_words
-        if w.lower() not in known_words and w.lower() not in previous_vocab
+    additional: list[tuple[str, str]] = [
+        (word, trans) for word, trans in prose_entries
+        if word.lower() not in known_words and word.lower() not in previous_vocab
     ]
 
     if not required and not recommended and not additional:
@@ -197,16 +228,32 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
         ])
 
     if additional:
-        lines.extend([
-            "",
-            "### Додаткові слова з уроку — Additional words from the lesson",
-            "",
-            "| Слово | Переклад | Частина мови | Рід |",
-            "|-------|----------|-------------|-----|",
-        ])
-        for word in additional:
-            pos, gender = _vesum_lookup(word)
-            lines.append(f"| **{word}** |  | {pos} | {gender} |")
+        # Split into single words and expressions (multi-word phrases)
+        single_words = [(w, t) for w, t in additional if " " not in w]
+        expressions = [(w, t) for w, t in additional if " " in w]
+
+        if single_words:
+            lines.extend([
+                "",
+                "### Додаткові слова з уроку — Additional words from the lesson",
+                "",
+                "| Слово | Переклад | Частина мови | Рід |",
+                "|-------|----------|-------------|-----|",
+            ])
+            for word, trans in single_words:
+                pos, gender = _vesum_lookup(word)
+                lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
+
+        if expressions:
+            lines.extend([
+                "",
+                "### Вирази — Expressions",
+                "",
+                "| Вираз | Переклад |",
+                "|-------|----------|",
+            ])
+            for expr, trans in expressions:
+                lines.append(f"| **{expr}** | {trans} |")
 
     lines.append("")
     return "\n".join(lines)
