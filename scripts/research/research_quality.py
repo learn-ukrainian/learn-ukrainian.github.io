@@ -79,25 +79,25 @@ DIMENSION_SHORT_LABELS = {
 
 import contextlib
 
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_blockquotes as _count_blockquotes,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_dated_entries as _count_dated_entries,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_guillemet_quotes as _count_guillemet_quotes,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_h3_subsections as _count_h3_subsections,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_numbered_items as _count_numbered_items,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     count_urls as _count_urls,
 )
-from research_markdown_utils import (
+from research.research_markdown_utils import (
     extract_section as _extract_section,
 )
 
