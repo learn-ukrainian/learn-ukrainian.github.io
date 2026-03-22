@@ -1,0 +1,251 @@
+module: b1-001
+level: B1
+sequence: 1
+slug: metalanguage-sounds
+version: '3.0'
+title: "Звуки і букви"
+subtitle: "Фонетика українською — від звуків до транскрипції"
+focus: phonetics
+pedagogy: PPP
+phase: "B1.1 [Metalanguage Bridge]"
+word_target: 4000
+objectives:
+- "Learner can name and classify Ukrainian sounds using Ukrainian metalanguage
+  (голосний, приголосний, дзвінкий, глухий, твердий, м'який, сонорний)"
+- "Learner can explain the difference between звук, літера, and фонема in Ukrainian"
+- "Learner can read and produce фонетична транскрипція for common Ukrainian words"
+- "Learner can identify наголос in words and explain its role in Ukrainian phonetics"
+- "Learner can classify consonants by three criteria: дзвінкість/глухість,
+  твердість/м'якість, and місце творення (губні, свистячі, шиплячі)"
+content_outline:
+- section: "Що вивчає фонетика? (What does phonetics study?)"
+  words: 600
+  points:
+  - "Bridge introduction: learners already KNOW Ukrainian sounds from A1-A2.
+    This module teaches them to NAME what they know using Ukrainian linguistic
+    terminology. The shift: from 'vowels and consonants' to голосні та приголосні.
+    From 'stress' to наголос. From 'soft consonant' to м'який приголосний."
+  - "Core definitions from Заболотний Grade 5 p.74:
+    Фонетика (від грец. phonetikos — звуковий) — розділ мовознавства,
+    що вивчає звуковий склад мови.
+    Графіка — розділ мовознавства, що вивчає систему умовних знаків
+    для передачі звуків на письмі.
+    Орфоепія — правила літературної вимови."
+  - "The golden rule revisited at B1 level (Заболотний Grade 5 p.73):
+    'Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.'
+    33 літери in the alphabet, 38 звуків in the language.
+    Why the mismatch: я, ю, є, ї can represent two sounds;
+    щ = [шч]; ь and ' (апостроф) have no sound of their own."
+  - "Звук vs фонема: звук is any concrete speech sound a person produces.
+    Фонема is the abstract unit that distinguishes meaning.
+    Example: [г] in горох is one фонема; the actual pronunciation may vary
+    by speaker, but all variations are the same фонема.
+    This distinction matters for understanding Ukrainian grammar explanations."
+- section: "Голосні звуки (Vowel sounds)"
+  words: 550
+  points:
+  - "Definition from Литвінова Grade 5 p.104:
+    Голосні звуки утворюються голосом, без перешкоди.
+    6 голосних звуків: [а], [о], [у], [е], [и], [і].
+    10 голосних літер: а, о, у, е, и, і, я, ю, є, ї."
+  - "Why 10 letters but only 6 sounds? The 'йотовані' letters я, ю, є, ї:
+    — На початку слова: яма [йама], юнак [йунак], єдність [йедн'іст'].
+    — Після голосного: мрія [мр'ійа], краює [крайуйе].
+    — Після апострофа: п'ять [пйат'], об'єм [обйем].
+    — Після приголосного (without apostrophe): they soften the consonant:
+    ляля [л'ал'а], любов [л'убов], лід [л'ід]."
+  - "Ненаголошені голосні — why this matters for spelling:
+    In unstressed position, [е] and [и] sound similar.
+    This is why Ukrainians themselves study правопис ненаголошених [е], [и].
+    Rule: change the word form to put the vowel under stress —
+    зелéний (бо зéлень), крилó (бо кри́ла).
+    Літвінова Grade 5 p.118: 'Якщо під час зміни слова сумнівний звук
+    чергується з [і] в закритому складі — пишемо и: осені (бо осінь).'"
+- section: "Приголосні звуки: дзвінкі та глухі (Consonants: voiced and voiceless)"
+  words: 700
+  points:
+  - "Definition from Авраменко Grade 5 p.77:
+    Приголосні звуки бувають дзвінкі та глухі.
+    Дзвінкі = голос + шум. Глухі = лише шум.
+    The paired system (Литвінова Grade 5 p.122):
+    дзвінкі: [б], [д], [ґ], [г], [з], [ж], [дж], [дз]
+    глухі:   [п], [т], [к], [х], [с], [ш], [ч],  [ц]"
+  - "Сонорні приголосні — a special group (Литвінова Grade 5 p.123):
+    Sounds [в], [м], [н], [л], [р] and their soft pairs + [й]
+    are neither дзвінкі nor глухі. Голос переважає над шумом.
+    Mnemonic from textbooks: МіНеРаЛоВиЙ.
+    Important: Ukrainian дзвінкі приголосні do NOT become глухі
+    at the end of a word (unlike Russian/German). дуб = [дуб], not *[дуп]."
+  - "Свистячі та шиплячі (Литвінова Grade 5 p.123):
+    Свистячі: [з], [ц], [с], [дз] — sound like a whistle.
+    Шиплячі: [ж], [ч], [ш], [дж] — sound like hissing.
+    Губні: [б], [п], [в], [м], [ф] — formed with the lips.
+    These groups matter for spelling rules (уподібнення, чергування)
+    that learners will encounter throughout B1."
+  - "Reading practice passage: a short Ukrainian text about sounds,
+    with learners identifying дзвінкі, глухі, and сонорні in context.
+    Example words for classification:
+    безпека [безпека] — б(дзв.), з(дзв.), п(гл.), к(гл.)
+    школярі [школ'ар'і] — ш(шипл.), к(гл.), л'(сон.), р'(сон.)"
+- section: "Приголосні звуки: тверді та м'які (Consonants: hard and soft)"
+  words: 700
+  points:
+  - "From Авраменко Grade 5 p.75:
+    М'який приголосний утворюється, коли кінчик язика торкається
+    до піднебіння (palatalized). Твердий — коли торкається до зубів.
+    Pair example: лис [лис] (тв.) vs ліс [л'іс] (м'як.) — different meaning!"
+  - "How softness is shown in writing (Литвінова Grade 5 p.126):
+    — м'який знак (ь): день [ден'], кінь [к'ін'], сіль [с'іл'].
+    — літери я, ю, є, і after a consonant: ляк [л'ак], любов [л'убов].
+    In транскрипція, softness is marked with [']:
+    тінь [т'ін'], дядько [д'ад'ко]."
+  - "Пом'якшені приголосні — the third category (Авраменко Grade 5 p.75):
+    Some consonants are not fully м'які but пом'якшені (partially softened).
+    This happens when a hard consonant stands before a soft one:
+    пісня [п'іс'н'а] — [с'] is пом'якшений before [н'].
+    The distinction: м'які are always soft, пом'якшені are soft only
+    because of their phonetic environment."
+  - "Consonants that are ALWAYS тверді (have no soft pair):
+    [б], [п], [в], [м], [ф], [г], [ґ], [к], [х], [ж], [ч], [ш], [дж], [р].
+    Consonants that are ALWAYS м'які: [й].
+    Consonants that form тверді/м'які pairs:
+    [д]-[д'], [т]-[т'], [з]-[з'], [с]-[с'], [ц]-[ц'], [дз]-[дз'],
+    [л]-[л'], [н]-[н']."
+- section: "Наголос (Stress)"
+  words: 600
+  points:
+  - "From Авраменко Grade 5 p.88:
+    Наголос — це посилена вимова одного зі складів.
+    Ukrainian stress is вільний (free — can fall on any syllable)
+    and рухомий (mobile — can shift between word forms):
+    ру́ки (plural) vs руки́ (genitive singular).
+    This differs from languages with fixed stress (Polish — penultimate,
+    French — final)."
+  - "Наголос змінює значення (stress changes meaning):
+    зáмок (castle) vs замóк (lock) — from Авраменко Grade 5 p.88.
+    óбід (rim) vs обі́д (lunch). при́клад (example) vs прикла́д (rifle butt).
+    Орфоепічна помилка — a pronunciation error caused by wrong stress."
+  - "Наголошений vs ненаголошений склад:
+    The stressed syllable is наголошений, all others are ненаголошені.
+    In калина [кали́на]: ка- (ненаголошений), -ли- (наголошений),
+    -на (ненаголошений).
+    Practice: learners mark наголос in common words and check against
+    an орфоепічний словник."
+  - "Why наголос matters for B1: upcoming modules on чергування голосних
+    (vowel alternations like рік-рóку, кінь-коня́) are driven by stress shifts.
+    Understanding наголос now = understanding morphophonemics later."
+- section: "Фонетична транскрипція (Phonetic transcription)"
+  words: 550
+  points:
+  - "Rules from Заболотний Grade 5 p.74:
+    1. Запис беремо у квадратні дужки: [калина].
+    2. Кожен звук позначаємо окремою буквою.
+    3. НЕ використовуємо букви я, ю, є, ї, ь, щ та великі букви.
+    4. Позначаємо місце наголосу: [подо́рож].
+    5. М'якість приголосного позначаємо скісною рисочкою: [ден']."
+  - "Step-by-step transcription practice:
+    яблуко → [йáблуко] (я at start = [йа])
+    воля → [вóл'а] (я after consonant = softening)
+    щастя → [шчáс'т'а] (щ = [шч], тя = [т'а])
+    об'їжджати → [обйіж:áти] (ї after ' = [йі], жд → [ж:])
+    More examples with increasing complexity."
+  - "Common transcription mistakes learners make:
+    — Forgetting that я/ю/є = two sounds at word start.
+    — Writing щ as one sound instead of [шч].
+    — Forgetting to mark м'якість.
+    — Confusing наголос placement.
+    Practice exercise: transcribe 8-10 words, check against model answers."
+- section: "Підсумок: ваш фонетичний словник (Summary: your phonetics vocabulary)"
+  words: 300
+  points:
+  - "Complete metalanguage glossary — all terms from this module collected:
+    фонетика, графіка, орфоепія, звук, літера, фонема,
+    голосний, приголосний, дзвінкий, глухий, сонорний,
+    твердий, м'який, пом'якшений, наголос, наголошений,
+    ненаголошений, транскрипція, склад, орфоепічна помилка,
+    свистячий, шиплячий, губний, йотований."
+  - "Self-check in Ukrainian: Дайте відповіді на запитання:
+    1. Скільки звуків в українській мові? Скільки літер?
+    2. Які звуки називаємо голосними? Скільки їх?
+    3. Чим дзвінкі приголосні відрізняються від глухих?
+    4. Що таке сонорні приголосні? Назвіть їх.
+    5. Запишіть фонетичною транскрипцією: день, яма, щастя."
+  - "Preview of next module: Будова слова (Word Structure) —
+    корінь, префікс, суфікс, закінчення, основа.
+    The metalanguage bridge continues: once you can name sounds,
+    you are ready to name the parts of words."
+vocabulary_hints:
+  required:
+  - "фонетика (phonetics — the study of speech sounds)"
+  - "звук (sound — what we hear and pronounce)"
+  - "літера (letter — what we see and write)"
+  - "фонема (phoneme — abstract sound unit that distinguishes meaning)"
+  - "голосний (vowel — sound made with voice only)"
+  - "приголосний (consonant — sound made with obstruction)"
+  - "дзвінкий (voiced — consonant produced with voice + noise)"
+  - "глухий (voiceless — consonant produced with noise only)"
+  - "сонорний (sonorant — consonant where voice dominates over noise)"
+  - "твердий (hard — non-palatalized consonant)"
+  - "м'який (soft — palatalized consonant)"
+  - "наголос (stress — emphasized pronunciation of a syllable)"
+  - "наголошений (stressed — syllable bearing the stress)"
+  - "ненаголошений (unstressed — syllable without stress)"
+  - "транскрипція (transcription — phonetic notation in square brackets)"
+  - "склад (syllable)"
+  recommended:
+  - "графіка (graphics — the writing system)"
+  - "орфоепія (orthoepy — rules of literary pronunciation)"
+  - "орфографія (orthography — rules of correct spelling)"
+  - "пом'якшений (partially softened consonant)"
+  - "йотований (iotated — letters я, ю, є, ї that can represent two sounds)"
+  - "свистячий (sibilant — whistling consonant: з, ц, с, дз)"
+  - "шиплячий (hushing consonant: ж, ч, ш, дж)"
+  - "губний (labial — consonant formed with lips: б, п, в, м, ф)"
+  - "орфоепічна помилка (pronunciation error)"
+  - "вільний наголос (free stress — can fall on any syllable)"
+  - "рухомий наголос (mobile stress — shifts between word forms)"
+  - "мовознавство (linguistics)"
+activity_hints:
+- type: quiz
+  focus: "Classify sounds: голосний чи приголосний? дзвінкий чи глухий?"
+  items: 8
+- type: match-up
+  focus: "Match Ukrainian phonetic terms to their definitions (e.g., дзвінкий — голос + шум)"
+  items: 8
+- type: fill-in
+  focus: "Complete phonetic transcription of words (fill in missing sounds/marks)"
+  items: 6
+- type: group-sort
+  focus: "Sort consonants into дзвінкі / глухі / сонорні groups"
+  items: 10
+- type: mark-the-words
+  focus: "In a passage, mark all сонорні приголосні (or all глухі, etc.)"
+  items: 6
+- type: error-correction
+  focus: "Find and fix mistakes in phonetic transcriptions"
+  items: 6
+connects_to:
+- "b1-002 (Будова слова — word structure metalanguage)"
+- "b1-006 (Phonetics: assimilation — applies дзвінкий/глухий classification)"
+- "b1-009 (Vowel alternations — applies наголос knowledge)"
+prerequisites:
+- "A2 completion (learner can read/write Ukrainian, knows basic grammar)"
+grammar:
+- "Звуки vs літери — 33 letters, 38 sounds, and why they differ"
+- "Голосні: 6 sounds, 10 letters, йотовані букви (я, ю, є, ї)"
+- "Приголосні classification: дзвінкі/глухі pairs, сонорні, свистячі/шиплячі/губні"
+- "Приголосні classification: тверді/м'які pairs, пом'якшені"
+- "Наголос: вільний і рухомий, meaning-distinguishing function"
+- "Фонетична транскрипція rules and notation"
+register: науково-навчальний
+references:
+- title: "Заболотний Grade 5, p.73-77"
+  notes: "Core фонетика chapter: звуки/літери, транскрипція rules, м'які/тверді."
+- title: "Авраменко Grade 5, p.75-77"
+  notes: "Тверді/м'які/пом'якшені distinction, дзвінкі/глухі pairs with dialogue."
+- title: "Литвінова Grade 5, p.104-130"
+  notes: "Comprehensive phonetics chapter: звуки мовлення, голосні/приголосні,
+    дзвінкі/глухі pairs table, сонорні/свистячі/шиплячі/губні groups,
+    тверді/м'які with м'який знак, ненаголошені е/и spelling rules."
+- title: "Голуб Grade 5, p.66"
+  notes: "Poetic framing of phonetics: 'Звуки — це щось надзвичайно своєрідне в мові.'"
