@@ -1,0 +1,155 @@
+module: b1-044
+level: B1
+sequence: 44
+slug: shopping-and-services
+version: '3.0'
+title: "Покупки і послуги"
+subtitle: "На ринку, в магазині, на пошті — порівняння і словотвір у дії"
+focus: communication
+pedagogy: PPP
+phase: "B1.5 [Degrees of Comparison & Word Formation]"
+word_target: 4000
+objectives:
+- "Learner can navigate shopping situations in Ukrainian: asking about prices,
+  comparing products, requesting services, bargaining, and making complaints"
+- "Learner can use comparative and superlative adjectives naturally in shopping
+  contexts (дешевший, найкращий, більш якісний)"
+- "Learner can use agent nouns and place nouns from word formation module
+  in real contexts (продавець/продавчиня, пекарня, хімчистка)"
+- "Learner can understand and use transactional vocabulary: знижка, чек,
+  готівка, картка, повернення, гарантія, розмір, примірка"
+- "Learner can write a simple complaint or review using comparison structures
+  and formal register where appropriate"
+content_outline:
+- section: "На ринку (At the market)"
+  words: 700
+  points:
+  - "Cultural context: Ukrainian markets (базар/ринок) as a living
+    institution — Бессарабський ринок, Привоз, Краматорський ринок.
+    Why markets matter culturally: direct interaction, bargaining,
+    seasonal products, personal relationships with sellers."
+  - "Key dialogues at the market:
+    Скільки коштує кілограм яблук? Дайте, будь ласка, півкіла.
+    Ці помідори свіжіші за ті? А які найсмачніші?
+    Чи можна дешевше? А якщо візьму два кілограми?
+    Using comparatives naturally: дешевший, свіжіший, більший, смачніший."
+  - "Vocabulary in context: продавець/продавчиня, покупець/покупчиня,
+    ваги, кілограм, ціна, знижка, здача, готівка, пакет.
+    Reading passage: a narrative about a market visit using Phase 5 grammar."
+- section: "У магазині (In a shop)"
+  words: 700
+  points:
+  - "Types of shops using word formation:
+    книгарня (книга+-арня), взуттєвий магазин, продуктовий магазин,
+    аптека, хімчистка, перукарня (перукар+-ня), майстерня (майстер+-ня).
+    Practice: derive shop names from base words."
+  - "Shopping dialogue: trying on clothes
+    Чи є цей светр у більшому розмірі? Мені потрібен менший.
+    Де примірочна? Скільки коштує ця сукня?
+    Ця тканина якісніша, але й дорожча. Яка найдешевша?
+    Using comparatives and superlatives from M38-39."
+  - "Paying: Ви розраховуєтесь готівкою чи карткою?
+    Дайте, будь ласка, чек. Чи є гарантія?
+    Я хочу повернути цю річ. Вона бракована."
+- section: "На пошті і в банку (At the post office and bank)"
+  words: 600
+  points:
+  - "Post office vocabulary and dialogues:
+    Я хочу відправити посилку / листа / бандероль.
+    Скільки коштує доставка? Яка найшвидша доставка?
+    Коли посилка дійде? Через скільки днів?
+    Using temporal expressions with comparatives: швидше, довше."
+  - "Bank vocabulary: рахунок, переказ, обмін валют, курс.
+    Який сьогодні курс долара? Де найвигідніший обмін?
+    Practice dialogue: exchanging currency and comparing rates."
+- section: "Послуги (Services)"
+  words: 600
+  points:
+  - "Service situations using agent nouns:
+    перукар/перукарка — у перукарні: Мені потрібна стрижка. Коротше, будь ласка.
+    майстер — у майстерні: Мій телефон зламався. Скільки коштує ремонт?
+    кравець/кравчиня — в ательє: Мені потрібно вкоротити штани."
+  - "Comparing services: Ця перукарня краща за ту.
+    У тій майстерні ремонт дешевший, але довший.
+    Який найкращий сервіс у місті?
+    Practice: writing a review comparing two service providers."
+- section: "Скарга і відгук (Complaints and reviews)"
+  words: 550
+  points:
+  - "Polite complaint template:
+    Вибачте, але цей товар бракований.
+    Я купив/купила це вчора, і воно вже зламалося.
+    Я хочу повернути товар / обміняти на інший.
+    Мені повинні повернути гроші.
+    Register: formal but assertive, using conditional for politeness."
+  - "Writing a review using comparisons:
+    'Ця кав'ярня — найкраща в місті. Кава тут смачніша, ніж у ...
+    Обслуговування найшвидше. Ціни трохи вищі, але якість набагато краща.'
+    Practice: write a 5-7 sentence review of a real or imagined place."
+- section: "Підсумок (Summary)"
+  words: 350
+  points:
+  - "Key transactional phrases organized by situation:
+    ринок, магазин, пошта, банк, послуги, скарги.
+    Grammar integration check: comparatives, superlatives, word formation."
+  - "Preview: контрольна робота 5 — review of all Phase 5 material
+    (comparison and word formation)."
+vocabulary_hints:
+  required:
+  - "знижка (discount)"
+  - "готівка (cash)"
+  - "картка (card — payment card)"
+  - "чек (receipt)"
+  - "повернення (return — of a product)"
+  - "гарантія (guarantee/warranty)"
+  - "розмір (size)"
+  - "примірочна (fitting room)"
+  - "посилка (parcel)"
+  - "обмін валют (currency exchange)"
+  - "курс (exchange rate)"
+  - "ремонт (repair)"
+  - "бракований (defective)"
+  recommended:
+  - "здача (change — money returned)"
+  - "тканина (fabric)"
+  - "доставка (delivery)"
+  - "переказ (money transfer)"
+  - "рахунок (bill/account)"
+  - "стрижка (haircut)"
+  - "ательє (tailor's shop)"
+  - "кав'ярня (coffee shop)"
+  - "обслуговування (service — customer service)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct transactional phrase for given shopping situations"
+  items: 8
+- type: fill-in
+  focus: "Complete shopping dialogues with comparatives, superlatives, vocabulary"
+  items: 8
+- type: match-up
+  focus: "Match agent noun to workplace/service location"
+  items: 8
+- type: dialogue-completion
+  focus: "Complete a market bargaining or shop complaint dialogue"
+  items: 6
+- type: sentence-builder
+  focus: "Build comparison sentences about products and services"
+  items: 6
+- type: free-write
+  focus: "Write a review of a shop or service using comparisons"
+  items: 1
+connects_to:
+- "b1-038 (Вищий ступінь — comparatives used in product comparison)"
+- "b1-039 (Найвищий ступінь — superlatives in reviews)"
+- "b1-043 (Творення іменників — agent and place nouns)"
+- "b1-045 (Контрольна робота 5 — review of Phase 5)"
+prerequisites:
+- "b1-038 through b1-043 (Phase 5 grammar modules)"
+grammar:
+- "Application of ступені порівняння in real shopping contexts"
+- "Application of словотвір (agent nouns, place nouns) in service contexts"
+- "Transactional register: polite requests, complaints, reviews"
+register: розмовно-побутовий
+references:
+- title: "Communicative context module"
+  notes: "Applies grammar from M38-43 in shopping, services, post office, and bank."

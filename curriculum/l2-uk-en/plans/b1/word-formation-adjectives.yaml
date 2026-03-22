@@ -1,0 +1,165 @@
+module: b1-042
+level: B1
+sequence: 42
+slug: word-formation-adjectives
+version: '3.0'
+title: "Творення прикметників"
+subtitle: "Як утворюються прикметники від іменників, дієслів і прикметників"
+focus: grammar
+pedagogy: PPP
+phase: "B1.5 [Degrees of Comparison & Word Formation]"
+word_target: 4000
+objectives:
+- "Learner can form adjectives from nouns using productive suffixes
+  (-н-, -ськ-/-зьк-/-цьк-, -ів-/-їв-, -ичн-/-ічн-, -уват-/-юват-)"
+- "Learner can apply the -н- vs -нн- spelling rule: one -н- in most adjective
+  suffixes, double -нн- in -енн(ий)/-анн(ий) (from verbal nouns) and -нн-
+  from stems ending in -н- (осінній, денний)"
+- "Learner can form adjectives using prefixes (пре-, без-, над-, анти-,
+  перед-, після-) and the prefixal-suffixal method (безхмарний, прибережний)"
+- "Learner can identify consonant alternations in adjective formation
+  (нога-ніжка-ніжний, козак-козацький, Париж-паризький)"
+- "Learner can distinguish якісні from відносні прикметники formed by the
+  same suffix and understand how context shifts meaning"
+content_outline:
+- section: "Суфіксальне творення прикметників (Suffixal formation)"
+  words: 900
+  points:
+  - "Most productive method from Литвінова Grade 6 p.208:
+    'Найбільше прикметників утворено за допомогою суфіксів.'
+    Core suffixes for відносні прикметники:
+    -н-: зима → зимний, телефон → телефонний
+    -ськ-/-зьк-/-цьк-: Київ → київський, Париж → паризький,
+    козак → козацький, Бахмач → бахмацький
+    (Караман Grade 10 p.132)"
+  - "Suffixes for якісні прикметники (Авраменко Grade 6 p.136):
+    -еньк-/-есеньк-: чистенький, малесенький (diminutive quality)
+    -юч-/-ющ-: смачнюча, здоровенюча (augmentative quality)
+    -уват-/-юват-: білуватий, синюватий (approximate quality — 'somewhat')
+    -ив-/-лив-: вигадливий, кмітливий (characteristic quality)"
+  - "The -ськ-/-зьк-/-цьк- alternation rule (Караман Grade 10 p.132):
+    Base ending in [к] → -цьк-: козак-козацький
+    Base ending in [ж], [з], [с] → -зьк-: Париж-паризький, француз-французький
+    Base ending in other consonants → -ськ-: Київ-київський, студент-студентський
+    Practice: form adjectives from 12 geographic and social nouns."
+- section: "Написання -Н- і -НН- у прикметниках (Single vs double -н-)"
+  words: 700
+  points:
+  - "From Литвінова Grade 6 p.208 and Заболотний Grade 6 p.155:
+    One -н-: суфікс -н- added to stem NOT ending in -н-:
+    зима → зимний, лимон → лимонний (wait — лимон ends in -н-!).
+    Rule clarification: -нн- appears when stem already ends in -н- + suffix -н-:
+    осінь → осінній, день → денний, кінь → кінний, лимон → лимонний."
+  - "Suffixes -енн(ий)/-анн(ий)/-янн(ий): these come from verbal nouns
+    and always have -нн-: здійсненний, нездоланний, незабутенній (archaic).
+    But standard adjective suffixes: -ан(ий)/-ян(ий) have one -н-:
+    скляний, дерев'яний, піщаний, гречаний."
+  - "Practice: complete a table of noun → adjective pairs, marking -н- or -нн-,
+    and explain why. Include tricky cases: туманний (туман+н), глиняний (глина+ян)."
+- section: "Префіксальне та префіксально-суфіксальне творення (Prefix formation)"
+  words: 600
+  points:
+  - "Prefix formation (Авраменко Grade 6 p.136):
+    пре-: прегарний, предобрий (emphatic quality)
+    без-/бес-: безмежний, безхмарний (absence of quality)
+    над-: надзвичайний, надважливий (excessive degree)
+    анти-: антивоєнний, антинауковий (opposition)
+    ультра-: ультрамодний, ультрасучасний (extreme)"
+  - "Prefixal-suffixal (simultaneous prefix + suffix):
+    при- + -н-: прибережний (при березі), прикордонний (при кордоні)
+    без- + -н-: безхмарний (без хмар), безсонний (без сну)
+    під- + -н-: підземний (під землею), підводний (під водою)
+    Practice: deduce the base noun from the adjective, identify the method."
+- section: "Чергування при творенні (Alternations in formation)"
+  words: 500
+  points:
+  - "Consonant alternations when adding suffixes:
+    [г] → [з']: книга-книжний, нога-ніжний (but also ніжка via diminutive)
+    [к] → [ц']: рука-ручний, козак-козацький
+    [х] → [с']: муха-мушиний, горох-горошковий
+    These follow the second palatalisation patterns from Phase 2."
+  - "Vowel alternations: [о/е] → [і] in closed syllables:
+    осінь-осінній (already known), ніч-нічний, сіль-сільський.
+    Practice: predict alternations before forming adjectives."
+- section: "Складне творення прикметників (Compound adjective formation)"
+  words: 500
+  points:
+  - "Compound adjectives formed by joining two stems:
+    With connecting vowel -о-/-е-: чорноокий, синьоокий, правобережний.
+    From two adjectives: кисло-солодкий, темно-зелений, ніжно-блакитний.
+    Hyphen rule: colour + colour or quality + quality = hyphen.
+    Stem + stem with connecting vowel = no hyphen."
+  - "Practice: form compound adjectives from word pairs and determine
+    whether they need a hyphen. Include geographic compounds:
+    західноукраїнський (but: Західна Україна with capital)."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Formation method summary table:
+    суфіксальний: -н-, -ськ-, -ів-, -уват-, -еньк-
+    префіксальний: пре-, без-, над-, анти-
+    пр.-суф.: при-...-н-, без-...-н-, під-...-н-
+    складання: stem+о/е+stem"
+  - "Preview: next module — how Ukrainian forms nouns for people
+    and places (словотвір іменників)."
+vocabulary_hints:
+  required:
+  - "словотвір (word formation — the study of how new words are created)"
+  - "суфікс (suffix — morpheme added after the root)"
+  - "префікс (prefix — morpheme added before the root)"
+  - "префіксально-суфіксальний (prefixal-suffixal — formed by both)"
+  - "складний прикметник (compound adjective — formed from two stems)"
+  - "сполучна голосна (connecting vowel — -о- or -е- in compounds)"
+  - "подвоєння (doubling — as in -нн- in adjectives)"
+  - "продуктивний (productive — actively used to form new words)"
+  recommended:
+  - "зменшувальний (diminutive — -еньк- suffix quality)"
+  - "збільшувальний (augmentative — -юч- suffix quality)"
+  - "наближений (approximate — -уват- suffix meaning)"
+  - "твірна основа (derivational base — the stem from which a word is formed)"
+  - "похідне слово (derived word — the newly formed word)"
+  - "мотивувальне слово (motivating word — the word from which another is derived)"
+activity_hints:
+- type: quiz
+  focus: "Identify formation method and correct suffix for given adjectives"
+  items: 8
+- type: fill-in
+  focus: "Form adjectives from nouns with correct suffix and -н-/-нн- spelling"
+  items: 8
+- type: match-up
+  focus: "Match noun/verb base to its derived adjective"
+  items: 8
+- type: group-sort
+  focus: "Sort adjectives by formation method: суфіксальний, префіксальний, складання"
+  items: 10
+- type: error-correction
+  focus: "Fix spelling errors in derived adjectives (-н-/-нн-, -ськ-/-зьк-/-цьк-)"
+  items: 6
+- type: mark-the-words
+  focus: "In a passage, identify all derived adjectives and name their base words"
+  items: 6
+connects_to:
+- "b1-043 (Творення іменників — noun formation patterns)"
+- "b1-038 (Вищий ступінь — comparative uses suffixes on adjective stems)"
+- "b1-009 (Чергування приголосних — alternation patterns reappear in formation)"
+prerequisites:
+- "b1-002 (Морфологія — word structure: корінь, суфікс, префікс)"
+- "b1-009 (Чергування приголосних — consonant alternation patterns)"
+grammar:
+- "Суфіксальне творення: -н-, -ськ-/-зьк-/-цьк-, -ів-, -уват-, -еньк-, -юч-"
+- "Написання -Н- і -НН-: основа на -н- + суфікс -н- = -нн-"
+- "Префіксальне творення: пре-, без-, над-, анти-, ультра-"
+- "Префіксально-суфіксальне: при-...-н-, без-...-н-, під-...-н-"
+- "Складання: з'єднувальна голосна -о-/-е-, написання через дефіс"
+register: науково-навчальний
+references:
+- title: "Литвінова Grade 6, p.208"
+  notes: "Adjective formation overview: suffix as the most productive method."
+- title: "Авраменко Grade 6, p.136"
+  notes: "Prefix and suffix formation of adjectives with examples."
+- title: "Караман Grade 10, p.132"
+  notes: "Geographic adjective formation: -ськ-/-зьк-/-цьк- distribution rule."
+- title: "Заболотний Grade 6, p.155"
+  notes: "Practice with -н-/-нн- in adjectives, exercises with suffixes."
+- title: "Голуб Grade 6, p.35"
+  notes: "Word formation methods overview: суфіксальний, префіксальний, складання."
