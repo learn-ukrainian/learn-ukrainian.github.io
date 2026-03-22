@@ -1,0 +1,73 @@
+{
+  "exists": true,
+  "words": 4438,
+  "quality": "thin",
+  "score": 2,
+  "score_raw": 3,
+  "score_max": 17,
+  "markers": 2,
+  "profile": "core",
+  "dimensions": {
+    "state_standard": {
+      "score": 0,
+      "max": 2,
+      "detail": "missing"
+    },
+    "vocabulary": {
+      "score": 0,
+      "max": 2,
+      "detail": "missing"
+    },
+    "cultural_hooks": {
+      "score": 0,
+      "max": 2,
+      "detail": "missing"
+    },
+    "learner_errors": {
+      "score": 0,
+      "max": 2,
+      "detail": "missing"
+    },
+    "cross_references": {
+      "score": 0,
+      "max": 1,
+      "detail": "missing"
+    },
+    "pedagogy_notes": {
+      "score": 0,
+      "max": 1,
+      "detail": "missing"
+    },
+    "source_verification": {
+      "score": 0,
+      "max": 2,
+      "detail": "no sources found"
+    },
+    "claim_grounding": {
+      "score": 2,
+      "max": 2,
+      "detail": "12 cited examples, 977 Ukrainian terms"
+    },
+    "discovery_integration": {
+      "score": 0,
+      "max": 1,
+      "detail": "0 resources"
+    },
+    "specificity": {
+      "score": 1,
+      "max": 2,
+      "detail": "3 specific markers (need 5+)"
+    }
+  },
+  "gaps": [
+    "state_standard: missing",
+    "vocabulary: missing",
+    "cultural_hooks: missing",
+    "learner_errors: missing",
+    "cross_references: missing",
+    "pedagogy_notes: missing",
+    "source_verification: no sources found",
+    "discovery_integration: 0 resources",
+    "specificity: 3 specific markers (need 5+)"
+  ]
+}
