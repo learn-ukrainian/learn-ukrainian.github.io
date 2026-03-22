@@ -1,0 +1,173 @@
+module: b1-059
+level: B1
+sequence: 59
+slug: participle-phrases
+version: '3.0'
+title: "Дієприкметниковий зворот"
+subtitle: "Дієприкметник із залежними словами та правила відокремлення"
+focus: grammar
+pedagogy: PPP
+phase: "B1.7 [Participles & Gerunds]"
+word_target: 4000
+objectives:
+- "Learner can identify дієприкметниковий зворот as a participle with its
+  dependent words functioning as a single означення in a sentence"
+- "Learner can apply comma rules: дієприкметниковий зворот після
+  означуваного слова відокремлюється комами; перед — не відокремлюється"
+- "Learner can transform participle phrases into subordinate clauses
+  with який/яка/яке and vice versa"
+- "Learner can use participle phrases to create more concise, literary
+  Ukrainian text while avoiding overuse that sounds unnatural"
+- "Learner can correctly punctuate sentences with multiple participle
+  phrases and distinguish them from other відокремлені означення"
+content_outline:
+- section: "Що таке дієприкметниковий зворот? (What is a participle phrase?)"
+  words: 650
+  points:
+  - "Definition from Литвінова Grade 7 p.82: дієприкметник із залежними
+    словами утворює дієприкметниковий зворот. It functions as an
+    extended означення (attribute) in the sentence.
+    Фільм, знятий в Україні, отримав найвищу нагороду.
+    Here 'знятий в Україні' is the зворот: знятий (дієприкметник) +
+    в Україні (залежні слова)."
+  - "Comparison: одиничний дієприкметник vs зворот:
+    Ми подивились обговорюваний фільм. (single participle — no commas)
+    Фільм, знятий в Україні, отримав нагороду. (phrase — commas)
+    The зворот carries more information and behaves differently
+    in punctuation."
+  - "Syntactic role: the entire зворот is an означення (attribute).
+    It answers the question який? яка? яке? які? about the noun.
+    Книга (яка?), прочитана всіма учнями, лежала на столі."
+- section: "Правила відокремлення (Comma rules for participle phrases)"
+  words: 800
+  points:
+  - "Core rule from Авраменко Grade 7 p.104-108:
+    AFTER the noun (постпозиція): COMMAS required.
+    Фільм, знятий в Україні, отримав нагороду.
+    Стіна, побілена вапном, сяяла чистотою.
+    Земля, припорошена першим снігом, нагадує білий килим.
+    BEFORE the noun (препозиція): NO commas.
+    Знятий в Україні фільм отримав нагороду.
+    Побілена вапном стіна сяяла чистотою.
+    Припорошена першим снігом земля нагадує білий килим."
+  - "Special case: participle phrase refers to a personal pronoun —
+    ALWAYS set off by commas regardless of position:
+    Стомлений дорогою, я заснув одразу.
+    Я, стомлений дорогою, заснув одразу.
+    Both require commas because the означуване слово is я (pronoun)."
+  - "From Заболотний Grade 8 p.205: participle phrases that also carry
+    обставинне значення (причини, умови) are always set off:
+    Схвильований новиною, батько негайно зателефонував.
+    (The phrase explains WHY the father called — causal shade.)"
+  - "Practice: 10-12 sentences where learners place commas correctly
+    based on position of the зворот relative to the noun."
+- section: "Трансформація: зворот ↔ підрядне речення (Transformation: phrase ↔ clause)"
+  words: 650
+  points:
+  - "Every дієприкметниковий зворот can be restated as a subordinate
+    clause with який/яка/яке/які:
+    Книга, прочитана всіма учнями, лежала на столі.
+    → Книга, яку прочитали всі учні, лежала на столі.
+    Збудований у XVIII столітті палац зберігся до сьогодні.
+    → Палац, який збудували у XVIII столітті, зберігся до сьогодні."
+  - "When to prefer which form:
+    Дієприкметниковий зворот: more concise, literary, formal.
+    Підрядне з який: more natural in speech, easier to parse.
+    Ukrainian stylistic preference: підрядне з який is generally
+    more natural. Дієприкметникові звороти are a feature of
+    written/literary Ukrainian."
+  - "Practice: transform 8 sentences both ways (зворот → clause and
+    clause → зворот). Learners note which version sounds more natural."
+- section: "Складні випадки та помилки (Complex cases and errors)"
+  words: 600
+  points:
+  - "Multiple participle phrases in one sentence:
+    Доповідь, написана студентом, перевірена професором, була відмінна.
+    (two postposed phrases — both get commas)
+    Написана студентом i перевірена професором доповідь була відмінна.
+    (two preposed phrases joined by i — no commas needed)"
+  - "Common errors:
+    1. Forgetting commas after a postposed phrase that is not at end of sentence.
+    2. Adding commas to a preposed phrase (wrong: *Знятий в Україні, фільм...).
+    3. Dangling participle: the participle must refer to the noun it modifies.
+    *Прочитана всіма, бібліотекар забрала книгу. (wrong referent)
+    → Прочитану всіма книгу бібліотекар забрала."
+  - "Overuse warning: stacking participle phrases creates heavy,
+    bureaucratic prose. Prefer variety: mix звороти with який-clauses
+    and simple sentences."
+- section: "Читання та практика (Reading and practice)"
+  words: 700
+  points:
+  - "Reading passage: a news report or article using participle phrases
+    naturally. Learners identify all звороти, mark commas, determine
+    whether each could be converted to a який-clause."
+  - "Error-correction passage: a text with deliberate punctuation errors
+    in participle phrases. Learners fix all errors and explain the rules."
+  - "Production: learners rewrite 5 simple sentences using participle
+    phrases to make them more concise:
+    Міст, який збудували минулого року, з'єднує два береги.
+    → Збудований минулого року міст з'єднує два береги."
+- section: "Підсумок та перехід до M60 (Summary and transition)"
+  words: 400
+  points:
+  - "Summary: дієприкметниковий зворот = дієприкметник + залежні слова.
+    Після означуваного слова → коми. Перед означуваним словом → без ком.
+    Після займенника → завжди коми. Трансформація ↔ підрядне з який.
+    Self-check: Я правильно ставлю коми ✓/✗,
+    Я можу перетворити зворот на підрядне речення ✓/✗."
+  - "Preview: M60 — Короткі прикметники. A different morphological form:
+    зелен, молод, потрібен — expressive and poetic."
+vocabulary_hints:
+  required:
+  - "дієприкметниковий зворот (participle phrase)"
+  - "означуване слово (modified word — the noun the participle refers to)"
+  - "означення (attribute — syntactic role of the participle phrase)"
+  - "відокремлення (setting off — punctuation with commas)"
+  - "постпозиція (postposition — phrase after the noun)"
+  - "препозиція (preposition — phrase before the noun)"
+  - "підрядне речення (subordinate clause)"
+  - "залежні слова (dependent words)"
+  recommended:
+  - "пунктограма (punctuation rule)"
+  - "обставинне значення (adverbial shade — causal/conditional)"
+  - "трансформація (transformation — converting between structures)"
+  - "стилістика (stylistics — choice between phrase and clause)"
+activity_hints:
+- type: fill-in
+  focus: "Place commas correctly in sentences with participle phrases"
+  items: 10
+- type: quiz
+  focus: "Does this participle phrase need commas? Choose correct punctuation"
+  items: 8
+- type: sentence-builder
+  focus: "Transform який-clauses into participle phrases and vice versa"
+  items: 8
+- type: error-correction
+  focus: "Fix punctuation and dangling participle errors"
+  items: 8
+- type: mark-the-words
+  focus: "In a passage, mark all дієприкметникові звороти and their означувані слова"
+  items: 6
+connects_to:
+- "b1-057 (Активні дієприкметники)"
+- "b1-058 (Пасивні дієприкметники)"
+- "b1-062 (Дієприслівниковий зворот — parallel structure for gerunds)"
+prerequisites:
+- "b1-058 (Passive participles — both participle types known)"
+grammar:
+- "Дієприкметниковий зворот: дієприкметник + залежні слова"
+- "Punctuation: postposed → commas, preposed → no commas"
+- "Special case: pronoun as означуване слово → always commas"
+- "Transformation: зворот ↔ підрядне речення з який"
+- "Stylistic choice: зворот (literary) vs який-clause (natural speech)"
+register: науково-навчальний
+references:
+- title: "Литвінова Grade 7, p.82-86"
+  notes: "§16 Дієприкметниковий зворот: definition, comma rules,
+    comparison of preposed and postposed positions with examples."
+- title: "Авраменко Grade 7, p.104-108"
+  notes: "§47 Дієприкметниковий зворот. Розділові знаки: test-format
+    exercises identifying when commas are needed."
+- title: "Заболотний Grade 8, p.205"
+  notes: "Відокремлені означення: participle phrases with adverbial
+    shade (причина, умова) — always set off by commas."

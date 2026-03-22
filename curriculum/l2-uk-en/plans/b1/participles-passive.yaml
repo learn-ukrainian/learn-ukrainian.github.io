@@ -1,0 +1,195 @@
+module: b1-058
+level: B1
+sequence: 58
+slug: participles-passive
+version: '3.0'
+title: "Пасивні дієприкметники"
+subtitle: "Ознака за дією, якої зазнає предмет"
+focus: grammar
+pedagogy: PPP
+phase: "B1.7 [Participles & Gerunds]"
+word_target: 4000
+objectives:
+- "Learner can form passive participles using суфікси -н- (основа на -а-),
+  -ен-/-єн- (основа на приголосний та -и-/-i-/-ї-), and -т- (односкладові)"
+- "Learner can use passive participles in attributive position with correct
+  agreement in рід, число, and відмінок (прочитана книга, збудований міст)"
+- "Learner can connect passive participles to -но/-то forms from M23:
+  прочитаний → прочитано, збудований → збудовано"
+- "Learner can apply consonant alternations that occur in passive participle
+  formation: носити → ношений, водити → воджений, просити → прошений"
+- "Learner can distinguish passive participles from regular adjectives
+  and use them naturally in written Ukrainian"
+content_outline:
+- section: "Пасивні дієприкметники: значення (Passive participles: meaning)"
+  words: 550
+  points:
+  - "Definition from Литвінова Grade 7 p.88: пасивні дієприкметники
+    виражають ознаку за дією, якої зазнає предмет із боку іншого
+    виконавця. The subject does NOT perform the action — someone else does:
+    прочитана книга (книгу хтось прочитав),
+    збудований міст (міст хтось збудував),
+    вишита сорочка (сорочку хтось вишив)."
+  - "Contrast with active participles (M57):
+    Active: квітучий сад — сад сам квітне (subject acts).
+    Passive: посаджений сад — сад хтось посадив (subject receives).
+    Passive participles are FAR more productive and natural in Ukrainian
+    than active present participles. This is the core participle type."
+  - "Connection to M23 (passive voice): passive participles are the
+    foundation of -но/-то forms: прочитаний → прочитано,
+    збудований → збудовано. The participle is the attributive form,
+    -но/-то is the predicate form."
+- section: "Творення пасивних дієприкметників (Formation of passive participles)"
+  words: 900
+  points:
+  - "Three suffix groups from Караман Grade 10 p.189 and Литвінова Grade 7 p.88:
+    1. Суфікс -н-: основа інфінітива на -а-:
+    прочитати → прочитаний, написати → написаний, зробити → зроблений.
+    2. Суфікс -ен-/-єн-: основа на приголосний та -и-/-i-/-ї-:
+    принести → принесений, побачити → побачений, загоїти → загоєний.
+    3. Суфікс -т-: від односкладових дієслів та деяких інших:
+    мити → митий, бити → битий, зігнути → зігнутий,
+    колоти → колотий, полоти → полотий."
+  - "Consonant alternations in passive participle formation:
+    [д] → [дж]: водити → воджений, ходити → ходжений.
+    [т] → [ч]: закрутити → закручений, замітити → замічений.
+    [з] → [ж]: возити → вожений, привезти → привезений.
+    [с] → [ш]: носити → ношений, просити → прошений, косити → кошений.
+    [б] → [бл]: робити → роблений, любити → люблений.
+    From Авраменко Grade 7 p.98-101."
+  - "Step-by-step formation algorithm:
+    1. Визначте основу інфінітива (drop -ти/-ти).
+    2. Визначте, на що закінчується основа (голосний -а- чи приголосний).
+    3. Оберіть суфікс (-н-, -ен-/-єн-, чи -т-).
+    4. Перевірте, чи є чергування приголосних.
+    5. Додайте закінчення прикметника (-ий/-а/-е/-i).
+    Practice: 12-15 verbs for formation, including those with alternations."
+- section: "Відмінювання пасивних дієприкметників (Declension)"
+  words: 600
+  points:
+  - "Passive participles decline like прикметники of hard group:
+    прочитаний, прочитаного, прочитаному, прочитаний/прочитаного,
+    прочитаним, прочитаному. Feminine: прочитана, прочитаної...
+    The ending must agree with the noun: прочитана книга (ж.р.),
+    прочитаний лист (ч.р.), прочитане повідомлення (с.р.)."
+  - "Agreement in context: case, gender, number must all match:
+    Я дивлюся на збудований міст. (Зн.в., ч.р., одн.)
+    Ми йдемо збудованим мостом. (Ор.в., ч.р., одн.)
+    Збудовані мости з'єднують береги. (Н.в., мн.)
+    Practice: decline participle + noun phrases through all cases."
+  - "Short form (predicate use) vs full form (attributive use):
+    Attributive: Прочитана книга лежить на столі.
+    Predicate: Книга прочитана. (short form, not declined)
+    Connection to -но/-то: Книгу прочитано. (impersonal, M23)"
+- section: "Дієприкметник чи прикметник? (Participle or adjective?)"
+  words: 550
+  points:
+  - "Some passive participles have become adjectives (втратили дієслівність):
+    варений (cooked — now a food descriptor), солений (salted),
+    печений (baked), мелений (ground), крашений (dyed).
+    Test: can you add a direct object or agent? If no → adjective.
+    Варена картопля (adj.) vs зварена мамою картопля (participle with agent)."
+  - "Spelling difference: прикметник has one -н-, дієприкметник has -н- from
+    the suffix + potential -н- from the stem, but in Ukrainian the distinction
+    is not always about double -н-. Key: дієприкметник has вид, прикметник does not.
+    Варений (прикметник, недок.) vs зварений (дієприкметник, док. — результат дії)."
+  - "Practice: classify forms as дієприкметник or прикметник based on context.
+    Learners add agents or direct objects to prove the form is a participle."
+- section: "Практика: пасивні дієприкметники у тексті (Practice in context)"
+  words: 700
+  points:
+  - "Reading passage: a description of a Ukrainian вишиванка or cultural
+    artifact using passive participles: 'Вишита квітами сорочка,
+    пофарбована натуральними барвниками тканина, створений
+    майстринею взірець...' Comprehension: identify all passive participles,
+    determine the base verb, check for alternations."
+  - "Transformation exercises from Авраменко Grade 7 p.98:
+    Form passive participles from given verbs:
+    передати → переданий, одягнути → одягнутий,
+    заплести → заплетений, зварити → зварений,
+    помити → помитий, замести → заметений,
+    пофарбувати → пофарбований."
+  - "Production: learners write 5-6 sentences describing a room, building,
+    or object using passive participles: 'У кімнаті стоїть пофарбований
+    стіл. На стіні висить намальована картина. На підлозі лежить
+    вишитий килимок.'"
+- section: "Підсумок та перехід до M59 (Summary and transition)"
+  words: 300
+  points:
+  - "Summary: пасивні дієприкметники = ознака за дією іншого виконавця.
+    Три суфікси: -н- (від -а-), -ен-/-єн- (від пригол.), -т- (односклад.).
+    Чергування приголосних при творенні. Зв'язок з -но/-то формами.
+    Self-check: Я можу утворити пасивні дієприкметники ✓/✗,
+    Я знаю чергування приголосних ✓/✗."
+  - "Preview: M59 — Дієприкметниковий зворот. The participle + its
+    dependent words form a phrase that requires specific punctuation rules."
+vocabulary_hints:
+  required:
+  - "пасивний дієприкметник (passive participle — subject receives the action)"
+  - "прочитаний (read — passive participle from прочитати)"
+  - "збудований (built — passive participle from збудувати)"
+  - "написаний (written — passive participle from написати)"
+  - "вишитий (embroidered — passive participle from вишити)"
+  - "зроблений (made/done — passive participle from зробити)"
+  - "принесений (brought — passive participle from принести)"
+  - "відкритий (opened — passive participle from відкрити)"
+  - "ношений (worn/carried — with [с]→[ш] alternation)"
+  - "закручений (twisted — with [т]→[ч] alternation)"
+  - "чергування (alternation — consonant changes in formation)"
+  recommended:
+  - "побачений (seen — passive participle from побачити)"
+  - "загоєний (healed — passive participle from загоїти)"
+  - "заметений (swept — passive participle from замести)"
+  - "пофарбований (painted — passive participle from пофарбувати)"
+  - "воджений (driven — with [д]→[дж] alternation)"
+  - "битий (beaten — -т- suffix from бити)"
+  - "митий (washed — -т- suffix from мити)"
+  - "колотий (chopped — -т- suffix from колоти)"
+  - "зварений (boiled/cooked — perfective participle)"
+  - "варений (cooked — lexicalized adjective from варити)"
+activity_hints:
+- type: fill-in
+  focus: "Form passive participles from given verbs with correct suffixes and alternations"
+  items: 10
+- type: quiz
+  focus: "Choose the correct passive participle form (testing suffix choice and alternations)"
+  items: 10
+- type: match-up
+  focus: "Match passive participles to their base verbs, identifying alternations"
+  items: 8
+- type: error-correction
+  focus: "Fix incorrectly formed passive participles (wrong suffix, missing alternation)"
+  items: 6
+- type: group-sort
+  focus: "Sort passive participles by suffix type: -н- vs -ен-/-єн- vs -т-"
+  items: 12
+- type: sentence-builder
+  focus: "Use passive participles with correct agreement to describe objects and places"
+  items: 6
+connects_to:
+- "b1-057 (Активні дієприкметники — active participles)"
+- "b1-059 (Дієприкметниковий зворот — participle phrases)"
+- "b1-023 (Пасивний стан — -но/-то forms as predicate counterpart)"
+prerequisites:
+- "b1-057 (Active participles — дієприкметник concept introduced)"
+grammar:
+- "Пасивні дієприкметники: ознака за дією іншого виконавця"
+- "Formation: -н- (основа на -а-), -ен-/-єн- (на приголосний), -т- (односкладові)"
+- "Чергування приголосних: д→дж, т→ч, з→ж, с→ш, б→бл"
+- "Відмінювання як прикметників (рід, число, відмінок)"
+- "Дієприкметник vs прикметник (варений vs зварений)"
+- "Connection to -но/-то predicate forms"
+register: науково-навчальний
+references:
+- title: "Литвінова Grade 7, p.87-92"
+  notes: "§17 Активні й пасивні дієприкметники: formation table with
+    suffixes -н-, -ен-, -т-, exercises on formation from given verbs."
+- title: "Караман Grade 10, p.189"
+  notes: "Творення дієприкметників: complete formation table for
+    active and passive, with suffix conditions clearly laid out."
+- title: "Авраменко Grade 7, p.98-101"
+  notes: "Passive participle formation exercises, including consonant
+    alternations and declension practice."
+- title: "Заболотний Grade 7, p.96"
+  notes: "Вправа 127: form passive participles in masculine form from
+    given verbs — systematic formation practice."

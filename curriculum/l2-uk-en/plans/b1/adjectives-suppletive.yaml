@@ -1,0 +1,176 @@
+module: b1-040
+level: B1
+sequence: 40
+slug: adjectives-suppletive
+version: '3.0'
+title: "Гарний - кращий (суплетивні форми)"
+subtitle: "Нерегулярні ступені порівняння: зміна кореня"
+focus: grammar
+pedagogy: PPP
+phase: "B1.5 [Degrees of Comparison & Word Formation]"
+word_target: 4000
+objectives:
+- "Learner can produce all suppletive comparison forms: гарний-кращий-найкращий,
+  поганий-гірший-найгірший, великий-більший-найбільший, малий-менший-найменший"
+- "Learner can identify the consonant alternation comparatives that are
+  near-suppletive: високий-вищий, низький-нижчий, широкий-ширший, вузький-вужчий"
+- "Learner can use suppletive comparatives in all cases and numbers
+  (кращого, кращій, кращому, etc.) with correct agreement"
+- "Learner can distinguish contexts where regular vs suppletive forms are used
+  (гарніший vs кращий — both exist but differ in nuance)"
+- "Learner can recognize and use suppletive adverb comparatives
+  (добре-краще, погано-гірше) that parallel the adjective forms"
+content_outline:
+- section: "Що таке суплетивні форми? (What are suppletive forms?)"
+  words: 500
+  points:
+  - "Definition: суплетивізм (suppletion) is when a grammatical form is built
+    from a completely different root than the base word. In English: good-better,
+    bad-worse. In Ukrainian: гарний-кращий, поганий-гірший.
+    The root changes entirely, unlike regular formation where only suffixes change."
+  - "Why suppletion exists: these are the most commonly used adjectives in any
+    language. High frequency → more likely to preserve ancient irregular forms.
+    Ukrainian inherited these from Proto-Slavic, and they are stable —
+    every native speaker uses them without thinking."
+  - "Comparison with regular formation:
+    Regular: сильний → сильніший (same root сильн-).
+    Suppletive: гарний → кращий (different root крат-/красн-).
+    The learner needs to memorize these — no rule predicts them."
+- section: "Чотири основні суплетивні пари (The four core suppletive pairs)"
+  words: 900
+  points:
+  - "гарний (good/beautiful) → кращий → найкращий
+    Note: гарніший also exists but means 'more beautiful/handsome'
+    (physical appearance). кращий means 'better' (general quality).
+    Ця книжка краща за ту. Він гарніший за брата (more handsome)."
+  - "поганий (bad) → гірший → найгірший
+    No alternative regular form (*поганіший is not standard).
+    Ситуація стає гіршою. Це найгірший варіант."
+  - "великий (big/great) → більший → найбільший
+    Note: великий also has regular form великіший (rare, dialectal).
+    більший is standard. Це більша кімната. Найбільше місто України."
+  - "малий (small/little) → менший → найменший
+    No alternative regular form (*маліший is not used).
+    Менша проблема. Це найменший ризик.
+    Full declension paradigm for all four pairs, with practice sentences."
+  - "Авраменко Grade 6 p.125: 'У деяких прикметниках при творенні
+    ступенів порівняння відбувається зміна основи слова
+    (малий → менший, великий → більший, гарний → кращий).'
+    Drill: 12-15 sentences using all four pairs in context."
+- section: "Напівсуплетивні форми (Near-suppletive alternation forms)"
+  words: 700
+  points:
+  - "Some adjectives undergo such heavy consonant changes that they feel
+    nearly suppletive, even though the root is technically preserved:
+    високий → вищий (not *високіший)
+    низький → нижчий
+    широкий → ширший
+    вузький → вужчий
+    легкий → легший
+    довгий → довший
+    дорогий → дорожчий
+    товстий → товщий"
+  - "These are NOT true suppletive forms (the root is recognizable), but
+    learners often struggle with them because the changes are dramatic.
+    Systematic review: base form → comparative → superlative for each."
+  - "Practice passage: a market scene where a buyer compares products,
+    using both suppletive and near-suppletive forms naturally.
+    'Ці яблука більші, але ті дешевші. А які найкращі?'"
+- section: "Суплетивні прислівники (Suppletive adverb comparatives)"
+  words: 550
+  points:
+  - "Parallel adverb forms follow the same suppletive roots:
+    добре (well) → краще → найкраще
+    погано (badly) → гірше → найгірше
+    багато (much) → більше → найбільше
+    мало (little) → менше → найменше"
+  - "Note the -е ending for adverb comparatives vs -ий for adjective comparatives:
+    кращий (adj.) vs краще (adv.). Він кращий студент. Він вчиться краще.
+    більший (adj.) vs більше (adv.). Більша кімната. Читай більше."
+  - "Common expressions with suppletive adverbs:
+    Краще пізно, ніж ніколи. Чим менше знаєш, тим краще спиш.
+    Practice: sentences where learners choose adjective or adverb form."
+- section: "Типові помилки та розмовна практика (Common errors and practice)"
+  words: 650
+  points:
+  - "Error 1: using regular forms instead of suppletive
+    (*поганіший → гірший, *маленькіший → менший).
+    Error 2: confusing adjective and adverb forms
+    (*Він вчиться кращий → Він вчиться краще).
+    Error 3: Russicism самий + superlative
+    (*самий кращий → найкращий)."
+  - "Dialogue practice: two friends planning a vacation, comparing options.
+    They use suppletive forms throughout:
+    'Цей готель кращий, але дорожчий. А менший готель ближчий до моря.
+    Яке найкраще рішення? Може, краще поїхати в наймолодше місто?'"
+  - "Self-assessment: translate 10 comparison sentences from English
+    to Ukrainian, requiring suppletive forms. Then peer-check."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Complete reference table:
+    гарний — кращий — найкращий (добре — краще — найкраще)
+    поганий — гірший — найгірший (погано — гірше — найгірше)
+    великий — більший — найбільший (багато — більше — найбільше)
+    малий — менший — найменший (мало — менше — найменше)"
+  - "Preview: next module extends comparison to прислівники —
+    how adverbs form ступені порівняння systematically."
+vocabulary_hints:
+  required:
+  - "суплетивний (suppletive — formed from a different root)"
+  - "кращий (better — suppletive comparative of гарний)"
+  - "гірший (worse — suppletive comparative of поганий)"
+  - "більший (bigger — suppletive comparative of великий)"
+  - "менший (smaller — suppletive comparative of малий)"
+  - "найкращий (best — suppletive superlative of гарний)"
+  - "найгірший (worst — suppletive superlative of поганий)"
+  - "краще (better — adverb, suppletive comparative of добре)"
+  - "гірше (worse — adverb, suppletive comparative of погано)"
+  recommended:
+  - "більше (more — adverb, suppletive comparative of багато)"
+  - "менше (less — adverb, suppletive comparative of мало)"
+  - "гарніший (more handsome — regular comparative, physical appearance only)"
+  - "нерегулярний (irregular — synonym for suppletive forms)"
+  - "корінь (root — the core morpheme of a word)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct suppletive or regular comparative form in context"
+  items: 8
+- type: fill-in
+  focus: "Complete sentences with the correct suppletive form (adj or adv)"
+  items: 8
+- type: match-up
+  focus: "Match base adjective/adverb to its suppletive comparative and superlative"
+  items: 8
+- type: error-correction
+  focus: "Find and fix errors: *поганіший, *маленькіший, *самий кращий"
+  items: 6
+- type: sentence-builder
+  focus: "Build comparison sentences requiring suppletive forms"
+  items: 6
+- type: group-sort
+  focus: "Sort comparatives into 'regular formation' vs 'suppletive' groups"
+  items: 10
+connects_to:
+- "b1-038 (Вищий ступінь — regular comparative formation)"
+- "b1-039 (Найвищий ступінь — regular superlative formation)"
+- "b1-041 (Прислівники — adverb comparison including suppletive)"
+prerequisites:
+- "b1-038 (Вищий ступінь прикметників — regular comparative)"
+- "b1-039 (Найвищий ступінь прикметників — regular superlative)"
+grammar:
+- "Суплетивні форми прикметників: гарний-кращий, поганий-гірший, великий-більший, малий-менший"
+- "Суплетивні форми прислівників: добре-краще, погано-гірше, багато-більше, мало-менше"
+- "Розрізнення: кращий (якість) vs гарніший (зовнішність)"
+- "Розрізнення: кращий (прикметник) vs краще (прислівник)"
+- "Напівсуплетивні форми: високий-вищий, широкий-ширший, довгий-довший"
+register: науково-навчальний
+references:
+- title: "Авраменко Grade 6, p.125"
+  notes: "Suppletive forms listed: малий-менший, великий-більший, гарний-кращий."
+- title: "Литвінова Grade 7, p.141-144"
+  notes: "Adverb comparison: suppletive forms добре-краще, погано-гірше."
+- title: "Заболотний Grade 8, p.28"
+  notes: "Parallel table of adjective and adverb comparison forms."
+- title: "Глазова Grade 11, p.18"
+  notes: "Complete formation table including suppletive pairs."

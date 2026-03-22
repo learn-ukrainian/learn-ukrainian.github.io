@@ -3,210 +3,154 @@ level: B1
 sequence: 19
 slug: conditionals-unreal
 version: '3.0'
-title: "Умовний спосіб (нереальний)"
-subtitle: "Якби-речення та контрфактичні умовні конструкції"
+title: Умовний спосіб (нереальний)
+subtitle: Якби-речення та контрфактичні умовні конструкції
 focus: grammar
 pedagogy: PPP
-phase: "B1.3 [Verbs]"
+phase: B1.3 [Verbs]
 word_target: 4000
 objectives:
-- "Learner can form unreal conditional sentences using якби + умовний спосіб
-  in the condition clause and умовний спосіб in the result clause"
-- "Learner can distinguish real conditions (якщо + дійсний) from unreal
-  conditions (якби + умовний) and choose correctly based on meaning"
-- "Learner can express contrary-to-fact statements about present and past:
-  Якби я знав, я б допоміг (but I didn't know, so I didn't help)"
-- "Learner can use unreal conditionals for dreams, regrets, and hypothetical
-  reasoning in both spoken and written Ukrainian"
-- "Learner can use the conjunction якби and its variants (коли б, як би)
-  correctly, including word order and particle placement"
+- Learner can form unreal conditional sentences using якби + умовний спосіб in the condition clause and умовний спосіб in
+  the result clause
+- Learner can distinguish real conditions (якщо + дійсний) from unreal conditions (якби + умовний) and choose correctly based
+  on meaning
+- 'Learner can express contrary-to-fact statements about present and past: Якби я знав, я б допоміг (but I didn''t know, so
+  I didn''t help)'
+- Learner can use unreal conditionals for dreams, regrets, and hypothetical reasoning in both spoken and written Ukrainian
+- Learner can use the conjunction якби and its variants (коли б, як би) correctly, including word order and particle placement
 content_outline:
-- section: "Реальне vs нереальне: два типи умов (Real vs unreal: two condition types)"
-  words: 650
-  points:
-  - "Contrast pair from M18:
-    Реальна умова: Якщо пошукаєш у книгах мудрості, то знайдеш
-    велику користь для душі своєї (Нестор) — дійсний спосіб, CAN happen.
-    Нереальна умова: Якби я мав більше часу, я б прочитав цю книжку —
-    умовний спосіб, CONTRARY TO FACT (I don't have enough time)."
-  - "The key signal: якщо signals real possibility, якби signals
-    unreality or contrary-to-fact. Заболотний Grade 9 p.114:
-    сполучники умови: якщо (якщо б), коли (коли б), як, якби, аби.
-    The б-forms (якщо б, коли б, якби) mark irrealis."
-  - "Visual schema for learners:
-    REAL: Якщо + future/present → future/present
-    UNREAL: Якби + умовний → умовний
-    This is the same logic as English 'if I have' vs 'if I had',
-    but Ukrainian uses mood (спосіб), not tense."
-- section: "Утворення нереальних умовних речень (Forming unreal conditionals)"
+- section: 'Реальне vs нереальне: два типи умов (Real vs unreal: two condition types)'
   words: 700
   points:
-  - "Structure: Якби + subject + минулий час + б/би, subject + минулий час + б/би.
-    Якби я знав це раніше, я б вчинив інакше.
-    Якби не дощ, Марина пішла б у перукарню (Заболотний Grade 7 p.75).
-    Якби не вітер, рибалка попливла б.
-    Note: якби already contains б, so the condition clause often omits
-    a second б/би after the verb."
-  - "Particle placement in both clauses (Литвінова Grade 7 p.62):
-    Коли б я його побачив, я, звичайно, не став би грати,
-    бо при ньому я соромився (Л. Смілянський).
-    The particle б/би can appear after any content word:
-    Якби я був чародієм, то хмаронько б тебе я напоїв (Лермонтов/ukr)."
-  - "Variant conjunctions: якби, коли б, як би.
-    Якби я міг — if I could (but I can't).
-    Коли б мали нагоду — if we had the opportunity (but we don't).
-    Як би не перешкода — if not for the obstacle.
-    Аби: slightly different — expresses purpose/minimal condition:
-    Аби я був чародієм (from Заболотний Grade 9 p.114)."
-  - "Aspect in unreal conditions:
-    Both доконаний and недоконаний are possible, with meaning differences:
-    Якби я читав цю книжку (impf — process, ongoing hypothetical),
-    Якби я прочитав цю книжку (pf — completed hypothetical result).
-    The choice follows the same aspect logic as elsewhere in Ukrainian."
-- section: "Нереальні умови: теперішнє i минуле (Unreal conditions: present and past)"
-  words: 650
+  - 'Contrast pair from M18: Реальна умова: Якщо пошукаєш у книгах мудрості, то знайдеш велику користь для душі своєї (Нестор)
+    — дійсний спосіб, CAN happen. Нереальна умова: Якби я мав більше часу, я б прочитав цю книжку — умовний спосіб, CONTRARY
+    TO FACT (I don''t have enough time).'
+  - 'The key signal: якщо signals real possibility, якби signals unreality or contrary-to-fact. Заболотний Grade 9 p.114:
+    сполучники умови: якщо (якщо б), коли (коли б), як, якби, аби. The б-forms (якщо б, коли б, якби) mark irrealis.'
+  - 'Visual schema for learners: REAL: Якщо + future/present → future/present UNREAL: Якби + умовний → умовний This is the
+    same logic as English ''if I have'' vs ''if I had'', but Ukrainian uses mood (спосіб), not tense.'
+- section: Утворення нереальних умовних речень (Forming unreal conditionals)
+  words: 750
   points:
-  - "Present counterfactual (contrary to current reality):
-    Якби я жив у Києві, ходив би на Хрещатик щодня.
-    (But I don't live in Kyiv.)
-    Якби я знав українську досконало, читав би Франка в оригіналі.
-    (But I don't know it perfectly yet.)
-    Note: Ukrainian uses the same form for present and past
-    counterfactuals — context disambiguates."
-  - "Past counterfactual (contrary to past reality):
-    Якби я тоді послухав батьків, все було б інакше.
-    (But I didn't listen to them.)
-    Якби ми вийшли раніше, встигли б на потяг.
-    (But we didn't leave early, and we missed the train.)
-    Adverbs like тоді, раніше, вчора help signal past reference."
-  - "Dreams and fantasies (not necessarily contrary to fact):
-    Якби я міг подорожувати в часі...
-    Якби я виграв мільйон...
-    These are hypothetical rather than counterfactual.
-    Ukrainian treats them identically: якби + умовний."
-- section: "Якби у повсякденному мовленні (Якби in everyday speech)"
+  - 'Structure: Якби + subject + минулий час + б/би, subject + минулий час + б/би. Якби я знав це раніше, я б вчинив інакше.
+    Якби не дощ, Марина пішла б у перукарню (Заболотний Grade 7 p.75). Якби не вітер, рибалка попливла б. Note: якби already
+    contains б, so the condition clause often omits a second б/би after the verb.'
+  - 'Particle placement in both clauses (Литвінова Grade 7 p.62): Коли б я його побачив, я, звичайно, не став би грати, бо
+    при ньому я соромився (Л. Смілянський). The particle б/би can appear after any content word: Якби я був чародієм, то хмаронько
+    б тебе я напоїв (Лермонтов/ukr).'
+  - 'Variant conjunctions: якби, коли б, як би. Якби я міг — if I could (but I can''t). Коли б мали нагоду — if we had the
+    opportunity (but we don''t). Як би не перешкода — if not for the obstacle. Аби: slightly different — expresses purpose/minimal
+    condition: Аби я був чародієм (from Заболотний Grade 9 p.114).'
+  - 'Aspect in unreal conditions: Both доконаний and недоконаний are possible, with meaning differences: Якби я читав цю книжку
+    (impf — process, ongoing hypothetical), Якби я прочитав цю книжку (pf — completed hypothetical result). The choice follows
+    the same aspect logic as elsewhere in Ukrainian.'
+- section: 'Нереальні умови: теперішнє i минуле (Unreal conditions: present and past)'
   words: 700
   points:
-  - "Common fixed expressions with якби:
-    Якби не... — if not for (cause elimination):
-    Якби не ти, я б не впорався. Якби не дощ, ми б пішли.
-    Якби я знав/знала! — If only I had known!
-    Якби ж то! / Якби ж бо! — If only! (wish expression)"
-  - "Dialogue: two friends discussing a missed opportunity.
-    Natural integration of якби with emotional expression:
-    — Шкода, що ми не поїхали на фестиваль.
-    — Так, якби я знав раніше, обов'язково б купив квитки.
-    — Якби не робота, я б теж поїхала.
-    — Нічого, якщо наступного року буде, поїдемо разом."
-  - "Contrast within dialogue: the last line switches from якби (unreal)
-    to якщо (real) — the speaker shifts from regret about the past
-    to hope about the future. Learners identify this shift."
-  - "Прислів'я та приказки with якби:
-    Якби знав, де впадеш, — соломки б підстелив.
-    Якби та якби — в роті виростуть гриби.
-    These illustrate the cultural presence of counterfactual thinking."
-- section: "Комплексні вправи (Complex exercises)"
-  words: 650
+  - 'Present counterfactual (contrary to current reality): Якби я жив у Києві, ходив би на Хрещатик щодня. (But I don''t live
+    in Kyiv.) Якби я знав українську досконало, читав би Франка в оригіналі. (But I don''t know it perfectly yet.) Note: Ukrainian
+    uses the same form for present and past counterfactuals — context disambiguates.'
+  - 'Past counterfactual (contrary to past reality): Якби я тоді послухав батьків, все було б інакше. (But I didn''t listen
+    to them.) Якби ми вийшли раніше, встигли б на потяг. (But we didn''t leave early, and we missed the train.) Adverbs like
+    тоді, раніше, вчора help signal past reference.'
+  - 'Dreams and fantasies (not necessarily contrary to fact): Якби я міг подорожувати в часі... Якби я виграв мільйон... These
+    are hypothetical rather than counterfactual. Ukrainian treats them identically: якби + умовний.'
+- section: Якби у повсякденному мовленні (Якби in everyday speech)
+  words: 750
   points:
-  - "Exercise 1 — Classify: learners read 10 conditional sentences
-    and classify each as реальна (якщо) or нереальна (якби) умова.
-    Mixed examples, some tricky: Якщо б я міг... — is this real or unreal?
-    (It's unreal: якщо б = якби in meaning.)"
-  - "Exercise 2 — Transform: given a real conditional, rewrite as unreal.
-    Якщо матиму час, поїду → Якби я мав час, поїхав би.
-    Якщо вивчу граматику, складу іспит → Якби я вивчив граматику,
-    склав би іспит. 6-8 pairs for practice."
-  - "Exercise 3 — Complete the sentence: given якби-clauses, write
-    logical result clauses. Якби я жив у XVII столітті... (creative).
-    Якби я був президентом... Якби я знав п'ять мов..."
-  - "Reading passage: an essay by a Ukrainian student about dreams.
-    Uses якби extensively. Comprehension questions test grammar:
-    identify all умовний спосіб forms, find б/би particles,
-    determine which conditions are present vs past counterfactual."
-- section: "Підсумок та перехід до M20 (Summary and transition)"
-  words: 350
+  - 'Common fixed expressions with якби: Якби не... — if not for (cause elimination): Якби не ти, я б не впорався. Якби не
+    дощ, ми б пішли. Якби я знав/знала! — If only I had known! Якби ж то! / Якби ж бо! — If only! (wish expression)'
+  - 'Dialogue: two friends discussing a missed opportunity. Natural integration of якби with emotional expression: — Шкода,
+    що ми не поїхали на фестиваль. — Так, якби я знав раніше, обов''язково б купив квитки. — Якби не робота, я б теж поїхала.
+    — Нічого, якщо наступного року буде, поїдемо разом.'
+  - 'Contrast within dialogue: the last line switches from якби (unreal) to якщо (real) — the speaker shifts from regret about
+    the past to hope about the future. Learners identify this shift.'
+  - 'Прислів''я та приказки with якби: Якби знав, де впадеш, — соломки б підстелив. Якби та якби — в роті виростуть гриби.
+    These illustrate the cultural presence of counterfactual thinking.'
+- section: Комплексні вправи (Complex exercises)
+  words: 700
   points:
-  - "Summary: реальна vs нереальна умова, утворення нереальних
-    умовних речень (якби + умовний), контрфактичність теперішня
-    i минула, якби у повсякденному мовленні.
-    Self-check: Я можу розрізнити якщо i якби ✓/✗,
-    Я можу утворити нереальну умову ✓/✗,
-    Я можу висловити жаль за допомогою якби ✓/✗."
-  - "Preview: M20 — Наказовий спосіб (деталі). The third mood.
-    Learners already know basic imperatives from A2. M20 adds
-    хай/нехай (3rd person commands), polite imperative forms,
-    and the interaction between perfective/imperfective aspect
-    in commands."
+  - 'Exercise 1 — Classify: learners read 10 conditional sentences and classify each as реальна (якщо) or нереальна (якби)
+    умова. Mixed examples, some tricky: Якщо б я міг... — is this real or unreal? (It''s unreal: якщо б = якби in meaning.)'
+  - 'Exercise 2 — Transform: given a real conditional, rewrite as unreal. Якщо матиму час, поїду → Якби я мав час, поїхав
+    би. Якщо вивчу граматику, складу іспит → Якби я вивчив граматику, склав би іспит. 6-8 pairs for practice.'
+  - 'Exercise 3 — Complete the sentence: given якби-clauses, write logical result clauses. Якби я жив у XVII столітті... (creative).
+    Якби я був президентом... Якби я знав п''ять мов...'
+  - 'Reading passage: an essay by a Ukrainian student about dreams. Uses якби extensively. Comprehension questions test grammar:
+    identify all умовний спосіб forms, find б/би particles, determine which conditions are present vs past counterfactual.'
+- section: Підсумок та перехід до M20 (Summary and transition)
+  words: 400
+  points:
+  - 'Summary: реальна vs нереальна умова, утворення нереальних умовних речень (якби + умовний), контрфактичність теперішня
+    i минула, якби у повсякденному мовленні. Self-check: Я можу розрізнити якщо i якби ✓/✗, Я можу утворити нереальну умову
+    ✓/✗, Я можу висловити жаль за допомогою якби ✓/✗.'
+  - 'Preview: M20 — Наказовий спосіб (деталі). The third mood. Learners already know basic imperatives from A2. M20 adds хай/нехай
+    (3rd person commands), polite imperative forms, and the interaction between perfective/imperfective aspect in commands.'
 vocabulary_hints:
   required:
-  - "якби (if — conjunction for unreal conditions, contains б)"
-  - "нереальний (unreal — condition contrary to fact)"
-  - "контрфактичний (counterfactual — describing what didn't happen)"
-  - "жаль (regret, pity — Якби я знав, якщо шкода)"
-  - "шкода (a pity — Шкода, що ми не поїхали)"
-  - "впоратися (to cope, manage — Якби не ти, я б не впорався)"
-  - "інакше (otherwise, differently)"
-  - "тоді (then — signals past reference in counterfactuals)"
-  - "обов'язково (definitely, certainly)"
-  - "знав/знала (knew — base form for common counterfactual)"
-  - "міг/могла (could — base form for hypotheticals)"
-  - "нагода (opportunity, occasion)"
-  - "перешкода (obstacle, hindrance)"
-  - "фестиваль (festival)"
+  - якби (if — conjunction for unreal conditions, contains б)
+  - нереальний (unreal — condition contrary to fact)
+  - контрфактичний (counterfactual — describing what didn't happen)
+  - жаль (regret, pity — Якби я знав, якщо шкода)
+  - шкода (a pity — Шкода, що ми не поїхали)
+  - впоратися (to cope, manage — Якби не ти, я б не впорався)
+  - інакше (otherwise, differently)
+  - тоді (then — signals past reference in counterfactuals)
+  - обов'язково (definitely, certainly)
+  - знав/знала (knew — base form for common counterfactual)
+  - міг/могла (could — base form for hypotheticals)
+  - нагода (opportunity, occasion)
+  - перешкода (obstacle, hindrance)
+  - фестиваль (festival)
   recommended:
-  - "аби (in order to / if only — variant conditional conjunction)"
-  - "соломка (little straw — from the прислів'я)"
-  - "підстелити (to spread underneath — from the прислів'я)"
-  - "прислів'я (proverb)"
-  - "мрія (dream — a wish for the future)"
-  - "фантазія (fantasy, imagination)"
-  - "століття (century)"
-  - "досконало (perfectly, thoroughly)"
-  - "впасти (to fall — Якби знав, де впадеш)"
-  - "квиток (ticket)"
+  - аби (in order to / if only — variant conditional conjunction)
+  - соломка (little straw — from the прислів'я)
+  - підстелити (to spread underneath — from the прислів'я)
+  - прислів'я (proverb)
+  - мрія (dream — a wish for the future)
+  - фантазія (fantasy, imagination)
+  - століття (century)
+  - досконало (perfectly, thoroughly)
+  - впасти (to fall — Якби знав, де впадеш)
+  - квиток (ticket)
 activity_hints:
 - type: quiz
-  focus: "Classify conditional sentences as реальна (якщо) or нереальна (якби) умова"
+  focus: Classify conditional sentences as реальна (якщо) or нереальна (якби) умова
   items: 10
 - type: fill-in
-  focus: "Complete якби-sentences with correct умовний спосіб form (gender, number, б/би)"
+  focus: Complete якби-sentences with correct умовний спосіб form (gender, number, б/би)
   items: 8
 - type: sentence-builder
-  focus: "Transform real conditionals (якщо + дійсний) into unreal ones (якби + умовний)"
+  focus: Transform real conditionals (якщо + дійсний) into unreal ones (якби + умовний)
   items: 8
 - type: match-up
-  focus: "Match якби-clauses to their logical result clauses"
+  focus: Match якби-clauses to their logical result clauses
   items: 8
 - type: error-correction
-  focus: "Fix errors: wrong conjunction (якщо vs якби), wrong mood, particle spelling"
+  focus: 'Fix errors: wrong conjunction (якщо vs якби), wrong mood, particle spelling'
   items: 6
 connects_to:
-- "b1-018 (Умовний спосіб реальний — real conditions, formation of умовний)"
-- "b1-020 (Наказовий спосіб деталі — completing the three-mood system)"
-- "b1-070 (Речення умови — complex subordinate clauses of condition, Phase 8)"
+- b1-018 (Умовний спосіб реальний — real conditions, formation of умовний)
+- b1-020 (Наказовий спосіб деталі — completing the three-mood system)
+- b1-070 (Речення умови — complex subordinate clauses of condition, Phase 8)
 prerequisites:
-- "b1-018 (Conditionals real — formation of умовний спосіб and якщо-sentences)"
+- b1-018 (Conditionals real — formation of умовний спосіб and якщо-sentences)
 grammar:
-- "Нереальна умова: якби + умовний спосіб... (то) + умовний спосіб"
-- "Якби vs якщо: irrealis vs realis distinction"
-- "Variant conjunctions: якби, коли б, як би, аби"
-- "Present counterfactual vs past counterfactual (same form, context disambiguates)"
-- "Aspect choice in unreal conditionals: доконаний vs недоконаний"
-- "Fixed expressions: якби не..., якби ж то!, якби я знав/знала"
+- 'Нереальна умова: якби + умовний спосіб... (то) + умовний спосіб'
+- 'Якби vs якщо: irrealis vs realis distinction'
+- 'Variant conjunctions: якби, коли б, як би, аби'
+- Present counterfactual vs past counterfactual (same form, context disambiguates)
+- 'Aspect choice in unreal conditionals: доконаний vs недоконаний'
+- 'Fixed expressions: якби не..., якби ж то!, якби я знав/знала'
 register: академічний
 references:
-- title: "Заболотний Grade 7, p.72-75"
-  notes: "Способи дієслів table; умовний спосіб formation; якби exercises
-    including: Якби не дощ, Марина пішла б у перукарню."
-- title: "Литвінова Grade 7, p.61-62"
-  notes: "Умовний спосіб definition; particle б/би formation; literary example
-    with коли б (Л. Смілянський)."
-- title: "Авраменко Grade 7, p.77, 83"
-  notes: "Умовний and наказовий have no часові форми; б/би euphony rule;
-    formation exercises with three-column sorting."
-- title: "Заболотний Grade 9, p.114"
-  notes: "Складнопідрядне речення умови: сполучники якщо, якби, коли б, аби;
-    співвідносне слово то; Липинський quote."
-- title: "Караман Grade 10, p.185"
-  notes: "Способи дієслів overview: умовний = дія, можлива за певних умов,
-    або бажана."
+- title: Заболотний Grade 7, p.72-75
+  notes: 'Способи дієслів table; умовний спосіб formation; якби exercises including: Якби не дощ, Марина пішла б у перукарню.'
+- title: Литвінова Grade 7, p.61-62
+  notes: Умовний спосіб definition; particle б/би formation; literary example with коли б (Л. Смілянський).
+- title: Авраменко Grade 7, p.77, 83
+  notes: Умовний and наказовий have no часові форми; б/би euphony rule; formation exercises with three-column sorting.
+- title: Заболотний Grade 9, p.114
+  notes: 'Складнопідрядне речення умови: сполучники якщо, якби, коли б, аби; співвідносне слово то; Липинський quote.'
+- title: Караман Grade 10, p.185
+  notes: 'Способи дієслів overview: умовний = дія, можлива за певних умов, або бажана.'

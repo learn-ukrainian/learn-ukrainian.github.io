@@ -1,0 +1,184 @@
+module: b1-038
+level: B1
+sequence: 38
+slug: adjectives-comparative
+version: '3.0'
+title: "Вищий ступінь прикметників"
+subtitle: "Проста та складена форми вищого ступеня порівняння"
+focus: grammar
+pedagogy: PPP
+phase: "B1.5 [Degrees of Comparison & Word Formation]"
+word_target: 4000
+objectives:
+- "Learner can form the simple comparative of adjectives using suffixes
+  -іш- and -ш- (сильніший, молодший) and explain when each suffix applies"
+- "Learner can form the compound comparative using більш/менш + adjective
+  (більш цікавий, менш складний) and explain when this form is preferred"
+- "Learner can identify consonant alternations that occur during comparative
+  formation: [г/з/к] + -ш- = [жч/шч/чч] (дорогий-дорожчий, вузький-вужчий)"
+- "Learner can list categories of adjectives that do NOT form degrees of
+  comparison (absolute qualities, compound adjectives, prefixed adjectives)"
+- "Learner can use comparative forms in natural Ukrainian sentences with
+  constructions за + Зн.в. (вищий за мене) and від + Р.в. (вищий від мене),
+  ніж (вищий, ніж я)"
+content_outline:
+- section: "Що таке ступені порівняння? (What are degrees of comparison?)"
+  words: 500
+  points:
+  - "Introduction: learners already use basic adjectives from A1-A2.
+    Now they learn to express MORE and LESS. Ukrainian has two ступені
+    порівняння: вищий (comparative) and найвищий (superlative).
+    Each has проста (synthetic) and складена (analytic) forms."
+  - "Key distinction from English: Ukrainian comparative is a full
+    adjective — it declines for gender, number, and case.
+    E.g., сильніший (m.), сильніша (f.), сильніше (n.), сильніші (pl.).
+    The declined comparative is natural Ukrainian; English-style 'more strong'
+    is only for the складена form."
+  - "Which adjectives can form ступені порівняння? Only якісні
+    прикметники — those expressing qualities that can vary in degree.
+    From Заболотний Grade 6 p.137: adjectives expressing absolute qualities
+    (сліпий, лисий, босий, голий, живий, порожній) cannot."
+- section: "Проста форма вищого ступеня (Simple comparative)"
+  words: 900
+  points:
+  - "Formation rule from Литвінова Grade 6 p.198:
+    основа або корінь прикметника + суфікс -іш- або -ш-.
+    Default suffix: -іш- (сильний-сильніший, цікавий-цікавіший,
+    красивий-красивіший, розумний-розумніший).
+    Shorter suffix: -ш- with certain stems (молодий-молодший,
+    старий-старший, тонкий-тонший, довгий-довший)."
+  - "Consonant alternations during formation (Авраменко Grade 6 p.125):
+    [г] + -ш- = [жч]: дорогий-дорожчий, строгий-строжчий.
+    [з] + -ш- = [жч]: вузький-вужчий, близький-ближчий.
+    [к] + -ш- = [чч] (written -щ-): легкий-легший (not *легчий).
+    [с] + -ш- = [шч] (written -щ-): високий-вищий.
+    Practice: provide 10-12 adjectives for learners to form comparatives,
+    including alternation cases."
+  - "The comparative declines like a regular adjective:
+    Н. сильніший / сильніша / сильніше / сильніші
+    Р. сильнішого / сильнішої / сильнішого / сильніших
+    Full paradigm with practice using declined forms in sentences."
+  - "Reading practice: a dialogue comparing two cities, using простa форма
+    extensively. Learners identify all comparatives and their base forms."
+- section: "Складена форма вищого ступеня (Compound comparative)"
+  words: 700
+  points:
+  - "Formation from Литвінова Grade 6 p.198:
+    більш/менш + початкова форма прикметника.
+    більш цікавий, менш складний, більш яскравий, менш відомий.
+    The adjective after більш/менш declines normally;
+    більш/менш itself is invariable."
+  - "When to use складена vs проста (Глазова Grade 11 p.18):
+    Складена form is preferred in formal/scientific register,
+    when the проста form sounds awkward (більш синій, not *синіший),
+    and for emphasis/contrast. Проста form is default in conversation."
+  - "Common error: mixing forms (*більш сильніший is WRONG).
+    Either сильніший OR більш сильний, never both.
+    From Авраменко Grade 11 p.29: 'самий кращий' is a Russicism —
+    correct: найкращий."
+- section: "Порівняльні конструкції (Comparison constructions)"
+  words: 550
+  points:
+  - "Three ways to express 'than' in Ukrainian:
+    1. за + Знахідний відмінок: Петро вищий за Марію.
+    2. від + Родовий відмінок: Петро вищий від Марії.
+    3. ніж + Називний відмінок: Петро вищий, ніж Марія.
+    All three are correct; за + Зн.в. is most common in speech."
+  - "Special constructions:
+    чим... тим... (the... the...): Чим далі, тим цікавіше.
+    набагато + comparative: набагато сильніший.
+    трохи/дещо/значно + comparative: трохи молодший, значно кращий."
+  - "Practice passage: a product review comparing items at a market,
+    using all three comparison constructions and various degree modifiers."
+- section: "Які прикметники не мають ступенів порівняння? (Exceptions)"
+  words: 500
+  points:
+  - "Full list of categories from Заболотний Grade 6 p.137 and
+    Авраменко Grade 6 p.125:
+    1. Absolute qualities: сліпий, лисий, босий, голий, мертвий.
+    2. Compound adjectives: кисло-солодкий, чорноокий, світло-зелений.
+    3. Prefixed adjectives with пре-, за-, над-, архі-, супер-:
+       предобрий, завеликий, надважливий, суперсучасний.
+    4. Відносні прикметники: дерев'яний, залізний, міський.
+    5. Масть тварин: буланий, вороний, гнідий."
+  - "Creative usage note from Авраменко Grade 11 p.29:
+    In advertising and informal speech, relative adjectives sometimes
+    form humorous comparatives: 'найкрабовіші палички.'
+    This is a deliberate stylistic device, not standard grammar."
+- section: "Підсумок і практика (Summary and practice)"
+  words: 350
+  points:
+  - "Summary table: проста (-іш-/-ш-) vs складена (більш/менш),
+    all alternation patterns, comparison constructions (за/від/ніж)."
+  - "Self-check: Утворіть вищий ступінь порівняння:
+    гарячий, близький, широкий, тихий, дешевий, тяжкий, ясний.
+    Preview: next module covers найвищий ступінь."
+vocabulary_hints:
+  required:
+  - "вищий ступінь (comparative degree)"
+  - "порівняння (comparison)"
+  - "проста форма (simple/synthetic form)"
+  - "складена форма (compound/analytic form)"
+  - "суфікс (suffix — word-forming element after the root)"
+  - "якісний прикметник (qualitative adjective — can vary in degree)"
+  - "відносний прикметник (relative adjective — cannot form comparatives)"
+  - "більш (more — used in compound comparative)"
+  - "менш (less — used in compound comparative)"
+  - "набагато (much, significantly — degree modifier)"
+  recommended:
+  - "чергування приголосних (consonant alternation during formation)"
+  - "початкова форма (base form — nominative singular masculine)"
+  - "ніж (than — conjunction in comparison)"
+  - "значно (considerably — degree modifier)"
+  - "дещо (somewhat — degree modifier)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct comparative form: проста or складена, with alternations"
+  items: 8
+- type: fill-in
+  focus: "Form the comparative from the base adjective (including alternation cases)"
+  items: 8
+- type: match-up
+  focus: "Match base adjective to its correct comparative form"
+  items: 8
+- type: error-correction
+  focus: "Find errors in comparative formation (*більш сильніший, *легчий)"
+  items: 6
+- type: sentence-builder
+  focus: "Build comparison sentences using за/від/ніж constructions"
+  items: 6
+- type: group-sort
+  focus: "Sort adjectives into 'can form comparatives' vs 'cannot form comparatives'"
+  items: 10
+connects_to:
+- "b1-039 (Найвищий ступінь прикметників — superlative degree)"
+- "b1-040 (Суплетивні форми — irregular comparatives like гарний-кращий)"
+- "b1-041 (Ступені порівняння прислівників — adverb comparison uses same suffixes)"
+prerequisites:
+- "A2 completion (learner knows якісні and відносні прикметники)"
+- "b1-009 (Чергування приголосних — consonant alternation patterns)"
+grammar:
+- "Вищий ступінь порівняння: проста форма (суфікси -іш-, -ш-)"
+- "Вищий ступінь порівняння: складена форма (більш/менш + прикметник)"
+- "Чергування приголосних при творенні: [г]-[жч], [з]-[жч], [к]-[чч], [с]-[шч]"
+- "Порівняльні конструкції: за + Зн.в., від + Р.в., ніж"
+- "Прикметники без ступенів порівняння: абсолютні, складні, з префіксами"
+register: науково-навчальний
+references:
+- title: "Авраменко Grade 6, p.124-125"
+  notes: "Ступені порівняння якісних прикметників: чергування, суплетивні форми,
+    categories that cannot form comparisons."
+- title: "Литвінова Grade 6, p.198"
+  notes: "Comparative formation table: проста (суфікси) vs складена (більш/менш),
+    найвищий ступінь (префікс най-)."
+- title: "Заболотний Grade 6, p.137"
+  notes: "Найвищий ступінь definition, full list of adjectives without
+    degrees of comparison."
+- title: "Глазова Grade 11, p.18-21"
+  notes: "Complete formation table for both degrees, synonymic constructions
+    (дуже, вельми, занадто as alternatives to formal comparison)."
+- title: "Авраменко Grade 11, p.29"
+  notes: "Stylistic observation: humorous comparatives from relative adjectives
+    in advertising (найкрабовіші)."
+- title: "Заболотний Grade 8, p.28"
+  notes: "Summary table of adjective and adverb comparison forms side by side."

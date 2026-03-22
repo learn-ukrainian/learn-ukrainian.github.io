@@ -1,0 +1,168 @@
+module: b1-041
+level: B1
+sequence: 41
+slug: adverbs-comparison-formation
+version: '3.0'
+title: "Ступені порівняння та творення прислівників"
+subtitle: "Як прислівники утворюються і порівнюються в українській мові"
+focus: grammar
+pedagogy: PPP
+phase: "B1.5 [Degrees of Comparison & Word Formation]"
+word_target: 4000
+objectives:
+- "Learner can form adverbs from adjectives using suffixes -о, -е, -и
+  (швидкий-швидко, гарячий-гаряче, по-дружньому, по-українськи)"
+- "Learner can form the simple comparative of adverbs using -іш(е), -ш(е)
+  (швидше, тихіше) including consonant alternations (дорого-дорожче)"
+- "Learner can form the simple superlative using най- + comparative
+  (найшвидше, найтихіше) and intensified forms (якнайшвидше, щонайкраще)"
+- "Learner can form compound comparative and superlative of adverbs
+  (більш весело, найбільш цікаво) and knows when to use each form"
+- "Learner can identify the main ways of adverb formation: суфіксальний,
+  префіксальний, суфіксально-префіксальний, складання"
+content_outline:
+- section: "Як утворюються прислівники? (How are adverbs formed?)"
+  words: 700
+  points:
+  - "Main formation patterns from Литвінова Grade 7 p.143:
+    1. Суфіксальний: від прикметників суфіксами -о, -е
+       швидкий → швидко, тихий → тихо, гарячий → гаряче.
+    2. Префіксально-суфіксальний: по- + прикметник + -ому/-ськи/-и
+       по-доброму, по-українськи, по-козацьки, по-новому.
+    3. Від іменників: зранку (ранок), вночі (ніч), додому (дім).
+    4. Складання: мимоволі, самохіть, праворуч."
+  - "Spelling rules for по- adverbs:
+    по-українськи, по-братерськи, по-доброму, по-новому —
+    always hyphenated. But: помалу, потроху, позавчора — no hyphen
+    (these are prefix formations, not the по-...-ому pattern)."
+  - "Practice: form adverbs from 15 adjectives and identify the formation
+    method. Some adjectives have multiple adverb forms:
+    добрий → добре (sufix.) / по-доброму (pref.-suf.)."
+- section: "Ступені порівняння прислівників (Degrees of comparison)"
+  words: 800
+  points:
+  - "Only adverbs formed from якісні прикметники with -о, -е can form
+    degrees of comparison (Заболотний Grade 7 p.151).
+    Cannot: adverbs with prefixes пре-, над-, за-, супер-
+    (превисоко, надшвидко — already express extreme degree)."
+  - "Simple comparative from Литвінова Grade 7 p.141:
+    суфікс -іш(е): тихо-тихіше, повільно-повільніше.
+    суфікс -ш(е): швидко-швидше, довго-довше.
+    With alternations: дорого-дорожче ([г]+[ш]=[жч]),
+    вузько-вужче, високо-вище ([с]+[ш]=[шч])."
+  - "Simple superlative: най- + comparative.
+    найтихіше, найшвидше, найдорожче.
+    Intensified: щонайшвидше, якнайтихіше."
+  - "Compound forms (Заболотний Grade 8 p.28):
+    Comparative: більш/менш + adverb (більш весело, менш часто).
+    Superlative: найбільш/найменш + adverb (найбільш весело).
+    Error: *більш веселіше — NEVER combine."
+- section: "Прислівник vs прикметник: паралельні форми (Adverb vs adjective)"
+  words: 600
+  points:
+  - "Critical distinction: adjective comparatives end in -ший (-ша, -ше, -ші),
+    adverb comparatives end in -ше (-іше, -че).
+    тихіший (adj., declines) vs тихіше (adv., invariable).
+    Вона тихіша за нього (adj.). Вона говорить тихіше за нього (adv.)."
+  - "Suppletive adverb forms (review from b1-040):
+    добре → краще → найкраще
+    погано → гірше → найгірше
+    багато → більше → найбільше
+    мало → менше → найменше"
+  - "Practice: sentences where learners must choose adjective or adverb
+    comparative/superlative. Distinguish modifying a noun vs modifying a verb."
+- section: "Прислівники без ступенів порівняння (Adverbs without comparison)"
+  words: 400
+  points:
+  - "From Заболотний Grade 7 p.151:
+    Adverbs with пре-, над-, за-, супер- (превисоко, надшвидко).
+    Adverbs of manner not from якісні прикметники (пішки, навмисно).
+    Adverbs of time and place (вчора, тут, завжди).
+    Adverbs formed with по-...-ськи (по-українськи)."
+  - "Practice: sort a list of 15 adverbs into 'can form comparison'
+    and 'cannot form comparison,' explaining why."
+- section: "Прислівники в контексті (Adverbs in real usage)"
+  words: 700
+  points:
+  - "Reading practice: a sports commentary or competition report using
+    adverb comparatives and superlatives extensively.
+    'Спортсменка пробігла швидше за суперницю. Вона стрибнула
+    найвище серед усіх учасниць. Тренувалася найбільше.'"
+  - "Dialogue practice: two friends comparing how they do things —
+    'Хто швидше читає? Хто краще готує? Хто найчастіше подорожує?'
+    Using чим...тим with adverbs: Чим більше читаєш, тим краще пишеш."
+  - "Self-check: form all comparison forms for 8 adverbs, including
+    at least 2 suppletive and 2 with consonant alternations."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Reference table: adjective comparison vs adverb comparison side by side
+    (Заболотний Grade 8 p.28 format).
+    Formation methods: суфіксальний, пр.-суф., складання.
+    Comparison: проста (-іше/-ше), складена (більш/менш), найвищий (най-)."
+  - "Preview: word formation — next modules explore how Ukrainian builds
+    new adjectives (b1-042) and nouns (b1-043) from existing words."
+vocabulary_hints:
+  required:
+  - "прислівник (adverb — invariable part of speech)"
+  - "творення (formation — the process of creating new words)"
+  - "суфіксальний (suffixal — formed by adding a suffix)"
+  - "префіксальний (prefixal — formed by adding a prefix)"
+  - "суфіксально-префіксальний (prefixal-suffixal — formed by both)"
+  - "складання (compounding — joining two stems)"
+  - "незмінний (invariable — does not decline or conjugate)"
+  - "швидше (faster — adverb comparative of швидко)"
+  - "тихіше (more quietly — adverb comparative of тихо)"
+  recommended:
+  - "якісний прикметник (qualitative adjective — source for comparable adverbs)"
+  - "по-українськи (in the Ukrainian way — prefixal-suffixal adverb)"
+  - "мимоволі (involuntarily — compound adverb)"
+  - "самохіть (of one's own will — compound adverb)"
+  - "праворуч (to the right — compound adverb)"
+  - "помалу (slowly, gradually — prefixed adverb, no hyphen)"
+activity_hints:
+- type: quiz
+  focus: "Choose correct adverb comparison form; distinguish adverb from adjective"
+  items: 8
+- type: fill-in
+  focus: "Form adverbs from adjectives and then form their comparatives"
+  items: 8
+- type: match-up
+  focus: "Match adverb to its formation method (суфіксальний, пр.-суф., etc.)"
+  items: 8
+- type: group-sort
+  focus: "Sort adverbs into 'can form comparison' vs 'cannot'"
+  items: 10
+- type: error-correction
+  focus: "Fix errors: *більш швидше, *по українськи, *самий добре"
+  items: 6
+- type: sentence-builder
+  focus: "Build sentences using чим...тим with adverb comparatives"
+  items: 6
+connects_to:
+- "b1-038 (Вищий ступінь прикметників — parallel adjective comparison)"
+- "b1-040 (Суплетивні форми — suppletive adverb comparatives)"
+- "b1-042 (Творення прикметників — word formation continues)"
+prerequisites:
+- "b1-038 (Вищий ступінь прикметників — comparative suffixes and alternations)"
+- "b1-039 (Найвищий ступінь — superlative formation with най-)"
+- "b1-040 (Суплетивні форми — irregular comparison forms)"
+grammar:
+- "Творення прислівників: суфіксальний (-о, -е), префіксально-суфіксальний (по-...-ому/-ськи)"
+- "Ступені порівняння прислівників: проста (-іше/-ше), складена (більш/менш)"
+- "Найвищий ступінь: най- + порівняльна форма; підсилена: що-/як-"
+- "Чергування: дорого-дорожче, високо-вище, вузько-вужче"
+- "Прислівник vs прикметник: тихіше (adv.) vs тихіший (adj.)"
+register: науково-навчальний
+references:
+- title: "Литвінова Grade 7, p.141-146"
+  notes: "Adverb comparison: formation, alternations, suppletive forms,
+    formation methods (суфіксальний, префіксальний, складання)."
+- title: "Заболотний Grade 7, p.151"
+  notes: "Adverb comparison diagram, adverbs that cannot form comparison."
+- title: "Авраменко Grade 7, p.137-140"
+  notes: "Adverb comparison exercises, formation from adjectives."
+- title: "Заболотний Grade 8, p.28"
+  notes: "Side-by-side adjective/adverb comparison table."
+- title: "Глазова Grade 11, p.23"
+  notes: "Adverb comparison in context, stylistic alternatives."
