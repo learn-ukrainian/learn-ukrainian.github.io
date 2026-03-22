@@ -2,7 +2,7 @@ module: b1-016
 level: B1
 sequence: 16
 slug: work-week-aspect-in-action
-version: '2.0'
+version: '3.0'
 title: 'Робочий тиждень: вид у дії'
 subtitle: Work Week - Aspect in Real-Life Context
 focus: grammar
@@ -13,15 +13,6 @@ objectives:
 - Learner can describe work routines using correct aspect
 - Learner can report completed and ongoing tasks
 - Learner can use aspect naturally in professional contexts
-sources:
-- name: Ukrainian Business Communication
-  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
-  type: reference
-  notes: Work-related vocabulary and contexts
-- name: Ukrainian State Standard 2024 - Professional Communication
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Aspect in workplace scenarios
 content_outline:
 - section: 'Вступ: Робота та вид дієслова (Introduction: Work and Verb Aspect)'
   words: 500
@@ -97,25 +88,27 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Work reports with correct aspect
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Weekly report narrative
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Plan → report (future → past aspect)
-  items: 8+
+  items: 8
 connects_to:
 - b1-14 (Aspect integration practice)
 - b1-72 (Describing Changes)
 prerequisites:
 - b1-12 (Aspect pairs - essential 40)
 - All aspect modules M06-12
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Productivity Coach
 grammar:
 - All aspect contexts in work scenarios
 - Aspect integration in daily routine
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian Business Communication
+  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
+  notes: Work-related vocabulary and contexts
+- title: Ukrainian State Standard 2024 - Professional Communication
+  url: https://mon.gov.ua/
+  notes: Aspect in workplace scenarios

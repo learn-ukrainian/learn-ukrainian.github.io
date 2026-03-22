@@ -2,7 +2,7 @@ module: b1-069
 level: B1
 sequence: 69
 slug: agreement-disagreement
-version: '2.0'
+version: '3.0'
 title: Згода і незгода
 subtitle: Agreement & Disagreement — Vocabulary & Phrases
 focus: vocabulary
@@ -72,7 +72,8 @@ vocabulary_hints:
   - незгода (disagreement) — виникли незгоди, серйозні незгоди; high frequency noun
   - згоден/згодна (agree - short adj) — ♂ згоден, ♀ згодна; MUST agree with speaker gender
   - погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися; high frequency verb
-  - заперечувати (to object/deny) — категорично заперечувати, заперечувати факт; medium frequency, formal/debate register
+  - заперечувати (to object/deny) — категорично заперечувати, заперечувати факт; medium frequency, formal/debate 
+    register
   - правильно (correctly) — ви правильно сказали; use instead of 'вірно' in agreement contexts
   - абсолютно (absolutely) — абсолютно згоден; strong agreement marker
   - частково (partially) — погоджуватися частково; key adverb for B1 nuance
@@ -100,11 +101,9 @@ connects_to:
 - 'b1-70 (Discourse Markers Basic)'
 prerequisites:
 - b1-68 (Expressing Opinions)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Diplomat
 grammar:
 - Expression patterns for agreement and disagreement
 - Concessive structures (хоча, але)
 - Partial agreement constructions
 register: розмовний
+references: []

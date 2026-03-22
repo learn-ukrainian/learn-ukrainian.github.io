@@ -2,7 +2,7 @@ module: b1-037
 level: B1
 sequence: 37
 slug: conditionals-mixed-complex
-version: '2.0'
+version: '3.0'
 title: 'Умовні речення: змішані та складні умови'
 subtitle: Mixed and Complex Conditionals
 focus: grammar
@@ -43,8 +43,8 @@ content_outline:
 - section: 'Діалоги: Від макогона до історії (Dialogues: From Pestles to History)'
   words: 900
   points:
-  - Conversational practice using the 'Якби не + Noun' pattern, integrating the historical irony proverb «Якби не макогін
-    і качалка, не була б у хаті господарем Наталка»
+  - Conversational practice using the 'Якби не + Noun' pattern, integrating the historical irony proverb «Якби не 
+    макогін і качалка, не була б у хаті господарем Наталка»
   - 'Role-play scenarios: Negotiating agreements in semi-formal registers using ''за умови, що...'''
   - 'Hypothetical historical debates: Expressing historical irony and ''what if'' scenarios using complex conditional logic'
 - section: Підсумок та рефлексія (Summary and Reflection)
@@ -85,11 +85,9 @@ connects_to:
 - 'b1-37 (Conditionals Mixed Complex))'
 prerequisites:
 - 'b1-35 (Conditionals Real Yakshcho))'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Chess Grandmaster
 grammar:
 - Mixed conditional constructions
 - Chained conditionals
 - Complex condition-consequence patterns
 register: розмовний
+references: []

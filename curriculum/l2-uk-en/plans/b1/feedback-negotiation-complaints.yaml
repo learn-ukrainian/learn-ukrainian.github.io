@@ -2,7 +2,7 @@ module: b1-102
 level: B1
 sequence: 102
 slug: feedback-negotiation-complaints
-version: '1.0'
+version: '3.0'
 title: Зворотний зв'язок, переговори, скарги
 subtitle: Feedback, Negotiation & Making Complaints
 focus: practical
@@ -19,9 +19,10 @@ content_outline:
   words: 500
   points:
   - The role of feedback and negotiation in professional and everyday life according to State Standard §1.4.1.2.1.
-  - Historical transition from the Soviet 'Книга скарг та пропозицій' (abolished 2020) to modern digital customer feedback.
-  - Introduction to the 2024 'Law on Protection of Consumers' Rights' and the rise of 'клієнтоорієнтованість' (customer-centricity)
-    in Ukraine.
+  - Historical transition from the Soviet 'Книга скарг та пропозицій' (abolished 2020) to modern digital customer 
+    feedback.
+  - Introduction to the 2024 'Law on Protection of Consumers' Rights' and the rise of 'клієнтоорієнтованість' 
+    (customer-centricity) in Ukraine.
 - section: Давати та отримувати зворотний зв'язок (Giving and Receiving Feedback)
   words: 800
   points:
@@ -48,7 +49,8 @@ content_outline:
     про проблему''.'
   - 'The anatomy of a formal complaint: stating the facts (''Справа в тому, що...''), expressing expectations (''Я очікую
     на...''), and demanding resolution (''Прошу розглянути мою скаргу'').'
-  - Handling service issues in specific contexts (banks, shops, post offices) as mandated by competency standards for B1 learners.
+  - Handling service issues in specific contexts (banks, shops, post offices) as mandated by competency standards for B1
+    learners.
 - section: 'Практикум: Сценарії вирішення проблем (Workshop: Problem-Solving Scenarios)'
   words: 800
   points:
@@ -91,11 +93,9 @@ connects_to:
 - b1-28 (Checkpoint Motion Verbs)
 prerequisites:
 - b1-98 (Novyny Yak Chytaty)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Customer Support Lead
 grammar:
 - Conditional for suggestions (Можливо, варто було б...)
 - Polite request forms (Прошу..., Я очікую...)
 - Softening phrases (На жаль..., Перепрошую, але...)
 register: розмовний
+references: []

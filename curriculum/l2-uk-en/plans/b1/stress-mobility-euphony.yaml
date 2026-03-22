@@ -2,7 +2,7 @@ module: b1-008
 level: B1
 sequence: 8
 slug: stress-mobility-euphony
-version: '1.0'
+version: '3.0'
 title: 'Рухомий наголос та милозвучність'
 subtitle: 'Mobile Stress & Advanced Euphony'
 focus: grammar
@@ -19,7 +19,8 @@ content_outline:
   words: 500
   points:
   - 'State Standard §4.1.2: mobile stress as a structural feature of Ukrainian — contrast with fixed-stress languages'
-  - 'Why stress matters: stress shifts distinguish grammatical forms (зáмок "castle" vs замóк "lock") and drive morphological patterns'
+  - 'Why stress matters: stress shifts distinguish grammatical forms (зáмок "castle" vs замóк "lock") and drive morphological
+    patterns'
   - 'Preview: stress mobility in declension, conjugation, and its interaction with euphony'
 - section: Рухомий наголос у відмінюванні іменників (Mobile Stress in Noun Declension)
   words: 900
@@ -88,13 +89,10 @@ prerequisites:
 - 'b1-07 (Phonetics: Alternation & Simplification)'
 connects_to:
 - 'b1-09 (Aspect: Complete System)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Voice Coach
 grammar:
 - Mobile stress in noun declension (рукá→рýки, водá→вóди)
 - Mobile stress in verb conjugation (писáти→пишý)
 - Advanced euphony (все/усе, вже/уже, зі/із)
 - Stress in prepositional phrases (enclitics/proclitics)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

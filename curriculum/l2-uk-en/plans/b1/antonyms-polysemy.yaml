@@ -2,7 +2,7 @@ module: b1-063
 level: B1
 sequence: 63
 slug: antonyms-polysemy
-version: '2.0'
+version: '3.0'
 title: Антоніми та багатозначність
 subtitle: Antonyms and Polysemy in Ukrainian
 focus: vocabulary
@@ -91,13 +91,10 @@ connects_to:
 - b1-64 (Homonyms and Paronyms)
 prerequisites:
 - 'b1-62 (Synonymy: Speaking Verbs)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Antonym types (gradual, complementary, converse, contextual)
 - Antonym formation by prefixation (за-/роз-, в-/ви-)
 - Polysemy (multiple related meanings)
 - Direct vs figurative meaning (пряме vs переносне значення)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

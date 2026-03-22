@@ -2,7 +2,7 @@ module: b1-092
 level: B1
 sequence: 92
 slug: running-in-ukraine
-version: '2.0'
+version: '3.0'
 title: Біг в Україні
 subtitle: Running Culture and Marathon Events
 focus: culture
@@ -19,7 +19,8 @@ content_outline:
   words: 600
   points:
   - Historical overview of running in Ukraine since 2010, aligning with State Standard §3.4 (Leisure and Hobbies)
-  - Distinguishing between 'оздоровчий біг' (wellness running) and 'біг підтюпцем' (jogging) as accessible lifestyle choices
+  - Distinguishing between 'оздоровчий біг' (wellness running) and 'біг підтюпцем' (jogging) as accessible lifestyle 
+    choices
   - 'Hook: Running as a tool for mental health and resilience in contemporary Ukrainian society'
 - section: Головні події та соціальна місія (Main Events and Social Mission)
   words: 1000
@@ -28,7 +29,8 @@ content_outline:
   - 'The Mile of the Unbroken (Миля Незламних): Analyzing its role as a symbol of solidarity with veterans and military personnel'
   - 'Running during war: Wartime formats like ''The Longest Marathon'' and essential safety protocols (shelters, air raid
     rules)'
-  - The distinction between a generic 'забіг' (race) and a technical 'марафон' (42.195 km) to avoid common terminology errors
+  - The distinction between a generic 'забіг' (race) and a technical 'марафон' (42.195 km) to avoid common terminology 
+    errors
 - section: Організація та підготовка (Organization and Preparation)
   words: 800
   points:
@@ -85,11 +87,9 @@ connects_to:
 - b1-90 (Sports In Ukraine)
 prerequisites:
 - b1-88 (Ukrainian Cinema And Tv)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Kyiv Marathon Organizer
 grammar:
 - Running and race vocabulary
 - Discussing distances and times
 - Event registration language
 register: розмовний
+references: []

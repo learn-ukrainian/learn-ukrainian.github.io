@@ -2,7 +2,7 @@ module: b1-017
 level: B1
 sequence: 17
 slug: aspect-integration-practice
-version: '2.0'
+version: '3.0'
 title: 'Інтеграція виду: практика'
 subtitle: Aspect Integration Practice
 focus: grammar
@@ -13,37 +13,28 @@ objectives:
 - Learner can integrate all aspect knowledge in narratives
 - Learner can use temporal connectors with correct aspect
 - Learner can mix aspects naturally in complex texts
-sources:
-- name: Ukrainian State Standard 2024 - Aspect Integration
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Comprehensive aspect usage in connected discourse
-- name: Ukrainian Narrative Patterns
-  url: https://uk.wikipedia.org/wiki/Нарація
-  type: reference
-  notes: Aspect in storytelling and narratives
 content_outline:
 - section: Вступ та діагностика (Introduction and Diagnostic)
   words: 600
   points:
-  - Review of aspect foundations (M06-13) and diagnostic test focusing on the 'Logic Switch' metaphor — identifying if actions
-    are simultaneous or sequential.
+  - Review of aspect foundations (M06-13) and diagnostic test focusing on the 'Logic Switch' metaphor — identifying if 
+    actions are simultaneous or sequential.
   - 'Learner error check: addressing the confusion between habitual actions and one-time events, such as ''Кожного дня він
     прочитав новини'' (error) vs ''читав'' (correct).'
 - section: 'Поглиблення: Часові сполучники (Deep Dive: Temporal Connectors)'
   words: 1000
   points:
-  - Detailed breakdown of коли, поки, доки, як тільки per State Standard §4.4.3 for expressing simultaneity (одночасність)
-    and sequentiality (різночасовість).
-  - Semantic nuances of доки/поки не as markers of a strict limit (until), contrasting with тим часом як for continuous background
-    actions.
+  - Detailed breakdown of коли, поки, доки, як тільки per State Standard §4.4.3 for expressing simultaneity 
+    (одночасність) and sequentiality (різночасовість).
+  - Semantic nuances of доки/поки не as markers of a strict limit (until), contrasting with тим часом як for continuous 
+    background actions.
 - section: 'Логічний перемикач: Послідовність vs Одночасність (Logic Switch: Sequence vs Simultaneity)'
   words: 900
   points:
   - 'Visual flowchart metaphor for narrative planning: ''Did B start after A finished?'' (Sequential = Perf + Perf) vs ''Did
     B happen while A was in progress?'' (Simultaneous = Imp + Imp/Perf).'
-  - Analysis of complex narrative patterns where aspect mixing signals shifts in focus or sudden interruptions using triggers
-    like раптом (Perfective trigger).
+  - Analysis of complex narrative patterns where aspect mixing signals shifts in focus or sudden interruptions using 
+    triggers like раптом (Perfective trigger).
 - section: Культурний контекст та типові помилки (Cultural Context and Common Errors)
   words: 800
   points:
@@ -54,8 +45,8 @@ content_outline:
 - section: Практичне застосування та діалоги (Practice Application and Dialogues)
   words: 700
   points:
-  - Extended dialogues incorporating high-frequency discourse markers врешті-решт and зрештою, reinforcing their use over
-    the incorrect phrase 'в кінці кінців'.
+  - Extended dialogues incorporating high-frequency discourse markers врешті-решт and зрештою, reinforcing their use 
+    over the incorrect phrase 'в кінці кінців'.
   - 'Production task: narrative sequencing using спочатку, потім, and нарешті to synthesize aspect integration skills in a
     cohesive workday story (building on b1-13).'
 vocabulary_hints:
@@ -79,28 +70,30 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Extended narrative with aspect choices
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Change temporal perspective (simultaneous → sequential)
-  items: 10+
+  items: 10
 - type: error-correction
   focus: Find and fix aspect mistakes in text
-  items: 12+
+  items: 12
 - type: quiz
   focus: Complex aspect scenarios
-  items: 15+
+  items: 15
 connects_to:
 - b1-15 (Checkpoint - aspect mastery)
 - b1-40 (Causal Result Clauses)
 prerequisites:
 - b1-13 (Work week - aspect in action)
 - All aspect modules M06-13
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Fitness Trainer
 grammar:
 - All aspect contexts combined
 - Temporal connectors with aspect
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Aspect Integration
+  url: https://mon.gov.ua/
+  notes: Comprehensive aspect usage in connected discourse
+- title: Ukrainian Narrative Patterns
+  url: https://uk.wikipedia.org/wiki/Нарація
+  notes: Aspect in storytelling and narratives

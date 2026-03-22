@@ -2,7 +2,7 @@ module: b1-004
 level: B1
 sequence: 4
 slug: sentence-structure
-version: '2.0'
+version: '3.0'
 title: Структура речення
 subtitle: Sentence analysis terminology
 focus: integration
@@ -13,20 +13,12 @@ objectives:
 - Learner can identify sentence parts using Ukrainian terminology
 - Learner can distinguish main and subordinate clauses
 - Learner can name sentence types and punctuation marks
-sources:
-- name: Ukrainian Syntax (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
-  type: reference
-  notes: Overview of Ukrainian sentence structure terminology
-- name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official terminology for sentence analysis
 content_outline:
 - section: 'Вступ: Анатомія мови (Introduction: Anatomy of Language)'
   words: 500
   points:
-  - Why sentence analysis terminology matters — introduction of the 'Anatomy of Language' concept as taught in Ukrainian schools
+  - Why sentence analysis terminology matters — introduction of the 'Anatomy of Language' concept as taught in Ukrainian
+    schools
   - 'Metalanguage Bridge B1.0: Transitioning from English scaffolding to Ukrainian syntactic terms to prepare for State Standard
     §4.4 requirements'
   - 'The logic of ''Parsing'': Presenting syntactic analysis (синтаксичний розбір) not as a chore, but as a logical exercise
@@ -44,8 +36,8 @@ content_outline:
 - section: Класифікація речень за Державним стандартом (Sentence Classification per State Standard)
   words: 1000
   points:
-  - Simple sentences (просте речення) vs. Complex sentences (складне речення) — establishing the B1 baseline for syntax (lines
-    2367-2431)
+  - Simple sentences (просте речення) vs. Complex sentences (складне речення) — establishing the B1 baseline for syntax 
+    (lines 2367-2431)
   - 'State Standard §4.4.2: Overview of ''ускладнене речення'' (complicated simple sentences) including homogeneous parts
     and parenthetical words (вставні слова)'
   - 'State Standard §4.4.3: Structural analysis of ''складносурядне'' (coordinate) and ''складнопідрядне'' (subordinate) sentences'
@@ -91,19 +83,19 @@ vocabulary_hints:
 activity_hints:
 - type: mark-the-words
   focus: Identify sentence parts in Ukrainian sentences
-  items: 10+
+  items: 10
 - type: match-up
   focus: Term → example sentence part
-  items: 12+
+  items: 12
 - type: quiz
   focus: Sentence type identification
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Label sentence components
-  items: 8+
+  items: 8
 - type: true-false
   focus: Statements about sentence types and clause relationships
-  items: 8+
+  items: 8
 connects_to:
 - b1-18 (Metalanguage checkpoint)
 - 'b1-30 (Relative Clauses Yakyi)'
@@ -112,13 +104,15 @@ prerequisites:
 - b1-01 (Basic grammar terminology)
 - b1-02 (Language About Verbs)
 - b1-03 (Reading grammar rules)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Construction Architect
 grammar:
 - Sentence parts in Ukrainian
 - Clause types
 - Sentence types and punctuation
-module_type: bridge
-immersion: 70-85% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian Syntax (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  notes: Overview of Ukrainian sentence structure terminology
+- title: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  notes: Official terminology for sentence analysis

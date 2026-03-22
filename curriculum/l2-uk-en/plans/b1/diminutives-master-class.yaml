@@ -2,7 +2,7 @@ module: b1-053
 level: B1
 sequence: 53
 slug: diminutives-master-class
-version: '2.0'
+version: '3.0'
 title: 'Демінутиви: майстер-клас'
 subtitle: Diminutives - Forms, Usage, and Nuance
 focus: grammar
@@ -18,10 +18,10 @@ content_outline:
 - section: 'Вступ: Світ українських демінутивів (Introduction: The World of Ukrainian Diminutives)'
   words: 500
   points:
-  - Introduction to diminutives as a stylistic tool (§4.5.1) and their high frequency in daily Ukrainian life compared to
-    English pragmatics.
-  - The concept of 'cordocentrism' (heart-centeredness) — how the abundance of diminutive forms reflects the emotional architecture
-    of Ukrainian culture.
+  - Introduction to diminutives as a stylistic tool (§4.5.1) and their high frequency in daily Ukrainian life compared 
+    to English pragmatics.
+  - The concept of 'cordocentrism' (heart-centeredness) — how the abundance of diminutive forms reflects the emotional 
+    architecture of Ukrainian culture.
   - 'The unique Ukrainian linguistic phenomenon: diminutive forms for verbs (спатоньки, їстоньки) and adverbs (тихенько, швиденько)
     — distinguishing ''B1 mastery'' from ''A2 basics''.'
 - section: 'Морфологія: Від іменників до дієслів (Morphology: From Nouns to Verbs)'
@@ -103,11 +103,9 @@ connects_to:
 - 'b1-54 (Numerals Collectives Fractions)'
 prerequisites:
 - b1-47 (Passive Constructions)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Kindergarten Teacher
 grammar:
 - 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
 - Прагматичні функції демінутивів
 - Регістрові та стилістичні відтінки
 register: розмовний
+references: []

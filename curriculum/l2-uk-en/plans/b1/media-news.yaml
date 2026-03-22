@@ -2,7 +2,7 @@ module: b1-073
 level: B1
 sequence: 73
 slug: media-news
-version: '2.0'
+version: '3.0'
 title: Медіа та новини
 subtitle: Media and News
 focus: vocabulary
@@ -53,7 +53,8 @@ content_outline:
 - section: Підсумок (Summary)
   words: 500
   points:
-  - Review of high-frequency media terminology (ЗМІ, редакція, висвітлювати, оприлюднювати) and their typical collocations.
+  - Review of high-frequency media terminology (ЗМІ, редакція, висвітлювати, оприлюднювати) and their typical 
+    collocations.
   - 'Final synthesis: forming opinions on news items using B1-level reporting verbs and corrected phrases.'
 vocabulary_hints:
   required:
@@ -91,11 +92,9 @@ connects_to:
 - b1-74 (Society Politics)
 prerequisites:
 - b1-72 (Describing Changes)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Investigative Journalist
 grammar:
 - Media vocabulary collocations
 - Journalistic expressions
 - Reporting verb patterns
 register: розмовний
+references: []

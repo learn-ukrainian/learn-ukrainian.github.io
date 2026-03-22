@@ -2,7 +2,7 @@ module: b1-039
 level: B1
 sequence: 39
 slug: concessive-khocha
-version: '2.0'
+version: '3.0'
 title: 'Допустові речення: хоча, незважаючи на'
 subtitle: Concessive Clauses - Although, Despite
 focus: grammar
@@ -18,7 +18,8 @@ content_outline:
 - section: Вступ та діагностика (Introduction & Diagnostics)
   words: 600
   points:
-  - Diagnostic quiz (Test phase of TTT) on concessive clauses to identify existing knowledge of 'хоча' and 'незважаючи на'
+  - Diagnostic quiz (Test phase of TTT) on concessive clauses to identify existing knowledge of 'хоча' and 'незважаючи 
+    на'
   - 'Hook with the proverb «Хоч бачить око, та зуб не йме»: analysis of the ''tantalus-like'' situation where reality contrasts
     with desire'
   - 'Identification task: scanning high-frequency collocations like ''хоча б'' and ''хоча й'' in a short introductory text
@@ -37,8 +38,8 @@ content_outline:
 - section: 'Стилістичні нюанси: попри та дарма що (Stylistic Nuances: Despite & Although)'
   words: 800
   points:
-  - Introducing 'попри' as a stylish, medium-frequency media alternative to 'незважаючи на'; drill with 'попри все' and 'попри
-    очікування'
+  - Introducing 'попри' as a stylish, medium-frequency media alternative to 'незважаючи на'; drill with 'попри все' and 
+    'попри очікування'
   - 'Literary immersion with Lina Kostenko: «Не бійся правди, хоч яка гірка...» — analyzing the use of ''хоч'' as a concessive
     marker for adjectives'
   - 'Register awareness: identifying archaic/literary ''дарма що'' (State Standard §4.4.3) and warning against its use in
@@ -99,11 +100,9 @@ connects_to:
 - b1-39 (Concessive Khocha)
 prerequisites:
 - 'b1-37 (Conditionals Mixed Complex))'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Debate Champion
 grammar:
 - Concessive clauses with хоча (although)
 - Concessive phrases with незважаючи на (despite)
 - Contrast and unexpected outcome expressions
 register: розмовний
+references: []

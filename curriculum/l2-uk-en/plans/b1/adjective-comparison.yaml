@@ -2,7 +2,7 @@ module: b1-060
 level: B1
 sequence: 60
 slug: adjective-comparison
-version: '1.0'
+version: '3.0'
 title: 'Ступені порівняння прикметників'
 subtitle: 'Adjective Comparison: Comparative & Superlative'
 focus: grammar
@@ -28,7 +28,8 @@ content_outline:
   - 'Stem alternations in comparatives: г→ж (дорогий→дорожчий), к→ч (легкий→легший), ск→щ (вузький→вужчий)'
   - 'Analytic formation: більш/менш + positive — більш детальний, менш важливий — used with relational and compound adjectives'
   - 'When to use which: synthetic for qualitative adjectives (кращий), analytic for relational/compound (більш сільськогосподарський)'
-  - 'Comparison constructions: за + accusative (старший за мене) and ніж + nominative (старший, ніж я) — both patterns with examples'
+  - 'Comparison constructions: за + accusative (старший за мене) and ніж + nominative (старший, ніж я) — both patterns with
+    examples'
 - section: Найвищий ступінь порівняння (Superlative Degree)
   words: 800
   points:
@@ -49,7 +50,8 @@ content_outline:
 - section: 'Порівняння у контексті: стиль і прагматика (Comparison in Context: Style and Pragmatics)'
   words: 600
   points:
-  - 'Register differences: synthetic (conversational) vs analytic (formal/academic) — Це кращий варіант vs Це більш оптимальний варіант'
+  - 'Register differences: synthetic (conversational) vs analytic (formal/academic) — Це кращий варіант vs Це більш оптимальний
+    варіант'
   - 'Comparison in advertising and media: найкращий, найсмачніший — superlative inflation in Ukrainian marketing'
   - 'Hedging with comparatives: трохи кращий, значно гірший — degree modifiers with comparatives'
   - 'Common collocations: кращий за все, гірше за все, більше того, тим більше'
@@ -90,9 +92,6 @@ prerequisites:
 - 'b1-58 (Word Formation: Modifiers)'
 connects_to:
 - 'b1-61 (Synonymy: Thinking Verbs)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Synthetic comparative (-ший/-іший) with stem alternations
 - Analytic comparative (більш/менш + positive)
@@ -101,4 +100,4 @@ grammar:
 - Emphatic superlative (якнай-/щонай-)
 - Irregular comparison forms (кращий, гірший, більший, менший)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

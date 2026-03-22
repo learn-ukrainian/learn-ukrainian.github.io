@@ -2,7 +2,7 @@ module: b1-081
 level: B1
 sequence: 81
 slug: travel-geography
-version: '2.0'
+version: '3.0'
 title: Подорожі та географія
 subtitle: Travel & Geography
 focus: vocabulary
@@ -62,8 +62,8 @@ content_outline:
 vocabulary_hints:
   required:
   - подорож (journey) — High frequency; далека подорож, вирушити в подорож, морська подорож, подорож мрії
-  - мандрівка (adventure/trip) — Medium frequency (literary/adventurous); піша мандрівка, незабутня мандрівка, віртуальна
-    мандрівка
+  - мандрівка (adventure/trip) — Medium frequency (literary/adventurous); піша мандрівка, незабутня мандрівка, 
+    віртуальна мандрівка
   - поїздка (trip/short journey) — Focused on specific/short-term goals; ділова поїздка, поїздка на роботу
   - географія (geography) — Academic context; вивчати географію, фізична географія, географія України
   - регіон (region) — High frequency in formal/news contexts; гірський регіон, південний регіон, розвиток регіону
@@ -95,11 +95,9 @@ connects_to:
 - 'b1-61 (Synonymy Thinking Verbs)'
 prerequisites:
 - b1-77 (Health Wellness)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Travel Agency Owner
 grammar:
 - Travel vocabulary collocations
 - Geographical terminology
 - Direction and location expressions
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-029
 level: B1
 sequence: 29
 slug: indefinite-negative-pronouns
-version: '2.0'
+version: '3.0'
 title: Невизначені та заперечні займенники
 subtitle: Indefinite & Negative Pronouns
 focus: grammar
@@ -101,13 +101,10 @@ connects_to:
 - 'b1-06 (Phonetics Assimilation)'
 - b1-103 (Фінальний іспит B1)
 prerequisites: []
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Logic Puzzle Host
 grammar:
 - Indefinite pronouns (-сь, -небудь, де-)
 - Negative pronouns (ні-) with double negation
 - Preposition insertion in negative pronouns
 - Declension of indefinite/negative pronouns
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

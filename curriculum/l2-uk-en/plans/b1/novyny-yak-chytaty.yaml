@@ -2,7 +2,7 @@ module: b1-098
 level: B1
 sequence: 98
 slug: novyny-yak-chytaty
-version: '2.0'
+version: '3.0'
 title: 'Новини: як читати'
 subtitle: News Reading Strategies for Ukrainian Media
 focus: skills
@@ -87,11 +87,9 @@ connects_to:
 - b1-96 (Ukrainian Cuisine)
 prerequisites:
 - b1-94 (Cycling Water)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: News Analyst
 grammar:
 - News vocabulary and register
 - Headline patterns
 - Reporting structures
 register: розмовний
+references: []

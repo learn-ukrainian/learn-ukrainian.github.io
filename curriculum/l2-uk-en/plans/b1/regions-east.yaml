@@ -2,7 +2,7 @@ module: b1-084
 level: B1
 sequence: 84
 slug: regions-east
-version: '2.0'
+version: '3.0'
 title: 'Українські регіони: Схід'
 subtitle: Eastern Ukraine - Industrial Heritage and Academic Excellence
 focus: culture
@@ -18,7 +18,8 @@ content_outline:
 - section: 'Вступ (Introduction: The Industrial and Intellectual Core)'
   words: 600
   points:
-  - Географія та ландшафт східних областей України (Харківська, Донецька, Луганська) відповідно до Державного стандарту §3.13.
+  - Географія та ландшафт східних областей України (Харківська, Донецька, Луганська) відповідно до Державного стандарту 
+    §3.13.
   - 'Трансформація від дикого степу до потужних індустріальних мегаполісів: баланс природи та індустрії.'
   - Визначення понять 'східний регіон' та 'східні області' як нейтральних географічних термінів.
 - section: 'Харків: Місто студентів, науки та архітектури (Kharkiv: City of Students, Science, and Architecture)'
@@ -87,11 +88,9 @@ connects_to:
 - 'b1-82 (Emotional Intelligence)'
 prerequisites:
 - 'b1-80 (Business Basics)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Kharkiv Industrial Engineer
 grammar:
 - Reading comprehension strategies
 - Cultural vocabulary in context
 - Industrial and academic vocabulary
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-059
 level: B1
 sequence: 59
 slug: possessive-short-adjectives
-version: '1.1'
+version: '3.0'
 title: 'Присвійні та короткі прикметники'
 subtitle: 'Possessive & Short-Form Adjectives'
 focus: grammar
@@ -89,13 +89,10 @@ prerequisites:
 - 'b1-58 (Word Formation: Modifiers)'
 connects_to:
 - 'b1-60 (Adjective Comparison)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Possessive adjective formation (-ів/-їв, -ин/-їн)
 - Possessive adjective declension (mixed paradigm)
 - Short-form adjectives (рад, повен, варт, годен, здатен, потрібен)
 - Predicative-only usage of short forms
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

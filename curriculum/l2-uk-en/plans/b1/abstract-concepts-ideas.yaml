@@ -2,7 +2,7 @@ module: b1-066
 level: B1
 sequence: 66
 slug: abstract-concepts-ideas
-version: '2.0'
+version: '3.0'
 title: 'Абстрактні концепції: ідеї та думки'
 subtitle: 'Abstract Concepts: Ideas and Thoughts'
 focus: vocabulary
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Transition from concrete A1/A2 descriptions to B1 intellectual expression, moving beyond physical objects to abstract
-    entities as per State Standard §3.6 (social issues) and §3.8 (education/fields of knowledge).
+  - Transition from concrete A1/A2 descriptions to B1 intellectual expression, moving beyond physical objects to 
+    abstract entities as per State Standard §3.6 (social issues) and §3.8 (education/fields of knowledge).
   - 'The role of abstract vocabulary in expressing values like ''justice'', ''truth'', and ''theory''. Introduction to syntactic
     padding for intellectual discourse: «Я вважаю, що...», «На мою думку...», «Мені здається, що...».'
 - section: Лексичний блок (Vocabulary Block)
@@ -63,18 +63,21 @@ content_outline:
     and core abstract vocabulary.'
 vocabulary_hints:
   required:
-  - ідея (idea) — головна/основна ідея, блискуча ідея, висувати ідею, втілювати ідею в життя; creative spark/plan vs opinion
-  - думка (thought/opinion) — власна думка, на мою думку, висловлювати думку, думки розбігаються, громадська думка; Shevchenko's
-    'Dumy'
+  - ідея (idea) — головна/основна ідея, блискуча ідея, висувати ідею, втілювати ідею в життя; creative spark/plan vs 
+    opinion
+  - думка (thought/opinion) — власна думка, на мою думку, висловлювати думку, думки розбігаються, громадська думка; 
+    Shevchenko's 'Dumy'
   - концепція (concept) — нова концепція, розробити концепцію, концепція розвитку, авторська концепція; academic/formal
-  - теорія (theory) — теорія ймовірності, теорія змови, підтвердити/спростувати теорію, теоретично обґрунтувати; scientific/logical
-  - погляд (view) — на перший погляд, поділяти погляди, власний погляд на (щось), з точки зору; distinguish from 'вигляд'
-  - переконання (belief/conviction) — глибоке переконання, власні переконання, діяти згідно з переконаннями; Lesya Ukrainka
-    context
-  - цінність (value) — культурні цінності, сімейні цінності, матеріальні/духовні цінності, система цінностей; Skovoroda's
-    values
-  - принцип (principle) — піти на принцип, принцип дії, з принципу, порушити принцип, дотримуватися принципів; moral/functional
-    rules
+  - теорія (theory) — теорія ймовірності, теорія змови, підтвердити/спростувати теорію, теоретично обґрунтувати; 
+    scientific/logical
+  - погляд (view) — на перший погляд, поділяти погляди, власний погляд на (щось), з точки зору; distinguish from 
+    'вигляд'
+  - переконання (belief/conviction) — глибоке переконання, власні переконання, діяти згідно з переконаннями; Lesya 
+    Ukrainka context
+  - цінність (value) — культурні цінності, сімейні цінності, матеріальні/духовні цінності, система цінностей; 
+    Skovoroda's values
+  - принцип (principle) — піти на принцип, принцип дії, з принципу, порушити принцип, дотримуватися принципів; 
+    moral/functional rules
   recommended:
   - гіпотеза (hypothesis) — висунути гіпотезу, підтвердити гіпотезу; academic discourse
   - істина (truth) — шукати істину, гірка істина; philosophical depth
@@ -98,11 +101,9 @@ connects_to:
 - 'b1-67 (Abstract Concepts Processes)'
 prerequisites:
 - 'b1-56 (Checkpoint Advanced Grammar)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Academic Researcher
 grammar:
 - Noun collocations with abstract vocabulary
 - Verb + abstract noun patterns
 - Preposition usage with abstracts
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-012
 level: B1
 sequence: 12
 slug: aspect-future
-version: '2.0'
+version: '3.0'
 title: Вид у майбутньому часі
 subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
 focus: grammar
@@ -14,25 +14,16 @@ objectives:
 - Learner can explain when to use compound vs synthetic imperfective future
 - Learner can select appropriate aspect for future actions
 - Learner recognizes stylistic differences between future forms
-sources:
-- name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official future tense forms and usage
-- name: Ukrainian Future Tense (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Майбутній_час
-  type: reference
-  notes: Three future forms with examples
 content_outline:
 - section: Діагностичний тест (Diagnostic Test)
   words: 600
   points:
-  - Діагностика розуміння різниці між доконаним і недоконаним видом у контексті майбутнього часу — перевірка здатності розрізняти
-    процес та результат.
+  - Діагностика розуміння різниці між доконаним і недоконаним видом у контексті майбутнього часу — перевірка здатності 
+    розрізняти процес та результат.
   - 'Аналіз типової помилки: вживання допоміжного дієслова «буду» з інфінітивом доконаного виду (наприклад, неправильне «я
     буду прочитати» замість «я буду читати» або «прочитаю»).'
-  - Перевірка розуміння концепції «Perfective Non-Past = Future» — як студенти сприймають форми теперішнього часу доконаного
-    виду в значенні майбутнього.
+  - Перевірка розуміння концепції «Perfective Non-Past = Future» — як студенти сприймають форми теперішнього часу 
+    доконаного виду в значенні майбутнього.
 - section: Граматичне пояснення (Grammar Explanation)
   words: 1000
   points:
@@ -47,8 +38,8 @@ content_outline:
 - section: Культурний та етнолінгвістичний контекст (Cultural & Ethnolinguistic Context)
   words: 800
   points:
-  - Аналіз прислів'я «Не кажи гоп, поки не перескочиш» — українська ментальність щодо планів на майбутнє та обережності в
-    обіцянках.
+  - Аналіз прислів'я «Не кажи гоп, поки не перескочиш» — українська ментальність щодо планів на майбутнє та обережності 
+    в обіцянках.
   - 'Забобони та мовні ритуали: вивчення фраз «Сплюнь і постучи по дереву» як засобів захисту від «зурочення» запланованого
     успіху.'
   - 'Традиції перед дорогою: обговорення забобону про повернення додому та ритуалу погляду в дзеркало для «перезавантаження»
@@ -56,10 +47,10 @@ content_outline:
 - section: Практика та корекція помилок (Practice & Error Correction)
   words: 1000
   points:
-  - Вправи на трансформацію аналітичної форми в синтетичну (наприклад, «буду боротися» -> «боротимуся») для досягнення природності
-    мовлення.
-  - Виправлення помилки вживання доконаного виду в значенні поточного моменту (наприклад, чому не можна сказати «я зроблю
-    зараз», коли дія вже триває).
+  - Вправи на трансформацію аналітичної форми в синтетичну (наприклад, «буду боротися» -> «боротимуся») для досягнення 
+    природності мовлення.
+  - Виправлення помилки вживання доконаного виду в значенні поточного моменту (наприклад, чому не можна сказати «я 
+    зроблю зараз», коли дія вже триває).
   - 'Дрилінг парадигм відмінювання згідно з Державним стандартом 2024: відпрацювання форм «скажу», «закричите», «поборють».'
   - 'Сценарії вибору форми залежно від регістра: офіційні плани (мати намір) проти дружніх зборів (збиратися).'
 - section: Продукція та підсумок (Production & Summary)
@@ -90,19 +81,19 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Compound → synthetic future
-  items: 12+
+  items: 12
 - type: quiz
   focus: Which future form for planned vs completed action?
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Future aspect selection
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Synthetic future paradigm practice
-  items: 10+
+  items: 10
 - type: match-up
   focus: Context → future form
-  items: 12+
+  items: 12
 connects_to:
 - b1-10 (Aspect in negation)
 - b1-13 (Aspect in imperatives)
@@ -110,14 +101,16 @@ prerequisites:
 - 'b1-08 (Stress Mobility Euphony)'
 - 'b1-09 (Aspect Complete System)'
 - b1-11 (Aspect past - result vs process)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Strategic Planner
 grammar:
 - 'Compound future: буду + infinitive'
 - Synthetic future forms (-тиму/-тимеш/-тиме)
 - Perfective future (simple future)
 - Future aspect selection patterns
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  notes: Official future tense forms and usage
+- title: Ukrainian Future Tense (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  notes: Three future forms with examples

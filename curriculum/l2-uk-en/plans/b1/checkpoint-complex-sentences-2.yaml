@@ -2,7 +2,7 @@ module: b1-045
 level: B1
 sequence: 45
 slug: checkpoint-complex-sentences-2
-version: '2.0'
+version: '3.0'
 title: 'Контрольна точка: складні речення (частина 2)'
 subtitle: Checkpoint - Complex Sentences Part 2
 focus: checkpoint
@@ -20,8 +20,8 @@ content_outline:
   points:
   - 'Вступ до контрольної точки: визначення цілей рівня B1.3b та важливості підсумкового оцінювання (assessment) згідно з
     Державним стандартом §4.4.3.'
-  - Обговорення поняття «інтеграція» (integration) у контексті поєднання різних типів підрядних речень для побудови складних
-    висловлювань.
+  - Обговорення поняття «інтеграція» (integration) у контексті поєднання різних типів підрядних речень для побудови 
+    складних висловлювань.
   - 'Самоаналіз: ідентифікація сильних сторін та прогалин у знаннях синтаксису складного речення.'
 - section: Допустові та часові зв'язки (Concessive and Temporal Links)
   words: 1000
@@ -90,11 +90,9 @@ connects_to:
 - b1-51 (Adverbial Participles Imperfective)
 prerequisites:
 - b1-43 (Reported Statements)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Senior Editor
 grammar:
 - Integration of M35-M40 grammar
 - Concessive, causal, temporal, reported speech
 - Comprehensive complex sentence mastery
 register: розмовний
+references: []

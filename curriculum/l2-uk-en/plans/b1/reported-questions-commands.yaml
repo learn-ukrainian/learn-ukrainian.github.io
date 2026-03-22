@@ -2,7 +2,7 @@ module: b1-044
 level: B1
 sequence: 44
 slug: reported-questions-commands
-version: '2.0'
+version: '3.0'
 title: Непрямі питання та накази
 subtitle: Reported Questions & Commands
 focus: grammar
@@ -18,8 +18,8 @@ content_outline:
 - section: Діагностичний тест (Diagnostic Test)
   words: 500
   points:
-  - Diagnostic quiz identifying the common 'що' vs 'чи' confusion in Yes/No indirect questions (e.g., *Він запитав, що я хочу
-    кави* vs correct *чи я хочу*)
+  - Diagnostic quiz identifying the common 'що' vs 'чи' confusion in Yes/No indirect questions (e.g., *Він запитав, що я
+    хочу кави* vs correct *чи я хочу*)
   - Check for 'ask to action' mistranslations where learners incorrectly use *питати* instead of *просити* for requests
   - 'Visual recognition task: identifying the incorrect retention of question marks in reported questions (e.g., *Вона спитала,
     де я живу?*)'
@@ -66,14 +66,17 @@ content_outline:
   - 'Reflective task: Describing a recent request or command using all three main conjunctions (*що, чи, щоб*)'
 vocabulary_hints:
   required:
-  - питання (question) — поставити питання, вирішити питання, спірне питання, риторичне питання; high frequency general use
+  - питання (question) — поставити питання, вирішити питання, спірне питання, риторичне питання; high frequency general 
+    use
   - наказ (command) — віддати наказ, виконати наказ, видати наказ; implies official or military register
   - прохання (request) — звернутися з проханням, ввічливе прохання, настійливе прохання; high frequency
   - чи (whether) — mandatory for Yes/No indirect questions; must be distinguished from 'що' in reporting
   - запитати (to ask) — запитати дозволу, запитати дорогу, запитати пораду; focus on information seeking
   - наказати (to order) — наказати зробити, суворо наказати; implies authority (parental, military, or state)
-  - просити (to request) — просити допомоги, просити пробачення, просити слова; key for reporting actions (not questions)
-  - щоб (that - subjunctive) — mandatory for reported commands/requests; used with past tense verbs (*сказав, щоб я зробив*)
+  - просити (to request) — просити допомоги, просити пробачення, просити слова; key for reporting actions (not 
+    questions)
+  - щоб (that - subjunctive) — mandatory for reported commands/requests; used with past tense verbs (*сказав, щоб я 
+    зробив*)
   recommended:
   - поцікавитися (to wonder) — polite, higher-register alternative to 'запитати' in indirect speech
   - вимагати (to demand) — stronger than 'просити', implies urgency, authority, or strict necessity
@@ -96,11 +99,9 @@ connects_to:
 - b1-45 (Checkpoint Complex Sentences 2)
 prerequisites:
 - 'b1-42 (Complex Sentence Integration)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Executive Assistant
 grammar:
 - Reported questions with чи, що, хто, де, коли
 - Reported commands with щоб + past form
 - Reported requests with просити, щоб
 register: розмовний
+references: []

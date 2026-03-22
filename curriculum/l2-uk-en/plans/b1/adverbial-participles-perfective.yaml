@@ -2,7 +2,7 @@ module: b1-052
 level: B1
 sequence: 52
 slug: adverbial-participles-perfective
-version: '2.0'
+version: '3.0'
 title: Дієприслівники доконаного виду
 subtitle: Adverbial Participles - Perfective (-вши/-ши)
 focus: grammar
@@ -18,15 +18,15 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Introduction to the perfective adverbial participle as a tool for constructing 'simple complicated sentences' (просте
-    ускладнене речення) per State Standard §4.4.2, focusing on its role in sophisticated narrative sequencing.
+  - Introduction to the perfective adverbial participle as a tool for constructing 'simple complicated sentences' 
+    (просте ускладнене речення) per State Standard §4.4.2, focusing on its role in sophisticated narrative sequencing.
   - 'Cultural hook: Analysis of the proverb «Далеко сховавши, близько не знайдеш» (Having hidden it far, you won''t find it
     near) to illustrate the logic of completed priority (попередність).'
 - section: 'Граматика: Формування та значення (Grammar: Formation and Meaning)'
   words: 900
   points:
-  - Morphological rules for suffixes -вши (used with vowel stems, e.g., прочита-вши) and -ши (used with consonant stems, e.g.,
-    приніс-ши), noting the overwhelming dominance of -вши in high-frequency verbs.
+  - Morphological rules for suffixes -вши (used with vowel stems, e.g., прочита-вши) and -ши (used with consonant stems,
+    e.g., приніс-ши), noting the overwhelming dominance of -вши in high-frequency verbs.
   - 'Conceptualizing temporal priority using a timeline visual: the ''completed dot'' (perfective) occurring strictly before
     the main action vs. the ''simultaneous line'' (imperfective) explored in b1-42.'
 - section: Аналіз помилок та обмеження (Error Analysis and Constraints)
@@ -84,11 +84,9 @@ connects_to:
 - b1-45 (Checkpoint Complex Sentences 2)
 prerequisites:
 - b1-51 (Adverbial Participles Imperfective)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Film Director
 grammar:
 - Дієприслівники доконаного виду
 - Суфікси -вши/-ши formation rules
 - Попередність дій (prior actions)
 register: розмовний
+references: []

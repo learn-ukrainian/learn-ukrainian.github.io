@@ -2,7 +2,7 @@ module: b1-082
 level: B1
 sequence: 82
 slug: emotional-intelligence
-version: '2.0'
+version: '3.0'
 title: Емоційний інтелект та міжособистісні навички
 subtitle: Emotional Intelligence & Interpersonal Skills
 focus: vocabulary
@@ -59,17 +59,17 @@ content_outline:
 - section: Саморефлексія та підсумок (Self-Reflection and Summary)
   words: 600
   points:
-  - Самоаналіз та зворотний зв’язок — vocabulary for self-reflection (саморефлексія) and feedback (зворотний зв’язок); preparation
-    for b1-91 (Feedback) through describing one's own emotional state and reactions.
+  - Самоаналіз та зворотний зв’язок — vocabulary for self-reflection (саморефлексія) and feedback (зворотний зв’язок); 
+    preparation for b1-91 (Feedback) through describing one's own emotional state and reactions.
   - 'Міні-чекпоінт: Лексика B1.5-B1.6 — assessment: self-evaluation of 30+ keywords from modules M52-71; testing the ability
     to form natural collocations with abstract interpersonal nouns.'
 vocabulary_hints:
   required:
-  - емоційний інтелект (emotional intelligence) — розвивати ~, високий/низький рівень ~, складові ~; high-frequency modern
-    usage.
+  - емоційний інтелект (emotional intelligence) — розвивати ~, високий/низький рівень ~, складові ~; high-frequency 
+    modern usage.
   - емпатія (empathy) — проявляти ~, розвинута ~, здатність до ~; implies feeling *with* someone (sharing the emotion).
-  - співчуття (sympathy/compassion) — висловлювати ~, щире ~, глибоке ~; implies feeling *for* someone (pity/concern); State
-    Standard requirement.
+  - співчуття (sympathy/compassion) — висловлювати ~, щире ~, глибоке ~; implies feeling *for* someone (pity/concern); 
+    State Standard requirement.
   - підтримка (support) — надавати ~, шукати ~, моральна ~, взаємна ~; high-frequency usage in crisis and daily life.
   - вибачення (apology) — просити ~, приймати ~, щирі ~; avoid calque 'приносити вибачення'.
   - турбота (care/concern) — проявляти ~, виявляти ~, оточувати ~; key for interpersonal skills.
@@ -102,11 +102,9 @@ connects_to:
 - 'b1-80 (Business Basics)'
 prerequisites:
 - b1-65 (Collocations Expressions)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Conflict Mediator
 grammar:
 - Interpersonal vocabulary collocations
 - Emotional state expressions
 - Advice and support patterns
 register: розмовний
+references: []

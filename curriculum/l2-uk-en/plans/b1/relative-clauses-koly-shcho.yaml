@@ -2,7 +2,7 @@ module: b1-032
 level: B1
 sequence: 32
 slug: relative-clauses-koly-shcho
-version: '2.0'
+version: '3.0'
 title: 'Підрядні означальні: коли, що'
 subtitle: Time and Fact Relative Clauses
 focus: grammar
@@ -33,7 +33,8 @@ content_outline:
   points:
   - 'Критична межа B1: Розрізнення «що» як сполучника (explanatory: я знаю, що...) та «що» як відносного займенника (relative:
     книга, що лежить...).'
-  - Вживання «що» з абстрактними іменниками та вказівними словами (те, що...; все, що...), аналіз конструкції «дарма, що».
+  - Вживання «що» з абстрактними іменниками та вказівними словами (те, що...; все, що...), аналіз конструкції «дарма, 
+    що».
   - 'Стилістика та евфонія: Вибір між «що» та «який» для уникнення тавтології та накопичення приголосних («k-heavy» речення).'
 - section: Порівняльний аналіз та типові помилки (Comparative Analysis and Common Errors)
   words: 800
@@ -81,11 +82,9 @@ connects_to:
 - b1-33 (Purpose Clauses щоб + infinitive)
 prerequisites:
 - 'b1-29 (Indefinite Negative Pronouns)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Storyteller
 grammar:
 - Time relatives with коли (when)
 - Fact relatives with що as relative pronoun
 - 'Distinction: relative що vs conjunction що'
 register: розмовний
+references: []

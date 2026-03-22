@@ -2,7 +2,7 @@ module: b1-086
 level: B1
 sequence: 86
 slug: regions-center
-version: '2.0'
+version: '3.0'
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
 focus: culture
@@ -26,15 +26,15 @@ content_outline:
   points:
   - 'Poltava as the ''spiritual capital'' and birthplace of modern Ukrainian: the legacy of Ivan Kotlyarevsky and the vernacular
     impact of ''Eneida'' (State Standard §3.15).'
-  - The role of the Poltava dialect as the foundational standard for the national language; connecting the region's literary
-    tradition to modern identity.
+  - The role of the Poltava dialect as the foundational standard for the national language; connecting the region's 
+    literary tradition to modern identity.
 - section: 'Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack Heart and Hetman Glory)'
   words: 1100
   points:
   - 'Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic capital under Bohdan Khmelnytsky and
     the ''Hetmanate'' concept.'
-  - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining the region as the 'Land of Bohdan and
-    Taras' and its historical significance.
+  - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining the region as the 'Land of Bohdan
+    and Taras' and its historical significance.
 - section: 'Київ: Від княжої столиці до європейського центру (Kyiv: From Princely Capital to European Center)'
   words: 900
   points:
@@ -83,11 +83,9 @@ connects_to:
 - b1-84 (Regions East)
 prerequisites:
 - 'b1-82 (Emotional Intelligence)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Cherkasy Historian
 grammar:
 - Reading comprehension strategies
 - Cultural vocabulary in context
 - Historical vocabulary patterns
 register: розмовний
+references: []

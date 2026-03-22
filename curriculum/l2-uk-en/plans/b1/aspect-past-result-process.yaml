@@ -2,7 +2,7 @@ module: b1-011
 level: B1
 sequence: 11
 slug: aspect-past-result-process
-version: '2.0'
+version: '3.0'
 title: 'Вид у минулому: результат і процес'
 subtitle: 'Aspect in Past: Result vs Process'
 focus: grammar
@@ -14,15 +14,6 @@ objectives:
 - Learner can explain duration markers with imperfective
 - Learner can select aspect based on speaker's focus (result vs activity)
 - Learner recognizes completion markers with perfective
-sources:
-- name: Ukrainian State Standard 2024 - Aspect and Result
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on result-oriented aspect usage
-- name: Ukrainian Grammar - Aspect
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Process vs result distinction in Ukrainian
 content_outline:
 - section: Діагностичний тест (Diagnostic Test)
   words: 600
@@ -75,8 +66,8 @@ content_outline:
     Standard.'
 vocabulary_hints:
   required:
-  - результат (result) — досягти результату, головний результат, результат роботи, чекати на результат; High frequency/General
-    Corpus.
+  - результат (result) — досягти результату, головний результат, результат роботи, чекати на результат; High 
+    frequency/General Corpus.
   - процес (process) — у процесі, навчальний процес, тривалий процес, контролювати процес; High frequency.
   - завершення (completion) — успішне завершення, після завершення, етап завершення; Medium frequency/Academic & Formal.
   - тривалість (duration) — середня тривалість, тривалість життя, тривалість дії; Medium frequency/Formal.
@@ -95,29 +86,31 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Result or process aspect?
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Duration markers with imperfective
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Add result marker → change to perfective
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Narrative with result/process focus
-  items: 10+
+  items: 10
 connects_to:
 - b1-09 (Aspect in future)
 - b1-14 (Aspect integration practice)
 prerequisites:
 - 'b1-08 (Stress Mobility Euphony)'
 - 'b1-09 (Aspect Complete System)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Crime Scene Investigator
 grammar:
 - Result-oriented vs process-oriented aspect
 - Duration markers and aspect
 - Completed actions vs ongoing processes
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Aspect and Result
+  url: https://mon.gov.ua/
+  notes: Official guidance on result-oriented aspect usage
+- title: Ukrainian Grammar - Aspect
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  notes: Process vs result distinction in Ukrainian

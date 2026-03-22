@@ -2,7 +2,7 @@ module: b1-094
 level: B1
 sequence: 94
 slug: cycling-water
-version: '2.0'
+version: '3.0'
 title: Велосипед та водні види
 subtitle: Cycling and Water Sports
 focus: culture
@@ -83,11 +83,9 @@ connects_to:
 - b1-92 (Running In Ukraine)
 prerequisites:
 - b1-90 (Sports In Ukraine)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Dnipro Kayak Guide
 grammar:
 - Cycling and water sports vocabulary
 - Rental and safety language
 - Describing activities
 register: розмовний
+references: []

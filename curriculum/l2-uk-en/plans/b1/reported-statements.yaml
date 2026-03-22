@@ -2,7 +2,7 @@ module: b1-043
 level: B1
 sequence: 43
 slug: reported-statements
-version: '2.0'
+version: '3.0'
 title: 'Непряма мова: твердження'
 subtitle: Reported Statements
 focus: grammar
@@ -18,14 +18,15 @@ content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - Introduction to reporting speech in Ukrainian, aligning with State Standard §4.4.3 for complex sentences with declarative
-    indirect speech.
+  - Introduction to reporting speech in Ukrainian, aligning with State Standard §4.4.3 for complex sentences with 
+    declarative indirect speech.
   - 'Cultural hook: The concept of Oral History (Усна історія) and how «Люди кажуть...» (People say) served as a trusted unofficial
     truth in Ukrainian culture.'
 - section: Діагностика (Diagnostic Test)
   words: 600
   points:
-  - Diagnostic quiz identifying direct vs. indirect speech structures in simple narratives to establish baseline competency.
+  - Diagnostic quiz identifying direct vs. indirect speech structures in simple narratives to establish baseline 
+    competency.
   - 'Identification task: Spotting the mandatory conjunction «що» in reported statements vs. English optional ''that'' patterns.'
   - Self-assessment exercises on basic pronoun shifts (e.g., changing speaker 'I' to reported 'he/she').
 - section: Граматичне пояснення (Grammar Explanation)
@@ -91,11 +92,9 @@ connects_to:
 - b1-43 (Reported Statements)
 prerequisites:
 - b1-41 (Temporal Clauses)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Court Reporter
 grammar:
 - Converting direct speech to indirect speech
 - Він сказав, що... constructions
 - Tense and pronoun changes
 register: розмовний
+references: []

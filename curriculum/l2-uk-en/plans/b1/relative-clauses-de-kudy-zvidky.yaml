@@ -2,7 +2,7 @@ module: b1-031
 level: B1
 sequence: 31
 slug: relative-clauses-de-kudy-zvidky
-version: '2.0'
+version: '3.0'
 title: 'Підрядні означальні: де, куди, звідки'
 subtitle: Place Relative Clauses
 focus: grammar
@@ -83,11 +83,9 @@ connects_to:
 - 'b1-29 (Indefinite Negative Pronouns)'
 prerequisites:
 - 'b1-29 (Indefinite Negative Pronouns)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Geographer
 grammar:
 - Place relatives with де (where - location)
 - Place relatives with куди (where - direction to)
 - Place relatives with звідки (where - direction from)
 register: розмовний
+references: []

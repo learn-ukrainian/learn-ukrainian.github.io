@@ -2,7 +2,7 @@ module: b1-056
 level: B1
 sequence: 56
 slug: checkpoint-advanced-grammar
-version: '2.0'
+version: '3.0'
 title: 'Контрольна точка: Просунута граматика'
 subtitle: Advanced Grammar Phase Checkpoint
 focus: checkpoint
@@ -25,7 +25,8 @@ content_outline:
 - section: 'Дієприслівники: Динаміка та помилки (Adverbial Participles: Dynamics and Errors)'
   words: 650
   points:
-  - Диференціація недоконаного (-ючи, -ачи) та доконаного (-вши, -ши) видів для вираження одночасності чи послідовності дій.
+  - Диференціація недоконаного (-ючи, -ачи) та доконаного (-вши, -ши) видів для вираження одночасності чи послідовності 
+    дій.
   - 'Аналіз типової помилки (Dangling Participle): чому конструкція «Йдучи додому, почався дощ» є граматично хибною та як
     її виправити.'
   - Практика узгодження дієприслівникового звороту з підметом основного речення для забезпечення природності мовлення.
@@ -34,7 +35,8 @@ content_outline:
   points:
   - 'Виправлення кальок з російської мови: заміна ''сидячих студентів'' та ''читаючих дівчат'' на природні конструкції з відносним
     займенником (''який сидить'', ''що читає'').'
-  - Вживання активних дієприкметників минулого часу на -лий (пожовкле листя, зблідле обличчя) як стилістично правильної альтернативи.
+  - Вживання активних дієприкметників минулого часу на -лий (пожовкле листя, зблідле обличчя) як стилістично правильної 
+    альтернативи.
   - Узгодження дієприкметників з іменниками у роді, числі та відмінку в структурі дієприкметникового звороту.
 - section: Пасивні конструкції та безособові форми (Passive Constructions and Impersonal Forms)
   words: 650
@@ -99,11 +101,9 @@ connects_to:
 - 'b1-66 (Abstract Concepts Ideas)'
 prerequisites:
 - b1-55 (Integrated Grammar Lab)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: University Philologist
 grammar:
 - Integration of M42-M50
 - Participles, passive voice, diminutives, numerals
 - Comprehensive review and testing
 register: розмовний
+references: []

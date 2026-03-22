@@ -2,7 +2,7 @@ module: b1-027
 level: B1
 sequence: 27
 slug: motion-practice-integration
-version: '2.0'
+version: '3.0'
 title: 'Дієслова руху: практика та інтеграція'
 subtitle: 'Motion verbs: practice and integration'
 focus: grammar
@@ -13,19 +13,6 @@ objectives:
 - Master complex travel narratives
 - Correctly use prepositions with specific motion prefixes
 - Learner can use high-frequency motion idioms in context
-sources:
-- name: Ukrainian State Standard 2024 - Motion and Prepositions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on preposition-verb combinations
-- name: Ukrainian Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Comprehensive motion verb reference
-- name: Ukrainian Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
-  type: reference
-  notes: Preposition usage with motion verbs
 content_outline:
 - section: 'Вступ: Перевірка та мотивація (Introduction: Testing and Motivation)'
   words: 400
@@ -84,16 +71,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Extended writing - "A journey I took"
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Map-based - Give complex directions
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Change direction/destination
-  items: 12+
+  items: 12
 - type: quiz
   focus: Preposition + motion verb combinations
-  items: 15+
+  items: 15
 connects_to:
 - b1-25 (Checkpoint - motion verbs)
 prerequisites:
@@ -105,13 +92,18 @@ prerequisites:
 - b1-21 (Motion - figurative uses)
 - b1-22 (Motion full prefix integration)
 - b1-23 (Motion patterns in other verbs)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Travel Blogger
 grammar:
 - Integration of pure and prefixed motion verbs
 - Prepositions governing motion (в, на, до, через, повз)
 - Figurative idioms with motion verbs
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  notes: Official guidance on preposition-verb combinations
+- title: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  notes: Comprehensive motion verb reference
+- title: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  notes: Preposition usage with motion verbs

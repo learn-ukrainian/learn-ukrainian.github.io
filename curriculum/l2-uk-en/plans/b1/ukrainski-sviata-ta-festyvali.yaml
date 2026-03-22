@@ -2,7 +2,7 @@ module: b1-097
 level: B1
 sequence: 97
 slug: ukrainski-sviata-ta-festyvali
-version: '2.0'
+version: '3.0'
 title: Українські свята та фестивалі
 subtitle: Ukrainian Holidays and Festivals
 focus: culture
@@ -93,11 +93,9 @@ connects_to:
 - b1-03 (News Reading)
 prerequisites:
 - b1-96 (Ukrainian Cuisine)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Ethno-Festival Organizer
 grammar:
 - Holiday and celebration vocabulary
 - Traditions and customs language
 - Calendar and date expressions
 register: розмовний
+references: []

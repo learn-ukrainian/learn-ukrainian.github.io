@@ -2,7 +2,7 @@ module: b1-021
 level: B1
 sequence: 21
 slug: motion-passing-crossing
-version: '2.0'
+version: '3.0'
 title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
 focus: grammar
@@ -13,15 +13,6 @@ objectives:
 - Learner can use пере- for crossing
 - Learner can use про- for passing through/by
 - Learner can use об- for going around
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for crossing/passing
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: пере-, про-, об- semantics
 content_outline:
 - section: Вступ (Introduction)
   words: 400
@@ -89,30 +80,32 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: пере- vs про- vs об- selection
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Route descriptions with correct prefixes
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Change movement type (cross → pass → around)
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Narrative describing a journey
-  items: 12+
+  items: 12
 - type: match-up
   focus: Situation → prefixed verb
-  items: 12+
+  items: 12
 connects_to:
 - b1-19 (Motion - starting & returning)
 - b1-22 (Motion full prefix integration)
 prerequisites:
 - 'b1-19 (Motion Verbs Full System)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Kyiv Traffic Controller
 grammar:
 - Prefixes пере-, про-, об-
 - Crossing, passing, going around patterns
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  notes: Official prefix meanings for crossing/passing
+- title: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  notes: пере-, про-, об- semantics

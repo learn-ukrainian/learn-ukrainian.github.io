@@ -2,7 +2,7 @@ module: b1-022
 level: B1
 sequence: 22
 slug: motion-starting-returning
-version: '2.0'
+version: '3.0'
 title: 'Рух: початок і повернення'
 subtitle: Motion - Starting & Returning
 focus: grammar
@@ -13,21 +13,12 @@ objectives:
 - Learner can use по- for starting movement
 - Learner can use за- for stopping by
 - Learner can use роз- for dispersing
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for starting/returning
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: по-, за-, роз- semantics
 content_outline:
 - section: Вступ та Діагностика (Introduction & Diagnostics)
   words: 600
   points:
-  - Introduction to the logic of starting, visiting, and dispersing in Ukrainian movement verbs, building on the passing concepts
-    from b1-18.
+  - Introduction to the logic of starting, visiting, and dispersing in Ukrainian movement verbs, building on the passing
+    concepts from b1-18.
   - 'Diagnostic dialogue: A chaotic morning commute scenario involving trying to ''зайти'' into a full marshrutka and needing
     to ''заскочити'' into a kiosk.'
   - 'Intuition check: Evaluating the learner''s initial grasp of the ''по-'' prefix for starting movement (''піти'' vs ''йти'')
@@ -65,7 +56,8 @@ content_outline:
 - section: Комплексна практика та підсумок (Comprehensive Practice & Summary)
   words: 700
   points:
-  - Prefix selection drills focusing on the choice between 'йти' and 'їхати' when combined with 'по-', 'за-', and 'роз-' semantics.
+  - Prefix selection drills focusing on the choice between 'йти' and 'їхати' when combined with 'по-', 'за-', and 'роз-'
+    semantics.
   - 'Colloquial usage: mastering the ''pop-in'' culture through high-frequency usage of ''заскочити'' for quick coffee or
     errands.'
   - 'Summary of the movement arc: from ''початок'' (departure rituals) through intermediate stops to the final dispersal of
@@ -92,27 +84,29 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: по- vs за- vs роз- selection
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Narratives about meetings and departures
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Start → stop by → disperse sequence
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Story about a gathering
-  items: 12+
+  items: 12
 connects_to:
 - b1-20 (Motion - approaching & departing)
 - b1-22 (Motion full prefix integration)
 prerequisites:
 - b1-21 (Motion - passing & crossing)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Commuter
 grammar:
 - Prefixes по-, за-, роз-
 - Starting, stopping by, dispersing patterns
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  notes: Official prefix meanings for starting/returning
+- title: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  notes: по-, за-, роз- semantics

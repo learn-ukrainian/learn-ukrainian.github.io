@@ -2,7 +2,7 @@ module: b1-078
 level: B1
 sequence: 78
 slug: emotions-deep-dive
-version: '2.0'
+version: '3.0'
 title: 'Емоції: глибоке занурення'
 subtitle: 'Emotions: Deep Dive'
 focus: vocabulary
@@ -18,15 +18,15 @@ content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - Introduce the 'Psychotherapist' persona who guides the learner through the inner landscape of emotions; introduce the
-    cultural hook of Cordocentrism (heart-centered worldview) based on Skovoroda and Yurkevych.
+  - Introduce the 'Psychotherapist' persona who guides the learner through the inner landscape of emotions; introduce 
+    the cultural hook of Cordocentrism (heart-centered worldview) based on Skovoroda and Yurkevych.
   - 'Thematic framing: ''Listen to your heart'' (Слухай своє серце) as a gateway to discussing feelings, character traits,
     and relationships as mandated by State Standard §3.'
 - section: Лексико-граматичні нюанси (Lexico-Grammatical Nuances)
   words: 1000
   points:
-  - Contrast the Dative Experiencer structure (Мені сумно, Тобі радісно) with the Nominative Agent structure (Я сумую, Ти
-    радієш); model the shift from simple verb structures to complex state descriptions.
+  - Contrast the Dative Experiencer structure (Мені сумно, Тобі радісно) with the Nominative Agent structure (Я сумую, 
+    Ти радієш); model the shift from simple verb structures to complex state descriptions.
   - 'Integrate State Standard §4.2.2 requirements: Genitive of cause (стрибати з радості, почервоніти від сорому) and Instrumental
     of object (захоплюватися музикою/мистецтвом).'
   - 'Intensity and Nuance: Distinguish between the ''General Sadness'' (сум), the ''Poetic Yearning'' (туга), and the ''Total
@@ -34,11 +34,12 @@ content_outline:
 - section: Тексти та культурний контекст (Texts and Cultural Context)
   words: 1200
   points:
-  - Reading analysis of high-frequency emotional states (радість, захоплення, тривога); integrate modern context for 'тривога'
-    (air raid sirens/anxiety) vs historical 'бити на сполох'.
-  - Introduce 'Зажура' (Zazhura) as a uniquely Ukrainian poetic state of 'sweet sadness' or connection to memory often found
-    in folklore, contrasting it with clinical states.
-  - Analyze authentic expressions of 'щира радість' and 'праведний гнів' in narrative texts to build stylistic awareness.
+  - Reading analysis of high-frequency emotional states (радість, захоплення, тривога); integrate modern context for 
+    'тривога' (air raid sirens/anxiety) vs historical 'бити на сполох'.
+  - Introduce 'Зажура' (Zazhura) as a uniquely Ukrainian poetic state of 'sweet sadness' or connection to memory often 
+    found in folklore, contrasting it with clinical states.
+  - Analyze authentic expressions of 'щира радість' and 'праведний гнів' in narrative texts to build stylistic 
+    awareness.
 - section: Комунікативна практика (Communicative Practice)
   words: 1000
   points:
@@ -59,10 +60,10 @@ vocabulary_hints:
   required:
   - радість (joy) — щира/непідробна радість, стрибати з радості, сльози радості; High frequency/Corpora
   - смуток (sadness) — глибокий смуток, смуток охопив, розвіяти смуток, світлий смуток; Lit/Formal frequency
-  - тривога (anxiety/alarm) — відчувати тривогу, бити на сполох, повітряна тривога, тривога наростає; High frequency in modern
-    context
-  - захоплення (admiration/excitement) — викликати захоплення, дивитися із захопленням, щире захоплення, не приховувати захоплення;
-    High frequency spoken
+  - тривога (anxiety/alarm) — відчувати тривогу, бити на сполох, повітряна тривога, тривога наростає; High frequency in 
+    modern context
+  - захоплення (admiration/excitement) — викликати захоплення, дивитися із захопленням, щире захоплення, не приховувати 
+    захоплення; High frequency spoken
   - розчарування (disappointment) — гірке розчарування, спіткало розчарування, глибоке розчарування
   - гнів (anger) — праведний гнів, приборкати гнів, спалах гніву, гнів палає
   - страх (fear) — відчувати страх, долати страх, заціпеніти від страху
@@ -92,11 +93,9 @@ connects_to:
 - b1-76 (Environment Ecology)
 prerequisites:
 - b1-74 (Society Politics)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Psychotherapist
 grammar:
 - Emotional vocabulary collocations
 - Register differences in emotional expression
 - Intensity modifiers with emotions
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-042
 level: B1
 sequence: 42
 slug: complex-sentence-integration
-version: '2.0'
+version: '3.0'
 title: Інтеграція складних речень
 subtitle: Complex Sentence Integration
 focus: grammar
@@ -92,11 +92,9 @@ connects_to:
 - 'b1-42 (Complex Sentence Integration)'
 prerequisites:
 - b1-40 (Causal Result Clauses)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Novel Editor
 grammar:
 - Combining multiple clause types
 - Coordination and subordination together
 - Multi-clause sentence management
 register: розмовний
+references: []

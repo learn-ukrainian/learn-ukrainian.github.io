@@ -2,7 +2,7 @@ module: b1-072
 level: B1
 sequence: 72
 slug: describing-changes
-version: '2.0'
+version: '3.0'
 title: Опис змін
 subtitle: Describing Changes
 focus: vocabulary
@@ -20,7 +20,8 @@ content_outline:
   points:
   - 'Introduction to the Climate Scientist persona: setting a professional tone for describing environmental and social shifts
     according to State Standard §3.14.'
-  - Distinguishing between dynamic processes (*процес*) and static results (*результат*) in Ukrainian descriptive grammar.
+  - Distinguishing between dynamic processes (*процес*) and static results (*результат*) in Ukrainian descriptive 
+    grammar.
   - 'Temporal perspectives: defining the scale of change from gradual (*поступово*) to sudden (*різко*) or rapid (*стрімко*).'
 - section: Презентація та граматичні нюанси (Presentation and Grammatical Nuances)
   words: 1000
@@ -55,14 +56,15 @@ content_outline:
   - 'Guided production: learners describe a significant change in their hometown or professional field using at least 10 verbs/adverbs
     from the required list.'
   - 'Refining nuances: choosing between *поступово*, *різко*, and *стрімко* to accurately convey the speed of transformation.'
-  - Final recap of case governance (*перетворюватися на...*) and the contrast between physical and abstract growth verbs.
+  - Final recap of case governance (*перетворюватися на...*) and the contrast between physical and abstract growth 
+    verbs.
 vocabulary_hints:
   required:
-  - зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; high frequency in news/econ; contrast with physical
-    *рости*
+  - зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; high frequency in news/econ; contrast with 
+    physical *рости*
   - зменшуватися (to decrease) — *кількість/відстань/ризик зменшується*; common for gradual reduction
-  - змінюватися (to change [itself]) — *погода/ситуація/часи змінюються*; intransitive/reflexive; contrast with transitive
-    *змінювати*
+  - змінюватися (to change [itself]) — *погода/ситуація/часи змінюються*; intransitive/reflexive; contrast with 
+    transitive *змінювати*
   - 'змінювати (to change [something]) — *змінювати план/назву/пароль*; transitive, requires Accusative; error: do not use
     ''до'''
   - перетворюватися на (to transform into) — *місто перетворюється на культурний хаб*; requires Accusative governance
@@ -94,11 +96,9 @@ connects_to:
 - b1-73 (Media News)
 prerequisites:
 - 'b1-71 (Discourse Markers Advanced)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Climate Scientist
 grammar:
 - Verb collocations for describing change
 - Adverbs of manner with change verbs
 - Temporal expressions for change processes
 register: розмовний
+references: []

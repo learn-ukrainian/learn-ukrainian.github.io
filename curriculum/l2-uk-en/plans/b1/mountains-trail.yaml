@@ -2,7 +2,7 @@ module: b1-093
 level: B1
 sequence: 93
 slug: mountains-trail
-version: '2.0'
+version: '3.0'
 title: Гори та трейлраннінг
 subtitle: Hiking and Trail Running in the Carpathians
 focus: culture
@@ -92,11 +92,9 @@ connects_to:
 - b1-91 (Active Lifestyle)
 prerequisites:
 - b1-89 (Technology And Startups)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Carpathian Trail Guide
 grammar:
 - Mountain and trail vocabulary
 - Weather and nature descriptions
 - Planning and directions
 register: розмовний
+references: []

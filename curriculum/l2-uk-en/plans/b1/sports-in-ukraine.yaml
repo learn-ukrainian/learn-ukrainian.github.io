@@ -2,7 +2,7 @@ module: b1-090
 level: B1
 sequence: 90
 slug: sports-in-ukraine
-version: '2.0'
+version: '3.0'
 title: Спорт в Україні
 subtitle: Spectator Sports and Ukrainian Athletes
 focus: culture
@@ -89,11 +89,9 @@ connects_to:
 - b1-88 (Ukrainian Cinema And Tv)
 prerequisites:
 - b1-86 (Regions Center)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Olympiad Commentator
 grammar:
 - Sports vocabulary
 - Discussing achievements and competitions
 - Expressing support and opinions
 register: розмовний
+references: []

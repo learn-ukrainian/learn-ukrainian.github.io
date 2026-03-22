@@ -2,7 +2,7 @@ module: b1-077
 level: B1
 sequence: 77
 slug: health-wellness
-version: '2.0'
+version: '3.0'
 title: Здоров'я та самопочуття
 subtitle: Health and Wellness
 focus: vocabulary
@@ -90,11 +90,9 @@ connects_to:
 - 'b1-75 (Professional Communication)'
 prerequisites:
 - b1-73 (Media News)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Family Doctor
 grammar:
 - Noun collocations with health vocabulary
 - Adjective-noun agreement in health contexts
 - Expressing physical states
 register: розмовний
+references: []

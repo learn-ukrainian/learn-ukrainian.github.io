@@ -2,7 +2,7 @@ module: b1-099
 level: B1
 sequence: 99
 slug: interviu-ta-podkasty
-version: '2.0'
+version: '3.0'
 title: Інтерв'ю та подкасти
 subtitle: Interviews & Podcasts — Introduction to Listening
 focus: skills
@@ -56,20 +56,22 @@ content_outline:
 - section: 'Підсумок: Слухай щодня (Conclusion: Listen Daily)'
   words: 400
   points:
-  - Рефлексія над розвитком навички від B1 (структуровані тексти) до B2 (готовність до швидкого темпу, різних акцентів та
-    абстрактних тем).
+  - Рефлексія над розвитком навички від B1 (структуровані тексти) до B2 (готовність до швидкого темпу, різних акцентів 
+    та абстрактних тем).
   - 'Фінальна порада: регулярність як ключ до успіху — рекомендація підписатися на свіжі випуски «Громадського» або «Подкаст
     Підкаст» для постійного занурення в живе мовне середовище.'
 vocabulary_hints:
   required:
-  - інтерв'ю (interview) — брати інтерв'ю (to interview), давати інтерв'ю (to give an interview), ексклюзивне інтерв'ю; High
-    frequency media term
-  - подкаст (podcast) — слухати подкаст, записувати подкаст, випуск подкасту, підписатися на подкаст; Modern media staple
-  - ведучий / ведуча (host) — ведучий програми, телеведучий, радіоведучий, питання від ведучого; Refers to the standard language
-    model
+  - інтерв'ю (interview) — брати інтерв'ю (to interview), давати інтерв'ю (to give an interview), ексклюзивне інтерв'ю; 
+    High frequency media term
+  - подкаст (podcast) — слухати подкаст, записувати подкаст, випуск подкасту, підписатися на подкаст; Modern media 
+    staple
+  - ведучий / ведуча (host) — ведучий програми, телеведучий, радіоведучий, питання від ведучого; Refers to the standard 
+    language model
   - гість / гостя (guest) — запрошений гість, спеціальний гість, гість студії; Often represents more colloquial register
   - 'випуск (episode) — новий випуск, свіжий випуск, спецвипуск; Common collocation: ''новий випуск подкасту'''
-  - посилання (link) — посилання в описі (link in description), активне посилання; Essential for digital content consumption
+  - посилання (link) — посилання в описі (link in description), активне посилання; Essential for digital content 
+    consumption
   - слухати (to listen) — активне слухання (active listening strategy); Distinguish from 'чути' (to hear)
   recommended:
   - нотатки (notes) — робити нотатки під час слухання; Crucial for B1-B2 listening strategies
@@ -95,11 +97,9 @@ connects_to:
 - b1-56 (Checkpoint Grammar Synthesis)
 prerequisites:
 - b1-03 (News Reading)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Podcast Host
 grammar:
 - Listening comprehension strategies
 - Note-taking techniques
 - Spoken discourse markers
 register: розмовний
+references: []

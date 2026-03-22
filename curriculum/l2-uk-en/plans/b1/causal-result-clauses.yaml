@@ -2,7 +2,7 @@ module: b1-040
 level: B1
 sequence: 40
 slug: causal-result-clauses
-version: '2.0'
+version: '3.0'
 title: Причинові та наслідкові речення
 subtitle: Causal and Result Clauses
 focus: grammar
@@ -71,7 +71,8 @@ vocabulary_hints:
   - наслідок (consequence) — logical pair to 'причина'
   - внаслідок (as a result) — Low frequency, formal; 'Внаслідок аварії...'
   recommended:
-  - оскільки (since) — Medium frequency, formal; 'Оскільки ви не відповіли...'; prefer over 'тому що' at start of sentence
+  - оскільки (since) — Medium frequency, formal; 'Оскільки ви не відповіли...'; prefer over 'тому що' at start of 
+    sentence
   - завдяки (thanks to) — positive cause/reason
   - у зв'язку з (in connection with) — formal/official administrative register
   - відтак (hence) — logical consequence in professional/journalistic style
@@ -93,11 +94,9 @@ connects_to:
 - b1-40 (Causal Result Clauses)
 prerequisites:
 - 'b1-38 (Checkpoint Complex Sentences 1)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Science Teacher
 grammar:
 - Causal clauses with тому що, бо, через те що
 - Result clauses with тому, отже, внаслідок
 - Cause-effect transformation
 register: розмовний
+references: []

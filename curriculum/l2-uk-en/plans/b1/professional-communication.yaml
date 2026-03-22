@@ -2,7 +2,7 @@ module: b1-075
 level: B1
 sequence: 75
 slug: professional-communication
-version: '2.0'
+version: '3.0'
 title: Професійна комунікація
 subtitle: Professional & Educational Communication
 focus: vocabulary
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Overview of professional and educational communication needs per State Standard §3.9 and §3.8, covering official employment
-    and educational organization.
+  - Overview of professional and educational communication needs per State Standard §3.9 and §3.8, covering official 
+    employment and educational organization.
   - 'The significance of formal register: The mandatory use of ''Ви'' (capitalized in writing) and the modern Ukrainian shift
     to ''Пане/Пані'' + [Title/Surname] as a marker of identity.'
   - 'Stylistic competence per §4.5.1: Introduction to address etiquette that distinguishes modern Ukrainian sectors from legacy
@@ -38,8 +38,8 @@ content_outline:
 - section: Освітня комунікація та традиції (Educational Communication & Traditions)
   words: 1000
   points:
-  - Academic environment vocabulary (студент, викладач, лекція, семінар, консультація) and the organization of the educational
-    process per Standard §3.8.
+  - Academic environment vocabulary (студент, викладач, лекція, семінар, консультація) and the organization of the 
+    educational process per Standard §3.8.
   - 'Assessment and milestones: Understanding the distinction between ''залік'' (credit/pass) and ''іспит'' (exam) within
     the semester (семестр) structure.'
   - 'Cultural hook: The ''Екватор'' (Equator) tradition celebrating the midpoint of studies (winter of the 3rd year) as a
@@ -115,11 +115,9 @@ connects_to:
 - b1-73 (Media News)
 prerequisites:
 - b1-74 (Society Politics)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Corporate HR Manager
 grammar:
 - Professional vocabulary collocations
 - Formal register expressions
 - Business communication patterns
 register: розмовний
+references: []

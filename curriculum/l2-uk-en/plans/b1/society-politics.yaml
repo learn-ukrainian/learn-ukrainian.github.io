@@ -2,7 +2,7 @@ module: b1-074
 level: B1
 sequence: 74
 slug: society-politics
-version: '2.0'
+version: '3.0'
 title: Суспільство та політика
 subtitle: Society & Politics
 focus: vocabulary
@@ -59,7 +59,8 @@ content_outline:
 - section: Підсумок (Summary)
   words: 200
   points:
-  - Synthesis of high-frequency civic collocations and summary of register distinctions (formal vs. informal political talk).
+  - Synthesis of high-frequency civic collocations and summary of register distinctions (formal vs. informal political 
+    talk).
   - 'Practice recommendations: Encouraging learners to follow Ukrainian news to observe institutional vocabulary in real-time.'
 vocabulary_hints:
   required:
@@ -97,11 +98,9 @@ connects_to:
 - b1-72 (Describing Changes)
 prerequisites:
 - b1-73 (Media News)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Political Analyst
 grammar:
 - Noun collocations with civic vocabulary
 - Political discourse patterns
 - Formal register expressions
 register: розмовний
+references: []

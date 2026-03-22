@@ -2,7 +2,7 @@ module: b1-100
 level: B1
 sequence: 100
 slug: communication-channels
-version: '1.0'
+version: '3.0'
 title: Канали комунікації
 subtitle: Communication Channels — Phone, Email & Formal Letters
 focus: practical
@@ -47,7 +47,8 @@ content_outline:
   points:
   - 'Структура офіційного листа за Стандартом: «шапка», офіційне привітання («Шановний пане/пані»), основна частина, підпис
     («З повагою», «З найкращими побажаннями»).'
-  - Оформлення теми листа (subject line) та робота з прикріпленими файлами (attachment). Фрази «Додаю файл», «Дивіться у вкладенні».
+  - Оформлення теми листа (subject line) та робота з прикріпленими файлами (attachment). Фрази «Додаю файл», «Дивіться у
+    вкладенні».
   - 'Корекція помилки ступенів порівняння в бізнес-стилі: використання «детальніше» або «більш детально» замість кальки «більш
     детальніше».'
   - 'Типові жанри ділового листування: лист-запит, лист-подяка, формальне запрошення на зустріч.'
@@ -104,11 +105,9 @@ connects_to:
 - b1-98 (Novyny Yak Chytaty)
 prerequisites:
 - b1-96 (Ukrainian Cuisine)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: SMM Manager
 grammar:
 - Imperative for polite requests (Зачекайте, Повторіть, Прошу)
 - Question forms (Чи можу я...?, Чи не могли б ви...?)
 - Conditional politeness (Був би вдячний, Я хотів би...)
 register: різні (formal, informal, semi-formal)
+references: []

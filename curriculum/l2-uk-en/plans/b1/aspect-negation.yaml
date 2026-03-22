@@ -2,7 +2,7 @@ module: b1-013
 level: B1
 sequence: 13
 slug: aspect-negation
-version: '2.0'
+version: '3.0'
 title: Вид у запереченні
 subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
 focus: grammar
@@ -14,15 +14,6 @@ objectives:
 - Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
 - Learner can form negative imperatives with correct aspect
 - Learner recognizes exceptions to imperfective preference
-sources:
-- name: Ukrainian State Standard 2024 - Negation and Aspect
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official rules for aspect in negative contexts
-- name: Ukrainian Negation Patterns
-  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
-  type: reference
-  notes: Negation with aspect selection
 content_outline:
 - section: Вступ (Introduction)
   words: 500
@@ -114,14 +105,16 @@ prerequisites:
 - b1-10 (Aspect past)
 - b1-10 (Aspect past)
 - b1-09 (Aspect future)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Defense Lawyer
 grammar:
 - Imperfective preference with не
 - ще не + perfective - expected completion
 - не + imperfective - general negation
 - Negative imperatives - наказові форми
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Negation and Aspect
+  url: https://mon.gov.ua/
+  notes: Official rules for aspect in negative contexts
+- title: Ukrainian Negation Patterns
+  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
+  notes: Negation with aspect selection

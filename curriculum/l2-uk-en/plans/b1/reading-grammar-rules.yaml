@@ -2,13 +2,13 @@ module: b1-003
 level: B1
 sequence: 3
 slug: reading-grammar-rules
-version: '2.1'
+version: '3.0'
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
 focus: integration
 pedagogy: PPP
 phase: B1.0 Bridge
-word_target: 4300
+word_target: 4000
 objectives:
 - Learner can understand standard grammar explanation patterns
 - Learner can follow Ukrainian grammar instructions
@@ -16,15 +16,6 @@ objectives:
 - Learner can recognize activity instruction verbs
 - Learner can understand analytical terminology
 - Learner can distinguish language styles and registers
-sources:
-- name: Ukrainian Grammar Textbooks
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standard patterns used in Ukrainian grammar instruction
-- name: Ukrainian Language Teaching Resources
-  url: https://osvita.ua/
-  type: reference
-  notes: Common instructional language in educational materials
 content_outline:
 - section: 'Вступ: Розуміння освітнього процесу (Introduction: Understanding Educational Process)'
   words: 600
@@ -79,7 +70,8 @@ content_outline:
     — essential for reading grammar explanations and reference materials'
   - 'Title and measurement abbreviations: проф. (професор), с. (сторінка), р. (рік), грн (гривня), м. (місто/метр) — frequent
     in academic and official texts'
-  - 'Abbreviation punctuation rules: when to use periods (т. д.) vs when not (грн, км) — Ukrainian conventions differ from English'
+  - 'Abbreviation punctuation rules: when to use periods (т. д.) vs when not (грн, км) — Ukrainian conventions differ from
+    English'
   - 'Acronyms vs abbreviations: МОН, ЗНО, ООН — how to read and decline acronyms in Ukrainian'
 - section: Практика та підсумок (Practice and Summary)
   words: 300
@@ -100,35 +92,37 @@ vocabulary_hints:
 activity_hints:
 - type: mark-the-words
   focus: Find instruction patterns in grammar text
-  items: 10+
+  items: 10
 - type: true-false
   focus: Statements about grammar patterns
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Complete grammar explanation passages
-  items: 8+
+  items: 8
 - type: match-up
   focus: Activity instruction verb → example activity (виберіть → quiz question)
-  items: 10+
+  items: 10
 - type: quiz
   focus: Identify analytical terms in grammar explanations (контекст, маркер, частота)
-  items: 8+
+  items: 8
 - type: error-correction
   focus: Correct misused style/register terms in grammar explanations
-  items: 6+
+  items: 6
 connects_to:
 - b1-04 (Sentence structure)
 - b1-18 (Metalanguage checkpoint)
 prerequisites:
 - b1-01 (Basic grammar terminology)
 - b1-02 (Language About Verbs)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Law Student
 grammar:
 - Grammar explanation patterns
 - Instruction vocabulary
 - Word formation terms
-module_type: bridge
-immersion: 70-85% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian Grammar Textbooks
+  url: https://mon.gov.ua/
+  notes: Standard patterns used in Ukrainian grammar instruction
+- title: Ukrainian Language Teaching Resources
+  url: https://osvita.ua/
+  notes: Common instructional language in educational materials

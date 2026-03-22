@@ -2,7 +2,7 @@ module: b1-071
 level: B1
 sequence: 71
 slug: discourse-markers-advanced
-version: '2.0'
+version: '3.0'
 title: 'Дискурсивні маркери II: складна організація'
 subtitle: 'Discourse Markers II: Advanced Text Organization'
 focus: vocabulary
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Align text organization strategies with State Standard §4.4.2/§4.5.1 regarding advanced 'вставні слова' (inserted words)
-    and the transition from simple B1 connectors to complex argument structures.
+  - Align text organization strategies with State Standard §4.4.2/§4.5.1 regarding advanced 'вставні слова' (inserted 
+    words) and the transition from simple B1 connectors to complex argument structures.
   - 'Cultural hook: The Kyiv-Mohyla Academy rhetoric tradition (17th-18th c.), where masters like Hryhorii Skovoroda and Theophan
     Prokopovych taught transitional logic and clear speech as essential signs of intellectual wisdom.'
 - section: Презентація лексики (Vocabulary Presentation)
@@ -90,11 +90,9 @@ connects_to:
 - b1-72 (Describing Changes)
 prerequisites:
 - 'b1-70 (Discourse Markers Basic)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Keynote Speaker
 grammar:
 - Advanced discourse markers for text organization
 - Academic and formal connectors
 - Structuring arguments and conclusions
 register: розмовний
+references: []

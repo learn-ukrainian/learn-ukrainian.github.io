@@ -2,7 +2,7 @@ module: b1-049
 level: B1
 sequence: 49
 slug: passive-constructions
-version: '2.0'
+version: '3.0'
 title: 'Пасивні конструкції: повна система'
 subtitle: Passive Constructions - Complete System
 focus: grammar
@@ -20,8 +20,9 @@ content_outline:
   points:
   - 'Overview of the three passive types as defined by State Standard §4.2.3.1 and §4.4.2: Adjectival (participle), Impersonal
     (fact/result), and Reflexive (process/habitual action).'
-  - Diagnostic exercise to identify existing learner patterns, specifically targeting the common error of adding an agent
-    in the instrumental case to impersonal -но/-то constructions (e.g., diagnosing if learners say 'Мною було зроблено').
+  - Diagnostic exercise to identify existing learner patterns, specifically targeting the common error of adding an 
+    agent in the instrumental case to impersonal -но/-то constructions (e.g., diagnosing if learners say 'Мною було 
+    зроблено').
 - section: 'Граматична система: три типи пасиву (Grammar System: Three Passive Types)'
   words: 1000
   points:
@@ -34,8 +35,8 @@ content_outline:
 - section: 'Культурний контекст: боротьба з «канцеляритом» (Cultural Context: Fighting ''Bureaucratese'')'
   words: 800
   points:
-  - Defining 'Kanceliaryt' (bureaucratese) as a remnant of Soviet/Russian-style passive overuse; highlighting the linguistic
-    preference for active voice ('Ми вирішили' vs 'Нами було вирішено').
+  - Defining 'Kanceliaryt' (bureaucratese) as a remnant of Soviet/Russian-style passive overuse; highlighting the 
+    linguistic preference for active voice ('Ми вирішили' vs 'Нами було вирішено').
   - 'Analyzing the ''Agent Error'': Explicitly teaching that forms on -но/-то must NOT have an agent in the instrumental case
     (''Мною зроблено'' - WRONG vs ''Я зробив'' or ''Зроблено'' - RIGHT).'
 - section: Практика та корекція помилок (Practice and Error Correction)
@@ -55,7 +56,8 @@ content_outline:
 vocabulary_hints:
   required:
   - пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані; High frequency in grammar context
-  - активний стан (active voice) — перетворити на активний стан, перевага активного стану; High frequency, stylistic priority
+  - активний стан (active voice) — перетворити на активний стан, перевага активного стану; High frequency, stylistic 
+    priority
   - дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот; High frequency (Education/Standard)
   - -но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено; High frequency (Official/Announcements)
   - зворотний (reflexive) — зворотне дієслово, пасив на -ся
@@ -89,12 +91,10 @@ connects_to:
 - 'b1-53 (Diminutives Master Class)'
 prerequisites:
 - b1-46 (Past Passive Participles 2)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Government Spokesperson
 grammar:
 - Три типи пасивних конструкцій
 - Пасив з дієприкметником (participle passive)
 - Пасив з короткою формою (short form passive)
 - Зворотний пасив (-ся reflexive passive)
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-024
 level: B1
 sequence: 24
 slug: motion-figurative-uses
-version: '2.0'
+version: '3.0'
 title: Переносні значення дієслів руху
 subtitle: Figurative uses of motion verbs
 focus: grammar
@@ -13,19 +13,6 @@ objectives:
 - Learner can recognize figurative uses of motion verbs
 - Learner can use common idiomatic expressions with motion verbs
 - Learner can explain the metaphorical extensions of motion prefixes
-sources:
-- name: Ukrainian State Standard 2024 - Figurative Language
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on idiomatic expressions
-- name: Ukrainian Idioms with Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Фразеологізми
-  type: reference
-  notes: Common figurative expressions with motion verbs
-- name: Slovnyk.UA - Motion Verb Idioms
-  url: https://slovnyk.ua/
-  type: reference
-  notes: Dictionary entries with figurative meanings
 content_outline:
 - section: 'Тест (Initial Test: Literal vs Figurative)'
   words: 400
@@ -70,48 +57,51 @@ content_outline:
     рівень») для закріплення зв''язку з реальним вживанням.'
 vocabulary_hints:
   required:
-  - виходить, що (it turns out that) — виходить, що так; з цього виходить; як не крути, а виходить; High frequency in logical
-    discourse
+  - виходить, що (it turns out that) — виходить, що так; з цього виходить; як не крути, а виходить; High frequency in 
+    logical discourse
   - 'дійти до висновку (reach a conclusion) — дійти до логічного/невтішного висновку; врешті-решт дійти до висновку; Learner
     error: avoid «прийти»'
-  - зайти занадто далеко (go too far) — жарт зайшов занадто далеко; ми зайшли занадто далеко; Medium frequency in conflict/drama
-    contexts
-  - відійти від теми (digress) — трохи відійти від теми; дозвольте відійти від теми; не будемо відходити від суті; High frequency
-    in formal discussions
-  - підійти до питання (approach a question) — серйозно підійти до питання; комплексно підійти до проблеми; з іншого боку
-    підійти; Professional register
-  - обійтися без (do without) — не можу обійтися без кави; обійтися без допомоги; обійдеться вам дорого (price variation);
-    Daily use
-  - перейти до справи (get down to business) — одразу перейти до справи; перейдемо до суті; досить розмов, переходьмо до справи;
-    High frequency in business
-  - пройти через (go through - experience) — пройти через пекло; пройти через випробування; ми через це вже проходили; Emotional
-    register
-  - вийти з ситуації (get out of a situation) — гідно вийти з ситуації; знайти спосіб вийти з кризи; сухим із води вийти (idiom)
-  - зайти в глухий кут (reach a dead end) — переговори зайшли в глухий кут; розслідування зайшло в глухий кут; Common in news/debates
+  - зайти занадто далеко (go too far) — жарт зайшов занадто далеко; ми зайшли занадто далеко; Medium frequency in 
+    conflict/drama contexts
+  - відійти від теми (digress) — трохи відійти від теми; дозвольте відійти від теми; не будемо відходити від суті; High 
+    frequency in formal discussions
+  - підійти до питання (approach a question) — серйозно підійти до питання; комплексно підійти до проблеми; з іншого 
+    боку підійти; Professional register
+  - обійтися без (do without) — не можу обійтися без кави; обійтися без допомоги; обійдеться вам дорого (price 
+    variation); Daily use
+  - перейти до справи (get down to business) — одразу перейти до справи; перейдемо до суті; досить розмов, переходьмо до
+    справи; High frequency in business
+  - пройти через (go through - experience) — пройти через пекло; пройти через випробування; ми через це вже проходили; 
+    Emotional register
+  - вийти з ситуації (get out of a situation) — гідно вийти з ситуації; знайти спосіб вийти з кризи; сухим із води вийти
+    (idiom)
+  - зайти в глухий кут (reach a dead end) — переговори зайшли в глухий кут; розслідування зайшло в глухий кут; Common in
+    news/debates
   recommended:
-  - до мене дійшло (it dawned on me) — нарешті до мене дійшло; тільки зараз дійшло; до нього довго доходить; Colloquial high
-    frequency
-  - вийти на новий рівень (reach a new level) — вийти на якісно новий рівень; стосунки вийшли на новий рівень; Marketing/Growth
-    contexts
+  - до мене дійшло (it dawned on me) — нарешті до мене дійшло; тільки зараз дійшло; до нього довго доходить; Colloquial 
+    high frequency
+  - вийти на новий рівень (reach a new level) — вийти на якісно новий рівень; стосунки вийшли на новий рівень; 
+    Marketing/Growth contexts
   - переносне значення (figurative meaning) — термін для пояснення метафор (Стандарт §4.5.1.1)
   - буквальний зміст (literal meaning) — протиставлення переносним значенням для контекстного аналізу
-  - фразеологізм (phraseological unit) — сталі вирази як «накивати п'ятами», «Гоголем ходити», «вискочити як Пилип з конопель»
+  - фразеологізм (phraseological unit) — сталі вирази як «накивати п'ятами», «Гоголем ходити», «вискочити як Пилип з 
+    конопель»
 activity_hints:
 - type: match-up
   focus: Expression -> meaning
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Use figurative expressions in context
-  items: 12+
+  items: 12
 - type: quiz
   focus: Literal vs figurative motion
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Dialogue with figurative expressions
-  items: 12+
+  items: 12
 - type: true-false
   focus: Literal motion vs figurative expression
-  items: 14+
+  items: 14
 connects_to:
 - b1-22 (Motion full prefix integration)
 - b1-25 (Checkpoint - motion verbs)
@@ -121,13 +111,18 @@ prerequisites:
 - b1-21 (Motion - passing & crossing)
 - b1-19 (Motion - starting & returning)
 - b1-20 (Motion - approaching & departing)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Lviv Poet
 grammar:
 - Idiomatic expressions with motion verbs
 - Figurative vs literal motion
 - Abstract movement vocabulary
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Figurative Language
+  url: https://mon.gov.ua/
+  notes: Official guidance on idiomatic expressions
+- title: Ukrainian Idioms with Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  notes: Common figurative expressions with motion verbs
+- title: Slovnyk.UA - Motion Verb Idioms
+  url: https://slovnyk.ua/
+  notes: Dictionary entries with figurative meanings

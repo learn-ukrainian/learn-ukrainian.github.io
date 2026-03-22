@@ -2,7 +2,7 @@ module: b1-055
 level: B1
 sequence: 55
 slug: integrated-grammar-lab
-version: '2.0'
+version: '3.0'
 title: Інтегрована граматична лабораторія
 subtitle: Integrated Grammar Lab - B1.4 Synthesis
 focus: grammar
@@ -99,12 +99,10 @@ connects_to:
 - b1-56 (Checkpoint Advanced Grammar)
 prerequisites:
 - b1-54 (Numerals Collectives Fractions)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - 'Синтез: дієприкметники + пасив + демінутиви + числівники'
 - Стилістична гнучкість (stylistic flexibility)
 - Перемикання регістрів (register switching)
 - Боротьба з канцеляритом (anti-bureaucratese)
 register: розмовний
+references: []

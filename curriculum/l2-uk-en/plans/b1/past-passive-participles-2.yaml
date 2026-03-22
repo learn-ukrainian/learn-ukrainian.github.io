@@ -2,7 +2,7 @@ module: b1-048
 level: B1
 sequence: 48
 slug: past-passive-participles-2
-version: '2.0'
+version: '3.0'
 title: 'Пасивні дієприкметники: коротка форма'
 subtitle: Past Passive Participles II - Short Forms (-но/-то)
 focus: grammar
@@ -27,8 +27,8 @@ content_outline:
 - section: 'Граматичний аналіз: Утворення та синтаксис (Grammar Analysis: Formation and Syntax)'
   words: 1000
   points:
-  - Formation of -но/-то suffixes from perfective stems to denote completed result; contrast with learner error of using imperfective
-    stems like «писано» or «роблено» as main predicates
+  - Formation of -но/-то suffixes from perfective stems to denote completed result; contrast with learner error of using
+    imperfective stems like «писано» or «роблено» as main predicates
   - 'The Syntax Shift: Detailed explanation of why the object takes the Accusative case («Книгу написано») rather than the
     Nominative, a critical distinction from full passive forms'
   - 'Visual comparison table for learners: Passive Personal («Двері зачинені» - Nom) vs. Impersonal («Двері зачинено» - Acc)
@@ -94,11 +94,9 @@ connects_to:
 - b1-48 (Passive Constructions)
 prerequisites:
 - b1-47 (Past Passive Participles 1)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Art Historian
 grammar:
 - Коротка форма пасивних дієприкметників (-но/-то)
 - Безособові пасивні конструкції
 - Повна vs коротка форма usage
 register: розмовний
+references: []

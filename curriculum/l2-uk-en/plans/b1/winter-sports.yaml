@@ -2,7 +2,7 @@ module: b1-095
 level: B1
 sequence: 95
 slug: winter-sports
-version: '2.0'
+version: '3.0'
 title: Зимові види спорту
 subtitle: Skiing and Snowboarding in Ukraine
 focus: culture
@@ -81,11 +81,9 @@ connects_to:
 - b1-96 (Ukrainian Cuisine)
 prerequisites:
 - b1-91 (Active Lifestyle)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Bukovel Ski Instructor
 grammar:
 - Winter sports vocabulary
 - Weather and conditions
 - Resort and booking language
 register: розмовний
+references: []

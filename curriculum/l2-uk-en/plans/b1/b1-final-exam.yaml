@@ -2,7 +2,7 @@ module: b1-103
 level: B1
 sequence: 103
 slug: b1-final-exam
-version: '1.0'
+version: '3.0'
 title: Фінальний іспит B1
 subtitle: B1 Level Final Assessment
 focus: checkpoint
@@ -55,7 +55,8 @@ content_outline:
     граматиці (вид, рух, синтаксис).'
 vocabulary_hints:
   required:
-  - іспит (exam) — складати/скласти іспит (take/pass), провалити іспит (fail), вступний іспит (entrance exam); висока частотність
+  - іспит (exam) — складати/скласти іспит (take/pass), провалити іспит (fail), вступний іспит (entrance exam); висока 
+    частотність
   - оцінка (grade, assessment) — отримати оцінку, висока/низька оцінка, 12-бальна шкала; висока частотність
   - результат (result) — оголосити результати, результат тесту, позитивний результат; висока частотність
   - бал (point, score) — прохідний бал (passing score), набрати бали, середній бал; ключовий термін оцінювання
@@ -87,11 +88,9 @@ connects_to:
 - b2-01 (Start of B2)
 prerequisites:
 - 'b1-06 (Phonetics Assimilation)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Certification Examiner
 grammar:
 - All B1 grammar (aspect, motion verbs, complex sentences, participles)
 - Vocabulary from M52-86
 - Communication skills from M87-91
 register: нейтральний
+references: []

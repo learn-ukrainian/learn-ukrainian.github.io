@@ -2,7 +2,7 @@ module: b1-051
 level: B1
 sequence: 51
 slug: adverbial-participles-imperfective
-version: '2.0'
+version: '3.0'
 title: Дієприслівники недоконаного виду
 subtitle: Adverbial Participles - Imperfective (-ючи/-ачи)
 focus: grammar
@@ -56,8 +56,8 @@ content_outline:
 - section: Підсумок та самоконтроль (Summary and Self-Control)
   words: 700
   points:
-  - Synthesized review of simultaneity (одночасність) as the hallmark of the imperfective adverbial participle, setting the
-    stage for the contrast with perfective forms in b1-43.
+  - Synthesized review of simultaneity (одночасність) as the hallmark of the imperfective adverbial participle, setting 
+    the stage for the contrast with perfective forms in b1-43.
   - 'Self-correction checklist: A ''Screenwriter’s Checklist'' for learners to verify subject alignment and suffix accuracy
     in their own writing and speech.'
   - 'Final production task: Describing a chaotic or multitasking scene from a film using at least five different imperfective
@@ -99,11 +99,9 @@ connects_to:
 - b1-52 (Adverbial Participles Perfective)
 prerequisites:
 - b1-45 (Checkpoint Complex Sentences 2)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Screenwriter
 grammar:
 - Дієприслівники недоконаного виду
 - Суфікси -ючи/-ачи formation rules
 - Одночасність дій (simultaneous actions)
 register: розмовний
+references: []

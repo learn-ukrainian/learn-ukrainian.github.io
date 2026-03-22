@@ -2,7 +2,7 @@ module: b1-050
 level: B1
 sequence: 50
 slug: one-member-sentences
-version: '2.0'
+version: '3.0'
 title: Односкладні речення
 subtitle: One-Member Sentences in Ukrainian
 focus: grammar
@@ -87,13 +87,10 @@ connects_to:
 - b1-51 (Adverbial Participles — Imperfective)
 prerequisites:
 - b1-48 (Passive Constructions)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Означено-особові речення (definite-personal)
 - Неозначено-особові речення (indefinite-personal)
 - Безособові речення (impersonal)
 - Називні речення (nominal)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

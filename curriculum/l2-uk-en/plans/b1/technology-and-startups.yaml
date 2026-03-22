@@ -2,7 +2,7 @@ module: b1-089
 level: B1
 sequence: 89
 slug: technology-and-startups
-version: '2.0'
+version: '3.0'
 title: Технології та стартапи
 subtitle: Ukraine's Tech Industry and Startup Ecosystem
 focus: culture
@@ -87,11 +87,9 @@ connects_to:
 - b1-87 (Ukrainian Music Today)
 prerequisites:
 - b1-85 (Regions South)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Startup Founder
 grammar:
 - Technology vocabulary
 - Business and startup terminology
 - Discussing trends and innovations
 register: розмовний
+references: []

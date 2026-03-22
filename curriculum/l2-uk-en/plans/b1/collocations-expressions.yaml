@@ -2,7 +2,7 @@ module: b1-065
 level: B1
 sequence: 65
 slug: collocations-expressions
-version: '2.0'
+version: '3.0'
 title: Колокації та вирази
 subtitle: Collocations and Expressions
 focus: vocabulary
@@ -18,16 +18,16 @@ content_outline:
 - section: Вступ та теоретична основа (Introduction and Theoretical Foundation)
   words: 600
   points:
-  - Definition of collocations (сталі словосполучення) as stylistic means per State Standard §4.5.1.1; focus on lexical competence
-    and semantic precision.
+  - Definition of collocations (сталі словосполучення) as stylistic means per State Standard §4.5.1.1; focus on lexical 
+    competence and semantic precision.
   - 'Cultural hook: The richness of Ukrainian synonymy as a tool for precise collocations (e.g., the word ''горизонт'' and
     its 10+ synonyms like ''обрій'', ''небокрай'', ''видноколо'').'
   - 'The concept of ''Natural vs. Unnatural'' combinations: contrast literal translation (calquing) with authentic usage patterns.'
 - section: Основні дієслівні колокації (Core Verb-Noun Collocations)
   words: 1000
   points:
-  - High-frequency clusters for 'Рішення' (приймати, ухвалювати, остаточне, скасувати) and 'Участь' (брати, активна, відмовитися
-    від).
+  - High-frequency clusters for 'Рішення' (приймати, ухвалювати, остаточне, скасувати) and 'Участь' (брати, активна, 
+    відмовитися від).
   - 'Collocations for ''Увага'': the distinction between ''звертати увагу'' (pay attention) and ''приділяти увагу'' (devote/allocate
     attention), plus ''заслуговувати на увагу''.'
   - 'Professional and educational collocations for ''Досвід'': ''набувати досвіду'' (gain), ''ділитися досвідом'' (share),
@@ -36,8 +36,8 @@ content_outline:
 - section: Культура мовлення та боротьба з кальками (Speech Culture and Fighting Calques)
   words: 900
   points:
-  - The problem of 'Surzhyk' arising from literal translation (calquing) of Russian and English structures; emphasis on linguistic
-    decolonization.
+  - The problem of 'Surzhyk' arising from literal translation (calquing) of Russian and English structures; emphasis on 
+    linguistic decolonization.
   - 'Correcting common errors: ''Правильна відповідь'' (not вірна - loyal), ''Вважати, що...'' (not рахувати - count), and
     ''Розплющувати очі'' (not відкривати - door/bottle).'
   - 'Functional distinction in time verbs: ''проводити час'' (leisure), ''витрачати час'' (resource/spend), and ''гаяти час''
@@ -102,11 +102,9 @@ connects_to:
 - b1-79 (Relationships)
 prerequisites:
 - 'b1-62 (Synonymy Speaking Verbs)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Literary Translator
 grammar:
 - Verb-noun collocations
 - Adjective-noun collocations
 - Fixed and semi-fixed expressions
 register: розмовний
+references: []

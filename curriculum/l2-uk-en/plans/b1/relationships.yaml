@@ -2,7 +2,7 @@ module: b1-079
 level: B1
 sequence: 79
 slug: relationships
-version: '2.0'
+version: '3.0'
 title: Стосунки та зв'язки
 subtitle: Relationships and Connections
 focus: vocabulary
@@ -29,15 +29,15 @@ content_outline:
   points:
   - 'Cultural hook: «куми» (godparents) as ''spiritual parents'' with a lifelong duty; explain the depth of this bond which
     often parallels blood kinship.'
-  - Linguistic analysis of the proverb «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are forever)
-    to illustrate social priorities.
+  - Linguistic analysis of the proverb «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are 
+    forever) to illustrate social priorities.
   - 'Narrative text: a story about a family event where godparents play a central role, highlighting the transition from acquaintance
     to spiritual kin.'
 - section: 'Мовна тонкість: Любити чи Кохати? (Linguistic Nuance: To Love or To Love?)'
   words: 800
   points:
-  - The strict semantic boundary between «любити» (family, friends, food, hobbies) and «кохати» (exclusive romantic passion
-    for a partner).
+  - The strict semantic boundary between «любити» (family, friends, food, hobbies) and «кохати» (exclusive romantic 
+    passion for a partner).
   - 'Learner error clinic: correcting the overgeneralization of «кохати» (e.g., «Я кохаю маму» or «Я кохаю борщ») with 5 natural
     substitution drills.'
   - 'Narrative illustration: a comical misunderstanding caused by a foreigner using the wrong ''love'' verb in a romantic
@@ -96,11 +96,9 @@ connects_to:
 - b1-77 (Health Wellness)
 prerequisites:
 - 'b1-75 (Professional Communication)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Family Psychologist
 grammar:
 - Noun collocations with relationship vocabulary
 - Verb patterns with emotional states
 - Preposition usage in relationship contexts
 register: розмовний
+references: []

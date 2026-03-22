@@ -2,7 +2,7 @@ module: b1-034
 level: B1
 sequence: 34
 slug: purpose-shchob-past-form
-version: '2.0'
+version: '3.0'
 title: 'Підрядні речення мети: щоб + минула форма'
 subtitle: Purpose Clauses - Different Subjects
 focus: grammar
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Вступне слово про постановку цілей та прагнення (Standard §4.4.3). Використання приказки «Щоб рибу їсти, треба у воду
-    лізти» як приклад природного вживання конструкції мети.
+  - Вступне слово про постановку цілей та прагнення (Standard §4.4.3). Використання приказки «Щоб рибу їсти, треба у 
+    воду лізти» як приклад природного вживання конструкції мети.
   - 'Концептуальний гачок: Коли ми хочемо чогось не від себе, а від інших. Огляд компетенцій рівня B1 щодо складнопідрядних
     речень.'
 - section: Граматична презентація (Grammar Presentation)
@@ -31,8 +31,8 @@ content_outline:
     без перевантаження термінологією.'
   - 'Ключові дієслова-тригери волевиявлення: хотіти, просити, вимагати, радити, бажати, чекати. Правило: дієслово в підрядному
     реченні завжди узгоджується з новим підметом у роді та числі.'
-  - Аспект та заперечення в конструкціях з «щоб». Як змінюється зміст при використанні доконаного та недоконаного виду («хочу,
-    щоб ти робив» vs «хочу, щоб ти зробив»).
+  - Аспект та заперечення в конструкціях з «щоб». Як змінюється зміст при використанні доконаного та недоконаного виду 
+    («хочу, щоб ти робив» vs «хочу, щоб ти зробив»).
 - section: Типові помилки та контраст (Common Errors & Contrast)
   words: 800
   points:
@@ -88,11 +88,9 @@ connects_to:
 - 'b1-35 (Conditionals Real Yakshcho))'
 prerequisites:
 - b1-33 (Purpose Clauses щоб + infinitive)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Business Analyst
 grammar:
 - щоб + past form for different subjects
 - Subject agreement in subordinate clause
 - Subjunctive mood (умовний спосіб) formation
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-005
 level: B1
 sequence: 5
 slug: ready-for-immersion
-version: '2.0'
+version: '3.0'
 title: Готові до занурення
 subtitle: Metalanguage mastery checkpoint
 focus: integration
@@ -16,15 +16,6 @@ objectives:
 - Learner can use negation and verb form terminology
 - Learner can understand activity instruction verbs
 - Learner can apply analytical terms and style/register concepts
-sources:
-- name: Ukrainian Grammar Textbook Samples
-  url: https://mon.gov.ua/
-  type: primary
-  notes: Authentic grammar explanations for comprehension testing
-- name: CEFR B1 Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: Proficiency standards for checkpoint assessment
 content_outline:
 - section: 'Вступ: Стрибок у занурення (Introduction: The Immersion Leap)'
   words: 400
@@ -103,13 +94,13 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete a full grammar explanation passage
-  items: 15+
+  items: 15
 - type: quiz
   focus: Comprehensive metalanguage review
-  items: 20+
+  items: 20
 - type: match-up
   focus: Term → definition (all in Ukrainian)
-  items: 15+
+  items: 15
 connects_to:
 - b1-09 (Aspect complete system - first full immersion module)
 - b1-15 (Aspect mastery checkpoint)
@@ -118,13 +109,16 @@ prerequisites:
 - b1-02 (Language About Verbs)
 - b1-03 (Reading grammar rules)
 - b1-04 (Sentence structure)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Exchange Student Mentor
 grammar:
 - Integration of all metalanguage from M01-04
 - Reading grammar in Ukrainian
 - Comprehension test
-module_type: checkpoint
-immersion: 70-85% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian Grammar Textbook Samples
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Authentic grammar explanations for comprehension testing
+- title: CEFR B1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  notes: Proficiency standards for checkpoint assessment

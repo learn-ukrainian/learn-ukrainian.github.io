@@ -2,7 +2,7 @@ module: b1-087
 level: B1
 sequence: 87
 slug: ukrainian-music-today
-version: '2.0'
+version: '3.0'
 title: Українська музика сьогодні
 subtitle: Contemporary Ukrainian Music Scene
 focus: culture
@@ -37,8 +37,8 @@ content_outline:
 - section: 'Символи незламності: Пісні про війну (Symbols of Resilience: Songs of War)'
   words: 800
   points:
-  - Історія гімну Січових Стрільців (1914) «Ой у лузі червона калина» та її нове життя після виконання Андрієм Хливнюком у
-    2022 році.
+  - Історія гімну Січових Стрільців (1914) «Ой у лузі червона калина» та її нове життя після виконання Андрієм Хливнюком
+    у 2022 році.
   - Роль музики у підтримці духу армії та благодійні концерти як засіб збору коштів.
   - Аналіз тексту пісень, що стали символами опору, та їхнього впливу на світову спільноту.
 - section: 'Граматична майстерня: Граємо та слухаємо (Grammar Workshop: Playing and Listening)'
@@ -89,11 +89,9 @@ connects_to:
 - b1-85 (Regions South)
 prerequisites:
 - 'b1-83 (Regions West)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Radio DJ
 grammar:
 - Music and arts vocabulary
 - Cultural commentary patterns
 - Expressing preferences
 register: розмовний
+references: []

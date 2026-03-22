@@ -2,7 +2,7 @@ module: b1-041
 level: B1
 sequence: 41
 slug: temporal-clauses
-version: '2.0'
+version: '3.0'
 title: Часові підрядні речення
 subtitle: Temporal Clauses Deep Dive
 focus: grammar
@@ -22,8 +22,8 @@ content_outline:
     (point in time) vs ''поки'' (duration/simultaneity).'
   - 'Self-assessment on the ''Until'' negation trap: test the counter-intuitive use of ''поки не'' + perfective verb versus
     English positive logic.'
-  - Orientation to simultaneous (одночасність) vs sequential (різночасовість) actions, identifying high-frequency connectors
-    found in research.
+  - Orientation to simultaneous (одночасність) vs sequential (різночасовість) actions, identifying high-frequency 
+    connectors found in research.
 - section: 'Пояснення: Одночасність та Тривалість (Explanation: Simultaneity & Duration)'
   words: 1000
   points:
@@ -31,7 +31,8 @@ content_outline:
     (Correct) vs ''Я читав, коли вона спала'' (Incorrect nuance).'
   - 'Grammar of Simultaneous Actions: The requirement for Imperfective aspect (Impf + Impf) to show background continuity
     and parallel events.'
-  - Usage of 'тим часом як' and 'під час того як' for complex narrative layers, expanding beyond basic A2 'коли' constructions.
+  - Usage of 'тим часом як' and 'під час того як' for complex narrative layers, expanding beyond basic A2 'коли' 
+    constructions.
 - section: 'Пояснення: Послідовність та пастка «поки не» (Explanation: Sequence & the «Until» Trap)'
   words: 1000
   points:
@@ -92,11 +93,9 @@ connects_to:
 - b1-41 (Temporal Clauses)
 prerequisites:
 - b1-39 (Concessive Khocha)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Biographer
 grammar:
 - Temporal clauses with коли, після того як, поки
 - 'Sequence markers: перш ніж, як тільки'
 - Simultaneous vs sequential action
 register: розмовний
+references: []

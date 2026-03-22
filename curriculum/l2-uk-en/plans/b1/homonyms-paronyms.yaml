@@ -2,7 +2,7 @@ module: b1-064
 level: B1
 sequence: 64
 slug: homonyms-paronyms
-version: '2.0'
+version: '3.0'
 title: Омоніми та пароніми
 subtitle: 'Homonyms and Paronyms: Look-Alikes and Sound-Alikes'
 focus: vocabulary
@@ -98,13 +98,10 @@ connects_to:
 - b1-65 (Collocations and Expressions)
 prerequisites:
 - b1-63 (Antonyms and Polysemy)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Homonym types (full, homophones, homographs, homoforms)
 - Homonyms vs polysemy distinction
 - Paronym pairs (common Ukrainian pairs)
 - Context-based disambiguation
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

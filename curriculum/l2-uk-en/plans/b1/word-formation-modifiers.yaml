@@ -2,13 +2,13 @@ module: b1-058
 level: B1
 sequence: 58
 slug: word-formation-modifiers
-version: '2.1'
+version: '3.0'
 title: Словотвір прикметників та прислівників
 subtitle: Adjective & Adverb Word Formation
 focus: grammar
 pedagogy: PPP
 phase: B1.7 [Word Formation and Lexicology]
-word_target: 4300
+word_target: 4000
 objectives:
 - Learner can form adjectives using productive Ukrainian suffixes
 - Learner can use adjective prefixes for negation and intensity
@@ -99,13 +99,10 @@ connects_to:
 - 'b1-61 (Synonymy: Thinking Verbs)'
 prerequisites:
 - 'b1-57 (Word Formation: Nouns)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Adjective suffixation (-н-, -ськ-, -ів-, -ист-, -уват-, -еньк-)
 - Adjective prefixation (не-, пре-, над-, за-, без-)
 - Compound adjectives (складні прикметники)
 - Adverb formation (-о/-е, -и, prefix patterns)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

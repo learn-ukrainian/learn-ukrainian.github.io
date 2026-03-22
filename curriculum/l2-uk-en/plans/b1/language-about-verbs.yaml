@@ -2,7 +2,7 @@ module: b1-002
 level: B1
 sequence: 2
 slug: language-about-verbs
-version: '2.0'
+version: '3.0'
 title: Мова про дієслова
 subtitle: Verb-specific terminology for aspect and tense
 focus: integration
@@ -15,24 +15,16 @@ objectives:
 - Learner can describe verb properties using Ukrainian terminology
 - Learner can use negation terminology correctly
 - Learner can identify different verb forms (compound, synthetic, imperative)
-sources:
-- name: Ukrainian State Standard 2024 - Verb System
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official terminology for Ukrainian verb categories
-- name: Ukrainian Verb Aspect (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Overview of aspectual system terminology
 content_outline:
 - section: 'Вступ: Система дієслова (Introduction: The Verb System)'
   words: 400
   points:
-  - The transition from 'learning language' to 'learning ABOUT language' at B1 — why mastering Ukrainian grammar terminology
-    is necessary for reading independent study guides.
+  - The transition from 'learning language' to 'learning ABOUT language' at B1 — why mastering Ukrainian grammar 
+    terminology is necessary for reading independent study guides.
   - 'Alignment with Ukrainian State Standard §4.2.3.1: Introducing ''Дійсний спосіб'' and the three basic tenses (Час) and
     two aspects (Вид).'
-  - Concept of 'Metalanguage Bridge' — using high-frequency grammar terms to decode complex rules in Ukrainian textbooks.
+  - Concept of 'Metalanguage Bridge' — using high-frequency grammar terms to decode complex rules in Ukrainian 
+    textbooks.
 - section: Категорія виду та «внутрішній час» (The Category of Aspect and «Internal Time»)
   words: 800
   points:
@@ -66,8 +58,8 @@ content_outline:
   - 'Defining negation: заперечення, загальне заперечення, заперечна частка ''не''.'
   - 'Learner error: ''Не відкрий'' (Don''t open). Explain the ''Prohibition vs Warning'' rule: Prohibition (заборона) strictly
     requires the Imperfective aspect (''Не відкривай'').'
-  - The terminology of warning/caution (попередження/застереження) — why 'Не відкрий (випадково)' uses the perfective to emphasize
-    the undesired result.
+  - The terminology of warning/caution (попередження/застереження) — why 'Не відкрий (випадково)' uses the perfective to
+    emphasize the undesired result.
 - section: Граматична метамова та читання довідників (Grammatical Metalanguage and Reading Reference Guides)
   words: 400
   points:
@@ -104,19 +96,19 @@ vocabulary_hints:
 activity_hints:
 - type: error-correction
   focus: Correct mistakes in verb terminology usage (wrong aspect label, wrong tense name)
-  items: 8+
+  items: 8
 - type: match-up
   focus: Ukrainian term → definition in Ukrainian
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Describe verb properties using Ukrainian terms
-  items: 10+
+  items: 10
 - type: quiz
   focus: Negation types and contexts (загальне заперечення vs очікувана дія)
-  items: 8+
+  items: 8
 - type: match-up
   focus: 'Verb forms (складна форма: буду читати vs синтетична форма: читатиму)'
-  items: 8+
+  items: 8
 connects_to:
 - b1-03 (Reading grammar rules)
 - 'b1-08 (Stress Mobility Euphony)'
@@ -124,13 +116,15 @@ connects_to:
 prerequisites:
 - b1-01 (Basic grammar terminology)
 - A2 aspect basics (conceptual understanding)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Ukrainian Tutor
 grammar:
 - Aspect terms in Ukrainian
 - Tense terminology in Ukrainian
 - Action concepts for grammar discussion
-module_type: bridge
-immersion: 70-85% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Verb System
+  url: https://mon.gov.ua/
+  notes: Official terminology for Ukrainian verb categories
+- title: Ukrainian Verb Aspect (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  notes: Overview of aspectual system terminology

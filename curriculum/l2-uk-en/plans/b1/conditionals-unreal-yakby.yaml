@@ -2,7 +2,7 @@ module: b1-036
 level: B1
 sequence: 36
 slug: conditionals-unreal-yakby
-version: '2.0'
+version: '3.0'
 title: 'Умовні речення: нереальна умова (якби)'
 subtitle: Unreal Conditionals - Hypothetical Situations
 focus: grammar
@@ -25,7 +25,8 @@ content_outline:
   words: 1200
   points:
   - 'Утворення форм умовного способу: поєднання дієслова у формі минулого часу з часткою «би/б» (§4.2.3.3)'
-  - Функціонування сполучника «якби» як основного маркера нереальності; аналіз емфатичних форм «якби тільки», «якби ж то»
+  - Функціонування сполучника «якби» як основного маркера нереальності; аналіз емфатичних форм «якби тільки», «якби ж 
+    то»
   - 'Контрастивна таблиця: порівняння «якщо» (реальність) та «якби» (ірреальність) — акцент на часових обмеженнях'
   - 'Пояснення структури: обов''язковість минулого часу після «якби» (уникнення кальок з англійської чи інших мов)'
 - section: Культурний контекст (Cultural Context)
@@ -77,11 +78,9 @@ connects_to:
 - 'b1-36 (Conditionals Unreal Yakby)'
 prerequisites:
 - 'b1-34 (Purpose Shchob Past Form))'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Alternative History Author
 grammar:
 - Unreal conditionals with якби
 - Conditional mood (умовний спосіб)
 - Past form + би construction
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-033
 level: B1
 sequence: 33
 slug: purpose-shchob-infinitive
-version: '2.0'
+version: '3.0'
 title: 'Підрядні речення мети: щоб + інфінітив'
 subtitle: Purpose Clauses - Same Subject
 focus: grammar
@@ -18,7 +18,8 @@ content_outline:
 - section: Вступ та діагностичний тест (Introduction & Diagnostic Test)
   words: 600
   points:
-  - Початковий тест на розрізнення сполучників що та щоб, а також перевірка знання інфінітивних конструкцій у простих реченнях.
+  - Початковий тест на розрізнення сполучників що та щоб, а також перевірка знання інфінітивних конструкцій у простих 
+    реченнях.
   - 'Аналіз прикладу зі Державного стандарту (§4.4.3): «Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного
     міста» — розбір структури.'
   - 'Постановка цілей модуля: навчитися висловлювати намір та мету за умови однакового підмета в обох частинах речення.'
@@ -88,11 +89,9 @@ connects_to:
 - b1-30 (Purpose Clauses щоб + past form)
 prerequisites:
 - 'b1-29 (Indefinite Negative Pronouns)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Project Lead
 grammar:
 - щоб + infinitive for same-subject purpose
 - Alternative expressions (для того щоб, аби)
 - When щоб + infinitive is required
 register: розмовний
+references: []

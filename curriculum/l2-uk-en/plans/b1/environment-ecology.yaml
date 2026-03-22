@@ -2,7 +2,7 @@ module: b1-076
 level: B1
 sequence: 76
 slug: environment-ecology
-version: '2.0'
+version: '3.0'
 title: Довкілля та екологія
 subtitle: Environment & Ecology
 focus: vocabulary
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - The concept of modern Ukrainian «еко-свідомість» (eco-consciousness) — introduce the cultural hook of 'Rekava', the Lviv-based
-    startup making biodegradable cups from coffee grounds.
+  - The concept of modern Ukrainian «еко-свідомість» (eco-consciousness) — introduce the cultural hook of 'Rekava', the 
+    Lviv-based startup making biodegradable cups from coffee grounds.
   - 'Setting the scene: Why ecology is a critical topic in Ukraine, framing the Carpathians as the «легені Європи» (lungs
     of Europe) and their role in the continental ecosystem.'
   - 'Statistical shock: Introduce the ''7% Problem'' — landfills in Ukraine occupy territory the size of Denmark (~7%), while
@@ -29,8 +29,8 @@ content_outline:
   points:
   - 'Terminology distinction — addressing the common learner error: when to use the natural «довкілля» vs. the bureaucratic/official
     «навколишнє середовище» (e.g., in ministry titles).'
-  - Natural objects from State Standard §3.14 — categorical vocabulary for forest (ліс), lake (озеро), river (річка), and
-    mountains (гори) using the Carpathians as a recurring example.
+  - Natural objects from State Standard §3.14 — categorical vocabulary for forest (ліс), lake (озеро), river (річка), 
+    and mountains (гори) using the Carpathians as a recurring example.
   - 'Grammar-Vocabulary lock: The word «забруднення» (pollution) and the mandatory Genitive case — drill collocations like
     «забруднення повітря», «забруднення води», and «забруднення ґрунту».'
   - 'Recycling terminology: Explicitly teaching «переробка» or «вторинна переробка» over the anglicism «ресайклінг», emphasizing
@@ -98,11 +98,9 @@ connects_to:
 - b1-74 (Society Politics)
 prerequisites:
 - b1-72 (Describing Changes)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Carpathian Ecologist
 grammar:
 - Environmental vocabulary collocations
 - Cause-effect constructions for ecology
 - Problem-solution patterns
 register: розмовний
+references: []

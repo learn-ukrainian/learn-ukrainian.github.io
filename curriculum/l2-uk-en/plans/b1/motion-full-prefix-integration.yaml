@@ -2,7 +2,7 @@ module: b1-025
 level: B1
 sequence: 25
 slug: motion-full-prefix-integration
-version: '2.0'
+version: '3.0'
 title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
 focus: grammar
@@ -13,19 +13,6 @@ objectives:
 - Master the logic of motion prefixes
 - Distinguish between spatial and resultative meanings
 - Use prefixed verbs in narratives and dialogues
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix system for motion verbs
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: Complete prefix reference with all meanings
-- name: Ukrainian Motion Verbs (Academic)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Academic treatment of motion verb system
 content_outline:
 - section: Діагностичний тест (Diagnostic Test)
   words: 400
@@ -60,8 +47,8 @@ content_outline:
     (exit), and ''переходити'' (transfer).'
   - 'Historical Narrative: The legend of Sultan Osman II at Kamianets-Podilskyi Castle, focusing on the tactical and metaphorical
     meaning of ''відійти'' (to retreat).'
-  - The 'wet spot' of Khotyn and verbs of passing/shedding, integrating 'пройти' (pass through) as both a physical movement
-    and a historical process.
+  - The 'wet spot' of Khotyn and verbs of passing/shedding, integrating 'пройти' (pass through) as both a physical 
+    movement and a historical process.
 - section: Практичне застосування та підсумок (Practical Application and Summary)
   words: 600
   points:
@@ -73,20 +60,20 @@ content_outline:
     (піти vs. походити).'
 vocabulary_hints:
   required:
-  - перейти (cross/switch) — перейти вулицю (cross street), перейти на українську (switch to Ukrainian), перейти межу (cross
-    the line); High frequency
-  - вийти (exit/result) — вийти з дому (leave home), вийти заміж (marry), нічого не вийшло (nothing worked out), вийти сухим
-    із води (get away with it); High frequency
-  - прийти (arrive) — прийти вчасно (arrive on time), прийти до тями (regain consciousness), прийти до висновку (conclude);
+  - перейти (cross/switch) — перейти вулицю (cross street), перейти на українську (switch to Ukrainian), перейти межу 
+    (cross the line); High frequency
+  - вийти (exit/result) — вийти з дому (leave home), вийти заміж (marry), нічого не вийшло (nothing worked out), вийти 
+    сухим із води (get away with it); High frequency
+  - прийти (arrive) — прийти вчасно (arrive on time), прийти до тями (regain consciousness), прийти до висновку 
+    (conclude); High frequency
+  - зайти (enter/drop by) — зайти в магазин (enter shop), зайти в гості (drop by), сонце зайшло (sun set), зайти далеко 
+    (go far - fig.); Med-High frequency
+  - дійти (reach/arrive at limit) — дійти до центру (reach center), дійти згоди (reach agreement), руки не доходять 
+    (never get around to it); Med frequency
+  - пройти (pass through/past) — пройти повз (walk past), біль пройшов (pain passed), пройти курс (complete a course); 
     High frequency
-  - зайти (enter/drop by) — зайти в магазин (enter shop), зайти в гості (drop by), сонце зайшло (sun set), зайти далеко (go
-    far - fig.); Med-High frequency
-  - дійти (reach/arrive at limit) — дійти до центру (reach center), дійти згоди (reach agreement), руки не доходять (never
-    get around to it); Med frequency
-  - пройти (pass through/past) — пройти повз (walk past), біль пройшов (pain passed), пройти курс (complete a course); High
-    frequency
-  - відійти (move away/retreat) — відійти від теми (stray from topic), відійти (retreat/move back — used in legends/military
-    context); Med frequency
+  - відійти (move away/retreat) — відійти від теми (stray from topic), відійти (retreat/move back — used in 
+    legends/military context); Med frequency
   - ввійти/увійти (enter neutral) — ввійти в роль (enter a role), ввійти в історію (make history); neutral entry
   recommended:
   - піти (set off) — unidirectional base + по-; specifically for starting movement
@@ -98,19 +85,19 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Prefix meaning identification
-  items: 20+
+  items: 20
 - type: fill-in
   focus: Combine prefixes with motion verbs
-  items: 15+
+  items: 15
 - type: fill-in
   focus: Add prefix to change meaning
-  items: 12+
+  items: 12
 - type: fill-in
   focus: Story using 10+ prefixed motion verbs
-  items: 15+
+  items: 15
 - type: match-up
   focus: Prefix + verb -> meaning
-  items: 15+
+  items: 15
 connects_to:
 - b1-23 (Motion patterns in other verbs)
 - b1-25 (Checkpoint - motion verbs)
@@ -121,13 +108,18 @@ prerequisites:
 - b1-19 (Motion - starting & returning)
 - b1-20 (Motion - approaching & departing)
 - b1-21 (Motion - figurative uses)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Urban Explorer
 grammar:
 - Prefixes of motion (по-, при-, пі-, за-, ви-, в-, до-, від-, пере-, про-)
 - Aspect pairs in motion (ідти/піти, ходити/сходити)
 - Figurative meanings of prefixed motion verbs
-module_type: grammar
-immersion: 100% Ukrainian
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  notes: Official prefix system for motion verbs
+- title: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  notes: Complete prefix reference with all meanings
+- title: Ukrainian Motion Verbs (Academic)
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  notes: Academic treatment of motion verb system

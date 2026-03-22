@@ -2,7 +2,7 @@ module: b1-038
 level: B1
 sequence: 38
 slug: checkpoint-complex-sentences-1
-version: '2.0'
+version: '3.0'
 title: 'Контрольна точка: складні речення (частина 1)'
 subtitle: Checkpoint - Complex Sentences Part 1
 focus: checkpoint
@@ -20,17 +20,17 @@ content_outline:
   points:
   - 'Review learning objectives focusing on learner autonomy and meta-cognition terms: «оцінювання» (assessment) and «результат»
     (result)'
-  - Frame the milestone using terms «фінальна контрольна точка» and «ключова точка» to establish progress tracking for the
-    B1.3a phase
-  - Explain the importance of self-assessment («самооцінювання») in mastering complex syntax as defined in State Standard
-    §4.4.3
+  - Frame the milestone using terms «фінальна контрольна точка» and «ключова точка» to establish progress tracking for 
+    the B1.3a phase
+  - Explain the importance of self-assessment («самооцінювання») in mastering complex syntax as defined in State 
+    Standard §4.4.3
 - section: Відносні речення та «симфонічний» синтаксис (Relative Clauses and «Symphonic» Syntax)
   words: 1000
   points:
-  - Mastering «який» in all cases; explicitly address the learner error of failure to agree in gender/number (e.g., correcting
-    «Дівчина, який я бачив» to «яку я бачив»)
-  - Syntactic integration of relative adverbs (де, куди, звідки, коли, що) according to Standard §4.4.3 for explanatory subordinate
-    parts
+  - Mastering «який» in all cases; explicitly address the learner error of failure to agree in gender/number (e.g., 
+    correcting «Дівчина, який я бачив» to «яку я бачив»)
+  - Syntactic integration of relative adverbs (де, куди, звідки, коли, що) according to Standard §4.4.3 for explanatory 
+    subordinate parts
   - 'Cultural Hook: Explore the «Symphonic Syntax» of Ukrainian literature (Gogol, Ukrainka); how complex sentences create
     «panoramic» views of reality'
   - 'Correcting «Preposition Stranding»: Address the English habit of ending with prepositions (e.g., «Дім, який я живу в»)
@@ -38,39 +38,44 @@ content_outline:
 - section: Підрядні речення мети (Purpose Clauses)
   words: 800
   points:
-  - Usage of «щоб» + infinitive for identical subjects; mastery checkpoint for purpose clauses defined in the State Standard
-  - Usage of «щоб» + past tense for different subjects; verify correct usage of gendered and plural past forms in subordinate
-    clauses
-  - Contrasting purpose clauses with simple results to ensure logical precision in academic and formal Ukrainian registers
+  - Usage of «щоб» + infinitive for identical subjects; mastery checkpoint for purpose clauses defined in the State 
+    Standard
+  - Usage of «щоб» + past tense for different subjects; verify correct usage of gendered and plural past forms in 
+    subordinate clauses
+  - Contrasting purpose clauses with simple results to ensure logical precision in academic and formal Ukrainian 
+    registers
 - section: 'Умовні речення: Реальні та ірреальні ситуації (Conditionals: Real and Unreal Situations)'
   words: 900
   points:
   - 'Addressing the «Якби vs Якщо» Trap: Detailed drill on real conditionals («якщо») versus unreal/hypothetical situations
     («якби»)'
-  - Correcting the error «Якщо я був би тобою...» to the required «Якби я був тобою...» to reflect the strict distinction
-    in Standard §4.4.3
+  - Correcting the error «Якщо я був би тобою...» to the required «Якби я був тобою...» to reflect the strict 
+    distinction in Standard §4.4.3
   - 'Consolidation of mixed conditionals: Applying distinctions between real possibility and hypothetical scenarios in complex
     narratives'
 - section: Інтеграційний виклик та самоконтроль (Integration Challenge and Self-Control)
   words: 800
   points:
-  - Comprehensive test applying «критерії оцінювання» (assessment criteria) and «формувальне оцінювання» (formative assessment)
+  - Comprehensive test applying «критерії оцінювання» (assessment criteria) and «формувальне оцінювання» (formative 
+    assessment)
   - 'Integration task: Combining relative, purpose, and conditional clauses into «panoramic» paragraphs reflecting authentic
     Ukrainian literary style'
-  - Final error analysis focusing on relative pronoun agreement and preposition placement before relative pronouns to ensure
-    B1.3a readiness
+  - Final error analysis focusing on relative pronoun agreement and preposition placement before relative pronouns to 
+    ensure B1.3a readiness
 vocabulary_hints:
   required:
-  - контрольна точка (checkpoint) — пройти контрольну точку, фінальна контрольна точка, ключова точка; medium frequency, educational/tech
-    context
-  - повторення (review) — інтервальне повторення, повторення вивченого, мати вигляд повторення; high frequency general term
-  - оцінювання (assessment) — критерії оцінювання, формувальне оцінювання, самооцінювання, система оцінювання; key pedagogical
+  - контрольна точка (checkpoint) — пройти контрольну точку, фінальна контрольна точка, ключова точка; medium frequency,
+    educational/tech context
+  - повторення (review) — інтервальне повторення, повторення вивченого, мати вигляд повторення; high frequency general 
     term
-  - інтеграція (integration) — процес інтеграції, інтеграція знань, європейська інтеграція, повна інтеграція; academic/political
-    register
-  - речення (sentence) — складне речення, просте речення, головне/підрядне речення, будувати речення; high frequency linguistic
-    term
-  - результат (result) — досягти результату, кінцевий результат, результат оцінювання; high frequency, critical for autonomy
+  - оцінювання (assessment) — критерії оцінювання, формувальне оцінювання, самооцінювання, система оцінювання; key 
+    pedagogical term
+  - інтеграція (integration) — процес інтеграції, інтеграція знань, європейська інтеграція, повна інтеграція; 
+    academic/political register
+  - речення (sentence) — складне речення, просте речення, головне/підрядне речення, будувати речення; high frequency 
+    linguistic term
+  - результат (result) — досягти результату, кінцевий результат, результат оцінювання; high frequency, critical for 
+    autonomy
   recommended:
   - самооцінювання (self-assessment) — важливий елемент автономного навчання; critical for checkpoint modules
   - прогрес (progress) — відстежувати прогрес, значний прогрес; tracking growth over the module arc
@@ -93,11 +98,9 @@ connects_to:
 - 'b1-38 (Checkpoint Complex Sentences 1)'
 prerequisites:
 - 'b1-36 (Conditionals Unreal Yakby)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Copy Editor
 grammar:
 - Integration of M26-M33 grammar
 - Relative clauses (який, де/куди/звідки, коли/що)
 - Purpose clauses and conditionals
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-067
 level: B1
 sequence: 67
 slug: abstract-concepts-processes
-version: '2.0'
+version: '3.0'
 title: 'Абстрактні концепції: процеси та зміни'
 subtitle: 'Abstract Concepts: Processes and Changes'
 focus: vocabulary
@@ -18,8 +18,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - Establishing the 'Business Consultant' persona to analyze market and social trends, introducing the temporal dimension
-    of change (past, present, future vectors).
+  - Establishing the 'Business Consultant' persona to analyze market and social trends, introducing the temporal 
+    dimension of change (past, present, future vectors).
   - 'Applying the ''Agency Rule'': focusing on how Ukrainians actively drive changes (Ми змінили країну) rather than being
     passive observers, setting the motivational tone for the module.'
 - section: 'Основна лексика: Тренди та динаміка (Core Vocabulary: Trends and Dynamics)'
@@ -43,10 +43,10 @@ content_outline:
 - section: Аналітичне читання та аудіювання (Analytical Reading and Listening)
   words: 1000
   points:
-  - Economic review text practicing 'сталий розвиток' (sustainable development) and 'темпи зростання' (growth rates) in the
-    context of Ukraine's economic transformation.
-  - Historical perspective on 'еволюція поглядів' (evolution of views), using the 2003-2023 geopolitical vector shift as a
-    case study for abstract narration.
+  - Economic review text practicing 'сталий розвиток' (sustainable development) and 'темпи зростання' (growth rates) in 
+    the context of Ukraine's economic transformation.
+  - Historical perspective on 'еволюція поглядів' (evolution of views), using the 2003-2023 geopolitical vector shift as
+    a case study for abstract narration.
   - 'Personal development blog excerpt: applying vocabulary like ''особистісне зростання'' and ''самовдосконалення'' to describe
     individual growth processes.'
 - section: Комунікація та обговорення (Communication and Discussion)
@@ -59,15 +59,16 @@ content_outline:
 - section: Підсумок та закріплення (Summary and Consolidation)
   words: 300
   points:
-  - Recap of the 35+ process words and suffix tools, with practice recommendations for narrating complex developments over
-    time using correct verb-noun pairs.
+  - Recap of the 35+ process words and suffix tools, with practice recommendations for narrating complex developments 
+    over time using correct verb-noun pairs.
   - 'Final reflection activity: learners describe a significant personal or social change using the ''Agency Rule'' and appropriate
     temporal markers.'
 vocabulary_hints:
   required:
   - зміна (change) — радикальна зміна, кліматичні зміни, внести зміни; high frequency (Top 500)
   - розвиток (development) — сталий розвиток, розвиток подій, всебічний розвиток; high frequency (Top 500)
-  - зростання (growth) — економічне зростання, особистісне зростання, темпи зростання; preferred abstract form, avoid 'ріст'
+  - зростання (growth) — економічне зростання, особистісне зростання, темпи зростання; preferred abstract form, avoid 
+    'ріст'
   - перетворення (transformation) — процес перетворення, перетворення енергії; focuses on qualitative shift
   - занепад (decline) — період занепаду, занепад культури, економічний занепад; systemic decline
   - тенденція (tendency/trend) — позитивна тенденція, зберігається тенденція; essential for business/news analysis
@@ -96,11 +97,9 @@ connects_to:
 - b1-68 (Expressing Opinions)
 prerequisites:
 - 'b1-66 (Abstract Concepts Ideas)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Business Consultant
 grammar:
 - Noun collocations with process vocabulary
 - Verb-noun pairs for change descriptions
 - Temporal markers with process words
 register: розмовний
+references: []

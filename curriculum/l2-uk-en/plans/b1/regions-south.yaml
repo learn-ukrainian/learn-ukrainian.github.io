@@ -2,7 +2,7 @@ module: b1-085
 level: B1
 sequence: 85
 slug: regions-south
-version: '2.0'
+version: '3.0'
 title: 'Українські регіони: Південь'
 subtitle: Southern Ukraine - Black Sea Coast and Steppe Heritage
 focus: culture
@@ -18,10 +18,10 @@ content_outline:
 - section: 'Вступ: Море та Степ (Introduction: Sea and Steppe)'
   words: 600
   points:
-  - Introduction to the Southern identity defined by the duality of the Black Sea (Chorne more) and the Sea of Azov (Azovske
-    more) coasts (§3.14)
-  - Defining the 'Steppe' (Степ) and its historical role as the 'Wild Field' (Дике Поле) — a land of freedom where the wind
-    meets the waves
+  - Introduction to the Southern identity defined by the duality of the Black Sea (Chorne more) and the Sea of Azov 
+    (Azovske more) coasts (§3.14)
+  - Defining the 'Steppe' (Степ) and its historical role as the 'Wild Field' (Дике Поле) — a land of freedom where the 
+    wind meets the waves
   - 'Geographic deep-dive: explaining ''Estuaries'' (Лимани) as a defining feature of the Southern landscape and their ecological
     importance'
 - section: Одеса — Перлина Чорного моря (Odesa — Pearl of the Black Sea)
@@ -101,11 +101,9 @@ connects_to:
 - 'b1-83 (Regions West)'
 prerequisites:
 - 'b1-81 (Travel Geography)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Odesa Tour Guide
 grammar:
 - Reading comprehension strategies
 - Cultural vocabulary in context
 - Geographic and maritime vocabulary
 register: розмовний
+references: []

@@ -2,7 +2,7 @@ module: b1-057
 level: B1
 sequence: 57
 slug: word-formation-nouns
-version: '2.0'
+version: '3.0'
 title: Словотвір іменників
 subtitle: 'Noun Word Formation: Suffixes, Prefixes, and Composition'
 focus: grammar
@@ -90,13 +90,10 @@ connects_to:
 - 'b1-58 (Word Formation: Modifiers)'
 prerequisites:
 - 'b1-56 (Checkpoint: Advanced Grammar)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistic Researcher
 grammar:
 - Noun suffixation (-ник, -ець, -ість, -ння, -ство)
 - Noun prefixation (без-, не-, під-, пере-, перед-)
 - Compound nouns (основоскладання)
 - Word formation chains (словотвірні ланцюжки)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

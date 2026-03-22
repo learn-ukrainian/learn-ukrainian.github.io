@@ -2,7 +2,7 @@ module: b1-101
 level: B1
 sequence: 101
 slug: presentations-visuals
-version: '1.0'
+version: '3.0'
 title: Презентації та візуалізація
 subtitle: Presentations & Describing Visual Information
 focus: practical
@@ -19,8 +19,8 @@ content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Роль презентацій у професійному та освітньому житті згідно з Державним стандартом (§3.9); перехід від традиційних доповідей
-    «з папірця» до сучасного формату TEDxKyiv.
+  - Роль презентацій у професійному та освітньому житті згідно з Державним стандартом (§3.9); перехід від традиційних 
+    доповідей «з папірця» до сучасного формату TEDxKyiv.
   - 'Культура публічних виступів в Україні: баланс між лаконічністю бізнес-форумів та академічною вимогливістю наукових кіл.'
 - section: Структура виступу та етикет (Presentation Structure & Etiquette)
   words: 800
@@ -63,10 +63,12 @@ content_outline:
     доречності.'
 vocabulary_hints:
   required:
-  - презентація (presentation) — робити/проводити презентацію, мультимедійна презентація, успішна презентація; High frequency
+  - презентація (presentation) — робити/проводити презентацію, мультимедійна презентація, успішна презентація; High 
+    frequency
   - графік (graph/chart) — лінійний графік, графік показує, на графіку видно; розрізняти з «розклад» (schedule)
   - діаграма (diagram) — кругова діаграма, стовпчаста діаграма, сектор діаграми, частка на діаграмі; Med frequency
-  - зростати (to grow/increase) — стрімко/поступово зростати, зрости на X відсотків, зростання показників; High frequency
+  - зростати (to grow/increase) — стрімко/поступово зростати, зрости на X відсотків, зростання показників; High 
+    frequency
   - падати (to fall/decrease) — різко падати, знижуватися до мінімуму, тенденція до спадання; High frequency
   - згідно з (according to) — згідно з графіком (+ Instrumental case), згідно з даними; уникати помилки «згідно графіку»
   - дані (data) — за даними, обробляти дані, достовірні дані
@@ -101,11 +103,9 @@ connects_to:
 - b1-99 (Interviu Ta Podkasty)
 prerequisites:
 - b1-97 (Ukrainski Sviata Ta Festyvali)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Creative Director
 grammar:
 - Presentation phrases (Дозвольте представити..., Як бачимо...)
 - Describing trends (зростає на X%, падає вдвічі)
 - Comparison structures (порівняно з..., на відміну від...)
 register: напівформальний
+references: []

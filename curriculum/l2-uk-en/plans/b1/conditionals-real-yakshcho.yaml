@@ -2,7 +2,7 @@ module: b1-035
 level: B1
 sequence: 35
 slug: conditionals-real-yakshcho
-version: '2.0'
+version: '3.0'
 title: 'Умовні речення: реальна умова (якщо)'
 subtitle: Real Conditionals - If Clauses
 focus: grammar
@@ -37,8 +37,8 @@ content_outline:
 - section: 'Семантичні нюанси: Якщо проти Коли (Semantic Nuances: ''Якщо'' vs. ''Коли'')'
   words: 800
   points:
-  - Distinguishing 'якщо' (conditional/possibility) from 'коли' (temporal/certainty). Explain that using 'коли' implies the
-    event will definitely happen.
+  - Distinguishing 'якщо' (conditional/possibility) from 'коли' (temporal/certainty). Explain that using 'коли' implies 
+    the event will definitely happen.
   - 'Error analysis: Correcting the common confusion where learners use «Коли...» for conditions with doubt, e.g., «Якщо буде
     дощ...» (conditional) vs. «Коли буде дощ...» (temporal certainty).'
   - 'Timeline visualization: Mapping ''якщо'' as a fork in the road of possible outcomes, distinct from the linear certainty
@@ -66,12 +66,12 @@ content_outline:
 vocabulary_hints:
   required:
   - якщо (if) — якщо... то... (if... then...), що якщо (what if), навіть якщо (even if); High frequency (Top 100)
-  - умова (condition) — за умови (on condition), обов'язкова умова (mandatory condition), необхідна умова (necessary condition),
-    створювати умови (to create conditions); High frequency, formal
-  - результат (result) — позитивний результат (positive result), у результаті (as a result - outcome), досягти результату
-    (to achieve a result); High frequency
-  - наслідок (consequence) — унаслідок (as a result of), мати наслідки (to have consequences), небезпечні наслідки; Medium
-    frequency, often neutral/negative
+  - умова (condition) — за умови (on condition), обов'язкова умова (mandatory condition), необхідна умова (necessary 
+    condition), створювати умови (to create conditions); High frequency, formal
+  - результат (result) — позитивний результат (positive result), у результаті (as a result - outcome), досягти 
+    результату (to achieve a result); High frequency
+  - наслідок (consequence) — унаслідок (as a result of), мати наслідки (to have consequences), небезпечні наслідки; 
+    Medium frequency, often neutral/negative
   - умовний (conditional) — умовний спосіб (conditional mood)
   - реальний (real) — реальна можливість (real possibility)
   - можливий (possible) — цілком можливо (quite possible)
@@ -98,11 +98,9 @@ connects_to:
 - 'b1-35 (Conditionals Real Yakshcho))'
 prerequisites:
 - b1-30 (Purpose Clauses щоб + past form)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Software Engineer
 grammar:
 - Real conditionals with якщо
 - Tense sequence in conditional sentences
 - Present and future in conditional clauses
 register: розмовний
+references: []

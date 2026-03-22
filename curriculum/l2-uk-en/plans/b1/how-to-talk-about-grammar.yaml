@@ -13,21 +13,12 @@ objectives:
 - Learner can identify parts of speech using Ukrainian terminology
 - Learner can name all seven grammatical cases in Ukrainian
 - Learner can describe basic sentence elements using Ukrainian terms
-sources:
-- name: Ukrainian State Standard 2024 - Grammar Terminology
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official metalanguage terms for Ukrainian grammar education
-- name: Ukrainian Grammar (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
-  type: reference
-  notes: Overview of Ukrainian grammatical terminology
 content_outline:
 - section: 'Вступ: Сила метамови (Introduction: The Power of Metalanguage)'
   words: 500
   points:
-  - English scaffolding (bridge module) explaining the transition to 70-85% immersion and why learning grammar in Ukrainian
-    is essential for B1+ success.
+  - English scaffolding (bridge module) explaining the transition to 70-85% immersion and why learning grammar in 
+    Ukrainian is essential for B1+ success.
   - 'The ''Linguistics Professor'' persona introduction: grammar as a powerful tool for decolonization and precision, not
     just a set of rules.'
   - 'Historical Hook: Meletiy Smotrytskyi and his ''Grammar'' (1619). Discuss how his terminology established the foundation
@@ -38,8 +29,8 @@ content_outline:
   words: 1000
   points:
   - 'Comprehensive breakdown of the six independent categories: іменник, дієслово, прикметник, прислівник, займенник, числівник.'
-  - Each category features an H3 with definition, questions (Хто? Що? Що робити?), and frequency-based collocations like 'рід
-    іменника' or 'час дієслова'.
+  - Each category features an H3 with definition, questions (Хто? Що? Що робити?), and frequency-based collocations like
+    'рід іменника' or 'час дієслова'.
   - 'Linguistic Depth: Explicit instruction on ''вид дієслова'' (aspect) and ''відміна іменника'' (declension group) as required
     for B1 state standards.'
   - 'Addressing Learner Error (Gender): Clarifying that ''рід іменника'' is determined by word endings (стіл - він, шафа -
@@ -47,17 +38,17 @@ content_outline:
 - section: Службові частини мови та культурна лінза (Service Parts of Speech and Cultural Lens)
   words: 600
   points:
-  - Functional roles of сполучник (conjunction), прийменник (preposition), частка (particle), and вигук (interjection) in
-    sentence construction.
+  - Functional roles of сполучник (conjunction), прийменник (preposition), частка (particle), and вигук (interjection) 
+    in sentence construction.
   - 'Cultural Hook: The letter ''Ґ'' as a symbol of systematicity. Discuss its repression in 1933 and restoration in the 1990s
     as part of returning historical truth to grammar.'
-  - Distinction between 'просте речення' (simple sentence) and 'складне речення' (complex sentence) using service words as
-    structural glue.
+  - Distinction between 'просте речення' (simple sentence) and 'складне речення' (complex sentence) using service words 
+    as structural glue.
 - section: 'Сім ключів: Відмінки та їхні ролі (Seven Keys: Cases and Their Roles)'
   words: 1000
   points:
-  - Detailed presentation of all 7 cases (називний, родовий, давальний, знахідний, орудний, місцевий, кличний) with questions
-    and primary semantic roles.
+  - Detailed presentation of all 7 cases (називний, родовий, давальний, знахідний, орудний, місцевий, кличний) with 
+    questions and primary semantic roles.
   - 'Mnemonic Aid: Integration of ''На Різдво Дід Загубив Горішки Між Ковбасками'' for memorizing the standard Ukrainian case
     order.'
   - 'Addressing Learner Error (Accusative vs Genitive): Specific drill on ''Бачу брата'' (Acc) vs ''Немає брата'' (Gen) to
@@ -78,10 +69,10 @@ content_outline:
   points:
   - 'Teacher-student dialogue simulation: ''Яка це частина мови?'' and ''У якому відмінку це слово?'' to normalize classroom
     metalanguage.'
-  - Recognition drill using authentic quotes from Shevchenko or Lesya Ukrainka to identify parts of speech and case forms
-    in context.
-  - Self-assessment checklist for M02 readiness, ensuring the learner can name all 7 cases and 10 parts of speech without
-    English prompts.
+  - Recognition drill using authentic quotes from Shevchenko or Lesya Ukrainka to identify parts of speech and case 
+    forms in context.
+  - Self-assessment checklist for M02 readiness, ensuring the learner can name all 7 cases and 10 parts of speech 
+    without English prompts.
 vocabulary_hints:
   required:
   - іменник (noun) — рід іменника (gender of a noun), відміна іменника (declension of a noun); High frequency.
@@ -112,16 +103,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Ukrainian term → English equivalent
-  items: 12+
+  items: 12
 - type: quiz
   focus: Identify part of speech by Ukrainian name
-  items: 10+
+  items: 10
 - type: fill-in
   focus: Complete sentences about grammar using Ukrainian terms
-  items: 8+
+  items: 8
 - type: error-correction
   focus: Fix common metalanguage mistakes
-  items: 8+
+  items: 8
 connects_to:
 - b1-02 (Language About Verbs)
 - b1-03 (Reading grammar rules)
@@ -130,13 +121,15 @@ prerequisites:
 - A2 completion required
 - Familiarity with all 7 cases (conceptually)
 - Basic understanding of grammar concepts
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Linguistics Professor
 grammar:
 - Parts of speech names in Ukrainian
 - Case names in Ukrainian
 - Basic sentence structure terms
-immersion: 70-85% Ukrainian
-module_type: bridge
 register: нейтральний
+references:
+- title: Ukrainian State Standard 2024 - Grammar Terminology
+  url: https://mon.gov.ua/
+  notes: Official metalanguage terms for Ukrainian grammar education
+- title: Ukrainian Grammar (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  notes: Overview of Ukrainian grammatical terminology

@@ -2,7 +2,7 @@ module: b1-007
 level: B1
 sequence: 7
 slug: phonetics-alternation-simplification
-version: '2.0'
+version: '3.0'
 title: 'Фонетика: спрощення та чергування'
 subtitle: 'Phonetics: Cluster Simplification & Alternations'
 focus: grammar
@@ -20,8 +20,8 @@ content_outline:
   points:
   - 'Align with State Standard §4.1.1: cluster simplification and alternation as structural phonetic principles of Ukrainian
     — the complement to assimilation covered in the previous module.'
-  - Connect to the previous module on assimilation — extending the euphony toolkit from neighbouring-sound effects to syllable-structure-driven
-    changes.
+  - Connect to the previous module on assimilation — extending the euphony toolkit from neighbouring-sound effects to 
+    syllable-structure-driven changes.
   - 'Preview the two-part agenda: how simplification affects spelling (письмо vs вимова), and how alternations drive morphology
     (case endings, word formation).'
 - section: Спрощення в групах приголосних (Consonant Cluster Simplification)
@@ -39,8 +39,8 @@ content_outline:
   - 'Present the о/і alternation in closed vs open syllables: стіл — столи, ніч — ночі, кіт — кота — frame the rule as ''о
     appears when the syllable stays open, і appears when it closes''.'
   - 'Present the е/і alternation: піч — печі, шість — шести — contrast with о/і to prevent overgeneralisation.'
-  - Provide the historical basis briefly — vowel alternation preserves phonetic balance across inflection, making case paradigms
-    easier to pronounce at speed.
+  - Provide the historical basis briefly — vowel alternation preserves phonetic balance across inflection, making case 
+    paradigms easier to pronounce at speed.
   - 'Drilling pattern: given a nominative singular, predict the genitive or plural form by applying the open/closed syllable
     test — turn this into an active pattern-recognition habit.'
 - section: Чергування приголосних (Consonant Alternations)
@@ -70,8 +70,8 @@ content_outline:
   points:
   - 'Dictation strategy — ''Write explicitly, pronounce smoothly'': learners write the full spelling (чесний with silent т)
     while pronouncing [чесний] — mismatch awareness is the core skill.'
-  - Скоромовки (tongue twisters) targeting cluster simplification — celebrate the ''music'' of Ukrainian speech while drilling
-    automaticity in simplified clusters.
+  - Скоромовки (tongue twisters) targeting cluster simplification — celebrate the ''music'' of Ukrainian speech while 
+    drilling automaticity in simplified clusters.
   - 'Spelling drills with minimal pairs: чесний vs честь, щасливий vs щастя — force learners to toggle between the root form
     and its derived simplification to consolidate both spelling and pronunciation.'
 vocabulary_hints:
@@ -106,13 +106,10 @@ connects_to:
 - 'b1-09 (Aspect: Complete System)'
 prerequisites:
 - 'b1-06 (Phonetics: Assimilation)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Voice Coach
 grammar:
 - Consonant cluster simplification (стн→сн, здн→зн, стл→сл)
 - Vowel alternations (о/і, е/і in closed/open syllables)
 - Consonant alternations (г/ж/з, к/ч/ц, х/ш/с)
 - Euphony at word boundaries (у/в, і/й, з/із/зі)
 register: нейтральний
-immersion: 75-100% Ukrainian
+references: []

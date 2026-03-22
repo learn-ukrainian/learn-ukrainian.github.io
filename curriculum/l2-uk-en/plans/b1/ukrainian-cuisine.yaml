@@ -2,7 +2,7 @@ module: b1-096
 level: B1
 sequence: 96
 slug: ukrainian-cuisine
-version: '2.0'
+version: '3.0'
 title: Українська кухня
 subtitle: Ukrainian Cuisine and Food Culture
 focus: culture
@@ -82,11 +82,9 @@ connects_to:
 - b1-94 (Cycling Water)
 prerequisites:
 - b1-92 (Running In Ukraine)
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Ukrainian Chef
 grammar:
 - Food and cooking vocabulary
 - Recipe instructions
 - Describing flavors and textures
 register: розмовний
+references: []

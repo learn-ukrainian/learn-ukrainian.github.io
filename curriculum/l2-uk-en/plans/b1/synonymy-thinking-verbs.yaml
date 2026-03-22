@@ -2,7 +2,7 @@ module: b1-061
 level: B1
 sequence: 61
 slug: synonymy-thinking-verbs
-version: '2.0'
+version: '3.0'
 title: 'Синонімія I: Дієслова мислення'
 subtitle: 'Synonymy I: Thinking Verbs'
 focus: vocabulary
@@ -96,11 +96,9 @@ activity_hints:
 connects_to:
 - 'b1-62 (Synonymy Speaking Verbs)'
 prerequisites: []
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Philosopher
 grammar:
 - Verb synonymy and semantic distinctions
 - Thinking verb collocations
 - Cognitive verb patterns
 register: розмовний
+references: []

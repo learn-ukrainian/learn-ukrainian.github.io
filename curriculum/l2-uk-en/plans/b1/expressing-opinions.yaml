@@ -2,7 +2,7 @@ module: b1-068
 level: B1
 sequence: 68
 slug: expressing-opinions
-version: '2.0'
+version: '3.0'
 title: Вираження думок та поглядів
 subtitle: Expressing Opinions — Vocabulary & Phrases
 focus: vocabulary
@@ -102,11 +102,9 @@ connects_to:
 - b1-69 (Agreement Disagreement)
 prerequisites:
 - 'b1-67 (Abstract Concepts Processes)'
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Talk Show Guest
 grammar:
 - Opinion verb constructions
 - Opinion phrase patterns
 - Hedging and intensifying expressions
 register: розмовний
+references: []
