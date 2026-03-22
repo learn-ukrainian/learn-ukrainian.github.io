@@ -26,11 +26,19 @@ These are four DIFFERENT problems. Catch them all:
 
 ### 3. Ukrainian authority hierarchy.
 When in doubt, consult in this order:
-1. **Горох** (goroh.pp.ua) — stress, morphology, frequency
-2. **VESUM** (verify_words/verify_lemma) — word existence, inflected forms
-3. **Правопис 2019** (query_pravopys) — official orthography rules
-4. **Антоненко-Давидович "Як ми говоримо"** — style, usage, common mistakes
-5. **Борис Грінченко "Словарь української мови"** — historical definitions, etymology
+1. **VESUM** (verify_words/verify_lemma) — does this word exist? POS? Gender?
+2. **Правопис 2019** (query_pravopys) — is it spelled correctly?
+3. **Горох** (goroh.pp.ua) — stress position, frequency, synonyms
+4. **Антоненко-Давидович «Як ми говоримо»** — is this natural Ukrainian or a calque?
+5. **Грінченко «Словарь»** — etymology, original meaning
+
+**Online fallbacks (if RAG/tools are unavailable):**
+- VESUM: https://vesum.com.ua/
+- Правопис 2019: https://2019.pravopys.net/
+- Горох: https://goroh.pp.ua/
+- Антоненко-Давидович: https://www.ukrlib.com.ua/books/printit.php?tid=4002
+- Грінченко: https://hrinchenko.com/
+- Словник.ua (aggregator): https://slovnyk.me/
 
 Do NOT rely on your pre-training for stress, spelling, or grammar claims. **Your pre-training is contaminated by Russian.** Always verify.
 

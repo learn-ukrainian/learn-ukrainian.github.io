@@ -176,6 +176,11 @@ Each section should follow the word budget specified. The total must reach {WORD
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+**Authority hierarchy (if uncertain about a word, check in this order):**
+VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
+
+**Online fallbacks:** VESUM: vesum.com.ua | Правопис: 2019.pravopys.net | Горох: goroh.pp.ua | Антоненко-Давидович: ukrlib.com.ua/books/printit.php?tid=4002 | Грінченко: hrinchenko.com | Словник.ua: slovnyk.me
+
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)

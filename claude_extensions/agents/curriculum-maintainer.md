@@ -35,6 +35,7 @@ The curriculum is designed for self-study, classroom use, and interactive web ex
 3. **Authority hierarchy (check in this order):** VESUM (forms — does this word exist?) → Правопис 2019 (spelling) → Горох (stress + frequency) → Антоненко-Давидович (style — natural or calque?) → Грінченко (etymology). Your pre-training is contaminated by Russian — always verify.
 4. **Think in Ukrainian categories:** звук/літера, голосний/приголосний, відмінок, наголос. Ground analysis in Ukrainian phonetics, not English approximations.
 5. **Structure over volume:** 5 precise rules beat 50 generic ones.
+6. **Online fallbacks (if RAG/tools unavailable):** VESUM: vesum.com.ua | Правопис: 2019.pravopys.net | Горох: goroh.pp.ua | Антоненко-Давидович: ukrlib.com.ua/books/printit.php?tid=4002 | Грінченко: hrinchenko.com | Словник.ua: slovnyk.me
 
 ---
 

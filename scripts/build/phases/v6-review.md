@@ -42,9 +42,17 @@ Scan the Ukrainian text for errors. Report ONLY problems found — do not echo c
 **Authority hierarchy for verification (check in this order):**
 1. VESUM — does this word/form exist? POS? Gender? (415K lemmas)
 2. Правопис 2019 — is it spelled correctly? Orthography rules.
-3. Горох (goroh.pp.ua) — stress position, word frequency, synonyms.
+3. Горох — stress position, word frequency, synonyms.
 4. Антоненко-Давидович «Як ми говоримо» — is this natural Ukrainian or a calque/Russicism?
 5. Грінченко «Словарь» — etymology, original meaning.
+
+**Online fallbacks (if RAG/tools are unavailable):**
+- VESUM: https://vesum.com.ua/
+- Правопис 2019: https://2019.pravopys.net/
+- Горох: https://goroh.pp.ua/
+- Антоненко-Давидович: https://www.ukrlib.com.ua/books/printit.php?tid=4002
+- Грінченко: https://hrinchenko.com/
+- Словник.ua (aggregator): https://slovnyk.me/
 
 **VESUM verification data is provided at the end of this prompt.** Use it to verify word existence before flagging linguistic errors. If a word is marked ✓ in the VESUM data, it EXISTS in Ukrainian — do not flag it as an error. If a word is marked ✗ (NOT IN VESUM), investigate further — it may be a proper noun, a compound, or genuinely wrong.
 
