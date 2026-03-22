@@ -32,7 +32,7 @@ GRINCHENKO_CHUNKS = PROJECT_ROOT / "data" / "grinchenko" / "chunks.jsonl"
 STYLE_COLLECTION = "style_guide"
 GRINCHENKO_COLLECTION = "grinchenko_dict"
 
-BATCH_SIZE = 100
+BATCH_SIZE = 500  # Larger batches — model loaded once, embedding is the bottleneck
 
 
 def get_client():
@@ -64,29 +64,35 @@ def load_chunks(path: Path) -> list[dict]:
     return chunks
 
 
-def embed_texts(texts: list[str]) -> list[list[float]]:
-    """Embed texts using BGE-M3."""
+def load_embedding_model():
+    """Load BGE-M3 model once."""
     from FlagEmbedding import BGEM3FlagModel
-    model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=True)
+    print("  Loading BGE-M3 embedding model...")
+    return BGEM3FlagModel("BAAI/bge-m3", use_fp16=True)
+
+
+def embed_texts(model, texts: list[str]) -> list[list[float]]:
+    """Embed texts using pre-loaded BGE-M3 model."""
     result = model.encode(texts, return_dense=True, return_sparse=False, return_colbert_vecs=False)
     return result["dense_vecs"].tolist()
 
 
-def ingest_collection(client, collection_name: str, chunks: list[dict], text_field: str):
+def ingest_collection(client, collection_name: str, chunks: list[dict], text_field: str, model):
     """Ingest chunks into a Qdrant collection."""
     from qdrant_client.models import PointStruct
 
     ensure_collection(client, collection_name)
 
     total = len(chunks)
-    print(f"  Ingesting {total} entries into '{collection_name}'...")
+    num_batches = (total + BATCH_SIZE - 1) // BATCH_SIZE
+    print(f"  Ingesting {total} entries into '{collection_name}' ({num_batches} batches)...")
 
     for batch_start in range(0, total, BATCH_SIZE):
         batch = chunks[batch_start:batch_start + BATCH_SIZE]
         texts = [c.get(text_field, c.get("text", "")) for c in batch]
 
-        # Embed
-        vectors = embed_texts(texts)
+        # Embed using pre-loaded model
+        vectors = embed_texts(model, texts)
 
         # Build points
         points = []
@@ -130,16 +136,17 @@ def main():
         sys.exit(1)
 
     client = get_client()
+    model = load_embedding_model()
 
     if args.antonenko or args.all:
         print("\n📚 Антоненко-Давидович «Як ми говоримо»")
         chunks = load_chunks(ANTONENKO_CHUNKS)
-        ingest_collection(client, STYLE_COLLECTION, chunks, text_field="text")
+        ingest_collection(client, STYLE_COLLECTION, chunks, text_field="text", model=model)
 
     if args.grinchenko or args.all:
         print("\n📖 Грінченко «Словарь української мови»")
         chunks = load_chunks(GRINCHENKO_CHUNKS)
-        ingest_collection(client, GRINCHENKO_COLLECTION, chunks, text_field="definition")
+        ingest_collection(client, GRINCHENKO_COLLECTION, chunks, text_field="definition", model=model)
 
 
 if __name__ == "__main__":
