@@ -1,0 +1,227 @@
+module: b1-018
+level: B1
+sequence: 18
+slug: conditionals-real
+version: '3.0'
+title: "Умовний спосiб (реальний)"
+subtitle: "Якщо-речення та реальнi умовнi конструкцiї"
+focus: grammar
+pedagogy: PPP
+phase: "B1.3 [Verbs]"
+word_target: 4000
+objectives:
+- "Learner can form and use дiєслова умовного способу with the particle
+  би/б to express wishes, hypothetical but possible outcomes, and polite requests"
+- "Learner can construct real conditional sentences using якщо... (то)...
+  with correct tense and aspect in both clauses"
+- "Learner can distinguish дiйсний спосiб from умовний спосiб by meaning
+  and form, and explain when each is appropriate"
+- "Learner can place the particle б/би correctly (after голосний → б,
+  after приголосний → би) and understands it can follow any повнозначне слово"
+- "Learner can use real conditionals in practical communication: making plans,
+  expressing conditions for future actions, polite suggestions"
+content_outline:
+- section: "Що таке спосiб дiєслова? (What is verb mood?)"
+  words: 550
+  points:
+  - "Review from Литвiнова Grade 7 p.36 — three-way system:
+    Дiйсний спосiб — реальна дiя (вiдбувалася, вiдбувається, вiдбуватиметься).
+    Умовний спосiб — бажана дiя, можлива лише за певних умов.
+    Наказовий спосiб — прохання, наказ, спонукання до дiї.
+    Дiйсний has tense forms; умовний and наказовий do NOT have tense forms
+    (Авраменко Grade 7 p.77)."
+  - "Why умовний is important for B1 communication:
+    expressing wishes (я хотiв би), making polite requests
+    (чи не могли б ви...?), talking about plans that depend on conditions
+    (якщо матиму час, пiду на виставку). This module focuses on
+    REAL conditions — things that CAN happen."
+  - "Comparison with A2 knowledge: at A2, learners used дiйсний спосiб
+    exclusively. Now they add a new dimension — the ability to express
+    conditions, wishes, and uncertainty. This is a major communicative
+    upgrade."
+- section: "Утворення умовного способу (Formation of the conditional mood)"
+  words: 700
+  points:
+  - "Formation rule from Литвiнова Grade 7 p.61, Заболотний Grade 7 p.72:
+    Минулий час дiєслова + частка би (б).
+    сказав + би = сказав би, сказала + б = сказала б.
+    The particle б/би is ALWAYS written separately from the verb.
+    Unlike English 'would', Ukrainian б/би has no fixed position."
+  - "Euphony rule for б vs. би (Авраменко Grade 7 p.83):
+    After a голосний → б: сказала б, хотiла б, зробило б.
+    After a приголосний → би: сказав би, хотiв би, зробив би.
+    This mirrors the Ukrainian principle of милозвучнiсть."
+  - "Particle placement flexibility (Авраменко Grade 7 p.83):
+    Частку б/би пишемо окремо, вона може стояти пiсля будь-якого
+    повнозначного слова: 'Я б навiть сонцю одягнула вiнок iз
+    житнiх колоскiв' (Л. Рубан). Compare: я зробив би / я б зробив /
+    я зробив це б iнакше — all grammatically correct."
+  - "Full paradigm practice:
+    читати: я читав би / я читала б, ти читав би / ти читала б,
+    вiн читав би, вона читала б, воно читало б,
+    ми читали б, ви читали б, вони читали б.
+    Note: умовний спосiб preserves рiд and число from минулий час
+    but has NO часовi форми of its own."
+- section: "Реальна умова з якщо (Real conditions with якщо)"
+  words: 700
+  points:
+  - "Structure of real conditional sentences:
+    Якщо + дiйсний спосiб (present/future), (то) + дiйсний спосiб (future).
+    Якщо пошукаєш у книгах мудростi, то знайдеш велику користь
+    для душi своєї (Нестор) — from Заболотний Grade 9 p.114.
+    The condition is REAL — it can actually happen."
+  - "Сполучник якщо and its variants:
+    якщо, коли (in conditional meaning), як (colloquial).
+    Якщо матимеш час, зателефонуй менi.
+    Коли будеш у Львовi, завiтай до нас.
+    Як прийдеш рано, встигнемо.
+    The particle то is optional but common in the main clause."
+  - "Aspect choice in якщо-clauses:
+    Недоконаний вид emphasizes process/repetition:
+    Якщо щодня вчитимеш слова, швидко заговориш.
+    Доконаний вид emphasizes completed result:
+    Якщо вивчиш цей роздiл, складеш iспит.
+    Practice: creating pairs with different aspect, noting meaning shift."
+  - "Common communicative patterns with якщо:
+    Якщо хочеш, можемо... (invitation)
+    Якщо не заперечуєш, я... (polite suggestion)
+    Якщо все буде гаразд, ми... (future plans)
+    Якщо матиму нагоду, обов'язково... (expressing intention)"
+- section: "Умовний спосiб для ввiчливостi (Conditional for politeness)"
+  words: 600
+  points:
+  - "Polite requests using умовний спосiб:
+    Чи не могли б ви допомогти? (instead of Допоможiть!)
+    Я хотiв/хотiла б запитати... (instead of Я хочу запитати)
+    Чи не пiдказали б ви, де аптека?
+    The conditional softens the directness of the request —
+    this is essential for Ukrainian polite register."
+  - "Expressing wishes and desires:
+    Я хотiв/хотiла б вiдвiдати Карпати.
+    Менi хотiлося б дiзнатися бiльше про iсторiю Києва.
+    Було б чудово зустрiтися цими вихiдними.
+    Добре було б почати рано.
+    Note the безособовi constructions: хотiлося б, було б."
+  - "Mild advice using умовний:
+    На вашому мiсцi я б подзвонив/подзвонила заздалегiдь.
+    Варто було б перевiрити.
+    Я б порадив/порадила вам..."
+- section: "Практика: якщо-речення у спiлкуваннi (Practice: якщо-sentences in communication)"
+  words: 700
+  points:
+  - "Dialogue 1 — planning a trip:
+    Two friends discussing a weekend trip. Natural use of якщо
+    with future tense: Якщо погода буде гарна, поїдемо за мiсто.
+    Якщо знайдемо дешевi квитки, полетимо до Одеси.
+    Якщо все вийде, проведемо там три днi."
+  - "Dialogue 2 — at a language school:
+    Student asking about courses. Polite conditionals:
+    Я хотiв/хотiла б записатися на курс. Чи не могли б ви
+    розповiсти про розклад? Якщо можна, я б хотiв/хотiла б
+    почати наступного тижня."
+  - "Reading passage: an email to a friend using якщо-constructions
+    and polite conditionals naturally. Comprehension tasks focus on
+    grammar: identify all умовний спосiб forms, find all якщо-clauses,
+    determine whether conditions are real or hypothetical."
+  - "Production exercise: learners write 5-6 sentences about their
+    own plans using якщо: Якщо вивчу цей роздiл, зможу читати
+    українськi книжки. Якщо поїду до Києва, вiдвiдаю Лавру."
+- section: "Типовi помилки (Common errors)"
+  words: 400
+  points:
+  - "Error 1: Using present tense instead of умовний for wishes.
+    *Я хочу вас запитати (direct) vs Я хотiв/хотiла б вас запитати (polite).
+    Error 2: Writing б/би together with the verb: *зробивби → зробив би.
+    Error 3: Confusing б/би placement: after приголосний use би, not б."
+  - "Error 4: Using якщо з умовним in real conditions.
+    *Якщо я зробив би це вчасно... (mixing real condition with conditional).
+    Correct: Якщо я зроблю це вчасно... (real condition → дiйсний спосiб).
+    Rule: якщо + дiйсний спосiб = real condition.
+    якби + умовний спосiб = unreal condition (next module)."
+- section: "Пiдсумок та перехiд до M19 (Summary and transition)"
+  words: 350
+  points:
+  - "Summary: три способи дiєслова, утворення умовного способу
+    (минулий час + би/б), реальна умова з якщо + дiйсний спосiб,
+    увiчливi прохання з умовним способом.
+    Self-check: Я можу утворити форму умовного способу ✓/✗,
+    Я можу побудувати речення з якщо ✓/✗,
+    Я можу ввiчливо попросити ✓/✗."
+  - "Preview: M19 will introduce UNREAL conditions with якби + умовний,
+    where the action is contrary to fact or impossible.
+    Compare: Якщо матиму час, пiду (real) vs
+    Якби я мав час, пiшов би (unreal). This pair (M18+M19)
+    gives learners the full conditional system."
+vocabulary_hints:
+  required:
+  - "умовний спосiб (conditional mood — expresses wished/hypothetical action)"
+  - "дiйсний спосiб (indicative mood — expresses real action)"
+  - "наказовий спосiб (imperative mood — expresses command/request)"
+  - "частка (particle — би/б in conditional formation)"
+  - "умова (condition — what must be true for action to happen)"
+  - "реальний (real — condition that can actually be fulfilled)"
+  - "якщо (if — conjunction for real conditions)"
+  - "ввiчливiсть (politeness — softening requests with conditional)"
+  - "бажання (wish, desire)"
+  - "хотiв би / хотiла б (would like — polite form of хотiти)"
+  - "могли б (could — polite conditional of могти)"
+  - "милозвучнiсть (euphony — sound harmony principle)"
+  - "повнозначне слово (content word — as opposed to service word)"
+  - "сполучник (conjunction — якщо, коли)"
+  recommended:
+  - "гаразд (fine, okay — Якщо все буде гаразд)"
+  - "нагода (opportunity, occasion)"
+  - "заперечувати (to object — Якщо не заперечуєте)"
+  - "порадити (to advise — я б порадив)"
+  - "завiтати (to visit, drop by — informal)"
+  - "заздалегiдь (in advance)"
+  - "розклад (schedule, timetable)"
+  - "обов'язково (definitely, without fail)"
+  - "вихiднi (weekend — pluralia tantum)"
+  - "встигнути (to make it in time — perfective)"
+activity_hints:
+- type: quiz
+  focus: "Identify умовний спосiб forms vs дiйсний спосiб in sentences"
+  items: 8
+- type: fill-in
+  focus: "Complete якщо-sentences with correct verb form (дiйсний спосiб in both clauses for real conditions)"
+  items: 8
+- type: match-up
+  focus: "Match якщо-clauses to their main clauses, ensuring logical and grammatical agreement"
+  items: 8
+- type: error-correction
+  focus: "Fix errors in conditional sentences: wrong particle б/би, wrong mood in якщо-clause, spelling"
+  items: 6
+- type: sentence-builder
+  focus: "Rewrite direct requests as polite ones using умовний спосiб (Дайте → Чи не дали б ви...)"
+  items: 6
+connects_to:
+- "b1-017 (Контрольна робота 2 — Phase 2 review, transition to Phase 3)"
+- "b1-019 (Умовний спосiб нереальний — extends conditional to якби + past)"
+- "b1-010 (Чергування приголосних у дiєсловах — alternations in verb conjugation)"
+prerequisites:
+- "b1-017 (Checkpoint 2 — all Phase 2 grammar mastered)"
+- "A2 knowledge of минулий час (required for conditional formation)"
+grammar:
+- "Умовний спосiб formation: минулий час + частка би (б)"
+- "Particle placement: б after голосний, би after приголосний, free position in clause"
+- "Реальна умова: якщо + дiйсний спосiб... (то) + дiйсний спосiб"
+- "Aspect choice in якщо-clauses: доконаний (result) vs недоконаний (process)"
+- "Polite register: умовний спосiб for requests, wishes, mild advice"
+register: академiчний
+references:
+- title: "Литвiнова Grade 7, p.36, 61-62"
+  notes: "Three-way mood system table; умовний спосiб definition and formation
+    exercises; particle б/би placement rules."
+- title: "Заболотний Grade 7, p.72-75"
+  notes: "Способи дiєслiв comparison table; умовний спосiб exercises with
+    якби-sentences; formation practice with personal forms."
+- title: "Авраменко Grade 7, p.77, 83"
+  notes: "Умовний and наказовий have no часовi форми; частка б/би spelling
+    rules and placement examples including literary quotes."
+- title: "Заболотний Grade 9, p.114"
+  notes: "Складнопiдрядне речення умови: сполучники якщо, коли, як, якби, аби;
+    спiввiдносне слово то in main clause."
+- title: "Караман Grade 10, p.185"
+  notes: "Способи дiєслiв: дiйсний = реальна дiя, умовний = можлива за умов,
+    наказовий = наказ/прохання."
