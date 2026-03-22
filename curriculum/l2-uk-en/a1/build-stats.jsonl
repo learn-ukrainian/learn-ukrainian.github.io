@@ -5,3 +5,5 @@
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-22T08:44:37.986834+00:00"}
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-22T09:03:43.113936+00:00"}
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-22T10:54:47.349078+00:00"}
+{"slug": "reading-ukrainian", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-22T19:06:53.260996+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 2, "model": "claude", "success": true, "timestamp": "2026-03-22T19:08:18.827991+00:00"}

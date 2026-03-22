@@ -1,0 +1,43 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "reading-ukrainian",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-22T19:05:14.776884+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-22T19:05:34.351021+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-22T19:08:18.828354+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-22T19:08:18.835938+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-22T19:08:20.835567+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-22T19:08:21.004503+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-22T19:08:21.076107+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-22T19:12:44.731203+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-22T19:12:44.798510+00:00"
+    }
+  }
+}
