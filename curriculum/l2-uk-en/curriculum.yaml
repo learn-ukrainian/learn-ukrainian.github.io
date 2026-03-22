@@ -142,19 +142,16 @@ levels:
     - a2-finale
   b1:
     type: core
-    # V3 — 85 modules, State Standard 2024 compliant
-    # Designed 2026-03-22 by Gemini, reviewed by Claude
+    # V4 — 92 modules, State Standard 2024 compliant
+    # Designed 2026-03-22 by Gemini, reviewed by Claude, revised by Gemini
     modules:
-    # Phase 1: Metalanguage Bridge (8 modules)
-    - metalanguage-sounds
-    - metalanguage-word-structure
-    - metalanguage-parts-of-speech
-    - metalanguage-cases
-    - metalanguage-syntax
+    - metalanguage-phonetics
+    - metalanguage-morphology
+    - metalanguage-syntax-cases
     - b1-baseline-past-present
     - b1-baseline-future-aspect
+    - people-and-relationships
     - checkpoint-b1-foundation
-    # Phase 2: Morphophonemics & Noun Subclasses (9 modules)
     - alternation-vowels
     - alternation-consonants-nouns
     - alternation-consonants-verbs
@@ -163,17 +160,18 @@ levels:
     - noun-subclasses-hissing
     - noun-subclasses-feminine
     - pluralia-tantum
-    - checkpoint-morphology
-    # Phase 3: Verb Mastery & Moods (8 modules)
-    - conditional-mood
-    - unreal-conditions
-    - imperative-advanced
+    - health-at-the-doctor
+    - checkpoint-morphophonemics
+    - conditionals-real
+    - conditionals-unreal
+    - imperative-nuances
     - verbal-nouns
     - reflexive-verbs-nuances
     - passive-voice-intro
     - verb-formation-suffixes
+    - daily-life-and-routines
     - checkpoint-verbs
-    # Phase 4: Motion Verb Universe (10 modules)
+    - prepositions-spatial-review
     - motion-base-review
     - motion-prefixes-arrival
     - motion-prefixes-departure
@@ -184,35 +182,34 @@ levels:
     - figurative-motion
     - traveling-ukraine
     - checkpoint-motion
-    # Phase 5: Degrees of Comparison & Word Formation (7 modules)
     - adjectives-comparative
     - adjectives-superlative
     - adjectives-suppletive
-    - adverbs-comparison
+    - adverbs-comparison-formation
     - word-formation-adjectives
     - word-formation-nouns
+    - shopping-and-services
     - checkpoint-comparison
-    # Phase 6: Advanced Case Usages & Prepositions (9 modules)
     - genitive-nuances
     - dative-nuances
     - instrumental-nuances
-    - prepositions-spatial
+    - vocative-formal
     - prepositions-temporal
     - prepositions-cause-purpose
-    - cases-with-numerals
+    - cases-with-ordinal-numerals
+    - cases-with-quantity-expressions
     - advanced-pronouns
+    - housing-and-renting
     - checkpoint-cases
-    # Phase 7: Participles & Gerunds (9 modules)
-    - participles-intro
     - participles-active
     - participles-passive
     - participle-phrases
-    - gerunds-intro
+    - short-form-adjectives
     - gerunds-imperfective
     - gerunds-perfective
     - gerund-phrases
+    - education-and-university
     - checkpoint-participles
-    # Phase 8: Complex Syntax (10 modules)
     - complex-compound
     - complex-subordinate-object
     - complex-subordinate-relative
@@ -222,20 +219,19 @@ levels:
     - complex-subordinate-purpose
     - complex-subordinate-concess
     - reported-speech
+    - leisure-culture-festivals
     - checkpoint-syntax
-    # Phase 9: Stylistics, Nuance & Text Compression (8 modules)
-    - lexical-stylistics
-    - syntactic-stylistics
+    - text-register-formal
+    - text-register-informal
     - text-compression
     - double-negation
     - introductory-words
-    - professional-communication
+    - nature-and-environment
     - reading-literature
-    - checkpoint-stylistics
-    # Phase 10: B1 Synthesis & Graduation (7 modules)
+    - checkpoint-text-register
     - narrative-mastery
     - debate-and-opinion
-    - media-and-news
+    - society-and-media
     - comprehensive-b1-review
     - practice-exam-reading
     - practice-exam-writing

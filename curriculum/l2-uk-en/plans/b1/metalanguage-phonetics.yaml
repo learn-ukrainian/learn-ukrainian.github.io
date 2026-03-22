@@ -1,7 +1,7 @@
 module: b1-001
 level: B1
 sequence: 1
-slug: metalanguage-sounds
+slug: metalanguage-phonetics
 version: '3.0'
 title: "Звуки і букви"
 subtitle: "Фонетика українською — від звуків до транскрипції"
