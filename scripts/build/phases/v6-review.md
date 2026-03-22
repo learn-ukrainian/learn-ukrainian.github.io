@@ -46,6 +46,8 @@ Scan the Ukrainian text for errors. Report ONLY problems found — do not echo c
 4. Антоненко-Давидович «Як ми говоримо» — is this natural Ukrainian or a calque/Russicism?
 5. Грінченко «Словарь» — etymology, original meaning.
 
+**VESUM verification data is provided at the end of this prompt.** Use it to verify word existence before flagging linguistic errors. If a word is marked ✓ in the VESUM data, it EXISTS in Ukrainian — do not flag it as an error. If a word is marked ✗ (NOT IN VESUM), investigate further — it may be a proper noun, a compound, or genuinely wrong.
+
 **CRITICAL: Your pre-training is contaminated by Russian.** Do NOT trust your instincts about Ukrainian words. If you are not 100% certain a word/form/usage is wrong, you MUST flag it as `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error. Wrong review findings cause wrong fixes. A false positive in the review is worse than a missed error.
 
 If no errors found, state: "No linguistic errors found."

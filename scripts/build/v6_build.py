@@ -919,6 +919,71 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     return len(issues) == 0
 
 
+def _build_vesum_report(content: str) -> str:
+    """Pre-verify all Ukrainian words against VESUM for the reviewer.
+
+    Extracts Ukrainian words (3+ characters) from the content, looks each up
+    in the VESUM SQLite database, and returns a structured report. This gives
+    the reviewer factual data instead of guessing about word existence.
+    """
+    import re
+    import sqlite3
+
+    vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+    if not vesum_db.exists():
+        return ""
+
+    # Extract Ukrainian words (3+ chars to skip particles/prepositions)
+    words = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]{2,}\b", content))
+    if not words:
+        return ""
+
+    db = sqlite3.connect(str(vesum_db))
+    try:
+        verified = []
+        not_found = []
+        for word in sorted(words):
+            row = db.execute(
+                "SELECT lemma, pos FROM forms WHERE word_form = ? LIMIT 1",
+                (word.lower(),),
+            ).fetchone()
+            if row:
+                verified.append(f"  ✓ {word} → lemma: {row[0]}, POS: {row[1]}")
+            else:
+                not_found.append(f"  ✗ {word} — NOT IN VESUM")
+    finally:
+        db.close()
+
+    report_lines = [
+        "<vesum_verification>",
+        "The following Ukrainian words from the content were verified against "
+        "VESUM (415K lemmas). Use this data to check linguistic claims — "
+        "do NOT guess about words.",
+        "",
+        f"Verified: {len(verified)} words | Not found: {len(not_found)} words",
+        "",
+    ]
+
+    if not_found:
+        report_lines.append(
+            "Words NOT in VESUM (may be errors, proper nouns, or valid words "
+            "missing from dict):"
+        )
+        report_lines.extend(not_found[:50])
+        report_lines.append("")
+
+    # Include a sample of verified words so reviewer can spot-check
+    if verified:
+        report_lines.append(
+            "Sample of verified words (all confirmed to exist in Ukrainian):"
+        )
+        report_lines.extend(verified[:50])
+        report_lines.append("")
+
+    report_lines.append("</vesum_verification>")
+    return "\n".join(report_lines)
+
+
 def step_review(content_path: Path, level: str, module_num: int,
                 slug: str, writer: str = "claude") -> tuple[bool, float]:
     """Step 8: Cross-agent adversarial review.
@@ -963,6 +1028,12 @@ def step_review(content_path: Path, level: str, module_num: int,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
+
+    # Inject VESUM verification data so the reviewer has facts, not guesses
+    vesum_report = _build_vesum_report(generated_content)
+    if vesum_report:
+        prompt = prompt + "\n\n" + vesum_report
+        _log(f"  VESUM pre-verification: injected ({len(vesum_report)} chars)")
 
     # Save review prompt
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
