@@ -28,14 +28,24 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 
 Scan the Ukrainian text for errors. Report ONLY problems found — do not echo correct text.
 
-Check for:
+**Four SEPARATE checks (these are four different problems):**
+1. **Russianisms** — Russian words used instead of Ukrainian (кот→кіт, хорошо→добре, конечно→звичайно, сейчас→зараз)
+2. **Surzhyk** — mixed Russian-Ukrainian forms (шо→що, чо→чому, тіпа→типу)
+3. **Calques** — literal translations from Russian that sound wrong in Ukrainian (приймати душ→брати душ, приймати рішення→ухвалювати рішення)
+4. **Paronyms** — similar-sounding words with different meanings used incorrectly (тактична≠тактовна, ефектний≠ефективний)
+
+**Also check:**
 - Russian characters (ы, э, ё, ъ) — these must NEVER appear
-- Russianisms (кот→кіт, хорошо→добре, конечно→звичайно)
-- Surzhyk (шо→що, чо→чому)
-- Calques (приймати душ→брати душ)
 - Incorrect gender assignment or case endings
 - Factually wrong claims about Ukrainian phonetics, grammar, or culture
-  - If you suspect a factual or phonetic error but are not 100% certain, flag it as `[NEEDS RAG VERIFICATION]` rather than marking it as critical/major
+
+**Authority hierarchy for verification:**
+- Горох (goroh.pp.ua) — stress and word frequency
+- VESUM — word forms and morphology (415K lemmas)
+- Правопис 2019 — orthography rules
+- Антоненко-Давидович "Як ми говоримо" — style and usage
+
+**CRITICAL: Your pre-training is contaminated by Russian.** Do NOT trust your instincts about Ukrainian words. If you are not 100% certain a word/form/usage is wrong, you MUST flag it as `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error. Wrong review findings cause wrong fixes. A false positive in the review is worse than a missed error.
 
 If no errors found, state: "No linguistic errors found."
 
