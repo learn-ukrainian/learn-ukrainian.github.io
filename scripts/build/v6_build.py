@@ -881,19 +881,20 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     except Exception as e:
         _log(f"  ⚠️  VESUM check skipped: {e}")
 
-    # Russicism scan
+    # Russicism scan (regex-based on content text)
     try:
-        from pipeline.semantic_russianisms import scan_for_russianisms
-        russicisms = scan_for_russianisms(text)
+        from build.quick_verify import SEVERE_RUSSIANISMS
+        content_lower = text.lower()
+        russicisms = [w for w in SEVERE_RUSSIANISMS if w in content_lower]
+        # Also check for Russian-only word forms
+        russian_words = ["букварь", "учебник", "тетрадь", "хорошо", "конечно",
+                         "сейчас", "здесь", "тоже", "пожалуйста", "спасибо"]
+        russicisms.extend(w for w in russian_words if w in content_lower)
         if russicisms:
-            _log(f"  ⚠️  Russicisms found: {len(russicisms)}")
-            for r in russicisms[:3]:
-                _log(f"    — {r}")
+            _log(f"  ⚠️  Russicisms found: {', '.join(set(russicisms))}")
             issues.extend(russicisms)
         else:
             _log("  ✅ No Russicisms detected")
-    except ImportError:
-        _log("  ℹ️  Russicism scanner not available")
     except Exception as e:
         _log(f"  ⚠️  Russicism scan failed: {e}")
 
