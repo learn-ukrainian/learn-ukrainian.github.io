@@ -1,0 +1,9 @@
+Section 1 "Що вивчає фонетика?": ~650 words — Bridge from A2 knowledge to Ukrainian metalanguage; define фонетика, графіка, орфоепія; explain звук vs літера vs фонема distinction with examples
+Section 2 "Голосні звуки": ~600 words — 6 sounds vs 10 letters; йотовані letters with positional rules; ненаголошені голосні and spelling implications
+Section 3 "Приголосні звуки: дзвінкі та глухі": ~750 words — Voiced/voiceless pairs; сонорні group with mnemonic; свистячі/шиплячі/губні classification; reading practice passage with classification task
+Section 4 "Приголосні звуки: тверді та м'які": ~750 words — Hard/soft pairs; how softness is shown in writing; пом'якшені as third category (correctly using labials/velars); always-hard and always-soft consonants
+Section 5 "Наголос": ~650 words — Free and mobile stress; meaning-distinguishing pairs; наголошений vs ненаголошений склад; why stress matters for B1 morphophonemics
+Section 6 "Фонетична транскрипція": ~600 words — Rules of transcription; step-by-step examples with increasing complexity; common mistakes
+Section 7 "Підсумок: ваш фонетичний словник": ~300 words — Complete glossary; 5 self-check questions; preview of next module
+Summary: ~150 words
+Total: ~4450 words

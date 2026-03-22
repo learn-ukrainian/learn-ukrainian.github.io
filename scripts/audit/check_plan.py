@@ -133,12 +133,22 @@ def check_phase_alignment(plan: dict) -> list[PlanIssue]:
     issues = []
     phase = plan.get("phase", "")
     seq = plan.get("sequence", 0)
+    level = plan.get("level", "").upper()
     if not phase or not seq:
         return issues
 
     phase_key = phase.split("[")[0].strip()
 
-    # V3 phase ranges (updated to match curriculum.yaml V3)
+    # Phase ranges are only validated for A1 (other levels have different structures)
+    if level != "A1":
+        # For non-A1 levels, just check that the phase starts with the level prefix
+        level_prefix = level.split("-")[0]  # B1, B2, C1, etc.
+        if not phase_key.startswith(level_prefix) and level_prefix not in phase_key:
+            issues.append(PlanIssue("PHASE", "WARNING",
+                                    f"Phase '{phase_key}' doesn't match level {level}"))
+        return issues
+
+    # V3 phase ranges for A1 (updated to match curriculum.yaml V3)
     expected_phases = {
         range(1, 8): "A1.1",      # M01-M07: Sounds, Letters, First Contact
         range(8, 15): "A1.2",     # M08-M14: My World

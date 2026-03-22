@@ -142,110 +142,104 @@ levels:
     - a2-finale
   b1:
     type: core
+    # V3 — 85 modules, State Standard 2024 compliant
+    # Designed 2026-03-22 by Gemini, reviewed by Claude
     modules:
-    - how-to-talk-about-grammar
-    - language-about-verbs
-    - reading-grammar-rules
-    - sentence-structure
-    - ready-for-immersion
-    - phonetics-assimilation
-    - phonetics-alternation-simplification
-    - stress-mobility-euphony
-    - aspect-complete-system
-    - aspect-past-single-repeated
-    - aspect-past-result-process
-    - aspect-future
-    - aspect-negation
-    - aspect-in-imperatives
-    - aspect-pairs-essential-40
-    - work-week-aspect-in-action
-    - aspect-integration-practice
-    - checkpoint-aspect-mastery
-    - motion-verbs-full-system
-    - motion-coming-going
-    - motion-passing-crossing
-    - motion-starting-returning
-    - motion-approaching-departing
-    - motion-figurative-uses
-    - motion-full-prefix-integration
-    - motion-patterns-other-verbs
-    - motion-practice-integration
-    - checkpoint-motion-verbs
-    - indefinite-negative-pronouns
-    - relative-clauses-yakyi
-    - relative-clauses-de-kudy-zvidky
-    - relative-clauses-koly-shcho
-    - purpose-shchob-infinitive
-    - purpose-shchob-past-form
-    - conditionals-real-yakshcho
-    - conditionals-unreal-yakby
-    - conditionals-mixed-complex
-    - checkpoint-complex-sentences-1
-    - concessive-khocha
-    - causal-result-clauses
-    - temporal-clauses
-    - complex-sentence-integration
-    - reported-statements
-    - reported-questions-commands
-    - checkpoint-complex-sentences-2
-    - active-participles-phrases
-    - past-passive-participles-1
-    - past-passive-participles-2
-    - passive-constructions
-    - one-member-sentences
-    - adverbial-participles-imperfective
-    - adverbial-participles-perfective
-    - diminutives-master-class
-    - numerals-collectives-fractions
-    - integrated-grammar-lab
-    - checkpoint-advanced-grammar
+    # Phase 1: Metalanguage Bridge (8 modules)
+    - metalanguage-sounds
+    - metalanguage-word-structure
+    - metalanguage-parts-of-speech
+    - metalanguage-cases
+    - metalanguage-syntax
+    - b1-baseline-past-present
+    - b1-baseline-future-aspect
+    - checkpoint-b1-foundation
+    # Phase 2: Morphophonemics & Noun Subclasses (9 modules)
+    - alternation-vowels
+    - alternation-consonants-nouns
+    - alternation-consonants-verbs
+    - simplification-consonants
+    - noun-subclasses-masculine
+    - noun-subclasses-hissing
+    - noun-subclasses-feminine
+    - pluralia-tantum
+    - checkpoint-morphology
+    # Phase 3: Verb Mastery & Moods (8 modules)
+    - conditional-mood
+    - unreal-conditions
+    - imperative-advanced
+    - verbal-nouns
+    - reflexive-verbs-nuances
+    - passive-voice-intro
+    - verb-formation-suffixes
+    - checkpoint-verbs
+    # Phase 4: Motion Verb Universe (10 modules)
+    - motion-base-review
+    - motion-prefixes-arrival
+    - motion-prefixes-departure
+    - motion-prefixes-in-out
+    - motion-prefixes-transit
+    - motion-prefixes-around
+    - motion-flight-swim
+    - figurative-motion
+    - traveling-ukraine
+    - checkpoint-motion
+    # Phase 5: Degrees of Comparison & Word Formation (7 modules)
+    - adjectives-comparative
+    - adjectives-superlative
+    - adjectives-suppletive
+    - adverbs-comparison
+    - word-formation-adjectives
     - word-formation-nouns
-    - word-formation-modifiers
-    - possessive-short-adjectives
-    - adjective-comparison
-    - synonymy-thinking-verbs
-    - synonymy-speaking-verbs
-    - antonyms-polysemy
-    - homonyms-paronyms
-    - collocations-expressions
-    - abstract-concepts-ideas
-    - abstract-concepts-processes
-    - expressing-opinions
-    - agreement-disagreement
-    - discourse-markers-basic
-    - discourse-markers-advanced
-    - describing-changes
-    - media-news
-    - society-politics
+    - checkpoint-comparison
+    # Phase 6: Advanced Case Usages & Prepositions (9 modules)
+    - genitive-nuances
+    - dative-nuances
+    - instrumental-nuances
+    - prepositions-spatial
+    - prepositions-temporal
+    - prepositions-cause-purpose
+    - cases-with-numerals
+    - advanced-pronouns
+    - checkpoint-cases
+    # Phase 7: Participles & Gerunds (9 modules)
+    - participles-intro
+    - participles-active
+    - participles-passive
+    - participle-phrases
+    - gerunds-intro
+    - gerunds-imperfective
+    - gerunds-perfective
+    - gerund-phrases
+    - checkpoint-participles
+    # Phase 8: Complex Syntax (10 modules)
+    - complex-compound
+    - complex-subordinate-object
+    - complex-subordinate-relative
+    - complex-subordinate-time
+    - complex-subordinate-reason
+    - complex-subordinate-condition
+    - complex-subordinate-purpose
+    - complex-subordinate-concess
+    - reported-speech
+    - checkpoint-syntax
+    # Phase 9: Stylistics, Nuance & Text Compression (8 modules)
+    - lexical-stylistics
+    - syntactic-stylistics
+    - text-compression
+    - double-negation
+    - introductory-words
     - professional-communication
-    - environment-ecology
-    - health-wellness
-    - emotions-deep-dive
-    - relationships
-    - business-basics
-    - travel-geography
-    - emotional-intelligence
-    - regions-west
-    - regions-east
-    - regions-south
-    - regions-center
-    - ukrainian-music-today
-    - ukrainian-cinema-and-tv
-    - technology-and-startups
-    - sports-in-ukraine
-    - active-lifestyle
-    - running-in-ukraine
-    - mountains-trail
-    - cycling-water
-    - winter-sports
-    - ukrainian-cuisine
-    - ukrainski-sviata-ta-festyvali
-    - novyny-yak-chytaty
-    - interviu-ta-podkasty
-    - communication-channels
-    - presentations-visuals
-    - feedback-negotiation-complaints
-    - b1-final-exam
+    - reading-literature
+    - checkpoint-stylistics
+    # Phase 10: B1 Synthesis & Graduation (7 modules)
+    - narrative-mastery
+    - debate-and-opinion
+    - media-and-news
+    - comprehensive-b1-review
+    - practice-exam-reading
+    - practice-exam-writing
+    - b1-finale
   b2:
     type: core
     modules:
