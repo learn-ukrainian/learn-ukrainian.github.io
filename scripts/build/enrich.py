@@ -317,19 +317,35 @@ def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
         actions.append("dialogue-formatting")
         content = new_content
 
-    # 2. Build tab content
-    slovnyk = _build_slovnyk(plan, content)
-    videos = _build_video_embeds(plan)
-    resources = _build_resources(plan)
+    # 2. Strip existing enrichment (idempotent — safe to re-run)
+    # Remove existing tab markers and everything after the first non-Урок tab
+    if "<!-- TAB:Словник -->" in content:
+        # Content was already enriched — strip everything from Словник tab onward
+        slovnyk_pos = content.index("<!-- TAB:Словник -->")
+        content = content[:slovnyk_pos].strip()
+    if "<!-- TAB:Урок -->" in content:
+        # Strip the Урок tab marker itself (we'll re-add it)
+        content = content.replace("<!-- TAB:Урок -->", "").strip()
 
-    # 3. Find Summary section — it stays in the Урок tab
-    # Remove Video/Словник/Resources sections if they were injected before (rebuild)
+    # Also remove old V5-era section headings
     content = re.sub(
         r"\n## (?:Video Resources|Відео — Video|Словник — Vocabulary|Resources|Ресурси — Resources)\n.*?(?=\n## |\Z)",
         "",
         content,
         flags=re.DOTALL,
     )
+    # Remove inline video sections from previous enrichment
+    content = re.sub(
+        r"\n### Відео — Video\n.*?(?=\n## |\n<!-- TAB:|\Z)",
+        "",
+        content,
+        flags=re.DOTALL,
+    )
+
+    # 3. Build tab content
+    slovnyk = _build_slovnyk(plan, content)
+    videos = _build_video_embeds(plan)
+    resources = _build_resources(plan)
 
     # 4. Insert inline videos into the prose (Урок tab)
     # Videos go right before Summary if it exists, otherwise at end of prose
