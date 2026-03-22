@@ -142,6 +142,7 @@ title: "Г чи Ґ? (Г or Ґ?)"
 
 
 
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
@@ -236,10 +237,3 @@ Advanced exercises for this module are in development. Check back soon!
   _Hard [–] vs soft [=] consonant notation._
 - Большакова Grade 1, p.45-47
   _Тверді і пом'якшені приголосні звуки._
-
-**Статті — Articles**
-
-- [How to talk about transport in Ukrainian](https://www.ukrainianlessons.com/fmu5/) (ukrainianlessons.com)
-- [How to ORDER at the restaurant in Ukrainian](https://www.ukrainianlessons.com/fmu16/) (ukrainianlessons.com)
-- [Grammar point: Plural of nouns in Ukrainian](https://www.ukrainianlessons.com/fmu46/) (ukrainianlessons.com)
-- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) (ukrainianlessons.com)

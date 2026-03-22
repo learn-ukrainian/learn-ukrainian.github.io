@@ -131,6 +131,7 @@ title: "Що це сло́во означа́є? (What does this word mean?)"
 
 
 
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
@@ -208,10 +209,3 @@ Advanced exercises for this module are in development. Check back soon!
   _Звуковий аналіз слова method — how to analyze word sounds._
 - Захарійчук Grade 1 (NUS 2025), p.13-15
   _Sound notation: [•] for vowels, [–] for consonants, [=] for soft._
-
-**Статті — Articles**
-
-- [How to talk about transport in Ukrainian](https://www.ukrainianlessons.com/fmu5/) (ukrainianlessons.com)
-- [How to ORDER at the restaurant in Ukrainian](https://www.ukrainianlessons.com/fmu16/) (ukrainianlessons.com)
-- [Grammar point: Plural of nouns in Ukrainian](https://www.ukrainianlessons.com/fmu46/) (ukrainianlessons.com)
-- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) (ukrainianlessons.com)

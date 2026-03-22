@@ -363,42 +363,9 @@ def _load_external_resources(slug: str, plan: dict) -> list[dict]:
     if prefixed in resources:
         return _flatten_resources(resources[prefixed])
 
-    # 3. Topic-based fuzzy match — use plan title + vocab keywords
-    title = plan.get("title", "").lower()
-    focus = plan.get("focus", "").lower()
-    vocab_words = " ".join(str(v) for v in plan.get("vocabulary_hints", {}).get("required", []))
-    keywords = set(re.split(r"[\s,()]+", f"{title} {focus} {vocab_words}".lower()))
-    keywords -= {"and", "the", "of", "in", "a", "", "—"}
-
-    # Collect ALL matching slugs (score >= 1), return resources from best matches
-    matches: list[tuple[int, str]] = []
-    for er_slug, _er_content in resources.items():
-        if not er_slug.startswith(f"{level}-"):
-            continue
-        slug_words = set(er_slug.replace(f"{level}-", "").split("-"))
-        overlap = len(keywords & slug_words)
-        if overlap >= 1:
-            matches.append((overlap, er_slug))
-
-    if matches:
-        # Sort by score descending
-        matches.sort(reverse=True)
-        best_score = matches[0][0]
-        # Only use matches with score >= 2, or the single best if all are 1
-        top_matches = (
-            [(s, slug) for s, slug in matches if s >= 2]
-            if best_score >= 2
-            else [matches[0]]
-        )
-
-        all_resources = []
-        seen_urls: set[str] = set()
-        for _score, match_slug in top_matches[:3]:
-            for item in _flatten_resources(resources[match_slug]):
-                if item["url"] and item["url"] not in seen_urls:
-                    seen_urls.add(item["url"])
-                    all_resources.append(item)
-        return all_resources
+    # No fuzzy matching — only exact slug matches.
+    # external_resources.yaml uses old V2 slugs that don't map to V3.
+    # TODO: remap external_resources.yaml to V3 slugs (#1022)
 
     return []
 

@@ -173,6 +173,7 @@ When sounding out an unfamiliar word, go letter by letter from left to right. Fi
 
 
 
+
 ### Відео — Video
 
 <YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
@@ -275,7 +276,3 @@ Advanced exercises for this module are in development. Check back soon!
   _38 звуків: 6 голосних + 32 приголосні._
 - [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
   _Привіт, Як справи?, response patterns._
-
-**Статті — Articles**
-
-- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
