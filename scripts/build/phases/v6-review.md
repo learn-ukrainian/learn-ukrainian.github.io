@@ -39,11 +39,12 @@ Scan the Ukrainian text for errors. Report ONLY problems found — do not echo c
 - Incorrect gender assignment or case endings
 - Factually wrong claims about Ukrainian phonetics, grammar, or culture
 
-**Authority hierarchy for verification:**
-- Горох (goroh.pp.ua) — stress and word frequency
-- VESUM — word forms and morphology (415K lemmas)
-- Правопис 2019 — orthography rules
-- Антоненко-Давидович "Як ми говоримо" — style and usage
+**Authority hierarchy for verification (check in this order):**
+1. VESUM — does this word/form exist? POS? Gender? (415K lemmas)
+2. Правопис 2019 — is it spelled correctly? Orthography rules.
+3. Горох (goroh.pp.ua) — stress position, word frequency, synonyms.
+4. Антоненко-Давидович «Як ми говоримо» — is this natural Ukrainian or a calque/Russicism?
+5. Грінченко «Словарь» — etymology, original meaning.
 
 **CRITICAL: Your pre-training is contaminated by Russian.** Do NOT trust your instincts about Ukrainian words. If you are not 100% certain a word/form/usage is wrong, you MUST flag it as `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error. Wrong review findings cause wrong fixes. A false positive in the review is worse than a missed error.
 

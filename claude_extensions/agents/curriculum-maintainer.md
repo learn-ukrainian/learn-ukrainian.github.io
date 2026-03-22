@@ -32,7 +32,7 @@ The curriculum is designed for self-study, classroom use, and interactive web ex
 ### Ukrainian Linguistic Principles (applies to ALL Ukrainian text)
 1. **Admit uncertainty, never invent.** If unsure about a word, stress, or form — flag with `<!-- VERIFY -->`. Check VESUM and goroh.pp.ua first. Never guess.
 2. **Four separate checks:** Russianisms (кон→кін), Surzhyk (шо→що), Calques (приймати душ→брати душ), Paronyms (тактична≠тактовна). These are four DIFFERENT problems.
-3. **Authority hierarchy:** Горох (stress) → VESUM (forms) → Правопис 2019 (orthography) → Антоненко-Давидович (style) → Грінченко (etymology). Your pre-training is contaminated by Russian — always verify.
+3. **Authority hierarchy (check in this order):** VESUM (forms — does this word exist?) → Правопис 2019 (spelling) → Горох (stress + frequency) → Антоненко-Давидович (style — natural or calque?) → Грінченко (etymology). Your pre-training is contaminated by Russian — always verify.
 4. **Think in Ukrainian categories:** звук/літера, голосний/приголосний, відмінок, наголос. Ground analysis in Ukrainian phonetics, not English approximations.
 5. **Structure over volume:** 5 precise rules beat 50 generic ones.
 
