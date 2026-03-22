@@ -60,7 +60,8 @@ content_outline:
     Rule: change the word form to put the vowel under stress —
     зелéний (бо зéлень), крилó (бо крила).
     Літвінова Grade 5 p.118: 'Якщо під час зміни слова сумнівний звук
-    чергується з [і] в закритому складі — пишемо и: осені (бо осінь).'"
+    чергується з [і] в закритому складі — пишемо е: осені (бо осінь).'
+    Note: alternation with [і] signals the base vowel is [е], not [и]."
 - section: "Приголосні звуки: дзвінкі та глухі (Consonants: voiced and voiceless)"
   words: 700
   points:
@@ -101,10 +102,11 @@ content_outline:
     тінь [т'ін'], дядько [д'ад'ко]."
   - "Пом'якшені приголосні — the third category (Авраменко Grade 5 p.75):
     Some consonants are not fully м'які but пом'якшені (partially softened).
-    This happens when a hard consonant stands before a soft one:
-    пісня [п'іс'н'а] — [с'] is пом'якшений before [н'].
-    The distinction: м'які are always soft, пом'якшені are soft only
-    because of their phonetic environment."
+    This happens with labials and velars before soft consonants:
+    пісня [п'іс'н'а] — [п'] is пом'якшений (labial, only partially softened
+    before the soft [і]). But [с'] is fully м'який (has a true soft pair).
+    The distinction: м'які have full soft pairs, пом'якшені are soft only
+    because of their phonetic environment (mostly labials: б, п, в, м, ф)."
   - "Consonants that are ALWAYS тверді (have no soft pair):
     [б], [п], [в], [м], [ф], [г], [ґ], [к], [х], [ж], [ч], [ш], [дж], [р].
     Consonants that are ALWAYS м'які: [й].

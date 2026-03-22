@@ -4,16 +4,16 @@ sequence: 7
 slug: checkpoint-b1-foundation
 version: '3.0'
 title: "Контрольна робота 1"
-subtitle: "Перевiрка знань: фонетика, морфологiя, синтаксис, часи, вид, опис людини"
+subtitle: "Перевірка знань: фонетика, морфологія, синтаксис, часи, вид, опис людини"
 focus: review
 pedagogy: PPP
 phase: "B1.1 [Metalanguage Bridge & Foundation]"
 word_target: 4000
 objectives:
 - "Learner can demonstrate mastery of Ukrainian phonetic metalanguage
-  (звук/лiтера, голосний/приголосний, дзвiнкий/глухий/сонорний,
-  наголос, транскрипцiя) through targeted exercises"
-- "Learner can analyze word structure (корiнь, префiкс, суфiкс, закiнчення)
+  (звук/літера, голосний/приголосний, дзвінкий/глухий/сонорний,
+  наголос, транскрипція) through targeted exercises"
+- "Learner can analyze word structure (корінь, префікс, суфікс, закінчення)
   and identify частини мови using Ukrainian terminology"
 - "Learner can correctly use all three future tense forms (проста, складна,
   складена) and choose appropriate aspect (доконаний/недоконаний) in context"
@@ -27,70 +27,70 @@ content_outline:
   points:
   - "Overview of the checkpoint structure: this module tests everything
     from M01-M06 (Phase 1: Metalanguage Bridge & Foundation).
-    Six content areas: фонетика (M01), морфологiя (M02),
-    синтаксис i вiдмiнки (M03), минуле i теперiшнє (M04),
-    майбутнє i вид дiєслова (M05), людина i стосунки (M06)."
-  - "Instructions in Ukrainian: 'Виконайте всi завдання по черзi.
-    Для кожного завдання є пiдказка, який модуль повторити, якщо
-    вiдповiдь виявиться складною. Не поспiшайте — головне розумiння,
-    а не швидкiсть.'"
+    Six content areas: фонетика (M01), морфологія (M02),
+    синтаксис i відмінки (M03), минуле i теперішнє (M04),
+    майбутнє i вид дієслова (M05), людина i стосунки (M06)."
+  - "Instructions in Ukrainian: 'Виконайте всі завдання по черзі.
+    Для кожного завдання є підказка, який модуль повторити, якщо
+    відповідь виявиться складною. Не поспішайте — головне розуміння,
+    а не швидкість.'"
   - "Self-assessment framework: after each section, learners rate their
-    confidence (впевнено / потребую повторення / не розумiю) to identify
+    confidence (впевнено / потребую повторення / не розумію) to identify
     areas for review before moving to Phase 2."
-- section: "Блок 1: Фонетика та графiка (Block 1: Phonetics and graphics — M01)"
+- section: "Блок 1: Фонетика та графіка (Block 1: Phonetics and graphics — M01)"
   words: 650
   points:
   - "Passage-based assessment: a Ukrainian text (150-200 words) about
     Ukrainian nature or culture, followed by phonetic analysis tasks:
-    — Count голоснi та приголоснi звуки in selected words.
-    — Classify приголоснi as дзвiнкi, глухi, or сонорнi.
-    — Identify м'якi та твердi приголоснi and explain why.
+    — Count голосні та приголосні звуки in selected words.
+    — Classify приголосні as дзвінкі, глухі, or сонорні.
+    — Identify м'які та тверді приголосні and explain why.
     — Mark наголос in 8-10 words from the passage."
-  - "Transcription exercises: learners produce фонетична транскрипцiя
+  - "Transcription exercises: learners produce фонетична транскрипція
     for 5 words of increasing complexity, applying rules from M01:
     яблуко → [йаблуко], воля → [вол'а], щастя → [шчас'т'а],
-    об'їжджати → [обйiж:ати]. Error-check: learners find mistakes
+    об'їжджати → [обйіж:ати]. Error-check: learners find mistakes
     in provided transcriptions."
   - "Metalanguage definitions: match Ukrainian terms to their meanings:
-    фонетика, графiка, орфоепiя, фонема, наголос, транскрипцiя.
-    Short-answer: explain the difference between звук and лiтера."
-- section: "Блок 2: Морфологiя та будова слова (Block 2: Morphology and word structure — M02)"
+    фонетика, графіка, орфоепія, фонема, наголос, транскрипція.
+    Short-answer: explain the difference between звук and літера."
+- section: "Блок 2: Морфологія та будова слова (Block 2: Morphology and word structure — M02)"
   words: 600
   points:
   - "Word structure analysis: learners break down 6-8 words into
-    корiнь, префiкс, суфiкс, закiнчення, основа.
+    корінь, префікс, суфікс, закінчення, основа.
     Example words selected to test prefix/suffix identification:
-    пришкiльний (при-школ-н-ий), безхмарний (без-хмар-н-ий),
+    пришкільний (при-школ-н-ий), безхмарний (без-хмар-н-ий),
     перечитати (пере-чит-а-ти)."
   - "Частини мови identification: given a mixed list of 12-15 words,
-    learners sort them into самостiйнi and службовi частини мови,
-    then identify specific parts of speech: iменник, прикметник,
-    дiєслово, прислiвник, числiвник, займенник, прийменник,
+    learners sort them into самостійні and службові частини мови,
+    then identify specific parts of speech: іменник, прикметник,
+    дієслово, прислівник, числівник, займенник, прийменник,
     сполучник, частка."
   - "Practical application: learners analyze a short Ukrainian sentence,
     identifying the частина мови and морфемна будова of each word."
-- section: "Блок 3: Синтаксис та вiдмiнки (Block 3: Syntax and cases — M03)"
+- section: "Блок 3: Синтаксис та відмінки (Block 3: Syntax and cases — M03)"
   words: 600
   points:
-  - "Sentence analysis: learners identify члени речення (пiдмет, присудок,
+  - "Sentence analysis: learners identify члени речення (підмет, присудок,
     додаток, означення, обставина) in 4-5 Ukrainian sentences.
-    Sentences designed to test: складнi випадки (compound predicates,
+    Sentences designed to test: складні випадки (compound predicates,
     implied subjects, adverbial phrases)."
   - "Case identification and usage: given sentences with highlighted nouns,
-    learners determine the вiдмiнок and explain the grammatical role.
-    Focus on cases that cause difficulty: родовий vs знахiдний for
-    animate masculines, мiсцевий vs давальний with прийменники."
+    learners determine the відмінок and explain the grammatical role.
+    Focus on cases that cause difficulty: родовий vs знахідний for
+    animate masculines, місцевий vs давальний with прийменники."
   - "Simple vs compound sentence recognition: learners classify 6 sentences
     as просте or складне речення and identify conjunctions/connectors.
-    Practice distinguishing складносурядне from складнопiдрядне речення."
-- section: "Блок 4: Часи дiєслова — минулий, теперiшнiй, майбутнiй (Block 4: Verb tenses — M04-M05)"
+    Practice distinguishing складносурядне from складнопідрядне речення."
+- section: "Блок 4: Часи дієслова — минулий, теперішній, майбутній (Block 4: Verb tenses — M04-M05)"
   words: 700
   points:
   - "Tense identification: learners sort 15-20 verb forms into three
-    columns: минулий час, теперiшнiй час, майбутнiй час.
+    columns: минулий час, теперішній час, майбутній час.
     Mixed forms including all three future types.
     Example verb forms: працюватимеш, крикнув, обробиш, упорядковую,
-    ламатимуть, iснувала, живете, буде шепотiти, перетворюватиме."
+    ламатимуть, існувала, живете, буде шепотіти, перетворюватиме."
   - "Future tense mastery: for 6 verbs, learners produce all possible
     future forms (проста, складна, складена where applicable) and
     identify which are доконаний, which недоконаний.
@@ -107,19 +107,19 @@ content_outline:
   points:
   - "Portrait vocabulary: given a literary portrait excerpt (100-150 words),
     learners identify and categorize портретна лексика:
-    зовнiшнiсть (appearance words), характер (character words),
-    художнi засоби (artistic devices: епiтети, порiвняння)."
+    зовнішність (appearance words), характер (character words),
+    художні засоби (artistic devices: епітети, порівняння)."
   - "Character description: learners choose the correct adjective from
     pairs of near-synonyms to complete descriptions:
-    щирий/чесний, лагiдний/нiжний, кремезний/товстий, стрункий/худий.
+    щирий/чесний, лагідний/ніжний, кремезний/товстий, стрункий/худий.
     Each pair tests precise semantic knowledge."
   - "Family and relationship vocabulary: fill-in exercises testing
-    Ukrainian kinship terms (свекруха vs теща, зять vs невiстка)
-    and the стосунки/вiдносини/ставлення distinction."
+    Ukrainian kinship terms (свекруха vs теща, зять vs невістка)
+    and the стосунки/відносини/ставлення distinction."
   - "Introduction role-play: learners write a short dialogue (8-10 lines)
     where they introduce a friend to a colleague using formal register,
-    applying кличний вiдмiнок and appropriate formulas."
-- section: "Пiдсумок та самооцiнка (Summary and self-assessment)"
+    applying кличний відмінок and appropriate formulas."
+- section: "Підсумок та самооцінка (Summary and self-assessment)"
   words: 450
   points:
   - "Integrated reading comprehension: a Ukrainian text (200-250 words)
@@ -128,11 +128,11 @@ content_outline:
     comprehension questions that require metalanguage, grammar, and
     vocabulary knowledge."
   - "Self-assessment checklist in Ukrainian:
-    Фонетика: Чи можу я зробити фонетичну транскрипцiю?
-    Морфологiя: Чи можу я розiбрати слово за будовою?
+    Фонетика: Чи можу я зробити фонетичну транскрипцію?
+    Морфологія: Чи можу я розібрати слово за будовою?
     Синтаксис: Чи можу я визначити члени речення?
     Часи: Чи можу я правильно вживати три форми майбутнього часу?
-    Вид: Чи розумiю я рiзницю мiж доконаним i недоконаним видом?
+    Вид: Чи розумію я різницю між доконаним i недоконаним видом?
     Опис: Чи можу я описати людину українською мовою?"
   - "Recommendations for review: if a learner scored below 70% on any
     block, return to the corresponding module. Phase 2 (Morphophonemics)
@@ -144,27 +144,27 @@ vocabulary_hints:
   required:
   - "контрольна робота (test/assessment — formal evaluation of knowledge)"
   - "фонетика (phonetics — the study of speech sounds)"
-  - "морфологiя (morphology — the study of word forms)"
+  - "морфологія (morphology — the study of word forms)"
   - "синтаксис (syntax — the study of sentence structure)"
-  - "вид дiєслова (verbal aspect — perfective vs imperfective)"
+  - "вид дієслова (verbal aspect — perfective vs imperfective)"
   - "доконаний (perfective — completed action)"
   - "недоконаний (imperfective — ongoing action)"
-  - "транскрипцiя (transcription — phonetic notation)"
+  - "транскрипція (transcription — phonetic notation)"
   - "наголос (stress — emphasized syllable)"
-  - "зовнiшнiсть (appearance)"
+  - "зовнішність (appearance)"
   - "характер (character — personality traits)"
   - "стосунки (relationships)"
   recommended:
-  - "самооцiнка (self-assessment)"
+  - "самооцінка (self-assessment)"
   - "повторення (review/revision)"
   - "завдання (task/exercise)"
   - "впевнено (confidently)"
   - "складний (difficult/complex)"
   - "виправити (to correct — finding errors)"
-  - "проаналiзувати (to analyze — breaking down language)"
+  - "проаналізувати (to analyze — breaking down language)"
   - "визначити (to determine/identify)"
-  - "пiдсумок (summary/conclusion)"
-  - "оцiнювання (evaluation/grading)"
+  - "підсумок (summary/conclusion)"
+  - "оцінювання (evaluation/grading)"
 activity_hints:
 - type: quiz
   focus: "Mixed metalanguage quiz: phonetic classification, morphological
@@ -183,7 +183,7 @@ activity_hints:
     incorrect transcription, misused descriptive vocabulary."
   items: 8
 - type: group-sort
-  focus: "Sort verb forms by tense (минулий/теперiшнiй/майбутнiй) and
+  focus: "Sort verb forms by tense (минулий/теперішній/майбутній) and
     by future form type (проста/складна/складена)."
   items: 12
 - type: free-write
@@ -202,22 +202,22 @@ prerequisites:
 - "b1-005 (b1-baseline-future-aspect)"
 - "b1-006 (people-and-relationships)"
 grammar:
-- "Review: фонетична транскрипцiя and sound classification"
+- "Review: фонетична транскрипція and sound classification"
 - "Review: морфемна будова слова and частини мови"
 - "Review: члени речення and sentence types"
 - "Review: past, present, and all three future tense forms"
-- "Review: вид дiєслова — доконаний vs недоконаний"
+- "Review: вид дієслова — доконаний vs недоконаний"
 - "Review: портретна лексика, character adjectives, kinship terms"
 - "Integration: using metalanguage, grammar, and vocabulary together"
 register: науково-навчальний
 references:
 - title: "All Phase 1 module references"
   notes: "This checkpoint draws on textbook sources cited in M01-M06:
-    Заболотний Grade 5/7, Авраменко Grade 5/7, Литвiнова Grade 5/7,
+    Заболотний Grade 5/7, Авраменко Grade 5/7, Литвінова Grade 5/7,
     Караман Grade 10, Кравцова Grade 4, Ворон Grade 9."
 - title: "Заболотний Grade 7, p.54-65"
-  notes: "Часи дiєслова, вид дiєслова — primary source for Block 4 exercises."
+  notes: "Часи дієслова, вид дієслова — primary source for Block 4 exercises."
 - title: "Авраменко Grade 7, p.100-101"
-  notes: "Опис зовнiшностi людини — primary source for Block 5 portrait analysis."
-- title: "Литвiнова Grade 7, p.30-49"
-  notes: "Вид дiєслова and майбутнiй час — source for aspect and future tense review."
+  notes: "Опис зовнішності людини — primary source for Block 5 portrait analysis."
+- title: "Литвінова Grade 7, p.30-49"
+  notes: "Вид дієслова and майбутній час — source for aspect and future tense review."
