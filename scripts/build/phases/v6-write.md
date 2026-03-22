@@ -10,6 +10,24 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 
 ---
 
+## Step 1: Pacing Plan (output this FIRST)
+
+Before writing any content, output a `<pacing_plan>` block. Evaluate each section from the plan and commit to a word budget. This prevents frontloading early sections and rushing later ones.
+
+```
+<pacing_plan>
+Section 1 "Title": ~XXX words — [1-sentence content focus]
+Section 2 "Title": ~XXX words — [1-sentence content focus]
+...
+Summary: ~150 words
+Total: {WORD_TARGET}+ words
+</pacing_plan>
+```
+
+Then begin writing the module content. Follow your own pacing plan — each section must hit its word budget (±10%).
+
+---
+
 ## 6 Hard Rules
 
 1. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."

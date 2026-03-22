@@ -326,6 +326,15 @@ def step_write(level: str, module_num: int, slug: str,
         _log("  ❌ Writer returned no output")
         return None
 
+    # Save pacing plan if present (for debugging)
+    import re as _re
+    pacing_match = _re.search(r"<pacing_plan>(.*?)</pacing_plan>", raw, _re.DOTALL)
+    if pacing_match:
+        pacing_text = pacing_match.group(1).strip()
+        _log(f"  📐 Pacing plan:\n{pacing_text}")
+        pacing_path = orch_dir / "pacing-plan.txt"
+        pacing_path.write_text(pacing_text, "utf-8")
+
     # Extract content (everything from first ## heading)
     lines = raw.split("\n")
     content_start = -1
@@ -339,6 +348,9 @@ def step_write(level: str, module_num: int, slug: str,
         final_content = raw
     else:
         final_content = "\n".join(lines[content_start:])
+
+    # Strip any pacing_plan tags that leaked into content
+    final_content = _re.sub(r"</?pacing_plan>", "", final_content)
 
     output_path.write_text(final_content, "utf-8")
     word_count = len(final_content.split())
