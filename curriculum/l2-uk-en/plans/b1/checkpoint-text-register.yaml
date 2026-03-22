@@ -1,0 +1,170 @@
+module: b1-084
+level: B1
+sequence: 84
+slug: checkpoint-text-register
+version: '3.0'
+title: "Контрольна робота 9"
+subtitle: "Перевірка знань: стилі мовлення, заперечення, вставні слова, природа, читання"
+focus: review
+pedagogy: PPP
+phase: "B1.9 [Text and Register]"
+word_target: 4000
+objectives:
+- "Learner can demonstrate mastery of офіційно-діловий and розмовний стилі
+  by identifying register markers and producing texts in both registers"
+- "Learner can correctly use абревіатури, графічні скорочення, and
+  number/date conventions in Ukrainian"
+- "Learner can apply подвійне заперечення correctly, including правопис
+  не/ні разом and окремо"
+- "Learner can identify and use вставні слова with correct punctuation,
+  distinguishing them from sentence members"
+- "Learner can read and analyze B1-level Ukrainian texts (literary and
+  non-literary), identifying стиль, художні засоби, and key vocabulary"
+content_outline:
+- section: "Вступ: як працювати з контрольною (Introduction)"
+  words: 300
+  points:
+  - "Overview: this checkpoint tests M77-M83 (Phase 9: Text and Register).
+    Seven content areas: офіційно-діловий стиль (M77), розмовний стиль (M78),
+    абревіатури (M79), подвійне заперечення (M80), вставні слова (M81),
+    природа i довкілля (M82), читання літератури (M83)."
+  - "Instructions: 'Виконайте всі завдання по черзі. Якщо завдання
+    здається складним, поверніться до відповідного модуля для повторення.'"
+  - "Self-assessment framework: впевнено / потребую повторення / не розумію."
+- section: "Блок 1: Стилі мовлення (Block 1: Speech styles — M77-M78)"
+  words: 650
+  points:
+  - "Style identification: four text excerpts (100-120 words each) —
+    learners identify each as офіційно-діловий, розмовний, науковий,
+    публіцистичний, or художній. Cite specific linguistic markers."
+  - "Register transformation: given a розмовний dialogue, learners rewrite
+    it in офіційно-діловий стиль (and vice versa). Tests understanding of
+    register-specific vocabulary, grammar, and tone."
+  - "Document composition: learners write a short заява or оголошення,
+    demonstrating mastery of офіційно-діловий стиль conventions.
+    Evaluation criteria: correct formatting, канцеляризми, case government."
+  - "Суржик identification: learners find and correct суржик elements
+    in a dialogue, replacing with genuine розмовна українська."
+- section: "Блок 2: Абревіатури та скорочення (Block 2: Abbreviations — M79)"
+  words: 500
+  points:
+  - "Decoding: learners expand 10 абревіатури (ЗСУ, ООН, ЗМI, ЄС, etc.)
+    and determine граматичний рід of each."
+  - "Agreement: complete sentences with абревіатури, ensuring correct
+    verb/adjective agreement (ООН ухвалила, ЗСУ звільнили)."
+  - "Графічні скорочення: write a Ukrainian address using standard
+    скорочення, write a date прописом, correct errors in скорочення usage."
+- section: "Блок 3: Подвійне заперечення (Block 3: Double negation — M80)"
+  words: 550
+  points:
+  - "Translation exercises: English negative sentences → Ukrainian with
+    correct подвійне/потрійне заперечення."
+  - "Правопис: разом чи окремо — learners write не/ні correctly with
+    заперечні займенники (in all cases, with and without прийменники)
+    and заперечні прислівники."
+  - "Error correction: find and fix negation errors in 6-8 sentences
+    (missing не, wrong написання, English-pattern single negation)."
+  - "Наголос: distinguish нікого немає vs нікого й спитати in context."
+- section: "Блок 4: Вставні слова (Block 4: Parenthetical words — M81)"
+  words: 550
+  points:
+  - "Classification: identify вставні слова in a text and sort them by
+    semantic group (впевненість, невпевненість, емоції, джерело, порядок)."
+  - "Punctuation: add or remove commas in sentences with вставні слова.
+    Include tricky cases: words that are sometimes вставні (здається,
+    можливо) and words that are never вставні (адже, навіть)."
+  - "Removal test: determine whether highlighted words are вставні or
+    sentence members by testing if the sentence works without them."
+  - "Production: insert appropriate вставні слова to express specified
+    attitudes in given sentences."
+- section: "Блок 5: Природа i читання (Block 5: Nature and reading — M82-M83)"
+  words: 700
+  points:
+  - "Nature vocabulary: classify given words into погода, рослини, тварини,
+    екологія categories. Fill in descriptions with correct vocabulary."
+  - "Literary reading: a B1-level Ukrainian text (200-250 words) about
+    nature or environment. Comprehension questions testing:
+    основна думка, деталі, художні засоби, стиль мовлення."
+  - "Художні засоби identification: find and name епітети, метафори,
+    порівняння, персоніфікації in the passage."
+  - "Opinion writing: structured response to the literary text using
+    вставні слова and opinion vocabulary (8-10 sentences)."
+- section: "Підсумок та самооцінка (Summary and self-assessment)"
+  words: 400
+  points:
+  - "Integrated exercise: a multi-register text (news article containing
+    абревіатури, a quoted dialogue in розмовний стиль, a literary
+    description). Learners identify all register shifts and language features."
+  - "Self-assessment checklist in Ukrainian:
+    Стилі: Чи розрізняю я офіційно-діловий i розмовний стилі?
+    Абревіатури: Чи знаю я основні українські абревіатури?
+    Заперечення: Чи правильно вживаю подвійне заперечення?
+    Вставні слова: Чи вмію я їх використовувати та виділяти комами?
+    Природа: Чи знаю я лексику природи i довкілля?
+    Читання: Чи розумію я художні тексти рівня B1?"
+  - "Preview of Phase 10: B1 Synthesis & Graduation —
+    putting everything together for B1 completion."
+vocabulary_hints:
+  required:
+  - "контрольна робота (test/assessment)"
+  - "стиль мовлення (speech style/register)"
+  - "абревіатура (abbreviation/acronym)"
+  - "подвійне заперечення (double negation)"
+  - "вставне слово (parenthetical word)"
+  - "довкілля (environment)"
+  - "художній засіб (literary device)"
+  - "самооцінка (self-assessment)"
+  recommended:
+  - "повторення (review/revision)"
+  - "перевірка (check/verification)"
+  - "оцінювання (evaluation)"
+  - "завдання (task/exercise)"
+activity_hints:
+- type: quiz
+  focus: "Mixed quiz across all Phase 9 topics: style identification,
+    абревіатури, negation patterns, вставні слова classification."
+  items: 12
+- type: fill-in
+  focus: "Complete texts with correct register vocabulary, negation forms,
+    вставні слова, and nature vocabulary."
+  items: 10
+- type: error-correction
+  focus: "Find and correct errors across all Phase 9 areas: register mixing,
+    wrong скорочення, negation errors, вставні commas."
+  items: 8
+- type: match-up
+  focus: "Match style excerpts to стилі мовлення, художні засоби to
+    definitions, абревіатури to full forms."
+  items: 10
+- type: group-sort
+  focus: "Sort mixed vocabulary and expressions by register, negation type,
+    вставне group, and nature category."
+  items: 12
+- type: free-write
+  focus: "Integrated writing: describe a nature scene using художні засоби,
+    then write a formal oголошення about an environmental event."
+  items: 1
+connects_to:
+- "b1-077 to b1-083 (all Phase 9 modules — this checkpoint tests them)"
+- "b1-085 (narrative-mastery — first module of Phase 10)"
+prerequisites:
+- "b1-077 (text-register-formal)"
+- "b1-078 (text-register-informal)"
+- "b1-079 (text-compression)"
+- "b1-080 (double-negation)"
+- "b1-081 (introductory-words)"
+- "b1-082 (nature-and-environment)"
+- "b1-083 (reading-literature)"
+grammar:
+- "Review: стилі мовлення — identification and production"
+- "Review: абревіатури — types, рід, відмінювання, правопис"
+- "Review: подвійне заперечення — не/ні разом/окремо"
+- "Review: вставні слова — groups, пунктуація, removal test"
+- "Review: художні засоби — identification and naming"
+- "Integration: applying all Phase 9 knowledge in mixed contexts"
+register: розмовний
+references:
+- title: "All Phase 9 module references"
+  notes: "This checkpoint draws on textbook sources cited in M77-M83:
+    Заболотний Grade 6/8, Авраменко Grade 8-11, Караман Grade 10,
+    Глазова Grade 10-11, Голуб Grade 6, Ворон Grade 9/11."
