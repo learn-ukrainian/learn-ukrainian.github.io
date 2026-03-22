@@ -878,6 +878,42 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score
 
 
+def _convert_tab_markers(content: str) -> str:
+    """Convert <!-- TAB:name --> markers to <Tabs>/<TabItem> MDX components.
+
+    Input:  <!-- TAB:Урок -->\n...content...\n<!-- TAB:Словник -->\n...
+    Output: <Tabs syncKey="module-tab">
+            <TabItem label="Урок">\n...content...\n</TabItem>
+            <TabItem label="Словник">\n...
+    """
+    import re
+
+    tab_pattern = re.compile(r"<!-- TAB:(.+?) -->")
+    tabs = list(tab_pattern.finditer(content))
+
+    if not tabs:
+        return content
+
+    parts = []
+    parts.append('<Tabs syncKey="module-tab">')
+
+    for i, match in enumerate(tabs):
+        tab_name = match.group(1)
+        start = match.end()
+        end = tabs[i + 1].start() if i + 1 < len(tabs) else len(content)
+        tab_content = content[start:end].strip()
+
+        parts.append(f'<TabItem label="{tab_name}">')
+        parts.append("")
+        parts.append(tab_content)
+        parts.append("")
+        parts.append("</TabItem>")
+
+    parts.append("</Tabs>")
+
+    return "\n".join(parts)
+
+
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
     """Step 9: Convert DSL→MDX."""
     _log(f"\n{'='*60}")
@@ -919,7 +955,8 @@ build_status: draft
 """
 
     # Add component imports
-    imports = """import Quiz from '@site/src/components/Quiz';
+    imports = """import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Quiz from '@site/src/components/Quiz';
 import FillIn from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
 import TrueFalse from '@site/src/components/TrueFalse';
@@ -927,6 +964,9 @@ import GroupSort from '@site/src/components/GroupSort';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 
 """
+
+    # Convert tab markers to <Tabs>/<TabItem> wrappers
+    mdx_content = _convert_tab_markers(mdx_content)
 
     mdx_path.write_text(frontmatter + imports + mdx_content, "utf-8")
     _log(f"  ✅ MDX written → {mdx_path}")

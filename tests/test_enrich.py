@@ -1,4 +1,4 @@
-"""Tests for V6 Step 7b: ENRICH — словник, videos, resources, dialogues."""
+"""Tests for V6 Step 7b: ENRICH — tabs, словник, videos, resources, dialogues."""
 
 import sys
 from pathlib import Path
@@ -22,7 +22,7 @@ class TestSlovnyk:
             }
         }
         result = _build_slovnyk(plan)
-        assert "## Словник — Vocabulary" in result
+        assert "Обов'язкові слова" in result
         assert "| **мама** | mother |" in result
         assert "| **тато** | father |" in result
         assert "| **вода** | water |" in result
@@ -35,8 +35,8 @@ class TestSlovnyk:
             }
         }
         result = _build_slovnyk(plan)
-        assert "### Required words" in result
-        assert "### Recommended words" in result
+        assert "Обов'язкові" in result
+        assert "Рекомендовані" in result
         assert "| **банк** | bank |" in result
 
     def test_words_without_translation(self):
@@ -72,7 +72,8 @@ class TestVideoEmbeds:
             }
         }
         result = _build_video_embeds(plan)
-        assert "[Full playlist]" in result
+        assert "Full playlist" in result
+        assert "Повний плейлист" in result
 
     def test_per_letter_videos(self):
         plan = {
@@ -134,7 +135,7 @@ class TestDialogueFormatting:
 
 
 class TestEnrichIntegration:
-    def test_full_enrichment(self):
+    def test_full_enrichment_has_tabs(self):
         content = "## Section 1\n\nSome content.\n\n## Підсумок — Summary\n\nSummary here."
         plan = {
             "vocabulary_hints": {
@@ -153,19 +154,49 @@ class TestEnrichIntegration:
         assert "slovnyk-table" in actions
         assert "video-embeds" in actions
         assert "external-resources" in actions
+        assert "tab-structure" in actions
 
-        # Enrichments should appear BEFORE summary
-        slovnyk_pos = result.index("Словник")
-        summary_pos = result.index("Підсумок")
-        assert slovnyk_pos < summary_pos
+        # Tab markers present
+        assert "<!-- TAB:Урок -->" in result
+        assert "<!-- TAB:Словник -->" in result
+        assert "<!-- TAB:Зошит -->" in result
+        assert "<!-- TAB:Ресурси -->" in result
 
-    def test_no_summary_appends_at_end(self):
-        content = "## Section 1\n\nContent only."
+    def test_workbook_placeholder(self):
+        content = "## Section 1\n\nContent."
         plan = {"vocabulary_hints": {"required": ["тест (test)"]}}
 
         result, actions = enrich(content, plan)
-        assert "slovnyk-table" in actions
-        assert result.endswith("\n")
+        assert "workbook-placeholder" in actions
+        assert "Розширені вправи" in result  # Ukrainian "Advanced exercises"
+
+    def test_slovnyk_in_separate_tab(self):
+        content = "## Section 1\n\nContent."
+        plan = {"vocabulary_hints": {"required": ["мама (mother)"]}}
+
+        result, _actions = enrich(content, plan)
+        # Словник content appears AFTER the Словник tab marker
+        slovnyk_tab = result.index("<!-- TAB:Словник -->")
+        slovnyk_content = result.index("Обов'язкові слова")
+        assert slovnyk_content > slovnyk_tab
+
+    def test_videos_inline_in_urok_tab(self):
+        content = "## Section 1\n\nContent.\n\n## Підсумок — Summary\n\nDone."
+        plan = {
+            "pronunciation_videos": {
+                "overview": "https://www.youtube.com/watch?v=abc",
+            },
+        }
+
+        result, _actions = enrich(content, plan)
+        # Video appears in the Урок tab (before Словник tab marker)
+        urok_marker = result.index("<!-- TAB:Урок -->")
+        video_pos = result.index("YouTubeVideo")
+        if "<!-- TAB:Словник -->" in result:
+            slovnyk_marker = result.index("<!-- TAB:Словник -->")
+        else:
+            slovnyk_marker = result.index("<!-- TAB:Зошит -->")
+        assert urok_marker < video_pos < slovnyk_marker
 
     def test_m01_plan_enrichment(self):
         """Test with actual M01 plan data."""
@@ -198,7 +229,7 @@ class TestEnrichIntegration:
         content = "## Звуки і літери\n\nContent.\n\n## Підсумок — Summary\n\nDone."
         result, actions = enrich(content, plan)
 
-        assert len(actions) >= 3
+        assert len(actions) >= 4  # videos, slovnyk, resources, tabs, workbook
         # All 10 required words in table
         assert result.count("| **") >= 10
         # Video embed
@@ -207,3 +238,8 @@ class TestEnrichIntegration:
         assert "PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV" in result
         # References
         assert "ukrainianlessons.com" in result
+        # All 4 tabs
+        assert "<!-- TAB:Урок -->" in result
+        assert "<!-- TAB:Словник -->" in result
+        assert "<!-- TAB:Зошит -->" in result
+        assert "<!-- TAB:Ресурси -->" in result

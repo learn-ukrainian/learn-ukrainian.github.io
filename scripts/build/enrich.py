@@ -1,16 +1,17 @@
-"""V6 Step 7b: ENRICH — словник, videos, dialogue formatting, resources.
+"""V6 Step 7b: ENRICH — tabs, словник, videos, dialogue formatting, resources.
 
 Deterministic enrichment step. Reads plan YAML and injects structural
 elements into generated content that the LLM writer doesn't produce:
 
-1. Словник (vocabulary table) from plan vocabulary_hints
-2. YouTube video embeds from plan pronunciation_videos
-3. External resources section from plan references
-4. Dialogue block formatting (:::dialogue wrappers)
+1. Tab structure (Урок / Словник / Зошит / Ресурси)
+2. Словник (vocabulary table) from plan vocabulary_hints
+3. YouTube video embeds from plan pronunciation_videos
+4. External resources section from plan references
+5. Dialogue block formatting (:::dialogue wrappers)
 
 Runs after ANNOTATE, before VERIFY.
 
-Issue: #1009
+Issue: #1009, #1012
 """
 
 from __future__ import annotations
@@ -20,6 +21,9 @@ from pathlib import Path
 
 import yaml
 from build.text_utils import parse_vocab_hint
+
+# Tab markers — PUBLISH step converts these to <Tabs>/<TabItem>
+TAB_MARKER = "<!-- TAB:{name} -->"
 
 
 def _vocab_table_rows(items: list) -> list[str]:
@@ -42,9 +46,7 @@ def _build_slovnyk(plan: dict) -> str:
 
     lines = [
         "",
-        "## Словник — Vocabulary",
-        "",
-        "### Required words",
+        "### Обов'язкові слова — Required words",
         "",
         "| Слово | Translation |",
         "|-------|-------------|",
@@ -54,7 +56,7 @@ def _build_slovnyk(plan: dict) -> str:
     if recommended:
         lines.extend([
             "",
-            "### Recommended words",
+            "### Рекомендовані слова — Recommended words",
             "",
             "| Слово | Translation |",
             "|-------|-------------|",
@@ -71,7 +73,7 @@ def _build_video_embeds(plan: dict) -> str:
     if not pv:
         return ""
 
-    lines = ["", "## Video Resources", ""]
+    lines = []
 
     overview = pv.get("overview", "")
     if overview:
@@ -81,7 +83,7 @@ def _build_video_embeds(plan: dict) -> str:
 
     playlist = pv.get("playlist", "")
     if playlist:
-        lines.append(f"📋 [Full playlist]({playlist})")
+        lines.append(f"[Повний плейлист / Full playlist]({playlist})")
         lines.append("")
 
     # Per-letter videos
@@ -105,7 +107,7 @@ def _build_resources(plan: dict) -> str:
     if not refs:
         return ""
 
-    lines = ["", "## Resources", ""]
+    lines = []
 
     for ref in refs:
         title = ref.get("title", "")
@@ -132,7 +134,6 @@ def _format_dialogues(content: str) -> str:
 
     And wraps them in :::dialogue ... ::: blocks.
     """
-    # Pattern: 2+ consecutive lines starting with — (em dash)
     dialogue_pattern = re.compile(
         r"((?:^— .+\n){2,})",
         re.MULTILINE,
@@ -146,7 +147,16 @@ def _format_dialogues(content: str) -> str:
 
 
 def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
-    """Enrich content with vocabulary table, videos, resources, and dialogue formatting.
+    """Enrich content with tab structure, vocabulary, videos, resources, dialogues.
+
+    Organizes content into 4 tabs:
+    - Урок (Lesson): prose + inline exercises + videos from plan
+    - Словник (Vocabulary): word tables from vocabulary_hints
+    - Зошит (Workbook): "Coming soon" placeholder
+    - Ресурси (Resources): external links, textbook references
+
+    Tab boundaries are marked with <!-- TAB:name --> comments.
+    The PUBLISH step converts these to <Tabs>/<TabItem> components.
 
     Args:
         content: Module markdown content (after annotation).
@@ -163,40 +173,65 @@ def enrich(content: str, plan: dict) -> tuple[str, list[str]]:
         actions.append("dialogue-formatting")
         content = new_content
 
-    # 2. Build enrichment sections
+    # 2. Build tab content
     slovnyk = _build_slovnyk(plan)
     videos = _build_video_embeds(plan)
     resources = _build_resources(plan)
 
-    # 3. Append enrichment sections before Summary (if it exists)
-    # Find the Summary heading to insert enrichments before it
-    summary_match = re.search(
-        r"^(## (?:Підсумок|Summary).*$)",
+    # 3. Find Summary section — it stays in the Урок tab
+    # Remove Video/Словник/Resources sections if they were injected before (rebuild)
+    content = re.sub(
+        r"\n## (?:Video Resources|Відео — Video|Словник — Vocabulary|Resources|Ресурси — Resources)\n.*?(?=\n## |\Z)",
+        "",
         content,
-        re.MULTILINE,
+        flags=re.DOTALL,
     )
 
-    enrichments = ""
+    # 4. Insert inline videos into the prose (Урок tab)
+    # Videos go right before Summary if it exists, otherwise at end of prose
     if videos:
-        enrichments += videos
+        summary_match = re.search(r"^(## (?:Підсумок|Summary))", content, re.MULTILINE)
+        video_section = f"\n### Відео — Video\n\n{videos}\n"
+        if summary_match:
+            content = content[:summary_match.start()] + video_section + "\n" + content[summary_match.start():]
+        else:
+            content = content.rstrip() + "\n" + video_section
         actions.append("video-embeds")
+
+    # 5. Assemble with tab markers
+    parts = []
+
+    # Tab 1: Урок (the prose content with inline exercises and videos)
+    parts.append("<!-- TAB:Урок -->")
+    parts.append(content.strip())
+
+    # Tab 2: Словник
     if slovnyk:
-        enrichments += slovnyk
+        parts.append("\n<!-- TAB:Словник -->")
+        parts.append(slovnyk.strip())
         actions.append("slovnyk-table")
+
+    # Tab 3: Зошит (Coming soon)
+    parts.append("\n<!-- TAB:Зошит -->")
+    parts.append(
+        ":::note\n"
+        "Розширені вправи для цього уроку ще в розробці.\n\n"
+        "Advanced exercises for this module are in development. "
+        "Check back soon!\n"
+        ":::"
+    )
+    actions.append("workbook-placeholder")
+
+    # Tab 4: Ресурси
     if resources:
-        enrichments += resources
+        parts.append("\n<!-- TAB:Ресурси -->")
+        parts.append(resources.strip())
         actions.append("external-resources")
 
-    if enrichments:
-        if summary_match:
-            # Insert before Summary
-            insert_pos = summary_match.start()
-            content = content[:insert_pos] + enrichments + "\n" + content[insert_pos:]
-        else:
-            # Append at end
-            content = content.rstrip() + "\n" + enrichments
+    enriched = "\n\n".join(parts)
+    actions.append("tab-structure")
 
-    return content, actions
+    return enriched, actions
 
 
 def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
