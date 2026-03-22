@@ -1,42 +1,53 @@
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=23902 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=23936 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ## Linguistic Scan
-No linguistic errors found.
+- "Око" is described as "a poetic word" for eye. This is a factual error stemming from Russian interference. In Russian, "око" is poetic/archaic (standard is "глаз"). In Ukrainian, "око" is the standard, everyday word for eye.
 
 ## Exercise Check
-- `:::quiz` (Звук чи літера?): 6 items. Logic is correct. Matches plan's `activity_hints` type and focus. Sufficient items.
-- `:::match-up` (Match false friend letters to their real sounds): 6 items. Logic is correct. Matches plan's `activity_hints` type and focus. Sufficient items.
-- `:::fill-in` (Complete the greeting dialogue): 4 items. Logic is correct. Matches plan's `activity_hints` type and focus. Sufficient items.
-- `:::group-sort` (Classify these Ukrainian letters): 2 groups, 8 items total. Logic is correct. Matches plan's `activity_hints` type and focus. Sufficient items.
-- `:::true-false` (True or false?): 5 items. **Issue:** This exercise was not requested in the plan's `activity_hints`.
+- `:::quiz` (Звук чи літера?): 6 items. Matches plan. Tests Section 1 concepts.
+- `:::match-up` (Match false friend letters): 6 items. Matches plan. Tests Section 2 concepts.
+- `:::group-sort` (Голосні чи приголосні?): 8 items. Matches plan. Tests Section 1 concepts, but placed awkwardly at the end of Section 2.
+- `:::fill-in` (Complete the greeting): 4 items. Matches plan. Tests Section 3 concepts.
+- `:::true-false` (True or false?): 5 items. NOT IN PLAN. The plan explicitly outlined 4 activities in `activity_hints`. This is an extra, hallucinated activity.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed word count budgets in sections "Привіт!" (~160 words vs 250 planned) and "Читаємо" (~150 words vs 250 planned). Overall word count is ~1000, under the 1200 target. Added an unrequested exercise. All content points are successfully covered. |
-| 2. Linguistic accuracy | 10/10 | Spot on. Accurate descriptions of unaspirated K/T, dental T, and the behaviors of Щ, Ь, and Ї. No Russianisms or Surzhyk. |
-| 3. Pedagogical quality | 10/10 | Excellent application of PPP. Effectively utilizes the requested textbook quotes ("Голосні почуєш в пісні", "Приголосні деренчать"). Keeps scope strictly to A1. |
-| 4. Vocabulary coverage | 10/10 | 100% coverage. All required (мама, тато, вода, рука, книга, школа, привіт, як справи, добре, чудово) and recommended words are introduced naturally in the text. |
-| 5. Exercise quality | 8/10 | The required exercises are well-constructed, test the right skills, and have the correct number of items. However, the writer hallucinated an extra true-false exercise at the end. |
-| 6. Engagement & tone | 8/10 | Tone is appropriately warm and authoritative, but explicitly uses LLM filler ("Do not panic — ") which was strictly forbidden in the review criteria. |
-| 7. Structural integrity | 8/10 | All H2 headings match the plan exactly. Formatting is clean. Points deducted only for the overall word count falling short of the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Contextualizes reading practice with real Ukrainian city names and common street signs. Respectful representation. |
-| 9. Dialogue & conversation quality | 10/10 | The introductory dialogue is natural, realistic, and correctly highlights the gendered response differences (Рада/Радий) without overwhelming the learner. |
+| 1. Plan adherence | 5/10 | Misses section word budgets significantly (e.g., Section 4 is ~150 words vs 250 planned). Fails to implement the "Self-check" question format requested for the Summary. Adds an unrequested True/False exercise. |
+| 2. Linguistic accuracy | 7/10 | Falsely claims "око" is a poetic word (a Russianism conceptual error). Otherwise, explanations of phonetics (dental T, unaspirated K) are accurate. |
+| 3. Pedagogical quality | 9/10 | Excellent breakdown of sounds vs letters. Good integration of the Большакова textbook quotes to ground the theory. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words are integrated naturally into the prose. |
+| 5. Exercise quality | 7/10 | Exercises are well-constructed, but the `group-sort` on vowels/consonants is placed in Section 2 instead of Section 1 where it belongs, and an unrequested True/False exercise was added. |
+| 6. Engagement & tone | 9/10 | Warm, encouraging tone. "Fighting every instinct" is a great hook for the false friends section. |
+| 7. Structural integrity | 6/10 | Total word count is under 1100 words (plan 1200). Section word budgets fluctuate well outside the ±10% margin. |
+| 8. Cultural accuracy | 9/10 | Good cultural hooks (embroidery for мак, traditional хата, brief but accurate city descriptions). |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, appropriate for A1, and clearly explain the gendered nuances of "рада/радий". |
 
 ## Findings
-[Engagement & tone] [minor]
-Location: Section "New Shapes" ("Do not panic — you will learn these through words, not by memorizing a chart.")
-Issue: Uses forbidden LLM filler ("Do not panic") explicitly called out in the review criteria constraints.
-Fix: Remove "Do not panic — " and simply start the sentence with "You will learn these through words..."
 
-[Plan adherence] [minor]
-Location: Sections "Привіт! (Hello!)" and "Читаємо (Reading Practice)".
-Issue: Both sections are significantly under their word budgets (160 words vs 250 planned, 150 words vs 250 planned). The overall module falls short of the 1200 word target.
-Fix: Expand the "Привіт!" section with more examples of greeting scenarios or pronunciation tips for the phrases. Expand "Читаємо" with a few more environmental signs or basic sentences to meet the target.
+[2. Linguistic accuracy] [major]
+Location: Section "Перші слова (First Words)": "Око — eye (a poetic word)."
+Issue: Factual error caused by Russian linguistic interference. In Russian, "око" is poetic/archaic. In Ukrainian, it is the standard, everyday word for eye.
+Fix: Remove "(a poetic word)".
 
-[Exercise quality] [minor]
+[1. Plan adherence] [major]
 Location: Section "Підсумок — Summary"
-Issue: An extra `:::true-false` exercise was included at the end. The plan's `activity_hints` did not request a true-false exercise, only a quiz, match-up, fill-in, and group-sort.
-Fix: Remove the `:::true-false` exercise block to strictly adhere to the plan.
+Issue: The plan explicitly requires a question-based self-check format ("Self-check: How many letters? How many sounds? Why are they different?..."). The generated text provides only declarative summary paragraphs and ignores the prompt's structural requirement.
+Fix: Rewrite the summary as a series of self-check questions for the learner to test their recall, exactly as outlined in the plan.
 
-## Verdict: PASS
-The module is highly accurate, pedagogically sound, and successfully meets the primary linguistic and structural goals for the A1.1 level. There are zero critical or major findings. The minor issues (slight word count shortage, one piece of LLM filler, and one extra exercise) are easily fixable polish items.
+[7. Structural integrity] [major]
+Location: Module-wide, specifically "Читаємо" and "Підсумок"
+Issue: Section word targets are ignored. "Читаємо" is ~150 words (plan: 250). "Звуки і літери" is ~200 words (plan: 250). The module falls short of the 1200-word target and violates the ±10% per-section budget rule.
+Fix: Expand the underwritten sections, particularly "Читаємо", with more examples, reading practice, or context to meet the word targets.
+
+[5. Exercise quality] [minor]
+Location: End of Section "Читаємо (Reading Practice)"
+Issue: An extra `:::true-false` exercise was generated that was not requested in the `activity_hints`.
+Fix: Remove the true-false exercise to strictly adhere to the planned activity list.
+
+[5. Exercise quality] [minor]
+Location: End of Section "Перші слова (First Words)", the `:::group-sort` activity.
+Issue: The activity tests vowels (голосні) vs consonants (приголосні), which was taught in Section 1. It is placed at the end of Section 2, after learning completely different topics (false friends, new shapes).
+Fix: Move the `:::group-sort` activity to the end of the "Звуки і літери" section.
+
+## Verdict: REVISE
+The module contains major findings, specifically a factual linguistic error rooted in Russian interference ("око" as poetic), a failure to follow the explicit structural requirements for the Summary section, and significant word count/budget deviations. It does not require a complete rewrite, but these issues must be fixed before it can pass.
