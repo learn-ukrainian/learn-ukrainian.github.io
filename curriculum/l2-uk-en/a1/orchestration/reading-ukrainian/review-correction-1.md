@@ -3,15 +3,14 @@ CRITICAL: Your previous module was reviewed and scored below 8.0/10.
 You must rewrite the module FROM SCRATCH, fixing ALL issues below.
 All original constraints from the writing prompt still apply.
 
-- FIX: [2. Linguistic accuracy] [critical]
-  Location: section "Голосні літери (Vowel Letters)" — "Сир (cheese) vs сір (grey)."
-  Issue: "сір" does not mean "grey" in Ukrainian. The word for "grey" is "сірий". The AI invented a word to create a clean minimal pair.
-  Fix: Remove the "сир vs сір" example entirely, or replace it with a valid minimal pair (e.g., "мишка (mouse) vs мішка (sack/bear)").
-- NOTE: [6. Engagement & tone] [minor]
-  Location: Throughout the text (e.g., "Now the clever ones", "One more reading tip", "Now a challenge round", "Do not panic").
-- NOTE: Issue: Minor use of LLM filler phrases and conversational transitions that make the text sound slightly artificial and overly enthusiastic.
-  Fix: Remove the filler transitions and state the instructions or facts more directly.
+- NOTE: [SEVERITY] minor
+  Location: "Next, CVCCV — a consonant cluster appears before the second vowel: школа, книга, па́рта."
+  Issue: "школа" (ш-к-о-л-а) and "книга" (к-н-и-г-а) actually follow a CCVCV pattern (the consonant cluster is at the beginning, before the first vowel), not CVCCV like "па́рта" (п-а-р-т-а). While this error originated in the module plan, it should be corrected in the text so learners are not confused about syllable structures.
+  Fix: Separate the patterns in the explanation. For example: "CCVCV (cluster at the start): школа, книга. CVCCV (cluster in the middle): парта."
+- FIX: [SEVERITY] major
+  Location: "Level 3 — four or more syllables: університет, бібліотека, фотографія, шоколад."
+  Issue: The text claims "шоколад" is a word with four or more syllables, but earlier in the text it correctly identified it as having three syllables ("шо-ко-лад"). Placing it in the 4+ category directly contradicts the core lesson on counting syllables.
+  Fix: Move "шоколад" to the Level 2 list (three syllables) and remove it from Level 3.
 
-- FIX (Linguistic): Found 1 linguistic error:
-- Factual/Vocabulary error: "сір" does not mean "grey". The Ukrainian word for "grey" is "сірий". "Сір" is not a valid Ukrainian adjective.
+- FIX (Linguistic): No Russianisms, Surzhyk, or calques found. The Ukrainian text is highly accurate. However, there are two linguistic/pedagogical inaccuracies: 1) labeling "школа" and "книга" as CVCCV instead of CCVCV, and 2) classifying "шоколад" as having 4+ syllables despite correctly identifying it as having 3 syllables earlier in the text.
 </correction_directive>

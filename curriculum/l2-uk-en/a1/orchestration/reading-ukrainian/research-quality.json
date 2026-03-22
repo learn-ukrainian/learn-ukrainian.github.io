@@ -1,73 +1,67 @@
 {
   "exists": true,
   "words": 4438,
-  "quality": "thin",
-  "score": 2,
-  "score_raw": 3,
+  "quality": "solid",
+  "score": 8,
+  "score_raw": 13,
   "score_max": 17,
-  "markers": 2,
+  "markers": 8,
   "profile": "core",
   "dimensions": {
     "state_standard": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "missing"
+      "detail": "6 sections covered"
     },
     "vocabulary": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "missing"
+      "detail": "36 textbook excerpts"
     },
     "cultural_hooks": {
       "score": 0,
       "max": 2,
-      "detail": "missing"
+      "detail": "no cultural references found"
     },
     "learner_errors": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "missing"
+      "detail": "N/A for V6 packets"
     },
     "cross_references": {
       "score": 0,
       "max": 1,
-      "detail": "missing"
+      "detail": "only 1 author(s)"
     },
     "pedagogy_notes": {
-      "score": 0,
+      "score": 1,
       "max": 1,
-      "detail": "missing"
+      "detail": "2 pedagogy references"
     },
     "source_verification": {
-      "score": 0,
+      "score": 1,
       "max": 2,
-      "detail": "no sources found"
+      "detail": "36 sources"
     },
     "claim_grounding": {
       "score": 2,
       "max": 2,
-      "detail": "12 cited examples, 977 Ukrainian terms"
+      "detail": "1644 Ukrainian terms"
     },
     "discovery_integration": {
-      "score": 0,
+      "score": 1,
       "max": 1,
-      "detail": "0 resources"
+      "detail": "N/A for V6"
     },
     "specificity": {
-      "score": 1,
+      "score": 2,
       "max": 2,
-      "detail": "3 specific markers (need 5+)"
+      "detail": "4438 words"
     }
   },
   "gaps": [
-    "state_standard: missing",
-    "vocabulary: missing",
-    "cultural_hooks: missing",
-    "learner_errors: missing",
-    "cross_references: missing",
-    "pedagogy_notes: missing",
-    "source_verification: no sources found",
-    "discovery_integration: 0 resources",
-    "specificity: 3 specific markers (need 5+)"
+    "cultural_hooks: no cultural references found",
+    "cross_references: only 1 author(s)",
+    "source_verification: 36 sources"
   ]
 }

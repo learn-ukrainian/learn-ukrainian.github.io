@@ -1,33 +1,49 @@
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=24827 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=25230 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ## Linguistic Scan
-No linguistic errors found.
+No linguistic errors found. The Ukrainian text is grammatically correct, properly utilizes open syllable division (складоподіл) principles (e.g., `а-пте-ка`), and accurately explains phonetic concepts without relying on Russianisms or Surzhyk.
 
 ## Exercise Check
-- `:::quiz` "Скільки складів?": 8 items. Tests syllable counting logic taught in the previous section. Correctly formats answers using 0-based indexing. Matches plan's activity hints exactly.
-- `:::match-up` "Йотовані голосні": 4 items. Tests iotated vowel sounds ([й] + vowel). Correct logic and format. Matches plan's activity hints exactly.
-- `:::fill-in` "Поділи на склади": 8 items. Tests syllable division based on the open-syllable principle (e.g., а-пте-ка). Logic is correct. Matches plan's activity hints exactly.
-- `:::quiz` "Що це слово означає?": 6 items. Tests meaning of required vocabulary words practiced in the reading section. Correct logic and format. Matches plan's activity hints exactly.
+- `:::fill-in` (Divide into syllables): 8 items present. Matches plan. Logic is correct, utilizing proper Ukrainian open-syllable division.
+- `:::quiz` (How many syllables?): 8 items present. Matches plan. Logic is correct (vowel counting matches the provided answers).
+- `:::match-up` (Iotated vowels): 4 items present. Matches plan. Accurately maps Я, Ю, Є, Ї to their [й] + vowel components.
+- `:::quiz` (What does this word mean?): 6 items present. Matches plan. Distractors are well-chosen from the vocabulary list.
 
-All exercises are placed correctly after the relevant teaching sections and align perfectly with the plan.
+All exercises align perfectly with the plan's `activity_hints` and test the exact skills taught in the module.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all outline points and uses all required vocabulary/references, but falls slightly short of the 1200 word target (~960 words generated). |
-| 2. Linguistic accuracy | 10/10 | Flawless phonetic descriptions. Accurate application of the open-syllable rule (а-пте-ка) and clear distinction of iotated vowels and minimal pairs (кит vs кіт). |
-| 3. Pedagogical quality | 10/10 | Perfectly applies the Звуковий аналіз method from the Большакова textbook. Progression from single letters to syllables to multisyllabic words is logical and highly effective for A1.1. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (яблуко, молоко, людина, університет, etc.) are integrated naturally into the reading practice and examples. |
-| 5. Exercise quality | 10/10 | Exercises perfectly match the plan's activity hints in type, focus, and item count. They directly test the mechanics taught in the preceding text. |
-| 6. Engagement & tone | 10/10 | The tone is encouraging, authoritative, and perfectly suited for adult beginners. It demystifies the Cyrillic alphabet effectively. |
-| 7. Structural integrity | 9/10 | All H2 headings from the plan are present and markdown is clean. Word count is slightly below the target. |
-| 8. Cultural accuracy | 10/10 | Highlights unique Ukrainian phonetic elements, such as the letter "Ї" and specific textbook learning methods used by native Ukrainian children. |
-| 9. Dialogue & conversation quality | 9/10 | The short reading passages ("Це Київ. Це столиця...") are natural, simple, and contextually appropriate for the very first reading lesson. |
+| 1. Plan adherence | 7/10 | The module entirely misses the "Захарійчук Grade 1" reference regarding standard sound notation (`[•]` for vowels, `[–]` for consonants, `[=]` for soft). It also swapped the planned "Що це?" for "А це?" in the final reading text, skipping the intended practice for the letter Щ. |
+| 2. Linguistic accuracy | 10/10 | Excellent. Accurately explains Ukrainian phonetic rules (vowel counting, iotated softening vs. dual sounds, apostrophe separation) with zero Russianisms. |
+| 3. Pedagogical quality | 8/10 | Generally strong PPP structure, but omitting the Zaсhariychuk sound notation skips a foundational visual tool used in actual Ukrainian schools for sound analysis (звуковий аналіз). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are seamlessly integrated into the explanations and reading text. |
+| 5. Exercise quality | 10/10 | Placeholders perfectly match the planned types, focuses, and item counts. Correct answers are flawlessly mapped. |
+| 6. Engagement & tone | 9/10 | The tone is highly encouraging and clear, but is marred slightly by sloppy mid-sentence capitalization in the drills (e.g., "Слон", "Ананас"). |
+| 7. Structural integrity | 8/10 | All H2 headings match the plan, but the word count is consistently 15-20% under budget across all sections, falling outside the ±10% acceptable variance (prose is ~1025 words vs 1200 target). |
+| 8. Cultural accuracy | 10/10 | Properly frames the learning around authentic Ukrainian primary school methods (Большакова) and points out uniquely Ukrainian linguistic features (Ї). |
+| 9. Dialogue & conversation quality | 10/10 | The connected reading text at the end is perfectly calibrated for absolute beginners just learning to blend syllables. |
 
 ## Findings
-[1. Plan adherence] [minor]
-Location: Entire module
-Issue: The total word count is approximately 960 words, falling short of the 1200-word target (about 20% under budget). Sections like "Склади" and "Голосні літери" are slightly shorter than their specific word budgets.
-Fix: Expand the explanations slightly or provide a few more reading practice examples in each section to hit the target word count. 
 
-## Verdict: PASS
-This module is exceptionally well-written. It translates first-grade Ukrainian phonetic instruction (Звуковий аналіз) into clear, accessible concepts for English-speaking adults. The linguistic explanations are accurate, the exercises are flawless, and it successfully meets all pedagogical goals. The slight shortfall in word count is a minor issue that does not detract from the module's high quality. Ready to ship.
+[DIMENSION 1: Plan adherence] [SEVERITY: major]
+Location: Entire module, specifically missing from "Склади (Syllables)"
+Issue: The plan explicitly requires teaching the standard Ukrainian school sound notation: "[•] for vowels, [–] for consonants, [=] for soft" based on the "Захарійчук Grade 1 (NUS 2025)" reference. This notation is completely omitted from the generated content.
+Fix: Add a paragraph explaining this standard visual notation when introducing vowels and consonants during the "звуковий аналіз" explanation.
+
+[DIMENSION 1: Plan adherence] [SEVERITY: minor]
+Location: Section "Читаємо разом (Reading Together)", Paragraph 3 ("Це Київ. Це столиця...")
+Issue: The plan specified using "Що це? Це кафе." in the reading text to ensure the learner practices reading the newly introduced letter "Щ". The generated text changed this to "А це? Це кафе.", completely missing the planned phonetic practice.
+Fix: Revert "А це?" to "Що це?" in the reading text.
+
+[DIMENSION 7: Structural integrity] [SEVERITY: minor]
+Location: Entire module
+Issue: The prose word count is consistently under budget (totaling roughly ~1025 words instead of the 1200 target). This falls outside the ±10% acceptable variance.
+Fix: Expand the explanations slightly across all sections, particularly by incorporating the missing Zakhariychuk sound notation and adding a few more guided syllable breakdown examples.
+
+[DIMENSION 6: Engagement & tone] [SEVERITY: minor]
+Location: Section "Склади (Syllables)", Paragraph 3 ("Quick drill. Count the vowels...")
+Issue: Target words are randomly capitalized mid-sentence as if they are proper nouns (e.g., "оса́ — two vowels, о-са. Слон — one vowel... Анана́с — three vowels... Смола́... Ла́мана"). This is stylistically sloppy and confusing.
+Fix: Change the capitalization to lowercase for these examples (e.g., "слон — one vowel", "ананас — three vowels").
+
+## Verdict: REVISE
+The module is linguistically sound and features excellent exercises, but it requires revision to address a major plan adherence failure: the complete omission of the Zakhariychuk primary school sound notation (`[•], [–], [=]`). Fixing this, along with correcting the missed "Що" practice, fixing the mid-sentence capitalization, and slightly bumping the word count, will bring it up to standard.
