@@ -82,11 +82,12 @@ TAB_MARKER = "<!-- TAB:{name} -->"
 
 
 def _vocab_table_rows(items: list) -> list[str]:
-    """Generate markdown table rows from vocabulary hint items."""
+    """Generate markdown table rows from vocabulary hint items with VESUM data."""
     rows = []
     for item in items:
         word, translation = parse_vocab_hint(item)
-        rows.append(f"| **{word}** | {translation} |")
+        pos, gender = _vesum_lookup(word)
+        rows.append(f"| **{word}** | {translation} | {pos} | {gender} |")
     return rows
 
 
@@ -180,8 +181,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             "",
             "### Обов'язкові слова — Required words",
             "",
-            "| Слово | Translation |",
-            "|-------|-------------|",
+            "| Слово | Переклад | Частина мови | Рід |",
+            "|-------|----------|-------------|-----|",
             *_vocab_table_rows(required),
         ])
 
@@ -190,8 +191,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             "",
             "### Рекомендовані слова — Recommended words",
             "",
-            "| Слово | Translation |",
-            "|-------|-------------|",
+            "| Слово | Переклад | Частина мови | Рід |",
+            "|-------|----------|-------------|-----|",
             *_vocab_table_rows(recommended),
         ])
 
@@ -200,12 +201,12 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             "",
             "### Додаткові слова з уроку — Additional words from the lesson",
             "",
-            "| Слово | Частина мови | Рід |",
-            "|-------|-------------|-----|",
+            "| Слово | Переклад | Частина мови | Рід |",
+            "|-------|----------|-------------|-----|",
         ])
         for word in additional:
             pos, gender = _vesum_lookup(word)
-            lines.append(f"| **{word}** | {pos} | {gender} |")
+            lines.append(f"| **{word}** |  | {pos} | {gender} |")
 
     lines.append("")
     return "\n".join(lines)
