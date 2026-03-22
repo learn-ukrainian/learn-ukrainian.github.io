@@ -1,6 +1,6 @@
-Section 1 "Склади (Syllables)": ~280 words — Teach the golden syllable rule (count vowels = count syllables), the 4-step reading method, progressive examples from 1 to 5 syllables.
-Section 2 "Голосні літери (Vowel Letters)": ~320 words — All 10 vowel letters: 6 simple vowels, 4 iotated vowels with dual behavior, Ї as uniquely Ukrainian, И vs І minimal pairs.
-Section 3 "Читання слів (Reading Words)": ~300 words — Syllable-by-syllable reading strategy applied to real words, common CVCV/CVC patterns, special combinations Щ/Ь/apostrophe preview.
-Section 4 "Читаємо разом (Reading Together)": ~200 words — Progressive reading ladder (2→3→4→5 syllables), simple reading text using Це + noun structures.
-Section 5 "Підсумок — Summary": ~150 words — Self-check questions as specified in plan.
-Total: ~1250 words
+Section 1 "Склади (Syllables)": ~280 words — Teach the golden syllable rule (vowels = syllables), open-syllable principle, step-by-step word reading method with multiple examples
+Section 2 "Голосні літери (Vowel Letters)": ~320 words — All 10 vowel letters, simple vs iotated, Ї as uniquely Ukrainian, minimal pairs И/І
+Section 3 "Читання слів (Reading Words)": ~300 words — Syllable-by-syllable reading strategy, common word patterns (CVCV, CVC, CVCCV), special letter combinations preview
+Section 4 "Читаємо разом (Reading Together)": ~220 words — Progressive reading practice from 2-syllable to 4+ syllable words, simple reading text with Це + noun
+Section 5 "Підсумок — Summary": ~150 words — Self-check questions, key takeaways, bridge to M03
+Total: ~1270 words

@@ -1,41 +1,45 @@
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=24049 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=23519 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ## Linguistic Scan
-- Phonetic division error: The text states the open-syllable principle ("consonants prefer to begin a new syllable"), but then divides words incorrectly: "ап-те-ка" (should be "а-пте-ка") and "біб-лі-о-те-ка" (should be "бі-блі-о-те-ка").
+Found one typo/mixed-alphabet error:
+- "букvar" should be "буквар"
 
 ## Exercise Check
-- `:::quiz title: "Скільки складів? (How many syllables?)"`: 8 items. Good logic and correct zero-indexed answers. Matches plan.
-- `:::match-up title: "Iotated vowels — what sounds do they make?"`: 4 items. Logic is correct. Matches plan.
-- `:::fill-in title: "Поділи на склади (Divide into syllables)"`: 8 items. Contains phonetic division errors ("ап-те-ка", "біб-лі-о-те-ка") that violate the text's own teaching of the open-syllable principle. Matches plan type/focus.
-- `:::quiz title: "Що це? (What is it?)"`: 6 items. Logic is correct. Matches plan.
+- `:::quiz` (Скільки складів?): 8 items. Correctly tests syllable counting by vowels. Matches plan.
+- `:::fill-in` (Divide into syllables): 8 items. Correctly tests syllable division rules. Matches plan.
+- `:::match-up` (Iotated vowels): 4 items. Correctly tests the sound components of Я, Ю, Є, Ї. Matches plan.
+- `:::quiz` (Read and choose the meaning): 6 items. Tests vocabulary comprehension from the reading practice. Matches plan.
+- `:::group-sort` (Sort by syllable count): 3 groups, 12 items total. Not explicitly requested in the plan's `activity_hints`, but provides good supplementary practice for the core skill. 
+
+All exercises test the correct skills, have logical distractors/answers, and align well with the pedagogical goals of the lesson.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | The module falls short of the 1200 word target (only ~900 words, -25%), failing to meet the specific section word budgets. It also ignored the plan's explicit example of "а-пте-ка" in the content outline. |
-| 2. Linguistic accuracy | 7/10 | The Ukrainian text is generally correct, but it fails on phonetic syllable division ("ап-те-ка", "біб-лі-о-те-ка"), which is a key learning objective. |
-| 3. Pedagogical quality | 7/10 | While the PPP structure is present, the pedagogical delivery is deeply flawed by stating a rule ("consonants prefer to begin a new syllable") and immediately breaking it in the examples. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary from the plan is introduced naturally in the prose. |
-| 5. Exercise quality | 8/10 | The exercises match the plan's activity hints perfectly in type and count, but the fill-in exercise reinforces the incorrect syllable division ("ап-те-___", "біб-лі-о-те-___"). |
-| 6. Engagement & tone | 9/10 | The tone is warm and encouraging, using clear textbook references (Большакова) that make the learner feel they are learning authentic Ukrainian. |
-| 7. Structural integrity | 8/10 | All H2 headings from the plan are present and perfectly match the outline. However, sections are too brief compared to the target length. |
-| 8. Cultural accuracy | 10/10 | Accurate references to the Ukrainian curriculum ("буквар", "звуковий аналіз"). |
-| 9. Dialogue & conversation quality | 9/10 | The reading practice ("Це Київ. Це столиця...") perfectly matches the plan and provides a natural progression for an A1 learner. |
+| 1. Plan adherence | 6/10 | Covers all content points but severely misses the word budget per section. The module is roughly 800 words, missing the 1200 word target by a significant margin. |
+| 2. Linguistic accuracy | 9/10 | Explanations of phonetics and складоподіл are accurate. Deducted 1 point for the "букvar" typo. |
+| 3. Pedagogical quality | 10/10 | Excellent breakdown of the open-syllable principle and reading strategy. Follows the requested Большакова method perfectly ("Find vowels -> split -> sound out -> blend"). |
+| 4. Vocabulary coverage | 10/10 | Beautifully integrates all required and recommended words into the prose and reading practice sections (яблуко, молоко, університет, etc.). |
+| 5. Exercise quality | 10/10 | Placeholders match the plan exactly, have the correct number of items, and logically test the specific phonetic and reading skills taught. |
+| 6. Engagement & tone | 9/10 | Tone is encouraging and authoritative. Good use of the "first-grader in Ukraine" framing to build confidence. |
+| 7. Structural integrity | 7/10 | Misses overall word count. Additionally, it includes manual `<!-- TAB:Словник -->` and `<!-- TAB:Ресурси -->` sections with raw tables, which are supposed to be handled by the downstream ENRICH step. |
+| 8. Cultural accuracy | 10/10 | Correctly highlights Ї as uniquely Ukrainian and uses culturally appropriate examples (Київ, столиця). |
+| 9. Dialogue & conversation quality | N/A | No dialogues present, which is appropriate for a phonetic A1.1 reading module. Scored as 10/10 to not penalize. |
 
 ## Findings
-[Linguistic accuracy] [major]
-Location: Section "Склади (Syllables)" — "Try this method with аптека. The vowels are а, е, а — three syllables: ап-те-ка." and Section "Підсумок — Summary" — "біб-лі-о-те-ка".
-Issue: The text explicitly teaches the open-syllable principle ("consonants in Ukrainian prefer to begin a new syllable rather than close the previous one"), but then divides "аптека" and "бібліотека" incorrectly ("ап-те-ка" instead of "а-пте-ка", "біб-лі-о-те-ка" instead of "бі-блі-о-те-ка"). This directly contradicts the pedagogical point and confuses the learner. Note that the plan explicitly listed "а-пте-ка" in the `content_outline`.
-Fix: Change "ап-те-ка" to "а-пте-ка" and "біб-лі-о-те-ка" to "бі-блі-о-те-ка" throughout the text, including the Summary section.
-
-[Exercise quality] [major]
-Location: `:::fill-in title: "Поділи на склади (Divide into syllables)"`
-Issue: The exercise uses the incorrect syllable divisions "ап-те-[ка]" and "біб-лі-о-те-[ка]", which reinforces the incorrect phonetic division and contradicts the open-syllable principle taught earlier. (Note: The plan's `activity_hints` contained the "ап-те-ка" error, which the generator blindly followed).
-Fix: Update the fill-in sentences to reflect correct phonetic division: "а-пте-___" and "бі-блі-о-те-___".
-
-[Plan adherence] [minor]
+[Dimension 1: Plan adherence] [SEVERITY: major]
 Location: Entire module
-Issue: The word count is roughly 900 words, which is 25% under the target of 1200 words. The content outline specifies detailed word counts per section (250, 300, 300, 200, 150) that were not fully met.
-Fix: Expand the sections, particularly "Склади" and "Читання слів", to provide more examples and reach the word count targets.
+Issue: The module falls significantly short of the 1200 word target (it is approximately 800 words). Sections are too brief compared to their allocated budgets (e.g., "Склади" is ~160 words instead of 250; "Читаємо разом" is ~110 words instead of 200).
+Fix: Expand each section to meet the plan's word budgets. Add more examples of syllable division, expand the reading practice text, and provide more detailed phonetic context for the iotated vowels.
+
+[Dimension 2: Linguistic accuracy] [SEVERITY: minor]
+Location: Section "Склади (Syllables)", Paragraph 1: "Every Ukrainian child learns this rule on page 25 of the букvar..."
+Issue: The word "букvar" is a typo mixing Cyrillic and Latin alphabets.
+Fix: Change "букvar" to "буквар".
+
+[Dimension 7: Structural integrity] [SEVERITY: minor]
+Location: End of the document (`<!-- TAB:Словник -->`, `<!-- TAB:Зошит -->`, `<!-- TAB:Ресурси -->`)
+Issue: The generator included manual UI tabs, a markdown vocabulary table, and a resources list. The protocol states these are handled by a downstream ENRICH step and shouldn't be manually formatted in the prose file.
+Fix: Remove the TAB markers and the manually generated Словник and Ресурси sections, leaving only the core lesson content and exercises.
 
 ## Verdict: REVISE
-The module has a solid structure and tone, but major phonetic division errors that contradict the taught rule and confuse the learner must be fixed. These are easily correctable without a complete rewrite.
+The module is pedagogically sound, linguistically accurate, and has excellent exercises that perfectly match the plan. However, it requires a REVISE due to the major finding regarding word count: it significantly under-delivers on the required depth and length specified in the plan's word budgets. Once expanded to ~1200 words and stripped of the redundant UI tabs, it will be an outstanding module.
