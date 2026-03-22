@@ -1,0 +1,47 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "stress-and-melody",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-22T22:58:25.614101+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-22T22:58:37.131331+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-22T22:59:55.971433+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-22T23:01:04.909399+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-22T23:01:04.915442+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-22T23:01:07.254115+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-22T23:01:07.697346+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-22T23:01:07.771794+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-22T23:02:18.033037+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-22T23:02:18.086571+00:00"
+    }
+  }
+}
