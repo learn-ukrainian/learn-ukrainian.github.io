@@ -3,20 +3,16 @@ CRITICAL: Your previous module was reviewed and scored below 8.0/10.
 You must rewrite the module FROM SCRATCH, fixing ALL issues below.
 All original constraints from the writing prompt still apply.
 
-- FIX: [Cultural accuracy] [MAJOR]
-  Location: Section "Сім'я (Family Vocabulary)": "A Grade 1 textbook poem by Марія Братко begins: «В мене дружна є сім'я»"
-  Issue: [NEEDS RAG VERIFICATION] This appears to be an LLM hallucination. There is no widely known Ukrainian children's author named "Марія Братко" who wrote this exact poem. Inventing primary sources violates the project's strict anti-hallucination rules.
-  Fix: Remove the reference to the specific author and poem. Rewrite to state a factual observation: "You will often see **сім'я** used in children's books and everyday speech."
-- FIX: [Pedagogical quality] [MAJOR]
-  Location: Section "Діалоги (Dialogues)", quiz items: `q: "У Марка є сестра?"` and `q: "Марко з Києва. У нього є..."`
-  Issue: The text explicitly defers the Genitive case (у нього, у неї) to A2, but uses it in the quiz prompts. A1.1 learners do not know that "Марка" is the genitive of "Марко", nor do they know "нього".
-  Fix: Rewrite the quiz questions to avoid the genitive case. Example: `q: "Марко каже: «У мене є...»"` or `q: "Брат Марка — це..."` (if testing possessives) or `q: "Хто є на фото?"`.
-- NOTE: [Exercise quality] [MINOR]
-  Location: Section "У мене є (I have)", fill-in exercise: `sentence: "У тебе є ___?" answer: "брат"`
-  Issue: The blank is too open-ended. A learner could logically fill in "сестра", "мама", "діти", etc.
-  Fix: Add context to constrain the answer. Example: `sentence: "У тебе є ___ чи сестра?" answer: "брат"`.
-- NOTE: [Structural integrity] [MINOR]
-  Location: Section `<!-- TAB:Словник -->`, table row: `| **мати** | more formal or literary; **тато** is everyday, **батько** is formal | ім. | ж. |`
-  Issue: Instructional prose has been dumped directly into the "Translation" column of the generated vocabulary table, breaking the data structure.
-  Fix: Change the translation cell to simply: `mother (formal/literary)`. Move pedagogical explanations back to the main prose if necessary.
+- FIX: [Plan adherence] [major]
+  Location: Entire module
+  Issue: The module falls short of the 1200 word target, coming in at approximately 950 words. Specifically, the "Діалоги" section is ~250 words (target 400) and "У мене є" is ~220 words (target 250).
+  Fix: Expand the "Діалоги" section with a bit more conversational context, and add more prose examples to the grammar explanations to meet the ±10% word count budget without adding new grammatical scope.
+- NOTE: [Pedagogical quality] [minor]
+  Location: `:::quiz` block, questions 1, 2, and 4
+  Issue: Questions use A2 genitive case declension for nouns and adjectives ("У Олі є сестра?", "У пе́ршого дру́га є два брати?"). The plan strictly limits genitive to memorized pronouns (у нього, у неї) at this level because noun declension is A2 grammar.
+  Fix: Rewrite the questions to avoid genitive noun declension. For example, use the taught pronouns: "У неї є сестра?". Or rely on context from the text: "Оля: У мене є брат? (Так/Ні)".
+- NOTE: [Vocabulary coverage] [minor]
+  Location: "Сім'я (Family Vocabulary)" section
+  Issue: The recommended words "дружина" (wife) and "чоловік" (husband) are missing from the instructional prose, though they appear in the final vocabulary table.
+  Fix: Add a sentence or two in the vocabulary section introducing "дружина" and "чоловік" to ensure learners see them in context before encountering them in the vocabulary list.
 </correction_directive>
