@@ -6,8 +6,8 @@
     {
       "check": "TOXIC",
       "severity": "WARNING",
-      "message": "Latin characters mixed with Cyrillic: m"
+      "message": "Latin characters mixed with Cyrillic: l"
     }
   ],
-  "timestamp": "2026-03-23T10:09:28.837777+00:00"
+  "timestamp": "2026-03-23T10:33:12.265700+00:00"
 }
