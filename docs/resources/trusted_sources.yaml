@@ -93,6 +93,18 @@ sources:
     query_function: r2u_translate
     mcp_tool: query_r2u
 
+  - id: e2u
+    name: e2u English-Ukrainian dictionary
+    type: live
+    url: https://e2u.org.ua
+    description: >
+      Comprehensive English→Ukrainian translation dictionary. 331,723 entries
+      across general, IT, scientific, EU, business, and legal dictionaries.
+      Sister site to r2u.org.ua — same structure, same developers.
+    coverage: English→Ukrainian translations
+    query_function: e2u_translate, e2u_reverse
+    mcp_tool: query_e2u
+
   # ── Reference sources ─────────────────────────────────────────
   - id: pravopys
     name: Ukrainian Pravopys (2019)

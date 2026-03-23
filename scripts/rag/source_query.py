@@ -500,69 +500,117 @@ def ulif_paradigm(word: str) -> dict[str, Any] | None:
 R2U_BASE = "https://r2u.org.ua"
 
 
-class _R2uParser(HTMLParser):
-    """Extract translation entries from r2u.org.ua HTML."""
+def _parse_dict_entries(html: str) -> list[dict[str, str]]:
+    """Parse dictionary entries from r2u/e2u HTML (table-based layout).
 
-    def __init__(self):
-        super().__init__()
-        self._in_entry = False
-        self._in_bold = False
-        self._entries: list[dict[str, str]] = []
-        self._current_headword = ""
-        self._current_text = ""
-        self._depth = 0
+    Both sites use <td class="result_row"> or <td class="result_row_main">
+    with <b> or <span class="...Bold"> for headwords and inline translations.
+    """
+    import re
+    entries = []
+    # Find all result_row cells
+    for match in re.finditer(
+        r'<td[^>]*class="result_row(?:_main)?"[^>]*>(.*?)</td>',
+        html, re.DOTALL,
+    ):
+        cell = match.group(1)
+        # Extract headword (bold text)
+        hw_match = re.search(r'<b>([^<]+)</b>|<span class="[^"]*Bold">([^<]+)</span>', cell)
+        if not hw_match:
+            continue
+        headword = (hw_match.group(1) or hw_match.group(2) or "").strip()
 
-    def handle_starttag(self, tag, attrs):
-        attrs_dict = dict(attrs)
-        cls = attrs_dict.get("class", "")
-        if tag == "div" and "slovnyk-entry" in cls:
-            self._in_entry = True
-            self._current_headword = ""
-            self._current_text = ""
-        if self._in_entry:
-            self._depth += 1
-            if tag == "b":
-                self._in_bold = True
+        # Extract translation (strip all HTML tags)
+        translation = re.sub(r"<[^>]+>", " ", cell)
+        translation = re.sub(r"\s+", " ", translation).strip()
 
-    def handle_endtag(self, tag):
-        if self._in_entry:
-            if tag == "b":
-                self._in_bold = False
-            if tag == "div":
-                self._depth -= 1
-                if self._depth <= 0:
-                    self._in_entry = False
-                    if self._current_headword:
-                        self._entries.append({
-                            "headword": self._current_headword.strip(),
-                            "translation": self._current_text.strip(),
-                        })
+        if headword:
+            entries.append({"headword": headword, "translation": translation})
 
-    def handle_data(self, data):
-        if self._in_entry:
-            if self._in_bold and not self._current_headword:
-                self._current_headword += data
-            self._current_text += data
+    return entries
 
 
 def r2u_translate(russian_word: str) -> list[dict[str, str]]:
     """Look up Russian→Ukrainian translation on r2u.org.ua.
 
-    Uses the search endpoint (?s=word). Returns list of {headword, translation}
-    dicts. R2u has a complex Drupal-based structure; results may be limited.
-    Consider using GRAC frequency comparison as a more reliable Russianisms check.
+    Uses the /s endpoint (?w=word). Returns list of {headword, translation} dicts.
     """
-    url = f"{R2U_BASE}/"
     try:
-        r = _get(url, params={"s": russian_word}, timeout=20)
+        r = _get(f"{R2U_BASE}/s", params={"w": russian_word}, timeout=20)
         if r.status_code == 404:
             return []
         r.raise_for_status()
-        parser = _R2uParser()
-        parser.feed(r.text)
-        return parser._entries
+        return _parse_dict_entries(r.text)
     except requests.RequestException:
         return []
+
+
+# ══════════════════════════════════════════════════════════════════
+# e2u (e2u.org.ua) — English→Ukrainian translation dictionary
+# ══════════════════════════════════════════════════════════════════
+
+E2U_BASE = "https://e2u.org.ua"
+
+
+def e2u_translate(english_word: str) -> list[dict[str, str]]:
+    """Look up English→Ukrainian translation on e2u.org.ua.
+
+    Uses the /s endpoint (?w=word). 331,723 entries across general, IT,
+    scientific, EU, business, and legal dictionaries.
+    """
+    try:
+        r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20)
+        if r.status_code == 404:
+            return []
+        r.raise_for_status()
+        return _parse_dict_entries(r.text)
+    except requests.RequestException:
+        return []
+
+
+WIKTIONARY_API = "https://en.wiktionary.org/w/api.php"
+
+
+def wiktionary_translate(ukrainian_word: str) -> str:
+    """Look up Ukrainian word → English translation via Wiktionary API.
+
+    Queries en.wiktionary.org for the Ukrainian section of the word's page.
+    Returns the first English definition, or empty string if not found.
+
+    Free API, no scraping needed. Works for most common Ukrainian words.
+    """
+    try:
+        r = _get(WIKTIONARY_API, params={
+            "action": "parse", "page": ukrainian_word.lower(),
+            "format": "json", "prop": "wikitext",
+        }, timeout=15, headers={"User-Agent": "LearnUkrainian/1.0"})
+        if r.status_code != 200:
+            return ""
+
+        data = r.json()
+        wikitext = data.get("parse", {}).get("wikitext", {}).get("*", "")
+        if not wikitext:
+            return ""
+
+        # Find Ukrainian section
+        import re
+        uk_section = re.search(r"==Ukrainian==(.*?)(?=\n==[A-Z]|\Z)", wikitext, re.DOTALL)
+        if not uk_section:
+            return ""
+
+        # Extract first definition (# [[translation]])
+        defs = re.findall(r"#\s*(?:\{\{[^}]+\}\}\s*)?(?:\[\[)?([a-zA-Z][a-zA-Z\s,]+?)(?:\]\])?(?:\s*$|\s*,)", uk_section.group(1), re.MULTILINE)
+        if defs:
+            return defs[0].strip()
+
+        # Fallback: any [[word]] in definitions
+        links = re.findall(r"\[\[([a-zA-Z][a-zA-Z\s]+?)\]\]", uk_section.group(1))
+        if links:
+            return links[0].strip()
+
+        return ""
+    except Exception:
+        return ""
 
 
 # ══════════════════════════════════════════════════════════════════
