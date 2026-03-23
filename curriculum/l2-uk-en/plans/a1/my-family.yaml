@@ -2,7 +2,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: my-family
-version: '1.1'
+version: '1.2'
 title: My Family
 subtitle: "У мене є брат — Showing photos"
 focus: vocabulary
@@ -99,17 +99,26 @@ vocabulary_hints:
   - тільки (only)
 activity_hints:
 - type: quiz
-  focus: "Answer: У тебе є...? Так / Ні"
+  focus: "У тебе є...? — answer Так/Ні. Use ONLY the chunk 'у тебе є'.
+    Example questions: 'У тебе є брат?', 'У тебе є сестра?', 'У тебе є бабуся?'
+    Answer options: 'Так, у мене є брат.' / 'Ні.' / 'Так, у мене є два брати.'
+    Do NOT use genitive names (no 'У Оксани є')."
   items: 6
 - type: fill-in
-  focus: "Choose correct possessive: (мій/моя/моє) ___ сестра"
+  focus: "Choose correct possessive pronoun. EXACT pattern:
+    'Це {___} мама.' → моя | 'Де {___} тато?' → твій | 'Ось {___} батьки.' → мої
+    All nominative case. Options: мій/моя/моє/мої or твій/твоя/твоє/твої."
   items: 8
 - type: match-up
-  focus: "Match family members with relationships"
+  focus: "Match English family words to Ukrainian.
+    Pairs: parents↔батьки, uncle↔дядько, aunt↔тітка, grandfather↔дідусь,
+    grandmother↔бабуся, brother↔брат, sister↔сестра, mother and father↔мама і тато."
   items: 8
 - type: fill-in
-  focus: "Complete family introduction dialogue"
-  items: 6
+  focus: "Complete a family introduction dialogue with blanks.
+    Pattern: '— Привіт! Це {твій} брат?' / '— Так, це мій брат. Ось мій {тато}.'
+    Options per blank: family members or possessives. NO genitive forms."
+  items: 4
 connects_to:
 - a1-007 (Checkpoint — First Contact)
 prerequisites:
