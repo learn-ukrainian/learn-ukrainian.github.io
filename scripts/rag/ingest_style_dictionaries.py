@@ -64,61 +64,54 @@ def load_chunks(path: Path) -> list[dict]:
     return chunks
 
 
-def load_embedding_model():
-    """Load BGE-M3 model once."""
-    from FlagEmbedding import BGEM3FlagModel
-    print("  Loading BGE-M3 embedding model...")
-    return BGEM3FlagModel("BAAI/bge-m3", use_fp16=True)
+def get_text_encoder():
+    """Get the shared TextEncoder from the RAG module."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from rag.embed import TextEncoder
+    print("  Loading TextEncoder (same as ingest.py)...")
+    return TextEncoder()
 
 
-def embed_texts(model, texts: list[str]) -> list[list[float]]:
-    """Embed texts using pre-loaded BGE-M3 model."""
-    result = model.encode(texts, return_dense=True, return_sparse=False, return_colbert_vecs=False)
-    return result["dense_vecs"].tolist()
-
-
-def ingest_collection(client, collection_name: str, chunks: list[dict], text_field: str, model):
-    """Ingest chunks into a Qdrant collection."""
+def ingest_collection(client, collection_name: str, chunks: list[dict], text_field: str, encoder):
+    """Ingest chunks into a Qdrant collection using the shared TextEncoder."""
     from qdrant_client.models import PointStruct
 
     ensure_collection(client, collection_name)
 
     total = len(chunks)
-    num_batches = (total + BATCH_SIZE - 1) // BATCH_SIZE
-    print(f"  Ingesting {total} entries into '{collection_name}' ({num_batches} batches)...")
+    print(f"  Ingesting {total} entries into '{collection_name}'...")
 
-    for batch_start in range(0, total, BATCH_SIZE):
-        batch = chunks[batch_start:batch_start + BATCH_SIZE]
-        texts = [c.get(text_field, c.get("text", "")) for c in batch]
+    # Encode ALL texts at once (encoder handles internal batching efficiently)
+    texts = [c.get(text_field, c.get("text", "")) for c in chunks]
+    print(f"  Embedding {len(texts)} texts (this may take a few minutes)...")
+    embeddings = encoder.encode(texts, batch_size=64)
+    dense_vecs = embeddings["dense_vecs"]
+    print(f"  ✅ Embedding complete ({len(dense_vecs)} vectors)")
 
-        # Embed using pre-loaded model
-        vectors = embed_texts(model, texts)
+    # Build all points
+    points = []
+    for i, (chunk, vec) in enumerate(zip(chunks, dense_vecs, strict=True)):
+        chunk_id = chunk.get("id", f"chunk-{i}")
+        point_id = int(hashlib.md5(chunk_id.encode()).hexdigest()[:15], 16)
+        payload = {
+            "chunk_id": chunk_id,
+            "word": chunk.get("word", ""),
+            "text": chunk.get(text_field, chunk.get("text", "")),
+            "source": chunk.get("source", collection_name),
+        }
+        if "section" in chunk:
+            payload["section"] = chunk["section"]
+        if "definition" in chunk:
+            payload["definition"] = chunk["definition"]
+        points.append(PointStruct(id=point_id, vector={"dense": vec.tolist()}, payload=payload))
 
-        # Build points
-        points = []
-        for i, (chunk, vec) in enumerate(zip(batch, vectors, strict=True)):
-            chunk_id = chunk.get("id", f"chunk-{batch_start + i}")
-            point_id = int(hashlib.md5(chunk_id.encode()).hexdigest()[:15], 16)
-            payload = {
-                "chunk_id": chunk_id,
-                "word": chunk.get("word", ""),
-                "text": chunk.get(text_field, chunk.get("text", "")),
-                "source": chunk.get("source", collection_name),
-            }
-            # Add extra fields
-            if "section" in chunk:
-                payload["section"] = chunk["section"]
-            if "definition" in chunk:
-                payload["definition"] = chunk["definition"]
-
-            points.append(PointStruct(
-                id=point_id,
-                vector={"dense": vec},
-                payload=payload,
-            ))
-
-        client.upsert(collection_name=collection_name, points=points)
-        print(f"    Batch {batch_start // BATCH_SIZE + 1}: {len(points)} points")
+    # Upload in batches
+    print(f"  Uploading {len(points)} points to Qdrant...")
+    for batch_start in range(0, len(points), BATCH_SIZE):
+        batch = points[batch_start:batch_start + BATCH_SIZE]
+        client.upsert(collection_name=collection_name, points=batch)
+        uploaded = min(batch_start + BATCH_SIZE, len(points))
+        print(f"    Uploaded {uploaded}/{len(points)}")
 
     count = client.count(collection_name=collection_name).count
     print(f"  ✅ Collection '{collection_name}': {count} points total")
@@ -136,17 +129,17 @@ def main():
         sys.exit(1)
 
     client = get_client()
-    model = load_embedding_model()
+    encoder = get_text_encoder()
 
     if args.antonenko or args.all:
         print("\n📚 Антоненко-Давидович «Як ми говоримо»")
         chunks = load_chunks(ANTONENKO_CHUNKS)
-        ingest_collection(client, STYLE_COLLECTION, chunks, text_field="text", model=model)
+        ingest_collection(client, STYLE_COLLECTION, chunks, text_field="text", encoder=encoder)
 
     if args.grinchenko or args.all:
         print("\n📖 Грінченко «Словарь української мови»")
         chunks = load_chunks(GRINCHENKO_CHUNKS)
-        ingest_collection(client, GRINCHENKO_COLLECTION, chunks, text_field="definition", model=model)
+        ingest_collection(client, GRINCHENKO_COLLECTION, chunks, text_field="definition", encoder=encoder)
 
 
 if __name__ == "__main__":
