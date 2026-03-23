@@ -1,0 +1,81 @@
+vocabulary:
+- word: прізвище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+- word: ім'я
+  translation: first name
+  expression: false
+  pos: ім.
+  gender: с.
+- word: Я з
+  translation: I am from
+  expression: true
+  pos: ''
+  gender: ''
+- word: Добрий вечір
+  translation: Good evening
+  expression: true
+  pos: ''
+  gender: ''
+- word: Доброго ранку
+  translation: Good morning
+  expression: true
+  pos: ''
+  gender: ''
+- word: До побачення
+  translation: Goodbye
+  expression: true
+  pos: ''
+  gender: ''
+- word: Па-па
+  translation: Bye-bye (informal)
+  expression: false
+  pos: виг.
+  gender: ''
+- word: ні
+  translation: 'no'
+  expression: false
+  pos: част.
+  gender: ''
+- word: телефон
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: архітектор
+  translation: architect
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: Америка
+  translation: America
+  expression: false
+  pos: ''
+  gender: ''
+- word: велика
+  translation: big (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: гарна
+  translation: beautiful, nice (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: дуже
+  translation: very
+  expression: false
+  pos: присл.
+  gender: ''
+- word: У вас є?
+  translation: Do you have? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: У тебе є?
+  translation: Do you have? (informal)
+  expression: true
+  pos: ''
+  gender: ''

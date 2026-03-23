@@ -1,6 +1,6 @@
-Section 1 "Звуки і літери (Sounds and Letters)": ~280 words — Golden rule (sounds vs letters), vowel family with poem, consonant family, quiz (6 items) + group-sort (8 items)
-Section 2 "Перші слова (First Words)": ~320 words — Familiar letters and first readable words, false friend letters with examples, new shapes intro, match-up (6 items)
-Section 3 "Привіт! (Hello!)": ~260 words — Greeting dialogue, responses to Як справи?, gendered forms, reading the word Привіт letter by letter, fill-in (4 items)
-Section 4 "Читаємо (Reading Practice)": ~270 words — Environmental signs, city names, first sentences with Це/Хто/Що, sounding out practice
-Section 5 "Підсумок — Summary": ~150 words — Self-check questions, recap of key numbers and concepts
-Total: ~1280 words
+Section 1 "Звуки і літери (Sounds and Letters)": ~270 words — Golden rule звуки vs літери, vowel/consonant families with poems, 6 vowel sounds + 10 vowel letters, consonant formation
+Section 2 "Перші слова (First Words)": ~320 words — Familiar letters (А,О,К,М,Т) + first words, false friend letters with examples, new shapes intro, Ї/Я/Ю/Є preview
+Section 3 "Привіт! (Hello!)": ~260 words — Greeting dialogue, responses to Як справи, gendered рада/радий, letter-by-letter reading of Привіт
+Section 4 "Читаємо (Reading Practice)": ~250 words — Environmental signs, Ukrainian city names, first sentences with Це
+Section 5 "Підсумок — Summary": ~150 words — Self-check questions covering all objectives
+Total: ~1250 words

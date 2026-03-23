@@ -1,1 +1,344 @@
+<!-- TAB:Урок -->
 
+## Діало́ги (Dialogues)
+
+You walk into a hostel in Kyiv. Someone smiles at you from the common room. How do you introduce yourself? Let's listen to three real conversations.
+
+### Dialogue 1 — At a hostel (informal)
+
+> — Приві́т! Як тебе́ зва́ти?
+> — Ме́не звати Марко́. А тебе?
+> — Мене звати Оле́на. Зві́дки ти?
+> — Я з Кана́ди. А ти?
+> — Я з Украї́ни. 
+> — Ду́же приє́мно!
+
+Here's what just happened: Марко and Олена met, exchanged names, said where they're from, and wrapped up with **Дуже приємно!** (Pleased to meet you!). That's a complete first conversation in Ukrainian — six short lines.
+
+
+
+When listening to Ukrainians introduce themselves, you might notice how fast these exchanges happen. Because there are no filler verbs like 'am' or 'is' to slow the sentence down, the information flows directly. This directness can feel abrupt to English speakers at first, but it is simply an efficient feature of the language. The warmth comes from the tone of voice, eye contact, and the smile, not from extra words padding the sentence. In Ukrainian culture, a sincere introduction builds immediate trust.
+
+Notice **Привіт!** (Hi!) — this is the informal greeting you already know from earlier modules. Олена uses **Як тебе звати?** (What's your name?) because they're the same age, in a casual setting. She doesn't say "What IS your name" — there's no word for "is" here. We'll explore why shortly.
+
+### Dialogue 2 — At a conference (formal)
+
+> — До́брий день! Як вас звати?
+> — Мене звати Петро́. Дуже приємно!
+> — Приємно познайо́митись! Ви з України?
+> — Так, я з Ки́єва.
+
+This is the formal version. **Добрий день!** (Good day!) replaces **Привіт!**, and **Як вас звати?** (What is your name?) replaces **Як тебе звати?** The word **вас** (you, formal) signals respect — use it with strangers, older people, and professional settings.
+
+Петро responds with **Дуже приємно!** and hears back **Приємно познайомитись!** (Pleased to make your acquaintance!) — a slightly more formal way to say the same thing. Both phrases come AFTER exchanging names, not before.
+
+### Dialogue 3 — Introducing someone else
+
+> — Це мій друг Андрі́й.
+> — Привіт, Андрію!
+> — Привіт! Він зі Льво́ва. Він — інжене́р.
+
+Now someone introduces a third person. **Це мій друг Андрій** (This is my friend Andrii). The word **це** (this is) does enormous work in Ukrainian — it identifies people, things, and places. **Він** (he) replaces Андрі́й's name in the next sentences. **Він зі Львова** (He is from Lviv). **Він — інженер** (He is an engineer). No verb "is" anywhere. In written Ukrainian, a dash (—) is often used to connect two nouns when the verb is dropped, as in **Він — інженер**. Notice how naturally the conversation flows when you don't have to conjugate a 'to be' verb. You simply state the person, point them out with **це**, and give the facts: where they are from, and what they do. This straightforward structure makes introducing others in Ukrainian incredibly simple for beginners.
+
+:::quiz
+title: "Formal or informal?"
+---
+- q: "You meet your friend's classmate at a party. You say:"
+  o: ["Як вас звати?", "Як тебе звати?", "Добрий день!"]
+  a: 1
+- q: "You meet a professor at a university event. You say:"
+  o: ["Привіт! Як тебе звати?", "Добрий день! Як вас звати?", "Мене звати..."]
+  a: 1
+- q: "After exchanging names, you say:"
+  o: ["Привіт!", "До́бре!", "Дуже приємно!"]
+  a: 2
+- q: "Someone says «Як вас звати?» — this is:"
+  o: ["informal", "formal", "rude"]
+  a: 1
+- q: "A colleague introduces you to their boss. You expect to hear:"
+  o: ["Як тебе звати?", "Звідки ти?", "Як вас звати?"]
+  a: 2
+- q: "«Приємно познайомитись!» is said:"
+  o: ["before names are exchanged", "after names are exchanged", "only in writing"]
+  a: 1
+:::
+
+## Мене звати... (My name is...)
+
+The phrase **Мене звати** literally means "me they-call." There is no verb "to be" and no word for "name" — Ukrainian simply says "me call Marko." This is not broken grammar. This is how Ukrainian works. The structure is beautifully simple:
+
+**Мене звати Марко.** — My name is Marko.
+**Мене звати Олена.** — My name is Olena.
+
+To ask someone's name, put the question word first:
+
+**Як тебе звати?** — What's your name? (informal)
+**Як вас звати?** — What's your name? (formal)
+
+The only difference is **тебе** (you, informal) versus **вас** (you, formal). Everything else stays the same. Use **тебе** with friends, peers, and children. Use **вас** with strangers, elders, and in professional settings.
+
+You can also ask about other people:
+
+**Як йо́го звати?** — What is his name? (literally: how him they-call?)
+**Як її звати?** — What is her name? (literally: how her they-call?)
+
+The words **його** (his) and **її** (her) never change form — they stay the same no matter what. Memorize them as fixed blocks.
+
+After you exchange names, say **Дуже приємно!** (Very pleasant! / Pleased to meet you!). In more formal situations, you can say **Приємно познайомитись!** (Pleased to make your acquaintance!). Both come AFTER the introduction, not before — this is the Ukrainian way.
+
+
+
+Culturally, introductions in Ukraine are usually straightforward. You don't need to ask 'How are you?' immediately after exchanging names unless you are actually prepared for a genuine, detailed answer. Keep it simple: exchange names, state where you are from, and express your pleasure at meeting them. This formula works perfectly in ninety percent of everyday encounters.
+
+:::fill-in
+title: "Introduce yourself"
+---
+- sentence: "___ звати Олена."
+  answer: "Мене"
+- sentence: "Як ___ звати? (informal)"
+  answer: "тебе"
+- sentence: "Як ___ звати? (formal)"
+  answer: "вас"
+- sentence: "Я з ___. (Ukraine)"
+  answer: "України"
+- sentence: "Я — ___. (student, female)"
+  answer: "студе́нтка"
+- sentence: "Дуже ___!"
+  answer: "приємно"
+:::
+
+## Це... (This is...)
+
+The word **це** (this is / it is / these are) is one of the most useful words in Ukrainian. It identifies anything — people, objects, cities:
+
+**Це ка́ва.** — This is coffee.
+**Це Ки́їв.** — This is Kyiv.
+**Це мій друг.** — This is my friend.
+
+No verb needed. **Це** does all the work by itself.
+
+To ask what something is, use **Що це?** (What is this?). To ask who someone is, use **Хто це?** (Who is this?). Notice: the question word usually goes FIRST in Ukrainian. The standard neutral question is **Хто це?** (You will only hear "Це хто?" in colloquial speech when someone is surprised or emphasizing the question).
+
+**Що це?** — What is this?
+**Це кни́га.** — This is a book.
+
+**Хто це?** — Who is this?
+**Це Олена.** — This is Olena.
+
+Here are a few more quick examples you might hear in everyday life:
+**Що це? Це телефо́н.** (What is this? This is a phone.)
+**Хто це? Це лі́кар.** (Who is this? This is a doctor.)
+As you walk around, you can mentally point to objects and ask yourself «Що це?» to practice identifying the world around you in Ukrainian.
+
+The difference is simple: **Що** (what) for things, **Хто** (who) for people. Ukrainian first-grade textbooks teach this exact distinction — **Що?** for objects, **Хто?** for living beings. A cat? **Хто це? Це кіт.** A table? **Що це? Це стіл.**
+
+:::tip
+**Хто** is for people and animals. **Що** is for objects and ideas. When in doubt, ask yourself: is it alive?
+:::
+
+## Я — студе́нт (I am a student)
+
+English says "I am a student." Ukrainian says **Я — студент.** No verb. No "am." Just a dash (—) where English would put "is," "am," or "are." This is called the zero copula — Ukrainian doesn't use the verb "to be" in the present tense.
+
+**Я — студент.** — I am a student. (male)
+**Я — студентка.** — I am a student. (female)
+**Він — лікар.** — He is a doctor.
+**Вона́ — вчи́телька.** — She is a teacher.
+
+Ukrainian professions come in pairs — a male form and a female form. This is not optional. A male teacher is **вчи́тель**, a female teacher is **вчителька**. Here are the key pairs:
+
+| Male | Female | Meaning |
+|------|--------|---------|
+| студент | студентка | student |
+| вчитель | вчителька | teacher |
+| лікар | лі́карка | doctor |
+| інженер | інжене́рка | engineer |
+| програмі́ст | програмі́стка | programmer |
+| журналі́ст | журналі́стка | journalist |
+
+Nationalities work the same way:
+
+| Male | Female | Meaning |
+|------|--------|---------|
+| украї́нець | украї́нка | Ukrainian |
+| америка́нець | америка́нка | American |
+| канаді́єць | кана́дка | Canadian |
+
+A male Ukrainian is **українець**. A female Ukrainian is **українка**. Always use the form that matches the person you're talking about.
+
+:::match-up
+title: "Match professions: male and female forms"
+---
+- left: "студент"
+  right: "студентка"
+- left: "вчитель"
+  right: "вчителька"
+- left: "лікар"
+  right: "лікарка"
+- left: "інженер"
+  right: "інженерка"
+- left: "журналіст"
+  right: "журналістка"
+- left: "програміст"
+  right: "програмістка"
+- left: "українець"
+  right: "українка"
+- left: "канадієць"
+  right: "канадка"
+:::
+
+## Звідки? (Where from?)
+
+Back to the hostel conversation: Олена asked **Звідки ти?** (Where are you from?). The word **звідки** (where from) is the question. The answer uses **з** (from) plus a country:
+
+**Я з України.** — I am from Ukraine.
+**Я з Канади.** — I am from Canada.
+**Я з Німе́ччини.** — I am from Germany.
+**Я зі Шта́тів.** — I am from the States.
+
+Notice that **з** becomes **зі** before **Штатів** — this happens when the next word starts with a cluster of consonants. It makes pronunciation easier.
+
+You might notice that the country names look different from their basic forms: **Украї́на** becomes **України**, **Кана́да** becomes **Канади**. These are genitive forms — but don't worry about the grammar rule behind them yet. That comes in A2. For now, memorize each "from" phrase as a complete chunk:
+
+| Country | "I am from..." |
+|---------|----------------|
+| Україна | Я з України. |
+| Канада | Я з Канади. |
+| Німе́ччина | Я з Німеччини. |
+| США | Я зі Штатів. |
+
+The formal version of the question is **Звідки ви?** (Where are you from? — formal). Same pattern: **тебе/ти** for informal, **вас/ви** for formal. When you hear native speakers, pay attention to how smoothly the preposition **з** blends into the country name. It sounds almost like one continuous word: *з-України*. Practice saying these chunks out loud until they feel entirely natural in your mouth.
+
+:::fill-in
+title: "Complete the dialogue"
+---
+- sentence: "— Звідки ти? — Я ___ України."
+  answer: "з"
+- sentence: "— Як тебе ___? — Мене звати Тара́с."
+  answer: "звати"
+- sentence: "— ___ це? — Це мій друг."
+  answer: "Хто"
+- sentence: "— Він — ___. (doctor, male)"
+  answer: "лікар"
+- sentence: "— Вона — ___. (journalist, female)"
+  answer: "журналістка"
+- sentence: "— Дуже ___! — Приємно познайомитись!"
+  answer: "приємно"
+:::
+
+
+
+
+### Ві́део — Video
+
+[По́вний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+
+
+## Підсумок — Summary
+
+You now have everything you need for a real Ukrainian introduction. Let's put it all together. Imagine meeting someone new:
+
+> — Привіт! Мене звати Олена. А тебе?
+> — Мене звати Тарас. Дуже приємно!
+> — Приємно познайомитись! Звідки ти?
+> — Я з Канади. Я — студент. А ти?
+> — Я з України. Я — вчителька.
+
+Five key patterns carry this entire conversation:
+
+1. **Мене звати...** — introducing yourself (no verb "to be")
+2. **Як тебе / вас звати?** — asking someone's name (informal / formal)
+3. **Це...** — identifying people and things
+4. **Я — студент / студентка** — stating your profession (dash replaces "am")
+5. **Я з України / Канади** — saying where you're from (memorized chunks)
+
+No conjugation tables. No grammar rules about cases. Just patterns that work. In the next module, you'll use these same patterns to talk about your family.
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **звідки** | where from | присл. |  |
+| **з** | from | прийм. |  |
+| **зі** | from (before consonant clusters) | прийм. |  |
+| **я** | I | ім. |  |
+| **ти** | you (informal) | ім. |  |
+| **ви** | you (formal) | ім. |  |
+| **він** | he | ім. | ч. |
+| **вона** | she | ім. | ж. |
+| **його** | his (doesn't change) | ім. | ч. |
+| **її** | her (doesn't change) | ім. | ж. |
+| **тебе** | you (informal, accusative/genitive) | ім. |  |
+| **вас** | you (formal, accusative/genitive) | ім. |  |
+| **мій** | my (masculine) | прикм. |  |
+| **друг** | friend (male) | ім. | ч. |
+| **за́раз** | now, currently | присл. |  |
+| **студент** | student (male) | ім. | ч. |
+| **студентка** | student (female) | ім. | ж. |
+| **вчитель** | teacher (male) | ім. | ч. |
+| **вчителька** | teacher (female) | ім. | ж. |
+| **лікар** | doctor (male) | ім. | ч. |
+| **лікарка** | doctor (female) | ім. | ж. |
+| **інженер** | engineer (male) | ім. | ч. |
+| **інженерка** | engineer (female) | ім. | ж. |
+| **програміст** | programmer (male) | ім. | ч. |
+| **програмістка** | programmer (female) | ім. | ж. |
+| **журналіст** | journalist (male) | ім. | ч. |
+| **журналістка** | journalist (female) | ім. | ж. |
+| **українець** | Ukrainian (male) | ім. | ч. |
+| **українка** | Ukrainian (female) | ім. | ж. |
+| **американець** | American (male) | ім. | ч. |
+| **американка** | American (female) | ім. | ж. |
+| **канадієць** | Canadian (male) | ім. | ч. |
+| **канадка** | Canadian (female) | ім. | ж. |
+| **Україна** | Ukraine | ім. | ж. |
+| **Канада** | Canada |  |  |
+| **Німеччина** | Germany |  |  |
+| **США** | USA |  |  |
+| **Київ** | Kyiv | ім. |  |
+| **Львів** | Lviv |  |  |
+| **стіл** | table | ім. | ч. |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **добрий день** | good day (formal greeting) |
+| **мене звати** | my name is |
+| **як тебе звати?** | what's your name? (informal) |
+| **як вас звати?** | what's your name? (formal) |
+| **як його звати?** | what is his name? |
+| **як її звати?** | what is her name? |
+| **дуже приємно** | pleased to meet you |
+| **приємно познайомитись** | pleased to make your acquaintance (formal) |
+| **звідки ти?** | where are you from? (informal) |
+| **звідки ви?** | where are you from? (formal) |
+| **це мій друг** | this is my friend |
+| **я з України** | I am from Ukraine |
+| **я з Канади** | I am from Canada |
+| **я з Німеччини** | I am from Germany |
+| **я зі Штатів** | I am from the States |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Дже́рела — References**
+
+- [ULP Season 1, Episode 3 — How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/)
+  _Мене звати, nationality, Дуже приємно._
+- [ULP Season 1, Episode 4 — Where You Live and Where From](https://www.ukrainianlessons.com/episode4/)
+  _Де ви живете́? Звідки ви?_
+- [ULP Season 1, Episode 8 — Jobs and Professions](https://www.ukrainianlessons.com/episode8/)
+  _Profession vocabulary with gendered forms._

@@ -51,6 +51,13 @@ logger = logging.getLogger(__name__)
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
+# Keywords to filter ENRICH-generated content from review findings.
+# The reviewer shouldn't blame the writer for словník issues added by ENRICH.
+_ENRICH_FILTER_KEYWORDS = (
+    "словник", "slovnyk", "vocabulary table", "vocab tab",
+    "enrich", "video", "youtube", "resource", "ресурси",
+)
+
 
 def _log(msg: str):
     print(msg, flush=True)
@@ -817,7 +824,12 @@ def _post_process_content(content_path: Path) -> int:
 
 
 def step_annotate(content_path: Path) -> bool:
-    """Step 6: Add stress marks + deterministic fixes."""
+    """Step 8b: Add stress marks (after review, before publish).
+
+    NOTE: Does NOT call _post_process_content — that runs earlier (step 6),
+    before ENRICH. Running it again here would strip the tab markers and
+    enriched content that ENRICH added.
+    """
     _log(f"\n{'='*60}")
     _log("  Step 6: ANNOTATE — Stress marks + post-processing")
     _log(f"{'='*60}")
@@ -825,9 +837,6 @@ def step_annotate(content_path: Path) -> bool:
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
         return False
-
-    # Post-processing first (strip LLM artifacts before stress annotation)
-    _post_process_content(content_path)
 
     try:
         from pipeline.stress_annotator import annotate_file
@@ -839,6 +848,120 @@ def step_annotate(content_path: Path) -> bool:
         _log(f"  ⚠️  Stress annotation failed: {e}")
 
     return True
+
+
+def step_vocab(content_path: Path, level: str, module_num: int,
+               slug: str, writer: str = "claude") -> Path | None:
+    """Step 5c: Generate vocabulary YAML from the module content.
+
+    The writer reads its own prose and produces a vocabulary list
+    with contextual translations. No dictionary API lookups needed.
+    """
+    _log(f"\n{'='*60}")
+    _log(f"  Step 5c: VOCAB — Writer generates словник ({writer})")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return None
+
+    # Load vocab prompt template
+    template_path = PHASES_DIR / "v6-vocab.md"
+    if not template_path.exists():
+        _log(f"  ⚠️  Vocab template not found: {template_path}")
+        return None
+
+    template = template_path.read_text("utf-8")
+
+    # Load plan vocabulary
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path.exists() else {}
+    vocab_hints = plan.get("vocabulary_hints", {})
+    plan_vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False)
+
+    # Load module content
+    module_content = content_path.read_text("utf-8")
+
+    # Build prompt
+    prompt = template.replace("{PLAN_VOCABULARY}", plan_vocab_text)
+    prompt = prompt.replace("{MODULE_CONTENT}", module_content)
+
+    # Dispatch to writer
+    if writer == "claude":
+        import subprocess
+
+        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
+        model = CLAUDE_MODEL_CORE_CONTENT
+        _log(f"  Dispatching to Claude ({model})...")
+        try:
+            result = subprocess.run(
+                ["claude", "-p", "--model", model, "--output-format", "text"],
+                input=prompt, capture_output=True, text=True, timeout=120,
+                cwd=str(PROJECT_ROOT),
+            )
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+        except subprocess.TimeoutExpired:
+            _log("  ❌ Timeout")
+            ok, raw = False, ""
+    elif writer == "gemini":
+        from batch_gemini_config import PRO_MODEL
+        from pipeline.core import dispatch_gemini
+        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
+        ok, raw = dispatch_gemini(
+            prompt, task_id=f"v6-vocab-{slug}",
+            model=PRO_MODEL, stdout_only=True, timeout=120,
+        )
+    else:
+        _log(f"  ❌ Unknown writer: {writer}")
+        return None
+
+    if not ok or not raw:
+        _log("  ❌ Writer returned no vocabulary output")
+        return None
+
+    # Parse vocabulary YAML
+    from build.vocab_gen import (
+        dedupe_vocab,
+        get_previous_vocab,
+        parse_vocab_yaml,
+        vesum_enrich_entry,
+    )
+
+    entries = parse_vocab_yaml(raw)
+    if not entries:
+        _log("  ⚠️  Could not parse vocabulary YAML")
+        return None
+
+    _log(f"  Writer produced {len(entries)} vocabulary entries")
+
+    # Dedup against previous modules
+    previous = get_previous_vocab(level, plan.get("sequence", 1))
+    before_count = len(entries)
+    entries = dedupe_vocab(entries, previous)
+    deduped = before_count - len(entries)
+    if deduped:
+        _log(f"  Deduped: removed {deduped} words already taught")
+
+    # VESUM enrichment
+    entries = [vesum_enrich_entry(e) for e in entries]
+
+    # Save vocabulary YAML
+    vocab_dir = CURRICULUM_ROOT / level / "vocabulary"
+    vocab_dir.mkdir(parents=True, exist_ok=True)
+    vocab_path = vocab_dir / f"{slug}.yaml"
+    vocab_data = {"vocabulary": entries}
+    vocab_path.write_text(
+        yaml.dump(vocab_data, allow_unicode=True, default_flow_style=False, sort_keys=False),
+        "utf-8",
+    )
+
+    words = [e for e in entries if not e.get("expression")]
+    exprs = [e for e in entries if e.get("expression")]
+    _log(f"  ✅ Vocabulary: {len(words)} words + {len(exprs)} expressions → {vocab_path.name}")
+
+    _save_v6_state(level, slug, "vocab")
+    return vocab_path
 
 
 def step_enrich(content_path: Path, level: str, slug: str) -> bool:
@@ -994,12 +1117,11 @@ def _build_vesum_report(content: str) -> str:
         report_lines.extend(not_found[:50])
         report_lines.append("")
 
-    # Include a sample of verified words so reviewer can spot-check
+    # Only include verified count — listing 60+ ✓ words is noise
     if verified:
         report_lines.append(
-            "Sample of verified words (all confirmed to exist in Ukrainian):"
+            f"All {len(verified)} other words are confirmed to exist in VESUM."
         )
-        report_lines.extend(verified[:50])
         report_lines.append("")
 
     report_lines.append("</vesum_verification>")
@@ -1162,19 +1284,25 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score, raw
 
 
-def _build_review_correction(review_text: str) -> str:
-    """Extract findings from a review and build a correction directive for retry.
+def _build_review_correction(review_text: str, score: float = 0.0) -> str:
+    """Extract findings from a review and build a PATCH directive for retry.
+
+    ALWAYS PATCH, NEVER REWRITE. Gemini's analysis proved that "rewrite FROM
+    SCRATCH" degrades content (9.6→9.2→8.4). Each rewrite throws away 96% good
+    content and hits new problems. PATCH fixes only the specific issues.
 
     Parses [DIMENSION] [SEVERITY] findings and formats them as a
-    correction directive that goes at the top of the retry prompt.
+    patch directive that goes at the top of the retry prompt.
     """
     import re
 
     lines = [
         "<correction_directive>",
-        "CRITICAL: Your previous module was reviewed and scored below 8.0/10.",
-        "You must rewrite the module FROM SCRATCH, fixing ALL issues below.",
-        "All original constraints from the writing prompt still apply.\n",
+        f"Your previous module scored {score}/10.",
+        "Do NOT rewrite from scratch. Keep the existing content intact.",
+        "Fix ONLY the specific issues listed below. Change as little as possible.",
+        "Every sentence you don't touch is a sentence that stays correct.",
+        "If an issue mentions словник/vocabulary TABLE — IGNORE it (added by a downstream tool, not your responsibility).\n",
     ]
 
     # Extract the raw findings section
@@ -1185,9 +1313,33 @@ def _build_review_correction(review_text: str) -> str:
     )
 
     if findings_section:
+        # Group lines into finding blocks (a finding starts with [DIMENSION])
+        # then filter ENTIRE blocks if any line contains ENRICH keywords.
+        # This prevents orphaned Location:/Issue:/Fix: lines from leaking through.
+        blocks: list[list[str]] = []
+        current_block: list[str] = []
         for line in findings_section.group(1).strip().split("\n"):
             line = line.strip()
-            if line and not line.startswith("```"):
+            if not line or line.startswith("```"):
+                continue
+            # New finding block starts with [DIMENSION] or severity marker
+            if "[DIMENSION" in line or "[SEVERITY" in line.upper():
+                if current_block:
+                    blocks.append(current_block)
+                current_block = [line]
+            elif current_block:
+                current_block.append(line)
+            else:
+                current_block = [line]
+        if current_block:
+            blocks.append(current_block)
+
+        for block in blocks:
+            block_text = " ".join(block).lower()
+            # Drop entire block if ANY line mentions ENRICH content
+            if any(kw in block_text for kw in _ENRICH_FILTER_KEYWORDS):
+                continue
+            for line in block:
                 if "critical" in line.lower() or "major" in line.lower():
                     lines.append(f"- FIX: {line}")
                 elif "minor" in line.lower():
@@ -1195,7 +1347,7 @@ def _build_review_correction(review_text: str) -> str:
                 elif line.startswith("Location:") or line.startswith("Issue:") or line.startswith("Fix:"):
                     lines.append(f"  {line}")
 
-    # Also extract the linguistic scan errors
+    # Also extract the linguistic scan errors (but skip ENRICH-related ones)
     linguistic_section = re.search(
         r"## Linguistic Scan\n(.*?)(?=\n## |\Z)",
         review_text,
@@ -1204,14 +1356,62 @@ def _build_review_correction(review_text: str) -> str:
     if linguistic_section:
         scan_text = linguistic_section.group(1).strip()
         if scan_text and "no linguistic errors" not in scan_text.lower():
-            lines.append(f"\n- FIX (Linguistic): {scan_text[:500]}")
+            # Filter out словник-related linguistic findings
+            scan_lines = [
+                sl for sl in scan_text.split("\n")
+                if not any(kw in sl.lower() for kw in _ENRICH_FILTER_KEYWORDS)
+            ]
+            filtered = "\n".join(scan_lines).strip()
+            if filtered:
+                lines.append(f"\n- FIX (Linguistic): {filtered[:500]}")
 
-    if len(lines) <= 4:
-        # No specific findings extracted — use generic directive
-        lines.append("- The reviewer found quality issues. Write more carefully.")
+    if len(lines) <= 6:
+        # No specific findings extracted
+        lines.append("- Minor quality issues detected. Polish the content.")
 
     lines.append("</correction_directive>")
     return "\n".join(lines)
+
+
+def _parse_review_fixes(review_text: str) -> list[dict]:
+    """Parse <fixes> block from reviewer output into find/replace pairs.
+
+    Expected format:
+    <fixes>
+    - find: "exact text"
+      replace: "corrected text"
+    - find: "another problem"
+      replace: "the fix"
+    </fixes>
+
+    Returns list of dicts with 'find' and 'replace' (or 'insert_after') keys.
+    """
+    import re
+
+    match = re.search(r"<fixes>\s*\n(.*?)</fixes>", review_text, re.DOTALL)
+    if not match:
+        return []
+
+    fixes_text = match.group(1)
+
+    try:
+        fixes = yaml.safe_load(fixes_text)
+        if isinstance(fixes, list):
+            # Validate each fix has the required keys
+            valid = []
+            for fix in fixes:
+                if not isinstance(fix, dict):
+                    continue
+                # Normalize: "content" is an alias for "replace"
+                if "content" in fix and "replace" not in fix:
+                    fix["replace"] = fix.pop("content")
+                if "find" in fix or "insert_after" in fix:
+                    valid.append(fix)
+            return valid
+    except Exception:
+        pass
+
+    return []
 
 
 def _convert_tab_markers(content: str) -> str:
@@ -1419,6 +1619,15 @@ def main():
         _post_process_content(content_path)
         _save_v6_state(args.level, slug, "annotate")
 
+    # Step 5c: VOCAB — writer generates словник YAML
+    if steps in ("all", "write"):
+        vocab_path = step_vocab(
+            content_path, args.level, args.module, slug,
+            writer=args.writer,
+        )
+        if vocab_path:
+            _save_v6_state(args.level, slug, "vocab")
+
     # Step 7b: ENRICH
     if steps in ("all", "enrich"):
         step_enrich(content_path, args.level, slug)
@@ -1429,10 +1638,10 @@ def main():
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
 
-    # Step 8: REVIEW
-    # Strategy:
-    #   score ≥ 8.0 → content is good, accept it (flag severity for human if needed)
-    #   score < 8.0 → content has real problems, retry ONCE with correction directive
+    # Step 8: REVIEW + deterministic fix
+    # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
+    # We apply them deterministically — no LLM regeneration, no rewriting.
+    # Then re-enrich and re-review to verify.
     if steps in ("all", "review"):
         passed, score, review_text = step_review(
             content_path, args.level, args.module, slug,
@@ -1440,44 +1649,69 @@ def main():
         )
         _save_v6_state(args.level, slug, "review")
 
-        if passed:
-            _log(f"\n✅ Review PASSED ({score}/10)")
-        elif score >= 8.0:
-            # Content is good (8+) but has a severity issue — accept and flag
-            _log(f"\n⚠️  Review {score}/10 — score gate PASS, severity issue flagged for human")
-            _log("  Content is good. Not rewriting — retries make it worse.")
-        else:
-            # Content has real problems (< 8.0) — retry ONCE
-            _log(f"\n❌ Review {score}/10 — rebuilding once with correction directive")
+        # Fix loop: reviewer provides <fixes>, we apply deterministically.
+        # Max 2 rounds. Score should go UP each round (9.0→9.4→9.7+).
+        max_fix_rounds = 2
+        for fix_round in range(1, max_fix_rounds + 1):
+            if passed:
+                _log(f"\n✅ Review PASSED ({score}/10)" if fix_round == 1
+                     else f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
+                break
 
-            correction = _build_review_correction(review_text)
+            fixes = _parse_review_fixes(review_text)
+            if not fixes:
+                _log(f"\n⚠️  Review {score}/10 — no <fixes> block in review output")
+                break
+
+            _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
+
+            # Save fixes for traceability
             orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
             orch_dir.mkdir(parents=True, exist_ok=True)
-            (orch_dir / "review-correction-1.md").write_text(correction, "utf-8")
-
-            content_path = step_write(
-                args.level, args.module, slug, packet_path,
-                writer=args.writer,
-                correction_directive=correction,
-                skeleton=skeleton_text,
+            (orch_dir / f"review-fixes-{fix_round}.yaml").write_text(
+                yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
+                "utf-8",
             )
-            if content_path:
-                step_exercises(content_path)
-                _post_process_content(content_path)
-                step_enrich(content_path, args.level, slug)
-                step_verify(content_path, args.level, args.module)
 
-                # Second review
-                passed, score, review_text = step_review(
-                    content_path, args.level, args.module, slug,
-                    writer=args.writer,
-                )
-                _save_v6_state(args.level, slug, "review")
+            # Apply each fix to the content file
+            content = content_path.read_text("utf-8")
+            applied = 0
+            for fix in fixes:
+                find = fix.get("find", "")
+                replace = fix.get("replace", "")
+                insert_after = fix.get("insert_after", "")
 
-                if passed:
-                    _log(f"\n✅ Review PASSED on retry ({score}/10)")
-                else:
-                    _log(f"\n⚠️  Review {score}/10 after retry — flag for human")
+                if find and replace and find in content:
+                    content = content.replace(find, replace, 1)
+                    applied += 1
+                    _log(f"    ✅ Fixed: {find[:60]}...")
+                elif find and replace:
+                    _log(f"    ⚠️  Not found: {find[:60]}...")
+                elif insert_after and replace and insert_after in content:
+                    pos = content.index(insert_after) + len(insert_after)
+                    content = content[:pos] + "\n\n" + replace + content[pos:]
+                    applied += 1
+                    _log(f"    ✅ Inserted after: {insert_after[:60]}...")
+
+            if applied == 0:
+                _log(f"  ⚠️  No fixes could be applied (0/{len(fixes)} matched)")
+                break
+
+            content_path.write_text(content, "utf-8")
+            _log(f"  Applied {applied}/{len(fixes)} fixes")
+
+            # Re-enrich, re-verify, re-review
+            step_enrich(content_path, args.level, slug)
+            step_verify(content_path, args.level, args.module)
+
+            passed, score, review_text = step_review(
+                content_path, args.level, args.module, slug,
+                writer=args.writer,
+            )
+            _save_v6_state(args.level, slug, "review")
+
+        if not passed:
+            _log(f"\n⚠️  Review {score}/10 after {max_fix_rounds} fix rounds")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs

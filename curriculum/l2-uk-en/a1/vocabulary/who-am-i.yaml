@@ -1,0 +1,276 @@
+vocabulary:
+- word: добрий день
+  translation: good day (formal greeting)
+  expression: true
+  pos: ''
+  gender: ''
+- word: мене звати
+  translation: my name is
+  expression: true
+  pos: ''
+  gender: ''
+- word: як тебе звати?
+  translation: what's your name? (informal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: як вас звати?
+  translation: what's your name? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: як його звати?
+  translation: what is his name?
+  expression: true
+  pos: ''
+  gender: ''
+- word: як її звати?
+  translation: what is her name?
+  expression: true
+  pos: ''
+  gender: ''
+- word: дуже приємно
+  translation: pleased to meet you
+  expression: true
+  pos: ''
+  gender: ''
+- word: приємно познайомитись
+  translation: pleased to make your acquaintance (formal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: звідки
+  translation: where from
+  expression: false
+  pos: присл.
+  gender: ''
+- word: звідки ти?
+  translation: where are you from? (informal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: звідки ви?
+  translation: where are you from? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: з
+  translation: from
+  expression: false
+  pos: прийм.
+  gender: ''
+- word: зі
+  translation: from (before consonant clusters)
+  expression: false
+  pos: прийм.
+  gender: ''
+- word: я
+  translation: I
+  expression: false
+  pos: ім.
+  gender: ''
+- word: ти
+  translation: you (informal)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: ви
+  translation: you (formal)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: він
+  translation: he
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: вона
+  translation: she
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: його
+  translation: his (doesn't change)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: її
+  translation: her (doesn't change)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: тебе
+  translation: you (informal, accusative/genitive)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: вас
+  translation: you (formal, accusative/genitive)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: мій
+  translation: my (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: друг
+  translation: friend (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: зараз
+  translation: now, currently
+  expression: false
+  pos: присл.
+  gender: ''
+- word: студент
+  translation: student (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: студентка
+  translation: student (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: вчитель
+  translation: teacher (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: вчителька
+  translation: teacher (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: лікар
+  translation: doctor (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: лікарка
+  translation: doctor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: інженер
+  translation: engineer (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: інженерка
+  translation: engineer (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: програміст
+  translation: programmer (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: програмістка
+  translation: programmer (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: журналіст
+  translation: journalist (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: журналістка
+  translation: journalist (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: українець
+  translation: Ukrainian (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: українка
+  translation: Ukrainian (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: американець
+  translation: American (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: американка
+  translation: American (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: канадієць
+  translation: Canadian (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: канадка
+  translation: Canadian (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: Україна
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: Канада
+  translation: Canada
+  expression: false
+  pos: ''
+  gender: ''
+- word: Німеччина
+  translation: Germany
+  expression: false
+  pos: ''
+  gender: ''
+- word: США
+  translation: USA
+  expression: false
+  pos: ''
+  gender: ''
+- word: Київ
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+- word: Львів
+  translation: Lviv
+  expression: false
+  pos: ''
+  gender: ''
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: це мій друг
+  translation: this is my friend
+  expression: true
+  pos: ''
+  gender: ''
+- word: я з України
+  translation: I am from Ukraine
+  expression: true
+  pos: ''
+  gender: ''
+- word: я з Канади
+  translation: I am from Canada
+  expression: true
+  pos: ''
+  gender: ''
+- word: я з Німеччини
+  translation: I am from Germany
+  expression: true
+  pos: ''
+  gender: ''
+- word: я зі Штатів
+  translation: I am from the States
+  expression: true
+  pos: ''
+  gender: ''

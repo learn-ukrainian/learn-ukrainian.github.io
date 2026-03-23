@@ -28,3 +28,24 @@
 {"slug": "checkpoint-first-contact", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T11:42:53.128414+00:00"}
 {"slug": "checkpoint-first-contact", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T11:44:19.968487+00:00"}
 {"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-23T11:46:41.746738+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T16:56:42.166226+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T17:10:15.492660+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T18:29:20.554020+00:00"}
+{"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T18:37:20.152620+00:00"}
+{"slug": "my-family", "error_type": "PASS", "attempt": 2, "model": "claude", "success": true, "timestamp": "2026-03-23T18:38:50.771940+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T18:44:31.419159+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T18:51:27.192222+00:00"}
+{"slug": "special-signs", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T18:56:17.398549+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 2, "model": "claude", "success": true, "timestamp": "2026-03-23T18:57:42.598147+00:00"}
+{"slug": "stress-and-melody", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T19:07:16.685855+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T19:27:12.900188+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T19:54:48.991540+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T20:01:10.635604+00:00"}
+{"slug": "stress-and-melody", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T20:10:04.136696+00:00"}
+{"slug": "who-am-i", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T20:21:50.239939+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T20:28:12.202647+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T20:29:43.876884+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-23T20:32:41.287458+00:00"}
+{"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T20:35:34.267039+00:00"}
+{"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T20:36:56.072975+00:00"}
+{"slug": "my-family", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-23T20:39:23.152614+00:00"}

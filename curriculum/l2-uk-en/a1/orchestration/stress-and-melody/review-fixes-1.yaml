@@ -1,0 +1,2 @@
+- find: 'фо-то-гра-фі-я — stress on the third а: фо-то-гра-ФІ-я (photograph)'
+  replace: 'фо-то-гра-фі-я — stress on **а**: фо-то-ГРА-фі-я (photograph)'

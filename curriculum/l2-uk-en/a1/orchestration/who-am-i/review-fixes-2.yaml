@@ -1,0 +1,32 @@
+- find: In written Ukrainian, a dash (—) is often used to connect two nouns when the
+    verb is dropped, as in **Він — інженер**.
+  replace: 'In written Ukrainian, a dash (—) is often used to connect two nouns when
+    the verb is dropped, as in **Він — інженер**. Notice how naturally the conversation
+    flows when you don''t have to conjugate a ''to be'' verb. You simply state the
+    person, point them out with **це**, and give the facts: where they are from, and
+    what they do. This straightforward structure makes introducing others in Ukrainian
+    incredibly simple for beginners.'
+- find: '**Хто це?** — Who is this?
+
+    **Це Олена.** — This is Olena.'
+  replace: '**Хто це?** — Who is this?
+
+    **Це Олена.** — This is Olena.
+
+
+    Here are a few more quick examples you might hear in everyday life:
+
+    **Що це? Це телефон.** (What is this? This is a phone.)
+
+    **Хто це? Це лікар.** (Who is this? This is a doctor.)
+
+    As you walk around, you can mentally point to objects and ask yourself «Що це?»
+    to practice identifying the world around you in Ukrainian.'
+- find: 'The formal version of the question is **Звідки ви?** (Where are you from?
+    — formal). Same pattern: **тебе/ти** for informal, **вас/ви** for formal.'
+  replace: 'The formal version of the question is **Звідки ви?** (Where are you from?
+    — formal). Same pattern: **тебе/ти** for informal, **вас/ви** for formal. When
+    you hear native speakers, pay attention to how smoothly the preposition **з**
+    blends into the country name. It sounds almost like one continuous word: *з-України*.
+    Practice saying these chunks out loud until they feel entirely natural in your
+    mouth.'

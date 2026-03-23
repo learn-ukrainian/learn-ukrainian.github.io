@@ -1,25 +1,8 @@
 <correction_directive>
-CRITICAL: Your previous module was reviewed and scored below 8.0/10.
-You must rewrite the module FROM SCRATCH, fixing ALL issues below.
-All original constraints from the writing prompt still apply.
+CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: [Plan adherence] [MAJOR]
-  Location: Діалог (Capstone Dialogue)
-  Issue: The plan explicitly dictates the full cycle of the dialogue: "greeting → name → origin → profession → family → showing photos → goodbye." The generated dialogue completely ignores the "showing photos" step.
-  Fix: Add 2-3 lines to the dialogue where they show a photo (e.g., "Ось фото. Це мій брат." / "Дуже гарна сім'я!").
-- FIX: [Linguistic accuracy] [MAJOR]
-  Location: Граматика (Grammar Summary) -> "Привіт! Мене звати Тарас. Я з Львова."
-  Issue: Fails basic Ukrainian euphony rules (милозвучність). The preposition "з" must take the form "зі" before the consonant cluster "льв".
-  Fix: Change "Я з Львова." to "Я зі Львова."
-- NOTE: [Engagement & tone] [MINOR]
-  Location: Throughout the prose (e.g., "A targeted comprehension check solidifies understanding.", "A specific pronunciation focus on three words from the passage thoroughly tests phonetics skills.")
-  Issue: Robotic meta-commentary that breaks the immersion and warmth of a teacher-student dynamic. It reads like the AI is explaining its curriculum design choices to the prompt engineer.
-  Fix: Rewrite these transition sentences to speak directly and warmly to the learner (e.g., "Let's check how well you understood the text:" or "Let's practice pronouncing these three words:").
-
-- FIX (Linguistic): One linguistic error found regarding Ukrainian euphony rules (милозвучність). 
-
-*   **Error:** «Я з Львова.»
-*   **Correction:** Should be «Я зі Львова.» Before the consonant cluster «льв», the preposition «з» must become «зі» for natural pronunciation.
+- FIX: Too short: 272 words (target: 1200, minimum: 1020)
+- FIX: Missing 1/1 required vocab: All vocabulary from M01-M06 is recycled — no new required words
 </correction_directive>
 
 # V6 Writing Prompt — Module Content Generation
@@ -52,7 +35,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ---
 
-## 7 Hard Rules
+## 8 Hard Rules
 
 1. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
@@ -61,6 +44,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
 6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+8. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -165,9 +149,9 @@ module: a1-007
 level: A1
 sequence: 7
 slug: checkpoint-first-contact
-version: '1.0'
-title: "Checkpoint: First Contact"
-subtitle: "Can you read, greet, and introduce yourself?"
+version: '1.1'
+title: 'Checkpoint: First Contact'
+subtitle: Can you read, greet, and introduce yourself?
 focus: review
 pedagogy: PPP
 phase: A1.1 [Sounds, Letters, and First Contact]
@@ -178,82 +162,64 @@ objectives:
 - Self-assess knowledge of sounds, letters, greetings, introductions
 - Combine all A1.1 skills in connected speech
 content_outline:
-- section: "Що ми знаємо? (What Do We Know?)"
+- section: Що ми знаємо? (What Do We Know?)
   words: 200
   points:
-  - "Self-check covering M01-M06:
-    Can you read any Ukrainian word? (M01-M02)
-    Do you know what Ь and apostrophe do? (M03)
-    Can you place stress correctly? (M04)
-    Can you introduce yourself? (M05)
-    Can you talk about your family? (M06)"
-- section: "Читання (Reading Practice)"
+  - 'Self-check covering M01-M06: Can you read any Ukrainian word? (M01-M02) Do you know what Ь and apostrophe do? (M03) Can
+    you place stress correctly? (M04) Can you introduce yourself? (M05) Can you talk about your family? (M06)'
+- section: Читання (Reading Practice)
   words: 250
   points:
-  - "A short Ukrainian text (8-10 sentences) using ONLY vocabulary
-    from M01-M06. No new words. The learner reads aloud.
-    Content: A person introduces themselves, describes family,
-    mentions professions, says where from."
-  - "Following Anna Ep10 'Я і моя сім'я' review pattern."
-- section: "Граматика (Grammar Summary)"
+  - 'A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M01-M06. No new words. The learner reads aloud. Content:
+    A person introduces themselves, describes family, mentions professions, says where from.'
+  - Following Anna Ep10 'Я і моя сім'я' review pattern.
+- section: Граматика (Grammar Summary)
   words: 200
   points:
-  - "Key patterns from A1.1:
-    1. Це + noun (identification)
-    2. Subject — Noun (no 'is'): Я — студент
-    3. У мене є + noun (possession)
-    4. Як тебе/вас звати? (asking names)
-    5. Мій/моя/моє + noun (possession with gender)
-    6. Звідки ти? — Я з... (origin as chunk)"
-- section: "Діалог (Capstone Dialogue)"
+  - 'Key patterns from A1.1: 1. Це + noun (identification) 2. Subject — Noun (no ''is''): Я — студент 3. У мене є + noun (possession)
+    4. Як тебе/вас звати? (asking names) 5. Мій/моя/моє + noun (possession with gender) 6. Звідки ти? — Я з... (origin as
+    chunk)'
+- section: Діалог (Capstone Dialogue)
   words: 400
   points:
-  - "The Full Introduction — comprehensive dialogue combining
-    EVERYTHING from A1.1. Setting: meeting someone new.
-    Full cycle: greeting → name → origin → profession → family →
-    showing photos → goodbye.
-    If learner can follow and produce this dialogue, A1.1 is complete."
-  - "Connected monologue: learner's own self-introduction.
-    Привіт! Мене звати [name]. Я [nationality].
-    Я — [profession]. Моя мама — [profession].
-    Мій тато — [profession]. У мене є [family].
-    This is the A1.1 graduation speech."
-- section: "Підсумок — Summary"
+  - 'The Full Introduction — comprehensive dialogue combining EVERYTHING from A1.1. Setting: meeting someone new. Full cycle:
+    greeting → name → origin → profession → family → showing photos → goodbye. If learner can follow and produce this dialogue,
+    A1.1 is complete.'
+  - 'Connected monologue: learner''s own self-introduction. Привіт! Мене звати [name]. Я [nationality]. Я — [profession].
+    Моя мама — [profession]. Мій тато — [profession]. У мене є [family]. This is the A1.1 graduation speech.'
+- section: Підсумок — Summary
   words: 150
   points:
-  - "Final self-check questions:
-    How many letters/sounds in Ukrainian?
-    Say hello formally and informally.
-    Introduce yourself in 5 sentences.
-    Name your family members with possessives."
+  - 'Final self-check questions: How many letters/sounds in Ukrainian? Say hello formally and informally. Introduce yourself
+    in 5 sentences. Name your family members with possessives.'
 vocabulary_hints:
   required:
-  - "All vocabulary from M01-M06 is recycled — no new required words"
+  - All vocabulary from M01-M06 is recycled — no new required words
   recommended:
   - ім'я (first name)
   - прізвище (surname)
 activity_hints:
 - type: quiz
-  focus: "Comprehensive review: sounds, letters, greetings, family"
+  focus: 'Comprehensive review: sounds, letters, greetings, family'
   items: 12
 - type: fill-in
-  focus: "Complete the full self-introduction monologue"
+  focus: Complete the full self-introduction monologue
   items: 8
 - type: match-up
-  focus: "Match questions with answers (Як звати? → Мене звати...)"
+  focus: Match questions with answers (Як звати? → Мене звати...)
   items: 8
 connects_to:
 - a1-008 (Things Have Gender)
 prerequisites:
 - a1-006 (My Family)
 grammar:
-- "Review: Це + noun, Subject — Noun, У мене є, possessives"
-- "No new grammar — consolidation only"
+- 'Review: Це + noun, Subject — Noun, У мене є, possessives'
+- No new grammar — consolidation only
 register: розмовний
 references:
-- title: "ULP Season 1, Episode 10 — Review 1-9"
+- title: ULP Season 1, Episode 10 — Review 1-9
   url: https://www.ukrainianlessons.com/episode10/
-  notes: "Anna's connected self-introduction review pattern."
+  notes: Anna's connected self-introduction review pattern.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
 
@@ -765,56 +731,6 @@ Look at the text on this page. What you are seeing are letters. Now, say a word 
 These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама**. It means mother, and you already know how to read it. Now look at **тато**. It means father.
 
 *Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*
-
-
-
----
-
-## Skeleton — Follow This Structure Exactly
-
-A detailed paragraph-level skeleton was generated for this module. You MUST follow it precisely:
-- Write every paragraph listed, in the order listed
-- Hit each paragraph's word budget (+-10%)
-- Place exercises exactly where the skeleton says
-- Use the specific examples named in the skeleton
-- Do NOT skip paragraphs, reorder sections, or add unplanned content
-
-The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
-
-<skeleton>
-## Що ми знаємо? (What Do We Know?) (~220 words total)
-- P1 (~60 words): Framing paragraph — you've completed A1.1, the foundation phase. You can now read Ukrainian Cyrillic, greet people, and talk about yourself and your family. This checkpoint tests whether those skills are solid before moving forward. No new material — everything here comes from M01–M06.
-- P2 (~100 words): Self-assessment checklist — five skill areas as direct questions to the learner. (1) Абетка: Can you read any Ukrainian word aloud, even unfamiliar ones? (M01–M02) (2) М'який знак та апостроф: Do you know what сім'я vs симя would sound like? (M03) (3) Наголос: Can you stress мáма, сестрá, батькó correctly? (M04) (4) Знайомство: Can you say your name, ask someone else's? Мене звати…, Як вас звати? (M05) (5) Родина: Can you name your family members with мій/моя? (M06)
-- P3 (~60 words): Honest self-evaluation guidance — if any area feels shaky, revisit that module before continuing. Mark each skill: впевнено (confident), майже (almost), потрібна практика (need practice). Encourage: навіть одне «потрібна практика» — це нормально.
-
-## Читання (Reading Practice) (~280 words total)
-- P1 (~40 words): Instructions — read the following text aloud. Every word comes from M01–M06. No dictionary needed. Focus on pronunciation: наголос, м'який знак, apostrophe. Read slowly first, then at natural speed.
-- P2 (~120 words): Reading passage — a short connected text (8–10 sentences) in Ukrainian only. Content: Привіт! Мене звати Оксана. Я українка. Я з Києва. Я — вчителька. Моя мама — лікарка. Мій тато — інженер. У мене є брат. Його звати Тарас. Він — студент. Моя сестра — Ганна. Вона маленька. Наша родина — дружна. До побачення! Uses exclusively M01–M06 vocabulary: звати, мама, тато, брат, сестра, родина, вчителька, студент, лікарка, інженер, маленька, дружна.
-- P3 (~60 words): Comprehension check in English — four questions about the passage: What is Оксана's profession? What does her тато do? How many siblings does she have? What adjective describes her родина? Answers require re-reading the Ukrainian, not memory — tests reading comprehension, not content recall.
-- P4 (~60 words): Pronunciation focus — highlight three words from the passage that test A1.1 phonetics: сім'я (apostrophe before я), вчителька (м'який знак before ка), інженер (наголос on final syllable: інженéр). Learner reads each word, then the sentence containing it, checking they apply the rules from M03–M04.
-
-## Граматика (Grammar Summary) (~220 words total)
-- P1 (~40 words): Framing — A1.1 gave you six core patterns. You don't need to memorize grammar tables — you need to recognize these patterns and use them automatically. Here they are, all in one place.
-- P2 (~120 words): Six patterns presented as a numbered reference list with one example each. (1) Це + noun (identification): Це мама. Це брат. (2) Subject — Noun (no "is"): Я — студент. Вона — лікарка. (3) У мене є + noun (possession): У мене є сестра. У мене є брат. (4) Як тебе/вас звати? — Мене звати... (asking/giving names): Як вас звати? — Мене звати Оксана. (5) Мій/моя/моє + noun (possessive with gender): мій тато, моя мама, моє ім'я. (6) Звідки ти? — Я з... (origin): Звідки ви? — Я з Канади.
-- P3 (~60 words): Pattern recognition note — these six patterns are building blocks. Real conversation chains them: Привіт! Мене звати Тарас. Я з Львова. Я — студент. У мене є сестра. Моя сестра — Ганна. Every sentence uses one of the six patterns. Point: fluency means chaining patterns without thinking about which one you're using.
-- Exercise: quiz — 12 items reviewing all six patterns plus sounds/letters knowledge from M01–M04. Mix of "which pattern fits?" and "what sound does Ь signal here?"
-
-## Діалог (Capstone Dialogue) (~440 words total)
-- P1 (~40 words): Setup — this is the A1.1 graduation test. Two people meet for the first time and have a complete conversation. If you can follow this dialogue and produce your own version, you're ready for A1.2.
-- P2 (~120 words): Full capstone dialogue in Ukrainian — Андрій meets Софія at a кафе. Complete cycle: greeting (Привіт! / Добрий день!), names (Як вас звати? — Мене звати Софія. А вас? — Мене звати Андрій.), origin (Звідки ви? — Я з Одеси. А ви? — Я з Торонто.), profession (Я — вчитель. А ви? — Я — студентка.), family (У мене є брат і сестра. Мій брат — лікар. А у вас є родина? — У мене є мама і тато. Моя мама — інженерка.), farewell (Дуже приємно! До побачення! — До побачення!).
-- P3 (~60 words): Dialogue analysis in English — point out how the dialogue chains all six grammar patterns from the previous section. Highlight the question-answer pairs: Як звати → Мене звати, Звідки → Я з, У вас є → У мене є. Note the turn-taking pattern: answer + А ви?/А вас? to return the question.
-- Exercise: match-up — 8 items pairing questions with appropriate answers from the dialogue. Як вас звати? → Мене звати Софія. Звідки ви? → Я з Одеси. У вас є родина? → У мене є брат і сестра. Хто ваш брат? → Мій брат — лікар. Etc.
-- P4 (~80 words): Connected monologue task — the A1.1 graduation speech. Learner fills in their own information to produce a self-introduction monologue. Template with blanks: Привіт! Мене звати ___. Я ___  (nationality). Я з ___ (city). Я — ___ (profession). У мене є ___ (family member). Мій/Моя ___ — ___ (family member's profession). Моя родина — ___ (adjective). Encourage saying it aloud, not just writing — this is spoken fluency practice.
-- Exercise: fill-in — 8 items completing the self-introduction monologue. Each blank tests a different pattern: Мене ___ Оксана (звати), Я ___ Києва (з), Моя мама — ___ (лікарка), У мене ___ брат (є), ___ тато — інженер (Мій), Я — ___ (студентка), ___ ви? (Звідки), Як вас ___? (звати).
-- P5 (~50 words): Performance encouragement — if you can say your монолог without looking at the template, you've internalized A1.1. Record yourself. Compare with the Оксана passage from Читання. You should sound just as natural. Наступний крок: A1.2, where things get their own gender.
-- P6 (~90 words): Cultural note on Ukrainian introductions — Ukrainians typically use Добрий день (not Привіт) with strangers and older people. Ви-form (Як вас звати? Звідки ви?) is default until someone suggests switching to ти. At university or among young people, Привіт + ти is fine from the start. Приємно познайомитися! (Nice to meet you!) is the standard closer after exchanging names. Mention that handshakes are common, and Ukrainians value eye contact during greetings.
-
-## Підсумок — Summary (~160 words total)
-- P1 (~80 words): Final self-check — four concrete tasks the learner should be able to do. (1) Скільки букв в українській абетці? (33) Скільки звуків? (38) (2) Привітайся офіційно і неофіційно. (Добрий день! / Привіт!) (3) Представся п'ятьма реченнями. (Мене звати... Я з... Я —... У мене є... Мій/Моя... —...) (4) Назви членів родини з присвійними займенниками. (мій тато, моя мама, мій брат, моя сестра)
-- P2 (~80 words): Bridge to A1.2 — you can now read, greet, introduce, and describe family. Next phase: A1.2 «Речі мають рід» (Things Have Gender). You'll learn that every Ukrainian noun has a gender — чоловічий, жіночий, середній — and this changes everything: adjectives, possessives, verbs. You already used мій/моя/моє without fully understanding why — Module 8 explains the system behind it. А1.1 завершено. Вітаємо! (A1.1 complete. Congratulations!)
-
-Grand total: ~1320 words
-</skeleton>
 
 ## Output Format
 

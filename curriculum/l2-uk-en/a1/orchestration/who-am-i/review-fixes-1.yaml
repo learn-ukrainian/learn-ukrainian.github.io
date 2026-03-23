@@ -1,0 +1,31 @@
+- insert_after: That's a complete first conversation in Ukrainian — six short lines.
+  replace: '
+
+
+    When listening to Ukrainians introduce themselves, you might notice how fast these
+    exchanges happen. Because there are no filler verbs like ''am'' or ''is'' to slow
+    the sentence down, the information flows directly. This directness can feel abrupt
+    to English speakers at first, but it is simply an efficient feature of the language.
+    The warmth comes from the tone of voice, eye contact, and the smile, not from
+    extra words padding the sentence. In Ukrainian culture, a sincere introduction
+    builds immediate trust.'
+- insert_after: Both come AFTER the introduction, not before — this is the Ukrainian
+    way.
+  replace: '
+
+
+    Culturally, introductions in Ukraine are usually straightforward. You don''t need
+    to ask ''How are you?'' immediately after exchanging names unless you are actually
+    prepared for a genuine, detailed answer. Keep it simple: exchange names, state
+    where you are from, and express your pleasure at meeting them. This formula works
+    perfectly in ninety percent of everyday encounters.'
+- find: 'Notice: the question word goes FIRST in Ukrainian. You say **Хто це?** —
+    never "Це хто?"'
+  replace: 'Notice: the question word usually goes FIRST in Ukrainian. The standard
+    neutral question is **Хто це?** (You will only hear "Це хто?" in colloquial speech
+    when someone is surprised or emphasizing the question).'
+- find: '**Він зі Львова** (He is from Lviv). **Він — інженер** (He is an engineer).
+    No verb "is" anywhere. Just a dash.'
+  replace: '**Він зі Львова** (He is from Lviv). **Він — інженер** (He is an engineer).
+    No verb "is" anywhere. In written Ukrainian, a dash (—) is often used to connect
+    two nouns when the verb is dropped, as in **Він — інженер**.'

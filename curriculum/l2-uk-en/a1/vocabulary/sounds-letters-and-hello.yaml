@@ -1,0 +1,221 @@
+vocabulary:
+- word: звук
+  translation: sound
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: літера
+  translation: letter
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: голосний
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: приголосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: абетка
+  translation: alphabet
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: мама
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: тато
+  translation: father
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: вода
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: рука
+  translation: hand
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: книга
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: школа
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: привіт
+  translation: hi (informal)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: добре
+  translation: fine, good
+  expression: false
+  pos: присл.
+  gender: ''
+- word: чудово
+  translation: great, wonderful
+  expression: false
+  pos: присл.
+  gender: ''
+- word: нормально
+  translation: okay, alright
+  expression: false
+  pos: присл.
+  gender: ''
+- word: банк
+  translation: bank
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: аптека
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: метро
+  translation: metro
+  expression: false
+  pos: ім.
+  gender: с.
+- word: пошта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: зупинка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: кафе
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: с.
+- word: кома
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: атом
+  translation: atom
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: мак
+  translation: poppy
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: око
+  translation: eye
+  expression: false
+  pos: ім.
+  gender: с.
+- word: сон
+  translation: dream
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: ніс
+  translation: nose
+  expression: false
+  pos: дієсл.
+  gender: ''
+- word: хата
+  translation: house
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: дім
+  translation: house, home
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: зима
+  translation: winter
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: це
+  translation: this is
+  expression: false
+  pos: ім.
+  gender: с.
+- word: що
+  translation: what
+  expression: false
+  pos: спол.
+  gender: ''
+- word: хто
+  translation: who
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: слово
+  translation: word
+  expression: false
+  pos: ім.
+  gender: с.
+- word: речення
+  translation: sentence
+  expression: false
+  pos: ім.
+  gender: с.
+- word: рада
+  translation: glad (feminine)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: радий
+  translation: glad (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: Як справи?
+  translation: How are you?
+  expression: true
+  pos: ''
+  gender: ''
+- word: А у тебе?
+  translation: And you?
+  expression: true
+  pos: ''
+  gender: ''
+- word: Рада тебе бачити!
+  translation: Glad to see you! (said by a woman)
+  expression: true
+  pos: ''
+  gender: ''
+- word: Радий тебе бачити!
+  translation: Glad to see you! (said by a man)
+  expression: true
+  pos: ''
+  gender: ''
+- word: Що це?
+  translation: What is this?
+  expression: true
+  pos: ''
+  gender: ''
+- word: Хто це?
+  translation: Who is this?
+  expression: true
+  pos: ''
+  gender: ''
+- word: Це мама.
+  translation: This is mom.
+  expression: true
+  pos: ''
+  gender: ''

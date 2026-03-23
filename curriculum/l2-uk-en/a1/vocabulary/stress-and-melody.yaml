@@ -1,0 +1,101 @@
+vocabulary:
+- word: наголос
+  translation: stress, accent
+  expression: false
+  pos: присл.
+  gender: ''
+- word: замок
+  translation: castle (first-syllable stress) / lock (second-syllable stress)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: мука
+  translation: torment (first-syllable stress) / flour (second-syllable stress)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: кава
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: атлас
+  translation: atlas (first-syllable stress) / satin (second-syllable stress)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: інтонація
+  translation: intonation
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: розповідні
+  translation: declarative (sentences)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: питальні
+  translation: interrogative (sentences)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: спонукальні
+  translation: imperative (sentences)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: окличні
+  translation: exclamatory (sentences)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: де
+  translation: where
+  expression: false
+  pos: присл.
+  gender: ''
+- word: коли
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+- word: українська
+  translation: Ukrainian
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: відпочинок
+  translation: rest, vacation
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: теж
+  translation: also, too
+  expression: false
+  pos: присл.
+  gender: ''
+- word: так
+  translation: 'yes'
+  expression: false
+  pos: присл.
+  gender: ''
+- word: вголос
+  translation: aloud
+  expression: false
+  pos: присл.
+  gender: ''
+- word: Як гарно!
+  translation: How beautiful!
+  expression: true
+  pos: ''
+  gender: ''
+- word: Це Київ.
+  translation: This is Kyiv.
+  expression: true
+  pos: ''
+  gender: ''
+- word: Київ — столиця.
+  translation: Kyiv is the capital.
+  expression: true
+  pos: ''
+  gender: ''

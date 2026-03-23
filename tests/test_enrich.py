@@ -53,6 +53,25 @@ class TestSlovnyk:
         assert _build_slovnyk(plan) == ""
 
 
+    def test_build_slovnyk_markdown_formatting(self):
+        """Test that build_slovnyk_markdown produces correct table output."""
+        from build.vocab_gen import build_slovnyk_markdown
+
+        entries = [
+            {"word": "звук", "translation": "sound", "expression": False, "pos": "ім.", "gender": "ч."},
+            {"word": "літера", "translation": "letter", "expression": False, "pos": "ім.", "gender": "ж."},
+        ]
+        expressions = [
+            {"word": "Як справи?", "translation": "How are you?", "expression": True},
+        ]
+        result = build_slovnyk_markdown(entries, [], expressions)
+
+        assert "| **звук** | sound | ім. | ч. |" in result
+        assert "| **літера** | letter | ім. | ж. |" in result
+        assert "| **Як справи?** | How are you? |" in result
+        assert "Вирази" in result
+
+
 class TestVideoEmbeds:
     def test_overview_video(self):
         plan = {

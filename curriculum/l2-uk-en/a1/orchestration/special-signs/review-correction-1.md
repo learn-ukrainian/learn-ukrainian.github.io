@@ -1,18 +1,19 @@
 <correction_directive>
-CRITICAL: Your previous module was reviewed and scored below 8.0/10.
-You must rewrite the module FROM SCRATCH, fixing ALL issues below.
-All original constraints from the writing prompt still apply.
+Your previous module scored 9.3/10.
+Do NOT rewrite from scratch. Keep the existing content intact.
+Fix ONLY the specific issues listed below. Change as little as possible.
+Every sentence you don't touch is a sentence that stays correct.
+If an issue mentions словник/vocabulary TABLE — IGNORE it (added by a downstream tool, not your responsibility).
 
-- FIX: [Dimension 5] [SEVERITY: major]
-  Location: Exercise block `:::fill-in` "Ь чи апостроф?", specifically: `- sentence: "батьк___вщина"` `answer: "батьківщина"`
-  Issue: The exercise prompt asks learners to choose between Ь or an apostrophe, but the gap is placed where the vowel `і` belongs. If the intention was to test the soft sign, the gap is in the wrong place.
-  Fix: Change the gap to test the soft sign correctly: `- sentence: "бат___ківщина"` `answer: "батьківщина"` OR replace the word entirely with an easier A1 word like `пальто`.
-- FIX: [Dimension 1] [SEVERITY: major]
-  Location: Entire exercise section (`:::fill-in`, `:::match-up`, `:::quiz`)
-  Issue: The generated activities violate the strict `activity_hints` prescribed in the plan. The plan asked for 4 specific exercises (Quiz 8 items, Match-up 8 items, Fill-in 6 items, Quiz 4 items). The generator created 5 exercises, replaced the first quiz with a fill-in, and hallucinated an extra quiz.
-  Fix: Delete the unprompted `:::fill-in` ("Де потрібен Ь?") and `:::quiz` ("Дзвінкий чи глухий?"). Generate the missing 8-item `:::quiz` focusing on "Does this word have a soft sign, apostrophe, or neither?" exactly as specified in the plan.
-- NOTE: [Dimension 2] [SEVERITY: minor]
-  Location: Section 1 (М'яки́й знак) paragraph 1: "...Ukrainian distinguishes between **тверді** (hard) and **м'якшені** (softened) consonants..."
-  Issue: The plan explicitly references Большакова Grade 1: "Тверді і пом'якшені приголосні звуки." The text uses the non-standard variant "м'якшені" instead of the standard "пом'якшені".
-  Fix: Change "**м'якшені**" to "**пом'якшені**".
+- FIX: [Linguistic accuracy] [SEVERITY: major]
+  Location: М'який знак (The Soft Sign — Ь) — "Look at these two words: **кон** (a type of game piece) and **кінь** (horse)."
+  Issue: "кон" is a Russianism (the Ukrainian word is "кін"). The writer attempted to translate the Russian minimal pair "кон / конь" directly into Ukrainian, resulting in a hallucinated Russianism in the text.
+  Fix: Remove "кон" and "кінь" as the introductory minimal pair. Replace with a valid Ukrainian minimal pair that demonstrates the soft sign, such as "син" (son) and "синь" (blue/blueness), or "лан" (field) and "лань" (doe).
+- NOTE: [Plan adherence] [SEVERITY: minor]
+  Location: Entire module
+  Issue: The module word count is roughly 1080 words, which is 10% below the 1200-word target specified in the plan.
+  Fix: Expand the "Важкі звуки" or "Апостроф" sections with one or two more contextual examples or reading practices to hit the target.
+
+- FIX (Linguistic): Found 1 Russianism:
+- "кон" is used as the nominative form for "game piece". This is a Russianism (and a direct translation of the Russian minimal pair кон/конь). The Ukrainian word is "кін".
 </correction_directive>

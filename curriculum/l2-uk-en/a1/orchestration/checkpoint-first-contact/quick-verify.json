@@ -8,6 +8,12 @@
       "message": "Missing 1/1 required vocab: All vocabulary from M01-M06 is recycled — no new required words"
     }
   ],
-  "warnings": [],
-  "timestamp": "2026-03-23T11:46:41.746463+00:00"
+  "warnings": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "WARNING",
+      "message": "Too long: 2141 words (target: 1200, ceiling: 1800)"
+    }
+  ],
+  "timestamp": "2026-03-23T20:32:41.286984+00:00"
 }

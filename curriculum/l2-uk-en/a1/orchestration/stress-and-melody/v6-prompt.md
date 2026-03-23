@@ -28,21 +28,28 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ---
 
-## 7 Hard Rules
+## 8 Hard Rules
 
 1. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
 4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
-6. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
+6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+8. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
 ## Exercises — Write Them Directly
 
-After each key teaching point, write an exercise directly in DSL format. Base your exercises on the `activity_hints` in the Plan — each hint should become one exercise.
+After each key teaching point, write an exercise directly in DSL format.
+
+**CRITICAL: Each exercise MUST match a specific `activity_hints` entry from the Plan.**
+- Use the EXACT `type` specified (quiz, fill-in, match-up, group-sort, true-false)
+- Follow the `focus` description EXACTLY — if the plan says "Answer: У тебе є...? Так / Ні", your quiz must test exactly that pattern
+- Match the `items` count specified
+- Do NOT invent different exercises — the plan's activity_hints are the specification
 
 Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
 
@@ -135,9 +142,9 @@ module: a1-004
 level: A1
 sequence: 4
 slug: stress-and-melody
-version: '1.0'
+version: '1.1'
 title: Stress and Melody
-subtitle: "Наголос changes meaning, intonation changes intent"
+subtitle: Наголос changes meaning, intonation changes intent
 focus: phonetics
 pedagogy: PPP
 phase: A1.1 [Sounds, Letters, and First Contact]
@@ -148,66 +155,44 @@ objectives:
 - Use rising intonation for yes/no questions and falling for statements
 - Read aloud with natural Ukrainian rhythm
 content_outline:
-- section: "Наголос (Stress)"
+- section: Наголос (Stress)
   words: 350
   points:
-  - "Заболотний Grade 5 p.73: Ukrainian has 38 sounds, and stress (наголос)
-    determines which syllable is louder and longer. Stress is FREE — it can
-    fall on any syllable, and it MOVES between forms of the same word.
-    This is unlike French (always last) or Czech (always first)."
-  - "Stress changes meaning — real pairs learners will encounter:
-    замок (castle) vs замок (lock),
-    мука (torment) vs мука (flour),
-    атлас (atlas) vs атлас (satin).
-    Wrong stress = wrong word. This is why stress marks matter."
-  - "In writing, stress marks (') appear in textbooks and dictionaries
-    but NOT in everyday Ukrainian text. As a learner, always check
-    goroh.pp.ua for stress when unsure."
-  - "Common patterns for beginners:
-    First syllable: мама, тато, ранок, кава, книга.
-    Last syllable: вода, зима, рука, метро, кафе.
-    No shortcut — learn each word's stress individually."
-- section: "Інтонація (Intonation)"
+  - 'Заболотний Grade 5 p.73: Ukrainian has 38 sounds, and stress (наголос) determines which syllable is louder and longer.
+    Stress is FREE — it can fall on any syllable, and it MOVES between forms of the same word. This is unlike French (always
+    last) or Czech (always first).'
+  - 'Stress changes meaning — real pairs learners will encounter: замок (castle) vs замок (lock), мука (torment) vs мука (flour),
+    атлас (atlas) vs атлас (satin). Wrong stress = wrong word. This is why stress marks matter.'
+  - In writing, stress marks (') appear in textbooks and dictionaries but NOT in everyday Ukrainian text. As a learner, always
+    check goroh.pp.ua for stress when unsure.
+  - 'Common patterns for beginners: First syllable: мама, тато, ранок, кава, книга. Last syllable: вода, зима, рука, метро,
+    кафе. No shortcut — learn each word''s stress individually.'
+- section: Інтонація (Intonation)
   words: 300
   points:
-  - "Ukrainian uses intonation (melody) to distinguish sentence types.
-    Same words, different melody, different meaning.
-    Statement: Це кава. ↘ (falling — telling)
-    Question: Це кава? ↗ (rising on last stressed syllable — asking)
-    Exclamation: Як гарно! ↘↘ (strong fall — expressing emotion)"
-  - "Question words (хто, що, де, коли) make questions WITHOUT rising:
-    Що це? ↘ (falling — the question word does the work).
-    Де метро? ↘ (falling).
-    But yes/no questions always rise: Це метро? ↗"
-  - "Ukrainian classifies sentences by purpose: розповідні (declarative),
-    питальні (interrogative), спонукальні (imperative). Any of these
-    can also be окличні (exclamatory) — a separate dimension.
-    For A1: focus on the three punctuation patterns:
-    . for statements, ? for questions, ! for exclamations/commands."
-- section: "Читаємо вголос (Reading Aloud)"
+  - 'Ukrainian uses intonation (melody) to distinguish sentence types. Same words, different melody, different meaning. Statement:
+    Це кава. ↘ (falling — telling) Question: Це кава? ↗ (rising on last stressed syllable — asking) Exclamation: Як гарно!
+    ↘↘ (strong fall — expressing emotion)'
+  - 'Question words (хто, що, де, коли) make questions WITHOUT rising: Що це? ↘ (falling — the question word does the work).
+    Де метро? ↘ (falling). But yes/no questions always rise: Це метро? ↗'
+  - 'Ukrainian classifies sentences by purpose: розповідні (declarative), питальні (interrogative), спонукальні (imperative).
+    Any of these can also be окличні (exclamatory) — a separate dimension. For A1: focus on the three punctuation patterns:
+    . for statements, ? for questions, ! for exclamations/commands.'
+- section: Читаємо вголос (Reading Aloud)
   words: 300
   points:
-  - "Multisyllable reading with correct stress:
-    у-кра-їн-ська (Ukrainian — stress on ї),
-    фо-то-гра-фі-я (photograph — stress on third а: фотографія),
-    ві-дпо-чи-нок (rest — stress on и).
-    Method: break → find stressed syllable → read at natural speed."
-  - "Short text reading practice:
-    Це Київ. Київ — столиця України. Тут є метро, аптеки, кафе.
-    Read aloud: find the stress on each word, use falling intonation
-    for statements."
-  - "Dialogue practice using greetings from M01:
-    — Привіт! ↘ (statement/greeting)
-    — Привіт! Як справи? ↗ (yes/no question)
-    — Добре! А у тебе? ↗
-    — Теж добре! ↘
-    Apply intonation patterns to the greetings already learned."
-- section: "Підсумок — Summary"
+  - 'Multisyllable reading with correct stress: у-кра-їн-ська (Ukrainian — stress on ї), фо-то-гра-фі-я (photograph — stress
+    on third а: фотографія), ві-дпо-чи-нок (rest — stress on и). Method: break → find stressed syllable → read at natural
+    speed.'
+  - 'Short text reading practice: Це Київ. Київ — столиця України. Тут є метро, аптеки, кафе. Read aloud: find the stress
+    on each word, use falling intonation for statements.'
+  - 'Dialogue practice using greetings from M01: — Привіт! ↘ (statement/greeting) — Привіт! Як справи? ↗ (yes/no question)
+    — Добре! А у тебе? ↗ — Теж добре! ↘ Apply intonation patterns to the greetings already learned.'
+- section: Підсумок — Summary
   words: 250
   points:
-  - "Self-check: What is наголос? Can it change word meaning? Give an example.
-    What intonation do you use for a yes/no question? For a statement?
-    Read this aloud: Це аптека? Так, це аптека. Як гарно!"
+  - 'Self-check: What is наголос? Can it change word meaning? Give an example. What intonation do you use for a yes/no question?
+    For a statement? Read this aloud: Це аптека? Так, це аптека. Як гарно!'
 vocabulary_hints:
   required:
   - наголос (stress/accent) — metalanguage word
@@ -223,35 +208,35 @@ vocabulary_hints:
   - фотографія (photograph) — long word practice
 activity_hints:
 - type: quiz
-  focus: "Where is the stress? Choose the correct syllable."
+  focus: Where is the stress? Choose the correct syllable.
   items: 8
 - type: match-up
-  focus: "Match stress pairs: замок (castle) ↔ замок (lock)"
+  focus: 'Match stress pairs: замок (castle) ↔ замок (lock)'
   items: 4
 - type: quiz
-  focus: "Statement, question, or exclamation? Choose based on punctuation."
+  focus: Statement, question, or exclamation? Choose based on punctuation.
   items: 6
 - type: fill-in
-  focus: "Add the correct punctuation: Це кава_ Де метро_ Як гарно_"
+  focus: 'Add the correct punctuation: Це кава_ Де метро_ Як гарно_'
   items: 6
 connects_to:
 - a1-005 (Who Am I?)
 prerequisites:
 - a1-003 (Special Signs)
 grammar:
-- "Free stress system (наголос)"
-- "Stress-meaning pairs"
-- "Three intonation patterns: statement ↘, question ↗, exclamation ↘↘"
-- "Question words don't need rising intonation"
+- Free stress system (наголос)
+- Stress-meaning pairs
+- 'Three intonation patterns: statement ↘, question ↗, exclamation ↘↘'
+- Question words don't need rising intonation
 register: розмовний
 references:
-- title: "Заболотний Grade 5, p.73"
-  notes: "38 звуків, наголос. Stress as free and mobile."
-- title: "Авраменко Grade 5, p.19"
-  notes: "Інтонація речень — розповідні, питальні, окличні."
-- title: "ULP Season 1, Episode 5 — Pronunciation Trainer"
+- title: Заболотний Grade 5, p.73
+  notes: 38 звуків, наголос. Stress as free and mobile.
+- title: Авраменко Grade 5, p.19
+  notes: Інтонація речень — розповідні, питальні, окличні.
+- title: ULP Season 1, Episode 5 — Pronunciation Trainer
   url: https://www.ukrainianlessons.com/episode5/
-  notes: "Stress practice with numbers."
+  notes: Stress practice with numbers.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
 
@@ -901,81 +886,6 @@ Look at the text on this page. What you are seeing are letters. Now, say a word 
 These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама**. It means mother, and you already know how to read it. Now look at **тато**. It means father.
 
 *Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*
-
-
-
----
-
-## Skeleton — Follow This Structure Exactly
-
-A detailed paragraph-level skeleton was generated for this module. You MUST follow it precisely:
-- Write every paragraph listed, in the order listed
-- Hit each paragraph's word budget (+-10%)
-- Place exercises exactly where the skeleton says
-- Use the specific examples named in the skeleton
-- Do NOT skip paragraphs, reorder sections, or add unplanned content
-
-The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
-
-<skeleton>
-## Наголос (Stress) (~385 words total)
-
-- P1 (~70 words): Open with the concept of наголос — one syllable in every Ukrainian word is louder and longer. Reference the Grade 1 textbook exercise: "Вимов слово на|го|лос. Один зі складів у слові ти вимовляєш сильніше." Ukrainian stress is FREE (вільний) — it can land on any syllable, unlike French (always last) or Czech (always first). Introduce the stress mark (ˊ) symbol.
-
-- P2 (~80 words): Stress is MOBILE (рухомий) — it moves between forms of the same word. Show: рукá → рýки, водá → вóди, книгá → кнúжка. This is one of the hardest things about Ukrainian for learners. Reference Grade 2 textbook: "Щоб запам'ятати наголос у слові, правильно проговори його кілька разів."
-
-- P3 (~85 words): Stress changes MEANING — introduce minimal pairs. замок (ЗА́мок = castle) vs замок (замо́к = lock). мýка (torment) vs мукá (flour). áтлас (atlas/book of maps) vs атлáс (satin fabric). Wrong stress = different word entirely. Reference Grade 1 textbook page showing замок/замок with pictures. Emphasize: this is why stress marks in dictionaries matter.
-
-- P4 (~70 words): Stress marks in real life — textbooks and dictionaries show them, but everyday Ukrainian writing does not. Learners should always check goroh.pp.ua when unsure. In this curriculum, stress marks appear on new vocabulary to help.
-
-- P5 (~80 words): Common stress patterns for A1 words. First syllable: мáма, тáто, рáнок, кáва, кнúга. Last syllable: водá, зимá, рукá, метрó, кафé. Middle syllable: столи́ця, Украї́на, аптéка. No universal rule — learn each word's stress individually. But patterns help: many two-syllable kinship/food words stress first syllable.
-
-- Exercise: Quiz — "Where is the stress? Choose the correct syllable." 8 items using: кава, вода, столиця, замок (castle), замок (lock), метро, книга, Україна.
-
-## Інтонація (Intonation) (~330 words total)
-
-- P1 (~75 words): Same words, different melody, different meaning. Introduce three patterns with the same sentence: Це кáва. ↘ (falling — you are telling). Це кáва? ↗ (rising on stressed syllable — you are asking). Як гáрно! ↘↘ (strong fall — you are feeling). The melody tells the listener whether you're stating, asking, or exclaiming.
-
-- P2 (~80 words): Yes/no questions always rise ↗ on the last stressed syllable. Це метрó? ↗ Це аптéка? ↗ Він студéнт? ↗ But question words (хто, що, де, коли, як) do the questioning work themselves — so intonation falls ↘. Що це? ↘ Де метрó? ↘ Хто це? ↘ Common learner mistake: rising on ALL questions. Only rise when there's no question word.
-
-- P3 (~80 words): Ukrainian grammar classifies sentences by purpose (за метою висловлювання): розповідні (statements → крáпка .), питáльні (questions → знак питáння ?), спонукáльні (commands/requests → знак оклику !). Any sentence can ALSO be окличне (exclamatory) — that's a separate layer. "Це Ки́їв." = calm statement. "Це Ки́їв!" = excited statement. For now: . for telling, ? for asking, ! for strong feeling or commands.
-
-- Exercise: Quiz — "Statement, question, or exclamation? Choose based on punctuation and intonation." 6 items: Це кава. / Це кава? / Як гарно! / Де метро? / Він студент? / Це Київ!
-
-- P4 (~95 words): Reference Grade 2 textbook on розповідні речення: "Речення, у якому про щось розповідається або повідомляється, називається розповідним." Show the Grade 2 SMS exercise idea adapted: imagine texting a friend. Розповідаєш (telling): Я в метро. Питаєш (asking): Ти вдома? Спонукаєш (requesting): Напиши мені! Each sentence type has its own punctuation AND its own melody. Practice saying all three aloud.
-
-- Exercise: Match-up — "Match stress pairs: зáмок (castle) ↔ замóк (lock), мýка (torment) ↔ мукá (flour)." 4 items pairing stress-shifted words with their meanings.
-
-## Читаємо вголос (Reading Aloud) (~330 words total)
-
-- P1 (~80 words): Method for reading long words: break into syllables → find the stressed syllable → say the whole word at natural speed. Practice: у-кра-ї́н-ська (stress on ї), сто-ли́-ця (stress on и), від-по-чи́-нок (stress on и), фо-то-грá-фі-я (stress on second а). Don't read syllable-by-syllable forever — the goal is smooth, natural pronunciation. Syllable splitting is training wheels.
-
-- P2 (~90 words): Short text for read-aloud practice. "Це Ки́їв. Ки́їв — столи́ця Украї́ни. Тут є метрó, аптéки, кафé. Це гáрне мíсто." Instructions: (1) Read silently, find stress on each word. (2) Read aloud slowly with correct stress. (3) Read again at natural speed with falling intonation ↘ for each statement. Now try questions about the same text: "Це Ки́їв? ↗ Тут є метрó? ↗ Де аптéка? ↘"
-
-- Exercise: Fill-in — "Add the correct punctuation: Це кава_ Де метро_ Як гарно_ Тут є аптека_ Хто це_ Це Київ_" 6 items.
-
-- P3 (~90 words): Dialogue practice connecting to greetings from M01. Read aloud with correct intonation:
-  — Приві́т! ↘
-  — Приві́т! Як спрáви? ↗
-  — Дóбре! А у тéбе? ↗
-  — Теж дóбре! ↘
-  — Де ти? ↘
-  — Я в кафé. ↘
-  — О, кáва! Як гáрно! ↘↘
-  Mark which lines rise ↗ and which fall ↘. Notice: "Як справи?" rises because it's a yes/no-style question expecting a status answer. "Де ти?" falls because де is a question word.
-
-- P4 (~70 words): Rhythm tip — Ukrainian speech has a natural flow where stressed syllables are slightly longer. Don't make every syllable equal length (that sounds robotic). Listen to any Ukrainian speaker: the stressed syllable stands out, unstressed syllables are quicker and lighter. Practice with: Украї́на, столи́ця, фотогрáфія — exaggerate the stressed syllable at first, then smooth it out.
-
-## Підсумок — Summary (~275 words total)
-
-- P1 (~90 words): Recap the three big ideas. (1) Наголос is free and mobile — it can fall on any syllable and moves between word forms. (2) Wrong stress can change meaning: зáмок ≠ замóк. (3) Intonation distinguishes statements ↘, yes/no questions ↗, and exclamations ↘↘ — but question words (що, де, хто) take falling intonation because the word itself signals a question.
-
-- P2 (~85 words): Self-check questions in a box. Що таке наголос? (Stress — one syllable is louder and longer.) Чи може наголос змінити значення слова? (Yes — замок/замок.) Яка інтонація у питанні "Це кава?"? (Rising ↗.) А у питанні "Що це?"? (Falling ↘ — question word.) Read aloud: "Це аптéка? Так, це аптéка. Як гáрно!" — did your melody change for each sentence?
-
-- P3 (~100 words): What comes next — preview M05 (Who Am I?). You now know Ukrainian sounds (M02), special signs (M03), and stress/intonation (this module). Next, you'll use all of this to introduce yourself and talk about identity. Encourage daily practice: pick 5 words from this module, check their stress on goroh.pp.ua, say them aloud. When you hear Ukrainian (podcasts, music, conversations), listen for the melody — where does the voice rise and fall? Stress and intonation are the music of Ukrainian. Натхнення й наполегливість — inspiration and persistence.
-
-Grand total: ~1320 words (385 + 330 + 330 + 275)
-</skeleton>
 
 ## Output Format
 

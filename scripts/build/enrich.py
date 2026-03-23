@@ -23,8 +23,11 @@ from pathlib import Path
 import yaml
 from build.text_utils import parse_vocab_hint
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_CURRICULUM_ROOT = _PROJECT_ROOT / "curriculum" / "l2-uk-en"
+
 # VESUM database for POS lookup
-_VESUM_DB = Path(__file__).resolve().parent.parent.parent / "data" / "vesum.db"
+_VESUM_DB = _PROJECT_ROOT / "data" / "vesum.db"
 
 # Ukrainian POS labels
 _POS_LABELS = {
@@ -153,7 +156,7 @@ def _extract_prose_vocab(content: str) -> list[str]:
 
 def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
     """Collect all vocabulary from previous modules' plans to avoid repetition."""
-    plans_dir = Path(__file__).resolve().parent.parent.parent / "curriculum" / "l2-uk-en" / "plans" / level
+    plans_dir = _CURRICULUM_ROOT / "plans" / level
     if not plans_dir.is_dir():
         return set()
 
@@ -177,36 +180,39 @@ def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
     return previous_words
 
 
-def _build_slovnyk(plan: dict, content: str = "") -> str:
-    """Generate словник (vocabulary table) from plan vocabulary_hints + prose extraction.
+def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
+    """Generate словник (vocabulary table) from writer-generated vocabulary YAML.
 
-    Deduplicates against vocabulary from previous modules to only show NEW words.
+    Priority:
+    1. vocabulary/{slug}.yaml (writer-driven, from step_vocab) — has contextual translations
+    2. Fallback: plan vocabulary_hints (no prose translations)
+
+    Issue: #1025
     """
+    # 1. Try writer-generated vocabulary YAML
+    level = plan.get("level", "").lower()
+    if slug and level:
+        vocab_path = _CURRICULUM_ROOT / level / "vocabulary" / f"{slug}.yaml"
+        if vocab_path.exists():
+            try:
+                vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
+                if isinstance(vocab_data, dict) and vocab_data.get("vocabulary"):
+                    from build.vocab_gen import build_slovnyk_markdown
+                    entries = vocab_data["vocabulary"]
+                    # Split into plan vocab, additional, and expressions
+                    expressions = [e for e in entries if e.get("expression")]
+                    additional = [e for e in entries if e.get("additional") and not e.get("expression")]
+                    plan_entries = [e for e in entries if not e.get("expression") and not e.get("additional")]
+                    return build_slovnyk_markdown(plan_entries, additional, expressions)
+            except Exception:
+                pass  # Fall through to plan-based fallback
+
+    # 2. Fallback: plan vocabulary_hints (no contextual translations from prose)
     vocab = plan.get("vocabulary_hints", {})
     required = vocab.get("required", [])
     recommended = vocab.get("recommended", [])
 
-    # Get words already taught in previous modules
-    level = plan.get("level", "").lower()
-    current_seq = plan.get("sequence", 1)
-    previous_vocab = _get_previous_vocab(level, current_seq) if level else set()
-
-    # Extract Ukrainian words from prose (no translations — those come from dictionary)
-    prose_words = _extract_prose_vocab(content) if content else []
-
-    # Build set of known words (lowercase) for deduplication
-    known_words: set[str] = set()
-    for item in required + recommended:
-        word, _ = parse_vocab_hint(item)
-        known_words.add(word.lower())
-
-    # Words from prose not in plan AND not in previous modules
-    additional: list[str] = [
-        word for word in prose_words
-        if word.lower() not in known_words and word.lower() not in previous_vocab
-    ]
-
-    if not required and not recommended and not additional:
+    if not required and not recommended:
         return ""
 
     lines = []
@@ -231,40 +237,6 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             *_vocab_table_rows(recommended),
         ])
 
-    if additional:
-        # Split into single words and expressions (multi-word phrases)
-        single_words = [w for w in additional if " " not in w]
-        expressions = [
-            w for w in additional
-            if " " in w
-            and not w.startswith("Це ")  # Skip example sentences
-            and len(w.split()) <= 4  # Max 4 words
-        ]
-
-        if single_words:
-            lines.extend([
-                "",
-                "### Додаткові слова з уроку — Additional words from the lesson",
-                "",
-                "| Слово | Частина мови | Рід |",
-                "|-------|-------------|-----|",
-            ])
-            for word in single_words:
-                # VESUM only — no live translation (too unreliable for context-dependent words)
-                pos, gender = _vesum_lookup(word)
-                lines.append(f"| **{word}** | {pos} | {gender} |")
-
-        if expressions:
-            lines.extend([
-                "",
-                "### Вирази — Expressions",
-                "",
-                "| Вираз |",
-                "|-------|",
-            ])
-            for expr in expressions:
-                lines.append(f"| **{expr}** |")
-
     lines.append("")
     return "\n".join(lines)
 
@@ -275,7 +247,7 @@ def _load_external_resources(slug: str, plan: dict) -> list[dict]:
     Tries exact slug match first, then topic-based fuzzy match using
     plan title and focus keywords.
     """
-    er_path = Path(__file__).resolve().parent.parent.parent / "docs" / "resources" / "external_resources.yaml"
+    er_path = _PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
     if not er_path.exists():
         return []
 
@@ -492,7 +464,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     )
 
     # 3. Build tab content
-    slovnyk = _build_slovnyk(plan, content)
+    slovnyk = _build_slovnyk(plan, content, slug=slug)
     videos = _build_video_embeds(plan)
     resources = _build_resources(plan, slug=slug)
 

@@ -44,8 +44,15 @@ RUSSIAN_CHARS = re.compile(r"[ыэёъЫЭЁЪ]")
 
 # Severe Russianisms that indicate wholesale Russian text
 SEVERE_RUSSIANISMS = [
-    "пожалуйста", "спасибо", "хорошо", "конечно", "потому что",
+    "пожалуйста", "спасибо", "хорошо", "конечно", "потому що",
     "ничего", "сейчас", "тоже", "здесь",
+]
+
+# Russian/archaic words that need word-boundary matching (too short for substring)
+# Format: (russian_form, correct_ukrainian, description)
+WORD_BOUNDARY_RUSSIANISMS = [
+    ("кон", "кін", "Russian кон — Ukrainian кін (stage/round)"),
+    ("кот", "кіт", "Russian кот — Ukrainian кіт (cat)"),
 ]
 
 # Latin characters that shouldn't appear in Ukrainian prose
@@ -148,6 +155,19 @@ def _check_toxic_tokens(content: str) -> list[QuickVerifyError]:
             check="TOXIC",
             severity="ERROR",
             message=f"Severe Russianisms: {', '.join(found_russianisms)}",
+        ))
+
+    # Word-boundary Russianisms (short words that need exact matching)
+    found_wb = []
+    for russian, ukrainian, _desc in WORD_BOUNDARY_RUSSIANISMS:
+        pattern = re.compile(rf"\b{re.escape(russian)}\b", re.IGNORECASE)
+        if pattern.search(content):
+            found_wb.append(f"{russian}→{ukrainian}")
+    if found_wb:
+        errors.append(QuickVerifyError(
+            check="TOXIC",
+            severity="ERROR",
+            message=f"Russian/archaic words: {', '.join(found_wb)}",
         ))
 
     # Latin chars mixed into Cyrillic words (not in code blocks or URLs)

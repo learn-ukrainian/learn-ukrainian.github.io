@@ -1,0 +1,42 @@
+- insert_after: 'Notice a pattern: **Ь** frequently appears at the end of a word or
+    before another consonant. It never appears before a vowel in these positions —
+    that job belongs to a different sign, which you will meet next.'
+  replace: '
+
+
+    Practice reading these words slowly, focusing on making the final consonant soft
+    and light. Imagine the **Ь** as a gentle feather touch at the end of the word.
+    **Сіль**... **день**... **мить**. It takes time to train your tongue to make these
+    sounds if they do not exist in your native language, so be patient with yourself.
+    Listen closely to native speakers and try to mimic that airy quality.'
+- insert_after: 'Reading practice — say these words out loud: **п''ять**, **дев''ять**,
+    **м''який** (soft), **м''яч** (ball), **об''єкт** (object).'
+  replace: '
+
+
+    When reading, treat the apostrophe almost like a tiny pause or a ''speed bump''
+    that stops the consonant from sliding into the vowel. It forces you to pronounce
+    them as distinct elements. This is why a word like **м''ясо** sounds energetic
+    and bouncy, compared to words where consonants and vowels blend smoothly. Getting
+    this right is a huge step toward sounding like a native Ukrainian speaker.'
+- insert_after: '**Мороз** (frost) is "мороз" — the **З** stays voiced, not "морос."
+    This is authentic Ukrainian pronunciation.'
+  replace: '
+
+
+    If you are coming from Russian, or if you speak German or Polish (which also devoice
+    final consonants), you must consciously train yourself to keep your vocal cords
+    vibrating all the way to the end of the word. This makes Ukrainian sound rich,
+    resonant, and melodic. Practice holding the final voiced sound for an extra second:
+    **дуббб**, **мороззз**. It might feel exaggerated at first, but it is exactly
+    what you need to build the right habit.'
+- insert_after: Even an imperfect **Р** is perfectly understood — do not stress about
+    mastering the trill immediately.
+  replace: '
+
+
+    A great trick for practicing the trilled **Р** is to say the English word ''butter''
+    very quickly. The way your tongue taps the roof of your mouth for the ''tt'' is
+    exactly the motion you need for the Ukrainian **Р**. Try making that sound repeatedly,
+    and then gradually add a vowel: ''ra-ra-ra''. With time and practice, the vibration
+    will come naturally.'
