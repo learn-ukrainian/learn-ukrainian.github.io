@@ -568,6 +568,19 @@ def e2u_translate(english_word: str) -> list[dict[str, str]]:
         return []
 
 
+def e2u_reverse(ukrainian_word: str) -> str:
+    """Look up Ukrainian word → English translation via e2u.org.ua reverse search.
+
+    Searches e2u with the Ukrainian word. Returns the English headword from the
+    first entry where the Ukrainian word appears in the translation.
+    """
+    results = e2u_translate(ukrainian_word)
+    if not results:
+        return ""
+    # First result's headword is usually the best English match
+    return results[0].get("headword", "")
+
+
 WIKTIONARY_API = "https://en.wiktionary.org/w/api.php"
 
 
