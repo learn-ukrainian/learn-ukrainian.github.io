@@ -42,7 +42,13 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## Exercises — Write Them Directly
 
-After each key teaching point, write an exercise directly in DSL format. Base your exercises on the `activity_hints` in the Plan — each hint should become one exercise.
+After each key teaching point, write an exercise directly in DSL format.
+
+**CRITICAL: Each exercise MUST match a specific `activity_hints` entry from the Plan.**
+- Use the EXACT `type` specified (quiz, fill-in, match-up, group-sort, true-false)
+- Follow the `focus` description EXACTLY — if the plan says "Answer: У тебе є...? Так / Ні", your quiz must test exactly that pattern
+- Match the `items` count specified
+- Do NOT invent different exercises — the plan's activity_hints are the specification
 
 Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
 
