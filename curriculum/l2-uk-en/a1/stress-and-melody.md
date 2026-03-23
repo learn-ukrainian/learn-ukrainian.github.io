@@ -129,6 +129,7 @@ Notice the pattern: «Як справи?» rises because it expects a yes/no-sty
 Ukrainian speech has a natural rhythm where stressed syllables are slightly longer than unstressed ones. Do not give every syllable equal weight — that sounds robotic, like a computer reading text. Listen to any Ukrainian speaker and you will hear it: the stressed syllable stands out, while unstressed syllables pass by quicker and lighter. Practice with longer words: **Україна**, **столиця**, **фотографія**. Exaggerate the stressed syllable at first — make it noticeably louder and longer. Then gradually smooth it out until it sounds natural. That flow is the music of Ukrainian.
 
 
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)

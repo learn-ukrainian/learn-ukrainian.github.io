@@ -143,6 +143,7 @@ title: "Г чи Ґ? (Г or Ґ?)"
 
 
 
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
@@ -194,6 +195,7 @@ What comes next? Module 4 — **На́голос** (Stress and Melody). Now that
 | **мить** | moment | ім. | ж. |
 | **мазь** | ointment | ім. | ж. |
 | **мідь** | copper | ім. | ж. |
+| **маленький** | small | прикм. |  |
 | **м'яч** | ball | ім. | ч. |
 | **дуб** | oak | ім. | ч. |
 | **хліб** | bread | ім. | ч. |
@@ -205,7 +207,6 @@ What comes next? Module 4 — **На́голос** (Stress and Melody). Now that
 | **ліс** | forest | ім. | ч. |
 | **лис** | fox | ім. | ч. |
 | **рік** | year | ім. | ч. |
-| **маленький** | small | прикм. |  |
 | **камінь** | stone | ім. | ч. |
 | **камін** | fireplace | ім. | ч. |
 | **ґудзик** | button | ім. | ч. |
@@ -215,7 +216,7 @@ What comes next? Module 4 — **На́голос** (Stress and Melody). Now that
 
 | Вираз | Переклад |
 |-------|----------|
-| **м'який знак** | the soft sign |
+| **м'який знак** | soft sign |
 
 
 <!-- TAB:Зошит -->

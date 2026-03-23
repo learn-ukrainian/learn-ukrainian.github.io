@@ -150,72 +150,31 @@ def _vocab_table_rows(items: list) -> list[str]:
     return rows
 
 
-def _extract_prose_vocab(content: str) -> list[tuple[str, str]]:
-    """Extract bold Ukrainian words/phrases WITH translations from prose.
+def _extract_prose_vocab(content: str) -> list[str]:
+    """Extract bold Ukrainian words from prose.
 
-    Scans for patterns like:
-    - **word** (translation)
-    - **word** — "translation"
-    - **word** — translation.
-    - **expression?** — "translation"
+    Only extracts the Ukrainian words — NO translation extraction from prose.
+    Translations come from plan vocabulary or fallback dictionary (deterministic).
 
-    Returns list of (word, translation) tuples. Translation may be empty.
-    Filters out fragments, single letters, and non-word artifacts.
+    Returns deduplicated list of Ukrainian words found in **bold** markup.
     """
-    # Pattern: **Ukrainian text** followed by optional translation
-    # Captures: group(1)=Ukrainian word/phrase, group(2)=translation (if present)
-    patterns = [
-        # **word** (translation) — most common
-        re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*\s*\(([^)]+)\)"),
-        # **word** — "translation" or **word** — translation
-        re.compile(r'\*\*([а-яА-ЯіІїЇєЄґҐ\'ʼ ?!.,]+)\*\*\s*[—–-]\s*["\"]?([^""\n.!?]+)["\"]?'),
-        # **word** means "translation"
-        re.compile(r'\*\*([а-яА-ЯіІїЇєЄґҐ\'ʼ ?!.,]+)\*\*\s+means?\s+["\"]?([^""\n.!?]+)["\"]?'),
-        # **word** alone (no translation) — lowest priority
-        re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*"),
-    ]
-
-    results: list[tuple[str, str]] = []
+    bold_pattern = re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*")
+    words: list[str] = []
     seen: set[str] = set()
 
-    # Try patterns in priority order — first match wins for each word
-    for pattern in patterns:
-        for match in pattern.finditer(content):
-            word = match.group(1).strip().rstrip(".,!?")
-            # Skip fragments: must be 3+ chars and contain at least one vowel
-            if len(word) < 3:
-                continue
-            if not re.search(r"[аоуеиіяюєї]", word.lower()):
-                continue
-            # Skip overly long phrases (>50 chars = sentence, not expression)
-            if len(word) > 50:
-                continue
-            if word.lower() in seen:
-                continue
+    for match in bold_pattern.finditer(content):
+        word = match.group(1).strip().rstrip(".,!?")
+        if len(word) < 3:
+            continue
+        if not re.search(r"[аоуеиіяюєї]", word.lower()):
+            continue
+        if len(word) > 40:
+            continue
+        if word.lower() not in seen:
             seen.add(word.lower())
+            words.append(word)
 
-            # Extract translation if captured
-            translation = ""
-            if match.lastindex and match.lastindex >= 2:
-                raw_trans = match.group(2).strip().strip('"').strip()
-                # Validate: must be a real translation, not context/description
-                is_english = bool(re.search(r"[a-zA-Z]", raw_trans))
-                word_count = len(raw_trans.split())
-                # Real translations are 1-5 words ("family", "I have", "how are you")
-                is_translation_length = 1 <= word_count <= 5
-                # Reject grammar/style descriptors
-                is_descriptor = bool(re.search(
-                    r"\b(masculine|feminine|neuter|informal|formal|plural|"
-                    r"singular|literally|more|general|everyday|literary|"
-                    r"archaic|colloquial)\b",
-                    raw_trans.lower(),
-                ))
-                if is_english and is_translation_length and not is_descriptor:
-                    translation = raw_trans
-
-            results.append((word, translation))
-
-    return results
+    return words
 
 
 def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
@@ -258,8 +217,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
     current_seq = plan.get("sequence", 1)
     previous_vocab = _get_previous_vocab(level, current_seq) if level else set()
 
-    # Extract words+translations from prose
-    prose_entries = _extract_prose_vocab(content) if content else []
+    # Extract Ukrainian words from prose (no translations — those come from dictionary)
+    prose_words = _extract_prose_vocab(content) if content else []
 
     # Build set of known words (lowercase) for deduplication
     known_words: set[str] = set()
@@ -268,8 +227,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
         known_words.add(word.lower())
 
     # Words from prose not in plan AND not in previous modules
-    additional: list[tuple[str, str]] = [
-        (word, trans) for word, trans in prose_entries
+    additional: list[str] = [
+        word for word in prose_words
         if word.lower() not in known_words and word.lower() not in previous_vocab
     ]
 
@@ -300,13 +259,12 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
 
     if additional:
         # Split into single words and expressions (multi-word phrases)
-        # Only include REAL expressions — not example sentences like "Це мама"
-        single_words = [(w, t) for w, t in additional if " " not in w]
+        single_words = [w for w in additional if " " not in w]
         expressions = [
-            (w, t) for w, t in additional
+            w for w in additional
             if " " in w
-            and not w.startswith("Це ")  # Skip "Це X" example sentences
-            and len(w.split()) <= 5  # Max 5 words — longer is a sentence
+            and not w.startswith("Це ")  # Skip example sentences
+            and len(w.split()) <= 4  # Max 4 words
         ]
 
         if single_words:
@@ -317,10 +275,9 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
                 "| Слово | Переклад | Частина мови | Рід |",
                 "|-------|----------|-------------|-----|",
             ])
-            for word, trans in single_words:
-                # If no translation found, try harder — search content for nearby English
-                if not trans:
-                    trans = _find_translation_nearby(word, content)
+            for word in single_words:
+                # Translation from fallback dictionary ONLY (deterministic)
+                trans = _find_translation_nearby(word, content)
                 pos, gender = _vesum_lookup(word)
                 lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
 
@@ -332,7 +289,8 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
                 "| Вираз | Переклад |",
                 "|-------|----------|",
             ])
-            for expr, trans in expressions:
+            for expr in expressions:
+                trans = _find_translation_nearby(expr, content)
                 lines.append(f"| **{expr}** | {trans} |")
 
     lines.append("")

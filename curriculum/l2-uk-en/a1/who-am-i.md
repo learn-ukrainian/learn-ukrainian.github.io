@@ -175,6 +175,7 @@ title: "Complete the dialogue"
 :::
 
 
+
 ### Відео — Video
 
 [Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
@@ -223,7 +224,6 @@ You can now do something remarkable: introduce yourself in Ukrainian without a s
 |-------|----------|-------------|-----|
 | **тебе** | you, informal | ім. |  |
 | **вас** | you, formal | ім. |  |
-| **Штатів** |  | ім. |  |
 | **студент** | I am a student | ім. | ч. |
 | **вчителька** |  | ім. | ж. |
 | **лікар** |  | ім. | ч. |
@@ -231,6 +231,7 @@ You can now do something remarkable: introduce yourself in Ukrainian without a s
 | **інженер** | He — engineer | ім. | ч. |
 | **він** |  | ім. | ч. |
 | **вона** |  | ім. | ж. |
+| **Штатів** |  | ім. |  |
 | **України** |  | ім. | ж. |
 | **Канади** |  |  |  |
 | **Німеччини** |  |  |  |
@@ -241,31 +242,31 @@ You can now do something remarkable: introduce yourself in Ukrainian without a s
 | Вираз | Переклад |
 |-------|----------|
 | **Добрий день** | good afternoon |
-| **Я з** | I'm from... |
-| **Як її звати** | What is her name? |
-| **Що це** | What is this? |
-| **Хто це** | Who is this? |
-| **Звідки ти** | informal |
-| **Звідки ви** | formal |
-| **Я з України** | I'm from Ukraine. |
-| **Я з Канади** | I'm from Canada. |
-| **Він зі Львова** | He's from Lviv |
-| **Я з Києва** | I'm from Kyiv. |
-| **Я зі Львова** | I'm from Lviv. |
-| **Я з Одеси** | I'm from Odesa. |
-| **Вона з Одеси** | Dialogue 3 |
-| **Я Тарас** | is even shorter |
-| **Як його звати** |  |
-| **Де ти** | Where ARE you |
+| **Я з** |  |
 | **Як тебе звати** |  |
 | **Як вас звати** |  |
 | **Мене звати Марко** |  |
 | **Мене звати Олена** |  |
+| **Я Тарас** |  |
+| **Як її звати** |  |
+| **Як його звати** |  |
 | **Його звати Богдан** |  |
 | **А це Оксана** |  |
-| **з Києва** |  |
-| **зі Львова** |  |
-| **з Одеси** |  |
+| **Що це** |  |
+| **Хто це** |  |
+| **Звідки ти** |  |
+| **Звідки ви** |  |
+| **Я з України** |  |
+| **Я з Канади** |  |
+| **Він зі Львова** | He's from Lviv |
+| **Я з Києва** | Dialogue 2 |
+| **Я зі Львова** |  |
+| **Я з Одеси** |  |
+| **Вона з Одеси** | Dialogue 3 |
+| **з Києва** | Dialogue 2 |
+| **зі Львова** | He's from Lviv |
+| **з Одеси** | Dialogue 3 |
+| **Де ти** |  |
 
 
 <!-- TAB:Зошит -->
