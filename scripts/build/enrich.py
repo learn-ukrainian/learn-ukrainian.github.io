@@ -198,17 +198,19 @@ def _extract_prose_vocab(content: str) -> list[tuple[str, str]]:
             translation = ""
             if match.lastindex and match.lastindex >= 2:
                 raw_trans = match.group(2).strip().strip('"').strip()
-                # Validate: must be English, short, and look like a translation
+                # Validate: must be a real translation, not context/description
                 is_english = bool(re.search(r"[a-zA-Z]", raw_trans))
-                is_short = len(raw_trans) < 30
-                # Only filter context words from LONG translations (4+ words)
-                # Short translations like "What is this?" are fine
                 word_count = len(raw_trans.split())
-                is_context = word_count >= 4 and bool(re.search(
-                    r"\b(the|which|when|where|how|because|although)\b",
+                # Real translations are 1-5 words ("family", "I have", "how are you")
+                is_translation_length = 1 <= word_count <= 5
+                # Reject grammar/style descriptors
+                is_descriptor = bool(re.search(
+                    r"\b(masculine|feminine|neuter|informal|formal|plural|"
+                    r"singular|literally|more|general|everyday|literary|"
+                    r"archaic|colloquial)\b",
                     raw_trans.lower(),
                 ))
-                if is_english and is_short and not is_context:
+                if is_english and is_translation_length and not is_descriptor:
                     translation = raw_trans
 
             results.append((word, translation))
@@ -547,6 +549,13 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     # Remove inline video sections from previous enrichment
     content = re.sub(
         r"\n### Відео — Video\n.*?(?=\n## |\n<!-- TAB:|\Z)",
+        "",
+        content,
+        flags=re.DOTALL,
+    )
+    # Remove any writer-generated vocabulary tables (the ENRICH step generates proper ones)
+    content = re.sub(
+        r"\n### (?:Додаткові слова|Additional words|Вирази|Словник|Vocabulary).*?(?=\n## |\n<!-- TAB:|\Z)",
         "",
         content,
         flags=re.DOTALL,

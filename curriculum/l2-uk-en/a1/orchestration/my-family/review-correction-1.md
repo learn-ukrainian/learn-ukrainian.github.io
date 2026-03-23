@@ -3,26 +3,12 @@ CRITICAL: Your previous module was reviewed and scored below 8.0/10.
 You must rewrite the module FROM SCRATCH, fixing ALL issues below.
 All original constraints from the writing prompt still apply.
 
-- FIX: [Pedagogical quality] [critical]
-  Location: `:::match-up` exercise
-  Issue: The exercise uses the Genitive case extensively ("мама мого тата", "брат мами", "дочка бабусі", "сестра тата", "батько батька"). This is A2 grammar. A1.1 learners have not learned the Genitive case and cannot logically deduce these forms.
-  Fix: Rewrite the match-up items to avoid the genitive case. Use descriptive chains without case changes: "Це тато. Його мама — моя..." -> "бабуся". "Мама і тато" -> "батьки". "Її звати мама. Її брат — мій..." -> "дядько".
-- FIX: [Pedagogical quality] [critical]
-  Location: Діалоги (Dialogues): "А твого брата? — Денис." AND Підсумок (Summary): "Мою маму звати Олена."
-  Issue: The plan explicitly restricts possessive pronouns: "Possessive pronouns мій/моя/моє/мої, твій/твоя/твоє (nominative only)". The text uses Accusative forms ("твого", "Мою"), which breaks the strict grammar progression.
-  Fix: Change "А твого брата?" to "А брат?". Change "Мою маму звати Олена." to "Моя мама — Олена." or "Її звати Олена."
-- FIX: [Plan adherence] [major]
-  Location: "Діалоги (Dialogues)" section
-  Issue: The section is approximately 165 words, which is significantly less than the 400-word target specified in the plan's `content_outline`.
-  Fix: Expand the section. Break down the vocabulary and grammar used in the dialogues more thoroughly, and add more context to hit the word count target.
-- FIX: [Exercise quality] [major]
-  Location: `:::fill-in` "Complete the family introduction"
-  Issue: The plan specifies the focus as "Complete family introduction dialogue". The generated exercise is a list of 6 disconnected sentences, not a cohesive dialogue.
-  Fix: Rewrite the 6 fill-in items so they form a single, continuous conversational dialogue.
-- NOTE: [Linguistic accuracy] [minor]
-  Location: Діалоги (Dialogues): "Це моя сестра Катя..."
-  Issue: "Катя" is a Russian-style diminutive. While very common in spoken Ukrainian, educational materials should prioritize Ukrainian forms to avoid Surzhyk.
-  Fix: Change "Катя" to "Катруся" or "Катря".
-
-- FIX (Linguistic): - "Катя" is a Russian-style diminutive. While "Коля" was explicitly required by the plan's dialogue outline, "Катя" was added by the writer. Ukrainian educational materials should prefer "Катруся" or "Катря".
+- FIX: [DIMENSION 7: Structural integrity] [SEVERITY: critical]
+  Location: `<!-- TAB:Словник -->` -> `Додаткові слова з уроку`
+  Issue: The generator hallucinated a translation table, mapping Ukrainian words to random English text fragments from the prose. For example, `мене` is translated as `that belongs to A2`, and `місто` is translated as `my`. If this renders on the frontend, it will teach learners absolute nonsense.
+  Fix: Remove the `<!-- TAB:Словник -->` content entirely and let the downstream enrichment pipeline generate it, OR manually correct the translations and parts of speech in the tables to be linguistically accurate.
+- FIX: [DIMENSION 1: Plan adherence] [SEVERITY: major]
+  Location: `## Діало́ги (Dialogues)` and `## У мене є (I have)`
+  Issue: The module falls significantly short of the 1200 word target. The Dialogues section is only ~200 words (plan asked for 400), and the "I have" section is ~180 words (plan asked for 250).
+  Fix: Expand the Dialogues section by adding more conversational turns, perhaps having the learner's character show their photos in return. Expand the explanations and examples in the "У мене є" section to hit the required word budgets.
 </correction_directive>

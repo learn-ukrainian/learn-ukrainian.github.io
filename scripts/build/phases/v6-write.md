@@ -35,7 +35,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
 4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
-6. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
+6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 7. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.

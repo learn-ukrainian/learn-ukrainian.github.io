@@ -1,47 +1,41 @@
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=32078 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=31993 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ## Linguistic Scan
-Found 1 linguistic error:
-- "Як звати твоя сестра?" in the fill-in exercise is ungrammatical. "Звати" requires an object in the accusative case (твою сестру). Using the nominative here is a blatant error.
+No linguistic errors found.
 
 ## Exercise Check
-1. `:::match-up` (8 items) - Focus matches plan, but has logic errors. "Це батьки. Їх дочка —" maps to "сестра". This is factually incorrect; to the parents, she is a daughter.
-2. `:::quiz` (6 items) - Tests "У тебе є...?", matches plan, distractors are good.
-3. `:::fill-in` (6 items) - Contains ungrammatical prompt "Як звати твоя сестра?".
-4. `:::fill-in` (8 items) - Tests possessives, matches plan, valid and pedagogical.
+- `:::quiz title="У тебе є...? Так чи ні?"`: 6 items. Matches the plan's focus, but uses A2 genitive case forms in the prompts ("У Оксани", "У Олени"). This violates the plan's explicit constraint to avoid genitive paradigms at A1. Item 5 contains a deliberate gender mismatch ("Мій тато — вчителька?") which may confuse beginners.
+- `:::match-up title="Match family members"`: 8 items. Matches plan focus and item count.
+- `:::fill-in title="Complete the dialogue"`: 6 items. Matches plan focus and item count.
+- `:::fill-in title="Choose the correct possessive"`: 8 items. Matches plan focus and item count.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Followed the outline and incorporated all planned sections, dialogues, and constraints. |
-| 2. Linguistic accuracy | 7/10 | General prose is native-like and accurate, but includes a severe grammatical error ("Як звати твоя сестра") in an exercise. |
-| 3. Pedagogical quality | 8/10 | Excellent chunk-based teaching of "У мене є" and possessives, avoiding A2 paradigms. However, flawed logic in the Match-up exercise hurts the pedagogy. |
-| 4. Vocabulary coverage | 8/10 | All required words used naturally. However, the vocabulary tables at the end extract meta-text instead of translations. |
-| 5. Exercise quality | 5/10 | Contains a critical grammatical error in one exercise and logical errors in another. Item counts match the plan. |
-| 6. Engagement & tone | 10/10 | Excellent tone, warm and encouraging. The textbook poem ("СІМ-Я") is a brilliant cultural and engaging touch. |
-| 7. Structural integrity | 4/10 | The auto-generated vocabulary tables are broken, mapping Ukrainian lemmas to English contextual descriptions rather than definitions. Writer also manually inserted stress marks, breaking word boundaries. |
-| 8. Cultural accuracy | 10/10 | Great explanation of the absence of a single word for "grandparents" and the importance of family in Ukrainian culture. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural, utilizing previously learned material well. |
+| 1. Plan adherence | 8/10 | Covers all outline points and vocabulary. However, it violates the strict grammatical scope by introducing A2 genitive forms ("У Оксани") in the quiz, despite the plan saying: "For A1, teach only: у мене є, у тебе є, у вас є." |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, or calques detected. The explanations of gender agreement and the "У мене є" structure are accurate. |
+| 3. Pedagogical quality | 7/10 | Good PPP structure. However, exposing A1.1 learners to unexplained genitive case mutations ("Оксана" -> "Оксани") in the quiz is a pedagogical flaw that contradicts the module's own warning about A2 grammar. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words are naturally integrated into the prose, examples, and dialogues. |
+| 5. Exercise quality | 7/10 | Exercises match the requested types and counts. However, the quiz relies on English context and out-of-scope grammar. Item 5 uses intentionally broken grammar ("Мій тато — вчителька?") as a distractor, which is bad practice for absolute beginners. |
+| 6. Engagement & tone | 9/10 | The tone is warm and encouraging. The context of showing family photos on a phone is culturally relevant and highly engaging for adult learners. |
+| 7. Structural integrity | 6/10 | The main H2 sections are present, but the generated `Додаткові слова з уроку` table is filled with garbage parsing artifacts (e.g., translating "мене" as "a genitive pronoun form that belongs to A2" and listing "дієсл" as a word). |
+| 8. Cultural accuracy | 10/10 | Correctly notes that Ukrainians use both "сім'я" and "родина", and highlights the authentic cultural practice of using affectionate diminutive forms ("матуся", "бабця"). |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural and fit the scenarios perfectly. The chained introduction in Dialogue 3 is a great practical review of prior modules. |
 
 ## Findings
-[Linguistic accuracy] [CRITICAL]
-Location: `:::fill-in` exercise under "Family introduction — complete the dialogue" -> "— Як звати твоя сестра?"
-Issue: "Звати" requires the accusative case ("твою сестру"). Using the nominative case here is ungrammatical and teaches learners broken Ukrainian.
-Fix: Change the sentence to avoid the accusative, e.g., "— А сестра? Як її звати?"
+[Pedagogical quality] [major]
+Location: Quiz section (`- q: "Оксана has two brothers. У Окса́ни є брати?"`, `- q: "Олена has a sister. У Оле́ни є сестра?"`)
+Issue: The quiz uses names in the genitive case ("У Оксани", "У Олени") to express possession. The plan explicitly states: "Other forms... use genitive pronouns which are A2 grammar... For A1, teach only: у мене є, у тебе є, у вас є." Introducing unexplained case mutations for names violates the A1 pedagogical scope.
+Fix: Change the quiz prompts to use the permitted chunks or direct quotes. For example: "Оксана каже: «У мене є брати»." or stick strictly to "У тебе є...?" as specified in the activity hint.
 
-[Structural integrity] [CRITICAL]
-Location: "Додаткові слова з уроку" and "Вирази" tables under the Словник tab.
-Issue: The tables contain English meta-text from the lesson rather than actual dictionary translations. Examples: "родина" -> "we have a close family", "мати" -> "more formal or general", "брати" -> "masculine", "один брат" -> "masculine", "звати" -> "her name is".
-Fix: Delete these additional tables or replace the English text with correct literal translations (e.g., родина -> family).
+[Exercise quality] [minor]
+Location: Quiz section (`- q: "Оле́на's father is an engineer. Мій тато — вчителька?"`)
+Issue: The distractor uses grammatically incorrect Ukrainian (masculine "тато" with feminine "вчителька"). Showing broken grammar to absolute beginners can reinforce incorrect patterns.
+Fix: Change the distractor to a grammatically correct but factually wrong statement, such as "Тато Олени — вчитель?" or "Мій тато — лікар?".
 
-[Exercise quality] [MAJOR]
-Location: `:::match-up` exercise -> "- left: "Це батьки. Їх дочка —" right: "сестра"" and "- left: "Це батьки. Їх син —" right: "брат""
-Issue: Logical error. The daughter of the parents is their "дочка" (daughter), not their "сестра" (sister).
-Fix: Change the prompt to establish the correct relationship, e.g., "Це мій тато. Його дочка —" -> "моя сестра" or change the right side to "дочка" and "син".
+[Structural integrity] [major]
+Location: `### Додаткові слова з уроку — Additional words from the lesson` table
+Issue: The author hallucinated a garbage vocabulary table by scraping fragments of its own prose, resulting in absurd entries like translating "мене" as "a genitive pronoun form that belongs to A2" and listing "дієсл" as a word.
+Fix: Delete all manually generated vocabulary tables. As noted in the instructions, vocabulary tables are added by a downstream ENRICH step and should not be hallucinated in the markdown body.
 
-[Structural integrity] [MINOR]
-Location: Throughout the prose (e.g., `Діало́ги`, `Оле́на`, `Ки́єва`).
-Issue: The writer manually inserted acute stress accents inside the text. As noted in the prompt rules, stress is handled by a downstream tool. The manual inclusion broke the VESUM validation script by splitting characters (e.g., Денис became Дени and с).
-Fix: Remove all manual stress marks from the markdown content.
-
-## Verdict: REJECT
-The module contains a critical grammatical error in the core exercises ("Як звати твоя сестра" instead of accusative) and a critical structural failure where vocabulary tables are populated with hallucinated meta-text instead of translations. Rewrite required to fix the exercise prompts and clean up the broken tables.
+## Verdict: REVISE
+The module features strong prose, accurate linguistics, and natural dialogues. However, the use of A2 genitive forms in the quiz violates strict pedagogical constraints, and the hallucinated vocabulary tables are a structural mess. These major issues require a revision to fix the exercises and remove the garbage tables, but no complete rewrite is needed.

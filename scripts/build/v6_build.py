@@ -1412,7 +1412,7 @@ def main():
 
     # Step 8: REVIEW with retry loop
     # If review fails, inject findings as correction directive and rebuild
-    max_review_retries = 2
+    max_review_retries = 3
     if steps in ("all", "review"):
         for review_attempt in range(1, max_review_retries + 1):
             _log(f"\n  📋 Review attempt {review_attempt}/{max_review_retries}")
