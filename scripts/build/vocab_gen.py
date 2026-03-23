@@ -11,10 +11,13 @@ Issue: #1025
 
 from __future__ import annotations
 
+import logging
 import sqlite3
 from pathlib import Path
 
 import yaml
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
@@ -51,10 +54,14 @@ def dedupe_vocab(
 
 
 def vesum_enrich_entry(entry: dict) -> dict:
-    """Add POS and gender from VESUM to a vocabulary entry.
+    """Add POS, gender, stress, and VESUM verification to a vocabulary entry.
 
-    Skips expressions (multi-word phrases).
-    Returns the entry with added 'pos' and 'gender' fields.
+    Skips expressions (multi-word phrases) for VESUM lookup.
+    After VESUM lookup, runs stress annotation on the word field.
+    Flags words NOT found in VESUM with ``verified: false``.
+
+    Returns the entry with added 'pos', 'gender', 'verified' fields
+    and stress-annotated 'word'.
     """
     result = dict(entry)
     result.setdefault("pos", "")
@@ -62,39 +69,55 @@ def vesum_enrich_entry(entry: dict) -> dict:
 
     # Skip expressions — VESUM doesn't have multi-word entries
     if entry.get("expression"):
+        result["verified"] = True  # expressions skip VESUM check
         return result
 
     word = entry.get("word", "").strip("?!.,")
     if not word:
+        result["verified"] = False
         return result
 
-    if not VESUM_DB.exists():
-        return result
+    found_in_vesum = False
 
-    try:
-        db = sqlite3.connect(str(VESUM_DB))
+    if VESUM_DB.exists():
         try:
-            row = db.execute(
-                "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
-                (word.lower(),),
-            ).fetchone()
-            if not row:
-                # Try lemma lookup
+            db = sqlite3.connect(str(VESUM_DB))
+            try:
                 row = db.execute(
-                    "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
+                    "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
                     (word.lower(),),
                 ).fetchone()
-            if row:
-                result["pos"] = _POS_LABELS.get(row[0], "")
-                if row[0] == "noun":
-                    for tag, label in _GENDER_MAP.items():
-                        if tag in row[1]:
-                            result["gender"] = label
-                            break
-        finally:
-            db.close()
+                if not row:
+                    # Try lemma lookup
+                    row = db.execute(
+                        "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
+                        (word.lower(),),
+                    ).fetchone()
+                if row:
+                    found_in_vesum = True
+                    result["pos"] = _POS_LABELS.get(row[0], "")
+                    if row[0] == "noun":
+                        for tag, label in _GENDER_MAP.items():
+                            if tag in row[1]:
+                                result["gender"] = label
+                                break
+            finally:
+                db.close()
+        except Exception:
+            pass
+
+    result["verified"] = found_in_vesum
+    if not found_in_vesum:
+        logger.debug("vocab: word %r not found in VESUM — flagged verified=false", word)
+
+    # Add stress marks to the word
+    try:
+        from pipeline.stress_annotator import annotate_stress
+        stressed_word, count = annotate_stress(word)
+        if count > 0:
+            result["word"] = stressed_word
     except Exception:
-        pass
+        pass  # Stress annotation is best-effort
 
     return result
 
@@ -172,6 +195,21 @@ def parse_vocab_yaml(raw: str) -> list[dict]:
     return []
 
 
+def _stress_word(word: str) -> str:
+    """Add stress mark to a word for display in the slovnyk table.
+
+    Best-effort: returns the original word if stress annotation fails.
+    """
+    try:
+        from pipeline.stress_annotator import annotate_stress
+        stressed, count = annotate_stress(word)
+        if count > 0:
+            return stressed
+    except Exception:
+        pass
+    return word
+
+
 def build_slovnyk_markdown(
     plan_vocab: list[dict],
     additional_vocab: list[dict],
@@ -183,6 +221,8 @@ def build_slovnyk_markdown(
     1. Required/recommended from plan (with translations from plan)
     2. Additional words from module (with writer translations + VESUM)
     3. Expressions
+
+    Words are displayed with stress marks (наголос) in the table.
     """
     lines = []
 
@@ -195,7 +235,7 @@ def build_slovnyk_markdown(
             "|-------|----------|-------------|-----|",
         ])
         for entry in plan_vocab:
-            word = entry.get("word", "")
+            word = _stress_word(entry.get("word", ""))
             trans = entry.get("translation", "")
             pos = entry.get("pos", "")
             gender = entry.get("gender", "")
@@ -210,7 +250,7 @@ def build_slovnyk_markdown(
             "|-------|----------|-------------|-----|",
         ])
         for entry in additional_vocab:
-            word = entry.get("word", "")
+            word = _stress_word(entry.get("word", ""))
             trans = entry.get("translation", "")
             pos = entry.get("pos", "")
             gender = entry.get("gender", "")

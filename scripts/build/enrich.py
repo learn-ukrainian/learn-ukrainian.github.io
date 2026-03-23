@@ -80,39 +80,6 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     except Exception:
         return "", ""
 
-_translation_cache: dict[str, str] = {}
-
-
-def _find_translation(word: str) -> str:
-    """Find English translation for a Ukrainian word.
-
-    Uses the translation tool chain: Wiktionary → Горох → e2u.
-    Results are cached to avoid repeated HTTP calls.
-    Failures return empty string (never crashes).
-    """
-    if word in _translation_cache:
-        return _translation_cache[word]
-
-    # Proper nouns
-    _proper_nouns = {
-        "Київ": "Kyiv", "Львів": "Lviv", "Одеса": "Odesa",
-        "Харків": "Kharkiv", "Дніпро": "Dnipro", "Полтава": "Poltava",
-    }
-    if word in _proper_nouns:
-        _translation_cache[word] = _proper_nouns[word]
-        return _proper_nouns[word]
-
-    # Use the unified translation chain (Wiktionary → Горох → e2u)
-    try:
-        from rag.source_query import translate_uk_to_en
-        result = translate_uk_to_en(word)
-        _translation_cache[word] = result
-        return result
-    except Exception:
-        _translation_cache[word] = ""
-        return ""
-
-
 # Tab markers — PUBLISH step converts these to <Tabs>/<TabItem>
 TAB_MARKER = "<!-- TAB:{name} -->"
 
@@ -125,59 +92,6 @@ def _vocab_table_rows(items: list) -> list[str]:
         pos, gender = _vesum_lookup(word)
         rows.append(f"| **{word}** | {translation} | {pos} | {gender} |")
     return rows
-
-
-def _extract_prose_vocab(content: str) -> list[str]:
-    """Extract bold Ukrainian words from prose.
-
-    Only extracts the Ukrainian words — NO translation extraction from prose.
-    Translations come from plan vocabulary or fallback dictionary (deterministic).
-
-    Returns deduplicated list of Ukrainian words found in **bold** markup.
-    """
-    bold_pattern = re.compile(r"\*\*([а-яА-ЯіІїЇєЄґҐ'ʼ ?!.,]+)\*\*")
-    words: list[str] = []
-    seen: set[str] = set()
-
-    for match in bold_pattern.finditer(content):
-        word = match.group(1).strip().rstrip(".,!?")
-        if len(word) < 3:
-            continue
-        if not re.search(r"[аоуеиіяюєї]", word.lower()):
-            continue
-        if len(word) > 40:
-            continue
-        if word.lower() not in seen:
-            seen.add(word.lower())
-            words.append(word)
-
-    return words
-
-
-def _get_previous_vocab(level: str, current_seq: int) -> set[str]:
-    """Collect all vocabulary from previous modules' plans to avoid repetition."""
-    plans_dir = _CURRICULUM_ROOT / "plans" / level
-    if not plans_dir.is_dir():
-        return set()
-
-    previous_words: set[str] = set()
-    for plan_file in plans_dir.glob("*.yaml"):
-        try:
-            plan_data = yaml.safe_load(plan_file.read_text("utf-8"))
-            if not isinstance(plan_data, dict):
-                continue
-            seq = plan_data.get("sequence", 999)
-            if seq >= current_seq:
-                continue
-            vocab = plan_data.get("vocabulary_hints", {})
-            for category in ("required", "recommended"):
-                for item in vocab.get(category, []):
-                    word, _ = parse_vocab_hint(item)
-                    previous_words.add(word.lower())
-        except Exception:
-            continue
-
-    return previous_words
 
 
 def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:

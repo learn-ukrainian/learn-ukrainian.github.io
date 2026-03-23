@@ -181,6 +181,7 @@ class TestVesumEnrichment:
         enriched = vesum_enrich_entry(entry)
         assert enriched["pos"] == "ім."
         assert enriched["gender"] == "ж."
+        assert enriched["verified"] is True
 
     def test_verb_gets_pos(self):
         from build.vocab_gen import vesum_enrich_entry
@@ -188,6 +189,7 @@ class TestVesumEnrichment:
         entry = {"word": "читати", "translation": "to read", "expression": False}
         enriched = vesum_enrich_entry(entry)
         assert enriched["pos"] == "дієсл."
+        assert enriched["verified"] is True
 
     def test_expression_skips_vesum(self):
         from build.vocab_gen import vesum_enrich_entry
@@ -195,10 +197,32 @@ class TestVesumEnrichment:
         entry = {"word": "Як справи?", "translation": "How are you?", "expression": True}
         enriched = vesum_enrich_entry(entry)
         assert enriched.get("pos", "") == ""
+        assert enriched["verified"] is True  # expressions bypass VESUM check
 
-    def test_unknown_word_no_crash(self):
+    def test_unknown_word_flagged_unverified(self):
+        """Words not in VESUM get verified=false (#1025 AC11)."""
         from build.vocab_gen import vesum_enrich_entry
 
         entry = {"word": "ґуґл", "translation": "Google", "expression": False}
         enriched = vesum_enrich_entry(entry)
         assert "word" in enriched  # didn't crash
+        assert enriched["verified"] is False
+
+    def test_stress_annotation_on_multisyllable(self):
+        """Multi-syllable words get stress marks (#1025 AC10)."""
+        from build.vocab_gen import vesum_enrich_entry
+
+        entry = {"word": "літера", "translation": "letter", "expression": False}
+        enriched = vesum_enrich_entry(entry)
+        # літера has 3 syllables — should get stress mark
+        assert "\u0301" in enriched["word"], (
+            f"Expected stress mark in '{enriched['word']}'"
+        )
+
+    def test_single_syllable_no_stress(self):
+        """Single-syllable words don't get stress marks."""
+        from build.vocab_gen import vesum_enrich_entry
+
+        entry = {"word": "звук", "translation": "sound", "expression": False}
+        enriched = vesum_enrich_entry(entry)
+        assert enriched["word"] == "звук"  # no stress mark on single syllable

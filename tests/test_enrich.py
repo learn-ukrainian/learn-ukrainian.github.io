@@ -1,7 +1,10 @@
 """Tests for V6 Step 7b: ENRICH — tabs, словник, videos, resources, dialogues."""
 
+import re
 import sys
 from pathlib import Path
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -12,6 +15,9 @@ from build.enrich import (
     _format_dialogues,
     enrich,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 
 class TestSlovnyk:
@@ -54,7 +60,11 @@ class TestSlovnyk:
 
 
     def test_build_slovnyk_markdown_formatting(self):
-        """Test that build_slovnyk_markdown produces correct table output."""
+        """Test that build_slovnyk_markdown produces correct table output.
+
+        Words with 2+ syllables get stress marks (e.g. літера -> лі́тера).
+        Single-syllable words (звук) stay unchanged.
+        """
         from build.vocab_gen import build_slovnyk_markdown
 
         entries = [
@@ -66,10 +76,67 @@ class TestSlovnyk:
         ]
         result = build_slovnyk_markdown(entries, [], expressions)
 
+        # Single-syllable word stays unchanged
         assert "| **звук** | sound | ім. | ч. |" in result
-        assert "| **літера** | letter | ім. | ж. |" in result
+        # Multi-syllable word gets stress mark (лі́тера) — strip combining accent for comparison
+        result_stripped = result.replace("\u0301", "")
+        assert "| **літера** | letter | ім. | ж. |" in result_stripped
         assert "| **Як справи?** | How are you? |" in result
         assert "Вирази" in result
+
+
+class TestM01EnrichedContent:
+    """Integration test: M01 enriched content has словник, video embeds, references (#1009 AC8)."""
+
+    def _load_m01(self):
+        content_path = CURRICULUM_ROOT / "a1" / "sounds-letters-and-hello.md"
+        plan_path = CURRICULUM_ROOT / "plans" / "a1" / "sounds-letters-and-hello.yaml"
+        if not content_path.exists() or not plan_path.exists():
+            return None, None
+        content = content_path.read_text("utf-8")
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+        return content, plan
+
+    def test_slovnyk_has_at_least_10_words(self):
+        content, _plan = self._load_m01()
+        if content is None:
+            import pytest
+            pytest.skip("M01 content/plan not available")
+
+        # Check the enriched content file directly for словник entries
+        slovnyk_pos = content.find("<!-- TAB:Словник -->")
+        assert slovnyk_pos != -1, "M01 content must have a Словник tab"
+
+        # Count vocabulary table rows (| **word** | ...)
+        slovnyk_section = content[slovnyk_pos:]
+        word_rows = re.findall(r"\| \*\*[^*]+\*\* \|", slovnyk_section)
+        assert len(word_rows) >= 10, (
+            f"M01 словник must have at least 10 words, found {len(word_rows)}"
+        )
+
+    def test_video_embeds_if_plan_has_them(self):
+        content, plan = self._load_m01()
+        if content is None:
+            import pytest
+            pytest.skip("M01 content/plan not available")
+
+        pv = plan.get("pronunciation_videos", {})
+        if pv.get("overview") or any(pv.get(k) for k in ("vowels", "consonants", "special", "letters")):
+            assert "YouTubeVideo" in content, (
+                "M01 plan has pronunciation_videos but content has no video embeds"
+            )
+
+    def test_references_present(self):
+        content, plan = self._load_m01()
+        if content is None:
+            import pytest
+            pytest.skip("M01 content/plan not available")
+
+        refs = plan.get("references", [])
+        if refs:
+            assert "<!-- TAB:Ресурси -->" in content, (
+                "M01 plan has references but content has no Ресурси tab"
+            )
 
 
 class TestVideoEmbeds:
