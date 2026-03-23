@@ -3,16 +3,24 @@ CRITICAL: Your previous module was reviewed and scored below 8.0/10.
 You must rewrite the module FROM SCRATCH, fixing ALL issues below.
 All original constraints from the writing prompt still apply.
 
-- FIX: [Plan adherence] [major]
-  Location: Entire module
-  Issue: The module falls short of the 1200 word target, coming in at approximately 950 words. Specifically, the "Діалоги" section is ~250 words (target 400) and "У мене є" is ~220 words (target 250).
-  Fix: Expand the "Діалоги" section with a bit more conversational context, and add more prose examples to the grammar explanations to meet the ±10% word count budget without adding new grammatical scope.
-- NOTE: [Pedagogical quality] [minor]
-  Location: `:::quiz` block, questions 1, 2, and 4
-  Issue: Questions use A2 genitive case declension for nouns and adjectives ("У Олі є сестра?", "У пе́ршого дру́га є два брати?"). The plan strictly limits genitive to memorized pronouns (у нього, у неї) at this level because noun declension is A2 grammar.
-  Fix: Rewrite the questions to avoid genitive noun declension. For example, use the taught pronouns: "У неї є сестра?". Or rely on context from the text: "Оля: У мене є брат? (Так/Ні)".
-- NOTE: [Vocabulary coverage] [minor]
-  Location: "Сім'я (Family Vocabulary)" section
-  Issue: The recommended words "дружина" (wife) and "чоловік" (husband) are missing from the instructional prose, though they appear in the final vocabulary table.
-  Fix: Add a sentence or two in the vocabulary section introducing "дружина" and "чоловік" to ensure learners see them in context before encountering them in the vocabulary list.
+- FIX: [2. Linguistic accuracy] [Major]
+  Location: Throughout the text, especially in "Діало́ги (Dialogues)" (e.g., "У тебе́ є бра́ти чи сестри́?", "у мене́ є", "йо́го зва́ти", "Катя́").
+  Issue: The writer manually inserted stress marks, which violates the pipeline process, and placed them entirely incorrectly. This teaches factually wrong pronunciation (e.g., "бра́ти" is the verb 'to take', the noun plural is "брати́"; pronouns shift stress after prepositions to "у ме́не", "у те́бе").
+  Fix: Remove all manual stress marks (`´`) from the entire markdown text. Let the downstream deterministic tool handle stress annotation.
+- FIX: [2. Linguistic accuracy] [Major]
+  Location: Section "У мене є (I have)" — "Ukrainian does not use a verb meaning 'to have.' Instead, possession works like this..."
+  Issue: Factually incorrect claim. Ukrainian does have a verb meaning "to have" («мати»: я маю, ти маєш). Claiming it doesn't exist is a linguistic hallucination.
+  Fix: Change the sentence to: "Instead of a verb like 'to have', Ukrainian usually expresses possession like this..." or "Ukrainian most commonly expresses possession without the verb 'to have'."
+- NOTE: [7. Structural integrity] [Minor]
+  Location: Bottom of the file (`<!-- TAB:Словник -->`, `<!-- TAB:Зошит -->`, `<!-- TAB:Ресурси -->`).
+  Issue: Writer generated the vocabulary tables, workbook placeholders, and resource links manually. These are injected by the pipeline's downstream `generate_mdx.py` script and will cause duplicates.
+  Fix: Delete everything from `<!-- TAB:Словник -->` to the end of the document. Keep only the core module content (`<!-- TAB:Урок -->`).
+
+- FIX (Linguistic): Linguistic errors found:
+1. **Phonetic Hallucinations (Incorrect Stress)**: The writer manually inserted stress marks (`´`), violating the instruction that stress is handled downstream. Worse, almost all manual stress marks are factually incorrect and teach wrong pronunciation:
+   - `у мене́` → prep shifts stress, should be `у ме́не`.
+   - `У тебе́` → prep shifts stress, should be `у те́бе`.
+   - `йо́го` → should be `його́`.
+   - `Катя́` → should be `Ка́тя`.
+   - `бра́ти` (nominative plural) → s
 </correction_directive>

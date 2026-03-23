@@ -1413,9 +1413,11 @@ def main():
         step_exercises(content_path)
         _save_v6_state(args.level, slug, "exercises")
 
-    # Step 6: ANNOTATE
+    # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
+    # Stress annotation moves to AFTER review to avoid wrong stress marks
+    # causing review rejection
     if steps in ("all", "annotate"):
-        step_annotate(content_path)
+        _post_process_content(content_path)
         _save_v6_state(args.level, slug, "annotate")
 
     # Step 7b: ENRICH
@@ -1471,9 +1473,16 @@ def main():
                 break
 
             step_exercises(content_path)
-            step_annotate(content_path)
+            _post_process_content(content_path)  # Strip artifacts, NOT stress annotation
             step_enrich(content_path, args.level, slug)
             step_verify(content_path, args.level, args.module)
+
+    # Step 8b: ANNOTATE (stress marks — after review, before publish)
+    # Moved here from step 6 because the stress annotator has heteronym bugs
+    # (e.g., бра́ти vs брати́) that caused review rejections
+    if steps in ("all", "publish", "annotate"):
+        step_annotate(content_path)
+        _save_v6_state(args.level, slug, "stress")
 
     # Step 9: PUBLISH
     if steps in ("all", "publish"):
