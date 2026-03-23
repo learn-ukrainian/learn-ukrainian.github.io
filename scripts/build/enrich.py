@@ -422,7 +422,8 @@ def _format_dialogues(content: str) -> str:
 
     result = blockquote_dialogue.sub(_convert_blockquote, content)
 
-    # Also handle non-blockquote dialogues (— at line start)
+    # Also handle non-blockquote dialogues:
+    # 1. Plain em-dash format (— at line start)
     plain_dialogue = re.compile(
         r"((?:^— .+\n){2,})",
         re.MULTILINE,
@@ -440,6 +441,23 @@ def _format_dialogues(content: str) -> str:
         return "\n".join(parts)
 
     result = plain_dialogue.sub(_convert_plain, result)
+
+    # 2. Named speaker format (**Name:** text) — 2+ consecutive turns
+    named_dialogue = re.compile(
+        r"((?:^\*\*[А-ЯІЇЄҐа-яіїєґA-Za-z]+:\*\* .+\n(?:\n|$)){2,})",
+        re.MULTILINE,
+    )
+
+    def _convert_named(match: re.Match) -> str:
+        block = match.group(1)
+        lines = [line.strip() for line in block.strip().split("\n") if line.strip()]
+        parts = ['<div class="dialogue">\n']
+        for line in lines:
+            parts.append(f"\n{line}\n")
+        parts.append("\n</div>\n")
+        return "\n".join(parts)
+
+    result = named_dialogue.sub(_convert_named, result)
 
     return result
 
