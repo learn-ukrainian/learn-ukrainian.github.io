@@ -1,29 +1,9 @@
 vocabulary:
-- word: склад
-  translation: syllable
-  expression: false
-  pos: ім.
-  gender: ч.
 - word: молоко
   translation: milk
   expression: false
   pos: ім.
   gender: с.
-- word: звуковий аналіз
-  translation: sound analysis
-  expression: true
-  pos: ''
-  gender: ''
-- word: університет
-  translation: university
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: шоколад
-  translation: chocolate
-  expression: false
-  pos: ім.
-  gender: ч.
 - word: каша
   translation: porridge
   expression: false
@@ -34,23 +14,48 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-- word: людина
-  translation: person
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: столиця
   translation: capital
   expression: false
   pos: ім.
   gender: ж.
+- word: яблуко
+  translation: apple
+  expression: false
+  pos: ім.
+  gender: с.
 - word: пісня
   translation: song
   expression: false
   pos: ім.
   gender: ж.
-- word: центр
-  translation: centre
+- word: людина
+  translation: person
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: університет
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: бібліотека
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: фотографія
+  translation: photography
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: шоколад
+  translation: chocolate
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: склад
+  translation: syllable
   expression: false
   pos: ім.
   gender: ч.
@@ -59,16 +64,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: яблуко
-  translation: apple
-  expression: false
-  pos: ім.
-  gender: с.
-- word: моя
-  translation: my (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
 - word: кит
   translation: whale
   expression: false
@@ -79,18 +74,13 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: коза
-  translation: goat
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: нога
-  translation: leg
+  translation: foot
   expression: false
   pos: ім.
   gender: ж.
 - word: парта
-  translation: desk
+  translation: school desk
   expression: false
   pos: ім.
   gender: ж.
@@ -110,7 +100,7 @@ vocabulary:
   pos: ім.
   gender: ч.
 - word: ще
-  translation: still; more
+  translation: more; still
   expression: false
   pos: присл.
   gender: ''
@@ -129,31 +119,11 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: сім'я
-  translation: family
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: м'ясо
   translation: meat
   expression: false
   pos: ім.
   gender: с.
-- word: п'ять
-  translation: five
-  expression: false
-  pos: числ.
-  gender: ''
-- word: бібліотека
-  translation: library
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: фотографія
-  translation: photography
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: тут
   translation: here
   expression: false
@@ -164,23 +134,13 @@ vocabulary:
   expression: false
   pos: присл.
   gender: ''
-- word: і
-  translation: and
-  expression: false
-  pos: спол.
+- word: звуковий аналіз
+  translation: sound analysis
+  expression: true
+  pos: ''
   gender: ''
-- word: а
-  translation: and; but (contrast)
-  expression: false
-  pos: спол.
+- word: Поділи на склади
+  translation: Divide into syllables
+  expression: true
+  pos: ''
   gender: ''
-- word: йотований
-  translation: iotated (vowel type)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: апостроф
-  translation: apostrophe
-  expression: false
-  pos: ім.
-  gender: ч.

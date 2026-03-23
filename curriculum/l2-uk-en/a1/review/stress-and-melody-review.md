@@ -1,42 +1,33 @@
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=26482 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=27629 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
 ## Linguistic Scan
-No linguistic errors found other than one phonetic explanation error: the word "фотографія" is explained as having stress on the "third а" but the syllable "ФІ" is highlighted. The correct standard Ukrainian stress is on the syllable "ГРА" (фотогра́фія).
+No linguistic errors found. The writer correctly identified that "Як справи?" requires falling intonation because it starts with a question word, overriding an error in the original plan. Syllable breakdowns and phonetic explanations are accurate.
 
 ## Exercise Check
-- `:::quiz` "Де наголос? (Where is the stress?)": 8 items. Matches plan (8 items). Tests phonetic stress concepts taught in the section.
-- `:::match-up` "Match the stress pairs": 4 items. Matches plan (4 items). Tests the meaning-changing nature of stress.
-- `:::quiz` "Розповідне, питальне чи окличне?": 6 items. Matches plan (6 items). Tests sentence types based on punctuation and intonation rules.
-- `:::fill-in` "Add the correct punctuation": 6 items. Matches plan (6 items). Tests practical application of intonation to punctuation.
-All exercises are well-formed, logically sound, and perfectly aligned with the plan's `activity_hints`.
+- `:::quiz` (Де наголос?): 8 items. Tests stress placement on vocabulary taught. Matches plan.
+- `:::match-up` (Утвори пару): 4 items. Tests stress-meaning pairs. Matches plan.
+- `:::quiz` (Розповідне, питальне чи окличне?): 6 items. Tests intonation/sentence type based on punctuation. Matches plan.
+- `:::fill-in` (Постав розділовий знак): 6 items. Tests punctuation selection based on sentence structure. Matches plan.
+
+All exercises are well-constructed, logically sound, and directly test the phonetics and intonation concepts taught in the module.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | All outline points are covered (Заболотний reference, 3 intonation patterns, goroh.pp.ua tip). However, the word count is noticeably under the 1200-word target (estimated ~850 words). |
-| 2. Linguistic accuracy | 8/10 | Ukrainian examples are natural and accurate. No Russianisms or Surzhyk. However, the explanation for the stress in "фотографія" is contradictory and highlights the wrong syllable. |
-| 3. Pedagogical quality | 10/10 | Excellent application of PPP. Concepts are explained simply without overwhelming metalanguage. The progression from syllable stress to sentence intonation is logical. |
-| 4. Vocabulary coverage | 10/10 | All required (наголос, замок, кава, вода, столиця) and recommended (мука, ранок, метро, фотографія) words are integrated naturally into the prose and examples. |
-| 5. Exercise quality | 10/10 | Exercises directly test the taught concepts. Distractors in the quizzes are plausible. The match-up effectively tests the semantic difference caused by stress. |
-| 6. Engagement & tone | 9/10 | The tone is encouraging, authoritative, and direct. Good use of the "coffee cup" scenario to explain intonation. |
-| 7. Structural integrity | 9/10 | Clean markdown, correct H2 headers following the plan. No LLM meta-commentary. Word count is the only structural minor deficiency. |
-| 8. Cultural accuracy | 10/10 | Accurate representation of Ukrainian phonetic rules. Focus on Ukrainian as a distinct language with its own free stress system. |
-| 9. Dialogue & conversation quality | 10/10 | The short greeting dialogue is perfectly calibrated for A1.1, reusing known vocabulary to teach a new phonetic concept. |
+| 1. Plan adherence | 10/10 | Covers all 4 sections precisely. Author intelligently corrected a flaw in the plan regarding the intonation of "Як справи?" (correctly applying falling intonation for a wh-question instead of rising). |
+| 2. Linguistic accuracy | 10/10 | Excellent. Accurate explanations of free stress, stress mobility, and the three core intonation patterns. No Russianisms. |
+| 3. Pedagogical quality | 10/10 | Very clear, step-by-step breakdown. Good use of bolding for stressed syllables to make the phonetic concepts visual for beginners. |
+| 4. Vocabulary coverage | 10/10 | All required words (наголос, замок, кава, вода, столиця) and recommended words are integrated naturally into the prose and examples. |
+| 5. Exercise quality | 10/10 | DSL formatting is correct. Exercises are perfectly aligned with the target skills (identifying stressed syllables, matching meaning based on stress, recognizing sentence types). |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and accessible. Relates abstract phonetic concepts to concrete examples (like setting something on a table for falling intonation). |
+| 7. Structural integrity | 9/10 | All H2 headings present. The word count is slightly below the 1200 target (around 1000 words of prose), but padding a phonetics module would dilute its clarity. |
+| 8. Cultural accuracy | 10/10 | Decolonized approach correctly compares Ukrainian stress mobility to French and Czech rather than Russian. |
+| 9. Dialogue & conversation quality | 10/10 | Short dialogue perfectly illustrates the intonation rules in a realistic A1 context. |
 
 ## Findings
-[Linguistic accuracy] [major]
-Location: "фо-то-гра-фі-я — stress on the third а: фо-то-гра-ФІ-я (photograph)"
-Issue: The explanation is contradictory (says "stress on the third а" but highlights "ФІ" which contains 'і'). Furthermore, the standard Ukrainian stress for photograph is on the syllable "ГРА" (фотогра́фія).
-Fix: Change the explanation to highlight "ГРА" and mention stress on "а".
-
-[Plan adherence] [minor]
+[7. Structural Integrity] [minor]
 Location: Entire module
-Issue: The total word count is approximately 850 words, missing the 1200 word target.
-Fix: For A1, brevity is often preferred to avoid overwhelming the learner, so this is a minor issue. An `insert_after` block could be used to expand the text, but a find/replace fix for the major linguistic issue is sufficient for a REVISE verdict.
+Issue: The total word count is slightly below the 1200-word target (approximately 1000 words of core content).
+Fix: Given the technical nature of A1 phonetics, the current length is optimal for learner comprehension. No padding is necessary, but noted for completeness.
 
-## Verdict: REVISE
-The module is structurally excellent, pedagogically sound, and the exercises are perfect. However, the contradictory and factually incorrect explanation of the stress in "фотографія" is a major linguistic error that might confuse learners. It must be fixed before shipping.
-
-<fixes>
-- find: "фо-то-гра-фі-я — stress on the third а: фо-то-гра-ФІ-я (photograph)"
-  replace: "фо-то-гра-фі-я — stress on **а**: фо-то-ГРА-фі-я (photograph)"
-</fixes>
+## Verdict: PASS
+The module is exceptionally well-written. The phonetic explanations are accurate, the tone is perfect for A1, and the exercises are flawlessly executed. The writer even caught and corrected a linguistic contradiction in the provided plan regarding the intonation of "Як". Zero critical or major findings. Ready to ship.

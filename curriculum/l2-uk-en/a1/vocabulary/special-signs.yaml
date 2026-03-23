@@ -1,4 +1,49 @@
 vocabulary:
+- word: м'який знак
+  translation: soft sign (ь)
+  expression: true
+  pos: ''
+  gender: ''
+- word: апостроф
+  translation: apostrophe
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: тверді
+  translation: hard (consonants)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: пом'якшені
+  translation: softened (consonants)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: дзвінкі
+  translation: voiced (consonants)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: глухі
+  translation: voiceless (consonants)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: кін
+  translation: end, turn
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: рись
+  translation: lynx
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: рис
+  translation: rice
+  expression: false
+  pos: ім.
+  gender: ч.
 - word: осінь
   translation: autumn
   expression: false
@@ -34,6 +79,16 @@ vocabulary:
   expression: false
   pos: прикм.
   gender: ''
+- word: сім'я
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: п'ять
+  translation: five
+  expression: false
+  pos: числ.
+  gender: ''
 - word: комп'ютер
   translation: computer
   expression: false
@@ -59,31 +114,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: тверді
-  translation: hard (consonants)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: пом'якшені
-  translation: softened (consonants)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: дзвінкий
-  translation: voiced (consonant)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: глухий
-  translation: voiceless (consonant)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: мороз
-  translation: frost
-  expression: false
-  pos: ім.
-  gender: ч.
 - word: балка
   translation: beam
   expression: false
@@ -94,11 +124,21 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
+- word: коза
+  translation: goat
+  expression: false
+  pos: ім.
+  gender: ж.
 - word: коса
   translation: braid
   expression: false
   pos: ім.
   gender: ж.
+- word: мороз
+  translation: frost
+  expression: false
+  pos: ім.
+  gender: ч.
 - word: бик
   translation: bull
   expression: false
@@ -124,16 +164,16 @@ vocabulary:
   expression: false
   pos: присл.
   gender: ''
-- word: гори
-  translation: mountains
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: голова
   translation: head
   expression: false
   pos: ім.
   gender: ч.
+- word: гори
+  translation: mountains
+  expression: false
+  pos: ім.
+  gender: ж.
 - word: ґанок
   translation: porch
   expression: false
@@ -149,23 +189,23 @@ vocabulary:
   expression: false
   pos: прикм.
   gender: ''
-- word: робота
-  translation: work
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: ранок
-  translation: morning
-  expression: false
-  pos: ім.
-  gender: ''
 - word: риба
   translation: fish
   expression: false
   pos: ім.
   gender: ж.
-- word: м'який знак
-  translation: soft sign
-  expression: true
-  pos: ''
+- word: ранок
+  translation: morning
+  expression: false
+  pos: ім.
+  gender: ''
+- word: мат
+  translation: mat
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: мать
+  translation: mother (archaic/dialectal)
+  expression: false
+  pos: дієсл.
   gender: ''

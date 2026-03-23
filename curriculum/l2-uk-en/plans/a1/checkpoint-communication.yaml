@@ -19,34 +19,43 @@ content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200
   points:
-  - 'Self-check covering M42-M46: Can you call someone by name using vocative? (M42) Can you ask someone to do something?
-    (M43) Can you connect ideas with і, а, але, бо? (M44) Can you build sentences with що, де, коли? (M45) Can you name Ukrainian
+  - 'Self-check covering M42-M46: Can you call someone by name using vocative? (M42)
+    Can you ask someone to do something? (M43) Can you connect ideas with і, а, але,
+    бо? (M44) Can you build sentences with що, де, коли? (M45) Can you name Ukrainian
     holidays and greet people? (M46)'
 - section: Читання (Reading Practice)
   words: 250
   points:
-  - 'A short Ukrainian text using all A1.7 skills. Content: Olena calls her friend Taras to plan a holiday celebration. She
-    uses vocative (Тарасе!), imperatives (Прийди! Принеси!), conjunctions (бо ми святкуємо, але я не знаю, коли ти вільний),
-    and holiday vocabulary (Різдво, кутя, колядки). Combines all A1.7 communication tools in one realistic scenario.'
+  - 'A short Ukrainian text using all A1.7 skills. Content: Olena calls her friend
+    Taras to plan a holiday celebration. She uses vocative (Тарасе!), imperatives
+    (Прийди! Принеси!), conjunctions (бо ми святкуємо, але я не знаю, коли ти вільний),
+    and holiday vocabulary (Різдво, кутя, колядки). Combines all A1.7 communication
+    tools in one realistic scenario.'
 - section: Граматика (Grammar Summary)
   words: 200
   points:
-  - 'Key patterns from A1.7: 1. Vocative: -а→-о (Олено), hard→-е (Тарасе), soft→-ю (Андрію) (M42) 2. Imperative: ти (читай,
-    дай), ви (читайте, дайте) (M43) 3. Coordinating: і/та (and), а (contrast), але (but), бо (because) (M44) 4. Subordinating:
-    що (that), де (where), коли (when) + comma (M45) 5. Holiday greetings: З + instrumental (З Різдвом!) (M46)'
+  - 'Key patterns from A1.7: 1. Vocative: -а→-о (Олено), hard→-е (Тарасе), soft→-ю
+    (Андрію) (M42) 2. Imperative: ти (читай, дай), ви (читайте, дайте) (M43) 3. Coordinating:
+    і/та (and), а (contrast), але (but), бо (because) (M44) 4. Subordinating: що (that),
+    де (where), коли (when) + comma (M45) 5. Holiday greetings: З + instrumental (З
+    Різдвом!) (M46)'
 - section: Діалог (Connected Dialogue)
   words: 200
   points:
-  - 'Planning a holiday gathering: — Олено, привіт! Ти знаєш, що скоро Різдво? — Так, Тарасе! Я думаю, що ми можемо святкувати
-    разом. — Добре! Скажи, коли ти вільна, бо я хочу запросити друзів. — Я вільна двадцять четвертого. Але я не знаю, де ми
-    будемо. — Ходімо до мене! Принеси кутю, будь ласка. — Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом! Uses
-    vocative, imperative, conjunctions, що/де/коли, and holidays.'
+  - 'Planning a holiday gathering: — Олено, привіт! Ти знаєш, що скоро Різдво? — Так,
+    Тарасе! Я думаю, що ми можемо святкувати разом. — Добре! Скажи, коли ти вільна,
+    бо я хочу запросити друзів. — Я вільна двадцять четвертого. Але я не знаю, де
+    ми будемо. — Ходімо до мене! Принеси кутю, будь ласка. — Добре, принесу! І я знаю,
+    де купити гарні свічки. З Різдвом! Uses vocative, imperative, conjunctions, що/де/коли,
+    and holidays.'
 - section: Підсумок — Summary
   words: 150
   points:
-  - 'A1.7 achievement summary: You can address people properly in Ukrainian. You can ask people to do things, politely and
-    informally. You can connect your ideas into longer, natural sentences. You can build complex sentences with що, де, коли.
-    You can talk about Ukrainian holidays and congratulate people. Next: A1.8 — Past, Future, Graduation.'
+  - 'A1.7 achievement summary: You can address people properly in Ukrainian. You can
+    ask people to do things, politely and informally. You can connect your ideas into
+    longer, natural sentences. You can build complex sentences with що, де, коли.
+    You can talk about Ukrainian holidays and congratulate people. Next: A1.8 — Past,
+    Future, Graduation.'
 vocabulary_hints:
   required: []
   recommended: []
@@ -76,5 +85,3 @@ register: розмовний
 references:
 - title: Synthesis of M42-M46 content
   notes: No new material — review and integration of A1.7 phase.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

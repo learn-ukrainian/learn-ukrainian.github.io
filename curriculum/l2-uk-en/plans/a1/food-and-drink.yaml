@@ -18,31 +18,38 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — At home in the morning: — Що ти хочеш на сніданок? — Каву з молоком і хліб з маслом. — А я хочу чай з цукром
-    і кашу. Food + drink combinations as chunks (з + noun = memorized phrase).'
-  - 'Dialogue 2 — Talking about food preferences: — Що ти зазвичай їш на обід? — Суп і салат. — А на вечерю? — М''ясо з картоплею
-    або рибу з рисом. Three meals: сніданок, обід, вечеря.'
+  - 'Dialogue 1 — At home in the morning: — Що ти хочеш на сніданок? — Каву з молоком
+    і хліб з маслом. — А я хочу чай з цукром і кашу. Food + drink combinations as
+    chunks (з + noun = memorized phrase).'
+  - 'Dialogue 2 — Talking about food preferences: — Що ти зазвичай їш на обід? — Суп
+    і салат. — А на вечерю? — М''ясо з картоплею або рибу з рисом. Three meals: сніданок,
+    обід, вечеря.'
 - section: Їжа (Food)
   words: 300
   points:
-  - 'Core food vocabulary by category: Хліб і каша: хліб, каша, рис, макарони. М''ясо і риба: м''ясо, курка, риба. Овочі:
-    картопля, морква, цибуля, помідор, огірок. Фрукти: яблуко, банан, апельсин. Молочне: молоко, сир, масло, сметана, йогурт.
+  - 'Core food vocabulary by category: Хліб і каша: хліб, каша, рис, макарони. М''ясо
+    і риба: м''ясо, курка, риба. Овочі: картопля, морква, цибуля, помідор, огірок.
+    Фрукти: яблуко, банан, апельсин. Молочне: молоко, сир, масло, сметана, йогурт.
     Інше: яйце, цукор, сіль, олія.'
-  - 'Ukrainian iconic foods (cultural note): борщ (beet soup — national dish), вареники (filled dumplings), сало (cured pork
-    fat), галушки (dumplings), деруни (potato pancakes). These words are cultural identity, not just vocabulary.'
+  - 'Ukrainian iconic foods (cultural note): борщ (beet soup — national dish), вареники
+    (filled dumplings), сало (cured pork fat), галушки (dumplings), деруни (potato
+    pancakes). These words are cultural identity, not just vocabulary.'
 - section: Напої (Drinks)
   words: 300
   points:
-  - 'Core drink vocabulary: Гарячі: кава, чай. Холодні: вода, сік, компот, лимонад. Молочні: молоко, кефір. Алкогольні: пиво,
-    вино (for recognition). Key chunk pattern: [drink] з [addition] — memorized, NOT grammar: кава з молоком, чай з цукром,
-    чай з лимоном, вода з газом.'
-  - 'Why ''з + noun'' is a chunk, not grammar: At A1, learn кава з молоком as a fixed phrase, like ''coffee with milk.'' The
-    instrumental case ending (-ом, -ою) is grammar for A2. For now: memorize the whole phrase. Say it as one unit.'
+  - 'Core drink vocabulary: Гарячі: кава, чай. Холодні: вода, сік, компот, лимонад.
+    Молочні: молоко, кефір. Алкогольні: пиво, вино (for recognition). Key chunk pattern:
+    [drink] з [addition] — memorized, NOT grammar: кава з молоком, чай з цукром, чай
+    з лимоном, вода з газом.'
+  - 'Why ''з + noun'' is a chunk, not grammar: At A1, learn кава з молоком as a fixed
+    phrase, like ''coffee with milk.'' The instrumental case ending (-ом, -ою) is
+    grammar for A2. For now: memorize the whole phrase. Say it as one unit.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Food and drink toolkit: Що ти хочеш? — Каву з молоком. / Хліб з маслом. Що ти їш на сніданок / обід / вечерю? Three meals:
-    сніданок (breakfast), обід (lunch), вечеря (dinner). Self-check: Name 5 foods and 3 drinks you like. Name one Ukrainian
+  - 'Food and drink toolkit: Що ти хочеш? — Каву з молоком. / Хліб з маслом. Що ти
+    їш на сніданок / обід / вечерю? Three meals: сніданок (breakfast), обід (lunch),
+    вечеря (dinner). Self-check: Name 5 foods and 3 drinks you like. Name one Ukrainian
     dish and why it matters.'
 vocabulary_hints:
   required:
@@ -141,5 +148,3 @@ references:
   notes: Anna introduces food and drink vocabulary, cafe ordering.
 - title: State Standard 2024, Topic 3 (ресторан)
   notes: 'Communicative situation: restaurant, food, ordering.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

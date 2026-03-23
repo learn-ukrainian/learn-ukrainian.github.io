@@ -18,33 +18,41 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Talking about abilities (ULP Ep24 pattern): — Ти говориш українською? — Так, я говорю трохи. А ти? — Я бачу,
-    що ти добре говориш! — Дякую, я вчуся. Group II verbs in natural conversation.'
-  - 'Dialogue 2 — Evening at home: — Що ти робиш увечері? — Я дивлюся фільм. А ти? — Я вчу нові слова. — Молодець! Note: дивлюся
-    (I watch) — the -ся ending means ''oneself'' (preview for M20).'
+  - 'Dialogue 1 — Talking about abilities (ULP Ep24 pattern): — Ти говориш українською?
+    — Так, я говорю трохи. А ти? — Я бачу, що ти добре говориш! — Дякую, я вчуся.
+    Group II verbs in natural conversation.'
+  - 'Dialogue 2 — Evening at home: — Що ти робиш увечері? — Я дивлюся фільм. А ти?
+    — Я вчу нові слова. — Молодець! Note: дивлюся (I watch) — the -ся ending means
+    ''oneself'' (preview for M20).'
 - section: Друга дієвідміна (Group II Verbs)
   words: 300
   points:
-  - 'Group II verbs have infinitive in -ити (or -іти): говорити → я говорю, ти говориш, він/вона говорить, ми говоримо, ви
-    говорите, вони говорять. Pattern: stem + -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать.'
-  - 'Six essential Group II verbs: говорити (to speak): говорю, говориш, говорить... бачити (to see): бачу, бачиш, бачить...
-    робити (to do/make): роблю, робиш, робить... вчити (to study/teach): вчу, вчиш, вчить... просити (to ask/request): прошу,
-    просиш, просить... ходити (to go/walk regularly): ходжу, ходиш, ходить...'
+  - 'Group II verbs have infinitive in -ити (or -іти): говорити → я говорю, ти говориш,
+    він/вона говорить, ми говоримо, ви говорите, вони говорять. Pattern: stem + -ю/-у,
+    -иш, -ить, -имо, -ите, -ять/-ать.'
+  - 'Six essential Group II verbs: говорити (to speak): говорю, говориш, говорить...
+    бачити (to see): бачу, бачиш, бачить... робити (to do/make): роблю, робиш, робить...
+    вчити (to study/teach): вчу, вчиш, вчить... просити (to ask/request): прошу, просиш,
+    просить... ходити (to go/walk regularly): ходжу, ходиш, ходить...'
 - section: Група I чи II? (Which Group?)
   words: 300
   points:
-  - 'Compare the endings side by side: | | Group I (-ати) | Group II (-ити) | | я | читаю | говорю | | ти | читаєш | говориш
-    | | він/вона | читає | говорить | | вони | читають | говорять | Key difference: ти form → -єш (I) vs -иш (II), вони →
-    -ють (I) vs -ять/-ать (II). Note: after ч, ш, ж, щ → -ать (not -ять): бачать, вчать, ходять (but not *бачять).'
-  - 'Consonant changes in Group II (я-form only): робити → роблю (б→бл), ходити → ходжу (д→дж), просити → прошу (с→ш), бачити
-    → бачу (no change). These changes only affect the я-form — all other forms are regular. Don''t memorize the rule — just
-    learn each я-form with the verb.'
+  - 'Compare the endings side by side: | | Group I (-ати) | Group II (-ити) | | я
+    | читаю | говорю | | ти | читаєш | говориш | | він/вона | читає | говорить | |
+    вони | читають | говорять | Key difference: ти form → -єш (I) vs -иш (II), вони
+    → -ють (I) vs -ять/-ать (II). Note: after ч, ш, ж, щ → -ать (not -ять): бачать,
+    вчать, ходять (but not *бачять).'
+  - 'Consonant changes in Group II (я-form only): робити → роблю (б→бл), ходити →
+    ходжу (д→дж), просити → прошу (с→ш), бачити → бачу (no change). These changes
+    only affect the я-form — all other forms are regular. Don''t memorize the rule
+    — just learn each я-form with the verb.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Two verb groups — two ending patterns: Group I (-ати): -ю, -єш, -є, -ємо, -єте, -ють Group II (-ити): -ю/-у, -иш, -ить,
-    -имо, -ите, -ять Consonant shifts in Group II я-form (роблю, ходжу, прошу). Self-check: Conjugate ''бачити'' for я, ти,
-    він/вона. Is ''слухати'' Group I or II? How about ''говорити''?'
+  - 'Two verb groups — two ending patterns: Group I (-ати): -ю, -єш, -є, -ємо, -єте,
+    -ють Group II (-ити): -ю/-у, -иш, -ить, -имо, -ите, -ять Consonant shifts in Group
+    II я-form (роблю, ходжу, прошу). Self-check: Conjugate ''бачити'' for я, ти, він/вона.
+    Is ''слухати'' Group I or II? How about ''говорити''?'
 vocabulary_hints:
   required:
   - говорити (to speak)
@@ -90,5 +98,3 @@ references:
 - title: ULP Season 1, Episode 24
   url: https://www.ukrainianlessons.com/episode24/
   notes: More verbs and conjugation practice.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

@@ -1,7 +1,7 @@
-Section 1 "Діалоги (Dialogues)": ~370 words — Three dialogues (hostel informal, conference formal, introducing someone) with brief contextual framing
-Section 2 "Мене звати... (My name is...)": ~260 words — The звати construction, formal/informal, asking about others, pleased to meet you
-Section 3 "Це... (This is...)": ~210 words — Це for identification, Що це? / Хто це? question patterns
+Section 1 "Діалоги (Dialogues)": ~370 words — Three dialogues (hostel, conference, introducing someone) with line-by-line translations and post-dialogue pattern explanations
+Section 2 "Мене звати... (My name is...)": ~260 words — The звати construction explained, formal vs informal, asking about others, pleased-to-meet-you phrases
+Section 3 "Це... (This is...)": ~210 words — Це + noun identification, Що це? / Хто це? question patterns, word order
 Section 4 "Я — студент (I am a student)": ~220 words — Zero copula with dash, professions and nationalities with gendered forms
-Section 5 "Звідки? (Where from?)": ~210 words — Where-from question, з/зі + country as memorized chunks
-Section 6 "Підсумок — Summary": ~150 words — Quick recap of key patterns with a final practice exercise
+Section 5 "Звідки? (Where from?)": ~210 words — Звідки ти/ви? pattern, з/зі + country as memorized chunks
+Section 6 "Підсумок — Summary": ~150 words — Key patterns recap with self-check dialogue exercise
 Total: ~1420 words

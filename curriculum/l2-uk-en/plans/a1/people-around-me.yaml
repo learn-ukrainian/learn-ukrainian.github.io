@@ -18,35 +18,43 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Who do you see? — Кого ти бачиш? — Я бачу маму і тата. — А хто це? — Це мій брат. Ти знаєш мого брата? —
-    Ні, я не знаю твого брата. — Ходімо, я тебе познайомлю! Accusative animate: маму (f), тата (m), брата (m).'
-  - 'Dialogue 2 — At work: — Ти знаєш нашу вчительку? — Так, я знаю Олену Петрівну. — А нового лікаря? — Ні, я ще не знаю
-    лікаря. — Він дуже добрий. Я чекаю його зараз. Animate accusative with people around you.'
+  - 'Dialogue 1 — Who do you see? — Кого ти бачиш? — Я бачу маму і тата. — А хто це?
+    — Це мій брат. Ти знаєш мого брата? — Ні, я не знаю твого брата. — Ходімо, я тебе
+    познайомлю! Accusative animate: маму (f), тата (m), брата (m).'
+  - 'Dialogue 2 — At work: — Ти знаєш нашу вчительку? — Так, я знаю Олену Петрівну.
+    — А нового лікаря? — Ні, я ще не знаю лікаря. — Він дуже добрий. Я чекаю його
+    зараз. Animate accusative with people around you.'
 - section: Кого? (Whom?)
   words: 300
   points:
-  - 'Accusative animate vs inanimate: Inanimate (M37): Я їм (що?) хліб. → no change for masculine. Animate (M40): Я бачу (кого?)
-    брата. → masculine changes! The question word is the key: що? = inanimate (things) → masculine stays same. кого? = animate
+  - 'Accusative animate vs inanimate: Inanimate (M37): Я їм (що?) хліб. → no change
+    for masculine. Animate (M40): Я бачу (кого?) брата. → masculine changes! The question
+    word is the key: що? = inanimate (things) → masculine stays same. кого? = animate
     (people, animals) → masculine changes.'
-  - 'Ukrainian school approach (Grade 4): ''Бачу кого? що?'' — two questions, two patterns. Кого? triggers the animate rule:
-    masculine animate accusative = genitive form. брат → брата, друг → друга, тато → тата, лікар → лікаря. This is why animate
+  - 'Ukrainian school approach (Grade 4): ''Бачу кого? що?'' — two questions, two
+    patterns. Кого? triggers the animate rule: masculine animate accusative = genitive
+    form. брат → брата, друг → друга, тато → тата, лікар → лікаря. This is why animate
     accusative matters — it changes masculine nouns.'
 - section: Знахідний відмінок — живе (Accusative Animate)
   words: 300
   points:
-  - 'Feminine animate: same as inanimate (-а → -у, -я → -ю): мама → маму (Я бачу маму), сестра → сестру (Я знаю сестру), Олена
-    → Олену (Я чекаю Олену), подруга → подругу (Я люблю подругу). No surprise — same ending as M37 (кава → каву).'
-  - 'Masculine animate: accusative = genitive (THE new rule): брат → брата (Я бачу брата), друг → друга (Я знаю друга), тато
-    → тата (Я люблю тата), лікар → лікаря (Я чекаю лікаря), вчитель → вчителя (Я знаю вчителя), сусід → сусіда (Я бачу сусіда).
-    Pattern: masculine animate in accusative takes the genitive ending. Compare: Я бачу хліб (inanimate — no change) vs Я
-    бачу брата (animate — changes).'
+  - 'Feminine animate: same as inanimate (-а → -у, -я → -ю): мама → маму (Я бачу маму),
+    сестра → сестру (Я знаю сестру), Олена → Олену (Я чекаю Олену), подруга → подругу
+    (Я люблю подругу). No surprise — same ending as M37 (кава → каву).'
+  - 'Masculine animate: accusative = genitive (THE new rule): брат → брата (Я бачу
+    брата), друг → друга (Я знаю друга), тато → тата (Я люблю тата), лікар → лікаря
+    (Я чекаю лікаря), вчитель → вчителя (Я знаю вчителя), сусід → сусіда (Я бачу сусіда).
+    Pattern: masculine animate in accusative takes the genitive ending. Compare: Я
+    бачу хліб (inanimate — no change) vs Я бачу брата (animate — changes).'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Accusative summary — the full picture: | | Inanimate (що?) | Animate (кого?) | | Masculine | = nominative (хліб) | =
-    genitive (брата) | | Feminine | -а → -у (каву) | -а → -у (маму) | | Neuter | = nominative (молоко) | (rare at A1) | Key
-    verbs with animate accusative: бачити (to see), знати (to know), любити (to love), чекати (to wait for), шукати (to look
-    for). Self-check: Я бачу ___ (мама → маму, брат → брата).'
+  - 'Accusative summary — the full picture: | | Inanimate (що?) | Animate (кого?)
+    | | Masculine | = nominative (хліб) | = genitive (брата) | | Feminine | -а → -у
+    (каву) | -а → -у (маму) | | Neuter | = nominative (молоко) | (rare at A1) | Key
+    verbs with animate accusative: бачити (to see), знати (to know), любити (to love),
+    чекати (to wait for), шукати (to look for). Self-check: Я бачу ___ (мама → маму,
+    брат → брата).'
 vocabulary_hints:
   required:
   - бачити (to see)
@@ -162,5 +170,3 @@ references:
   notes: Accusative case — animate nouns.
 - title: 'Grade 4 textbook: Знахідний відмінок (Заболотний)'
   notes: 'Ukrainian school approach: бачу кого? що? — animate accusative = genitive.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

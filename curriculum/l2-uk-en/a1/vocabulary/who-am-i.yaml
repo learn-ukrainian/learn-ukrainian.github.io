@@ -1,9 +1,4 @@
 vocabulary:
-- word: добрий день
-  translation: good day (formal greeting)
-  expression: true
-  pos: ''
-  gender: ''
 - word: мене звати
   translation: my name is
   expression: true
@@ -19,23 +14,8 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
-- word: як його звати?
-  translation: what is his name?
-  expression: true
-  pos: ''
-  gender: ''
-- word: як її звати?
-  translation: what is her name?
-  expression: true
-  pos: ''
-  gender: ''
-- word: дуже приємно
-  translation: pleased to meet you
-  expression: true
-  pos: ''
-  gender: ''
-- word: приємно познайомитись
-  translation: pleased to make your acquaintance (formal)
+- word: а тебе?
+  translation: and yours? (informal)
   expression: true
   pos: ''
   gender: ''
@@ -54,20 +34,30 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
-- word: з
-  translation: from
-  expression: false
-  pos: прийм.
+- word: я з
+  translation: I'm from
+  expression: true
+  pos: ''
   gender: ''
-- word: зі
-  translation: from (before consonant clusters)
-  expression: false
-  pos: прийм.
+- word: дуже приємно
+  translation: pleased to meet you
+  expression: true
+  pos: ''
   gender: ''
-- word: я
-  translation: I
-  expression: false
-  pos: ім.
+- word: приємно познайомитись
+  translation: pleased to get acquainted
+  expression: true
+  pos: ''
+  gender: ''
+- word: також приємно
+  translation: also pleased (to meet you)
+  expression: true
+  pos: ''
+  gender: ''
+- word: добрий день
+  translation: good afternoon
+  expression: true
+  pos: ''
   gender: ''
 - word: ти
   translation: you (informal)
@@ -76,6 +66,11 @@ vocabulary:
   gender: ''
 - word: ви
   translation: you (formal)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: вас
+  translation: you (formal, accusative/genitive)
   expression: false
   pos: ім.
   gender: ''
@@ -90,22 +85,17 @@ vocabulary:
   pos: ім.
   gender: ж.
 - word: його
-  translation: his (doesn't change)
+  translation: his
   expression: false
   pos: ім.
   gender: ч.
 - word: її
-  translation: her (doesn't change)
+  translation: her
   expression: false
   pos: ім.
   gender: ж.
-- word: тебе
-  translation: you (informal, accusative/genitive)
-  expression: false
-  pos: ім.
-  gender: ''
-- word: вас
-  translation: you (formal, accusative/genitive)
+- word: я
+  translation: I
   expression: false
   pos: ім.
   gender: ''
@@ -119,10 +109,25 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
+- word: з
+  translation: from
+  expression: false
+  pos: прийм.
+  gender: ''
+- word: зі
+  translation: from (before consonant clusters)
+  expression: false
+  pos: прийм.
+  gender: ''
 - word: зараз
   translation: now, currently
   expression: false
   pos: присл.
+  gender: ''
+- word: а
+  translation: and / and you?
+  expression: false
+  pos: спол.
   gender: ''
 - word: студент
   translation: student (male)
@@ -154,16 +159,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-- word: інженер
-  translation: engineer (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: інженерка
-  translation: engineer (female)
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: програміст
   translation: programmer (male)
   expression: false
@@ -181,6 +176,16 @@ vocabulary:
   gender: ч.
 - word: журналістка
   translation: journalist (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: інженер
+  translation: engineer (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: інженерка
+  translation: engineer (female)
   expression: false
   pos: ім.
   gender: ж.
@@ -214,11 +219,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-- word: Україна
-  translation: Ukraine
-  expression: false
-  pos: ім.
-  gender: ж.
 - word: Канада
   translation: Canada
   expression: false
@@ -229,48 +229,13 @@ vocabulary:
   expression: false
   pos: ''
   gender: ''
-- word: США
-  translation: USA
-  expression: false
-  pos: ''
-  gender: ''
-- word: Київ
-  translation: Kyiv
+- word: Штати
+  translation: the States (USA)
   expression: false
   pos: ім.
   gender: ''
-- word: Львів
-  translation: Lviv
+- word: звати
+  translation: to call (used for names)
   expression: false
-  pos: ''
-  gender: ''
-- word: стіл
-  translation: table
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: це мій друг
-  translation: this is my friend
-  expression: true
-  pos: ''
-  gender: ''
-- word: я з України
-  translation: I am from Ukraine
-  expression: true
-  pos: ''
-  gender: ''
-- word: я з Канади
-  translation: I am from Canada
-  expression: true
-  pos: ''
-  gender: ''
-- word: я з Німеччини
-  translation: I am from Germany
-  expression: true
-  pos: ''
-  gender: ''
-- word: я зі Штатів
-  translation: I am from the States
-  expression: true
-  pos: ''
+  pos: дієсл.
   gender: ''

@@ -5,25 +5,35 @@ vocabulary:
   pos: присл.
   gender: ''
 - word: замок
-  translation: castle (first-syllable stress) / lock (second-syllable stress)
+  translation: castle (first-syllable stress)
   expression: false
   pos: ім.
   gender: ч.
-- word: мука
-  translation: torment (first-syllable stress) / flour (second-syllable stress)
+- word: замок
+  translation: lock (second-syllable stress)
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
 - word: кава
   translation: coffee
   expression: false
   pos: ім.
   gender: ж.
-- word: атлас
-  translation: atlas (first-syllable stress) / satin (second-syllable stress)
+- word: мука
+  translation: torment, suffering (first-syllable stress)
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
+- word: мука
+  translation: flour (second-syllable stress)
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: руки
+  translation: hands
+  expression: false
+  pos: ім.
+  gender: ж.
 - word: інтонація
   translation: intonation
   expression: false
@@ -44,21 +54,21 @@ vocabulary:
   expression: false
   pos: прикм.
   gender: ''
-- word: окличні
-  translation: exclamatory (sentences)
+- word: окличне
+  translation: exclamatory
   expression: false
   pos: прикм.
   gender: ''
-- word: де
-  translation: where
-  expression: false
-  pos: присл.
-  gender: ''
-- word: коли
-  translation: when
+- word: атлас
+  translation: atlas, book of maps (first-syllable stress)
   expression: false
   pos: ім.
-  gender: ''
+  gender: ч.
+- word: атлас
+  translation: satin fabric (second-syllable stress)
+  expression: false
+  pos: ім.
+  gender: ч.
 - word: українська
   translation: Ukrainian
   expression: false
@@ -69,8 +79,18 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: теж
-  translation: also, too
+- word: Україна
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: де
+  translation: where
+  expression: false
+  pos: присл.
+  gender: ''
+- word: як
+  translation: how
   expression: false
   pos: присл.
   gender: ''
@@ -78,6 +98,26 @@ vocabulary:
   translation: 'yes'
   expression: false
   pos: присл.
+  gender: ''
+- word: ні
+  translation: 'no'
+  expression: false
+  pos: част.
+  gender: ''
+- word: є
+  translation: is, there is
+  expression: false
+  pos: дієсл.
+  gender: ''
+- word: теж
+  translation: also, too
+  expression: false
+  pos: присл.
+  gender: ''
+- word: читай
+  translation: read! (imperative)
+  expression: false
+  pos: дієсл.
   gender: ''
 - word: вголос
   translation: aloud
@@ -89,13 +129,13 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
-- word: Це Київ.
-  translation: This is Kyiv.
+- word: Це кава.
+  translation: This is coffee.
   expression: true
   pos: ''
   gender: ''
-- word: Київ — столиця.
-  translation: Kyiv is the capital.
+- word: Київ — столиця України.
+  translation: Kyiv is the capital of Ukraine.
   expression: true
   pos: ''
   gender: ''

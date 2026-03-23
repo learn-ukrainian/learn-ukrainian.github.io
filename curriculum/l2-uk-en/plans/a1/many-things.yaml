@@ -18,34 +18,41 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Describing a classroom (Вашуленко Grade 3 p.114-115): — Що є у класі? — Столи, стільці і вікна. — Які столи?
-    — Столи великі й нові. А стільці — старі. Plurals emerge naturally from describing a room full of things.'
-  - 'Dialogue 2 — Shopping for several items (extending M11): — Мені потрібні ручки. — Які ручки? Червоні чи сині? — Сині.
-    І ще зошити. — Скільки? — Три зошити. Plural adjectives (-і) in real context.'
+  - 'Dialogue 1 — Describing a classroom (Вашуленко Grade 3 p.114-115): — Що є у класі?
+    — Столи, стільці і вікна. — Які столи? — Столи великі й нові. А стільці — старі.
+    Plurals emerge naturally from describing a room full of things.'
+  - 'Dialogue 2 — Shopping for several items (extending M11): — Мені потрібні ручки.
+    — Які ручки? Червоні чи сині? — Сині. І ще зошити. — Скільки? — Три зошити. Plural
+    adjectives (-і) in real context.'
 - section: Один → багато (Singular → Plural)
   words: 300
   points:
-  - 'Большакова Grade 2 p.18: ''Один предмет → багато предметів.'' Three main plural patterns for nominative: Masculine →
-    usually -и or -і: стіл → столи, стілець → стільці, телефон → телефони, зошит → зошити. Feminine → usually -и or -і: книга
-    → книги, лампа → лампи, ручка → ручки, сумка → сумки. Neuter → usually -а or -я: вікно → вікна, ліжко → ліжка, крісло
-    → крісла, дзеркало → дзеркала.'
-  - 'Guideline (not a rule — exceptions exist): After г, к, х → -и (книга → книги, ручка → ручки). After most other consonants
-    → -и or -і (стіл → столи, стілець → стільці). Neuter -о → -а (вікно → вікна). Neuter -е → -я (not covered yet). Full declension
-    rules come later — for now, learn each plural with its noun.'
+  - 'Большакова Grade 2 p.18: ''Один предмет → багато предметів.'' Three main plural
+    patterns for nominative: Masculine → usually -и or -і: стіл → столи, стілець →
+    стільці, телефон → телефони, зошит → зошити. Feminine → usually -и or -і: книга
+    → книги, лампа → лампи, ручка → ручки, сумка → сумки. Neuter → usually -а or -я:
+    вікно → вікна, ліжко → ліжка, крісло → крісла, дзеркало → дзеркала.'
+  - 'Guideline (not a rule — exceptions exist): After г, к, х → -и (книга → книги,
+    ручка → ручки). After most other consonants → -и or -і (стіл → столи, стілець
+    → стільці). Neuter -о → -а (вікно → вікна). Neuter -е → -я (not covered yet).
+    Full declension rules come later — for now, learn each plural with its noun.'
 - section: Прикметники у множині (Adjectives in Plural)
   words: 300
   points:
-  - 'Большакова Grade 2 p.42: який/яка/яке → які, веселий/весела/веселе → веселі. ALL adjectives take -і in the plural, regardless
-    of gender: великий стіл → великі столи нова книга → нові книги чисте вікно → чисті вікна This is simpler than singular
+  - 'Большакова Grade 2 p.42: який/яка/яке → які, веселий/весела/веселе → веселі.
+    ALL adjectives take -і in the plural, regardless of gender: великий стіл → великі
+    столи нова книга → нові книги чисте вікно → чисті вікна This is simpler than singular
     — one ending for all genders!'
-  - 'Colors in plural (review M10): червоні ручки (red pens), сині зошити (blue notebooks), білі стіни (white walls), чорні
-    стільці (black chairs). Demonstratives also have a plural form: ці (these) — Ці столи великі. Ці книги нові. ті (those)
-    — Ті вікна чисті. Ті стільці старі.'
+  - 'Colors in plural (review M10): червоні ручки (red pens), сині зошити (blue notebooks),
+    білі стіни (white walls), чорні стільці (black chairs). Demonstratives also have
+    a plural form: ці (these) — Ці столи великі. Ці книги нові. ті (those) — Ті вікна
+    чисті. Ті стільці старі.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Plural formation summary: Nouns: learn each plural individually (столи, книги, вікна). Adjectives: always -і (великі,
-    нові, червоні, сині). Demonstratives: ці (these), ті (those). Possessives: мої (my — plural). Self-check: Make these plural
+  - 'Plural formation summary: Nouns: learn each plural individually (столи, книги,
+    вікна). Adjectives: always -і (великі, нові, червоні, сині). Demonstratives: ці
+    (these), ті (those). Possessives: мої (my — plural). Self-check: Make these plural
     — стіл, книга, вікно. Describe your classroom: Які столи? Які стільці? Які вікна?'
 vocabulary_hints:
   required:
@@ -95,5 +102,3 @@ references:
   notes: Один предмет → багато предметів. First introduction of plural concept.
 - title: Большакова Grade 2, p.42
   notes: 'Adjective singular/plural: який/яка/яке → які, веселий → веселі.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

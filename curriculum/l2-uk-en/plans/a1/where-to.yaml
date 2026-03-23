@@ -18,32 +18,38 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Where are you going? (ULP Ep18): — Куди ти йдеш? — Я йду в банк. А ти? — Я йду на роботу. — А потім? — Потім
-    іду в магазин. — Зустрінемося в кафе? Direction vs location: іду В банк (direction) vs я В банку (location).'
-  - 'Dialogue 2 — Planning a trip: — Куди ти їдеш у суботу? — Я їду у Львів. — А Олена? — Вона їде в Одесу. Cities as destinations:
-    їхати в/у + city.'
+  - 'Dialogue 1 — Where are you going? (ULP Ep18): — Куди ти йдеш? — Я йду в банк.
+    А ти? — Я йду на роботу. — А потім? — Потім іду в магазин. — Зустрінемося в кафе?
+    Direction vs location: іду В банк (direction) vs я В банку (location).'
+  - 'Dialogue 2 — Planning a trip: — Куди ти їдеш у суботу? — Я їду у Львів. — А Олена?
+    — Вона їде в Одесу. Cities as destinations: їхати в/у + city.'
 - section: Куди? Знахідний відмінок (Where To? Accusative)
   words: 300
   points:
-  - 'Grade 4 case helper: Зн. (бачу) — кого? що? For direction: в/у + accusative = WHERE TO (motion toward). Compare with
-    locative: в/у + locative = WHERE (static position). Де ти? — Я в банку. (locative — you ARE there) Куди ти йдеш? — Я йду
+  - 'Grade 4 case helper: Зн. (бачу) — кого? що? For direction: в/у + accusative =
+    WHERE TO (motion toward). Compare with locative: в/у + locative = WHERE (static
+    position). Де ти? — Я в банку. (locative — you ARE there) Куди ти йдеш? — Я йду
     в банк. (accusative — you''re GOING there)'
-  - 'Accusative endings for places: Masculine inanimate: = nominative (no change!): банк → в банк, магазин → у магазин, парк
-    → у парк. Feminine -а/-я → -у/-ю: школа → у школу, робота → на роботу, бібліотека → у бібліотеку. Neuter: = nominative
-    (no change): кафе → у кафе, місто → у місто. Good news: masculine and neuter don''t change! Only feminine shifts.'
+  - 'Accusative endings for places: Masculine inanimate: = nominative (no change!):
+    банк → в банк, магазин → у магазин, парк → у парк. Feminine -а/-я → -у/-ю: школа
+    → у школу, робота → на роботу, бібліотека → у бібліотеку. Neuter: = nominative
+    (no change): кафе → у кафе, місто → у місто. Good news: masculine and neuter don''t
+    change! Only feminine shifts.'
 - section: Де чи куди? (Where or Where To?)
   words: 300
   points:
-  - 'The key question pair: Де ти? (Where are you?) → в/у/на + LOCATIVE Куди ти йдеш? (Where are you going?) → в/у/на + ACCUSATIVE
-    | Place | Де? (М.в.) | Куди? (Зн.в.) | | школа | в школі | у школу | | робота | на роботі | на роботу | | банк | у банку
-    | у банк | | парк | у парку | у парк |'
-  - 'Motion verbs: йти (to go on foot): Я йду в магазин. їхати (to go by transport): Я їду на вокзал. Note: йти = on foot,
-    їхати = by vehicle. Both + в/на + accusative.'
+  - 'The key question pair: Де ти? (Where are you?) → в/у/на + LOCATIVE Куди ти йдеш?
+    (Where are you going?) → в/у/на + ACCUSATIVE | Place | Де? (М.в.) | Куди? (Зн.в.)
+    | | школа | в школі | у школу | | робота | на роботі | на роботу | | банк | у
+    банку | у банк | | парк | у парку | у парк |'
+  - 'Motion verbs: йти (to go on foot): Я йду в магазин. їхати (to go by transport):
+    Я їду на вокзал. Note: йти = on foot, їхати = by vehicle. Both + в/на + accusative.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Two questions, two cases: Де? → locative (в школі, на роботі) = STATIC Куди? → accusative (у школу, на роботу) = DIRECTION
-    Masculine/neuter accusative = nominative (no change). Feminine: -а→-у, -я→-ю (школа→школу, бібліотека→бібліотеку). Self-check:
+  - 'Two questions, two cases: Де? → locative (в школі, на роботі) = STATIC Куди?
+    → accusative (у школу, на роботу) = DIRECTION Masculine/neuter accusative = nominative
+    (no change). Feminine: -а→-у, -я→-ю (школа→школу, бібліотека→бібліотеку). Self-check:
     Where are you? (Де?) Where are you going? (Куди?)'
 vocabulary_hints:
   required:
@@ -88,5 +94,3 @@ references:
 - title: ULP Season 1, Episode 18
   url: https://www.ukrainianlessons.com/episode18/
   notes: Accusative case for directions.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

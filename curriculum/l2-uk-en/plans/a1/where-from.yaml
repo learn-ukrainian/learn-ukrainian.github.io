@@ -18,31 +18,37 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Meeting someone (extending M05, ULP Ep4): — Звідки ти? — Я з України, з Києва. А ти? — Я з Канади, із Торонто.
-    — Давно тут? — Ні, я приїхав місяць тому. Звідки? pattern with countries and cities.'
-  - 'Dialogue 2 — Coming from somewhere: — Звідки ти йдеш? — Я йду з роботи. — А Олена? — Вона йде зі школи. — Куди вона йде?
-    — Додому. Direction FROM (з + genitive chunk) vs TO (в/на + accusative).'
+  - 'Dialogue 1 — Meeting someone (extending M05, ULP Ep4): — Звідки ти? — Я з України,
+    з Києва. А ти? — Я з Канади, із Торонто. — Давно тут? — Ні, я приїхав місяць тому.
+    Звідки? pattern with countries and cities.'
+  - 'Dialogue 2 — Coming from somewhere: — Звідки ти йдеш? — Я йду з роботи. — А Олена?
+    — Вона йде зі школи. — Куди вона йде? — Додому. Direction FROM (з + genitive chunk)
+    vs TO (в/на + accusative).'
 - section: Звідки? (Where From?)
   words: 300
   points:
-  - 'Three direction questions complete: Де ти? — В Україні. (locative — where you ARE) Куди ти їдеш? — В Україну. (accusative
-    — where you''re GOING) Звідки ти? — З України. (genitive — where you''re FROM) At A1: learn з + country/city as chunks.
-    Genitive grammar = A2.'
-  - 'Pattern: з/із/зі + genitive (memorized forms): з України, з Києва, зі Львова, з Одеси, з Харкова. з Канади, зі США (зі
-    Штатів), з Англії, з Німеччини, з Польщі. з роботи, зі школи, з магазину, з банку. Note: euphony rules from M28 apply:
-    з/із/зі.'
+  - 'Three direction questions complete: Де ти? — В Україні. (locative — where you
+    ARE) Куди ти їдеш? — В Україну. (accusative — where you''re GOING) Звідки ти?
+    — З України. (genitive — where you''re FROM) At A1: learn з + country/city as
+    chunks. Genitive grammar = A2.'
+  - 'Pattern: з/із/зі + genitive (memorized forms): з України, з Києва, зі Львова,
+    з Одеси, з Харкова. з Канади, зі США (зі Штатів), з Англії, з Німеччини, з Польщі.
+    з роботи, зі школи, з магазину, з банку. Note: euphony rules from M28 apply: з/із/зі.'
 - section: Країни і міста (Countries and Cities)
   words: 300
   points:
-  - 'Ukrainian cities: Київ (Kyiv), Львів (Lviv), Одеса (Odesa), Харків (Kharkiv), Дніпро (Dnipro), Запоріжжя (Zaporizhzhia).
-    Countries (common for learners): Україна, Канада, США, Англія, Німеччина, Польща, Франція, Італія, Японія.'
-  - 'Nationality and language links: Я з України → Я українець/українка → Я говорю українською. Review from M05: Мене звати...,
-    Я з..., Я говорю... New: Я живу в Києві, але я зі Львова. (current location vs origin)'
+  - 'Ukrainian cities: Київ (Kyiv), Львів (Lviv), Одеса (Odesa), Харків (Kharkiv),
+    Дніпро (Dnipro), Запоріжжя (Zaporizhzhia). Countries (common for learners): Україна,
+    Канада, США, Англія, Німеччина, Польща, Франція, Італія, Японія.'
+  - 'Nationality and language links: Я з України → Я українець/українка → Я говорю
+    українською. Review from M05: Мене звати..., Я з..., Я говорю... New: Я живу в
+    Києві, але я зі Львова. (current location vs origin)'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Three location questions: Де? → в/на + locative (В Україні) Куди? → в/на + accusative (В Україну) Звідки? → з/із/зі +
-    genitive chunk (З України) Self-check: Where are you from? Where do you live now? Where are you going after this lesson?'
+  - 'Three location questions: Де? → в/на + locative (В Україні) Куди? → в/на + accusative
+    (В Україну) Звідки? → з/із/зі + genitive chunk (З України) Self-check: Where are
+    you from? Where do you live now? Where are you going after this lesson?'
 vocabulary_hints:
   required:
   - звідки (where from)
@@ -126,5 +132,3 @@ references:
 - title: ULP Season 1, Episode 4
   url: https://www.ukrainianlessons.com/episode4/
   notes: Where are you from? — nationalities and countries.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

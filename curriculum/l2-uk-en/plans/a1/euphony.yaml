@@ -18,34 +18,41 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Describing where things are: — Де ти живеш? — Я живу в Києві. А ти? — Я живу у Львові. — У Львові гарно!
-    Note: в Києві (before К=consonant after vowel) vs у Львові (before Л after consonant). Euphony rules make sentences flow
+  - 'Dialogue 1 — Describing where things are: — Де ти живеш? — Я живу в Києві. А
+    ти? — Я живу у Львові. — У Львові гарно! Note: в Києві (before К=consonant after
+    vowel) vs у Львові (before Л after consonant). Euphony rules make sentences flow
     naturally.'
-  - 'Dialogue 2 — Making plans: — Ти й Олена йдете в кіно? — Ні, я і Максим йдемо в парк. — А Олена й Тарас? — Вони йдуть
-    у театр. Note: й between vowels (ти й Олена), і between consonants (я і Максим).'
+  - 'Dialogue 2 — Making plans: — Ти й Олена йдете в кіно? — Ні, я і Максим йдемо
+    в парк. — А Олена й Тарас? — Вони йдуть у театр. Note: й between vowels (ти й
+    Олена), і between consonants (я і Максим).'
 - section: У чи В? (У or В?)
   words: 300
   points:
-  - 'Авраменко Grade 5 p.117: Чергування у–в забезпечує милозвучність мови. Core rule: avoid consonant clusters. В after a
-    vowel before a consonant: живу в Києві, працюю в офісі. У after a consonant before a consonant: Тарас у Львові, Максим
-    у банку. This applies to both the preposition (в/у) and the prefix (вже/уже).'
-  - 'Exceptions to know: At the start of a sentence: У мене є... (always У). After a pause or comma: Так, у нас є... (У after
-    pause). Don''t overthink it — native speakers use euphony instinctively. The goal: sentences that SOUND smooth, not rigid
-    rule application.'
+  - 'Авраменко Grade 5 p.117: Чергування у–в забезпечує милозвучність мови. Core rule:
+    avoid consonant clusters. В after a vowel before a consonant: живу в Києві, працюю
+    в офісі. У after a consonant before a consonant: Тарас у Львові, Максим у банку.
+    This applies to both the preposition (в/у) and the prefix (вже/уже).'
+  - 'Exceptions to know: At the start of a sentence: У мене є... (always У). After
+    a pause or comma: Так, у нас є... (У after pause). Don''t overthink it — native
+    speakers use euphony instinctively. The goal: sentences that SOUND smooth, not
+    rigid rule application.'
 - section: І чи Й? З, із, чи зі?
   words: 300
   points:
-  - 'Літвінова Grade 5 p.176: і/й чергування: І between consonants: брат і сестра, Тарас і Максим. Й between vowels: мама
-    й тато, вона й він. At sentence start: І він прийшов (always І).'
-  - 'Літвінова Grade 5 p.177: з/із/зі чергування: З before vowels and most consonants: з Одеси, з другом. Із between consonants
-    (avoiding cluster): Максим із Семеном. Зі before з, с, ш, щ or consonant clusters: зі мною, зі святом, зі школи. This
+  - 'Літвінова Grade 5 p.176: і/й чергування: І between consonants: брат і сестра,
+    Тарас і Максим. Й between vowels: мама й тато, вона й він. At sentence start:
+    І він прийшов (always І).'
+  - 'Літвінова Grade 5 p.177: з/із/зі чергування: З before vowels and most consonants:
+    з Одеси, з другом. Із between consonants (avoiding cluster): Максим із Семеном.
+    Зі before з, с, ш, щ or consonant clusters: зі мною, зі святом, зі школи. This
     is a smaller rule than у/в but important for natural speech.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Three euphony pairs: у/в — avoid consonant+consonant: у Львові, в Києві. і/й — avoid vowel+vowel: брат і сестра, мама
-    й тато. з/із/зі — before difficult clusters: з другом, із сестрою, зі мною. Self-check: Which is correct? Я живу (в/у)
-    Києві. Мама (і/й) тато. Practice: read your sentences aloud — do they flow smoothly?'
+  - 'Three euphony pairs: у/в — avoid consonant+consonant: у Львові, в Києві. і/й
+    — avoid vowel+vowel: брат і сестра, мама й тато. з/із/зі — before difficult clusters:
+    з другом, із сестрою, зі мною. Self-check: Which is correct? Я живу (в/у) Києві.
+    Мама (і/й) тато. Practice: read your sentences aloud — do they flow smoothly?'
 vocabulary_hints:
   required:
   - у/в (in/at — alternating preposition)
@@ -84,5 +91,3 @@ references:
   notes: Чергування у–в та і–й. Уживання прийменника з.
 - title: Літвінова Grade 5, p.174-177
   notes: 'Милозвучність: правила чергування у—в, і—й, з—із—зі.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

@@ -49,3 +49,23 @@
 {"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T20:35:34.267039+00:00"}
 {"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T20:36:56.072975+00:00"}
 {"slug": "my-family", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-23T20:39:23.152614+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T21:13:24.452924+00:00"}
+{"slug": "reading-ukrainian", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T21:19:21.598106+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 2, "model": "claude", "success": true, "timestamp": "2026-03-23T21:20:45.538650+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T21:29:01.626283+00:00"}
+{"slug": "stress-and-melody", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T21:32:06.253458+00:00"}
+{"slug": "who-am-i", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T21:36:32.574877+00:00"}
+{"slug": "my-family", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T21:39:12.805130+00:00"}
+{"slug": "my-family", "error_type": "STRUCTURE", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T21:40:54.569634+00:00"}
+{"slug": "my-family", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-23T21:42:06.082121+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY, WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T21:47:22.539202+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY, WORD_COUNT", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T21:48:56.882862+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-23T21:53:03.127408+00:00"}
+{"slug": "my-family", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T22:03:21.220100+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T22:09:29.823978+00:00"}
+{"slug": "special-signs", "error_type": "TOXIC", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T22:17:45.525411+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 2, "model": "claude", "success": true, "timestamp": "2026-03-23T22:19:11.927844+00:00"}
+{"slug": "who-am-i", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T22:20:04.530219+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T22:26:58.697314+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T22:28:24.957797+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-23T22:30:27.110933+00:00"}

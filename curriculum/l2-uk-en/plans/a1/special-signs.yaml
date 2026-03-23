@@ -18,41 +18,48 @@ content_outline:
 - section: М'який знак (The Soft Sign — Ь)
   words: 250
   points:
-  - 'Ь has no sound. Its job: soften the consonant before it. Ukrainian distinguishes hard (тверді) and soft (м''якшені) consonants.
-    Захарійчук Grade 1 p.15 notation: hard = [–], soft = [=]. Common words: день (day), сіль (salt), кінь (horse), мідь (copper).
-    The Ь appears only after consonants, never at word start.'
-  - 'Where Ь commonly appears: -нь: день, кінь, осінь -ль: сіль, біль (pain) -ть: мить, путь -зь: мазь (ointment) Practice:
-    учитель (teacher), батько (father), маленький (small).'
+  - 'Ь has no sound. Its job: soften the consonant before it. Ukrainian distinguishes
+    hard (тверді) and soft (м''якшені) consonants. Захарійчук Grade 1 p.15 notation:
+    hard = [–], soft = [=]. Common words: день (day), сіль (salt), кінь (horse), мідь
+    (copper). The Ь appears only after consonants, never at word start.'
+  - 'Where Ь commonly appears: -нь: день, кінь, осінь -ль: сіль, біль (pain) -ть:
+    мить, путь -зь: мазь (ointment) Practice: учитель (teacher), батько (father),
+    маленький (small).'
 - section: Апостроф (The Apostrophe)
   words: 250
   points:
-  - 'Захарійчук Grade 1 p.97: Apostrophe comes after б, п, в, м, ф, р before я, ю, є, ї. It keeps the consonant HARD and gives
-    the vowel its full [й] + vowel sound.'
-  - 'Without apostrophe: consonant softens (пісня — Н is soft). With apostrophe: consonant stays hard + vowel = two sounds.
-    сім''я [сім-йа] (family), м''ясо [м-йасо] (meat), п''ять [п-йать] (five), комп''ютер [комп-йутер] (computer). Reading
-    practice: п''ять, дев''ять, м''який, м''яч, об''єкт.'
+  - 'Захарійчук Grade 1 p.97: Apostrophe comes after б, п, в, м, ф, р before я, ю,
+    є, ї. It keeps the consonant HARD and gives the vowel its full [й] + vowel sound.'
+  - 'Without apostrophe: consonant softens (пісня — Н is soft). With apostrophe: consonant
+    stays hard + vowel = two sounds. сім''я [сім-йа] (family), м''ясо [м-йасо] (meat),
+    п''ять [п-йать] (five), комп''ютер [комп-йутер] (computer). Reading practice:
+    п''ять, дев''ять, м''який, м''яч, об''єкт.'
 - section: Дзвінкі і глухі (Voiced and Voiceless)
   words: 250
   points:
-  - 'Consonants come in voiced-voiceless pairs. Hand on throat test: vibration = voiced. Pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш,
-    ДЗ-Ц, ДЖ-Ч.'
-  - 'Critical difference from Russian: Ukrainian does NOT devoice consonants at word end. дуб is [дуб], NOT *[дуп]. мороз
-    is [мороз], NOT *[морос]. This is authentic Ukrainian.'
-  - 'Minimal pairs for ear training: балка (beam) vs палка (stick), коза (goat) vs коса (braid).'
+  - 'Consonants come in voiced-voiceless pairs. Hand on throat test: vibration = voiced.
+    Pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.'
+  - 'Critical difference from Russian: Ukrainian does NOT devoice consonants at word
+    end. дуб is [дуб], NOT *[дуп]. мороз is [мороз], NOT *[морос]. This is authentic
+    Ukrainian.'
+  - 'Minimal pairs for ear training: балка (beam) vs палка (stick), коза (goat) vs
+    коса (braid).'
 - section: Важкі звуки (Tricky Sounds)
   words: 250
   points:
-  - 'И — not English ''ee'' or ''i''. Between them. Smile for ''ee'' but pull tongue back slightly. Practice: бик, лист, зима,
-    тихо, синій.'
-  - 'Г — voiced glottal fricative [ɦ]. NOT Russian hard [g]. Like saying ''h'' but with voice. Words: гарно, гори, голова.
-    Ґ = hard [g], only in: ґанок, ґудзик, ґречний.'
-  - 'Р — rolled/trilled, like Spanish. Practice: рука, робота, ранок, риба. Even imperfect Р is understood — don''t stress
-    about it.'
+  - 'И — not English ''ee'' or ''i''. Between them. Smile for ''ee'' but pull tongue
+    back slightly. Practice: бик, лист, зима, тихо, синій.'
+  - 'Г — voiced glottal fricative [ɦ]. NOT Russian hard [g]. Like saying ''h'' but
+    with voice. Words: гарно, гори, голова. Ґ = hard [g], only in: ґанок, ґудзик,
+    ґречний.'
+  - 'Р — rolled/trilled, like Spanish. Practice: рука, робота, ранок, риба. Even imperfect
+    Р is understood — don''t stress about it.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - 'Self-check: What does Ь do? After which letters does apostrophe appear? Name 3 voiced-voiceless pairs. How is Ukrainian
-    Г different from Ґ? Read these words: сім''я, день, п''ять, гарно.'
+  - 'Self-check: What does Ь do? After which letters does apostrophe appear? Name
+    3 voiced-voiceless pairs. How is Ukrainian Г different from Ґ? Read these words:
+    сім''я, день, п''ять, гарно.'
 vocabulary_hints:
   required:
   - сім'я (family) — apostrophe word
@@ -99,11 +106,3 @@ references:
   notes: Hard [–] vs soft [=] consonant notation.
 - title: Большакова Grade 1, p.45-47
   notes: Тверді і пом'якшені приголосні звуки.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
-  relevant:
-    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
-    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
-    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    И: https://www.youtube.com/watch?v=W-1rCu0indE

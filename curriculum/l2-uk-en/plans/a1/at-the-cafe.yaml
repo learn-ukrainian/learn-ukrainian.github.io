@@ -18,33 +18,40 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Ordering at a cafe: — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте? — Борщ дуже смачний. — Добре,
-    мені борщ і хліб, будь ласка. — А що будете пити? — Каву з молоком. — Добре, одну хвилинку. Polite ordering with будь
-    ласка, мені + accusative.'
-  - 'Dialogue 2 — Paying the bill: — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять гривень. — Можна карткою? — Так,
-    звичайно. — Дякую, дуже смачно було! — Дякуємо, приходьте ще! Paying, complimenting food, tipping.'
+  - 'Dialogue 1 — Ordering at a cafe: — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте?
+    — Борщ дуже смачний. — Добре, мені борщ і хліб, будь ласка. — А що будете пити?
+    — Каву з молоком. — Добре, одну хвилинку. Polite ordering with будь ласка, мені
+    + accusative.'
+  - 'Dialogue 2 — Paying the bill: — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять
+    гривень. — Можна карткою? — Так, звичайно. — Дякую, дуже смачно було! — Дякуємо,
+    приходьте ще! Paying, complimenting food, tipping.'
 - section: Як замовити (How to Order)
   words: 300
   points:
-  - 'Ordering patterns: Мені [accusative], будь ласка. (Мені каву, будь ласка.) Можна [accusative]? (Можна воду?) Дайте, будь
-    ласка, [accusative]. (Дайте, будь ласка, борщ.) Я хочу / Я буду [accusative]. (Я буду салат.) All use accusative from
-    M37 — real application.'
-  - 'Asking about the menu: Що ви рекомендуєте? (What do you recommend?) Це гостре? (Is it spicy?) Це з м''ясом? (Is it with
-    meat?) А що це? (What is this?) Скільки коштує? (How much?) Є вегетаріанське меню? (Is there a vegetarian menu?)'
+  - 'Ordering patterns: Мені [accusative], будь ласка. (Мені каву, будь ласка.) Можна
+    [accusative]? (Можна воду?) Дайте, будь ласка, [accusative]. (Дайте, будь ласка,
+    борщ.) Я хочу / Я буду [accusative]. (Я буду салат.) All use accusative from M37
+    — real application.'
+  - 'Asking about the menu: Що ви рекомендуєте? (What do you recommend?) Це гостре?
+    (Is it spicy?) Це з м''ясом? (Is it with meat?) А що це? (What is this?) Скільки
+    коштує? (How much?) Є вегетаріанське меню? (Is there a vegetarian menu?)'
 - section: Культура кафе (Cafe Culture)
   words: 300
   points:
-  - 'Ukrainian cafe culture: Кафе vs ресторан: кафе is casual, ресторан is formal. Меню: the waiter brings it, or it''s on
-    the wall/board. Рахунок: ask for the bill — it doesn''t come automatically. Чайові (tips): 10% is standard, not obligatory.
+  - 'Ukrainian cafe culture: Кафе vs ресторан: кафе is casual, ресторан is formal.
+    Меню: the waiter brings it, or it''s on the wall/board. Рахунок: ask for the bill
+    — it doesn''t come automatically. Чайові (tips): 10% is standard, not obligatory.
     Карткою чи готівкою? (Card or cash?) — most places take cards.'
-  - 'Useful cafe phrases: Вільно? / Тут вільно? (Is this seat free?) Можна меню? (Can I have the menu?) Ще одну каву, будь
-    ласка. (One more coffee, please.) Без цукру. (Without sugar.) З лимоном. (With lemon.) Все було дуже смачно! (Everything
-    was delicious!)'
+  - 'Useful cafe phrases: Вільно? / Тут вільно? (Is this seat free?) Можна меню? (Can
+    I have the menu?) Ще одну каву, будь ласка. (One more coffee, please.) Без цукру.
+    (Without sugar.) З лимоном. (With lemon.) Все було дуже смачно! (Everything was
+    delicious!)'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Cafe communication toolkit: Order: Мені [accusative], будь ласка. Ask: Скільки коштує? Що рекомендуєте? Pay: Рахунок,
-    будь ласка. Можна карткою? Compliment: Дуже смачно! Self-check: Order a full meal (starter, main, drink) at a cafe. Ask
+  - 'Cafe communication toolkit: Order: Мені [accusative], будь ласка. Ask: Скільки
+    коштує? Що рекомендуєте? Pay: Рахунок, будь ласка. Можна карткою? Compliment:
+    Дуже смачно! Self-check: Order a full meal (starter, main, drink) at a cafe. Ask
     for the bill and pay.'
 vocabulary_hints:
   required:
@@ -153,5 +160,3 @@ references:
   notes: Ordering at a cafe, restaurant vocabulary.
 - title: State Standard 2024, Topic 3 (ресторан)
   notes: 'Communicative situation: ordering food and drinks.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

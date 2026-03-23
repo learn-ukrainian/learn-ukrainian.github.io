@@ -1,0 +1,4 @@
+- find: '- **око** (eye)
+
+    - **тома** (volume — of a book)'
+  replace: '- **око** (eye)'

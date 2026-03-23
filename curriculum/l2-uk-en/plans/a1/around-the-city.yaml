@@ -18,31 +18,39 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Asking for directions: — Вибачте, як дістатися до бібліотеки? — Ідіть прямо, потім направо. Бібліотека на
-    розі. — А музей? — Музей далеко. Їдьте на метро до центру. Combines directions + transport + city places.'
-  - 'Dialogue 2 — Describing your route: — Як ти дістаєшся на роботу? — Спочатку йду на зупинку. Потім їду автобусом до центру.
-    — А потім? — Потім іду пішки п''ять хвилин. Робота в офісі на площі. Daily route using sequence words + transport + places.'
+  - 'Dialogue 1 — Asking for directions: — Вибачте, як дістатися до бібліотеки? —
+    Ідіть прямо, потім направо. Бібліотека на розі. — А музей? — Музей далеко. Їдьте
+    на метро до центру. Combines directions + transport + city places.'
+  - 'Dialogue 2 — Describing your route: — Як ти дістаєшся на роботу? — Спочатку йду
+    на зупинку. Потім їду автобусом до центру. — А потім? — Потім іду пішки п''ять
+    хвилин. Робота в офісі на площі. Daily route using sequence words + transport
+    + places.'
 - section: Де і куди разом (Where and Where To Together)
   words: 300
   points:
-  - 'Real navigation uses both cases together: Я зараз у парку (де? — locative). Я йду в магазин (куди? — accusative). Магазин
-    на вулиці Шевченка (де? — locative). Потім їду на роботу (куди? — accusative). The constant switch between де? and куди?
-    is natural Ukrainian.'
-  - 'Preposition patterns (synthesis): | Situation | Question | Form | | Static | Де ти? | в/на + locative | | Direction |
-    Куди йдеш? | в/на + accusative | | By transport | Як? Чим? | автобусом / на метро | | Distance | Далеко? | далеко / близько
-    / пішки |'
+  - 'Real navigation uses both cases together: Я зараз у парку (де? — locative). Я
+    йду в магазин (куди? — accusative). Магазин на вулиці Шевченка (де? — locative).
+    Потім їду на роботу (куди? — accusative). The constant switch between де? and
+    куди? is natural Ukrainian.'
+  - 'Preposition patterns (synthesis): | Situation | Question | Form | | Static |
+    Де ти? | в/на + locative | | Direction | Куди йдеш? | в/на + accusative | | By
+    transport | Як? Чим? | автобусом / на метро | | Distance | Далеко? | далеко /
+    близько / пішки |'
 - section: Мій район (My Neighborhood)
   words: 300
   points:
-  - 'Describing where you live: Я живу на вулиці Франка. Біля мого дому є парк і магазин. Школа далеко — треба їхати автобусом.
-    Аптека близько, можна піти пішки. У моєму районі є кафе, ресторан і бібліотека.'
-  - 'Useful phrases for city life: пішки (on foot), хвилина (minute) — П''ять хвилин пішки. далеко/близько від (far/near from
-    — chunk). У центрі міста / на околиці (in the center / on the outskirts).'
+  - 'Describing where you live: Я живу на вулиці Франка. Біля мого дому є парк і магазин.
+    Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки. У моєму
+    районі є кафе, ресторан і бібліотека.'
+  - 'Useful phrases for city life: пішки (on foot), хвилина (minute) — П''ять хвилин
+    пішки. далеко/близько від (far/near from — chunk). У центрі міста / на околиці
+    (in the center / on the outskirts).'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Urban communication toolkit: Asking: Де...? Як дістатися до...? Directions: прямо, направо, наліво. Location: в/на +
-    locative, в/на + accusative. Transport: автобусом, на метро, пішки. Self-check: Describe your route from home to work/school.'
+  - 'Urban communication toolkit: Asking: Де...? Як дістатися до...? Directions: прямо,
+    направо, наліво. Location: в/на + locative, в/на + accusative. Transport: автобусом,
+    на метро, пішки. Self-check: Describe your route from home to work/school.'
 vocabulary_hints:
   required:
   - пішки (on foot)
@@ -110,5 +118,3 @@ register: розмовний
 references:
 - title: Synthesis of M28-M32 skills
   notes: Applied communication — no new grammar, just integration.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

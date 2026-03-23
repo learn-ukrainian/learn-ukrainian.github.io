@@ -18,31 +18,38 @@ content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200
   points:
-  - 'Self-check covering M36-M40: Can you name 10 foods and 5 drinks? (M36) Can you say what you eat/drink using accusative?
-    (M37) Can you order at a cafe? (M38) Can you ask prices and buy things? (M39) Can you use accusative for people? (M40)'
+  - 'Self-check covering M36-M40: Can you name 10 foods and 5 drinks? (M36) Can you
+    say what you eat/drink using accusative? (M37) Can you order at a cafe? (M38)
+    Can you ask prices and buy things? (M39) Can you use accusative for people? (M40)'
 - section: Читання (Reading Practice)
   words: 250
   points:
-  - 'A short Ukrainian text using vocabulary from M36-M40. Content: Anna goes to the market, buys food, then goes to a cafe.
-    She orders борщ and каву з молоком, asks for the bill, then meets a friend and introduces her brother. Uses food vocabulary,
+  - 'A short Ukrainian text using vocabulary from M36-M40. Content: Anna goes to the
+    market, buys food, then goes to a cafe. She orders борщ and каву з молоком, asks
+    for the bill, then meets a friend and introduces her brother. Uses food vocabulary,
     accusative inanimate and animate, cafe phrases.'
 - section: Граматика (Grammar Summary)
   words: 200
   points:
-  - 'Key patterns from A1.6: 1. Food/drink vocabulary: їжа, напої, meals (M36) 2. Accusative inanimate: masc = nom, fem -а→-у
-    (M37) 3. Ordering: Мені каву, будь ласка (M38) 4. Prices: Скільки коштує? Гривня/гривні/гривень (M39) 5. Accusative animate:
-    fem -а→-у, masc = genitive (M40) 6. Chunks: кава з молоком, кілограм яблук (M36, M39)'
+  - 'Key patterns from A1.6: 1. Food/drink vocabulary: їжа, напої, meals (M36) 2.
+    Accusative inanimate: masc = nom, fem -а→-у (M37) 3. Ordering: Мені каву, будь
+    ласка (M38) 4. Prices: Скільки коштує? Гривня/гривні/гривень (M39) 5. Accusative
+    animate: fem -а→-у, masc = genitive (M40) 6. Chunks: кава з молоком, кілограм
+    яблук (M36, M39)'
 - section: Діалог (Connected Dialogue)
   words: 200
   points:
-  - 'A day of food and shopping: — Що ти їш на сніданок? — Я їм кашу і п''ю каву з молоком. — Потім іду на ринок. Скільки
-    коштують помідори? — Тридцять гривень. — Дайте кілограм, будь ласка. — Потім у кафе: Мені борщ і воду, будь ласка. — О,
-    я бачу Олену! Олено, привіт! Ти знаєш мого брата? Combines all A1.6 skills in one realistic day.'
+  - 'A day of food and shopping: — Що ти їш на сніданок? — Я їм кашу і п''ю каву з
+    молоком. — Потім іду на ринок. Скільки коштують помідори? — Тридцять гривень.
+    — Дайте кілограм, будь ласка. — Потім у кафе: Мені борщ і воду, будь ласка. —
+    О, я бачу Олену! Олено, привіт! Ти знаєш мого брата? Combines all A1.6 skills
+    in one realistic day.'
 - section: Підсумок — Summary
   words: 150
   points:
-  - 'A1.6 achievement summary: You can talk about food and drinks. You can use accusative for things AND people. You can order
-    at a cafe and pay. You can shop at a market and ask prices. Next: A1.7 — Communication (phone, email, making plans).'
+  - 'A1.6 achievement summary: You can talk about food and drinks. You can use accusative
+    for things AND people. You can order at a cafe and pay. You can shop at a market
+    and ask prices. Next: A1.7 — Communication (phone, email, making plans).'
 vocabulary_hints:
   required: []
   recommended: []
@@ -183,5 +190,3 @@ register: розмовний
 references:
 - title: Synthesis of M36-M40 content
   notes: No new material — review and integration of A1.6 phase.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

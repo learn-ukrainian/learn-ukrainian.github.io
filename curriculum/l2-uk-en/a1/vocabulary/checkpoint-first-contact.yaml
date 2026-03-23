@@ -1,81 +1,91 @@
 vocabulary:
-- word: прізвище
-  translation: surname
+- word: звуки
+  translation: sounds
   expression: false
   pos: ім.
-  gender: с.
+  gender: ''
+- word: літери
+  translation: letters
+  expression: false
+  pos: ім.
+  gender: ж.
 - word: ім'я
   translation: first name
   expression: false
   pos: ім.
   gender: с.
-- word: Я з
-  translation: I am from
-  expression: true
-  pos: ''
-  gender: ''
-- word: Добрий вечір
-  translation: Good evening
-  expression: true
-  pos: ''
-  gender: ''
-- word: Доброго ранку
-  translation: Good morning
-  expression: true
-  pos: ''
-  gender: ''
-- word: До побачення
-  translation: Goodbye
-  expression: true
-  pos: ''
-  gender: ''
-- word: Па-па
-  translation: Bye-bye (informal)
-  expression: false
-  pos: виг.
-  gender: ''
-- word: ні
-  translation: 'no'
-  expression: false
-  pos: част.
-  gender: ''
-- word: телефон
-  translation: phone
+- word: прізвище
+  translation: surname
   expression: false
   pos: ім.
-  gender: ч.
-- word: архітектор
-  translation: architect
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: Америка
-  translation: America
-  expression: false
-  pos: ''
-  gender: ''
-- word: велика
-  translation: big (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: гарна
-  translation: beautiful, nice (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
+  gender: с.
 - word: дуже
   translation: very
   expression: false
   pos: присл.
   gender: ''
-- word: У вас є?
-  translation: Do you have? (formal)
+- word: приємно
+  translation: pleasant / nice
+  expression: false
+  pos: присл.
+  gender: ''
+- word: Привіт!
+  translation: Hi!
   expression: true
   pos: ''
   gender: ''
-- word: У тебе є?
-  translation: Do you have? (informal)
+- word: Добрий день!
+  translation: Good day!
+  expression: true
+  pos: ''
+  gender: ''
+- word: До побачення!
+  translation: Goodbye!
+  expression: true
+  pos: ''
+  gender: ''
+- word: Бувай!
+  translation: Bye! (informal)
+  expression: true
+  pos: ''
+  gender: ''
+- word: Мене звати...
+  translation: My name is...
+  expression: true
+  pos: ''
+  gender: ''
+- word: Я з України.
+  translation: I am from Ukraine.
+  expression: true
+  pos: ''
+  gender: ''
+- word: Я з Канади.
+  translation: I am from Canada.
+  expression: true
+  pos: ''
+  gender: ''
+- word: У мене є...
+  translation: I have...
+  expression: true
+  pos: ''
+  gender: ''
+- word: Це моя сім'я.
+  translation: This is my family.
+  expression: true
+  pos: ''
+  gender: ''
+- word: Дуже приємно!
+  translation: Very nice to meet you!
+  expression: true
+  pos: ''
+  gender: ''
+- word: Навзаєм!
+  translation: Likewise!
+  expression: true
+  pos: ''
+  gender: ''
+- word: Добре, дякую.
+  translation: Good, thank you.
   expression: true
   pos: ''
   gender: ''

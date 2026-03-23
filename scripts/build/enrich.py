@@ -289,9 +289,19 @@ def _flatten_resources(resource_data: dict) -> list[dict]:
 
 
 def _build_video_embeds(plan: dict) -> str:
-    """Generate YouTube video embed section from plan pronunciation_videos."""
+    """Generate YouTube video embed section from plan pronunciation_videos.
+
+    Only emits content if there are actual videos (overview or per-letter).
+    A bare playlist link alone is not useful — skip it.
+    """
     pv = plan.get("pronunciation_videos", {})
     if not pv:
+        return ""
+
+    # Skip if no real video content (just a playlist link)
+    has_overview = bool(pv.get("overview"))
+    has_letters = any(pv.get(k) for k in ("vowels", "consonants", "special", "letters"))
+    if not has_overview and not has_letters:
         return ""
 
     lines = []
@@ -407,8 +417,10 @@ def _format_dialogues(content: str) -> str:
     def _convert_blockquote(match: re.Match) -> str:
         block = match.group(1)
         lines = block.strip().split("\n")
-        # Check if this block has dialogue markers (—)
-        has_dialogue = any(re.match(r"^>\s*—\s", line) for line in lines)
+        # Check if this block has dialogue markers (— or **Name:**)
+        has_dialogue = any(
+            re.match(r"^>\s*(?:—\s|\*\*[^*]+:\*\*)", line) for line in lines
+        )
         if not has_dialogue:
             return match.group(0)  # Not a dialogue, leave as blockquote
 

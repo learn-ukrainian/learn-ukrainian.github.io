@@ -84,15 +84,26 @@ class TestVideoEmbeds:
         assert '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=abc123"' in result
         assert "Anna Ohoiko" in result
 
-    def test_playlist_link(self):
+    def test_bare_playlist_skipped(self):
+        """A bare playlist with no overview or letter videos produces nothing."""
         plan = {
             "pronunciation_videos": {
                 "playlist": "https://www.youtube.com/playlist?list=PLabc",
             }
         }
         result = _build_video_embeds(plan)
+        assert result == ""
+
+    def test_playlist_with_overview(self):
+        """Playlist link IS included when there's also an overview video."""
+        plan = {
+            "pronunciation_videos": {
+                "overview": "https://www.youtube.com/watch?v=abc",
+                "playlist": "https://www.youtube.com/playlist?list=PLabc",
+            }
+        }
+        result = _build_video_embeds(plan)
         assert "Full playlist" in result
-        assert "Повний плейлист" in result
 
     def test_per_letter_videos(self):
         plan = {

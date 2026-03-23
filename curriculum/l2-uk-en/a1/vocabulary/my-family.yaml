@@ -1,6 +1,6 @@
 vocabulary:
 - word: родина
-  translation: family / extended family
+  translation: family
   expression: false
   pos: ім.
   gender: ж.
@@ -39,23 +39,13 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-- word: дружина
-  translation: wife
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: чоловік
-  translation: husband / man
-  expression: false
-  pos: ім.
-  gender: ч.
 - word: бабуся
   translation: grandmother
   expression: false
   pos: ім.
   gender: ж.
 - word: баба
-  translation: grandma / old woman
+  translation: grandmother (informal)
   expression: false
   pos: ім.
   gender: ж.
@@ -65,7 +55,7 @@ vocabulary:
   pos: ім.
   gender: ч.
 - word: дід
-  translation: grandpa / old man
+  translation: grandfather (informal)
   expression: false
   pos: ім.
   gender: ч.
@@ -79,13 +69,23 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: моє
-  translation: my (neuter)
+- word: дружина
+  translation: wife
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: чоловік
+  translation: husband; man
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: моя
+  translation: my (feminine)
   expression: false
   pos: прикм.
   gender: ''
-- word: мої
-  translation: my (plural)
+- word: моє
+  translation: my (neuter)
   expression: false
   pos: прикм.
   gender: ''
@@ -120,7 +120,7 @@ vocabulary:
   pos: ''
   gender: ''
 - word: у вас є
-  translation: you have (formal/plural)
+  translation: you have (formal)
   expression: true
   pos: ''
   gender: ''
@@ -154,33 +154,18 @@ vocabulary:
   expression: false
   pos: присл.
   gender: ''
-- word: ні
-  translation: 'no'
+- word: класно
+  translation: cool, great
   expression: false
-  pos: част.
-  gender: ''
-- word: її звати
-  translation: her name is
-  expression: true
-  pos: ''
+  pos: присл.
   gender: ''
 - word: ого
   translation: wow
   expression: false
   pos: виг.
   gender: ''
-- word: класно
-  translation: cool / great
-  expression: false
-  pos: присл.
-  gender: ''
 - word: місто
   translation: city
   expression: false
   pos: ім.
   gender: с.
-- word: ось
-  translation: here is
-  expression: false
-  pos: част.
-  gender: ''

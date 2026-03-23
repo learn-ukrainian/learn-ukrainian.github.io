@@ -1,6 +1,6 @@
-Section 1 "Що ми знаємо?": ~250 words — Review foundational skills: alphabet, sounds (soft sign, apostrophe), stress, and basic conversational topics.
-Section 2 "Читання": ~350 words — Analyze a short introductory text combining all M01-M06 vocabulary to practice connected reading.
-Section 3 "Граматика": ~350 words — Summarize the six core grammatical patterns of A1.1 with clear, pattern-based examples.
-Section 4 "Діалог": ~450 words — Present the Capstone Dialogue and break down the conversational flow, followed by the self-introduction template.
-Section 5 "Підсумок — Summary": ~150 words — Final self-assessment questions to confirm readiness for the next phase.
-Total: 1550 words
+Section 1 "Що ми знаємо? (What Do We Know?)": ~300 words — Self-check covering M01-M06 sounds, stress, false friends, greetings, and family.
+Section 2 "Читання (Reading Practice)": ~350 words — A short connected text where a person introduces themselves and their family, followed by line-by-line analysis.
+Section 3 "Граматика (Grammar Summary)": ~350 words — Review of key A1.1 patterns including identification, zero copula, possession, asking names, possessives, and origin.
+Section 4 "Діалог (Capstone Dialogue)": ~500 words — A comprehensive introduction dialogue and the connected monologue template for graduation.
+Section 5 "Підсумок — Summary": ~150 words — Final self-check questions and encouraging wrap-up.
+Total: 1650 words

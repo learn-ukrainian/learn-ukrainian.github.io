@@ -1,0 +1,27 @@
+- find: but the language has 38 **звуки** (sounds).
+  replace: but the language has 38 **звуків** (sounds).
+- find: 'items: ["А", "О", "У", "І"]'
+  replace: 'items: ["А", "О", "У", "Е", "И", "І"]'
+- find: These false friends are the single biggest source of confusion for English
+    speakers. When you see **В**, your brain screams "B!" — but it is "v." When you
+    see **Р**, everything in you says "P!" — but it is a rolled "r."
+  insert_after: '
+
+
+    It takes time to retrain your brain not to react to these familiar shapes with
+    their English sounds. The best way to overcome this is to read Ukrainian words
+    aloud slowly. Do not rush. Let your eyes see the Cyrillic **С**, pause, and force
+    your mouth to make the "s" sound. It is a completely normal part of the learning
+    process to accidentally read **С** as "k" or **У** as "y" during your first few
+    weeks. Just correct yourself and move on.'
+- find: Every letter has one job — Ukrainian spelling is far more consistent than
+    English.
+  insert_after: '
+
+
+    When you see a word like **Метро**, you do not have to guess how the ''е'' or
+    the ''о'' is pronounced. There are no silent letters at the end of these words,
+    and no hidden surprises. If it is written, it is pronounced. This makes Ukrainian
+    an incredibly satisfying language to read. Once you memorize the alphabet, you
+    can accurately read aloud almost any text you see, even if you do not yet know
+    what all the words mean.'

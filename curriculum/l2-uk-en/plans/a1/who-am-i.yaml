@@ -18,36 +18,44 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 350
   points:
-  - 'Dialogue 1 — At a hostel (informal, following Anna Ep3): — Привіт! Як тебе звати? — Мене звати Марко. А тебе? — Мене
-    звати Олена. Звідки ти? — Я з Канади. А ти? — Я з України. — Дуже приємно!'
-  - 'Dialogue 2 — At a conference (formal, following Anna Ep3-4): — Добрий день! Як вас звати? — Мене звати Петро. Дуже приємно!
-    — Мені також! Ви з України? — Так, я з Києва.'
-  - 'Dialogue 3 — Introducing someone else: Це мій друг Андрій. Він зі Львова. Він — інженер.'
+  - 'Dialogue 1 — At a hostel (informal, following Anna Ep3): — Привіт! Як тебе звати?
+    — Мене звати Марко. А тебе? — Мене звати Олена. Звідки ти? — Я з Канади. А ти?
+    — Я з України. — Дуже приємно!'
+  - 'Dialogue 2 — At a conference (formal, following Anna Ep3-4): — Добрий день! Як
+    вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так,
+    я з Києва.'
+  - 'Dialogue 3 — Introducing someone else: Це мій друг Андрій. Він зі Львова. Він
+    — інженер.'
 - section: Мене звати... (My name is...)
   words: 250
   points:
-  - 'Following Anna Ep3: Мене звати... literally ''me they-call.'' Ukrainian doesn''t use ''My name IS'' — no verb ''to be''
-    needed. Asking: Як тебе звати? (informal) / Як вас звати? (formal). About others: Як його звати? (his) / Як її звати?
-    (her).'
-  - 'Pleased to meet you: Дуже приємно! or Приємно познайомитись! Said AFTER exchanging names.'
+  - 'Following Anna Ep3: Мене звати... literally ''me they-call.'' Ukrainian doesn''t
+    use ''My name IS'' — no verb ''to be'' needed. Asking: Як тебе звати? (informal)
+    / Як вас звати? (formal). About others: Як його звати? (his) / Як її звати? (her).'
+  - 'Pleased to meet you: Дуже приємно! or Приємно познайомитись! Said AFTER exchanging
+    names.'
 - section: Це... (This is...)
   words: 200
   points:
-  - 'Це = ''this is / it is / these are.'' No verb ''to be'' needed. Це кава. Це Київ. Це мій друг. Questions: Що це? (What
-    is this?) Хто це? (Who is this?) Question words go FIRST: Хто це? not *Це хто?'
+  - 'Це = ''this is / it is / these are.'' No verb ''to be'' needed. Це кава. Це Київ.
+    Це мій друг. Questions: Що це? (What is this?) Хто це? (Who is this?) Question
+    words go FIRST: Хто це? not *Це хто?'
 - section: Я — студент (I am a student)
   words: 200
   points:
-  - 'No verb ''to be'' in present tense. Subject — Noun: Я — студент. Він — лікар. Вона — вчителька. The dash (—) marks where
-    ''is'' would go.'
-  - 'Nationalities (nominative, no verb): українець / українка, американець / американка, канадієць / канадка. Professions:
-    студент/студентка, вчитель/вчителька, лікар/лікарка, програміст/програмістка.'
+  - 'No verb ''to be'' in present tense. Subject — Noun: Я — студент. Він — лікар.
+    Вона — вчителька. The dash (—) marks where ''is'' would go.'
+  - 'Nationalities (nominative, no verb): українець / українка, американець / американка,
+    канадієць / канадка. Professions: студент/студентка, вчитель/вчителька, лікар/лікарка,
+    програміст/програмістка.'
 - section: Звідки? (Where from?)
   words: 200
   points:
-  - 'Following Anna Ep4: Звідки ти? / Звідки ви? Я з України. Я з Канади. Я зі Штатів. Я з Німеччини. Note: ''з/зі + country''
-    uses genitive forms (України, Канади) but teach as MEMORIZED CHUNKS — genitive grammar is A2. Do NOT introduce ''Де ви
-    живете?'' here — locative + verb conjugation are taught later (M16 verbs, M29 locative).'
+  - 'Following Anna Ep4: Звідки ти? / Звідки ви? Я з України. Я з Канади. Я зі Штатів.
+    Я з Німеччини. Note: ''з/зі + country'' uses genitive forms (України, Канади)
+    but teach as MEMORIZED CHUNKS — genitive grammar is A2. Do NOT introduce ''Де
+    ви живете?'' here — locative + verb conjugation are taught later (M16 verbs, M29
+    locative).'
 - section: Підсумок — Summary
   words: 0
   points:
@@ -109,5 +117,3 @@ references:
 - title: ULP Season 1, Episode 8 — Jobs and Professions
   url: https://www.ukrainianlessons.com/episode8/
   notes: Profession vocabulary with gendered forms.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

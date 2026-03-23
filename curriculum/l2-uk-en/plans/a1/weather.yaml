@@ -18,33 +18,39 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Looking out the window (ULP Ep16 pattern): — Яка сьогодні погода? — Сьогодні холодно і йде дощ. — А завтра?
-    — Завтра буде тепло і сонячно. — Добре! Тоді завтра гуляємо! Weather + future plans (буде as chunk).'
-  - 'Dialogue 2 — Seasons conversation: — Яка пора року тобі подобається? — Мені подобається літо. — Чому? — Тому що влітку
-    тепло і сонячно. А тобі? — Мені подобається осінь. Восени красиво. Weather + seasons + opinion verbs from M15.'
+  - 'Dialogue 1 — Looking out the window (ULP Ep16 pattern): — Яка сьогодні погода?
+    — Сьогодні холодно і йде дощ. — А завтра? — Завтра буде тепло і сонячно. — Добре!
+    Тоді завтра гуляємо! Weather + future plans (буде as chunk).'
+  - 'Dialogue 2 — Seasons conversation: — Яка пора року тобі подобається? — Мені подобається
+    літо. — Чому? — Тому що влітку тепло і сонячно. А тобі? — Мені подобається осінь.
+    Восени красиво. Weather + seasons + opinion verbs from M15.'
 - section: Яка погода? (What's the Weather?)
   words: 300
   points:
-  - 'Impersonal weather expressions (no subject — the weather just IS): Сьогодні холодно. (It''s cold today.) Сьогодні тепло.
-    (It''s warm.) Сьогодні спекотно. (It''s hot.) Сьогодні прохолодно. (It''s cool.) Заболотний Grade 8 p.126: безособові
-    речення передають явища природи. These are adverbs — no subject needed, just the state.'
-  - 'Precipitation patterns: Іде дощ. (It''s raining — literally ''rain goes''.) Іде сніг. (It''s snowing — ''snow goes''.)
-    Дме вітер. (The wind is blowing.) Світить сонце. (The sun is shining.) Хмарно / ясно. (Cloudy / clear.) Note: іде дощ
-    (not ''дощить'') is the natural conversational form.'
+  - 'Impersonal weather expressions (no subject — the weather just IS): Сьогодні холодно.
+    (It''s cold today.) Сьогодні тепло. (It''s warm.) Сьогодні спекотно. (It''s hot.)
+    Сьогодні прохолодно. (It''s cool.) Заболотний Grade 8 p.126: безособові речення
+    передають явища природи. These are adverbs — no subject needed, just the state.'
+  - 'Precipitation patterns: Іде дощ. (It''s raining — literally ''rain goes''.) Іде
+    сніг. (It''s snowing — ''snow goes''.) Дме вітер. (The wind is blowing.) Світить
+    сонце. (The sun is shining.) Хмарно / ясно. (Cloudy / clear.) Note: іде дощ (not
+    ''дощить'') is the natural conversational form.'
 - section: Погода і пори року (Weather and Seasons)
   words: 300
   points:
-  - 'Connecting weather to seasons (M23): Взимку холодно. Іде сніг. (In winter it''s cold. It snows.) Навесні тепло. Все зелене.
-    (In spring it''s warm. Everything''s green.) Влітку спекотно. Світить сонце. (In summer it''s hot. The sun shines.) Восени
-    прохолодно. Іде дощ. (In autumn it''s cool. It rains.)'
-  - 'Temperature vocabulary: градуси (degrees) — Сьогодні двадцять градусів. (20 degrees.) плюс / мінус — Мінус десять. (Minus
-    10.) тепло / холодно as nouns: На вулиці тепло. (It''s warm outside.) Time words: сьогодні (today), завтра (tomorrow),
-    вчора (yesterday).'
+  - 'Connecting weather to seasons (M23): Взимку холодно. Іде сніг. (In winter it''s
+    cold. It snows.) Навесні тепло. Все зелене. (In spring it''s warm. Everything''s
+    green.) Влітку спекотно. Світить сонце. (In summer it''s hot. The sun shines.)
+    Восени прохолодно. Іде дощ. (In autumn it''s cool. It rains.)'
+  - 'Temperature vocabulary: градуси (degrees) — Сьогодні двадцять градусів. (20 degrees.)
+    плюс / мінус — Мінус десять. (Minus 10.) тепло / холодно as nouns: На вулиці тепло.
+    (It''s warm outside.) Time words: сьогодні (today), завтра (tomorrow), вчора (yesterday).'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Weather toolkit: Question: Яка сьогодні погода? Temperature: холодно, тепло, спекотно, прохолодно. Precipitation: іде
-    дощ, іде сніг, дме вітер, світить сонце. Sky: хмарно, ясно, сонячно. Seasons: взимку холодно, влітку спекотно. Self-check:
+  - 'Weather toolkit: Question: Яка сьогодні погода? Temperature: холодно, тепло,
+    спекотно, прохолодно. Precipitation: іде дощ, іде сніг, дме вітер, світить сонце.
+    Sky: хмарно, ясно, сонячно. Seasons: взимку холодно, влітку спекотно. Self-check:
     Describe today''s weather. What''s winter like where you live?'
 vocabulary_hints:
   required:
@@ -108,5 +114,3 @@ references:
 - title: ULP Season 1, Episode 16
   url: https://www.ukrainianlessons.com/episode16/
   notes: Weather vocabulary and expressions.
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

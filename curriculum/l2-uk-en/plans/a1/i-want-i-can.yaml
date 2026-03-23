@@ -18,32 +18,38 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Making plans: — Що ти хочеш робити? — Я хочу гуляти. А ти? — Я не можу, я мушу працювати. — Шкода! All three
-    modals in one natural exchange.'
-  - 'Dialogue 2 — At a café (preview for A1.6): — Я хочу каву. — Велику чи маленьку? — Велику. І ще я хочу їсти. Що ви можете
-    порекомендувати? — Можу порекомендувати борщ! Хотіти + noun (no infinitive needed).'
+  - 'Dialogue 1 — Making plans: — Що ти хочеш робити? — Я хочу гуляти. А ти? — Я не
+    можу, я мушу працювати. — Шкода! All three modals in one natural exchange.'
+  - 'Dialogue 2 — At a café (preview for A1.6): — Я хочу каву. — Велику чи маленьку?
+    — Велику. І ще я хочу їсти. Що ви можете порекомендувати? — Можу порекомендувати
+    борщ! Хотіти + noun (no infinitive needed).'
 - section: Хотіти (To Want)
   words: 300
   points:
-  - 'Хотіти is irregular — it belongs to Group I despite -іти ending: я хочу, ти хочеш, він/вона хоче, ми хочемо, ви хочете,
-    вони хочуть. Note: хот- → хоч- (т→ч change in all forms). Two uses: хочу + infinitive (Я хочу читати) or хочу + noun (Я
-    хочу каву).'
-  - 'Negative: Я не хочу. Ти не хочеш? Вона не хоче. Polite requests use хотів/хотіла би (conditional) — but that''s later.
-    For now: Я хочу... is the direct way to express a want.'
+  - 'Хотіти is irregular — it belongs to Group I despite -іти ending: я хочу, ти хочеш,
+    він/вона хоче, ми хочемо, ви хочете, вони хочуть. Note: хот- → хоч- (т→ч change
+    in all forms). Two uses: хочу + infinitive (Я хочу читати) or хочу + noun (Я хочу
+    каву).'
+  - 'Negative: Я не хочу. Ти не хочеш? Вона не хоче. Polite requests use хотів/хотіла
+    би (conditional) — but that''s later. For now: Я хочу... is the direct way to
+    express a want.'
 - section: Могти і мусити (Can and Must)
   words: 300
   points:
-  - 'Могти (can/able to) — also irregular: я можу, ти можеш, він/вона може, ми можемо, ви можете, вони можуть. Note: мог-
-    → мож- (г→ж change). Я можу говорити українською. Ти можеш допомогти?'
-  - 'Мусити (must/have to) — regular Group II: я мушу, ти мусиш, він/вона мусить, ми мусимо, ви мусите, вони мусять. Note:
-    с→ш only in я-form (мушу), rest is regular. Я мушу працювати. Ти мусиш вчити слова. Мусити = obligation, not choice. Stronger
+  - 'Могти (can/able to) — also irregular: я можу, ти можеш, він/вона може, ми можемо,
+    ви можете, вони можуть. Note: мог- → мож- (г→ж change). Я можу говорити українською.
+    Ти можеш допомогти?'
+  - 'Мусити (must/have to) — regular Group II: я мушу, ти мусиш, він/вона мусить,
+    ми мусимо, ви мусите, вони мусять. Note: с→ш only in я-form (мушу), rest is regular.
+    Я мушу працювати. Ти мусиш вчити слова. Мусити = obligation, not choice. Stronger
     than ''треба'' (impersonal, later).'
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Three modals + infinitive: Хочу + inf. = I want to (desire) Можу + inf. = I can (ability) Мушу + inf. = I must (obligation)
-    All three: Я хочу гуляти, але не можу — мушу працювати. Self-check: Say what you want to do today. Say what you can do
-    in Ukrainian. Say what you must do tomorrow.'
+  - 'Three modals + infinitive: Хочу + inf. = I want to (desire) Можу + inf. = I can
+    (ability) Мушу + inf. = I must (obligation) All three: Я хочу гуляти, але не можу
+    — мушу працювати. Self-check: Say what you want to do today. Say what you can
+    do in Ukrainian. Say what you must do tomorrow.'
 vocabulary_hints:
   required:
   - хотіти (to want — irregular!)
@@ -85,5 +91,3 @@ references:
   notes: Хотіти listed as Group I exception (despite -іти infinitive).
 - title: Літвінова Grade 7, p.55
   notes: 'Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти.'
-pronunciation_videos:
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

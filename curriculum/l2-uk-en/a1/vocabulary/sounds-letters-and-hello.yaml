@@ -10,12 +10,12 @@ vocabulary:
   pos: ім.
   gender: ж.
 - word: голосний
-  translation: vowel
+  translation: vowel (sound)
   expression: false
   pos: прикм.
   gender: ''
 - word: приголосний
-  translation: consonant
+  translation: consonant (sound)
   expression: false
   pos: прикм.
   gender: ''
@@ -34,76 +34,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: вода
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: рука
-  translation: hand
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: книга
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: школа
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: привіт
-  translation: hi (informal)
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: добре
-  translation: fine, good
-  expression: false
-  pos: присл.
-  gender: ''
-- word: чудово
-  translation: great, wonderful
-  expression: false
-  pos: присл.
-  gender: ''
-- word: нормально
-  translation: okay, alright
-  expression: false
-  pos: присл.
-  gender: ''
-- word: банк
-  translation: bank
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: аптека
-  translation: pharmacy
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: метро
-  translation: metro
-  expression: false
-  pos: ім.
-  gender: с.
-- word: пошта
-  translation: post office
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: зупинка
-  translation: bus stop
-  expression: false
-  pos: ім.
-  gender: ж.
-- word: кафе
-  translation: cafe
-  expression: false
-  pos: ім.
-  gender: с.
 - word: кома
   translation: comma
   expression: false
@@ -124,6 +54,21 @@ vocabulary:
   expression: false
   pos: ім.
   gender: с.
+- word: тома
+  translation: volume (of a book)
+  expression: false
+  pos: ''
+  gender: ''
+- word: вода
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: рука
+  translation: hand
+  expression: false
+  pos: ім.
+  gender: ж.
 - word: сон
   translation: dream
   expression: false
@@ -139,6 +84,11 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
+- word: банк
+  translation: bank
+  expression: false
+  pos: ім.
+  gender: ч.
 - word: дім
   translation: house, home
   expression: false
@@ -149,6 +99,126 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
+- word: книга
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: школа
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: привіт
+  translation: hi (informal)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: Як справи?
+  translation: How are you?
+  expression: true
+  pos: ''
+  gender: ''
+- word: добре
+  translation: fine, good
+  expression: false
+  pos: присл.
+  gender: ''
+- word: чудово
+  translation: great, wonderful
+  expression: false
+  pos: присл.
+  gender: ''
+- word: нормально
+  translation: okay, normal
+  expression: false
+  pos: присл.
+  gender: ''
+- word: А у тебе?
+  translation: And you?
+  expression: true
+  pos: ''
+  gender: ''
+- word: дякую
+  translation: thanks
+  expression: false
+  pos: дієсл.
+  gender: ''
+- word: рада
+  translation: glad (feminine)
+  expression: false
+  pos: ім.
+  gender: ч.
+- word: радий
+  translation: glad (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+- word: Рада тебе бачити!
+  translation: Glad to see you! (feminine)
+  expression: true
+  pos: ''
+  gender: ''
+- word: Радий тебе бачити!
+  translation: Glad to see you! (masculine)
+  expression: true
+  pos: ''
+  gender: ''
+- word: аптека
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: кафе
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: с.
+- word: метро
+  translation: metro
+  expression: false
+  pos: ім.
+  gender: с.
+- word: пошта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: зупинка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+- word: Київ
+  translation: Kyiv (the capital)
+  expression: false
+  pos: ім.
+  gender: ''
+- word: Львів
+  translation: Lviv
+  expression: false
+  pos: ''
+  gender: ''
+- word: Одеса
+  translation: Odesa
+  expression: false
+  pos: ''
+  gender: ''
+- word: Харків
+  translation: Kharkiv
+  expression: false
+  pos: ''
+  gender: ''
+- word: Дніпро
+  translation: Dnipro
+  expression: false
+  pos: ''
+  gender: ''
+- word: Полтава
+  translation: Poltava
+  expression: false
+  pos: ''
+  gender: ''
 - word: це
   translation: this is
   expression: false
@@ -164,46 +234,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-- word: слово
-  translation: word
-  expression: false
-  pos: ім.
-  gender: с.
-- word: речення
-  translation: sentence
-  expression: false
-  pos: ім.
-  gender: с.
-- word: рада
-  translation: glad (feminine)
-  expression: false
-  pos: ім.
-  gender: ч.
-- word: радий
-  translation: glad (masculine)
-  expression: false
-  pos: прикм.
-  gender: ''
-- word: Як справи?
-  translation: How are you?
-  expression: true
-  pos: ''
-  gender: ''
-- word: А у тебе?
-  translation: And you?
-  expression: true
-  pos: ''
-  gender: ''
-- word: Рада тебе бачити!
-  translation: Glad to see you! (said by a woman)
-  expression: true
-  pos: ''
-  gender: ''
-- word: Радий тебе бачити!
-  translation: Glad to see you! (said by a man)
-  expression: true
-  pos: ''
-  gender: ''
 - word: Що це?
   translation: What is this?
   expression: true
@@ -214,8 +244,18 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
-- word: Це мама.
-  translation: This is mom.
-  expression: true
-  pos: ''
+- word: слово
+  translation: word
+  expression: false
+  pos: ім.
+  gender: с.
+- word: речення
+  translation: sentence
+  expression: false
+  pos: ім.
+  gender: с.
+- word: тебе
+  translation: you (accusative/genitive)
+  expression: false
+  pos: ім.
   gender: ''

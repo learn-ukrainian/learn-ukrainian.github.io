@@ -192,15 +192,13 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
-- **Dialogue formatting** — every dialogue MUST have speaker names. Write each turn as `**Name:** text` on its own line, with a blank line between turns. Use consistent Ukrainian names. Example:
+- **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
-**Оленка:** Привіт! Як справи?
+> **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
+> **Тарас:** Добре, дякую! А у тебе? *(Good, thanks! And you?)*
+> **Оленка:** Теж добре! *(Also good!)*
 
-**Тарас:** Добре, дякую! А у тебе?
-
-**Оленка:** Теж добре!
-
-Without speaker names, the reader cannot tell who is speaking and the dialogue makes no sense. NEVER use anonymous em dashes (`— text`) for dialogues.
+Without speaker names, the reader cannot tell who is speaking. NEVER use anonymous em dashes (`— text`). After each dialogue, briefly explain the key phrases and patterns the learner just saw.
 - Dialogues: natural, not stilted. Real situations, real responses.
 - **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
 - **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.

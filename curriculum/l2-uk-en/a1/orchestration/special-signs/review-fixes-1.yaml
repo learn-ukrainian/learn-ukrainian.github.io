@@ -1,8 +1,42 @@
-- find: "- q: \"Де м'який знак — «батько» чи «батко»?\"\n  o: [\"батько\", \"батко\"\
-    ]\n  a: 0\n:::\n"
-  replace: "- q: \"Де м'який знак — «батько» чи «батко»?\"\n  o: [\"батько\", \"батко\"\
-    ]\n  a: 0\n- q: \"Де м'який знак — «осінь» чи «осін»?\"\n  o: [\"осінь\", \"осін\"\
-    ]\n  a: 0\n- q: \"Де м'який знак — «мазь» чи «маз»?\"\n  o: [\"мазь\", \"маз\"\
-    ]\n  a: 0\n- q: \"Де м'який знак — «мить» чи «мит»?\"\n  o: [\"мить\", \"мит\"\
-    ]\n  a: 0\n- q: \"Де м'який знак — «маленький» чи «маленкий»?\"\n  o: [\"маленький\"\
-    , \"маленкий\"]\n  a: 0\n:::\n"
+- find: 'Look at these two words: **мат** and **мать**. One tiny letter at the end
+    — **ь** — changes everything.'
+  replace: 'Look at these two words: **стан** (state) and **стань** (stand!). One
+    tiny letter at the end — **ь** — changes everything.'
+- find: '- **-ть**: **мить** (moment)
+
+    - **-зь**: **мазь** (ointment)'
+  replace: '- **-ть**: **мить** (moment)
+
+    - **-дь**: **мідь** (copper)
+
+    - **-зь**: **мазь** (ointment)'
+- find: 'Practice words: **риба** (fish), **ранок** (morning), **рука** (hand).'
+  replace: 'Practice words: **риба** (fish), **ранок** (morning), **рука** (hand),
+    **робота** (work).'
+- insert_after: The soft sign is not decoration — it is meaningful.
+  replace: '
+
+
+    When you pronounce a hard consonant, your tongue is relaxed. When you pronounce
+    a softened consonant, the middle of your tongue raises toward the roof of your
+    mouth, pressing slightly against the palate. This creates a subtle ''y'' flavor
+    right at the end of the consonant, melting it. It takes practice to hear it, but
+    native speakers listen for this difference constantly.'
+- insert_after: The apostrophe is your signal to keep the consonant firm and give
+    the vowel its full sound.
+  replace: '
+
+
+    Think of the apostrophe as a tiny speed bump. You drive up to the consonant, stop
+    for a microsecond, and then say the vowel as if it were at the beginning of a
+    new word. Try saying "п... ять" and then slowly bring them closer together without
+    blending the sounds. That crisp separation is the heart of the Ukrainian apostrophe.'
+- insert_after: Voiced and voiceless are not interchangeable.
+  replace: '
+
+
+    This rule of keeping final consonants voiced gives spoken Ukrainian a very strong,
+    resonant, and musical quality. When a Ukrainian says **хліб** (bread) or **дід**
+    (grandfather), the final vibration rings out clearly. Practice over-emphasizing
+    that final buzz or hum until it feels natural. If you master this one rule, your
+    accent will immediately sound more authentically Ukrainian.'

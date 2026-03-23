@@ -1,0 +1,16 @@
+- find: "- sentence: \"— Так, це моя ___.\"\n  answer: \"сім'я\"\n"
+  replace: "- sentence: \"— Так, це моя ___.\"\n  answer: \"мама\"\n"
+- find: Now, let us look at a second situation. Here, Olena is showing David a photograph
+    of her relatives. Notice how she introduces each person.
+  replace: In this second situation, Olena is showing David a photograph of her relatives.
+    Notice how she introduces each person.
+- find: Finally, let us look at a connected speech pattern. When you introduce yourself
+    to a group, you combine several pieces of information into a short presentation.
+  replace: When you introduce yourself to a group, you can combine several pieces
+    of information into a short presentation, creating a connected speech pattern.
+- find: Let us learn the core words for the people in your life.
+  replace: Here are the core words for the people in your life.
+- find: Let us preview how numbers work with this phrase.
+  replace: Here is a preview of how numbers work with this phrase.
+- find: 'Let us look at the word for "my":'
+  replace: 'Here are the forms for the word "my":'

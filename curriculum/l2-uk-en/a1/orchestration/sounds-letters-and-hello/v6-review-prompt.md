@@ -141,23 +141,31 @@ pronunciation_videos:
 
 ## Звуки і літери (Sounds and Letters)
 
-Look at the text on this page. What you see are letters — shapes on a screen. Now say something out loud. What you just produced are sounds. This distinction is the absolute foundation of the Ukrainian language, and every Ukrainian first-grader learns a golden rule:
+Look at the text on this page. What you see are letters — symbols printed on a screen. Now say a word out loud. What you just produced are sounds — vibrations in the air. This distinction is the absolute foundation of Ukrainian, and every Ukrainian first-grader learns a golden rule:
 
-> **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.**
+**Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.**
 
-We hear and pronounce sounds, but we see and write letters. The Ukrainian alphabet has 33 **літери** (letters), but 38 **звуки** (sounds). Why the mismatch? Because some letters represent more than one sound, and some sounds have no letter of their own. You will discover why as the course unfolds.
+We hear and pronounce sounds, but we see and write letters.
 
-Ukrainian sounds split into two families. The first family is **голосні** (vowels) — sounds made with voice alone, mouth open, no obstruction from lips or tongue. A poem from the Ukrainian first-grade reader captures it perfectly: *«Голосні почуєш в пісні»* — you hear vowels in a song. There are 6 vowel sounds in Ukrainian, but 10 vowel letters represent them:
+The Ukrainian alphabet has 33 **літери** (letters), but the language has 38 **звуків** (sounds). Why the mismatch? Because some letters represent more than one sound, and some sounds share a letter. That mystery unfolds across the next few modules — for now, remember: 33 літери, 38 звуків.
+
+### Голосні (Vowels)
+
+**Голосні** (vowels) are sounds made with voice alone. Your mouth stays open, nothing blocks the air. Ukrainian textbooks teach this with a little poem: *Голосні почуєш в пісні* — you hear vowels in a song. And it makes sense: try singing a long note. That pure tone is a vowel sound.
+
+There are 6 vowel sounds, but 10 vowel letters:
 
 | Vowel sounds (6) | Vowel letters (10) |
 |---|---|
 | а, о, у, е, и, і | А, О, У, Е, И, І, Я, Ю, Є, Ї |
 
-Why 10 letters for 6 sounds? The letters **Я**, **Ю**, **Є**, and **Ї** are special — they can represent two sounds at once, or they can soften the consonant before them. More on this in Module 2.
+Why 10 letters for 6 sounds? The letters **Я**, **Ю**, **Є**, and **Ї** do double duty — they can represent two sounds at once or soften the consonant before them. That is a story for Module 2.
 
-The second family is **приголосні** (consonants) — sounds made when lips, teeth, or tongue create an obstruction. Voice and noise combine, or sometimes just noise alone. The same textbook offers another rhyme: *«Приголосні деренчать і тихенько шелестять»* — consonants clatter and softly rustle. Ukrainian has 32 consonant sounds.
+In Ukrainian textbooks, a vowel sound is marked with a dot: [•]. A consonant sound is marked with a dash: [–]. You will see this notation in Ukrainian school materials everywhere.
 
-Ukrainian textbooks use a simple notation from the Захарійчук Grade 1 reader: a dot **[•]** marks a vowel sound, a dash **[–]** marks a consonant. So the word **мама** (mother) looks like this: [–] [•] [–] [•] — consonant, vowel, consonant, vowel.
+### Приголосні (Consonants)
+
+**Приголосні** (consonants) are sounds made when something in your mouth — lips, teeth, or tongue — blocks the airflow. Voice may or may not be involved. There are 32 consonant sounds, and Ukrainian textbooks have their own poem for these: *Приголосні деренчать, і тихенько шелестять* — consonants rattle and quietly rustle.
 
 :::quiz
 title: "Звук чи літера?"
@@ -171,67 +179,90 @@ title: "Звук чи літера?"
 - q: "Скільки літер в абетці?"
   o: ["38", "33", "32"]
   a: 1
-- q: "Скільки звуків в українській мові?"
-  o: ["33", "32", "38"]
+- q: "Скільки звуків?"
+  o: ["33", "10", "38"]
   a: 2
-- q: "Голосні звуки утворюються за допомогою..."
-  o: ["голосу", "шуму", "голосу і шуму"]
+- q: "Голосні — це звуки, які утворюються за допомогою..."
+  o: ["голосу", "шуму", "тиші"]
   a: 0
-- q: "Приголосні звуки утворюються за допомогою..."
-  o: ["голосу і шуму", "тільки голосу", "тільки літер"]
-  a: 0
+- q: "Приголосних звуків в українській мові..."
+  o: ["6", "32", "33"]
+  a: 1
 :::
 
 ## Перші слова (First Words)
 
-Some Cyrillic letters look identical to Latin ones — and, helpfully, a few of them sound similar too. Meet your first friendly letters: **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words right now.
+### Familiar Faces
 
-Look at the word **мама** (mother). You already know how to read it — М sounds like "m," А sounds like "a" in "father." Now try **тато** (father). And **кома** (comma), **атом** (atom), **мак** (poppy), **око** (eye). You are reading Ukrainian.
+Some Cyrillic letters look exactly like Latin letters and sound similar too. These are your friends: **А**, **О**, **К**, **М**, **Т**. Because they are so familiar, you can start reading real Ukrainian words right now.
 
-One small note: Ukrainian **Т** is dental — the tongue touches the teeth, not the gum ridge behind them. And both **К** and **Т** are unaspirated — no puff of air follows them, unlike in English "top" or "kit." Close enough for now; your ear will adjust naturally.
+Look at **мама** (mother). You already know how to read it — every letter is familiar. Now try **тато** (father). Same thing — every letter maps to a sound you recognize. Here are more words built entirely from friendly letters:
 
-### False friends — the biggest trap
+- **кома** (comma)
+- **атом** (atom)
+- **мак** (poppy)
+- **око** (eye)
 
-Now for the dangerous letters. These Cyrillic letters look like Latin ones but sound completely different:
+One small note: Ukrainian **Т** is dental — your tongue touches the back of your upper teeth, not the gum ridge as in English. And **К** and **Т** have no puff of air after them. Close enough for now — these differences become natural with practice.
 
-| Letter | Sounds like | NOT like |
+### False Friends — The Biggest Trap
+
+Now for the letters that will trip you up. These Cyrillic letters look like Latin letters but make completely different sounds:
+
+| Letter | Looks like | Actually sounds like |
 |---|---|---|
-| **В** | "v" in "van" | not "b" |
-| **Н** | "n" in "net" | not "h" |
-| **Р** | rolled "r" (like in Spanish) | not "p" |
-| **С** | "s" in "sun" | not "c" or "k" |
-| **У** | "oo" in "food" | not "y" |
-| **Х** | "ch" in Scottish "loch" | not "x" |
+| **В** | B | "v" as in "very" |
+| **Н** | H | "n" as in "no" |
+| **Р** | P | a rolled "r" (like in Spanish) |
+| **С** | C | "s" as in "sun" |
+| **У** | Y | "oo" as in "moon" |
+| **Х** | X | like "ch" in Scottish "loch" |
 
-Practice reading with false friends: **вода** (water), **рука** (hand), **сон** (dream), **ніс** (nose), **хата** (house). Read each letter for its Ukrainian sound, not its English look.
+These false friends are the single biggest source of confusion for English speakers. When you see **В**, your brain screams "B!" — but it is "v." When you see **Р**, everything in you says "P!" — but it is a rolled "r."
+
+Practice reading with these tricky letters:
+
+- **вода** (water) — not "boda"
+- **рука** (hand) — not "pyka"
+- **сон** (dream) — not "con"
+- **ніс** (nose) — the **Н** is "n," not "h"
+- **хата** (house) — **Х** is that "ch" in "loch"
 
 :::match-up
 title: "Match false friend letters to their real sounds"
 ---
 - left: "В"
-  right: "sounds like [в], not «b»"
+  right: "sounds like «в», not «b»"
 - left: "Н"
-  right: "sounds like [н], not «h»"
+  right: "sounds like «н», not «h»"
 - left: "Р"
-  right: "sounds like [р] (rolled), not «p»"
+  right: "sounds like «р» (rolled), not «p»"
 - left: "С"
-  right: "sounds like [с], not «c/k»"
+  right: "sounds like «с», not «c/k»"
 - left: "У"
-  right: "sounds like [у] (oo), not «y»"
+  right: "sounds like «у» (oo), not «y»"
 - left: "Х"
-  right: "sounds like [х] (loch), not «x»"
+  right: "sounds like «х» (loch), not «x»"
 :::
 
-### New shapes
+### New Shapes
 
-Some Ukrainian letters have no Latin equivalent at all. These are entirely new shapes: **Б**, **Г**, **Ґ**, **Д**, **Ж**, **З**, **И**, **Й**, **Л**, **П**, **Ф**, **Ц**, **Ч**, **Ш**, **Щ**. You will meet them gradually through words: **банк** (bank), **дім** (house), **зима** (winter), **книга** (book), **школа** (school).
+Finally, there are letters with no Latin equivalent at all. These are completely new shapes: **Б**, **Г**, **Ґ**, **Д**, **Ж**, **З**, **И**, **Й**, **Л**, **П**, **Ф**, **Ц**, **Ч**, **Ш**, **Щ**, **Ь**.
 
-One letter deserves special mention: **Щ** always makes two sounds together — "шч." And the soft sign **Ь** has no sound of its own — it softens the consonant before it, like a silent instruction to the tongue.
+You will learn them through words:
 
-Finally, four special letters: **Ї** always represents two sounds and is unique to Ukrainian — no other Slavic language has it. The letters **Я**, **Ю**, and **Є** can either represent two sounds or soften a preceding consonant. Their full story unfolds in Module 2 — for now, simply recognize them when you see them.
+- **банк** (bank) — **Б** sounds like "b"
+- **дім** (house, home) — **Д** sounds like "d"
+- **зима** (winter) — **З** sounds like "z"
+- **книга** (book) — **Г** sounds like "h" in "hello"
+- **школа** (school) — **Ш** sounds like "sh"
+
+Two special characters to notice: **Щ** always makes two sounds together — "shch," like the end of "fresh cheese" run together. And **Ь** (the soft sign) makes no sound at all — it softens the consonant before it.
+
+One more: **Ї** always represents two sounds — "yi." It is unique to Ukrainian and exists in no other Slavic language. The letters **Я**, **Ю**, and **Є** can also represent two sounds or soften a consonant — full exploration in Module 2. For now, just recognize them when you see them.
 
 :::group-sort
-title: "Classify letters: Голосні чи Приголосні?"
+title: "Голосні чи приголосні?"
 ---
 groups:
   - name: "Голосні"
@@ -244,21 +275,39 @@ groups:
 
 Time for your first Ukrainian conversation. Two friends meet on the street:
 
-> — **Привіт!**
-> — **Привіт!** **Як справи?**
-> — **Добре.** А у **тебе?**
-> — **Чудово!**
+> **Оленка:** Привіт! Як справи?
+> **Тарас:** Добре, дякую! А у тебе?
+> **Оленка:** Чудово!
 
-**Привіт** (hi) is the informal greeting — use it with friends, family, classmates, anyone you are on familiar terms with. **Як справи?** (how are you?) is the standard follow-up. The answers:
+That is a complete, natural exchange. Here is what each piece means:
 
-- **Добре.** — Fine. Good.
-- **Чудово!** — Great! Wonderful!
-- **Нормально.** — Okay. Alright.
+- **Привіт!** (Hi!) — informal, for friends, family, and peers. This is your default greeting with anyone you are on friendly terms with.
+- **Як справи?** (How are you? — literally "how are things?")
+- **Добре.** (Fine. Good.)
+- **Чудово.** (Great. Wonderful.)
+- **Нормально.** (Okay. Normal.) — the honest answer when things are just alright.
+- **А у тебе?** (And you?)
+- **Дякую!** (Thanks!)
 
-To bounce the question back, say **А у тебе?** (And you?).
+:::tip
+Ukrainian has gendered forms. A woman says **Рада тебе бачити!** (Glad to see you!) while a man says **Радий тебе бачити!** The ending changes: **рада** (feminine) vs. **радий** (masculine). This is your first glimpse of grammatical gender in Ukrainian — it becomes a major topic starting in Module 8.
+:::
+
+### Reading Привіт Letter by Letter
+
+Now look at **Привіт** more closely. This single word contains letters from every group you just learned:
+
+- **П** — new shape (sounds like "p")
+- **р** — false friend! (rolled "r," not "p")
+- **и** — new vowel (sounds roughly like the "i" in "bit," but further back)
+- **в** — false friend! ("v," not "b")
+- **і** — vowel (like "ee" in "see")
+- **т** — familiar (like "t," but dental)
+
+Blend them together: При-віт! Two syllables. You just read your first Ukrainian word from scratch.
 
 :::fill-in
-title: "Complete the greeting"
+title: "Привіт! Як справи?"
 ---
 - sentence: "— ___! Як справи?"
   answer: "Привіт"
@@ -266,65 +315,66 @@ title: "Complete the greeting"
   answer: "Добре"
 - sentence: "— ___!"
   answer: "Чудово"
-- sentence: "— Привіт! Як ___?"
-  answer: "справи"
+- sentence: "— Добре, дякую! А у ___?"
+  answer: "тебе"
 :::
-
-### Gender in greetings — a first glimpse
-
-Ukrainian has gendered forms. When expressing gladness at seeing someone, a woman says **Рада тебе бачити!** and a man says **Радий тебе бачити!** (Glad to see you!). The difference is in the ending: **рада** (feminine) versus **радий** (masculine). This is your very first encounter with grammatical gender in Ukrainian — it will become a major topic starting in Module 8.
-
-### Reading «Привіт» letter by letter
-
-Now look at **Привіт** through your new knowledge. Break it into syllables: **При-віт!** This single word uses letters from all three groups you just learned:
-
-- **П** — a new shape (not in Latin)
-- **р** — a false friend (not "p"!)
-- **и** — a new vowel (between "i" and "y")
-- **в** — a false friend (not "b"!)
-- **і** — a vowel (like "ee" in "see")
-- **т** — a familiar letter
-
-You can read the most important word in any language — the greeting.
 
 ## Читаємо (Reading Practice)
 
-Imagine walking through a Ukrainian city. Signs surround you, and now you can read them. Sound out each letter, blend into syllables, read the whole word:
+### Signs in Ukraine
 
-| Sign | Meaning |
-|---|---|
-| **Аптека** | pharmacy |
-| **Банк** | bank |
-| **Кафе** | cafe |
-| **Метро** | metro |
-| **Пошта** | post office |
-| **Школа** | school |
-| **Зупинка** | bus stop |
+Imagine you just arrived in Ukraine. You step off the train and see signs everywhere. You can already read many of them:
 
-Notice how several of these words feel familiar — **банк**, **кафе**, **метро** are international words. Others are purely Ukrainian: **зупинка** (bus stop) comes from the verb meaning "to stop," and **пошта** (post office) has deep roots in Ukrainian.
+- **Аптека** (pharmacy)
+- **Банк** (bank)
+- **Кафе** (cafe)
+- **Метро** (metro)
+- **Пошта** (post office)
+- **Школа** (school)
+- **Зупинка** (bus stop)
 
-### Ukrainian city names
+Sound out each word letter by letter. Blend the sounds into syllables, then into the full word. **Аптека**: А-пте-ка. **Зупинка**: Зу-пин-ка. Every letter has one job — Ukrainian spelling is far more consistent than English.
 
-Now try reading the names of real Ukrainian cities: **Київ** (Kyiv), **Львів** (Lviv), **Одеса** (Odesa), **Харків** (Kharkiv), **Дніпро** (Dnipro), **Полтава** (Poltava). Each name is a reading exercise — sound out every letter using what you know. **Київ** has a false friend **К** (but here it sounds the same as English "k"), a new vowel **и**, the tricky **ї** (two sounds!), and a false friend **в** (sounds like "v").
+### Ukrainian City Names
 
-### First sentences with «Це»
+Now try reading the names of real Ukrainian cities:
 
-The word **Це** (this is) unlocks your first Ukrainian sentences:
+- **Київ** (Kyiv) — the capital
+- **Львів** (Lviv) — the cultural heart of western Ukraine
+- **Одеса** (Odesa) — the Black Sea port city
+- **Харків** (Kharkiv) — the second-largest city
+- **Дніпро** (Dnipro) — named after the great river
+- **Полтава** (Poltava) — a historic city in central Ukraine
 
-> **Це мама.** — This is mom.
+Notice how **Київ** and **Львів** both end in **-ів**. That pattern is everywhere in Ukrainian place names.
+
+### First Sentences with Це
+
+You are now ready for your first Ukrainian sentences. The word **Це** (this is) lets you identify anything:
+
+> **Це мама.** — This is mother.
+
 > **Це банк.** — This is a bank.
+
 > **Це Київ.** — This is Kyiv.
 
-And your first questions:
+And you can ask questions:
 
 > **Що це?** — What is this?
+
 > **Хто це?** — Who is this?
 
-**Що** (what) and **Хто** (who) — two question words that open the door to asking about the world around you.
+**Що** (what) is for things. **Хто** (who) is for people. Simple, powerful, and you will use these two question words constantly.
 
-:::tip
-**Що** versus **Хто**: Use **Хто** for people and **Що** for everything else. **Хто це?** — **Це мама.** **Що це?** — **Це школа.**
-:::
+> **Що це? Це школа.** — What is this? This is a school.
+
+> **Хто це? Це тато.** — Who is this? This is father.
+
+> **Що це? Це книга.** — What is this? This is a book.
+
+> **Що це? Це вода.** — What is this? This is water.
+
+
 
 
 ### Відео — Video
@@ -336,22 +386,17 @@ And your first questions:
 
 ## Підсумок — Summary
 
-You have taken your first steps into Ukrainian. Let us check what you know.
+You now know the foundation of Ukrainian:
 
-The Ukrainian alphabet has 33 **літери** (letters), but the language has 38 **звуки** (sounds). You hear and pronounce **звуки**; you see and write **літери**. Sounds split into two families: **голосні** (vowels) — 6 sounds, 10 letters — made with voice alone, and **приголосні** (consonants) — 32 sounds — made with voice and noise or noise alone.
+**Sounds and letters.** Ukrainian has 33 літери and 38 звуків. Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери. Голосні are vowel sounds — 6 sounds, 10 letters. Приголосні are consonant sounds — 32 of them.
 
-You learned to read your first words using familiar letters (**мама**, **тато**, **мак**, **око**), watched out for false friend letters (**В**, **Н**, **Р**, **С**, **У**, **Х**), and glimpsed the new shapes unique to Cyrillic. You said your first greeting — **Привіт! Як справи?** — and learned to respond: **Добре**, **Чудово**, **Нормально**. You read signs from a Ukrainian street, city names on the map, and built your first sentences with **Це**.
+**Three groups of letters.** Familiar friends (А, О, К, М, Т) let you read immediately. False friends (В, Н, Р, С, У, Х) look like Latin letters but sound completely different — this is the trap to watch for. New shapes (Б, Д, Ж, Ш, Щ, and more) have no Latin equivalent.
 
-**Self-check:**
+**Your first greeting.** Привіт! Як справи? — Добре! Чудово! Нормально! You can greet someone, ask how they are, and respond.
 
-- How many letters does the Ukrainian alphabet have? (33)
-- How many sounds? (38)
-- Why are these numbers different?
-- What are **голосні**? What are **приголосні**?
-- What does **Привіт** mean?
-- How do you respond to **Як справи?**
+**Your first sentences.** Це мама. Це школа. Що це? Хто це? — You can identify things and ask about them.
 
-In Module 2, you will explore the full alphabet in depth — every letter, every sound, and the special powers of **Я**, **Ю**, **Є**, and **Ї**.
+In Module 2, you will discover what makes Я, Ю, Є, and Ї special — and read your first short texts in Ukrainian.
 
 
 <!-- TAB:Словник -->
@@ -362,41 +407,50 @@ In Module 2, you will explore the full alphabet in depth — every letter, every
 |-------|----------|-------------|-----|
 | **звук** | sound | ім. | ч. |
 | **літера** | letter | ім. | ж. |
-| **голосний** | vowel | прикм. |  |
-| **приголосний** | consonant | прикм. |  |
+| **голосний** | vowel (sound) | прикм. |  |
+| **приголосний** | consonant (sound) | прикм. |  |
 | **абетка** | alphabet | ім. | ж. |
 | **мама** | mother | ім. | ж. |
 | **тато** | father | ім. | ч. |
+| **кома** | comma | ім. | ж. |
+| **атом** | atom | ім. | ч. |
+| **мак** | poppy | ім. | ч. |
+| **око** | eye | ім. | с. |
+| **тома** | volume (of a book) |  |  |
 | **вода** | water | ім. | ж. |
 | **рука** | hand | ім. | ж. |
+| **сон** | dream | ім. | ч. |
+| **ніс** | nose | дієсл. |  |
+| **хата** | house | ім. | ж. |
+| **банк** | bank | ім. | ч. |
+| **дім** | house, home | ім. | ч. |
+| **зима** | winter | ім. | ж. |
 | **книга** | book | ім. | ж. |
 | **школа** | school | ім. | ж. |
 | **привіт** | hi (informal) | ім. | ч. |
 | **добре** | fine, good | присл. |  |
 | **чудово** | great, wonderful | присл. |  |
-| **нормально** | okay, alright | присл. |  |
-| **банк** | bank | ім. | ч. |
+| **нормально** | okay, normal | присл. |  |
+| **дякую** | thanks | дієсл. |  |
+| **рада** | glad (feminine) | ім. | ч. |
+| **радий** | glad (masculine) | прикм. |  |
 | **аптека** | pharmacy | ім. | ж. |
+| **кафе** | cafe | ім. | с. |
 | **метро** | metro | ім. | с. |
 | **пошта** | post office | ім. | ж. |
 | **зупинка** | bus stop | ім. | ж. |
-| **кафе** | cafe | ім. | с. |
-| **кома** | comma | ім. | ж. |
-| **атом** | atom | ім. | ч. |
-| **мак** | poppy | ім. | ч. |
-| **око** | eye | ім. | с. |
-| **сон** | dream | ім. | ч. |
-| **ніс** | nose | дієсл. |  |
-| **хата** | house | ім. | ж. |
-| **дім** | house, home | ім. | ч. |
-| **зима** | winter | ім. | ж. |
+| **Київ** | Kyiv (the capital) | ім. |  |
+| **Львів** | Lviv |  |  |
+| **Одеса** | Odesa |  |  |
+| **Харків** | Kharkiv |  |  |
+| **Дніпро** | Dnipro |  |  |
+| **Полтава** | Poltava |  |  |
 | **це** | this is | ім. | с. |
 | **що** | what | спол. |  |
 | **хто** | who | ім. | ч. |
 | **слово** | word | ім. | с. |
 | **речення** | sentence | ім. | с. |
-| **рада** | glad (feminine) | ім. | ч. |
-| **радий** | glad (masculine) | прикм. |  |
+| **тебе** | you (accusative/genitive) | ім. |  |
 
 ### Вирази
 
@@ -404,11 +458,10 @@ In Module 2, you will explore the full alphabet in depth — every letter, every
 |-------|----------|
 | **Як справи?** | How are you? |
 | **А у тебе?** | And you? |
-| **Рада тебе бачити!** | Glad to see you! (said by a woman) |
-| **Радий тебе бачити!** | Glad to see you! (said by a man) |
+| **Рада тебе бачити!** | Glad to see you! (feminine) |
+| **Радий тебе бачити!** | Glad to see you! (masculine) |
 | **Що це?** | What is this? |
 | **Хто це?** | Who is this? |
-| **Це мама.** | This is mom. |
 
 
 <!-- TAB:Зошит -->
@@ -535,6 +588,17 @@ Base your verdict on the **severity of findings** — the pipeline calculates th
 | **REVISE** | Has major findings but no criticals — fixable without rewrite |
 | **REJECT** | Has any critical finding — fundamental problems requiring rewrite |
 
+### Step 7: Fix it yourself (REVISE only)
+
+If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find/replace pairs. The pipeline applies these deterministically — no LLM regeneration, no rewriting from scratch.
+
+Rules for fixes:
+- Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
+- The `find` string must be an EXACT substring of the module content — copy-paste it
+- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
+- For word count issues: add content as a new `insert_after:` entry instead of find/replace
+
 ---
 
 ## Output Format
@@ -557,13 +621,22 @@ Base your verdict on the **severity of findings** — the pipeline calculates th
 
 ## Verdict: PASS / REVISE / REJECT
 [justification — reference both score gate and severity gate]
+
+<fixes>
+- find: "exact text from module"
+  replace: "corrected text"
+- find: "another exact problem"
+  replace: "the fix"
+</fixes>
 ```
+
+**The `<fixes>` block is REQUIRED for REVISE verdicts.** Without it, the pipeline cannot apply your fixes. For PASS verdicts, omit the `<fixes>` block. For REJECT verdicts, the module needs a full rebuild — `<fixes>` is optional.
 
 
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 113 words | Not found: 11 words
+Verified: 117 words | Not found: 15 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Большакова — NOT IN VESUM
@@ -572,62 +645,16 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Львів — NOT IN VESUM
   ✗ Одеса — NOT IN VESUM
   ✗ Полтава — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
   ✗ Харків — NOT IN VESUM
   ✗ дієсл — NOT IN VESUM
+  ✗ пин — NOT IN VESUM
   ✗ прикм — NOT IN VESUM
   ✗ присл — NOT IN VESUM
+  ✗ пте — NOT IN VESUM
   ✗ спол — NOT IN VESUM
+  ✗ тома — NOT IN VESUM
 
-Sample of verified words (all confirmed to exist in Ukrainian):
-  ✓ Аптека → lemma: аптека, POS: noun
-  ✓ Банк → lemma: банк, POS: noun
-  ✓ Вираз → lemma: вираз, POS: noun
-  ✓ Вирази → lemma: вираз, POS: noun
-  ✓ Відео → lemma: відео, POS: noun
-  ✓ Голосні → lemma: голосний, POS: adj
-  ✓ Джерела → lemma: джерело, POS: noun
-  ✓ Добре → lemma: добре, POS: adv
-  ✓ Заболотний → lemma: заболотний, POS: adj
-  ✓ Звук → lemma: звук, POS: noun
-  ✓ Звуки → lemma: звук, POS: noun
-  ✓ Зошит → lemma: зошит, POS: noun
-  ✓ Зупинка → lemma: зупинка, POS: noun
-  ✓ Кафе → lemma: кафе, POS: noun
-  ✓ Київ → lemma: кий, POS: noun
-  ✓ Метро → lemma: метро, POS: noun
-  ✓ Нормально → lemma: нормально, POS: adv
-  ✓ Обов'язкові → lemma: обов'язковий, POS: adj
-  ✓ Переклад → lemma: переклад, POS: noun
-  ✓ Перші → lemma: перший, POS: adj
-  ✓ Повний → lemma: повний, POS: adj
-  ✓ Пошта → lemma: пошта, POS: noun
-  ✓ При → lemma: перти, POS: verb
-  ✓ Привіт → lemma: привіт, POS: noun
-  ✓ Приголосні → lemma: приголосний, POS: adj
-  ✓ Підсумок → lemma: підсумок, POS: noun
-  ✓ Рада → lemma: рад, POS: noun
-  ✓ Радий → lemma: радий, POS: adj
-  ✓ Ресурси → lemma: ресурс, POS: noun
-  ✓ Розширені → lemma: розширений, POS: adj
-  ✓ Рід → lemma: рід, POS: noun
-  ✓ Скільки → lemma: скільки, POS: adv
-  ✓ Словник → lemma: словник, POS: noun
-  ✓ Слово → lemma: слово, POS: noun
-  ✓ Урок → lemma: урка, POS: noun
-  ✓ Хто → lemma: хто, POS: noun
-  ✓ Частина → lemma: частина, POS: noun
-  ✓ Читаємо → lemma: читати, POS: verb
-  ✓ Чудово → lemma: чудово, POS: adv
-  ✓ Школа → lemma: школа, POS: noun
-  ✓ абетка → lemma: абетка, POS: noun
-  ✓ абетці → lemma: абетка, POS: noun
-  ✓ аптека → lemma: аптека, POS: noun
-  ✓ атом → lemma: атом, POS: noun
-  ✓ банк → lemma: банк, POS: noun
-  ✓ бачимо → lemma: бачити, POS: verb
-  ✓ бачити → lemma: бачити, POS: verb
-  ✓ буквар → lemma: буквар, POS: noun
-  ✓ вимовляємо → lemma: вимовляти, POS: verb
-  ✓ вода → lemma: вода, POS: noun
+All 117 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
