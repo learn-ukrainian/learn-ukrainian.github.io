@@ -1,0 +1,13 @@
+{
+  "attempt": 3,
+  "passed": false,
+  "errors": [
+    {
+      "check": "VOCABULARY",
+      "severity": "ERROR",
+      "message": "Missing 1/1 required vocab: All vocabulary from M01-M06 is recycled — no new required words"
+    }
+  ],
+  "warnings": [],
+  "timestamp": "2026-03-23T11:46:41.746463+00:00"
+}

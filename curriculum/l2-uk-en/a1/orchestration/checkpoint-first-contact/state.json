@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-first-contact",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-23T11:40:10.220969+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-23T11:40:21.289799+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-23T11:41:37.152084+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-23T11:46:41.747743+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-23T11:46:41.752840+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-23T11:46:41.753435+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-23T11:46:42.212074+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-23T11:46:42.255443+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-23T11:51:43.593465+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-23T11:51:45.275765+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-23T11:51:45.324024+00:00"
+    }
+  }
+}

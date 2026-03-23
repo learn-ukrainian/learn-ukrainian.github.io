@@ -25,3 +25,6 @@
 {"slug": "my-family", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T11:11:34.750461+00:00"}
 {"slug": "my-family", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T11:25:10.907384+00:00"}
 {"slug": "my-family", "error_type": "PASS", "attempt": 1, "model": "claude", "success": true, "timestamp": "2026-03-23T11:38:24.379855+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-23T11:42:53.128414+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-23T11:44:19.968487+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-23T11:46:41.746738+00:00"}
