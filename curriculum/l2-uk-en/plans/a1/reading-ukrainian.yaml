@@ -2,9 +2,9 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: '1.0'
+version: '1.1'
 title: Reading Ukrainian
-subtitle: "From letters to words to sentences"
+subtitle: From letters to words to sentences
 focus: phonetics
 pedagogy: PPP
 phase: A1.1 [Sounds, Letters, and First Contact]
@@ -15,73 +15,48 @@ objectives:
 - Read multisyllable words confidently (not letter by letter)
 - Understand how the 10 vowel letters map to 6 vowel sounds
 content_outline:
-- section: "Склади (Syllables)"
+- section: Склади (Syllables)
   words: 250
   points:
-  - "Большакова Grade 1 p.25: 'У слові стільки складів, скільки голосних звуків.'
-    Count the vowels, count the syllables. This rule never breaks.
-    ма-ма (2 vowels = 2 syllables), мо-ло-ко (3 vowels = 3 syllables),
-    банк (1 vowel = 1 syllable)."
-  - "How to read a new word:
-    1. Find the vowels (they're the syllable cores)
-    2. Split at syllable boundaries (consonants prefer starting new syllables)
-    3. Sound out each syllable
-    4. Blend into the full word at natural speed
-    Practice: а-пте-ка, у-ні-вер-си-тет, шо-ко-лад.
-    Note: Ukrainian phonetic syllable division (складоподіл) follows the
-    open-syllable principle — consonants prefer starting new syllables."
-  - "Following Большакова p.29 звуковий аналіз method: identify vowels,
-    divide into syllables, then read. This is how Ukrainian children learn."
-- section: "Голосні літери (Vowel Letters)"
+  - 'Большакова Grade 1 p.25: ''У слові стільки складів, скільки голосних звуків.'' Count the vowels, count the syllables.
+    This rule never breaks. ма-ма (2 vowels = 2 syllables), мо-ло-ко (3 vowels = 3 syllables), банк (1 vowel = 1 syllable).'
+  - 'How to read a new word: 1. Find the vowels (they''re the syllable cores) 2. Split at syllable boundaries (consonants
+    prefer starting new syllables) 3. Sound out each syllable 4. Blend into the full word at natural speed Practice: а-пте-ка,
+    у-ні-вер-си-тет, шо-ко-лад. Note: Ukrainian phonetic syllable division (складоподіл) follows the open-syllable principle
+    — consonants prefer starting new syllables.'
+  - 'Following Большакова p.29 звуковий аналіз method: identify vowels, divide into syllables, then read. This is how Ukrainian
+    children learn.'
+- section: Голосні літери (Vowel Letters)
   words: 300
   points:
-  - "Review from M01: 6 sounds, 10 letters. Now learn all 10 individually.
-    Simple vowels (one sound each): А [а], О [о], У [у], Е [е], И [и], І [і].
-    Each makes ONE consistent sound — no surprises."
-  - "Iotated vowels (two sounds or softening):
-    Я = [йа] at word start (яблуко) or after vowel (моя).
-    After consonant: softens it + [а] (пісня — Н is softened).
-    Ю = [йу] or softening + [у]. Є = [йе] or softening + [е].
-    Ї = ALWAYS [йі] — never softens. Only at word start, after vowel,
-    or after apostrophe. Unique to Ukrainian."
-  - "Critical minimal pairs:
-    И vs І: кит (whale) vs кіт (cat), дим (smoke) vs дім (house).
-    Listen to Anna's pronunciation videos for each — the difference
-    is subtle but changes meaning."
-- section: "Читання слів (Reading Words)"
+  - 'Review from M01: 6 sounds, 10 letters. Now learn all 10 individually. Simple vowels (one sound each): А [а], О [о], У
+    [у], Е [е], И [и], І [і]. Each makes ONE consistent sound — no surprises.'
+  - 'Iotated vowels (two sounds or softening): Я = [йа] at word start (яблуко) or after vowel (моя). After consonant: softens
+    it + [а] (пісня — Н is softened). Ю = [йу] or softening + [у]. Є = [йе] or softening + [е]. Ї = ALWAYS [йі] — never softens.
+    Only at word start, after vowel, or after apostrophe. Unique to Ukrainian.'
+  - 'Critical minimal pairs: И vs І: кит (whale) vs кіт (cat), дим (smoke) vs дім (house). Listen to Anna''s pronunciation
+    videos for each — the difference is subtle but changes meaning.'
+- section: Читання слів (Reading Words)
   words: 300
   points:
-  - "Apply M01 letter knowledge to read real words fluently.
-    Strategy: don't read letter-by-letter. Read syllable-by-syllable.
-    Start with the vowels (find them first), then build outward.
-    Example: книга — find vowels И, А → кни-га → read."
-  - "Common word patterns for reading practice:
-    CVCV: мама, тато, каша, вода, рука, хата, коза, нога
-    CVCCV: школа, книга, банда, парта
-    CVC: дім, сон, ліс, дуб, хліб, банк
-    The more patterns you see, the faster you read."
-  - "Special letter combinations to watch for:
-    Щ is always [шч] — що, ще, щастя.
-    Ь has no sound — it softens: день, сіль, кінь.
-    ' (apostrophe) separates: сім'я, м'ясо, п'ять.
-    These will be explored fully in M03."
-- section: "Читаємо разом (Reading Together)"
+  - 'Apply M01 letter knowledge to read real words fluently. Strategy: don''t read letter-by-letter. Read syllable-by-syllable.
+    Start with the vowels (find them first), then build outward. Example: книга — find vowels И, А → кни-га → read.'
+  - 'Common word patterns for reading practice: CVCV: мама, тато, каша, вода, рука, хата, коза, нога CVCCV: школа, книга,
+    банда, парта CVC: дім, сон, ліс, дуб, хліб, банк The more patterns you see, the faster you read.'
+  - 'Special letter combinations to watch for: Щ is always [шч] — що, ще, щастя. Ь has no sound — it softens: день, сіль,
+    кінь. '' (apostrophe) separates: сім''я, м''ясо, п''ять. These will be explored fully in M03.'
+- section: Читаємо разом (Reading Together)
   words: 200
   points:
-  - "Progressive reading practice — start simple, build up:
-    Level 1 (2 syllables): мама, тато, вода, рука, хата, каша
-    Level 2 (3 syllables): аптека, молоко, людина, вулиця
-    Level 3 (4+ syllables): університет, бібліотека, фотографія"
-  - "Reading a simple text (all Це + noun, no verbs):
-    Це Київ. Це столиця. Тут аптека і банк. Там школа.
-    Що це? Це кафе. А це пошта."
-- section: "Підсумок — Summary"
+  - 'Progressive reading practice — start simple, build up: Level 1 (2 syllables): мама, тато, вода, рука, хата, каша Level
+    2 (3 syllables): аптека, молоко, людина, вулиця Level 3 (4+ syllables): університет, бібліотека, фотографія'
+  - 'Reading a simple text (all Це + noun, no verbs): Це Київ. Це столиця. Тут аптека і банк. Там школа. Що це? Це кафе. А
+    це пошта.'
+- section: Підсумок — Summary
   words: 150
   points:
-  - "Self-check: How do you count syllables in a Ukrainian word?
-    What are the 6 vowel sounds? Name the 4 iotated vowel letters.
-    What does Ь do? What does the apostrophe do?
-    Read this word: бібліотека — how many syllables?"
+  - 'Self-check: How do you count syllables in a Ukrainian word? What are the 6 vowel sounds? Name the 4 iotated vowel letters.
+    What does Ь do? What does the apostrophe do? Read this word: бібліотека — how many syllables?'
 vocabulary_hints:
   required:
   - яблуко (apple) — Я at word start = [йа]
@@ -98,34 +73,34 @@ vocabulary_hints:
   - шоколад (chocolate) — Ш + О + К combination
 activity_hints:
 - type: fill-in
-  focus: "Divide words into syllables: мо-ло-ко, ап-те-ка"
+  focus: 'Divide words into syllables: мо-ло-ко, ап-те-ка'
   items: 8
 - type: quiz
-  focus: "How many syllables? Count the vowels."
+  focus: How many syllables? Count the vowels.
   items: 8
 - type: match-up
-  focus: "Match iotated vowels to their sound components: Я=[й]+[а]"
+  focus: 'Match iotated vowels to their sound components: Я=[й]+[а]'
   items: 4
 - type: quiz
-  focus: "Read the word and choose its meaning"
+  focus: Read the word and choose its meaning
   items: 6
 connects_to:
 - a1-003 (Special Signs)
 prerequisites:
 - a1-001 (Sounds, Letters, and Hello)
 grammar:
-- "Syllable rule: count vowels = count syllables (складоподіл)"
-- "10 vowel letters → 6 vowel sounds mapping"
-- "Iotated vowels (Я, Ю, Є as two sounds or softening; Ї always [йі])"
-- "Reading fluency: syllable-by-syllable word reading"
-- "Ь, apostrophe, voiced/voiceless (preview — detailed in M03)"
+- 'Syllable rule: count vowels = count syllables (складоподіл)'
+- 10 vowel letters → 6 vowel sounds mapping
+- Iotated vowels (Я, Ю, Є as two sounds or softening; Ї always [йі])
+- 'Reading fluency: syllable-by-syllable word reading'
+- Ь, apostrophe, voiced/voiceless (preview — detailed in M03)
 register: розмовний
 references:
-- title: "Большакова Grade 1 буквар, p.25"
-  notes: "Syllable rule: 'У слові стільки складів, скільки голосних звуків.'"
-- title: "Большакова Grade 1 буквар, p.29"
-  notes: "Звуковий аналіз слова method — how to analyze word sounds."
-- title: "Захарійчук Grade 1 (NUS 2025), p.13-15"
-  notes: "Sound notation: [•] for vowels, [–] for consonants, [=] for soft."
+- title: Большакова Grade 1 буквар, p.25
+  notes: 'Syllable rule: ''У слові стільки складів, скільки голосних звуків.'''
+- title: Большакова Grade 1 буквар, p.29
+  notes: Звуковий аналіз слова method — how to analyze word sounds.
+- title: Захарійчук Grade 1 (NUS 2025), p.13-15
+  notes: 'Sound notation: [•] for vowels, [–] for consonants, [=] for soft.'
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
