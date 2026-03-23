@@ -581,6 +581,87 @@ def e2u_reverse(ukrainian_word: str) -> str:
     return results[0].get("headword", "")
 
 
+# ══════════════════════════════════════════════════════════════════
+# goroh (goroh.pp.ua) — Ukrainian translation + stress + frequency
+# ══════════════════════════════════════════════════════════════════
+
+GOROH_BASE = "https://goroh.pp.ua"
+
+
+def goroh_translate(ukrainian_word: str) -> list[str]:
+    """Look up Ukrainian word → English translations via goroh.pp.ua.
+
+    Goroh has multi-language translations. We extract the English section.
+    Returns list of English translations (e.g., ["family", "household", "kin"]).
+    """
+    import html as _html
+    from urllib.parse import quote
+
+    try:
+        r = _get(f"{GOROH_BASE}/Переклад/{quote(ukrainian_word)}", timeout=15)
+        if r.status_code != 200:
+            return []
+
+        # Decode HTML entities (Англійська is encoded as &#x410;...)
+        text = _html.unescape(r.text)
+
+        # Find English section
+        idx = text.find("Англійська")
+        if idx < 0:
+            return []
+
+        section = text[idx:idx + 2000]
+        # Extract translation links
+        import re
+        trans = re.findall(
+            r'<a[^>]*href="/Переклад/[^"]*"[^>]*>([a-zA-Z][a-zA-Z\s]{1,25})</a>',
+            section,
+        )
+        # Deduplicate
+        seen: set[str] = set()
+        result = []
+        for t in trans:
+            t = t.strip()
+            if t.lower() not in seen and len(t) > 1:
+                seen.add(t.lower())
+                result.append(t)
+        return result
+    except Exception:
+        return []
+
+
+# ══════════════════════════════════════════════════════════════════
+# Wiktionary (en.wiktionary.org) — Ukrainian→English via API
+# ══════════════════════════════════════════════════════════════════
+
+def translate_uk_to_en(ukrainian_word: str) -> str:
+    """Translate Ukrainian word to English using all available sources.
+
+    Priority order:
+    1. Wiktionary (cleanest, most common words)
+    2. Горох (broadest Ukrainian coverage)
+    3. e2u reverse (broadest English coverage)
+
+    Returns first successful translation, or empty string.
+    """
+    # 1. Wiktionary
+    result = wiktionary_translate(ukrainian_word)
+    if result:
+        return result
+
+    # 2. Горох
+    translations = goroh_translate(ukrainian_word)
+    if translations:
+        return translations[0]
+
+    # 3. e2u reverse
+    result = e2u_reverse(ukrainian_word)
+    if result:
+        return result
+
+    return ""
+
+
 WIKTIONARY_API = "https://en.wiktionary.org/w/api.php"
 
 
