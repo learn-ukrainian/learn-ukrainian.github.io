@@ -2,7 +2,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: my-family
-version: '1.0'
+version: '1.1'
 title: My Family
 subtitle: "У мене є брат — Showing photos"
 focus: vocabulary
@@ -115,10 +115,15 @@ connects_to:
 prerequisites:
 - a1-005 (Who Am I?)
 grammar:
-- "У мене є / у тебе є (memorized chunks, NOT genitive paradigm)"
-- "Possessive pronouns мій/моя/моє/мої, твій/твоя/твоє (nominative only)"
-- "Gender agreement preview (possessive + noun)"
+- "У мене є / у тебе є / у вас є (memorized chunks for possession)"
+- "Possessive pronouns мій/моя/моє/мої, твій/твоя/твоє — nominative is the focus"
+- "Genitive ALLOWED ONLY as memorized chunks in exercises: у тебе, у мене, у нього, у неї
+  — do NOT teach genitive paradigm, just teach these as fixed phrases"
+- "Gender agreement preview (possessive + noun): мій брат, моя сестра"
 - "Numbers один/одна, два/дві with family members"
+- "Family relationship descriptions: use Це + nominative (Це мій брат),
+  NOT genitive constructions (avoid: мама мого тата). Describe relationships
+  through simple sentences: Мій тато. Його мама — моя бабуся."
 - "Negation: Ні + simple response (NOT У мене немає — deferred to A2)"
 register: розмовний
 references:
