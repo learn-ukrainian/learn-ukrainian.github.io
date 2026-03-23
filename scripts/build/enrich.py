@@ -246,26 +246,24 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
                 "",
                 "### Додаткові слова з уроку — Additional words from the lesson",
                 "",
-                "| Слово | Переклад | Частина мови | Рід |",
-                "|-------|----------|-------------|-----|",
+                "| Слово | Частина мови | Рід |",
+                "|-------|-------------|-----|",
             ])
             for word in single_words:
-                # Translation from fallback dictionary ONLY (deterministic)
-                trans = _find_translation(word)
+                # VESUM only — no live translation (too unreliable for context-dependent words)
                 pos, gender = _vesum_lookup(word)
-                lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
+                lines.append(f"| **{word}** | {pos} | {gender} |")
 
         if expressions:
             lines.extend([
                 "",
                 "### Вирази — Expressions",
                 "",
-                "| Вираз | Переклад |",
-                "|-------|----------|",
+                "| Вираз |",
+                "|-------|",
             ])
             for expr in expressions:
-                trans = _find_translation(expr)
-                lines.append(f"| **{expr}** | {trans} |")
+                lines.append(f"| **{expr}** |")
 
     lines.append("")
     return "\n".join(lines)
