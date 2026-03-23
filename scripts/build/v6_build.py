@@ -781,7 +781,25 @@ def _post_process_content(content_path: Path) -> int:
     # 3. Strip trailing --- separator before content notes
     text = re.sub(r"\n---\s*$", "\n", text)
 
-    # 4. Strip stray single quotes from exercise DSL values
+    # 4. Strip ALL manual stress marks (combining acute U+0301)
+    # The writer sometimes adds them despite being told not to.
+    # The stress annotator adds correct ones later.
+    clean = text.replace("\u0301", "")
+    if clean != text:
+        stress_count = len(text) - len(clean)
+        fixes += 1
+        text = clean
+        _log(f"  🔧 Stripped {stress_count} manual stress marks")
+
+    # 5. Strip writer-generated tab markers and vocab tables
+    # The ENRICH step generates these properly — writer copies are garbage
+    if "<!-- TAB:" in text:
+        tab_pos = text.index("<!-- TAB:")
+        text = text[:tab_pos].rstrip() + "\n"
+        fixes += 1
+        _log("  🔧 Stripped writer-generated tab markers")
+
+    # 6. Strip stray single quotes from exercise DSL values
     # LLMs sometimes produce: q: "'text'" or answer: "'word'"
     stray_quote_pattern = re.compile(
         r'''((?:q|answer|sentence|left|right|statement|name):\s*")'([^"]*)'("?)'''
