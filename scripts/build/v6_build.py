@@ -1429,52 +1429,55 @@ def main():
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
 
-    # Step 8: REVIEW with retry loop
-    # If review fails, inject findings as correction directive and rebuild
-    max_review_retries = 3
+    # Step 8: REVIEW
+    # Strategy:
+    #   score ≥ 8.0 → content is good, accept it (flag severity for human if needed)
+    #   score < 8.0 → content has real problems, retry ONCE with correction directive
     if steps in ("all", "review"):
-        for review_attempt in range(1, max_review_retries + 1):
-            _log(f"\n  📋 Review attempt {review_attempt}/{max_review_retries}")
+        passed, score, review_text = step_review(
+            content_path, args.level, args.module, slug,
+            writer=args.writer,
+        )
+        _save_v6_state(args.level, slug, "review")
 
-            passed, score, review_text = step_review(
-                content_path, args.level, args.module, slug,
-                writer=args.writer,
-            )
-            _save_v6_state(args.level, slug, "review")
+        if passed:
+            _log(f"\n✅ Review PASSED ({score}/10)")
+        elif score >= 8.0:
+            # Content is good (8+) but has a severity issue — accept and flag
+            _log(f"\n⚠️  Review {score}/10 — score gate PASS, severity issue flagged for human")
+            _log("  Content is good. Not rewriting — retries make it worse.")
+        else:
+            # Content has real problems (< 8.0) — retry ONCE
+            _log(f"\n❌ Review {score}/10 — rebuilding once with correction directive")
 
-            if passed:
-                _log(f"\n✅ Review PASSED on attempt {review_attempt} ({score}/10)")
-                break
-
-            if review_attempt >= max_review_retries:
-                _log(f"\n⚠️  Review failed after {max_review_retries} attempts ({score}/10) — flag for human")
-                break
-
-            # Build correction directive from review findings
             correction = _build_review_correction(review_text)
-            _log(f"  🔄 Rebuilding with review correction directive ({len(correction)} chars)...")
-
-            # Save correction for inspection
             orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
             orch_dir.mkdir(parents=True, exist_ok=True)
-            corr_path = orch_dir / f"review-correction-{review_attempt}.md"
-            corr_path.write_text(correction, "utf-8")
+            (orch_dir / "review-correction-1.md").write_text(correction, "utf-8")
 
-            # Re-run WRITE → EXERCISES → ANNOTATE → ENRICH → VERIFY
             content_path = step_write(
                 args.level, args.module, slug, packet_path,
                 writer=args.writer,
                 correction_directive=correction,
                 skeleton=skeleton_text,
             )
-            if not content_path:
-                _log("  ❌ Rebuild failed — writer returned no output")
-                break
+            if content_path:
+                step_exercises(content_path)
+                _post_process_content(content_path)
+                step_enrich(content_path, args.level, slug)
+                step_verify(content_path, args.level, args.module)
 
-            step_exercises(content_path)
-            _post_process_content(content_path)  # Strip artifacts, NOT stress annotation
-            step_enrich(content_path, args.level, slug)
-            step_verify(content_path, args.level, args.module)
+                # Second review
+                passed, score, review_text = step_review(
+                    content_path, args.level, args.module, slug,
+                    writer=args.writer,
+                )
+                _save_v6_state(args.level, slug, "review")
+
+                if passed:
+                    _log(f"\n✅ Review PASSED on retry ({score}/10)")
+                else:
+                    _log(f"\n⚠️  Review {score}/10 after retry — flag for human")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
