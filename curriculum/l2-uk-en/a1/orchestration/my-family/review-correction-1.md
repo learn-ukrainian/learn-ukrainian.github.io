@@ -3,26 +3,24 @@ CRITICAL: Your previous module was reviewed and scored below 8.0/10.
 You must rewrite the module FROM SCRATCH, fixing ALL issues below.
 All original constraints from the writing prompt still apply.
 
-- FIX: [2. Linguistic accuracy] [SEVERITY: major]
-  Location: `У мене́ є (I have) ... У тебе́ є бра́ти чи сестри́?`
-  Issue: Incorrect stress on pronouns after prepositions, and incorrect stress on the nominative plural forms of brother/sister.
-  Fix: Change to `У ме́не є`, `У те́бе є`, and `брати́ чи се́стри`.
-- FIX: [2. Linguistic accuracy] [SEVERITY: major]
-  Location: `Це моя сестра Катя́`
-  Issue: Incorrect stress on the name.
-  Fix: Change to `Ка́тя`.
-- FIX: [2. Linguistic accuracy] [SEVERITY: major]
-  Location: `На́зви п'ять чле́нів сі́м'ї.`
-  Issue: Incorrect stress for the imperative verb and the genitive singular noun.
-  Fix: Change to `Назви́ п'ять чле́нів сім'ї́.`
-- NOTE: [5. Exercise quality] [SEVERITY: minor]
-  Location: `:::match-up \n title: "У́твори па́ру — Match family members"`
-  Issue: The plan requested `focus: "Match family members with relationships"`, but the generated exercise just matches Ukrainian to English. Additionally, the author added a 5th unprompted exercise at the end of the module.
-  Fix: Rewrite the first match-up to use simple nominative/possessive sentences as allowed by the A1 grammar constraints (e.g., left: "Мій тато. Його мама — це...", right: "бабуся"). Optionally, remove the redundant 5th match-up exercise.
+- FIX: [DIMENSION 2. Linguistic accuracy] [SEVERITY: critical]
+  Location: `Діало́ги (Dialogues)` -> "У тебе́ є бра́ти чи сестри́?", "Як йо́го зва́ти?", "Це моя сестра Катя́"
+  Issue: The writer manually inserted stress marks (which should be handled by a deterministic tool) and placed them incorrectly, resulting in severe morphological errors. `бра́ти` is the verb "to take", whereas the plural noun is `брати́`. `сестри́` is the genitive singular, whereas the nominative plural is `се́стри`. `йо́го` should be `його́`. `Катя́` should be `Ка́тя`.
+  Fix: Remove all manual stress marks (`´`) from the markdown prose to prevent breaking parsing tools and to eliminate these linguistic errors.
+- FIX: [DIMENSION 5. Exercise quality] [SEVERITY: major]
+  Location: All exercise blocks (`:::quiz`, `:::match-up`, `:::fill-in`)
+  Issue: The generated exercises actively ignore the specific `focus` instructions from the plan's `activity_hints`.
+  Fix: Rewrite all exercises to align with the plan: the quiz must practice answering "У тебе є...?", the match-up must test family relationships (e.g., "тато моєї мами" -> "дідусь"), the first fill-in must test possessive pronouns, and the second fill-in must be a comprehensive family introduction dialogue.
+- FIX: [DIMENSION 1. Plan adherence] [SEVERITY: major]
+  Location: Entire module
+  Issue: The module word count (~850 words) is nearly 30% below the target budget of 1200 words.
+  Fix: Expand the pedagogical explanations, add more dialogue examples to the first section, and flesh out the cultural notes to reach the target word count.
+- NOTE: [DIMENSION 4. Vocabulary coverage] [SEVERITY: minor]
+  Location: `Сім'я (Family Vocabulary)`
+  Issue: The recommended words `дружина` (wife) and `чоловік` (husband) are entirely omitted from the instructional prose.
+  Fix: Introduce `дружина` and `чоловік` naturally into the vocabulary explanations or within the dialogues.
 
-- FIX (Linguistic): Linguistic errors found (primarily incorrect stress marks):
-- "У мене́ є" / "У тебе́ є" — Incorrect stress shift. After prepositions, the stress shifts to the root: "У ме́не", "У те́бе".
-- "бра́ти чи сестри́" — Incorrect stress for nominative plural. It should be "брати́ чи се́стри" ("бра́ти" means "to take", and "сестри́" is genitive singular).
-- "Катя́" — Incorrect stress on the name. It should be "Ка́тя".
-- "На́зви п'ять чле́нів сі́м'ї" — Two stress errors here. "На́зви" is a plural noun (tit
+- FIX (Linguistic): Errors found:
+1. **Incorrect manual stress marks causing morphological errors:** The writer manually added acute accents (`´`) for stress throughout the text. Not only does this violate the pipeline rule that stress annotation is handled by a deterministic tool, but several stress marks are placed on the wrong syllables, changing the word's meaning or grammatical case:
+   - `бра́ти` — Used in the text as the plural of brother ("У тебе́ є бра́ти..."). This is a critical error. `бра́ти` (stress on
 </correction_directive>

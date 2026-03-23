@@ -161,192 +161,189 @@ pronunciation_videos:
 
 ## Діало́ги (Dialogues)
 
-Two friends sit in a café. One pulls out a phone — there are new family photos to share. This is how Ukrainians naturally talk about their families: scrolling through photos, pointing, naming. The phrase you will hear most often is **У мене́ є** (I have).
+Two friends — **Оля** and **Марко́** — are sitting in a café, scrolling through photos on their phones. This is how Ukrainians naturally talk about family: someone pulls out a phone, shows a picture, and the questions start flowing. Listen to how they ask and answer.
 
 > — У тебе́ є бра́ти чи сестри́?
-> — Так, у мене є два брати і одна́ сестра́.
+> — Так, у мене́ є два брати і одна́ сестра́.
 > — Ого́! У мене ті́льки оди́н брат. Як йо́го зва́ти?
 > — Ко́ля.
 
-Line by line: **У тебе є** means "you have" — literally "at you there-is." **Брати** (brothers) **чи** (or) **сестри** (sisters) — notice **чи** is how Ukrainian asks "or" questions. **Два брати і одна сестра** — two brothers and one sister. **Ого!** is a natural exclamation, like "Wow!" **Тільки** means "only." **Як його звати?** means "What is his name?" — literally "How to call him?" The answer is just the name: **Коля**.
+**Line by line:**
+- **У тебе є брати чи сестри?** — "Do you have brothers or sisters?"
+- **Так, у мене є два брати і одна сестра.** — "Yes, I have two brothers and one sister."
+- **Ого!** — "Wow!"
+- **У мене тільки один брат.** — "I have only one brother."
+- **Як його звати?** — "What is his name?"
+- **Коля.** — "Kolya."
 
-The friend swipes to a group photo. A whole family is in the frame. This dialogue introduces possessive pronouns — **мій** (my, masculine), **моя́** (my, feminine), **мої́** (my, plural) — as they naturally appear when someone points at a photo and names each person.
+Notice two fixed phrases here. **У тебе є** means "do you have" — learn it as one chunk. The word **чи** (or) connects two options in a question: **брати чи сестри** — "brothers or sisters."
+
+Now Оля shows her family photo. Watch how she uses **Це мій** and **Це моя́** to introduce each person — the word changes depending on who she is talking about.
 
 > — Це моя сім'я́ на фотогра́фії.
 > — Кла́сно! Хто це?
-> — Це моя ма́ма Мари́на. Це мій та́то Євге́н. Це моя сестра Катя́ і мої брати — Іва́н і Дени́с.
+> — Це моя ма́ма Мари́на. Це мій та́то Євге́н.
+> — Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с.
 > — А це твоя́ бабу́ся?
 > — Так, її звати Тетя́на.
 
-**Це моя сім'я** — "This is my family." **Сім'я** (family) is feminine, so it takes **моя**. **Класно!** means "Cool!" **Хто це?** — "Who is this?" Then the introductions flow: **Це моя мама** (this is my mom), **Це мій тато** (this is my dad) — notice **мій** for masculine **тато**. **Мої брати** uses the plural form **мої** (my). At the end, **її звати Тетяна** — "her name is Tetiana." The word **її** (her) never changes form, no matter what follows it.
+**Line by line:**
+- **Це моя сім'я на фотографії.** — "This is my family in the photo."
+- **Класно!** — "Cool!"
+- **Хто це?** — "Who is this?"
+- **Це моя мама Марина.** — "This is my mother Maryna."
+- **Це мій тато Євген.** — "This is my father Yevhen."
+- **Це моя сестра Катя і мої брати — Іван і Денис.** — "This is my sister Katia and my brothers — Ivan and Denys."
+- **А це твоя бабуся?** — "And is this your grandmother?"
+- **Так, її звати Тетяна.** — "Yes, her name is Tetiana."
 
-Now the learner puts it all together — greetings from earlier modules, professions from Module 5, and new family vocabulary. This is a connected self-introduction, the kind Ukrainians give when meeting someone new.
+See how Оля switches between **мій** (my, for masculine), **моя** (my, for feminine), and **мої** (my, for plural). The phrase **її звати** (her name is) works like **мене звати** from Module 5 — memorize it as a chunk.
 
-> Приві́т! Мене звати Андрі́й. Моя мама — вчи́телька. Мій тато — інжене́р. У мене є один брат. Його звати Оле́г. У мене є бабуся і діду́сь. Моя бабуся — О́льга.
+By now you have all the building blocks to introduce your own family: your name, your family members, and possessive words. Here is Марко putting it all together in a short monologue.
 
-Notice how this monologue combines everything: **Мене звати** (my name is) from Module 3, professions like **вчителька** (teacher) and **інженер** (engineer) from Module 5, and the new family patterns. **Моя мама — вчителька** needs no verb — Ukrainian simply uses a dash where English would say "is." **Його звати Олег** — "His name is Oleh." Like **її**, the word **його** (his) never changes form.
+> Приві́т! Мене звати Марко. Я з Ки́єва.
+> Моя мама — вчи́телька. Мій тато — інжене́р.
+> У мене є один брат. Його звати Коля.
+> Моя бабуся — Тетяна, а мій діду́сь — Оле́г.
+> У мене дру́жна сім'я.
 
-One word deserves special attention: **сім'я** (family). See that little mark between **м** and **я**? That is an apostrophe. It creates a brief pause — a glottal break — before the **я**. Without it, the word would sound wrong. A Grade 1 textbook poem by Марі́я Братко́ uses this word beautifully: «В мене дру́жна є сім'я» — "I have a friendly family." The word **ім'я́** (name) uses the same apostrophe pattern.
+**Line by line:**
+- **Мене звати Марко. Я з Києва.** — "My name is Marko. I am from Kyiv." (Modules 4-5 review)
+- **Моя мама — вчителька.** — "My mother is a teacher."
+- **Мій тато — інженер.** — "My father is an engineer." (Module 5 professions)
+- **У мене є один брат.** — "I have one brother."
+- **Його звати Коля.** — "His name is Kolya."
+- **У мене дружна сім'я.** — "I have a close-knit family."
+
+This monologue combines greetings, your name, your city, professions, and family — everything from Modules 1 through 6 in one natural block of speech.
+
+:::quiz
+title: "Діалоги — Розумі́ння"
+---
+- q: "Оля ка́же: «У мене тільки один...»"
+  o: ["брат", "сестра", "тато"]
+  a: 0
+- q: "Хто є мама Олі?"
+  o: ["Марина", "Катя", "Тетяна"]
+  a: 0
+- q: "Скі́льки браті́в є у Марка?"
+  o: ["два", "один", "три"]
+  a: 1
+- q: "Тато Олі — це..."
+  o: ["Євген", "Олег", "Коля"]
+  a: 0
+- q: "Бабуся Олі — це..."
+  o: ["Тетяна", "Марина", "Катя"]
+  a: 0
+- q: "Марко каже: «Мій тато —...»"
+  o: ["інженер", "вчи́тель", "лі́кар"]
+  a: 0
+:::
 
 ## Сім'я (Family Vocabulary)
 
-Ukrainian has two words for family: **сім'я** and **роди́на**. Both are correct and widely used. The Grade 1 textbook unit is titled «Я і моя родина», yet the poem inside that same unit says «В мене дружна є сім'я.» There is no wrong choice. In everyday speech, **сім'я** appears more frequently, but **родина** carries a warm, slightly more literary tone. Use either one.
+Ukrainian has two words for "family": **сім'я** and **роди́на** — both are common, both are correct. You will see **сім'я** in children's books, everyday speech, and official documents alike. The word **родина** carries a slightly warmer, more poetic tone. Use either one freely. Notice the apostrophe in **сім'я** — the apostrophe comes after **м** before **я**, just like the apostrophe rules from Module 3. This is one of the first apostrophe words you will use every day.
 
-Here are the core family members. Some have two forms — a casual everyday form and a more formal one:
+Here are the core family members. Pay attention to paired forms — Ukrainian often has an everyday word and a more formal one for the same person.
 
-- **мама** (mom) / **ма́ти** (mother — formal)
-- **тато** (dad) / **ба́тько** (father — formal)
+- **мама** (mother) — everyday; **ма́ти** (mother) — formal or literary
+- **тато** (father) — everyday; **ба́тько** (father) — formal
 - **брат** (brother)
 - **сестра** (sister)
 - **син** (son)
-- **дочка́** (daughter) — **до́нька** is the affectionate variant
-- **бабуся** (grandmother) / **ба́ба** (grandma — informal)
-- **дідусь** (grandfather) / **дід** (grandpa — informal)
-- **ті́тка** (aunt)
-- **дя́дько** (uncle)
+- **дочка́** (daughter); **до́нька** (daughter) — warmer, more affectionate
+- **батьки́** (parents) — the plural of **батько**, but it refers to both parents together
 
-One important gap: Ukrainian has no single word for "grandparents." You always say **бабуся і дідусь** — both names, every time.
-
-Ukrainian families love affectionate forms: **тату́сь** (daddy), **мату́ся** (mommy), **ба́бця** (granny), **сестри́чка** (little sister), **бра́тик** (little brother). The Grade 1 poem uses **татусь** and **бабця Ві́ра**. You do not need to use these forms yourself yet — just recognize them when you hear or read them.
+Extended family members round out the picture: **бабуся** (grandmother) and **дідусь** (grandfather) are the standard forms. **Баба** and **дід** are informal or rural variants — you will hear them, but **бабуся** and **дідусь** are safer for a learner. For aunts and uncles: **ті́тка** (aunt) and **дя́дько** (uncle). One cultural note: Ukrainian has no single word for "grandparents." You always say **бабуся і дідусь** — both words, every time.
 
 :::match-up
-title: "У́твори па́ру — Match family members"
+title: "Сім'я — Хто це?"
 ---
 - left: "мама"
   right: "mother"
-- left: "тато"
-  right: "father"
-- left: "брат"
-  right: "brother"
-- left: "сестра"
-  right: "sister"
-- left: "бабуся"
-  right: "grandmother"
 - left: "дідусь"
   right: "grandfather"
-- left: "дочка"
-  right: "daughter"
+- left: "батьки"
+  right: "parents"
+- left: "сестра"
+  right: "sister"
+- left: "тітка"
+  right: "aunt"
+- left: "дядько"
+  right: "uncle"
 - left: "син"
   right: "son"
+- left: "донька"
+  right: "daughter"
 :::
-
-The word **батьки́** (parents) exists only in plural — there is no singular form meaning "a parent." **Мої батьки** means "my parents." A Grade 2 textbook exercise asks children to unscramble jumbled family words: маам → мама, отат → тато, дусьід → дідусь. The letters are all there — just rearranged.
 
 ## У мене є (I have)
 
-Ukrainian does not use a verb for "have." Where English says "I have a brother," Ukrainian says something closer to "At me there-is a brother" — **У мене є брат**. This is not a grammar rule to analyze — it is a chunk to memorize. Three forms matter at this stage:
+Ukrainian does not use a verb meaning "to have." Instead, the language flips the structure entirely: "At me there-is." English says "I have a brother." Ukrainian says **У мене є брат** — literally "At me is brother." The noun after **є** (is/there is) stays in the nominative case, so no endings change. You need only three forms at this level:
 
 - **У мене є** — I have
 - **У тебе є** — you have (informal)
 - **У вас є** — you have (formal)
 
-The pronoun forms **мене**, **тебе**, and **вас** are genitive, but you do not need to know that yet. Just learn the whole phrase as one unit. Examples: **У мене є сестра.** (I have a sister.) **У тебе є брат?** (Do you have a brother?) **У вас є ді́ти?** (Do you have children?)
+Treat each one as a memorized chunk. Do not try to break them apart grammatically — just use them whole.
 
-Asking questions is simple — no word-order change is needed. Just raise your intonation at the end. **У тебе є сестра?** ↗ sounds exactly like the statement, except your voice goes up. Compare this with English, which requires "Do you have...?" Ukrainian is more straightforward here. More examples: **У тебе є брат?** **У тебе є бабуся?** **У вас є сім'я?**
+Turning a statement into a question requires nothing but your voice. The words stay in the same order — your intonation rises at the end. Statement: **У тебе є сестра.** (You have a sister.) Question: **У тебе є сестра?** ↗ — voice goes up. More examples: **У тебе є брат?** (Do you have a brother?) **У вас є ді́ти?** (Do you have children?) This connects directly to the intonation patterns from Module 4 — Ukrainian yes/no questions live in your voice, not in word order.
 
-:::quiz
-title: "У тебе є...?"
----
-- q: "У тебе є брат? — Так, ..."
-  o: ["у мене є брат", "мій є брат", "я є брат"]
-  a: 0
-- q: "У тебе є сестра? — Ні, ..."
-  o: ["у мене тільки брат", "моя нема́є сестра", "я тільки брат"]
-  a: 0
-- q: "У тебе є бабуся? — Так, ..."
-  o: ["у мене є бабуся", "моя бабуся є", "я є бабуся"]
-  a: 0
-- q: "What does «У мене є» mean?"
-  o: ["I have", "I am", "I want"]
-  a: 0
-- q: "How do you ask «Do you have?» informally?"
-  o: ["У тебе є?", "У вас є?", "У мене є?"]
-  a: 0
-- q: "У вас є діти? — This question is..."
-  o: ["formal", "informal", "rude"]
-  a: 0
-:::
+How do you answer? Yes: **Так, у мене є брат.** No: simply **Ні.** or **Ні, у мене тільки один брат.** (No, I only have one brother.) The full negative form **У мене нема́є** requires the genitive case — that is A2 grammar. For now, answer with **Ні** and add a positive statement if you want to say more.
 
-What about saying "I don't have"? The phrase **У мене немає** requires a grammatical change to the noun that follows — genitive case. For example, "I don't have a brother" is **У мене немає бра́та**, not *У мене немає брат. This grammar belongs to A2. For now, answer negative questions simply: **Ні.** Or add context: **Ні, у мене тільки один брат.** Or even shorter: **Ні, тільки сестра.** These responses are natural and avoid the genitive trap entirely.
-
-Numbers appear naturally with family members. **Один** (one) and **одна** (one) change by gender: **один брат** (masculine), **одна сестра** (feminine). The same happens with "two": **два брати** (masculine), **дві сестри** (feminine). Remember Dialogue 1: «два брати і одна сестра.» Only these two numbers matter at A1 — more numbers come in Module 9.
+One more detail: numbers change by gender with family words. **Один брат** (one brother — masculine) but **одна сестра** (one sister — feminine). **Два брати** (two brothers — masculine) but **дві сестри** (two sisters — feminine). In full sentences: **У мене є два брати і одна сестра.** **У мене є один брат і дві сестри.** The pattern is automatic — masculine family members take **один/два**, feminine family members take **одна/дві**.
 
 :::fill-in
-title: "Complete the family introduction"
+title: "У мене є — Допо́вни"
 ---
-- sentence: "У мене є ___ брат."
-  answer: "один"
 - sentence: "У мене є ___ сестра."
   answer: "одна"
-- sentence: "У тебе є ___?"
-  answer: "брати"
-- sentence: "___ мене є бабуся і дідусь."
-  answer: "У"
-- sentence: "У мене є два ___ і дві ___."
-  answer: "брати"
-- sentence: "У тебе є сестра? — Ні, ___ брат."
-  answer: "тільки"
+- sentence: "___ є два брати."
+  answer: "У мене"
+- sentence: "У тебе є брат чи ___?"
+  answer: "сестра"
+- sentence: "У мене є ___ брат і одна сестра."
+  answer: "один"
+- sentence: "У вас ___ діти?"
+  answer: "є"
+- sentence: "У мене є два брати і ___ сестри."
+  answer: "дві"
+- sentence: "___ є бабуся?"
+  answer: "У тебе"
+- sentence: "Так, у мене є один ___."
+  answer: "брат"
 :::
-
-You will also hear other forms in conversation: **у нього є** (he has), **у не́ї є** (she has), **у нас є** (we have). Remember from Dialogue 2 — **її звати Тетяна**, so **у неї є** follows the same pattern. Do not memorize these yet. Just know they exist so you are not confused when they appear.
 
 ## Мій, моя, моє́ (Possessive Pronouns)
 
-Possessive pronouns in Ukrainian match the thing possessed, not the owner. English "my" never changes — my brother, my sister, my city. Ukrainian **мій** has four forms:
+The golden rule of Ukrainian possessives: the possessive matches the gender of the thing possessed, not the gender of the speaker. A man saying "my sister" and a woman saying "my sister" both say **моя сестра** — because **сестра** is feminine. Here is the full set:
 
-- **мій тато** — my dad (masculine)
-- **моя мама** — my mom (feminine)
-- **моє ім'я** — my name (neuter)
-- **мої батьки** — my parents (plural)
+| | Masculine | Feminine | Neuter | Plural |
+|---|---|---|---|---|
+| my | **мій** брат | **моя** сестра | **моє** мі́сто | **мої** батьки |
+| your (informal) | **твій** брат | **твоя** сестра | **твоє́** місто | **твої́** батьки |
 
-The choice depends entirely on the noun's gender. **Тато** is masculine → **мій**. **Мама** is feminine → **моя**. **Ім'я** is neuter → **моє**. **Батьки** is plural → **мої**. You already know noun genders from Modules 4–5. The same knowledge now determines which possessive to use.
+In practice: **Моя мама — вчителька.** **Мій тато — інженер.** **Моє прі́звище — Шевче́нко.** **Мої брати — Іван і Денис.** The trick is simple: look at the noun's gender in the vocabulary list, then pick the matching possessive form.
 
-The pattern repeats for "your" (informal): **твій** (m), **твоя** (f), **твоє́** (n), **твої́** (pl). But **його** (his) and **її** (her) are different — they never change. **Його брат, його сестра, його мі́сто** — all **його**. The same applies to **її**: **її брат, її сестра, її місто**. This makes **його** and **її** easier than **мій** and **твій**. Compare: **мій брат** — **його брат** — **її брат**.
+**Твій/твоя/твоє/твої** (your, informal) follows the exact same pattern. In questions: **Твій брат — студе́нт?** **Твоя мама — лі́карка?** Now here is a shortcut: **його** (his) and **її** (her) do not change for gender at all. **Його мама, його тато, його місто** — always **його**. **Її мама, її тато, її місто** — always **її**. This makes them easier than **мій** and **твій**.
+
+The forms **наш** (our), **ваш** (your, formal/plural), and **ї́хній** (their) belong to A2. For now, you know **мій**, **твій**, **його**, **її** — that is enough to talk about your immediate family and ask about someone else's.
 
 :::fill-in
-title: "Обери́ правильне сло́во — Choose the correct possessive"
+title: "Мій чи моя? — Діало́г"
 ---
-- sentence: "___ сестра — вчителька. (мій/моя/моє)"
-  answer: "Моя"
-- sentence: "___ тато — інженер. (мій/моя/моє)"
-  answer: "Мій"
-- sentence: "Це ___ брати. (мій/мої)"
-  answer: "мої"
-- sentence: "___ ім'я — Катя. (моя/моє)"
-  answer: "Моє"
-- sentence: "___ бабуся — Тетяна. (твій/твоя)"
-  answer: "Твоя"
-- sentence: "___ дідусь — Євген. (твій/твоя)"
-  answer: "Твій"
-- sentence: "___ мама — Марина. (його/її)"
-  answer: "Його"
-- sentence: "___ тато — Олег. (його/її)"
+- sentence: "Це ___ сестра Катя."
+  answer: "моя"
+- sentence: "___ звати Тетяна."
   answer: "Її"
-:::
-
-The key A1 sentence pattern combines **Це** with possessives: **Це мій брат Олег. Це моя бабуся Тетяна. Це мої батьки.** Look back at Dialogue 2 — every introduction uses exactly this structure. The full paradigm (**наш** — our, **ваш** — your formal, **ї́хній** — their) comes in A2. For now, four possessives are enough: **мій**, **твій**, **його**, **її** — all in nominative case only.
-
-Gender agreement between possessive and noun is a pattern you can practice right now. Masculine nouns take **мій**: мій тато, мій брат, мій дідусь, мій син, мій дядько. Feminine nouns take **моя**: моя мама, моя сестра, моя бабуся, моя дочка, моя тітка. Match the noun's gender, and you will always choose the right form.
-
-:::match-up
-title: "Match family members with the correct possessive"
----
-- left: "брат"
-  right: "мій"
-- left: "сестра"
-  right: "моя"
-- left: "ім'я"
-  right: "моє"
-- left: "батьки"
-  right: "мої"
-- left: "тато"
-  right: "мій"
-- left: "мама"
-  right: "моя"
-- left: "дідусь"
-  right: "мій"
-- left: "бабуся"
-  right: "моя"
+- sentence: "А це ___ брат?"
+  answer: "твій"
+- sentence: "Це ___ батьки."
+  answer: "мої"
+- sentence: "___ тато — інженер."
+  answer: "Мій"
+- sentence: "___ мама — вчителька."
+  answer: "Його"
 :::
 
 
@@ -357,11 +354,11 @@ title: "Match family members with the correct possessive"
 
 ## Підсумок — Summary
 
-This module taught three pillars of talking about family in Ukrainian. First, family vocabulary: **сім'я**, **мама**, **тато**, **брат**, **сестра**, **бабуся**, **дідусь**, **син**, **дочка** — and the fact that Ukrainian has two words for family (**сім'я** and **родина**) but no single word for "grandparents." Second, the possession chunk **У мене є** — a fixed phrase meaning "I have," with no verb involved. Third, possessive pronouns **мій/моя/моє/мої** that change to match the gender of what you possess. Together these let you say: **У мене є брат. Мій брат — Олег.**
+This module gave you four connected skills. First, **family vocabulary**: мама, тато, брат, сестра, бабуся, дідусь, син, дочка, батьки, тітка, дядько — and two words for family itself, **сім'я** and **родина**. Second, the **У мене є** structure to talk about what you have: **У мене є два брати.** Third, **possessive pronouns** мій/моя/моє/мої and твій/твоя/твоє/твої to introduce your family: **Це моя мама.** Fourth, **numbers with gender**: один/одна, два/дві. All these pieces connect naturally: **У мене є два брати. Мій брат — Коля.**
 
-Test yourself: На́зви п'ять чле́нів сі́м'ї. Скажи́ «У мене є сестра.» Яка різни́ця між мій і моя? Now try introducing your family in 4–5 sentences, following the Dialogue 3 pattern. Say it out loud — not just in your head.
+Test yourself now. Can you name five family members in Ukrainian? Can you say "I have a sister" — **У мене є сестра**? What is the difference between **мій** and **моя**? Try introducing your family in four or five sentences, using Dialogue 3 as your model. Challenge: include a grandparent and a sibling.
 
-The next module (M07) is the A1.1 checkpoint — a review of everything from Modules 1–6. Practice the connected family introduction aloud before moving on. Later, in A2, you will learn **немає** + genitive for "I don't have" and the complete possessive paradigm: **наш** (our), **ваш** (your, formal), **їхній** (their).
+Module 7 is a checkpoint that reviews everything from A1.1 — letters, greetings, professions, and family. Before you move on, practice introducing your real family out loud. Say each sentence as if you are showing a friend your phone. The more natural it feels now, the easier the checkpoint will be.
 
 
 <!-- TAB:Словник -->
@@ -404,67 +401,45 @@ The next module (M07) is the A1.1 checkpoint — a review of everything from Mod
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **Брати** | brothers | дієсл. |  |
-| **сестри** | sisters | ім. | ж. |
-| **мій** | my, masculine | прикм. |  |
-| **мої** | my | прикм. |  |
-| **вчителька** | teacher | ім. | ж. |
-| **інженер** | engineer | ім. | ч. |
-| **дід** | grandpa — informal | ім. | ч. |
-| **Один** | one | числ. |  |
-| **одна** | one | числ. |  |
-| **твій** | m | прикм. |  |
-| **твоя** | f | прикм. |  |
-| **наш** | our | прикм. |  |
-| **ваш** | your, formal | прикм. |  |
-| **їхній** | their | прикм. |  |
-| **Класно** | Cool | присл. |  |
+| **Оля** |  |  |  |
 | **Ого** |  | виг. |  |
 | **Коля** |  |  |  |
-| **моя** |  | прикм. |  |
+| **Класно** |  | присл. |  |
+| **мій** | my, for masculine | прикм. |  |
+| **моя** | my, for feminine | прикм. |  |
+| **мої** | my, for plural | прикм. |  |
 | **родина** |  | ім. | ж. |
-| **татусь** |  | ім. | ч. |
-| **мене** |  | ім. |  |
-| **тебе** |  | ім. |  |
-| **вас** |  | ім. |  |
-| **Ім'я** | neuter → **моє** | ім. | с. |
+| **Баба** |  | ім. | ж. |
+| **дід** |  | ім. | ч. |
 | **моє** |  | прикм. |  |
-| **немає** |  |  |  |
+| **твій** |  | прикм. |  |
+| **твоя** |  | прикм. |  |
+| **наш** | our | прикм. |  |
+| **ваш** | your, formal/plural | прикм. |  |
 
 ### Вирази — Expressions
 
 | Вираз | Переклад |
 |-------|----------|
-| **У мене є сестра** | I have a sister. |
-| **У тебе є брат** | Do you have a brother? |
-| **один брат** |  |
-| **одна сестра** |  |
-| **два брати** |  |
-| **дві сестри** |  |
-| **у нього є** | he has |
-| **у нас є** | we have |
-| **Два брати і одна сестра** | two brothers and one sister |
-| **Хто це** | Who is this |
-| **її звати Тетяна** | her name is Tetiana |
-| **Його звати Олег** | His name is Oleh |
-| **бабуся і дідусь** | both names, every time |
-| **У вас є** |  |
-| **мій тато** |  |
-| **моя мама** |  |
-| **моє ім'я** |  |
-| **мої батьки** |  |
-| **мій брат** |  |
-| **Як його звати** | What is his name |
-| **Мої брати** |  |
+| **Як його звати** |  |
+| **брати чи сестри** |  |
+| **Хто це** |  |
+| **А це твоя бабуся** |  |
+| **Так, її звати Тетяна** |  |
+| **її звати** | her name is |
+| **Його звати Коля** |  |
+| **У мене дружна сім'я** |  |
+| **бабуся і дідусь** |  |
 | **У мене є брат** |  |
+| **У вас є** |  |
 | **У тебе є сестра** |  |
-| **У тебе є бабуся** |  |
-| **У вас є сім'я** |  |
-| **У мене немає** |  |
-| **Ні, тільки сестра** |  |
-| **у неї є** |  |
-| **його брат** |  |
-| **її брат** |  |
+| **У тебе є брат** |  |
+| **Один брат** | one brother — masculine |
+| **одна сестра** | one sister — feminine |
+| **Два брати** | two brothers — masculine |
+| **дві сестри** | two sisters — feminine |
+| **моя сестра** |  |
+| **У мене є сестра** |  |
 
 
 <!-- TAB:Зошит -->
@@ -625,78 +600,76 @@ Base your verdict on the **severity of findings** — the pipeline calculates th
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 124 words | Not found: 44 words
+Verified: 114 words | Not found: 44 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Євге — NOT IN VESUM
   ✗ Євген — NOT IN VESUM
   ✗ Іва — NOT IN VESUM
-  ✗ Андрі — NOT IN VESUM
+  ✗ Іван — NOT IN VESUM
   ✗ Дени — NOT IN VESUM
+  ✗ Денис — NOT IN VESUM
+  ✗ Допо — NOT IN VESUM
   ✗ Діало — NOT IN VESUM
   ✗ Катя — NOT IN VESUM
+  ✗ Києва — NOT IN VESUM
   ✗ Кла — NOT IN VESUM
   ✗ Коля — NOT IN VESUM
   ✗ Оле — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
+  ✗ Оля — NOT IN VESUM
+  ✗ Олі — NOT IN VESUM
   ✗ Приві — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
   ✗ Тетя — NOT IN VESUM
   ✗ Тетяна — NOT IN VESUM
-  ✗ бця — NOT IN VESUM
   ✗ виг — NOT IN VESUM
+  ✗ вни — NOT IN VESUM
   ✗ дру — NOT IN VESUM
-  ✗ дусьід — NOT IN VESUM
   ✗ дько — NOT IN VESUM
-  ✗ дієсл — NOT IN VESUM
   ✗ жна — NOT IN VESUM
   ✗ зва — NOT IN VESUM
-  ✗ льга — NOT IN VESUM
   ✗ льки — NOT IN VESUM
-  ✗ м'ї — NOT IN VESUM
-  ✗ маам — NOT IN VESUM
+  ✗ нко — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
   ✗ нька — NOT IN VESUM
-  ✗ нів — NOT IN VESUM
-  ✗ отат — NOT IN VESUM
   ✗ прикм — NOT IN VESUM
   ✗ присл — NOT IN VESUM
-  ✗ сло — NOT IN VESUM
   ✗ сно — NOT IN VESUM
   ✗ спол — NOT IN VESUM
+  ✗ студе — NOT IN VESUM
+  ✗ тель — NOT IN VESUM
   ✗ телька — NOT IN VESUM
   ✗ тка — NOT IN VESUM
   ✗ тько — NOT IN VESUM
   ✗ фотогра — NOT IN VESUM
   ✗ фії — NOT IN VESUM
   ✗ хній — NOT IN VESUM
-  ✗ числ — NOT IN VESUM
-  ✗ чка — NOT IN VESUM
-  ✗ чле — NOT IN VESUM
+  ✗ єва — NOT IN VESUM
   ✗ інжене — NOT IN VESUM
 
 Sample of verified words (all confirmed to exist in Ukrainian):
-  ✓ Ім'я → lemma: ім'я, POS: noun
-  ✓ Батьки → lemma: батьки, POS: noun
-  ✓ Брати → lemma: брат, POS: noun
-  ✓ Братко → lemma: братко, POS: noun
+  ✓ Баба → lemma: баба, POS: noun
+  ✓ Бабуся → lemma: бабуся, POS: noun
   ✓ Вираз → lemma: вираз, POS: noun
   ✓ Вирази → lemma: вираз, POS: noun
   ✓ Відео → lemma: відео, POS: noun
   ✓ Два → lemma: два, POS: numr
   ✓ Джерела → lemma: джерело, POS: noun
   ✓ Додаткові → lemma: додатковий, POS: adj
+  ✓ Діалоги → lemma: діалог, POS: noun
   ✓ Зошит → lemma: зошит, POS: noun
   ✓ Його → lemma: він, POS: noun
   ✓ Класно → lemma: класно, POS: adv
-  ✓ Мама → lemma: мама, POS: noun
   ✓ Мари → lemma: мара, POS: noun
   ✓ Марина → lemma: марина, POS: noun
-  ✓ Марі → lemma: мара, POS: noun
+  ✓ Марка → lemma: марка, POS: noun
+  ✓ Марко → lemma: марка, POS: noun
   ✓ Мене → lemma: я, POS: noun
   ✓ Моя → lemma: мій, POS: adj
   ✓ Моє → lemma: мій, POS: adj
   ✓ Мої → lemma: мій, POS: adj
   ✓ Мій → lemma: мій, POS: adj
-  ✓ Обери → lemma: обрати, POS: verb
   ✓ Обов'язкові → lemma: обов'язковий, POS: adj
   ✓ Ого → lemma: ого, POS: intj
   ✓ Один → lemma: один, POS: numr
@@ -706,9 +679,9 @@ Sample of verified words (all confirmed to exist in Ukrainian):
   ✓ Рекомендовані → lemma: рекомендований, POS: adj
   ✓ Ресурси → lemma: ресурс, POS: noun
   ✓ Родина → lemma: родина, POS: noun
+  ✓ Розумі → lemma: розум, POS: noun
   ✓ Розширені → lemma: розширений, POS: adj
   ✓ Рід → lemma: рід, POS: noun
-  ✓ Скажи → lemma: сказати, POS: verb
   ✓ Словник → lemma: словник, POS: noun
   ✓ Слово → lemma: слово, POS: noun
   ✓ Статті → lemma: стаття, POS: noun
@@ -717,12 +690,14 @@ Sample of verified words (all confirmed to exist in Ukrainian):
   ✓ Тато → lemma: тато, POS: noun
   ✓ Твоя → lemma: твій, POS: adj
   ✓ Твій → lemma: твій, POS: adj
-  ✓ Тільки → lemma: тільки, POS: adv
   ✓ Урок → lemma: урка, POS: noun
   ✓ Хто → lemma: хто, POS: noun
   ✓ Частина → lemma: частина, POS: noun
-  ✓ Яка → lemma: як, POS: noun
+  ✓ Шевче → lemma: швець, POS: noun
   ✓ бабу → lemma: баба, POS: noun
   ✓ бабуся → lemma: бабуся, POS: noun
+  ✓ батьки → lemma: батьки, POS: noun
+  ✓ батько → lemma: батько, POS: noun
+  ✓ бра → lemma: бра, POS: noun
 
 </vesum_verification>

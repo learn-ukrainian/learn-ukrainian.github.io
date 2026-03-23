@@ -1,78 +1,57 @@
 ## Діалоги (Dialogues) (~440 words total)
 
-- P1 (~30 words): Brief scene-setting — two friends meet at a café, one pulls out their phone to show family photos. Establish the situation in English, prime the phrase "У мене є."
+- P1 (~40 words): Brief scene-setting. Learner meets two friends, Оля and Марко, who are showing each other photos on their phones. Frame: this is how Ukrainians naturally talk about family — showing photos, asking questions.
 
-- Dialogue 1 (~100 words): Showing phone photos. Turn-by-turn with translation gloss:
-  — У тебе є брати чи сестри?
-  — Так, у мене є два брати і одна сестра.
-  — Ого! У мене тільки один брат. Як його звати?
-  — Коля.
-  Each line glossed inline. Highlight "у мене є" and "у тебе є" as fixed chunks. Note "чи" for or-questions.
+- Dialogue 1 (~100 words): Phone photos — asking about siblings. Оля asks Марко: "У тебе є брати чи сестри?" Марко answers: "Так, у мене є два брати і одна сестра." Оля: "Ого! У мене тільки один брат. Як його звати?" Марко: "Коля." Include English gloss after each line. Post-dialogue note: point out "у тебе є" as a fixed phrase meaning "do you have," and "чи" as "or" in questions.
 
-- P2 (~30 words): Transition — the friend swipes to a family group photo. Brief English setup for Dialogue 2. Introduce "Це моя сім'я" as the opener.
+- P2 (~30 words): Transition — now Оля shows her family photo. Prompt learner to notice how she uses "Це мій/моя" to introduce each person.
 
-- Dialogue 2 (~110 words): Family in a photo. Longer exchange introducing possessives naturally:
-  — Це моя сім'я на фотографії. / — Класно! Хто це?
-  — Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя і мої брати — Іван і Денис.
-  — А це твоя бабуся? / — Так, її звати Тетяна.
-  Gloss each possessive (мій/моя/мої) as it appears. Point out його/її as "his/her" chunks that don't change form.
+- Dialogue 2 (~110 words): Family photo introduction. Оля: "Це моя сім'я на фотографії." Марко: "Класно! Хто це?" Оля introduces: "Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя і мої брати — Іван і Денис." Марко: "А це твоя бабуся?" Оля: "Так, її звати Тетяна." English gloss per line. Post-dialogue note: highlight мій/моя/мої switching based on the person introduced, and "її звати" as a memorized chunk for "her name is."
 
-- P3 (~30 words): Transition to connected speech — the learner now tries introducing their own family, combining greetings from M01-M05 with new family vocabulary. Frame as "putting it all together."
+- P3 (~30 words): Transition to connected speech. Explain that by now the learner has all the building blocks to introduce their own family — name, family members, possessives. Марко demonstrates.
 
-- Dialogue 3 (~100 words): Connected self-introduction monologue with interspersed gloss:
-  Привіт! Мене звати Андрій. Моя мама — вчителька. Мій тато — інженер. У мене є один брат. Його звати Олег. У мене є бабуся і дідусь. Моя бабуся — Ольга.
-  Highlight how this combines: self-introduction (M03), professions (M05), family (this module). Note word order: "Моя мама — вчителька" (no verb needed).
+- Dialogue 3 (~100 words): Connected self-introduction monologue. Марко: "Привіт! Мене звати Марко. Я з Києва. Моя мама — вчителька. Мій тато — інженер. У мене є один брат. Його звати Коля. Моя бабуся — Тетяна, а мій дідусь — Олег. У мене дружна сім'я." English gloss. Post-dialogue note: this combines skills from modules 1-5 (greetings, name, city, profession) with new family vocabulary.
 
-- P4 (~40 words): Pronunciation spotlight on apostrophe in сім'я — the glottal break before я. Compare: сім'я vs *сімя. Reference the textbook poem "В мене дружна є сім'я" (Братко, Grade 1). Briefly note ім'я uses the same pattern.
+- Exercise (~30 words): **Quiz** (6 items) — comprehension questions on the dialogues. "У Марка є сестра? — Ні / Так." "Як звати маму Олі? — Марина / Катя." Tests reading comprehension, not content recall — answers come from re-reading the dialogues.
 
 ## Сім'я (Family Vocabulary) (~220 words total)
 
-- P1 (~60 words): Two Ukrainian words for family: сім'я and родина — both are correct, both widely used. The Grade 1 textbook unit is titled "Я і моя родина" but the poem inside says "В мене дружна є сім'я." No preference needed at A1, but note сім'я is more common in speech.
+- P1 (~70 words): Two Ukrainian words for "family": сім'я and родина — both are common and correct. Reference the Grade 1 textbook poem by Марія Братко: "В мене дружна є сім'я" — note how the textbook uses both terms. Apostrophe reminder: сім'я has an apostrophe after м before я (connects to Module 3 letter knowledge).
 
-- P2 (~80 words): Core family vocabulary table (presented as a list, not a paradigm grid). Pairs with formal/informal variants: мама/мати, тато/батько. Core nouns: брат, сестра, син, дочка (note: донька is the affectionate variant). Extended: бабуся/баба, дідусь/дід, тітка, дядько. Stress marks on all words. Note that Ukrainian has NO single word for "grandparents" — always бабуся і дідусь.
+- P2 (~80 words): Core family members table/list with gender markers. мама/мати (f), тато/батько (m), брат (m), сестра (f), син (m), дочка/донька (f). Note paired forms: мама is everyday, мати is formal/literary; тато is everyday, батько is formal; дочка and донька are both standard (донька is warmer). батьки means "parents" (plural of батько, but refers to both parents).
 
-- P3 (~40 words): Affectionate forms briefly — татусь, матуся, бабця, сестричка, братик. Reference textbook poem using "татусь" and "бабця Віра." These are recognition vocabulary only — learners should understand them but use the standard forms.
+- P3 (~40 words): Extended family: бабуся/баба (grandmother), дідусь/дід (grandfather), тітка (aunt), дядько (uncle). Cultural note: Ukrainian has NO single word for "grandparents" — always say "бабуся і дідусь." Баба and дід are informal/rural variants.
 
-- Exercise: **match-up** — Match 8 family member words (мама, тато, брат, сестра, бабуся, дідусь, дочка, син) with their English equivalents or simple illustrations.
-
-- P4 (~40 words): батьки (parents) as a plural-only word — there is no singular *батька meaning "a parent." Мої батьки = my parents. Link to the Grade 2 textbook activity where children unscramble family words (маам→мама, отат→тато).
+- Exercise (~30 words): **Match-up** (8 items) — match Ukrainian family words to relationship descriptions. "мама — mother," "дідусь — grandfather," "батьки — parents," "сестра — sister." Include both core and extended family.
 
 ## У мене є (I have) (~275 words total)
 
-- P1 (~70 words): Ukrainian doesn't use a verb for "have." Instead: "At me there-is" — У мене є брат. Contrast with English "I have a brother." Three forms for A1: у мене є (I have), у тебе є (you have, informal), у вас є (you have, formal). Present these as memorized chunks — the pronoun forms (мене, тебе, вас) are genitive but learners don't need to know that yet. Examples: У мене є сестра. У тебе є брат? У вас є діти?
+- P1 (~80 words): Core concept — Ukrainian doesn't use a verb "to have." Instead: "At me there-is" = У мене є. Compare structure: English "I have a brother" → Ukrainian "У мене є брат." The noun after є stays in nominative (no ending change). Three forms for A1: у мене є (I have), у тебе є (you have, informal), у вас є (you have, formal). Present these as memorized chunks, not as a grammatical paradigm.
 
-- P2 (~50 words): Questions with rising intonation — no word-order change needed. У тебе є сестра? ↗ just rises at the end. Compare with English which inverts "Do you have...?" Ukrainian is simpler here. Three example questions: У тебе є брат? У тебе є бабуся? У вас є сім'я?
+- P2 (~60 words): Questions with rising intonation. Statement: "У тебе є сестра." ↗ Question: "У тебе є сестра?" — same words, voice goes up. Examples: "У тебе є брат?" "У вас є діти?" Explain that Ukrainian uses intonation for yes/no questions (no word-order change needed), connecting back to Module 4's intonation work.
 
-- Exercise: **quiz** — 6 items. Prompt: "У тебе є...?" with family member. Learner answers Так, у мене є... / Ні. Test comprehension of the chunk and family vocabulary together.
+- P3 (~50 words): Answering and negation strategy. Yes: "Так, у мене є брат." No: "Ні." or "Ні, у мене тільки один брат." Explicitly state: the full negative form "У мене немає" requires genitive case — that's A2 grammar. For now, use "Ні" + a positive alternative.
 
-- P3 (~60 words): What about "I don't have"? — У мене немає requires genitive (немає брата, not *немає брат). This is A2 grammar. For now, answer negative questions simply: Ні. / Ні, у мене тільки один брат. / Ні, тільки сестра. Explicit note: avoid немає until genitive is properly taught. Three example negative responses.
+- P4 (~50 words): Numbers preview with gender. один брат (masculine) but одна сестра (feminine). два брати (masculine) but дві сестри (feminine). Examples in sentences: "У мене є два брати і одна сестра." "У мене є один брат і дві сестри." Gender agreement is automatic with family words — masculine family = один/два, feminine family = одна/дві.
 
-- P4 (~50 words): Numbers preview with family — один/одна changes by gender: один брат (masculine), одна сестра (feminine). два/дві: два брати, дві сестри. Reference the Dialogue 1 pattern: "два брати і одна сестра." Only these two numbers at A1 — більше numbers come in A1 Module 9.
-
-- Exercise: **fill-in** — 6 items. Complete family introduction dialogue gaps: "У мене є ___ (один/одна) ___." "У тебе є ___?" Mixing у мене є chunks with gender-appropriate один/одна.
-
-- P5 (~45 words): Quick note on other forms learners will hear — у нього є (he has), у неї є (she has), у нас є (we have). Present ONLY as recognition vocabulary from Dialogue 2 context (її звати Тетяна → у неї). Don't drill these — just enough to not be confused when they appear.
+- Exercise (~35 words): **Fill-in** (8 items) — complete sentences with correct forms. "У мене є ___ (один/одна) сестра." "У тебе є ___? (брат/брати)" "___ (У мене / Мене) є бабуся." Mix possessive and є-structure practice.
 
 ## Мій, моя, моє (Possessive Pronouns) (~220 words total)
 
-- P1 (~70 words): Possessives match the THING possessed, not the owner. мій брат (brother is masculine → мій), моя сестра (sister is feminine → моя), моє місто (city is neuter → моє), мої батьки (parents is plural → мої). Key insight: English "my" never changes, Ukrainian "мій" has 4 forms. Use family examples exclusively: мій тато, моя мама, моє ім'я, мої брати.
+- P1 (~80 words): Core rule — possessives match the gender of the thing possessed, NOT the speaker. мій брат (m), моя сестра (f), моє місто (n), мої батьки (pl). Demonstrate with family: "Моя мама — вчителька. Мій тато — інженер. Моє прізвище — Шевченко. Мої брати — Іван і Денис." Learner tip: look at the NOUN's gender (from vocabulary lists) to pick мій/моя/моє/мої.
 
-- P2 (~50 words): твій/твоя/твоє/твої — same pattern for "your" (informal). його (his) and її (her) — these DON'T change for gender. його брат, його сестра, його місто — all його. Same for її. This makes його/її easier than мій/твій. Three contrastive examples: мій брат — його брат — її брат.
+- P2 (~60 words): твій/твоя/твоє/твої (your, informal) — same pattern as мій. Examples in questions: "Твій брат — студент?" "Твоя мама — лікарка?" Introduce його (his) and її (her) — these do NOT change for gender: "його мама, його тато, його місто" all use його. Same for її. This makes його/її easier than мій/твій.
 
-- Exercise: **fill-in** — 8 items. Choose correct possessive: "_____ (мій/моя/моє) сестра", "_____ (твій/твоя/твоє) тато", "_____ (його/її) мама." Mix all persons and genders.
+- P3 (~40 words): Scope boundary — наш (our), ваш (your formal/plural), їхній (their) are A2 grammar. For now, learners know мій, твій, його, її — enough to talk about immediate family. Full table comes later.
 
-- P3 (~55 words): Combining Це with possessives — the key A1 sentence pattern. Це мій брат Олег. Це моя бабуся Тетяна. Це мої батьки. Reference Dialogue 2 where every introduction uses this pattern. Note: full paradigm (наш, ваш, їхній) comes in A2. For now: мій, твій, його, її — nominative only.
-
-- P4 (~45 words): Gender agreement preview — possessive + noun must agree. Link to what learners already know about gender from M04-M05 (masculine/feminine/neuter noun recognition). Pattern drill: мій + masculine nouns (тато, брат, дідусь, син, дядько), моя + feminine (мама, сестра, бабуся, дочка, тітка).
-
-- Exercise: **match-up** — 8 items. Match family members with correct possessive phrase: "мій..." / "моя..." / "моє..." / "мої..." with брат, сестра, ім'я, батьки, тато, мама, дідусь, бабуся.
+- Exercise (~40 words): **Fill-in** (6 items) — complete a family introduction dialogue with correct possessives. "Це ___ (мій/моя) сестра. ___ (її/його) звати Катя. А це ___ (твій/твоя) брат?" Dialogue format reinforces natural usage over isolated grammar.
 
 ## Підсумок — Summary (~165 words total)
 
-- P1 (~65 words): Recap of key patterns learned — three pillars of this module: (1) family vocabulary (сім'я, мама, тато, брат, сестра, бабуся, дідусь), (2) "У мене є" as a memorized chunk for possession, (3) possessives мій/моя/моє matching gender. Link these together: "У мене є брат. Мій брат — Олег."
+- P1 (~80 words): Recap of the four skills learned: (1) family vocabulary — мама, тато, брат, сестра, бабуся, дідусь and more; (2) "У мене є" to talk about what you have; (3) possessives мій/моя/моє to introduce family; (4) numbers один/одна, два/дві with family members. Remind learners: all these pieces connect — "У мене є два брати. Мій брат — Коля."
 
-- P2 (~50 words): Self-check questions — Назви п'ять членів сім'ї. Скажи "У мене є сестра." Яка різниця між мій і моя? Introduce your family in 4-5 sentences using the Dialogue 3 pattern.
+- P2 (~50 words): Self-check prompts. Name 5 family members in Ukrainian. Say "I have a sister" in Ukrainian. What's the difference between мій and моя? Introduce your family in 4-5 sentences using the Dialogue 3 model. Challenge: include a grandparent and a sibling.
 
-- P3 (~50 words): Looking ahead — next module (M07) is the A1.1 checkpoint, reviewing everything from Modules 1-6. Encourage learners to practice the connected family introduction (Dialogue 3 pattern) aloud. Mention that in A2 they'll learn немає + genitive for "I don't have" and the full possessive paradigm (наш, ваш, їхній).
+- P3 (~35 words): Preview of Module 7 (Checkpoint — First Contact). Next module reviews everything from A1.1 — letters, greetings, professions, family. Encourage learner to practice introducing their real family before the checkpoint.
 
-Grand total: ~1320 words (440 + 220 + 275 + 220 + 165)
+Grand total: ~1320 words
