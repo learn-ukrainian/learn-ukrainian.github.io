@@ -78,7 +78,16 @@ def ingest_collection(client, collection_name: str, chunks: list[dict], text_fie
 
     ensure_collection(client, collection_name)
 
+    # Check for resume — skip if already fully ingested
+    existing = client.count(collection_name=collection_name).count
     total = len(chunks)
+    if existing >= total:
+        print(f"  ✅ Collection '{collection_name}' already has {existing} points (>= {total}). Skipping.")
+        return
+
+    if existing > 0:
+        print(f"  ⚠️  Collection has {existing}/{total} points — re-ingesting all (upsert is safe)")
+
     print(f"  Ingesting {total} entries into '{collection_name}'...")
 
     # Encode ALL texts at once (encoder handles internal batching efficiently)
