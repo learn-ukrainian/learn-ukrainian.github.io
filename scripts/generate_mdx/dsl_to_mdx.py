@@ -478,41 +478,8 @@ def convert_dsl_to_mdx(text: str) -> tuple[str, int]:
     # Convert bare URLs in prose to markdown links
     result = _convert_bare_urls(result)
 
-    # Convert dialogue blocks (blockquote with em-dash lines) to <DialogueBox>
-    def _dialogue_replace(m: re.Match) -> str:
-        nonlocal count
-        block = m.group(0)
-        lines = block.strip().split("\n")
-        exchanges = []
-        speaker_num = 0
-        speakers = ["А", "Б"]  # Default speaker labels
-        for line in lines:
-            line = line.strip().lstrip(">").strip()
-            if not line:
-                continue
-            # Match: — **Speaker text** or — Speaker text
-            dm = re.match(r"^—\s*\*?\*?(.+?)\*?\*?\s*$", line)
-            if dm:
-                text = dm.group(1).strip()
-                # Alternate speakers
-                speaker = speakers[speaker_num % 2]
-                speaker_num += 1
-                exchanges.append({"speaker": speaker, "text": text})
-        if not exchanges:
-            return block  # Can't parse — leave as-is
-        import json as _json
-        count += 1
-        return (
-            f'<DialogueBox client:only="react" '
-            f'exchanges={{{_json.dumps(exchanges, ensure_ascii=False)}}} />'
-        )
-
-    # Pattern: 2+ consecutive blockquote lines starting with > —
-    _DIALOGUE_RE = re.compile(
-        r"(?:^> *— .+\n){2,}",
-        re.MULTILINE,
-    )
-    result = _DIALOGUE_RE.sub(_dialogue_replace, result)
+    # Dialogues: leave as markdown blockquotes (> — lines).
+    # Simple and readable — no React component needed.
 
     # Clean stray quotes that leaked from DSL: "'text'" → "text"
     result = re.sub(r"\"'([^\"]*)'\"", r'"\1"', result)

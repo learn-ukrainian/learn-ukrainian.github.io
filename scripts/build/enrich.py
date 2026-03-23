@@ -77,28 +77,36 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     except Exception:
         return "", ""
 
+_translation_cache: dict[str, str] = {}
+
+
 def _find_translation(word: str) -> str:
     """Find English translation for a Ukrainian word.
 
     Uses the translation tool chain: Wiktionary → Горох → e2u.
-    No hardcoded dictionaries. No prose extraction. Fully deterministic.
-
-    Proper nouns (cities) use a small static map since dictionaries
-    don't always have them.
+    Results are cached to avoid repeated HTTP calls.
+    Failures return empty string (never crashes).
     """
-    # Proper nouns — dictionaries don't always have these
+    if word in _translation_cache:
+        return _translation_cache[word]
+
+    # Proper nouns
     _proper_nouns = {
         "Київ": "Kyiv", "Львів": "Lviv", "Одеса": "Odesa",
         "Харків": "Kharkiv", "Дніпро": "Dnipro", "Полтава": "Poltava",
     }
     if word in _proper_nouns:
+        _translation_cache[word] = _proper_nouns[word]
         return _proper_nouns[word]
 
     # Use the unified translation chain (Wiktionary → Горох → e2u)
     try:
         from rag.source_query import translate_uk_to_en
-        return translate_uk_to_en(word)
+        result = translate_uk_to_en(word)
+        _translation_cache[word] = result
+        return result
     except Exception:
+        _translation_cache[word] = ""
         return ""
 
 
@@ -538,15 +546,30 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
 
 
 def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
-    """Enrich a content file using its plan. Returns list of actions taken."""
+    """Enrich a content file using its plan. Returns list of actions taken.
+
+    Atomic write: enriches in memory, only writes if successful.
+    If enrichment fails, the original file is preserved.
+    """
     content = content_path.read_text("utf-8")
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
     slug = plan.get("slug", plan_path.stem)
 
-    enriched, actions = enrich(content, plan, slug=slug)
+    try:
+        enriched, actions = enrich(content, plan, slug=slug)
+    except Exception as e:
+        import logging
+        logging.warning(f"Enrichment failed for {slug}: {e}")
+        return []
 
-    if actions:
+    # Only write if enrichment produced content (not empty/truncated)
+    if actions and len(enriched) >= len(content) * 0.5:
         content_path.write_text(enriched, "utf-8")
+    elif actions:
+        import logging
+        logging.warning(f"Enrichment for {slug} produced suspiciously short output "
+                       f"({len(enriched)} vs {len(content)}). Skipping write.")
+        return []
 
     return actions
 

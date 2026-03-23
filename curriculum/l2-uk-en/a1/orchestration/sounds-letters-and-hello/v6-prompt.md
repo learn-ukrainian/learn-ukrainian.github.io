@@ -1,26 +1,3 @@
-<correction_directive>
-CRITICAL: Your previous module was reviewed and scored below 8.0/10.
-You must rewrite the module FROM SCRATCH, fixing ALL issues below.
-All original constraints from the writing prompt still apply.
-
-- FIX: [1. Plan adherence] [major]
-  Location: Entire module
-  Issue: The module falls significantly short of the 1200-word target. Most sections are 30-40% below their allocated word budgets. For example, the plan asks for 250 words for "Читаємо", but the text provides only a brief list and a few short sentences totaling ~150 words.
-  Fix: Expand the prose in each section to meet the specified word budgets. Add deeper phonetic explanations, more reading practice examples, and more cultural context for the greetings and city names.
-- NOTE: [5. Exercise quality] [minor]
-  Location: `:::quiz` (title: "Звук чи літера?")
-  Issue: The quiz contains 4 items, but the plan's `activity_hints` required 6 items.
-  Fix: Add 2 more questions to the quiz block to meet the target (e.g., test the concept of the soft sign Ь or the total number of consonant sounds).
-- NOTE: [5. Exercise quality] [minor]
-  Location: `:::group-sort` under the "Перші слова" section
-  Issue: The sorting activity tests vowels vs. consonants, but it is placed at the end of the "Перші слова" section. This breaks the pedagogical flow, as vowels and consonants were taught in the first section.
-  Fix: Move the `:::group-sort` activity to the end of the "Звуки і літери" section.
-- NOTE: [1. Plan adherence] [minor]
-  Location: `:::true-false` under the "Читаємо" section
-  Issue: An extra true-false activity was generated, which was not requested in the `activity_hints` of the plan.
-  Fix: Remove the true-false activity to strictly adhere to the plan, or if retained, ensure the orchestrator plan is updated to expect 5 activities instead of 4.
-</correction_directive>
-
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -51,20 +28,27 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ---
 
-## 6 Hard Rules
+## 7 Hard Rules
 
-1. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-2. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
-3. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-4. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
-5. **NO meta-commentary** — do NOT add "Content notes:", word count summaries, or self-audit sections at the end. Just write the module content and stop.
-6. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+1. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
+2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
+6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
+7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
 ## Exercises — Write Them Directly
 
-After each key teaching point, write an exercise directly in DSL format. Base your exercises on the `activity_hints` in the Plan — each hint should become one exercise.
+After each key teaching point, write an exercise directly in DSL format.
+
+**CRITICAL: Each exercise MUST match a specific `activity_hints` entry from the Plan.**
+- Use the EXACT `type` specified (quiz, fill-in, match-up, group-sort, true-false)
+- Follow the `focus` description EXACTLY — if the plan says "Answer: У тебе є...? Так / Ні", your quiz must test exactly that pattern
+- Match the `items` count specified
+- Do NOT invent different exercises — the plan's activity_hints are the specification
 
 Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
 
@@ -157,9 +141,9 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: '1.0'
+version: '1.1'
 title: Sounds, Letters, and Hello
-subtitle: "33 літери, 38 звуків, Привіт!"
+subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
 pedagogy: PPP
 phase: A1.1 [Sounds, Letters, and First Contact]
@@ -170,73 +154,50 @@ objectives:
 - Read your first Ukrainian words using Cyrillic letters
 - Say hello and respond to a greeting
 content_outline:
-- section: "Звуки і літери (Sounds and Letters)"
+- section: Звуки і літери (Sounds and Letters)
   words: 250
   points:
-  - "Golden rule from Большакова Grade 1 p.24 and Заболотний Grade 5 p.73:
-    'Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.'
-    33 letters (літери), 38 sounds (звуки). Letters are symbols on paper.
-    Sounds are what we hear and pronounce."
-  - "Two families of sounds:
-    Голосні (vowels) — made with voice only, mouth open, no obstruction.
-    Большакова teaches with a poem: 'Голосні почуєш в пісні.'
-    6 vowel sounds: [а], [о], [у], [е], [и], [і].
-    10 vowel letters: А, О, У, Е, И, І, Я, Ю, Є, Ї."
-  - "Приголосні (consonants) — made with voice + noise or noise only.
-    Lips, teeth, tongue create obstruction. 32 consonant sounds.
-    Большакова: 'Приголосні деренчать, і тихенько шелестять.'"
-- section: "Перші слова (First Words)"
+  - 'Golden rule from Большакова Grade 1 p.24 and Заболотний Grade 5 p.73: ''Ми чуємо і вимовляємо звуки, а бачимо і пишемо
+    літери.'' 33 letters (літери), 38 sounds (звуки). Letters are symbols on paper. Sounds are what we hear and pronounce.'
+  - 'Two families of sounds: Голосні (vowels) — made with voice only, mouth open, no obstruction. Большакова teaches with
+    a poem: ''Голосні почуєш в пісні.'' 6 vowel sounds: [а], [о], [у], [е], [и], [і]. 10 vowel letters: А, О, У, Е, И, І,
+    Я, Ю, Є, Ї.'
+  - 'Приголосні (consonants) — made with voice + noise or noise only. Lips, teeth, tongue create obstruction. 32 consonant
+    sounds. Большакова: ''Приголосні деренчать, і тихенько шелестять.'''
+- section: Перші слова (First Words)
   words: 300
   points:
-  - "Some Cyrillic letters look like Latin but may sound different.
-    Start with letters that look AND sound familiar: А, О, К, М, Т.
-    Read immediately: мама, тато, кома, атом, мак, око.
-    Important: Ukrainian Т is dental (tongue touches teeth, not gum ridge)
-    and К/Т are unaspirated (no puff of air). Close enough for now."
-  - "False friend letters — the biggest trap for English speakers:
-    В sounds [в] (not 'b'), Н sounds [н] (not 'h'),
-    Р sounds [р] rolled (not 'p'), С sounds [с] (not 'c/k'),
-    У sounds [у] (not 'y'), Х sounds [х] (not 'x').
-    Practice: вода (water), рука (hand), сон (dream), ніс (nose), хата (house)."
-  - "New shapes — letters with no Latin equivalent:
-    Б, Г, Ґ, Д, Ж, З, И, Й, Л, П, Ф, Ц, Ч, Ш, Щ.
-    Through words: банк, дім, зима, книга, школа.
-    Щ always makes TWO sounds [шч]. Ь has NO sound (softens the consonant before it)."
-  - "Special: Ї always = [йі], never softens. Unique to Ukrainian.
-    Я, Ю, Є can be two sounds OR soften a consonant.
-    Full exploration in M02 — for now, just recognize them."
-- section: "Привіт! (Hello!)"
+  - 'Some Cyrillic letters look like Latin but may sound different. Start with letters that look AND sound familiar: А, О,
+    К, М, Т. Read immediately: мама, тато, кома, атом, мак, око. Important: Ukrainian Т is dental (tongue touches teeth, not
+    gum ridge) and К/Т are unaspirated (no puff of air). Close enough for now.'
+  - 'False friend letters — the biggest trap for English speakers: В sounds [в] (not ''b''), Н sounds [н] (not ''h''), Р sounds
+    [р] rolled (not ''p''), С sounds [с] (not ''c/k''), У sounds [у] (not ''y''), Х sounds [х] (not ''x''). Practice: вода
+    (water), рука (hand), сон (dream), ніс (nose), хата (house).'
+  - 'New shapes — letters with no Latin equivalent: Б, Г, Ґ, Д, Ж, З, И, Й, Л, П, Ф, Ц, Ч, Ш, Щ. Through words: банк, дім,
+    зима, книга, школа. Щ always makes TWO sounds [шч]. Ь has NO sound (softens the consonant before it).'
+  - 'Special: Ї always = [йі], never softens. Unique to Ukrainian. Я, Ю, Є can be two sounds OR soften a consonant. Full exploration
+    in M02 — for now, just recognize them.'
+- section: Привіт! (Hello!)
   words: 250
   points:
-  - "Following Anna Ohoiko ULP Episode 1 — your first conversation.
-    Привіт! — Hi! (informal, use with friends, family, peers).
-    Як справи? — How are you? Answers: Добре. Чудово. Нормально.
-    А у тебе? — And you?"
-  - "Рада тебе бачити! (female) / Радий тебе бачити! (male) — Glad to see you!
-    Note: Ukrainian has gendered forms. Women say рада, men say радий.
-    This is your first encounter with gender in Ukrainian — it will become
-    a major topic starting M08."
-  - "Reading practice with the greeting:
-    Read each letter, blend into syllables: При-віт!
-    This word uses letters from all groups:
-    П (new), р (false friend!), и (new vowel), в (false friend!), і (vowel), т (familiar)."
-- section: "Читаємо (Reading Practice)"
+  - 'Following Anna Ohoiko ULP Episode 1 — your first conversation. Привіт! — Hi! (informal, use with friends, family, peers).
+    Як справи? — How are you? Answers: Добре. Чудово. Нормально. А у тебе? — And you?'
+  - 'Рада тебе бачити! (female) / Радий тебе бачити! (male) — Glad to see you! Note: Ukrainian has gendered forms. Women say
+    рада, men say радий. This is your first encounter with gender in Ukrainian — it will become a major topic starting M08.'
+  - 'Reading practice with the greeting: Read each letter, blend into syllables: При-віт! This word uses letters from all
+    groups: П (new), р (false friend!), и (new vowel), в (false friend!), і (vowel), т (familiar).'
+- section: Читаємо (Reading Practice)
   words: 250
   points:
-  - "Environmental reading — signs you see in Ukraine:
-    Аптека (pharmacy), Банк (bank), Кафе (cafe), Метро (metro),
-    Пошта (post office), Школа (school), Зупинка (bus stop).
-    Sound out each letter, blend into syllables, read the whole word."
-  - "Ukrainian city names:
-    Київ, Львів, Одеса, Харків, Дніпро, Полтава."
-  - "First sentences with Це (this is):
-    Це мама. Це банк. Це Київ. Що це? Хто це?"
-- section: "Підсумок — Summary"
+  - 'Environmental reading — signs you see in Ukraine: Аптека (pharmacy), Банк (bank), Кафе (cafe), Метро (metro), Пошта (post
+    office), Школа (school), Зупинка (bus stop). Sound out each letter, blend into syllables, read the whole word.'
+  - 'Ukrainian city names: Київ, Львів, Одеса, Харків, Дніпро, Полтава.'
+  - 'First sentences with Це (this is): Це мама. Це банк. Це Київ. Що це? Хто це?'
+- section: Підсумок — Summary
   words: 150
   points:
-  - "Self-check: How many letters? How many sounds? Why are they different?
-    What are голосні? What are приголосні?
-    What does Привіт mean? How do you respond to Як справи?"
+  - 'Self-check: How many letters? How many sounds? Why are they different? What are голосні? What are приголосні? What does
+    Привіт mean? How do you respond to Як справи?'
 vocabulary_hints:
   required:
   - мама (mother)
@@ -258,36 +219,41 @@ vocabulary_hints:
   - нормально (okay)
 activity_hints:
 - type: quiz
-  focus: "Sound or letter? (звук чи літера?)"
+  focus: 'Distinguish between sounds (звуки) and letters (літери). Example questions: ''Що ми чуємо і вимовляємо?'' → ''звуки''
+    | ''Що ми бачимо і пишемо?'' → ''літери'' | ''Скільки літер в абетці?'' → ''33'' | ''Скільки звуків в українській мові?''
+    → ''38''.'
   items: 6
 - type: match-up
-  focus: "Match false friend letters to their REAL sounds"
+  focus: 'Match false friend Cyrillic letters to their REAL sounds. Pairs: В ↔ [в] (not ''b''), Н ↔ [н] (not ''h''), Р ↔ [р]
+    (not ''p''), С ↔ [с] (not ''c/k''), У ↔ [у] (not ''y''), Х ↔ [х] (not ''x'').'
   items: 6
 - type: fill-in
-  focus: "Complete the greeting dialogue"
+  focus: 'Complete a basic greeting dialogue with blanks. EXACT pattern: ''— {Привіт}! Як {справи}?'' / ''— {Добре}. А у {тебе}?''
+    / ''— {Чудово}.'' Options per blank: Привіт / справи / Добре / тебе / Чудово / Нормально.'
   items: 4
 - type: group-sort
-  focus: "Sort into голосні vs приголосні"
+  focus: 'Sort Cyrillic letters into Голосні (vowels) and Приголосні (consonants). Голосні: А, О, У, Е, И, І. Приголосні:
+    К, М, Т, В, Н, Р, С, Х.'
   items: 8
 connects_to:
 - a1-002 (Reading Ukrainian)
 prerequisites: []
 grammar:
-- "Звуки vs літери — 33 letters, 38 sounds"
-- "Голосні (6 sounds, 10 letters) vs приголосні (32 sounds)"
-- "Cyrillic letter-sound mapping (familiar, false friends, new shapes)"
-- "Привіт greeting as first spoken Ukrainian"
+- Звуки vs літери — 33 letters, 38 sounds
+- Голосні (6 sounds, 10 letters) vs приголосні (32 sounds)
+- Cyrillic letter-sound mapping (familiar, false friends, new shapes)
+- Привіт greeting as first spoken Ukrainian
 register: розмовний
 references:
-- title: "Большакова Grade 1 буквар, p.24"
-  notes: "Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.'"
-- title: "Захарійчук Grade 1 буквар (NUS 2025), p.13"
-  notes: "Sound notation: [•] for vowels, [–] for consonants."
-- title: "Заболотний Grade 5, p.73"
-  notes: "38 звуків: 6 голосних + 32 приголосні."
-- title: "ULP Season 1, Episode 1 — Informal Greetings"
+- title: Большакова Grade 1 буквар, p.24
+  notes: Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.'
+- title: Захарійчук Grade 1 буквар (NUS 2025), p.13
+  notes: 'Sound notation: [•] for vowels, [–] for consonants.'
+- title: Заболотний Grade 5, p.73
+  notes: '38 звуків: 6 голосних + 32 приголосні.'
+- title: ULP Season 1, Episode 1 — Informal Greetings
   url: https://www.ukrainianlessons.com/episode1/
-  notes: "Привіт, Як справи?, response patterns."
+  notes: Привіт, Як справи?, response patterns.
 pronunciation_videos:
   overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
@@ -729,6 +695,11 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+**Authority hierarchy (if uncertain about a word, check in this order):**
+VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
+
+**Online fallbacks:** VESUM: vesum.com.ua | Правопис: 2019.pravopys.net | Горох: goroh.pp.ua | Антоненко-Давидович: ukrlib.com.ua/books/printit.php?tid=4002 | Грінченко: hrinchenko.com | Словник.ua: slovnyk.me
+
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
@@ -784,12 +755,84 @@ These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because t
 
 *Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*
 
+
+
+---
+
+## Skeleton — Follow This Structure Exactly
+
+A detailed paragraph-level skeleton was generated for this module. You MUST follow it precisely:
+- Write every paragraph listed, in the order listed
+- Hit each paragraph's word budget (+-10%)
+- Place exercises exactly where the skeleton says
+- Use the specific examples named in the skeleton
+- Do NOT skip paragraphs, reorder sections, or add unplanned content
+
+The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
+
+<skeleton>
+## Звуки і літери (Sounds and Letters) (~275 words total)
+
+- P1 (~90 words): Open with the golden rule from Большакова Grade 1: «Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери.» Establish the core distinction — sounds (звуки) are what your mouth makes and your ears hear; letters (літери) are symbols on paper. Ukrainian has 33 letters but 38 sounds. The mismatch is the first mystery of Ukrainian — some letters do double duty. Frame this as a key insight, not just a fact.
+
+- P2 (~100 words): Introduce голосні (vowels) — sounds made with voice alone, mouth open, air flows freely without obstruction. Use Большакова's poem: «Голосні почуєш в пісні.» List the 6 vowel sounds: [а], [о], [у], [е], [и], [і]. Then the 10 vowel letters: А, О, У, Е, И, І, Я, Ю, Є, Ї. Note the 6-vs-10 gap — Я, Ю, Є, Ї are "special" letters explored later. For now, just recognize them.
+
+- P3 (~85 words): Introduce приголосні (consonants) — sounds made when lips, teeth, or tongue create an obstruction. Voice + noise or noise alone. Use Большакова's poem: «Приголосні деренчать, і тихенько шелестять.» 32 consonant sounds from 22 consonant letters (plus Ь, which has no sound of its own). Use the Grade 1 notation: [•] for vowels, [–] for consonants. Quick check: say «мама» — [м] lips close (consonant), [а] mouth open (vowel), alternating.
+
+- Exercise: **Group-sort** — Sort letters into Голосні (А, О, У, Е, И, І) and Приголосні (К, М, Т, В, Н, Р, С, Х). 8 items.
+
+## Перші слова (First Words) (~330 words total)
+
+- P1 (~80 words): Familiar letters — some Cyrillic letters look AND sound like their Latin counterparts. Start reading immediately with А, О, К, М, Т. Sound out: мама, тато, кома, атом, мак, око. Celebrate — you just read Ukrainian! Brief note: Ukrainian Т is dental (tongue touches teeth, not the gum ridge like English T) and К/Т have no puff of air (unaspirated). Close enough for now — perfection comes later.
+
+- P2 (~100 words): False friend letters — the biggest trap. These look like English letters but make completely different sounds. В sounds [в] (like English "v", not "b"). Н sounds [н] (like English "n", not "h"). Р sounds [р] (rolled, not "p"). С sounds [с] (like English "s", not "c/k"). У sounds [у] (like "oo", not "y"). Х sounds [х] (a raspy "h", not "x"). Practice each with a word: вода (water), ніс (nose), рука (hand), сон (dream), хата (house). Read slowly — your brain will try to apply English sounds. Resist it.
+
+- Exercise: **Match-up** — Match false friend Cyrillic letters to their real Ukrainian sounds. Pairs: В↔[в], Н↔[н], Р↔[р], С↔[с], У↔[у], Х↔[х]. 6 items.
+
+- P3 (~90 words): New shapes — letters with no Latin lookalike. Б, Г, Ґ, Д, Ж, З, И, Й, Л, П, Ф, Ц, Ч, Ш, Щ. Don't memorize the list — learn through words: банк (Б), дім (Д, home), зима (З, winter), книга (К+Н together, book), школа (Ш, school). Special cases: Щ always makes two sounds [шч]. Ь (soft sign) has no sound — it softens the consonant before it, like the л in сіль (salt).
+
+- P4 (~60 words): Preview of special letters: Ї always = [йі], never softens a consonant — unique to Ukrainian. Я, Ю, Є can either represent two sounds or soften a preceding consonant. Full exploration in Module 2 — for now, just recognize them when you see them in words like Україна, юнак, Європа.
+
+## Привіт! (Hello!) (~275 words total)
+
+- P1 (~60 words): Transition from reading to speaking. You can now sound out letters — time for your first real conversation. Ukrainian greetings follow patterns just like English, but with a few surprises. The most common informal greeting: Привіт! (Hi!) — use with friends, family, anyone your age.
+
+- Dialogue 1 (~80 words): A complete greeting exchange between two friends. Model conversation:
+  — Привіт!
+  — Привіт! Як справи?
+  — Добре. А у тебе?
+  — Чудово!
+  Break down each line. Як справи? = How are things? Answers: Добре (fine/good), Чудово (great/wonderful), Нормально (okay). А у тебе? = And with you? — bounces the question back.
+
+- P2 (~70 words): Gender in greetings — your first encounter. Рада тебе бачити! (female speaker) vs. Радий тебе бачити! (male speaker) — both mean "Glad to see you!" The ending changes: -а for women, -ий for men. This isn't about who you're talking TO — it's about who is SPEAKING. Gender agreement will become a major topic starting Module 8; for now, just notice the pattern.
+
+- P3 (~65 words): Reading practice with Привіт. Sound out each letter: П (new shape) — р (false friend! rolled, not "p") — и (new vowel) — в (false friend! [в], not "b") — і (vowel) — т (familiar). Blend into syllables: При-віт! This single word uses letters from all three groups — familiar, false friend, and new. If you can read Привіт, you can read Ukrainian.
+
+- Exercise: **Fill-in** — Complete a greeting dialogue with blanks. «— {Привіт}! Як {справи}?» / «— {Добре}. А у {тебе}?» / «— {Чудово}.» Word bank: Привіт, справи, Добре, тебе, Чудово, Нормально. 4 blanks.
+
+## Читаємо (Reading Practice) (~275 words total)
+
+- P1 (~90 words): Environmental reading — signs you'd see walking through a Ukrainian city. Sound out each word letter by letter, then blend into syllables: Аптека (А-пте-ка, pharmacy), Банк (Банк, bank), Кафе (Ка-фе, cafe), Метро (Мет-ро, metro), Пошта (Пош-та, post office), Школа (Шко-ла, school), Зупинка (Зу-пин-ка, bus stop). Notice how many are recognizable — international words that Ukrainian has adopted with its own spelling and pronunciation.
+
+- P2 (~80 words): Ukrainian city names — practice reading real proper nouns. Київ (Ки-їв, note the Ї!), Львів (Львів — three consonants in a row!), Одеса (О-де-са), Харків (Хар-ків — starts with false friend Х), Дніпро (Дніп-ро — rolled Р), Полтава (Пол-та-ва). These names contain every type of letter you've learned. Try saying each aloud. If you can read Львів with its consonant cluster, you're doing well.
+
+- P3 (~105 words): First sentences using Це (this is). The simplest Ukrainian sentence: Це + noun. Це мама. (This is mom.) Це банк. (This is a bank.) Це Київ. (This is Kyiv.) No verb needed — Ukrainian drops "is" in present tense. Build questions: Що це? (What is this?) — for things. Хто це? (Who is this?) — for people. Practice pairs: Що це? — Це школа. Хто це? — Це мама. Що це? — Це аптека. You now have the pattern for pointing at anything in Ukraine and asking about it — or answering when someone points and asks you.
+
+- Exercise: **Quiz** — Звуки vs літери comprehension. «Що ми чуємо і вимовляємо?» → звуки. «Що ми бачимо і пишемо?» → літери. «Скільки літер в абетці?» → 33. «Скільки звуків в українській мові?» → 38. «Які звуки утворюються за допомогою голосу?» → голосні. «Як називаються звуки, що деренчать і шелестять?» → приголосні. 6 items.
+
+## Підсумок — Summary (~165 words total)
+
+- P1 (~165 words): Recap the journey of this module. You learned the fundamental distinction: 33 літери (letters) that you see and write, 38 звуків (sounds) that you hear and pronounce. Sounds split into two families: голосні (6 vowel sounds, 10 vowel letters) and приголосні (32 consonant sounds). You read your first Ukrainian words by learning three groups of Cyrillic letters: familiar (А, О, К, М, Т), false friends (В, Н, Р, С, У, Х), and new shapes (Б, Д, Ж, З, Ш, Щ). You spoke your first greeting: Привіт! Як справи? — Добре! And you read real Ukrainian words from city signs and place names, built your first sentences with Це. Self-check: Can you answer — How many letters? How many sounds? Why the difference? What are голосні? What are приголосні? What does Привіт mean? How do you answer Як справи? If yes — вітаю, you're ready for Module 2!
+
+Grand total: ~1320 words
+</skeleton>
+
 ## Output Format
 
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught
+- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `:::quiz` / `:::fill-in` / `:::match-up` / `:::group-sort` / `:::true-false` for exercises (using the DSL formats above)
