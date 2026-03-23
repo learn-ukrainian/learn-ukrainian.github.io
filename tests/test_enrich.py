@@ -138,9 +138,9 @@ class TestDialogueFormatting:
     def test_wraps_dialogue_block(self):
         content = "Some prose.\n\n— Привіт!\n— Як справи?\n— Добре!\n\nMore prose."
         result = _format_dialogues(content)
-        assert ":::dialogue" in result
+        assert '<div class="dialogue">' in result
         assert "— Привіт!" in result
-        assert ":::" in result
+        assert "</div>" in result
 
     def test_single_line_not_wrapped(self):
         content = "— Привіт!\n\nSome prose."

@@ -6,6 +6,7 @@ Look at the text on this page. What you see are letters — shapes on a screen. 
 
 > **Ми чу́ємо і вимовля́ємо звуки, а ба́чимо і пи́шемо літери.**
 
+
 We hear and pronounce sounds, but we see and write letters. The Ukrainian alphabet has 33 **літери** (letters), but 38 **звуки** (sounds). Why the mismatch? Because some letters represent more than one sound, and some sounds have no letter of their own. You will discover why as the course unfolds.
 
 Ukrainian sounds split into two families. The first family is **голосні́** (vowels) — sounds made with voice alone, mouth open, no obstruction from lips or tongue. A poem from the Ukrainian first-grade reader captures it perfectly: *«Голосні почу́єш в пісні́»* — you hear vowels in a song. There are 6 vowel sounds in Ukrainian, but 10 vowel letters represent them:
@@ -105,10 +106,24 @@ groups:
 
 Time for your first Ukrainian conversation. Two friends meet on the street:
 
-> — **Привіт!**
-> — **Привіт!** **Як спра́ви?**
-> — **До́бре.** А у **тебе́?**
-> — **Чудо́во!**
+<div class="dialogue">
+
+
+— **Привіт!**
+
+
+— **Привіт!** **Як спра́ви?**
+
+
+— **До́бре.** А у **тебе́?**
+
+
+— **Чудо́во!**
+
+
+</div>
+
+
 
 **Привіт** (hi) is the informal greeting — use it with friends, family, classmates, anyone you are on familiar terms with. **Як справи?** (how are you?) is the standard follow-up. The answers:
 
@@ -176,10 +191,12 @@ The word **Це** (this is) unlocks your first Ukrainian sentences:
 > **Це банк.** — This is a bank.
 > **Це Київ.** — This is Kyiv.
 
+
 And your first questions:
 
 > **Що це?** — What is this?
 > **Хто це?** — Who is this?
+
 
 **Що** (what) and **Хто** (who) — two question words that open the door to asking about the world around you.
 
@@ -193,6 +210,16 @@ And your first questions:
 <YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
 
 [По́вний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+
+
+
+
+
+### Відео — Video
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
+
+[Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
 
 
 ## Підсумок — Summary
@@ -217,15 +244,15 @@ In Module 2, you will explore the full alphabet in depth — every letter, every
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **звук** | sound | ім. | ч. |
 | **літера** | letter | ім. | ж. |
-| **голосни́й** | vowel | прикм. |  |
-| **при́голосний** | consonant | прикм. |  |
-| **абе́тка** | alphabet | ім. | ж. |
+| **голосний** | vowel | прикм. |  |
+| **приголосний** | consonant | прикм. |  |
+| **абетка** | alphabet | ім. | ж. |
 | **мама** | mother | ім. | ж. |
 | **тато** | father | ім. | ч. |
 | **вода** | water | ім. | ж. |
@@ -259,9 +286,9 @@ In Module 2, you will explore the full alphabet in depth — every letter, every
 | **рада** | glad (feminine) | ім. | ч. |
 | **радий** | glad (masculine) | прикм. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Як справи?** | How are you? |
 | **А у тебе?** | And you? |
@@ -275,7 +302,7 @@ In Module 2, you will explore the full alphabet in depth — every letter, every
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -283,13 +310,13 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Дже́рела — References**
+**Джерела — References**
 
-- Большако́ва Grade 1 буква́р, p.24
-  _Голосні/приголосні taught through poems. 'Голосні́ почуєш в пісні.'_
+- Большакова Grade 1 буквар, p.24
+  _Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.'_
 - Захарійчук Grade 1 буквар (NUS 2025), p.13
   _Sound notation: [•] for vowels, [–] for consonants._
-- Заболо́тний Grade 5, p.73
-  _38 звуків: 6 голосни́х + 32 приголосні._
+- Заболотний Grade 5, p.73
+  _38 звуків: 6 голосних + 32 приголосні._
 - [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
   _Привіт, Як справи?, response patterns._

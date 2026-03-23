@@ -138,20 +138,54 @@ This is the Capstone Dialogue. It combines every single skill you have learned i
 Read the following dialogue aloud. Try to hear the distinct voices of the two speakers.
 
 :::dialogue
+<div class="dialogue">
+
+
 — Добрий день!
+
+
 — Добрий день!
+
+
 — Як вас звати?
+
+
 — Мене звати Максим. А як вас звати?
+
+
 — Мене звати Де́від.
+
+
 — Ду́же приє́мно, Де́віде. Звідки ви?
+
+
 — Я з Америки. А ви звідки?
+
+
 — Я з України. Я — архіте́ктор. А хто ви?
+
+
 — Я — програмі́ст.
+
+
 — У вас є сім'я?
+
+
 — Так, у мене є сім'я. Це моя дружи́на. Її звати Анна. Вона — лікар. А це мій син. Його звати Марк.
+
+
 — Дуже га́рна сім'я. У мене є брат. Це мій брат. Він — студент.
+
+
 — Дуже приємно. До поба́чення, Макси́ме!
+
+
 — До побачення, Девіде!
+
+
+</div>
+
+
 :::
 
 Let us analyze the flow of this interaction. It begins formally because these are two adults meeting for the very first time. They use the respectful daytime greeting «Добрий день!» (Good day!). When asking for names, they use the formal construction «Як вас звати?» (What is your name?). Once names are exchanged, they express politeness with the phrase «Дуже приємно» (Very pleasant / Nice to meet you).
@@ -206,6 +240,14 @@ title: "Complete the full self-introduction monologue"
 [По́вний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
 
 
+
+
+
+### Відео — Video
+
+[Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+
+
 ## Підсумок — Summary
 
 You have officially reached the end of the Checkpoint. Let us perform a final, honest self-check to ensure your foundation is rock solid before we move forward. Can you confidently answer these questions?
@@ -223,9 +265,9 @@ If you can answer "yes" to these questions, you are absolutely ready. You have m
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **прізвище** | surname | ім. | с. |
 | **ім'я** | first name | ім. | с. |
@@ -233,14 +275,14 @@ If you can answer "yes" to these questions, you are absolutely ready. You have m
 | **ні** | no | част. |  |
 | **телефон** | phone | ім. | ч. |
 | **архітектор** | architect | ім. | ч. |
-| **Аме́рика** | America |  |  |
+| **Америка** | America |  |  |
 | **велика** | big (feminine) | прикм. |  |
 | **гарна** | beautiful, nice (feminine) | прикм. |  |
 | **дуже** | very | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Я з** | I am from |
 | **Добрий вечір** | Good evening |
@@ -253,7 +295,7 @@ If you can answer "yes" to these questions, you are absolutely ready. You have m
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -261,12 +303,12 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Дже́рела — References**
+**Джерела — References**
 
 - [ULP Season 1, Episode 10 — Review 1-9](https://www.ukrainianlessons.com/episode10/)
   _Anna's connected self-introduction review pattern._
 
-**Статті́ — Articles**
+**Статті — Articles**
 
 - [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) (All 33 letters with audio)
 - [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) (Gender rules)

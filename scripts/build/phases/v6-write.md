@@ -192,6 +192,13 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- **Dialogue formatting** — write each speaker turn on its own line starting with an em dash `—`. Use blockquote `>` prefix. Each turn = one line. Example:
+
+> — Привіт! Як справи?
+> — Добре, дякую! А у тебе?
+> — Теж добре!
+
+A downstream tool converts these to styled dialogue blocks automatically.
 - Dialogues: natural, not stilted. Real situations, real responses.
 - **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
 - **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.

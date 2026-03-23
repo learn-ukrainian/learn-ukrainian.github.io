@@ -384,24 +384,64 @@ def _build_resources(plan: dict, slug: str = "") -> str:
 
 
 def _format_dialogues(content: str) -> str:
-    """Wrap dialogue blocks in :::dialogue containers.
+    """Convert blockquote dialogues to visually separated dialogue blocks.
 
-    Detects patterns like:
-    — Привіт! Як справи?
-    — Добре, дякую! А у тебе?
+    Detects blockquote dialogue patterns like:
+        > — **Привіт!** (Hi!)
+        > — **Добре!** (Good!)
 
-    And wraps them in :::dialogue ... ::: blocks.
+    And converts them to a styled dialogue div with each turn separated:
+        <div class="dialogue">
+        <p>— **Привіт!** (Hi!)</p>
+        <p>— **Добре!** (Good!)</p>
+        </div>
+
+    Also handles non-blockquote dialogues (— at line start).
     """
-    dialogue_pattern = re.compile(
+    # Match a block of consecutive blockquote lines containing dialogue
+    blockquote_dialogue = re.compile(
+        r"((?:^> .+\n)+)",
+        re.MULTILINE,
+    )
+
+    def _convert_blockquote(match: re.Match) -> str:
+        block = match.group(1)
+        lines = block.strip().split("\n")
+        # Check if this block has dialogue markers (—)
+        has_dialogue = any(re.match(r"^>\s*—\s", line) for line in lines)
+        if not has_dialogue:
+            return match.group(0)  # Not a dialogue, leave as blockquote
+
+        parts = ['<div class="dialogue">\n']
+        for line in lines:
+            text = re.sub(r"^>\s*", "", line).strip()
+            if text:
+                parts.append(f"\n{text}\n")
+        parts.append("\n</div>\n")
+        return "\n".join(parts)
+
+    result = blockquote_dialogue.sub(_convert_blockquote, content)
+
+    # Also handle non-blockquote dialogues (— at line start)
+    plain_dialogue = re.compile(
         r"((?:^— .+\n){2,})",
         re.MULTILINE,
     )
 
-    def _wrap(match: re.Match) -> str:
-        block = match.group(1).rstrip("\n")
-        return f":::dialogue\n{block}\n:::\n"
+    def _convert_plain(match: re.Match) -> str:
+        block = match.group(1)
+        lines = block.strip().split("\n")
+        parts = ['<div class="dialogue">\n']
+        for line in lines:
+            text = line.strip()
+            if text:
+                parts.append(f"\n{text}\n")
+        parts.append("\n</div>\n")
+        return "\n".join(parts)
 
-    return dialogue_pattern.sub(_wrap, content)
+    result = plain_dialogue.sub(_convert_plain, result)
+
+    return result
 
 
 def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
@@ -425,7 +465,22 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     """
     actions: list[str] = []
 
-    # 1. Format dialogues in existing content
+    # 1. Revert any previously converted dialogues back to blockquote format,
+    # then re-format. This ensures idempotent dialogue processing.
+    if '<div class="dialogue">' in content:
+        # Strip dialogue divs, restore blockquote lines
+        def _restore_blockquote(m: re.Match) -> str:
+            inner = m.group(1).strip()
+            lines = [line.strip() for line in inner.split("\n") if line.strip()]
+            return "\n".join(f"> {line}" for line in lines) + "\n"
+        content = re.sub(
+            r'<div class="dialogue">\s*\n(.*?)\n</div>',
+            _restore_blockquote,
+            content,
+            flags=re.DOTALL,
+        )
+
+    # Format dialogues in content
     new_content = _format_dialogues(content)
     if new_content != content:
         actions.append("dialogue-formatting")

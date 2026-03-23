@@ -705,3 +705,33 @@ details.solution-block > *:last-child {
 [data-theme='dark'] details.solution-block summary:hover {
   background: var(--ifm-color-emphasis-300);
 }
+
+
+/* ============= DIALOGUE BLOCKS ============= */
+/* Visually separated dialogue turns for lesson conversations */
+
+.dialogue {
+  background: var(--co-gray-50);
+  border-left: 3px solid var(--co-blue-bright);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+
+.dialogue p {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+.dialogue p:first-child {
+  margin-top: 0;
+}
+
+.dialogue p:last-child {
+  margin-bottom: 0;
+}
+
+[data-theme='dark'] .dialogue {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: var(--co-blue-light);
+}

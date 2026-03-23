@@ -198,6 +198,14 @@ title: "Г чи Ґ?"
 [По́вний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
 
 
+
+
+
+### Відео — Video
+
+[Повний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+
+
 ## Підсумок — Summary
 
 You now have three essential tools for reading Ukrainian accurately.
@@ -222,9 +230,9 @@ Read these words aloud: **сім'я**, **день**, **п'ять**, **гарно
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **осінь** | autumn | ім. | ж. |
 | **біль** | pain | ім. | ч. |
@@ -260,9 +268,9 @@ Read these words aloud: **сім'я**, **день**, **п'ять**, **гарно
 | **ранок** | morning | ім. |  |
 | **риба** | fish | ім. | ж. |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **м'який знак** | soft sign |
 
@@ -270,7 +278,7 @@ Read these words aloud: **сім'я**, **день**, **п'ять**, **гарно
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -278,11 +286,11 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Дже́рела — References**
+**Джерела — References**
 
 - Захарійчук Grade 1 (NUS 2025), p.97
   _Apostrophe rule: after б,п,в,м,ф,р before я,ю,є,ї._
 - Захарійчук Grade 1 (NUS 2025), p.15
   _Hard [–] vs soft [=] consonant notation._
-- Большако́ва Grade 1, p.45-47
-  _Тверді і пом'якшені при́голосні звуки._
+- Большакова Grade 1, p.45-47
+  _Тверді і пом'якшені приголосні звуки._
