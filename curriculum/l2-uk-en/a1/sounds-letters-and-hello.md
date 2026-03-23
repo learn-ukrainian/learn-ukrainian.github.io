@@ -175,6 +175,7 @@ When sounding out an unfamiliar word, go letter by letter from left to right. Fi
 
 
 
+
 ### Відео — Video
 
 <YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
@@ -235,25 +236,25 @@ And you started reading real Ukrainian words — signs like **аптека** and
 | **там** | there | присл. |  |
 | **тут** | here | присл. |  |
 | **ніс** | nose | ім. | ч. |
-| **сон** | dream | ім. | ч. |
-| **дім** | home | ім. | ч. |
+| **сон** | sleep | ім. | ч. |
+| **дім** | house | ім. | ч. |
 | **кафе** | cafe | ім. | с. |
 | **Львів** | Lviv |  |  |
 | **Харків** | Kharkiv |  |  |
 | **Київ** | Kyiv | ім. |  |
-| **літери** | letters | ім. | ж. |
-| **голосні** | consonants | прикм. |  |
-| **приголосні** | consonants | прикм. |  |
-| **рада** | female | ім. | ж. |
-| **радий** | male | прикм. |  |
+| **літери** | sort | ім. | ж. |
+| **голосні** | plaudit | прикм. |  |
+| **приголосні** | accordant | прикм. |  |
+| **рада** | council | ім. | ж. |
+| **радий** | glad | прикм. |  |
 
 ### Вирази — Expressions
 
 | Вираз | Переклад |
 |-------|----------|
 | **А у тебе** |  |
-| **Що це** |  |
-| **Хто це** |  |
+| **Що це** | admit |
+| **Хто це** | know |
 
 
 <!-- TAB:Зошит -->

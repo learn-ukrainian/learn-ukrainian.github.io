@@ -77,63 +77,29 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     except Exception:
         return "", ""
 
-def _find_translation_nearby(word: str, content: str) -> str:
-    """Search content for a translation of a Ukrainian word using broader patterns.
+def _find_translation(word: str) -> str:
+    """Find English translation for a Ukrainian word.
 
-    Looks for patterns like:
-    - word ... means "translation"
-    - word ... is "translation"
-    - word (translation)
-    - word, which means "translation"
-    - known cognates (кафе→cafe, метро→metro)
+    Uses the translation tool chain: Wiktionary → Горох → e2u.
+    No hardcoded dictionaries. No prose extraction. Fully deterministic.
+
+    Proper nouns (cities) use a small static map since dictionaries
+    don't always have them.
     """
-    # Common cognates/proper nouns that are self-explanatory
-    # Common words + cognates/proper nouns
-    # This is a fallback — ideally the writer provides translations inline
-    cognates = {
-        # Cognates
-        "кафе": "cafe", "метро": "metro", "банк": "bank", "аптека": "pharmacy",
-        "автобус": "bus", "телефон": "phone", "університет": "university",
-        # Cities
+    # Proper nouns — dictionaries don't always have these
+    _proper_nouns = {
         "Київ": "Kyiv", "Львів": "Lviv", "Одеса": "Odesa",
         "Харків": "Kharkiv", "Дніпро": "Dnipro", "Полтава": "Poltava",
-        # Common A1 words that writers often skip translating
-        "день": "day", "ніч": "night", "сон": "dream", "дім": "home",
-        "хліб": "bread", "сіль": "salt", "кінь": "horse", "дуб": "oak",
-        "хата": "house", "мак": "poppy", "ніс": "nose", "око": "eye",
-        "вухо": "ear", "рот": "mouth", "ліс": "forest", "кіт": "cat",
-        "пес": "dog", "вовк": "wolf", "лис": "fox",
-        "з'їв": "ate", "їжа": "food", "молоко": "milk",
-        "наголос": "stress (accent)", "склад": "syllable",
-        "літера": "letter", "звук": "sound",
-        "голосний": "vowel", "приголосний": "consonant",
-        "камінь": "stone", "камін": "fireplace", "ґудзик": "button",
-        "маленький": "small", "великий": "big", "гарний": "beautiful",
-        "тверді": "hard", "м'які": "soft",
-        "м'який знак": "soft sign", "апостроф": "apostrophe",
     }
-    if word in cognates:
-        return cognates[word]
+    if word in _proper_nouns:
+        return _proper_nouns[word]
 
-    # Search for "word" near English text in content (within 100 chars)
-    escaped = re.escape(word)
-    # Pattern: word ... (English in parentheses)
-    match = re.search(
-        rf"(?:\*\*)?{escaped}(?:\*\*)?\s*\(([a-zA-Z][^)]+)\)",
-        content,
-    )
-    if match:
-        return match.group(1).strip()
-
-    # Pattern: word ... means/is "English"
-    match = re.search(
-        rf"(?:\*\*)?{escaped}(?:\*\*)?\s+(?:means?|is)\s+[\"\"']?([a-zA-Z][^\"\"'\n.]+)",
-        content,
-    )
-    if match:
-        return match.group(1).strip().rstrip(".,;:")
-
-    return ""
+    # Use the unified translation chain (Wiktionary → Горох → e2u)
+    try:
+        from rag.source_query import translate_uk_to_en
+        return translate_uk_to_en(word)
+    except Exception:
+        return ""
 
 
 # Tab markers — PUBLISH step converts these to <Tabs>/<TabItem>
@@ -277,7 +243,7 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
             ])
             for word in single_words:
                 # Translation from fallback dictionary ONLY (deterministic)
-                trans = _find_translation_nearby(word, content)
+                trans = _find_translation(word)
                 pos, gender = _vesum_lookup(word)
                 lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
 
@@ -290,7 +256,7 @@ def _build_slovnyk(plan: dict, content: str = "") -> str:
                 "|-------|----------|",
             ])
             for expr in expressions:
-                trans = _find_translation_nearby(expr, content)
+                trans = _find_translation(expr)
                 lines.append(f"| **{expr}** | {trans} |")
 
     lines.append("")
