@@ -2,9 +2,9 @@ module: a1-008
 level: A1
 sequence: 8
 slug: things-have-gender
-version: '1.0'
+version: '1.1'
 title: Things Have Gender
-subtitle: "він, вона, воно — every noun has a gender"
+subtitle: він, вона, воно — every noun has a gender
 focus: grammar
 pedagogy: PPP
 phase: A1.2 [My World]
@@ -15,51 +15,34 @@ objectives:
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Video call showing your room:
-    — Привіт! Дивись, це моя кімната.
-    — Класно! У тебе є стіл? — Так, у мене є стіл і ліжко.
-    Gender emerges naturally through мій стіл (m), моя кімната (f), моє ліжко (n)."
-  - "Dialogue 2 — What's in your bag?
-    — Що у тебе є? — У мене є книга, телефон і фото.
-    — А у мене є ручка і зошит."
-- section: "Він, вона, воно (The Gender Test)"
+  - 'Dialogue 1 — Video call showing your room: — Привіт! Дивись, це моя кімната. — Класно! У тебе є стіл? — Так, у мене є
+    стіл і ліжко. Gender emerges naturally through мій стіл (m), моя кімната (f), моє ліжко (n).'
+  - Dialogue 2 — What's in your bag? — Що у тебе є? — У мене є книга, телефон і фото. — А у мене є ручка і зошит.
+- section: Він, вона, воно (The Gender Test)
   words: 300
   points:
-  - "Пономарова Grade 3 p.86: Ukrainian nouns have gender.
-    Test: can you replace the noun with він, вона, or воно?
-    Чоловічий рід (masculine): стіл — він. Можна додати: мій стіл.
-    Жіночий рід (feminine): книга — вона. Можна додати: моя книга.
-    Середній рід (neuter): вікно — воно. Можна додати: моє вікно."
-  - "Вашуленко Grade 3 p.112 — endings by gender:
-    Masculine: usually ends in consonant — стіл, телефон, зошит.
-    Feminine: usually ends in -а or -я — книга, лампа, кімната, ручка.
-    Neuter: usually ends in -о or -е — вікно, ліжко, крісло, місто.
-    This covers ~90% of nouns. Exceptions (like -ь words) come later."
-- section: "Предмети навколо (Objects Around Us)"
+  - 'Пономарова Grade 3 p.86: Ukrainian nouns have gender. Test: can you replace the noun with він, вона, or воно? Чоловічий
+    рід (masculine): стіл — він. Можна додати: мій стіл. Жіночий рід (feminine): книга — вона. Можна додати: моя книга. Середній
+    рід (neuter): вікно — воно. Можна додати: моє вікно.'
+  - 'Вашуленко Grade 3 p.112 — endings by gender: Masculine: usually ends in consonant — стіл, телефон, зошит. Feminine: usually
+    ends in -а or -я — книга, лампа, кімната, ручка. Neuter: usually ends in -о or -е — вікно, ліжко, крісло, місто. This
+    covers ~90% of nouns. Exceptions (like -ь words) come later.'
+- section: Предмети навколо (Objects Around Us)
   words: 300
   points:
-  - "Room vocabulary organized by gender:
-    Masculine: стіл (table), стілець (chair), телефон (phone),
-    комп'ютер (computer), зошит (notebook), ключ (key).
-    Feminine: книга (book), лампа (lamp), сумка (bag), ручка (pen),
-    кімната (room), стіна (wall).
-    Neuter: вікно (window), ліжко (bed), крісло (armchair),
-    дзеркало (mirror), фото (photo)."
-  - "Extending У мене є from M06 (family) to objects:
-    У мене є стіл. У мене є книга. У мене є вікно.
-    Same pattern, new vocabulary."
-- section: "Підсумок — Summary"
+  - 'Room vocabulary organized by gender: Masculine: стіл (table), стілець (chair), телефон (phone), комп''ютер (computer),
+    зошит (notebook), ключ (key). Feminine: книга (book), лампа (lamp), сумка (bag), ручка (pen), кімната (room), стіна (wall).
+    Neuter: вікно (window), ліжко (bed), крісло (armchair), дзеркало (mirror), фото (photo).'
+  - 'Extending У мене є from M06 (family) to objects: У мене є стіл. У мене є книга. У мене є вікно. Same pattern, new vocabulary.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Gender determination in 3 steps:
-    1. Say він/вона/воно with the noun — which fits?
-    2. Check the ending — consonant? -а/-я? -о/-е?
-    3. Use the right possessive — мій/моя/моє.
-    Self-check: What gender is 'стіл'? What gender is 'книга'?
-    What about 'вікно'? Say 'I have a chair' in Ukrainian."
+  - 'Gender determination in 3 steps: 1. Say він/вона/воно with the noun — which fits? 2. Check the ending — consonant? -а/-я?
+    -о/-е? 3. Use the right possessive — мій/моя/моє. Self-check: What gender is ''стіл''? What gender is ''книга''? What
+    about ''вікно''? Say ''I have a chair'' in Ukrainian.'
 vocabulary_hints:
   required:
   - стіл (table, m)
@@ -83,33 +66,33 @@ vocabulary_hints:
   - стіна (wall, f)
 activity_hints:
 - type: group-sort
-  focus: "Sort objects into masculine/feminine/neuter"
+  focus: Sort objects into masculine/feminine/neuter
   items: 12
 - type: quiz
-  focus: "він, вона, or воно? Choose for each noun."
+  focus: він, вона, or воно? Choose for each noun.
   items: 8
 - type: fill-in
-  focus: "мій/моя/моє ___ (match possessive to noun)"
+  focus: мій/моя/моє ___ (match possessive to noun)
   items: 8
 - type: quiz
-  focus: "What gender? Look at the ending."
+  focus: What gender? Look at the ending.
   items: 6
 connects_to:
 - a1-009 (What Is It Like?)
 prerequisites:
 - a1-007 (Checkpoint — First Contact)
 grammar:
-- "Noun gender: чоловічий (він, мій), жіночий (вона, моя), середній (воно, моє)"
-- "Gender by ending: consonant=m, -а/-я=f, -о/-е=n"
-- "У мене є extended to objects (from M06 family)"
+- 'Noun gender: чоловічий (він, мій), жіночий (вона, моя), середній (воно, моє)'
+- 'Gender by ending: consonant=m, -а/-я=f, -о/-е=n'
+- У мене є extended to objects (from M06 family)
 register: розмовний
 references:
-- title: "Пономарова Grade 3, p.86"
-  notes: "Gender test: він/мій, вона/моя, воно/моє."
-- title: "Вашуленко Grade 3, p.112"
-  notes: "Gender endings table: consonant, -а/-я, -о/-е."
-- title: "ULP Season 1, Episode 6 — Gender naturally through family"
+- title: Пономарова Grade 3, p.86
+  notes: 'Gender test: він/мій, вона/моя, воно/моє.'
+- title: Вашуленко Grade 3, p.112
+  notes: 'Gender endings table: consonant, -а/-я, -о/-е.'
+- title: ULP Season 1, Episode 6 — Gender naturally through family
   url: https://www.ukrainianlessons.com/episode6/
-  notes: "Gender emerges from possessives already taught."
+  notes: Gender emerges from possessives already taught.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

@@ -2,9 +2,9 @@ module: a1-011
 level: A1
 sequence: 11
 slug: how-many
-version: '1.1'
+version: '1.2'
 title: How Many?
-subtitle: "Один, два, три — numbers through prices, ages, and phones"
+subtitle: Один, два, три — numbers through prices, ages, and phones
 focus: vocabulary
 pedagogy: PPP
 phase: A1.2 [My World]
@@ -15,48 +15,37 @@ objectives:
 - Give age using Мені ... років (as memorized chunk — NO case grammar)
 - Read and say Ukrainian phone numbers
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — At a market stall:
-    — Скільки коштує ця сумка? — Двісті гривень.
-    — А ця? — Сто п'ятдесят. — Добре, я беру цю. (Accusative 'цю' as chunk — no grammar.)
-    Numbers emerge through real shopping context."
-  - "Dialogue 2 — Meeting someone new (extending M05):
-    — Скільки тобі років? — Мені двадцять п'ять. А тобі?
-    — Мені тридцять два. А твоя сестра? — Їй вісімнадцять.
-    Age formula as chunk: Мені/тобі/їй + number + років/роки/рік."
-- section: "Числа 1-20 (Numbers 1-20)"
+  - 'Dialogue 1 — At a market stall: — Скільки коштує ця сумка? — Двісті гривень. — А ця? — Сто п''ятдесят. — Добре, я беру
+    цю. (Accusative ''цю'' as chunk — no grammar.) Numbers emerge through real shopping context.'
+  - 'Dialogue 2 — Meeting someone new (extending M05): — Скільки тобі років? — Мені двадцять п''ять. А тобі? — Мені тридцять
+    два. А твоя сестра? — Їй вісімнадцять. Age formula as chunk: Мені/тобі/їй + number + років/роки/рік.'
+- section: Числа 1-20 (Numbers 1-20)
   words: 300
   points:
-  - "1-10: один, два, три, чотири, п'ять, шість, сім, вісім, дев'ять, десять.
-    Pronunciation focus: п'ять (apostrophe!), сім (not 'сем'), дев'ять (apostrophe!).
-    Practice: counting objects from M08 — один стіл, два стільці, три книги.
-    Note: the noun changes after numbers, but we learn the PATTERNS as chunks, not the grammar rule."
-  - "11-20: одинадцять, дванадцять, тринадцять, чотирнадцять, п'ятнадцять,
-    шістнадцять, сімнадцять, вісімнадцять, дев'ятнадцять, двадцять.
-    Pattern: base + -надцять (like English '-teen').
-    Watch the stress: одинáдцять, дванáдцять — stress always falls on the syllable 'на' in -надцять."
-- section: "Десятки і сотні (Tens and Hundreds)"
+  - '1-10: один, два, три, чотири, п''ять, шість, сім, вісім, дев''ять, десять. Pronunciation focus: п''ять (apostrophe!),
+    сім (not ''сем''), дев''ять (apostrophe!). Practice: counting objects from M08 — один стіл, два стільці, три книги. Note:
+    the noun changes after numbers, but we learn the PATTERNS as chunks, not the grammar rule.'
+  - '11-20: одинадцять, дванадцять, тринадцять, чотирнадцять, п''ятнадцять, шістнадцять, сімнадцять, вісімнадцять, дев''ятнадцять,
+    двадцять. Pattern: base + -надцять (like English ''-teen''). Watch the stress: одинáдцять, дванáдцять — stress always
+    falls on the syllable ''на'' in -надцять.'
+- section: Десятки і сотні (Tens and Hundreds)
   words: 300
   points:
-  - "Tens: двадцять, тридцять, сорок (!), п'ятдесят, шістдесят,
-    сімдесят, вісімдесят, дев'яносто (!), сто.
-    Two irregulars: сорок (40 — not 'чотиридесят') and дев'яносто (90 — not 'дев'ятдесят').
-    Combined: двадцять один, тридцять п'ять, сорок сім — just add the unit."
-  - "Hundreds for prices: сто (100), двісті (200), триста (300), чотириста (400),
-    п'ятсот (500), тисяча (1000).
-    Гривня: одна гривня, дві гривні, п'ять гривень.
-    These noun changes are memorized patterns — grammar comes in A2.
-    ULP Ep9: Anna teaches numbers through real prices."
-- section: "Підсумок — Summary"
+  - 'Tens: двадцять, тридцять, сорок (!), п''ятдесят, шістдесят, сімдесят, вісімдесят, дев''яносто (!), сто. Two irregulars:
+    сорок (40 — not ''чотиридесят'') and дев''яносто (90 — not ''дев''ятдесят''). Combined: двадцять один, тридцять п''ять,
+    сорок сім — just add the unit.'
+  - 'Hundreds for prices: сто (100), двісті (200), триста (300), чотириста (400), п''ятсот (500), тисяча (1000). Гривня: одна
+    гривня, дві гривні, п''ять гривень. These noun changes are memorized patterns — grammar comes in A2. ULP Ep9: Anna teaches
+    numbers through real prices.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Three practical uses of numbers:
-    1. Prices: Скільки коштує? — Двісті гривень. Сто п'ятдесят гривень.
-    2. Age: Скільки тобі років? — Мені двадцять три (роки).
-    3. Phone: Мій номер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.
-    Self-check: Say your age in Ukrainian. Say a price (250 hryvnias). Read a phone number."
+  - 'Three practical uses of numbers: 1. Prices: Скільки коштує? — Двісті гривень. Сто п''ятдесят гривень. 2. Age: Скільки
+    тобі років? — Мені двадцять три (роки). 3. Phone: Мій номер — нуль дев''яносто сім, три два один, сорок п''ять, шістдесят
+    сім. Self-check: Say your age in Ukrainian. Say a price (250 hryvnias). Read a phone number.'
 vocabulary_hints:
   required:
   - один, два, три, чотири, п'ять (1-5)
@@ -76,35 +65,35 @@ vocabulary_hints:
   - нуль (zero)
 activity_hints:
 - type: fill-in
-  focus: "Write the number in words: 15 → п'ятнадцять, 47 → сорок сім"
+  focus: 'Write the number in words: 15 → п''ятнадцять, 47 → сорок сім'
   items: 10
 - type: quiz
-  focus: "Скільки коштує? Match price tags to spoken prices."
+  focus: Скільки коштує? Match price tags to spoken prices.
   items: 8
 - type: quiz
-  focus: "Скільки років? Match ages to descriptions."
+  focus: Скільки років? Match ages to descriptions.
   items: 6
 - type: fill-in
-  focus: "Complete the phone number dictation"
+  focus: Complete the phone number dictation
   items: 4
 connects_to:
 - a1-012 (This and That)
 prerequisites:
 - a1-009 (What Is It Like?)
 grammar:
-- "Cardinal numbers 1-1000 (vocabulary, not morphology)"
-- "Скільки коштує? question pattern"
-- "Age chunk: Мені + number + років/роки/рік (memorized, not analyzed)"
-- "Irregular tens: сорок (40), дев'яносто (90)"
+- Cardinal numbers 1-1000 (vocabulary, not morphology)
+- Скільки коштує? question pattern
+- 'Age chunk: Мені + number + років/роки/рік (memorized, not analyzed)'
+- 'Irregular tens: сорок (40), дев''яносто (90)'
 register: розмовний
 references:
-- title: "ULP Season 1, Episode 5"
+- title: ULP Season 1, Episode 5
   url: https://www.ukrainianlessons.com/episode5/
-  notes: "Numbers 1-10 pronunciation."
-- title: "ULP Season 1, Episode 9"
+  notes: Numbers 1-10 pronunciation.
+- title: ULP Season 1, Episode 9
   url: https://www.ukrainianlessons.com/episode9/
-  notes: "Numbers 11-100 and prices."
-- title: "Авраменко Grade 6, p.152"
-  notes: "Числівники кількісні vs порядкові — basic classification."
+  notes: Numbers 11-100 and prices.
+- title: Авраменко Grade 6, p.152
+  notes: Числівники кількісні vs порядкові — basic classification.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
