@@ -1,0 +1,233 @@
+"""Writer-driven vocabulary generation for the словник tab.
+
+The writer produces vocabulary YAML after writing module content.
+This module handles deduplication and VESUM enrichment.
+
+Architecture:
+  WRITE (prose) → VOCAB GEN (writer outputs YAML) → DEDUPE → VESUM → словник
+
+Issue: #1025
+"""
+
+from __future__ import annotations
+
+import sqlite3
+from pathlib import Path
+
+import yaml
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
+
+# Ukrainian POS labels
+_POS_LABELS = {
+    "noun": "ім.",
+    "verb": "дієсл.",
+    "adj": "прикм.",
+    "adv": "присл.",
+    "numr": "числ.",
+    "prep": "прийм.",
+    "conj": "спол.",
+    "part": "част.",
+    "intj": "виг.",
+    "pron": "займ.",
+}
+
+_GENDER_MAP = {":m:": "ч.", ":f:": "ж.", ":n:": "с."}
+
+
+def dedupe_vocab(
+    current: list[dict], previous_words: set[str]
+) -> list[dict]:
+    """Remove words already taught in previous modules.
+
+    Case-insensitive matching. Returns filtered list.
+    """
+    previous_lower = {w.lower() for w in previous_words}
+    return [
+        entry for entry in current
+        if entry.get("word", "").lower() not in previous_lower
+    ]
+
+
+def vesum_enrich_entry(entry: dict) -> dict:
+    """Add POS and gender from VESUM to a vocabulary entry.
+
+    Skips expressions (multi-word phrases).
+    Returns the entry with added 'pos' and 'gender' fields.
+    """
+    result = dict(entry)
+    result.setdefault("pos", "")
+    result.setdefault("gender", "")
+
+    # Skip expressions — VESUM doesn't have multi-word entries
+    if entry.get("expression"):
+        return result
+
+    word = entry.get("word", "").strip("?!.,")
+    if not word:
+        return result
+
+    if not VESUM_DB.exists():
+        return result
+
+    try:
+        db = sqlite3.connect(str(VESUM_DB))
+        try:
+            row = db.execute(
+                "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
+                (word.lower(),),
+            ).fetchone()
+            if not row:
+                # Try lemma lookup
+                row = db.execute(
+                    "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
+                    (word.lower(),),
+                ).fetchone()
+            if row:
+                result["pos"] = _POS_LABELS.get(row[0], "")
+                if row[0] == "noun":
+                    for tag, label in _GENDER_MAP.items():
+                        if tag in row[1]:
+                            result["gender"] = label
+                            break
+        finally:
+            db.close()
+    except Exception:
+        pass
+
+    return result
+
+
+def get_previous_vocab(level: str, current_seq: int) -> set[str]:
+    """Collect all vocabulary from previous modules' vocab files.
+
+    Reads vocabulary/{slug}.yaml files for modules with sequence < current_seq.
+    Falls back to plan vocabulary_hints if no vocab file exists.
+    """
+    plans_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level
+    vocab_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / level / "vocabulary"
+
+    if not plans_dir.is_dir():
+        return set()
+
+    previous: set[str] = set()
+
+    for plan_file in plans_dir.glob("*.yaml"):
+        try:
+            plan = yaml.safe_load(plan_file.read_text("utf-8"))
+            if not isinstance(plan, dict):
+                continue
+            seq = plan.get("sequence", 999)
+            if seq >= current_seq:
+                continue
+            slug = plan.get("slug", plan_file.stem)
+
+            # Try vocab file first
+            vocab_file = vocab_dir / f"{slug}.yaml"
+            if vocab_file.exists():
+                vocab_data = yaml.safe_load(vocab_file.read_text("utf-8"))
+                if isinstance(vocab_data, dict):
+                    for entry in vocab_data.get("vocabulary", []):
+                        previous.add(entry.get("word", "").lower())
+                continue
+
+            # Fall back to plan vocabulary_hints
+            hints = plan.get("vocabulary_hints", {})
+            for category in ("required", "recommended"):
+                for item in hints.get(category, []):
+                    # Parse "мама (mother)" format
+                    word = str(item).split("(")[0].strip().lower()
+                    if word:
+                        previous.add(word)
+        except Exception:
+            continue
+
+    return previous
+
+
+def parse_vocab_yaml(raw: str) -> list[dict]:
+    """Parse vocabulary YAML from writer output.
+
+    Handles both ```yaml``` blocks and raw YAML.
+    Returns list of vocabulary entries.
+    """
+    import re
+
+    # Extract from ```yaml``` block if present
+    match = re.search(r"```yaml\s*\n(.*?)```", raw, re.DOTALL)
+    if match:
+        raw = match.group(1)
+
+    # Try parsing
+    try:
+        data = yaml.safe_load(raw)
+        if isinstance(data, dict) and "vocabulary" in data:
+            return data["vocabulary"]
+        if isinstance(data, list):
+            return data
+    except Exception:
+        pass
+
+    return []
+
+
+def build_slovnyk_markdown(
+    plan_vocab: list[dict],
+    additional_vocab: list[dict],
+    expressions: list[dict],
+) -> str:
+    """Build the словник tab content as markdown.
+
+    Three sections:
+    1. Required/recommended from plan (with translations from plan)
+    2. Additional words from module (with writer translations + VESUM)
+    3. Expressions
+    """
+    lines = []
+
+    if plan_vocab:
+        lines.extend([
+            "",
+            "### Обов'язкові та рекомендовані слова",
+            "",
+            "| Слово | Переклад | Частина мови | Рід |",
+            "|-------|----------|-------------|-----|",
+        ])
+        for entry in plan_vocab:
+            word = entry.get("word", "")
+            trans = entry.get("translation", "")
+            pos = entry.get("pos", "")
+            gender = entry.get("gender", "")
+            lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
+
+    if additional_vocab:
+        lines.extend([
+            "",
+            "### Додаткові слова з уроку",
+            "",
+            "| Слово | Переклад | Частина мови | Рід |",
+            "|-------|----------|-------------|-----|",
+        ])
+        for entry in additional_vocab:
+            word = entry.get("word", "")
+            trans = entry.get("translation", "")
+            pos = entry.get("pos", "")
+            gender = entry.get("gender", "")
+            lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
+
+    if expressions:
+        lines.extend([
+            "",
+            "### Вирази",
+            "",
+            "| Вираз | Переклад |",
+            "|-------|----------|",
+        ])
+        for entry in expressions:
+            word = entry.get("word", "")
+            trans = entry.get("translation", "")
+            lines.append(f"| **{word}** | {trans} |")
+
+    lines.append("")
+    return "\n".join(lines)
