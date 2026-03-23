@@ -14,6 +14,7 @@ import MatchUp from '@site/src/components/MatchUp';
 import TrueFalse from '@site/src/components/TrueFalse';
 import GroupSort from '@site/src/components/GroupSort';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import DialogueBox from '@site/src/components/DialogueBox';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
@@ -24,27 +25,12 @@ You are sitting in a café with a Ukrainian friend. Your phone buzzes — a new 
 
 **Dialogue 1 — Phone photos**
 
-> — Приві́т! Що ново́го?
-> — Диви́сь, це фо́то з вихідни́х!
-> — О, кла́сно! У тебе́ є бра́ти чи сестри́?
-> — Так, у мене́ є два брати i одна́ сестра́.
-> — Ого́! У мене ті́льки оди́н брат.
-> — Як йо́го зва́ти?
-> — Ко́ля. А брат? Як звати?
-> — Дени́с.
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Приві́т! Що ново́го?"}, {"speaker": "Б", "text": "Диви́сь, це фо́то з вихідни́х!"}, {"speaker": "А", "text": "О, кла́сно! У тебе́ є бра́ти чи сестри́?"}, {"speaker": "Б", "text": "Так, у мене́ є два брати i одна́ сестра́."}, {"speaker": "А", "text": "Ого́! У мене ті́льки оди́н брат."}, {"speaker": "Б", "text": "Як йо́го зва́ти?"}, {"speaker": "А", "text": "Ко́ля. А брат? Як звати?"}, {"speaker": "Б", "text": "Дени́с."}]} />
 Notice the key phrases here. **У тебе є...?** means "Do you have...?" — literally "At you there-is...?" **У мене є** means "I have" — literally "At me there-is." **Як його звати?** means "What is his name?" You already know **звати** from M05. The word **чи** (or) appears in yes/no questions: **брати чи сестри?** — "brothers or sisters?"
 
 **Dialogue 2 — A family photo**
 
-> — Це моя́ сім'я́ на фотогра́фії.
-> — Класно! Хто це?
-> — Це моя ма́ма Мари́на. А це мій та́то Євге́н.
-> — А хто тут?
-> — Це моя сестра Катру́ся i мої́ брати — Іва́н i Денис.
-> — А це твоя́ бабу́ся?
-> — Так, її звати Тетя́на. А це мій діду́сь Миха́йло.
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Це моя́ сім'я́ на фотогра́фії."}, {"speaker": "Б", "text": "Класно! Хто це?"}, {"speaker": "А", "text": "Це моя ма́ма Мари́на. А це мій та́то Євге́н."}, {"speaker": "Б", "text": "А хто тут?"}, {"speaker": "А", "text": "Це моя сестра Катру́ся i мої́ брати — Іва́н i Денис."}, {"speaker": "Б", "text": "А це твоя́ бабу́ся?"}, {"speaker": "А", "text": "Так, її звати Тетя́на. А це мій діду́сь Миха́йло."}]} />
 Look at how the possessives change: **моя мама** but **мій тато**, **моя сестра** but **мої брати**. The word changes depending on the noun — not the speaker. Also notice **її звати** (her name is) — **її** (her) never changes form, no matter what noun follows.
 
 **Dialogue 3 — Introducing yourself and your family**

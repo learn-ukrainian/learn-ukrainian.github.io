@@ -14,6 +14,7 @@ import MatchUp from '@site/src/components/MatchUp';
 import TrueFalse from '@site/src/components/TrueFalse';
 import GroupSort from '@site/src/components/GroupSort';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import DialogueBox from '@site/src/components/DialogueBox';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
@@ -24,13 +25,7 @@ Imagine you just arrived in Ukraine. You walk into a hostel in Kyiv, and someone
 
 ### Діало́г 1 — At a hostel (informal)
 
-> — Приві́т! Як тебе́ зва́ти?
-> — Ме́не звати Марко́. А тебе?
-> — Мене звати Оле́на. Зві́дки ти?
-> — Я з Кана́ди. А ти?
-> — Я з Украї́ни.
-> — Ду́же приє́мно!
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Приві́т! Як тебе́ зва́ти?"}, {"speaker": "Б", "text": "Ме́не звати Марко́. А тебе?"}, {"speaker": "А", "text": "Мене звати Оле́на. Зві́дки ти?"}, {"speaker": "Б", "text": "Я з Кана́ди. А ти?"}, {"speaker": "А", "text": "Я з Украї́ни."}, {"speaker": "Б", "text": "Ду́же приє́мно!"}]} />
 "Hi! What's your name?" — "My name is Marko. And yours?" — "My name is Olena. Where are you from?" — "I'm from Canada. And you?" — "I'm from Ukraine." — "Very pleased to meet you!"
 
 Notice the informal markers: **Привіт** (hi), **тебе** (you, informal), **ти** (you, informal). This is how young people talk to each other at a hostel — relaxed, friendly, direct.
@@ -39,11 +34,7 @@ Now the same situation, but at a professional event. Watch what changes — the 
 
 ### Діалог 2 — At a conference (formal)
 
-> — До́брий день! Як вас звати?
-> — Мене звати Петро́. Дуже приємно!
-> — Дуже приємно! Ви з України?
-> — Так, я з Ки́єва.
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "До́брий день! Як вас звати?"}, {"speaker": "Б", "text": "Мене звати Петро́. Дуже приємно!"}, {"speaker": "А", "text": "Дуже приємно! Ви з України?"}, {"speaker": "Б", "text": "Так, я з Ки́єва."}]} />
 "Good afternoon! What is your name?" — "My name is Petro. Very pleased!" — "Very pleased! Are you from Ukraine?" — "Yes, I'm from Kyiv."
 
 The formal markers here: **Добрий день** (good afternoon) instead of Привіт, **вас** (you, formal) instead of тебе, **Ви** (you, formal) instead of ти. The content is the same — only the level of politeness changed.
@@ -52,9 +43,7 @@ What stayed identical across both dialogues? **Мене звати...** (my name
 
 ### Діалог 3 — Introducing someone else
 
-> — Це мій друг Андрі́й. Він зі Льво́ва. Він — інжене́р.
-> — А це Окса́на. Вона́ з Оде́си. Вона — журналі́стка.
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Це мій друг Андрі́й. Він зі Льво́ва. Він — інжене́р."}, {"speaker": "Б", "text": "А це Окса́на. Вона́ з Оде́си. Вона — журналі́стка."}]} />
 "This is my friend Andriy. He's from Lviv. He's an engineer." — "And this is Oksana. She's from Odesa. She's a journalist."
 
 A new pattern appears: **Це** (this is) + name. And notice: **Він — інженер** (He — engineer), **Вона — журналістка** (She — journalist). No word for "is" anywhere. Ukrainian simply skips it.
@@ -69,10 +58,7 @@ How do you ask the question? **Як тебе звати?** in informal settings 
 
 After you exchange names, Ukrainians say **Дуже приємно!** (Very pleased!) — always AFTER names, not before. A slightly more formal variant is **Приємно познайо́митись!** (Pleased to meet you!). The natural reply is **Дуже приємно!** right back. Here is the typical sequence:
 
-> — Мене звати Олена. А вас?
-> — Мене звати Тарас. Дуже приємно!
-> — Дуже приємно!
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Мене звати Олена. А вас?"}, {"speaker": "Б", "text": "Мене звати Тарас. Дуже приємно!"}, {"speaker": "А", "text": "Дуже приємно!"}]} />
 Names first, then the pleasantry. That's the Ukrainian order.
 
 <FillIn client:only="react" items={[{"sentence": "___ звати Марко.", "answer": "Мене"}, {"sentence": "Як ___ звати? (informal)", "answer": "тебе"}, {"sentence": "Як ___ звати? (formal)", "answer": "вас"}, {"sentence": "Я ___ Канади.", "answer": "з"}, {"sentence": "Я — ___. (student, male)", "answer": "студе́нт"}, {"sentence": "Дуже ___!", "answer": "приємно"}]} />

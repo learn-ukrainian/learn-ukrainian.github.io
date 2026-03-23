@@ -14,6 +14,7 @@ import MatchUp from '@site/src/components/MatchUp';
 import TrueFalse from '@site/src/components/TrueFalse';
 import GroupSort from '@site/src/components/GroupSort';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import DialogueBox from '@site/src/components/DialogueBox';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
@@ -60,14 +61,7 @@ Every sentence here is a statement — your voice should fall at the end of each
 
 Now put everything together with a dialogue. Read aloud, paying attention to where the voice rises ↗ and falls ↘:
 
-> — Приві́т! ↘
-> — Привіт! Як спра́ви? ↗
-> — До́бре! А у тебе́? ↗
-> — Теж добре! ↘
-> — Де ти? ↘
-> — Я в кафе. ↘
-> — О, кава! Як гарно! ↘↘
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Приві́т! ↘"}, {"speaker": "Б", "text": "Привіт! Як спра́ви? ↗"}, {"speaker": "А", "text": "До́бре! А у тебе́? ↗"}, {"speaker": "Б", "text": "Теж добре! ↘"}, {"speaker": "А", "text": "Де ти? ↘"}, {"speaker": "Б", "text": "Я в кафе. ↘"}, {"speaker": "А", "text": "О, кава! Як гарно! ↘↘"}]} />
 Notice the pattern: «Як справи?» rises because it expects a yes/no-style status answer — is everything fine? «Де ти?» falls because **де** is a question word that does the questioning work by itself. The greetings and statements all fall naturally. This dialogue uses vocabulary from Module 1 — you already know these words. Now you are adding music to them.
 
 Ukrainian speech has a natural rhythm where stressed syllables are slightly longer than unstressed ones. Do not give every syllable equal weight — that sounds robotic, like a computer reading text. Listen to any Ukrainian speaker and you will hear it: the stressed syllable stands out, while unstressed syllables pass by quicker and lighter. Practice with longer words: **Україна**, **столиця**, **фотографія**. Exaggerate the stressed syllable at first — make it noticeably louder and longer. Then gradually smooth it out until it sounds natural. That flow is the music of Ukrainian.

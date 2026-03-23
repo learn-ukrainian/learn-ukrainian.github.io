@@ -14,6 +14,7 @@ import MatchUp from '@site/src/components/MatchUp';
 import TrueFalse from '@site/src/components/TrueFalse';
 import GroupSort from '@site/src/components/GroupSort';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import DialogueBox from '@site/src/components/DialogueBox';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
@@ -66,11 +67,7 @@ One letter is uniquely Ukrainian: **Ї**. No other Slavic language has it. It al
 
 Time for your first Ukrainian conversation. Imagine you are meeting a friend on the street in Kyiv. What do you say?
 
-> — **Привіт!**
-> — **Привіт! Як спра́ви?**
-> — **До́бре! А у тебе́?**
-> — **Чудо́во!**
-
+<DialogueBox client:only="react" exchanges={[{"speaker": "А", "text": "Привіт!"}, {"speaker": "Б", "text": "Привіт! Як спра́ви?"}, {"speaker": "А", "text": "До́бре! А у тебе́?"}, {"speaker": "Б", "text": "Чудо́во!"}]} />
 That is a complete greeting in Ukrainian. Let's break it apart.
 
 **Привіт** means "hi" — informal, warm, for friends, family, and people your age. You would not say it to your professor or a stranger much older than you. For those situations, Ukrainian has formal greetings — but those come later, in Module 4.
