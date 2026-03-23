@@ -2,9 +2,9 @@ module: a1-042
 level: A1
 sequence: 42
 slug: hey-friend
-version: '1.0'
-title: "Hey, Friend!"
-subtitle: "Олено! Тарасе! Друже! Мамо! — calling people by name"
+version: '1.2'
+title: Hey, Friend!
+subtitle: Олено! Тарасе! Друже! Мамо! — calling people by name
 focus: grammar
 pedagogy: PPP
 phase: A1.7 [Communication]
@@ -15,60 +15,40 @@ objectives:
 - Recognize vocative endings for masculine (-е, -у/-ю) and feminine (-о, -ю, -є) nouns
 - Address people naturally using vocative in everyday situations
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Meeting a friend:
-    — Олено, привіт! Як справи?
-    — Добре, дякую, Тарасе! А в тебе?
-    — Теж добре. Олено, ти знаєш мого брата?
-    — Ні. — Андрію, ходи сюди! Це Олена. Олено, це Андрій.
-    Vocative forms: Олено (Олена), Тарасе (Тарас), Андрію (Андрій)."
-  - "Dialogue 2 — At home:
-    — Мамо, де мій телефон? — На столі, синку.
-    — Тату, а де ключі? — У кишені, дочко.
-    — Бабусю, ми йдемо! — Добре, будьте обережні!
-    Family vocatives: мамо, тату, синку, дочко, бабусю."
-- section: "Кличний відмінок (The Vocative Case)"
+  - 'Dialogue 1 — Meeting a friend: — Олено, привіт! Як справи? — Добре, дякую, Тарасе! А в тебе? — Теж добре. Олено, ти знаєш
+    мого брата? — Ні. — Андрію, ходи сюди! Це Олена. Олено, це Андрій. Vocative forms: Олено (Олена), Тарасе (Тарас), Андрію
+    (Андрій).'
+  - 'Dialogue 2 — At home: — Мамо, де мій телефон? — На столі, синку. — Тату, а де ключі? — У кишені, дочко. — Бабусю, ми
+    йдемо! — Добре, будьте обережні! Family vocatives: мамо, тату, синку, дочко, бабусю.'
+- section: Кличний відмінок (The Vocative Case)
   words: 300
   points:
-  - "Ukrainian has a special case for calling someone — кличний відмінок.
-    In English you just say the name: 'Olena, come here!'
-    In Ukrainian the name CHANGES: Олена → Олено, ходи сюди!
-    This is not optional — Ukrainians always use vocative when addressing someone.
-    Grade 4 helper word: Кл. (!) — the exclamation mark reminds you:
-    you're calling someone, so the ending changes."
-  - "Why vocative matters:
-    Олена прийшла. (Olena came.) — nominative, talking ABOUT her.
-    Олено, ходи сюди! (Olena, come here!) — vocative, talking TO her.
-    Using nominative to address someone sounds unnatural in Ukrainian.
-    It's like saying 'Hey, him!' instead of 'Hey, you!' in English."
-- section: "Закінчення кличного (Vocative Endings)"
+  - 'Ukrainian has a special case for calling someone — кличний відмінок. In English you just say the name: ''Olena, come
+    here!'' In Ukrainian the name CHANGES: Олена → Олено, ходи сюди! This is not optional — Ukrainians always use vocative
+    when addressing someone. Grade 4 helper word: Кл. (!) — the exclamation mark reminds you: you''re calling someone, so
+    the ending changes.'
+  - 'Why vocative matters: Олена прийшла. (Olena came.) — nominative, talking ABOUT her. Олено, ходи сюди! (Olena, come here!)
+    — vocative, talking TO her. Using nominative to address someone sounds unnatural in Ukrainian. It''s like saying ''Hey,
+    him!'' instead of ''Hey, you!'' in English.'
+- section: Закінчення кличного (Vocative Endings)
   words: 300
   points:
-  - "Feminine names and nouns (-а → -о):
-    Олена → Олено, мама → мамо, сестра → сестро, Оксана → Оксано,
-    подруга → подруго, бабуся → бабусю (-ся → -сю).
-    Names on -ка: Наталка → Наталко, Ірка → Ірко.
-    Names on -ія: Марія → Маріє (not Маріо!).
-    Names on -а (long): Катерина → Катерино, Тетяна → Тетяно."
-  - "Masculine names and nouns:
-    Hard consonant → -е: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане.
-    Soft consonant / -й → -ю: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю.
-    Special: друг → друже (г → ж), козак → козаче (к → ч).
-    Тато → тату (exceptional -у ending, memorize)."
-- section: "Підсумок — Summary"
+  - 'Feminine names and nouns (-а → -о): Олена → Олено, мама → мамо, сестра → сестро, Оксана → Оксано, подруга → подруго,
+    бабуся → бабусю (-ся → -сю). Names on -ка: Наталка → Наталко, Ірка → Ірко. Names on -ія: Марія → Маріє (not Маріо!). Names
+    on -а (long): Катерина → Катерино, Тетяна → Тетяно.'
+  - 'Masculine names and nouns: Hard consonant → -е: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане. Soft consonant
+    / -й → -ю: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю. Special: друг → друже (г → ж), козак → козаче (к → ч).
+    Тато → тату (exceptional -у ending, memorize).'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Vocative quick reference:
-    | Pattern | Nominative → Vocative | Example |
-    | Feminine -а | -а → -о | Олена → Олено, мама → мамо |
-    | Feminine -ія | -ія → -іє | Марія → Маріє |
-    | Feminine -ся | -ся → -сю | бабуся → бабусю |
-    | Masculine hard | + -е | Тарас → Тарасе, брат → брате |
-    | Masculine -й/soft | + -ю | Андрій → Андрію, вчитель → вчителю |
-    | Special (г, к) | г→ж, к→ч + -е | друг → друже |
-    Self-check: How do you call your family? мама → ? тато → ? брат → ?"
+  - 'Vocative quick reference: | Pattern | Nominative → Vocative | Example | | Feminine -а | -а → -о | Олена → Олено, мама
+    → мамо | | Feminine -ія | -ія → -іє | Марія → Маріє | | Feminine -ся | -ся → -сю | бабуся → бабусю | | Masculine hard
+    | + -е | Тарас → Тарасе, брат → брате | | Masculine -й/soft | + -ю | Андрій → Андрію, вчитель → вчителю | | Special (г,
+    к) | г→ж, к→ч + -е | друг → друже | Self-check: How do you call your family? мама → ? тато → ? брат → ?'
 vocabulary_hints:
   required:
   - друг (friend, m)
@@ -86,31 +66,103 @@ vocabulary_hints:
   - дідусь (grandfather, m)
 activity_hints:
 - type: fill-in
-  focus: "Write vocative: Олена → Олено, Тарас → Тарасе, мама → мамо"
-  items: 10
+  focus: 'Write vocative: Олена → Олено, Тарас → Тарасе, мама → мамо'
+  items:
+  - Олена → {Олено}
+  - Тарас → {Тарасе}
+  - мама → {мамо}
+  - Іван → {Іване}
+  - сестра → {сестро}
+  - Андрій → {Андрію}
+  - подруга → {подруго}
+  - брат → {брате}
+  - Марія → {Маріє}
+  - бабуся → {бабусю}
 - type: quiz
-  focus: "Choose correct vocative: (Олена / Олено / Оленю), привіт!"
-  items: 8
+  focus: 'Choose correct vocative: (Олена / Олено / Оленю), привіт!'
+  items:
+  - question: ___, привіт!
+    options:
+    - Олено
+    - Олена
+    - Оленю
+  - question: Як справи, ___?
+    options:
+    - Тарасе
+    - Тарас
+    - Тарасу
+  - question: Дякую, ___!
+    options:
+    - мамо
+    - мама
+    - маме
+  - question: Ходи сюди, ___!
+    options:
+    - Іване
+    - Іван
+    - Івану
+  - question: Будь обережний, ___!
+    options:
+    - синку
+    - синок
+    - синке
+  - question: Що ти робиш, ___?
+    options:
+    - брате
+    - брат
+    - брату
+  - question: Добрий день, ___!
+    options:
+    - пане
+    - пан
+    - пану
+  - question: Привіт, ___!
+    options:
+    - Андрію
+    - Андрій
+    - Андріє
 - type: group-sort
-  focus: "Sort vocative endings: -о (feminine) vs -е (masculine hard) vs -ю (masculine soft)"
-  items: 10
+  focus: 'Sort vocative endings: -о (feminine) vs -е (masculine hard) vs -ю (masculine soft)'
+  groups:
+  - name: -о (feminine)
+    items:
+    - Олено
+    - мамо
+    - сестро
+  - name: -е (masculine hard)
+    items:
+    - Тарасе
+    - Іване
+    - брате
+    - пане
+  - name: -ю (masculine soft)
+    items:
+    - Андрію
+    - дідусю
+    - вчителю
 - type: fill-in
-  focus: "Complete dialogue: ___, привіт! Як справи? (name → vocative)"
-  items: 6
+  focus: 'Complete dialogue: ___, привіт! Як справи? (name → vocative)'
+  items:
+  - — {Олено|Олена}, привіт! Як справи?
+  - — Добре, дякую, {Тарасе|Тарас}!
+  - — {Мамо|Мама}, де мій телефон?
+  - — На столі, {синку|синок}.
+  - — {Бабусю|Бабуся}, ми йдемо!
+  - — Добре, до побачення, {Андрію|Андрій}!
 connects_to:
 - a1-043 (Please Do This)
 prerequisites:
 - a1-041 (Checkpoint — Food and Shopping)
 grammar:
-- "Vocative case (кличний відмінок): special endings for direct address"
-- "Feminine -а → -о (Олена → Олено), -ія → -іє (Марія → Маріє)"
-- "Masculine hard → -е (Тарас → Тарасе), soft/-й → -ю (Андрій → Андрію)"
-- "Consonant alternation: друг → друже (г → ж)"
+- 'Vocative case (кличний відмінок): special endings for direct address'
+- Feminine -а → -о (Олена → Олено), -ія → -іє (Марія → Маріє)
+- Masculine hard → -е (Тарас → Тарасе), soft/-й → -ю (Андрій → Андрію)
+- 'Consonant alternation: друг → друже (г → ж)'
 register: розмовний
 references:
-- title: "State Standard 2024, §4.2.3.4"
-  notes: "Vocative case — address forms. A1 scope: common patterns only."
-- title: "Grade 4 textbook: Кличний відмінок (Заболотний)"
-  notes: "Helper word Кл. (!). Feminine -а→-о, masculine hard→-е, soft→-ю."
+- title: State Standard 2024, §4.2.3.4
+  notes: 'Vocative case — address forms. A1 scope: common patterns only.'
+- title: 'Grade 4 textbook: Кличний відмінок (Заболотний)'
+  notes: Helper word Кл. (!). Feminine -а→-о, masculine hard→-е, soft→-ю.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

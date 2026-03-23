@@ -2,9 +2,9 @@ module: a1-030
 level: A1
 sequence: 30
 slug: my-city
-version: '1.0'
+version: '1.1'
 title: My City
-subtitle: "Бібліотека, аптека, ресторан — city vocabulary"
+subtitle: Бібліотека, аптека, ресторан — city vocabulary
 focus: vocabulary
 pedagogy: PPP
 phase: A1.5 [Places]
@@ -15,52 +15,34 @@ objectives:
 - Describe what you do at each place (combining verbs from A1.3)
 - Give simple directions using є (there is) and тут/там
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — New in the city:
-    — Вибачте, де тут аптека? — Аптека на вулиці Шевченка.
-    — А бібліотека? — Бібліотека в центрі, біля парку.
-    — Дякую! — Будь ласка!
-    City places in asking-for-directions context."
-  - "Dialogue 2 — My neighborhood:
-    — Що є біля твого дому? — Біля дому є магазин і кафе.
-    — А школа? — Школа далеко, у центрі міста.
-    Review: в/на + locative for all places."
-- section: "Місця в місті (City Places)"
+  - 'Dialogue 1 — New in the city: — Вибачте, де тут аптека? — Аптека на вулиці Шевченка. — А бібліотека? — Бібліотека в центрі,
+    біля парку. — Дякую! — Будь ласка! City places in asking-for-directions context.'
+  - 'Dialogue 2 — My neighborhood: — Що є біля твого дому? — Біля дому є магазин і кафе. — А школа? — Школа далеко, у центрі
+    міста. Review: в/на + locative for all places.'
+- section: Місця в місті (City Places)
   words: 300
   points:
-  - "Essential city vocabulary:
-    аптека (pharmacy), бібліотека (library), лікарня (hospital),
-    магазин (shop), супермаркет (supermarket), ресторан (restaurant),
-    кафе (café), банк (bank), пошта (post office), вокзал (train station),
-    готель (hotel), музей (museum), театр (theater), кінотеатр (cinema),
-    церква (church), стадіон (stadium), університет (university)."
-  - "Each place with its preposition (locative from M29):
-    в аптеці, у бібліотеці, у лікарні, в магазині, у ресторані,
-    у кафе, у банку, на пошті, на вокзалі, у готелі, в музеї.
-    What you do there: Я купую ліки в аптеці. Я читаю в бібліотеці.
-    Я працюю в офісі. Я відпочиваю в парку."
-- section: "Де це? (Where Is It?)"
+  - 'Essential city vocabulary: аптека (pharmacy), бібліотека (library), лікарня (hospital), магазин (shop), супермаркет (supermarket),
+    ресторан (restaurant), кафе (café), банк (bank), пошта (post office), вокзал (train station), готель (hotel), музей (museum),
+    театр (theater), кінотеатр (cinema), церква (church), стадіон (stadium), університет (university).'
+  - 'Each place with its preposition (locative from M29): в аптеці, у бібліотеці, у лікарні, в магазині, у ресторані, у кафе,
+    у банку, на пошті, на вокзалі, у готелі, в музеї. What you do there: Я купую ліки в аптеці. Я читаю в бібліотеці. Я працюю
+    в офісі. Я відпочиваю в парку.'
+- section: Де це? (Where Is It?)
   words: 300
   points:
-  - "Location words:
-    тут (here), там (there), далеко (far), близько (near/close),
-    біля + gen (near — as chunk: біля парку, біля дому),
-    у центрі (in the center), на розі (on the corner).
-    Note: біля requires genitive — learn as chunks, not grammar."
-  - "Describing your city:
-    У моєму місті є великий парк і два музеї.
-    Бібліотека біля університету. Магазин тут, біля дому.
-    Note: є = 'there is/are' (already used since M06)."
-- section: "Підсумок — Summary"
+  - 'Location words: тут (here), там (there), далеко (far), близько (near/close), біля + gen (near — as chunk: біля парку,
+    біля дому), у центрі (in the center), на розі (on the corner). Note: біля requires genitive — learn as chunks, not grammar.'
+  - 'Describing your city: У моєму місті є великий парк і два музеї. Бібліотека біля університету. Магазин тут, біля дому.
+    Note: є = ''there is/are'' (already used since M06).'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "City vocabulary with prepositions:
-    В/у: аптеці, бібліотеці, магазині, банку, готелі, ресторані.
-    На: пошті, вокзалі, стадіоні, площі.
-    Location words: тут, там, далеко, близько, біля.
-    Self-check: Name 5 places near your home. What do you do there?"
+  - 'City vocabulary with prepositions: В/у: аптеці, бібліотеці, магазині, банку, готелі, ресторані. На: пошті, вокзалі, стадіоні,
+    площі. Location words: тут, там, далеко, близько, біля. Self-check: Name 5 places near your home. What do you do there?'
 vocabulary_hints:
   required:
   - аптека (pharmacy, f)
@@ -82,28 +64,28 @@ vocabulary_hints:
   - біля (near — + genitive chunk)
 activity_hints:
 - type: match-up
-  focus: "Match place to activity: аптека ↔ купувати ліки"
+  focus: 'Match place to activity: аптека ↔ купувати ліки'
   items: 8
 - type: quiz
-  focus: "В or на? Choose preposition for city places."
+  focus: В or на? Choose preposition for city places.
   items: 8
 - type: fill-in
-  focus: "Describe your city: У моєму місті є ___."
+  focus: 'Describe your city: У моєму місті є ___.'
   items: 6
 - type: quiz
-  focus: "Where would you go? Choose the right place for each situation."
+  focus: Where would you go? Choose the right place for each situation.
   items: 6
 connects_to:
 - a1-031 (Where To?)
 prerequisites:
 - a1-029 (Where Is It?)
 grammar:
-- "City vocabulary with locative prepositions (в/на + М.в.)"
-- "Location expressions: тут, там, далеко, близько, біля"
-- "Є = there is/are"
+- City vocabulary with locative prepositions (в/на + М.в.)
+- 'Location expressions: тут, там, далеко, близько, біля'
+- Є = there is/are
 register: розмовний
 references:
-- title: "Anna-led module — city vocabulary through practical situations"
-  notes: "No single textbook source — vocabulary compiled from multiple textbook city themes."
+- title: Anna-led module — city vocabulary through practical situations
+  notes: No single textbook source — vocabulary compiled from multiple textbook city themes.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

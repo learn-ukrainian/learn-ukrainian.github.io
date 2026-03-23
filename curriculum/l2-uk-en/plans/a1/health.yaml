@@ -2,9 +2,9 @@ module: a1-053
 level: A1
 sequence: 53
 slug: health
-version: '1.0'
+version: '1.2'
 title: Health
-subtitle: "У мене болить голова — body parts and symptoms"
+subtitle: У мене болить голова — body parts and symptoms
 focus: vocabulary
 pedagogy: PPP
 phase: A1.8 [Past, Future, Graduation]
@@ -15,65 +15,39 @@ objectives:
 - Tell a doctor or pharmacist what hurts
 - Use basic health vocabulary in practical situations
 content_outline:
-- section: "Dialogues"
+- section: Dialogues
   words: 300
   points:
-  - "Dialogue 1 — At the doctor's:
-    — Що у вас болить? — У мене болить голова і горло.
-    — Давно? — З учора. І в мене температура.
-    — Ви кашляєте? — Так, трохи. І в мене нежить.
-    — Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте!
-    — Дякую, лікарю!
-    Doctor visit: symptoms + basic diagnosis."
-  - "Dialogue 2 — At the pharmacy:
-    — Добрий день! У мене болить голова. Дайте, будь ласка, таблетки.
-    — Від головного болю? — Так. І від кашлю, будь ласка.
-    — Ось, будь ласка. Ще щось?
-    — А є щось від нежиті? — Так, ось краплі.
-    — Дякую! Скільки це коштує?
-    Pharmacy: asking for medicine using known polite forms."
-- section: "Тіло (The Body)"
+  - 'Dialogue 1 — At the doctor''s: — Що у вас болить? — У мене болить голова і горло. — Давно? — З учора. І в мене температура.
+    — Ви кашляєте? — Так, трохи. І в мене нежить. — Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте! — Дякую, лікарю! Doctor
+    visit: symptoms + basic diagnosis.'
+  - 'Dialogue 2 — At the pharmacy: — Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. — Від головного болю?
+    — Так. І від кашлю, будь ласка. — Ось, будь ласка. Ще щось? — А є щось від нежиті? — Так, ось краплі. — Дякую! Скільки
+    це коштує? Pharmacy: asking for medicine using known polite forms.'
+- section: Тіло (The Body)
   words: 300
   points:
-  - "Essential body parts (Grade 1-2 textbooks: частини тіла):
-    голова (head, f), горло (throat, n), спина (back, f),
-    живіт (stomach, m), рука (hand/arm, f), нога (leg/foot, f),
-    око (eye, n), вухо (ear, n), зуб (tooth, m), ніс (nose, m).
-    Note: рука = whole arm including hand. нога = whole leg including foot.
-    These are the most useful for A1 — not an anatomy lesson."
-  - "Body part gender matters for adjectives (review from M09):
-    велике око (big eye — neuter), великий ніс (big nose — masc),
-    велика рука (big hand — fem).
-    But at A1, focus on recognition — you'll use these mainly with болить."
-- section: "У мене болить... (It Hurts...)"
+  - 'Essential body parts (Grade 1-2 textbooks: частини тіла): голова (head, f), горло (throat, n), спина (back, f), живіт
+    (stomach, m), рука (hand/arm, f), нога (leg/foot, f), око (eye, n), вухо (ear, n), зуб (tooth, m), ніс (nose, m). Note:
+    рука = whole arm including hand. нога = whole leg including foot. These are the most useful for A1 — not an anatomy lesson.'
+  - 'Body part gender matters for adjectives (review from M09): велике око (big eye — neuter), великий ніс (big nose — masc),
+    велика рука (big hand — fem). But at A1, focus on recognition — you''ll use these mainly with болить.'
+- section: У мене болить... (It Hurts...)
   words: 300
   points:
-  - "The magic phrase: У мене болить + body part.
-    У мене болить голова. (I have a headache. — literally 'at me hurts head')
-    У мене болить живіт. (My stomach hurts.)
-    У мене болить горло. (My throat hurts.)
-    У мене болить спина. (My back hurts.)
-    У мене болить зуб. (I have a toothache.)
-    Learn this as a CHUNK — don't analyze the grammar (that's dative, A2+)."
-  - "Common symptoms (as chunks):
-    У мене температура. (I have a fever.)
-    У мене кашель. (I have a cough.)
-    У мене нежить. (I have a runny nose.)
-    Мені холодно. (I'm cold.)
-    Мені погано. (I feel bad.)
-    Я хворий/хвора. (I'm sick. — masc/fem)
-    Note: 'У мене болять зуби' (teeth hurt — plural form болять). Just recognize it."
-- section: "Summary"
+  - 'The magic phrase: У мене болить + body part. У мене болить голова. (I have a headache. — literally ''at me hurts head'')
+    У мене болить живіт. (My stomach hurts.) У мене болить горло. (My throat hurts.) У мене болить спина. (My back hurts.)
+    У мене болить зуб. (I have a toothache.) Learn this as a CHUNK — don''t analyze the grammar (that''s dative, A2+).'
+  - 'Common symptoms (as chunks): У мене температура. (I have a fever.) У мене кашель. (I have a cough.) У мене нежить. (I
+    have a runny nose.) Мені холодно. (I''m cold.) Мені погано. (I feel bad.) Я хворий/хвора. (I''m sick. — masc/fem) Note:
+    ''У мене болять зуби'' (teeth hurt — plural form болять). Just recognize it.'
+- section: Summary
   words: 300
   points:
-  - "Health toolkit:
-    Body parts: голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс.
-    Symptoms: У мене болить [body part]. У мене температура/кашель/нежить.
-    State: Я хворий/хвора. Мені погано.
-    At the doctor: Що у вас болить? — У мене болить...
-    At the pharmacy: Дайте таблетки від [symptom], будь ласка.
-    від головного болю (for headache), від кашлю (for cough), від нежиті (for runny nose).
-    Self-check: How do you say 'My throat hurts and I have a fever'?"
+  - 'Health toolkit: Body parts: голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс. Symptoms: У мене болить [body
+    part]. У мене температура/кашель/нежить. State: Я хворий/хвора. Мені погано. At the doctor: Що у вас болить? — У мене
+    болить... At the pharmacy: Дайте таблетки від [symptom], будь ласка. від головного болю (for headache), від кашлю (for
+    cough), від нежиті (for runny nose). Self-check: How do you say ''My throat hurts and I have a fever''?'
 vocabulary_hints:
   required:
   - голова (head, f)
@@ -97,30 +71,69 @@ vocabulary_hints:
   - хворий (sick, adj)
 activity_hints:
 - type: match-up
-  focus: "Match Ukrainian body part to picture: голова, рука, нога, око, вухо, ніс"
-  items: 10
+  focus: Match body parts to their English translations.
+  items:
+  - голова == head
+  - живіт == stomach
+  - горло == throat
+  - спина == back
+  - рука == hand/arm
+  - нога == leg/foot
+  - зуб == tooth
+  - око == eye
 - type: fill-in
-  focus: "Complete: У мене болить ___ . (голова / горло / живіт / спина)"
-  items: 8
+  focus: Complete the sentence with the correct symptom or body part.
+  items:
+  - У мене болить {голова|рука|нога}. Я хочу спати.
+  - У мене болить {живіт|вухо|око}. Я не хочу їсти.
+  - У мене болить {горло|спина|ніс} і є температура. Я не можу говорити.
+  - У мене {кашель|нежить|зуб}, я постійно кашляю.
+  - У мене болить {зуб|голова|нога}, мені потрібен стоматолог.
+  - Я {хворий|лікар|аптека}. У мене болить голова і спина.
 - type: quiz
-  focus: "What does the patient need? У мене болить голова → таблетки від головного болю"
-  items: 6
+  focus: Choose the logical response to the health problem.
+  items:
+  - question: У мене болить голова.
+    options:
+    - Ось таблетки від головного болю.
+    - Ось краплі від нежиті.
+    - Випийте сироп від кашлю.
+  - question: У мене сильний кашель.
+    options:
+    - Вам потрібні таблетки від кашлю.
+    - Ось краплі для носа.
+    - У мене болить зуб.
+  - question: Що у вас болить?
+    options:
+    - У мене болить горло.
+    - Я лікар.
+    - Де аптека?
+  - question: Добрий день. Дайте, будь ласка, щось від нежиті.
+    options:
+    - Ось краплі, будь ласка.
+    - У мене болить спина.
+    - Це таблетки від головного болю.
 - type: fill-in
-  focus: "At the pharmacy: Дайте ___, будь ласка. (таблетки / краплі від...)"
-  items: 6
+  focus: At the pharmacy or doctor - using target chunks.
+  items:
+  - Дайте, {будь ласка|добрий день|дякую}, таблетки від головного болю.
+  - Що у вас {болить|хворий|лікар}?
+  - У мене {температура|аптека|лікар} і болить горло.
+  - Мені {погано|хворий|добре}. Викличте лікаря!
+  - Де тут найближча {аптека|голова|спина}? Мені потрібні ліки.
 connects_to:
 - a1-054 (Emergencies)
 prerequisites:
 - a1-052 (My Story)
 grammar:
-- "У мене болить + body part (impersonal chunk — no grammar analysis)"
-- "Body part gender for adjective agreement (recognition only)"
-- "Я хворий/хвора (gender agreement in short adjectives)"
+- У мене болить + body part (impersonal chunk — no grammar analysis)
+- Body part gender for adjective agreement (recognition only)
+- Я хворий/хвора (gender agreement in short adjectives)
 register: розмовний
 references:
-- title: "State Standard 2024, §3"
-  notes: "Thematic area: health (здоров'я) — body parts, symptoms, doctor visits."
-- title: "Grade 1-2 textbook: Частини тіла"
-  notes: "Body parts vocabulary with pictures."
+- title: State Standard 2024, §3
+  notes: 'Thematic area: health (здоров''я) — body parts, symptoms, doctor visits.'
+- title: 'Grade 1-2 textbook: Частини тіла'
+  notes: Body parts vocabulary with pictures.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

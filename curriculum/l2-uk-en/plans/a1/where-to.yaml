@@ -2,9 +2,9 @@ module: a1-031
 level: A1
 sequence: 31
 slug: where-to
-version: '1.0'
+version: '1.1'
 title: Where To?
-subtitle: "Іду в банк, на роботу — the accusative for direction"
+subtitle: Іду в банк, на роботу — the accusative for direction
 focus: grammar
 pedagogy: PPP
 phase: A1.5 [Places]
@@ -15,58 +15,36 @@ objectives:
 - Form basic accusative endings for place nouns
 - Navigate between locations using йти/їхати + direction
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Where are you going? (ULP Ep18):
-    — Куди ти йдеш? — Я йду в банк. А ти?
-    — Я йду на роботу. — А потім?
-    — Потім іду в магазин. — Зустрінемося в кафе?
-    Direction vs location: іду В банк (direction) vs я В банку (location)."
-  - "Dialogue 2 — Planning a trip:
-    — Куди ти їдеш у суботу? — Я їду у Львів.
-    — А Олена? — Вона їде в Одесу.
-    Cities as destinations: їхати в/у + city."
-- section: "Куди? Знахідний відмінок (Where To? Accusative)"
+  - 'Dialogue 1 — Where are you going? (ULP Ep18): — Куди ти йдеш? — Я йду в банк. А ти? — Я йду на роботу. — А потім? — Потім
+    іду в магазин. — Зустрінемося в кафе? Direction vs location: іду В банк (direction) vs я В банку (location).'
+  - 'Dialogue 2 — Planning a trip: — Куди ти їдеш у суботу? — Я їду у Львів. — А Олена? — Вона їде в Одесу. Cities as destinations:
+    їхати в/у + city.'
+- section: Куди? Знахідний відмінок (Where To? Accusative)
   words: 300
   points:
-  - "Grade 4 case helper: Зн. (бачу) — кого? що?
-    For direction: в/у + accusative = WHERE TO (motion toward).
-    Compare with locative: в/у + locative = WHERE (static position).
-    Де ти? — Я в банку. (locative — you ARE there)
-    Куди ти йдеш? — Я йду в банк. (accusative — you're GOING there)"
-  - "Accusative endings for places:
-    Masculine inanimate: = nominative (no change!):
-    банк → в банк, магазин → у магазин, парк → у парк.
-    Feminine -а/-я → -у/-ю:
-    школа → у школу, робота → на роботу, бібліотека → у бібліотеку.
-    Neuter: = nominative (no change):
-    кафе → у кафе, місто → у місто.
-    Good news: masculine and neuter don't change! Only feminine shifts."
-- section: "Де чи куди? (Where or Where To?)"
+  - 'Grade 4 case helper: Зн. (бачу) — кого? що? For direction: в/у + accusative = WHERE TO (motion toward). Compare with
+    locative: в/у + locative = WHERE (static position). Де ти? — Я в банку. (locative — you ARE there) Куди ти йдеш? — Я йду
+    в банк. (accusative — you''re GOING there)'
+  - 'Accusative endings for places: Masculine inanimate: = nominative (no change!): банк → в банк, магазин → у магазин, парк
+    → у парк. Feminine -а/-я → -у/-ю: школа → у школу, робота → на роботу, бібліотека → у бібліотеку. Neuter: = nominative
+    (no change): кафе → у кафе, місто → у місто. Good news: masculine and neuter don''t change! Only feminine shifts.'
+- section: Де чи куди? (Where or Where To?)
   words: 300
   points:
-  - "The key question pair:
-    Де ти? (Where are you?) → в/у/на + LOCATIVE
-    Куди ти йдеш? (Where are you going?) → в/у/на + ACCUSATIVE
-    | Place | Де? (М.в.) | Куди? (Зн.в.) |
-    | школа | в школі | у школу |
-    | робота | на роботі | на роботу |
-    | банк | у банку | у банк |
-    | парк | у парку | у парк |"
-  - "Motion verbs:
-    йти (to go on foot): Я йду в магазин.
-    їхати (to go by transport): Я їду на вокзал.
-    Note: йти = on foot, їхати = by vehicle. Both + в/на + accusative."
-- section: "Підсумок — Summary"
+  - 'The key question pair: Де ти? (Where are you?) → в/у/на + LOCATIVE Куди ти йдеш? (Where are you going?) → в/у/на + ACCUSATIVE
+    | Place | Де? (М.в.) | Куди? (Зн.в.) | | школа | в школі | у школу | | робота | на роботі | на роботу | | банк | у банку
+    | у банк | | парк | у парку | у парк |'
+  - 'Motion verbs: йти (to go on foot): Я йду в магазин. їхати (to go by transport): Я їду на вокзал. Note: йти = on foot,
+    їхати = by vehicle. Both + в/на + accusative.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Two questions, two cases:
-    Де? → locative (в школі, на роботі) = STATIC
-    Куди? → accusative (у школу, на роботу) = DIRECTION
-    Masculine/neuter accusative = nominative (no change).
-    Feminine: -а→-у, -я→-ю (школа→школу, бібліотека→бібліотеку).
-    Self-check: Where are you? (Де?) Where are you going? (Куди?)"
+  - 'Two questions, two cases: Де? → locative (в школі, на роботі) = STATIC Куди? → accusative (у школу, на роботу) = DIRECTION
+    Masculine/neuter accusative = nominative (no change). Feminine: -а→-у, -я→-ю (школа→школу, бібліотека→бібліотеку). Self-check:
+    Where are you? (Де?) Where are you going? (Куди?)'
 vocabulary_hints:
   required:
   - куди (where to)
@@ -83,32 +61,32 @@ vocabulary_hints:
   - повертатися → додому (to return home)
 activity_hints:
 - type: quiz
-  focus: "Де or Куди? Choose the right question for each sentence."
+  focus: Де or Куди? Choose the right question for each sentence.
   items: 8
 - type: fill-in
-  focus: "Complete: Я йду ___ (школа). Він у ___ (банк)."
+  focus: 'Complete: Я йду ___ (школа). Він у ___ (банк).'
   items: 10
 - type: group-sort
-  focus: "Sort phrases: Де? (locative) vs Куди? (accusative)"
+  focus: 'Sort phrases: Де? (locative) vs Куди? (accusative)'
   items: 10
 - type: quiz
-  focus: "Йти or їхати? Choose based on distance/transport."
+  focus: Йти or їхати? Choose based on distance/transport.
   items: 6
 connects_to:
 - a1-032 (Transport)
 prerequisites:
 - a1-029 (Where Is It?)
 grammar:
-- "Accusative for direction: в/у/на + Зн.в."
-- "Де? (М.в.) vs Куди? (Зн.в.) distinction"
-- "Accusative endings: m/n = nominative, f: -а→-у, -я→-ю"
-- "Motion verbs: йти (foot) vs їхати (transport)"
+- 'Accusative for direction: в/у/на + Зн.в.'
+- Де? (М.в.) vs Куди? (Зн.в.) distinction
+- 'Accusative endings: m/n = nominative, f: -а→-у, -я→-ю'
+- 'Motion verbs: йти (foot) vs їхати (transport)'
 register: розмовний
 references:
-- title: "Grade 4 case table"
-  notes: "Зн. (бачу) — кого? що? Helper word method."
-- title: "ULP Season 1, Episode 18"
+- title: Grade 4 case table
+  notes: Зн. (бачу) — кого? що? Helper word method.
+- title: ULP Season 1, Episode 18
   url: https://www.ukrainianlessons.com/episode18/
-  notes: "Accusative case for directions."
+  notes: Accusative case for directions.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

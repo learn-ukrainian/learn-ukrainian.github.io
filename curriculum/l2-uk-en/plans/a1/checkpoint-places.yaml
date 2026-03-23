@@ -2,9 +2,9 @@ module: a1-035
 level: A1
 sequence: 35
 slug: checkpoint-places
-version: '1.0'
-title: "Checkpoint: Places"
-subtitle: "Can you navigate a Ukrainian city?"
+version: '1.2'
+title: 'Checkpoint: Places'
+subtitle: Can you navigate a Ukrainian city?
 focus: review
 pedagogy: PPP
 phase: A1.5 [Places]
@@ -16,84 +16,105 @@ objectives:
 - Answer Звідки? with genitive chunks
 - Combine all A1.5 skills in connected urban scenarios
 content_outline:
-- section: "Що ми знаємо? (What Do We Know?)"
+- section: Що ми знаємо? (What Do We Know?)
   words: 200
   points:
-  - "Self-check covering M28-M34:
-    Can you apply euphony rules? (M28)
-    Can you say where things are? (M29)
-    Can you name city places? (M30)
-    Can you say where you're going? (M31)
-    Can you use transport? (M32)
-    Can you give directions? (M33)
-    Can you say where you're from? (M34)"
-- section: "Читання (Reading Practice)"
+  - 'Self-check covering M28-M34: Can you apply euphony rules? (M28) Can you say where things are? (M29) Can you name city
+    places? (M30) Can you say where you''re going? (M31) Can you use transport? (M32) Can you give directions? (M33) Can you
+    say where you''re from? (M34)'
+- section: Читання (Reading Practice)
   words: 250
   points:
-  - "A short Ukrainian text using vocabulary from M28-M34.
-    Content: a tourist navigates Kyiv — asks for directions, takes metro,
-    finds a museum, describes where they're from and where they're going.
-    Uses euphony, locative, accusative, genitive chunks, transport."
-- section: "Граматика (Grammar Summary)"
+  - 'A short Ukrainian text using vocabulary from M28-M34. Content: a tourist navigates Kyiv — asks for directions, takes
+    metro, finds a museum, describes where they''re from and where they''re going. Uses euphony, locative, accusative, genitive
+    chunks, transport.'
+- section: Граматика (Grammar Summary)
   words: 200
   points:
-  - "Key patterns from A1.5:
-    1. Euphony: у/в, і/й, з/із/зі (M28)
-    2. Де? → в/на + locative: в школі, на роботі (M29)
-    3. Куди? → в/на + accusative: у школу, на роботу (M31)
-    4. Звідки? → з + genitive chunk: з України, з роботи (M34)
-    5. Transport: автобусом, на метро (M32)
-    6. Directions: прямо, направо, наліво (M33)
-    7. City places with correct prepositions (M30)"
-- section: "Діалог (Connected Dialogue)"
+  - 'Key patterns from A1.5: 1. Euphony: у/в, і/й, з/із/зі (M28) 2. Де? → в/на + locative: в школі, на роботі (M29) 3. Куди?
+    → в/на + accusative: у школу, на роботу (M31) 4. Звідки? → з + genitive chunk: з України, з роботи (M34) 5. Transport:
+    автобусом, на метро (M32) 6. Directions: прямо, направо, наліво (M33) 7. City places with correct prepositions (M30)'
+- section: Діалог (Connected Dialogue)
   words: 300
   points:
-  - "A tourist in Kyiv asks for help:
-    — Вибачте, я з Канади. Де тут музей?
-    — Музей у центрі. Ідіть на метро до станції Хрещатик.
-    — А як дістатися від метро? — Вийдіть і йдіть направо. Музей на площі.
-    — Дякую! А потім я хочу їхати у Львів. Де вокзал?
-    — Вокзал далеко, їдьте на метро до станції Вокзальна.
-    Uses all A1.5 skills in one realistic scenario."
-- section: "Підсумок — Summary"
+  - 'A tourist in Kyiv asks for help: — Вибачте, я з Канади. Де тут музей? — Музей у центрі. Ідіть на метро до станції Хрещатик.
+    — А як дістатися від метро? — Вийдіть і йдіть направо. Музей на площі. — Дякую! А потім я хочу їхати у Львів. Де вокзал?
+    — Вокзал далеко, їдьте на метро до станції Вокзальна. Uses all A1.5 skills in one realistic scenario.'
+- section: Підсумок — Summary
   words: 250
   points:
-  - "A1.5 achievement summary:
-    You can now navigate Ukrainian cities.
-    You know euphony rules for natural speech.
-    You can say WHERE something is (locative).
-    You can say WHERE you're GOING (accusative).
-    You can say WHERE you're FROM (genitive chunks).
-    You can use transport and give directions.
-    Next: A1.6 — Food and Shopping (ordering, buying, accusative for objects)."
+  - 'A1.5 achievement summary: You can now navigate Ukrainian cities. You know euphony rules for natural speech. You can say
+    WHERE something is (locative). You can say WHERE you''re GOING (accusative). You can say WHERE you''re FROM (genitive
+    chunks). You can use transport and give directions. Next: A1.6 — Food and Shopping (ordering, buying, accusative for objects).'
 vocabulary_hints:
   required: []
   recommended: []
 activity_hints:
 - type: quiz
-  focus: "Де/Куди/Звідки? Choose correct form for each situation."
-  items: 10
+  focus: 'Choose the correct question: Де? Куди? Звідки?'
+  items: 8
+  questions:
+  - '... ти живеш? — У Києві. (Де / Куди / Звідки)'
+  - '... ти йдеш? — У магазин. (Куди / Де / Звідки)'
+  - '... ви? — Ми з Канади. (Звідки / Де / Куди)'
+  - '... музей? — У центрі. (Де / Куди / Звідки)'
+  - '... їде автобус? — На вокзал. (Куди / Де / Звідки)'
+  - '... ти їдеш? — З роботи. (Звідки / Куди / Де)'
+  - '... аптека? — Направо. (Де / Куди / Звідки)'
+  - '... вони? — Зі США. (Звідки / Де / Куди)'
 - type: fill-in
-  focus: "Navigate Kyiv: complete the tourist dialogue with correct forms"
-  items: 8
+  focus: Complete the connected dialogue with correct forms
+  items: 6
+  blanks:
+  - Вибачте, я {з Канади}. Де тут музей?
+  - Музей {у центрі}. Ідіть на метро.
+  - А як дістатися {від метро}?
+  - Вийдіть і йдіть {направо}. Музей на площі.
+  - Я хочу їхати {у Львів}. Де вокзал?
+  - Вокзал далеко, їдьте {на метро}.
 - type: group-sort
-  focus: "Sort city phrases by case: locative / accusative / genitive"
+  focus: Sort phrases by case/function (Locative, Accusative, Genitive chunks)
   items: 9
+  groups:
+  - name: Локація (Де?)
+    items:
+    - у школі
+    - на площі
+    - в центрі
+  - name: Напрямок (Куди?)
+    items:
+    - на роботу
+    - у Львів
+    - в Канаду
+  - name: Походження (Звідки?)
+    items:
+    - з України
+    - зі США
+    - з роботи
 - type: quiz
-  focus: "Euphony check: choose correct у/в, і/й, з/із/зі"
+  focus: 'Euphony rules check: у/в, і/й, з/із/зі'
   items: 8
+  questions:
+  - Брат ... сестра (і / й)
+  - Вона живе ... Львові (у / в)
+  - Я йду ... школи (зі / з)
+  - Він ... Києві (у / в)
+  - Мама ... тато (і / й)
+  - Ми ... України (з / із)
+  - Я ... кімнаті (в / у)
+  - Вона ... США (зі / з)
 connects_to:
 - a1-036 (Food and Drink)
 prerequisites:
 - a1-034 (Where From?)
 grammar:
-- "Review: locative for location (Де?)"
-- "Review: accusative for direction (Куди?)"
-- "Review: genitive chunks for origin (Звідки?)"
-- "Review: euphony and transport"
+- 'Review: locative for location (Де?)'
+- 'Review: accusative for direction (Куди?)'
+- 'Review: genitive chunks for origin (Звідки?)'
+- 'Review: euphony and transport'
 register: розмовний
 references:
-- title: "Synthesis of M28-M34 content"
-  notes: "No new material — review and integration of A1.5 phase."
+- title: Synthesis of M28-M34 content
+  notes: No new material — review and integration of A1.5 phase.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

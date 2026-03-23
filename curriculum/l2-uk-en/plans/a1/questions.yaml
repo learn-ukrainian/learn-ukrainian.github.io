@@ -2,9 +2,9 @@ module: a1-019
 level: A1
 sequence: 19
 slug: questions
-version: '1.0'
+version: '1.1'
 title: Questions
-subtitle: "Хто? Що? Де? — asking about the world"
+subtitle: Хто? Що? Де? — asking about the world
 focus: grammar
 pedagogy: PPP
 phase: A1.3 [Actions]
@@ -15,55 +15,36 @@ objectives:
 - Form yes/no questions with intonation (no word order change)
 - Combine question words with verbs from M16-M18
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Getting to know someone (extending M05):
-    — Хто ти? — Я студент. — Що ти вивчаєш? — Я вивчаю українську.
-    — Де ти живеш? — Я живу в Києві. — Коли ти приїхав? — Місяць тому.
-    Question words demonstrated in real conversation."
-  - "Dialogue 2 — Lost in the city (preview for A1.5):
-    — Де бібліотека? — Я не знаю. — А хто знає?
-    — Запитай там. — Чому? — Тому що там працює мій друг.
-    Questions + negation in practical context."
-- section: "Питальні слова (Question Words)"
+  - 'Dialogue 1 — Getting to know someone (extending M05): — Хто ти? — Я студент. — Що ти вивчаєш? — Я вивчаю українську.
+    — Де ти живеш? — Я живу в Києві. — Коли ти приїхав? — Місяць тому. Question words demonstrated in real conversation.'
+  - 'Dialogue 2 — Lost in the city (preview for A1.5): — Де бібліотека? — Я не знаю. — А хто знає? — Запитай там. — Чому?
+    — Тому що там працює мій друг. Questions + negation in practical context.'
+- section: Питальні слова (Question Words)
   words: 300
   points:
-  - "Seven essential question words:
-    Хто? (Who?) — Хто це? Хто говорить?
-    Що? (What?) — Що це? Що ти робиш?
-    Де? (Where?) — Де ти живеш? Де книга?
-    Куди? (Where to?) — Куди ти йдеш?
-    Коли? (When?) — Коли ти працюєш?
-    Чому? (Why?) — Чому ти не працюєш?
-    Як? (How?) — Як справи? Як тебе звати?"
-  - "Word order: question word + verb + subject (flexible):
-    Де ти живеш? = Ти де живеш? (both acceptable).
-    Yes/no questions: just raise intonation at the end:
-    Ти говориш українською? ↑ (no special word needed).
-    Чи ти говориш? — formal/written (optional for A1)."
-- section: "Заперечення (Negation)"
+  - 'Seven essential question words: Хто? (Who?) — Хто це? Хто говорить? Що? (What?) — Що це? Що ти робиш? Де? (Where?) —
+    Де ти живеш? Де книга? Куди? (Where to?) — Куди ти йдеш? Коли? (When?) — Коли ти працюєш? Чому? (Why?) — Чому ти не працюєш?
+    Як? (How?) — Як справи? Як тебе звати?'
+  - 'Word order: question word + verb + subject (flexible): Де ти живеш? = Ти де живеш? (both acceptable). Yes/no questions:
+    just raise intonation at the end: Ти говориш українською? ↑ (no special word needed). Чи ти говориш? — formal/written
+    (optional for A1).'
+- section: Заперечення (Negation)
   words: 300
   points:
-  - "Не = not (before verb):
-    Я не знаю. Він не працює. Ми не розуміємо.
-    Не goes directly before the verb — never separated.
-    Review: Я не хочу. Мені не подобається. (from M15, M18)"
-  - "Ні = no (standalone) / nothing, nobody (with pronouns):
-    Ні, я не знаю. (No, I don't know.)
-    Нічого (nothing), ніхто (nobody), ніколи (never), ніде (nowhere).
-    Double negation is REQUIRED in Ukrainian:
-    Я нічого не знаю. (literally: I nothing don't know = I don't know anything.)
-    Ніхто не говорить. (Nobody speaks.) — unlike English, both не and ні- are needed."
-- section: "Підсумок — Summary"
+  - 'Не = not (before verb): Я не знаю. Він не працює. Ми не розуміємо. Не goes directly before the verb — never separated.
+    Review: Я не хочу. Мені не подобається. (from M15, M18)'
+  - 'Ні = no (standalone) / nothing, nobody (with pronouns): Ні, я не знаю. (No, I don''t know.) Нічого (nothing), ніхто (nobody),
+    ніколи (never), ніде (nowhere). Double negation is REQUIRED in Ukrainian: Я нічого не знаю. (literally: I nothing don''t
+    know = I don''t know anything.) Ніхто не говорить. (Nobody speaks.) — unlike English, both не and ні- are needed.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Questions: Хто? Що? Де? Куди? Коли? Чому? Як?
-    Yes/no: intonation only (Ти знаєш? ↑)
-    Negation: не before verb (Я не знаю).
-    Double negation: Ніхто не знає. Я нічого не бачу.
-    Self-check: Ask 3 questions about a friend (Де...? Що...? Коли...?).
-    Make 2 negative sentences (Я не... / Ніхто не...)."
+  - 'Questions: Хто? Що? Де? Куди? Коли? Чому? Як? Yes/no: intonation only (Ти знаєш? ↑) Negation: не before verb (Я не знаю).
+    Double negation: Ніхто не знає. Я нічого не бачу. Self-check: Ask 3 questions about a friend (Де...? Що...? Коли...?).
+    Make 2 negative sentences (Я не... / Ніхто не...).'
 vocabulary_hints:
   required:
   - хто (who)
@@ -84,32 +65,32 @@ vocabulary_hints:
   - тому що (because)
 activity_hints:
 - type: quiz
-  focus: "Choose the right question word: ___ ти живеш? (Де/Що/Хто)"
+  focus: 'Choose the right question word: ___ ти живеш? (Де/Що/Хто)'
   items: 8
 - type: fill-in
-  focus: "Make it negative: Я знаю → Я не знаю, Хтось знає → Ніхто не знає"
+  focus: 'Make it negative: Я знаю → Я не знаю, Хтось знає → Ніхто не знає'
   items: 8
 - type: match-up
-  focus: "Match question to answer: Де ти живеш? ↔ У Києві."
+  focus: 'Match question to answer: Де ти живеш? ↔ У Києві.'
   items: 6
 - type: quiz
-  focus: "Double negation: choose the correct Ukrainian sentence."
+  focus: 'Double negation: choose the correct Ukrainian sentence.'
   items: 6
 connects_to:
 - a1-020 (My Morning)
 prerequisites:
 - a1-018 (I Want, I Can)
 grammar:
-- "Question words: хто, що, де, куди, коли, чому, як"
-- "Yes/no questions with rising intonation"
-- "Negation: не before verb"
-- "Double negation: ніхто не + verb, нічого не + verb"
+- 'Question words: хто, що, де, куди, коли, чому, як'
+- Yes/no questions with rising intonation
+- 'Negation: не before verb'
+- 'Double negation: ніхто не + verb, нічого не + verb'
 register: розмовний
 references:
-- title: "Варзацька Grade 4, p.41"
-  notes: "Question words in case system context (хто? що? кого? чого?)."
-- title: "ULP Season 1, Episode 35"
+- title: Варзацька Grade 4, p.41
+  notes: Question words in case system context (хто? що? кого? чого?).
+- title: ULP Season 1, Episode 35
   url: https://www.ukrainianlessons.com/episode35/
-  notes: "Questions in Ukrainian — word order and intonation."
+  notes: Questions in Ukrainian — word order and intonation.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

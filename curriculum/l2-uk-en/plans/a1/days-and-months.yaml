@@ -2,9 +2,9 @@ module: a1-023
 level: A1
 sequence: 23
 slug: days-and-months
-version: '1.0'
+version: '1.2'
 title: Days and Months
-subtitle: "У понеділок, у січні — the calendar in Ukrainian"
+subtitle: У понеділок, у січні — the calendar in Ukrainian
 focus: vocabulary
 pedagogy: PPP
 phase: A1.4 [Time and Nature]
@@ -15,54 +15,36 @@ objectives:
 - Say dates using ordinal numbers (as chunks)
 - Plan a week using days, times, and activities
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Planning the week (ULP Ep15 pattern):
-    — Що ти робиш у понеділок? — Я працюю. А у вівторок?
-    — У вівторок я вивчаю українську. — А у суботу?
-    — У суботу гуляю. Неділя — вільний день!
-    Days of the week in practical scheduling."
-  - "Dialogue 2 — When is your birthday?
-    — Коли у тебе день народження? — У березні.
-    — Якого числа? — П'ятнадцятого березня. А у тебе?
-    — У мене в серпні. — О, це літо!
-    Months and seasons in personal context."
-- section: "Дні тижня (Days of the Week)"
+  - 'Dialogue 1 — Planning the week (ULP Ep15 pattern): — Що ти робиш у понеділок? — Я працюю. А у вівторок? — У вівторок
+    я вивчаю українську. — А у суботу? — У суботу гуляю. Неділя — вільний день! Days of the week in practical scheduling.'
+  - Dialogue 2 — When is your birthday? — Коли у тебе день народження? — У березні. — Якого числа? — П'ятнадцятого березня.
+    А у тебе? — У мене в серпні. — О, це літо! Months and seasons in personal context.
+- section: Дні тижня (Days of the Week)
   words: 300
   points:
-  - "Seven days — all LOWERCASE in Ukrainian (not capitalized like English):
-    понеділок (Monday), вівторок (Tuesday), середа (Wednesday),
-    четвер (Thursday), п'ятниця (Friday), субота (Saturday), неділя (Sunday).
-    Вашуленко Grade 2 p.83: planning your week activity.
-    Note: неділя = Sunday AND 'week' in some dialects. Standard 'week' = тиждень."
-  - "'On' a day = у/в + accusative (chunk — no grammar analysis):
-    у понеділок, у вівторок, у середу, у четвер,
-    у п'ятницю, в суботу, в неділю.
-    Note the endings change — just memorize each form."
-- section: "Місяці і пори року (Months and Seasons)"
+  - 'Seven days — all LOWERCASE in Ukrainian (not capitalized like English): понеділок (Monday), вівторок (Tuesday), середа
+    (Wednesday), четвер (Thursday), п''ятниця (Friday), субота (Saturday), неділя (Sunday). Вашуленко Grade 2 p.83: planning
+    your week activity. Note: неділя = Sunday AND ''week'' in some dialects. Standard ''week'' = тиждень.'
+  - '''On'' a day = у/в + accusative (chunk — no grammar analysis): у понеділок, у вівторок, у середу, у четвер, у п''ятницю,
+    в суботу, в неділю. Note the endings change — just memorize each form.'
+- section: Місяці і пори року (Months and Seasons)
   words: 300
   points:
-  - "12 months — also lowercase, organized by season:
-    Зима: грудень (Dec), січень (Jan), лютий (Feb).
-    Весна: березень (Mar), квітень (Apr), травень (May).
-    Літо: червень (Jun), липень (Jul), серпень (Aug).
-    Осінь: вересень (Sep), жовтень (Oct), листопад (Nov).
-    All months are masculine. Many come from nature words
-    (березень ← береза, липень ← липа, листопад ← листя падає)."
-  - "4 seasons: зима (winter, f), весна (spring, f), літо (summer, n), осінь (autumn, f).
-    'In' a month/season = у/в + locative (chunk):
-    у січні, у лютому, в березні... влітку, взимку, восени, навесні.
-    Seasonal forms are irregular — memorize as chunks."
-- section: "Підсумок — Summary"
+  - '12 months — also lowercase, organized by season: Зима: грудень (Dec), січень (Jan), лютий (Feb). Весна: березень (Mar),
+    квітень (Apr), травень (May). Літо: червень (Jun), липень (Jul), серпень (Aug). Осінь: вересень (Sep), жовтень (Oct),
+    листопад (Nov). All months are masculine. Many come from nature words (березень ← береза, липень ← липа, листопад ← листя
+    падає).'
+  - '4 seasons: зима (winter, f), весна (spring, f), літо (summer, n), осінь (autumn, f). ''In'' a month/season = у/в + locative
+    (chunk): у січні, у лютому, в березні... влітку, взимку, восени, навесні. Seasonal forms are irregular — memorize as chunks.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Calendar vocabulary:
-    Days: понеділок → неділя (у понеділок, в суботу).
-    Months: січень → грудень (у січні, в серпні).
-    Seasons: зима, весна, літо, осінь (взимку, навесні, влітку, восени).
-    Self-check: What day is today? What month? What season?
-    When is your birthday? Plan your next week in Ukrainian."
+  - 'Calendar vocabulary: Days: понеділок → неділя (у понеділок, в суботу). Months: січень → грудень (у січні, в серпні).
+    Seasons: зима, весна, літо, осінь (взимку, навесні, влітку, восени). Self-check: What day is today? What month? What season?
+    When is your birthday? Plan your next week in Ukrainian.'
 vocabulary_hints:
   required:
   - понеділок, вівторок, середа (Mon, Tue, Wed)
@@ -78,33 +60,51 @@ vocabulary_hints:
   - день народження (birthday)
 activity_hints:
 - type: fill-in
-  focus: "Put days in order: понеділок, ___, середа, ___, п'ятниця, ___, ___"
-  items: 7
-- type: quiz
-  focus: "Which season? січень → зима, квітень → весна"
-  items: 8
-- type: fill-in
-  focus: "Plan your week: У понеділок я ___, у вівторок ___..."
-  items: 5
+  focus: Put days of the week in order
+  items:
+  - понеділок, {вівторок|субота|четвер}, середа
+  - середа, {четвер|п'ятниця|неділя}, п'ятниця
+  - п'ятниця, {субота|вівторок|середа}, неділя
+  - неділя, {понеділок|вівторок|четвер}, вівторок
+  - вівторок, середа, {четвер|п'ятниця|неділя}
+  - четвер, п'ятниця, {субота|понеділок|вівторок}
+  - субота, {неділя|понеділок|п'ятниця}, понеділок
 - type: match-up
-  focus: "Match months to seasons: березень ↔ весна"
-  items: 8
+  focus: Match the month to the correct season
+  pairs:
+  - січень ↔ зима
+  - квітень ↔ весна
+  - липень ↔ літо
+  - жовтень ↔ осінь
+  - лютий ↔ зима
+  - травень ↔ весна
+  - серпень ↔ літо
+  - листопад ↔ осінь
+- type: fill-in
+  focus: Use the correct 'in/on' chunk for days and months
+  items:
+  - Я працюю {у понеділок|понеділок|в понеділок}.
+  - Мій день народження {у березні|березень|в березень}.
+  - Ми гуляємо {в суботу|субота|у субота}.
+  - '{Взимку|Зима|У зима} холодно.'
+  - Я вивчаю українську {у вівторок|вівторок|в вівторок}.
+  - Вони відпочивають {у серпні|серпень|в серпень}.
 connects_to:
 - a1-024 (Weather)
 prerequisites:
 - a1-022 (What Time?)
 grammar:
-- "Days of the week: у/в + accusative chunk (у понеділок, в суботу)"
-- "Months: у/в + locative chunk (у січні)"
-- "Seasons: adverbial forms (взимку, навесні, влітку, восени)"
+- 'Days of the week: у/в + accusative chunk (у понеділок, в суботу)'
+- 'Months: у/в + locative chunk (у січні)'
+- 'Seasons: adverbial forms (взимку, навесні, влітку, восени)'
 register: розмовний
 references:
-- title: "Вашуленко Grade 2, p.83"
-  notes: "Planning your week — days of the week activity."
-- title: "Вашуленко Grade 2, p.69-89"
-  notes: "Months through seasonal stories and poems."
-- title: "ULP Season 1, Episode 15"
+- title: Вашуленко Grade 2, p.83
+  notes: Planning your week — days of the week activity.
+- title: Вашуленко Grade 2, p.69-89
+  notes: Months through seasonal stories and poems.
+- title: ULP Season 1, Episode 15
   url: https://www.ukrainianlessons.com/episode15/
-  notes: "Days of the week and planning."
+  notes: Days of the week and planning.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

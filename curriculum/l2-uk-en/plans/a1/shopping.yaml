@@ -2,9 +2,9 @@ module: a1-039
 level: A1
 sequence: 39
 slug: shopping
-version: '1.0'
+version: '1.2'
 title: Shopping
-subtitle: "Скільки коштує? — prices, quantities, and buying things"
+subtitle: Скільки коштує? — prices, quantities, and buying things
 focus: communication
 pedagogy: PPP
 phase: A1.6 [Food and Shopping]
@@ -15,57 +15,36 @@ objectives:
 - Buy things at a shop or market using polite phrases
 - Express quantities (кілограм, літр, пачка, пляшка)
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — At the market:
-    — Скільки коштує кілограм яблук? — Сорок гривень.
-    — А помідори? — Тридцять п'ять гривень за кілограм.
-    — Дайте, будь ласка, два кілограми помідорів і кілограм яблук.
-    — Сімдесят п'ять гривень. — Ось, будь ласка.
-    Prices, quantities, polite buying at the market."
-  - "Dialogue 2 — At the supermarket:
-    — Вибачте, де тут хліб? — Хліб у третьому ряді.
-    — А молоко? — Молоко в холодильнику, там.
-    — Скільки коштує цей сир? — Сто двадцять гривень.
-    — Дорого! А є дешевший? — Так, ось цей — вісімдесят.
-    Navigation, asking prices, comparing (дорого/дешево)."
-- section: "Скільки коштує? (How Much?)"
+  - 'Dialogue 1 — At the market: — Скільки коштує кілограм яблук? — Сорок гривень. — А помідори? — Тридцять п''ять гривень
+    за кілограм. — Дайте, будь ласка, два кілограми помідорів і кілограм яблук. — Сімдесят п''ять гривень. — Ось, будь ласка.
+    Prices, quantities, polite buying at the market.'
+  - 'Dialogue 2 — At the supermarket: — Вибачте, де тут хліб? — Хліб у третьому ряді. — А молоко? — Молоко в холодильнику,
+    там. — Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший? — Так, ось цей — вісімдесят. Navigation,
+    asking prices, comparing (дорого/дешево).'
+- section: Скільки коштує? (How Much?)
   words: 300
   points:
-  - "Price patterns:
-    Скільки коштує [item]? — [number] гривень/гривні/гривня.
-    Скільки коштують [plural item]? — verb agrees with plural.
-    Currency: гривня (1), гривні (2-4), гривень (5+).
-    Копійка: one hundredth of a гривня (often rounded)."
-  - "Numbers with prices (review from M12):
-    21 гривня, 32 гривні, 45 гривень, 100 гривень.
-    Дорого! (Expensive!) Дешево! (Cheap!) Нормальна ціна. (Fair price.)
-    Є знижка? (Is there a discount?) За все — [total]. (Total.)"
-- section: "Де купити? (Where to Buy)"
+  - 'Price patterns: Скільки коштує [item]? — [number] гривень/гривні/гривня. Скільки коштують [plural item]? — verb agrees
+    with plural. Currency: гривня (1), гривні (2-4), гривень (5+). Копійка: one hundredth of a гривня (often rounded).'
+  - 'Numbers with prices (review from M12): 21 гривня, 32 гривні, 45 гривень, 100 гривень. Дорого! (Expensive!) Дешево! (Cheap!)
+    Нормальна ціна. (Fair price.) Є знижка? (Is there a discount?) За все — [total]. (Total.)'
+- section: Де купити? (Where to Buy)
   words: 300
   points:
-  - "Shopping locations:
-    магазин (shop), супермаркет (supermarket), ринок (market),
-    аптека (pharmacy), крамниця (store — Ukrainian synonym for магазин).
-    Specific: м'ясний відділ (meat section), молочний (dairy section)."
-  - "Quantity words:
-    кілограм (kilogram): кілограм яблук, два кілограми помідорів.
-    літр (liter): літр молока, два літри соку.
-    пачка (pack): пачка масла, пачка чаю.
-    пляшка (bottle): пляшка води, пляшка соку.
-    буханка (loaf): буханка хліба.
-    All use genitive after quantity — taught as chunks at A1."
-- section: "Підсумок — Summary"
+  - 'Shopping locations: магазин (shop), супермаркет (supermarket), ринок (market), аптека (pharmacy), крамниця (store — Ukrainian
+    synonym for магазин). Specific: м''ясний відділ (meat section), молочний (dairy section).'
+  - 'Quantity words: кілограм (kilogram): кілограм яблук, два кілограми помідорів. літр (liter): літр молока, два літри соку.
+    пачка (pack): пачка масла, пачка чаю. пляшка (bottle): пляшка води, пляшка соку. буханка (loaf): буханка хліба. All use
+    genitive after quantity — taught as chunks at A1.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Shopping toolkit:
-    Ask: Скільки коштує? Де тут [item]?
-    Buy: Дайте, будь ласка, [quantity] [item].
-    React: Дорого! / Дешево! / Добре, беру.
-    Pay: Скільки за все? Можна карткою?
-    Self-check: Buy 3 items at a market.
-    Ask the price, choose a quantity, pay."
+  - 'Shopping toolkit: Ask: Скільки коштує? Де тут [item]? Buy: Дайте, будь ласка, [quantity] [item]. React: Дорого! / Дешево!
+    / Добре, беру. Pay: Скільки за все? Можна карткою? Self-check: Buy 3 items at a market. Ask the price, choose a quantity,
+    pay.'
 vocabulary_hints:
   required:
   - коштувати (to cost)
@@ -89,31 +68,93 @@ vocabulary_hints:
   - готівка (cash, f)
 activity_hints:
 - type: fill-in
-  focus: "Скільки коштує ___? — ___ гривень. (match items with prices)"
-  items: 8
+  focus: Скільки коштує ___? — ___ гривень. (match items with prices)
+  items:
+  - Скільки коштує {хліб|хліба}? — Двадцять гривень.
+  - Скільки коштує {вода|воду}? — Десять гривень.
+  - Скільки коштує {сир|сиру}? — Сто гривень.
+  - Скільки коштують {яблука|яблук}? — Сорок гривень.
+  - Скільки коштують {помідори|помідорів}? — Тридцять гривень.
+  - Скільки коштує {молоко|молока}? — П'ятдесят гривень.
+  - Скільки коштує {сік|соку}? — Шістдесят гривень.
+  - Скільки коштують {банани|бананів}? — Сімдесят гривень.
 - type: quiz
-  focus: "Choose correct: 23 (гривня / гривні / гривень)"
-  items: 8
+  focus: 'Choose correct: 23 (гривня / гривні / гривень)'
+  items:
+  - question: 21 ___
+    options:
+    - гривня
+    - гривні
+    - гривень
+  - question: 32 ___
+    options:
+    - гривні
+    - гривня
+    - гривень
+  - question: 45 ___
+    options:
+    - гривень
+    - гривня
+    - гривні
+  - question: 100 ___
+    options:
+    - гривень
+    - гривня
+    - гривні
+  - question: 1 ___
+    options:
+    - гривня
+    - гривні
+    - гривень
+  - question: 3 ___
+    options:
+    - гривні
+    - гривня
+    - гривень
+  - question: 10 ___
+    options:
+    - гривень
+    - гривня
+    - гривні
+  - question: 54 ___
+    options:
+    - гривні
+    - гривня
+    - гривень
 - type: fill-in
-  focus: "At the market: Дайте ___ (кілограм/літр/пляшка) ___."
-  items: 6
-- type: quiz
-  focus: "Where do you buy it? Match item to shop type."
-  items: 8
+  focus: 'At the market: Дайте ___ (кілограм/літр/пляшка) ___.'
+  items:
+  - Дайте {кілограм|літр|пляшку} яблук.
+  - Дайте {літр|кілограм|пачку} молока.
+  - Дайте {пляшку|кілограм|літр} води.
+  - Дайте {пачку|літр|пляшку} чаю.
+  - Дайте {буханку|літр|кілограм} хліба.
+  - Дайте {кілограм|літр|пляшку} помідорів.
+- type: match-up
+  focus: Where do you buy it? Match item to shop type.
+  items:
+  - помідори: ринок
+  - м'ясо: м'ясний відділ
+  - сир: молочний відділ
+  - хліб: крамниця
+  - молоко: супермаркет
+  - вода: магазин
+  - кава: кафе
+  - борщ: ресторан
 connects_to:
 - a1-040 (People Around Me)
 prerequisites:
 - a1-038 (At the Cafe)
 grammar:
-- "Скільки коштує/коштують? — singular/plural agreement"
-- "Currency: гривня/гривні/гривень (1/2-4/5+)"
-- "Quantity + genitive as chunks: кілограм яблук, літр молока"
+- Скільки коштує/коштують? — singular/plural agreement
+- 'Currency: гривня/гривні/гривень (1/2-4/5+)'
+- 'Quantity + genitive as chunks: кілограм яблук, літр молока'
 register: розмовний
 references:
-- title: "ULP Season 1, Episode 31"
+- title: ULP Season 1, Episode 31
   url: https://www.ukrainianlessons.com/episode31/
-  notes: "Shopping vocabulary, prices, quantities."
-- title: "State Standard 2024, Topic 3 (купівля)"
-  notes: "Communicative situation: shopping, prices, paying."
+  notes: Shopping vocabulary, prices, quantities.
+- title: State Standard 2024, Topic 3 (купівля)
+  notes: 'Communicative situation: shopping, prices, paying.'
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

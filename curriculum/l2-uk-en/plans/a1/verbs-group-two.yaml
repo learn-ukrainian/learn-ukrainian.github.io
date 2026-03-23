@@ -2,9 +2,9 @@ module: a1-017
 level: A1
 sequence: 17
 slug: verbs-group-two
-version: '1.1'
+version: '1.2'
 title: Verbs Group II
-subtitle: "Говорю, говориш, говорить — the second pattern"
+subtitle: Говорю, говориш, говорить — the second pattern
 focus: grammar
 pedagogy: PPP
 phase: A1.3 [Actions]
@@ -15,56 +15,36 @@ objectives:
 - Use 6 high-frequency Group II verbs in sentences
 - Compare and contrast both conjugation groups
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Talking about abilities (ULP Ep24 pattern):
-    — Ти говориш українською? — Так, я говорю трохи. А ти?
-    — Я бачу, що ти добре говориш! — Дякую, я вчуся.
-    Group II verbs in natural conversation."
-  - "Dialogue 2 — Evening at home:
-    — Що ти робиш увечері? — Я дивлюся фільм. А ти?
-    — Я вчу нові слова. — Молодець!
-    Note: дивлюся (I watch) — the -ся ending means 'oneself' (preview for M20)."
-- section: "Друга дієвідміна (Group II Verbs)"
+  - 'Dialogue 1 — Talking about abilities (ULP Ep24 pattern): — Ти говориш українською? — Так, я говорю трохи. А ти? — Я бачу,
+    що ти добре говориш! — Дякую, я вчуся. Group II verbs in natural conversation.'
+  - 'Dialogue 2 — Evening at home: — Що ти робиш увечері? — Я дивлюся фільм. А ти? — Я вчу нові слова. — Молодець! Note: дивлюся
+    (I watch) — the -ся ending means ''oneself'' (preview for M20).'
+- section: Друга дієвідміна (Group II Verbs)
   words: 300
   points:
-  - "Group II verbs have infinitive in -ити (or -іти):
-    говорити → я говорю, ти говориш, він/вона говорить,
-    ми говоримо, ви говорите, вони говорять.
-    Pattern: stem + -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать."
-  - "Six essential Group II verbs:
-    говорити (to speak): говорю, говориш, говорить...
-    бачити (to see): бачу, бачиш, бачить...
-    робити (to do/make): роблю, робиш, робить...
-    вчити (to study/teach): вчу, вчиш, вчить...
-    просити (to ask/request): прошу, просиш, просить...
-    ходити (to go/walk regularly): ходжу, ходиш, ходить..."
-- section: "Група I чи II? (Which Group?)"
+  - 'Group II verbs have infinitive in -ити (or -іти): говорити → я говорю, ти говориш, він/вона говорить, ми говоримо, ви
+    говорите, вони говорять. Pattern: stem + -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать.'
+  - 'Six essential Group II verbs: говорити (to speak): говорю, говориш, говорить... бачити (to see): бачу, бачиш, бачить...
+    робити (to do/make): роблю, робиш, робить... вчити (to study/teach): вчу, вчиш, вчить... просити (to ask/request): прошу,
+    просиш, просить... ходити (to go/walk regularly): ходжу, ходиш, ходить...'
+- section: Група I чи II? (Which Group?)
   words: 300
   points:
-  - "Compare the endings side by side:
-    | | Group I (-ати) | Group II (-ити) |
-    | я | читаю | говорю |
-    | ти | читаєш | говориш |
-    | він/вона | читає | говорить |
-    | вони | читають | говорять |
-    Key difference: ти form → -єш (I) vs -иш (II), вони → -ють (I) vs -ять/-ать (II).
-    Note: after ч, ш, ж, щ → -ать (not -ять): бачать, вчать, ходять (but not *бачять)."
-  - "Consonant changes in Group II (я-form only):
-    робити → роблю (б→бл), ходити → ходжу (д→дж),
-    просити → прошу (с→ш), бачити → бачу (no change).
-    These changes only affect the я-form — all other forms are regular.
-    Don't memorize the rule — just learn each я-form with the verb."
-- section: "Підсумок — Summary"
+  - 'Compare the endings side by side: | | Group I (-ати) | Group II (-ити) | | я | читаю | говорю | | ти | читаєш | говориш
+    | | він/вона | читає | говорить | | вони | читають | говорять | Key difference: ти form → -єш (I) vs -иш (II), вони →
+    -ють (I) vs -ять/-ать (II). Note: after ч, ш, ж, щ → -ать (not -ять): бачать, вчать, ходять (but not *бачять).'
+  - 'Consonant changes in Group II (я-form only): робити → роблю (б→бл), ходити → ходжу (д→дж), просити → прошу (с→ш), бачити
+    → бачу (no change). These changes only affect the я-form — all other forms are regular. Don''t memorize the rule — just
+    learn each я-form with the verb.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Two verb groups — two ending patterns:
-    Group I (-ати): -ю, -єш, -є, -ємо, -єте, -ють
-    Group II (-ити): -ю/-у, -иш, -ить, -имо, -ите, -ять
-    Consonant shifts in Group II я-form (роблю, ходжу, прошу).
-    Self-check: Conjugate 'бачити' for я, ти, він/вона.
-    Is 'слухати' Group I or II? How about 'говорити'?"
+  - 'Two verb groups — two ending patterns: Group I (-ати): -ю, -єш, -є, -ємо, -єте, -ють Group II (-ити): -ю/-у, -иш, -ить,
+    -имо, -ите, -ять Consonant shifts in Group II я-form (роблю, ходжу, прошу). Self-check: Conjugate ''бачити'' for я, ти,
+    він/вона. Is ''слухати'' Group I or II? How about ''говорити''?'
 vocabulary_hints:
   required:
   - говорити (to speak)
@@ -82,33 +62,33 @@ vocabulary_hints:
   - увечері (in the evening)
 activity_hints:
 - type: fill-in
-  focus: "Conjugate: я говор__, ти говор__, він говор__"
+  focus: 'Conjugate: я говор__, ти говор__, він говор__'
   items: 10
 - type: group-sort
-  focus: "Sort verbs into Group I (-ати) and Group II (-ити)"
+  focus: Sort verbs into Group I (-ати) and Group II (-ити)
   items: 10
 - type: quiz
-  focus: "Choose correct form: Ти (бачу/бачиш/бачить) це?"
+  focus: 'Choose correct form: Ти (бачу/бачиш/бачить) це?'
   items: 8
 - type: fill-in
-  focus: "Complete with correct verb form: Вона ___ українською. (говорити)"
+  focus: 'Complete with correct verb form: Вона ___ українською. (говорити)'
   items: 6
 connects_to:
 - a1-018 (I Want, I Can)
 prerequisites:
 - a1-016 (Verbs Group I)
 grammar:
-- "Group II conjugation: -ю/-у, -иш, -ить, -имо, -ите, -ять"
-- "Consonant changes in я-form: б→бл, д→дж, с→ш, т→ч"
-- "Distinguishing Group I vs Group II by endings"
+- 'Group II conjugation: -ю/-у, -иш, -ить, -имо, -ите, -ять'
+- 'Consonant changes in я-form: б→бл, д→дж, с→ш, т→ч'
+- Distinguishing Group I vs Group II by endings
 register: розмовний
 references:
-- title: "Караман Grade 10, p.179"
-  notes: "І vs ІІ дієвідміна: endings and infinitive patterns."
-- title: "Захарійчук Grade 4, p.110-113"
-  notes: "Verb conjugation tables for present tense."
-- title: "ULP Season 1, Episode 24"
+- title: Караман Grade 10, p.179
+  notes: 'І vs ІІ дієвідміна: endings and infinitive patterns.'
+- title: Захарійчук Grade 4, p.110-113
+  notes: Verb conjugation tables for present tense.
+- title: ULP Season 1, Episode 24
   url: https://www.ukrainianlessons.com/episode24/
-  notes: "More verbs and conjugation practice."
+  notes: More verbs and conjugation practice.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

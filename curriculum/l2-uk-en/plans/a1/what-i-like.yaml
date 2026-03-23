@@ -2,9 +2,9 @@ module: a1-015
 level: A1
 sequence: 15
 slug: what-i-like
-version: '1.0'
+version: '1.1'
 title: What I Like
-subtitle: "Я люблю читати — your first verbs"
+subtitle: Я люблю читати — your first verbs
 focus: grammar
 pedagogy: PPP
 phase: A1.3 [Actions]
@@ -15,52 +15,36 @@ objectives:
 - Recognize Ukrainian infinitive form (-ти ending)
 - Talk about hobbies and interests using simple verb phrases
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Meeting someone's interests (ULP Ep14 pattern):
-    — Що ти любиш робити? — Я люблю читати і слухати музику.
-    — А я люблю готувати. — Правда? Що ти готуєш?
-    Infinitives introduced naturally through 'люблю + verb'."
-  - "Dialogue 2 — Describing preferences:
-    — Тобі подобається ця книга? — Так, мені подобається.
-    — А цей фільм? — Ні, мені не подобається. Мені подобається музика.
-    'Подобається' as a fixed chunk — dative grammar NOT analyzed."
-- section: "Я люблю... (I Like...)"
+  - 'Dialogue 1 — Meeting someone''s interests (ULP Ep14 pattern): — Що ти любиш робити? — Я люблю читати і слухати музику.
+    — А я люблю готувати. — Правда? Що ти готуєш? Infinitives introduced naturally through ''люблю + verb''.'
+  - 'Dialogue 2 — Describing preferences: — Тобі подобається ця книга? — Так, мені подобається. — А цей фільм? — Ні, мені
+    не подобається. Мені подобається музика. ''Подобається'' as a fixed chunk — dative grammar NOT analyzed.'
+- section: Я люблю... (I Like...)
   words: 300
   points:
-  - "Люблю + infinitive (what you enjoy doing):
-    Я люблю читати (I like to read). Я люблю гуляти (I like to walk).
-    Я люблю готувати (I like to cook). Я люблю слухати музику (I like to listen to music).
-    Pattern: subject + люблю + infinitive (-ти ending).
-    Infinitive = dictionary form of the verb, always ends in -ти."
-  - "Common infinitives for hobbies (new vocabulary):
-    читати (to read), гуляти (to walk), готувати (to cook),
-    слухати (to listen), дивитися (to watch), грати (to play),
-    малювати (to draw), подорожувати (to travel), співати (to sing).
-    Pronunciation: the stress in infinitives varies — learn each one."
-- section: "Мені подобається... (I Like...)"
+  - 'Люблю + infinitive (what you enjoy doing): Я люблю читати (I like to read). Я люблю гуляти (I like to walk). Я люблю
+    готувати (I like to cook). Я люблю слухати музику (I like to listen to music). Pattern: subject + люблю + infinitive (-ти
+    ending). Infinitive = dictionary form of the verb, always ends in -ти.'
+  - 'Common infinitives for hobbies (new vocabulary): читати (to read), гуляти (to walk), готувати (to cook), слухати (to
+    listen), дивитися (to watch), грати (to play), малювати (to draw), подорожувати (to travel), співати (to sing). Pronunciation:
+    the stress in infinitives varies — learn each one.'
+- section: Мені подобається... (I Like...)
   words: 300
   points:
-  - "Two ways to say 'I like' — different grammar, same meaning at A1:
-    Я люблю + infinitive = I love/like doing something.
-    Мені подобається + noun = I like something (a thing).
-    Мені подобається музика. Мені подобається ця книга. Мені подобається Київ.
-    Note: 'мені подобається' is a chunk — we don't analyze WHY мені (dative). Just use it."
-  - "Negative: Я не люблю / Мені не подобається:
-    Я не люблю готувати. Мені не подобається цей фільм.
-    Question: Ти любиш читати? Тобі подобається?
-    Note: люблю changes by person (я люблю, ти любиш) — full conjugation in M17 (Group II)."
-- section: "Підсумок — Summary"
+  - 'Two ways to say ''I like'' — different grammar, same meaning at A1: Я люблю + infinitive = I love/like doing something.
+    Мені подобається + noun = I like something (a thing). Мені подобається музика. Мені подобається ця книга. Мені подобається
+    Київ. Note: ''мені подобається'' is a chunk — we don''t analyze WHY мені (dative). Just use it.'
+  - 'Negative: Я не люблю / Мені не подобається: Я не люблю готувати. Мені не подобається цей фільм. Question: Ти любиш читати?
+    Тобі подобається? Note: люблю changes by person (я люблю, ти любиш) — full conjugation in M17 (Group II).'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Two structures for 'like':
-    1. Я люблю + infinitive (-ти) — for activities
-    2. Мені подобається + noun — for things
-    Negative: не before the verb (не люблю, не подобається).
-    Self-check: Name 3 things you like doing (Я люблю...).
-    Name 2 things you like (Мені подобається...).
-    Name 1 thing you don't like (Я не люблю... / Мені не подобається...)."
+  - 'Two structures for ''like'': 1. Я люблю + infinitive (-ти) — for activities 2. Мені подобається + noun — for things Negative:
+    не before the verb (не люблю, не подобається). Self-check: Name 3 things you like doing (Я люблю...). Name 2 things you
+    like (Мені подобається...). Name 1 thing you don''t like (Я не люблю... / Мені не подобається...).'
 vocabulary_hints:
   required:
   - любити (to love/like — verb)
@@ -80,32 +64,32 @@ vocabulary_hints:
   - книга (book — review from M08)
 activity_hints:
 - type: fill-in
-  focus: "Complete: Я люблю ___. (choose infinitive for the picture)"
+  focus: 'Complete: Я люблю ___. (choose infinitive for the picture)'
   items: 8
 - type: quiz
-  focus: "Люблю or подобається? Choose the right structure."
+  focus: Люблю or подобається? Choose the right structure.
   items: 8
 - type: match-up
-  focus: "Match infinitives to their meanings: читати ↔ to read"
+  focus: 'Match infinitives to their meanings: читати ↔ to read'
   items: 8
 - type: fill-in
-  focus: "Make it negative: Я люблю → Я не люблю"
+  focus: 'Make it negative: Я люблю → Я не люблю'
   items: 6
 connects_to:
 - a1-016 (Verbs Group I)
 prerequisites:
 - a1-014 (Checkpoint — My World)
 grammar:
-- "Infinitive form: all verbs end in -ти"
-- "Люблю + infinitive for activities"
-- "Мені подобається + noun (chunk — no dative analysis)"
-- "Negation with не before the verb"
+- 'Infinitive form: all verbs end in -ти'
+- Люблю + infinitive for activities
+- Мені подобається + noun (chunk — no dative analysis)
+- Negation with не before the verb
 register: розмовний
 references:
-- title: "ULP Season 1, Episode 14"
+- title: ULP Season 1, Episode 14
   url: https://www.ukrainianlessons.com/episode14/
-  notes: "Hobbies and interests — люблю + infinitive pattern."
-- title: "Літвінова Grade 7, p.26-27"
-  notes: "Infinitive definition: форма, що закінчується суфіксом -ти."
+  notes: Hobbies and interests — люблю + infinitive pattern.
+- title: Літвінова Grade 7, p.26-27
+  notes: 'Infinitive definition: форма, що закінчується суфіксом -ти.'
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

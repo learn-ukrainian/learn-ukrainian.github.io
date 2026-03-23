@@ -2,9 +2,9 @@ module: a1-026
 level: A1
 sequence: 26
 slug: free-time
-version: '1.0'
+version: '1.2'
 title: Free Time
-subtitle: "Хобі, спорт, музика — what you do for fun"
+subtitle: Хобі, спорт, музика — what you do for fun
 focus: communication
 pedagogy: PPP
 phase: A1.4 [Time and Nature]
@@ -15,57 +15,35 @@ objectives:
 - Express frequency (часто, іноді, рідко, ніколи)
 - Combine all A1.4 skills: time + day + weather + activities
 content_outline:
-- section: "Діалоги (Dialogues)"
+- section: Діалоги (Dialogues)
   words: 300
   points:
-  - "Dialogue 1 — Weekend plans:
-    — Що ти робиш у вихідні? — Зазвичай я гуляю і читаю.
-    — Ходімо в кіно в суботу! — Добре! О котрій?
-    — О п'ятій. — Чудово!
-    Invitation pattern + time + day."
-  - "Dialogue 2 — Talking about hobbies:
-    — Ти любиш спорт? — Так, я граю у футбол.
-    — Як часто? — Двічі на тиждень, у вівторок і четвер.
-    — А ще? — Іноді слухаю музику і малюю.
-    Frequency + hobby vocabulary."
-- section: "Хобі і спорт (Hobbies and Sports)"
+  - 'Dialogue 1 — Weekend plans: — Що ти робиш у вихідні? — Зазвичай я гуляю і читаю. — Ходімо в кіно в суботу! — Добре! О
+    котрій? — О п''ятій. — Чудово! Invitation pattern + time + day.'
+  - 'Dialogue 2 — Talking about hobbies: — Ти любиш спорт? — Так, я граю у футбол. — Як часто? — Двічі на тиждень, у вівторок
+    і четвер. — А ще? — Іноді слухаю музику і малюю. Frequency + hobby vocabulary.'
+- section: Хобі і спорт (Hobbies and Sports)
   words: 300
   points:
-  - "Hobby vocabulary (extending M15 люблю + infinitive):
-    грати у футбол / баскетбол / теніс (to play football/basketball/tennis)
-    грати на гітарі / піаніно (to play guitar/piano — 'на' + instrument as chunk)
-    слухати музику (to listen to music)
-    дивитися фільми / серіали (to watch movies/series)
-    малювати (to draw), фотографувати (to take photos)"
-  - "Entertainment and culture:
-    ходити в кіно (to go to the cinema)
-    ходити в театр (to go to the theater)
-    ходити на концерт (to go to a concert)
-    ходити в музей (to go to a museum)
-    Note: ходити + в/на is a chunk — the case grammar comes in A1.5."
-- section: "Як часто? (How Often?)"
+  - 'Hobby vocabulary (extending M15 люблю + infinitive): грати у футбол / баскетбол / теніс (to play football/basketball/tennis)
+    грати на гітарі / піаніно (to play guitar/piano — ''на'' + instrument as chunk) слухати музику (to listen to music) дивитися
+    фільми / серіали (to watch movies/series) малювати (to draw), фотографувати (to take photos)'
+  - 'Entertainment and culture: ходити в кіно (to go to the cinema) ходити в театр (to go to the theater) ходити на концерт
+    (to go to a concert) ходити в музей (to go to a museum) Note: ходити + в/на is a chunk — the case grammar comes in A1.5.'
+- section: Як часто? (How Often?)
   words: 300
   points:
-  - "Frequency adverbs:
-    завжди (always), зазвичай (usually), часто (often),
-    іноді / інколи (sometimes), рідко (rarely), ніколи (never).
-    Word order: frequency adverb usually before the verb:
-    Я часто гуляю. Я іноді читаю. Я ніколи не працюю у неділю.
-    Ніколи requires не (double negation — review M19)."
-  - "Frequency expressions with numbers:
-    раз на тиждень (once a week), двічі на тиждень (twice a week),
-    тричі на тиждень (three times a week), кожен день (every day).
-    Я граю у футбол двічі на тиждень.
-    Я ходжу в кіно раз на місяць."
-- section: "Підсумок — Summary"
+  - 'Frequency adverbs: завжди (always), зазвичай (usually), часто (often), іноді / інколи (sometimes), рідко (rarely), ніколи
+    (never). Word order: frequency adverb usually before the verb: Я часто гуляю. Я іноді читаю. Я ніколи не працюю у неділю.
+    Ніколи requires не (double negation — review M19).'
+  - 'Frequency expressions with numbers: раз на тиждень (once a week), двічі на тиждень (twice a week), тричі на тиждень (three
+    times a week), кожен день (every day). Я граю у футбол двічі на тиждень. Я ходжу в кіно раз на місяць.'
+- section: Підсумок — Summary
   words: 300
   points:
-  - "Free time communication:
-    Hobbies: Я люблю + infinitive. Я граю у/на...
-    Invitations: Ходімо! Давай! (Let's go! Let's!)
-    Frequency: завжди, часто, іноді, рідко, ніколи.
-    Self-check: Name 3 hobbies. How often do you do each?
-    Invite a friend to do something this weekend."
+  - 'Free time communication: Hobbies: Я люблю + infinitive. Я граю у/на... Invitations: Ходімо! Давай! (Let''s go! Let''s!)
+    Frequency: завжди, часто, іноді, рідко, ніколи. Self-check: Name 3 hobbies. How often do you do each? Invite a friend
+    to do something this weekend.'
 vocabulary_hints:
   required:
   - вихідні (weekend, pl)
@@ -86,29 +64,44 @@ vocabulary_hints:
   - давай (let's — informal)
   - раз (once/time)
 activity_hints:
-- type: quiz
-  focus: "How often? Order from most to least: завжди → часто → іноді → рідко → ніколи"
-  items: 6
+- type: match-up
+  focus: Match the verb to the logical noun (hobbies)
+  pairs:
+  - грати ↔ у футбол
+  - грати ↔ на гітарі
+  - слухати ↔ музику
+  - дивитися ↔ фільми
+  - ходити ↔ в кіно
+  - ходити ↔ в театр
+  - читати ↔ книгу
+  - малювати ↔ картину
 - type: fill-in
-  focus: "Complete: Я ___ граю у футбол. (часто/рідко/ніколи)"
-  items: 8
+  focus: Complete the invitations and frequency sentences
+  items:
+  - Я {ніколи не|завжди|часто} працюю у неділю.
+  - Вона грає у теніс двічі {на тиждень|у тиждень|в тиждень}.
+  - — {Ходімо|Давай|Ідемо} в кіно у суботу! — Добре!
+  - Я люблю спорт, тому {часто|ніколи|рідко} граю у баскетбол.
+  - Я не маю часу, тому {рідко|часто|завжди} читаю книги.
+  - — Що ти робиш {у вихідні|вихідні|на вихідні}? — Відпочиваю.
 - type: fill-in
-  focus: "Invite a friend: Ходімо в ___ у ___! (place + day)"
-  items: 6
-- type: quiz
-  focus: "Match hobby to verb: футбол ↔ грати, фільм ↔ дивитися"
-  items: 8
+  focus: Choose the correct preposition for the activity
+  items:
+  - Він грає {на|у|в} піаніно.
+  - Ми граємо {у|на|в} футбол.
+  - Я хочу піти {на|в|у} концерт.
+  - Вони ходять {в|на|у} театр раз на місяць.
 connects_to:
 - a1-027 (Checkpoint — Time and Nature)
 prerequisites:
 - a1-025 (My Day)
 grammar:
-- "Frequency adverbs: завжди, часто, іноді, рідко, ніколи"
-- "Ходімо! / Давай! invitation patterns"
-- "Грати у + sport, грати на + instrument (preposition chunks)"
+- 'Frequency adverbs: завжди, часто, іноді, рідко, ніколи'
+- Ходімо! / Давай! invitation patterns
+- Грати у + sport, грати на + instrument (preposition chunks)
 register: розмовний
 references:
-- title: "ULP — various episodes on hobbies and sports"
-  notes: "Conversational patterns for discussing free time."
+- title: ULP — various episodes on hobbies and sports
+  notes: Conversational patterns for discussing free time.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

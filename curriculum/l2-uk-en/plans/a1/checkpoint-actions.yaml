@@ -2,9 +2,9 @@ module: a1-021
 level: A1
 sequence: 21
 slug: checkpoint-actions
-version: '1.0'
-title: "Checkpoint: Actions"
-subtitle: "Can you say what you do, want, and ask questions?"
+version: '1.1'
+title: 'Checkpoint: Actions'
+subtitle: Can you say what you do, want, and ask questions?
 focus: review
 pedagogy: PPP
 phase: A1.3 [Actions]
@@ -16,83 +16,64 @@ objectives:
 - Describe a routine using reflexive verbs and sequence words
 - Combine A1.1-A1.3 skills in connected speech
 content_outline:
-- section: "Що ми знаємо? (What Do We Know?)"
+- section: Що ми знаємо? (What Do We Know?)
   words: 200
   points:
-  - "Self-check covering M15-M20:
-    Can you say what you like? (M15)
-    Can you conjugate Group I verbs? (M16)
-    Can you conjugate Group II verbs? (M17)
-    Can you say what you want, can, and must? (M18)
-    Can you ask questions? (M19)
-    Can you describe your morning? (M20)"
-- section: "Читання (Reading Practice)"
+  - 'Self-check covering M15-M20: Can you say what you like? (M15) Can you conjugate Group I verbs? (M16) Can you conjugate
+    Group II verbs? (M17) Can you say what you want, can, and must? (M18) Can you ask questions? (M19) Can you describe your
+    morning? (M20)'
+- section: Читання (Reading Practice)
   words: 250
   points:
-  - "A short Ukrainian text (8-10 sentences) using ONLY vocabulary
-    from M15-M20. No new words. The learner reads aloud.
-    Content: a person describes their day — morning routine, work, hobbies.
-    Example: Я прокидаюся о сьомій. Потім вмиваюся і снідаю.
-    Я працюю в офісі. Я люблю читати. Увечері я дивлюся фільм."
-- section: "Граматика (Grammar Summary)"
+  - 'A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M15-M20. No new words. The learner reads aloud. Content:
+    a person describes their day — morning routine, work, hobbies. Example: Я прокидаюся о сьомій. Потім вмиваюся і снідаю.
+    Я працюю в офісі. Я люблю читати. Увечері я дивлюся фільм.'
+- section: Граматика (Grammar Summary)
   words: 200
   points:
-  - "Key patterns from A1.3:
-    1. Infinitive: -ти (читати, говорити, хотіти)
-    2. Group I: -ю, -єш, -є, -ємо, -єте, -ють
-    3. Group II: -ю/-у, -иш, -ить, -имо, -ите, -ять
-    4. Modals: хочу/можу/мушу + infinitive
-    5. Questions: хто, що, де, куди, коли, чому, як
-    6. Negation: не + verb; double negation (ніхто не)
-    7. Reflexive: verb + ся (прокидаюся, вмиваюся)"
-- section: "Діалог (Connected Dialogue)"
+  - 'Key patterns from A1.3: 1. Infinitive: -ти (читати, говорити, хотіти) 2. Group I: -ю, -єш, -є, -ємо, -єте, -ють 3. Group
+    II: -ю/-у, -иш, -ить, -имо, -ите, -ять 4. Modals: хочу/можу/мушу + infinitive 5. Questions: хто, що, де, куди, коли, чому,
+    як 6. Negation: не + verb; double negation (ніхто не) 7. Reflexive: verb + ся (прокидаюся, вмиваюся)'
+- section: Діалог (Connected Dialogue)
   words: 300
   points:
-  - "A complete conversation combining all A1.3 skills:
-    Meeting + plans scenario.
-    — Привіт! Що ти робиш? — Я читаю книгу. А ти?
-    — Я хочу гуляти. Можеш піти зі мною?
-    — Не можу, мушу працювати. Коли ти повертаєшся?
-    — О шостій. — Добре, тоді гуляємо ввечері!
-    Uses: both verb groups, modals, questions, reflexive, negation."
-- section: "Підсумок — Summary"
+  - 'A complete conversation combining all A1.3 skills: Meeting + plans scenario. — Привіт! Що ти робиш? — Я читаю книгу.
+    А ти? — Я хочу гуляти. Можеш піти зі мною? — Не можу, мушу працювати. Коли ти повертаєшся? — О шостій. — Добре, тоді гуляємо
+    ввечері! Uses: both verb groups, modals, questions, reflexive, negation.'
+- section: Підсумок — Summary
   words: 250
   points:
-  - "A1.3 achievement summary:
-    You can now talk about actions in Ukrainian.
-    You can conjugate verbs in two groups.
-    You can express wants, abilities, and obligations.
-    You can ask questions and negate statements.
-    You can describe your daily routine.
-    Next: A1.4 — Time and Nature (time, days, weather)."
+  - 'A1.3 achievement summary: You can now talk about actions in Ukrainian. You can conjugate verbs in two groups. You can
+    express wants, abilities, and obligations. You can ask questions and negate statements. You can describe your daily routine.
+    Next: A1.4 — Time and Nature (time, days, weather).'
 vocabulary_hints:
   required: []
   recommended: []
 activity_hints:
 - type: quiz
-  focus: "Mixed conjugation: choose correct form for Group I and II verbs"
+  focus: 'Mixed conjugation: choose correct form for Group I and II verbs'
   items: 10
 - type: fill-in
-  focus: "Complete the dialogue with modals, questions, and verb forms"
+  focus: Complete the dialogue with modals, questions, and verb forms
   items: 8
 - type: fill-in
-  focus: "Describe your day: morning routine → work → evening"
+  focus: 'Describe your day: morning routine → work → evening'
   items: 6
 - type: group-sort
-  focus: "Sort verbs by group: Group I vs Group II vs Reflexive"
+  focus: 'Sort verbs by group: Group I vs Group II vs Reflexive'
   items: 12
 connects_to:
 - a1-022 (What Time?)
 prerequisites:
 - a1-020 (My Morning)
 grammar:
-- "Review: Group I and II conjugation"
-- "Review: modal verbs + infinitive"
-- "Review: question words and negation"
-- "Review: reflexive verbs and sequence words"
+- 'Review: Group I and II conjugation'
+- 'Review: modal verbs + infinitive'
+- 'Review: question words and negation'
+- 'Review: reflexive verbs and sequence words'
 register: розмовний
 references:
-- title: "Synthesis of M15-M20 content"
-  notes: "No new material — review and integration of A1.3 phase."
+- title: Synthesis of M15-M20 content
+  notes: No new material — review and integration of A1.3 phase.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

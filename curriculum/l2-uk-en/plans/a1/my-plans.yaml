@@ -2,9 +2,9 @@ module: a1-051
 level: A1
 sequence: 51
 slug: my-plans
-version: '1.0'
+version: '1.2'
 title: My Plans
-subtitle: "У суботу я буду... — scheduling and weekend plans"
+subtitle: У суботу я буду... — scheduling and weekend plans
 focus: communicative
 pedagogy: PPP
 phase: A1.8 [Past, Future, Graduation]
@@ -15,66 +15,39 @@ objectives:
 - Combine future tense with time expressions (у суботу, о третій, ввечері)
 - Invite someone and respond to invitations using future tense
 content_outline:
-- section: "Dialogues"
+- section: Dialogues
   words: 300
   points:
-  - "Dialogue 1 — Making plans:
-    — Що ти будеш робити у суботу? — Зранку я буду прибирати квартиру.
-    — А вдень? — Вдень я буду ходити в магазин. А ти?
-    — Я буду відпочивати! Може, підемо в кафе ввечері?
-    — Добре! О котрій? — О шостій. Добре?
-    — Чудово! До зустрічі у суботу!
-    Future + time + invitation."
-  - "Dialogue 2 — A busy week:
-    — У тебе є плани на тиждень? — Так, багато!
-    — У понеділок я буду працювати допізна.
-    — У вівторок буду вчитися. У середу — зустріч з друзями.
-    — А у четвер? — У четвер я буду готувати на вечірку.
-    — А в п'ятницю? — В п'ятницю — вечірка! Ти будеш?
-    — Звичайно буду!
-    Days of week + future planning."
-- section: "Планування (Planning)"
+  - 'Dialogue 1 — Making plans: — Що ти будеш робити у суботу? — Зранку я буду прибирати квартиру. — А вдень? — Вдень я буду
+    ходити в магазин. А ти? — Я буду відпочивати! Може, підемо в кафе ввечері? — Добре! О котрій? — О шостій. Добре? — Чудово!
+    До зустрічі у суботу! Future + time + invitation.'
+  - 'Dialogue 2 — A busy week: — У тебе є плани на тиждень? — Так, багато! — У понеділок я буду працювати допізна. — У вівторок
+    буду вчитися. У середу — зустріч з друзями. — А у четвер? — У четвер я буду готувати на вечірку. — А в п''ятницю? — В
+    п''ятницю — вечірка! Ти будеш? — Звичайно буду! Days of week + future planning.'
+- section: Планування (Planning)
   words: 300
   points:
-  - "Scheduling patterns:
-    У + day: у понеділок, у вівторок, у середу, у четвер, у п'ятницю.
-    У суботу / в неділю (on Saturday / on Sunday).
-    О + time: о дев'ятій, о третій, о шостій.
-    Зранку / вдень / ввечері (morning / afternoon / evening).
-    Combine: У суботу ввечері я буду дивитися фільм."
-  - "Invitation phrases:
-    Ходімо в кафе! (Let's go to a cafe! — imperative from M43)
-    Може, підемо в кіно? (Maybe we'll go to the cinema?)
-    Ти будеш вільний/вільна у суботу? (Will you be free on Saturday?)
-    Давай зустрінемося о п'ятій! (Let's meet at five!)
-    Responses: Добре! Чудово! З задоволенням! На жаль, не можу."
-- section: "Мій тиждень (My Week)"
+  - 'Scheduling patterns: У + day: у понеділок, у вівторок, у середу, у четвер, у п''ятницю. У суботу / в неділю (on Saturday
+    / on Sunday). О + time: о дев''ятій, о третій, о шостій. Зранку / вдень / ввечері (morning / afternoon / evening). Combine:
+    У суботу ввечері я буду дивитися фільм.'
+  - 'Invitation phrases: Ходімо в кафе! (Let''s go to a cafe! — imperative from M43) Може, підемо в кіно? (Maybe we''ll go
+    to the cinema?) Ти будеш вільний/вільна у суботу? (Will you be free on Saturday?) Давай зустрінемося о п''ятій! (Let''s
+    meet at five!) Responses: Добре! Чудово! З задоволенням! На жаль, не можу.'
+- section: Мій тиждень (My Week)
   words: 300
   points:
-  - "Model plan — Taras's week:
-    У понеділок я буду працювати. Після роботи буду вчити українську.
-    У вівторок я буду обідати з другом у кафе.
-    У середу ввечері я буду дивитися футбол.
-    У четвер я буду готувати вечерю для родини.
-    У п'ятницю я буду відпочивати — піду в кіно.
-    У суботу зранку буду прибирати, а вдень гуляти в парку.
-    В неділю я буду спати довго!
-    Each day = буду + activity."
-  - "Your turn — plan your week:
-    Template: У [day] я буду [activity].
-    Add details: time (о котрій?), place (де?), with whom (з ким?).
-    У суботу о десятій я буду гуляти в парку з другом.
-    Use all the A1 vocabulary: places, food, people, activities."
-- section: "Summary"
+  - 'Model plan — Taras''s week: У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати
+    з другом у кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п''ятницю я буду
+    відпочивати — піду в кіно. У суботу зранку буду прибирати, а вдень гуляти в парку. В неділю я буду спати довго! Each day
+    = буду + activity.'
+  - 'Your turn — plan your week: Template: У [day] я буду [activity]. Add details: time (о котрій?), place (де?), with whom
+    (з ким?). У суботу о десятій я буду гуляти в парку з другом. Use all the A1 vocabulary: places, food, people, activities.'
+- section: Summary
   words: 300
   points:
-  - "Planning toolkit:
-    Day + time + буду + infinitive:
-    У суботу о третій я буду готувати обід.
-    Invitations: Ходімо! Може, підемо? Давай зустрінемося!
-    Responses: Добре! З задоволенням! На жаль, не можу.
-    Days review: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя.
-    Self-check: Plan your ideal weekend — what will you do on Saturday and Sunday?"
+  - 'Planning toolkit: Day + time + буду + infinitive: У суботу о третій я буду готувати обід. Invitations: Ходімо! Може,
+    підемо? Давай зустрінемося! Responses: Добре! З задоволенням! На жаль, не можу. Days review: понеділок, вівторок, середа,
+    четвер, п''ятниця, субота, неділя. Self-check: Plan your ideal weekend — what will you do on Saturday and Sunday?'
 vocabulary_hints:
   required:
   - план (plan, m)
@@ -95,28 +68,37 @@ vocabulary_hints:
   - вчити (to study/learn)
 activity_hints:
 - type: fill-in
-  focus: "Plan the week: У понеділок я буду ___ . У вівторок я буду ___ ."
-  items: 7
-- type: quiz
-  focus: "Match invitation to response: Ходімо в кіно! → (Добре! / На жаль, не можу.)"
-  items: 6
+  focus: Combine days of the week, time, and future tense
+  items:
+  - У {понеділок|понеділку|понеділка} я буду працювати.
+  - У суботу {зранку|ранок|ранку} я буду прибирати квартиру.
+  - '{О|В|На} шостій ми будемо дивитися кіно.'
+  - У {неділю|неділя|неділі} він буде відпочивати.
+  - У п'ятницю {ввечері|вечір|вечора} буде вечірка.
+- type: matching
+  focus: Match invitations to natural responses
+  pairs:
+  - Ходімо в кіно!: З задоволенням!
+  - Може, підемо в кафе?: Добре! О котрій?
+  - Ти будеш вільний у суботу?: На жаль, не можу.
+  - Давай зустрінемося о п'ятій!: Чудово! До зустрічі!
 - type: fill-in
-  focus: "Complete the plan: У суботу о ___ я ___ ___ (гуляти) в парку."
-  items: 8
-- type: quiz
-  focus: "When? У суботу зранку / У середу ввечері / В неділю вдень — match to activity"
-  items: 6
+  focus: Complete a scheduled plan for the week
+  items:
+  - У вівторок я {буду вчити|вчив|вчу} українську.
+  - У середу ми {будемо готувати|готували|готуємо} вечерю.
+  - У четвер вона {буде працювати|працювала|працює} допізна.
 connects_to:
 - a1-052 (My Story)
 prerequisites:
 - a1-050 (What Will Happen?)
 grammar:
-- "Future tense in scheduling: day + time + буду + infinitive"
-- "Invitation patterns: Ходімо! Може, підемо? Давай зустрінемося!"
-- "Day-of-week prepositions: у понеділок, у суботу, в неділю"
+- 'Future tense in scheduling: day + time + буду + infinitive'
+- 'Invitation patterns: Ходімо! Може, підемо? Давай зустрінемося!'
+- 'Day-of-week prepositions: у понеділок, у суботу, в неділю'
 register: розмовний
 references:
-- title: "State Standard 2024, §4.2.4.1"
-  notes: "Future tense applied in planning and scheduling context."
+- title: State Standard 2024, §4.2.4.1
+  notes: Future tense applied in planning and scheduling context.
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
