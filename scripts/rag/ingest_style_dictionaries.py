@@ -31,6 +31,12 @@ GRINCHENKO_CHUNKS = PROJECT_ROOT / "data" / "grinchenko" / "chunks.jsonl"
 
 STYLE_COLLECTION = "style_guide"
 GRINCHENKO_COLLECTION = "grinchenko_dict"
+SUM11_CHUNKS = PROJECT_ROOT / "data" / "sum11" / "chunks.jsonl"
+SUM11_COLLECTION = "sum11"
+BALLA_CHUNKS = PROJECT_ROOT / "data" / "balla-en-uk" / "chunks.jsonl"
+BALLA_COLLECTION = "balla_en_uk"
+FRAZ_CHUNKS = PROJECT_ROOT / "data" / "frazeolohichnyi" / "chunks.jsonl"
+FRAZ_COLLECTION = "frazeolohichnyi"
 
 BATCH_SIZE = 500  # Larger batches — model loaded once, embedding is the bottleneck
 
@@ -137,13 +143,17 @@ def ingest_collection(client, collection_name: str, chunks: list[dict], text_fie
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Ingest style/dictionary data into Qdrant")
-    parser.add_argument("--antonenko", action="store_true", help="Ingest Антоненко-Давидович")
-    parser.add_argument("--grinchenko", action="store_true", help="Ingest Грінченко")
-    parser.add_argument("--all", action="store_true", help="Ingest both")
+    parser = argparse.ArgumentParser(description="Ingest dictionaries into Qdrant")
+    parser.add_argument("--antonenko", action="store_true", help="Ingest Антоненко-Давидович (279)")
+    parser.add_argument("--grinchenko", action="store_true", help="Ingest Грінченко (67K)")
+    parser.add_argument("--sum11", action="store_true", help="Ingest СУМ-11 (127K)")
+    parser.add_argument("--balla", action="store_true", help="Ingest Балла EN→UK (79K)")
+    parser.add_argument("--frazeolohichnyi", action="store_true", help="Ingest Фразеологічний (25K)")
+    parser.add_argument("--all", action="store_true", help="Ingest all dictionaries")
     args = parser.parse_args()
 
-    if not (args.antonenko or args.grinchenko or args.all):
+    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.all])
+    if not any_selected:
         parser.print_help()
         sys.exit(1)
 
@@ -159,6 +169,21 @@ def main():
         print("\n📖 Грінченко «Словарь української мови»")
         chunks = load_chunks(GRINCHENKO_CHUNKS)
         ingest_collection(client, GRINCHENKO_COLLECTION, chunks, text_field="definition", encoder=encoder)
+
+    if args.sum11 or args.all:
+        print("\n📖 СУМ-11 «Словник української мови в 11 томах»")
+        chunks = load_chunks(SUM11_CHUNKS)
+        ingest_collection(client, SUM11_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.balla or args.all:
+        print("\n📖 Балла «Англо-український словник»")
+        chunks = load_chunks(BALLA_CHUNKS)
+        ingest_collection(client, BALLA_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.frazeolohichnyi or args.all:
+        print("\n📖 Фразеологічний словник")
+        chunks = load_chunks(FRAZ_CHUNKS)
+        ingest_collection(client, FRAZ_COLLECTION, chunks, text_field="text", encoder=encoder)
 
 
 if __name__ == "__main__":
