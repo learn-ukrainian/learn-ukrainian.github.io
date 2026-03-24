@@ -37,6 +37,8 @@ BALLA_CHUNKS = PROJECT_ROOT / "data" / "balla-en-uk" / "chunks.jsonl"
 BALLA_COLLECTION = "balla_en_uk"
 FRAZ_CHUNKS = PROJECT_ROOT / "data" / "frazeolohichnyi" / "chunks.jsonl"
 FRAZ_COLLECTION = "frazeolohichnyi"
+WIKT_CHUNKS = PROJECT_ROOT / "data" / "wiktionary" / "chunks.jsonl"
+WIKT_COLLECTION = "wiktionary_uk"
 
 BATCH_SIZE = 500  # Larger batches — model loaded once, embedding is the bottleneck
 
@@ -149,10 +151,11 @@ def main():
     parser.add_argument("--sum11", action="store_true", help="Ingest СУМ-11 (127K)")
     parser.add_argument("--balla", action="store_true", help="Ingest Балла EN→UK (79K)")
     parser.add_argument("--frazeolohichnyi", action="store_true", help="Ingest Фразеологічний (25K)")
+    parser.add_argument("--wiktionary", action="store_true", help="Ingest Вікісловник (50K)")
     parser.add_argument("--all", action="store_true", help="Ingest all dictionaries")
     args = parser.parse_args()
 
-    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.all])
+    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.wiktionary, args.all])
     if not any_selected:
         parser.print_help()
         sys.exit(1)
@@ -184,6 +187,11 @@ def main():
         print("\n📖 Фразеологічний словник")
         chunks = load_chunks(FRAZ_CHUNKS)
         ingest_collection(client, FRAZ_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.wiktionary or args.all:
+        print("\n📖 Вікісловник (Ukrainian Wiktionary)")
+        chunks = load_chunks(WIKT_CHUNKS)
+        ingest_collection(client, WIKT_COLLECTION, chunks, text_field="text", encoder=encoder)
 
 
 if __name__ == "__main__":
