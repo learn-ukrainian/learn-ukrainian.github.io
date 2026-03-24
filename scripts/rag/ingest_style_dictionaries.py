@@ -39,6 +39,10 @@ FRAZ_CHUNKS = PROJECT_ROOT / "data" / "frazeolohichnyi" / "chunks.jsonl"
 FRAZ_COLLECTION = "frazeolohichnyi"
 WIKT_CHUNKS = PROJECT_ROOT / "data" / "wiktionary" / "chunks.jsonl"
 WIKT_COLLECTION = "wiktionary_uk"
+DMK_CHUNKS = PROJECT_ROOT / "data" / "dmklinger-uk-en" / "chunks.jsonl"
+DMK_COLLECTION = "dmklinger_uk_en"
+UKRNET_CHUNKS = PROJECT_ROOT / "data" / "ukrajinet" / "chunks.jsonl"
+UKRNET_COLLECTION = "ukrajinet"
 
 BATCH_SIZE = 500  # Larger batches — model loaded once, embedding is the bottleneck
 
@@ -152,10 +156,12 @@ def main():
     parser.add_argument("--balla", action="store_true", help="Ingest Балла EN→UK (79K)")
     parser.add_argument("--frazeolohichnyi", action="store_true", help="Ingest Фразеологічний (25K)")
     parser.add_argument("--wiktionary", action="store_true", help="Ingest Вікісловник (50K)")
+    parser.add_argument("--dmklinger", action="store_true", help="Ingest dmklinger UK→EN (30K)")
+    parser.add_argument("--ukrajinet", action="store_true", help="Ingest Ukrajinet WordNet (122K)")
     parser.add_argument("--all", action="store_true", help="Ingest all dictionaries")
     args = parser.parse_args()
 
-    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.wiktionary, args.all])
+    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.wiktionary, args.dmklinger, args.ukrajinet, args.all])
     if not any_selected:
         parser.print_help()
         sys.exit(1)
@@ -192,6 +198,16 @@ def main():
         print("\n📖 Вікісловник (Ukrainian Wiktionary)")
         chunks = load_chunks(WIKT_CHUNKS)
         ingest_collection(client, WIKT_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.dmklinger or args.all:
+        print("\n📖 dmklinger UK→EN dictionary")
+        chunks = load_chunks(DMK_CHUNKS)
+        ingest_collection(client, DMK_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.ukrajinet or args.all:
+        print("\n📖 Ukrajinet WordNet (synonyms)")
+        chunks = load_chunks(UKRNET_CHUNKS)
+        ingest_collection(client, UKRNET_COLLECTION, chunks, text_field="text", encoder=encoder)
 
 
 if __name__ == "__main__":
