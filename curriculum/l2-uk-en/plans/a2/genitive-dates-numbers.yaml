@@ -84,3 +84,9 @@ activity_hints:
 - type: match-up
   focus: Q&A about quantities and dates
   items: 6
+references:
+- title: Заболотний Grade 5, §20-22
+  notes: Родовий відмінок іменників
+- title: 'ULP: 10 Uses of Genitive Case'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: All genitive functions

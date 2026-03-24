@@ -51,3 +51,6 @@ sequence: 57
 module: a2-057
 version: '1.0'
 phase: A2.8 [Refinement and Graduation]
+references:
+- title: Заболотний Grade 5, §1-5
+  notes: Частини мови, будова слова

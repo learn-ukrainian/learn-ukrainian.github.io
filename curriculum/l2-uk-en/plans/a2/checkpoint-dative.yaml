@@ -94,3 +94,9 @@ sequence: 20
 module: a2-020
 version: '1.0'
 phase: A2.3 [Dative Case]
+references:
+- title: Заболотний Grade 5, §23-24
+  notes: Давальний відмінок іменників
+- title: 'ULP: Dative Case'
+  url: https://www.ukrainianlessons.com/dative-case/
+  notes: Dative uses and forms

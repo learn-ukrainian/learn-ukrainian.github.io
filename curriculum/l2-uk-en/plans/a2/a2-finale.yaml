@@ -54,3 +54,6 @@ sequence: 60
 module: a2-060
 version: '1.0'
 phase: A2.8 [Refinement and Graduation]
+references:
+- title: Заболотний Grade 5-7
+  notes: Повторення вивченого

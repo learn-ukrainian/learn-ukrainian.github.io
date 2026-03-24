@@ -50,3 +50,9 @@ sequence: 48
 module: a2-048
 version: '1.0'
 phase: A2.8 [Refinement and Graduation]
+references:
+- title: Заболотний Grade 6, §32-33
+  notes: Ступені порівняння прикметників
+- title: 'ULP: Comparative and Superlative'
+  url: https://www.ukrainianlessons.com/comparison/
+  notes: Degrees of comparison

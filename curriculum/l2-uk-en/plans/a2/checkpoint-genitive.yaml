@@ -69,3 +69,9 @@ sequence: 14
 module: a2-014
 version: '1.0'
 phase: A2.2 [Genitive Case Complete]
+references:
+- title: Заболотний Grade 5, §20-22
+  notes: Родовий відмінок іменників
+- title: 'ULP: 10 Uses of Genitive Case'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: All genitive functions

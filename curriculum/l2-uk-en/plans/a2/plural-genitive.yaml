@@ -92,3 +92,9 @@ sequence: 29
 module: a2-029
 version: '1.0'
 phase: A2.5 [Case Synthesis and Plurals]
+references:
+- title: Заболотний Grade 5, §20-22
+  notes: Родовий відмінок іменників
+- title: 'ULP: 10 Uses of Genitive Case'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: All genitive functions

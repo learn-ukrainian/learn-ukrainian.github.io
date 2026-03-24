@@ -72,3 +72,9 @@ sequence: 13
 module: a2-013
 version: '1.0'
 phase: A2.2 [Genitive Case Complete]
+references:
+- title: Заболотний Grade 5, §19
+  notes: 'Тематична лексика: покупки, здоров''я'
+- title: 'ULP: At the Grocery Store'
+  url: https://www.ukrainianlessons.com/grocery/
+  notes: Shopping vocabulary

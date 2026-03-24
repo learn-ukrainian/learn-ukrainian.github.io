@@ -74,3 +74,9 @@ sequence: 24
 module: a2-024
 version: '1.0'
 phase: A2.4 [Instrumental Case]
+references:
+- title: Заболотний Grade 5, §25-26
+  notes: Орудний відмінок іменників
+- title: 'ULP: Instrumental Case'
+  url: https://www.ukrainianlessons.com/instrumental-case/
+  notes: Instrumental uses

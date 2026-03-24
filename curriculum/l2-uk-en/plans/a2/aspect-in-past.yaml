@@ -87,3 +87,9 @@ sequence: 35
 module: a2-035
 version: '1.0'
 phase: A2.6 [Aspect, Tenses, and Motion]
+references:
+- title: Заболотний Grade 7, §42-44
+  notes: 'Вид дієслова: доконаний і недоконаний'
+- title: 'ULP: Ukrainian Verb Aspect'
+  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+  notes: Imperfective vs perfective

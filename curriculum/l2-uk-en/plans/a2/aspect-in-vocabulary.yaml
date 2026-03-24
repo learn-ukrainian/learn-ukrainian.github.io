@@ -82,3 +82,9 @@ activity_hints:
 - type: match-up
   focus: Sentence Translation (Aspect Focus)
   items: 6
+references:
+- title: Заболотний Grade 7, §42-44
+  notes: 'Вид дієслова: доконаний і недоконаний'
+- title: 'ULP: Ukrainian Verb Aspect'
+  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+  notes: Imperfective vs perfective
