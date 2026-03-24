@@ -1,70 +1,68 @@
 # Dictionary Pipeline Status
 
-> What we have, what needs converting to JSONL, what needs RAG ingestion.
-> Updated: 2026-03-24
+> What we have, what needs RAG ingestion, what gaps remain.
+> Updated: 2026-03-24 (after Phase 2 conversions)
 
-## Phase 1: HAVE JSONL — Need RAG ingestion
+## Ready to ingest (have JSONL + ingestion flag in script)
 
-Run: `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 .venv/bin/python scripts/rag/ingest_style_dictionaries.py --<flag>`
+Run: `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 .venv/bin/python scripts/rag/ingest_style_dictionaries.py --all`
 
-| Dictionary | JSONL file | Entries | Ingest flag | RAG status |
-|-----------|-----------|---------|-------------|------------|
-| СУМ-11 | `data/sum11/chunks.jsonl` | 127,069 | `--sum11` | ❌ Not ingested |
-| Балла EN→UK | `data/balla-en-uk/chunks.jsonl` | 78,704 | `--balla` | ❌ Not ingested |
-| Фразеологічний | `data/frazeolohichnyi/chunks.jsonl` | 24,683 | `--frazeolohichnyi` | ❌ Not ingested |
-| Вікісловник | `data/wiktionary/chunks.jsonl` | 50,278 | `--wiktionary` | ❌ Not ingested |
+Skips already-ingested collections automatically.
 
-## Phase 2: HAVE raw data — Need JSONL conversion
+| Dictionary | JSONL file | Entries | Flag | RAG status |
+|-----------|-----------|---------|------|------------|
+| Антоненко-Давидович | `data/antonenko-davydovych/chunks.jsonl` | 279 | `--antonenko` | ✅ Done (279 pts) |
+| Грінченко | `data/grinchenko/chunks.jsonl` | 67,275 | `--grinchenko` | ✅ Done (67,275 pts) |
+| СУМ-11 | `data/sum11/chunks.jsonl` | 127,069 | `--sum11` | ❌ Need ingestion |
+| Балла EN→UK | `data/balla-en-uk/chunks.jsonl` | 78,704 | `--balla` | ❌ Need ingestion |
+| Фразеологічний | `data/frazeolohichnyi/chunks.jsonl` | 24,683 | `--frazeolohichnyi` | ❌ Need ingestion |
+| Вікісловник | `data/wiktionary/chunks.jsonl` | 50,278 | `--wiktionary` | ❌ Need ingestion |
+| dmklinger UK→EN | `data/dmklinger-uk-en/chunks.jsonl` | 30,111 | `--dmklinger` | ❌ Need ingestion |
+| Ukrajinet WordNet | `data/ukrajinet/chunks.jsonl` | 122,441 | `--ukrajinet` | ❌ Need ingestion |
 
-| Dictionary | Raw file | Entries | Conversion needed |
-|-----------|---------|---------|-------------------|
-| dmklinger UK→EN | `data/dmklinger-uk-en/words.json` | 30,111 | Parse JSON → JSONL |
-| Ukrajinet WordNet | `data/ukrajinet/ukrajinet.xml` | 3,360 synsets | Parse XML → JSONL |
-| UberText frequency | `data/ubertext-freq/ubertext_freq.csv.xz` | 12.4M rows | Decompress, import to SQLite |
-| PULS CEFR vocab | puls.peremova.org (119 pages) | ~10,000 | **Scrape → JSONL** |
-| Ukrainian Formality | HuggingFace `ukr-detect/ukr-formality-dataset-translated-gyafc` | ? | **Download → process** |
-| СУМ-11 register labels | `data/sum11/chunks.jsonl` (already have) | 127K | **Extract розм./книжн./заст. tags** |
+## Local databases (no RAG needed)
 
-## Phase 3: Already in RAG ✅
+| Resource | File | Size | Status |
+|---------|------|------|--------|
+| VESUM | `data/vesum.db` | 409K lemmas, 6.7M forms | ✅ |
+| UberText frequency | `data/ubertext-freq/frequency.db` | 12.4M rows (SQLite) | ✅ |
+| PULS CEFR vocab | `data/puls/entries.jsonl` | ~10K words (A1-C1) | ✅ Scraped |
+| СУМ-11 registers | `data/sum11/registers.jsonl` | 25,565 labeled words | ✅ |
+| Stress dictionary | `ukrainian-word-stress` lib | 2.7M forms | ✅ |
+| Heteronyms | `ukrainian-heteronyms-dictionary` lib | ~1K | ✅ |
+| Wikipedia cache | `data/wiki_cache.db` | Full UK Wiki | ✅ |
 
-| Dictionary | Collection | Points |
-|-----------|-----------|--------|
-| Грінченко | `grinchenko_dict` | 67,275 ✅ |
-| Антоненко-Давидович | `style_guide` | 279 ✅ |
-| Textbooks | `textbook_chunks` | 23,398 ✅ |
-| Literary texts | `literary_texts` | 125,316 ✅ |
-| Textbook images | `textbook_images` | 14,119 ✅ |
+## Already in RAG
 
-## Phase 4: Already local (no RAG needed)
+| Collection | Points |
+|-----------|--------|
+| literary_texts | 125,316 |
+| textbook_chunks | 23,398 |
+| textbook_images | 14,119 |
+| grinchenko_dict | 67,275 |
+| style_guide | 279 |
 
-| Resource | Location | Size |
-|---------|----------|------|
-| VESUM | `data/vesum.db` (SQLite) | 409K lemmas, 6.7M forms |
-| Stress dictionary | `ukrainian-word-stress` lib | 2.7M forms |
-| Heteronyms | `ukrainian-heteronyms-dictionary` lib | ~1K |
-| Wikipedia cache | `data/wiki_cache.db` | Full UK Wiki |
+## Remaining gaps
 
-## Phase 5: GAPS — Need research/acquisition
+| Gap | Severity | Notes |
+|-----|----------|-------|
+| **Collocations** | Medium (C1+) | No open source exists. Derive from UberText corpus later (PMI extraction). |
+| **C2 vocabulary** | Low (last priority) | Derive from UberText freq + literary chunks when we reach C2. |
+| **Native formality corpus** | Low | Only translated version on HuggingFace. СУМ-11 registers cover most needs. |
 
-| Gap | Size needed | Blocking? | Best lead |
-|-----|------------|-----------|-----------|
-| **Synonyms (large-scale)** | 50K+ groups | B1+ distractors | No open source found. Derive from UberText corpus? |
-| **C2 vocabulary list** | ~5K words | C2 track (last priority) | Derive from UberText freq + literary chunks |
-| **Collocations** | 50K+ pairs | C1+ naturalness | Derive from UberText corpus (PMI extraction) |
-| **Native formality corpus** | 10K+ labeled | C1+ register | Only translated version exists (HuggingFace) |
-
-## Quick commands
+## Ingestion command
 
 ```bash
-# Ingest all Phase 1 dictionaries (~90 min total)
+# Ingest all 8 dictionaries (skips already-done ones)
 PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 .venv/bin/python scripts/rag/ingest_style_dictionaries.py --all
 
-# Scrape PULS (Phase 2)
-.venv/bin/python scripts/rag/scrape_puls.py
-
-# Scrape Грушевський тт. 4-6 (already have т.4-10 in one file)
-# Already done — check data/literary_texts/грушевський-історія-україни-руси-т4.jsonl
-
-# Backup everything to Google Drive
+# Backup to Google Drive
 ./scripts/backup-data.sh
 ```
+
+## Literary sources
+
+See `docs/RAG-LITERARY-CATALOG.md` for full inventory (125K chunks, 3257 works).
+See `docs/RAG-CONTENT-GAPS.md` for missing primary sources.
+
+Грушевський тт. 4-10 scraped. Конституція Орлика scraped.
