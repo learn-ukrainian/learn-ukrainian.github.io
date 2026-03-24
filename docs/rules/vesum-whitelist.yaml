@@ -1,0 +1,41 @@
+# VESUM False-Positive Whitelist (Global)
+#
+# Words that VESUM marks as "not found" but are valid in context.
+# These are filtered out before reporting VESUM errors in the build pipeline.
+#
+# Format:
+#   - word: "the word (lowercase)"
+#     reason: "Why this is valid"
+#     approved_by: "who approved (human name or 'auto')"
+#
+# Per-module whitelists: orchestration/{slug}/vesum-whitelist.yaml
+# CLI: .venv/bin/python scripts/vesum_whitelist.py add --word "xyz" --reason "..."
+
+words:
+  - word: "зь"
+    reason: "Consonant softening example (м'який знак + з) in phonetics modules"
+    approved_by: "auto"
+
+  - word: "ль"
+    reason: "Consonant softening example (м'який знак + л) in phonetics modules"
+    approved_by: "auto"
+
+  - word: "нь"
+    reason: "Consonant softening example (м'який знак + н) in phonetics modules"
+    approved_by: "auto"
+
+  - word: "ть"
+    reason: "Consonant softening example (м'який знак + т) in phonetics modules"
+    approved_by: "auto"
+
+  - word: "морос"
+    reason: "Appears in special-signs content as example fragment"
+    approved_by: "auto"
+
+  - word: "анок"
+    reason: "Partial word fragment from stress-annotated text"
+    approved_by: "auto"
+
+  - word: "арно"
+    reason: "Partial word fragment from stress-annotated text"
+    approved_by: "auto"
