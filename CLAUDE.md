@@ -4,14 +4,7 @@
 
 > **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
 
-> **BEHAVIORAL RULES — read these EVERY session:**
-> 1. **FINISH THE JOB.** No "for now", no "batch job for later", no tech debt. When something needs doing, do ALL of it before moving on. If you add JSONL, add the ingestion flag, update the tracking doc, verify it works end-to-end — in the SAME commit.
-> 2. **STOP ASKING, START DOING.** If we already discussed and agreed something needs doing — do it. Don't ask "want me to do X?" or present options. You are the engineer, not a waiter.
-> 3. **TEST BEFORE SHIPPING.** Every change must be verified. Does the file exist? Can it be queried? Does the pipeline work end-to-end? Never celebrate numbers without checking the full chain.
-> 4. **USE THE TRACKING DOCS.** Read `docs/DICTIONARY-PIPELINE-STATUS.md` before and after every dictionary operation. Update it in the same commit. Same for GH issues — check ACs before claiming done.
-> 5. **NO SHORTCUTS ON QUALITY.** Dialogues must be natural (from textbooks, not invented). Plans must have references. Vocabulary must be VESUM-verified. Word counts must hit targets. There is no "good enough."
-> 6. **INVESTIGATE BEFORE CODING.** Read the actual output, trace the actual data flow, check the actual files. Don't guess why something broke — look at it.
-> 7. **BE HONEST.** If something is broken, say it's broken. If you don't know, say you don't know. Never fake completion or hide problems.
+> **BEHAVIORAL RULES** are in `memory/MEMORY.md` — enforced every session. Key: finish the job (no tech debt), stop asking (just do it), test before shipping, use tracking docs, no quality shortcuts, investigate before coding, be honest.
 
 > **NON-NEGOTIABLE RULES** auto-loaded from `claude_extensions/rules/non-negotiable-rules.md` (deployed to `.claude/rules/`) — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
