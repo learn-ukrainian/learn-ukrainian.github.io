@@ -46,26 +46,31 @@ def parse_entries_page(html: str) -> list[dict]:
     """
     entries = []
 
-    # Row-by-row parsing
-    rows = re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.DOTALL)
+    # Parse <tr class='entry'> rows with 5 cells:
+    # 1: <a href="/lexemes/NNN#meaning-NNN">word</a>
+    # 2: guideword (may be empty)
+    # 3: CEFR level (A1/A2/B1/B2/C1)
+    # 4: POS (іменник, дієслово, etc.)
+    # 5: type (значення, фраза, etc.)
+    rows = re.findall(r"<tr\s+class='entry'>(.*?)</tr>", html, re.DOTALL)
     for row in rows:
-        # Extract cells
         cells = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
-        if len(cells) < 4:
+        if len(cells) < 5:
             continue
 
-        # First cell has the link with word
-        link_match = re.search(r'href="/entries/(\d+)"[^>]*>([^<]+)</a>', cells[0])
+        # Word from link
+        link_match = re.search(r'href="/lexemes/(\d+)[^"]*">([^<]+)</a>', cells[0])
         if not link_match:
             continue
 
         entry_id = link_match.group(1)
         word = link_match.group(2).strip()
 
-        # Clean HTML from other cells
+        # Other fields — strip HTML
         guideword = re.sub(r"<[^>]+>", "", cells[1]).strip()
         level = re.sub(r"<[^>]+>", "", cells[2]).strip()
         pos = re.sub(r"<[^>]+>", "", cells[3]).strip()
+        entry_type = re.sub(r"<[^>]+>", "", cells[4]).strip()
 
         # Validate CEFR level
         if not re.match(r"^[ABC][12]$", level):
@@ -77,6 +82,7 @@ def parse_entries_page(html: str) -> list[dict]:
             "guideword": guideword,
             "level": level,
             "pos": pos,
+            "type": entry_type,
             "source": "PULS (puls.peremova.org)",
         })
 
