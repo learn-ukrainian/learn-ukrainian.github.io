@@ -43,6 +43,8 @@ DMK_CHUNKS = PROJECT_ROOT / "data" / "dmklinger-uk-en" / "chunks.jsonl"
 DMK_COLLECTION = "dmklinger_uk_en"
 UKRNET_CHUNKS = PROJECT_ROOT / "data" / "ukrajinet" / "chunks.jsonl"
 UKRNET_COLLECTION = "ukrajinet"
+PULS_CHUNKS = PROJECT_ROOT / "data" / "puls" / "entries.jsonl"
+PULS_COLLECTION = "puls_cefr"
 
 BATCH_SIZE = 500  # Larger batches — model loaded once, embedding is the bottleneck
 
@@ -158,10 +160,11 @@ def main():
     parser.add_argument("--wiktionary", action="store_true", help="Ingest Вікісловник (50K)")
     parser.add_argument("--dmklinger", action="store_true", help="Ingest dmklinger UK→EN (30K)")
     parser.add_argument("--ukrajinet", action="store_true", help="Ingest Ukrajinet WordNet (122K)")
+    parser.add_argument("--puls", action="store_true", help="Ingest PULS CEFR vocab (10K)")
     parser.add_argument("--all", action="store_true", help="Ingest all dictionaries")
     args = parser.parse_args()
 
-    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.wiktionary, args.dmklinger, args.ukrajinet, args.all])
+    any_selected = any([args.antonenko, args.grinchenko, args.sum11, args.balla, args.frazeolohichnyi, args.wiktionary, args.dmklinger, args.ukrajinet, args.puls, args.all])
     if not any_selected:
         parser.print_help()
         sys.exit(1)
@@ -208,6 +211,11 @@ def main():
         print("\n📖 Ukrajinet WordNet (synonyms)")
         chunks = load_chunks(UKRNET_CHUNKS)
         ingest_collection(client, UKRNET_COLLECTION, chunks, text_field="text", encoder=encoder)
+
+    if args.puls or args.all:
+        print("\n📖 PULS CEFR vocabulary profile")
+        chunks = load_chunks(PULS_CHUNKS)
+        ingest_collection(client, PULS_COLLECTION, chunks, text_field="text", encoder=encoder)
 
 
 if __name__ == "__main__":

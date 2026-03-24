@@ -19,6 +19,7 @@ Skips already-ingested collections automatically.
 | Вікісловник | `data/wiktionary/chunks.jsonl` | 50,278 | `--wiktionary` | ❌ Need ingestion |
 | dmklinger UK→EN | `data/dmklinger-uk-en/chunks.jsonl` | 30,111 | `--dmklinger` | ❌ Need ingestion |
 | Ukrajinet WordNet | `data/ukrajinet/chunks.jsonl` | 122,441 | `--ukrajinet` | ❌ Need ingestion |
+| PULS CEFR vocab | `data/puls/entries.jsonl` | ~10,000 | `--puls` | ❌ Need ingestion |
 
 ## Local databases (no RAG needed)
 
