@@ -1,0 +1,85 @@
+module: a2-002
+level: A2
+sequence: 2
+slug: aspect-concept
+version: '1.0'
+title: Зроблено чи в процесі? Вступ до виду дієслів
+subtitle: Концепція доконаного та недоконаного виду
+focus: grammar
+pedagogy: PPP
+phase: A2.1 [Foundation and Aspect Introduction]
+word_target: 2000
+objectives:
+- Learner can define grammatical aspect (вид дієслова) and differentiate between perfective
+  (доконаний) and imperfective (недоконаний) verbs.
+- 'Learner can explain the core conceptual difference: imperfective for process/repetition,
+  perfective for a single, completed result.'
+- Learner can identify the aspect of a verb in a simple sentence (past or present
+  tense).
+- Given a simple action, learner can describe it as a process (imperfective) and as
+  a completed result (perfective).
+content_outline:
+- section: Що таке вид дієслова? (What is Verb Aspect?)
+  words: 500
+  points:
+  - 'Introduction to the concept: Ukrainian verbs have a hidden dimension called ''aspect''.
+    It''s not about *when* (tense), but *how* the action unfolds.'
+  - 'Meet the two types: Недоконаний вид (НВ, imperfective) for ongoing processes,
+    repeated actions, or facts. Доконаний вид (ДВ, perfective) for a single, completed
+    action with a clear result.'
+  - 'Analogy: Imperfective is like watching a movie; perfective is like seeing the
+    ''The End'' screen.'
+- section: 'Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)'
+  words: 700
+  points:
+  - 'Focus on the uses of imperfective: describing an action in progress (''Я читав,
+    коли ти подзвонив''), a repeated action (''Я читав цю книгу три рази''), or a
+    general fact (''Діти читають книги'').'
+  - 'Simple examples in present and past tense: ''Я читаю'' (I am reading), ''Я читав''
+    (I was reading / I used to read).'
+  - 'Key signal words: завжди (always), часто (often), зазвичай (usually), довго (for
+    a long time), щодня (every day).'
+- section: 'Доконаний вид: Результат! (Perfective: The Result!)'
+  words: 600
+  points:
+  - 'Focus on the use of perfective: describing a single, successfully completed action.
+    The result is what matters.'
+  - 'Example: ''Я прочитав книгу'' (I have read the book, it is finished). Contrast
+    with ''Я читав книгу'' (I was reading the book, maybe I finished, maybe not).'
+  - 'Perfective verbs have no true present tense. Their ''present'' form has a future
+    meaning (e.g., ''зроблю'' means ''I will do''). We will focus on the past tense
+    for now: ''зробив'', ''написала''.'
+  - 'Key signal words: вчора (yesterday, for a single event), раптом (suddenly), нарешті
+    (finally).'
+- section: 'Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)'
+  words: 200
+  points:
+  - 'Side-by-side comparison of simple pairs: ''Він писав лист'' (He was writing a
+    letter) vs. ''Він написав лист'' (He wrote a letter).'
+  - 'Visual aids: timelines showing the duration of an imperfective action vs. the
+    single point of completion for a perfective action.'
+vocabulary_hints:
+  required:
+  - вид дієслова (verb aspect)
+  - недоконаний вид (imperfective aspect)
+  - доконаний вид (perfective aspect)
+  - процес (process)
+  - результат (result)
+  - дія (action)
+  - повторення (repetition)
+  - робити / зробити (to do)
+  recommended:
+  - завершений (completed, finished)
+  - тривалий (ongoing, lasting)
+  - одноразовий (single, one-time)
+  - концепція (concept)
+activity_hints:
+- type: quiz
+  focus: 'Aspect Sorting: Process vs. Result'
+  items: 6
+- type: fill-in
+  focus: Identify the Aspect in Sentences
+  items: 6
+- type: match-up
+  focus: Choose the Correct Aspect (Context-based)
+  items: 6

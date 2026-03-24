@@ -1,0 +1,80 @@
+module: a2-004
+level: A2
+sequence: 4
+slug: genitive-intro
+version: '1.0'
+title: У мене немає...
+subtitle: Родовий відмінок для вираження відсутності та кількості
+focus: grammar
+pedagogy: PPP
+phase: A2.1 [Foundation and Aspect Introduction]
+word_target: 2000
+objectives:
+- Learner can correctly use the Genitive singular after `немає` to express the absence
+  of an object.
+- Learner can form the Genitive singular endings for all three noun genders (-а/-я,
+  -у/-ю, -и/-і).
+- Learner can use quantity words `багато`, `мало`, `кілька`, `декілька` with the Genitive
+  plural.
+- Learner can form the Genitive plural endings for all three noun genders (-ів, -ей,
+  нульове закінчення).
+content_outline:
+- section: 'Родовий відмінок: Коли чогось немає (The Genitive Case: When Something
+    Isn''t There)'
+  words: 600
+  points:
+  - Introducing the Genitive case (Родовий відмінок), answering 'Кого? Чого?'.
+  - 'Its first key function: expressing absence or non-existence with the construction
+    `(У мене) немає + Genitive`.'
+  - 'Contrast: ''У мене є брат'' (Accusative implied, but Nom. form used) vs. ''У
+    мене немає брата'' (Genitive).'
+  - 'Practice with simple sentences: ''Тут є стіл.'' -> ''Тут немає стола.'''
+- section: Закінчення родового відмінка однини (Genitive Singular Endings)
+  words: 700
+  points:
+  - 'Masculine nouns: the -а/-я vs. -у/-ю puzzle. -а/-я for concrete, animate, specific
+    items (стола, брата, комп''ютера). -у/-ю for abstract concepts, substances, locations
+    (часу, цукру, Києву).'
+  - 'Feminine nouns: -и for hard stems (книги, мами), -і for soft stems and stems
+    in -я (землі, пісні).'
+  - 'Neuter nouns: -а for stems in -о (вікна), -я for stems in -е (моря, сонця).'
+  - Provide clear charts and practice drills for forming the Genitive singular.
+- section: Коли є багато або мало (When There Is a Lot or a Little)
+  words: 700
+  points:
+  - 'Introducing quantity words that require the Genitive plural: багато (a lot),
+    мало (a little, few), кілька/декілька (a few, some), скільки (how many).'
+  - 'Genitive Plural Endings: a tricky topic. Masculine: often -ів (столів, братів).
+    Feminine/Neuter: often a zero ending with a possible vowel insertion (книг, сестер,
+    вікон). Feminine soft stems: -ей (пісень).'
+  - 'Lots of examples: багато друзів, мало грошей, кілька книжок, скільки студентів?'
+  - Focus on recognizing and using the most common forms, not memorizing every exception.
+vocabulary_hints:
+  required:
+  - родовий відмінок (genitive case)
+  - немає ((there) is not, (I) don't have)
+  - багато (a lot, many, much)
+  - мало (a little, few)
+  - кілька (a few, several)
+  - скільки (how many, how much)
+  - закінчення (ending (grammar))
+  - однина (singular)
+  - множина (plural)
+  recommended:
+  - кількість (quantity)
+  - відсутність (absence)
+  - гроші (money)
+  - час (time)
+activity_hints:
+- type: quiz
+  focus: Possession vs. Absence Drill (`Є` vs. `Немає`)
+  items: 6
+- type: fill-in
+  focus: Genitive Singular Formation
+  items: 6
+- type: match-up
+  focus: Genitive Plural Formation with Quantity Words
+  items: 6
+- type: match-up
+  focus: Translate sentences with 'a lot of...' / 'I don't have...'
+  items: 6
