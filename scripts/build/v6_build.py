@@ -321,11 +321,16 @@ def step_write(level: str, module_num: int, slug: str,
     _log(f"  Step 5: WRITE — Content generation ({writer})")
     _log(f"{'='*60}")
 
-    # Load template
-    template_path = PHASES_DIR / "v6-write.md"
+    # Load template — use seminar prompt for HIST/BIO/ISTORIO/LIT/FOLK/OES/RUTH
+    SEMINAR_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    is_seminar = level.lower() in SEMINAR_TRACKS or level.lower().startswith("lit-")
+    template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
+    template_path = PHASES_DIR / template_name
     if not template_path.exists():
         _log(f"  ❌ Template not found: {template_path}")
         return None
+    if is_seminar:
+        _log("  📚 Using seminar prompt template")
 
     template = template_path.read_text("utf-8")
 
@@ -1003,6 +1008,14 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     text = content_path.read_text("utf-8")
     issues = []
 
+    # Load VESUM whitelist (global + per-module)
+    slug = content_path.stem
+    try:
+        from vesum_whitelist import load_combined_whitelist
+        whitelist = load_combined_whitelist(level, slug)
+    except Exception:
+        whitelist = set()
+
     # VESUM word check
     try:
         from pipeline.screen import _run_vesum_verify
@@ -1015,6 +1028,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             r for r in not_found
             if not (r.get("original", "")[0:1].isupper() and r.get("source") == "prose")
             and r.get("original", "").lower() not in _phonetic_fragments
+            and r.get("original", "").lower() not in whitelist
         ]
         if real_not_found:
             _log(f"  ⚠️  VESUM: {len(real_not_found)} word(s) not found:")
@@ -1023,6 +1037,13 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             issues.extend(real_not_found)
         else:
             _log(f"  ✅ VESUM: {vesum_hits}/{total} words verified")
+        # Log whitelisted words that were filtered
+        whitelisted_count = sum(
+            1 for r in not_found
+            if r.get("original", "").lower() in whitelist
+        )
+        if whitelisted_count > 0:
+            _log(f"  ℹ️  {whitelisted_count} word(s) skipped via whitelist")
     except Exception as e:
         _log(f"  ⚠️  VESUM check skipped: {e}")
 
@@ -1064,12 +1085,15 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     return len(issues) == 0
 
 
-def _build_vesum_report(content: str) -> str:
+def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
     """Pre-verify all Ukrainian words against VESUM for the reviewer.
 
     Extracts Ukrainian words (3+ characters) from the content, looks each up
     in the VESUM SQLite database, and returns a structured report. This gives
     the reviewer factual data instead of guessing about word existence.
+
+    Whitelisted words (from global + per-module whitelists) are excluded from
+    the "not found" list.
     """
     import re
     import sqlite3
@@ -1083,11 +1107,22 @@ def _build_vesum_report(content: str) -> str:
     if not words:
         return ""
 
+    # Load whitelist
+    whitelist: set[str] = set()
+    if level and slug:
+        try:
+            from vesum_whitelist import load_combined_whitelist
+            whitelist = load_combined_whitelist(level, slug)
+        except Exception:
+            pass
+
     db = sqlite3.connect(str(vesum_db))
     try:
         verified = []
         not_found = []
         for word in sorted(words):
+            if word.lower() in whitelist:
+                continue
             row = db.execute(
                 "SELECT lemma, pos FROM forms WHERE word_form = ? LIMIT 1",
                 (word.lower(),),
@@ -1174,7 +1209,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         prompt = prompt.replace(key, value)
 
     # Inject VESUM verification data so the reviewer has facts, not guesses
-    vesum_report = _build_vesum_report(generated_content)
+    vesum_report = _build_vesum_report(generated_content, level=level, slug=slug)
     if vesum_report:
         prompt = prompt + "\n\n" + vesum_report
         _log(f"  VESUM pre-verification: injected ({len(vesum_report)} chars)")
