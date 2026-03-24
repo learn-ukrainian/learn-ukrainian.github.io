@@ -1,0 +1,52 @@
+slug: comparison
+level: A2
+title: Більший, кращий, найкращий
+subtitle: Bigger, Better, Best
+focus: grammar
+word_target: 2000
+objectives:
+- Form and use comparative adjectives (e.g., більший, цікавіший).
+- Form and use superlative adjectives (e.g., найбільший, найцікавіший).
+- Master irregular (suppletive) forms like кращий, гірший, ліпший.
+- Use comparative constructions with 'ніж' (than) and 'за' (than).
+- Compare people, objects, and ideas in conversation.
+vocabulary_hints:
+- uk: порівняння
+  en: comparison
+- uk: ступінь
+  en: degree
+- uk: вищий ступінь
+  en: comparative degree
+- uk: найвищий ступінь
+  en: superlative degree
+- uk: виняток
+  en: exception
+- uk: дешевий
+  en: cheap
+- uk: дорогий
+  en: expensive
+- uk: високий
+  en: tall / high
+- uk: низький
+  en: short / low
+activity_hints:
+- type: fill-in-the-blank
+  focus: Forming comparatives and superlatives from base adjectives.
+  items: 15
+- type: sentence-completion
+  focus: Using comparative forms with 'ніж' to complete sentences.
+  items: 12
+- type: multiple-choice
+  focus: Choosing the correct suppletive form (кращий, гірший, ліпший).
+  items: 12
+- type: image-description
+  focus: Comparing two images using comparative and superlative adjectives.
+  items: 10
+- type: open-ended-question
+  focus: Answering questions that require making comparisons (e.g., What is better,
+    tea or coffee?).
+  items: 8
+sequence: 48
+module: a2-048
+version: '1.0'
+phase: A2.8 [Refinement and Graduation]

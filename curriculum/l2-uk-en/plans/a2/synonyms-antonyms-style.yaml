@@ -1,0 +1,51 @@
+slug: synonyms-antonyms-style
+level: A2
+title: У слів є друзі
+subtitle: Words Have Friends
+focus: grammar
+word_target: 2000
+objectives:
+- Identify and use common synonyms to enrich vocabulary.
+- Identify and use common antonyms to express opposition.
+- Recognize and form simple diminutive and augmentative noun forms (e.g., стіл ->
+  столик).
+- Understand how word choice affects the style and tone of a sentence (neutral, formal,
+  informal).
+- Begin to choose words that are more stylistically appropriate for a given context.
+vocabulary_hints:
+- uk: синонім
+  en: synonym
+- uk: антонім
+  en: antonym
+- uk: зменшувальна форма
+  en: diminutive form
+- uk: стиль
+  en: style
+- uk: гарний / красивий / чудовий
+  en: good-looking / beautiful / wonderful
+- uk: великий / величезний
+  en: big / huge
+- uk: іти / ходити
+  en: to go (unidirectional) / to go (multidirectional)
+- uk: говорити / казати / розмовляти
+  en: to speak / to say / to converse
+activity_hints:
+- type: matching
+  focus: Matching synonyms from two columns.
+  items: 15
+- type: matching
+  focus: Matching antonyms from two columns.
+  items: 15
+- type: word-transformation
+  focus: Creating diminutive forms of given nouns (кіт -> котик).
+  items: 12
+- type: sentence-rewrite
+  focus: Rewriting a neutral sentence to be more formal or more informal/affectionate.
+  items: 10
+- type: multiple-choice
+  focus: Choosing the most stylistically appropriate word to complete a sentence.
+  items: 12
+sequence: 52
+module: a2-052
+version: '1.0'
+phase: A2.8 [Refinement and Graduation]

@@ -1,0 +1,51 @@
+slug: nature-and-traditions
+level: A2
+title: Українська природа та свята
+subtitle: Ukrainian Seasons and Holidays
+focus: communication
+word_target: 2000
+objectives:
+- Discuss the four seasons in Ukraine, including typical weather and activities.
+- 'Use vocabulary related to nature: trees, flowers, animals, landscapes.'
+- Talk about major Ukrainian holidays (e.g., Christmas, Easter, Independence Day).
+- Describe family traditions associated with these holidays.
+- Integrate and review all A2 grammar (cases, verb aspects, comparisons) in the context
+  of nature and culture.
+vocabulary_hints:
+- uk: пора року
+  en: season
+- uk: весна, літо, осінь, зима
+  en: spring, summer, autumn, winter
+- uk: свято
+  en: holiday
+- uk: традиція
+  en: tradition
+- uk: Різдво
+  en: Christmas
+- uk: Великдень
+  en: Easter
+- uk: погода
+  en: weather
+- uk: природа
+  en: nature
+activity_hints:
+- type: reading-comprehension
+  focus: Reading short texts about each of the four seasons and answering questions.
+  items: 12
+- type: image-description
+  focus: Describing photos of Ukrainian landscapes or holiday celebrations.
+  items: 10
+- type: presentation
+  focus: Preparing and giving a short (1-minute) talk about a favorite season or holiday.
+  items: 5
+- type: dialogue
+  focus: A conversation about plans for an upcoming holiday.
+  items: 1
+- type: fill-in-the-blank
+  focus: A cloze text about a Ukrainian tradition, requiring correct verb forms and
+    case endings.
+  items: 15
+sequence: 54
+module: a2-054
+version: '1.0'
+phase: A2.8 [Refinement and Graduation]

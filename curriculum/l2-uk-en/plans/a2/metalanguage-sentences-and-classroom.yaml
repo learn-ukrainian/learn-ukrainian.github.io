@@ -1,0 +1,53 @@
+slug: metalanguage-sentences-and-classroom
+level: A2
+title: Речення та клас
+subtitle: Sentences and Classroom
+focus: bridge
+word_target: 2000
+objectives:
+- 'Identify the basic parts of a sentence: підмет (subject) and присудок (predicate).'
+- 'Understand terms for word structure: корінь (root), префікс (prefix), суфікс (suffix),
+  закінчення (ending).'
+- Learn and use common classroom commands and phrases (e.g., 'Повторіть, будь ласка',
+  'Я не розумію').
+- Ask for clarification using phrases like 'Що означає це слово?'.
+- Use metalanguage to analyze simple words and sentences.
+vocabulary_hints:
+- uk: речення
+  en: sentence
+- uk: підмет
+  en: subject
+- uk: присудок
+  en: predicate
+- uk: корінь
+  en: root
+- uk: префікс / суфікс
+  en: prefix / suffix
+- uk: закінчення
+  en: ending (inflection)
+- uk: повторіть, будь ласка
+  en: repeat, please
+- uk: що це означає?
+  en: what does this mean?
+activity_hints:
+- type: labeling
+  focus: Identifying the subject and predicate in a series of simple sentences.
+  items: 12
+- type: word-analysis
+  focus: Breaking down simple words into root, prefix, and suffix.
+  items: 10
+- type: matching
+  focus: Matching classroom phrases with their functions (e.g., asking for repetition,
+    asking for meaning).
+  items: 12
+- type: role-play
+  focus: A short classroom scenario where a student asks a teacher for clarification
+    using metalanguage.
+  items: 1
+- type: question-formation
+  focus: Forming questions about grammar using the newly learned terms.
+  items: 10
+sequence: 57
+module: a2-057
+version: '1.0'
+phase: A2.8 [Refinement and Graduation]
