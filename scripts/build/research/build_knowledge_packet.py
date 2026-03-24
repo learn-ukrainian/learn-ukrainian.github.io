@@ -183,6 +183,25 @@ def _build_section_packet(section: dict, grade_hint: int | None) -> str:
     if hits_added == 0:
         lines.append("*No relevant textbook excerpts found.*\n")
 
+    # Also search for dialogue/situational examples on the topic
+    # Textbooks have real conversations that the writer should adapt
+    if queries:
+        topic_keyword = queries[0].split()[0] if queries[0] else title
+        dialogue_query = f"{topic_keyword} діалог розмова вправа"
+        dialogue_results = _search_rag(dialogue_query, grade=grade_hint, limit=2)
+        dialogue_hits = 0
+        for hit in dialogue_results:
+            chunk_id = hit.get("chunk_id", "")
+            if chunk_id in seen_chunks:
+                continue
+            seen_chunks.add(chunk_id)
+            formatted = _format_hit(hit)
+            if formatted:
+                if dialogue_hits == 0:
+                    lines.append("\n**Textbook dialogue/exercise examples:**\n")
+                lines.append(formatted)
+                dialogue_hits += 1
+
     return "\n".join(lines)
 
 
