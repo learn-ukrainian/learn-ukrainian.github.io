@@ -1,0 +1,63 @@
+module: a2-037
+level: A2
+sequence: 37
+slug: aspect-mastery
+version: '1.0'
+title: 30 Essential Pairs
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: grammar
+pedagogy: PPP
+phase: A2.6 [Aspect, Tenses, and Motion]
+word_target: 2000
+objectives:
+- 'Understand and apply: Expanded pair list'
+- 'Understand and apply: morphology patterns'
+- 'Understand and apply: choosing aspect in context'
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Context and motivation: why this topic matters at A2. Connect to prior knowledge from A2.6.'
+- section: Граматика 1 (Grammar 1)
+  words: 367
+  points:
+  - Expanded pair list
+- section: Граматика 2 (Grammar 2)
+  words: 367
+  points:
+  - morphology patterns
+- section: Граматика 3 (Grammar 3)
+  words: 366
+  points:
+  - choosing aspect in context
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Reading Practice: 8-10 Ukrainian sentences using the grammar taught in this module.'
+  - Mini-dialogues applying the grammar in real situations.
+- section: Підсумок (Summary)
+  words: 200
+  points:
+  - Key patterns summary. Self-check questions.
+vocabulary_hints:
+  required:
+  - '<!-- TODO: extract vocabulary from content -->'
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Test understanding of key grammar concepts from this module
+  items: 6
+- type: fill-in
+  focus: Complete sentences using the grammar patterns taught
+  items: 6
+- type: match-up
+  focus: Match forms to their functions or translations
+  items: 6
+connects_to:
+- motion-verbs
+prerequisites:
+- synthetic-future
+grammar:
+- 30 Essential Pairs
+register: розмовний
+references: []

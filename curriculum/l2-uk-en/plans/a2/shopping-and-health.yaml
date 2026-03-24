@@ -1,0 +1,60 @@
+module: a2-013
+level: A2
+sequence: 13
+slug: shopping-and-health
+version: '1.0'
+title: At the Market, At the Doctor
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: communication
+pedagogy: PPP
+phase: A2.2 [Genitive Case Complete]
+word_target: 2000
+objectives:
+- |-
+  Understand and apply: Genitive in shopping (кілограм яблук) and health (немає температури, для здоров'я)
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Setting the scene: practical context for At the Market, At the Doctor.'
+- section: Ситуація (Situation)
+  words: 700
+  points:
+  - Genitive in shopping (кілограм яблук) and health (немає температури, для здоров'я)
+- section: Діалоги (Dialogues)
+  words: 600
+  points:
+  - 4-6 practical dialogues applying grammar from this phase in real situations.
+  - Each dialogue 6-8 turns, using vocabulary from this and previous modules.
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Reading Practice: connected Ukrainian text using all patterns from this phase.'
+  - 'Self-check: can you handle these situations in Ukrainian?'
+vocabulary_hints:
+  required:
+  - кілограм (<!-- VERIFY meaning -->)
+  - яблук (<!-- VERIFY meaning -->)
+  - немає (<!-- VERIFY meaning -->)
+  - температури (<!-- VERIFY meaning -->)
+  - для (<!-- VERIFY meaning -->)
+  - здоров'я (<!-- VERIFY meaning -->)
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Comprehension questions about practical situations
+  items: 6
+- type: fill-in
+  focus: Complete dialogues in practical contexts
+  items: 6
+- type: group-sort
+  focus: Categorize expressions by situation or function
+  items: 8
+connects_to:
+- checkpoint-genitive
+prerequisites:
+- genitive-plural
+grammar:
+- At the Market, At the Doctor
+register: розмовний
+references: []

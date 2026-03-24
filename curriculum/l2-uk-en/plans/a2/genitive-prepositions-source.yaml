@@ -1,0 +1,54 @@
+module: a2-008
+level: A2
+sequence: 8
+slug: genitive-prepositions-source
+version: '1.0'
+title: From, After, Since
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: grammar
+pedagogy: PPP
+phase: A2.2 [Genitive Case Complete]
+word_target: 2000
+objectives:
+- 'Understand and apply: з/із/зі (origin, material, start time), від (from person), після (after)'
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Context and motivation: why this topic matters at A2. Connect to prior knowledge from A2.2.'
+- section: Граматика (Grammar)
+  words: 1100
+  points:
+  - з/із/зі (origin, material, start time), від (from person), після (after)
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Reading Practice: 8-10 Ukrainian sentences using the grammar taught in this module.'
+  - Mini-dialogues applying the grammar in real situations.
+- section: Підсумок (Summary)
+  words: 200
+  points:
+  - Key patterns summary. Self-check questions.
+vocabulary_hints:
+  required:
+  - від (<!-- VERIFY meaning -->)
+  - після (<!-- VERIFY meaning -->)
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Test understanding of key grammar concepts from this module
+  items: 6
+- type: fill-in
+  focus: Complete sentences using the grammar patterns taught
+  items: 6
+- type: match-up
+  focus: Match forms to their functions or translations
+  items: 6
+connects_to:
+- genitive-prepositions-purpose
+prerequisites:
+- checkpoint-foundations
+grammar:
+- From, After, Since
+register: розмовний
+references: []

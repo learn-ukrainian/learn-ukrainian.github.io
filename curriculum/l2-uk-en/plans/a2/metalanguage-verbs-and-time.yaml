@@ -1,0 +1,63 @@
+module: a2-056
+level: A2
+sequence: 56
+slug: metalanguage-verbs-and-time
+version: '1.0'
+title: Дія і час
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: bridge
+pedagogy: PPP
+phase: A2.8 [Refinement and Graduation]
+word_target: 2000
+objectives:
+- |-
+  Understand and apply: Metalanguage bridge 2: Verb categories (час, вид доконаний/недоконаний, спосіб, дієвідміна, особа). Adverb terms. Dic...
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Why Ukrainian grammar terms matter: B1 uses 100% Ukrainian instruction.'
+- section: Терміни (Terms)
+  words: 800
+  points:
+  - |-
+    **Metalanguage bridge 2:** Verb categories (час, вид доконаний/недоконаний, спосіб, дієвідміна, особа). Adverb terms. Dictionary literacy: read goroh.pp.ua entries (ж.р., док., недок., одн., мн.).
+- section: Практика (Practice)
+  words: 500
+  points:
+  - 'Exercises using Ukrainian metalanguage: identify parts of speech, name cases, describe verb forms.'
+- section: Словник (Dictionary Skills)
+  words: 400
+  points:
+  - How to read dictionary entries using Ukrainian abbreviations and terms.
+vocabulary_hints:
+  required:
+  - час (<!-- VERIFY meaning -->)
+  - вид (<!-- VERIFY meaning -->)
+  - доконаний (<!-- VERIFY meaning -->)
+  - недоконаний (<!-- VERIFY meaning -->)
+  - спосіб (<!-- VERIFY meaning -->)
+  - дієвідміна (<!-- VERIFY meaning -->)
+  - особа (<!-- VERIFY meaning -->)
+  - док (<!-- VERIFY meaning -->)
+  - недок (<!-- VERIFY meaning -->)
+  - одн (<!-- VERIFY meaning -->)
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Identify Ukrainian metalanguage terms for grammar concepts
+  items: 6
+- type: match-up
+  focus: Match Ukrainian grammar terms to their meanings
+  items: 8
+- type: fill-in
+  focus: Complete grammar explanations using Ukrainian terminology
+  items: 6
+connects_to:
+- metalanguage-sentences-and-classroom
+prerequisites:
+- metalanguage-words-and-cases
+grammar:
+- Verb aspect
+register: розмовний
+references: []

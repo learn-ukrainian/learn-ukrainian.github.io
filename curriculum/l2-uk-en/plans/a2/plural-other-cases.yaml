@@ -1,0 +1,56 @@
+module: a2-030
+level: A2
+sequence: 30
+slug: plural-other-cases
+version: '1.0'
+title: With Friends, For Children
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: grammar
+pedagogy: PPP
+phase: A2.5 [Case Synthesis and Plurals]
+word_target: 2000
+objectives:
+- 'Understand and apply: Dat., Instr., Loc. plurals (more regular than Gen.Pl.)'
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Context and motivation: why this topic matters at A2. Connect to prior knowledge from A2.5.'
+- section: Граматика (Grammar)
+  words: 1100
+  points:
+  - Dat., Instr., Loc. plurals (more regular than Gen.Pl.)
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Reading Practice: 8-10 Ukrainian sentences using the grammar taught in this module.'
+  - Mini-dialogues applying the grammar in real situations.
+- section: Підсумок (Summary)
+  words: 200
+  points:
+  - Key patterns summary. Self-check questions.
+vocabulary_hints:
+  required:
+  - '<!-- TODO: extract vocabulary from content -->'
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Test understanding of key grammar concepts from this module
+  items: 6
+- type: fill-in
+  focus: Complete sentences using the grammar patterns taught
+  items: 6
+- type: match-up
+  focus: Match forms to their functions or translations
+  items: 6
+connects_to:
+- which-case-when
+prerequisites:
+- plural-genitive
+grammar:
+- Genitive case
+- Dative case
+- Instrumental case
+- Plural forms
+register: розмовний
+references: []

@@ -1,0 +1,59 @@
+module: a2-026
+level: A2
+sequence: 26
+slug: work-and-food
+version: '1.0'
+title: Professions and Cooking
+subtitle: '<!-- TODO: add Ukrainian subtitle -->'
+focus: communication
+pedagogy: PPP
+phase: A2.4 [Instrumental Case]
+word_target: 2000
+objectives:
+- 'Understand and apply: Apply instrumental: Хто ти за фахом? готувати з маслом, їсти виделкою'
+content_outline:
+- section: Вступ (Introduction)
+  words: 300
+  points:
+  - 'Setting the scene: practical context for Professions and Cooking.'
+- section: Ситуація (Situation)
+  words: 700
+  points:
+  - 'Apply instrumental: Хто ти за фахом? готувати з маслом, їсти виделкою'
+- section: Діалоги (Dialogues)
+  words: 600
+  points:
+  - 4-6 practical dialogues applying grammar from this phase in real situations.
+  - Each dialogue 6-8 turns, using vocabulary from this and previous modules.
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Reading Practice: connected Ukrainian text using all patterns from this phase.'
+  - 'Self-check: can you handle these situations in Ukrainian?'
+vocabulary_hints:
+  required:
+  - Хто (<!-- VERIFY meaning -->)
+  - фахом (<!-- VERIFY meaning -->)
+  - готувати (<!-- VERIFY meaning -->)
+  - маслом (<!-- VERIFY meaning -->)
+  - їсти (<!-- VERIFY meaning -->)
+  - виделкою (<!-- VERIFY meaning -->)
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: Comprehension questions about practical situations
+  items: 6
+- type: fill-in
+  focus: Complete dialogues in practical contexts
+  items: 6
+- type: group-sort
+  focus: Categorize expressions by situation or function
+  items: 8
+connects_to:
+- checkpoint-instrumental
+prerequisites:
+- instrumental-adjectives-pronouns
+grammar:
+- Professions and Cooking
+register: розмовний
+references: []
