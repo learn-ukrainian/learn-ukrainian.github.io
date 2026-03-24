@@ -11,29 +11,11 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: бага́то
-  translation: a lot, many, much
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ма́ло
-  translation: a little, few
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: кі́лька
-  translation: a few, several
+- word: відсу́тність
+  translation: absence
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: скі́льки
-  translation: how many, how much
-  expression: false
-  pos: присл.
-  gender: ''
   verified: true
 - word: закі́нчення
   translation: ending (grammar)
@@ -59,11 +41,35 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: відсу́тність
-  translation: absence
+- word: бага́то
+  translation: a lot, many, much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ло
+  translation: a little, few
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кі́лька
+  translation: a few, several
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: де́кілька
+  translation: a few, several
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: скі́льки
+  translation: how many, how much
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
 - word: гроші
   translation: money
@@ -77,20 +83,32 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: є
-  translation: is, exists, there is
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: нема́
-  translation: there is not (colloquial short form of немає)
-  expression: false
+- word: Кого? Чого?
+  translation: Of whom? Of what? (genitive case questions)
+  expression: true
   pos: ''
   gender: ''
   verified: true
-- word: па́спорт
-  translation: passport
+- word: У мене є...
+  translation: I have...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене немає...
+  translation: I don't have...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ключі́
+  translation: keys
   expression: false
   pos: ім.
   gender: ч.
@@ -113,20 +131,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: кіт
-  translation: cat
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: кни́га
   translation: book
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: маши́на
-  translation: car
+- word: пробле́ма
+  translation: problem
   expression: false
   pos: ім.
   gender: ж.
@@ -137,11 +149,11 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: хліб
-  translation: bread
+- word: молоко́
+  translation: milk
   expression: false
   pos: ім.
-  gender: ч.
+  gender: с.
   verified: true
 - word: вікно́
   translation: window
@@ -155,53 +167,35 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: молоко́
-  translation: milk
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мо́ре
-  translation: sea
+- word: кіт
+  translation: cat
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: мі́сце
-  translation: place
+- word: студе́нт
+  translation: student
   expression: false
   pos: ім.
-  gender: с.
+  gender: ч.
   verified: true
-- word: земля́
-  translation: earth, land
+- word: вчи́тель
+  translation: teacher
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: пі́сня
-  translation: song
+- word: оліве́ць
+  translation: pencil
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: сім'я́
-  translation: family
+- word: комп'ю́тер
+  translation: computer
   expression: false
   pos: ім.
-  gender: ж.
-  verified: true
-- word: іде́я
-  translation: idea
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сло́во
-  translation: word
-  expression: false
-  pos: ім.
-  gender: с.
+  gender: ч.
   verified: true
 - word: цу́кор
   translation: sugar
@@ -215,11 +209,11 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: сніг
-  translation: snow
+- word: ка́ва
+  translation: coffee
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
 - word: сік
   translation: juice
@@ -227,20 +221,20 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: біль
-  translation: pain
+- word: сніг
+  translation: snow
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на́стрій
+  translation: mood
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: у́спіх
   translation: success
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: спорт
-  translation: sport
   expression: false
   pos: ім.
   gender: ч.
@@ -257,86 +251,50 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: інтерне́т
-  translation: internet
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: студе́нт
-  translation: student
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: комп'ю́тер
-  translation: computer
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: оліве́ць
-  translation: pencil
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: понеді́лок
-  translation: Monday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: жо́втень
-  translation: October
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: музе́й
-  translation: museum
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лід
-  translation: ice
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: друг
-  translation: friend
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пробле́ма
-  translation: problem
+- word: земля́
+  translation: earth, land
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: соро́чка
-  translation: shirt
+- word: пі́сня
+  translation: song
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: светр
-  translation: sweater
+- word: істо́рія
+  translation: history, story
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мо́ре
+  translation: sea
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: валі́за
-  translation: suitcase
+- word: со́нце
+  translation: sun
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
-- word: річ
-  translation: thing
+- word: мі́сце
+  translation: place
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сло́во
+  translation: word
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: маши́на
+  translation: car
   expression: false
   pos: ім.
   gender: ж.
@@ -347,105 +305,75 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: лю́ди
-  translation: people
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: ді́ти
-  translation: children
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: грошей
-  translation: money (genitive plural)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: люде́й
-  translation: people (genitive plural)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: діте́й
-  translation: children (genitive plural)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: У мене немає...
-  translation: I don't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У тебе немає...
-  translation: You don't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У нього немає...
-  translation: He doesn't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У неї немає...
-  translation: She doesn't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У нас немає...
-  translation: We don't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У вас немає...
-  translation: You (formal/plural) don't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У них немає...
-  translation: They don't have...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Скільки це коштує?
-  translation: How much does this cost?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ко́шту́є
-  translation: costs
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кімна́та
-  translation: room
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: клас
-  translation: class, classroom
+- word: музе́й
+  translation: museum
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: вдо́ма
-  translation: at home
+- word: сві́тло
+  translation: light
   expression: false
   pos: присл.
+  gender: ''
+  verified: true
+- word: вівто́рок
+  translation: Tuesday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сі́чень
+  translation: January
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ма
+  translation: mom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: друг
+  translation: friend
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хвили́на
+  translation: minute
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нульове закінчення
+  translation: zero ending (grammar)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іде́я
+  translation: idea
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: На жаль
+  translation: unfortunately
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ви́бачте
+  translation: excuse me, sorry
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true

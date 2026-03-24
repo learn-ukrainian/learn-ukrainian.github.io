@@ -1,5 +1,5 @@
-Section 1 "Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There)": ~750 words — Introduces the core concept of absence and the fundamental "У мене немає..." structure with the Genitive case, contrasting it with the English "to have" structure.
-Section 2 "Закінчення родового відмінка однини (Genitive Singular Endings)": ~950 words — Details the endings for singular nouns, deeply exploring the complex masculine -a/-y distinction, the feminine -и/-і shift, and the neuter -a/-я shift, including vowel alternations.
-Section 3 "Коли є багато або мало (When There Is a Lot or a Little)": ~850 words — Expands the Genitive to plural forms used with quantity words (багато, мало), covering the masculine -ів, zero endings for feminine/neuter, and vowel insertions.
-Summary: ~150 words
-Total: 2700+ words
+Section 1 "Title": ~650 words — Introduces the Genitive case conceptually, focusing on the expression of absence using the word "немає" and contrasting it with affirmative possession.
+Section 2 "Title": ~750 words — Details the specific Genitive singular endings for all three genders, with a deep dive into the complex masculine -а/-я vs. -у/-ю distinction.
+Section 3 "Title": ~750 words — Explores quantity words (багато, мало, кілька) and introduces the rules for forming the Genitive plural, including the zero ending concept.
+Summary: ~150 words — A concise wrap-up of the grammatical patterns learned in the module.
+Total: 2300+ words

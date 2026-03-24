@@ -1,4 +1,8 @@
-- find: quantity words like **багато** (a lot / many / much), **мало** (a little /
-    few), **кілька** (a few / several), and the question word **скільки**
-  replace: quantity words like **багато** (a lot / many / much), **мало** (a little
-    / few), **кілька** або **декілька** (a few / several), and the question word **скільки**
+- find: Київ *(Kyiv)* -> немає **Києву**
+  replace: Крим *(Crimea)* -> немає **Криму**
+- find: слово *(word)* -> кілька **слов** *(a few words)*
+  replace: слово *(word)* -> кілька **слів** *(a few words)*
+- find: Ні, на столі немає телефону.
+  replace: Ні, на столі немає телефона.
+- find: 'o: ["телефону", "телефон", "телефоном"]'
+  replace: 'o: ["телефона", "телефон", "телефоном"]'
