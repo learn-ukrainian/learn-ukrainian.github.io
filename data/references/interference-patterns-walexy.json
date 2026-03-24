@@ -1,0 +1,302 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "purpose": "Understanding why Ukrainian speakers make specific English mistakes helps you meet them halfway. These patterns let you decode what they MEAN, not just what they SAY.",
+    "philosophy": "This isn't about correcting anyone. It's about building a mental bridge so communication flows easier."
+  },
+  "patterns": {
+    "articles": {
+      "issue": "Missing or incorrect articles (a, an, the)",
+      "ukrainianReason": "Ukrainian has NO articles. Zero. The concept doesn't exist.",
+      "examples": [
+        {
+          "theyMightSay": "I need to go to store",
+          "theyMean": "I need to go to the store",
+          "explanation": "In Ukrainian: 'Мені треба піти до крамниці' - no article needed or possible"
+        },
+        {
+          "theyMightSay": "She is engineer",
+          "theyMean": "She is an engineer",
+          "explanation": "Professions in Ukrainian never use articles: 'Вона інженер'"
+        },
+        {
+          "theyMightSay": "I saw movie yesterday",
+          "theyMean": "I saw a movie yesterday",
+          "explanation": "No way to say 'a' in Ukrainian - they must learn this as pure arbitrary English rule"
+        }
+      ],
+      "howToHelp": "Don't correct. Your brain will start filling in articles automatically as you understand the pattern. Focus on the content, not the grammar."
+    },
+    "aspectsAndTenses": {
+      "issue": "Unusual tense usage, especially with 'will' and 'going to'",
+      "ukrainianReason": "Ukrainian verbs encode ASPECT (completed vs. ongoing) rather than precise time. They have fewer tenses but more verb forms.",
+      "examples": [
+        {
+          "theyMightSay": "I do this tomorrow",
+          "theyMean": "I will do this tomorrow",
+          "explanation": "Ukrainian uses present tense with time markers for future events"
+        },
+        {
+          "theyMightSay": "When I will come, I call you",
+          "theyMean": "When I come, I'll call you",
+          "explanation": "Ukrainian uses future in both clauses; English uses present in conditional clause"
+        },
+        {
+          "theyMightSay": "I already read this book",
+          "theyMean": "I have already read this book",
+          "explanation": "Ukrainian's perfective aspect ('прочитав') conveys completion without needing 'have'"
+        }
+      ],
+      "howToHelp": "The time reference is usually clear from context. Listen for when, then understand what."
+    },
+    "pronounGender": {
+      "issue": "He/she confusion",
+      "ukrainianReason": "Ukrainian has grammatical gender but it works differently. All nouns have gender, and pronouns must agree - but not with biological sex the way English speakers expect.",
+      "examples": [
+        {
+          "theyMightSay": "The company, she is growing fast",
+          "theyMean": "The company is growing fast (it)",
+          "explanation": "'Компанія' is feminine in Ukrainian, so the pronoun is 'вона' (she)"
+        },
+        {
+          "theyMightSay": "My sister, he works in Kyiv",
+          "theyMean": "My sister works in Kyiv",
+          "explanation": "Usually just a slip when thinking fast - they know the difference"
+        }
+      ],
+      "howToHelp": "Context always makes the meaning clear. This mistake decreases with practice."
+    },
+    "wordOrder": {
+      "issue": "Unusual sentence structure",
+      "ukrainianReason": "Ukrainian has very flexible word order because case endings show who does what to whom. English relies on word order, so Ukrainian patterns sound odd.",
+      "examples": [
+        {
+          "theyMightSay": "Tomorrow meeting we will have",
+          "theyMean": "We will have a meeting tomorrow",
+          "explanation": "Emphasis in Ukrainian comes from word order - important info first"
+        },
+        {
+          "theyMightSay": "To you I sent the file",
+          "theyMean": "I sent you the file",
+          "explanation": "Emphasizing the recipient (you) by fronting it"
+        },
+        {
+          "theyMightSay": "This I don't understand",
+          "theyMean": "I don't understand this",
+          "explanation": "Object-first is common in Ukrainian for emphasis"
+        }
+      ],
+      "howToHelp": "The unusual order often reveals what they consider most important. It's actually useful information!"
+    },
+    "prepositions": {
+      "issue": "Wrong preposition choices",
+      "ukrainianReason": "Prepositions are notoriously untranslatable between languages. Ukrainian prepositions map differently than English ones.",
+      "examples": [
+        {
+          "theyMightSay": "I'm waiting you",
+          "theyMean": "I'm waiting for you",
+          "explanation": "Ukrainian 'чекати' (wait) takes a direct object, no preposition needed"
+        },
+        {
+          "theyMightSay": "Depends from the weather",
+          "theyMean": "Depends on the weather",
+          "explanation": "Ukrainian uses 'від' (from) where English uses 'on'"
+        },
+        {
+          "theyMightSay": "I'm on the meeting",
+          "theyMean": "I'm in the meeting / at the meeting",
+          "explanation": "Ukrainian 'на зустрічі' uses 'на' (on) for meetings"
+        },
+        {
+          "theyMightSay": "Married with someone",
+          "theyMean": "Married to someone",
+          "explanation": "Ukrainian uses 'з' (with) for marriage"
+        },
+        {
+          "theyMightSay": "I'll call to you",
+          "theyMean": "I'll call you",
+          "explanation": "Ukrainian 'зателефонувати до' requires 'to'"
+        }
+      ],
+      "howToHelp": "Prepositions are pure memorization - there's no logic to port between languages. Be patient."
+    },
+    "negation": {
+      "issue": "Double negatives",
+      "ukrainianReason": "Ukrainian REQUIRES double (or triple) negatives. 'Nobody didn't say nothing' is grammatically correct in Ukrainian.",
+      "examples": [
+        {
+          "theyMightSay": "I don't know nothing about this",
+          "theyMean": "I don't know anything about this",
+          "explanation": "'Я нічого не знаю' literally 'I nothing not know' - double negative required"
+        },
+        {
+          "theyMightSay": "Nobody didn't call",
+          "theyMean": "Nobody called",
+          "explanation": "'Ніхто не дзвонив' = 'Nobody not called' - standard Ukrainian"
+        }
+      ],
+      "howToHelp": "Double negatives in Slavic languages still mean negative. Just hear the intent."
+    },
+    "modalVerbs": {
+      "issue": "Unusual modal verb usage",
+      "ukrainianReason": "Ukrainian modals work differently and have fewer shades of meaning than English modals.",
+      "examples": [
+        {
+          "theyMightSay": "I must to go now",
+          "theyMean": "I must go now",
+          "explanation": "Ukrainian modal + infinitive structure expects 'to'"
+        },
+        {
+          "theyMightSay": "You should to try this",
+          "theyMean": "You should try this",
+          "explanation": "Same pattern - modal followed by 'to + verb' feels natural from Ukrainian"
+        },
+        {
+          "theyMightSay": "I can to help you",
+          "theyMean": "I can help you",
+          "explanation": "Ukrainian 'можу допомогти' patterns as 'can + to + help'"
+        }
+      ],
+      "howToHelp": "The meaning is clear. The extra 'to' is just linguistic muscle memory."
+    },
+    "pronunciation": {
+      "issue": "Specific sound substitutions",
+      "ukrainianReason": "Some English sounds don't exist in Ukrainian, so speakers substitute the closest Ukrainian sound.",
+      "examples": [
+        {
+          "pattern": "W → V",
+          "example": "'work' sounds like 'vork', 'water' sounds like 'vater'",
+          "explanation": "Ukrainian has no 'W' sound. 'В' (V) is the closest."
+        },
+        {
+          "pattern": "TH → D/T/Z/S",
+          "example": "'the' sounds like 'de', 'think' sounds like 'sink' or 'tink'",
+          "explanation": "Ukrainian has no 'th' sounds. They're genuinely hard to produce."
+        },
+        {
+          "pattern": "H → G/KH",
+          "example": "'hello' might sound like 'khello' or stronger 'h'",
+          "explanation": "Ukrainian 'Г' is a voiced velar sound, different from soft English H"
+        },
+        {
+          "pattern": "Short I vs. Long EE",
+          "example": "'bit' and 'beat' may sound similar",
+          "explanation": "Ukrainian И/І distinction is different from English short/long i"
+        }
+      ],
+      "howToHelp": "Once you know the substitution patterns, your brain auto-corrects. 'Vork' becomes 'work' instantly."
+    },
+    "falseTranslations": {
+      "issue": "Direct translations of Ukrainian expressions",
+      "ukrainianReason": "Idioms and phrases that work in Ukrainian get translated word-for-word into English.",
+      "examples": [
+        {
+          "theyMightSay": "It goes about...",
+          "theyMean": "It's about... / This concerns...",
+          "explanation": "Ukrainian 'Йдеться про' literally 'it goes about'"
+        },
+        {
+          "theyMightSay": "I have a question to you",
+          "theyMean": "I have a question for you",
+          "explanation": "Ukrainian uses 'до' (to) where English uses 'for'"
+        },
+        {
+          "theyMightSay": "How you think?",
+          "theyMean": "What do you think?",
+          "explanation": "Ukrainian 'Як ти думаєш?' uses 'how' for opinions"
+        },
+        {
+          "theyMightSay": "I feel myself well",
+          "theyMean": "I feel well / I'm feeling good",
+          "explanation": "Ukrainian reflexive 'почуваю себе' requires 'myself'"
+        },
+        {
+          "theyMightSay": "In the result...",
+          "theyMean": "As a result...",
+          "explanation": "Ukrainian 'В результаті' uses 'in'"
+        },
+        {
+          "theyMightSay": "From my side...",
+          "theyMean": "For my part... / On my end...",
+          "explanation": "Ukrainian 'з мого боку' = 'from my side'"
+        }
+      ],
+      "howToHelp": "These are often the most interesting - you're hearing Ukrainian thought patterns in English words."
+    }
+  },
+  "practicalTips": [
+    {
+      "title": "Don't Correct (Usually)",
+      "advice": "Unless asked, don't correct grammar. It's patronizing and interrupts flow. Your goal is communication, not teaching."
+    },
+    {
+      "title": "Confirm Understanding",
+      "advice": "If unclear, rephrase: 'So you're saying...' This helps without correcting."
+    },
+    {
+      "title": "Learn Their Patterns",
+      "advice": "Each person has consistent interference patterns. Learn your colleagues' specific ones."
+    },
+    {
+      "title": "Ask About Ukrainian",
+      "advice": "'How would you say that in Ukrainian?' shows interest and builds connection."
+    },
+    {
+      "title": "Notice When You Stop Noticing",
+      "advice": "A sign of progress: these patterns stop sounding 'wrong' and just sound like your colleagues."
+    }
+  ],
+  "usefulUkrainianPhrases": {
+    "purpose": "Phrases you can use to connect with colleagues, even before you're conversational",
+    "phrases": [
+      {
+        "ukrainian": "Дякую",
+        "transliteration": "dyakuyu",
+        "meaning": "Thank you",
+        "usage": "End any interaction with this. Simple but meaningful."
+      },
+      {
+        "ukrainian": "Будь ласка",
+        "transliteration": "bud' laska",
+        "meaning": "Please / You're welcome",
+        "usage": "Works for both. Very polite."
+      },
+      {
+        "ukrainian": "Добре",
+        "transliteration": "dobre",
+        "meaning": "Good / Okay",
+        "usage": "Acknowledge something. Shows you're paying attention."
+      },
+      {
+        "ukrainian": "Розумію",
+        "transliteration": "rozumiyu",
+        "meaning": "I understand",
+        "usage": "Powerful! When they explain something, say this."
+      },
+      {
+        "ukrainian": "Як справи?",
+        "transliteration": "yak spravy?",
+        "meaning": "How are things?",
+        "usage": "Casual greeting. Opens conversations warmly."
+      },
+      {
+        "ukrainian": "Все добре",
+        "transliteration": "vse dobre",
+        "meaning": "All good / Everything's fine",
+        "usage": "Response to 'how are you' - or reassurance."
+      },
+      {
+        "ukrainian": "Вибач(те)",
+        "transliteration": "vybách(te)",
+        "meaning": "Sorry / Excuse me",
+        "usage": "-те makes it formal. Use for interruptions or mistakes."
+      },
+      {
+        "ukrainian": "Хвилинку",
+        "transliteration": "khvylýnku",
+        "meaning": "Just a moment",
+        "usage": "When you need a second to finish something."
+      }
+    ]
+  }
+}
