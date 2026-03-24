@@ -1,0 +1,4 @@
+- find: quantity words like **багато** (a lot / many / much), **мало** (a little /
+    few), **кілька** (a few / several), and the question word **скільки**
+  replace: quantity words like **багато** (a lot / many / much), **мало** (a little
+    / few), **кілька** або **декілька** (a few / several), and the question word **скільки**

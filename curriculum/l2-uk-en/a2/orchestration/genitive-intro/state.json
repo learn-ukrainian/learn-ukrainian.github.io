@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "genitive-intro",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-24T14:53:44.758899+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-24T14:53:56.304089+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:22.152868+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:22.157164+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:22.157784+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:52.077292+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:52.885010+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-24T15:00:52.946529+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-24T15:03:20.518247+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-24T15:03:23.699493+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-24T15:03:23.749920+00:00"
+    }
+  }
+}

@@ -1190,7 +1190,21 @@ def step_review(content_path: Path, level: str, module_num: int,
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content = plan_path.read_text("utf-8") if plan_path.exists() else ""
     plan = yaml.safe_load(plan_content) if plan_content else {}
-    generated_content = content_path.read_text("utf-8")
+    raw_content = content_path.read_text("utf-8")
+
+    # Strip enrichment (tabs, словník, workbook, resources) before review.
+    # The reviewer should evaluate the WRITER's prose, not ENRICH-generated content.
+    import re as _re
+    generated_content = raw_content
+    tab_marker = generated_content.find("<!-- TAB:Словник -->")
+    if tab_marker != -1:
+        generated_content = generated_content[:tab_marker].strip()
+    generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
+
+    # Inject deterministic word count so reviewer doesn't guess
+    prose_words = len(_re.sub(r":::.*?:::", "", generated_content, flags=_re.DOTALL).split())
+    word_count_note = f"\n\n**Deterministic word count: {prose_words} words** (calculated by pipeline, do NOT estimate manually)\n"
+    generated_content = generated_content + word_count_note
 
     # Build review prompt
     writer_model = "Claude Opus" if writer == "claude" else "Gemini Pro"
