@@ -1,0 +1,93 @@
+slug: all-cases-practice
+title: Усе разом
+level: A2
+word_target: 2000
+objectives:
+- Integrate all 7 cases in both singular and plural forms within extended dialogues.
+- Confidently switch between cases in a single conversation.
+- Understand and respond to complex questions that require different cases in the
+  answer.
+- Use a wide range of prepositions and verbs that govern different cases.
+- Tell a simple story or describe a past event using a variety of grammatical cases.
+content_outline:
+- section: 'Діалог 1: Планування подорожі'
+  points:
+  - Обговорення, куди поїхати (Знахідний), з ким (Орудний), коли (Родовий/Місцевий).
+  - Запитання про ціни квитків (Родовий множини), про готелі (Місцевий).
+  - 'Приклади фраз: ''Я хочу поїхати до Львова'', ''Скільки коштують квитки?'', ''Ми
+    будемо жити в готелі біля центру''.'
+- section: 'Діалог 2: Розмова по телефону з другом'
+  points:
+  - Розповідь про свій день (минулий час, різні відмінки).
+  - Запрошення друга в гості (Знахідний) або в кіно (Знахідний).
+  - Обговорення новин, фільмів, книг (Родовий, Місцевий).
+  - 'Приклади фраз: ''Що ти робив учора?'', ''Ходімо в суботу в кафе?'', ''Я розповів
+    батькам про тебе''.'
+- section: 'Діалог 3: На прийомі в лікаря'
+  points:
+  - 'Опис симптомів: ''У мене болить голова'', ''Немає апетиту'' (Родовий).'
+  - 'Відповіді на запитання лікаря: ''Що вас турбує?'', ''Як довго це триває?''.'
+  - Обговорення лікування (Орудний), поради лікаря (Давальний).
+  - 'Приклади фраз: ''Я вам раджу більше відпочивати'', ''Приймайте ці ліки тричі
+    на день''.'
+- section: 'Монолог: Розповідь про минулі вихідні'
+  points:
+  - 'Структура розповіді: де був, що робив, з ким зустрічався.'
+  - Використання повного спектру відмінків для опису подій, людей та місць.
+  - 'Приклад: ''Минулої суботи я з друзями поїхав за місто. Ми гуляли в лісі, насолоджувалися
+    природою...'''
+vocabulary_hints:
+  required:
+  - word (подорож)
+  - translation (journey, trip)
+  - word (квиток)
+  - translation (ticket)
+  - word (готель)
+  - translation (hotel)
+  - word (лікар)
+  - translation (doctor)
+  - word (ліки)
+  - translation (medicine)
+  - word (вихідні)
+  - translation (weekend)
+  - word (зустріч)
+  - translation (meeting)
+  - word (плани)
+  - translation (plans)
+  - word (симптоми)
+  - translation (symptoms)
+  - word (порада)
+  - translation (advice)
+  recommended:
+  - word (домовлятися)
+  - translation (to arrange, to agree on)
+  - word (скаржитися (на))
+  - translation (to complain (about))
+  - word (радити)
+  - translation (to advise)
+  - word (пропонувати)
+  - translation (to suggest, to offer)
+  - word (насолоджуватися)
+  - translation (to enjoy (+ Instr))
+  - word (турбувати)
+  - translation (to bother, to worry)
+activity_hints:
+- type: role-play
+  focus: Simulating dialogues (planning a trip, at the doctor's)
+  items: 3
+- type: dialogue-reconstruction
+  focus: Putting jumbled dialogue lines in the correct order
+  items: 12
+- type: story-creation
+  focus: Writing a short story about a past event using a list of keywords
+  items: 1
+- type: fill-in-the-blanks
+  focus: Completing a long dialogue with nouns in correct cases
+  items: 20
+- type: listening-comprehension
+  focus: Answering questions based on a recorded dialogue
+  items: 10
+sequence: 32
+module: a2-032
+version: '1.0'
+phase: A2.5 [Case Synthesis and Plurals]

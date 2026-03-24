@@ -1,0 +1,91 @@
+slug: checkpoint-cases
+title: Контрольна точка
+level: A2
+word_target: 1500
+objectives:
+- Review and consolidate knowledge of plural noun declensions (Nominative, Accusative,
+  Genitive).
+- Demonstrate correct usage of Dative, Instrumental, and Locative plural endings.
+- Choose the appropriate case in complex sentences based on verbs and prepositions.
+- Apply case knowledge to practical communicative tasks like describing places and
+  events.
+- Identify and correct common mistakes in plural case usage.
+content_outline:
+- section: 'Повторення: Множина (Називний, Знахідний, Родовий)'
+  points:
+  - 'Тест-огляд: утворення множини для різних іменників.'
+  - 'Практика: розрізнення істот і неістот у Знахідному відмінку множини.'
+  - Вправи на вживання Родового відмінка множини з числами та словами 'багато'/'мало'.
+- section: 'Повторення: Множина (Давальний, Орудний, Місцевий)'
+  points:
+  - Вправи на стабільні закінчення -ам/-ям, -ами/-ями, -ах/-ях.
+  - Складання речень з прийменниками, що вимагають цих відмінків (з, по, в, на).
+  - 'Творче завдання: написати лист другові, використовуючи різні відмінки множини
+    (''Я сумую за нашими прогулянками...'').'
+- section: Комплексний тест 'Відмінковий компас'
+  points:
+  - Завдання на вибір правильного відмінка в реченні.
+  - Трансформація речень з однини в множину.
+  - Знаходження та виправлення помилок у тексті.
+- section: 'Комунікативне завдання: ''Моє місто'''
+  points:
+  - Підготувати коротку розповідь про своє місто.
+  - Описати, що є в місті (Називний), що можна побачити (Знахідний), де можна погуляти
+    (Місцевий), з ким можна зустрітися (Орудний).
+  - Використовувати лексику з теми 'Дім та повсякденне життя'.
+vocabulary_hints:
+  required:
+  - word (помилка)
+  - translation (mistake, error)
+  - word (правило)
+  - translation (rule)
+  - word (виняток)
+  - translation (exception)
+  - word (вправа)
+  - translation (exercise)
+  - word (тест)
+  - translation (test)
+  - word (завдання)
+  - translation (task, assignment)
+  - word (повторення)
+  - translation (revision, review)
+  - word (результат)
+  - translation (result)
+  - word (приклад)
+  - translation (example)
+  - word (пояснення)
+  - translation (explanation)
+  recommended:
+  - word (перевіряти)
+  - translation (to check, to verify)
+  - word (виправляти)
+  - translation (to correct, to fix)
+  - word (пам'ятати)
+  - translation (to remember)
+  - word (забувати)
+  - translation (to forget)
+  - word (впевнений)
+  - translation (confident, sure)
+  - word (складний)
+  - translation (difficult, complex)
+activity_hints:
+- type: comprehensive-test
+  focus: Mixed questions covering all plural cases
+  items: 25
+- type: error-correction
+  focus: Identifying and fixing case errors in a short text
+  items: 10
+- type: sentence-transformation
+  focus: Changing sentences from singular to plural and vice-versa
+  items: 12
+- type: short-prose
+  focus: Writing a paragraph on a given topic ('My last vacation', 'My favorite city')
+    using plural nouns
+  items: 1
+- type: matching
+  focus: Matching sentence fragments that use different cases
+  items: 12
+sequence: 34
+module: a2-034
+version: '1.0'
+phase: A2.5 [Case Synthesis and Plurals]

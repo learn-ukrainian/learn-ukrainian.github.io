@@ -1,0 +1,94 @@
+slug: plural-genitive
+title: Скільки?
+level: A2
+word_target: 2000
+objectives:
+- Form and use the genitive plural for all declension classes.
+- 'Master the three main genitive plural endings: zero ending, -ів/-їв, and -ей.'
+- Correctly use the genitive plural after numbers (5, 6, 10, 100...) and words like
+  'багато', 'мало', 'кілька', 'скільки'.
+- Recognize and apply vowel insertion/alternation in stems with zero endings (книга
+  -> книг, пісня -> пісень).
+- Understand when to use different endings for masculine nouns (-ів vs. zero ending).
+content_outline:
+- section: 'Родовий відмінок множини: Кого? Чого?'
+  points:
+  - 'Головна функція: позначення кількості після чисел (5 і більше) та слів ''багато'',
+    ''мало'', ''кілька'', ''трохи''.'
+  - 'Приклади: п''ять студентів, багато книг, кілька проблем, мало грошей.'
+  - 'Використання для позначення відсутності: ''Немає... (кого? чого?)'' - ''Немає
+    друзів'', ''немає квитків''.'
+- section: 'Три основні закінчення: нульове, -ів, -ей'
+  points:
+  - 'Нульове закінчення: найпоширеніше для жіночого та середнього роду (багато країн,
+    книг, слів, місць, питань).'
+  - 'Чергування голосних при нульовому закінченні: ''о'', ''е'' -> ''і'' (дорога -
+    доріг), випадання ''е'', ''о'' (пісня - пісень).'
+  - 'Закінчення -ів/-їв: типове для більшості іменників чоловічого роду (багато столів,
+    комп''ютерів, музеїв, героїв).'
+  - 'Закінчення -ей: для деяких іменників на -я та іменників типу ''ніч'' (статей,
+    ночей).'
+  - 'Особливі форми: людей, дітей, грошей.'
+- section: 'Числа і кількість: Практичне застосування'
+  points:
+  - 'Правило: 1 + Називний однини; 2, 3, 4 + Називний множини; 5+ + Родовий множини.'
+  - 'Порівняння: один стіл, два столи, п''ять столів.'
+  - 'Практика з різними числами та іменниками: ''У мене є десять доларів'', ''Я прочитав
+    двадцять книг'', ''Тут працює сто людей''.'
+  - 'Запитання ''Скільки?'': ''Скільки у вас друзів?'' - ''У мене багато друзів''.'
+vocabulary_hints:
+  required:
+  - word (багато)
+  - translation (many, a lot)
+  - word (мало)
+  - translation (few, little)
+  - word (кілька)
+  - translation (several, a few)
+  - word (скільки)
+  - translation (how many, how much)
+  - word (студентів)
+  - translation (of students)
+  - word (книг)
+  - translation (of books)
+  - word (років)
+  - translation (of years)
+  - word (гривень)
+  - translation (of hryvnias)
+  - word (питань)
+  - translation (of questions)
+  - word (місць)
+  - translation (of places)
+  recommended:
+  - word (сотня)
+  - translation (a hundred)
+  - word (тисяча)
+  - translation (a thousand)
+  - word (мільйон)
+  - translation (a million)
+  - word (більше)
+  - translation (more)
+  - word (менше)
+  - translation (less)
+  - word (трохи)
+  - translation (a little bit)
+activity_hints:
+- type: fill-in-the-blanks
+  focus: Genitive plural after numbers and quantity words
+  items: 15
+- type: sentence-transformation
+  focus: Rewriting sentences using quantity words (e.g., 'I have 10 friends' -> 'I
+    have many friends')
+  items: 12
+- type: table-completion
+  focus: Forming the Genitive Plural for a list of nouns
+  items: 20
+- type: multiple-choice
+  focus: Choosing the correct Gen. Pl. ending (-ів, zero, -ей)
+  items: 15
+- type: question-answer
+  focus: Answering 'Скільки?' questions about personal life
+  items: 10
+sequence: 29
+module: a2-029
+version: '1.0'
+phase: A2.5 [Case Synthesis and Plurals]
