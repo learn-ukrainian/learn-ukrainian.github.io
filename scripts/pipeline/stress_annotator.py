@@ -99,83 +99,60 @@ def _in_skip_range(pos: int, skip_ranges: list[tuple[int, int]]) -> bool:
     return False
 
 
-def _build_sentence_stress_map(text: str, skip_ranges: list[tuple[int, int]]) -> dict[int, str]:
+def _build_sentence_stress_map(
+    text: str, orig_words: list[re.Match],
+) -> dict[int, str]:
     """Build a map of word positions to their stressed forms using sentence context.
 
-    Processes text line-by-line, feeding each line to the Stressifier so that
-    Stanza can use sentence context for heteronym disambiguation.
+    Feeds the full text to the Stressifier in one call so that Stanza can use
+    sentence context for heteronym disambiguation. This is both faster (one
+    Stanza pass) and more accurate (full context available).
+
+    Args:
+        text: Full document text.
+        orig_words: Pre-computed Cyrillic word matches from the text.
 
     Returns dict mapping match-start-position -> stressed word form.
     """
     stressifier = _get_stressifier()
     stress_map: dict[int, str] = {}
 
-    # Process line by line — each line is a reasonable sentence unit
-    for line_match in re.finditer(r"[^\n]+", text):
-        line = line_match.group()
-        line_start = line_match.start()
+    try:
+        stressed_text = stressifier(text)
+    except Exception:
+        logger.debug("stress_annotator: stressifier failed on full text")
+        return stress_map
 
-        # Skip lines entirely within skip ranges
-        if _in_skip_range(line_start, skip_ranges):
-            continue
+    stressed_words = list(_CYRILLIC_WORD_RE.finditer(stressed_text))
 
-        # Find Ukrainian words in this line that need stressing
-        words_in_line = list(_CYRILLIC_WORD_RE.finditer(line))
-        if not words_in_line:
-            continue
-
-        # Check if any word in the line needs stress (multi-syllable, not skipped)
-        needs_stress = False
-        for m in words_in_line:
+    if len(orig_words) != len(stressed_words):
+        logger.warning(
+            "stress_annotator: word count mismatch (%d vs %d), "
+            "falling back to per-word stress",
+            len(orig_words),
+            len(stressed_words),
+        )
+        for m in orig_words:
             word = m.group(1)
-            abs_pos = line_start + m.start()
-            if (
-                not _in_skip_range(abs_pos, skip_ranges)
-                and not _already_stressed(word)
-                and _count_syllables(word) >= 2
-            ):
-                needs_stress = True
-                break
-
-        if not needs_stress:
-            continue
-
-        # Feed the full line to the stressifier for context-aware stress
-        try:
-            stressed_line = stressifier(line)
-        except Exception:
-            logger.debug("stress_annotator: stressifier failed on line: %s", line[:80])
-            continue
-
-        # Extract stressed forms by aligning original and stressed line
-        # The stressifier inserts combining accents, shifting positions.
-        # Re-find words in the stressed line and match by stripped form + order.
-        stressed_words = list(_CYRILLIC_WORD_RE.finditer(stressed_line))
-
-        # Build alignment: match original words to stressed words by order
-        # Both have the same number of Cyrillic word tokens (stressifier only adds accents)
-        if len(words_in_line) != len(stressed_words):
-            # Fallback: alignment mismatch, skip this line
-            logger.debug(
-                "stress_annotator: word count mismatch (%d vs %d) on line: %s",
-                len(words_in_line),
-                len(stressed_words),
-                line[:80],
-            )
-            continue
-
-        for orig_m, stress_m in zip(words_in_line, stressed_words, strict=False):
-            orig_word = orig_m.group(1)
-            stressed_word = stress_m.group(1)
-
-            # Verify alignment: stripped forms must match
-            if stressed_word.replace(STRESS_MARK, "") != orig_word:
+            if _count_syllables(word) < 2 or _already_stressed(word):
                 continue
+            try:
+                stressed = stressifier(word)
+            except Exception:
+                continue
+            if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == word:
+                stress_map[m.start(1)] = stressed
+        return stress_map
 
-            # Only record if stress was actually added
-            if STRESS_MARK in stressed_word:
-                abs_pos = line_start + orig_m.start(1)
-                stress_map[abs_pos] = stressed_word
+    for orig_m, stress_m in zip(orig_words, stressed_words, strict=False):
+        orig_word = orig_m.group(1)
+        stressed_word = stress_m.group(1)
+
+        if stressed_word.replace(STRESS_MARK, "") != orig_word:
+            continue
+
+        if STRESS_MARK in stressed_word:
+            stress_map[orig_m.start(1)] = stressed_word
 
     return stress_map
 
@@ -193,17 +170,15 @@ def annotate_stress(text: str) -> tuple[str, int]:
     - Use ukrainian-word-stress library with SENTENCE context for disambiguation
     """
     skip_ranges = _build_skip_mask(text)
-
-    # Build stress map using sentence-level processing
-    stress_map = _build_sentence_stress_map(text, skip_ranges)
-
-    seen_forms: set[str] = set()
-    count = 0
-
     matches = list(_CYRILLIC_WORD_RE.finditer(text))
 
+    # Build stress map using sentence-level processing (reuses matches)
+    stress_map = _build_sentence_stress_map(text, matches)
+
+    count = 0
+
     # First pass: find first occurrence of each word form (forward order)
-    first_occurrences: dict[str, int] = {}  # lowercase form -> match index
+    first_occurrences: dict[str, int] = {}
     for i, m in enumerate(matches):
         word = m.group(1)
         lower = word.lower().replace(STRESS_MARK, "")
@@ -217,42 +192,24 @@ def annotate_stress(text: str) -> tuple[str, int]:
         word = m.group(1)
         lower = word.lower().replace(STRESS_MARK, "")
 
-        # Skip if not first occurrence
         if first_occurrences.get(lower) != i:
             continue
 
-        # Skip if in a skip range
         if _in_skip_range(m.start(), skip_ranges):
             continue
 
-        # Skip if already stressed
         if _already_stressed(word):
             continue
 
-        # Skip single-syllable words
         if _count_syllables(word) < 2:
             continue
 
-        # Skip if already seen (shouldn't happen with first_occurrences, but safety)
-        if lower in seen_forms:
-            continue
-
-        # Look up stressed form from sentence-context map
-        abs_pos = m.start(1)
-        stressed = stress_map.get(abs_pos)
-
+        stressed = stress_map.get(m.start(1))
         if stressed is None:
-            # No stress from sentence context — word was skipped/unresolved
             continue
 
-        # Verify the stressed form matches the original word
-        if stressed.replace(STRESS_MARK, "") != word:
-            continue
-
-        # Replace in the result
         start, end = m.start(1), m.end(1)
         result[start:end] = list(stressed)
-        seen_forms.add(lower)
         count += 1
 
     return "".join(result), count
