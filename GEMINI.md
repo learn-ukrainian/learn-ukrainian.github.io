@@ -234,6 +234,20 @@ curriculum/l2-uk-en/
     └── status/{slug}.json       # Cached audit results
 ```
 
+## Dictionaries Available
+
+| Dictionary | Entries | What it gives you |
+|-----------|---------|-------------------|
+| **VESUM** | 409K lemmas, 6.7M forms | Morphological: POS, gender, inflections. `verify_word`/`verify_lemma` |
+| **СУМ-11** | 127K | THE Ukrainian explanatory dictionary. Definitions, literary citations, all in Ukrainian. |
+| **Грінченко** | 67K | Historical dictionary (1907). Etymology, original meanings. |
+| **Балла EN→UK** | 79K | English→Ukrainian. Authoritative bilingual dictionary by M.I. Ball. |
+| **Антоненко-Давидович** | 279 | Style guide «Як ми говоримо». Calques vs natural Ukrainian. |
+| **Фразеологічний** | 25K | Ukrainian idioms and fixed expressions. |
+| **Stress dictionary** | 2.7M forms | Word stress marks. |
+
+Use these for verification, NOT your pre-training. Your pre-training is contaminated by Russian.
+
 ## Prompt Structure (ideal order)
 
 When you receive a content prompt, expect this structure:

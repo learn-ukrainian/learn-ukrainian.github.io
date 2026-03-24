@@ -86,41 +86,51 @@ def ingest_collection(client, collection_name: str, chunks: list[dict], text_fie
         return
 
     if existing > 0:
-        print(f"  ⚠️  Collection has {existing}/{total} points — re-ingesting all (upsert is safe)")
+        print(f"  ⚠️  Collection has {existing}/{total} points — resuming from chunk {existing}")
+        chunks = chunks[existing:]
+        total_remaining = len(chunks)
+        if total_remaining == 0:
+            print(f"  ✅ Nothing to resume — all {total} points already ingested.")
+            return
+        print(f"  Resuming: {total_remaining} entries remaining")
+    else:
+        total_remaining = total
 
-    print(f"  Ingesting {total} entries into '{collection_name}'...")
+    print(f"  Ingesting {total_remaining} entries into '{collection_name}'...")
 
-    # Encode ALL texts at once (encoder handles internal batching efficiently)
-    texts = [c.get(text_field, c.get("text", "")) for c in chunks]
-    print(f"  Embedding {len(texts)} texts (this may take a few minutes)...")
-    embeddings = encoder.encode(texts, batch_size=64)
-    dense_vecs = embeddings["dense_vecs"]
-    print(f"  ✅ Embedding complete ({len(dense_vecs)} vectors)")
+    # Process in mega-batches to allow resume on interruption
+    EMBED_BATCH = BATCH_SIZE
+    for batch_start in range(0, total_remaining, EMBED_BATCH):
+        batch_chunks = chunks[batch_start:batch_start + EMBED_BATCH]
+        batch_num = batch_start // EMBED_BATCH + 1
+        total_batches = (total_remaining + EMBED_BATCH - 1) // EMBED_BATCH
+        print(f"  Batch {batch_num}/{total_batches}: embedding {len(batch_chunks)} entries...", flush=True)
 
-    # Build all points
-    points = []
-    for i, (chunk, vec) in enumerate(zip(chunks, dense_vecs, strict=True)):
-        chunk_id = chunk.get("id", f"chunk-{i}")
-        point_id = int(hashlib.md5(chunk_id.encode()).hexdigest()[:15], 16)
-        payload = {
-            "chunk_id": chunk_id,
-            "word": chunk.get("word", ""),
-            "text": chunk.get(text_field, chunk.get("text", "")),
-            "source": chunk.get("source", collection_name),
-        }
-        if "section" in chunk:
-            payload["section"] = chunk["section"]
-        if "definition" in chunk:
-            payload["definition"] = chunk["definition"]
-        points.append(PointStruct(id=point_id, vector={"dense": vec.tolist()}, payload=payload))
+        texts = [c.get(text_field, c.get("text", "")) for c in batch_chunks]
+        embeddings = encoder.encode(texts, batch_size=16)
+        dense_vecs = embeddings["dense_vecs"]
 
-    # Upload in batches
-    print(f"  Uploading {len(points)} points to Qdrant...")
-    for batch_start in range(0, len(points), BATCH_SIZE):
-        batch = points[batch_start:batch_start + BATCH_SIZE]
-        client.upsert(collection_name=collection_name, points=batch)
-        uploaded = min(batch_start + BATCH_SIZE, len(points))
-        print(f"    Uploaded {uploaded}/{len(points)}")
+        points = []
+        for i, (chunk, vec) in enumerate(zip(batch_chunks, dense_vecs, strict=True)):
+            global_idx = existing + batch_start + i
+            chunk_id = chunk.get("id", f"chunk-{global_idx}")
+            point_id = int(hashlib.md5(chunk_id.encode()).hexdigest()[:15], 16)
+            payload = {
+                "chunk_id": chunk_id,
+                "word": chunk.get("word", ""),
+                "text": chunk.get(text_field, chunk.get("text", "")),
+                "source": chunk.get("source", collection_name),
+            }
+            if "section" in chunk:
+                payload["section"] = chunk["section"]
+            if "definition" in chunk:
+                payload["definition"] = chunk["definition"]
+            points.append(PointStruct(id=point_id, vector={"dense": vec.tolist()}, payload=payload))
+
+        # Upload this batch immediately
+        client.upsert(collection_name=collection_name, points=points)
+        done = existing + batch_start + len(batch_chunks)
+        print(f"    ✅ Uploaded — {done}/{total} total points")
 
     count = client.count(collection_name=collection_name).count
     print(f"  ✅ Collection '{collection_name}': {count} points total")
