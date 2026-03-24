@@ -11,10 +11,11 @@ All rules are hard requirements. Partial compliance = failure.
 | Building content | Check `config.py` target_words FIRST — never hardcode from memory |
 | Module under word target | Expand content to meet target. Never lower the target |
 | Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
-| Fixing a module | Batch ALL fixes in ONE pass, run ONE audit at end (rule 9) |
+| Fixing a module | Reviewer provides `<fixes>` — apply deterministically (rule 4) |
 | Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
 | Plan can't be met | STOP building. Report to user. Propose new plan version (rule 7) |
-| Review phase (v4) / Phase D (v3) | Loop: Review → Fix → Review → Fix until ALL gates PASS (rule 4) |
+| Review verdict REVISE | Reviewer outputs `<fixes>` find/replace pairs → pipeline applies them (rule 4) |
+| Creating JSONL/data | Add ingestion flag + update tracking doc in SAME commit (rule 11) |
 
 </critical>
 
@@ -34,9 +35,6 @@ import sys; sys.path.insert(0, 'scripts')
 from audit.config import LEVEL_CONFIG
 print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 "
-
-# Or use the validation script
-.venv/bin/python scripts/validate_plan_config.py {level}
 ```
 
 **Word targets by level** (from `config.py` v2026-03-05 — if stale, re-read config.py):
@@ -63,8 +61,6 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 | OES | OES | 5000 |
 | RUTH | RUTH | 5000 |
 
-> **B2-capstone**: Raised from legacy 2714 to 4000 (2026-03). Module content needs expansion.
-
 **Lesson learned:** In January 2026, 270 ISTORIO plans were generated with 3500 words instead of 4000 because an agent hardcoded values from memory instead of reading config.py.
 
 </critical>
@@ -80,7 +76,6 @@ ALL gates must be GREEN (✅) or the module FAILS.
 | Words | ≥ target from config.py |
 | Activities | ≥ minimum count for level |
 | Unique_types | Sufficient variety |
-| Engagement | ≥ minimum engagement boxes for level |
 | Vocab | ≥ minimum vocabulary for level |
 | Naturalness | ≥ 8/10 |
 
@@ -98,24 +93,23 @@ Section targets are guidance, not hard limits.
 
 **Flexible:** Redistribute words between sections freely. One section 20% over is fine if no section is >10% under.
 
-```
-Section A: 900 / 800 ✅ (+12.5% over — OK)
-Section B: 500 / 600 ❌ (-16.7% under — expand to ≥540)
-TOTAL: 1400 / 1400 ✅
-```
-
 **Priority:** Total word count first → fix sections >10% under → don't worry about over-target sections.
 
 ---
 
-## 4. Review Loop (Review → Fix → Pass)
+## 4. Review + Fix Loop (V6 Pipeline)
 
-The review phase (v4 `review` / v3 `D`) loops until ALL gates PASS: Review → Fix → Review → Fix.
+V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` with exact find/replace pairs. Pipeline applies them deterministically — no LLM regeneration, no rewriting from scratch.
 
-- Loop until ALL gates show ✅
-- Fix every violation completely
-- Rebuild sections if needed (>3 violations in one section)
-- Do not stop at "most gates pass" or give up after 1-2 iterations
+**Flow:**
+1. Writer generates content → ENRICH adds tabs/словнік → REVIEW
+2. If REVISE: reviewer outputs `<fixes>` → pipeline applies find/replace → re-ENRICH → re-REVIEW
+3. Max 2 fix rounds. Score should go UP (9.0→9.4→9.7), never down.
+4. If still failing after 2 rounds → problem is in the PROMPT or PLAN, not the content.
+
+**Critical:** Reviewer sees PROSE ONLY (enrichment stripped before review). Deterministic word count injected into review prompt. Reviewer must NOT estimate word count — use the injected number.
+
+**Never rewrite from scratch.** Gemini proved: "FROM SCRATCH" rewrites degrade content (9.6→9.2→8.4). PATCH fixes only what's broken.
 
 ---
 
@@ -123,10 +117,12 @@ The review phase (v4 `review` / v3 `D`) loops until ALL gates PASS: Review → F
 
 | Requirement | Threshold |
 |---|---|
-| Naturalness score | 8+/10 minimum (9-10 preferred) |
+| Review score | 9+/10 target (8+ minimum PASS) |
 | Russian ghost words | Zero (кот → кіт, хорошо → добре) |
-| Engagement boxes | B2: 6+, C1: 7+ |
-| Example sentences | B2: 28+, C1: 30+ |
+| Dialogues | Natural situations from textbooks — not invented. Someone searches for keys, not interrogation. |
+| Vocabulary | All words VESUM-verified. Writer generates словнік YAML with contextual translations. |
+| Plans | Must have `references` (textbook + ULP links). No plan ships without references. |
+| Stress marks | Added by deterministic annotator AFTER review, not by writer. |
 
 Rewrite any text that fails naturalness. No robotic or disconnected prose.
 
@@ -134,7 +130,7 @@ Rewrite any text that fails naturalness. No robotic or disconnected prose.
 
 ## 6. LLM Self-Validation — Cite Evidence or It's Invalid
 
-Reviews in `{slug}-llm-review.md` must cite SPECIFIC examples from the actual content.
+Reviews must cite SPECIFIC examples from the actual content.
 
 **FAKE review (invalid):**
 
@@ -157,8 +153,6 @@ Every review must: read the actual content first, verify grammar with real examp
 Plans in `plans/` are the source of truth. They require user approval to change.
 
 > `plans/{level}/{slug}.yaml` → VERSIONED (immutable without approval)
-> `{level}/meta/{slug}.yaml` → MUTABLE build config
-> `{level}/status/{slug}.json` → AUTO-GENERATED audit cache
 
 **When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → backup old plan as `.bak` → write new version with bumped `version` field.
 
@@ -166,32 +160,11 @@ Plans in `plans/` are the source of truth. They require user approval to change.
 
 **Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and word targets remain immutable.
 
-**This is mutiny:**
-
-```yaml
-# Plan says word_target: 4000, you wrote 3500, then changed plan to:
-word_target: 3500  # ← FORBIDDEN
-# Correct: ADD 500 more words to match plan
-```
-
 ---
 
-## 8. Meta.yaml Is Build Config, Not Planning
+## 8. Batch Fixes Within Module
 
-Meta.yaml = mutable build config. Plans = immutable source of truth.
-
-| File | Contains | Mutability |
-|---|---|---|
-| `meta/{slug}.yaml` | naturalness score/status, version, build timestamps | Mutable |
-| `plans/{level}/{slug}.yaml` | content_outline, word_target, objectives, vocabulary_hints, activity_hints | Immutable (user approval required) |
-
-Update meta after naturalness evaluation or successful build. Never add planning data to meta.
-
----
-
-## 9. Batch Fixes Within Module
-
-When fixing a module, diagnose ALL issues first, fix ALL at once, audit ONCE.
+When fixing a module, diagnose ALL issues first, fix ALL at once, verify ONCE.
 
 **Wrong** (O(3N) tokens):
 ```
@@ -200,20 +173,18 @@ Read → Fix A → Audit → Read → Fix B → Audit → Read → Fix C → Aud
 
 **Correct** (O(3) tokens):
 ```
-1. DIAGNOSE: Read all 4 files (meta, md, activities, vocab) + run ONE audit
-2. EXECUTE: Fix ALL issues in ONE pass (order: meta → vocab → activities → markdown)
-3. VERIFY: Run ONE final audit
+1. DIAGNOSE: Read review findings + audit results
+2. EXECUTE: Apply ALL fixes in ONE pass
+3. VERIFY: Re-enrich + re-review ONCE
 ```
-
-Fixes are interdependent (adding vocab → expanding sections → new activities). Batch fixing catches interaction bugs. This is mandatory for all review-phase work.
 
 ---
 
-## 10. Activities Test LANGUAGE, Not Content
+## 9. Activities Test LANGUAGE, Not Content
 
 Activities practice Ukrainian language skills, not subject knowledge.
 
-### 10a. Content-heavy modules (HIST, BIO, ISTORIO, LIT, RUTH, OES)
+### 9a. Content-heavy modules (HIST, BIO, ISTORIO, LIT, RUTH, OES)
 
 **Golden Rule:** Can the learner answer without reading the Ukrainian text? If YES → rewrite it.
 
@@ -224,12 +195,28 @@ Activities practice Ukrainian language skills, not subject knowledge.
 | "Згідно з текстом, як автор..." | ✅ Tests comprehension |
 | "У тексті модуля автор характеризує..." | ✅ Tests comprehension |
 
-### 10b. ZNO-format activities (EXEMPT from 10a)
+### 9b. ZNO-format activities (EXEMPT from 9a)
 
-ZNO activities (`zno_row_select`, `zno_sentence_select`, `zno_error_find`, `zno_fill_ending`) test language mechanics directly — наголос, фонетика, орфографія, морфологія. These are standalone language skill tests exempt from 10a. Source: `osyvokon/zno` (MIT license). Applies to both `l2-uk-en` and `l2-uk-direct` (A2+).
+ZNO activities test language mechanics directly — наголос, фонетика, орфографія, морфологія. These are standalone language skill tests exempt from 9a.
+
+---
+
+## 10. Complete The Work — No Tech Debt
+
+Every operation must be finished end-to-end in the same commit:
+
+| When you... | You MUST also... |
+|---|---|
+| Create JSONL data | Add ingestion flag to script + update `DICTIONARY-PIPELINE-STATUS.md` |
+| Write plans | Add references (textbook + ULP links) to every plan |
+| Build a module | Verify MDX renders correctly (not empty, has all tabs) |
+| Fix a bug | Write a test that catches the same bug |
+| Close a GH issue | Verify ALL acceptance criteria, not just "most" |
+
+"For now", "batch job for later", "flag for human" = failure. If it needs doing, do it NOW.
 
 ---
 
 ## Enforcement
 
-Negotiating requirements down, skipping audit gates, producing under-length modules, or giving up before PASS = task failure.
+Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, or giving up before PASS = task failure.
