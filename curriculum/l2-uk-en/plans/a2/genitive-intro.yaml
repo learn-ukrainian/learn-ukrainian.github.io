@@ -78,3 +78,9 @@ activity_hints:
 - type: match-up
   focus: Translate sentences with 'a lot of...' / 'I don't have...'
   items: 6
+references:
+- title: "ULP: 10 Uses of Genitive Case"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "All genitive functions explained"
+- title: "Заболотний Grade 7, §81"
+  notes: "немає vs не має — key distinction with examples"

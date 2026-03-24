@@ -23,6 +23,7 @@
 </div>
 
 
+
 Notice the word **немає** ((there) is not, (I) don't have) in this conversation. When Olena and Maksym talk about things that are missing—the phone, the keys, the time—the endings of those words change. The word **телефон** becomes **телефону**, the word **ключі** becomes **ключів**, and the word **час** (time) becomes **часу**. 
 
 This transformation happens because Ukrainian uses a specific grammatical case to talk about the **відсутність** (absence) of something. This is the **родовий відмінок** (genitive case). 
@@ -104,6 +105,7 @@ title: "Possession vs. Absence Drill: Є vs. Немає"
 
 
 </div>
+
 
 
 When Anna and the waiter discuss what is missing, they are dealing with one item at a time: no coffee, no sugar. To use the **родовий відмінок** correctly, we must learn the rules for the **однина** (singular) form. In Ukrainian grammar, the **закінчення** (ending) a word takes depends heavily on its gender and its physical nature. 
@@ -224,6 +226,7 @@ title: "Genitive Singular Formation"
 </div>
 
 
+
 Sometimes, things are not entirely absent. Sometimes they exist, but we want to talk about their **кількість** (quantity). In Ukrainian, whenever you use a word that measures an indefinite quantity, the noun that follows it must jump into the **родовий відмінок** in the **множина** (plural).
 
 We use four primary words to express quantity:
@@ -331,9 +334,9 @@ Mastering these rules transforms how you speak, allowing you to easily describe 
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Слово | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **нема́є** | (there) is not, (I) don't have |  |  |
 | **відсу́тність** | absence | ім. | ж. |
@@ -393,9 +396,9 @@ Mastering these rules transforms how you speak, allowing you to easily describe 
 | **теа́тр** | theater | ім. | ч. |
 | **Ви́бачте** | excuse me, sorry | дієсл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **родовий відмінок** | genitive case |
 | **Кого? Чого?** | Of whom? Of what? (genitive case questions) |
@@ -408,7 +411,17 @@ Mastering these rules transforms how you speak, allowing you to easily describe 
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- [ULP: 10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/)
+  _All genitive functions explained_
+- Заболотний Grade 7, §81
+  _немає vs не має — key distinction with examples_
