@@ -51,6 +51,78 @@ logger = logging.getLogger(__name__)
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
+
+def _build_tool_instructions(writer: str) -> str:
+    """Build MCP tool-use instructions for the writer prompt.
+
+    Uses explicit conditional triggers (Gemini's recommendation) to guide
+    when to use tools vs just write. Batching enforced to prevent excessive
+    tool calls.
+    """
+    # Tool name prefix differs: Claude uses mcp__rag__, Gemini uses rag_
+    if "claude" in writer:
+        vw = "mcp__rag__verify_word"
+        vws = "mcp__rag__verify_words"
+        vl = "mcp__rag__verify_lemma"
+        st = "mcp__rag__search_text"
+        sl = "mcp__rag__search_literary"
+        qp = "mcp__rag__query_pravopys"
+        qw = "mcp__rag__query_wikipedia"
+    else:
+        vw = "rag_verify_word"
+        vws = "rag_verify_words"
+        vl = "rag_verify_lemma"
+        st = "rag_search_text"
+        sl = "rag_search_literary"
+        qp = "rag_query_pravopys"
+        qw = "rag_query_wikipedia"
+
+    return (
+        "\n\n---\n\n"
+        "## Live Verification Tools (MCP)\n\n"
+        "You have access to RAG-powered MCP tools to verify Ukrainian language "
+        "constructs **live as you write**. The research phase is already complete; "
+        "use these tools strictly for targeted verification to ensure zero "
+        "Russianisms, accurate grammar, and authentic usage.\n\n"
+        "**Available Tools:**\n"
+        f"- `{vws}` / `{vw}` / `{vl}` — VESUM morphological dictionary "
+        "(409K lemmas, 6.7M forms). Returns full declension/conjugation.\n"
+        f"- `{st}` — Ukrainian school textbooks (Grades 1-11, 23K chunks).\n"
+        f"- `{sl}` — Primary literary sources (chronicles, poetry, legal texts).\n"
+        f"- `{qp}` — Official Ukrainian orthography rules (Правопис 2019).\n"
+        f"- `{qw}` — Ukrainian Wikipedia.\n\n"
+        "**WHEN to use tools (Specific Triggers):**\n\n"
+        "1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**\n"
+        "   - *Trigger:* You are about to use a word that sounds similar to Russian, "
+        "a calque, or you are unsure of its exact Ukrainian equivalent.\n"
+        f"   - *Action:* Use `{vws}`. If VESUM does not recognize it, do not use it.\n"
+        "   - *Example:* Checking якщо *міроприємство* (wrong) or *захід* (right); "
+        "*вірний* (loyalty) vs *правильний* (correct).\n\n"
+        "2. **Grammar & Morphology Doubts:**\n"
+        "   - *Trigger:* You are unsure about a specific case ending (e.g., Gen. -а vs -у), "
+        "an irregular plural, or a verb conjugation/aspect pair.\n"
+        f"   - *Action:* Use `{vl}` to pull the complete declension/conjugation table.\n\n"
+        "3. **Drafting Grammar Rules:**\n"
+        "   - *Trigger:* You are writing an explanation for a phonetic, spelling, or punctuation rule.\n"
+        f"   - *Action:* Use `{qp}` to confirm the exact 2019 standard rule before "
+        "explaining it to the learner.\n\n"
+        "4. **Authentic Examples & Quotes:**\n"
+        "   - *Trigger:* You need a highly natural sentence example, or a quote from a "
+        "historical/literary figure.\n"
+        f"   - *Action:* Use `{st}` to see how textbooks use the word in context, or "
+        f"`{sl}` / `{qw}` to find exact, verbatim quotes.\n\n"
+        "**Efficiency Rules:**\n"
+        f"- **Batch your checks:** Compile 5-15 high-risk words and check them all at once "
+        f"using `{vws}`. Do NOT make individual tool calls for every word.\n"
+        "- **Do NOT verify basic words:** Trust your knowledge for *мама*, *стіл*, *робити*. "
+        "Reserve tool calls for abstract nouns, idioms, technical terms, and complex verbs.\n"
+        "- **Zero invention:** If a tool returns no results for a word or form, treat it as "
+        "a hallucination. Find a verified alternative.\n"
+        "- **Target: 5-10 tool calls per module**, not 50.\n\n"
+        "IMPORTANT: After using tools, output your COMPLETE module content as plain text. "
+        "Do NOT narrate your tool usage. Just output the final module content.\n"
+    )
+
 # Keywords to filter ENRICH-generated content from review findings.
 # The reviewer shouldn't blame the writer for словník issues added by ENRICH.
 _ENRICH_FILTER_KEYWORDS = (
@@ -250,8 +322,10 @@ def step_skeleton(level: str, module_num: int, slug: str,
     prompt_path.write_text(prompt, "utf-8")
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
 
-    # Dispatch to writer
-    if writer == "gemini":
+    # Dispatch to writer — skeleton is short output, tools not needed
+    base_writer = "gemini" if "gemini" in writer else "claude"
+
+    if base_writer == "gemini":
         from batch_gemini_config import PRO_MODEL
         from pipeline.core import dispatch_gemini
         _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
@@ -260,7 +334,7 @@ def step_skeleton(level: str, module_num: int, slug: str,
             model=PRO_MODEL,
             stdout_only=True, timeout=300,
         )
-    elif writer == "claude":
+    else:
         import subprocess
 
         from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
@@ -283,9 +357,6 @@ def step_skeleton(level: str, module_num: int, slug: str,
             _log("  ❌ Claude timed out (300s)")
             ok = False
             raw = ""
-    else:
-        _log(f"  ❌ Unknown writer: {writer}")
-        return None
 
     if not ok or not raw:
         _log("  ❌ Writer returned no skeleton output")
@@ -472,22 +543,77 @@ def step_write(level: str, module_num: int, slug: str,
             model=PRO_MODEL,
             stdout_only=True, timeout=600,
         )
-    elif writer == "claude":
+    elif writer == "gemini-tools":
+        import subprocess
+
+        from batch_gemini_config import PRO_MODEL
+        _log(f"  Dispatching to Gemini + MCP tools ({PRO_MODEL})...")
+        prompt = prompt + _build_tool_instructions("gemini-tools")
+
+        try:
+            result = subprocess.run(
+                ["gemini", "-m", PRO_MODEL, "-y",
+                 "--allowed-mcp-server-names", "rag"],
+                input=prompt,
+                capture_output=True, text=True, timeout=900,
+                cwd=str(PROJECT_ROOT),
+            )
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+            if not ok:
+                _log(f"  ❌ Gemini returned error: {(result.stderr or '')[:200]}")
+        except subprocess.TimeoutExpired:
+            _log("  ❌ Gemini timed out (900s)")
+            ok = False
+            raw = ""
+    elif writer in ("claude", "claude-tools"):
         import subprocess
 
         from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
 
         model = CLAUDE_MODEL_CORE_CONTENT
-        _log(f"  Dispatching to Claude ({model})...")
+        use_tools = writer == "claude-tools"
 
-        # Pipe prompt content via stdin to Claude CLI
-        # -p flag with stdin: cat prompt | claude -p --output-format text
+        if use_tools:
+            _log(f"  Dispatching to Claude + MCP tools ({model})...")
+            prompt = prompt + _build_tool_instructions("claude-tools")
+
+            # MCP config path
+            mcp_config = str(PROJECT_ROOT / ".mcp.json")
+            # Allow only RAG tools + Read (no Edit/Write/Bash)
+            allowed_tools = (
+                "mcp__rag__verify_word,"
+                "mcp__rag__verify_words,"
+                "mcp__rag__verify_lemma,"
+                "mcp__rag__search_text,"
+                "mcp__rag__search_images,"
+                "mcp__rag__search_literary,"
+                "mcp__rag__query_pravopys,"
+                "mcp__rag__query_wikipedia,"
+                "Read"
+            )
+            cmd = [
+                "claude", "-p",
+                "--model", model,
+                "--output-format", "text",
+                "--mcp-config", mcp_config,
+                "--allowedTools", allowed_tools,
+            ]
+            timeout = 900  # tool use takes longer
+        else:
+            _log(f"  Dispatching to Claude ({model})...")
+            cmd = [
+                "claude", "-p",
+                "--model", model,
+                "--output-format", "text",
+            ]
+            timeout = 600
+
         try:
             result = subprocess.run(
-                ["claude", "-p", "--model", model,
-                 "--output-format", "text"],
+                cmd,
                 input=prompt,
-                capture_output=True, text=True, timeout=600,
+                capture_output=True, text=True, timeout=timeout,
                 cwd=str(PROJECT_ROOT),
             )
             ok = result.returncode == 0
@@ -495,7 +621,7 @@ def step_write(level: str, module_num: int, slug: str,
             if not ok:
                 _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
         except subprocess.TimeoutExpired:
-            _log("  ❌ Claude timed out (600s)")
+            _log(f"  ❌ Claude timed out ({timeout}s)")
             ok = False
             raw = ""
     else:
@@ -570,7 +696,7 @@ def step_write_with_retry(
     # Stats log
     stats_path = CURRICULUM_ROOT / level / "build-stats.jsonl"
 
-    other_writer = "claude" if writer == "gemini" else "gemini"
+    other_writer = "claude" if writer in ("gemini", "gemini-tools") else "gemini"  # cross-agent fallback
 
     current_directive = ""  # No directive on first attempt
 
@@ -589,8 +715,17 @@ def step_write_with_retry(
             _log_stats(stats_path, slug, "WRITE_FAILED", attempt, current_writer, False)
             continue
 
-        # Quick verify
+        # Stub detection: if output is absurdly short, treat as transient
+        # API failure and retry without correction directive (don't waste an
+        # attempt on a correction that can't help a non-response).
         content = output.read_text("utf-8")
+        word_count = len(content.split())
+        if word_count < 100 and attempt <= max_retries:
+            _log(f"  ⚠️  Stub response detected ({word_count} words) — transient API failure, retrying same writer")
+            _log_stats(stats_path, slug, "STUB_RESPONSE", attempt, current_writer, False)
+            continue  # retry WITHOUT correction directive
+
+        # Quick verify
         results = quick_verify(content, plan)
         _log(format_results(results))
 
@@ -605,6 +740,11 @@ def step_write_with_retry(
         # Failed — log and prepare retry
         error_types = ", ".join(set(r.check for r in results if r.severity == "ERROR"))
         _log_stats(stats_path, slug, error_types, attempt, current_writer, False)
+
+        # Post-error auto-query: search past friction files for matching patterns
+        friction_hints = _query_friction_for_errors(level, slug, results)
+        if friction_hints:
+            _log(f"  🔍 Friction auto-query: {len(friction_hints)} relevant hint(s) from past builds")
 
         if attempt > max_retries:
             _log(f"  ❌ Exhausted {max_retries + 1} attempts. Flag for human review.")
@@ -629,6 +769,12 @@ def step_write_with_retry(
 
         # Build correction directive for next attempt — injected into prompt
         current_directive = build_correction_directive(results)
+        # Append friction hints from past builds (post-error auto-query)
+        if friction_hints:
+            current_directive += (
+                "\n\nLEARNINGS FROM PAST BUILDS (same error patterns seen before):\n"
+                + "\n".join(f"- {h}" for h in friction_hints)
+            )
         _log("  🔄 Retrying with correction directive...")
 
         # Also save directive to disk for human inspection
@@ -638,6 +784,137 @@ def step_write_with_retry(
         directive_path.write_text(current_directive, "utf-8")
 
     return None  # Should not reach here
+
+
+def _query_friction_for_errors(level: str, slug: str, results: list) -> list[str]:
+    """Post-error auto-query: search past friction files for matching error patterns.
+
+    Scans all friction.yaml files across all modules (excluding current slug)
+    and the global friction file. Returns a list of relevant hint strings
+    that match the current error types.
+
+    Inspired by mozilla-ai/cq's shared agent learning — agents shouldn't
+    rediscover the same failures independently.
+    """
+    current_error_types = {r.check for r in results if r.severity == "ERROR"}
+    if not current_error_types:
+        return []
+
+    hints: list[str] = []
+
+    # 1. Search global friction
+    global_path = PROJECT_ROOT / "docs" / "rules" / "global-friction.yaml"
+    if global_path.exists():
+        try:
+            data = yaml.safe_load(global_path.read_text("utf-8"))
+            for f in data.get("frictions", []):
+                if f.get("status") == "active":
+                    hints.append(f"[GLOBAL] {f.get('description', '').strip()}")
+        except Exception:
+            pass
+
+    # 2. Search module-specific friction files across ALL modules
+    for orch_dir in (CURRICULUM_ROOT / level / "orchestration").iterdir():
+        if not orch_dir.is_dir() or orch_dir.name == slug:
+            continue  # skip self
+        friction_path = orch_dir / "friction.yaml"
+        if not friction_path.exists():
+            continue
+        try:
+            entries = yaml.safe_load(friction_path.read_text("utf-8"))
+            if not isinstance(entries, list):
+                continue
+            for entry in entries:
+                if entry.get("status") != "active":
+                    continue
+                past_errors = set(entry.get("error_types", []))
+                # Match if there's overlap in error types
+                overlap = current_error_types & past_errors
+                if overlap:
+                    note = entry.get("note", "")
+                    hints.append(
+                        f"[{orch_dir.name}] Same errors ({', '.join(overlap)}): {note}"
+                    )
+        except Exception:
+            continue
+
+    # 3. Also scan other levels' friction files for cross-level patterns
+    for level_dir in CURRICULUM_ROOT.iterdir():
+        if not level_dir.is_dir() or level_dir.name == level:
+            continue
+        orch_root = level_dir / "orchestration"
+        if not orch_root.exists():
+            continue
+        for orch_dir in orch_root.iterdir():
+            if not orch_dir.is_dir():
+                continue
+            friction_path = orch_dir / "friction.yaml"
+            if not friction_path.exists():
+                continue
+            try:
+                entries = yaml.safe_load(friction_path.read_text("utf-8"))
+                if not isinstance(entries, list):
+                    continue
+                for entry in entries:
+                    if entry.get("status") != "active":
+                        continue
+                    past_errors = set(entry.get("error_types", []))
+                    overlap = current_error_types & past_errors
+                    if overlap:
+                        note = entry.get("note", "")
+                        hints.append(
+                            f"[{level_dir.name}/{orch_dir.name}] Same errors ({', '.join(overlap)}): {note}"
+                        )
+            except Exception:
+                continue
+
+    return hints[:10]  # cap at 10 to avoid bloating the prompt
+
+
+def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
+    """Extract structured findings from review markdown and save as YAML.
+
+    Parses the ## Findings section for [DIMENSION] [SEVERITY] blocks.
+    Saves to orchestration for aggregation across modules (#1027, #1028).
+    """
+    import re
+
+    findings = []
+    # Match finding blocks: ```\n[DIMENSION] [SEVERITY]\n...\n```
+    pattern = re.compile(
+        r"```\s*\n\[(\w[\w\s&]*?)\]\s*\[(\w+)\]\s*\n"
+        r"Location:\s*(.*?)\n"
+        r"Issue:\s*(.*?)\n"
+        r"Fix:\s*(.*?)\n```",
+        re.DOTALL,
+    )
+    for m in pattern.finditer(review_text):
+        findings.append({
+            "dimension": m.group(1).strip(),
+            "severity": m.group(2).strip(),
+            "location": m.group(3).strip(),
+            "issue": m.group(4).strip(),
+            "fix": m.group(5).strip(),
+        })
+
+    # Also extract scores table
+    score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
+    scores = []
+    for m in score_pattern.finditer(review_text):
+        scores.append({
+            "dimension": int(m.group(1)),
+            "name": m.group(2).strip(),
+            "score": int(m.group(3)),
+            "evidence": m.group(4).strip()[:200],  # truncate long evidence
+        })
+
+    if findings or scores:
+        data = {"round": round_num, "scores": scores, "findings": findings}
+        out_path = orch_dir / f"review-structured-r{round_num}.yaml"
+        out_path.write_text(
+            yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False),
+            "utf-8",
+        )
 
 
 def _generate_friction(level: str, slug: str, results: list,
@@ -892,7 +1169,10 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     prompt = prompt.replace("{MODULE_CONTENT}", module_content)
 
     # Dispatch to writer
-    if writer == "claude":
+    # Normalize writer — vocab step doesn't need tools, just the base model
+    base_writer = "claude" if "claude" in writer else "gemini"
+
+    if base_writer == "claude":
         import subprocess
 
         from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
@@ -909,7 +1189,7 @@ def step_vocab(content_path: Path, level: str, module_num: int,
         except subprocess.TimeoutExpired:
             _log("  ❌ Timeout")
             ok, raw = False, ""
-    elif writer == "gemini":
+    else:
         from batch_gemini_config import PRO_MODEL
         from pipeline.core import dispatch_gemini
         _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
@@ -917,9 +1197,6 @@ def step_vocab(content_path: Path, level: str, module_num: int,
             prompt, task_id=f"v6-vocab-{slug}",
             model=PRO_MODEL, stdout_only=True, timeout=120,
         )
-    else:
-        _log(f"  ❌ Unknown writer: {writer}")
-        return None
 
     if not ok or not raw:
         _log("  ❌ Writer returned no vocabulary output")
@@ -1235,7 +1512,7 @@ def step_review(content_path: Path, level: str, module_num: int,
     review_prompt_path.write_text(prompt, "utf-8")
 
     # Dispatch to reviewer (cross-agent: writer's opposite)
-    reviewer = "gemini" if writer == "claude" else "claude"
+    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"  # gemini/gemini-tools → claude reviews
     _log(f"  Reviewer: {reviewer} (writer was {writer})")
 
     if reviewer == "gemini":
@@ -1269,12 +1546,25 @@ def step_review(content_path: Path, level: str, module_num: int,
         _log("  ❌ Reviewer returned no output")
         return False, 0.0
 
-    # Save review output
+    # Save review output — versioned + latest symlink
     review_dir = CURRICULUM_ROOT / level / "review"
     review_dir.mkdir(parents=True, exist_ok=True)
+
+    # Determine round number from existing versioned files
+    existing = sorted(review_dir.glob(f"{slug}-review-r*.md"))
+    round_num = len(existing) + 1
+    versioned_path = review_dir / f"{slug}-review-r{round_num}.md"
+    versioned_path.write_text(raw, "utf-8")
+
+    # Also save as the "latest" for backward compatibility
     review_path = review_dir / f"{slug}-review.md"
     review_path.write_text(raw, "utf-8")
-    _log(f"  Review saved → {review_path}")
+    _log(f"  Review saved → {versioned_path.name} (round {round_num})")
+
+    # Save structured findings to orchestration for aggregation (#1027)
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    _save_structured_findings(raw, orch_dir, round_num)
 
     # Parse raw dimension scores from review output and calculate weighted total
     import re
@@ -1563,8 +1853,8 @@ def main():
     parser = argparse.ArgumentParser(description="V6 Pipeline Build")
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("module", type=int, help="Module number")
-    parser.add_argument("--writer", choices=["gemini", "claude"], default="gemini",
-                        help="Default: gemini (Claude CLI truncates long-form content)")
+    parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini",
+                        help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
     parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
