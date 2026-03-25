@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
-    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/sitemap": "^3.7.1",
     "@astrojs/starlight": "^0.37.6",
     "@astrojs/starlight-docsearch": "^0.6.1",
     "@types/react": "^19.2.14",
