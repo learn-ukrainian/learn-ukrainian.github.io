@@ -496,8 +496,9 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         flags=re.DOTALL,
     )
     # Remove inline video sections from previous enrichment
+    # Note: match with optional stress marks (Ві́део or Відео)
     content = re.sub(
-        r"\n### Відео — Video\n.*?(?=\n## |\n<!-- TAB:|\Z)",
+        r"\n### В[іi]\u0301?део — Video\n.*?(?=\n## |\n### |\n<!-- TAB:|\Z)",
         "",
         content,
         flags=re.DOTALL,
