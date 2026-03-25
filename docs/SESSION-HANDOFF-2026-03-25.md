@@ -42,33 +42,37 @@
 - Aggregation script tested: extracts findings from all review files, groups by dimension
 - CLAUDE.md updated for V6 pipeline references
 
+### Late Session (after batch build)
+- CLAUDE.md restructured: 214→65 lines, 7 rule files in `.claude/rules/` (3 path-scoped)
+- 9 Qdrant dictionary collections exposed via RAG MCP (506K+ entries)
+  - New tools: search_style_guide, query_cefr_level, search_definitions, search_etymology, search_idioms, search_synonyms, translate_en_uk
+- Writer + reviewer both get MCP tool access (style_guide, CEFR level, definitions)
+- Tool instructions improved: explicit triggers, dictionary tools, batching
+- **RAG server needs restart** to pick up new tools (`services.sh restart rag`)
+
 ### Issues Created
 - #1027: Review versioning (partially implemented)
 - #1028: MINOR findings → prompt improvements (aggregation done, frictions added)
 - #1029: Orchestration folder discoverability
 - #1030: A1 quality pass — targeted rewrites to reach 9.5+
 - #1031: Investigate Figma MCP + textbook image integration
-- #1032: Restructure CLAUDE.md — path-scoped rules, under 200 lines
+- #1032: Restructure CLAUDE.md — DONE (needs path-scope testing in fresh session)
 - #1033: Anthropic harness patterns — context anxiety, reviewer calibration
 
 ## What needs doing next session
 
-### PRIORITY 1: Verify CLAUDE.md restructure (#1032) — DONE, needs testing
-- Split DONE (214→65 lines, 7 rule files in claude_extensions/rules/)
-- Next session: verify path-scoped rules load correctly (AC1, AC7, AC8)
-- Test a real build to confirm nothing broke
+### PRIORITY 1: Verify & test (#1032 + #1022)
+- Restart RAG server: `services.sh restart rag` — new dictionary tools won't work until restart
+- Verify CLAUDE.md path-scoped rules load correctly (pipeline.md only for scripts/build/**)
+- Test one module build with new tools — verify writer/reviewer can use search_style_guide, query_cefr_level
+- Quick sanity: `mcp__rag__collection_stats` should now show all 12 collections
 
-### PRIORITY 2: Expose 9 unexposed RAG collections (#1022)
-- 9 of 12 Qdrant collections not accessible via MCP (506K+ entries hidden)
-- **Phase 1 (HIGH):** style_guide (Russicism detection), puls_cefr (level-appropriate vocab), sum11 (definitions), grinchenko_dict (etymology)
-- **Phase 2:** frazeolohichnyi (idioms), balla_en_uk (translations), ukrajinet (synonyms)
-- ~20 lines of code per collection to expose. Massive quality impact.
-
-### PRIORITY 3: A1 Quality Pass (#1030)
+### PRIORITY 2: A1 Quality Pass (#1030)
 - Fix M37 (rebuild — stub) and M38 (rebuild — no exercises)
 - Targeted section rewrites on 8.x modules using review findings
 - Strategy (from Gemini): fix PROMPT first (done — 4 frictions added), then fix CONTENT
 - Hybrid approach: simple fixes via find/replace, structural fixes via section re-generation
+- Writers + reviewer now have style_guide + CEFR tools — should improve quality
 - Target: avg 9.0 → 9.3+ (stretch 9.5)
 
 ### PRIORITY 3: A2 Batch Build
