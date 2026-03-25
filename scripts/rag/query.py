@@ -497,11 +497,70 @@ def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict]:
     return context_chunks
 
 
+def search_dictionary(query: str, collection: str, limit: int = 5) -> list[dict]:
+    """Generic semantic search across any dictionary/reference collection.
+
+    Works for: style_guide, sum11, grinchenko_dict, frazeolohichnyi,
+    balla_en_uk, ukrajinet, dmklinger_uk_en, wiktionary_uk, puls_cefr.
+
+    Uses dense-only search (BGE-M3) — dictionary collections are smaller
+    and don't need the full hybrid approach.
+    """
+    client = get_client()
+    encoder = get_text_encoder()
+
+    result = encoder.encode([query])
+    dense_vec = result["dense_vecs"][0].tolist()
+
+    try:
+        results = client.query_points(
+            collection_name=collection,
+            query=dense_vec,
+            using="dense",
+            limit=limit,
+            with_payload=True,
+        )
+    except Exception:
+        # Collection may not exist or may not have dense index
+        return []
+
+    hits = []
+    for point in results.points:
+        payload = point.payload or {}
+        hits.append({
+            "score": point.score,
+            "text": payload.get("text", ""),
+            "source": payload.get("source", ""),
+            "headword": payload.get("headword", payload.get("word", "")),
+            "metadata": {k: v for k, v in payload.items()
+                         if k not in ("text", "source", "headword", "word")},
+        })
+    return hits
+
+
 def collection_stats() -> dict:
     """Get stats for all RAG collections."""
+    from rag.config import (
+        BALLA_COLLECTION,
+        DMKLINGER_COLLECTION,
+        FRAZEOLOHICHNYI_COLLECTION,
+        GRINCHENKO_COLLECTION,
+        PULS_CEFR_COLLECTION,
+        STYLE_GUIDE_COLLECTION,
+        SUM11_COLLECTION,
+        UKRAJINET_COLLECTION,
+        WIKTIONARY_COLLECTION,
+    )
+
     client = get_client()
     stats = {}
-    for coll_name in [TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION]:
+    all_collections = [
+        TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION,
+        STYLE_GUIDE_COLLECTION, PULS_CEFR_COLLECTION, SUM11_COLLECTION,
+        GRINCHENKO_COLLECTION, FRAZEOLOHICHNYI_COLLECTION, BALLA_COLLECTION,
+        UKRAJINET_COLLECTION, DMKLINGER_COLLECTION, WIKTIONARY_COLLECTION,
+    ]
+    for coll_name in all_collections:
         try:
             info = client.get_collection(coll_name)
             stats[coll_name] = {

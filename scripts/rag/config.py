@@ -27,6 +27,17 @@ TEXT_COLLECTION = "textbook_chunks"
 IMAGE_COLLECTION = "textbook_images"
 LITERARY_COLLECTION = "literary_texts"
 
+# Dictionary / reference collections (#1022)
+STYLE_GUIDE_COLLECTION = "style_guide"
+PULS_CEFR_COLLECTION = "puls_cefr"
+SUM11_COLLECTION = "sum11"
+GRINCHENKO_COLLECTION = "grinchenko_dict"
+FRAZEOLOHICHNYI_COLLECTION = "frazeolohichnyi"
+BALLA_COLLECTION = "balla_en_uk"
+UKRAJINET_COLLECTION = "ukrajinet"
+DMKLINGER_COLLECTION = "dmklinger_uk_en"
+WIKTIONARY_COLLECTION = "wiktionary_uk"
+
 # ── Literary text paths ───────────────────────────────────────────
 LITERARY_DIR = DATA_DIR / "literary_texts"
 

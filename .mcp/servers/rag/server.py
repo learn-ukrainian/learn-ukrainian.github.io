@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2].parent / "scripts"))
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
-    from mcp.types import Tool, TextContent
+    from mcp.types import TextContent, Tool
 except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
@@ -396,6 +396,119 @@ async def list_tools() -> list[Tool]:
                 "required": ["topic"]
             },
         ),
+        # ── Dictionary / reference collections (#1022) ──
+        Tool(
+            name="search_style_guide",
+            description=(
+                "Search Антоненко-Давидович style guide (279 entries). "
+                "Identifies calques, Russianisms, and unnatural Ukrainian phrasing. "
+                "HIGH PRIORITY for quality — use when unsure if a phrase is natural Ukrainian "
+                "or a Russian calque. Query in Ukrainian (e.g., 'приймати участь', 'вірний')."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian phrase or word to check for calques/Russianisms"},
+                    "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="query_cefr_level",
+            description=(
+                "Look up CEFR level (A1-C1) for a Ukrainian word from the PULS vocabulary database "
+                "(5,939 words). Use to verify vocabulary is level-appropriate for the module being written. "
+                "Query with a single Ukrainian word."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word to check CEFR level"},
+                    "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_definitions",
+            description=(
+                "Search СУМ-11 (127K entries) — the authoritative Ukrainian explanatory dictionary. "
+                "Returns definitions, usage examples, and citations in Ukrainian. "
+                "Use to look up exact meanings, check word usage, or find example sentences."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word or phrase to look up"},
+                    "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_etymology",
+            description=(
+                "Search Грінченко dictionary (67K entries) — historical Ukrainian dictionary from 1907. "
+                "Use for etymology, historical word forms, and pre-Soviet Ukrainian usage. "
+                "Helps verify that a word is genuinely Ukrainian (not a Soviet-era import)."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word to look up etymology/historical form"},
+                    "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_idioms",
+            description=(
+                "Search Ukrainian phraseological dictionary (25K entries). "
+                "Find Ukrainian idioms, set expressions, and collocations. "
+                "Use to make dialogues and examples more natural."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Topic or word to find related Ukrainian idioms"},
+                    "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_synonyms",
+            description=(
+                "Search Ukrajinet Ukrainian WordNet (122K synsets). "
+                "Find synonyms, antonyms, and semantically related words. "
+                "Use for vocabulary variety and finding the most natural word choice."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word to find synonyms/antonyms for"},
+                    "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="translate_en_uk",
+            description=(
+                "Search Балла English→Ukrainian dictionary (79K entries). "
+                "Find Ukrainian translations for English words with context."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "English word or phrase to translate to Ukrainian"},
+                    "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
     ]
 
 
@@ -431,6 +544,21 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_query_r2u(arguments)
         elif name == "query_pravopys":
             return await handle_query_pravopys(arguments)
+        # Dictionary / reference collections (#1022)
+        elif name == "search_style_guide":
+            return await handle_dict_search(arguments, "style_guide", "Антоненко-Давидович")
+        elif name == "query_cefr_level":
+            return await handle_dict_search(arguments, "puls_cefr", "PULS CEFR")
+        elif name == "search_definitions":
+            return await handle_dict_search(arguments, "sum11", "СУМ-11")
+        elif name == "search_etymology":
+            return await handle_dict_search(arguments, "grinchenko_dict", "Грінченко")
+        elif name == "search_idioms":
+            return await handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний")
+        elif name == "search_synonyms":
+            return await handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet")
+        elif name == "translate_en_uk":
+            return await handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK")
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
     except Exception as e:
@@ -648,10 +776,13 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
     force_refresh = args.get("force_refresh", False)
 
     from rag.source_query import (
-        wikipedia_summary, wikipedia_search, wikipedia_sections,
-        wikipedia_extract, wikipedia_section_text,
+        wikipedia_extract,
+        wikipedia_search,
+        wikipedia_section_text,
+        wikipedia_sections,
+        wikipedia_summary,
     )
-    from rag.wiki_cache import WikiCache, NEGATIVE_SENTINEL
+    from rag.wiki_cache import WikiCache
 
     cache = WikiCache()
 
@@ -773,7 +904,10 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
     limit = args.get("limit", 10)
 
     from rag.source_query import (
-        grac_frequency, grac_lemma_frequency, grac_concordance, grac_collocations,
+        grac_collocations,
+        grac_concordance,
+        grac_frequency,
+        grac_lemma_frequency,
     )
 
     if mode == "frequency":
@@ -846,7 +980,7 @@ async def handle_query_r2u(args: dict) -> list[TextContent]:
 async def handle_query_pravopys(args: dict) -> list[TextContent]:
     topic = args["topic"]
 
-    from rag.source_query import pravopys_section, pravopys_lookup
+    from rag.source_query import pravopys_lookup, pravopys_section
 
     # Check if topic is a number
     if topic.strip().isdigit():
@@ -866,6 +1000,37 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
+async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
+    """Generic handler for dictionary/reference collection searches (#1022)."""
+    query = args["query"]
+    limit = min(args.get("limit", 3), 10)
+
+    from rag.query import search_dictionary
+    hits = await asyncio.to_thread(search_dictionary, query, collection, limit)
+
+    if not hits:
+        return [TextContent(type="text", text=f"No results in {label} for: \"{query}\"")]
+
+    lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
+        if hit.get("headword"):
+            lines.append(f"- **Headword**: {hit['headword']}")
+        if hit.get("source"):
+            lines.append(f"- **Source**: {hit['source']}")
+        text = hit.get("text", "")
+        if text:
+            lines.append(f"- **Text**: {text[:500]}")
+        meta = hit.get("metadata", {})
+        if meta:
+            meta_str = ", ".join(f"{k}: {v}" for k, v in list(meta.items())[:5] if v)
+            if meta_str:
+                lines.append(f"- **Metadata**: {meta_str}")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
 async def main_stdio():
     """Run the MCP RAG server via stdio (spawned by Claude Code)."""
     async with stdio_server() as (read_stream, write_stream):
@@ -874,10 +1039,10 @@ async def main_stdio():
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     """Run the MCP RAG server as a standalone SSE daemon."""
+    import uvicorn
     from mcp.server.sse import SseServerTransport
     from starlette.applications import Starlette
-    from starlette.routing import Route, Mount
-    import uvicorn
+    from starlette.routing import Mount, Route
 
     sse = SseServerTransport("/messages/")
 

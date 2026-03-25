@@ -7,13 +7,22 @@ paths:
 
 # RAG Tools (MCP)
 
-Ukrainian language verification and textbook content search:
-- `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms)
+## Core tools (always use)
+- `mcp__rag__verify_word` / `mcp__rag__verify_words` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms)
 - `mcp__rag__search_text` — textbook content search (23K chunks, Grades 1-11)
 - `mcp__rag__search_images` — textbook image search (14K images)
 - `mcp__rag__search_literary` — primary literary sources (125K chunks — chronicles, poetry, legal texts)
 - `mcp__rag__query_pravopys` — Ukrainian orthography rules (Правопис 2019)
 - `mcp__rag__query_wikipedia` — Ukrainian Wikipedia
+
+## Dictionary tools (for quality and vocabulary)
+- `mcp__rag__search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.
+- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
+- `mcp__rag__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary
+- `mcp__rag__search_etymology` — Грінченко (67K entries) — historical dictionary, etymology
+- `mcp__rag__search_idioms` — Фразеологічний (25K entries) — Ukrainian idioms and expressions
+- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets) — synonyms, antonyms
+- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries) — English→Ukrainian translations
 
 ## Dictionaries (local, in RAG or SQLite)
 
