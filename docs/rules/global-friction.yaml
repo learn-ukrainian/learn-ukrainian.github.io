@@ -88,3 +88,51 @@ frictions:
     resolved_by: "ACTIVITY_VESUM_FAIL check in content_quality_pipeline.py"
     source: "M01/M04 reviews — #969"
     date_added: "2026-03-17"
+
+  - id: gf-008
+    status: active
+    type: structural
+    description: >
+      NO LLM filler phrases. Do NOT write: "Let us start with...",
+      "Numbers unlock the real Ukraine", "You now possess a complete...",
+      "It is incredibly versatile", "one of the most rewarding skills".
+      Start sections with a dialogue, a question, or a concrete example —
+      never with a generic motivational opener. If a sentence could appear
+      in any language course about any topic, delete it.
+    source: "A1 batch review aggregation — 6 findings across 48 modules (#1028)"
+    date_added: "2026-03-25"
+
+  - id: gf-009
+    status: active
+    type: pedagogical
+    description: >
+      Every exercise item must test something EXPLICITLY taught in the
+      preceding prose. If an exercise tests the collocation "малювати
+      картину", the prose must contain "малювати картину" as a taught
+      example. Do NOT test collocations, vocabulary, or patterns that the
+      learner has to infer — test what was taught.
+    source: "A1 batch review aggregation — exercise quality findings (#1028)"
+    date_added: "2026-03-25"
+
+  - id: gf-010
+    status: active
+    type: structural
+    description: >
+      Quiz correct answers must be RANDOMIZED across positions. Do NOT
+      place the correct answer at index 0 for all items. Distribute correct
+      answers roughly evenly across all positions (0, 1, 2) to prevent
+      pattern-guessing.
+    source: "A1 M32 transport review — all 8 answers at index 0 (#1028)"
+    date_added: "2026-03-25"
+
+  - id: gf-011
+    status: active
+    type: pedagogical
+    description: >
+      Do NOT use spatial metaphors for abstract grammatical requirements.
+      Example: "на" with musical instruments is NOT "on top of" — it is an
+      abstract grammatical requirement that must be memorized. Misleading
+      mnemonics cause incorrect generalizations. If a rule must simply be
+      memorized, say so directly.
+    source: "A1 M26 free-time review — pedagogical quality finding (#1028)"
+    date_added: "2026-03-25"
