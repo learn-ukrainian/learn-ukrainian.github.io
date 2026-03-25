@@ -1,0 +1,257 @@
+"""Exercise verification — check that exercise items are grounded in module prose.
+
+Extracts Ukrainian words from exercises and verifies they appear in the prose
+sections that precede them. Also checks against plan vocabulary_hints.
+
+Issue: #1016
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+
+# Ukrainian word pattern: at least 2 Cyrillic characters (skip single-letter prepositions)
+# Allows combining acute (U+0301) inside words for stress-marked text
+_UK_WORD_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ\u0301]+")
+
+# Exercise block pattern: :::type ... :::
+_EXERCISE_BLOCK_RE = re.compile(
+    r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b(.*?)^:::",
+    re.MULTILINE | re.DOTALL,
+)
+
+# H2 heading pattern
+_H2_RE = re.compile(r"^## .+", re.MULTILINE)
+
+
+@dataclass
+class ExerciseItem:
+    """A single testable item extracted from an exercise."""
+
+    word: str
+    exercise_type: str
+    context: str  # short snippet showing where it came from
+
+
+@dataclass
+class VerifyResult:
+    """Result of exercise verification for one module."""
+
+    total_items: int = 0
+    grounded_items: int = 0
+    ungrounded: list[dict] = field(default_factory=list)
+    vocab_coverage: dict = field(default_factory=dict)  # plan vocab check
+
+    @property
+    def all_grounded(self) -> bool:
+        return len(self.ungrounded) == 0
+
+
+def extract_exercise_items(content: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words being tested in all exercise blocks.
+
+    Parses each exercise type's DSL to find the words the learner must
+    produce or recognize.
+    """
+    items: list[ExerciseItem] = []
+
+    for m in _EXERCISE_BLOCK_RE.finditer(content):
+        ex_type = m.group(1)
+        block = m.group(2)
+
+        if ex_type == "quiz":
+            items.extend(_parse_quiz(block))
+        elif ex_type == "fill-in":
+            items.extend(_parse_fill_in(block))
+        elif ex_type == "match-up":
+            items.extend(_parse_match_up(block))
+        elif ex_type == "group-sort":
+            items.extend(_parse_group_sort(block))
+        elif ex_type == "true-false":
+            items.extend(_parse_true_false(block))
+
+    return items
+
+
+def _parse_quiz(block: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from quiz options and correct answers."""
+    items = []
+    # Extract options: o: ["word1", "word2", ...]
+    for m in re.finditer(r'o:\s*\[([^\]]+)\]', block):
+        options_str = m.group(1)
+        for opt in re.findall(r'"([^"]*)"', options_str):
+            for w in _UK_WORD_RE.findall(opt):
+                items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=opt[:60]))
+    # Extract question text for Ukrainian words
+    for m in re.finditer(r'q:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=m.group(1)[:60]))
+    return items
+
+
+def _parse_fill_in(block: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from fill-in answers and sentences."""
+    items = []
+    # Extract answers
+    for m in re.finditer(r'answer:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60]))
+    # Extract sentence context words
+    for m in re.finditer(r'sentence:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60]))
+    return items
+
+
+def _parse_match_up(block: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from match-up left/right pairs."""
+    items = []
+    for side in ("left", "right"):
+        for m in re.finditer(rf'{side}:\s*"([^"]*)"', block):
+            for w in _UK_WORD_RE.findall(m.group(1)):
+                items.append(ExerciseItem(word=w.lower(), exercise_type="match-up", context=m.group(1)[:60]))
+    return items
+
+
+def _parse_group_sort(block: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from group-sort items and group names."""
+    items = []
+    # Group names
+    for m in re.finditer(r'name:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=m.group(1)[:60]))
+    # Items in arrays
+    for m in re.finditer(r'items:\s*\[([^\]]+)\]', block):
+        for item in re.findall(r'"([^"]*)"', m.group(1)):
+            for w in _UK_WORD_RE.findall(item):
+                items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=item[:60]))
+    return items
+
+
+def _parse_true_false(block: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from true-false statements."""
+    items = []
+    for m in re.finditer(r'statement:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="true-false", context=m.group(1)[:60]))
+    return items
+
+
+def extract_prose_words(content: str) -> set[str]:
+    """Extract all Ukrainian words from prose sections (before exercises).
+
+    Prose = everything in H2 sections that is NOT inside an exercise block.
+    This includes dialogues, examples, bullet points, etc.
+    """
+    # Remove exercise blocks from content to get prose only
+    prose = _EXERCISE_BLOCK_RE.sub("", content)
+
+    # Remove enrichment tabs (словник, зошит, ресурси)
+    tab_marker = prose.find("<!-- TAB:Словник -->")
+    if tab_marker != -1:
+        prose = prose[:tab_marker]
+
+    # Extract all Ukrainian words (lowercased, 2+ chars)
+    words = set()
+    for w in _UK_WORD_RE.findall(prose):
+        words.add(w.lower())
+        # Also add the word without stress marks (combining acute)
+        clean = w.replace("\u0301", "").lower()
+        if clean != w.lower():
+            words.add(clean)
+
+    return words
+
+
+def extract_plan_vocab(plan: dict) -> set[str]:
+    """Extract Ukrainian words from plan vocabulary_hints."""
+    words = set()
+    vocab = plan.get("vocabulary_hints", {})
+    for category in ("required", "recommended"):
+        for item in vocab.get(category, []):
+            item_str = str(item)
+            # vocabulary_hints entries look like: "яблуко (apple) — note"
+            # Extract the Ukrainian part (before parenthesis or dash)
+            uk_part = re.split(r"[(\—–-]", item_str)[0].strip()
+            for w in _UK_WORD_RE.findall(uk_part):
+                words.add(w.lower())
+    return words
+
+
+def verify_exercises(content: str, plan: dict | None = None) -> VerifyResult:
+    """Main verification: check exercise items against prose and plan vocab.
+
+    Returns a VerifyResult with grounded/ungrounded counts and details.
+    """
+    result = VerifyResult()
+
+    exercise_items = extract_exercise_items(content)
+    prose_words = extract_prose_words(content)
+    plan_vocab = extract_plan_vocab(plan) if plan else set()
+
+    # Combine prose + plan vocab as the "taught" set
+    taught = prose_words | plan_vocab
+
+    # Deduplicate exercise items by word
+    seen_words: set[str] = set()
+    unique_items: list[ExerciseItem] = []
+    for item in exercise_items:
+        if item.word not in seen_words:
+            seen_words.add(item.word)
+            unique_items.append(item)
+
+    result.total_items = len(unique_items)
+
+    for item in unique_items:
+        # Strip stress marks for comparison
+        clean_word = item.word.replace("\u0301", "")
+        if clean_word in taught or item.word in taught:
+            result.grounded_items += 1
+        else:
+            result.ungrounded.append({
+                "word": item.word,
+                "exercise_type": item.exercise_type,
+                "context": item.context,
+            })
+
+    # Check plan vocab coverage separately
+    if plan_vocab:
+        exercise_words = {item.word.replace("\u0301", "") for item in exercise_items}
+        covered = plan_vocab & exercise_words
+        result.vocab_coverage = {
+            "plan_vocab_total": len(plan_vocab),
+            "tested_in_exercises": len(covered),
+            "not_tested": sorted(plan_vocab - exercise_words),
+        }
+
+    return result
+
+
+def format_verify_result(result: VerifyResult) -> str:
+    """Format verification result for logging."""
+    lines = []
+    if result.all_grounded:
+        lines.append(
+            f"  ✅ All {result.total_items} exercise item(s) grounded in prose"
+        )
+    else:
+        lines.append(
+            f"  ⚠️ {len(result.ungrounded)} exercise item(s) not found in prose "
+            f"(out of {result.total_items}):"
+        )
+        for item in result.ungrounded[:10]:
+            lines.append(
+                f"    — {item['word']} ({item['exercise_type']}: {item['context']})"
+            )
+        if len(result.ungrounded) > 10:
+            lines.append(f"    ... and {len(result.ungrounded) - 10} more")
+
+    if result.vocab_coverage:
+        vc = result.vocab_coverage
+        lines.append(
+            f"  Plan vocab: {vc['tested_in_exercises']}/{vc['plan_vocab_total']} "
+            f"words tested in exercises"
+        )
+
+    return "\n".join(lines)

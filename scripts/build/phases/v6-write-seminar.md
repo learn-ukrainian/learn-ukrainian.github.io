@@ -122,6 +122,8 @@ This curriculum teaches Ukrainian history and culture **on Ukrainian terms**. Ke
 {KNOWLEDGE_PACKET}
 </knowledge_packet>
 
+{GOLDEN_FRAGMENT}
+
 {SKELETON_SECTION}
 
 {CORRECTION_SECTION}

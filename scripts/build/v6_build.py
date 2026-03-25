@@ -4,9 +4,10 @@
 Orchestrates the V6 pipeline:
 1. CHECK: Plan checker validation
 2. RESEARCH: Build knowledge packet from RAG
-3. SKELETON: Paragraph-level structure plan (auto for word_target >= 3000)
+3. SKELETON: Paragraph-level structure plan (always on, --no-skeleton to skip)
 4. WRITE: LLM session constrained by skeleton (prose + exercises)
 5b. EXERCISES: Fill placeholders with DSL
+5d. VERIFY EXERCISES: Check exercise items grounded in prose (#1016)
 6. ANNOTATE: Stress marks + deterministic fixes
 7b. ENRICH: Словник, videos, resources, dialogue formatting
 7. VERIFY: VESUM + grammar scope
@@ -14,12 +15,12 @@ Orchestrates the V6 pipeline:
 9. PUBLISH: DSL→MDX conversion
 
 The Skeleton->Flesh architecture (#998) splits content generation into two calls
-for modules with word_target >= 3000:
+for all modules (use --no-skeleton to skip):
 - Call 1 (Skeleton): Short output (~500-800 words) planning every paragraph
 - Call 2 (Flesh): Full prose following the skeleton exactly
 
 This prevents frontloading early sections and rushing later ones.
-Modules under 3000 words (e.g., A1) skip the skeleton step.
+Use --no-skeleton to skip for quick iteration.
 
 Usage:
     .venv/bin/python scripts/build/v6_build.py a1 1
@@ -401,14 +402,320 @@ def step_skeleton(level: str, module_num: int, slug: str,
     return skeleton_text
 
 
+def _parse_skeleton_sections(skeleton: str) -> list[dict]:
+    """Parse skeleton text into H2 sections with word budgets.
+
+    Each section dict has:
+      - title: str (the H2 heading text, e.g. "Мене звати... (My name is...)")
+      - body: str (the full skeleton text for that section)
+      - words: int (word budget from the (~XXX words total) annotation, or 0)
+
+    Returns empty list if skeleton has fewer than 2 H2 sections.
+    """
+    lines = skeleton.split("\n")
+    sections: list[dict] = []
+    current_title = ""
+    current_lines: list[str] = []
+
+    for line in lines:
+        if line.startswith("## "):
+            # Save previous section
+            if current_title:
+                sections.append({
+                    "title": current_title,
+                    "body": "\n".join(current_lines).strip(),
+                    "words": _extract_word_budget(current_title),
+                })
+            current_title = line[3:].strip()
+            current_lines = [line]
+        elif current_title:
+            current_lines.append(line)
+
+    # Save last section
+    if current_title:
+        sections.append({
+            "title": current_title,
+            "body": "\n".join(current_lines).strip(),
+            "words": _extract_word_budget(current_title),
+        })
+
+    return sections
+
+
+def _extract_word_budget(title: str) -> int:
+    """Extract word budget from skeleton heading like '## Title (~275 words total)'."""
+    m = re.search(r"~(\d+)\s*words", title)
+    return int(m.group(1)) if m else 0
+
+
+def _build_section_summary(sections_so_far: list[str], max_words: int = 500) -> str:
+    """Build a rolling summary of previously written sections for context handoff.
+
+    Keeps the summary under max_words by taking the last N sections that fit.
+    """
+    if not sections_so_far:
+        return ""
+
+    combined = "\n\n".join(sections_so_far)
+    words = combined.split()
+    if len(words) <= max_words:
+        return combined
+
+    # Take from the end (most recent context is most relevant)
+    truncated = " ".join(words[-max_words:])
+    return f"[...previous sections truncated...]\n\n{truncated}"
+
+
+def _build_chunk_prompt(
+    *,
+    template: str,
+    section: dict,
+    section_index: int,
+    total_sections: int,
+    previous_summary: str,
+    plan_content: str,
+    packet: str,
+    level: str,
+    module_num: int,
+    plan: dict,
+    slug: str,
+) -> str:
+    """Build prompt for a single section chunk.
+
+    Includes the section plan from skeleton, rolling summary of previous
+    sections, and the research packet. Uses a streamlined prompt that
+    focuses the writer on one section at a time.
+    """
+    from pipeline.config_tables import (
+        get_immersion_rule,
+        get_level_constraints,
+        get_pedagogical_constraints,
+    )
+
+    word_target = section["words"] or 300  # fallback if no budget in skeleton
+    phase = plan.get("phase", "")
+
+    section_prompt = f"""# Section-by-Section Generation — Section {section_index + 1}/{total_sections}
+
+You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
+
+**Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
+**Section to write:** {section["title"]}
+**Word target for this section:** {word_target} words (aim for {int(word_target * 1.1)} to account for undershoot)
+
+---
+
+## Section Skeleton (follow this exactly)
+
+{section["body"]}
+
+---
+"""
+
+    if previous_summary:
+        section_prompt += f"""## Previous Sections (for continuity — do NOT repeat this content)
+
+<previous_context>
+{previous_summary}
+</previous_context>
+
+Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
+
+---
+"""
+
+    # Add plan for reference (trimmed to content_outline for this section)
+    section_prompt += f"""## Full Plan (for reference)
+
+<plan_content>
+{plan_content}
+</plan_content>
+
+---
+
+## Knowledge Packet
+
+<knowledge_packet>
+{packet}
+</knowledge_packet>
+
+---
+
+## Rules
+
+{get_immersion_rule(level, module_num)}
+
+{get_level_constraints(level, plan)}
+
+{get_pedagogical_constraints(level, module_num, plan)}
+
+- **NO IPA, NO Latin transliteration** — describe sounds by comparison.
+- **Ukrainian quotes: «...»** for Ukrainian text.
+- **Write exercises directly** in DSL format (:::quiz, :::fill-in, etc.) if the skeleton places them in this section.
+- **NO meta-commentary** — no "In this section we will...", no vocabulary tables, no word count notes.
+- **Zero Russian, zero Surzhyk, zero calques.**
+- **Every bold Ukrainian word MUST have an English translation on first use.**
+- **NO stress marks** — a deterministic tool adds them later.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+
+## Output
+
+Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+"""
+    return section_prompt
+
+
+def step_write_chunked(
+    level: str, module_num: int, slug: str,
+    packet_path: Path, writer: str = "gemini",
+    skeleton: str = "",
+    correction_directive: str = "",
+) -> Path | None:
+    """Write content section-by-section using skeleton sections as chunks.
+
+    For modules with word_target >= 2000 and multiple skeleton H2 sections,
+    generates each section in a separate LLM call with rolling context.
+    Concatenates results into a single .md file.
+
+    Returns the content path, or None on failure.
+    """
+    _log("  📦 CHUNKED generation — writing section-by-section")
+
+    sections = _parse_skeleton_sections(skeleton)
+    if len(sections) < 2:
+        _log("  ⚠️  Skeleton has < 2 sections — falling back to single-call")
+        return None  # caller falls back to single-call
+
+    _log(f"  Skeleton has {len(sections)} sections:")
+    for i, s in enumerate(sections):
+        _log(f"    {i + 1}. {s['title']} (~{s['words']} words)")
+
+    # Load plan and packet
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan_content = plan_path.read_text("utf-8")
+    plan = yaml.safe_load(plan_content)
+
+    packet = ""
+    if packet_path and packet_path.exists():
+        packet = packet_path.read_text("utf-8")
+        if len(packet) > 8000:
+            packet = packet[:8000] + "\n\n... (truncated for context window)"
+
+    # Load write template for reference (used to pull content rules)
+    SEMINAR_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    is_seminar = level.lower() in SEMINAR_TRACKS or level.lower().startswith("lit-")
+    template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
+    template_path = PHASES_DIR / template_name
+    template = template_path.read_text("utf-8") if template_path.exists() else ""
+
+    from build.dispatch import dispatch_agent as _dispatch
+
+    base_writer = "gemini" if "gemini" in writer else "claude"
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    written_sections: list[str] = []
+
+    for i, section in enumerate(sections):
+        _log(f"\n  --- Chunk {i + 1}/{len(sections)}: {section['title']} ---")
+
+        previous_summary = _build_section_summary(written_sections)
+
+        prompt = _build_chunk_prompt(
+            template=template,
+            section=section,
+            section_index=i,
+            total_sections=len(sections),
+            previous_summary=previous_summary,
+            plan_content=plan_content,
+            packet=packet,
+            level=level,
+            module_num=module_num,
+            plan=plan,
+            slug=slug,
+        )
+
+        # Inject correction directive on first chunk only
+        if correction_directive and i == 0:
+            prompt = correction_directive + "\n\n" + prompt
+
+        # Save chunk prompt for inspection
+        chunk_prompt_path = orch_dir / f"v6-chunk-{i + 1:02d}-prompt.md"
+        chunk_prompt_path.write_text(prompt, "utf-8")
+
+        # Dispatch — shorter timeout per section
+        ok, raw = _dispatch(
+            prompt, agent=base_writer, phase=f"write-chunk-{i + 1:02d}",
+            orch_dir=orch_dir, timeout=300,
+        )
+
+        if not ok or not raw:
+            _log(f"  ❌ Chunk {i + 1} failed — writer returned no output")
+            return None
+
+        # Extract from first ## heading
+        lines = raw.split("\n")
+        content_start = -1
+        for j, line in enumerate(lines):
+            if line.startswith("## "):
+                content_start = j
+                break
+
+        chunk_content = "\n".join(lines[content_start:]) if content_start >= 0 else raw
+        chunk_words = len(chunk_content.split())
+        _log(f"  ✅ Chunk {i + 1}: {chunk_words} words")
+
+        written_sections.append(chunk_content)
+
+    # Concatenate all sections
+    final_content = "\n\n".join(written_sections)
+
+    # Strip any leaked tags
+    final_content = re.sub(r"</?pacing_plan>", "", final_content)
+    final_content = re.sub(r"</?skeleton>", "", final_content)
+
+    output_dir = CURRICULUM_ROOT / level
+    output_path = output_dir / f"{slug}.md"
+    output_path.write_text(final_content, "utf-8")
+
+    total_words = len(final_content.split())
+    _log(f"\n  ✅ Chunked write complete: {total_words} words total ({len(sections)} sections)")
+    _log(f"  → {output_path}")
+
+    return output_path
+
+
 def step_write(level: str, module_num: int, slug: str,
                packet_path: Path, writer: str = "gemini",
                correction_directive: str = "",
-               skeleton: str = "") -> Path | None:
-    """Step 5: Single LLM session — generate prose + exercise placeholders."""
+               skeleton: str = "",
+               no_chunk: bool = False) -> Path | None:
+    """Step 5: Single LLM session — generate prose + exercise placeholders.
+
+    When word_target >= 2000, the skeleton has multiple H2 sections, and
+    --no-chunk is not set, delegates to step_write_chunked() for
+    section-by-section generation. Falls back to single-call on failure.
+    """
     _log(f"\n{'='*60}")
     _log(f"  Step 5: WRITE — Content generation ({writer})")
     _log(f"{'='*60}")
+
+    # --- Chunking gate: section-by-section for large modules ---
+    if skeleton and not no_chunk:
+        plan_path_tmp = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+        if plan_path_tmp.exists():
+            wt = yaml.safe_load(plan_path_tmp.read_text("utf-8")).get("word_target", 0)
+            skeleton_sections = _parse_skeleton_sections(skeleton)
+            if wt >= 2000 and len(skeleton_sections) >= 2:
+                _log(f"  Chunking enabled: word_target={wt}, sections={len(skeleton_sections)}")
+                result = step_write_chunked(
+                    level, module_num, slug, packet_path,
+                    writer=writer, skeleton=skeleton,
+                    correction_directive=correction_directive,
+                )
+                if result is not None:
+                    return result
+                _log("  ⚠️  Chunked write failed — falling back to single-call")
 
     # Load template — use seminar prompt for HIST/BIO/ISTORIO/LIT/FOLK/OES/RUTH
     SEMINAR_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
@@ -624,6 +931,7 @@ def step_write_with_retry(
     writer: str = "gemini",
     max_retries: int = 2,
     skeleton: str = "",
+    no_chunk: bool = False,
 ) -> Path | None:
     """Write content with quick verify and retry loop.
 
@@ -660,6 +968,7 @@ def step_write_with_retry(
             writer=current_writer,
             correction_directive=current_directive,
             skeleton=skeleton,
+            no_chunk=no_chunk,
         )
         if output is None:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
@@ -1271,6 +1580,57 @@ def _save_verify_flags(level: str, slug: str, flags: list[dict]) -> Path:
         "utf-8",
     )
     return flags_path
+
+
+def step_verify_exercises(content_path: Path, level: str, slug: str) -> bool:
+    """Step 5d: Verify exercise items are grounded in module prose.
+
+    Informational check -- logs warnings but does NOT fail the build.
+    Saves results to orchestration/{slug}/exercise-verification.json.
+
+    Issue: #1016
+    """
+    import json
+
+    _log(f"\n{'='*60}")
+    _log("  Step 5d: VERIFY EXERCISES — Grounding check")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False
+
+    from build.exercise_verify import format_verify_result, verify_exercises
+
+    content = content_path.read_text("utf-8")
+
+    # Load plan for vocabulary_hints check
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan = None
+    if plan_path.exists():
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+
+    result = verify_exercises(content, plan)
+    _log(format_verify_result(result))
+
+    # Save results to orchestration
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    verify_path = orch_dir / "exercise-verification.json"
+
+    data = {
+        "total_items": result.total_items,
+        "grounded_items": result.grounded_items,
+        "ungrounded": result.ungrounded,
+        "vocab_coverage": result.vocab_coverage,
+        "all_grounded": result.all_grounded,
+    }
+    verify_path.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False), "utf-8"
+    )
+    _log(f"  → {verify_path}")
+
+    return True
 
 
 def step_enrich(content_path: Path, level: str, slug: str) -> bool:
@@ -1960,13 +2320,15 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini",
                         help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
-    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
-                                help="Force skeleton step (default: auto for word_target >= 3000)")
+                                help="Force skeleton step (default: always on)")
     skeleton_group.add_argument("--no-skeleton", action="store_true",
                                 help="Skip skeleton step even for large modules")
+    parser.add_argument("--no-chunk", action="store_true",
+                        help="Disable section-by-section chunked generation (always single-call)")
     args = parser.parse_args()
 
     # Resolve slug
@@ -2004,15 +2366,15 @@ def main():
         if not packet_path.exists():
             packet_path = None
 
-    # Step 4: SKELETON (auto for word_target >= 3000, or forced via --skeleton)
+    # Step 4: SKELETON (always on, use --no-skeleton to skip)
     skeleton_text = ""
     plan_path = CURRICULUM_ROOT / "plans" / args.level / f"{slug}.yaml"
     word_target = yaml.safe_load(plan_path.read_text("utf-8")).get("word_target", 1200) if plan_path.exists() else 1200
 
-    use_skeleton = (
-        args.skeleton
-        or (not args.no_skeleton and word_target >= 3000)
-    )
+    # Always use skeleton — matures the skeleton→flesh flow for B1+,
+    # and improves structure even at A1/A2 word counts.
+    # Use --no-skeleton to opt out.
+    use_skeleton = not args.no_skeleton
 
     if steps in ("all", "skeleton") and use_skeleton:
         skeleton_text = step_skeleton(
@@ -2043,6 +2405,7 @@ def main():
             args.level, args.module, slug, packet_path,
             writer=args.writer, max_retries=2,
             skeleton=skeleton_text,
+            no_chunk=args.no_chunk,
         )
         if not content_path:
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
@@ -2055,6 +2418,11 @@ def main():
     if steps in ("all", "exercises"):
         step_exercises(content_path)
         _save_v6_state(args.level, slug, "exercises")
+
+    # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
+    if steps in ("all", "exercises", "verify-exercises"):
+        step_verify_exercises(content_path, args.level, slug)
+        _save_v6_state(args.level, slug, "verify-exercises")
 
     # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
     # Stress annotation moves to AFTER review to avoid wrong stress marks

@@ -204,6 +204,22 @@ GOLDEN_FRAGMENTS: dict[str, str] = {
         Зверніть увагу на ключову відмінність: розмовний стиль використовує пряме звертання та скорочені конструкції, тоді як діловий стиль послуговується безособовими формами та канцелярськими зворотами.
 
         *Note: 100% Ukrainian prose. Advanced syntax and register. Cultural and stylistic analysis in Ukrainian. No English.*"""),
+
+    "seminar": textwrap.dedent("""\
+        ### Style Reference (match this tone and structure)
+
+        ## Текст для читання: Лесь Курбас і театр «Березіль»
+
+        У 1922 році Лесь Курбас заснував у Києві мистецьке об'єднання «Березіль», яке за кілька років стало найвпливовішим театром в Україні. Курбас відкидав натуралістичний театр і шукав нові форми: експресіонізм, конструктивізм, політичний театр. Його постановка «Газ» за п'єсою Кайзера вразила глядачів несподіваною сценографією — замість декорацій актори працювали з абстрактними конструкціями та ритмічним рухом.
+
+        У 1926 році «Березіль» переїхав до Харкова, тодішньої столиці УРСР. Саме тут Курбас поставив «Народного Малахія» за п'єсою Миколи Куліша — виставу, яку радянська критика назвала «націоналістичною». Це звинувачення стало початком кінця: у 1933 році Курбаса заарештували, а у 1937-му — розстріляли в урочищі Сандармох разом із сотнями інших українських митців.
+
+        :::note
+        **Завдання для роздуму:**
+        Чому радянська влада сприймала експериментальний театр як загрозу? Яку роль відіграв театр «Березіль» у формуванні Розстріляного відродження?
+        :::
+
+        *Note: 100% Ukrainian academic prose. Dates, names, and historical context. Critical analysis prompt at the end. Decolonization through critical source analysis and centering the Ukrainian perspective.*"""),
 }
 
 
@@ -1078,13 +1094,12 @@ def get_immersion_rule(track: str, module_num: int) -> str:
 def get_golden_fragment(track: str, module_num: int) -> str:
     """Return a level-appropriate golden fragment for the writing prompt.
 
-    4 bands: early-beginner (A1.1-A1.2), late-beginner (A1.3-A2),
-    intermediate (B1), advanced (B2-C2).
-    Seminars use a static golden example (handled separately).
+    5 bands: early-beginner (A1.1-A1.2), late-beginner (A1.3-A2),
+    intermediate (B1), advanced (B2-C2), seminar (HIST/BIO/LIT/etc.).
     """
     base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
     if base in ("hist", "bio", "istorio", "lit", "oes", "ruth"):
-        return ""  # Seminars use their own template
+        return GOLDEN_FRAGMENTS["seminar"]
     if base == "a1":
         if module_num <= 14:
             return GOLDEN_FRAGMENTS["early-beginner"]
