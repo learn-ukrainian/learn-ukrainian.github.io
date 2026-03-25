@@ -199,7 +199,7 @@ def build_level_landing(level, config, is_track=False):
             link = f"{mod.title.replace("<!-- Title -->", "")}"
         else:
             status = "📋"
-            link = f"Модуль {num:02d}"
+            link = mod.title.replace("<!-- Title -->", "") if mod.title else f"Модуль {num:02d}"
         rows.append(f"| {num} | {link} | {status} |")
 
     # Build introduction section

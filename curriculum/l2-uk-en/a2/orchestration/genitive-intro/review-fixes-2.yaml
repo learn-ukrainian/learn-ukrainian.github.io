@@ -1,7 +1,0 @@
-- find: "- q: \"На столі ___ стіл.\"\n  o: [\"є\", \"немає\"]\n  a: 0\n- q: \"На столі\
-    \ ___ стола.\"\n  o: [\"є\", \"немає\"]\n  a: 1"
-  replace: "- q: \"У кімнаті ___ стіл.\"\n  o: [\"є\", \"немає\"]\n  a: 0\n- q: \"\
-    У кімнаті ___ стола.\"\n  o: [\"є\", \"немає\"]\n  a: 1"
-- find: For neuter stems ending in **-е** or **-я**, the ending changes to **-я**.
-  replace: For neuter stems ending in **-е** or **-я**, the ending becomes or remains
-    **-я**.
