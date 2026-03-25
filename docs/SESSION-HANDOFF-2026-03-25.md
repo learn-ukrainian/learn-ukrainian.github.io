@@ -53,14 +53,18 @@
 
 ## What needs doing next session
 
-### PRIORITY 1: Restructure CLAUDE.md (#1032)
-- Split into path-scoped `.claude/rules/` files
-- Target: CLAUDE.md under 100 lines, all detail in rules/
-- Verify `paths:` frontmatter and `@path` imports work (fact-checked against official Anthropic docs)
-- CLAUDE.local.md is NOT a real feature — use `~/.claude/CLAUDE.md` for personal prefs
-- Fast (~1 hour), high impact on everything downstream
+### PRIORITY 1: Verify CLAUDE.md restructure (#1032) — DONE, needs testing
+- Split DONE (214→65 lines, 7 rule files in claude_extensions/rules/)
+- Next session: verify path-scoped rules load correctly (AC1, AC7, AC8)
+- Test a real build to confirm nothing broke
 
-### PRIORITY 2: A1 Quality Pass (#1030)
+### PRIORITY 2: Expose 9 unexposed RAG collections (#1022)
+- 9 of 12 Qdrant collections not accessible via MCP (506K+ entries hidden)
+- **Phase 1 (HIGH):** style_guide (Russicism detection), puls_cefr (level-appropriate vocab), sum11 (definitions), grinchenko_dict (etymology)
+- **Phase 2:** frazeolohichnyi (idioms), balla_en_uk (translations), ukrajinet (synonyms)
+- ~20 lines of code per collection to expose. Massive quality impact.
+
+### PRIORITY 3: A1 Quality Pass (#1030)
 - Fix M37 (rebuild — stub) and M38 (rebuild — no exercises)
 - Targeted section rewrites on 8.x modules using review findings
 - Strategy (from Gemini): fix PROMPT first (done — 4 frictions added), then fix CONTENT
