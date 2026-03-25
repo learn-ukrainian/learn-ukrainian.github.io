@@ -1,0 +1,154 @@
+version: "1.0"
+module: things-have-gender
+level: a1
+
+inline:
+  - id: quiz-genders
+    type: quiz
+    instruction: "Оберіть правильний варіант"
+    items:
+      - question: "_____ стіл"
+        options: ["мій", "моя", "моє"]
+        correct: 0
+      - question: "_____ книга"
+        options: ["мій", "моя", "моє"]
+        correct: 1
+      - question: "_____ вікно"
+        options: ["мій", "моя", "моє"]
+        correct: 2
+      - question: "_____ ручка"
+        options: ["мій", "моя", "моє"]
+        correct: 1
+
+  - id: fillin-possessives
+    type: fill-in
+    instruction: "Вставте правильне слово"
+    items:
+      - sentence: "Це ____ кімната."
+        answer: "моя"
+        options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ телефон."
+        answer: "мій"
+        options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ фото."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+
+  - id: observe-endings
+    type: observe
+    examples:
+      - "стіл → він → мій (consonant ending)"
+      - "книга → вона → моя (ending -а)"
+      - "кімната → вона → моя (ending -а)"
+      - "вікно → воно → моє (ending -о)"
+      - "ліжко → воно → моє (ending -о)"
+    prompt: "What pattern do you notice about the word endings and gender?"
+
+workbook:
+  - type: match-up
+    instruction: "З'єднайте іменник із правильним займенником"
+    pairs:
+      - left: "стіл"
+        right: "він"
+      - left: "книга"
+        right: "вона"
+      - left: "вікно"
+        right: "воно"
+      - left: "зошит"
+        right: "він"
+      - left: "ручка"
+        right: "вона"
+      - left: "ліжко"
+        right: "воно"
+
+  - type: group-sort
+    instruction: "Розподіліть слова за родами"
+    groups:
+      - label: "Чоловічий рід (він)"
+        items: ["стіл", "телефон", "зошит", "олівець"]
+      - label: "Жіночий рід (вона)"
+        items: ["книга", "ручка", "кімната", "лампа"]
+      - label: "Середній рід (воно)"
+        items: ["вікно", "ліжко", "фото", "місто"]
+
+  - type: true-false
+    instruction: "Правда чи ні?"
+    items:
+      - statement: "Слово «стіл» — жіночого роду."
+        correct: false
+        explanation: "Стіл — чоловічого роду (він, мій стіл)."
+      - statement: "Слово «книга» — жіночого роду."
+        correct: true
+        explanation: "Книга — жіночого роду (вона, моя книга)."
+      - statement: "Слово «вікно» — середнього роду."
+        correct: true
+        explanation: "Вікно — середнього роду (воно, моє вікно)."
+      - statement: "Слова, що закінчуються на -а, зазвичай жіночого роду."
+        correct: true
+        explanation: "Так, слова на -а/-я — зазвичай жіночого роду."
+      - statement: "Слово «місто» — чоловічого роду."
+        correct: false
+        explanation: "Місто — середнього роду (воно, моє місто)."
+
+  - type: error-correction
+    instruction: "Виправте помилку в присвійному займеннику"
+    items:
+      - sentence: "Це моя стіл."
+        error: "моя"
+        correction: "мій"
+        error_type: "word"
+        options: ["мій", "моє", "моя"]
+        explanation: "Стіл — чоловічого роду, тому правильно: мій стіл."
+      - sentence: "Це мій кімната."
+        error: "мій"
+        correction: "моя"
+        error_type: "word"
+        options: ["моя", "моє", "мій"]
+        explanation: "Кімната — жіночого роду, тому правильно: моя кімната."
+      - sentence: "Це моя ліжко."
+        error: "моя"
+        correction: "моє"
+        error_type: "word"
+        options: ["моє", "мій", "моя"]
+        explanation: "Ліжко — середнього роду, тому правильно: моє ліжко."
+
+  - type: anagram
+    instruction: "Складіть слово з літер"
+    items:
+      - letters: ["к", "н", "и", "г", "а"]
+        answer: "книга"
+        hint: "book"
+      - letters: ["с", "т", "і", "л"]
+        answer: "стіл"
+        hint: "table"
+      - letters: ["в", "і", "к", "н", "о"]
+        answer: "вікно"
+        hint: "window"
+
+  - type: translate
+    instruction: "Оберіть правильний переклад"
+    items:
+      - source: "my table"
+        options:
+          - text: "мій стіл"
+            correct: true
+          - text: "моя стіл"
+            correct: false
+          - text: "моє стіл"
+            correct: false
+      - source: "my room"
+        options:
+          - text: "мій кімната"
+            correct: false
+          - text: "моя кімната"
+            correct: true
+          - text: "моє кімната"
+            correct: false
+      - source: "my window"
+        options:
+          - text: "мій вікно"
+            correct: false
+          - text: "моя вікно"
+            correct: false
+          - text: "моє вікно"
+            correct: true

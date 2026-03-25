@@ -1,0 +1,116 @@
+---
+title: "Test: Lesson Components"
+description: "Smoke test for RuleBox, MythBuster, SourceBox, FlashcardDeck, and 4-tab layout"
+sidebar:
+  hidden: true
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import RuleBox from '../../../components/RuleBox.tsx';
+import MythBuster from '../../../components/MythBuster.tsx';
+import SourceBox from '../../../components/SourceBox.tsx';
+import FlashcardDeck from '../../../components/FlashcardDeck.tsx';
+
+<Tabs>
+<TabItem label="Урок">
+
+## Dialogue Test
+
+<div className="dialogue">
+  <div className="dialogue-title">Video call between friends</div>
+  <div className="dialogue-line"><span className="speaker">Марко:</span> Привіт! Дивись, це <span className="ukr">моя кімната</span>. <span className="trans">(Hi! Look, this is my room.)</span></div>
+  <div className="dialogue-line"><span className="speaker">Анна:</span> Класно! У тебе є стіл? <span className="trans">(Cool! Do you have a table?)</span></div>
+  <div className="dialogue-line"><span className="speaker">Марко:</span> Так, <span className="ukr">мій стіл</span> і <span className="ukr">моє ліжко</span>. <span className="trans">(Yes, my table and my bed.)</span></div>
+</div>
+
+## Rule Box Test
+
+<RuleBox title="Gender by ending" icon="📐" client:load>
+
+| Рід | Ending | мій/моя/моє | Examples |
+|-----|--------|-------------|----------|
+| <span className="gender-m">Чоловічий (м)</span> | consonant | **мій** | стіл, зошит, телефон |
+| <span className="gender-f">Жіночий (ж)</span> | -а, -я | **моя** | книга, ручка, кімната |
+| <span className="gender-n">Середній (с)</span> | -о, -е | **моє** | ліжко, вікно, фото |
+
+</RuleBox>
+
+## Myth Buster Test (Seminar)
+
+<MythBuster
+  claim="Ukrainian is just a dialect of Russian, invented by Austro-Hungarian propaganda."
+  claimSource="Russian imperial historiography"
+  truth="Ukrainian has a distinct phonological system, grammar, and vocabulary attested in written sources centuries before any 'Austro-Hungarian' influence. The earliest Ukrainian features appear in texts from the 12th-13th centuries."
+  truthSource="Shevelov, A Historical Phonology of the Ukrainian Language (1979)"
+  client:load
+/>
+
+## Source Box Test (Seminar)
+
+<SourceBox
+  title="Galician-Volhynian Chronicle"
+  quote="Данило ж бЪяшеть кнЪзь великъ, иже обнови землю Рускую, и грады постави..."
+  citation="Galician-Volhynian Chronicle, entry for 1253"
+  client:load
+>
+  This passage demonstrates how the chronicler positioned Danylo as a builder and
+  restorer of the Rus' land, emphasizing his construction of new cities as a mark
+  of legitimate rule.
+</SourceBox>
+
+</TabItem>
+<TabItem label="Словник">
+
+## Flashcard Test
+
+<FlashcardDeck
+  cards={[
+    { front: "стіл", back: "table", subtitle: "мій стіл", tag: "м", tagColor: "#0057B8" },
+    { front: "книга", back: "book", tag: "ж", tagColor: "#C2185B" },
+    { front: "ліжко", back: "bed", tag: "с", tagColor: "#2E7D32" },
+    { front: "вікно", back: "window", tag: "с", tagColor: "#2E7D32" },
+    { front: "ручка", back: "pen", tag: "ж", tagColor: "#C2185B" },
+    { front: "зошит", back: "notebook", tag: "м", tagColor: "#0057B8" },
+  ]}
+  client:load
+/>
+
+## Gender Colors
+
+- <span className="gender-m">Чоловічий рід (masculine)</span> — стіл, зошит
+- <span className="gender-f">Жіночий рід (feminine)</span> — книга, ручка
+- <span className="gender-n">Середній рід (neuter)</span> — вікно, ліжко
+
+</TabItem>
+<TabItem label="Зошит">
+
+## Exercise Wrapper Test
+
+<div className="exercise">
+  <div className="exercise-header">
+    <span className="exercise-badge badge-quiz">Quiz</span>
+    <span className="exercise-title">Визначте рід</span>
+    <span className="exercise-num">#1</span>
+  </div>
+  <div className="exercise-instruction">Determine the gender of each noun by its ending.</div>
+  <p>This is where interactive quiz components would render.</p>
+</div>
+
+<div className="exercise">
+  <div className="exercise-header">
+    <span className="exercise-badge badge-matchup">Match-up</span>
+    <span className="exercise-title">Match noun to gender</span>
+  </div>
+  <p>Match-up activity placeholder.</p>
+</div>
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Resources
+
+- Ukrainian grammar reference
+- Textbook sources
+
+</TabItem>
+</Tabs>

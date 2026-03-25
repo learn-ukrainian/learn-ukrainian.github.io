@@ -60,6 +60,7 @@ export default defineConfig({
       },
       customCss: [
         './src/css/custom.css',
+        './src/styles/lesson.css',
       ],
       plugins: [
         starlightDocSearch({

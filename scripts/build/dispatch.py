@@ -81,6 +81,7 @@ CLAUDE_REVIEWER_TOOLS = (
 _PHASE_SEQ = {
     "skeleton": "01",
     "write": "02",
+    "activities": "02b",
     "vocab": "03",
     "enrich": "04",
     "review": "05",

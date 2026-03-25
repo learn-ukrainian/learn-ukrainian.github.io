@@ -1633,6 +1633,221 @@ def step_verify_exercises(content_path: Path, level: str, slug: str) -> bool:
     return True
 
 
+def _check_activity_semantics(data: dict) -> list[str]:
+    """Check inline activity ids for uniqueness and existence."""
+    errors: list[str] = []
+    seen: dict[str, int] = {}
+    for i, activity in enumerate(data.get("inline", [])):
+        if not isinstance(activity, dict):
+            continue
+        aid = activity.get("id")
+        if not aid:
+            errors.append(f"inline[{i}]: missing required 'id' field")
+        elif aid in seen:
+            errors.append(
+                f"inline[{i}]: duplicate id '{aid}' "
+                f"(first seen at inline[{seen[aid]}])"
+            )
+        else:
+            seen[aid] = i
+    return errors
+
+
+def step_activities(
+    content_path: Path, level: str, module_num: int, slug: str,
+    writer: str = "gemini-tools", max_retries: int = 2,
+) -> Path | None:
+    """Step 5e: Generate structured activity YAML from plan + prose.
+
+    Separate LLM call that reads the generated prose and plan's activity_hints
+    to produce activities/{slug}.yaml with inline + workbook exercises.
+    Validates against JSON Schema with retry on parse/validation errors.
+
+    Returns the path to the saved YAML file, or None on failure.
+    Issue: #1042
+    """
+    import json
+
+    import jsonschema
+
+    _log(f"\n{'='*60}")
+    _log(f"  Step 5e: ACTIVITIES — Structured YAML generation ({writer})")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return None
+
+    # Load prompt template
+    template_path = PHASES_DIR / "v6-activities.md"
+    if not template_path.exists():
+        _log(f"  ❌ Activity prompt template not found: {template_path}")
+        return None
+
+    template = template_path.read_text("utf-8")
+
+    # Load plan
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        _log(f"  ❌ Plan not found: {plan_path}")
+        return None
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+
+    # Load module content
+    module_content = content_path.read_text("utf-8")
+
+    # Extract injection markers from prose
+    injection_markers = re.findall(
+        r"<!--\s*INJECT_ACTIVITY:\s*([a-z0-9][a-z0-9-]*)\s*-->", module_content
+    )
+    if injection_markers:
+        markers_text = "\n".join(f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in injection_markers)
+    else:
+        markers_text = "(No injection markers found in prose. All activities will go to workbook.)"
+
+    # Build activity hints text
+    activity_hints = plan.get("activity_hints", [])
+    if activity_hints:
+        hints_text = yaml.dump(activity_hints, allow_unicode=True, default_flow_style=False)
+    else:
+        hints_text = "(No activity_hints in plan. Generate appropriate exercises based on the content.)"
+
+    # Build vocabulary text
+    vocab_hints = plan.get("vocabulary_hints", {})
+    vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False)
+
+    # Build tool instructions
+    tool_instructions = _build_tool_instructions(writer)
+
+    # Fill template
+    prompt = template
+    replacements = {
+        "{MODULE_NUM}": str(module_num),
+        "{TOPIC_TITLE}": plan.get("title", slug),
+        "{LEVEL}": level.lower(),
+        "{MODULE_SLUG}": slug,
+        "{INJECTION_MARKERS}": markers_text,
+        "{PLAN_ACTIVITY_HINTS}": hints_text,
+        "{PLAN_VOCABULARY}": vocab_text,
+        "{MODULE_CONTENT}": module_content,
+        "{TOOL_INSTRUCTIONS}": tool_instructions,
+    }
+    for key, value in replacements.items():
+        prompt = prompt.replace(key, value)
+
+    # Save prompt for inspection
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    prompt_path = orch_dir / "v6-activities-prompt.md"
+    prompt_path.write_text(prompt, "utf-8")
+    _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
+
+    # Load JSON Schema for validation
+    schema_path = PROJECT_ROOT / "schemas" / "activity-v2.schema.json"
+    schema = json.loads(schema_path.read_text("utf-8"))
+
+    # Dispatch with retry loop
+    from build.dispatch import CLAUDE_WRITER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    base_writer = "gemini-tools" if "gemini" in writer else writer
+    error_context = ""
+
+    for attempt in range(1, max_retries + 2):
+        _log(f"\n  📝 Activity generation attempt {attempt}/{max_retries + 1}")
+
+        current_prompt = prompt
+        if error_context:
+            current_prompt = (
+                f"<error_from_previous_attempt>\n{error_context}\n"
+                "</error_from_previous_attempt>\n\n"
+                "Fix the errors above and output the corrected YAML.\n\n"
+                + prompt
+            )
+
+        # Dispatch — use tools mode for MCP access
+        if "gemini" in base_writer:
+            ok, raw = _dispatch(
+                current_prompt, agent="gemini-tools", phase="activities",
+                orch_dir=orch_dir, timeout=300, mcp_tools=True,
+            )
+        else:
+            ok, raw = _dispatch(
+                current_prompt, agent="claude-tools", phase="activities",
+                orch_dir=orch_dir, timeout=300,
+                mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
+            )
+
+        if not ok or not raw:
+            _log(f"  ❌ Writer returned no output on attempt {attempt}")
+            error_context = "Writer returned empty output. Please output valid YAML."
+            continue
+
+        # Strip markdown fences if present
+        clean = raw.strip()
+        if clean.startswith("```"):
+            # Remove opening fence
+            first_newline = clean.index("\n")
+            clean = clean[first_newline + 1:]
+        if clean.endswith("```"):
+            clean = clean[:-3]
+        clean = clean.strip()
+
+        # Parse YAML
+        try:
+            data = yaml.safe_load(clean)
+        except yaml.YAMLError as e:
+            _log(f"  ❌ YAML parse error: {e}")
+            error_context = f"YAML parse error: {e}"
+            continue
+
+        if not isinstance(data, dict):
+            _log(f"  ❌ Expected YAML mapping, got {type(data).__name__}")
+            error_context = f"Expected YAML mapping at root, got {type(data).__name__}"
+            continue
+
+        # Validate against JSON Schema
+        validator = jsonschema.Draft7Validator(schema)
+        errors = sorted(validator.iter_errors(data), key=lambda e: list(e.absolute_path))
+        if errors:
+            error_msgs = []
+            for err in errors[:10]:  # Cap at 10 to avoid huge retry prompts
+                path = ".".join(str(p) for p in err.absolute_path) or "(root)"
+                error_msgs.append(f"[{path}] {err.message}")
+            error_text = "\n".join(error_msgs)
+            _log(f"  ❌ Schema validation failed ({len(errors)} error(s)):")
+            for msg in error_msgs[:5]:
+                _log(f"    {msg}")
+            error_context = f"JSON Schema validation errors:\n{error_text}"
+            continue
+
+        # Additional semantic checks (inline id uniqueness + existence)
+        semantic_errors = _check_activity_semantics(data)
+        if semantic_errors:
+            error_text = "\n".join(semantic_errors)
+            _log(f"  ⚠️  Semantic issues: {len(semantic_errors)}")
+            for msg in semantic_errors:
+                _log(f"    {msg}")
+            # Semantic issues are warnings, not retries
+
+        # Validation passed — save the file
+        activities_dir = CURRICULUM_ROOT / level / "activities"
+        activities_dir.mkdir(parents=True, exist_ok=True)
+        output_path = activities_dir / f"{slug}.yaml"
+        output_path.write_text(clean, "utf-8")
+
+        inline_count = len(data.get("inline", []))
+        workbook_count = len(data.get("workbook", []))
+        _log(f"  ✅ Activities generated: {inline_count} inline + {workbook_count} workbook")
+        _log(f"  → {output_path}")
+
+        _save_v6_state(level, slug, "activities")
+        return output_path
+
+    _log(f"  ❌ Activity generation failed after {max_retries + 1} attempts")
+    return None
+
+
 def step_enrich(content_path: Path, level: str, slug: str) -> bool:
     """Step 7b: ENRICH — словник, videos, resources, dialogue formatting."""
     _log(f"\n{'='*60}")
@@ -2254,25 +2469,229 @@ def _convert_tab_markers(content: str) -> str:
     return "\n".join(parts)
 
 
+def _load_activities(level: str, slug: str) -> dict | None:
+    """Load activities/{slug}.yaml if it exists. Returns parsed dict or None."""
+    activities_path = CURRICULUM_ROOT / level / "activities" / f"{slug}.yaml"
+    if not activities_path.exists():
+        return None
+    try:
+        data = yaml.safe_load(activities_path.read_text("utf-8"))
+        if not isinstance(data, dict):
+            return None
+        return data
+    except Exception as e:
+        _log(f"  ⚠️  Failed to parse activities YAML: {e}")
+        return None
+
+
+def _inject_inline_activities(
+    mdx_content: str, inline_activities: list[dict],
+) -> tuple[str, list[dict]]:
+    """Replace <!-- INJECT_ACTIVITY: {id} --> markers with rendered JSX.
+
+    Returns (updated_content, unmatched_activities).
+    Unmatched activities (marker not found in prose) are returned for
+    fallback into the Зошит tab.
+    """
+    from build.activity_renderer import render_activity_to_jsx
+
+    unmatched = []
+    for act in inline_activities:
+        act_id = act.get("id", "")
+        marker = f"<!-- INJECT_ACTIVITY: {act_id} -->"
+        if marker in mdx_content:
+            jsx = render_activity_to_jsx(act)
+            mdx_content = mdx_content.replace(marker, jsx, 1)
+        else:
+            unmatched.append(act)
+
+    return mdx_content, unmatched
+
+
+def _build_workbook_tab(workbook_activities: list[dict]) -> str:
+    """Render all workbook activities as JSX for the Зошит tab."""
+    from build.activity_renderer import render_activity_to_jsx
+
+    if not workbook_activities:
+        return (
+            ":::note\n"
+            "Розши\u0301рені впра\u0301ви для цього\u0301 уро\u0301ку ще в розро\u0301бці.\n\n"
+            "Advanced exercises for this module are in development. Check back soon!\n"
+            ":::"
+        )
+
+    parts = []
+    for act in workbook_activities:
+        jsx = render_activity_to_jsx(act)
+        parts.append(jsx)
+        parts.append("")  # blank line between activities
+
+    return "\n".join(parts)
+
+
+def _build_resources_tab(level: str, slug: str) -> str:
+    """Build Ресурси tab content from plan references + external_resources.yaml."""
+    parts = ["**Джерела — References**", ""]
+
+    # 1. Plan references
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if plan_path.exists():
+        try:
+            plan = yaml.safe_load(plan_path.read_text("utf-8"))
+            refs = plan.get("references", [])
+            if isinstance(refs, list):
+                for ref in refs:
+                    if isinstance(ref, str):
+                        parts.append(f"- {ref}")
+                    elif isinstance(ref, dict):
+                        title = ref.get("title", "")
+                        url = ref.get("url", "")
+                        note = ref.get("note", "")
+                        if url:
+                            parts.append(f"- [{title}]({url})")
+                        else:
+                            parts.append(f"- {title}")
+                        if note:
+                            parts.append(f"  _{note}_")
+        except Exception:
+            pass
+
+    # 2. External resources
+    ext_path = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
+    lookup_key = f"{level}-{slug}"
+    if ext_path.exists():
+        try:
+            ext_data = yaml.safe_load(ext_path.read_text("utf-8"))
+            resources = ext_data.get("resources", {}).get(lookup_key, {})
+            articles = resources.get("articles", [])
+            for article in articles:
+                title = article.get("title", "")
+                url = article.get("url", "")
+                source = article.get("source", "")
+                if url:
+                    parts.append(f"- [{title}]({url})")
+                    if source:
+                        parts.append(f"  _Source: {source}_")
+        except Exception:
+            pass
+
+    if len(parts) <= 2:
+        # No references found
+        parts.append("_References will be added during review._")
+
+    return "\n".join(parts)
+
+
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
-    """Step 9: Convert DSL→MDX."""
+    """Step 9: Convert DSL→MDX + inject activities + build 4-tab structure.
+
+    The 4 tabs are:
+    1. Урок (prose + inline activities from YAML)
+    2. Словник (vocabulary — from ENRICH step)
+    3. Зошит (workbook activities from YAML)
+    4. Ресурси (plan references + external resources)
+
+    If no activities/{slug}.yaml exists, falls back to legacy DSL→MDX conversion.
+    """
     _log(f"\n{'='*60}")
-    _log("  Step 9: PUBLISH — DSL→MDX")
+    _log("  Step 9: PUBLISH — DSL→MDX + Activities")
     _log(f"{'='*60}")
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
         return False
 
+    from build.activity_renderer import get_required_imports
     from generate_mdx.dsl_to_mdx import convert_dsl_to_mdx
 
     text = content_path.read_text("utf-8")
-    mdx_content, count = convert_dsl_to_mdx(text)
 
-    if count > 0:
-        _log(f"  Converted {count} exercise(s) to MDX components")
+    # --- Legacy DSL→MDX conversion (backward compatible) ---
+    mdx_content, dsl_count = convert_dsl_to_mdx(text)
+    if dsl_count > 0:
+        _log(f"  Converted {dsl_count} DSL exercise(s) to MDX components")
 
-    # Write MDX
+    # --- Activity V2: load YAML if it exists ---
+    activities_data = _load_activities(level, slug)
+    inline_activities = activities_data.get("inline", []) if activities_data else []
+    workbook_activities = activities_data.get("workbook", []) if activities_data else []
+    all_v2_activities = inline_activities + workbook_activities
+
+    if activities_data:
+        _log(f"  Activity V2: {len(inline_activities)} inline, {len(workbook_activities)} workbook")
+
+        # Inject inline activities at markers
+        mdx_content, unmatched = _inject_inline_activities(mdx_content, inline_activities)
+        matched_count = len(inline_activities) - len(unmatched)
+        if matched_count > 0:
+            _log(f"  Injected {matched_count} inline activity/activities at markers")
+        if unmatched:
+            _log(f"  ⚠️  {len(unmatched)} inline activity/activities without markers → moved to Зошит")
+            workbook_activities = unmatched + workbook_activities
+
+    # --- Build 4-tab structure ---
+    # Split content at TAB markers (from ENRICH step)
+    tab_marker_pattern = re.compile(r"<!-- TAB:(.+?) -->")
+    tabs_present = list(tab_marker_pattern.finditer(mdx_content))
+
+    if tabs_present:
+        # Content already has tab markers from ENRICH — parse existing tabs
+        # and replace/add Зошит and Ресурси content
+        tab_sections: dict[str, str] = {}
+        for i, match in enumerate(tabs_present):
+            tab_name = match.group(1)
+            start = match.end()
+            end = tabs_present[i + 1].start() if i + 1 < len(tabs_present) else len(mdx_content)
+            tab_sections[tab_name] = mdx_content[start:end].strip()
+
+        # Rebuild with 4 tabs
+        tab_parts = []
+        tab_parts.append('<Tabs syncKey="module-tab">')
+
+        # Tab 1: Урок
+        urok_content = tab_sections.get("Урок", mdx_content)
+        tab_parts.append('<TabItem label="Урок">')
+        tab_parts.append("")
+        tab_parts.append(urok_content)
+        tab_parts.append("")
+        tab_parts.append("</TabItem>")
+
+        # Tab 2: Словник (preserve existing)
+        slovnyk_content = tab_sections.get("Словник", "")
+        if slovnyk_content:
+            tab_parts.append('<TabItem label="Словник">')
+            tab_parts.append("")
+            tab_parts.append(slovnyk_content)
+            tab_parts.append("")
+            tab_parts.append("</TabItem>")
+
+        # Tab 3: Зошит (from activities YAML or placeholder)
+        workbook_content = _build_workbook_tab(workbook_activities)
+        tab_parts.append('<TabItem label="Зошит">')
+        tab_parts.append("")
+        tab_parts.append(workbook_content)
+        tab_parts.append("")
+        tab_parts.append("</TabItem>")
+
+        # Tab 4: Ресурси
+        resources_content = _build_resources_tab(level, slug)
+        # Check if ENRICH already added Ресурси content
+        existing_resources = tab_sections.get("Ресурси", "")
+        if existing_resources:
+            resources_content = existing_resources
+        tab_parts.append('<TabItem label="Ресурси">')
+        tab_parts.append("")
+        tab_parts.append(resources_content)
+        tab_parts.append("")
+        tab_parts.append("</TabItem>")
+
+        tab_parts.append("</Tabs>")
+        mdx_content = "\n".join(tab_parts)
+    else:
+        # No tab markers — just convert as before
+        mdx_content = _convert_tab_markers(mdx_content)
+
+    # --- Write MDX ---
     mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level
     mdx_dir.mkdir(parents=True, exist_ok=True)
     mdx_path = mdx_dir / f"{slug}.mdx"
@@ -2294,19 +2713,27 @@ build_status: draft
 
 """
 
-    # Add component imports
-    imports = """import { Tabs, TabItem } from '@astrojs/starlight/components';
-import Quiz from '@site/src/components/Quiz';
-import FillIn from '@site/src/components/FillIn';
-import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse from '@site/src/components/TrueFalse';
-import GroupSort from '@site/src/components/GroupSort';
-import YouTubeVideo from '@site/src/components/YouTubeVideo';
+    # Build imports — dynamic based on which components are used
+    base_imports = [
+        "import { Tabs, TabItem } from '@astrojs/starlight/components';",
+        "import YouTubeVideo from '@site/src/components/YouTubeVideo';",
+    ]
 
-"""
+    # Legacy DSL imports (always included for backward compat when DSL exercises exist)
+    if dsl_count > 0:
+        for comp in ("Quiz", "FillIn", "MatchUp", "TrueFalse", "GroupSort"):
+            imp = f"import {comp} from '@site/src/components/{comp}';"
+            if imp not in base_imports:
+                base_imports.append(imp)
 
-    # Convert tab markers to <Tabs>/<TabItem> wrappers
-    mdx_content = _convert_tab_markers(mdx_content)
+    # Activity V2 imports
+    if all_v2_activities:
+        v2_imports = get_required_imports(all_v2_activities)
+        for imp in v2_imports:
+            if imp not in base_imports:
+                base_imports.append(imp)
+
+    imports = "\n".join(sorted(base_imports)) + "\n\n"
 
     mdx_path.write_text(frontmatter + imports + mdx_content, "utf-8")
     _log(f"  ✅ MDX written → {mdx_path}")
@@ -2320,7 +2747,7 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini",
                         help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
-    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
@@ -2418,6 +2845,18 @@ def main():
     if steps in ("all", "exercises"):
         step_exercises(content_path)
         _save_v6_state(args.level, slug, "exercises")
+
+    # Step 5e: ACTIVITIES — structured YAML generation (#1042)
+    if steps in ("all", "activities"):
+        activity_path = step_activities(
+            content_path, args.level, args.module, slug,
+            writer=args.writer,
+        )
+        if activity_path:
+            _save_v6_state(args.level, slug, "activities")
+        elif steps == "activities":
+            _log("\n❌ Build FAILED at Step 5e (activity generation)")
+            sys.exit(1)
 
     # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
     if steps in ("all", "exercises", "verify-exercises"):

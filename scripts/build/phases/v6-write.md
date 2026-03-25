@@ -122,6 +122,22 @@ title: "True or false?"
 
 Spread exercises evenly throughout the module. Never cluster them.
 
+### Exercise Placement Markers
+
+In addition to writing exercises directly in DSL, place **injection markers** where additional exercises should appear. A separate pipeline step will generate structured exercises at these points.
+
+Place 2-3 markers after key teaching sections using this format:
+
+```
+<!-- INJECT_ACTIVITY: quiz-genders -->
+```
+
+Use descriptive, lowercase, hyphenated IDs that describe the exercise focus:
+- `quiz-genders`, `fillin-possessives`, `observe-endings`
+- `quiz-verb-forms`, `match-nouns-gender`, `group-cases`
+
+These are HTML comments — invisible in rendered output. The activity generator will create matching exercises.
+
 ### Approved Exercise Patterns
 
 Use these Ukrainian textbook-inspired patterns (Заболотний, Авраменко) instead of generic "quiz" types:

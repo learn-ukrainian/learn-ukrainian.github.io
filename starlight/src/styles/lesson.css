@@ -1,0 +1,446 @@
+/**
+ * Lesson Design Styles
+ *
+ * Ported from poc-lesson-design.html. Coexists with Starlight's theme
+ * by using namespaced class names and respecting Starlight's CSS variable
+ * system. All colors defined as CSS custom properties for dark-mode support.
+ *
+ * Sections:
+ *   1. Design tokens (lesson-specific)
+ *   2. Dialogue blocks
+ *   3. Rule box (grammar callouts)
+ *   4. Gender color classes
+ *   5. Myth buster (seminar)
+ *   6. Source box (seminar)
+ *   7. Exercise wrapper & badges
+ *   8. Flashcards
+ *   9. Dark mode overrides
+ */
+
+/* ============= 1. DESIGN TOKENS ============= */
+:root {
+  --lesson-blue: #0057B8;
+  --lesson-yellow: #FFD700;
+  --lesson-blue-light: #E8F0FE;
+  --lesson-yellow-light: #FFF9E0;
+  --lesson-green: #2E7D32;
+  --lesson-green-light: #E8F5E9;
+  --lesson-red: #C62828;
+  --lesson-red-light: #FFEBEE;
+  --lesson-purple: #6A1B9A;
+  --lesson-purple-light: #F3E5F5;
+  --lesson-orange: #E65100;
+  --lesson-orange-light: #FFF3E0;
+  --lesson-radius: 12px;
+  --lesson-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --lesson-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='dark'] {
+  --lesson-blue: #5B9BD5;
+  --lesson-yellow: #FFD700;
+  --lesson-blue-light: rgba(91, 155, 213, 0.15);
+  --lesson-yellow-light: rgba(255, 215, 0, 0.12);
+  --lesson-green: #66BB6A;
+  --lesson-green-light: rgba(102, 187, 106, 0.15);
+  --lesson-red: #EF5350;
+  --lesson-red-light: rgba(239, 83, 80, 0.15);
+  --lesson-purple: #AB47BC;
+  --lesson-purple-light: rgba(171, 71, 188, 0.15);
+  --lesson-orange: #FF7043;
+  --lesson-orange-light: rgba(255, 112, 67, 0.15);
+  --lesson-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --lesson-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* ============= 2. DIALOGUE ============= */
+/* Note: .dialogue base styles already exist in custom.css.
+ * These extend with speaker markers and line formatting. */
+
+.dialogue-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ifm-color-emphasis-600, #757575);
+  margin-bottom: 0.875rem;
+  font-weight: 600;
+}
+
+.dialogue-line {
+  margin-bottom: 0.625rem;
+  padding-left: 0.875rem;
+  position: relative;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.dialogue-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lesson-blue);
+}
+
+.dialogue-line:nth-child(odd)::before {
+  background: var(--lesson-yellow);
+}
+
+.speaker {
+  font-weight: 700;
+}
+
+/* Ukrainian word highlight */
+.ukr {
+  font-weight: 600;
+  color: var(--lesson-blue);
+}
+
+/* Translation / gloss */
+.trans {
+  color: var(--ifm-color-emphasis-600, #757575);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* ============= 3. RULE BOX ============= */
+.rule-box {
+  background: var(--lesson-yellow-light);
+  border: 2px solid var(--lesson-yellow);
+  border-radius: var(--lesson-radius);
+  padding: 1.125rem 1.375rem;
+  margin: 1.375rem 0;
+}
+
+.rule-box-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.625rem;
+}
+
+.rule-box-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--lesson-yellow);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.rule-box table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.rule-box th {
+  text-align: left;
+  padding: 0.4375rem 0.625rem;
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+}
+
+.rule-box td {
+  padding: 0.4375rem 0.625rem;
+}
+
+[data-theme='dark'] .rule-box th {
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* ============= 4. GENDER COLORS ============= */
+.gender-m {
+  color: var(--lesson-blue);
+  font-weight: 700;
+}
+
+.gender-f {
+  color: #C2185B;
+  font-weight: 700;
+}
+
+.gender-n {
+  color: var(--lesson-green);
+  font-weight: 700;
+}
+
+[data-theme='dark'] .gender-f {
+  color: #F48FB1;
+}
+
+/* ============= 5. MYTH BUSTER (seminar) ============= */
+.myth-box {
+  background: var(--lesson-red-light);
+  border: 2px solid var(--lesson-red);
+  border-radius: var(--lesson-radius);
+  padding: 1.125rem 1.375rem;
+  margin: 1.375rem 0;
+}
+
+.myth-box-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.625rem;
+  color: var(--lesson-red);
+}
+
+.myth-claim {
+  background: rgba(198, 40, 40, 0.08);
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  font-style: italic;
+  border-left: 3px solid var(--lesson-red);
+}
+
+.myth-truth {
+  background: var(--lesson-green-light);
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  border-left: 3px solid var(--lesson-green);
+}
+
+.myth-source {
+  font-size: 0.8125rem;
+  color: var(--ifm-color-emphasis-600, #757575);
+  margin-top: 0.25rem;
+}
+
+/* ============= 6. SOURCE BOX (seminar) ============= */
+.source-box {
+  background: var(--lesson-purple-light);
+  border: 2px solid var(--lesson-purple);
+  border-radius: var(--lesson-radius);
+  padding: 1.125rem 1.375rem;
+  margin: 1.375rem 0;
+}
+
+.source-box-header {
+  font-weight: 700;
+  color: var(--lesson-purple);
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.source-box blockquote {
+  font-style: italic;
+  border-left: 3px solid var(--lesson-purple);
+  padding-left: 0.875rem;
+  margin: 0.625rem 0;
+  color: var(--ifm-font-color-base, #424242);
+  /* Override Starlight's default blockquote background */
+  background: transparent;
+}
+
+.source-box .source-cite {
+  font-size: 0.8125rem;
+  color: var(--ifm-color-emphasis-600, #757575);
+  text-align: right;
+}
+
+.source-box .source-analysis {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+/* ============= 7. EXERCISE WRAPPER & BADGES ============= */
+.exercise {
+  background: var(--ifm-card-background-color, white);
+  border-radius: var(--lesson-radius);
+  border: 2px solid var(--ifm-color-emphasis-200, #EEEEEE);
+  padding: 1.375rem;
+  margin: 1.375rem 0;
+  box-shadow: var(--lesson-shadow);
+}
+
+.exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.exercise-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.1875rem 0.625rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+/* Badge color variants */
+.badge-quiz { background: var(--lesson-blue); }
+.badge-fillin { background: var(--lesson-green); }
+.badge-matchup { background: var(--lesson-orange); }
+.badge-groupsort { background: var(--lesson-purple); }
+.badge-truefalse { background: #00695C; }
+.badge-error { background: var(--lesson-red); }
+.badge-anagram { background: #5D4037; }
+.badge-translate { background: #1565C0; }
+.badge-cloze { background: #37474F; }
+.badge-unjumble { background: #AD1457; }
+.badge-select { background: #00838F; }
+.badge-grammar { background: #1B5E20; }
+.badge-observe { background: #263238; }
+.badge-classify { background: #4E342E; }
+.badge-mark { background: #1A237E; }
+.badge-morpheme { background: #880E4F; }
+.badge-image2letter { background: #F57F17; color: var(--ifm-font-color-base, #212121); }
+.badge-lettergrid { background: #01579B; }
+.badge-phrasetable { background: #33691E; }
+.badge-essay { background: var(--lesson-purple); }
+.badge-critical { background: #BF360C; }
+.badge-source { background: #4A148C; }
+.badge-reading { background: #006064; }
+.badge-comparative { background: #004D40; }
+.badge-authorial { background: #311B92; }
+.badge-debate { background: #B71C1C; }
+.badge-etymology { background: #3E2723; }
+.badge-transcritique { background: #0D47A1; }
+.badge-transcription { background: #827717; }
+.badge-paleography { background: #4A148C; }
+.badge-dialect { background: #1B5E20; }
+
+.exercise-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.exercise-instruction {
+  color: var(--ifm-color-emphasis-600, #757575);
+  font-size: 0.8125rem;
+  margin-bottom: 0.875rem;
+  font-style: italic;
+}
+
+.exercise-num {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600, #757575);
+  margin-left: auto;
+  font-weight: 600;
+}
+
+/* ============= 8. FLASHCARDS ============= */
+.flashcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.875rem;
+  margin: 1.25rem 0;
+}
+
+.flashcard {
+  perspective: 600px;
+  height: 130px;
+  cursor: pointer;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--lesson-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem;
+  box-shadow: var(--lesson-shadow);
+}
+
+.flashcard-front {
+  background: var(--ifm-card-background-color, white);
+  border: 2px solid var(--lesson-blue);
+}
+
+.flashcard-front .flashcard-word {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--lesson-blue);
+}
+
+.flashcard-front .flashcard-subtitle {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600, #757575);
+  margin-top: 0.25rem;
+}
+
+.flashcard-front .flashcard-tag {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.flashcard-back {
+  background: var(--lesson-blue);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flashcard-back .flashcard-word {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.flashcard-back .flashcard-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+/* ============= 9. DARK MODE OVERRIDES ============= */
+[data-theme='dark'] .myth-claim {
+  background: rgba(239, 83, 80, 0.1);
+}
+
+[data-theme='dark'] .source-box blockquote {
+  color: var(--ifm-font-color-base);
+}
+
+[data-theme='dark'] .exercise {
+  box-shadow: var(--lesson-shadow);
+}
+
+[data-theme='dark'] .flashcard-front {
+  background: var(--ifm-card-background-color);
+}
+
+/* ============= RESPONSIVE ============= */
+@media (max-width: 600px) {
+  .flashcards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,28 @@
+import React from 'react';
+
+interface RuleBoxProps {
+  title: string;
+  icon?: string;
+  children: React.ReactNode;
+}
+
+/**
+ * Grammar rule callout with yellow background and optional icon.
+ * Supports table or text content via children.
+ *
+ * Usage in MDX:
+ *   <RuleBox title="Gender by ending" icon="📐">
+ *     <table>...</table>
+ *   </RuleBox>
+ */
+export default function RuleBox({ title, icon = '\u{1F4D0}', children }: RuleBoxProps) {
+  return (
+    <div className="rule-box">
+      <div className="rule-box-header">
+        <div className="rule-box-icon">{icon}</div>
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
