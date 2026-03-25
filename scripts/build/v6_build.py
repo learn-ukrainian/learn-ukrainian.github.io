@@ -2159,11 +2159,11 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
 
 
 def step_review(content_path: Path, level: str, module_num: int,
-                slug: str, writer: str = "claude") -> tuple[bool, float]:
+                slug: str, writer: str = "claude") -> tuple[bool, float, str]:
     """Step 8: Cross-agent adversarial review.
 
     If Claude wrote → Gemini reviews (and vice versa).
-    Returns (passed, score).
+    Returns (passed, score, review_text).
     """
     _log(f"\n{'='*60}")
     _log("  Step 8: REVIEW — Cross-agent adversarial review")
@@ -2171,13 +2171,13 @@ def step_review(content_path: Path, level: str, module_num: int,
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
-        return False, 0.0
+        return False, 0.0, ""
 
     # Load review template
     template_path = PHASES_DIR / "v6-review.md"
     if not template_path.exists():
         _log(f"  ❌ Review template not found: {template_path}")
-        return False, 0.0
+        return False, 0.0, ""
 
     template = template_path.read_text("utf-8")
 
@@ -2310,7 +2310,7 @@ def step_review(content_path: Path, level: str, module_num: int,
 
     if not ok or not raw:
         _log("  ❌ Reviewer returned no output")
-        return False, 0.0
+        return False, 0.0, ""
 
     # Save review output — versioned + latest symlink
     review_dir = CURRICULUM_ROOT / level / "review"
