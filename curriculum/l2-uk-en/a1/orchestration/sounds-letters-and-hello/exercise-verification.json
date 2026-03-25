@@ -1,0 +1,95 @@
+{
+  "total_items": 31,
+  "grounded_items": 17,
+  "ungrounded": [
+    {
+      "word": "речення",
+      "exercise_type": "quiz",
+      "context": "речення"
+    },
+    {
+      "word": "скільки",
+      "exercise_type": "quiz",
+      "context": "Скільки літер в абетці?"
+    },
+    {
+      "word": "літер",
+      "exercise_type": "quiz",
+      "context": "Скільки літер в абетці?"
+    },
+    {
+      "word": "абетці",
+      "exercise_type": "quiz",
+      "context": "Скільки літер в абетці?"
+    },
+    {
+      "word": "звуків",
+      "exercise_type": "quiz",
+      "context": "Скільки звуків в українській мові?"
+    },
+    {
+      "word": "українській",
+      "exercise_type": "quiz",
+      "context": "Скільки звуків в українській мові?"
+    },
+    {
+      "word": "мові",
+      "exercise_type": "quiz",
+      "context": "Скільки звуків в українській мові?"
+    },
+    {
+      "word": "які",
+      "exercise_type": "quiz",
+      "context": "Які звуки утворюються тільки голосом?"
+    },
+    {
+      "word": "утворюються",
+      "exercise_type": "quiz",
+      "context": "Які звуки утворюються тільки голосом?"
+    },
+    {
+      "word": "тільки",
+      "exercise_type": "quiz",
+      "context": "Які звуки утворюються тільки голосом?"
+    },
+    {
+      "word": "голосом",
+      "exercise_type": "quiz",
+      "context": "Які звуки утворюються тільки голосом?"
+    },
+    {
+      "word": "створюють",
+      "exercise_type": "quiz",
+      "context": "Які звуки створюють перешкоду в роті?"
+    },
+    {
+      "word": "перешкоду",
+      "exercise_type": "quiz",
+      "context": "Які звуки створюють перешкоду в роті?"
+    },
+    {
+      "word": "роті",
+      "exercise_type": "quiz",
+      "context": "Які звуки створюють перешкоду в роті?"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 5,
+    "not_tested": [
+      "аптека",
+      "банк",
+      "вода",
+      "зупинка",
+      "книга",
+      "мама",
+      "метро",
+      "нормально",
+      "пошта",
+      "рука",
+      "тато",
+      "школа"
+    ]
+  },
+  "all_grounded": false
+}
