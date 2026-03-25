@@ -285,52 +285,52 @@ workbook:
   letters:
   - upper: А
     lower: а
-    emoji: "\U0001F34D"
+    emoji: 🍍
     key_word: ананас
     sound_type: vowel
   - upper: О
     lower: о
-    emoji: "\U0001F441\uFE0F"
+    emoji: 👁️
     key_word: око
     sound_type: vowel
   - upper: У
     lower: у
-    emoji: "\U0001F1FA\U0001F1E6"
+    emoji: 🇺🇦
     key_word: Україна
     sound_type: vowel
   - upper: И
     lower: и
-    emoji: "\U0001F41F"
+    emoji: 🐟
     key_word: риба
     sound_type: vowel
   - upper: І
     lower: і
-    emoji: "\U0001F983"
+    emoji: 🦃
     key_word: індик
     sound_type: vowel
   - upper: Е
     lower: е
-    emoji: "\U0001F4FA"
+    emoji: 📺
     key_word: екран
     sound_type: vowel
   - upper: Я
     lower: я
-    emoji: "\U0001F34E"
+    emoji: 🍎
     key_word: яблуко
     sound_type: vowel
   - upper: Ю
     lower: ю
-    emoji: "\U0001F9D1"
+    emoji: 🧑
     key_word: юнак
     sound_type: vowel
   - upper: Є
     lower: є
-    emoji: "\U0001F99D"
+    emoji: 🦝
     key_word: єнот
     sound_type: vowel
   - upper: Ї
     lower: ї
-    emoji: "\U0001F994"
+    emoji: 🦔
     key_word: їжак
     sound_type: vowel
 - type: letter-grid
@@ -338,17 +338,17 @@ workbook:
   letters:
   - upper: М
     lower: м
-    emoji: "\U0001F955"
+    emoji: 🥕
     key_word: морква
     sound_type: consonant
   - upper: К
     lower: к
-    emoji: "\U0001F431"
+    emoji: 🐱
     key_word: кіт
     sound_type: consonant
   - upper: Т
     lower: т
-    emoji: "\U0001F42F"
+    emoji: 🐯
     key_word: тигр
     sound_type: consonant
 - type: letter-grid
@@ -356,27 +356,27 @@ workbook:
   letters:
   - upper: Н
     lower: н
-    emoji: "\u2702\uFE0F"
+    emoji: ✂️
     key_word: ножиці
     sound_type: consonant
   - upper: С
     lower: с
-    emoji: "\U0001F45C"
+    emoji: 👜
     key_word: сумка
     sound_type: consonant
   - upper: Р
     lower: р
-    emoji: "\U0001F680"
+    emoji: 🚀
     key_word: ракета
     sound_type: consonant
   - upper: В
     lower: в
-    emoji: "\U0001F43A"
+    emoji: 🐺
     key_word: вовк
     sound_type: consonant
   - upper: Х
     lower: х
-    emoji: "\U0001F35E"
+    emoji: 🍞
     key_word: хліб
     sound_type: consonant
 - type: letter-grid
@@ -384,72 +384,72 @@ workbook:
   letters:
   - upper: Л
     lower: л
-    emoji: "\u2708\uFE0F"
+    emoji: ✈️
     key_word: літак
     sound_type: consonant
   - upper: Б
     lower: б
-    emoji: "\U0001F34C"
+    emoji: 🍌
     key_word: банан
     sound_type: consonant
   - upper: Д
     lower: д
-    emoji: "\U0001F3E0"
+    emoji: 🏠
     key_word: дім
     sound_type: consonant
   - upper: П
     lower: п
-    emoji: "\U0001F577\uFE0F"
+    emoji: 🕷️
     key_word: павук
     sound_type: consonant
   - upper: Г
     lower: г
-    emoji: "\u26F0\uFE0F"
+    emoji: ⛰️
     key_word: гора
     sound_type: consonant
   - upper: Ґ
     lower: ґ
-    emoji: "\U0001F6AA"
+    emoji: 🚪
     key_word: ґанок
     sound_type: consonant
   - upper: З
     lower: з
-    emoji: "\U0001F993"
+    emoji: 🦓
     key_word: зебра
     sound_type: consonant
   - upper: Ж
     lower: ж
-    emoji: "\U0001FAB2"
+    emoji: 🪲
     key_word: жук
     sound_type: consonant
   - upper: Ш
     lower: ш
-    emoji: "\U0001F9E2"
+    emoji: 🧢
     key_word: шапка
     sound_type: consonant
   - upper: Й
     lower: й
-    emoji: "\U0001F95B"
+    emoji: 🥛
     key_word: йогурт
     sound_type: consonant
   - upper: Ч
     lower: ч
-    emoji: "\U0001F422"
+    emoji: 🐢
     key_word: черепаха
     sound_type: consonant
   - upper: Щ
     lower: щ
-    emoji: "\U0001FAA5"
+    emoji: 🪥
     key_word: щітка
     sound_type: consonant
   - upper: Ц
     lower: ц
-    emoji: "\U0001F9C5"
+    emoji: 🧅
     key_word: цибуля
     sound_type: consonant
   - upper: Ф
     lower: ф
-    emoji: "\U0001F9A9"
+    emoji: 🦩
     key_word: фламінго
     sound_type: consonant
 - type: letter-grid
@@ -457,81 +457,166 @@ workbook:
   letters:
   - upper: Я
     lower: я
-    emoji: "\U0001F34E"
+    emoji: 🍎
     key_word: яблуко
     sound_type: vowel
   - upper: Ю
     lower: ю
-    emoji: "\U0001F9D1"
+    emoji: 🧑
     key_word: юнак
     sound_type: vowel
   - upper: Є
     lower: є
-    emoji: "\U0001F99D"
+    emoji: 🦝
     key_word: єнот
     sound_type: vowel
   - upper: Ь
     lower: ь
-    emoji: "\U0001F9C2"
+    emoji: 🧂
     key_word: сіль
     sound_type: special
   - upper: Ї
     lower: ї
-    emoji: "\U0001F994"
+    emoji: 🦔
     key_word: їжак
     sound_type: vowel
-- type: observe
+- type: watch-and-repeat
   instruction: 'Watch and repeat: А, М, Л, У, Н, С'
-  examples:
-  - 'А — ананас — «У нас ананас.» — Video: https://www.youtube.com/watch?v=hvB3VpcR3ZE'
-  - 'М — морква — «Мама сама.» — Video: https://www.youtube.com/watch?v=Ez95H4ibuJo'
-  - 'Л — літак — «Мала лама.» — Video: https://www.youtube.com/watch?v=v6-3Xg52Buk'
-  - 'У — Україна — «У нас мул.» — Video: https://www.youtube.com/watch?v=VB1O6PmtYRU'
-  - 'Н — ножиці — «У нас лан.» — Video: https://www.youtube.com/watch?v=vNUfiKHPYaU'
-  - 'С — сумка — «Сумна мама.» — Video: https://www.youtube.com/watch?v=7UsFBgSL91E'
-  prompt: Watch each video by Anna Ohoiko. Say the letter out loud, then the key word,
-    then the short phrase. Can you hear how each letter sounds on its own and inside
-    a word?
-- type: observe
+  items:
+  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    letter: А
+    word: ананас
+    note: У нас ананас.
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: М
+    word: морква
+    note: Мама сама.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: Л
+    word: літак
+    note: Мала лама.
+  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    letter: У
+    word: Україна
+    note: У нас мул.
+  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    letter: Н
+    word: ножиці
+    note: У нас лан.
+  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    letter: С
+    word: сумка
+    note: Сумна мама.
+- type: watch-and-repeat
   instruction: 'Watch and repeat: К, И, Р, Б, В, Д, І'
-  examples:
-  - 'К — кіт — Video: https://www.youtube.com/watch?v=J7sGEI4-xJo'
-  - 'И — риба — Video: https://www.youtube.com/watch?v=W-1rCu0indE'
-  - 'Р — ракета — Video: https://www.youtube.com/watch?v=fMGsQ5KPQgg'
-  - 'Б — банан — Video: https://www.youtube.com/watch?v=V1hxBE_JbGg'
-  - 'В — вовк — Video: https://www.youtube.com/watch?v=aFcvYfvQ2X4'
-  - 'Д — дім — Video: https://www.youtube.com/watch?v=g4Bh-lqzd48'
-  - 'І — індик — Video: https://www.youtube.com/watch?v=Z9TH0H4ShGo'
-  prompt: Watch each video and repeat after Anna. Pay special attention to В (sounds
-    like "v", not "b") and Р (rolled, not like English "p"). Can you feel the difference?
-- type: observe
+  items:
+  - video: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    letter: К
+    word: кіт
+    note: ''
+  - video: https://www.youtube.com/watch?v=W-1rCu0indE
+    letter: И
+    word: риба
+    note: ''
+  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    letter: Р
+    word: ракета
+    note: ''
+  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    letter: Б
+    word: банан
+    note: ''
+  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    letter: В
+    word: вовк
+    note: ''
+  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    letter: Д
+    word: дім
+    note: ''
+  - video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    letter: І
+    word: індик
+    note: ''
+- type: watch-and-repeat
   instruction: 'Watch and repeat: П, Т, Г, Ґ, Е, З, Ж, Ш, Х'
-  examples:
-  - 'П — павук — Video: https://www.youtube.com/watch?v=JksSjjxyW5Y'
-  - 'Т — тигр — Video: https://www.youtube.com/watch?v=m-jcLR_gK0k'
-  - 'Г — гора — Video: https://www.youtube.com/watch?v=gVnclpSI0DU'
-  - 'Ґ — ґанок — Video: https://www.youtube.com/watch?v=gNjHqjTW9WQ'
-  - 'Е — екран — Video: https://www.youtube.com/watch?v=KFlsroBW0dk'
-  - 'З — зебра — Video: https://www.youtube.com/watch?v=BhASNxitC1A'
-  - 'Ж — жук — Video: https://www.youtube.com/watch?v=dIrGVcqPwqM'
-  - 'Ш — шапка — Video: https://www.youtube.com/watch?v=1D-6MIw3OXY'
-  - 'Х — хліб — Video: https://www.youtube.com/watch?v=vpr58zJSJKc'
-  prompt: These letters have new shapes you have not seen in English. Watch each video
-    and try to memorize the shape alongside the sound. Which letters are hardest to
-    remember?
-- type: observe
+  items:
+  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    letter: П
+    word: павук
+    note: ''
+  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    letter: Т
+    word: тигр
+    note: ''
+  - video: https://www.youtube.com/watch?v=gVnclpSI0DU
+    letter: Г
+    word: гора
+    note: ''
+  - video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    letter: Ґ
+    word: ґанок
+    note: ''
+  - video: https://www.youtube.com/watch?v=KFlsroBW0dk
+    letter: Е
+    word: екран
+    note: ''
+  - video: https://www.youtube.com/watch?v=BhASNxitC1A
+    letter: З
+    word: зебра
+    note: ''
+  - video: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    letter: Ж
+    word: жук
+    note: ''
+  - video: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    letter: Ш
+    word: шапка
+    note: ''
+  - video: https://www.youtube.com/watch?v=vpr58zJSJKc
+    letter: Х
+    word: хліб
+    note: ''
+- type: watch-and-repeat
   instruction: 'Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф'
-  examples:
-  - 'Й — йогурт — Video: https://www.youtube.com/watch?v=aq0cjB90s3w'
-  - 'Ч — черепаха — Video: https://www.youtube.com/watch?v=UsJkbdsY2RA'
-  - 'Щ — щітка — Video: https://www.youtube.com/watch?v=QmBLieIuf6Q'
-  - 'Я — яблуко — Video: https://www.youtube.com/watch?v=yhSAf41LX8I'
-  - 'Ю — юнак — Video: https://www.youtube.com/watch?v=9JdIBYCTWGw'
-  - 'Є — єнот — Video: https://www.youtube.com/watch?v=O0bwRyyBQSc'
-  - 'Ь — сіль — Video: https://www.youtube.com/watch?v=cJlal8XKBxo'
-  - 'Ї — їжак — Video: https://www.youtube.com/watch?v=UcjdjQXhAY8'
-  - 'Ц — цибуля — Video: https://www.youtube.com/watch?v=u44eCjR2Oz8'
-  - 'Ф — фламінго — Video: https://www.youtube.com/watch?v=haHRsFFZRQI'
-  prompt: These are the remaining letters of the Ukrainian абетка. Watch each video
-    and repeat. Notice that Ь (soft sign) has no sound of its own — it only softens
-    the consonant before it. And Ї always sounds like [йі].
+  items:
+  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
+    letter: Й
+    word: йогурт
+    note: ''
+  - video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    letter: Ч
+    word: черепаха
+    note: ''
+  - video: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    letter: Щ
+    word: щітка
+    note: ''
+  - video: https://www.youtube.com/watch?v=yhSAf41LX8I
+    letter: Я
+    word: яблуко
+    note: ''
+  - video: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    letter: Ю
+    word: юнак
+    note: ''
+  - video: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    letter: Є
+    word: єнот
+    note: ''
+  - video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    letter: Ь
+    word: сіль
+    note: ''
+  - video: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    letter: Ї
+    word: їжак
+    note: ''
+  - video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    letter: Ц
+    word: цибуля
+    note: ''
+  - video: https://www.youtube.com/watch?v=haHRsFFZRQI
+    letter: Ф
+    word: фламінго
+    note: ''

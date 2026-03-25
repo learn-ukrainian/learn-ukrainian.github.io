@@ -1965,12 +1965,13 @@ def _inject_abetka_activities(activities_path: Path, level: str, slug: str) -> N
         _log("  ⚠️  No abetka data found in l2-uk-direct")
         return
 
-    # Load existing activities — remove LLM-generated letter-grid/watch-and-repeat
-    # (deterministic injection replaces them with properly split versions)
+    # Load existing activities — remove LLM-generated letter-grid/watch-and-repeat/observe
+    # (deterministic injection replaces them with properly split versions from abetka data)
+    # LLMs sometimes generate "observe" instead of "watch-and-repeat" for video hints
     data = yaml.safe_load(activities_path.read_text("utf-8"))
     workbook = [
         act for act in data.get("workbook", [])
-        if act.get("type") not in ("letter-grid", "watch-and-repeat")
+        if act.get("type") not in ("letter-grid", "watch-and-repeat", "observe")
     ]
 
     injected = 0
