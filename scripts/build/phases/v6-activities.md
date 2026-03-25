@@ -171,9 +171,18 @@ workbook:
 
 ---
 
+## Learner Level Context
+
+{LEVEL_CONTEXT}
+
 ## Quality Rules
 
-1. **Instructions in Ukrainian** — all `instruction` fields must be in Ukrainian (the learner is learning Ukrainian)
+1. **Instructions match learner level:**
+   - **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
+   - **A1.2-A1.3 (M08-M21):** Instructions in simple English with Ukrainian key terms in bold. Learner knows basic words but not grammar terminology.
+   - **A1.4+ (M22-M55):** Instructions can be in simple Ukrainian with English translation in parentheses.
+   - **A2+:** Instructions in Ukrainian.
+   - **B1+:** Full Ukrainian, no English.
 2. **3-5 options per quiz/fill-in** — enough to prevent guessing, not so many to overwhelm
 3. **No duplicate options** — each option in a quiz item must be unique
 4. **Answer must be in options** — for quiz items, `correct` must be a valid index. For fill-in with options, `answer` must appear in `options`.

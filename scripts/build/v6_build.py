@@ -1653,6 +1653,88 @@ def _check_activity_semantics(data: dict) -> list[str]:
     return errors
 
 
+def _build_activity_level_context(level: str, module_num: int, plan: dict) -> str:
+    """Build level-aware context for the activity generator.
+
+    Tells the generator WHO the learner is, what they can and can't do,
+    what language to use for instructions, and which activity types are appropriate.
+    """
+    pv = plan.get("pronunciation_videos", {})
+    video_text = ""
+    if pv:
+        video_text = (
+            "\n**Pronunciation videos (Anna Ohoiko):**\n"
+            f"- Overview: {pv.get('overview', 'N/A')}\n"
+            f"- Full playlist: {pv.get('playlist', 'N/A')}\n"
+            "Use these in exercises: reference specific videos, embed WatchAndRepeat activities.\n"
+        )
+
+    if level == "a1" and module_num <= 7:
+        return (
+            f"**Level: A1.1 (Module {module_num}/55) — COMPLETE BEGINNER**\n\n"
+            "The learner is on their FIRST DAYS learning Ukrainian. They:\n"
+            "- Cannot read Ukrainian yet (learning the alphabet)\n"
+            "- Know zero Ukrainian grammar\n"
+            "- Can recognize only a few words (мама, тато, привіт)\n\n"
+            "**ALL instructions MUST be in English.** The learner cannot read Ukrainian instructions.\n\n"
+            "**Best activity types for this level:**\n"
+            "- image-to-letter: hear/see → pick the letter\n"
+            "- letter-grid: interactive alphabet practice\n"
+            "- match-up: letter ↔ sound, letter ↔ word\n"
+            "- quiz: in ENGLISH about Ukrainian sounds ('What sound does В make?')\n"
+            "- observe: show patterns in Ukrainian with English prompts\n"
+            "- group-sort: sort letters into vowels/consonants\n\n"
+            "**DO NOT use:** fill-in with Ukrainian sentences, error-correction, "
+            "translate (learner can't write Ukrainian yet), cloze, unjumble.\n"
+            f"{video_text}"
+        )
+    if level == "a1" and module_num <= 21:
+        return (
+            f"**Level: A1.2-A1.3 (Module {module_num}/55) — EARLY BEGINNER**\n\n"
+            "The learner knows the alphabet and ~200 words. They:\n"
+            "- Can read Ukrainian slowly\n"
+            "- Know basic nouns, adjectives, simple verb forms\n"
+            "- Cannot handle complex sentences or grammar terminology in Ukrainian\n\n"
+            "**Instructions in simple English with Ukrainian key terms in bold.**\n"
+            "Example: 'Choose the correct form of **мій/моя/моє**'\n\n"
+            "**Good activity types:** quiz, fill-in (simple sentences), match-up, "
+            "group-sort, true-false, observe, anagram, translate (English→Ukrainian).\n"
+            f"{video_text}"
+        )
+    if level == "a1":
+        return (
+            f"**Level: A1.4+ (Module {module_num}/55) — BEGINNER**\n\n"
+            "The learner knows ~500 words, basic grammar, can form sentences.\n\n"
+            "**Instructions in simple Ukrainian with English translation in parentheses.**\n"
+            "Example: 'Оберіть правильний варіант (Choose the correct option)'\n\n"
+            "**All core activity types are appropriate.**\n"
+            f"{video_text}"
+        )
+    if level == "a2":
+        return (
+            f"**Level: A2 (Module {module_num}/60) — ELEMENTARY**\n\n"
+            "The learner knows ~1200 words, understands basic grammar.\n\n"
+            "**Instructions in Ukrainian.** No English needed.\n\n"
+            "**All core activity types are appropriate.** Include error-correction, "
+            "cloze, unjumble for deeper practice.\n"
+        )
+    base = level.split("-")[0]
+    if base in ("hist", "bio", "istorio", "lit", "oes", "ruth"):
+        return (
+            f"**Level: Seminar ({level.upper()}) — ADVANCED**\n\n"
+            "The learner is at B2+ level. Full Ukrainian immersion.\n\n"
+            "**Instructions in Ukrainian.** No English.\n\n"
+            "**Use seminar activity types:** critical-analysis, essay-response, "
+            "source-evaluation, reading, comparative-study, authorial-intent, debate, "
+            "etymology-trace, translation-critique, transcription.\n"
+        )
+    # B1+ default
+    return (
+        f"**Level: {level.upper()} (Module {module_num})**\n\n"
+        "**Instructions in Ukrainian.** All activity types appropriate.\n"
+    )
+
+
 def step_activities(
     content_path: Path, level: str, module_num: int, slug: str,
     writer: str = "gemini-tools", max_retries: int = 2,
@@ -1719,6 +1801,9 @@ def step_activities(
     # Build tool instructions
     tool_instructions = _build_tool_instructions(writer)
 
+    # Build level context — critical for activity language and type selection
+    level_context = _build_activity_level_context(level, module_num, plan)
+
     # Fill template
     prompt = template
     replacements = {
@@ -1731,6 +1816,7 @@ def step_activities(
         "{PLAN_VOCABULARY}": vocab_text,
         "{MODULE_CONTENT}": module_content,
         "{TOOL_INSTRUCTIONS}": tool_instructions,
+        "{LEVEL_CONTEXT}": level_context,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
