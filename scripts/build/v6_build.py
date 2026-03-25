@@ -36,7 +36,9 @@ from __future__ import annotations
 
 import argparse
 import logging
+import re
 import sys
+import time
 from datetime import UTC
 from pathlib import Path
 
@@ -172,12 +174,13 @@ def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
-    """Step 2: Run deterministic plan checker."""
+    """Step 2: Run deterministic plan checker with auto-fix for Russicisms and VESUM failures."""
     _log(f"\n{'='*60}")
     _log("  Step 2: CHECK — Plan validation")
     _log(f"{'='*60}")
 
     from audit.check_plan import check_plan
+    from tools.plan_autofix import auto_fix_plan, fix_russianisms_in_plan
 
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     if not plan_path.exists():
@@ -190,6 +193,47 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
     all_slugs = data.get("levels", {}).get(level, {}).get("modules", [])
 
     issues = check_plan(plan_path, all_slugs)
+
+    # --- Auto-fix: Russicisms ---
+    russicism_issues = [i for i in issues if i.check == "RUSSICISM"]
+    if russicism_issues:
+        # Convert PlanIssue objects to dicts expected by fix_russianisms_in_plan
+        russicism_dicts = [
+            {"issue_type": "RUSSICISM", "problem": i.message, "suggested_fix": i.fix}
+            for i in russicism_issues
+        ]
+        n_fixed, changelog = fix_russianisms_in_plan(plan_path, russicism_dicts)
+        if n_fixed > 0:
+            # Re-read plan version after fix
+            plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+            new_version = plan_data.get("version", "?")
+            _log(f"  ⚠️ Plan auto-fixed: {n_fixed} Russicism(s) corrected, version bumped to {new_version}")
+            for entry in changelog:
+                _log(f"    {entry}")
+
+    # --- Auto-fix: VESUM vocabulary failures ---
+    vesum_issues = [i for i in issues if i.check == "VESUM"]
+    if vesum_issues:
+        # Convert PlanIssue objects to dicts expected by auto_fix_plan
+        # Extract word from message like "Vocabulary word 'X' not found in VESUM"
+        vesum_not_found = []
+        for vi in vesum_issues:
+            match = re.search(r"'([^']+)'", vi.message)
+            if match:
+                vesum_not_found.append({"original": match.group(1), "status": "❌"})
+        if vesum_not_found:
+            n_fixed, changelog = auto_fix_plan(plan_path, vesum_not_found=vesum_not_found)
+            if n_fixed > 0:
+                plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+                new_version = plan_data.get("version", "?")
+                _log(f"  ⚠️ Plan auto-fixed: {n_fixed} VESUM-failed word(s) removed, version bumped to {new_version}")
+                for entry in changelog:
+                    _log(f"    {entry}")
+
+    # --- Re-check after auto-fixes ---
+    if russicism_issues or vesum_issues:
+        issues = check_plan(plan_path, all_slugs)
+
     errors = [i for i in issues if i.severity == "ERROR"]
 
     if errors:
@@ -1133,6 +1177,102 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     return vocab_path
 
 
+def _extract_verify_flags(content: str) -> list[dict]:
+    """Extract <!-- VERIFY: ... --> flags from writer content.
+
+    Writers are told to flag uncertain words/claims with these markers.
+    We extract them early (before ENRICH might alter structure) so we can:
+    1. Attempt automated VESUM resolution
+    2. Pass unresolved flags to the reviewer
+    3. Track resolution stats
+
+    Issue: #1018
+    """
+    flags = []
+    for m in re.finditer(r"<!--\s*VERIFY:\s*(.+?)\s*-->", content):
+        flags.append({
+            "claim": m.group(1).strip(),
+            "resolved": False,
+            "resolution": "",
+        })
+    return flags
+
+
+def _resolve_verify_flags(flags: list[dict]) -> list[dict]:
+    """Attempt to resolve VERIFY flags via VESUM lookup.
+
+    For each flag, extracts the first Ukrainian word from the claim
+    and checks if it exists in VESUM. If found, marks it resolved
+    with the lemma and POS info.
+
+    Returns the same list with resolved/resolution fields updated.
+    """
+    if not flags:
+        return flags
+
+    import sqlite3
+
+    vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+    if not vesum_db.exists():
+        return flags
+
+    # Pattern to find Ukrainian words in a claim
+    uk_word_pattern = re.compile(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+")
+
+    try:
+        db = sqlite3.connect(str(vesum_db))
+        for flag in flags:
+            # Extract Ukrainian words from the claim
+            words = uk_word_pattern.findall(flag["claim"])
+            if not words:
+                continue
+
+            for word in words:
+                row = db.execute(
+                    "SELECT lemma, pos FROM forms WHERE word_form = ? LIMIT 1",
+                    (word.lower(),),
+                ).fetchone()
+                if row:
+                    flag["resolved"] = True
+                    flag["resolution"] = (
+                        f"VESUM confirms: {word} -> lemma '{row[0]}', POS: {row[1]}"
+                    )
+                    break
+            # If no word found in VESUM, try lemma lookup
+            if not flag["resolved"]:
+                for word in words:
+                    row = db.execute(
+                        "SELECT lemma, pos FROM forms WHERE lemma = ? LIMIT 1",
+                        (word.lower(),),
+                    ).fetchone()
+                    if row:
+                        flag["resolved"] = True
+                        flag["resolution"] = (
+                            f"VESUM confirms lemma: {row[0]}, POS: {row[1]}"
+                        )
+                        break
+        db.close()
+    except Exception as e:
+        _log(f"  ⚠️  VESUM resolution failed: {e}")
+
+    return flags
+
+
+def _save_verify_flags(level: str, slug: str, flags: list[dict]) -> Path:
+    """Save VERIFY flags to orchestration directory.
+
+    Returns the path to the saved file.
+    """
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    flags_path = orch_dir / "verify-flags.yaml"
+    flags_path.write_text(
+        yaml.dump(flags, allow_unicode=True, default_flow_style=False, sort_keys=False),
+        "utf-8",
+    )
+    return flags_path
+
+
 def step_enrich(content_path: Path, level: str, slug: str) -> bool:
     """Step 7b: ENRICH — словник, videos, resources, dialogue formatting."""
     _log(f"\n{'='*60}")
@@ -1160,7 +1300,13 @@ def step_enrich(content_path: Path, level: str, slug: str) -> bool:
 
 
 def step_verify(content_path: Path, level: str, module_num: int) -> bool:
-    """Step 7: VESUM verification + grammar scope check."""
+    """Step 7: VESUM verification + grammar scope check + VERIFY flag resolution.
+
+    VERIFY flags (<!-- VERIFY: ... -->) are writer-signaled uncertainties.
+    They are a POSITIVE signal — the writer was honest about what it doesn't know.
+    We extract them, attempt VESUM resolution, save results, and pass unresolved
+    flags to the reviewer. They are NOT treated as errors. (Issue: #1018)
+    """
     _log(f"\n{'='*60}")
     _log("  Step 7: VERIFY — VESUM + grammar checks")
     _log(f"{'='*60}")
@@ -1172,8 +1318,26 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
     text = content_path.read_text("utf-8")
     issues = []
 
-    # Load VESUM whitelist (global + per-module)
+    # --- VERIFY flag resolution (#1018) ---
+    # Extract before any other checks. These are non-blocking.
     slug = content_path.stem
+    verify_flags = _extract_verify_flags(text)
+    if verify_flags:
+        _log(f"  📋 Found {len(verify_flags)} VERIFY flag(s) from writer")
+        verify_flags = _resolve_verify_flags(verify_flags)
+        resolved = [f for f in verify_flags if f["resolved"]]
+        unresolved = [f for f in verify_flags if not f["resolved"]]
+        if resolved:
+            _log(f"  ✅ Resolved {len(resolved)} flag(s) via VESUM:")
+            for f in resolved:
+                _log(f"    ✓ {f['claim']} — {f['resolution']}")
+        if unresolved:
+            _log(f"  ℹ️  {len(unresolved)} flag(s) unresolved (will pass to reviewer):")
+            for f in unresolved:
+                _log(f"    ? {f['claim']}")
+        _save_verify_flags(level, slug, verify_flags)
+
+    # Load VESUM whitelist (global + per-module)
     try:
         from vesum_whitelist import load_combined_whitelist
         whitelist = load_combined_whitelist(level, slug)
@@ -1181,6 +1345,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
         whitelist = set()
 
     # VESUM word check
+    t0 = time.monotonic()
     try:
         from pipeline.screen import _run_vesum_verify
         stats, not_found, _ = _run_vesum_verify(content_path)
@@ -1210,8 +1375,10 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             _log(f"  ℹ️  {whitelisted_count} word(s) skipped via whitelist")
     except Exception as e:
         _log(f"  ⚠️  VESUM check skipped: {e}")
+    _log(f"  ⏱ VESUM verify: {time.monotonic() - t0:.1f}s")
 
     # Russicism scan (regex-based on content text)
+    t0 = time.monotonic()
     try:
         from build.quick_verify import SEVERE_RUSSIANISMS
         content_lower = text.lower()
@@ -1227,9 +1394,11 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             _log("  ✅ No Russicisms detected")
     except Exception as e:
         _log(f"  ⚠️  Russicism scan failed: {e}")
+    _log(f"  ⏱ Russicism scan: {time.monotonic() - t0:.1f}s")
 
     # IPA check (skip for phonetics M01-M03)
     if not (level == "a1" and module_num <= 3):
+        t0 = time.monotonic()
         try:
             from pipeline.screen import _run_ipa_scan
             ipa_issues = _run_ipa_scan(text)
@@ -1240,6 +1409,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
                 _log("  ✅ No IPA/Latin transliteration")
         except Exception as e:
             _log(f"  ⚠️  IPA check failed: {e}")
+        _log(f"  ⏱ IPA check: {time.monotonic() - t0:.1f}s")
 
     if issues:
         _log(f"\n  ⚠️  Verification found {len(issues)} issue(s) — review recommended")
@@ -1391,6 +1561,37 @@ def step_review(content_path: Path, level: str, module_num: int,
     if vesum_report:
         prompt = prompt + "\n\n" + vesum_report
         _log(f"  VESUM pre-verification: injected ({len(vesum_report)} chars)")
+
+    # Inject VERIFY flags from writer (#1018)
+    # Unresolved flags are passed to the reviewer for human-quality verification.
+    # Resolved flags are shown for context. VERIFY flags are a POSITIVE signal.
+    flags_path = CURRICULUM_ROOT / level / "orchestration" / slug / "verify-flags.yaml"
+    if flags_path.exists():
+        try:
+            all_flags = yaml.safe_load(flags_path.read_text("utf-8"))
+            if all_flags:
+                unresolved = [f for f in all_flags if not f.get("resolved")]
+                resolved = [f for f in all_flags if f.get("resolved")]
+                flag_inject = (
+                    "\n\n## Writer Uncertainty Flags (VERIFY)\n\n"
+                    "The writer honestly flagged these items as uncertain. "
+                    "This is a POSITIVE signal — it means the writer was careful "
+                    "rather than guessing. Please verify each claim:\n\n"
+                )
+                if unresolved:
+                    flag_inject += "**Unresolved (needs your verification):**\n"
+                    for f in unresolved:
+                        flag_inject += f"- {f['claim']}\n"
+                    flag_inject += "\n"
+                if resolved:
+                    flag_inject += "**Auto-resolved via VESUM (for context):**\n"
+                    for f in resolved:
+                        flag_inject += f"- {f['claim']} -- {f['resolution']}\n"
+                    flag_inject += "\n"
+                prompt += flag_inject
+                _log(f"  VERIFY flags injected: {len(unresolved)} unresolved, {len(resolved)} resolved")
+        except Exception:
+            pass  # Non-blocking
 
     # Inject tool instructions for the reviewer
     reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
@@ -1894,7 +2095,9 @@ def main():
 
         # Fix loop: reviewer provides <fixes>, we apply deterministically.
         # Max 2 rounds. Score should go UP each round (9.0→9.4→9.7+).
+        # Early termination: if score doesn't improve, stop to avoid degradation.
         max_fix_rounds = 2
+        prev_score = score
         for fix_round in range(1, max_fix_rounds + 1):
             if passed:
                 _log(f"\n✅ Review PASSED ({score}/10)" if fix_round == 1
@@ -1953,8 +2156,17 @@ def main():
             )
             _save_v6_state(args.level, slug, "review")
 
+            # Early termination: stop if score didn't improve
+            if not passed and score <= prev_score:
+                _log(
+                    f"\n⚠️  Fix round {fix_round} didn't improve score "
+                    f"({prev_score}→{score}), stopping early"
+                )
+                break
+            prev_score = score
+
         if not passed:
-            _log(f"\n⚠️  Review {score}/10 after {max_fix_rounds} fix rounds")
+            _log(f"\n⚠️  Review {score}/10 after fix loop (max {max_fix_rounds} rounds)")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
@@ -1967,6 +2179,12 @@ def main():
     if steps in ("all", "publish"):
         step_publish(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "publish")
+
+    # Generate orchestration index (#1029)
+    from build.orch_index import generate_index
+    result = generate_index(args.level, slug)
+    if result:
+        _log(f"  📋 Orchestration index → {slug}/index.md")
 
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
 
