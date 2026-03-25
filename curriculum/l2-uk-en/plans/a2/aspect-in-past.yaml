@@ -1,0 +1,106 @@
+module: a2-035
+level: A2
+sequence: 35
+slug: aspect-in-past
+version: '1.0'
+title: Що ти робив? А що зробив?
+subtitle: Вид дієслова в минулому часі — процес чи результат
+focus: grammar
+pedagogy: PPP
+phase: A2.6 [Aspect, Tenses, and Motion]
+word_target: 2000
+objectives:
+- Learner can distinguish between imperfective past (що робив?) expressing process,
+  duration, or repetition and perfective past (що зробив?) expressing a completed
+  action with a visible result.
+- Learner can choose the correct aspect in past tense based on context clues (signal
+  words, result focus, background vs. foreground).
+- Learner can form past tense forms for both aspects of 10 common verb pairs,
+  correctly applying gender and number agreement (робив/робила/робили vs.
+  зробив/зробила/зробили).
+- Learner can narrate a simple sequence of events using perfective past for
+  completed steps and imperfective past for background actions.
+content_outline:
+- section: Два питання — два види (Two Questions — Two Aspects)
+  words: 500
+  points:
+  - 'The key question pair: Що ти робив? (What were you doing? — process) vs.
+    Що ти зробив? (What did you get done? — result). This is not a grammar trick
+    but a real difference in how Ukrainians think about actions.'
+  - 'Imperfective past = the camera was rolling: Я читав книгу (I was reading).
+    The focus is on the action itself, its duration, or its repetition.'
+  - 'Perfective past = the photo of the result: Я прочитав книгу (I read/finished
+    the book). The focus is on the completed outcome.'
+  - 'Gender agreement review: він робив / вона робила / воно робило / вони робили.
+    Same pattern for perfective: він зробив / вона зробила.'
+- section: Коли вживати недоконаний вид (When to Use Imperfective Past)
+  words: 500
+  points:
+  - 'Process or duration: Я довго писав листа (I was writing a letter for a long
+    time). The action stretched over time.'
+  - 'Repetition or habit: Вона щодня готувала сніданок (She made breakfast every
+    day). A repeated action, not one single event.'
+  - 'Background action: Коли я снідав, подзвонив друг (While I was having
+    breakfast, a friend called). Imperfective sets the scene.'
+  - 'Signal words: довго, часто, завжди, щодня, зазвичай, раніше, коли (for
+    background).'
+- section: Коли вживати доконаний вид (When to Use Perfective Past)
+  words: 500
+  points:
+  - 'Completed result: Я написав листа (I wrote the letter — it is done). The
+    action reached its endpoint and produced a result.'
+  - 'Single event in sequence: Я прийшов додому, пообідав і подзвонив мамі
+    (I came home, had lunch, and called Mom). Each verb marks a completed step.'
+  - 'Sudden action: Раптом хтось постукав у двері (Suddenly someone knocked on
+    the door). A single, punctual event.'
+  - 'Signal words: вже, нарешті, раптом, одного разу, вчора (when referring to
+    a single completed event).'
+- section: Практика вибору виду (Choosing the Right Aspect)
+  words: 500
+  points:
+  - 'Contrastive pairs in context: Він читав газету (was reading) vs. Він
+    прочитав газету (finished reading). Вона вчила слова (was studying words)
+    vs. Вона вивчила слова (learned the words).'
+  - 'Mini-narratives combining both aspects: Коли я готував вечерю, раптом
+    погасло світло. Я знайшов свічку і запалив її.'
+  - 'Common mistakes: using imperfective when result matters (*Я писав листа
+    вчора — ambiguous), using perfective for repeated actions (*Він щодня
+    зробив вправи — wrong).'
+  - 'Decision flowchart: Is there a result? → Perfective. Is it a process,
+    habit, or background? → Imperfective.'
+vocabulary_hints:
+  required:
+  - минулий час (past tense)
+  - робити / зробити (to do — impf./pf.)
+  - писати / написати (to write — impf./pf.)
+  - читати / прочитати (to read — impf./pf.)
+  - готувати / приготувати (to cook/prepare — impf./pf.)
+  - вчити / вивчити (to study/learn — impf./pf.)
+  - процес (process)
+  - результат (result)
+  - довго (for a long time)
+  - раптом (suddenly)
+  recommended:
+  - щодня (every day)
+  - нарешті (finally, at last)
+  - одного разу (one time, once)
+  - тривалість (duration)
+activity_hints:
+- type: quiz
+  focus: Given a sentence, identify whether the verb is imperfective or perfective
+    and explain why
+  items: 6
+- type: fill-in
+  focus: Choose the correct aspect form (imperfective or perfective past) to
+    complete sentences based on context
+  items: 6
+- type: match-up
+  focus: Match signal words (довго, раптом, щодня, нарешті) with the correct
+    aspect and example sentence
+  items: 6
+references:
+- title: Заболотний Grade 7, §42-44
+  notes: Вид дієслова в минулому часі — process vs. result contrast
+- title: 'ULP: Past Tense and Aspect'
+  url: https://www.ukrainianlessons.com/grammar-hub/
+  notes: Practical examples of aspect choice in past tense

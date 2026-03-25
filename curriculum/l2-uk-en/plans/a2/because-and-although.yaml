@@ -1,0 +1,103 @@
+module: a2-042
+level: A2
+sequence: 42
+slug: because-and-although
+version: '1.0'
+title: Тому що, бо, хоча
+subtitle: Складне речення з причиною та допустом
+focus: grammar
+pedagogy: PPP
+phase: A2.7 [Complex Sentences and Conditionals]
+word_target: 2000
+objectives:
+- Learner can join two clauses using тому що and бо to express cause or reason.
+- Learner can use хоча to express concession (although, even though) in compound
+  sentences.
+- Learner can build compound sentences with coordinating conjunctions і, та, але
+  to expand simple ideas into longer utterances.
+- Learner can distinguish between причина (cause with бо/тому що) and допуст
+  (concession with хоча) in context.
+content_outline:
+- section: 'Чому? Тому що... / Бо... (Why? Because...)'
+  words: 700
+  points:
+  - 'Introducing subordinate clauses of cause: the question Чому? and the answers
+    тому що... and бо... Both mean "because" but differ in register — бо is more
+    colloquial, тому що is more neutral/formal.'
+  - 'Word order: тому що always introduces the subordinate clause; бо can appear
+    mid-sentence or at the start of the second clause. Comma placement before the
+    conjunction.'
+  - 'Building natural cause sentences from everyday life: Я не прийшов, тому що був
+    зайнятий. Вона вивчає українську, бо хоче розуміти друзів.'
+  - 'Practice transformations: two simple sentences into one compound sentence with
+    тому що or бо.'
+- section: 'Хоча... (Although...)'
+  words: 600
+  points:
+  - 'Introducing concessive clauses with хоча: expressing a contrast between
+    expectation and reality. Хоча надворі холодно, ми пішли гуляти.'
+  - 'Distinguishing хоча (although — concession) from але (but — simple contrast):
+    Хоча він втомився, він продовжив працювати vs. Він втомився, але продовжив
+    працювати.'
+  - 'Position flexibility: хоча-clause can come first or second. When first, the
+    main clause often has no additional conjunction. Comma before or after хоча-clause.'
+  - 'Natural examples: Хоча я вчу українську недовго, я вже розумію багато. Ми
+    пішли на прогулянку, хоча йшов дощ.'
+- section: 'Складносурядне речення: і, та, але (Compound Sentences: and, but)'
+  words: 700
+  points:
+  - 'Expanding from A1 coordinating conjunctions: і/та (and), але/проте/однак (but).
+    Difference between і and та — та is slightly more formal or used to avoid
+    repeating і.'
+  - 'Building longer compound sentences: Я прийшов додому, і ми разом повечеряли.
+    Сергій хотів піти в кіно, але не мав часу.'
+  - 'Contrast: coordinating (і, та, але — equal clauses) vs. subordinating (тому
+    що, бо, хоча — main + dependent clause). How to tell the difference.'
+  - 'Comma rules for compound sentences: always a comma before але/проте/однак;
+    comma before і/та when joining two clauses (not two words).'
+  - 'Consolidation exercise: rewrite a short paragraph using all three types
+    (cause, concession, coordination) to create natural, connected prose.'
+vocabulary_hints:
+  required:
+  - тому що (because)
+  - бо (because — colloquial)
+  - хоча (although, even though)
+  - але (but)
+  - проте (however, yet)
+  - однак (however)
+  - причина (reason, cause)
+  - сполучник (conjunction)
+  - складне речення (complex sentence)
+  - тому (therefore, that is why)
+  recommended:
+  - допуст (concession)
+  - зате (but then, on the other hand)
+  - навпаки (on the contrary)
+  - незважаючи на (despite)
+activity_hints:
+- type: quiz
+  focus: Choose the correct conjunction (тому що, бо, хоча, але) to complete
+    sentences
+  items: 6
+- type: fill-in
+  focus: Complete compound sentences by adding the missing clause after the
+    conjunction
+  items: 6
+- type: match-up
+  focus: Match two halves of sentences — причина with наслідок, допуст with
+    результат
+  items: 6
+- type: group-sort
+  focus: Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs.
+    протиставлення (але, проте, однак)
+  items: 6
+references:
+- title: Авраменко Grade 9, §24
+  notes: Складнопідрядні речення з підрядними причини, мети, умови — primary
+    grammar source
+- title: Заболотний Grade 7, причинові сполучники
+  notes: 'Cause conjunctions: бо, тому що, через те що, оскільки — with examples
+    from Ukrainian proverbs'
+- title: 'ULP: Ukrainian Conjunctions'
+  url: https://www.ukrainianlessons.com/conjunctions/
+  notes: Overview of coordinating and subordinating conjunctions

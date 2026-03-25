@@ -1,0 +1,96 @@
+module: a2-016
+level: A2
+sequence: 16
+slug: dative-nouns
+version: '1.0'
+title: Студентові, сестрі, дитині
+subtitle: Закінчення давального відмінка іменників усіх родів
+focus: grammar
+pedagogy: PPP
+phase: A2.3 [Dative Case]
+word_target: 2000
+objectives:
+- Learner can form dative singular endings for masculine nouns using the correct variant
+  (-ові/-еві/-єві vs. -у/-ю).
+- Learner can form dative singular endings for feminine nouns (-і/-ї for hard/soft stems,
+  -ці/-зі after velars with consonant alternation).
+- Learner can form dative singular endings for neuter nouns (-у/-ю).
+- Learner can use dative nouns as indirect objects with verbs like подарувати, показати,
+  розповісти, написати.
+content_outline:
+- section: 'Давальний відмінок іменників чоловічого роду (Dative of Masculine Nouns)'
+  words: 650
+  points:
+  - 'II declension masculine nouns have parallel endings: -ові/-еві/-єві and -у/-ю.
+    Both are correct: братові = брату, лікареві = лікарю.'
+  - '-ові for hard stems (студентові, другові, батькові), -еві for soft stems and
+    sibilants (вчителеві, товаришеві), -єві after vowels (героєві).'
+  - 'Style rule from Заболотний: when multiple dative nouns appear together, alternate
+    endings to avoid monotony — подякувати сусідові Данилу.'
+  - 'I declension masculine nouns (Дмитро, батько): follow their declension pattern —
+    Дмитрові, батькові.'
+  - Practice with common masculine nouns learners already know from A1-A2.
+- section: 'Давальний відмінок іменників жіночого роду (Dative of Feminine Nouns)'
+  words: 500
+  points:
+  - 'I declension: hard stems take -і (мамі, подрузі, сестрі), soft stems take -і
+    (землі, пісні), stems in -ія take -ії (станції).'
+  - 'Consonant alternations before -і: к→ц (подруга→подрузі), г→з (книга→книзі),
+    х→с (свекруха→свекрусі).'
+  - 'III declension feminine nouns: -і (ночі, матері, любові, радості).'
+  - Practice sentences using indirect object pattern (подарувати квіти мамі, написати
+    листа подрузі).
+- section: 'Давальний відмінок іменників середнього роду (Dative of Neuter Nouns)'
+  words: 350
+  points:
+  - 'II declension neuter: -у for hard stems (місту, слову, вікну), -ю for soft stems
+    (морю, серцю).'
+  - 'IV declension (nouns in -а/-ят-): -аті/-яті (немовляті, курчаті).'
+  - Examples with neuter nouns in real contexts (дати назву місту, радіти сонцю).
+- section: 'Давальний відмінок у реченні (Dative Nouns in Sentences)'
+  words: 500
+  points:
+  - 'Two-object verb pattern: Subject + Verb + Dative (recipient) + Accusative (thing).
+    Тетяна подарувала братові книгу. Вчитель показав студентам карту.'
+  - 'Common verbs with indirect objects: подарувати, показати, дати, розповісти,
+    написати, пояснити, відповісти.'
+  - Dialogue practice — giving gifts, explaining things, writing to someone.
+  - Contrast with Genitive constructions (дати братові vs. немає брата) to reinforce
+    case discrimination.
+vocabulary_hints:
+  required:
+  - студентові (to the student (dat.))
+  - сестрі (to the sister (dat.))
+  - другові (to the friend (dat.))
+  - подарувати (to give as a gift)
+  - показати (to show)
+  - написати (to write)
+  - розповісти (to tell, to narrate)
+  - пояснити (to explain)
+  - відповісти (to answer, to reply)
+  - закінчення (ending (grammar))
+  recommended:
+  - відміна (declension)
+  - чергування (alternation (grammar))
+  - одержувач (recipient)
+  - немовля (baby, infant)
+activity_hints:
+- type: fill-in
+  focus: Put the noun in brackets into the dative case (e.g., подарувати [брат] → братові)
+  items: 6
+- type: group-sort
+  focus: Sort dative nouns by gender (masculine -ові/-у, feminine -і, neuter -у/-ю)
+  items: 6
+- type: quiz
+  focus: Choose the correct dative ending for nouns with consonant alternation (подруга→подрузі vs. *подругі)
+  items: 6
+- type: match-up
+  focus: Match verb + dative noun phrases to their English meanings
+  items: 6
+references:
+- title: "Заболотний Grade 10, §157"
+  notes: "Dative endings for II declension masculine nouns with parallel -ові/-еві/-єві and -у/-ю, style rule for alternating"
+- title: "Глазова Grade 10, §194"
+  notes: "Dative singular endings for masculine nouns by declension group (hard, soft, mixed)"
+- title: "Кравцова Grade 4, §135"
+  notes: "Distinguishing dative and locative case — shared endings, different functions"

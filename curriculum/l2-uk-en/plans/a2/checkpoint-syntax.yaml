@@ -1,0 +1,86 @@
+module: a2-047
+level: A2
+sequence: 47
+slug: checkpoint-syntax
+version: '1.0'
+title: Контрольна робота — складне речення
+subtitle: Перевірка знань з модулів M42-M46 — причина, мета, означення, умова
+focus: review
+pedagogy: Review
+phase: A2.7 [Complex Sentences and Conditionals]
+word_target: 1500
+objectives:
+- Learner can identify and produce subordinate clauses of cause (тому що, бо),
+  concession (хоча), purpose (щоб), relative (який, де), and condition (якщо).
+- Learner can choose the correct conjunction for a given communicative intent
+  (explaining why, stating purpose, describing, setting conditions).
+- Learner can transform direct speech into reported speech using він сказав, що...
+- Learner can use all complex sentence types together in connected speech about
+  education, work, and daily life.
+content_outline:
+- section: 'Частина 1: Впізнай сполучник (Part 1: Identify the Conjunction)'
+  words: 450
+  points:
+  - 'Conjunction identification: given a complex sentence, identify the conjunction
+    and name its type — причина (тому що, бо), допуст (хоча), мета (щоб),
+    означальне (який, де, куди, звідки), умова (якщо).'
+  - 'Error detection: find and correct errors in complex sentences — wrong
+    conjunction, missing comma, wrong form of який, wrong verb form after щоб.'
+  - 'Mixed examples from all five types, drawn from everyday contexts covered in
+    M42-M46.'
+- section: 'Частина 2: Вибери правильну форму (Part 2: Choose the Correct Form)'
+  words: 500
+  points:
+  - 'Conjunction selection: given a pair of ideas, choose the correct conjunction to
+    combine them. Cause vs. purpose (тому що vs. щоб), real vs. unreal condition
+    (якщо vs. якби — recognition), coordination vs. subordination (але vs. хоча).'
+  - 'Form agreement: choose the correct form of який (gender, number) for relative
+    clauses. Choose the correct verb form after щоб (infinitive vs. past-tense
+    form).'
+  - 'Reported speech transformation: convert direct quotes to indirect speech using
+    що and чи.'
+  - 'Comma placement: insert commas in complex sentences that are missing
+    punctuation.'
+- section: 'Частина 3: Побудуй складне речення (Part 3: Build Complex Sentences)'
+  words: 550
+  points:
+  - 'Sentence building: given a situation (at university, at work, planning a trip),
+    produce complex sentences using the required conjunction type.'
+  - 'Paragraph writing: combine multiple complex sentence types into a short
+    connected paragraph about education goals, work experience, or weekend plans.'
+  - 'Self-assessment checklist: review all five types of complex sentences learned
+    in A2.7. Can I explain причину? допуст? мету? означення? умову? Can I report
+    what someone said?'
+  - 'Preview of B1 syntax: brief mention of what comes next — якби (unreal
+    conditions), складнопідрядні з кількома підрядними (multiple subordinate
+    clauses), складні сполучники.'
+vocabulary_hints:
+  required:
+  - тому що (because)
+  - бо (because)
+  - хоча (although)
+  - щоб (in order to)
+  - який (which, that)
+  - якщо (if)
+  - сполучник (conjunction)
+  - складне речення (complex sentence)
+  recommended:
+  - підрядний (subordinate)
+  - головний (main)
+  - кома (comma)
+activity_hints:
+- type: quiz
+  focus: Identify conjunction types in mixed complex sentences from M42-M46
+  items: 6
+- type: fill-in
+  focus: Complete complex sentences choosing from all five conjunction types
+  items: 6
+- type: group-sort
+  focus: Sort example sentences by type — причина, допуст, мета, означення, умова
+  items: 6
+references:
+- title: Авраменко Grade 9, §17-24
+  notes: Full coverage of складнопідрядні речення — all types reviewed in this
+    checkpoint
+- title: Заболотний Grade 9, §17-21
+  notes: Comprehensive review of subordinate clause types with exercises

@@ -1,0 +1,107 @@
+module: a2-033
+level: A2
+sequence: 33
+slug: home-and-daily-life
+version: '1.0'
+title: Мій дім, мій день
+subtitle: Описуємо помешкання, меблі та щоденний розпорядок із повною системою відмінків
+focus: communication
+pedagogy: TBL
+phase: A2.5 [Case Synthesis and Plurals]
+word_target: 2000
+objectives:
+- Learner can describe their home and its rooms, using Locative for location (у кухні,
+  на балконі), Genitive for absence/quantity (немає гаража, багато кімнат), and
+  Nominative for listing (тут є диван, шафа, стіл).
+- Learner can describe furniture and household items using Instrumental for
+  characteristics (стіл з дерева, кімната з великими вікнами) and Accusative for
+  actions (поставити стілець, повісити картину).
+- Learner can narrate a daily routine in sequence, using appropriate tenses and cases
+  (вранці я встаю о сьомій годині, снідаю з родиною, їду на роботу).
+- Learner can participate in a dialogue about visiting someone's home, asking about
+  rooms and routines using the full case system naturally.
+content_outline:
+- section: 'Сценарій 1: Моє помешкання (Scenario 1: My Home)'
+  words: 600
+  points:
+  - 'Dialogue: showing a friend around a new apartment. Host describes rooms
+    and furniture. Cases emerge naturally: Ось вітальня (Nom.). У вітальні
+    (Loc.) стоїть великий диван. На стіні (Loc.) висить картина. Біля
+    вікна (Gen.) є крісло.'
+  - 'Room vocabulary: кухня, спальня, вітальня, ванна кімната, коридор,
+    балкон, кабінет.'
+  - 'Furniture vocabulary: диван, крісло, стіл, стілець, шафа, ліжко,
+    полиця, дзеркало, килим.'
+  - 'Guest asks questions: А скільки у вас кімнат (Gen.Pl.)? Що на балконі
+    (Loc.)? Де ви поставили книжки (Acc.Pl.)?'
+- section: 'Сценарій 2: Мій звичайний день (Scenario 2: My Typical Day)'
+  words: 600
+  points:
+  - 'Monologue: describing a typical weekday from morning to evening.
+    Вранці я встаю о сьомій (Loc. for time). Іду у ванну (Acc. direction).
+    Снідаю з родиною (Instr.). Їду на роботу (Acc.) автобусом (Instr.).'
+  - 'Daily actions: вставати, вмиватися, снідати, обідати, вечеряти,
+    працювати, відпочивати, лягати спати.'
+  - 'Time expressions: вранці, вдень, увечері, вночі; о котрій годині;
+    після обіду (Gen.), перед сном (Instr.), під час роботи (Gen.).'
+  - 'Contrast weekday vs. weekend: У будні я працюю, а у вихідні
+    відпочиваю. По суботах ходжу на ринок (Acc.).'
+- section: 'Сценарій 3: В гостях (Scenario 3: Visiting Someone)'
+  words: 500
+  points:
+  - 'Dialogue: visiting a Ukrainian friend for dinner. Arrival, tour of
+    the home, sitting down to eat, conversation about daily routines.'
+  - 'Hospitality expressions: Будь ласка, заходьте! Сідайте за стіл (Acc.).
+    Пригощайтеся! Хочете чаю (Gen.) чи кави (Gen.)?'
+  - 'Comparing routines: А о котрій ви встаєте? Хто у вас готує вечерю
+    (Acc.)? Ви снідаєте вдома (Loc. implied) чи на роботі (Loc.)?'
+  - 'Cases in action: за столом (Instr.), на кухні (Loc.), для гостей
+    (Gen.), з цукром (Instr.), дякую господарям (Dat.).'
+- section: 'Мовленнєве завдання: Опишіть свій дім (Speaking Task: Describe
+    Your Home)'
+  words: 300
+  points:
+  - 'Guided production task: learner writes 8-10 sentences describing their
+    home and daily routine, using a checklist to ensure they include at least
+    5 different cases.'
+  - 'Checklist: use Nom. (what is there), Gen. (what is not there / how many),
+    Dat. (for whom), Acc. (where you go / what you do), Instr. (with whom /
+    by what means), Loc. (where things are).'
+  - 'Model answer provided for comparison.'
+vocabulary_hints:
+  required:
+  - помешкання (dwelling, apartment)
+  - кімната (room)
+  - кухня (kitchen)
+  - спальня (bedroom)
+  - вітальня (living room)
+  - меблі (furniture)
+  - розпорядок дня (daily routine)
+  - вставати (to get up)
+  - снідати (to have breakfast)
+  - лягати спати (to go to bed)
+  recommended:
+  - балкон (balcony)
+  - коридор (hallway)
+  - килим (carpet, rug)
+  - пригощатися (to help oneself (to food))
+  - господар (host)
+activity_hints:
+- type: fill-in
+  focus: Complete a description of a home with the correct case forms for room
+    and furniture nouns
+  items: 6
+- type: quiz
+  focus: Choose the correct case form in daily routine sentences (time expressions,
+    prepositions, verbs)
+  items: 6
+- type: match-up
+  focus: Match daily activities with the correct time of day and appropriate case
+    construction
+  items: 6
+references:
+- title: Заболотний Grade 5, §§25-28
+  notes: Describing places and daily activities — case usage in context
+- title: "ULP: Home and Daily Routine"
+  url: "https://www.ukrainianlessons.com/season3/"
+  notes: Vocabulary for home description and daily routines with audio

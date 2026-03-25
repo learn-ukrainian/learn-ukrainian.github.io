@@ -1,0 +1,93 @@
+module: a2-011
+level: A2
+sequence: 11
+slug: genitive-adjectives-pronouns
+version: '1.0'
+title: Мого друга, цієї книги
+subtitle: Узгодження прикметників, присвійних та вказівних займенників у родовому відмінку
+focus: grammar
+pedagogy: PPP
+phase: A2.2 [Genitive Case Complete]
+word_target: 2000
+objectives:
+- Learner can form Genitive singular adjective endings for masculine/neuter (-ого/-ього)
+  and feminine (-ої/-ьої) nouns.
+- Learner can use possessive pronouns in the Genitive (мого, твого, нашого, вашого;
+  моєї, твоєї, нашої, вашої).
+- Learner can use demonstrative pronouns in the Genitive (цього, того; цієї, тієї).
+- Learner can produce full Genitive noun phrases with adjective + pronoun + noun
+  agreement across all three genders.
+content_outline:
+- section: 'Який? Якого? Прикметники в родовому (Which? Whose? Adjectives in the Genitive)'
+  words: 700
+  points:
+  - 'Masculine and neuter Genitive adjective endings: -ого for hard stems (нового друга,
+    нового міста), -ього for soft stems (синього олівця, синього моря).'
+  - 'Feminine Genitive adjective endings: -ої for hard stems (нової книги), -ьої for
+    soft stems (синьої сукні).'
+  - 'Agreement in full phrases: без нового підручника (masc.), без нової книги (fem.),
+    біля нового будинку (masc.), біля старої церкви (fem.).'
+  - 'Common adjectives practiced in Genitive: великий→великого/великої, маленький→маленького/маленької,
+    старий→старого/старої, молодий→молодого/молодої.'
+- section: 'Мого, твого, нашого: присвійні займенники (Мого, твого, нашого: Possessive
+    Pronouns)'
+  words: 650
+  points:
+  - 'Masculine/neuter Genitive forms: мого, твого, його (unchanged), нашого, вашого,
+    їхнього (unchanged). Examples: для мого брата, біля нашого будинку, без твого дозволу.'
+  - 'Feminine Genitive forms: моєї, твоєї, її (unchanged), нашої, вашої, їхньої (unchanged).
+    Examples: від моєї сестри, для нашої вчительки, біля вашої школи.'
+  - 'Note: його, її, їхній/їхня/їхнє do not change for case when they are possessives
+    (його книги = his book''s, not him).'
+  - 'Practice with prepositions from M08-M10: з мого міста, без твоєї допомоги, для
+    нашого вчителя, до вашої лікарні.'
+- section: 'Цього, того: вказівні займенники та повні фрази (Цього, того: Demonstratives
+    and Full Phrases)'
+  words: 650
+  points:
+  - 'Masculine/neuter Genitive demonstratives: цього (this), того (that). Examples:
+    біля цього будинку, після того дня, від цього вчителя.'
+  - 'Feminine Genitive demonstratives: цієї (this), тієї (that). Examples: для цієї
+    дівчини, навпроти тієї школи, без тієї книги.'
+  - 'Full noun phrases with multiple modifiers: біля цього нового ринку, для моєї старшої
+    сестри, без того важливого документа. Word order: demonstrative + possessive/adjective
+    + noun.'
+  - 'Consolidation drill: building Genitive phrases step by step — noun alone (друга)
+    → adjective + noun (нового друга) → demonstrative + adjective + noun (цього нового
+    друга) → preposition + full phrase (для цього нового друга).'
+vocabulary_hints:
+  required:
+  - прикметник (adjective)
+  - займенник (pronoun)
+  - присвійний (possessive)
+  - вказівний (demonstrative)
+  - узгодження (agreement (grammatical))
+  - дозвіл (permission)
+  - підручник (textbook)
+  - документ (document)
+  - вчителька (female teacher)
+  - важливий (important)
+  recommended:
+  - молодий (young)
+  - старший (older, elder)
+  - дівчина (girl, young woman)
+  - олівець (pencil)
+activity_hints:
+- type: fill-in
+  focus: Put the adjective and noun into the correct Genitive form
+  items: 6
+- type: quiz
+  focus: Choose the correct possessive pronoun form (мого vs. моєї etc.)
+  items: 6
+- type: match-up
+  focus: Match Nominative noun phrases to their Genitive equivalents
+  items: 6
+- type: fill-in
+  focus: Build complete Genitive phrases with demonstrative + adjective + noun
+  items: 6
+references:
+- title: Заболотний Grade 6, §48-49
+  notes: Відмінювання прикметників, присвійних та вказівних займенників
+- title: 'ULP: Ukrainian Adjective Declension'
+  url: https://www.ukrainianlessons.com/adjective-declension/
+  notes: Adjective endings across cases

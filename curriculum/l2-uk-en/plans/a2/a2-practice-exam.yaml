@@ -1,0 +1,95 @@
+module: a2-059
+level: A2
+sequence: 59
+slug: a2-practice-exam
+version: '1.0'
+title: Пробний іспит
+subtitle: Тренувальний тест рівня A2 з читання, письма та граматики
+focus: review
+pedagogy: Review
+phase: A2.8 [Refinement and Graduation]
+word_target: 1500
+objectives:
+- Learner can complete a timed reading comprehension section, answering
+  questions about everyday Ukrainian texts.
+- Learner can demonstrate grammar accuracy across all A2 topics in a
+  structured test format.
+- Learner can produce a short written response (80-100 words) on a
+  familiar topic using correct grammar and vocabulary.
+- Learner can self-assess readiness for B1 based on exam performance.
+content_outline:
+- section: 'Частина 1: Читання (Part 1: Reading)'
+  words: 450
+  points:
+  - 'Text A: a short informational text (advertisement, schedule, or
+    announcement — 80-100 words) with 3-4 comprehension questions.
+    Tests scanning for specific information.'
+  - 'Text B: a personal message or email (100-120 words) where a
+    Ukrainian friend describes their plans, asks questions, shares
+    news. 4-5 comprehension questions requiring understanding of
+    detail and inference.'
+  - 'Text C: a short narrative or blog post (120-150 words) about
+    a Ukrainian tradition or travel experience. 4-5 questions testing
+    main idea, vocabulary in context, and drawing conclusions.'
+- section: 'Частина 2: Граматика (Part 2: Grammar)'
+  words: 400
+  points:
+  - 'Section A: Case selection (6 items) — choose the correct case
+    form in sentences with various triggers (verbs, prepositions,
+    quantity words).'
+  - 'Section B: Verb form (6 items) — select the correct tense, aspect,
+    or mood for the context.'
+  - 'Section C: Mixed grammar (6 items) — comparatives, pronouns
+    (свій, себе, indefinite/negative), conjunctions, numeral
+    agreement.'
+- section: 'Частина 3: Спілкування та письмо (Part 3: Communication
+    and Writing)'
+  words: 350
+  points:
+  - 'Task A: Dialogue completion — fill in 6 blanks in a natural
+    conversation (at a cafe, on the phone, planning a trip).'
+  - 'Task B: Guided writing — write a short text (80-100 words) on
+    one of three topics: (1) Describe your favorite season and why,
+    (2) Write to a Ukrainian friend about your weekend plans,
+    (3) Describe a holiday tradition you like.'
+  - 'Scoring rubric: grammar accuracy (cases, aspect, agreement),
+    vocabulary range, coherence, task completion.'
+- section: 'Результати та самооцінка (Results and Self-Assessment)'
+  words: 300
+  points:
+  - 'Answer key with explanations for each grammar and reading question.
+    Why each answer is correct — teaching through the test itself.'
+  - 'Self-assessment grid: Strong / Developing / Needs Work for each
+    A2 skill area (cases, aspect, comparison, complex sentences,
+    vocabulary, reading, writing).'
+  - 'Recommendations: which modules to revisit before starting B1.
+    Encouragement: passing 70% means ready for B1.'
+vocabulary_hints:
+  required:
+  - іспит (exam)
+  - завдання (task, exercise)
+  - відповідь (answer)
+  - питання (question)
+  - читання (reading)
+  - письмо (writing)
+  - граматика (grammar)
+  - результат (result)
+  recommended:
+  - самооцінка (self-assessment)
+  - оцінка (grade, assessment)
+  - правильний (correct)
+activity_hints:
+- type: quiz
+  focus: Simulated exam — mixed grammar questions (cases, aspect, comparison)
+  items: 6
+- type: fill-in
+  focus: Reading comprehension — answer questions about a Ukrainian text
+  items: 6
+- type: true-false
+  focus: Grammar accuracy check — identify correct vs incorrect sentences
+  items: 6
+references:
+- title: CEFR A2 Descriptor — Can-do statements
+  notes: Aligned to CEFR A2 reading, writing, and grammar competencies
+- title: Заболотний Grade 6, Контрольна робота
+  notes: Ukrainian school test format for grammar and reading sections

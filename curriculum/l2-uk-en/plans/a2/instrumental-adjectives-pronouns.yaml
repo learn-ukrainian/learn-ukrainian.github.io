@@ -1,0 +1,111 @@
+module: a2-025
+level: A2
+sequence: 25
+slug: instrumental-adjectives-pronouns
+version: '1.0'
+title: З моїм найкращим другом
+subtitle: Узгодження прикметників та займенників в орудному відмінку
+focus: grammar
+pedagogy: PPP
+phase: A2.4 [Instrumental Case]
+word_target: 2000
+objectives:
+- 'Learner can form Instrumental singular endings for adjectives in all three genders
+  (hard group: -им/-ою, soft group: -ім/-ьою).'
+- Learner can form Instrumental singular endings for possessive pronouns (моїм,
+  моєю, твоїм, твоєю, нашим, нашою).
+- Learner can build complete noun phrases in Instrumental with adjective + noun
+  agreement (з гарним другом, за нашим будинком, під великою ялинкою).
+- Learner can use demonstrative pronouns цим/цією, тим/тією in Instrumental
+  phrases.
+content_outline:
+- section: 'Прикметники в орудному відмінку (Adjectives in the Instrumental Case)'
+  words: 550
+  points:
+  - 'Hard group adjective endings in Instrumental singular: masculine/neuter -им
+    (новим, гарним, великим, старим), feminine -ою (новою, гарною, великою, старою).'
+  - 'Soft group adjective endings in Instrumental singular: masculine/neuter -ім
+    (синім, літнім, домашнім), feminine -ьою (синьою, літньою, домашньою).'
+  - 'Reference chart from Захарійчук Grade 4, с. 92: full declension table for hard
+    and soft adjective groups.'
+  - 'Practice: з добрим другом, з гарною подругою, під великим деревом, за синім
+    морем — building phrases with adjective + noun agreement.'
+- section: 'Присвійні та вказівні займенники (Possessive and Demonstrative Pronouns)'
+  words: 500
+  points:
+  - 'Possessive pronouns in Instrumental singular: мій → моїм/моєю, твій → твоїм/
+    твоєю, наш → нашим/нашою, ваш → вашим/вашою. його/її/їхній do not change
+    (його is invariable, їхній declines like an adjective).'
+  - 'Demonstrative pronouns: цей → цим/цією, той → тим/тією. Цим автобусом
+    (by this bus), за тією стіною (behind that wall).'
+  - 'Building full phrases: з моїм старим другом, за нашим новим будинком, під
+    цією великою ялинкою.'
+  - 'Pattern: preposition + pronoun (Instrumental) + adjective (Instrumental) +
+    noun (Instrumental) — all parts agree in case.'
+- section: 'Повні словосполучення в орудному відмінку (Full Instrumental Phrases)'
+  words: 500
+  points:
+  - 'Three-word agreement chains: з моїм найкращим другом (prep + poss.pron. +
+    adj. + noun), за нашим великим будинком, між тією старою школою і новою
+    бібліотекою.'
+  - 'Comparing masculine and feminine chains: з моїм новим сусідом vs. з моєю
+    новою сусідкою — every word changes.'
+  - 'Common real-life phrases: з моєю найкращою подругою, за вашим будинком, цим
+    вечором (this evening — temporal), тим часом (meanwhile).'
+  - Fixed expressions using Instrumental pronouns and adjectives in daily speech.
+- section: 'Практика: Опиши свій день (Practice: Describe Your Day)'
+  words: 450
+  points:
+  - 'Production exercise: describe your day using full Instrumental phrases — З ким
+    ти снідаєш? З моєю сім''єю. Чим ти їдеш на роботу? Нашим старим автобусом.'
+  - 'Dialogue: Two friends catching up — asking about family, new neighbors, daily
+    routine. Practice with possessive + adjective + noun chains.'
+  - 'Error correction drill: spot and fix agreement mistakes in Instrumental phrases
+    (e.g., *з моїм новою другом → з моїм новим другом).'
+  - 'Review of all Instrumental functions so far: companionship, tool, profession,
+    spatial — now with full adjective+pronoun agreement.'
+vocabulary_hints:
+  required:
+  - мій (my)
+  - твій (your (informal))
+  - наш (our)
+  - ваш (your (formal/plural))
+  - цей (this)
+  - той (that)
+  - новий (new)
+  - старий (old)
+  - великий (big, large)
+  - гарний (nice, beautiful)
+  - найкращий (the best)
+  - сусід (neighbor (male))
+  recommended:
+  - домашній (home (adj.), domestic)
+  - синій (blue)
+  - сусідка (neighbor (female))
+  - тим часом (meanwhile)
+  - цим вечором (this evening)
+activity_hints:
+- type: fill-in
+  focus: Add correct Instrumental adjective endings to complete noun phrases
+  items: 6
+- type: match-up
+  focus: Match Nominative phrases (мій новий друг) to Instrumental forms (моїм новим
+    другом)
+  items: 6
+- type: quiz
+  focus: Choose the correct pronoun form (моїм vs. моєю) based on noun gender
+  items: 6
+- type: fill-in
+  focus: Build full sentences using preposition + pronoun + adjective + noun in
+    Instrumental
+  items: 6
+references:
+- title: Захарійчук Grade 4, с. 85-92
+  notes: Full adjective declension tables for hard and soft groups, including Instrumental
+    endings (-им/-ою and -ім/-ьою)
+- title: Голуб Grade 6, с. 179
+  notes: Pronoun declension table showing Instrumental forms (моїм, такою, усім) with
+    note that possessive pronouns decline like adjectives
+- title: Авраменко Grade 11, с. 25
+  notes: Adjective declension reference table — hard group (білий → білим/білою) and
+    soft group (синій → синім/синьою)

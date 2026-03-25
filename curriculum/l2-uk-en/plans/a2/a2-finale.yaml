@@ -1,0 +1,101 @@
+module: a2-060
+level: A2
+sequence: 60
+slug: a2-finale
+version: '1.0'
+title: Фінал A2
+subtitle: Підсумкове завдання — один день в українському місті
+focus: review
+pedagogy: Review
+phase: A2.8 [Refinement and Graduation]
+word_target: 1500
+objectives:
+- Learner can sustain an extended conversation in Ukrainian across multiple
+  everyday situations (transport, shopping, dining, asking directions).
+- Learner can narrate events in the past, describe the present, and
+  discuss future plans using all A2 grammar structures fluently.
+- Learner can complete practical real-world tasks in Ukrainian (order food,
+  buy tickets, ask for help, describe a problem).
+- Learner can demonstrate readiness for B1 through integrated use of
+  cases, aspect, comparison, complex sentences, and opinion expression.
+content_outline:
+- section: 'Ранок: прибуття та орієнтація (Morning: Arrival and Orientation)'
+  words: 400
+  points:
+  - 'Scenario: the learner arrives in Lviv by train. Tasks: buy a transit
+    ticket, ask for directions to the hotel, check in at the hotel
+    (give name, passport, ask about room).'
+  - 'Dialogues integrating: Locative (у Львові, на вокзалі), Accusative
+    (купити квиток), Genitive (немає вільних кімнат), formal
+    imperative (Покажіть, будь ласка, паспорт).'
+  - 'Cultural note: how to navigate a Ukrainian city — маршрутка,
+    трамвай, таксі, пішки.'
+- section: 'День: ринок, кав''ярня, прогулянка (Day: Market, Cafe, Walk)'
+  words: 400
+  points:
+  - 'At the market: buy food, discuss quantities and prices (numeral
+    agreement: два кілограми яблук, п''ять помідорів), compare
+    products (Ці яблука солодші за ті).'
+  - 'At a cafe: order food and drinks, discuss preferences (Я волію
+    каву з молоком. А що ви порадите?), deal with a small problem
+    (Вибачте, я замовляв борщ, а не суп).'
+  - 'Walking around: describe what you see using all cases naturally,
+    ask locals about sights (Що це за будівля? Коли її збудували?).'
+- section: 'Вечір: друзі, розмови, плани (Evening: Friends, Conversations,
+    Plans)'
+  words: 400
+  points:
+  - 'Meeting Ukrainian friends: discuss your day using past tense and
+    aspect (Сьогодні я побачив/побачила стільки цікавого!). Share
+    opinions (На мою думку, Львів — найгарніше місто).'
+  - 'Extended conversation: discuss favorite places, compare Lviv with
+    your home city, talk about Ukrainian traditions (Я дізнався/
+    дізналася про Івана Купала — це так цікаво!).'
+  - 'Making future plans: discuss what to do tomorrow using future
+    tense and щоб/якщо (Якщо буде гарна погода, поїдемо у Карпати.
+    Я хочу поїхати, щоб побачити гори).'
+- section: 'Підсумок: від A2 до B1 (Summary: From A2 to B1)'
+  words: 300
+  points:
+  - 'Reflection: what the learner can now do — a summary of all A2
+    competencies expressed as "Я можу..." statements. Connect to
+    CEFR A2 can-do descriptors.'
+  - 'What changes in B1: more Ukrainian in explanations (metalanguage
+    bridge is complete), longer texts, more nuanced grammar
+    (participles, complex aspect, passive), richer vocabulary.'
+  - 'Encouragement and celebration: completing A2 is a major milestone.
+    The learner can handle everyday situations in Ukraine. Вітаємо!
+    Ви готові до рівня B1!'
+vocabulary_hints:
+  required:
+  - прибуття (arrival)
+  - вокзал (train station)
+  - квиток (ticket)
+  - ринок (market)
+  - замовити (to order)
+  - порадити (to recommend)
+  - будівля (building)
+  - враження (impression)
+  - підсумок (summary)
+  - вітаємо (congratulations)
+  recommended:
+  - маршрутка (minibus)
+  - прогулянка (walk, stroll)
+  - дізнатися (to find out, to learn)
+  - готовий (ready)
+activity_hints:
+- type: fill-in
+  focus: Complete dialogues in real-world Ukrainian city situations
+  items: 6
+- type: quiz
+  focus: Choose the correct grammar form in integrated context (mixed cases, aspect)
+  items: 6
+- type: match-up
+  focus: Match situations to appropriate Ukrainian phrases and expressions
+  items: 6
+references:
+- title: "ULP: Travelling in Ukraine"
+  url: "https://www.ukrainianlessons.com/travel-ukraine/"
+  notes: Practical travel vocabulary and dialogues for real-world situations
+- title: Заболотний Grade 6, Повторення наприкінці року
+  notes: End-of-year capstone review format

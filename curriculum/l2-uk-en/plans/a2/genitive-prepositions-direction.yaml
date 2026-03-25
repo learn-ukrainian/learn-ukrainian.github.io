@@ -1,0 +1,89 @@
+module: a2-010
+level: A2
+sequence: 10
+slug: genitive-prepositions-direction
+version: '1.0'
+title: Куди? До якого часу?
+subtitle: Прийменник до з родовим відмінком для напрямку, мети та часу
+focus: grammar
+pedagogy: PPP
+phase: A2.2 [Genitive Case Complete]
+word_target: 2000
+objectives:
+- Learner can use до + Genitive to express direction toward a destination.
+- Learner can use до + Genitive to express a time limit ('until', 'by').
+- Learner can use до + Genitive to express purpose ('to see someone', 'to the doctor').
+- Learner can contrast до with other directional constructions (в/на + Accusative)
+  and explain when each is appropriate.
+content_outline:
+- section: 'Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive
+    for Direction)'
+  words: 700
+  points:
+  - 'Destination as a place: до Львова, до Києва, до Одеси. Used for cities and countries:
+    до України, до Польщі.'
+  - 'Destination as a person: до друга (to a friend''s place), до бабусі (to grandma''s),
+    до лікаря (to the doctor). До + person = going to see them / to their place.'
+  - 'Contrast до vs. в/на + Accusative: ''Іду до магазину'' vs. ''Іду в магазин'' —
+    до emphasizes direction toward, в/на emphasizes entering/arriving. Both are correct,
+    but до is often preferred in standard Ukrainian.'
+  - 'Hard and soft stems: до будинку (hard masc.), до музею (soft masc.), до школи
+    (hard fem.), до станції (-ія fem.), до моря (soft neuter).'
+- section: 'До якого часу? До + родовий для часу (Until When? До + Genitive for Time)'
+  words: 650
+  points:
+  - 'Time limit — until: до вечора (until evening), до ранку (until morning), до понеділка
+    (until Monday), до літа (until summer).'
+  - 'Deadline — by: зробити до п''ятниці (finish by Friday), прийти до восьмої (come
+    by eight o''clock).'
+  - 'Paired with від/з for time ranges: від ранку до вечора (from morning to evening),
+    з понеділка до п''ятниці (from Monday to Friday).'
+  - 'Common daily phrases: працювати до шостої, чекати до завтра, відкрито до дев''ятої.'
+- section: 'До + родовий: решта значень та узагальнення (До + Genitive: Other Meanings
+    and Summary)'
+  words: 650
+  points:
+  - 'Purpose — with abstract nouns: до речі (by the way), до побачення (goodbye — lit.
+    until seeing), готовий до екзамену (ready for the exam).'
+  - 'Addition and relation: додати до списку (add to the list), ставлення до роботи
+    (attitude toward work), інтерес до мови (interest in the language).'
+  - 'Summary table of all до meanings: direction (до Львова), person (до лікаря), time
+    limit (до вечора), deadline (до п''ятниці), purpose (до побачення).'
+  - 'Consolidation: compare до with від and після from M08 — all three take the Genitive,
+    but express different relationships (toward, from, after).'
+vocabulary_hints:
+  required:
+  - напрямок (direction)
+  - мета (goal, purpose)
+  - музей (museum)
+  - лікар (doctor)
+  - бабуся (grandmother)
+  - вечір (evening)
+  - ранок (morning)
+  - екзамен (exam)
+  - побачення (meeting, date; goodbye in 'до побачення')
+  - список (list)
+  recommended:
+  - ставлення (attitude)
+  - інтерес (interest)
+  - готовий (ready)
+  - завтра (tomorrow)
+activity_hints:
+- type: quiz
+  focus: Choose the correct meaning of до in context (direction, time, purpose)
+  items: 6
+- type: fill-in
+  focus: Complete sentences with до + correct Genitive noun form
+  items: 6
+- type: match-up
+  focus: Match до-phrases with their functions (direction, time limit, purpose)
+  items: 6
+- type: group-sort
+  focus: Sort до-phrases by meaning category (direction vs. time vs. purpose)
+  items: 6
+references:
+- title: Заболотний Grade 7, §31
+  notes: Прийменник до з родовим відмінком
+- title: 'ULP: 10 Uses of Genitive Case'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: Direction and time uses of до

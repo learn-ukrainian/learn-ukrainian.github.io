@@ -1,0 +1,113 @@
+module: a2-037
+level: A2
+sequence: 37
+slug: aspect-mastery
+version: '1.0'
+title: 30 найважливіших видових пар
+subtitle: Морфологія видових пар та вибір виду в контексті
+focus: grammar
+pedagogy: PPP
+phase: A2.6 [Aspect, Tenses, and Motion]
+word_target: 2000
+objectives:
+- Learner can produce both members of 30 essential aspect pairs from memory,
+  organized by morphological pattern (prefix, suffix change, stem change,
+  suppletive).
+- Learner can identify the four main formation patterns for aspect pairs and
+  predict the perfective or imperfective partner of an unfamiliar verb using
+  these patterns.
+- Learner can choose the correct aspect in complex sentences involving sequence,
+  interruption, habitual action, and single result — beyond simple signal words.
+- Learner can use aspect pairs fluently in short dialogues about daily plans,
+  completed tasks, and ongoing activities.
+content_outline:
+- section: Як утворюються видові пари (How Aspect Pairs Are Formed)
+  words: 500
+  points:
+  - 'Pattern 1 — Prefixation (most common): писати → написати, читати →
+    прочитати, робити → зробити, їсти → з''їсти, варити → зварити. The prefix
+    adds completion without changing the base meaning.'
+  - 'Pattern 2 — Suffix change: записувати → записати (-увати → -ати),
+    розповідати → розповісти (-ідати → -істи), пояснювати → пояснити
+    (-ювати → -ити). Imperfective suffixes are longer.'
+  - 'Pattern 3 — Stem change: допомагати → допомогти, відповідати →
+    відповісти. The stem itself transforms.'
+  - 'Pattern 4 — Suppletive (different roots): брати → взяти, говорити →
+    сказати, класти → покласти. These must be memorized as pairs.'
+- section: '30 пар: Список і приклади (30 Pairs: List and Examples)'
+  words: 600
+  points:
+  - 'Group A — Daily actions (10 pairs): робити/зробити, писати/написати,
+    читати/прочитати, готувати/приготувати, їсти/з''їсти, пити/випити,
+    варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати.'
+  - 'Group B — Communication & learning (10 pairs): говорити/сказати,
+    питати/запитати, відповідати/відповісти, пояснювати/пояснити,
+    вчити/вивчити, розуміти/зрозуміти, казати/сказати, розповідати/розповісти,
+    записувати/записати, перекладати/перекласти.'
+  - 'Group C — Movement & interaction (10 pairs): брати/взяти, давати/дати,
+    класти/покласти, відкривати/відкрити, закривати/закрити, починати/почати,
+    закінчувати/закінчити, допомагати/допомогти, купувати/купити,
+    платити/заплатити.'
+  - 'Each pair shown in a minimal contrast sentence: Я варив суп (was cooking)
+    vs. Я зварив суп (cooked it, done).'
+- section: Вибір виду в складних ситуаціях (Aspect Choice in Complex Situations)
+  words: 500
+  points:
+  - 'Sequence of completed events — all perfective: Я встав, вмився, поснідав
+    і пішов на роботу (I got up, washed, had breakfast, and left for work).'
+  - 'Interruption — imperfective background + perfective event: Коли я готувала
+    вечерю, подзвонила подруга (While I was cooking dinner, a friend called).'
+  - 'Habitual vs. single — imperfective for habit, perfective for one-time:
+    Вона завжди допомагала сусідам (She always helped the neighbors) vs.
+    Вона допомогла сусідці вчора (She helped the neighbor yesterday).'
+  - 'Negation nuance: Я не читав цю книгу (I haven''t read it / never read it)
+    vs. Я не прочитав цю книгу (I didn''t finish reading it — started but
+    didn''t complete).'
+- section: Практика у діалогах (Practice in Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: Що ти зробив сьогодні? — Listing completed tasks with perfective.
+    А що ти робив увечері? — Describing an ongoing evening activity with imperfective.'
+  - 'Dialogue 2: Planning and reporting. Що ти будеш робити завтра? (impf.)
+    vs. Що ти зробиш до п''ятниці? (pf.) — aspect in future context too.'
+  - 'Common conversational patterns with aspect: Ти вже зробив? (Have you done
+    it yet?), Я ще роблю (I''m still doing it), Я тільки що зробив (I just
+    did it).'
+vocabulary_hints:
+  required:
+  - видова пара (aspect pair)
+  - префікс (prefix)
+  - суфікс (suffix)
+  - брати / взяти (to take — impf./pf.)
+  - давати / дати (to give — impf./pf.)
+  - говорити / сказати (to say — impf./pf.)
+  - класти / покласти (to put — impf./pf.)
+  - починати / почати (to begin — impf./pf.)
+  - закінчувати / закінчити (to finish — impf./pf.)
+  - допомагати / допомогти (to help — impf./pf.)
+  recommended:
+  - утворення (formation)
+  - морфологія (morphology)
+  - тільки що (just now)
+  - вже (already)
+activity_hints:
+- type: match-up
+  focus: Match imperfective verbs with their perfective partners from the 30 pairs
+  items: 6
+- type: fill-in
+  focus: Complete sentences by choosing the correct aspect based on context
+    (sequence, interruption, habit, single event)
+  items: 6
+- type: group-sort
+  focus: Sort aspect pairs by formation pattern (prefix, suffix, stem change,
+    suppletive)
+  items: 6
+- type: quiz
+  focus: Read a mini-situation and choose the correct aspect form with
+    justification
+  items: 6
+references:
+- title: Заболотний Grade 7, §42-44
+  notes: Видові пари дієслів — formation patterns and usage
+- title: 'Ohoiko, 500+ Ukrainian Verbs (2024)'
+  notes: Comprehensive aspect pair reference with conjugation tables

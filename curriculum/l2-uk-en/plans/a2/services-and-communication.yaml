@@ -1,0 +1,103 @@
+module: a2-019
+level: A2
+sequence: 19
+slug: services-and-communication
+version: '1.0'
+title: На пошті
+subtitle: Давальний відмінок у ситуаціях обслуговування — надсилання, отримання, прохання
+focus: communication
+pedagogy: TBL
+phase: A2.3 [Dative Case]
+word_target: 2000
+objectives:
+- Learner can navigate a post office interaction in Ukrainian — sending a letter or
+  parcel, asking about delivery, filling out an address form.
+- Learner can use dative constructions in service situations to express giving, sending,
+  and addressing (надіслати листа другові, дати посилку листоноші).
+- Learner can request help and thank service workers using dative-governing verbs
+  (допоможіть мені, дякую вам).
+- Learner can write a short message or address using dative forms (Дорогому другові
+  Андрію, Любій бабусі Олені).
+content_outline:
+- section: 'На пошті: Базова лексика (At the Post Office: Essential Vocabulary)'
+  words: 400
+  points:
+  - 'Post office vocabulary: пошта, відділення, лист, конверт, марка, посилка, бандероль,
+    квитанція, адреса, індекс.'
+  - 'People: листоноша, одержувач, відправник.'
+  - 'Actions: надіслати/відправити (to send), отримати (to receive), заповнити
+    (to fill out), підписати (to sign).'
+  - Brief cultural note on Укрпошта and how postal services work in Ukraine.
+- section: 'Надіслати листа: Діалоги на пошті (Sending a Letter: Dialogues at the
+    Post Office)'
+  words: 550
+  points:
+  - 'Dialogue 1: Sending a letter — asking for an envelope and stamps, giving the address,
+    paying. Natural interaction with a postal worker.'
+  - 'Dialogue 2: Sending a parcel to a friend — explaining contents, filling out the form
+    (кому — одержувач, від кого — відправник), asking about delivery time.'
+  - 'Dative in action: Я хочу надіслати листа другові. Дайте мені два конверти. Покажіть
+    мені бланк. Напишіть адресу одержувачеві.'
+  - Polite request forms with dative: Допоможіть мені, будь ласка. Підкажіть мені, де...
+- section: 'Просити, дякувати, допомагати: Давальний у сфері послуг (Requesting,
+    Thanking, Helping: Dative in Services)'
+  words: 550
+  points:
+  - 'Requesting help: Допоможіть мені заповнити бланк. Покажіть мені, як це зробити.
+    Поясніть мені правила.'
+  - 'Thanking: Дякую вам за допомогу. Дякую листоноші.'
+  - 'Giving advice: Раджу вам надіслати бандероллю. Раджу тобі перевірити адресу.'
+  - 'Extended scenario: Asking a neighbor to help send something, explaining who it is
+    for (Це подарунок моїй бабусі. Допоможи мені загорнути).'
+  - Review of imperative + dative (дай мені, покажи нам, скажіть їй) from natural
+    service interactions.
+- section: 'Написати адресу: Давальний у листуванні (Writing an Address: Dative in
+    Correspondence)'
+  words: 500
+  points:
+  - 'Addressing letters and messages: Кому — дорогому другові Андрію, любій бабусі Олені,
+    шановному професорові Петренку.'
+  - 'Full dative agreement in addresses: possessive + adjective + noun + name all in
+    dative — моєму дорогому братові Михайлові.'
+  - 'Short message writing: Дорогій подрузі! Пишу тобі з Києва. Посилаю тобі
+    маленький подарунок.'
+  - Practice writing addresses and short greetings using dative forms.
+vocabulary_hints:
+  required:
+  - пошта (post office, mail)
+  - лист (letter)
+  - конверт (envelope)
+  - марка (stamp)
+  - посилка (parcel, package)
+  - адреса (address)
+  - надіслати (to send)
+  - отримати (to receive)
+  - відправити (to send, to dispatch)
+  - листоноша (mail carrier)
+  recommended:
+  - бандероль (small parcel, book post)
+  - квитанція (receipt)
+  - одержувач (recipient)
+  - відправник (sender)
+  - індекс (postal code)
+activity_hints:
+- type: fill-in
+  focus: Complete post office dialogue lines with correct dative forms (Надішліть цю посилку ___)
+  items: 6
+- type: match-up
+  focus: Match service requests to appropriate responses (Допоможіть мені → Звичайно, що вам потрібно?)
+  items: 6
+- type: quiz
+  focus: Choose the correct dative address form (дорогому/дорогій/дорогим + name)
+  items: 6
+- type: group-sort
+  focus: Sort phrases into categories — requesting (прохання), thanking (подяка), giving (давання)
+  items: 6
+references:
+- title: "Заболотний Grade 10, §157"
+  notes: "Dative case in formal address and letter-writing conventions"
+- title: "ULP: At the Post Office"
+  url: "https://www.ukrainianlessons.com/at-the-post-office/"
+  notes: "Post office vocabulary and dialogues with dative constructions"
+- title: "Кравцова Grade 4, §135"
+  notes: "Dative vs. Locative distinction — relevant for на пошті (Loc.) vs. надіслати листоношеві (Dat.)"

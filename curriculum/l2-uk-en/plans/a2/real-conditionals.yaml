@@ -1,0 +1,102 @@
+module: a2-045
+level: A2
+sequence: 45
+slug: real-conditionals
+version: '1.0'
+title: Якщо... то...
+subtitle: Реальна умова — теперішній і майбутній час
+focus: grammar
+pedagogy: PPP
+phase: A2.7 [Complex Sentences and Conditionals]
+word_target: 2000
+objectives:
+- Learner can form real conditional sentences using якщо + present or future tense
+  to describe likely or possible situations.
+- Learner can use the якщо... то... frame to clearly connect condition and result.
+- Learner can distinguish real conditions (якщо — A2) from unreal/hypothetical
+  conditions (якби — B1, not taught here).
+- Learner can apply real conditionals in practical everyday scenarios (planning,
+  advice, warnings, promises).
+content_outline:
+- section: 'Якщо + теперішній/майбутній час (If + Present/Future)'
+  words: 700
+  points:
+  - 'Introducing real conditionals: якщо expresses a condition that is possible or
+    likely. Якщо буде гарна погода, ми підемо гуляти. Якщо ти хочеш, я допоможу.'
+  - 'Tense in real conditionals: якщо-clause uses present or future tense. The
+    result clause uses future or imperative. No special mood — just regular verb
+    forms.'
+  - 'The якщо... то... frame: то is optional but very common in Ukrainian. It
+    marks the beginning of the result clause. Якщо дощитиме, то ми залишимося
+    вдома.'
+  - 'Comma placement: comma before якщо when it comes second; comma after the
+    якщо-clause when it comes first.'
+  - 'Explicit scope note: this module covers ONLY real conditions (реальна умова)
+    with якщо. Unreal/hypothetical conditions with якби (нереальна умова) are a B1
+    topic and are NOT covered here.'
+- section: 'Умова в повсякденному житті (Conditions in Everyday Life)'
+  words: 700
+  points:
+  - 'Planning and decisions: Якщо завтра буде вільний час, я піду в спортзал. Якщо
+    у магазині є свіжий хліб, купи, будь ласка.'
+  - 'Advice and recommendations: Якщо болить голова, випий таблетку. Якщо хочеш
+    вивчити мову, практикуй щодня.'
+  - 'Warnings: Якщо не поспішиш, запізнишся. Якщо не візьмеш парасольку, змокнеш.'
+  - 'Promises and agreements: Якщо ти допоможеш мені, я допоможу тобі. Якщо все
+    буде добре, ми поїдемо у відпустку.'
+  - 'Natural dialogues: two friends making weekend plans, a parent giving advice
+    to a child, colleagues discussing a project deadline — all using real conditionals.'
+- section: 'Якщо чи якби? Тільки реальна умова (Якщо or якби? Real Conditions Only)'
+  words: 600
+  points:
+  - 'Preview of the difference: якщо = real, possible condition (if it rains, we
+    will stay home). якби = unreal, hypothetical condition (if I were a bird, I
+    would fly). At A2, learners use only якщо.'
+  - 'Recognition only for якби: learners may encounter якби in songs, proverbs,
+    or conversation. They should recognize it means "if (hypothetically)" but not
+    produce it yet. Якби я знав — if only I knew (but I do not).'
+  - 'Consolidation of all complex sentence types from A2.7: причина (тому що, бо),
+    допуст (хоча), мета (щоб), означальне (який, де), умова (якщо). Building
+    paragraphs that use multiple types.'
+  - 'Self-check: can I explain why (тому що), despite what (хоча), for what purpose
+    (щоб), which one (який), and under what condition (якщо)?'
+vocabulary_hints:
+  required:
+  - якщо (if — real condition)
+  - умова (condition)
+  - результат (result, outcome)
+  - реальний (real)
+  - погода (weather)
+  - допомогти (to help)
+  - поспішити (to hurry)
+  - вільний (free, available)
+  - залишитися (to stay, to remain)
+  - порада (advice)
+  recommended:
+  - якби (if — hypothetical, B1 preview)
+  - змокнути (to get wet)
+  - запізнитися (to be late)
+  - парасолька (umbrella)
+  - відпустка (vacation, holiday)
+activity_hints:
+- type: fill-in
+  focus: Complete real conditional sentences with the correct verb form in the
+    якщо-clause or result clause
+  items: 6
+- type: quiz
+  focus: Choose якщо or якби — identify real vs. hypothetical conditions
+    (recognition only for якби)
+  items: 6
+- type: match-up
+  focus: Match conditions (якщо-clauses) to their logical results
+  items: 6
+references:
+- title: Авраменко Grade 9, §24
+  notes: Складнопідрядні речення умови — якщо, коли, як with examples from
+    literature and proverbs
+- title: Заболотний Grade 9, §21
+  notes: Підрядні частини умови та допусту — distinguishing real and unreal
+    conditions
+- title: 'ULP: If in Ukrainian — якщо vs якби'
+  url: https://www.ukrainianlessons.com/if-in-ukrainian/
+  notes: Clear explanation of real vs. unreal conditionals for learners
