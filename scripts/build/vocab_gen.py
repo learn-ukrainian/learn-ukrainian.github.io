@@ -215,17 +215,22 @@ def build_slovnyk_markdown(
     additional_vocab: list[dict],
     expressions: list[dict],
 ) -> str:
-    """Build the словник tab content as markdown.
+    """Build the словник tab: dictionary table + interactive FlashcardDeck below.
 
-    Three sections:
-    1. Required/recommended from plan (with translations from plan)
-    2. Additional words from module (with writer translations + VESUM)
-    3. Expressions
-
-    Words are displayed with stress marks (наголос) in the table.
+    Structure:
+    1. Markdown tables (reference dictionary)
+    2. FlashcardDeck (interactive practice)
+    3. Expressions table
     """
+    GENDER_COLORS = {
+        "ч.": "#0057B8", "м.": "#0057B8",
+        "ж.": "#C2185B", "ф.": "#C2185B",
+        "с.": "#E65100", "н.": "#E65100",
+    }
+
     lines = []
 
+    # 1. Dictionary tables
     if plan_vocab:
         lines.extend([
             "",
@@ -269,5 +274,38 @@ def build_slovnyk_markdown(
             trans = entry.get("translation", "")
             lines.append(f"| **{word}** | {trans} |")
 
+    # 2. Interactive flashcards below the tables
+    all_words = (plan_vocab or []) + (additional_vocab or [])
+    if all_words:
+        cards = []
+        for entry in all_words:
+            word = _stress_word(entry.get("word", ""))
+            trans = entry.get("translation", "")
+            pos = entry.get("pos", "")
+            gender = entry.get("gender", "")
+
+            card_parts = [f'front: "{_esc(word)}", back: "{_esc(trans)}"']
+            if pos:
+                card_parts.append(f'subtitle: "{_esc(pos)}"')
+            if gender:
+                card_parts.append(f'tag: "{_esc(gender)}"')
+                color = GENDER_COLORS.get(gender, "")
+                if color:
+                    card_parts.append(f'tagColor: "{color}"')
+            cards.append("{ " + ", ".join(card_parts) + " }")
+
+        cards_js = ", ".join(cards)
+        lines.extend([
+            "",
+            "### Картки — Flashcards",
+            "",
+            f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
+        ])
+
     lines.append("")
     return "\n".join(lines)
+
+
+def _esc(s: str) -> str:
+    """Escape quotes for JSX string props."""
+    return s.replace("\\", "\\\\").replace('"', '\\"')

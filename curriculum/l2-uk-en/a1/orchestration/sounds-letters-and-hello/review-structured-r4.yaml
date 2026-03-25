@@ -1,0 +1,52 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers every single point in the outline (golden rules, phonetics, false
+    friends, greetings). The word count exceeds the target (1636 vs 1200) but targets
+    are minimums, and the expansion provides pure
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless phonetic execution. The syllable division examples (`а-пте-ка`,
+    `по-шта`, `зу-пин-ка`, `Хар-ків`) strictly follow Ukrainian phonotactic rules
+    (sonority sequencing). No Surzhyk or calques.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional contrastive explanations (e.g., the palm test for unaspirated
+    K/T). The grouping of Cyrillic letters into "friendly," "false friends," and "new
+    shapes" is a highly effective A1 teaching st
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are introduced naturally
+    within the prose and reading practice blocks.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All placeholders are present, sequentially correct, and placed precisely
+    after the target knowledge is introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Highly encouraging tone. The visual mnemonics for new letter shapes (e.g.,
+    "П is a doorway", "Ш is a comb") are perfectly tailored for adult beginners.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, precise formatting of the dialogue block, and excellent
+    use of bolding.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module frames city names (Kyiv, Lviv, Odesa) not just as reading practice
+    but as places with cultural weight ("Pronouncing these names correctly is a sign
+    of respect").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The provided dialogue is natural, brief, and seamlessly introduces grammatical
+    gender agreement (`Рада` vs `Радий`).
+findings: []

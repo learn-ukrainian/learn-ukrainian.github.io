@@ -80,6 +80,7 @@ _TYPE_TO_COMPONENT: dict[str, str] = {
     "highlight-morphemes": "HighlightMorphemes",
     "image-to-letter": "ImageToLetter",
     "letter-grid": "LetterGrid",
+    "watch-and-repeat": "WatchAndRepeat",
     "phrase-table": "PhraseTable",
     "critical-analysis": "CriticalAnalysis",
     "essay-response": "EssayResponse",
@@ -491,6 +492,28 @@ def _render_letter_grid(act: dict) -> str:
     return _component("LetterGrid", props)
 
 
+def _render_watch_and_repeat(act: dict) -> str:
+    """watch-and-repeat → <WatchAndRepeat items={[...]} />
+
+    YAML: items[{video, letter?, word?, note?}]
+    React WatchAndRepeatItem: {video, letter?, word?, note?}
+    """
+    items = []
+    for item in act.get("items", []):
+        entry = {"video": item.get("video", "")}
+        if item.get("letter"):
+            entry["letter"] = item["letter"]
+        if item.get("word"):
+            entry["word"] = item["word"]
+        if item.get("note"):
+            entry["note"] = item["note"]
+        items.append(entry)
+
+    props = _prop("items", items)
+    props += _opt_prop("title", act.get("instruction"))
+    return _component("WatchAndRepeat", props)
+
+
 def _render_phrase_table(act: dict) -> str:
     """phrase-table → <PhraseTable groups={[...]} />
 
@@ -740,6 +763,7 @@ _RENDERERS: dict[str, Any] = {
     "highlight-morphemes": _render_highlight_morphemes,
     "image-to-letter": _render_image_to_letter,
     "letter-grid": _render_letter_grid,
+    "watch-and-repeat": _render_watch_and_repeat,
     "phrase-table": _render_phrase_table,
     # Seminar types
     "critical-analysis": _render_critical_analysis,

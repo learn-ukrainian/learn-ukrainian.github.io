@@ -121,7 +121,7 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
             except Exception:
                 pass  # Fall through to plan-based fallback
 
-    # 2. Fallback: plan vocabulary_hints (no contextual translations from prose)
+    # 2. Fallback: plan vocabulary_hints → table + FlashcardDeck
     vocab = plan.get("vocabulary_hints", {})
     required = vocab.get("required", [])
     recommended = vocab.get("recommended", [])
@@ -129,8 +129,15 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
     if not required and not recommended:
         return ""
 
+    GENDER_COLORS = {
+        "ч.": "#0057B8", "м.": "#0057B8",
+        "ж.": "#C2185B", "ф.": "#C2185B",
+        "с.": "#E65100", "н.": "#E65100",
+    }
+
     lines = []
 
+    # Dictionary tables
     if required:
         lines.extend([
             "",
@@ -151,7 +158,33 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
             *_vocab_table_rows(recommended),
         ])
 
-    lines.append("")
+    # Flashcards below
+    all_items = required + recommended
+    cards = []
+    for item in all_items:
+        word, translation = parse_vocab_hint(item)
+        pos, gender = _vesum_lookup(word)
+        front = word.replace('"', '\\"')
+        back = translation.replace('"', '\\"')
+        parts = [f'front: "{front}", back: "{back}"']
+        if pos:
+            parts.append(f'subtitle: "{pos}"')
+        if gender:
+            parts.append(f'tag: "{gender}"')
+            color = GENDER_COLORS.get(gender, "")
+            if color:
+                parts.append(f'tagColor: "{color}"')
+        cards.append("{ " + ", ".join(parts) + " }")
+
+    cards_js = ", ".join(cards)
+    lines.extend([
+        "",
+        "### Картки — Flashcards",
+        "",
+        f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
+        "",
+    ])
+
     return "\n".join(lines)
 
 

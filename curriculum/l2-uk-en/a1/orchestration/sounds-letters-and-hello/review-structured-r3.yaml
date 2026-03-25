@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all major plan points (sounds vs letters, textbook references,
+    specific letter categories, greetings). Slightly skims over the full list of "new
+    shapes" (omits mentioning Ґ, И, Й, Ф, Ц, Ч expli
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques. Correct explanations of phonetics
+    (unaspirated T/K, dental T, roles of ь, щ, ї). Proper spelling and grammatical
+    gender use.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent integration of textbook poems and rules. Clear progression from
+    familiar letters to false friends to new shapes. Solid explanation of basic syllable
+    division.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is naturally integrated
+    into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 3
+  evidence: Filled exercises are missing entirely; only raw placeholders are present.
+    Cannot evaluate logic or distractors.
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: Heavy use of forbidden motivational fluff ("Look at the text on this screen",
+    "Imagine walking through a Ukrainian city"), meta-commentary ("This is the foundation
+    of everything that follows"), gamifi
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Clean markdown and correct headings. Word count (1816) is significantly
+    higher than the 1200 word target (>50% over), though acceptable under the "targets
+    are minimums" rule.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Beautifully contextualizes cities (Lviv as cultural heart, Kyiv as capital)
+    and uses authentic textbook references (Большакова).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Natural, brief conversation showcasing grammatical gender correctly. Distinct
+    named speakers.
+findings: []

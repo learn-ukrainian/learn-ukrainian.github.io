@@ -1,0 +1,51 @@
+- find: 'Look at the text on this screen. What you see are letters — shapes drawn
+    on a surface. Now say any word out loud. What you just produced are sounds — vibrations
+    in the air. You already understand this distinction instinctively, but Ukrainian
+    makes it explicit from day one. Every Ukrainian first-grader learns a golden rule
+    from their very first textbook: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо
+    літери**'
+  replace: 'Every Ukrainian first-grader learns a golden rule from their very first
+    textbook: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери**'
+- find: This is the foundation of everything that follows. The Ukrainian **абетка**
+    (alphabet) has 33 **літери** (letters)
+  replace: The Ukrainian **абетка** (alphabet) has 33 **літери** (letters)
+- find: 'Because they are so familiar, you can start reading real Ukrainian words
+    right now. Look at the word **мама** (mother). You already know how to read it
+    — just sound it out: м-а-м-а.'
+  replace: 'Look at the word **мама** (mother). Sound it out: м-а-м-а.'
+- find: 'Now for the biggest trap English speakers face: **false friend** letters.
+    These look exactly like Latin letters but make completely different sounds. Memorize
+    these six — they will save you from countless mistakes:'
+  replace: 'Some Cyrillic letters are **false friends**. They look exactly like Latin
+    letters but make completely different sounds:'
+- find: Your brain will see **В** and scream "b" — fight that instinct. When you see
+    **РЕСТОРАН** on a sign in Kyiv, the **Р** is a rolled "r" and the **С** is an
+    "s." Train your eyes to see Cyrillic, not Latin ghosts.
+  replace: When you see **РЕСТОРАН** on a sign in Kyiv, the **Р** is a rolled "r"
+    and the **С** is an "s."
+- find: 'Time for your first Ukrainian conversation. These are informal greetings
+    — use them with friends, family, and people your age or younger. The core phrases:'
+  replace: 'These are informal greetings — use them with friends, family, and people
+    your age or younger. The core phrases:'
+- find: This single word uses letters from all three groups — friendly, false friends,
+    and new shapes. If you can read **Привіт**, you have already started reading Ukrainian.
+  replace: This single word uses letters from all three groups — friendly, false friends,
+    and new shapes.
+- find: 'Imagine walking through a Ukrainian city. Signs surround you — and you can
+    already read them. Sound out each word letter by letter, then blend into syllables:'
+  replace: 'Sound out each word letter by letter, then blend into syllables:'
+- find: Notice how many of these words are recognizable from English or other European
+    languages. Ukrainian has plenty of international vocabulary. The spelling follows
+    Ukrainian rules, but the meaning is transparent. You are not starting from zero
+    — you are starting from shared ground.
+  replace: Notice how many of these words are recognizable from English or other European
+    languages. Ukrainian has plenty of international vocabulary. The spelling follows
+    Ukrainian rules, but the meaning is transparent.
+- find: 'Two question forms unlock conversation: **Що це?**'
+  replace: 'Two essential question forms are: **Що це?**'
+- find: 'Notice the **що/хто** distinction: **що** for objects and places, **хто**
+    for people. Ukrainian distinguishes animate from inanimate from the very start
+    — this is how the language thinks, and now you are beginning to think that way
+    too.'
+  replace: 'Notice the **що/хто** distinction: **що** for objects and places, **хто**
+    for people. Ukrainian distinguishes animate from inanimate from the very start.'

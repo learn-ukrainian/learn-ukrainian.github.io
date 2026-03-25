@@ -2843,6 +2843,12 @@ build_status: draft
             if imp not in base_imports:
                 base_imports.append(imp)
 
+    # FlashcardDeck import (Словник tab uses it)
+    if "FlashcardDeck" in mdx_content:
+        fc_imp = "import FlashcardDeck from '@site/src/components/FlashcardDeck';"
+        if fc_imp not in base_imports:
+            base_imports.append(fc_imp)
+
     imports = "\n".join(sorted(base_imports)) + "\n\n"
 
     mdx_path.write_text(frontmatter + imports + mdx_content, "utf-8")
