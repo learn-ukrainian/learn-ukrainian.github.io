@@ -7,7 +7,7 @@ from typing import ClassVar
 import pytest
 import yaml
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "tools"))
 
 from fix_external_resources import (
     audit,

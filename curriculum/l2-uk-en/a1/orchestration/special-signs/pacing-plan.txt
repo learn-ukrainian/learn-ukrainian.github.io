@@ -1,7 +1,0 @@
-Section 1 "М'який знак (The Soft Sign — Ь)": ~270 words — Explain Ь softens consonants, hard vs soft notation, common patterns (-нь, -ль, -ть), examples
-Section 2 "Апостроф (The Apostrophe)": ~270 words — Rule (after б,п,в,м,ф,р before я,ю,є,ї), keeps consonant hard, contrast with/without, reading practice
-Section 3 "Дзвінкі і глухі (Voiced and Voiceless)": ~270 words — Pairs, throat test, Ukrainian non-devoicing vs Russian, minimal pairs
-Section 4 "Важкі звуки (Tricky Sounds)": ~260 words — И, Г vs Ґ, Р descriptions and practice words
-Section 5 "Підсумок — Summary": ~200 words — Self-check questions, review words
-Section 6 "Summary": ~150 words — English recap of key points
-Total: ~1420 words

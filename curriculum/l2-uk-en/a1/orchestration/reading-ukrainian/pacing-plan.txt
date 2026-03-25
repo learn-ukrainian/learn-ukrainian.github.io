@@ -1,6 +1,0 @@
-Section 1 "Склади (Syllables)": ~250 words — Syllable rule (count vowels = count syllables), how to sound out new words syllable-by-syllable, open-syllable principle
-Section 2 "Голосні літери (Vowel Letters)": ~300 words — All 10 vowel letters, simple vs iotated, Ї as always two sounds, И vs І minimal pairs
-Section 3 "Читання слів (Reading Words)": ~300 words — Syllable-by-syllable reading strategy, common word patterns (CVCV, CVCCV, CVC), special combinations (Щ, Ь, apostrophe preview)
-Section 4 "Читаємо разом (Reading Together)": ~200 words — Progressive reading practice from 2-syllable to 4+ syllable words, simple reading text with Це + noun
-Section 5 "Підсумок — Summary": ~150 words — Self-check questions, review of key concepts
-Total: ~1200+ words

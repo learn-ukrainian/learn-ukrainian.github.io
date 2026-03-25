@@ -1,0 +1,18 @@
+with open('curriculum/l2-uk-en/a1/vocabulary/my-world-objects.yaml', 'a', encoding='utf-8') as f:
+    f.write("""  - lemma: "множина"
+    translation: "plural"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рід"
+    translation: "gender"
+    pos: "noun"
+    gender: "m"
+  - lemma: "місце"
+    translation: "place"
+    pos: "noun"
+    gender: "n"
+  - lemma: "речі"
+    translation: "things"
+    pos: "noun"
+    notes: "plural only in this context"
+""")

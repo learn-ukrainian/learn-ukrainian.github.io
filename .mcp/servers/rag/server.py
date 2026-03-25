@@ -1042,16 +1042,23 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     import uvicorn
     from mcp.server.sse import SseServerTransport
     from starlette.applications import Starlette
+    from starlette.responses import Response
     from starlette.routing import Mount, Route
 
     sse = SseServerTransport("/messages/")
 
     async def handle_sse(request):
-        async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
-            await server.run(
-                streams[0], streams[1], server.create_initialization_options(),
-                stateless=True,
-            )
+        try:
+            async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
+                await server.run(
+                    streams[0], streams[1], server.create_initialization_options(),
+                    stateless=True,
+                )
+        except Exception:
+            # Client disconnected (Gemini timeout, rate limit, etc.)
+            # This is normal — don't crash the server
+            pass
+        return Response()
 
     app = Starlette(
         routes=[

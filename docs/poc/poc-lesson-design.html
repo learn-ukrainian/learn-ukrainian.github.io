@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Lesson Design — learn-ukrainian</title>
+<style>
+  :root {
+    --blue: #0057B8;
+    --yellow: #FFD700;
+    --blue-light: #E8F0FE;
+    --yellow-light: #FFF9E0;
+    --green: #2E7D32;
+    --green-light: #E8F5E9;
+    --red: #C62828;
+    --red-light: #FFEBEE;
+    --purple: #6A1B9A;
+    --purple-light: #F3E5F5;
+    --orange: #E65100;
+    --orange-light: #FFF3E0;
+    --teal: #00695C;
+    --teal-light: #E0F2F1;
+    --brown: #5D4037;
+    --brown-light: #EFEBE9;
+    --gray-50: #FAFAFA; --gray-100: #F5F5F5; --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0; --gray-600: #757575; --gray-800: #424242; --gray-900: #212121;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.7; }
+
+  /* Module switcher */
+  .module-switch {
+    background: var(--gray-900); color: white; padding: 10px 24px;
+    display: flex; align-items: center; gap: 16px; font-size: 13px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .module-switch label { opacity: 0.7; }
+  .module-switch select {
+    background: var(--gray-800); color: white; border: 1px solid var(--gray-600);
+    padding: 4px 12px; border-radius: 6px; font-size: 13px;
+  }
+  .module-switch .poc-label {
+    margin-left: auto; color: var(--yellow); font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  /* Header */
+  .header { padding: 24px 0; border-bottom: 4px solid var(--yellow); }
+  .header.core { background: var(--blue); color: white; }
+  .header.seminar { background: linear-gradient(135deg, #1a237e, #4a148c); color: white; }
+  .header-inner { max-width: 840px; margin: 0 auto; padding: 0 24px; }
+  .level-badge {
+    display: inline-block; background: var(--yellow); color: var(--gray-900);
+    font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { opacity: 0.85; font-size: 14px; }
+
+  /* Tabs */
+  .tabs-container { max-width: 840px; margin: 0 auto; padding: 0 24px; }
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-top: 20px; overflow-x: auto; }
+  .tab {
+    padding: 11px 20px; font-size: 14px; font-weight: 600; color: var(--gray-600);
+    background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; white-space: nowrap; transition: all 0.2s;
+  }
+  .tab:hover { color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-content { display: none; padding: 28px 0 60px; }
+  .tab-content.active { display: block; }
+  .content-area { max-width: 840px; margin: 0 auto; padding: 0 24px; }
+
+  /* Typography */
+  h2 { font-size: 20px; color: var(--blue); margin: 28px 0 14px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); }
+  h2:first-child { margin-top: 0; }
+  h3 { font-size: 17px; margin: 20px 0 10px; color: var(--gray-800); }
+  p { margin-bottom: 14px; font-size: 15px; }
+  .ukr { font-weight: 600; color: var(--blue); }
+  .trans { color: var(--gray-600); font-style: italic; font-size: 14px; }
+
+  /* Dialogue */
+  .dialogue {
+    background: white; border-radius: var(--radius); border-left: 4px solid var(--blue);
+    padding: 18px 22px; margin: 18px 0; box-shadow: var(--shadow);
+  }
+  .dialogue-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); margin-bottom: 14px; font-weight: 600; }
+  .dialogue-line { margin-bottom: 10px; padding-left: 14px; position: relative; font-size: 15px; }
+  .dialogue-line::before { content: ''; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+  .dialogue-line:nth-child(odd)::before { background: var(--yellow); }
+  .speaker { font-weight: 700; }
+
+  /* Rule box */
+  .rule-box { background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius); padding: 18px 22px; margin: 22px 0; }
+  .rule-box-header { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; margin-bottom: 10px; }
+  .rule-box-icon { width: 30px; height: 30px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .rule-box table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+  .rule-box th { text-align: left; padding: 7px 10px; background: rgba(255,215,0,0.3); border-radius: 4px; }
+  .rule-box td { padding: 7px 10px; }
+  .gender-m { color: var(--blue); font-weight: 700; }
+  .gender-f { color: #C2185B; font-weight: 700; }
+  .gender-n { color: var(--green); font-weight: 700; }
+
+  /* Myth buster (seminar) */
+  .myth-box { background: var(--red-light); border: 2px solid var(--red); border-radius: var(--radius); padding: 18px 22px; margin: 22px 0; }
+  .myth-box-header { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; margin-bottom: 10px; color: var(--red); }
+  .myth-box .myth-claim { background: rgba(198,40,40,0.08); padding: 10px 14px; border-radius: 8px; margin: 8px 0; font-style: italic; border-left: 3px solid var(--red); }
+  .myth-box .myth-truth { background: var(--green-light); padding: 10px 14px; border-radius: 8px; margin: 8px 0; border-left: 3px solid var(--green); }
+
+  /* Primary source (seminar) */
+  .source-box { background: var(--purple-light); border: 2px solid var(--purple); border-radius: var(--radius); padding: 18px 22px; margin: 22px 0; }
+  .source-box-header { font-weight: 700; color: var(--purple); margin-bottom: 8px; font-size: 15px; }
+  .source-box blockquote { font-style: italic; border-left: 3px solid var(--purple); padding-left: 14px; margin: 10px 0; color: var(--gray-800); }
+  .source-box .source-cite { font-size: 13px; color: var(--gray-600); text-align: right; }
+
+  /* Exercise wrapper */
+  .exercise {
+    background: white; border-radius: var(--radius); border: 2px solid var(--gray-200);
+    padding: 22px; margin: 22px 0; box-shadow: var(--shadow);
+  }
+  .exercise-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .exercise-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px; color: white;
+  }
+  .badge-quiz { background: var(--blue); }
+  .badge-fillin { background: var(--green); }
+  .badge-matchup { background: var(--orange); }
+  .badge-groupsort { background: var(--purple); }
+  .badge-truefalse { background: #00695C; }
+  .badge-error { background: var(--red); }
+  .badge-anagram { background: #5D4037; }
+  .badge-translate { background: #1565C0; }
+  .badge-cloze { background: #37474F; }
+  .badge-unjumble { background: #AD1457; }
+  .badge-select { background: #00838F; }
+  .badge-grammar { background: #1B5E20; }
+  .badge-observe { background: #263238; }
+  .badge-classify { background: #4E342E; }
+  .badge-mark { background: #1A237E; }
+  .badge-morpheme { background: #880E4F; }
+  .badge-image2letter { background: #F57F17; color: var(--gray-900); }
+  .badge-lettergrid { background: #01579B; }
+  .badge-phrasetable { background: #33691E; }
+  .badge-essay { background: var(--purple); }
+  .badge-critical { background: #BF360C; }
+  .badge-source { background: #4A148C; }
+  .badge-reading { background: #006064; }
+  .badge-comparative { background: #004D40; }
+  .badge-authorial { background: #311B92; }
+  .badge-debate { background: #B71C1C; }
+  .badge-etymology { background: #3E2723; }
+  .badge-transcritique { background: #0D47A1; }
+  .badge-transcription { background: #827717; }
+  .badge-paleography { background: #4A148C; }
+  .badge-dialect { background: #1B5E20; }
+  .exercise-title { font-weight: 600; font-size: 15px; }
+  .exercise-instruction { color: var(--gray-600); font-size: 13px; margin-bottom: 14px; font-style: italic; }
+  .exercise-num { font-size: 12px; color: var(--gray-600); margin-left: auto; font-weight: 600; }
+
+  /* Quiz */
+  .quiz-question { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-200); }
+  .quiz-question:last-child { border-bottom: none; padding-bottom: 0; }
+  .quiz-q { font-weight: 600; margin-bottom: 8px; font-size: 15px; }
+  .quiz-options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .quiz-option {
+    padding: 7px 14px; border: 2px solid var(--gray-200); border-radius: 8px;
+    cursor: pointer; font-size: 14px; transition: all 0.2s; background: white;
+  }
+  .quiz-option:hover { border-color: var(--blue); background: var(--blue-light); }
+  .quiz-option.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .quiz-option.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* Match-up */
+  .matchup { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; }
+  .matchup-left, .matchup-right {
+    padding: 10px 14px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .matchup-left { background: var(--blue-light); border: 2px solid transparent; text-align: right; }
+  .matchup-right { background: var(--orange-light); border: 2px solid transparent; }
+  .matchup-left:hover { border-color: var(--blue); }
+  .matchup-right:hover { border-color: var(--orange); }
+  .matchup-left.selected { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0,87,184,0.2); }
+  .matchup-right.selected { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(230,81,0,0.2); }
+  .matchup-arrow { color: var(--gray-300); font-size: 18px; text-align: center; }
+  .matchup-left.matched, .matchup-right.matched { border-color: var(--green); background: var(--green-light); }
+
+  /* Group sort */
+  .groupsort-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .groupsort-zone {
+    min-height: 100px; border: 2px dashed var(--gray-300); border-radius: var(--radius);
+    padding: 12px; text-align: center;
+  }
+  .groupsort-zone h4 { font-size: 14px; color: var(--purple); margin-bottom: 8px; }
+  .groupsort-items { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .groupsort-chip {
+    padding: 6px 14px; background: var(--purple-light); border: 1px solid var(--purple);
+    border-radius: 20px; cursor: grab; font-size: 13px; transition: all 0.2s; user-select: none;
+  }
+  .groupsort-chip:hover { background: var(--purple); color: white; }
+  .groupsort-chip.placed { opacity: 0.4; pointer-events: none; }
+
+  /* True/False */
+  .tf-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 14px; }
+  .tf-statement { flex: 1; }
+  .tf-buttons { display: flex; gap: 6px; }
+  .tf-btn {
+    padding: 5px 14px; border: 2px solid var(--gray-200); border-radius: 6px;
+    cursor: pointer; font-size: 13px; font-weight: 600; background: white; transition: all 0.2s;
+  }
+  .tf-btn:hover { border-color: var(--blue); }
+  .tf-btn.correct-true { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .tf-btn.correct-false { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* Fill-in */
+  .fillin-item { margin-bottom: 10px; font-size: 15px; line-height: 2; }
+  .fillin-blank {
+    display: inline-block; min-width: 80px; border-bottom: 2px dashed var(--blue);
+    padding: 2px 8px; text-align: center; cursor: pointer; font-weight: 600; color: var(--blue);
+  }
+  .fillin-blank.filled { border-bottom-style: solid; background: var(--green-light); color: var(--green); border-color: var(--green); border-radius: 4px; }
+
+  /* Error correction */
+  .error-sentence {
+    padding: 12px 16px; background: var(--gray-100); border-radius: 8px;
+    margin-bottom: 10px; font-size: 15px; line-height: 1.8;
+  }
+  .error-word { background: var(--red-light); padding: 2px 6px; border-radius: 4px; cursor: pointer; text-decoration: underline wavy var(--red); }
+  .error-word:hover { background: var(--red); color: white; }
+  .error-correction { display: none; color: var(--green); font-weight: 600; margin-left: 8px; }
+
+  /* Anagram */
+  .anagram-tiles { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .anagram-tile {
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    background: var(--blue-light); border: 2px solid var(--blue); border-radius: 8px;
+    font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+  .anagram-tile:hover { background: var(--blue); color: white; transform: scale(1.1); }
+  .anagram-target { display: flex; gap: 6px; margin-bottom: 16px; }
+  .anagram-slot {
+    width: 40px; height: 40px; border: 2px dashed var(--gray-300); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700;
+  }
+
+  /* Translate */
+  .translate-item { margin-bottom: 14px; }
+  .translate-source { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .translate-input {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--gray-200); border-radius: 8px;
+    font-size: 15px; font-family: inherit; transition: border-color 0.2s;
+  }
+  .translate-input:focus { outline: none; border-color: var(--blue); }
+
+  /* Unjumble */
+  .unjumble-words { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .unjumble-word {
+    padding: 6px 14px; background: white; border: 2px solid var(--blue);
+    border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s;
+  }
+  .unjumble-word:hover { background: var(--blue); color: white; }
+  .unjumble-result {
+    min-height: 44px; border: 2px dashed var(--gray-300); border-radius: 8px;
+    padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+  }
+
+  /* Cloze */
+  .cloze-text { font-size: 15px; line-height: 2; padding: 16px; background: var(--gray-100); border-radius: 8px; }
+  .cloze-gap {
+    display: inline-block; min-width: 70px; border-bottom: 2px solid var(--blue);
+    text-align: center; margin: 0 2px; cursor: pointer;
+  }
+  .cloze-gap.filled { color: var(--green); font-weight: 600; border-color: var(--green); }
+
+  /* Select (inline dropdown) */
+  .select-sentence { font-size: 15px; line-height: 2.2; margin-bottom: 10px; }
+  .inline-select {
+    padding: 4px 8px; border: 2px solid var(--blue); border-radius: 6px;
+    font-size: 14px; font-family: inherit; background: var(--blue-light); cursor: pointer;
+  }
+  .inline-select.correct-select { border-color: var(--green); background: var(--green-light); }
+  .inline-select.wrong-select { border-color: var(--red); background: var(--red-light); }
+
+  /* Observe */
+  .observe-box { background: var(--blue-light); border-radius: var(--radius); padding: 18px; margin: 14px 0; }
+  .observe-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .observe-item { padding: 10px 14px; background: white; border-radius: 8px; text-align: center; font-size: 15px; }
+  .observe-question { margin-top: 14px; font-style: italic; color: var(--blue); font-weight: 600; }
+
+  /* Classify */
+  .classify-zones { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .classify-zone {
+    min-height: 90px; border: 2px dashed var(--gray-300); border-radius: var(--radius);
+    padding: 10px; text-align: center;
+  }
+  .classify-zone h4 { font-size: 13px; margin-bottom: 6px; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+  .classify-items { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .classify-chip {
+    padding: 6px 14px; background: var(--gray-100); border: 2px solid var(--gray-300);
+    border-radius: 8px; cursor: pointer; font-size: 13px; transition: all 0.2s;
+  }
+  .classify-chip:hover { border-color: var(--blue); background: var(--blue-light); }
+  .classify-chip.placed { opacity: 0.3; pointer-events: none; }
+
+  /* MarkTheWords */
+  .mark-text { font-size: 15px; line-height: 2.2; padding: 16px; background: var(--gray-100); border-radius: 8px; }
+  .mark-word {
+    padding: 2px 4px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+  }
+  .mark-word:hover { background: var(--blue-light); }
+  .mark-word.marked-correct { background: var(--green-light); border: 2px solid var(--green); font-weight: 600; }
+  .mark-word.marked-wrong { background: var(--red-light); border: 2px solid var(--red); text-decoration: line-through; }
+
+  /* HighlightMorphemes */
+  .morpheme-word { display: flex; gap: 0; justify-content: center; margin: 16px 0; }
+  .morpheme-part {
+    padding: 12px 16px; font-size: 20px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    border: 2px solid var(--gray-300); position: relative;
+  }
+  .morpheme-part:first-child { border-radius: 8px 0 0 8px; }
+  .morpheme-part:last-child { border-radius: 0 8px 8px 0; }
+  .morpheme-part.mp-prefix { background: #E3F2FD; border-color: #1565C0; }
+  .morpheme-part.mp-root { background: #FFF9C4; border-color: #F9A825; }
+  .morpheme-part.mp-suffix { background: #F3E5F5; border-color: var(--purple); }
+  .morpheme-part.mp-ending { background: var(--green-light); border-color: var(--green); }
+  .morpheme-label {
+    position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-weight: 600; white-space: nowrap; display: none;
+  }
+  .morpheme-part.revealed .morpheme-label { display: block; }
+
+  /* ImageToLetter */
+  .img-letter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .img-letter-card {
+    text-align: center; padding: 16px; background: var(--gray-100); border-radius: var(--radius);
+    cursor: pointer; border: 2px solid transparent; transition: all 0.2s;
+  }
+  .img-letter-card:hover { border-color: var(--blue); }
+  .img-letter-card .emoji { font-size: 36px; margin-bottom: 6px; }
+  .img-letter-card .letter-options { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+  .letter-opt {
+    width: 32px; height: 32px; border: 2px solid var(--gray-300); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .letter-opt:hover { border-color: var(--blue); background: var(--blue-light); }
+  .letter-opt.letter-correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .letter-opt.letter-wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* LetterGrid */
+  .letter-grid-table { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin: 16px 0; }
+  .lg-cell {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; border-radius: 8px; cursor: pointer;
+    background: white; border: 2px solid var(--gray-200); transition: all 0.2s;
+  }
+  .lg-cell:hover { border-color: var(--blue); background: var(--blue-light); transform: scale(1.05); }
+  .lg-cell.lg-vowel { background: #E3F2FD; border-color: #1565C0; }
+  .lg-cell.lg-consonant { background: #FFF9C4; border-color: #F9A825; }
+  .lg-cell.lg-special { background: var(--purple-light); border-color: var(--purple); }
+
+  /* PhraseTable */
+  .phrase-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .phrase-table th { background: var(--green); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  .phrase-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; vertical-align: top; }
+  .phrase-table tr:hover td { background: var(--green-light); }
+  .phrase-cat { font-weight: 700; color: var(--green); }
+  .phrase-audio { cursor: pointer; font-size: 16px; opacity: 0.6; }
+  .phrase-audio:hover { opacity: 1; }
+
+  /* Essay / Critical Analysis (seminar) */
+  .essay-prompt { background: var(--purple-light); padding: 16px 20px; border-radius: var(--radius); margin-bottom: 14px; border-left: 4px solid var(--purple); }
+  .essay-textarea {
+    width: 100%; min-height: 150px; padding: 14px; border: 2px solid var(--gray-200);
+    border-radius: 8px; font-size: 15px; font-family: inherit; line-height: 1.6; resize: vertical;
+  }
+  .essay-textarea:focus { outline: none; border-color: var(--purple); }
+  .essay-wordcount { text-align: right; font-size: 12px; color: var(--gray-600); margin-top: 4px; }
+  .essay-rubric { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .rubric-item { font-size: 13px; padding: 8px 12px; background: var(--gray-100); border-radius: 6px; }
+  .rubric-label { font-weight: 600; color: var(--gray-800); }
+
+  /* Reading activity */
+  .reading-passage {
+    background: white; border: 2px solid var(--gray-200); border-radius: var(--radius);
+    padding: 20px; margin: 14px 0; font-size: 15px; line-height: 1.9;
+  }
+  .reading-passage .highlight { background: var(--yellow-light); padding: 1px 4px; border-radius: 3px; }
+  .reading-questions { margin-top: 14px; }
+  .reading-q { font-size: 14px; margin-bottom: 8px; padding-left: 20px; position: relative; }
+  .reading-q::before { content: attr(data-num); position: absolute; left: 0; font-weight: 700; color: var(--blue); }
+
+  /* Debate */
+  .debate-positions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .debate-pos {
+    padding: 16px; border-radius: var(--radius); border: 2px solid var(--gray-200); cursor: pointer; transition: all 0.2s;
+  }
+  .debate-pos:hover { border-color: var(--blue); }
+  .debate-pos.pos-selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 2px rgba(0,87,184,0.15); }
+  .debate-pos h4 { font-size: 14px; margin-bottom: 6px; }
+  .debate-pos p { font-size: 13px; color: var(--gray-600); margin: 0; }
+  .debate-label { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+
+  /* TranslationCritique */
+  .critique-versions { display: grid; gap: 12px; margin: 14px 0; }
+  .critique-version {
+    padding: 14px 18px; border-radius: 8px; border: 2px solid var(--gray-200);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .critique-version:hover { border-color: var(--blue); }
+  .critique-version.cv-selected { border-color: var(--blue); background: var(--blue-light); }
+  .critique-version .cv-label { font-size: 12px; font-weight: 700; color: var(--gray-600); margin-bottom: 4px; }
+  .critique-version .cv-text { font-size: 15px; font-style: italic; }
+
+  /* Transcription */
+  .transcription-source {
+    background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius);
+    padding: 20px; margin: 14px 0; font-family: 'Georgia', serif; font-size: 18px; line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* PaleographyAnalysis */
+  .paleo-manuscript {
+    position: relative; background: #F5F0E6; border: 3px solid #8D6E63; border-radius: var(--radius);
+    padding: 24px; margin: 14px 0; min-height: 180px; font-family: 'Georgia', serif;
+    font-size: 20px; line-height: 2; letter-spacing: 1px;
+  }
+  .paleo-hotspot {
+    display: inline-block; padding: 2px 6px; border: 2px dashed var(--red); border-radius: 4px;
+    cursor: pointer; position: relative; transition: all 0.2s;
+  }
+  .paleo-hotspot:hover { background: rgba(198,40,40,0.1); }
+  .paleo-tooltip {
+    display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: var(--gray-900); color: white; padding: 8px 12px; border-radius: 6px;
+    font-size: 12px; font-family: -apple-system, sans-serif; white-space: nowrap; z-index: 10;
+    margin-bottom: 6px;
+  }
+  .paleo-hotspot.paleo-active .paleo-tooltip { display: block; }
+
+  /* DialectComparison */
+  .dialect-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .dialect-table th { padding: 10px 14px; text-align: left; font-size: 13px; }
+  .dialect-table th:nth-child(1) { background: var(--blue); color: white; }
+  .dialect-table th:nth-child(2) { background: #1B5E20; color: white; }
+  .dialect-table th:nth-child(3) { background: #BF360C; color: white; }
+  .dialect-table th:nth-child(4) { background: var(--purple); color: white; }
+  .dialect-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .dialect-table tr:hover td { background: var(--gray-100); }
+  .dialect-play { cursor: pointer; opacity: 0.6; }
+  .dialect-play:hover { opacity: 1; }
+
+  /* Etymology trace */
+  .ety-timeline { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px; background: var(--gray-100); border-radius: 8px; }
+  .ety-stage {
+    text-align: center; padding: 10px 16px; background: white; border-radius: 8px;
+    border: 2px solid var(--gray-300); transition: all 0.2s; cursor: pointer;
+  }
+  .ety-stage:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .ety-stage .ety-period { font-size: 11px; color: var(--gray-600); }
+  .ety-stage .ety-word { font-size: 18px; font-weight: 700; }
+  .ety-arrow { font-size: 24px; color: var(--gray-300); }
+
+  /* Vocab table */
+  .vocab-table { width: 100%; border-collapse: collapse; margin: 18px 0; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .vocab-table th { background: var(--blue); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  .vocab-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .vocab-table tr:last-child td { border-bottom: none; }
+  .vocab-table tr:hover td { background: var(--blue-light); }
+
+  /* Flashcards */
+  .flashcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin: 20px 0; }
+  .flashcard { perspective: 600px; height: 130px; cursor: pointer; }
+  .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    border-radius: var(--radius); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 14px; box-shadow: var(--shadow);
+  }
+  .flashcard-front { background: white; border: 2px solid var(--blue); }
+  .flashcard-front .word { font-size: 20px; font-weight: 700; color: var(--blue); }
+  .flashcard-front .gender { font-size: 12px; margin-top: 4px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  .flashcard-back { background: var(--blue); color: white; transform: rotateY(180deg); }
+  .flashcard-back .word { font-size: 18px; font-weight: 600; }
+  .flashcard-back .hint { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+
+  /* Resources */
+  .resource-card {
+    background: white; border-radius: var(--radius); padding: 18px;
+    margin-bottom: 14px; box-shadow: var(--shadow); border-left: 4px solid var(--blue); transition: transform 0.2s;
+  }
+  .resource-card:hover { transform: translateX(4px); }
+  .resource-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .resource-card p { font-size: 13px; color: var(--gray-600); margin: 0; }
+  .resource-card .tag { display: inline-block; font-size: 11px; padding: 2px 8px; background: var(--blue-light); color: var(--blue); border-radius: 4px; font-weight: 600; margin-top: 6px; }
+
+  /* AuthorialIntent excerpt */
+  .ai-excerpt {
+    background: var(--yellow-light); border-left: 4px solid var(--yellow); padding: 16px 20px;
+    border-radius: 0 var(--radius) var(--radius) 0; margin: 14px 0; font-style: italic; font-size: 15px; line-height: 1.8;
+  }
+  .ai-options { display: grid; gap: 8px; margin-top: 14px; }
+  .ai-option {
+    padding: 12px 16px; border: 2px solid var(--gray-200); border-radius: 8px;
+    cursor: pointer; font-size: 14px; transition: all 0.2s;
+  }
+  .ai-option:hover { border-color: var(--blue); background: var(--blue-light); }
+  .ai-option.ai-correct { border-color: var(--green); background: var(--green-light); }
+  .ai-option.ai-wrong { border-color: var(--red); background: var(--red-light); }
+
+  .section-divider { border: none; border-top: 2px solid var(--gray-200); margin: 32px 0; }
+
+  /* Feedback message */
+  .feedback { padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; font-weight: 600; display: none; }
+  .feedback.show { display: block; }
+  .feedback.fb-correct { background: var(--green-light); color: var(--green); border: 1px solid var(--green); }
+  .feedback.fb-wrong { background: var(--red-light); color: var(--red); border: 1px solid var(--red); }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 20px; }
+    .tab { padding: 10px 14px; font-size: 13px; }
+    .flashcards { grid-template-columns: repeat(2, 1fr); }
+    .matchup { grid-template-columns: 1fr; }
+    .matchup-arrow { transform: rotate(90deg); }
+    .groupsort-zones { grid-template-columns: 1fr; }
+    .classify-zones { grid-template-columns: 1fr; }
+    .essay-rubric { grid-template-columns: 1fr; }
+    .debate-positions { grid-template-columns: 1fr; }
+    .img-letter-grid { grid-template-columns: repeat(2, 1fr); }
+    .letter-grid-table { grid-template-columns: repeat(6, 1fr); }
+    .ety-timeline { flex-direction: column; }
+    .ety-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="module-switch">
+  <label>Module:</label>
+  <select onchange="switchModule(this.value)">
+    <option value="core">A1 M08: Things Have Gender (Core)</option>
+    <option value="seminar">HIST M23: Danylo Halytskyi (Seminar)</option>
+  </select>
+  <span class="poc-label">POC: Final Lesson Design — 31 Activity Types</span>
+</div>
+
+<!-- ==================== CORE MODULE ==================== -->
+<div id="module-core">
+  <div class="header core">
+    <div class="header-inner">
+      <span class="level-badge">A1 Module 08</span>
+      <h1>Речi мають рід</h1>
+      <div class="subtitle">Things Have Gender — Grammatical gender of Ukrainian nouns</div>
+    </div>
+  </div>
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab active" data-tab="core-urok">Урок</button>
+      <button class="tab" data-tab="core-slovnyk">Словник</button>
+      <button class="tab" data-tab="core-zoshyt">Зошит</button>
+      <button class="tab" data-tab="core-resursy">Ресурси</button>
+    </div>
+  </div>
+  <div class="content-area">
+
+    <!-- УРОК -->
+    <div id="core-urok" class="tab-content active">
+      <h2>Діалоги (Dialogues)</h2>
+      <p>When you describe things in Ukrainian, you'll notice the word for "my" changes. It's not random — every noun has a <span class="ukr">рід</span> <span class="trans">(gender)</span>.</p>
+      <div class="dialogue">
+        <div class="dialogue-title">Video call between friends</div>
+        <div class="dialogue-line"><span class="speaker">Марко:</span> Привіт! Дивись, це <span class="ukr">моя кімната</span>. <span class="trans">(Hi! Look, this is my room.)</span></div>
+        <div class="dialogue-line"><span class="speaker">Анна:</span> Класно! У тебе є стіл? <span class="trans">(Cool! Do you have a table?)</span></div>
+        <div class="dialogue-line"><span class="speaker">Марко:</span> Так, <span class="ukr">мій стіл</span> і <span class="ukr">моє ліжко</span>. <span class="trans">(Yes, my table and my bed.)</span></div>
+      </div>
+
+      <h2>Три роди (Three Genders)</h2>
+      <div class="rule-box">
+        <div class="rule-box-header"><div class="rule-box-icon">&#x1F4D0;</div> Правило: Gender by ending</div>
+        <table>
+          <tr><th>Рід</th><th>Ending</th><th>мій/моя/моє</th><th>Examples</th></tr>
+          <tr><td><span class="gender-m">Чоловічий (м)</span></td><td>consonant</td><td><strong>мій</strong></td><td>стіл, зошит, телефон</td></tr>
+          <tr><td><span class="gender-f">Жіночий (ж)</span></td><td>-а, -я</td><td><strong>моя</strong></td><td>книга, ручка, кімната</td></tr>
+          <tr><td><span class="gender-n">Середній (с)</span></td><td>-о, -е</td><td><strong>моє</strong></td><td>ліжко, вікно, фото</td></tr>
+        </table>
+      </div>
+
+      <!-- Observe -->
+      <h2>Спостереження (Observe)</h2>
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-observe">Observe</span><span class="exercise-title">Порівняйте</span></div>
+        <div class="observe-box">
+          <div class="observe-pairs">
+            <div class="observe-item"><strong>мій</strong> стіл</div><div class="observe-item">стіл ends in <strong>-л</strong> (consonant)</div>
+            <div class="observe-item"><strong>моя</strong> книга</div><div class="observe-item">книга ends in <strong>-а</strong></div>
+            <div class="observe-item"><strong>моє</strong> вікно</div><div class="observe-item">вікно ends in <strong>-о</strong></div>
+          </div>
+          <div class="observe-question">What pattern do you see between the noun ending and the possessive form?</div>
+        </div>
+      </div>
+
+      <!-- Inline Quiz -->
+      <h2>Вправа 1: Quiz</h2>
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-quiz">Quiz</span><span class="exercise-title">Оберіть правильний варіант</span></div>
+        <div class="quiz-question"><div class="quiz-q">_____ стіл</div><div class="quiz-options"><span class="quiz-option" onclick="checkQuiz(this,'correct')">мій</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моя</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моє</span></div></div>
+        <div class="quiz-question"><div class="quiz-q">_____ книга</div><div class="quiz-options"><span class="quiz-option" onclick="checkQuiz(this,'wrong')">мій</span><span class="quiz-option" onclick="checkQuiz(this,'correct')">моя</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моє</span></div></div>
+        <div class="quiz-question"><div class="quiz-q">_____ вікно</div><div class="quiz-options"><span class="quiz-option" onclick="checkQuiz(this,'wrong')">мій</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моя</span><span class="quiz-option" onclick="checkQuiz(this,'correct')">моє</span></div></div>
+      </div>
+
+      <!-- Inline Fill-in -->
+      <h2>Вправа 2: Fill-in</h2>
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-fillin">Fill-in</span><span class="exercise-title">Вставте пропущене слово</span></div>
+        <div class="fillin-item">Це <span class="fillin-blank" onclick="fillDemo(this,'мій')">?</span> зошит. <span class="trans">(This is my notebook.)</span></div>
+        <div class="fillin-item">Де <span class="fillin-blank" onclick="fillDemo(this,'моя')">?</span> кімната? <span class="trans">(Where is my room?)</span></div>
+        <div class="fillin-item">Це <span class="fillin-blank" onclick="fillDemo(this,'моє')">?</span> фото. <span class="trans">(This is my photo.)</span></div>
+      </div>
+    </div>
+
+    <!-- СЛОВНИК -->
+    <div id="core-slovnyk" class="tab-content">
+      <h2>Словник (Vocabulary)</h2>
+      <table class="vocab-table">
+        <tr><th>Слово</th><th>Рід</th><th>English</th><th>Example</th></tr>
+        <tr><td><strong>стіл</strong></td><td><span class="gender-m">м</span></td><td>table</td><td>мій стіл</td></tr>
+        <tr><td><strong>книга</strong></td><td><span class="gender-f">ж</span></td><td>book</td><td>моя книга</td></tr>
+        <tr><td><strong>ліжко</strong></td><td><span class="gender-n">с</span></td><td>bed</td><td>моє ліжко</td></tr>
+        <tr><td><strong>вікно</strong></td><td><span class="gender-n">с</span></td><td>window</td><td>моє вікно</td></tr>
+        <tr><td><strong>ручка</strong></td><td><span class="gender-f">ж</span></td><td>pen</td><td>моя ручка</td></tr>
+        <tr><td><strong>зошит</strong></td><td><span class="gender-m">м</span></td><td>notebook</td><td>мій зошит</td></tr>
+        <tr><td><strong>кімната</strong></td><td><span class="gender-f">ж</span></td><td>room</td><td>моя кімната</td></tr>
+        <tr><td><strong>телефон</strong></td><td><span class="gender-m">м</span></td><td>phone</td><td>мій телефон</td></tr>
+        <tr><td><strong>фото</strong></td><td><span class="gender-n">с</span></td><td>photo</td><td>моє фото</td></tr>
+      </table>
+
+      <h2>Картки (Flashcards)</h2>
+      <p style="color:var(--gray-600);font-size:13px;">Click to flip</p>
+      <div class="flashcards" id="core-flashcards"></div>
+    </div>
+
+    <!-- ЗОШИТ (WORKBOOK) — CORE ACTIVITY TYPES 1-19 -->
+    <div id="core-zoshyt" class="tab-content">
+      <h2>Зошит (Workbook)</h2>
+      <p style="color:var(--gray-600);font-size:14px;">All 19 core activity types (A1-C2). Each is fully interactive.</p>
+
+      <!-- 1. Quiz -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-quiz">Quiz</span><span class="exercise-title">Оберіть правильну форму</span><span class="exercise-num">#1</span></div>
+        <div class="quiz-question"><div class="quiz-q">Це _____ молоко.</div><div class="quiz-options"><span class="quiz-option" onclick="checkQuiz(this,'wrong')">мій</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моя</span><span class="quiz-option" onclick="checkQuiz(this,'correct')">моє</span></div></div>
+        <div class="quiz-question"><div class="quiz-q">Де _____ ручка?</div><div class="quiz-options"><span class="quiz-option" onclick="checkQuiz(this,'wrong')">мій</span><span class="quiz-option" onclick="checkQuiz(this,'correct')">моя</span><span class="quiz-option" onclick="checkQuiz(this,'wrong')">моє</span></div></div>
+      </div>
+
+      <!-- 2. FillIn -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-fillin">Fill-in</span><span class="exercise-title">Вставте слово</span><span class="exercise-num">#2</span></div>
+        <div class="fillin-item"><span class="fillin-blank" onclick="fillDemo(this,'Мій')">?</span> телефон новий. <span class="trans">(My phone is new.)</span></div>
+        <div class="fillin-item">Де <span class="fillin-blank" onclick="fillDemo(this,'моя')">?</span> сумка? <span class="trans">(Where is my bag?)</span></div>
+      </div>
+
+      <!-- 3. MatchUp -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-matchup">Match-up</span><span class="exercise-title">З'єднайте пари</span><span class="exercise-num">#3</span></div>
+        <div class="exercise-instruction">Match each noun with its correct possessive form.</div>
+        <div class="matchup" id="matchup-core">
+          <div class="matchup-left" onclick="selectMatch(this,'left','matchup-core')">стіл</div><div class="matchup-arrow">&#x2194;</div><div class="matchup-right" onclick="selectMatch(this,'right','matchup-core')">моє</div>
+          <div class="matchup-left" onclick="selectMatch(this,'left','matchup-core')">книга</div><div class="matchup-arrow">&#x2194;</div><div class="matchup-right" onclick="selectMatch(this,'right','matchup-core')">мій</div>
+          <div class="matchup-left" onclick="selectMatch(this,'left','matchup-core')">вікно</div><div class="matchup-arrow">&#x2194;</div><div class="matchup-right" onclick="selectMatch(this,'right','matchup-core')">моя</div>
+        </div>
+      </div>
+
+      <!-- 4. GroupSort -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-groupsort">Group Sort</span><span class="exercise-title">Розподіліть за родами</span><span class="exercise-num">#4</span></div>
+        <div class="exercise-instruction">Click each word, then click the target group.</div>
+        <div class="groupsort-zones">
+          <div class="groupsort-zone"><h4>Чоловічий (м)</h4><div class="groupsort-items" id="gz-m"></div></div>
+          <div class="groupsort-zone"><h4>Жіночий (ж)</h4><div class="groupsort-items" id="gz-f"></div></div>
+        </div>
+        <div class="groupsort-items" style="justify-content:center">
+          <span class="groupsort-chip" onclick="sortWord(this,'m')">стіл</span>
+          <span class="groupsort-chip" onclick="sortWord(this,'f')">книга</span>
+          <span class="groupsort-chip" onclick="sortWord(this,'m')">зошит</span>
+          <span class="groupsort-chip" onclick="sortWord(this,'f')">ручка</span>
+          <span class="groupsort-chip" onclick="sortWord(this,'m')">телефон</span>
+          <span class="groupsort-chip" onclick="sortWord(this,'f')">кімната</span>
+        </div>
+      </div>
+
+      <!-- 5. TrueFalse -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-truefalse">True/False</span><span class="exercise-title">Правда чи ні?</span><span class="exercise-num">#5</span></div>
+        <div class="tf-item"><div class="tf-statement">«Книга» is чоловічий рід.</div><div class="tf-buttons"><span class="tf-btn" onclick="checkTF(this,false)">Правда</span><span class="tf-btn" onclick="checkTF(this,true)">Ні</span></div></div>
+        <div class="tf-item"><div class="tf-statement">Words ending in -о are середній рід.</div><div class="tf-buttons"><span class="tf-btn" onclick="checkTF(this,true)">Правда</span><span class="tf-btn" onclick="checkTF(this,false)">Ні</span></div></div>
+        <div class="tf-item"><div class="tf-statement">«Мій» is used with жіночий рід nouns.</div><div class="tf-buttons"><span class="tf-btn" onclick="checkTF(this,false)">Правда</span><span class="tf-btn" onclick="checkTF(this,true)">Ні</span></div></div>
+      </div>
+
+      <!-- 6. ErrorCorrection -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-error">Error Correction</span><span class="exercise-title">Знайдіть помилку</span><span class="exercise-num">#6</span></div>
+        <div class="exercise-instruction">Click the wrong word in each sentence.</div>
+        <div class="error-sentence">Це <span class="error-word" onclick="showError(this,'мій')">моя</span> стіл.<span class="error-correction"> &#x2192; мій стіл</span></div>
+        <div class="error-sentence">Де <span class="error-word" onclick="showError(this,'моє')">мій</span> вікно?<span class="error-correction"> &#x2192; моє вікно</span></div>
+        <div class="error-sentence">Ось <span class="error-word" onclick="showError(this,'моя')">моє</span> ручка.<span class="error-correction"> &#x2192; моя ручка</span></div>
+      </div>
+
+      <!-- 7. Anagram -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-anagram">Anagram</span><span class="exercise-title">Складіть слово</span><span class="exercise-num">#7</span></div>
+        <div class="exercise-instruction">Rearrange the letters to form a Ukrainian word. Hint: моя _____</div>
+        <div class="anagram-target" id="anagram1-target"><div class="anagram-slot"></div><div class="anagram-slot"></div><div class="anagram-slot"></div><div class="anagram-slot"></div><div class="anagram-slot"></div></div>
+        <div class="anagram-tiles" id="anagram1-tiles"><span class="anagram-tile" onclick="placeTile(this,'anagram1')">г</span><span class="anagram-tile" onclick="placeTile(this,'anagram1')">к</span><span class="anagram-tile" onclick="placeTile(this,'anagram1')">н</span><span class="anagram-tile" onclick="placeTile(this,'anagram1')">и</span><span class="anagram-tile" onclick="placeTile(this,'anagram1')">а</span></div>
+      </div>
+
+      <!-- 8. Translate -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-translate">Translate</span><span class="exercise-title">Перекладіть</span><span class="exercise-num">#8</span></div>
+        <div class="translate-item"><div class="translate-source">This is my book.</div><input class="translate-input" placeholder="Це..." data-answer="Це моя книга." /></div>
+        <div class="translate-item"><div class="translate-source">Where is my phone?</div><input class="translate-input" placeholder="Де..." data-answer="Де мій телефон?" /></div>
+      </div>
+
+      <!-- 9. Unjumble -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-unjumble">Unjumble</span><span class="exercise-title">Складіть речення</span><span class="exercise-num">#9</span></div>
+        <div class="exercise-instruction">Put the words in the correct order.</div>
+        <div class="unjumble-result" id="unjumble-result-1"></div>
+        <div class="unjumble-words" id="unjumble-words-1">
+          <span class="unjumble-word" onclick="addWord(this,'unjumble-result-1')">кімната</span>
+          <span class="unjumble-word" onclick="addWord(this,'unjumble-result-1')">моя</span>
+          <span class="unjumble-word" onclick="addWord(this,'unjumble-result-1')">це</span>
+          <span class="unjumble-word" onclick="addWord(this,'unjumble-result-1')">Ось</span>
+        </div>
+      </div>
+
+      <!-- 10. Cloze -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-cloze">Cloze</span><span class="exercise-title">Заповніть пропуски</span><span class="exercise-num">#10</span></div>
+        <div class="cloze-text">
+          У Марка є <span class="cloze-gap" onclick="fillCloze(this,'мій')">___</span> стіл і <span class="cloze-gap" onclick="fillCloze(this,'моє')">___</span> ліжко.
+          На столі лежить <span class="cloze-gap" onclick="fillCloze(this,'моя')">___</span> книга і <span class="cloze-gap" onclick="fillCloze(this,'мій')">___</span> зошит.
+        </div>
+      </div>
+
+      <!-- 11. Select -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-select">Select</span><span class="exercise-title">Оберіть правильний варіант</span><span class="exercise-num">#11</span></div>
+        <div class="exercise-instruction">Choose the correct form from the dropdown.</div>
+        <div class="select-sentence">
+          Це <select class="inline-select" onchange="checkSelect(this,'моя')"><option value="">...</option><option value="мій">мій</option><option value="моя">моя</option><option value="моє">моє</option></select> кімната.
+        </div>
+        <div class="select-sentence">
+          Де <select class="inline-select" onchange="checkSelect(this,'мій')"><option value="">...</option><option value="мій">мій</option><option value="моя">моя</option><option value="моє">моє</option></select> зошит?
+        </div>
+        <div class="select-sentence">
+          Ось <select class="inline-select" onchange="checkSelect(this,'моє')"><option value="">...</option><option value="мій">мій</option><option value="моя">моя</option><option value="моє">моє</option></select> фото.
+        </div>
+      </div>
+
+      <!-- 12. GrammarIdentify -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-grammar">Grammar Identify</span><span class="exercise-title">Визначте рід</span><span class="exercise-num">#12</span></div>
+        <div class="exercise-instruction">Click the correct gender for each word.</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div style="text-align:center;padding:14px;background:var(--gray-100);border-radius:8px">
+            <strong style="font-size:18px">двері</strong>
+            <div style="display:flex;gap:4px;justify-content:center;margin-top:8px">
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">м</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'correct')" style="padding:4px 10px;font-size:12px">ж (pl)</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">с</span>
+            </div>
+          </div>
+          <div style="text-align:center;padding:14px;background:var(--gray-100);border-radius:8px">
+            <strong style="font-size:18px">молоко</strong>
+            <div style="display:flex;gap:4px;justify-content:center;margin-top:8px">
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">м</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">ж</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'correct')" style="padding:4px 10px;font-size:12px">с</span>
+            </div>
+          </div>
+          <div style="text-align:center;padding:14px;background:var(--gray-100);border-radius:8px">
+            <strong style="font-size:18px">сонце</strong>
+            <div style="display:flex;gap:4px;justify-content:center;margin-top:8px">
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">м</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'wrong')" style="padding:4px 10px;font-size:12px">ж</span>
+              <span class="quiz-option" onclick="checkQuiz(this,'correct')" style="padding:4px 10px;font-size:12px">с</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. Observe -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-observe">Observe</span><span class="exercise-title">Спостерігайте за закономірністю</span><span class="exercise-num">#13</span></div>
+        <div class="observe-box">
+          <div class="observe-pairs">
+            <div class="observe-item"><strong>новий</strong> стіл</div><div class="observe-item">стіл = <span class="gender-m">м</span> &#x2192; нов<strong>ий</strong></div>
+            <div class="observe-item"><strong>нова</strong> книга</div><div class="observe-item">книга = <span class="gender-f">ж</span> &#x2192; нов<strong>а</strong></div>
+            <div class="observe-item"><strong>нове</strong> вікно</div><div class="observe-item">вікно = <span class="gender-n">с</span> &#x2192; нов<strong>е</strong></div>
+          </div>
+          <div class="observe-question">How do adjective endings match noun gender? Write your observation below.</div>
+          <input class="translate-input" placeholder="I notice that..." style="margin-top:10px" />
+        </div>
+      </div>
+
+      <!-- 14. Classify -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-classify">Classify</span><span class="exercise-title">Класифікуйте слова</span><span class="exercise-num">#14</span></div>
+        <div class="exercise-instruction">Sort each word into its gender category by clicking.</div>
+        <div class="classify-zones">
+          <div class="classify-zone"><h4 style="background:var(--blue-light);color:var(--blue)">Чоловічий (м)</h4><div class="classify-items" id="cz-m"></div></div>
+          <div class="classify-zone"><h4 style="background:#FCE4EC;color:#C2185B">Жіночий (ж)</h4><div class="classify-items" id="cz-f"></div></div>
+          <div class="classify-zone"><h4 style="background:var(--green-light);color:var(--green)">Середній (с)</h4><div class="classify-items" id="cz-n"></div></div>
+        </div>
+        <div class="classify-items" style="justify-content:center">
+          <span class="classify-chip" onclick="classifyWord(this,'m')">автобус</span>
+          <span class="classify-chip" onclick="classifyWord(this,'f')">школа</span>
+          <span class="classify-chip" onclick="classifyWord(this,'n')">місто</span>
+          <span class="classify-chip" onclick="classifyWord(this,'m')">банк</span>
+          <span class="classify-chip" onclick="classifyWord(this,'f')">вулиця</span>
+          <span class="classify-chip" onclick="classifyWord(this,'n')">море</span>
+        </div>
+      </div>
+
+      <!-- 15. MarkTheWords -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-mark">Mark The Words</span><span class="exercise-title">Позначте іменники жіночого роду</span><span class="exercise-num">#15</span></div>
+        <div class="exercise-instruction">Click all feminine nouns in the text below.</div>
+        <div class="mark-text">
+          <span class="mark-word" onclick="markWord(this,false)">Марко</span>
+          <span class="mark-word" onclick="markWord(this,false)">має</span>
+          <span class="mark-word" onclick="markWord(this,true)">кімнату</span>,
+          <span class="mark-word" onclick="markWord(this,false)">стіл</span>,
+          <span class="mark-word" onclick="markWord(this,true)">книгу</span>
+          <span class="mark-word" onclick="markWord(this,false)">і</span>
+          <span class="mark-word" onclick="markWord(this,false)">телефон</span>.
+          <span class="mark-word" onclick="markWord(this,false)">На</span>
+          <span class="mark-word" onclick="markWord(this,false)">столі</span>
+          <span class="mark-word" onclick="markWord(this,false)">лежить</span>
+          <span class="mark-word" onclick="markWord(this,true)">ручка</span>
+          <span class="mark-word" onclick="markWord(this,false)">і</span>
+          <span class="mark-word" onclick="markWord(this,false)">зошит</span>.
+        </div>
+      </div>
+
+      <!-- 16. HighlightMorphemes -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-morpheme">Highlight Morphemes</span><span class="exercise-title">Визначте частини слова</span><span class="exercise-num">#16</span></div>
+        <div class="exercise-instruction">Click each word part to reveal its morpheme type.</div>
+        <div style="margin-bottom:20px">
+          <p style="text-align:center;font-size:13px;color:var(--gray-600);margin-bottom:4px">кімната</p>
+          <div class="morpheme-word">
+            <div class="morpheme-part" onclick="revealMorpheme(this,'mp-root','корінь')">кімнат<span class="morpheme-label">корінь</span></div>
+            <div class="morpheme-part" onclick="revealMorpheme(this,'mp-ending','закінчення')">а<span class="morpheme-label">закінчення</span></div>
+          </div>
+        </div>
+        <div style="margin-bottom:20px">
+          <p style="text-align:center;font-size:13px;color:var(--gray-600);margin-bottom:4px">підручник</p>
+          <div class="morpheme-word">
+            <div class="morpheme-part" onclick="revealMorpheme(this,'mp-prefix','префікс')">під<span class="morpheme-label">префікс</span></div>
+            <div class="morpheme-part" onclick="revealMorpheme(this,'mp-root','корінь')">руч<span class="morpheme-label">корінь</span></div>
+            <div class="morpheme-part" onclick="revealMorpheme(this,'mp-suffix','суфікс')">ник<span class="morpheme-label">суфікс</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17. ImageToLetter -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-image2letter">Image &#x2192; Letter</span><span class="exercise-title">З якої літери починається?</span><span class="exercise-num">#17</span></div>
+        <div class="exercise-instruction">Match each image to the first letter of its Ukrainian name.</div>
+        <div class="img-letter-grid">
+          <div class="img-letter-card">
+            <div class="emoji">&#x1F431;</div>
+            <div style="font-size:12px;color:var(--gray-600)">кіт</div>
+            <div class="letter-options">
+              <span class="letter-opt" onclick="checkLetter(this,true)">К</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">Т</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">М</span>
+            </div>
+          </div>
+          <div class="img-letter-card">
+            <div class="emoji">&#x1F436;</div>
+            <div style="font-size:12px;color:var(--gray-600)">собака</div>
+            <div class="letter-options">
+              <span class="letter-opt" onclick="checkLetter(this,false)">Б</span>
+              <span class="letter-opt" onclick="checkLetter(this,true)">С</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">Д</span>
+            </div>
+          </div>
+          <div class="img-letter-card">
+            <div class="emoji">&#x1F34E;</div>
+            <div style="font-size:12px;color:var(--gray-600)">яблуко</div>
+            <div class="letter-options">
+              <span class="letter-opt" onclick="checkLetter(this,false)">А</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">О</span>
+              <span class="letter-opt" onclick="checkLetter(this,true)">Я</span>
+            </div>
+          </div>
+          <div class="img-letter-card">
+            <div class="emoji">&#x1F333;</div>
+            <div style="font-size:12px;color:var(--gray-600)">дерево</div>
+            <div class="letter-options">
+              <span class="letter-opt" onclick="checkLetter(this,true)">Д</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">Р</span>
+              <span class="letter-opt" onclick="checkLetter(this,false)">В</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18. LetterGrid -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-lettergrid">Letter Grid</span><span class="exercise-title">Інтерактивна абетка</span><span class="exercise-num">#18</span></div>
+        <div class="exercise-instruction">Click any letter. Vowels turn blue, consonants turn yellow, special signs turn purple.</div>
+        <div class="letter-grid-table" id="letter-grid"></div>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px">
+          <span><span style="display:inline-block;width:12px;height:12px;background:#E3F2FD;border:1px solid #1565C0;border-radius:2px;vertical-align:middle"></span> голосний</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#FFF9C4;border:1px solid #F9A825;border-radius:2px;vertical-align:middle"></span> приголосний</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:var(--purple-light);border:1px solid var(--purple);border-radius:2px;vertical-align:middle"></span> знак</span>
+        </div>
+      </div>
+
+      <!-- 19. PhraseTable -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-phrasetable">Phrase Table</span><span class="exercise-title">Корисні фрази</span><span class="exercise-num">#19</span></div>
+        <div class="exercise-instruction">Grouped phrases for this module. Click the speaker icon to hear pronunciation (demo).</div>
+        <table class="phrase-table">
+          <tr><th>Category</th><th>Ukrainian</th><th>English</th><th></th></tr>
+          <tr><td class="phrase-cat">Питання</td><td>Що це?</td><td>What is this?</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+          <tr><td class="phrase-cat">Питання</td><td>Де мій стіл?</td><td>Where is my table?</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+          <tr><td class="phrase-cat">Відповідь</td><td>Це моя книга.</td><td>This is my book.</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+          <tr><td class="phrase-cat">Відповідь</td><td>Ось моє фото.</td><td>Here is my photo.</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+          <tr><td class="phrase-cat">Вираз</td><td>Класно!</td><td>Cool!</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+          <tr><td class="phrase-cat">Вираз</td><td>Привіт!</td><td>Hi!</td><td><span class="phrase-audio" onclick="playPhrase(this)">&#x1F50A;</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- РЕСУРСИ -->
+    <div id="core-resursy" class="tab-content">
+      <h2>Ресурси (Resources)</h2>
+      <div class="resource-card"><h3>Ukrainian Lessons Podcast — Gender of Nouns</h3><p>Season 1, Episode 8: Three genders and how to identify them.</p><span class="tag">Podcast</span></div>
+      <div class="resource-card"><h3>Добра Форма — Рід іменників</h3><p>Comprehensive grammar guide with exercises and exceptions.</p><span class="tag">Grammar Guide</span></div>
+      <div class="resource-card"><h3>Grade 3 Textbook (Kravtsova) — Chapter 4</h3><p>How Ukrainian schoolchildren learn gender.</p><span class="tag">Textbook</span></div>
+      <div class="resource-card"><h3>Talk Ukrainian — Possessive Pronouns</h3><p>Video tutorial on мій/моя/моє.</p><span class="tag">Video</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SEMINAR MODULE ==================== -->
+<div id="module-seminar" style="display:none">
+  <div class="header seminar">
+    <div class="header-inner">
+      <span class="level-badge">HIST Module 23</span>
+      <h1>Данило Галицький</h1>
+      <div class="subtitle">King Danylo and the Galician-Volhynian State</div>
+    </div>
+  </div>
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab active" data-tab="sem-urok">Урок</button>
+      <button class="tab" data-tab="sem-slovnyk">Словник</button>
+      <button class="tab" data-tab="sem-zoshyt">Зошит</button>
+      <button class="tab" data-tab="sem-resursy">Ресурси</button>
+    </div>
+  </div>
+  <div class="content-area">
+
+    <!-- СЕМІНАР: УРОК (100% Ukrainian) -->
+    <div id="sem-urok" class="tab-content active">
+      <h2>Вступ</h2>
+      <p>Галицько-Волинське князівство — одна з найважливіших державних формацій в українській історії. Після занепаду Київської Русі саме Данило Романович зумів об'єднати західноукраїнські землі та створити потужну державу, яка протистояла монгольській навалі.</p>
+
+      <!-- Primary Source -->
+      <div class="source-box">
+        <div class="source-box-header">Першоджерело: Галицько-Волинський літопис</div>
+        <blockquote>«Данило ж, князь добрий, хоробрий і мудрий, збудував городи многі, і церкви поставив, і оздобив їх різними прикрасами...»</blockquote>
+        <div class="source-cite">— Галицько-Волинський літопис, ХІІІ ст.</div>
+      </div>
+
+      <p>Літописець підкреслює три якості Данила: <strong>доброту, хоробрість і мудрість</strong>. Це не випадково — середньовічний літопис будує образ ідеального правителя через конкретні справи: будівництво міст, заснування церков.</p>
+
+      <h2>Коронація 1253 року</h2>
+      <p>У 1253 році Данило отримав королівську корону від папи Інокентія IV. Це була <strong>єдина коронація українського монарха</strong> у середньовічній історії. Дорогобич став місцем коронації — не Рим, не Краків, а українське місто.</p>
+
+      <p>Данилова дипломатія була багатовекторною: переговори з угорським королем Белою IV, союзи з польськими князями Мазовії, листування з папою римським. Водночас він зміцнював внутрішню оборону — будував фортеці Холм, Львів, Дорогобич.</p>
+
+      <!-- Myth Buster -->
+      <div class="myth-box">
+        <div class="myth-box-header">Руйнуємо міф</div>
+        <div class="myth-claim"><strong>Російська імперська історіографія стверджує:</strong> «Галицько-Волинське князівство було периферійним утворенням, яке не мало самостійного значення.»</div>
+        <div class="myth-truth"><strong>Українські першоджерела свідчать:</strong> Данилова держава мала дипломатичні зв'язки з Угорщиною, Польщею, Священною Римською імперією та Папським престолом. Коронація 1253 року — акт міжнародного визнання.</div>
+      </div>
+
+      <h2>Спадщина</h2>
+      <p>Після смерті Данила у 1264 році його нащадки продовжили розбудовувати державу. Галицько-Волинське князівство проіснувало до 1349 року — майже сто років після монгольської навали. Це був останній незалежний українській державний організм до козацької доби.</p>
+
+      <!-- Inline Reading Activity -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-reading">Reading</span><span class="exercise-title">Читання: Аналіз першоджерела</span></div>
+        <div class="reading-passage">
+          «Данило <span class="highlight">зумів об'єднати</span> галицькі та волинські землі під єдиною владою. Він <span class="highlight">протистояв</span> монгольській навалі, водночас шукаючи союзників на Заході. Його дипломатія була <span class="highlight">багатовекторною</span> — переговори з папою, угорським королем, польськими князями.»
+        </div>
+        <div class="reading-questions">
+          <div class="reading-q" data-num="1.">Які три напрямки дипломатії Данила згадує автор?</div>
+          <div class="reading-q" data-num="2.">Чому автор використовує слово «багатовекторна»? Яке сучасне значення воно набуває?</div>
+          <div class="reading-q" data-num="3.">Порівняйте образ Данила в літописі та в цьому тексті. Що спільного?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- СЕМІНАР: СЛОВНИК -->
+    <div id="sem-slovnyk" class="tab-content">
+      <h2>Словник</h2>
+      <table class="vocab-table">
+        <tr><th>Слово</th><th>Значення</th><th>Приклад</th></tr>
+        <tr><td><strong>князівство</strong></td><td>principality, realm</td><td>Галицько-Волинське князівство</td></tr>
+        <tr><td><strong>навала</strong></td><td>invasion, onslaught</td><td>монгольська навала</td></tr>
+        <tr><td><strong>коронація</strong></td><td>coronation</td><td>коронація 1253 року</td></tr>
+        <tr><td><strong>першоджерело</strong></td><td>primary source</td><td>аналіз першоджерела</td></tr>
+        <tr><td><strong>літопис</strong></td><td>chronicle</td><td>Галицько-Волинський літопис</td></tr>
+        <tr><td><strong>об'єднати</strong></td><td>to unite</td><td>зумів об'єднати землі</td></tr>
+        <tr><td><strong>протистояти</strong></td><td>to resist, withstand</td><td>протистояв навалі</td></tr>
+        <tr><td><strong>багатовекторний</strong></td><td>multi-directional</td><td>багатовекторна дипломатія</td></tr>
+      </table>
+
+      <h2>Картки (Flashcards)</h2>
+      <p style="color:var(--gray-600);font-size:13px;">Click to flip</p>
+      <div class="flashcards" id="sem-flashcards"></div>
+    </div>
+
+    <!-- СЕМІНАР: ЗОШИТ — SEMINAR ACTIVITY TYPES 20-31 -->
+    <div id="sem-zoshyt" class="tab-content">
+      <h2>Зошит (Workbook)</h2>
+      <p style="color:var(--gray-600);font-size:14px;">All 12 seminar activity types (HIST, BIO, LIT, ISTORIO, OES, RUTH). Each is fully interactive.</p>
+
+      <!-- 20. CriticalAnalysis -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-critical">Critical Analysis</span><span class="exercise-title">Критичний аналіз</span><span class="exercise-num">#20</span></div>
+        <div class="essay-prompt">
+          <strong>Завдання:</strong> Порівняйте два описи Данила Галицького — з Галицько-Волинського літопису та з сучасного українського підручника. Яку мету переслідував кожен автор? Як це впливає на зображення Данила?
+        </div>
+        <textarea class="essay-textarea" placeholder="Напишіть відповідь українською мовою (150-300 слів)..."></textarea>
+        <div class="essay-wordcount">0 / 300 слів</div>
+        <div class="essay-rubric">
+          <div class="rubric-item"><span class="rubric-label">Аргументація:</span> Чіткі тези з доказами</div>
+          <div class="rubric-item"><span class="rubric-label">Джерела:</span> Посилання на першоджерела</div>
+          <div class="rubric-item"><span class="rubric-label">Мова:</span> Академічний стиль українською</div>
+          <div class="rubric-item"><span class="rubric-label">Критичність:</span> Порівняння перспектив</div>
+        </div>
+      </div>
+
+      <!-- 21. EssayResponse -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-essay">Essay Response</span><span class="exercise-title">Есе</span><span class="exercise-num">#21</span></div>
+        <div class="essay-prompt">
+          <strong>Тема:</strong> «Чому радянська історіографія применшувала значення Галицько-Волинського князівства? Яку роль це відіграло у формуванні сучасних історичних наративів?»<br><br>
+          <em>Використайте щонайменше два першоджерела. Обсяг: 250-400 слів.</em>
+        </div>
+        <textarea class="essay-textarea" placeholder="Напишіть есе українською мовою..."></textarea>
+        <div class="essay-wordcount">0 / 400 слів</div>
+      </div>
+
+      <!-- 22. SourceEvaluation -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-source">Source Evaluation</span><span class="exercise-title">Оцінка джерела</span><span class="exercise-num">#22</span></div>
+        <div class="exercise-instruction">Evaluate the reliability of this source using 5 criteria. Click each criterion to rate it.</div>
+        <div class="source-box" style="margin:14px 0">
+          <div class="source-box-header">Джерело для аналізу</div>
+          <blockquote>«Данило Галицький прийняв корону від папи лише заради політичної вигоди, без жодного наміру прийняти католицизм.»</blockquote>
+          <div class="source-cite">— М. Грушевський, «Історія України-Руси», т. 3</div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <div class="rubric-item" style="cursor:pointer" onclick="rateSource(this)"><span class="rubric-label">Авторство:</span> Хто автор? Яка його перспектива? <span style="float:right;color:var(--gray-300)">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div>
+          <div class="rubric-item" style="cursor:pointer" onclick="rateSource(this)"><span class="rubric-label">Контекст:</span> Коли написано? Для якої аудиторії? <span style="float:right;color:var(--gray-300)">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div>
+          <div class="rubric-item" style="cursor:pointer" onclick="rateSource(this)"><span class="rubric-label">Доказовість:</span> На які першоджерела спирається? <span style="float:right;color:var(--gray-300)">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div>
+          <div class="rubric-item" style="cursor:pointer" onclick="rateSource(this)"><span class="rubric-label">Упередження:</span> Чи є ознаки упередженості? <span style="float:right;color:var(--gray-300)">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div>
+          <div class="rubric-item" style="cursor:pointer" onclick="rateSource(this)"><span class="rubric-label">Корисність:</span> Чим корисне це джерело для нашої теми? <span style="float:right;color:var(--gray-300)">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div>
+        </div>
+        <textarea class="essay-textarea" style="min-height:80px;margin-top:12px" placeholder="Ваш висновок про надійність джерела..."></textarea>
+      </div>
+
+      <!-- 23. ReadingActivity -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-reading">Reading Activity</span><span class="exercise-title">Читання з розумінням</span><span class="exercise-num">#23</span></div>
+        <div class="reading-passage">
+          Холм був <span class="highlight">головним містом</span> Данилової держави. Літописець описує його як «город красний» із палацами, оздобленими <span class="highlight">різьбленим камінням</span> та золотом. Данило запросив до Холма <span class="highlight">майстрів з різних країн</span> — німецьких каменярів, грецьких живописців, угорських ювелірів. Місто стало центром <span class="highlight">міжнародної торгівлі</span> та культурного обміну.
+        </div>
+        <div class="reading-questions">
+          <div class="reading-q" data-num="1.">Як літописець характеризує місто Холм?</div>
+          <div class="reading-q" data-num="2.">Звідки прибули майстри? Що це свідчить про Данилову державу?</div>
+          <div class="reading-q" data-num="3.">Яку роль відігравав Холм у міжнародних зв'язках?</div>
+        </div>
+        <textarea class="essay-textarea" style="min-height:80px;margin-top:12px" placeholder="Ваші відповіді..."></textarea>
+      </div>
+
+      <!-- 24. ComparativeStudy -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-comparative">Comparative Study</span><span class="exercise-title">Порівняльне дослідження</span><span class="exercise-num">#24</span></div>
+        <div class="exercise-instruction">Compare two texts and fill in the table.</div>
+        <table class="vocab-table">
+          <tr><th>Критерій</th><th>Літопис (XIII ст.)</th><th>Підручник (XXI ст.)</th></tr>
+          <tr><td><strong>Мета автора</strong></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td></tr>
+          <tr><td><strong>Образ Данила</strong></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td></tr>
+          <tr><td><strong>Докази</strong></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td></tr>
+          <tr><td><strong>Мова та стиль</strong></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td><td><input class="translate-input" style="width:100%" placeholder="..." /></td></tr>
+        </table>
+      </div>
+
+      <!-- 25. AuthorialIntent -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-authorial">Authorial Intent</span><span class="exercise-title">Авторський задум</span><span class="exercise-num">#25</span></div>
+        <div class="exercise-instruction">Read the excerpt and identify the author's primary purpose.</div>
+        <div class="ai-excerpt">
+          «Данило ж, князь добрий, хоробрий і мудрий, збудував городи многі, і церкви поставив, і оздобив їх різними прикрасами, і прийшли до нього німці і русь, і ляхи...»
+        </div>
+        <div class="ai-options">
+          <div class="ai-option" onclick="checkAuthorial(this,false)"><strong>A.</strong> Об'єктивний хронологічний запис подій без оцінки</div>
+          <div class="ai-option" onclick="checkAuthorial(this,true)"><strong>B.</strong> Панегірик — ідеалізований образ правителя через перелік його досягнень</div>
+          <div class="ai-option" onclick="checkAuthorial(this,false)"><strong>C.</strong> Критичний аналіз Данилової політики з погляду церкви</div>
+          <div class="ai-option" onclick="checkAuthorial(this,false)"><strong>D.</strong> Порівняння Данила з іншими європейськими монархами</div>
+        </div>
+      </div>
+
+      <!-- 26. Debate -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-debate">Debate</span><span class="exercise-title">Дискусія</span><span class="exercise-num">#26</span></div>
+        <div class="exercise-instruction">Evaluate both positions, choose one, and argue for it below.</div>
+        <p style="font-weight:600;margin-bottom:12px">Чи була коронація Данила дипломатичною перемогою чи поступкою?</p>
+        <div class="debate-positions">
+          <div class="debate-pos" onclick="selectDebate(this)">
+            <span class="debate-label" style="background:var(--green-light);color:var(--green)">Позиція А</span>
+            <h4>Дипломатична перемога</h4>
+            <p>Коронація визнала міжнародний статус Данилової держави. Папа фактично визнав його рівним європейським монархам.</p>
+          </div>
+          <div class="debate-pos" onclick="selectDebate(this)">
+            <span class="debate-label" style="background:var(--red-light);color:var(--red)">Позиція Б</span>
+            <h4>Вимушена поступка</h4>
+            <p>Данило мусив прийняти корону від папи, сподіваючись на військову допомогу проти монголів, якої так і не отримав.</p>
+          </div>
+        </div>
+        <textarea class="essay-textarea" style="min-height:100px;margin-top:12px" placeholder="Обгрунтуйте вашу позицію (100-200 слів)..."></textarea>
+        <div class="essay-wordcount">0 / 200 слів</div>
+      </div>
+
+      <!-- 27. EtymologyTrace -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-etymology">Etymology Trace</span><span class="exercise-title">Етимологічний слід</span><span class="exercise-num">#27</span></div>
+        <div class="exercise-instruction">Trace the evolution of the word through historical periods. Click each stage for details.</div>
+        <p style="font-weight:600;margin-bottom:8px">Слово: «князь»</p>
+        <div class="ety-timeline">
+          <div class="ety-stage" onclick="toggleEtyInfo(this,'Germanic *kuningaz (king). Borrowed into Proto-Slavic via Gothic.')">
+            <div class="ety-period">Прагерманська</div>
+            <div class="ety-word">*kuningaz</div>
+          </div>
+          <div class="ety-arrow">&#x2192;</div>
+          <div class="ety-stage" onclick="toggleEtyInfo(this,'Proto-Slavic borrowing. Sound shift: u>ъ, g>z>dz>z.')">
+            <div class="ety-period">Праслов'янська</div>
+            <div class="ety-word">*kъnedzь</div>
+          </div>
+          <div class="ety-arrow">&#x2192;</div>
+          <div class="ety-stage" onclick="toggleEtyInfo(this,'Old Rus\' form. Used in Galician-Volhynian Chronicle for Danylo.')">
+            <div class="ety-period">Давньоруська</div>
+            <div class="ety-word" style="color:var(--purple)">кънязь</div>
+          </div>
+          <div class="ety-arrow">&#x2192;</div>
+          <div class="ety-stage" onclick="toggleEtyInfo(this,'Modern Ukrainian. Jer ъ fell, soft sign retained. Stress: кня\u0301зь.')">
+            <div class="ety-period">Сучасна українська</div>
+            <div class="ety-word" style="color:var(--blue)">князь</div>
+          </div>
+        </div>
+        <div id="ety-info" style="margin-top:12px;padding:12px;background:var(--gray-100);border-radius:8px;font-size:13px;color:var(--gray-800);display:none"></div>
+      </div>
+
+      <!-- 28. TranslationCritique -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-transcritique">Translation Critique</span><span class="exercise-title">Критика перекладу</span><span class="exercise-num">#28</span></div>
+        <div class="exercise-instruction">Which translation best captures the original? Click to select, then explain your reasoning.</div>
+        <div class="source-box" style="margin:10px 0 14px">
+          <div class="source-box-header">Оригінал (давньоукраїнська)</div>
+          <blockquote>«Данило ж, князь добрий, хоробрий і мудрий»</blockquote>
+        </div>
+        <div class="critique-versions">
+          <div class="critique-version" onclick="selectCritique(this)">
+            <div class="cv-label">Translation A</div>
+            <div class="cv-text">"Danylo, a prince good, brave, and wise"</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Literal word-for-word translation</div>
+          </div>
+          <div class="critique-version" onclick="selectCritique(this)">
+            <div class="cv-label">Translation B</div>
+            <div class="cv-text">"And Danylo, that good prince, courageous and wise"</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Preserves the chronicle's rhetorical «ж» particle</div>
+          </div>
+          <div class="critique-version" onclick="selectCritique(this)">
+            <div class="cv-label">Translation C</div>
+            <div class="cv-text">"Prince Daniel was a good, brave, and intelligent ruler"</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Modern paraphrase, loses medieval voice</div>
+          </div>
+        </div>
+        <textarea class="essay-textarea" style="min-height:80px;margin-top:12px" placeholder="Який переклад найкращий і чому?"></textarea>
+      </div>
+
+      <!-- 29. Transcription -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-transcription">Transcription</span><span class="exercise-title">Транскрипція</span><span class="exercise-num">#29</span></div>
+        <div class="exercise-instruction">Transcribe this historical text into modern Ukrainian orthography.</div>
+        <div class="transcription-source">
+          «Данилъ же кнzзь добръıи хоробръıи и мудръıи збудовалъ городъı многъı...»
+        </div>
+        <textarea class="essay-textarea" style="min-height:80px" placeholder="Перепишіть сучасною українською орфографією..."></textarea>
+        <div class="feedback fb-correct" id="transcription-check" style="margin-top:8px">
+          Expected: «Данило ж, князь добрий, хоробрий і мудрий, збудував городи многі...»
+        </div>
+        <button onclick="document.getElementById('transcription-check').classList.add('show')" style="margin-top:8px;padding:8px 16px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px">Check answer</button>
+      </div>
+
+      <!-- 30. PaleographyAnalysis -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-paleography">Paleography Analysis</span><span class="exercise-title">Палеографічний аналіз</span><span class="exercise-num">#30</span></div>
+        <div class="exercise-instruction">Click the highlighted elements in the manuscript to reveal paleographic notes.</div>
+        <div class="paleo-manuscript">
+          <span class="paleo-hotspot" onclick="togglePaleo(this)">Данилъ<span class="paleo-tooltip">Єр (ъ) — used at end of masculine nouns in Old Slavic. Lost in modern Ukrainian.</span></span>
+          же
+          <span class="paleo-hotspot" onclick="togglePaleo(this)">кнzзь<span class="paleo-tooltip">The letter z (дз) represents an early form. Later standardized to «князь» with «я» from юс малий.</span></span>
+          добрыи хоробрыи и
+          <span class="paleo-hotspot" onclick="togglePaleo(this)">мудрыи<span class="paleo-tooltip">Ери (ы) — old letter, replaced by «и» in modern Ukrainian orthography. Russian kept «ы».</span></span>
+          збудовалъ
+          <span class="paleo-hotspot" onclick="togglePaleo(this)">городы<span class="paleo-tooltip">«Городы» = cities. The ending «-ы» became «-и» in Ukrainian (городи). Compare Russian «города» (different development).</span></span>
+          многы и
+          <span class="paleo-hotspot" onclick="togglePaleo(this)">церкви<span class="paleo-tooltip">«Церкви» — this word kept its form across centuries. From Greek κυριακόν via Old Church Slavonic.</span></span>
+          поставилъ
+        </div>
+      </div>
+
+      <!-- 31. DialectComparison -->
+      <div class="exercise">
+        <div class="exercise-header"><span class="exercise-badge badge-dialect">Dialect Comparison</span><span class="exercise-title">Порівняння діалектів</span><span class="exercise-num">#31</span></div>
+        <div class="exercise-instruction">Compare how the same words appear in different Ukrainian dialects and the literary standard.</div>
+        <table class="dialect-table">
+          <tr>
+            <th>Літературна</th>
+            <th>Галицька</th>
+            <th>Полтавська</th>
+            <th>Волинська</th>
+          </tr>
+          <tr><td><strong>що</strong></td><td>шо / що</td><td>шо</td><td>шчо</td></tr>
+          <tr><td><strong>один</strong></td><td>один / оден</td><td>одни</td><td>одын</td></tr>
+          <tr><td><strong>дуже</strong></td><td>файно / барз</td><td>дуже</td><td>дуже / моцно</td></tr>
+          <tr><td><strong>гарний</strong></td><td>файний</td><td>гарний</td><td>красний</td></tr>
+          <tr><td><strong>говорити</strong></td><td>говорити / балакати</td><td>балакати</td><td>говорити</td></tr>
+        </table>
+        <div class="observe-question" style="margin-top:12px">Which dialect shows the most similarity to the literary standard? What might explain this?</div>
+        <textarea class="essay-textarea" style="min-height:80px;margin-top:8px" placeholder="Ваше спостереження..."></textarea>
+      </div>
+    </div>
+
+    <!-- СЕМІНАР: РЕСУРСИ -->
+    <div id="sem-resursy" class="tab-content">
+      <h2>Ресурси</h2>
+      <div class="resource-card" style="border-left-color:var(--purple)"><h3>Галицько-Волинський літопис (переклад)</h3><p>Повний текст літопису в сучасному перекладі.</p><span class="tag">Першоджерело</span></div>
+      <div class="resource-card" style="border-left-color:var(--purple)"><h3>Грушевський — Історія України-Руси, т. 3</h3><p>Академічний аналіз Галицько-Волинської доби.</p><span class="tag">Монографія</span></div>
+      <div class="resource-card" style="border-left-color:var(--purple)"><h3>Wikipedia: Данило Галицький</h3><p>Огляд біографії з посиланнями на джерела.</p><span class="tag">Довідка</span></div>
+      <div class="resource-card" style="border-left-color:var(--purple)"><h3>Ярослав Ісаєвич — Галицько-Волинська держава</h3><p>Монографія з аналізом міжнародних зв'язків.</p><span class="tag">Монографія</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== TAB SWITCHING (FIXED) =====================
+// The fix: scope tab-content lookup to the parent module div, not .content
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var tabId = this.getAttribute('data-tab');
+    // Find the parent module container (module-core or module-seminar)
+    var moduleContainer = this.closest('[id^="module-"]');
+    // Deactivate all tabs in this module's tab bar
+    var tabBar = this.closest('.tabs');
+    tabBar.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+    // Deactivate all tab-content in this module container
+    moduleContainer.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+    // Activate the target tab-content
+    document.getElementById(tabId).classList.add('active');
+  });
+});
+
+// ===================== MODULE SWITCHING =====================
+function switchModule(val) {
+  document.getElementById('module-core').style.display = val === 'core' ? '' : 'none';
+  document.getElementById('module-seminar').style.display = val === 'seminar' ? '' : 'none';
+}
+
+// ===================== QUIZ =====================
+function checkQuiz(el, result) {
+  if (el.parentElement.querySelector('.correct,.wrong')) return;
+  el.classList.add(result);
+  if (result === 'wrong') {
+    setTimeout(function() {
+      var correct = el.parentElement.querySelector('[onclick*="correct"]');
+      if (correct) correct.classList.add('correct');
+    }, 500);
+  }
+}
+
+// ===================== FILL-IN =====================
+function fillDemo(el, answer) {
+  if (el.classList.contains('filled')) return;
+  el.textContent = answer;
+  el.classList.add('filled');
+}
+
+// ===================== TRUE/FALSE =====================
+function checkTF(el, isCorrect) {
+  if (el.parentElement.querySelector('.correct-true,.correct-false')) return;
+  el.classList.add(isCorrect ? 'correct-true' : 'correct-false');
+}
+
+// ===================== ERROR CORRECTION =====================
+function showError(el) {
+  el.style.background = 'var(--red)'; el.style.color = 'white';
+  el.style.textDecoration = 'line-through';
+  var correction = el.parentElement.querySelector('.error-correction');
+  if (correction) correction.style.display = 'inline';
+}
+
+// ===================== MATCH-UP =====================
+var matchState = {};
+function selectMatch(el, side, groupId) {
+  if (!matchState[groupId]) matchState[groupId] = {};
+  if (side === 'left') {
+    if (matchState[groupId].left) matchState[groupId].left.classList.remove('selected');
+    matchState[groupId].left = el;
+    el.classList.add('selected');
+  } else if (matchState[groupId].left) {
+    el.classList.add('matched');
+    matchState[groupId].left.classList.add('matched');
+    matchState[groupId].left = null;
+  }
+}
+
+// ===================== GROUP SORT =====================
+function sortWord(el, group) {
+  var target = document.getElementById('gz-' + group);
+  var clone = el.cloneNode(true);
+  clone.onclick = null; clone.style.cursor = 'default';
+  target.appendChild(clone);
+  el.classList.add('placed');
+}
+
+// ===================== ANAGRAM =====================
+function placeTile(el, prefix) {
+  var slots = document.getElementById(prefix + '-target').querySelectorAll('.anagram-slot');
+  for (var i = 0; i < slots.length; i++) {
+    if (!slots[i].textContent) {
+      slots[i].textContent = el.textContent;
+      el.style.opacity = '0.3';
+      el.style.pointerEvents = 'none';
+      break;
+    }
+  }
+}
+
+// ===================== UNJUMBLE =====================
+function addWord(el, resultId) {
+  var result = document.getElementById(resultId);
+  var span = document.createElement('span');
+  span.className = 'unjumble-word';
+  span.textContent = el.textContent;
+  span.onclick = function() { this.remove(); el.style.display = ''; };
+  result.appendChild(span);
+  el.style.display = 'none';
+}
+
+// ===================== CLOZE =====================
+function fillCloze(el, answer) {
+  if (el.classList.contains('filled')) return;
+  el.textContent = answer;
+  el.classList.add('filled');
+}
+
+// ===================== SELECT (DROPDOWN) =====================
+function checkSelect(el, correct) {
+  el.classList.remove('correct-select', 'wrong-select');
+  if (el.value === '') return;
+  el.classList.add(el.value === correct ? 'correct-select' : 'wrong-select');
+}
+
+// ===================== CLASSIFY =====================
+function classifyWord(el, group) {
+  var target = document.getElementById('cz-' + group);
+  var clone = el.cloneNode(true);
+  clone.onclick = null; clone.style.cursor = 'default';
+  clone.style.background = 'var(--blue-light)'; clone.style.borderColor = 'var(--blue)';
+  target.appendChild(clone);
+  el.classList.add('placed');
+}
+
+// ===================== MARK THE WORDS =====================
+function markWord(el, isCorrect) {
+  if (el.classList.contains('marked-correct') || el.classList.contains('marked-wrong')) return;
+  el.classList.add(isCorrect ? 'marked-correct' : 'marked-wrong');
+}
+
+// ===================== HIGHLIGHT MORPHEMES =====================
+function revealMorpheme(el, cls, label) {
+  el.classList.add(cls, 'revealed');
+}
+
+// ===================== IMAGE TO LETTER =====================
+function checkLetter(el, isCorrect) {
+  if (el.parentElement.querySelector('.letter-correct,.letter-wrong')) return;
+  el.classList.add(isCorrect ? 'letter-correct' : 'letter-wrong');
+  if (!isCorrect) {
+    setTimeout(function() {
+      var c = el.parentElement.querySelector('[onclick*="true"]');
+      if (c) c.classList.add('letter-correct');
+    }, 500);
+  }
+}
+
+// ===================== LETTER GRID =====================
+(function() {
+  var vowels = 'АЕЄИІЇОУЮЯ';
+  var special = 'ЬЪ';
+  var alphabet = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ';
+  var grid = document.getElementById('letter-grid');
+  if (!grid) return;
+  for (var i = 0; i < alphabet.length; i++) {
+    var ch = alphabet[i];
+    var cell = document.createElement('div');
+    cell.className = 'lg-cell';
+    cell.textContent = ch;
+    cell.onclick = (function(c) {
+      return function() {
+        this.classList.toggle(vowels.indexOf(c) >= 0 ? 'lg-vowel' : special.indexOf(c) >= 0 ? 'lg-special' : 'lg-consonant');
+      };
+    })(ch);
+    grid.appendChild(cell);
+  }
+})();
+
+// ===================== PHRASE TABLE AUDIO =====================
+function playPhrase(el) {
+  el.style.opacity = '1';
+  el.textContent = '\u{1F50A} ...';
+  setTimeout(function() { el.textContent = '\u{1F50A}'; el.style.opacity = '0.6'; }, 800);
+}
+
+// ===================== AUTHORIAL INTENT =====================
+function checkAuthorial(el, isCorrect) {
+  var parent = el.closest('.ai-options');
+  if (parent.querySelector('.ai-correct,.ai-wrong')) return;
+  el.classList.add(isCorrect ? 'ai-correct' : 'ai-wrong');
+  if (!isCorrect) {
+    setTimeout(function() {
+      parent.querySelectorAll('.ai-option').forEach(function(o) {
+        if (o.getAttribute('onclick') && o.getAttribute('onclick').indexOf('true') > -1) o.classList.add('ai-correct');
+      });
+    }, 500);
+  }
+}
+
+// ===================== DEBATE =====================
+function selectDebate(el) {
+  el.closest('.debate-positions').querySelectorAll('.debate-pos').forEach(function(p) { p.classList.remove('pos-selected'); });
+  el.classList.add('pos-selected');
+}
+
+// ===================== ETYMOLOGY TRACE =====================
+function toggleEtyInfo(el, info) {
+  var infoBox = document.getElementById('ety-info');
+  infoBox.textContent = info;
+  infoBox.style.display = 'block';
+  // Highlight selected stage
+  el.closest('.ety-timeline').querySelectorAll('.ety-stage').forEach(function(s) { s.style.borderColor = 'var(--gray-300)'; });
+  el.style.borderColor = 'var(--blue)';
+}
+
+// ===================== TRANSLATION CRITIQUE =====================
+function selectCritique(el) {
+  el.closest('.critique-versions').querySelectorAll('.critique-version').forEach(function(v) { v.classList.remove('cv-selected'); });
+  el.classList.add('cv-selected');
+}
+
+// ===================== SOURCE EVALUATION STARS =====================
+function rateSource(el) {
+  var stars = el.querySelector('span:last-child');
+  if (!stars) return;
+  var current = (stars.textContent.match(/\u2605/g) || []).length;
+  // Cycle through 1-5 filled stars
+  var filled = ((current % 5) || 0) + 1;
+  if (stars.dataset.rated) filled = (parseInt(stars.dataset.rated) % 5) + 1;
+  stars.dataset.rated = filled;
+  stars.textContent = '';
+  for (var i = 0; i < 5; i++) {
+    stars.textContent += i < filled ? '\u2605' : '\u2606';
+  }
+  stars.style.color = filled >= 4 ? 'var(--green)' : filled >= 2 ? 'var(--orange)' : 'var(--red)';
+}
+
+// ===================== PALEOGRAPHY =====================
+function togglePaleo(el) {
+  el.classList.toggle('paleo-active');
+}
+
+// ===================== WORD COUNT =====================
+document.querySelectorAll('.essay-textarea').forEach(function(ta) {
+  ta.addEventListener('input', function() {
+    var wc = this.value.trim() ? this.value.trim().split(/\s+/).length : 0;
+    var wcEl = this.nextElementSibling;
+    if (wcEl && wcEl.classList.contains('essay-wordcount')) {
+      var parts = wcEl.textContent.split('/');
+      wcEl.textContent = wc + ' / ' + parts[1].trim();
+    }
+  });
+});
+
+// ===================== FLASHCARDS =====================
+var coreWords = [
+  {uk:'стіл',en:'table',g:'м',gc:'var(--blue-light)',gt:'var(--blue)'},
+  {uk:'книга',en:'book',g:'ж',gc:'#FCE4EC',gt:'#C2185B'},
+  {uk:'ліжко',en:'bed',g:'с',gc:'var(--green-light)',gt:'var(--green)'},
+  {uk:'вікно',en:'window',g:'с',gc:'var(--green-light)',gt:'var(--green)'},
+  {uk:'ручка',en:'pen',g:'ж',gc:'#FCE4EC',gt:'#C2185B'},
+  {uk:'зошит',en:'notebook',g:'м',gc:'var(--blue-light)',gt:'var(--blue)'},
+];
+var fc = document.getElementById('core-flashcards');
+coreWords.forEach(function(w) {
+  fc.innerHTML += '<div class="flashcard" onclick="this.classList.toggle(\'flipped\')"><div class="flashcard-inner"><div class="flashcard-front"><div class="word">'+w.uk+'</div><div class="gender" style="background:'+w.gc+';color:'+w.gt+'">'+w.g+'</div></div><div class="flashcard-back"><div class="word">'+w.en+'</div><div class="hint">'+(w.g==='м'?'мій':w.g==='ж'?'моя':'моє')+' '+w.uk+'</div></div></div></div>';
+});
+
+var semWords = [
+  {uk:'князівство',en:'principality'},
+  {uk:'навала',en:'invasion'},
+  {uk:'коронація',en:'coronation'},
+  {uk:'літопис',en:'chronicle'},
+  {uk:'першоджерело',en:'primary source'},
+  {uk:'об\'єднати',en:'to unite'},
+];
+var sfc = document.getElementById('sem-flashcards');
+semWords.forEach(function(w) {
+  sfc.innerHTML += '<div class="flashcard" onclick="this.classList.toggle(\'flipped\')"><div class="flashcard-inner"><div class="flashcard-front"><div class="word">'+w.uk+'</div></div><div class="flashcard-back"><div class="word">'+w.en+'</div></div></div></div>';
+});
+</script>
+</body>
+</html>

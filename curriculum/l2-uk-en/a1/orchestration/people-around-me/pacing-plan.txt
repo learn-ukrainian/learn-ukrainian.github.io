@@ -1,6 +1,0 @@
-Section 1 "Діалоги (Dialogues)": ~350 words — Introduce the target grammar through two natural dialogues focusing on identifying and knowing people.
-Section 2 "Кого? (Whom?)": ~350 words — Explain the fundamental distinction between animate and inanimate objects in Ukrainian grammar and the question words that trigger them.
-Section 3 "Знахідний відмінок — живе (Accusative Animate)": ~400 words — Detail the specific ending changes for feminine and masculine animate nouns in the accusative case.
-Section 4 "Підсумок — Summary": ~200 words — Provide a comprehensive paradigm table and a review of the key verbs that require this case.
-Section 5 "Підсумок": ~150 words — Final brief wrap-up and encouragement before moving to the next module.
-Total: 1450+ words

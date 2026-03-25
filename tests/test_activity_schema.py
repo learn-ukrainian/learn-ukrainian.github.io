@@ -857,7 +857,7 @@ class TestSemanticChecks:
     def test_duplicate_inline_ids_detected(self):
         """Import and test the duplicate id checker."""
         import sys
-        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts" / "validate"))
         from validate_activities_v2 import _check_duplicate_ids
 
         data = {
@@ -872,7 +872,7 @@ class TestSemanticChecks:
 
     def test_no_duplicate_ids(self):
         import sys
-        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts" / "validate"))
         from validate_activities_v2 import _check_duplicate_ids
 
         data = {

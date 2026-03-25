@@ -1,5 +1,0 @@
-Section 1 "Діалоги (Dialogues)": ~400 words — Introduce the vocative case naturally through conversational scenarios involving friends and family.
-Section 2 "Кличний відмінок (The Vocative Case)": ~350 words — Explain the core concept of the vocative case, its necessity, the helper word "Кл. (!)", and the difference from nominative.
-Section 3 "Закінчення кличного (Vocative Endings)": ~550 words — Detail the specific endings for feminine (-о, -є, -сю) and masculine (-е, -ю) nouns, including consonant alternations and exceptions.
-Section 4 "Підсумок — Summary": ~250 words — Provide a quick reference table and a self-check for the rules learned.
-Total: 1550+ words

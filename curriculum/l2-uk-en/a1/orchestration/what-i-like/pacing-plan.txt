@@ -1,5 +1,0 @@
-Section 1 "Діалоги (Dialogues)": ~300 words — [Two dialogues introducing 'люблю + verb' and 'мені подобається + noun' in natural context.]
-Section 2 "Я люблю... (I Like...)": ~350 words — [Explaining the 'люблю + infinitive' structure and introducing hobby verbs ending in -ти.]
-Section 3 "Мені подобається... (I Like...)": ~350 words — [Explaining the 'мені подобається + noun' chunk and how to negate both structures.]
-Section 4 "Підсумок — Summary": ~200 words — [Consolidating the two structures, their negative forms, and a self-check prompt.]
-Total: 1200+ words

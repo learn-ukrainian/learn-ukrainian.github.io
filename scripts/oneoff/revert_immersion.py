@@ -1,0 +1,27 @@
+with open('curriculum/l2-uk-en/a2/being-and-becoming.md', 'r') as f:
+    content = f.read()
+
+content = content.replace('Ukrainian language (**українська мова**)', 'Ukrainian language')
+content = content.replace('conversational speech (**розмовна мова**)', 'conversational speech')
+content = content.replace('Nominative case (**називний відмінок**)', 'Nominative case')
+content = content.replace('future (**майбутнє**)', 'future')
+content = content.replace('Instrumental case (**орудний відмінок**)', 'Instrumental case')
+content = content.replace('grammatical rule (**граматичне правило**)', 'grammatical rule')
+content = content.replace('high-frequency verbs (**дієслова**)', 'high-frequency verbs')
+content = content.replace('fluency (**рівень вільного володіння**)', 'fluency')
+content = content.replace('career history (**історія кар\'єри**)', 'career history')
+content = content.replace('professional dreams (**професійні мрії**)', 'professional dreams')
+content = content.replace('common verbs (**найпоширеніші дієслова**)', 'common verbs')
+content = content.replace('career discussions (**обговорення кар\'єри**)', 'career discussions')
+content = content.replace('perfective verb (**доконаний вид**)', 'perfective verb')
+content = content.replace('imperfective partner (**недоконаний вид**)', 'imperfective partner')
+content = content.replace('femininitives (**фемінітиви**)', 'femininitives')
+content = content.replace('grammatical rules (**граматичні правила**)', 'grammatical rules')
+content = content.replace('cultural background (**культурний контекст**)', 'cultural background')
+content = content.replace('«Ким ви працювали?» (**ким ви працювали?**)', '«Ким ви працювали?»')
+content = content.replace('grammatical structures (**граматичні структури**)', 'grammatical structures')
+content = content.replace('good friends (**добрі друзі**)', 'good friends')
+content = content.replace('families (**сім\'ї**)', 'families')
+
+with open('curriculum/l2-uk-en/a2/being-and-becoming.md', 'w') as f:
+    f.write(content)

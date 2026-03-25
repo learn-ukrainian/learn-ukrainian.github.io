@@ -1,5 +1,0 @@
-Section 1 "Наголос (Stress)": ~380 words — Free stress system, stress-meaning pairs (замок/замок, мука/мука), common patterns, when stress marks appear
-Section 2 "Інтонація (Intonation)": ~330 words — Three intonation patterns (statement↘, yes/no question↗, exclamation↘↘), question words don't rise, sentence types by purpose
-Section 3 "Читаємо вголос (Reading Aloud)": ~320 words — Multisyllable stress placement method, short text reading, dialogue practice with intonation
-Section 4 "Підсумок — Summary": ~180 words — Self-check questions, read-aloud practice combining stress and intonation
-Total: ~1210 words

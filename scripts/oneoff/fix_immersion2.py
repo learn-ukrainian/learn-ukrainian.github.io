@@ -1,0 +1,70 @@
+import re
+
+with open("curriculum/l2-uk-en/a2/being-and-becoming.md", "r", encoding="utf-8") as f:
+    text = f.read()
+
+replacements = {
+    "When we talk about who we are right now": "When we talk about who we are right now (**хто ми є зараз**)",
+    "we use the Nominative case": "we use the Nominative case (**називни́й відмі́нок**)",
+    "dictionary form": "dictionary form (**словнико́ва фо́рма**)",
+    "You simply say the pronoun": "You simply say the pronoun (**займе́нник**)",
+    "and the noun": "and the noun (**іме́нник**)",
+    "However, when we describe a role": "However, when we describe a role (**роль**)",
+    "a profession we work in": "a profession we work in (**профе́сія**)",
+    "a past phase": "a past phase (**мину́лий ета́п**)",
+    "or a future goal": "or a future goal (**майбу́тня ціль**)",
+    "Because English uses «to be» with the basic noun form": "Because English uses «to be» with the basic noun form (**ба́зова фо́рма іме́нника**)",
+    "learners directly translate this": "learners directly translate this (**переклада́ють**)",
+    "Once you add verbs like «to be»": "Once you add verbs like «to be» (**бу́ти**)",
+    "or «to become,»": "or «to become» (**ста́ти**)",
+    "the noun must change to the Instrumental case": "the noun must change to the Instrumental case (**ору́дний відмі́нок**)",
+    "When you say": "When you say (**коли ви кажете**)",
+    "But when you say": "But when you say (**але коли ви кажете**)",
+    "you are saying that he puts on the metaphorical doctor's uniform": "you are saying that he puts on the metaphorical doctor's uniform (**форму лікаря**)",
+    "This is the core logic": "This is the core logic (**основна́ ло́гіка**)",
+    "describing a person's profession or status": "describing a person's profession or status (**ста́тус**)",
+    "The Instrumental case marks the temporary": "The Instrumental case marks the temporary (**тимчасо́вий**)",
+    "functional nature of the role": "functional nature of the role (**функціона́льна приро́да**)",
+    "This distinction is vital": "This distinction is vital (**важли́ва різни́ця**)",
+    "for sounding natural in Ukrainian.": "for sounding natural in Ukrainian (**приро́дно**).",
+    "Notice how the word for the profession changes its ending": "Notice how the word for the profession changes its ending (**закі́нчення**)",
+    "Let's look at how the endings change": "Let's look at how the endings change (**змі́нюються**)",
+    "for our core profession vocabulary": "for our core profession vocabulary (**словни́к профе́сій**)",
+    "Notice how the endings adapt": "Notice how the endings adapt (**адапту́ються**)",
+    "depending on whether the noun is masculine or feminine": "depending on whether the noun is masculine or feminine (**чолові́чий чи жіно́чий рід**)",
+    "In the present tense": "In the present tense (**тепері́шній час**)",
+    "we usually drop the verb entirely": "we usually drop the verb entirely (**пропуска́ємо дієсло́во**)",
+    "But when we talk about what someone was": "But when we talk about what someone was (**був**)",
+    "or what they will be": "or what they will be (**бу́де**)",
+    "the Instrumental case is absolutely mandatory.": "the Instrumental case is absolutely mandatory (**обов'язко́во**).",
+    "It signals that this state was true in the past": "It signals that this state was true in the past (**у мину́лому**)",
+    "or will be true in the future.": "or will be true in the future (**у майбу́тньому**).",
+    "indicates a clear change": "indicates a clear change (**змі́на**)",
+    "of state or a transition into a new role": "of state or a transition into a new role (**но́ва роль**)",
+    "While **ста́ти** focuses on the completed result": "While **ста́ти** focuses on the completed result (**результа́т**)",
+    "describes the ongoing, continuous process": "describes the ongoing, continuous process (**проце́с**)",
+    "In English, we say": "In English, we say (**англі́йською ми ка́жемо**)",
+    "Many learners try to translate the word": "Many learners try to translate the word (**перекласти слово**)",
+    "directly into Ukrainian": "directly into Ukrainian (**украї́нською**)",
+    "using the word": "using the word (**слово**)",
+    "This is a major error.": "This is a major error (**вели́ка поми́лка**).",
+    "In Ukrainian, you never use": "In Ukrainian, you never use (**ніко́ли не використо́вуйте**)",
+    "when describing your profession": "when describing your profession (**ваша профе́сія**)",
+    "instead, the verb": "instead, the verb (**дієсло́во**)",
+    "governs the Instrumental case directly": "governs the Instrumental case directly (**прямо керує орудним відмінком**)",
+    "without any preposition.": "without any preposition (**без прийме́нника**).",
+    "The word": "The word (**сло́во**)",
+    "is not used for professions in this specific context.": "is not used for professions in this specific context (**у цьому конте́ксті**).",
+    "The Instrumental ending itself carries the necessary meaning": "The Instrumental ending itself carries the necessary meaning (**зна́чення**)",
+    "By mastering these three verbs": "By mastering these three verbs (**три дієсло́ва**)",
+    "you will be able to describe anyone's career path fluently.": "you will be able to describe anyone's career path fluently (**ві́льно**).",
+    "The verb itself acts as a grammatical trigger": "The verb itself acts as a grammatical trigger (**грамати́чний три́гер**)",
+    "Remember that these specific case rules apply consistently": "Remember that these specific case rules apply consistently (**пості́йно**)",
+    "across all the different profession vocabulary words": "across all the different profession vocabulary words (**слова**)",
+}
+
+for k, v in replacements.items():
+    text = text.replace(k, v)
+
+with open("curriculum/l2-uk-en/a2/being-and-becoming.md", "w", encoding="utf-8") as f:
+    f.write(text)

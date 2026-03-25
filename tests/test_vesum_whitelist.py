@@ -13,6 +13,7 @@ import yaml
 
 # Ensure scripts/ is on the path
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
+sys.path.insert(0, str(SCRIPTS_DIR / "tools"))
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from vesum_whitelist import (

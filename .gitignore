@@ -147,3 +147,12 @@ starlight/dist
 starlight/node_modules
 starlight/.astro
 /testbed/
+data/sum11/
+data/frazeolohichnyi/
+data/ubertext-freq/
+data/balla-en-uk/
+data/dmklinger-uk-en/
+data/ukrajinet/
+data/wiktionary/
+data/puls/
+data/literary_texts/*.jsonl
