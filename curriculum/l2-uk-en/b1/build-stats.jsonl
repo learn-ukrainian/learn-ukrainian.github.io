@@ -1,3 +1,8 @@
 {"slug": "metalanguage-sounds", "error_type": "WORD_COUNT", "attempt": 1, "model": "claude", "success": false, "timestamp": "2026-03-22T11:05:43.895185+00:00"}
 {"slug": "metalanguage-sounds", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 2, "model": "claude", "success": false, "timestamp": "2026-03-22T11:09:32.645303+00:00"}
 {"slug": "metalanguage-sounds", "error_type": "WORD_COUNT", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-22T11:12:13.175460+00:00"}
+{"slug": "alternation-vowels", "error_type": "TOXIC, WORD_COUNT", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-24T22:39:19.519618+00:00"}
+{"slug": "alternation-vowels", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-03-24T22:43:05.542176+00:00"}
+{"slug": "alternation-vowels", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-24T23:03:13.198489+00:00"}
+{"slug": "alternation-vowels", "error_type": "TOXIC", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-03-24T23:05:26.650109+00:00"}
+{"slug": "alternation-vowels", "error_type": "WORD_COUNT", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-03-24T23:08:56.288603+00:00"}

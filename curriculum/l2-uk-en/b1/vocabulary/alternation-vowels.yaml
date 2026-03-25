@@ -1,0 +1,97 @@
+vocabulary:
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відкри́тий
+  translation: open
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: закри́тий
+  translation: closed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: морфоноло́гія
+  translation: morphophonology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: право́пис
+  translation: orthography
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перевірне слово
+  translation: checking word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відкритий склад
+  translation: open syllable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закритий склад
+  translation: closed syllable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біглий голосний
+  translation: fleeting vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нуль звука
+  translation: zero sound
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: орфогра́ма
+  translation: orthographic rule
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: форма слова
+  translation: word form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергування голосних
+  translation: vowel alternation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: осі́нній
+  translation: autumn (adj.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вечі́рній
+  translation: evening (adj.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

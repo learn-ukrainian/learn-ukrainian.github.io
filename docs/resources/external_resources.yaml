@@ -7618,3 +7618,25 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       source: ukrainianlessons.com
+  a2-comparison:
+    articles:
+    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-3/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-4: Verbal Aspect (Future Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-4/
+      relevance: high
+      source: University of Kansas
+    - title: Healthy lifestyle + Degrees of comparison in Ukrainian
+      url: https://www.ukrainianlessons.com/episode104/
+      relevance: high
+      source: ukrainianlessons.com

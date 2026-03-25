@@ -1,0 +1,193 @@
+vocabulary:
+- word: ана́ліз
+  translation: analysis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конте́кст
+  translation: context
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вплив
+  translation: influence
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на́слідки
+  translation: consequences
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: у́нія
+  translation: union
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: церковна унія
+  translation: church union
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: істо́рія
+  translation: history
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: де́ржа́ва
+  translation: state
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Галицько-Волинська держава
+  translation: Galicia-Volhynia state
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: наро́д
+  translation: people
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вла́да
+  translation: power
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пері́од
+  translation: period
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поді́я
+  translation: event
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: історична подія
+  translation: historical event
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: первинне джерело
+  translation: primary source
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: батьківська спадщина
+  translation: paternal heritage
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: корона́ція
+  translation: coronation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: коронація Данила
+  translation: coronation of Danylo
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: монгольська навала
+  translation: Mongol invasion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Галицько-Волинський літопис
+  translation: Galician-Volhynian Chronicle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Король Русі
+  translation: King of Rus'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Золота Орда
+  translation: Golden Horde
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Папа Римський
+  translation: Pope
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хрестовий похід
+  translation: crusade
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: боярська опозиція
+  translation: boyar opposition
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: васальна залежність
+  translation: vassal dependence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: екзистенційна загроза
+  translation: existential threat
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: узурпа́ція
+  translation: usurpation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інсигнії
+  translation: insignia
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: лега́т
+  translation: legate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: О, лихіша лиха честь татарськая!
+  translation: Oh, worse than evil is the Tatar honor!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Не личить держати нашу батьківщину крижевникам
+  translation: It is not fitting for crusaders to hold our homeland
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
