@@ -152,88 +152,74 @@ def get_module_title(meta_file):
 
 
 def build_level_landing(level, config, is_track=False):
-    """Build landing page for a single level."""
+    """Build landing page for a single level using LevelLanding component."""
     planned = config.get('planned', 0)
-    config.get('description', '')
-    introduction = config.get('introduction', '').strip()
 
     if is_track:
         meta_files, mdx_files, review_files, audit_files = get_track_module_files(level)
     else:
         meta_files, mdx_files, review_files, audit_files = get_module_files(level)
 
-    # Count stats
-    built_count = len(mdx_files)
-    ready_count = len(review_files)
-    qa_count = max(0, built_count - ready_count)
-    len([n for n in meta_files if n not in mdx_files])
-
-    # Determine status emoji for header
-    if ready_count == planned and planned > 0:
-        status_emoji = "✅"
-        status_text = "Завершено"
-    elif built_count > 0:
-        status_emoji = "🔍"
-        status_text = f"На перевірці — {ready_count}/{planned} готово, {qa_count} у QA"
-    else:
-        status_emoji = "📋"
-        status_text = "Заплановано"
-
-    # Build module table rows
-    rows = []
-
-    # Build module rows from manifest
+    # Build module list from manifest
     modules = get_modules_for_level(level)
+    module_items = []
+    ready_count = 0
+
     for mod in modules:
         num = mod.local_num
+        title = (mod.title or '').replace('<!-- Title -->', '').strip() or f'Module {num:02d}'
+        is_checkpoint = 'checkpoint' in title.lower()
+
         if num in mdx_files:
             if num in review_files:
-                status = "✅"
+                status = 'ready'
+                ready_count += 1
             elif num in audit_files:
-                status = "QA"
+                status = 'qa'
+                ready_count += 1
             else:
-                status = "✅" # Fallback if no audit but MDX exists
-            link = f"[{mod.title.replace("<!-- Title -->", "")}](./{mod.slug}/)"
+                status = 'ready'
+                ready_count += 1
         elif num in meta_files:
-            status = "🚧"
-            link = f"{mod.title.replace("<!-- Title -->", "")}"
+            status = 'wip'
         else:
-            status = "📋"
-            link = mod.title.replace("<!-- Title -->", "") if mod.title else f"Модуль {num:02d}"
-        rows.append(f"| {num} | {link} | {status} |")
+            status = 'planned'
 
-    # Build introduction section
-    intro_section = ""
-    if introduction:
-        intro_section = f"\n{introduction}\n"
+        # Escape quotes in title for JSON
+        safe_title = title.replace('"', '\\"')
+        module_items.append(
+            f'  {{ num: {num}, title: "{safe_title}", slug: "{mod.slug}", '
+            f'status: "{status}"{", isCheckpoint: true" if is_checkpoint else ""} }}'
+        )
 
-    # Build content
+    modules_js = ',\n'.join(module_items)
+
+    # English subtitle from config
+    en_name = LEVEL_NAMES_EN.get(level, '')
+    subtitle = f'{en_name} — {planned} modules' if en_name else f'{planned} modules'
+
+    # Use the short description from config, not the long markdown introduction
+    description = config.get('description', '').strip()
+
     content = f"""---
 title: {LEVEL_NAMES_UK[level]}
 sidebar:
   order: 1
 ---
 
-# {status_emoji} {LEVEL_NAMES_UK[level]}
+import LevelLanding from '@site/src/components/LevelLanding';
 
-**{status_text}**
-{intro_section}
----
-
-## Модулі
-
-| # | Модуль | Статус |
-|---|--------|--------|
-{chr(10).join(rows)}
-
----
-
-## Прогрес
-
-- **Готові модулі (✅):** {ready_count}
-- **У черзі на перевірку (QA):** {qa_count}
-- **Заплановані модулі:** {planned}
-- **Завершення:** {round(ready_count / planned * 100) if planned > 0 else 0}%
+<LevelLanding
+  client:load
+  level="{level}"
+  levelName="{LEVEL_NAMES_UK[level]}"
+  subtitle="{subtitle}"
+  introduction="{description}"
+  totalPlanned={{{planned}}}
+  modules={{[
+{modules_js}
+  ]}}
+/>
 """
 
     return content, ready_count, planned

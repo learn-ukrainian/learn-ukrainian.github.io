@@ -1,0 +1,227 @@
+/**
+ * Level Landing Page Styles
+ * Matches the design language from Home.module.css and lesson.css
+ */
+
+/* ============= HEADER ============= */
+.header {
+  padding: 2.5rem 0 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(255, 215, 0, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(91, 155, 213, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.headerTitle {
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  margin: 0 0 0.25rem 0;
+}
+
+.headerSub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* ============= PROGRESS BAR ============= */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--co-gray-50, #FAFBFC);
+  border: 1px solid var(--co-gray-200, #E8EAED);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+:global([data-theme='dark']) .progress {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  background: var(--co-gray-200, #E8EAED);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+:global([data-theme='dark']) .progressBar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progressLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--co-gray-600, #5F6368);
+  white-space: nowrap;
+}
+
+:global([data-theme='dark']) .progressLabel {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ============= INTRO ============= */
+.intro {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--co-gray-800, #3C4043);
+  margin-bottom: 2rem;
+  max-width: 720px;
+}
+
+:global([data-theme='dark']) .intro {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ============= MODULE GRID ============= */
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--co-gray-900, #202124);
+}
+
+:global([data-theme='dark']) .sectionTitle {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+/* ============= MODULE CARD ============= */
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.875rem 1rem;
+  background: white;
+  border: 1px solid var(--co-gray-200, #E8EAED);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover {
+  border-color: var(--co-blue-deep, #0057B7);
+  box-shadow: 0 2px 8px rgba(0, 87, 183, 0.1);
+  transform: translateY(-2px);
+}
+
+:global([data-theme='dark']) .card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:global([data-theme='dark']) .card:hover {
+  border-color: var(--co-blue-light, #4DA3FF);
+  box-shadow: 0 2px 8px rgba(77, 163, 255, 0.15);
+}
+
+.cardPlanned {
+  opacity: 0.65;
+}
+
+.cardPlanned:hover {
+  opacity: 0.85;
+  transform: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.cardReady:hover {
+  cursor: pointer;
+}
+
+/* Module number */
+.num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: white;
+}
+
+/* Module info */
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--co-gray-900, #202124);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global([data-theme='dark']) .title {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Status badge */
+.status {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ============= CHECKPOINT CARD ============= */
+.checkpoint {
+  border-left: 3px solid var(--co-gold, #FFD700);
+  background: linear-gradient(to right, rgba(255, 215, 0, 0.04), transparent);
+}
+
+:global([data-theme='dark']) .checkpoint {
+  background: linear-gradient(to right, rgba(255, 215, 0, 0.06), transparent);
+}
+
+/* ============= RESPONSIVE ============= */
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  .headerTitle {
+    font-size: 1.8rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
