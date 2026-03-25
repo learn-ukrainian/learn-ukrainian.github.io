@@ -1,0 +1,21 @@
+- find: Both **бо** and **тому що** are perfectly correct. Both are deeply Ukrainian.
+    You can use whichever feels more comfortable in the moment.
+  replace: Both **бо** and **тому що** are perfectly correct. Both are deeply Ukrainian.
+    In practice, **бо** is the everyday default in speech — it is short, quick, and
+    natural. Ukrainians reach for **тому що** when they want to sound more deliberate
+    or are writing something more formal, like a message to a teacher or a short essay.
+    In casual conversation, **бо** is almost always the first choice.
+- find: ":::fill-in\ntitle: \"З'єднай причину: бо / тому що (Connect the reason)\"\
+    \n---\n- sentence: \"Я вчу українську, ___ це важливо.\"\n  answer: \"бо\"\n-\
+    \ sentence: \"Вона не працює, ___ вона вдома.\"\n  answer: \"тому що\"\n- sentence:\
+    \ \"Ми купуємо воду, ___ хочемо пити.\"\n  answer: \"бо\"\n- sentence: \"Він сумний,\
+    \ ___ його друг поїхав.\"\n  answer: \"тому що\"\n- sentence: \"Я люблю літо,\
+    \ ___ тепло.\"\n  answer: \"бо\"\n- sentence: \"Вони не читають, ___ немає часу.\"\
+    \n  answer: \"тому що\""
+  replace: ":::fill-in\ntitle: \"З'єднай причину: бо / тому що (Connect the reason)\"\
+    \n---\n- sentence: \"— Чому ти не їси? — ___ я не голодний.\"\n  answer: \"Бо\"\
+    \n- sentence: \"Він не прийшов на урок, ___ він захворів.\"\n  answer: \"тому\
+    \ що\"\n- sentence: \"— Чому ви тут? — ___ ми чекаємо друга.\"\n  answer: \"Бо\"\
+    \n- sentence: \"Магазин зачинений, ___ сьогодні неділя.\"\n  answer: \"тому що\"\
+    \n- sentence: \"— Чому ти сміється? — ___ це смішно!\"\n  answer: \"Бо\"\n- sentence:\
+    \ \"Ми не гуляємо, ___ надворі холодно.\"\n  answer: \"тому що\""

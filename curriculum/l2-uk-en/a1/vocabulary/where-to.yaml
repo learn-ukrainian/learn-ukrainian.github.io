@@ -1,0 +1,205 @@
+vocabulary:
+- word: куди́
+  translation: where to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to go by transport
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: у школу
+  translation: to school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: робо́та
+  translation: work
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на роботу
+  translation: to work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у банк
+  translation: to the bank
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: магази́н
+  translation: shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у магазин
+  translation: to the shop
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у бібліотеку
+  translation: to the library
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у ресторан
+  translation: to the restaurant
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в Одесу
+  translation: to Odesa
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поверта́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: додо́му
+  translation: home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: у кафе
+  translation: to the cafe
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до зустрічі
+  translation: see you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Львів
+  translation: to Lviv
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Гарної дороги!
+  translation: Have a good trip!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Знахідний відмінок
+  translation: Accusative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ба́чу
+  translation: I see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кого?
+  translation: whom?
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: що?
+  translation: what?
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: у парк
+  translation: to the park
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у місто
+  translation: to the city
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Київ
+  translation: to Kyiv
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в аптеку
+  translation: to the pharmacy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в університет
+  translation: to the university
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на вокзал
+  translation: to the train station
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: маши́на
+  translation: car
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́їзд
+  translation: train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

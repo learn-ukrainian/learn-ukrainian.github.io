@@ -1,0 +1,57 @@
+- find: "You have reached a significant checkpoint in your learning journey. You can\
+    \ now navigate Ukrainian cities with confidence and clarity. You know the euphony\
+    \ rules for natural, flowing speech, ensuring your words connect smoothly without\
+    \ harsh sounds. \n\nYou can say exactly WHERE something is located using the locative\
+    \ case. You can say WHERE you are GOING using the accusative case for direction.\
+    \ You can say WHERE you are FROM using genitive chunks. \n\nYou can use different\
+    \ modes of transport and give clear, precise directions to others. You have built\
+    \ the necessary tools to explore any city in Ukraine, interact with locals, and\
+    \ find your way to museums, cafes, and train stations. \n\nNext, we move to a\
+    \ new essential survival skill. In the A1.6 phase, we will explore Food and Shopping.\
+    \ You will learn how to order food in a restaurant, buy items in a grocery store,\
+    \ and use the accusative case for direct objects. \n\nFor now, celebrate your\
+    \ progress. You are fully ready to explore the city!"
+  replace: 'You have reached a significant checkpoint in your learning journey. You
+    can now navigate Ukrainian cities with confidence and clarity. Let''s look at
+    exactly what you have mastered.
+
+
+    You know the euphony rules for natural, flowing speech. You can say **брат і сестра**
+    but **мама й тато**, choosing the right connector every time. You alternate **у**
+    and **в**, **з** and **зі** without thinking twice. Your Ukrainian flows smoothly,
+    without the harsh clashes that mark a beginner.
+
+
+    You can say exactly WHERE something is located using the locative case. When someone
+    asks **Де музей?**, you answer with confidence: **Музей у центрі. Він на площі.**
+    You know that **в** and **на** each have their own places — **в школі** for enclosed
+    spaces, **на вокзалі** for open or public ones.
+
+
+    You can say WHERE you are GOING using the accusative case for direction. The question
+    **Куди?** is now your compass: **Я йду в магазин. Вона їде на вокзал. Ми хочемо
+    їхати у Львів.** You understand that the preposition stays the same — only the
+    case ending changes.
+
+
+    You can say WHERE you are FROM using genitive chunks. **Я з України. Він зі США.
+    Вона з Канади.** The question **Звідки?** opens the door to identity — where you
+    come from is always part of the conversation.
+
+
+    You can use different modes of transport — **на метро, автобусом, на автобусі**
+    — and give clear, precise directions: **прямо, направо, наліво**. You have built
+    the necessary tools to explore any city in Ukraine, interact with locals, and
+    find your way to museums, cafes, and train stations.
+
+
+    Next, we move to a new essential survival skill. In the A1.6 phase, we will explore
+    Food and Shopping. You will learn how to order food in a restaurant, buy items
+    in a grocery store, and use the accusative case for direct objects.
+
+
+    Celebrate your progress. You are fully ready to explore the city!'
+- find: Look at these questions. They define how we move through the world. The difference
+  replace: These three questions are your navigation tools. The difference
+- find: Ми із США (We are from the USA)
+  replace: Ми зі США (We are from the USA)

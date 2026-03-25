@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "this-and-that",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T00:09:26.646938+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T00:09:37.699817+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T00:12:48.835661+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T00:12:48.840391+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T00:12:48.840945+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T00:13:23.219005+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T00:13:23.530208+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T00:13:23.587179+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T00:17:22.675268+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T00:17:24.876590+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T00:17:24.926983+00:00"
+    }
+  }
+}

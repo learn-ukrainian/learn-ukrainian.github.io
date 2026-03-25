@@ -1,0 +1,345 @@
+<!-- TAB:Урок -->
+
+## Діало́ги (Dialogues)
+
+Time shapes our daily routines. Whenever you want to arrange a meeting with a friend, plan a study session, or ask about an upcoming celebration, you rely on the vocabulary of the calendar. Mastering the names of the days and months is an essential step toward full independence in a new language. Before we examine the individual words, let us observe how native speakers use them in real life.
+
+Below is a brief exchange between two colleagues. Notice how they inquire about each other's schedules.
+
+<div class="dialogue">
+
+
+**Марія:** Що ти ро́биш у понеді́лок? *(What are you doing on Monday?)*
+
+
+**Олег:** Я працю́ю. А у вівто́рок? *(I am working. And on Tuesday?)*
+
+
+**Марія:** У вівторок я вивча́ю украї́нську. *(On Tuesday I study Ukrainian.)*
+
+
+**Олег:** А у субо́ту? *(And on Saturday?)*
+
+
+**Марія:** У суботу гуля́ю. *(On Saturday I go for a walk.)*
+
+
+**Олег:** Неді́ля — ві́льний день! *(Sunday is a free day!)*
+
+
+</div>
+
+
+
+In this conversation, Maria asks a direct question: «Що ти робиш у понеділок?». Oleg replies efficiently: «Я працюю». In Ukrainian, the present tense verb covers both the simple and continuous meanings found in English. You do not need extra auxiliary words to say "I am working." When Maria and Oleg mention a specific day, they place the preposition **у** right before it. 
+
+Now, consider a different scenario. How do you talk about the time of year you were born? Pay attention to the way the months and seasons are mentioned in this second dialogue.
+
+<div class="dialogue">
+
+
+**Анна:** Ко́ли у тебе́ день наро́дження? *(When is your birthday?)*
+
+
+**Богдан:** У бе́резні. *(In March.)*
+
+
+**Анна:** Яко́го числа? *(What date?)*
+
+
+**Богдан:** П'ятна́дцятого бе́резня. А у тебе? *(On the fifteenth of March. And you?)*
+
+
+**Анна:** У мене́ в се́рпні. *(Mine is in August.)*
+
+
+**Богдан:** О, це лі́то! *(Oh, that is summer!)*
+
+
+</div>
+
+
+
+When Bogdan answers the question about his birthday, he first gives the broad time frame: «У березні». When pressed for details, he provides the exact date: «П'ятнадцятого березня». The word **число** translates to "number" or "date" in this context. The phrase «Якого числа?» is the standard way to ask for a specific calendar date. Finally, the conversation ends with a realization about the season of the year.
+
+## Дні ти́жня (Days of the Week)
+
+In Ukraine, the standard calendar week begins on Monday. This structure makes logical sense: you dedicate your energy to work or study for five days, and the weekend sits exactly at the end of the row. When you write these days in a sentence, remember a simple rule: they are always written in lowercase letters.
+
+Here are the seven days of the week:
+
+*   **понеділок** (Monday)
+*   **вівторок** (Tuesday)
+*   **середа** (Wednesday)
+*   **четвер** (Thursday)
+*   **п'ятниця** (Friday)
+*   **субота** (Saturday)
+*   **неділя** (Sunday)
+
+The names of these days possess fascinating historical meanings. The word **середа** comes from the concept of «сере́дина» (middle), marking the exact middle of the traditional working week. The words **четвер** and **п'ятниця** are directly related to the numbers four and five. The word **неділя** historically means a day when you "do nothing" (не ділати) — a designated day of rest. And **понеділок** simply means the day that comes "after Sunday" (по неді́лі).
+
+:::tip
+The standard Ukrainian word for "week" is **тиждень**. However, in some regional dialects, you might hear people use the word **неділя** to mean the entire week, not just Sunday! For clear communication, stick to **тиждень** when you mean "week."
+:::
+
+When you want to say that something happens *on* a specific day, you do not just use the basic dictionary word. Instead, you add the preposition **у** or **в** and change the ending of the word. At this stage, you do not need to analyze the complex grammar rules behind these changes. It is much faster and more effective to simply memorize them as fixed chunks.
+
+Here are the chunks you need to successfully plan your week:
+
+*   **у понеділок** (on Monday)
+*   **у вівторок** (on Tuesday)
+*   **у середу** (on Wednesday)
+*   **у четвер** (on Thursday)
+*   **у п'ятницю** (on Friday)
+*   **в суботу** (on Saturday)
+*   **в неділю** (on Sunday)
+
+In Ukrainian elementary schools, children learn to organize their time using a weekly planner. If you look at a textbook like *Вашуленко* for Grade 2, you will see practical exercises where students write down their daily routines to understand this concept. They practice saying things like:
+
+*   **Я чита́ю в суботу.** (I read on Saturday.)
+*   **Ми гуля́ємо в неділю.** (We go for a walk on Sunday.)
+
+:::fill-in
+title: "Put days of the week in order"
+---
+- sentence: "понеділок, {вівторок|субота|четвер}, середа"
+- sentence: "середа, {четвер|п'ятниця|неділя}, п'ятниця"
+- sentence: "п'ятниця, {субота|вівторок|середа}, неділя"
+- sentence: "неділя, {понеділок|вівторок|четвер}, вівторок"
+- sentence: "вівторок, середа, {четвер|п'ятниця|неділя}"
+- sentence: "четвер, п'ятниця, {субота|понеділок|вівторок}"
+- sentence: "субота, {неділя|понеділок|п'ятниця}, понеділок"
+:::
+
+## Мі́сяці і по́ри ро́ку (Months and Seasons)
+
+The Ukrainian year is divided into four distinct seasons. These seasons dictate the rhythm of life, agriculture, and cultural celebrations. The transition between seasons in Ukraine is visually striking, and the language reflects this dramatic change. Winter brings deep snow, spring thaws the frozen earth, summer is warm and golden, and autumn paints the forests in vibrant colors.
+
+The four seasons are:
+
+*   **зима** (winter)
+*   **весна** (spring)
+*   **літо** (summer)
+*   **осінь** (autumn)
+
+Within these four seasons, we have twelve months. Just like the days of the week, the names of the months are always written in lowercase. Furthermore, all twelve months in Ukrainian are grammatically masculine words.
+
+Instead of borrowing names from the Roman calendar, the Ukrainian language preserves an ancient, highly descriptive system. The names of the months are deeply connected to nature, weather, and the agricultural cycle. Learning these words feels like taking a walk through a traditional Ukrainian village.
+
+Let us look at the months organized by their season:
+
+**Зима** (Winter)
+*   **грудень** (December) — from **груда** (frozen clod of earth), when the wet ground freezes into hard lumps.
+*   **січень** (January) — from **сікти** (to cut), because winter was the traditional season for felling timber in the forest.
+*   **лютий** (February) — meaning "fierce" or "angry," describing the harsh winter weather.
+
+**Весна** (Spring)
+*   **березень** (March) — from **береза** (birch tree), when the birch sap begins to flow.
+*   **квітень** (April) — from **квітка** (flower), the beautiful month of blooming.
+*   **травень** (May) — from **трава** (grass), when the whole world turns vibrant green.
+
+**Літо** (Summer)
+*   **червень** (June) — from **червоний** (red), when the red berries ripen.
+*   **липень** (July) — from **липа** (linden tree), which blossoms and provides sweet honey.
+*   **серпень** (August) — from **серп** (sickle), the traditional tool used for the grain harvest.
+
+**Осінь** (Autumn)
+*   **вересень** (September) — from **верес** (heather), an evergreen plant that blooms in early autumn.
+*   **жовтень** (October) — from **жовтий** (yellow), the color of the falling autumn leaves.
+*   **листопад** (November) — literally meaning **листя падає** (leaves fall).
+
+When you want to say that an event happens *in* a specific month, you must use the preposition **у** or **в**. The ending of the month also changes. Most months end in **-і**, while **лютий** changes to **лютому**. Memorize these forms as set chunks:
+
+*   **у січні** (in January)
+*   **у лютому** (in February)
+*   **у березні** (in March)
+*   **у квітні** (in April)
+*   **у травні** (in May)
+*   **у червні** (in June)
+*   **у липні** (in July)
+*   **у серпні** (in August)
+*   **у вересні** (in September)
+*   **у жовтні** (in October)
+*   **у листопаді** (in November)
+*   **у грудні** (in December)
+
+When talking about seasons, you do not use the preposition **у**. Instead, Ukrainian uses special single-word adverb forms to mean "in the winter" or "in the summer."
+
+*   **взимку** (in winter)
+*   **навесні** (in spring)
+*   **влітку** (in summer)
+*   **восени** (in autumn)
+
+Let us look at some practical examples of how to use these seasonal adverbs in complete sentences:
+
+*   **Взимку ду́же хо́лодно.** (In winter it is very cold.)
+*   **Навесні те́пло.** (In spring it is warm.)
+*   **Влітку я гуляю.** (In summer I walk.)
+*   **Восени ми чита́ємо.** (In autumn we read.)
+
+These adverbs are incredibly useful because they do not require any extra prepositions. You simply place the adverb at the beginning or end of your sentence.
+
+:::match-up
+title: "Match the month to the correct season"
+---
+- left: "січень"
+  right: "зима"
+- left: "квітень"
+  right: "весна"
+- left: "липень"
+  right: "літо"
+- left: "жовтень"
+  right: "осінь"
+- left: "лютий"
+  right: "зима"
+- left: "травень"
+  right: "весна"
+- left: "серпень"
+  right: "літо"
+- left: "листопад"
+  right: "осінь"
+:::
+
+## Підсумок — Summary
+
+You now have the essential vocabulary you need to navigate the calendar in Ukrainian. You know the seven days of the week, starting with the busy **понеділок** and ending with the restful **неділя**. You also know the four distinct seasons: **зима**, **весна**, **літо**, and **осінь**.
+
+The twelve months of the year offer a beautiful reflection of the natural world, from the freezing, cutting winds of **січень** to the vibrant blooming flowers of **квітень** and the falling leaves of **листопад**.
+
+The most important grammatical skill you practiced today is how to form time chunks. Instead of analyzing complex case endings every time you speak, you can simply memorize these fixed phrases.
+
+For days of the week, use **у** or **в** followed by the specific day form:
+*   **у понеділок** (on Monday)
+*   **в суботу** (on Saturday)
+
+For months, use **у** or **в** followed by the modified month name:
+*   **у січні** (in January)
+*   **у серпні** (in August)
+
+For seasons, use the special single-word adverbial forms:
+*   **взимку** (in winter)
+*   **навесні** (in spring)
+*   **влітку** (in summer)
+*   **восени** (in autumn)
+
+You also practiced one more important skill in the dialogues: saying a specific date. When someone asks «Якого числа?» (What date?), you answer with an ordinal number in the genitive case. At this stage, memorize these as chunks:
+
+*   **першого січня** (on the first of January)
+*   **п'ятнадцятого березня** (on the fifteenth of March)
+*   **двадцять п'я́того грудня** (on the twenty-fifth of December)
+
+The pattern is always the same: ordinal number + month in genitive. You already saw this in the dialogue when Bogdan said «П'ятнадцятого березня». As you learn more numbers, you will be able to say any date.
+
+Now test yourself. Try to answer each question out loud in Ukrainian:
+
+*   Яки́й сього́дні день тижня? *(What day of the week is it today?)*
+*   Який за́раз мі́сяць? *(What month is it now?)*
+*   Яка зараз пора року? *(What season is it now?)*
+*   Коли у тебе день народження? Якого числа? *(When is your birthday? What date?)*
+*   Що ти робиш у понеділок? А в суботу? *(What do you do on Monday? And on Saturday?)*
+
+If you can answer all five questions, you have mastered the Ukrainian calendar. You are ready to plan your week, talk about your birthday, and describe the seasons like a native speaker.
+
+:::fill-in
+title: "Use the correct in/on chunk for days and months"
+---
+- sentence: "Я працюю {у понеділок|понеділок|на понеділок}."
+- sentence: "Мій день народження {у березні|березень|в березень}."
+- sentence: "Ми гуляємо {в суботу|субота|у субота}."
+- sentence: "{Взимку|Зима|У зима} холодно."
+- sentence: "Я вивчаю українську {у вівторок|вівторок|на вівторок}."
+- sentence: "Вони́ відпочива́ють {у серпні|серпень|в серпень}."
+:::
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **понеді́лок** | Monday | ім. | ч. |
+| **вівто́рок** | Tuesday | ім. | ч. |
+| **середа́** | Wednesday | ім. | ж. |
+| **четве́р** | Thursday | ім. | ч. |
+| **п'я́тниця** | Friday | ім. | ж. |
+| **субо́та** | Saturday | ім. | ж. |
+| **неді́ля** | Sunday | ім. | ж. |
+| **ти́ждень** | week | ім. | ч. |
+| **весна́** | spring | ім. | ж. |
+| **лі́то** | summer | ім. | с. |
+| **сі́чень** | January | ім. | ч. |
+| **лю́тий** | February | прикм. |  |
+| **бе́резень** | March | ім. | ч. |
+| **кві́тень** | April | ім. | ч. |
+| **тра́вень** | May | ім. | ч. |
+| **че́рвень** | June | ім. | ч. |
+| **ли́пень** | July | ім. | ч. |
+| **се́рпень** | August | ім. | ч. |
+| **ве́ресень** | September | ім. | ч. |
+| **жо́втень** | October | ім. | ч. |
+| **листопа́д** | November | ім. | ч. |
+| **гру́день** | December | ім. | ч. |
+| **число́** | date | ім. | с. |
+| **хо́лодно** | cold | присл. |  |
+| **тепло́** | warm | присл. |  |
+| **працю́ю** | I work | дієсл. |  |
+| **вивча́ю** | I study | дієсл. |  |
+| **гуля́ю** | I walk | дієсл. |  |
+| **чита́ю** | I read | дієсл. |  |
+| **відпочива́ють** | they rest | дієсл. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **день народження** | birthday |
+| **Що ти робиш у понеділок?** | What are you doing on Monday? |
+| **Я працюю.** | I am working. |
+| **вільний день** | free day |
+| **Коли у тебе день народження?** | When is your birthday? |
+| **Якого числа?** | What date? |
+| **у понеділок** | on Monday |
+| **у вівторок** | on Tuesday |
+| **у середу** | on Wednesday |
+| **у четвер** | on Thursday |
+| **у п'ятницю** | on Friday |
+| **в суботу** | on Saturday |
+| **в неділю** | on Sunday |
+| **у січні** | in January |
+| **у лютому** | in February |
+| **у березні** | in March |
+| **у квітні** | in April |
+| **у травні** | in May |
+| **у червні** | in June |
+| **у липні** | in July |
+| **у серпні** | in August |
+| **у вересні** | in September |
+| **у жовтні** | in October |
+| **у листопаді** | in November |
+| **у грудні** | in December |
+| **взимку** | in winter |
+| **навесні** | in spring |
+| **влітку** | in summer |
+| **восени** | in autumn |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- Вашуленко Grade 2, p.83
+  _Planning your week — days of the week activity._
+- Вашуленко Grade 2, p.69-89
+  _Months through seasonal stories and poems._
+- [ULP Season 1, Episode 15](https://www.ukrainianlessons.com/episode15/)
+  _Days of the week and planning._

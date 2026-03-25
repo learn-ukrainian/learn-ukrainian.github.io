@@ -1,0 +1,314 @@
+<!-- TAB:Урок -->
+
+## Діало́ги (Dialogues)
+
+Life is not just about daily routines and schedules. After a long week of work or study, you need time to rest, recharge, and enjoy your hobbies. To talk about your free time, you need to combine your knowledge of time, days of the week, and action verbs.
+
+We start with the most important days of the week: the **вихідні** (weekend). Notice that this word is always plural in Ukrainian. When you want to ask someone about their weekend plans, you use the preposition **у**. Let us look at a typical conversation between friends making plans.
+
+<div class="dialogue">
+
+
+**Олег:** Що ти ро́биш у вихідні? *(What are you doing on the weekend?)*
+
+
+**Анна:** Зазвича́й я гуля́ю і чита́ю. *(Usually I walk and read.)*
+
+
+**Олег:** Ході́мо в кіно́ в субо́ту! *(Let's go to the cinema on Saturday!)*
+
+
+**Анна:** До́бре! О котрі́й? *(Good! At what time?)*
+
+
+**Олег:** О п'я́тій. *(At five.)*
+
+
+**Анна:** Чудо́во! *(Great!)*
+
+
+</div>
+
+This dialogue is simple but incredibly powerful. Oleg asks about Anna's weekend using **Що ти робиш у вихідні?** (What are you doing on the weekend?). Anna replies with her normal routine using the frequency adverb **зазвичай** (usually). 
+
+Then, Oleg makes an invitation using the magical word **Ходімо!** (Let's go!). This is the standard, polite, and perfectly natural Ukrainian way to invite someone to go somewhere with you. You pair it directly with a destination. When Anna agrees, she asks for the time using the pattern you learned previously: **О котрій?** (At what time?). 
+
+Now let us look at a second conversation where two friends discuss their sports and hobbies. Pay attention to how they talk about how often they do things.
+
+<div class="dialogue">
+
+
+**Максим:** Ти лю́биш спорт? *(Do you like sport?)*
+
+
+**Іван:** Так, я гра́ю у футбо́л. *(Yes, I play football.)*
+
+
+**Максим:** Як ча́сто? *(How often?)*
+
+
+**Іван:** Дві́чі на ти́ждень, у вівто́рок і четве́р. *(Twice a week, on Tuesday and Thursday.)*
+
+
+**Максим:** А ще? *(And what else?)*
+
+
+**Іван:** І́ноді слу́хаю му́зику і малю́ю. *(Sometimes I listen to music and draw.)*
+
+
+</div>
+
+Here, Ivan uses the word **спорт** (sport) and specifies his favorite game: **футбол** (football). When Maxim asks **Як часто?** (How often?), Ivan uses a precise frequency phrase: **двічі на тиждень** (twice a week). He then adds other activities like listening to music and drawing, using the word **іноді** (sometimes). 
+
+These two short dialogues contain everything you need to organize your social life in Ukrainian. You can invite friends out, discuss your favorite activities, and coordinate schedules. In the next sections, we will break down the exact vocabulary and grammar you need to build these sentences yourself.
+
+## Хо́бі і спорт (Hobbies and Sports)
+
+To talk about your hobbies, you need to know how Ukrainians categorize different activities. In English, you use the verb "to play" for almost everything: you play football, you play the guitar, and you play video games. Ukrainian is much more precise. We use the same verb, **грати** (to play), but we change the preposition depending on the type of activity.
+
+### Sports and Games
+When you talk about sports, team games, or board games, you use the verb **грати** followed by the preposition **у** (or **в**) and the name of the sport. You can think of this as "playing into" a game.
+
+*   **грати у футбол** (to play football)
+*   **грати у баскетбол** (to play basketball)
+*   **грати у теніс** (to play tennis)
+
+Here are examples of how to use this pattern in a complete sentence. Notice that the name of the sport does not change its ending.
+
+*   Я **граю у футбол** у суботу. (I play football on Saturday.)
+*   Він **грає у теніс** добре. (He plays tennis well.)
+*   Ми **граємо у баскетбол**. (We play basketball.)
+
+### Musical Instruments
+When you talk about playing a musical instrument, the rule changes. You still use the verb **грати**, but you must use the preposition **на** (on). You can think of this as your hands playing "on top of" the instrument. This is a very strict rule in Ukrainian.
+
+*   **грати на гітарі** (to play the guitar)
+*   **грати на піаніно** (to play the piano)
+
+Let us see these musical phrases in action:
+
+*   Вона́ **грає на гітарі**. (She plays the guitar.)
+*   Ти **граєш на піаніно**? (Do you play the piano?)
+*   Я люблю́ **грати на гітарі**. (I like to play the guitar.)
+
+### Other Popular Hobbies
+Not all hobbies involve playing. For other activities, you use specific verbs. Many of these verbs pair directly with a noun.
+
+*   **слухати музику** (to listen to music)
+*   **дивитися фільми** (to watch movies)
+*   **дивитися серіали** (to watch series)
+*   **малювати** (to draw)
+*   **фотографувати** (to take photos)
+
+Notice that in Ukrainian, we say **слухати музику** without any extra prepositions. In English, you listen "to" music, but in Ukrainian, the verb takes the object directly.
+
+*   Я люблю **слухати музику**. (I like to listen to music.)
+*   Ми **дивимося серіали** у неді́лю. (We watch series on Sunday.)
+*   Мій брат лю́бить **малювати**. (My brother likes to draw.)
+
+### Going Out for Entertainment
+When you want to leave the house for fun, you use the verb **ходити** (to go). Just like with sports and instruments, you need the correct preposition. For enclosed spaces like buildings, we generally use **в** (into). For open events or performances, we use **на** (onto).
+
+*   **ходити в кіно** (to go to the cinema)
+*   **ходити в театр** (to go to the theater)
+*   **ходити в музей** (to go to a museum)
+*   **ходити на концерт** (to go to a concert)
+
+The word **кіно** (cinema) is a special foreign loanword. It is indeclinable, which means its ending never changes, no matter what grammatical case you use.
+
+*   Ходімо **в кіно**! (Let's go to the cinema!)
+*   Я часто **ходжу в театр**. (I often go to the theater.)
+*   Вони́ **ходять на концерт**. (They go to a concert.)
+
+:::match-up
+title: "Match the verb to the logical noun"
+---
+- left: "грати"
+  right: "у футбол"
+- left: "грати"
+  right: "на гітарі"
+- left: "слухати"
+  right: "музику"
+- left: "дивитися"
+  right: "фільми"
+- left: "ходити"
+  right: "в кіно"
+- left: "ходити"
+  right: "в театр"
+- left: "чита́ти"
+  right: "кни́гу"
+- left: "малювати"
+  right: "карти́ну"
+:::
+
+:::fill-in
+title: "Choose the correct preposition"
+---
+- sentence: "Він грає {на|у|в} піаніно."
+- sentence: "Ми граємо {у|на|в} футбол."
+- sentence: "Я хо́чу піти {на|в|у} концерт."
+- sentence: "Вони ходять {в|на|у} театр раз на мі́сяць."
+:::
+
+## Як часто? (How Often?)
+
+Knowing the vocabulary for hobbies is wonderful, but to have a real conversation, you need to explain your routines. How often do you play tennis? How frequently do you go to the cinema? To answer the question **Як часто?** (How often?), we use frequency adverbs. 
+
+Here is the scale of frequency adverbs in Ukrainian, from one hundred percent down to zero percent:
+
+*   **завжди** (always)
+*   **зазвичай** (usually)
+*   **часто** (often)
+*   **іноді** (sometimes) — you will also hear the variant **інколи** (sometimes)
+*   **рідко** (rarely)
+*   **ніколи** (never)
+
+### Word Order
+Ukrainian sentence structure is famous for being flexible, but for adverbs of frequency, there is a natural rhythm. The most common and natural place to put these words is directly before the main verb.
+
+*   Я **часто** гуляю. (I often walk.)
+*   Вона **зазвичай** чита́є вра́нці. (She usually reads in the morning.)
+*   Ми **іноді** дивимося фільми. (We sometimes watch movies.)
+*   Ти **рідко** граєш у теніс. (You rarely play tennis.)
+
+### The Double Negative with Ніколи
+There is a critical rule you must remember when using **ніколи** (never). English uses a single negative system: "I never work on Sunday." The word "never" is negative, but the verb "work" is positive. 
+
+Ukrainian requires a double negation. If you use a negative word like **ніколи**, you MUST also negate the verb with **не**. If you forget the **не**, the sentence is grammatically incorrect.
+
+*   Я **ніколи не** працю́ю у неділю. (I never work on Sunday.)
+*   Він **ніколи не** грає у футбол. (He never plays football.)
+*   Ми **ніколи не** хо́димо в музей. (We never go to a museum.)
+
+### Frequency with Numbers
+Sometimes, adverbs like "often" or "rarely" are not specific enough. You might want to say exactly how many times you do something per week or per month. To do this, we use the word **раз** (once / one time) combined with the preposition **на** (per / on).
+
+*   **раз на тиждень** (once a week)
+*   **раз на місяць** (once a month)
+
+If you do something more than once, the word changes its form:
+*   **двічі на тиждень** (twice a week)
+*   **тричі на тиждень** (three times a week)
+
+If you do something constantly, every single day, you use the phrase **кожен день** (every day). Let us look at these precise frequency expressions in full sentences. Notice that these phrases usually go at the end of the sentence.
+
+*   Я граю у футбол **двічі на тиждень**. (I play football twice a week.)
+*   Я ходжу в кіно **раз на місяць**. (I go to the cinema once a month.)
+*   Вона слу́хає музику **кожен день**. (She listens to music every day.)
+*   Ми чита́ємо нови́ни **кожен день**. (We read the news every day.)
+
+:::fill-in
+title: "Complete the invitations and frequency sentences"
+---
+- sentence: "Я {ніколи не|завжди|часто} працюю у неділю."
+- sentence: "Вона грає у теніс двічі {на тиждень|у тиждень|в тиждень}."
+- sentence: "— {Ходімо|Давай|Ідемо} в кіно у суботу! — Добре!"
+- sentence: "Я люблю спорт, тому́ {часто|ніколи|рідко} граю у баскетбол."
+- sentence: "Я не маю ча́су, тому {рідко|часто|завжди} читаю кни́ги."
+- sentence: "— Що ти робиш {у вихідні|вихідні|на вихідні}? — Відпочива́ю."
+:::
+
+## Підсумок — Summary
+
+You now have a complete toolkit for organizing your free time and discussing your hobbies in Ukrainian. Let us review the core communication patterns you have learned in this module.
+
+First, you can express your general preferences by combining the verb "to love" with an infinitive verb, a pattern we first introduced when discussing daily routines.
+*   Я люблю + infinitive. (I like to...)
+*   Я люблю **малювати**. (I like to draw.)
+*   Я люблю **фотографувати**. (I like to take photos.)
+
+Second, you know how to talk about sports and music using the correct prepositions. Remember the strict difference between games and instruments.
+*   Я граю **у** футбол. (I play football.)
+*   Я граю **на** гітарі. (I play the guitar.)
+
+Third, you can confidently invite your friends to join you using the classic Ukrainian invitation pattern.
+*   **Ходімо** в кіно! (Let's go to the cinema!)
+*   **Давай**! (Let's! / Come on!) — Note that **давай** is a very informal, colloquial way to agree or encourage someone.
+
+Finally, you can describe exactly how your routines work using frequency adverbs.
+*   завжди, часто, іноді, рідко, ніколи.
+*   Я **часто** читаю. (I often read.)
+
+:::tip
+**Self-Check:**
+Try this simple exercise out loud. Name three hobbies you enjoy. How often do you do each one? Now, imagine a Ukrainian friend is visiting your city. Invite them to do something fun this weekend using "Ходімо".
+:::
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **за́вжди́** | always | присл. |  |
+| **зазвича́й** | usually | присл. |  |
+| **теа́тр** | theater | ім. | ч. |
+| **конце́рт** | concert | ім. | ч. |
+| **музе́й** | museum | ім. | ч. |
+| **дава́й** | let's | дієсл. |  |
+| **раз** | once | присл. |  |
+| **вихідні́** | weekend | прикм. |  |
+| **спорт** | sport | ім. | ч. |
+| **футбо́л** | football | ім. | ч. |
+| **кіно́** | cinema | ім. | с. |
+| **ча́сто** | often | присл. |  |
+| **і́ноді** | sometimes | присл. |  |
+| **рі́дко** | rarely | присл. |  |
+| **ході́мо** | let's go! | дієсл. |  |
+| **гра́ти** | to play | дієсл. |  |
+| **баскетбо́л** | basketball | ім. | ч. |
+| **те́ніс** | tennis | ім. | ч. |
+| **гіта́ра** | guitar | ім. | ж. |
+| **піані́но** | piano | ім. | с. |
+| **слу́хати** | to listen | дієсл. |  |
+| **му́зика** | music | ім. | ч. |
+| **диви́тися** | to watch | дієсл. |  |
+| **фі́льми** | movies | ім. |  |
+| **серіа́ли** | series | ім. |  |
+| **малюва́ти** | to draw | дієсл. |  |
+| **фотографува́ти** | to take photos | дієсл. |  |
+| **ходи́ти** | to go | дієсл. |  |
+| **і́нколи** | sometimes | присл. |  |
+| **дві́чі** | twice | присл. |  |
+| **три́чі** | three times | присл. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **Що ти робиш у вихідні?** | What are you doing on the weekend? |
+| **грати у футбол** | to play football |
+| **грати у баскетбол** | to play basketball |
+| **грати у теніс** | to play tennis |
+| **грати на гітарі** | to play the guitar |
+| **грати на піаніно** | to play the piano |
+| **слухати музику** | to listen to music |
+| **дивитися фільми** | to watch movies |
+| **дивитися серіали** | to watch series |
+| **ходити в кіно** | to go to the cinema |
+| **ходити в театр** | to go to the theater |
+| **ходити в музей** | to go to a museum |
+| **ходити на концерт** | to go to a concert |
+| **раз на тиждень** | once a week |
+| **раз на місяць** | once a month |
+| **двічі на тиждень** | twice a week |
+| **тричі на тиждень** | three times a week |
+| **кожен день** | every day |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- ULP — various episodes on hobbies and sports
+  _Conversational patterns for discussing free time._

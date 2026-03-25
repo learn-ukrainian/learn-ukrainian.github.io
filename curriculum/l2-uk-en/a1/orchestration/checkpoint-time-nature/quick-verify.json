@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "WARNING",
+      "message": "Too long: 1819 words (target: 1200, ceiling: 1800)"
+    }
+  ],
+  "timestamp": "2026-03-25T02:15:28.396719+00:00"
+}

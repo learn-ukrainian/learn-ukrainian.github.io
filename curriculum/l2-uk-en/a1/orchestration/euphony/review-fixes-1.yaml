@@ -1,0 +1,31 @@
+- find: '**Олена:** Я живу в **Київ** (Kyiv). А ти? *(I live in Kyiv. And you?)*'
+  replace: '**Олена:** Я живу в Києві. А ти? *(I live in Kyiv. And you?)*'
+- find: '**Максим:** Я живу у **Львів** (Lviv). *(I live in Lviv.)*'
+  replace: '**Максим:** Я живу у Львові. *(I live in Lviv.)*'
+- find: 'Notice the difference in the first dialogue: **в Києві** versus **у Львові**.
+    Both short words mean "in". The choice between them depends entirely on the surrounding
+    sounds.'
+  replace: 'Notice the difference: **в** Києві versus **у** Львові. Both mean "in".
+    The choice between them depends entirely on the surrounding sounds.'
+- find: If a word ends in a vowel and the next begins with a vowel, Ukrainian uses
+    a consonant connector. If the words are surrounded by consonants, Ukrainian uses
+    a vowel connector.
+  replace: 'Ukrainian adjusts these small words based on the surrounding sounds. The
+    core physical principle is simple: avoid clusters of the same type. When consonants
+    pile up, Ukrainian inserts a vowel sound to break them apart. When a vowel follows
+    a vowel, a light consonant glide smooths the transition.'
+- find: Use **й** between vowels. This provides a soft, gliding consonant bridge between
+    two vowel sounds.
+  replace: Use **й** after a vowel. This provides a soft, gliding consonant sound
+    that smooths the transition to the next word.
+- find: Use **і** between consonants. This acts as a vowel bridge between two hard
+    sounds.
+  replace: Use **і** after a consonant or at the start of a sentence. This acts as
+    a vowel bridge after a hard consonant sound.
+- find: "- q: \"Which is correct?\"\n  o: [\"Він працює у банку.\", \"Він працює в\
+    \ банку.\"]\n  a: 0"
+  replace: "- q: \"Which is correct?\"\n  o: [\"Він працює в банку.\", \"Він працює\
+    \ у банку.\"]\n  a: 0"
+- find: The best way to practice euphony is to read your sentences aloud.
+  replace: The best way to practice euphony is to read your Ukrainian sentences aloud.
+    Try it with the examples from this module.

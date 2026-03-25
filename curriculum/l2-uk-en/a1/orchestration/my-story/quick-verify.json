@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "WARNING",
+      "message": "Too long: 1817 words (target: 1200, ceiling: 1800)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 3"
+    }
+  ],
+  "timestamp": "2026-03-25T05:23:31.860754+00:00"
+}

@@ -1,0 +1,163 @@
+vocabulary:
+- word: ї́жа
+  translation: food
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: напо́ї
+  translation: drinks
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́ца
+  translation: pizza
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Мені каву, будь ласка.
+  translation: Coffee for me, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Рахунок, будь ласка.
+  translation: The bill, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте кілограм яблук.
+  translation: Give me a kilogram of apples.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дорого!
+  translation: Expensive!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дешево!
+  translation: Cheap!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Нормальна ціна.
+  translation: Normal price.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проду́кти
+  translation: groceries
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: фру́кти
+  translation: fruits
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: я́блука
+  translation: apples
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: продаве́ць
+  translation: seller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Це все?
+  translation: Is that all?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Так, звичайно.
+  translation: Yes, of course.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сніда́нок
+  translation: breakfast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: одна гривня
+  translation: one hryvnia
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дві гривні
+  translation: two hryvnias
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять гривень
+  translation: five hryvnias
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кілограм яблук
+  translation: a kilogram of apples
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: помідо́ри
+  translation: tomatoes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусі́д
+  translation: neighbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

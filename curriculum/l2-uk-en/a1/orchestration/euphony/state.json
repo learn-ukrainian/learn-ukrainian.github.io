@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "euphony",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T02:19:25.065473+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T02:19:36.419295+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:05.561223+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:05.566309+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:05.566768+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:36.191255+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:36.507887+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T02:23:36.565402+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T02:31:43.799453+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T02:31:45.427859+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T02:31:45.474559+00:00"
+    }
+  }
+}

@@ -1,0 +1,304 @@
+<!-- TAB:Урок -->
+
+## Діало́ги (Dialogues)
+
+Real conversations in Ukrainian constantly mix different types of verbs. When you meet someone new, discussing your language skills or your daily routine is one of the most natural icebreakers. Observe how the speakers in the following conversation drop their pronouns and rely purely on the verb endings to convey who is performing the action.
+
+<div class="dialogue">
+
+
+**Марко:** Приві́т, А́нно! Ти гово́риш украї́нською? *(Hi, Anna! Do you speak Ukrainian?)*
+
+
+**Анна:** Так, я говорю́ тро́хи. А ти? *(Yes, I speak a little. And you?)*
+
+
+**Марко:** Я ба́чу, що ти до́бре говориш! *(I see that you speak well!)*
+
+
+**Анна:** Дякую, я вчу́ся. *(Thank you, I am learning.)*
+
+
+</div>
+
+
+The verb **говорити** (to speak) is the foundation of communication. Notice the pattern: when Marko asks a question, he uses **говориш** (you speak). When Anna replies about herself, she changes the ending and says **говорю** (I speak). 
+
+You can also use adverbs to add detail to your actions. Anna says she speaks **трохи** (a little), while Marko compliments her by saying she speaks **добре** (well). The phrase **ти говориш українською** uses a special form of the word for "Ukrainian" to mean "in Ukrainian." 
+
+Let us look at another common situation: a quiet evening at home.
+
+<div class="dialogue">
+
+
+**Олег:** Що ти ро́биш уве́чері? *(What are you doing in the evening?)*
+
+
+**Марія:** Я дивлю́ся фільм. А ти? *(I am watching a movie. And you?)*
+
+
+**Олег:** Я вчу нові́ слова́. *(I am learning new words.)*
+
+
+**Марія:** Молоде́ць! *(Good job!)*
+
+
+</div>
+
+
+This dialogue is driven by action verbs. **Робити** (to do / to make) is the ultimate workhorse verb. Oleg uses the time word **увечері** (in the evening) to ask about Maria's plans. 
+
+Pay close attention to the verbs **дивлюся** (I watch) and **вчуся** (I learn) from the previous dialogue. You will notice they both end with the particle **-ся**. This special ending literally means "oneself" and marks the verb as reflexive. We will explore reflexive verbs deeply in future modules, but for now, treat them as a preview of how Ukrainian builds complex meaning directly onto the verb.
+
+:::fill-in
+title: "Complete with correct verb form: Вона́ ___ українською. (говорити)"
+---
+- sentence: "Вона ___ українською."
+  answer: "гово́рить"
+- sentence: "Я ___ трохи."
+  answer: "говорю"
+- sentence: "Ти добре ___."
+  answer: "говориш"
+- sentence: "Що ти ___?"
+  answer: "робиш"
+- sentence: "Я ___ нові слова."
+  answer: "вчу"
+- sentence: "Ти ___ це?"
+  answer: "ба́чиш"
+:::
+
+## Дру́га дієвідмі́на (Group II Verbs)
+
+Ukrainian verbs are categorized into two major conjugation patterns, known as groups. You are already familiar with Group I verbs, which typically end in **-ати** and utilize the vowels **є** or **е** in their conjugations. 
+
+Now it is time to master Group II verbs. These verbs generally have an infinitive ending in **-ити** (and sometimes **-іти**). The defining characteristic of this group is the dominant use of the vowel **и** in the middle forms. 
+
+To conjugate a Group II verb, you drop the **-ити** ending from the infinitive to find the core stem, and then attach the new personal endings. Let us look at the complete pattern for **говорити** (to speak):
+
+| Pronoun | Ending | Example | English |
+|---|---|---|---|
+| **я** | -ю / -у | я говорю | I speak |
+| **ти** | -иш | ти говориш | you speak (informal) |
+| **він/вона/воно** | -ить | він говорить | he speaks |
+| **ми** | -имо | ми гово́римо | we speak |
+| **ви** | -ите | ви гово́рите | you speak (formal/plural) |
+| **вони** | -ять / -ать | вони гово́рять | they speak |
+
+Notice that the vowel **и** appears clearly when you talk to someone (**ти**, **ви**) or about someone (**він**, **ми**). 
+
+Here are six essential Group II verbs that you need for everyday communication. Learning these well will dramatically increase your fluency.
+
+**1. говорити** (to speak)
+Use this verb for any general communication, talking, or speaking a language.
+- Я говорю шви́дко. *(I speak quickly.)*
+- Ти говориш го́лосно. *(You speak loudly.)*
+- Вони говорять. *(They are speaking.)*
+
+**2. бачити** (to see)
+This verb expresses visual perception. Notice that the "я" form takes an **-у** ending instead of **-ю**.
+- Я бачу парк. *(I see the park.)*
+- Ти бачиш мі́сто. *(You see the city.)*
+- Вона ба́чить це. *(She sees this.)*
+
+**3. робити** (to do / to make)
+English separates the concepts of doing an action and making an object. Ukrainian uses this single verb for both.
+- Я роблю́ ка́ву. *(I make coffee.)*
+- Що він ро́бить? *(What is he doing?)*
+- Ми ро́бимо чай. *(We are making tea.)*
+
+**4. вчити** (to study / to teach)
+This is a dual-purpose verb. Depending on the context, it can mean you are studying a subject, or you are teaching it to someone else.
+- Вона вчить слова. *(She studies words.)*
+- Ти вчиш украї́нську. *(You study Ukrainian.)*
+- Ми вчимо́ діте́й. *(We teach children.)*
+
+**5. просити** (to ask / to request)
+When you are at a restaurant or need a favor, use this verb to make a request politely.
+- Я прошу воду́. *(I request water.)*
+- Ти про́сиш чай. *(You request tea.)*
+- Вони про́сять чек. *(They request the bill.)*
+
+**6. ходити** (to go / to walk regularly)
+This is a verb of motion. Use it to talk about walking or going somewhere on a regular basis.
+- Я ходжу́ пі́шки. *(I walk on foot.)*
+- Ти хо́диш туди́. *(You walk there.)*
+- Вона хо́дить ча́сто. *(She walks often.)*
+
+**Bonus: любити** (to love)
+You may already know this verb from earlier modules. It is actually a Group II verb! Notice the familiar consonant shift in the я-form: **б → бл**, just like робити → роблю.
+- Я люблю́ каву. *(I love coffee.)*
+- Ти лю́биш му́зику. *(You love music.)*
+- Вони лю́блять Украї́ну. *(They love Ukraine.)*
+
+:::fill-in
+title: "Conjugate: я говор__, ти говор__, він говор__"
+---
+- sentence: "я говор__"
+  answer: "ю"
+- sentence: "ти говор__"
+  answer: "иш"
+- sentence: "він говор__"
+  answer: "ить"
+- sentence: "вона говор__"
+  answer: "ить"
+- sentence: "воно говор__"
+  answer: "ить"
+- sentence: "ми говор__"
+  answer: "имо"
+- sentence: "ви говор__"
+  answer: "ите"
+- sentence: "вони говор__"
+  answer: "ять"
+- sentence: "студе́нти говор__"
+  answer: "ять"
+- sentence: "Марко говор__"
+  answer: "ить"
+:::
+
+## Гру́па I чи II? (Which Group?)
+
+To read and speak fluidly, you must be able to instantly distinguish between Group I and Group II verbs. The secret lies entirely in the vowels. 
+
+Let us compare the endings side by side using **читати** (to read) for Group I and **говорити** (to speak) for Group II.
+
+| Pronoun | Group I (-ати) | Group II (-ити) |
+|---|---|---|
+| **я** | чита́ю | говорю |
+| **ти** | чита́єш | говориш |
+| **він/вона** | чита́є | говорить |
+| **вони** | чита́ють | говорять |
+
+The key difference is unmistakable. The **ти** form uses **-єш** for Group I versus **-иш** for Group II. The **вони** form uses **-ють** for Group I versus **-ять** (or **-ать**) for Group II. 
+
+There is a strict spelling rule regarding the **вони** form that you must respect. After the "hushing" consonant sounds **ч**, **ш**, **ж**, and **щ**, the Ukrainian language absolutely requires the letter **а**. It rejects the soft vowel **я**. 
+Therefore, for a verb like **бачити** (to see), the correct form is **бачать** (they see). For **вчити** (to study), it is **вчать** (they study). Writing *бачять is a severe spelling error. 
+Conversely, if the stem ends in a normal consonant like **д**, the rule does not apply. The verb **ходити** takes the standard ending: **ходять** (they walk).
+
+You also need to understand a unique phenomenon in Group II: consonant changes. For many Group II verbs, the final consonant of the stem mutates—but this change **only affects the я-form**. All other forms in the paradigm remain perfectly regular. 
+
+This happens because centuries ago, the combination of certain consonants with the old "я" sound was difficult to pronounce. The language smoothed out the sounds to make speech flow better.
+
+Here are the specific consonant shifts you will encounter:
+- The letter **б** becomes **бл**: **робити** → я **роблю**. (But: ти **робиш**, він **робить**).
+- The letter **д** becomes **дж**: **ходити** → я **ходжу**. (But: ти **ходиш**, він **ходить**).
+- The letter **с** becomes **ш**: **просити** → я **прошу**. (But: ти **просиш**, він **просить**).
+- The letter **ч** has no change: **бачити** → я **бачу**. (The consonant stays the same, but it forces an **-у** ending instead of **-ю**).
+
+Do not try to memorize these shifts as abstract mathematical formulas. The most efficient way to learn Ukrainian verbs is to memorize the "я" form at the exact same time you learn the infinitive. Think of them as a set: **робити** / **роблю**. Once you know those two pieces of information, the rest of the pattern falls into place automatically.
+
+:::group-sort
+title: "Sort verbs into Group I (-ати) and Group II (-ити)"
+---
+groups:
+  - name: "Group I (-ати)"
+    items: ["читати", "зна́ти", "слу́хати", "ду́мати", "пита́ти"]
+  - name: "Group II (-ити)"
+    items: ["говорити", "робити", "бачити", "ходити", "просити", "любити"]
+:::
+
+:::quiz
+title: "Choose correct form: Ти (бачу/бачиш/бачить) це?"
+---
+- q: "Ти ___ це?"
+  o: ["бачу", "бачиш", "бачить"]
+  a: 1
+- q: "Що ви ___ увечері?"
+  o: ["робимо", "робить", "ро́бите"]
+  a: 2
+- q: "Я ___ українською."
+  o: ["говорю", "говориш", "говорять"]
+  a: 0
+- q: "Вона ___ нові слова."
+  o: ["вчу", "вчить", "вчать"]
+  a: 1
+- q: "Ми ___ каву."
+  o: ["прошу", "просиш", "про́симо"]
+  a: 2
+- q: "Вони ___ туди."
+  o: ["ходжу", "ходить", "ходять"]
+  a: 2
+- q: "Ти добре ___."
+  o: ["робиш", "робить", "роблю"]
+  a: 0
+- q: "Студенти ___ бага́то."
+  o: ["вчить", "вчать", "вчу"]
+  a: 1
+:::
+
+## Підсумок — Summary
+
+You now possess the complete framework for the present tense in Ukrainian. The verb system relies entirely on these two conjugation patterns.
+
+**Group I (-ати)** uses the endings: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**.
+**Group II (-ити)** uses the endings: **-ю**/**-у**, **-иш**, **-ить**, **-имо**, **-ите**, **-ять**/**-ать**.
+
+Remember that Group II features consonant shifts in the **я** form (like **роблю**, **ходжу**, **прошу**), but the rest of the conjugation remains completely stable. 
+
+Let's test your understanding of these concepts.
+
+- **Self-check 1:** Conjugate the verb **бачити** (to see) for the pronouns **я**, **ти**, and **він/вона**.
+- **Self-check 2:** Look at the verb **слухати** (to listen). Does it belong to Group I or Group II?
+- **Self-check 3:** Look at the verb **говорити** (to speak). Which group is it?
+
+:::note
+**Answers:**
+1. **я бачу**, **ти бачиш**, **він/вона бачить**. (Remember, the **я** form takes **-у**, and there is no consonant change).
+2. It is Group I! It ends in **-ати**, so it follows the standard pattern: **я слухаю**, **ти слухаєш**.
+3. It is Group II! It ends in **-ити**, so it follows the pattern: **я говорю**, **ти говориш**.
+:::
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **говори́ти** | to speak | дієсл. |  |
+| **ба́чити** | to see | дієсл. |  |
+| **роби́ти** | to do / to make | дієсл. |  |
+| **вчи́ти** | to study / to teach | дієсл. |  |
+| **проси́ти** | to ask / to request | дієсл. |  |
+| **ходи́ти** | to go / to walk regularly | дієсл. |  |
+| **диви́тися** | to watch | дієсл. |  |
+| **вчи́тися** | to learn | дієсл. |  |
+| **люби́ти** | to love | дієсл. |  |
+| **тро́хи** | a little | присл. |  |
+| **уве́чері** | in the evening | присл. |  |
+| **украї́нською** | in Ukrainian | ім. | ж. |
+| **шви́дко** | quickly | присл. |  |
+| **го́лосно** | loudly | присл. |  |
+| **чай** | tea | ім. | ч. |
+| **ді́ти** | children | ім. |  |
+| **чек** | bill | ім. | ч. |
+| **пі́шки** | on foot | присл. |  |
+| **туди́** | there | присл. |  |
+| **ча́сто** | often | присл. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **нові слова** | new words |
+| **Молодець!** | Good job! |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- Карама́н Grade 10, p.179
+  _І vs ІІ дієвідміна: endings and infinitive patterns._
+- Захарійчук Grade 4, p.110-113
+  _Verb conjugation tables for present tense._
+- [ULP Season 1, Episode 24](https://www.ukrainianlessons.com/episode24/)
+  _More verbs and conjugation practice._

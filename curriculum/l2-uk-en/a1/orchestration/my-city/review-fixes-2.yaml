@@ -1,0 +1,14 @@
+- find: '*   **на стадіоні** (at the stadium)'
+  replace: '*   **на стадіоні** (at the stadium)
+
+    *   **на площі** (at the square)'
+- find: '| | **стадіоні** | at the stadium |'
+  replace: '| | **стадіоні** | at the stadium |
+
+    | | **площі** | at the square |'
+- find: '**стадіон** (stadium)'
+  replace: '**стадіон** (stadium)
+
+    *   **площа** (square)'
+- find: or **працюю**
+  replace: or **працювати**

@@ -1,0 +1,10 @@
+- find: '**січень** (January) — from **сікти** (to cut), because the freezing winds
+    cut your face.'
+  replace: '**січень** (January) — from **сікти** (to cut), because winter was the
+    traditional season for felling timber in the forest.'
+- find: У суботу гуляю. *(On Saturday I walk.)*
+  replace: У суботу гуляю. *(On Saturday I go for a walk.)*
+- find: Влітку я гуляю. *(In summer I walk.)*
+  replace: Влітку я гуляю. *(In summer I go for a walk.)*
+- find: Ми гуляємо в неділю.** (We walk on Sunday.)
+  replace: Ми гуляємо в неділю.** (We go for a walk on Sunday.)

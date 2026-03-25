@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "what-is-it-like",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-24T23:35:37.286705+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-24T23:35:48.188672+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:21.094114+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:21.098418+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:21.098917+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:56.520326+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:56.878294+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-24T23:39:56.926131+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-24T23:42:07.736050+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-24T23:42:09.297059+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-24T23:42:09.342962+00:00"
+    }
+  }
+}

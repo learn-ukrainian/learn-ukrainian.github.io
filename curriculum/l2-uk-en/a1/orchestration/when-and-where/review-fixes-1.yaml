@@ -1,0 +1,6 @@
+- find: '**Анна:** Я вільний, коли закінчу роботу. *(I am free when I finish work.)*'
+  replace: '**Анна:** Я вільна, коли закінчу роботу. *(I am free when I finish work.)*'
+- find: '**Ірина:** Ні, я не знав! А де вона живе? *(No, I didn''t know! And where
+    does she live?)*'
+  replace: '**Ірина:** Ні, я не знала! А де вона живе? *(No, I didn''t know! And where
+    does she live?)*'

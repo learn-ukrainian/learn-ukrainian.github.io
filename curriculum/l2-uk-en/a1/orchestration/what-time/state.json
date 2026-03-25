@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "what-time",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T01:32:46.657461+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T01:32:57.596020+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T01:36:51.256570+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T01:36:51.261076+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T01:36:51.261667+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T01:37:26.431667+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T01:37:26.892105+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T01:37:26.939089+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T01:41:19.698602+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T01:41:21.618034+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T01:41:21.666461+00:00"
+    }
+  }
+}

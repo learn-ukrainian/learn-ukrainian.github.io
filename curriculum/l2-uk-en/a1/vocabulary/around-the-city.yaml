@@ -1,0 +1,187 @@
+vocabulary:
+- word: діста́тися
+  translation: to get to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іді́ть
+  translation: go! (on foot)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́дьте
+  translation: go! (by transport)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по́руч
+  translation: nearby
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: навпро́ти
+  translation: opposite
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: між
+  translation: between
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хвили́на
+  translation: minute
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: райо́н
+  translation: neighborhood
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: центр
+  translation: center
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ви́бачте
+  translation: excuse me
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: як дістатися
+  translation: how to get to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пря́мо
+  translation: straight
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: напра́во
+  translation: to the right
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: налі́во
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: дале́ко
+  translation: far
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: near
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first / initially
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then / afterwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Де?
+  translation: Where?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Куди́
+  translation: Where to?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Як?
+  translation: How?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Чим?
+  translation: By what?
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: авто́бусом
+  translation: by bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трамва́єм
+  translation: by tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на метро
+  translation: by metro
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на таксі
+  translation: by taxi
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять хвилин
+  translation: five minutes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у центрі міста
+  translation: in the city center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на околиці
+  translation: on the outskirts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перехо́жий
+  translation: passerby
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

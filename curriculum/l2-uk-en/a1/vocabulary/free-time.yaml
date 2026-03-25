@@ -1,0 +1,295 @@
+vocabulary:
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конце́рт
+  translation: concert
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дава́й
+  translation: let's
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: раз
+  translation: once
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вихідні́
+  translation: weekend
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: спорт
+  translation: sport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: футбо́л
+  translation: football
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кіно́
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: і́ноді
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рі́дко
+  translation: rarely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ході́мо
+  translation: let's go!
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Що ти робиш у вихідні?
+  translation: What are you doing on the weekend?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: грати у футбол
+  translation: to play football
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: баскетбо́л
+  translation: basketball
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: грати у баскетбол
+  translation: to play basketball
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: те́ніс
+  translation: tennis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: грати у теніс
+  translation: to play tennis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гіта́ра
+  translation: guitar
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: грати на гітарі
+  translation: to play the guitar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: піані́но
+  translation: piano
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: грати на піаніно
+  translation: to play the piano
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: слухати музику
+  translation: to listen to music
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: фі́льми
+  translation: movies
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дивитися фільми
+  translation: to watch movies
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: серіа́ли
+  translation: series
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дивитися серіали
+  translation: to watch series
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: фотографува́ти
+  translation: to take photos
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходити в кіно
+  translation: to go to the cinema
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходити в театр
+  translation: to go to the theater
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходити в музей
+  translation: to go to a museum
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходити на концерт
+  translation: to go to a concert
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: і́нколи
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: раз на тиждень
+  translation: once a week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: раз на місяць
+  translation: once a month
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дві́чі
+  translation: twice
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: двічі на тиждень
+  translation: twice a week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: три́чі
+  translation: three times
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тричі на тиждень
+  translation: three times a week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кожен день
+  translation: every day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,18 @@
+- find: "- q: \"Ми працюємо ___ банку.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 2"
+  replace: "- q: \"Ми працюємо ___ банку.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 1"
+- find: "- q: \"Моя мама ___ лікарні.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 2"
+  replace: "- q: \"Моя мама ___ лікарні.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 1"
+- find: "- q: \"Він ___ магазині.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 1"
+  replace: "- q: \"Він ___ магазині.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 2"
+- find: "- q: \"Вона читає ___ бібліотеці.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 2"
+  replace: "- q: \"Вона читає ___ бібліотеці.\"\n  o: [\"на\", \"в\", \"у\"]\n  a:\
+    \ 1"
+- find: "- q: \"Ми вечеряємо ___ ресторані.\"\n  o: [\"на\", \"в\", \"у\"]\n  a: 2"
+  replace: "- q: \"Ми вечеряємо ___ ресторані.\"\n  o: [\"на\", \"в\", \"у\"]\n  a:\
+    \ 1"
+- find: These words are adverbs, meaning they never change their form. You can use
+    them immediately after a noun to state its location.
+  replace: The first four — тут, там, далеко, близько — are adverbs that never change
+    their form. The last two — у центрі and на розі — are prepositional phrases (preposition
+    + noun) that work the same way in a sentence. You can use any of them after a
+    noun to state its location.

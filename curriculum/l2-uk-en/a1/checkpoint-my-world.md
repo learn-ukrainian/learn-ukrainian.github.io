@@ -1,0 +1,210 @@
+<!-- TAB:Урок -->
+
+## Що ми зна́ємо? (What Do We Know?)
+
+Start with a grounding thought. Look around your physical space. A few modules ago, a table was just a table. Now, it is **цей вели́кий стіл** (this big table). You have crossed a significant threshold in your Ukrainian journey. You are no longer just naming isolated items; you are actively describing reality.
+
+In the previous modules (M08 to M13), we built the foundational mechanics of the Ukrainian noun universe. You learned that every object has a grammatical gender, and this gender dictates how the rest of the sentence behaves. A masculine noun like **стіл** (table) demands masculine adjectives and pronouns, while a feminine noun like **книга** (book) reshapes those same descriptive words to match its feminine nature. The neuter gender, seen in words like **вікно** (window), provides a third distinct pattern.
+
+We explored how to attach colors to these objects, discovering the crucial difference between hard-stem adjectives like **червоний** (red) and soft-stem adjectives like **синій** (dark blue). You learned how to point at things with precision, distinguishing between what is right here within your reach, using **цей** (this), and what is over there across the room, using **той** (that). We broke the boundary of singular items by forming basic plurals, turning one **вікно** into many **вікна** (windows), and ensuring our adjectives matched this plurality. Finally, we attached numbers and prices to these objects, allowing you to survive a basic transaction at a Ukrainian market.
+
+This checkpoint is your moment to consolidate these pieces. We will not introduce any new vocabulary or grammar rules here. Instead, we will weave everything together. Mastery comes not from constantly learning new rules, but from effortlessly combining the ones you already know.
+
+## Чита́ння (Reading Practice)
+
+Let us begin by simply reading. Do not try to translate every single word into English in your head. Read the Ukrainian sentences aloud and let the images form directly in your mind. You know all of these words.
+
+**Це моя́ кімна́та. Мій стіл великий і нови́й. Ця ла́мпа бі́ла, а та — жо́вта. У мене́ є три кни́ги. Ці книги нові́. Сті́ни бі́лі. Це вікно вели́ке. Той зо́шит синій, а цей — червоний.**
+
+Read it one more time. Notice how the endings of the descriptive words lock into the nouns perfectly, creating a natural rhythm.
+
+When the text says **Ця лампа біла** (This lamp is white), the feminine noun **лампа** forces both the demonstrative pronoun **ця** (this) and the adjective **біла** (white) to take feminine endings. There is no ambiguity. When the focus shifts to the masculine noun **зошит** (notebook), the surrounding words immediately adapt: **Той зошит синій** (That notebook is dark blue). The masculine noun commands the masculine demonstrative **той** and the masculine adjective **синій**. 
+
+You also successfully navigated plurals in context. The phrase **У мене є три книги** (I have three books) uses the plural form of **книга**. Because the noun is plural, the following sentence, **Ці книги нові** (These books are new), uses the plural demonstrative **ці** (these) and the plural adjective **нові** (new). Even without seeing the objects, the endings tell you whether there is one item or many.
+
+This is exactly how native Ukrainian speakers think. They do not calculate gender as a separate mathematical step before speaking; they feel the phonetic harmony of the matching endings. If you change the noun, the echo of that change ripples through the entire sentence automatically.
+
+:::quiz
+title: "Обери́ правильне сло́во (Choose the right word)"
+---
+- q: "_____ стіл великий."
+  o: ["Цей", "Ця", "Це"]
+  a: 0
+- q: "У мене є _____ книга."
+  o: ["новий", "нова́", "нове́"]
+  a: 1
+- q: "_____ вікно чи́сте."
+  o: ["Той", "Та", "Те"]
+  a: 2
+- q: "Ця су́мка _____."
+  o: ["червоний", "черво́на", "черво́не"]
+  a: 1
+- q: "Той зошит _____."
+  o: ["синій", "си́ня", "си́нє"]
+  a: 0
+- q: "Це _____ лампа."
+  o: ["бі́лий", "біла", "бі́ле"]
+  a: 1
+- q: "Ці столи́ _____."
+  o: ["великий", "вели́ка", "вели́кі"]
+  a: 2
+- q: "_____ зо́шити нові."
+  o: ["Цей", "Ця", "Ці"]
+  a: 2
+- q: "Та книга _____."
+  o: ["синій", "синя", "синє"]
+  a: 1
+- q: "_____ мо́ре велике."
+  o: ["Цей", "Ця", "Це"]
+  a: 2
+:::
+
+## Грама́тика (Grammar Summary)
+
+Let us review the core mechanical patterns that make this harmony possible. Understanding these six pillars allows you to describe any object in the Ukrainian language with confidence.
+
+1. **Gender:** Every noun belongs to one of three categories: **чоловічий рід** (masculine gender) associated with **він** (he), **жіночий рід** (feminine gender) associated with **вона** (she), or **середній рід** (neuter gender) associated with **воно** (it). You can usually identify the gender by the final letter of the word. A consonant ending indicates masculine (**стіл**, **телефон**). An **-а** or **-я** ending indicates feminine (**книга**, **диня**). An **-о** or **-е** ending indicates neuter (**вікно**, **море**).
+2. **Agreement:** Adjectives must always mirror the gender of the noun they describe. The adjective changes its shape to match the noun. A big table is **великий стіл**, a big book is **велика книга**, and a big window is **велике вікно**.
+3. **Hard vs. Soft Stems:** Most adjectives have a hard stem, taking standard endings like **-ий**, **-а**, **-е** (for example, **червоний**, **червона**, **червоне**). However, a specific group of adjectives, notably colors like **синій** (dark blue), have a soft stem. They take softer, palatalized endings: **-ій**, **-я**, **-є** (**синій**, **синя**, **синє**).
+4. **Demonstratives:** Pointing at objects requires the same strict gender agreement. For nearby objects (this), use **цей** (masculine), **ця** (feminine), or **це** (neuter). For distant objects (that), use **той** (masculine), **та** (feminine), or **те** (neuter).
+5. **Plurals:** To talk about multiple items, nouns change their endings. Most masculine and feminine nouns take **-и** or **-і** (**столи**, **книги**). Neuter nouns typically change their **-о** to **-а** (**вікна**). When describing plurals, adjectives always take the universal plural ending **-і**, regardless of the noun's original gender (**великі столи**, **великі книги**, **великі вікна**).
+6. **Numbers:** You learned the numbers from one to one thousand. For now, treat numbers simply as vocabulary words used to state quantities and prices, such as **двадцять** (twenty) or **двісті** (two hundred).
+
+:::group-sort
+title: "Розпо́діли слова́ (Classify the words)"
+---
+groups:
+  - name: "Предме́ти"
+    items: ["стіл", "книга", "вікно", "зошит"]
+  - name: "Кольори́"
+    items: ["червоний", "синій", "білий", "жо́втий"]
+  - name: "Числа"
+    items: ["оди́н", "двадцять", "сто", "двісті"]
+:::
+
+## Діало́г (Connected Dialogue)
+
+Theory is useless unless it serves practical communication. Let us observe these mechanics operating in a real-world scenario. You are at a local Ukrainian market looking for some everyday items. You approach the vendor. Read the dialogue aloud, paying attention to how the customer points at specific objects, distinguishes between similar items using colors, and asks for their prices.
+
+<div class="dialogue">
+
+
+**Покупець:** До́брий день! Ме́ні потрі́бна сумка. *(Good afternoon! I need a bag.)*
+
+
+**Продавець:** Яка? Ця червона чи та синя? *(Which one? This red one or that dark blue one?)*
+
+
+**Покупець:** Та синя. Скі́льки вона ко́шту́є? *(That dark blue one. How much does it cost?)*
+
+
+**Продавець:** Двісті гри́вень. *(Two hundred hryvnias.)*
+
+
+**Покупець:** До́бре. А ці зошити? *(Good. And these notebooks?)*
+
+
+**Продавець:** Ті великі — по двадцять гривень. *(Those big ones — twenty hryvnias each.)*
+
+
+</div>
+
+This brief exchange is dense with the grammar you have mastered. The customer starts by stating a need for a **сумка** (bag), which is a feminine noun. The seller immediately responds with the feminine question word **Яка?** (Which one?). To clarify the options, the seller points out two specific bags, using feminine demonstratives and adjectives: **Ця червона** (This red one) and **та синя** (that dark blue one). Notice the clear contrast between the standard hard stem of **червона** and the soft stem of **синя**. Both are feminine, but they sound different because of their stems.
+
+When the customer asks about the price, they use the feminine pronoun **вона** (she/it) to refer back to the bag: **Скільки вона коштує?** (How much does it cost?). It would be grammatically incorrect to use **він** or **воно** here, because the entire conversation is anchored to the feminine gender of the bag. The price is then given clearly using the number **двісті** (two hundred).
+
+The transaction then shifts to a plural noun, **зошити** (notebooks). The customer points to the notebooks using the plural demonstrative **ці** (these). The seller responds using the plural demonstrative for distant objects, **ті** (those), and the plural adjective **великі** (big). The word **по** is a highly useful preposition in shopping contexts, meaning "each" or "apiece" when stating individual prices for multiple items.
+
+:::fill-in
+title: "Склади речення: Shopping"
+---
+- sentence: "Мені потрібна ___."
+  answer: "сумка"
+- sentence: "Яка? ___ червона чи та синя?"
+  answer: "Ця"
+- sentence: "Та ___. Скільки вона коштує?"
+  answer: "синя"
+- sentence: "Двісті ___."
+  answer: "гривень"
+- sentence: "Добре. А ___ зошити?"
+  answer: "ці"
+- sentence: "Ті великі — ___ двадцять гривень."
+  answer: "по"
+- sentence: "___ вона коштує?"
+  answer: "Скільки"
+- sentence: "Ті зошити ___."
+  answer: "великі"
+:::
+
+:::quiz
+title: "Один чи бага́то? (Transform to plural)"
+---
+- q: "Це великий стіл. → Це великі _____."
+  o: ["стіли", "столи", "стіл"]
+  a: 1
+- q: "Ця книга нова. → _____ книги нові."
+  o: ["Цей", "Ця", "Ці"]
+  a: 2
+- q: "У мене є синій зошит. → У мене є си́ні _____."
+  o: ["зошити", "зо́шита", "зошит"]
+  a: 0
+- q: "Той стіл білий. → _____ столи білі."
+  o: ["Ті", "Той", "Та"]
+  a: 0
+- q: "Це вікно чисте. → Ці вікна _____."
+  o: ["чи́стий", "чи́ста", "чи́сті"]
+  a: 2
+- q: "Ця лампа жовта. → Ці ла́мпи _____."
+  o: ["жо́вті", "жовта", "жовтий"]
+  a: 0
+- q: "У мене є червона сумка. → У мене є черво́ні _____."
+  o: ["су́мки́", "сумка", "су́мку"]
+  a: 0
+- q: "Та книга велика. → Ті книги _____."
+  o: ["великий", "велика", "великі"]
+  a: 2
+:::
+
+## Підсумок — Summary
+
+Take a moment to appreciate what you have accomplished in this phase. You now have the linguistic tools to describe your physical world in Ukrainian. You are not just memorizing disconnected vocabulary flashcards; you are building a flexible, dynamic grammatical system in your mind.
+
+You know the names of over twenty common objects, and more importantly, you know their grammatical genders. You can describe these objects using a variety of adjectives—designating them as big, small, new, or old—and you can apply colors accurately, including red, white, yellow, and the distinct shades of Ukrainian blue. You can confidently point at objects in your environment, distinguishing between "this" and "that" while maintaining perfect gender agreement across all your words. You understand how to group individual objects into plurals, and you can navigate basic commerce by asking for prices and understanding numbers up to a thousand.
+
+This is the absolute foundation of descriptive Ukrainian. You have mastered the static world—the physical objects, their inherent qualities, and their relative locations in space. But a spoken language is not static; it is driven by human action and intent.
+
+In the next phase (A1.3), we will breathe life into this world. You will learn how to express what you do, what you want, and what you like. We will introduce verbs, which act as the engines of the Ukrainian sentence. Because you have spent the necessary time building this solid foundation of nouns and descriptive adjectives, adding actions will feel like a natural, powerful expansion of your abilities. You are ready to move forward.
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова
+
+| Слово | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **по** | each / apiece | прийм. |  |
+| **Яка?** | Which one? | ім. | ч. |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **Мені потрібна сумка.** | I need a bag. |
+| **Скільки вона коштує?** | How much does it cost? |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- Synthesis of M08-M13 content
+  _No new material — review and integration of A1.2 phase._

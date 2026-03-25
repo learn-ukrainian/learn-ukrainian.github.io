@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-food-shopping",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T04:06:55.759796+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T04:07:06.909048+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T04:10:50.485711+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T04:10:50.489826+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T04:10:50.490326+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T04:11:57.801364+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T04:11:58.182269+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T04:11:58.238378+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T04:15:05.843742+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T04:15:08.246125+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T04:15:08.293521+00:00"
+    }
+  }
+}

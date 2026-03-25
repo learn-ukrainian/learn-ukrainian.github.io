@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "linking-ideas",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T04:31:38.255608+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T04:31:49.068881+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T04:36:16.121101+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T04:36:16.125443+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T04:36:16.126125+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T04:37:00.010750+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T04:37:00.329139+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T04:37:00.410592+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T04:41:51.208138+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T04:41:53.536239+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T04:41:53.581863+00:00"
+    }
+  }
+}

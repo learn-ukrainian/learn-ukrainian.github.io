@@ -1,0 +1,35 @@
+- find: '**6. ходити** (to go / to walk regularly)
+
+    This is a verb of motion. Use it to talk about walking or going somewhere on a
+    regular basis.
+
+    - Я ходжу пішки. *(I walk on foot.)*
+
+    - Ти ходиш туди. *(You walk there.)*
+
+    - Вона ходить часто. *(She walks often.)*'
+  replace: '**6. ходити** (to go / to walk regularly)
+
+    This is a verb of motion. Use it to talk about walking or going somewhere on a
+    regular basis.
+
+    - Я ходжу пішки. *(I walk on foot.)*
+
+    - Ти ходиш туди. *(You walk there.)*
+
+    - Вона ходить часто. *(She walks often.)*
+
+
+    **Bonus: любити** (to love)
+
+    You may already know this verb from earlier modules. It is actually a Group II
+    verb! Notice the familiar consonant shift in the я-form: **б → бл**, just like
+    робити → роблю.
+
+    - Я люблю каву. *(I love coffee.)*
+
+    - Ти любиш музику. *(You love music.)*
+
+    - Вони люблять Україну. *(They love Ukraine.)*'
+- find: 'items: ["говорити", "робити", "бачити", "ходити", "просити"]'
+  replace: 'items: ["говорити", "робити", "бачити", "ходити", "просити", "любити"]'

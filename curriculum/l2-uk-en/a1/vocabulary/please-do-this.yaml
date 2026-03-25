@@ -1,0 +1,157 @@
+vocabulary:
+- word: відкри́ти
+  translation: to open
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сі́сти
+  translation: to sit down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: показа́ти
+  translation: to show
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: запита́ти
+  translation: to ask
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підру́чник
+  translation: textbook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сторі́нка
+  translation: page
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: писа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to look / watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: да́ти
+  translation: to give
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сказа́ти
+  translation: to say / tell
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іти́
+  translation: to go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to walk / go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пого́да
+  translation: weather
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: меню́
+  translation: menu
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нака́з
+  translation: order / command
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: спо́сіб
+  translation: mood / method
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: наказовий спосіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вибачте, яку сторінку?
+  translation: Excuse me, which page?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна запитати?
+  translation: May I ask?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Слухай, ходімо в кафе!
+  translation: Listen, let's go to a cafe!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добре, йди, я зараз.
+  translation: Okay, go, I'll be right there.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Подивись, яка гарна погода!
+  translation: Look, what beautiful weather!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скажи, що ти хочеш?
+  translation: Tell me, what do you want?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

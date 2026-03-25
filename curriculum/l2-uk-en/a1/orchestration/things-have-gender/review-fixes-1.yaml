@@ -1,0 +1,183 @@
+- find: 'English speakers do not worry about the gender of a table, a lamp, or a window.
+    In the English language, a table is simply an "it". You do not think of the table
+    as having inherently masculine or feminine qualities. In Ukrainian, this framework
+    does not exist. Every single object, concept, abstract idea, and living being
+    belongs to a specific grammatical category. We call this foundational grammatical
+    concept **рід** (gender). This is not about biological sex; it is a purely structural
+    classification system that dictates how words interact with each other in a sentence.
+
+
+    Theoretical rules are easier to understand when you see how Ukrainians actually
+    speak. Imagine you are on a video call with a friend in Ukraine. You have just
+    moved, and you are showing them your new apartment.'
+  replace: 'In Ukrainian, every noun belongs to a grammatical category called **рід**
+    (gender). Tables, lamps, windows, ideas — each one is either masculine, feminine,
+    or neuter. This is not about biological sex. It is a structural classification
+    system that determines how words interact in a sentence. The word for "my" changes
+    depending on the object: **мій** стіл (my table), **моя** кімната (my room), **моє**
+    вікно (my window). Three different forms of the same word, because three different
+    genders demand them.
+
+
+    You will see this immediately in real conversation. Imagine you are on a video
+    call with a friend in Ukraine. You have just moved, and you are showing them your
+    new apartment.'
+- find: 'Masculine nouns almost always end in a consonant. If you see a word ending
+    in a hard, solid consonant sound, you can be very confident it is a "he". There
+    are no special endings to memorize; the absence of a vowel is your primary clue.
+
+
+    *   The word **стіл** (table) ends in the consonant **л**. Therefore, it is masculine:
+    **він** (he). You can confidently say **мій стіл** (my table).
+
+    *   The word **телефон** (phone) ends in the consonant **н**. It is masculine.
+    You replace it with **він** (he) and say **мій телефон** (my phone).
+
+    *   The word **зошит** (notebook) ends in the consonant **т**. It is masculine.
+    You replace it with **він** (he) and say **мій зошит** (my notebook).'
+  replace: 'Masculine nouns almost always end in a consonant — no trailing vowel,
+    just a hard stop. That absence of a vowel is your clue.
+
+
+    *   **стіл** (table) → ends in **-л** → він → **мій стіл**
+
+    *   **телефон** (phone) → ends in **-н** → він → **мій телефон**
+
+    *   **зошит** (notebook) → ends in **-т** → він → **мій зошит**
+
+
+    The pattern is consistent: consonant ending = masculine. Try saying **він** with
+    each word — стіл? він. Телефон? він. Зошит? він. It fits naturally.'
+- find: 'Feminine nouns almost always end in the vowel **-а** or the vowel **-я**.
+    Whenever you see these soft, open sounds at the tail end of a word, you are dealing
+    with a "she".
+
+
+    *   The word **книга** (book) ends in the vowel **-а**. Therefore, it is feminine:
+    **вона** (she). You must say **моя книга** (my book).
+
+    *   The word **лампа** (lamp) ends in the vowel **-а**. It is feminine. You replace
+    it with **вона** (she) and say **моя лампа** (my lamp).
+
+    *   The word **кімната** (room) ends in the vowel **-а**. It is feminine. You
+    replace it with **вона** (she) and say **моя кімната** (my room).
+
+    *   The word **ручка** (pen) ends in the vowel **-а**. It is feminine. You replace
+    it with **вона** (she) and say **моя ручка** (my pen).'
+  replace: 'Feminine nouns almost always end in **-а** or **-я** — an open vowel sound
+    at the end of the word.
+
+
+    *   **книга** (book) → ends in **-а** → вона → **моя книга**
+
+    *   **лампа** (lamp) → ends in **-а** → вона → **моя лампа**
+
+    *   **кімната** (room) → ends in **-а** → вона → **моя кімната**
+
+    *   **ручка** (pen) → ends in **-а** → вона → **моя ручка**
+
+
+    Say **вона** with each: книга? вона. Лампа? вона. Кімната? вона. The **-а** ending
+    and **вона** go hand in hand.'
+- find: 'Neuter nouns generally end in the vowel **-о** or the vowel **-е**. These
+    are the true "it" words of the Ukrainian language. They are distinctively round
+    in their pronunciation.
+
+
+    *   The word **вікно** (window) ends in the vowel **-о**. Therefore, it is neuter:
+    **воно** (it). You must say **моє вікно** (my window).
+
+    *   The word **ліжко** (bed) ends in the vowel **-о**. It is neuter. You replace
+    it with **воно** (it) and say **моє ліжко** (my bed).
+
+    *   The word **крісло** (armchair) ends in the vowel **-о**. It is neuter. You
+    replace it with **воно** (it) and say **моє крісло** (my armchair).
+
+    *   The word **місто** (city) ends in the vowel **-о**. It is neuter. You replace
+    it with **воно** (it) and say **моє місто** (my city).'
+  replace: 'Neuter nouns generally end in **-о** or **-е** — round, open sounds.
+
+
+    *   **вікно** (window) → ends in **-о** → воно → **моє вікно**
+
+    *   **ліжко** (bed) → ends in **-о** → воно → **моє ліжко**
+
+    *   **крісло** (armchair) → ends in **-о** → воно → **моє крісло**
+
+    *   **місто** (city) → ends in **-о** → воно → **моє місто**
+
+
+    Notice how **воно** and **моє** pair with every **-о** ending. The sound pattern
+    is your guide.'
+- find: You can apply this theory immediately. If you look at the final letter of
+    a word, you immediately know its grammatical gender. Try it with these new words.
+  replace: 'Apply this now. Look at the final letter — you already know the gender.
+    Try these words you have not seen before:'
+- find: These are the true neutral objects
+  replace: These are the neuter objects
+- find: 'Here are your essential masculine objects. Notice how they all end abruptly
+    in consonants without any trailing vowels. This hard stop is the hallmark of the
+    masculine noun:'
+  replace: 'Here are your essential masculine objects — all ending in consonants:'
+- find: 'Here are your essential feminine objects. Notice the open, trailing **-а**
+    sound that defines them. This soft, open vowel is the definitive marker of the
+    feminine noun:'
+  replace: 'Here are your essential feminine objects — all ending in **-а**:'
+- find: 'Here are your essential neuter objects. They end in the distinctive, round
+    **-о** sound, or sometimes the soft **-е**. These are the neuter objects:'
+  replace: 'Here are your essential neuter objects — ending in **-о**:'
+- find: You use the exact same grammatical structure to talk about inanimate objects.
+    You simply combine **У мене є** with the new vocabulary you just learned. The
+    beauty of this structure is its absolute stability.
+  replace: 'The same structure works for inanimate objects. Combine **У мене є** with
+    any noun you have learned:'
+- find: Whether the object you possess is masculine, feminine, or neuter, the phrase
+    **У мене є** remains perfectly constant. You do not need to alter the phrase based
+    on the gender of the object you are holding.
+  replace: Whether the object is masculine, feminine, or neuter, **У мене є** stays
+    the same — gender does not change this phrase.
+- find: You have unlocked the most foundational sorting system of the Ukrainian language.
+    Identifying the gender of a noun is not a random guessing game requiring endless
+    rote memorization. It is a highly logical, predictable process based entirely
+    on the spelling and sound of the word.
+  replace: You now know how Ukrainian sorts every noun into one of three genders.
+    This is not random memorization — it is a logical system based on the ending of
+    the word.
+- find: 'Whenever you encounter a new noun in your studies, process it through these
+    three definitive steps:'
+  replace: 'Whenever you encounter a new noun, run it through these three steps:'
+- find: 1.  **Test the pronoun:** Ask yourself if the object feels grammatically like
+    a **він** (he), a **вона** (she), or a **воно** (it). This builds your intuitive
+    sense of the language.
+  replace: 1.  **Test the pronoun:** Say **він**, **вона**, or **воно** with the noun
+    — which one fits?
+- find: 2.  **Check the ending:** Look precisely at the final letter. Does the word
+    end in a hard consonant? It belongs to the masculine gender. Does it end in the
+    open vowel **-а** or **-я**? It belongs to the feminine gender. Does it end in
+    the round vowel **-о** or **-е**? It belongs to the neuter gender.
+  replace: 2.  **Check the ending:** Consonant → masculine. Ending in **-а**/**-я**
+    → feminine. Ending in **-о**/**-е** → neuter.
+- find: 3.  **Use the correct possessive:** Once you have identified the gender, you
+    automatically know how to claim the object as your own. You use **мій** for all
+    masculine words, **моя** for all feminine words, and **моє** for all neuter words.
+  replace: 3.  **Use the correct possessive:** **мій** (masculine), **моя** (feminine),
+    **моє** (neuter).
+- find: Take a moment to verify your understanding of this system. If someone points
+    to a table (**стіл**), what gender is it? It ends in a consonant, so it is strictly
+    masculine (**він**). You would claim it by saying **мій стіл**. If someone points
+    to a book (**книга**), what gender is it? It ends in the vowel **-а**, so it is
+    strictly feminine (**вона**). You would claim it by saying **моя книга**. If someone
+    points to a window (**вікно**), it ends in the vowel **-о**, making it strictly
+    neuter (**воно**). You claim it by saying **моє вікно**.
+  replace: 'Test yourself: **стіл** — ends in a consonant — він — **мій стіл**. **Книга**
+    — ends in **-а** — вона — **моя книга**. **Вікно** — ends in **-о** — воно — **моє
+    вікно**.'
+- find: 'And to state that you actively possess these items in your daily life, you
+    simply rely on the universal, unchanging structure you already know: **У мене
+    є стілець** (I have a chair), **У мене є ручка** (I have a pen), **У мене є фото**
+    (I have a photo). You are now fully equipped to categorize and describe the physical
+    world around you in authentic Ukrainian.'
+  replace: 'To say you have these things, use the structure you already know: **У
+    мене є стілець** (I have a chair), **У мене є ручка** (I have a pen), **У мене
+    є фото** (I have a photo). You can now identify the gender of any common noun
+    and describe what you have in Ukrainian.'

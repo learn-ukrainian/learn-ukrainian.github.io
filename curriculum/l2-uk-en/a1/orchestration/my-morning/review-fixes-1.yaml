@@ -1,0 +1,24 @@
+- find: дивлюся телефон
+  replace: дивлюся в телефон
+- find: '*(Me too. I wake up late, lie down, look at the phone.)*'
+  replace: '*(Me too. I wake up late, lie in bed, look at the phone.)*'
+- find: The **-ся** simply attaches to the very end of the already conjugated form.
+    You take a normal verb, conjugate it exactly as you normally would for **я**,
+    **ти**, **він/вона**, and then add **-ся** at the end.
+  replace: The reflexive suffix attaches to the very end of the already conjugated
+    form. For **я** and **ти**, you add **-ся**. For **він/вона**, the suffix takes
+    the form **-ться**. You take a normal verb, conjugate it as you normally would,
+    and then add the reflexive suffix at the end.
+- find: '*   Він/вона вмиваєть + **ся** = **він/вона вмивається** (He/she washes up)'
+  replace: '*   Він/вона вмиває + **ться** = **він/вона вмивається** (He/she washes
+    up)'
+- find: "- q: \"Обери правильне слово: Я (вмиваю/вмиваюся) руки.\"\n  o: [\"вмиваю\"\
+    , \"вмиваюся\"]\n  a: 0"
+  replace: "- q: \"Обери правильне слово: Я (вмиваю/вмиваюся) щоранку.\"\n  o: [\"\
+    вмиваю\", \"вмиваюся\"]\n  a: 1"
+- find: "- sentence: \"Він прокидаєть___ о сьомій.\"\n  answer: \"ся\""
+  replace: "- sentence: \"Він прокидає___ о сьомій.\"\n  answer: \"ться\""
+- find: "- sentence: \"Вона вмиваєть___ холодною водою.\"\n  answer: \"ся\""
+  replace: "- sentence: \"Вона вмиває___ холодною водою.\"\n  answer: \"ться\""
+- find: "- sentence: \"Він часто прокидаєть___ вночі.\"\n  answer: \"ся\""
+  replace: "- sentence: \"Він часто прокидає___ вночі.\"\n  answer: \"ться\""

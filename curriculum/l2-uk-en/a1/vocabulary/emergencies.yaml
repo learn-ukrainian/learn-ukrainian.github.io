@@ -1,0 +1,259 @@
+vocabulary:
+- word: поже́жа
+  translation: fire
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поряту́нок
+  translation: rescue
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́спорт
+  translation: passport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: адре́са
+  translation: address
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: но́мер
+  translation: number
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: алергі́я
+  translation: allergy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фо́рма
+  translation: form / document
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: буди́нок
+  translation: building / house
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: допомо́га
+  translation: help
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: допоможі́ть
+  translation: help!
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: швидка́
+  translation: ambulance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: полі́ція
+  translation: police
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ава́рія
+  translation: accident
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: загуби́ти
+  translation: to lose
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: викликати
+  translation: to call / summon
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́кличте
+  translation: call / summon (imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пога́но
+  translation: bad / unwell
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: understood
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: один один два
+  translation: one one two (112)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Служба порятунку, слухаю вас.
+  translation: Rescue service, I am listening to you.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут аварія!
+  translation: There is an accident here!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Людина не рухається!
+  translation: The person is not moving!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ви?
+  translation: Where are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Швидка вже їде.
+  translation: The ambulance is already driving.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Залишайтеся на місці.
+  translation: Stay in place.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як ваше прізвище?
+  translation: What is your surname?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: номер телефону
+  translation: phone number
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Заповніть цю форму, будь ласка.
+  translation: Fill out this form, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Викличте швидку!
+  translation: Call an ambulance!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Викличте поліцію!
+  translation: Call the police!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут пожежа!
+  translation: There is a fire here!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Людині погано!
+  translation: Someone is feeling bad!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені потрібна допомога!
+  translation: I need help!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені потрібен
+  translation: I need (for masculine object)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені потрібна
+  translation: I need (for feminine object)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені потрібен лікар.
+  translation: I need a doctor.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене алергія на...
+  translation: I am allergic to...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не розумію.
+  translation: I do not understand.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Повторіть, будь ласка.
+  translation: Repeat, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ви говорите англійською?
+  translation: Do you speak English?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я загубив паспорт.
+  translation: I lost my passport. (male speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я загубила телефон.
+  translation: I lost my phone. (female speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

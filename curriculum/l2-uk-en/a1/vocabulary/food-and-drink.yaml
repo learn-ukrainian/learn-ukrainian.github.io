@@ -1,0 +1,295 @@
+vocabulary:
+- word: ї́жа
+  translation: food
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: напі́й
+  translation: drink
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сік
+  translation: juice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: суп
+  translation: soup
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сніда́нок
+  translation: breakfast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обід
+  translation: lunch
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: варе́ник
+  translation: dumpling
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сир
+  translation: cheese
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́сло
+  translation: butter
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: яйце́
+  translation: egg
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: карто́пля
+  translation: potato
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цу́кор
+  translation: sugar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: смета́на
+  translation: sour cream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: компо́т
+  translation: compote
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ку́рка
+  translation: chicken
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: макаро́ни
+  translation: pasta
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: мо́рква
+  translation: carrot
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цибу́ля
+  translation: onion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: помідо́р
+  translation: tomato
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: огіро́к
+  translation: cucumber
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бана́н
+  translation: banana
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: апельси́н
+  translation: orange
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: йо́гурт
+  translation: yogurt
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: олі́я
+  translation: vegetable oil
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: са́ло
+  translation: cured pork fat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: галушки́
+  translation: dumplings
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: деруни́
+  translation: potato pancakes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: лимона́д
+  translation: lemonade
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кефі́р
+  translation: kefir
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пи́во
+  translation: beer
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вино́
+  translation: wine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на сніданок
+  translation: for breakfast
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на обід
+  translation: for lunch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на вечерю
+  translation: for dinner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кава з молоком
+  translation: coffee with milk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чай з цукром
+  translation: tea with sugar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чай з лимоном
+  translation: tea with lemon
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вода з газом
+  translation: water with gas / sparkling water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хліб з маслом
+  translation: bread with butter
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: м'ясо з картоплею
+  translation: meat with potatoes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: риба з рисом
+  translation: fish with rice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти хочеш?
+  translation: What do you want?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти хочеш на сніданок?
+  translation: What do you want for breakfast?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти зазвичай їш на обід?
+  translation: What do you usually eat for lunch?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їш на сніданок?
+  translation: What do you eat for breakfast?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їш на обід?
+  translation: What do you eat for lunch?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їш на вечерю?
+  translation: What do you eat for dinner?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

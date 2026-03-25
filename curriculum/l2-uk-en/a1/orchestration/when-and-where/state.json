@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "when-and-where",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T04:41:54.974074+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T04:42:05.758435+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T04:42:58.821787+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T04:42:58.825868+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T04:42:58.826328+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T04:43:29.656644+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T04:43:30.018367+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T04:43:30.081734+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T04:45:24.455074+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T04:45:26.415730+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T04:45:26.465218+00:00"
+    }
+  }
+}

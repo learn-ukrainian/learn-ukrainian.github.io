@@ -1,0 +1,145 @@
+vocabulary:
+- word: люби́ти
+  translation: to love / to like (an action)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to like (a thing) / to be pleasing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співа́ти
+  translation: to sing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фільм
+  translation: film
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: не
+  translation: not
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: пра́вда
+  translation: really
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цей
+  translation: this (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ця
+  translation: this (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Що ти любиш робити?
+  translation: What do you like to do?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я люблю
+  translation: I like (an action)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не люблю
+  translation: I do not like (an action)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені не подобається
+  translation: I do not like (a thing)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ти любиш
+  translation: You like (an action)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тобі подобається
+  translation: You like (a thing)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

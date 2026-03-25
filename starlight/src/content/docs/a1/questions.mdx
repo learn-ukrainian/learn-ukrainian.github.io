@@ -1,0 +1,252 @@
+---
+title: "Questions"
+sidebar:
+  order: 19
+  label: "19. Questions"
+pipeline: v6
+build_status: draft
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Quiz from '@site/src/components/Quiz';
+import FillIn from '@site/src/components/FillIn';
+import MatchUp from '@site/src/components/MatchUp';
+import TrueFalse from '@site/src/components/TrueFalse';
+import GroupSort from '@site/src/components/GroupSort';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діало́ги (Dialogues)
+
+When you begin speaking a new language, you often feel like you need a massive vocabulary to participate in a conversation. In reality, you only need to know how to ask questions. Questions are the engine of communication. They allow you to gather information, express curiosity, and keep a dialogue moving forward even if you only know a few basic nouns and verbs. In Ukrainian, asking questions is refreshingly straightforward. There are no complex sentence inversions and no required auxiliary verbs like the English "do" or "does". You simply state your question word and ask.
+
+Let us look at a typical conversation when you meet someone new. Notice how the questions drive the entire interaction forward.
+
+<div class="dialogue">
+
+
+**Анна:** Приві́т! Хто ти? *(Hi! Who are you?)*
+
+
+**Максим:** Я студе́нт. *(I am a student.)*
+
+
+**Анна:** Що ти вивча́єш? *(What do you study?)*
+
+
+**Максим:** Я вивча́ю украї́нську. *(I study Ukrainian.)*
+
+
+**Анна:** Де ти живе́ш? *(Where do you live?)*
+
+
+**Максим:** Я живу́ в Ки́єві. *(I live in Kyiv.)*
+
+
+**Анна:** Ко́ли ти приї́хав? *(When did you arrive?)*
+
+
+**Максим:** Мі́сяць тому́. *(A month ago.)*
+
+
+</div>
+
+
+Notice how direct and efficient this conversation is. In Ukrainian culture, asking **Хто ти?** (Who are you?) is a perfectly normal and acceptable way to ask about someone's identity, role, or profession in a casual setting. You do not need to build complex introductory phrases. The question words **що** (what), **де** (where), and **коли** (when) sit comfortably at the very beginning of the sentence, immediately signaling to the listener what specific piece of information is being requested. Anna uses these fundamental question words to rapidly build a clear picture of who Maksym is, where he lives, and what his timeline looks like.
+
+Now, imagine you are walking in Lviv or Kyiv and you cannot find your destination. Asking a local is the best approach. 
+
+<div class="dialogue">
+
+
+**Турист:** Де бібліоте́ка? *(Where is the library?)*
+
+
+**Перехожий:** Я не зна́ю. *(I don't know.)*
+
+
+**Турист:** А хто зна́є? *(And who knows?)*
+
+
+**Перехожий:** Запита́й там. *(Ask there.)*
+
+
+**Турист:** Чо́му? *(Why?)*
+
+
+**Перехожий:** Тому що там працю́є мій друг. *(Because my friend works there.)*
+
+
+</div>
+
+
+This dialogue represents a classic language survival situation. When you are lost in a new city, finding a specific location is your absolute first priority. The tourist starts with a simple, two-word location question: **Де бібліотека?** Notice the passerby's response: **Я не знаю.** The small, powerful word **не** instantly turns a positive, capable verb into a negative one. When the tourist asks for a reason using the question word **Чому?** (Why?), the passerby naturally and automatically replies with the phrase **Тому що** (Because). These small, rhythmic question and answer pairs are the foundational building blocks of everyday communication on the streets of Ukraine.
+
+## Пита́льні слова́ (Question Words)
+
+To effectively ask questions in Ukrainian, you need to memorize and master seven essential question words. These words are the keys that will unlock conversations and help you gather vital information about the world around you. They appear constantly in both spoken and written Ukrainian. Let us look at each one in detail, observing how they interact with the verbs and subjects in a sentence.
+
+**Хто** means who. It is used exclusively for people and sometimes animals.
+- **Хто це?** (Who is this?)
+- **Хто гово́рить?** (Who is speaking?)
+- **Хто ти?** (Who are you?)
+
+**Що** means what. It is used for objects, abstract ideas, and actions.
+- **Що це?** (What is this?)
+- **Що ти ро́биш?** (What are you doing?)
+- **Що ти хо́чеш?** (What do you want?)
+
+**Де** means where. It asks for a static location. If you are looking for a building, a person, or an object that is currently staying in one place, you use **де**.
+- **Де ти живеш?** (Where do you live?)
+- **Де моя́ кни́га?** (Where is my book?)
+- **Де працює Тара́с?** (Where does Taras work?)
+
+**Куди** means where to. This is a crucial distinction from English. English often uses "where" for both static location and dynamic motion, but Ukrainian splits them. If there is movement toward a destination, you must use **куди**.
+- **Куди ти йдеш?** (Where are you going?)
+- **Куди ми ї́демо?** (Where are we riding?)
+
+**Коли** means when. It asks for a specific time, a day, or a date.
+- **Коли ти працю́єш?** (When do you work?)
+- **Коли він відпочива́є?** (When does he rest?)
+
+**Чому** means why. It asks for a reason or a motivation. The most common way to answer this question is with the phrase **тому що**, which means because.
+- **Чому ти не працюєш?** (Why are you not working?)
+- **Тому що я відпочива́ю.** (Because I am resting.)
+
+**Як** means how. It asks about the manner in which an action happens, or it inquires about a general state of being or feeling. You will hear this word multiple times a day in basic greetings.
+- **Як спра́ви?** (How are things?)
+- **Як тебе́ зва́ти?** (What is your name? / literally: How do they call you?)
+- **Як ти живеш?** (How do you live?)
+
+<Quiz client:only="react" instruction={"Choose the right question word"} questions={[{"question": "___ ти живеш?", "options": [{"text": "Де", "correct": true}, {"text": "Що", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "___ ти вивчаєш?", "options": [{"text": "Що", "correct": true}, {"text": "Коли", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "___ ти йдеш?", "options": [{"text": "Куди", "correct": true}, {"text": "Що", "correct": false}, {"text": "Де", "correct": false}]}, {"question": "___ це?", "options": [{"text": "Хто", "correct": true}, {"text": "Коли", "correct": false}, {"text": "Куди", "correct": false}]}, {"question": "___ ти не працюєш?", "options": [{"text": "Чому", "correct": true}, {"text": "Хто", "correct": false}, {"text": "Що", "correct": false}]}, {"question": "___ тебе звати?", "options": [{"text": "Як", "correct": true}, {"text": "Де", "correct": false}, {"text": "Що", "correct": false}]}, {"question": "___ ти приїхав?", "options": [{"text": "Коли", "correct": true}, {"text": "Що", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "___ говорить?", "options": [{"text": "Хто", "correct": true}, {"text": "Що", "correct": false}, {"text": "Де", "correct": false}]}]} />
+
+One of the great joys of learning Ukrainian is discovering that the word order is highly flexible. In English, forming a question demands a very strict, rigid grammatical structure. If you mess up the word order in English, the sentence falls apart. Ukrainian, however, allows you to move words around depending on what specific piece of information you want to emphasize. The standard, textbook structure is to put the question word first, followed by the verb, and then the subject.
+- **Де ти живеш?** (Where do you live?)
+
+However, it is completely acceptable and very common in spoken Ukrainian to put the subject first.
+- **Ти де живеш?** (You where live?)
+
+Both sentences mean exactly the same thing and are grammatically correct.
+
+What if your question does not use a question word? What if you want to ask a simple yes or no question? This is where Ukrainian is incredibly easy for beginners. You do not need to add helper words, and you do not need to rearrange the sentence. You simply take a normal statement and raise the pitch of your voice on the stressed syllable of the key word at the end of the sentence.
+- **Ти розумі́єш.** (You understand.)
+- **Ти розумієш?** (Do you understand?)
+
+There is a formal question word **чи**, which you might see in written texts: **Чи ти розумієш?** However, in everyday conversation, **чи** is optional. Your voice does all the work. If you raise your intonation at the end of the sentence, the listener will instantly know you are asking a question.
+
+<MatchUp client:only="react" instruction={"Match question to answer"} pairs={[{"left": "Де ти живеш?", "right": "У Києві."}, {"left": "Що ти вивчаєш?", "right": "Українську мо́ву."}, {"left": "Чому ти відпочива́єш?", "right": "Тому що я не працю́ю."}, {"left": "Хто це?", "right": "Це мій друг."}, {"left": "Коли ти працюєш?", "right": "За́раз."}, {"left": "Як справи?", "right": "До́бре, дякую."}]} />
+
+## Запере́чення (Negation)
+
+Saying no is just as important, and often more important, than saying yes. Setting boundaries, expressing a lack of knowledge, or denying an action are critical communication skills. In Ukrainian, the process of negation is straightforward, highly powerful, and mathematically consistent across the entire language. You will rely on two core, foundational words to build your negative sentences: **не** and **ні**.
+
+The word **не** translates directly to the English word "not". Its primary, unbreakable job is to negate a verb. As a general rule, **не** goes directly before the verb it negates. At this stage of your learning, always place **не** immediately before the verb — this pattern covers the vast majority of sentences you will encounter and produce.
+- **Я не знаю.** (I do not know.)
+- **Він не працює.** (He does not work.)
+- **Ми не розумі́ємо.** (We do not understand.)
+
+If you want to express a dislike or a lack of desire, you use the exact same structure. Recall the phrases you learned previously for expressing wants.
+- **Я не хо́чу.** (I do not want.)
+- **Мені не подо́бається.** (I do not like it.)
+
+<FillIn client:only="react" instruction={"Make it negative"} items={[{"sentence": "Я знаю. → Я ___ знаю.", "answer": "не"}, {"sentence": "Він працює. → Він ___ працює.", "answer": "не"}, {"sentence": "Хтось знає. → ___ не знає.", "answer": "Ніхто́"}, {"sentence": "Я все розумі́ю. → Я ___ не розумію.", "answer": "ні́чого"}, {"sentence": "Ми хо́чемо. → Ми ___ хочемо.", "answer": "не"}, {"sentence": "Вона́ чита́є. → Вона ___ читає.", "answer": "не"}, {"sentence": "Хтось говорить. → ___ не говорить.", "answer": "Ніхто"}, {"sentence": "Я щось ба́чу. → Я ___ не бачу.", "answer": "нічого"}]} />
+
+The word **ні** translates directly to "no". You use it as a standalone answer to a direct yes or no question.
+- **Ти зна́єш?** (Do you know?)
+- **Ні, я не знаю.** (No, I do not know.)
+
+The concept of **ні** extends to negative pronouns. By adding **ні-** to the beginning of question words, you create powerful new words that mean nothing, nobody, or never.
+- **нічого** (nothing)
+- **ніхто** (nobody)
+- **ніколи** (never)
+- **ніде** (nowhere)
+
+This brings us to one of the most famous, and sometimes confusing, differences between English and Ukrainian grammar: the concept of double negation. In English grammar classes, you are taught the strict rule that two negatives make a positive. Saying a phrase like "I don't know nothing" is considered incorrect and poor style. In Ukrainian, however, double negation is absolutely required by the rules of the language. It is not slang; it is the only grammatically correct way to form these specific sentences.
+
+If you use a negative pronoun like **нічого** (nothing) or **ніхто** (nobody) in your sentence, you must also put the word **не** before your verb. You are essentially setting a negative atmosphere with the pronoun and then confirming that negative reality with the action. The verb must agree with the negative pronoun.
+- **Я нічого не знаю.** (I know nothing. / I do not know anything.)
+- **Ніхто не говорить.** (Nobody speaks.)
+- **Я ніколи не відпочиваю.** (I never rest.)
+
+Do not try to translate this literally into English, or it will feel redundant and awkward in your mind. Embrace the Ukrainian logic: double negation is not optional or stylistic — it is a strict grammatical requirement. When a negative pronoun like **ніхто** or **нічого** appears in the sentence, the verb must also carry **не**. Both elements are mandatory for the sentence to be grammatically correct.
+
+<Quiz client:only="react" instruction={"Double negation: choose the correct sentence"} questions={[{"question": "I don't know anything.", "options": [{"text": "Я нічого не знаю.", "correct": true}, {"text": "Я нічого знаю.", "correct": false}, {"text": "Я не нічого знаю.", "correct": false}]}, {"question": "Nobody works here.", "options": [{"text": "Ніхто не працює тут.", "correct": true}, {"text": "Ніхто працює тут.", "correct": false}, {"text": "Не ніхто працює тут.", "correct": false}]}, {"question": "I never rest.", "options": [{"text": "Я ніколи не відпочиваю.", "correct": true}, {"text": "Я ніколи відпочиваю.", "correct": false}, {"text": "Я не ніколи відпочиваю.", "correct": false}]}, {"question": "Nobody understands.", "options": [{"text": "Ніхто не розумі́є.", "correct": true}, {"text": "Ніхто розуміє.", "correct": false}, {"text": "Не ніхто розуміє.", "correct": false}]}, {"question": "I see nothing.", "options": [{"text": "Я нічого не бачу.", "correct": true}, {"text": "Я нічого бачу.", "correct": false}, {"text": "Я не нічого бачу.", "correct": false}]}, {"question": "He knows nothing.", "options": [{"text": "Він нічого не знає.", "correct": true}, {"text": "Він нічого знає.", "correct": false}, {"text": "Він не нічого знає.", "correct": false}]}]} />
+
+## Підсумок — Summary
+
+You now have the fundamental grammatical tools required to ask detailed questions and express clear negation in the Ukrainian language. Let us take a moment to review the core concepts you have mastered in this module.
+
+First, you learned the seven essential question words that drive conversation: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). You must remember the critical, physical difference between **де**, which asks for a static location, and **куди**, which asks for dynamic motion toward a destination.
+
+Second, you discovered that simple yes or no questions do not require complex grammar changes or extra helper words. You simply use a normal, declarative statement and raise your intonation at the very end of the sentence. The statement **Ти розумієш.** becomes the question **Ти розумієш?** instantly, using only the pitch of your voice.
+
+Third, you learned the absolute, unbreakable rule of verbal negation: the short word **не** always goes directly in front of the verb it modifies. The positive phrase **Я знаю** becomes the negative phrase **Я не знаю** without any other structural changes.
+
+Finally, you embraced the Ukrainian grammatical requirement for double negation. When you use absolute negative words like **ніхто** (nobody) or **нічого** (nothing), you must also negate the accompanying verb with **не**. Therefore, the sentence **Я нічого не бачу** is perfectly natural, logically sound, and grammatically necessary.
+
+Before moving on to the next module in your journey, perform a quick, practical self-check. Think about a friend or a family member right now. Can you ask three distinct questions about them in Ukrainian out loud? Try asking where they live (**Де...?**), what they do (**Що...?**), and when they work (**Коли...?**). After that, try making two true negative statements about yourself, such as **Я не...** or **Ніхто не...**. If you can formulate these thoughts smoothly, you are fully ready to continue.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язко́ві та рекомендо́вані слова
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **ніхто́** | nobody | ім. | ч. |
+| **ні́чого** | nothing | ім. | с. |
+| **ніколи** | never | присл. |  |
+| **жи́ти** | to live | дієсл. |  |
+| **розумі́ти** | to understand | дієсл. |  |
+| **куди́** | where to | присл. |  |
+| **коли́** | when | ім. |  |
+| **чому́** | why | присл. |  |
+| **вивча́ти** | to study | дієсл. |  |
+| **в** | in | прийм. |  |
+| **приї́хати** | to arrive | дієсл. |  |
+| **зна́ти** | to know | дієсл. |  |
+| **запита́ти** | to ask | дієсл. |  |
+| **працюва́ти** | to work | дієсл. |  |
+| **роби́ти** | to do | дієсл. |  |
+| **хоті́ти** | to want | дієсл. |  |
+| **іти́** | to go | дієсл. |  |
+| **ї́хати** | to ride | дієсл. |  |
+| **відпочива́ти** | to rest | дієсл. |  |
+| **подо́батися** | to like | дієсл. |  |
+| **все** | everything | прикм. |  |
+| **хтось** | someone | ім. | ч. |
+| **щось** | something | присл. |  |
+| **чита́ти** | to read | дієсл. |  |
+| **ба́чити** | to see | дієсл. |  |
+| **ніде** | nowhere | присл. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **тому що** | because |
+| **місяць тому** | a month ago |
+
+</TabItem>
+<TabItem label="Зошит">
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- Варзацька Grade 4, p.41
+  _Question words in case system context (хто? що? кого? чого́?)._
+- [ULP Season 1, Episode 35](https://www.ukrainianlessons.com/episode35/)
+  _Questions in Ukrainian — word order and intonation._
+
+</TabItem>
+</Tabs>

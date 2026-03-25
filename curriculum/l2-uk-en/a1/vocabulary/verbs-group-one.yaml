@@ -1,0 +1,145 @@
+vocabulary:
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk / to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study/learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: карти́на
+  translation: picture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: футбо́л
+  translation: football
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: він/вона́/воно́
+  translation: he/she/it
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ми
+  translation: we
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: вони́
+  translation: they
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Перша дієвідміна
+  translation: First Conjugation / Group I
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: теперішній час
+  translation: present tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти робиш?
+  translation: What are you doing?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А ти?
+  translation: And you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти працюєш?
+  translation: Where do you work?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,17 @@
+- find: "We will explore exactly how this works in the next section.\n\n:::fill-in\n\
+    title: \"Choose correct gender based on the subject\"\n---\n- sentence: \"Марія\
+    \ ___ фільм.\"\n  answer: \"дивилася\"\n- sentence: \"Мій брат ___ у парку.\"\n\
+    \  answer: \"гуляв\"\n- sentence: \"Вони ___ вихідні разом.\"\n  answer: \"провели\"\
+    \n:::"
+  replace: We will explore exactly how this works in the next section.
+- find: "Both are perfectly correct and natural. The key is ensuring that the verb\
+    \ ending matches the subject. If you are talking about your brother, use **-в**.\
+    \ If you are talking about your mother, use **-ла**. If you are talking about\
+    \ your parents, use **-ли**. \n\n:::fill-in"
+  replace: "Both are perfectly correct and natural. The key is ensuring that the verb\
+    \ ending matches the subject. If you are talking about your brother, use **-в**.\
+    \ If you are talking about your mother, use **-ла**. If you are talking about\
+    \ your parents, use **-ли**. \n\n:::fill-in\ntitle: \"Choose correct gender based\
+    \ on the subject\"\n---\n- sentence: \"Марія ___ фільм.\"\n  answer: \"дивилася\"\
+    \n- sentence: \"Мій брат ___ у парку.\"\n  answer: \"гуляв\"\n- sentence: \"Вони\
+    \ ___ вихідні разом.\"\n  answer: \"провели\"\n:::\n\n:::fill-in"

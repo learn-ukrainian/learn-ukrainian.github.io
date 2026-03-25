@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "emergencies",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T05:31:12.918546+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T05:31:23.763861+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T05:33:42.406761+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T05:33:42.410905+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T05:33:42.411563+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T05:34:28.226989+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T05:34:28.665613+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T05:34:28.729547+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T05:35:26.760984+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T05:35:28.773162+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T05:35:28.821522+00:00"
+    }
+  }
+}

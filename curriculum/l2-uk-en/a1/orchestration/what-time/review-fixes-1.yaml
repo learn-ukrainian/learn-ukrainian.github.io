@@ -1,0 +1,68 @@
+- find: ":::quiz\ntitle: \"Котра година?\"\n---\n- q: \"You look at the clock and\
+    \ it is exactly 5:00. What do you say?\"\n  o: [\"П'ята\", \"Третя\", \"Шоста\"\
+    ]\n  a: 0\n- q: \"The clock shows 1:00. You say:\"\n  o: [\"Перша\", \"Друга\"\
+    , \"Десята\"]\n  a: 0\n- q: \"It is exactly 3:00 right now.\"\n  o: [\"Третя\"\
+    , \"П'ята\", \"Сьома\"]\n  a: 0\n- q: \"The time on the wall is 10:00.\"\n  o:\
+    \ [\"Десята\", \"Дев'ята\", \"Одинадцята\"]\n  a: 0\n- q: \"How do you correctly\
+    \ say 1:30?\"\n  o: [\"Пів на другу\", \"Пів на першу\", \"Чверть на другу\"]\n\
+    \  a: 0\n- q: \"How do you say 8:30 in Ukrainian?\"\n  o: [\"Пів на дев'яту\"\
+    , \"Пів на восьму\", \"Сьома\"]\n  a: 0\n- q: \"The clock shows 2:15. You recognize\
+    \ this spoken as:\"\n  o: [\"Чверть на третю\", \"За чверть третя\", \"Пів на\
+    \ другу\"]\n  a: 0\n- q: \"The clock shows 2:45. You recognize this phrase as:\"\
+    \n  o: [\"За чверть третя\", \"Чверть на третю\", \"Пів на третю\"]\n  a: 0\n\
+    :::"
+  replace: ":::quiz\ntitle: \"Котра година?\"\n---\n- q: \"You look at the clock and\
+    \ it is exactly 5:00. What do you say?\"\n  o: [\"Третя\", \"П'ята\", \"Шоста\"\
+    ]\n  a: 1\n- q: \"The clock shows 1:00. You say:\"\n  o: [\"Перша\", \"Друга\"\
+    , \"Десята\"]\n  a: 0\n- q: \"It is exactly 3:00 right now.\"\n  o: [\"П'ята\"\
+    , \"Сьома\", \"Третя\"]\n  a: 2\n- q: \"The time on the wall is 10:00.\"\n  o:\
+    \ [\"Дев'ята\", \"Десята\", \"Одинадцята\"]\n  a: 1\n- q: \"How do you correctly\
+    \ say 1:30?\"\n  o: [\"Пів на першу\", \"Чверть на другу\", \"Пів на другу\"]\n\
+    \  a: 2\n- q: \"How do you say 8:30 in Ukrainian?\"\n  o: [\"Пів на восьму\",\
+    \ \"Пів на дев'яту\", \"Сьома\"]\n  a: 1\n- q: \"The clock shows 2:15. You recognize\
+    \ this spoken as:\"\n  o: [\"За чверть третя\", \"Чверть на третю\", \"Пів на\
+    \ другу\"]\n  a: 1\n- q: \"The clock shows 2:45. You recognize this phrase as:\"\
+    \n  o: [\"Чверть на третю\", \"Пів на третю\", \"За чверть третя\"]\n  a: 2\n\
+    :::"
+- find: ":::fill-in\ntitle: \"О котрій?\"\n---\n- sentence: \"Я снідаю ___ восьмій.\"\
+    \n  answer: \"о\"\n- sentence: \"Ми працюємо о ___.\"\n  answer: \"дев'ятій\"\n\
+    - sentence: \"Зустрінемося о ___.\"\n  answer: \"першій\"\n- sentence: \"Я вечеряю\
+    \ о ___.\"\n  answer: \"сьомій\"\n- sentence: \"Концерт починається о ___.\"\n\
+    \  answer: \"сьомій\"\n- sentence: \"Фільм о ___.\"\n  answer: \"восьмій\"\n-\
+    \ sentence: \"Я читаю о ___.\"\n  answer: \"десятій\"\n- sentence: \"Урок ___\
+    \ одинадцятій.\"\n  answer: \"об\"\n:::"
+  replace: ":::fill-in\ntitle: \"О котрій?\"\n---\n- sentence: \"Я снідаю ___ восьмій.\"\
+    \n  answer: \"о\"\n- sentence: \"Котра година? Дев'ята. Ми починаємо працювати\
+    \ о ___.\"\n  answer: \"дев'ятій\"\n- sentence: \"Зустрінемося о першій? — Так,\
+    \ о ___!\"\n  answer: \"першій\"\n- sentence: \"Котра година? Сьома. Час вечеряти!\
+    \ Я вечеряю о ___.\"\n  answer: \"сьомій\"\n- sentence: \"Концерт о сьомій ___.\
+    \ Ще світло надворі.\"\n  answer: \"вечора\"\n- sentence: \"Я прокидаюся о восьмій\
+    \ ___.\"\n  answer: \"ранку\"\n- sentence: \"Я читаю книжку о десятій ___. Уже\
+    \ темно.\"\n  answer: \"вечора\"\n- sentence: \"Урок ___ одинадцятій.\"\n  answer:\
+    \ \"об\"\n:::"
+- find: ":::quiz\ntitle: \"Ранку, дня, or вечора?\"\n---\n- q: \"You are having breakfast\
+    \ at 8:00. This is о восьмій ___.\"\n  o: [\"ранку\", \"вечора\", \"дня\"]\n \
+    \ a: 0\n- q: \"You are finishing work and going home at 18:00. This is о шостій\
+    \ ___.\"\n  o: [\"вечора\", \"ранку\", \"ночі\"]\n  a: 0\n- q: \"You are having\
+    \ a late lunch at 15:00. This is о третій ___.\"\n  o: [\"дня\", \"ранку\", \"\
+    ночі\"]\n  a: 0\n- q: \"You are fast asleep in bed at 3:00 AM. This is о третій\
+    \ ___.\"\n  o: [\"ночі\", \"дня\", \"вечора\"]\n  a: 0\n- q: \"You are drinking\
+    \ coffee to wake up at 7:00. This is о сьомій ___.\"\n  o: [\"ранку\", \"вечора\"\
+    , \"ночі\"]\n  a: 0\n- q: \"You are watching a movie before bed at 21:00. This\
+    \ is о дев'ятій ___.\"\n  o: [\"вечора\", \"дня\", \"ранку\"]\n  a: 0\n:::"
+  replace: ":::quiz\ntitle: \"Ранку, дня, or вечора?\"\n---\n- q: \"You are having\
+    \ breakfast at 8:00. This is о восьмій ___.\"\n  o: [\"вечора\", \"ранку\", \"\
+    дня\"]\n  a: 1\n- q: \"You are finishing work and going home at 18:00. This is\
+    \ о шостій ___.\"\n  o: [\"ранку\", \"вечора\", \"ночі\"]\n  a: 1\n- q: \"You\
+    \ are having a late lunch at 15:00. This is о третій ___.\"\n  o: [\"ранку\",\
+    \ \"ночі\", \"дня\"]\n  a: 2\n- q: \"You are fast asleep in bed at 3:00 AM. This\
+    \ is о третій ___.\"\n  o: [\"дня\", \"вечора\", \"ночі\"]\n  a: 2\n- q: \"You\
+    \ are drinking coffee to wake up at 7:00. This is о сьомій ___.\"\n  o: [\"ранку\"\
+    , \"вечора\", \"ночі\"]\n  a: 0\n- q: \"You are watching a movie before bed at\
+    \ 21:00. This is о дев'ятій ___.\"\n  o: [\"дня\", \"вечора\", \"ранку\"]\n  a:\
+    \ 1\n:::"
+- find: Additionally, there are two special single words you can use for exact midday
+    and exact midnight.
+  replace: Ukrainian textbooks (such as *Літвінова Grade 6, pp.245-246*) present the
+    full system of time prepositions and expressions, including two special standalone
+    words for exact midday and exact midnight.

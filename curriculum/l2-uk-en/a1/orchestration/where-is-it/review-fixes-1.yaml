@@ -1,0 +1,48 @@
+- find: You have already seen the nominative (хто? що?) and the accusative. Now meet
+    the locative
+  replace: You have already seen the nominative case (хто? що? — who? what?), which
+    names things. Now meet the locative
+- find: 'The most common ending is **-і**. Some masculine nouns take **-у** (**банк**
+    → **у банку**, **парк** → **в парку**). Indeclinable nouns like **кафе** do not
+    change.
+
+
+    Now ask yourself'
+  replace: 'The most common ending is **-і**. Some masculine nouns take **-у** (**банк**
+    → **у банку**, **парк** → **в парку**). Indeclinable nouns like **кафе** do not
+    change.
+
+
+    ### Quick Self-Test
+
+
+    Before you move on, try forming the locative for these places from memory. Cover
+    the table above and say each one aloud:
+
+
+    - Where is school? → **в школі**
+
+    - Where is the post office? → **на пошті**
+
+    - Where is the park? → **в парку**
+
+    - Where is the hospital? → **в лікарні**
+
+    - Where is the café? → **в кафе**
+
+
+    If you got all five, you are ready. If not, review the table once more — these
+    are the places you will use every day.
+
+
+    Now ask yourself'
+- find: "  o: [\"в школі\", \"в школа\", \"на школі\"]\n  a: 0"
+  replace: "  o: [\"на школі\", \"в школі\", \"в школа\"]\n  a: 1"
+- find: "- q: \"Де діти? — Вони ___ (парк).\"\n  o: [\"в парку\", \"в паркі\", \"\
+    на парку\"]\n  a: 0"
+  replace: "- q: \"Де діти? — Вони ___ (парк).\"\n  o: [\"в паркі\", \"на парку\"\
+    , \"в парку\"]\n  a: 2"
+- find: "- q: \"Книга ___ (магазин).\"\n  o: [\"в магазині\", \"в магазину\", \"на\
+    \ магазині\"]\n  a: 0"
+  replace: "- q: \"Книга ___ (магазин).\"\n  o: [\"на магазині\", \"в магазині\",\
+    \ \"в магазину\"]\n  a: 1"

@@ -1,0 +1,47 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "at-the-cafe",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T03:49:41.669508+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T03:49:52.080398+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T03:51:33.611709+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T03:51:33.615980+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T03:51:33.616582+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T03:52:31.140227+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T03:52:31.552054+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T03:52:31.606492+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T03:54:50.686593+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T03:54:52.491611+00:00"
+    }
+  }
+}

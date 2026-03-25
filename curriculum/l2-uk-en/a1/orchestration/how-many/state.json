@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "how-many",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-24T23:54:56.124059+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-24T23:55:08.002655+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-24T23:58:49.680470+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-24T23:58:49.685514+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-24T23:58:49.686089+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-24T23:59:34.776645+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-24T23:59:35.408952+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-24T23:59:35.451006+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T00:09:21.181024+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T00:09:25.046435+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T00:09:25.098849+00:00"
+    }
+  }
+}

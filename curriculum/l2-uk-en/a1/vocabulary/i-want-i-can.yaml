@@ -1,0 +1,61 @@
+vocabulary:
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: to be able to / can
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сити
+  translation: to must / have to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́сти
+  translation: to eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шко́да́
+  translation: pity / unfortunately
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: допомогти́
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: борщ
+  translation: borscht
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: порекомендува́ти
+  translation: to recommend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: тре́ба
+  translation: need to
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true

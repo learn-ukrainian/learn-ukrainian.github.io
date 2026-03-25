@@ -1,0 +1,289 @@
+vocabulary:
+- word: Куди́
+  translation: Where to?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Зві́дки
+  translation: Where from?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: у / в
+  translation: in, into, at
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: і / й
+  translation: and
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: від
+  translation: from
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: пря́мо
+  translation: straight
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: напра́во
+  translation: to the right
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: налі́во
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: дале́ко
+  translation: far
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: close
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: суперма́ркет
+  translation: supermarket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магази́н
+  translation: store
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вокза́л
+  translation: station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пло́ща
+  translation: square
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: робо́та
+  translation: work
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ста́нція
+  translation: station
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тури́ст
+  translation: tourist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лю́ди
+  translation: people
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: вели́ка
+  translation: large
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йти / іти́
+  translation: to go
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ї́хати
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пита́ти
+  translation: to ask
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виходити
+  translation: to exit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́ти
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: діста́тися
+  translation: to get to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хоче знати
+  translation: wants to know
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дуже радий
+  translation: very happy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я в школі.
+  translation: I am at school.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Брат на роботі.
+  translation: Brother is at work.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Студент у парку.
+  translation: The student is in the park.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут є аптека.
+  translation: There is a pharmacy here.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Музей у центрі.
+  translation: The museum is in the center.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Супермаркет на вулиці.
+  translation: The supermarket is on the street.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я йду в магазин.
+  translation: I am going to the store.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вона їде на вокзал.
+  translation: She is traveling to the station.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ми йдемо на площу.
+  translation: We are going to the square.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ідіть прямо, потім направо.
+  translation: Go straight, then to the right.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ми їдемо на метро.
+  translation: We are traveling by metro.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Аптека наліво.
+  translation: The pharmacy is to the left.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Він зі США.
+  translation: He is from the USA.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вони з Канади.
+  translation: They are from Canada.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де тут музей?
+  translation: Where is the museum here?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вибачте, я з Канади.
+  translation: Excuse me, I am from Canada.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А як дістатися від метро?
+  translation: And how to get there from the metro?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,115 @@
+vocabulary:
+- word: споча́тку
+  translation: first / at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: поверну́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лягти́
+  translation: to lie down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: звича́йний
+  translation: ordinary
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: проду́кти
+  translation: groceries
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: серіа́л
+  translation: TV series
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: учо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then / after that
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: проки́нутися
+  translation: to wake up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: посні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пройти́
+  translation: to pass / to go by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вночі́
+  translation: at night
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: лягти спати
+  translation: to go to bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як файно!
+  translation: How nice!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

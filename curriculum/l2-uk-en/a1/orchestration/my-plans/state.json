@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "my-plans",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T05:12:18.872867+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T05:12:29.608335+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T05:15:46.007416+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T05:15:46.012151+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T05:15:46.012863+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T05:16:29.427817+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T05:16:29.796047+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T05:16:29.849614+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T05:20:24.509775+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T05:20:25.708868+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T05:20:25.757945+00:00"
+    }
+  }
+}

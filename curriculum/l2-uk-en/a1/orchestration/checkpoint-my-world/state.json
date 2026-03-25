@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-my-world",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T00:26:33.777949+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T00:26:44.781360+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T00:28:47.789887+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T00:28:47.794554+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T00:28:47.795147+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T00:29:14.773489+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T00:29:15.045566+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T00:29:15.100622+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T00:31:25.772785+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T00:31:27.754573+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T00:31:27.806267+00:00"
+    }
+  }
+}

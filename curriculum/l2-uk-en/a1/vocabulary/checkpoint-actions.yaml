@@ -1,0 +1,223 @@
+vocabulary:
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́тися
+  translation: to dress oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверта́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: can, to be able to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сити
+  translation: must
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: піти
+  translation: to go
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ї́сти
+  translation: to eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to eat breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́ти
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: уве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тоді́
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: о шостій
+  translation: at six
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бага́то
+  translation: a lot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ніхто́
+  translation: nobody
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: телеві́зор
+  translation: television
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по-украї́нськи
+  translation: in Ukrainian
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: додо́му
+  translation: home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зі мною
+  translation: with me
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

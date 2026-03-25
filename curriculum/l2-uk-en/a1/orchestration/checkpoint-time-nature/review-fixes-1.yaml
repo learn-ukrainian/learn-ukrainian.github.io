@@ -1,0 +1,6 @@
+- find: '- **Вона рідко гуляє.** (She rarely walks.)'
+  replace: '- **Вона рідко гуляє.** (She rarely walks.)
+
+    - **Я ніколи не запізнююся.** (I never am late.)'
+- find: "- left: \"Що ти робиш завтра?\"\n  right: \"Я працюю.\""
+  replace: "- left: \"Що ти будеш робити завтра?\"\n  right: \"Буду працювати.\""

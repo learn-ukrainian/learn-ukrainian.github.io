@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "people-around-me",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T04:01:05.455321+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T04:01:16.149640+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T04:02:42.227941+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T04:02:42.232101+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T04:02:42.232685+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T04:03:17.196542+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T04:03:17.549172+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T04:03:17.596982+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T04:06:52.745893+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T04:06:54.424316+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T04:06:54.470170+00:00"
+    }
+  }
+}

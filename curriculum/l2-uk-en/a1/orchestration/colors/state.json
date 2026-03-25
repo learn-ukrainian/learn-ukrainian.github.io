@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "colors",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-24T23:42:10.958543+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-24T23:42:21.786683+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-24T23:45:32.817737+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-24T23:45:32.822772+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-24T23:45:32.823350+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-24T23:46:32.119086+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-24T23:46:32.769114+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-24T23:46:32.818646+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-24T23:54:52.174949+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-24T23:54:54.771786+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-24T23:54:54.819572+00:00"
+    }
+  }
+}

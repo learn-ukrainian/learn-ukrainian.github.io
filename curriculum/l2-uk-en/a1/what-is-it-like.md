@@ -1,0 +1,273 @@
+<!-- TAB:Урок -->
+
+## Діало́ги (Dialogues)
+
+When you walk into a room, you do not just see isolated objects. You notice their characteristics. You see if the space is bright or dark, if the furniture is old or new, if the environment is clean or dirty. Describing the world around you is one of the most fundamental skills in any language. 
+
+In English, adjectives are static. The word "new" stays exactly the same whether it describes a new car, a new phone, or a new window. In Ukrainian, adjectives are dynamic. They are shape-shifters. They adapt their form to perfectly match the grammatical gender of the noun they describe. This creates a language that sounds incredibly melodic, where words literally rhyme and harmonize with each other.
+
+Let's see this in action. Read this conversation between two friends. Olena is describing her apartment to Marko. Notice how the describing words change depending on the object being discussed.
+
+<div class="dialogue">
+
+
+**Марко:** Яка твоя́ кімна́та? *(What is your room like?)*
+
+
+**Олена:** Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*
+
+
+**Марко:** А стіл? *(And the table?)*
+
+
+**Олена:** Стіл нови́й. А лі́жко — старе́. *(The table is new. And the bed is old.)*
+
+
+</div>
+
+Did you catch the shifts? When Olena talks about her room (**кімната**, room), which is a feminine noun, she says it is **велика** (big) and **світла** (bright). But when Marko asks about the table (**стіл**, table), which is masculine, Olena says it is **новий** (new). Finally, when she mentions the bed (**ліжко**, bed), which is neuter, the adjective becomes **старе** (old). The core meaning remains the same, but the ending morphs to mirror the noun.
+
+This adaptation happens everywhere, not just at home. Imagine Anna and Petro walking down a street in Kyiv, window shopping. 
+
+<div class="dialogue">
+
+
+**Анна:** Диви́сь, яка га́рна су́мка! *(Look, what a beautiful bag!)*
+
+
+**Петро:** Так, але́ вона́ доро́га. *(Yes, but it is expensive.)*
+
+
+**Анна:** А цей телефо́н? *(And this phone?)*
+
+
+**Петро:** Він вели́кий і деше́вий. *(It is big and cheap.)*
+
+
+</div>
+
+Anna points out a bag (**сумка**, bag). Because **сумка** is feminine, she calls it **гарна** (beautiful), and Petro notes that it is **дорога** (expensive). Then Anna points to a phone (**телефон**, phone). Because **телефон** is masculine, Petro describes it as **великий** (big) and **дешевий** (cheap).
+
+The adjectives are acting like a mirror, reflecting the grammatical identity of the core object. As the Ukrainian school textbook *Вашуленко Grade 3* demonstrates in its exercise «Моя кімната», adjective agreement must emerge naturally from real descriptions. You do not learn adjectives in a vacuum; you learn them attached to the things they describe.
+
+## Яки́й? Яка? Яке́? (What kind?)
+
+If you want to ask "What kind?" or "Which?", you cannot use a single, frozen word. The question word itself changes based on the gender of the object you are asking about. This follows the exact same logic as the possessive words **мій**, **моя**, **моє** (my) that you mastered previously.
+
+*   To ask about a masculine noun, use the word **який** (what kind).
+*   To ask about a feminine noun, use the word **яка** (what kind).
+*   To ask about a neuter noun, use the word **яке** (what kind).
+
+Look at how these questions pair with their answers:
+*   **Який стіл?** (What kind of table?) → **Великий стіл.** (A big table.)
+*   **Яка кни́га?** (What kind of book?) → **Нова книга.** (A new book.)
+*   **Яке вікно́?** (What kind of window?) → **Чисте вікно.** (A clean window.)
+
+As the Ukrainian grammar textbook *Пономарова Grade 3* explicitly states: «Прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний.» This translates to: "An adjective has the same gender as the noun it is connected to." The noun is the boss. It dictates the form of everything that describes it.
+
+:::quiz
+title: "Який, яка чи яке?"
+---
+- q: "___ це кімната?"
+  o: ["Яка", "Який", "Яке"]
+  a: 0
+- q: "___ це телефон?"
+  o: ["Який", "Яка", "Яке"]
+  a: 0
+- q: "___ це ліжко?"
+  o: ["Яке", "Який", "Яка"]
+  a: 0
+- q: "___ це сумка?"
+  o: ["Яка", "Яке", "Який"]
+  a: 0
+- q: "___ це комп'ю́тер?"
+  o: ["Який", "Яка", "Яке"]
+  a: 0
+- q: "___ це вікно?"
+  o: ["Яке", "Яка", "Який"]
+  a: 0
+:::
+
+When you learn a new adjective from a dictionary or a vocabulary list, it will always be presented in its default, masculine form. It is your job to change the ending if the noun requires it. Let's break down the standard endings for each gender in the nominative case (the basic dictionary form).
+
+**Masculine adjectives usually end in -ий.**
+If you see a describing word ending in **-ий**, you can be highly confident it is a masculine adjective.
+*   **великий** (big)
+*   **новий** (new)
+*   **чистий** (clean)
+
+**Feminine adjectives usually end in -а.**
+Notice how this ending perfectly mirrors the common **-а** ending of feminine nouns (like **мама**, mom, or **кімната**, room). This creates a satisfying rhyming effect.
+*   **велика** (big)
+*   **нова** (new)
+*   **чиста** (clean)
+
+**Neuter adjectives usually end in -е.**
+Again, this reflects the common **-е** or **-о** endings of neuter nouns (like **море**, sea, or **вікно**, window).
+*   **велике** (big)
+*   **нове** (new)
+*   **чисте** (clean)
+
+This is the standard pattern: **-ий**, **-а**, **-е**. 
+
+:::note
+You might be wondering: do all adjectives follow this exact pattern? Most do. These are called hard-stem adjectives. There is a smaller group called soft-stem adjectives that use **-ій**, **-я**, **-є** (like **синій**, blue). You will dive into those when we study colors in the next module. For now, focus entirely on mastering the dominant hard-stem pattern.
+:::
+
+This matching game is the absolute core of Ukrainian grammar. This pattern of agreement will reappear in every single case you learn in the future. If you train your brain to match genders in the basic dictionary form right now, you will build an unshakable foundation.
+
+:::fill-in
+title: "Add the correct adjective ending"
+---
+- sentence: "Це нов___ книга."
+  answer: "а"
+- sentence: "Тут є велик___ стіл."
+  answer: "ий"
+- sentence: "Це чист___ вікно."
+  answer: "е"
+- sentence: "Моя кімната гарн___."
+  answer: "а"
+- sentence: "Цей телефон дорог___."
+  answer: "ий"
+- sentence: "Це стар___ ліжко."
+  answer: "е"
+- sentence: "Там є маленьк___ кімната."
+  answer: "а"
+- sentence: "Це дешев___ телефон."
+  answer: "ий"
+- sentence: "Це світл___ вікно."
+  answer: "е"
+- sentence: "Тут є поган___ стіл."
+  answer: "ий"
+:::
+
+## Прикме́тники (Common Adjectives)
+
+The most effective strategy for acquiring new describing words is to learn them in pairs of opposites. The human brain stores contrast naturally. If you learn the word for "big," your mind will immediately search for the word for "small." This gives you a mental anchor and doubles your vocabulary acquisition speed.
+
+Here are the most common adjective pairs you will use every day to describe your world. They are listed in their default masculine form.
+
+*   **великий** (big) ↔ **маленький** (small)
+*   **новий** (new) ↔ **старий** (old)
+*   **гарний** (nice/beautiful) ↔ **поганий** (bad)
+*   **чистий** (clean) ↔ **брудний** (dirty)
+*   **дорогий** (expensive) ↔ **дешевий** (cheap)
+*   **світлий** (light/bright) ↔ **темний** (dark)
+
+Take a moment to read these pairs aloud. Feel the rhythm of the language. Notice that **маленький** has a built-in softening sound that makes the word itself feel small and cute. Notice the versatility of **гарний** — it can mean beautiful, handsome, nice, or just generally "good" in terms of quality.
+
+:::match-up
+title: "Match the opposites"
+---
+- left: "великий"
+  right: "маленький"
+- left: "новий"
+  right: "старий"
+- left: "гарний"
+  right: "поганий"
+- left: "чистий"
+  right: "брудний"
+- left: "дорогий"
+  right: "дешевий"
+- left: "світлий"
+  right: "темний"
+:::
+
+Now let's start building real descriptions by combining these adjectives with the everyday objects you already know. 
+
+*   **У мене́ є великий стіл.** (I have a big table.)
+*   **Моя кімната мале́нька.** (My room is small.)
+*   **Вікно велике і чисте.** (The window is big and clean.)
+
+When you describe things, you rarely just state one fact. You often want to connect ideas or contrast them. To do this, Ukrainian relies heavily on three small connector words: **і** (and), **а** (and/whereas), and **але** (but). Using these words correctly makes your Ukrainian sound instantly more natural, moving you from fragmented statements to fluid thoughts.
+
+**1. The Harmonious і (and)**
+Use **і** when you are adding identical or complementary qualities together. It shows a parallel.
+*   **Цей телефон новий і дорогий.** (This phone is new and expensive.)
+*   **Моя кімната велика і світла.** (My room is big and bright.)
+
+**2. The Juxtaposing а (and / whereas)**
+Use **а** to compare two different things or ideas. It acts like a pivot point or a gentle contrast in the sentence. It does not mean a hard "but"; it simply highlights a difference.
+*   **Стілець старий, а ліжко — нове.** (The chair is old, whereas the bed is new.)
+*   **Сумка дорога, а словни́к — дешевий.** (The bag is expensive, whereas the **словник**, dictionary, is cheap.)
+
+**3. The Contradicting але (but)**
+Use **але** for a direct contradiction or when the second part of the sentence goes against the expectation set by the first part.
+*   **Моя кімната маленька, але гарна.** (My room is small, but nice.)
+*   **Телефон дешевий, але гарний.** (The phone is cheap, but good.)
+
+These connectors allow you to paint a much richer picture of your environment.
+
+:::fill-in
+title: "Describe the room (change the adjective to match the noun)"
+---
+- sentence: "Моя кімната ду́же ___ (світлий)."
+  answer: "світла"
+- sentence: "Тут є ___ (великий) стіл."
+  answer: "великий"
+- sentence: "Моє вікно за́вжди́ ___ (чистий)."
+  answer: "чисте"
+- sentence: "Це дуже ___ (старий) ліжко."
+  answer: "старе"
+- sentence: "Твоя сумка дуже ___ (гарний)."
+  answer: "гарна"
+- sentence: "Цей комп'ютер ___ (новий)."
+  answer: "новий"
+:::
+
+## Підсумок — Summary
+
+You now possess the tools to look at the space around you and describe it accurately in Ukrainian. You have moved beyond simply naming objects to giving them character and detail.
+
+The core mechanism you have learned is gender agreement. Remember that the noun is always the anchor of the sentence. Before you apply an adjective, you must identify the gender of the noun. 
+
+Ask yourself: What ending does a masculine adjective have? It takes **-ий**. What ending does a feminine adjective have? It takes **-а**. And what ending does a neuter adjective have? It takes **-е**. By learning vocabulary in contrasting pairs like **великий** and **маленький**, you are building a highly efficient mental database of descriptive words. 
+
+Your task now is to apply this to your own life. Look around the room you are currently in. What do you see? Can you describe your table, your window, or your phone? Challenge yourself to form three complete Ukrainian sentences describing your room right now, using the adjectives you just learned and the connectors **і**, **а**, or **але**. The world around you is no longer just a collection of objects; it is an opportunity to practice your Ukrainian.
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **пога́ний** | bad | прикм. |  |
+| **брудни́й** | dirty | прикм. |  |
+| **сві́тлий** | light, bright | прикм. |  |
+| **те́мний** | dark | прикм. |  |
+| **але́** | but | спол. |  |
+| **яки́й, яка, яке́** | what kind? (m/f/n) |  |  |
+| **вели́кий** | big | прикм. |  |
+| **нови́й** | new | прикм. |  |
+| **стари́й** | old | прикм. |  |
+| **га́рний** | nice, beautiful, good | прикм. |  |
+| **чи́стий** | clean | прикм. |  |
+| **дороги́й** | expensive | прикм. |  |
+| **деше́вий** | cheap | прикм. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **Яка твоя кімната?** | What is your room like? |
+| **Дивись, яка гарна сумка!** | Look, what a beautiful bag! |
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- Пономарова Grade 3, p.98
+  _'Прикметник має такий рід, як іменник, з яким він зв'язаний.'_
+- Вашуленко Grade 3, p.128-131
+  _Adjective agreement exercises, 'Моя́ кімната' description task._

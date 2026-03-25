@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "what-happened",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T04:58:59.269446+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T04:59:09.999571+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:23.458573+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:23.462149+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:23.462737+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:59.056949+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:59.487847+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T05:00:59.521101+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T05:04:17.362455+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T05:04:18.695476+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T05:04:18.747986+00:00"
+    }
+  }
+}

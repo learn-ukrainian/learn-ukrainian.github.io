@@ -1,0 +1,21 @@
+- find: Notice how the verb **робити** (to do) changes. When asking "you", it is **робиш**.
+    When asking about "Olena" (she), it becomes **робить**.
+  replace: 'Notice how the verb **робити** (to do) changes. When asking "you", it
+    is **робиш**. When asking about "Olena" (she), it becomes **робить**. Important:
+    **робити** belongs to a different verb group (Group II), which you will learn
+    in Module 17. For now, just memorize **робиш** and **робить** as fixed phrases
+    — do not try to apply the Group I pattern to this verb.'
+- find: According to standard Ukrainian pedagogy, such as the *Варзацька Grade 4*
+    textbook (page 129), verbs in the present tense (**теперішній час**) change their
+    endings according to the person (I, you, he/she) and number (singular or plural).
+  replace: According to standard Ukrainian pedagogy, such as the *Варзацька Grade
+    4* textbook (page 129) and *Захарійчук Grade 4* (page 110), verbs in the present
+    tense (**теперішній час**) change their endings according to the person (I, you,
+    he/she) and number (singular or plural).
+- find: You have taken an important step forward in your ability to communicate in
+    Ukrainian. By mastering the First Conjugation (**Перша дієвідміна**), you are
+    no longer limited to just pointing at things or describing them. You can now express
+    action, routine, and life.
+  replace: With the First Conjugation (**Перша дієвідміна**) in your toolkit, you
+    are no longer limited to pointing at things or describing them. You can now express
+    action, routine, and daily life — the core of real conversation.

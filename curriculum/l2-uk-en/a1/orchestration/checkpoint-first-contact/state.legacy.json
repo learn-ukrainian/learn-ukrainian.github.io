@@ -1,0 +1,55 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-first-contact",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-23T22:25:16.026922+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-23T22:25:27.207829+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-23T11:41:37.152084+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:27.112806+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:27.117252+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:27.117770+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:58.056025+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:49.205412+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-23T22:31:42.991593+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-23T22:31:42.993705+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-23T22:31:43.041077+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-23T22:30:48.908768+00:00"
+    }
+  }
+}

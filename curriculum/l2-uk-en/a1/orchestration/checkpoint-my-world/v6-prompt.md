@@ -1,0 +1,766 @@
+# V6 Writing Prompt — Module Content Generation
+
+You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
+
+## Your task
+
+Write the full prose content for module **14: Checkpoint: My World** (A1, A1.2 [My World]).
+
+**Target: 1200–1800 words** of prose (Ukrainian examples count toward word total, headings and exercise placeholders do not).
+
+---
+
+## Step 1: Pacing Plan (output this FIRST)
+
+Before writing any content, output a `<pacing_plan>` block. Evaluate each section from the plan and commit to a word budget. This prevents frontloading early sections and rushing later ones.
+
+```
+<pacing_plan>
+Section 1 "Title": ~XXX words — [1-sentence content focus]
+Section 2 "Title": ~XXX words — [1-sentence content focus]
+...
+Summary: ~150 words
+Total: 1200+ words
+</pacing_plan>
+```
+
+Then begin writing the module content. Follow your own pacing plan — each section must hit its word budget (±10%).
+
+---
+
+## 8 Hard Rules
+
+1. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
+2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
+6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
+7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+8. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+
+**Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
+
+## Exercises — Write Them Directly
+
+After each key teaching point, write an exercise directly in DSL format.
+
+**CRITICAL: Each exercise MUST match a specific `activity_hints` entry from the Plan.**
+- Use the EXACT `type` specified (quiz, fill-in, match-up, group-sort, true-false)
+- Follow the `focus` description EXACTLY — if the plan says "Answer: У тебе є...? Так / Ні", your quiz must test exactly that pattern
+- Match the `items` count specified
+- Do NOT invent different exercises — the plan's activity_hints are the specification
+
+Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
+
+### DSL Format
+
+Use these exact formats. Each block starts with `:::type` and ends with `:::`.
+
+**Quiz** (multiple choice):
+```
+:::quiz
+title: "Звук чи літера?"
+---
+- q: "Що ми чуємо і вимовляємо?"
+  o: ["звуки", "літери", "слова"]
+  a: 0
+- q: "Що ми бачимо і пишемо?"
+  o: ["літери", "звуки", "речення"]
+  a: 0
+:::
+```
+
+**Fill-in** (complete the sentence):
+```
+:::fill-in
+title: "Complete the greeting"
+---
+- sentence: "Привіт! Як ___?"
+  answer: "справи"
+- sentence: "Дякую, ___."
+  answer: "добре"
+:::
+```
+
+**Match-up** (connect pairs):
+```
+:::match-up
+title: "Match false friend letters to their real sounds"
+---
+- left: "В"
+  right: "sounds like [в], not [b]"
+- left: "Н"
+  right: "sounds like [н], not [h]"
+:::
+```
+
+**Group-sort** (classify into categories):
+```
+:::group-sort
+title: "Classify letters"
+---
+groups:
+  - name: "Голосні"
+    items: ["А", "О", "У", "І"]
+  - name: "Приголосні"
+    items: ["М", "К", "Б", "Ш"]
+:::
+```
+
+**True-false**:
+```
+:::true-false
+title: "True or false?"
+---
+- statement: "В українській мові 33 літери."
+  answer: true
+- statement: "Голосних звуків більше, ніж приголосних."
+  answer: false
+:::
+```
+
+Spread exercises evenly throughout the module. Never cluster them.
+
+### Approved Exercise Patterns
+
+Use these Ukrainian textbook-inspired patterns (Заболотний, Авраменко) instead of generic "quiz" types:
+
+- **Знайди помилку (Find the error):** Give 3 correct sentences and 1 with an error. Learner identifies the mistake. Tests: grammar rules, calques, Russianisms.
+- **Обери правильне слово (Choose the right word):** Fill in the blank from 2-3 options (synonyms, paronyms, or confusable words). Tests: vocabulary nuance, register.
+- **Утвори пару (Match-up):** Match words to antonyms, translations, or grammatical pairs (e.g., masculine → feminine). Tests: vocabulary, morphology.
+- **Розподіли (Group-sort):** Sort items into 2-3 categories (e.g., голосні vs приголосні, hard vs soft consonants). Tests: foundational phonetics, grammar classification.
+- **Склади речення (Build a sentence):** Give scrambled words, learner arranges into correct order. Tests: word order, sentence structure.
+- **Знайди місце (Find the right place):** Give 4 sentences with blanks and 4 words — each word fits exactly one sentence. Tests: contextual meaning, collocations.
+
+---
+
+## Plan
+
+<plan_content>
+module: a1-014
+level: A1
+sequence: 14
+slug: checkpoint-my-world
+version: '1.1'
+title: 'Checkpoint: My World'
+subtitle: Can you describe things, count, and point?
+focus: review
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Demonstrate ability to identify noun gender and use possessives correctly
+- Describe objects using adjectives and colors with correct agreement
+- Use numbers in practical contexts (prices, age)
+- Point at and identify objects using demonstratives
+- Use basic plurals for familiar nouns
+content_outline:
+- section: Що ми знаємо? (What Do We Know?)
+  words: 200
+  points:
+  - 'Self-check covering M08-M13: Can you determine noun gender? (M08) Can you describe
+    things with adjectives? (M09) Can you name colors, including both blues? (M10)
+    Can you count and say prices? (M11) Can you say ''this'' and ''that''? (M12) Can
+    you make things plural? (M13)'
+- section: Читання (Reading Practice)
+  words: 250
+  points:
+  - 'A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M08-M13. No
+    new words. The learner reads aloud. Content: describing a room — objects, colors,
+    prices, pointing at things. Example: Це моя кімната. Мій стіл великий і новий.
+    Ця лампа біла, а та — жовта. У мене є три книги. Ці книги нові. Стіни білі.'
+- section: Граматика (Grammar Summary)
+  words: 200
+  points:
+  - 'Key patterns from A1.2: 1. Gender: він/вона/воно test + endings (consonant/−а,−я/−о,−е)
+    2. Agreement: великий стіл, велика книга, велике вікно 3. Hard vs soft stem: червоний
+    (-ий) vs синій (-ій) 4. Demonstratives: цей/ця/це, той/та/те 5. Plurals: столи,
+    книги, вікна; adjective always -і 6. Numbers: as vocabulary (no morphology)'
+- section: Діалог (Connected Dialogue)
+  words: 300
+  points:
+  - 'A complete conversation combining all A1.2 skills: Shopping scenario — choosing
+    items, describing what you want, asking prices. Uses gender agreement, colors,
+    demonstratives, numbers, and plurals. — Добрий день! Мені потрібна сумка. — Яка?
+    Ця червона чи та синя? — Та синя. Скільки вона коштує? — Двісті гривень. — Добре.
+    А ці зошити? — Ті великі — по двадцять гривень.'
+- section: Підсумок — Summary
+  words: 250
+  points:
+  - 'A1.2 achievement summary: You can now describe your world in Ukrainian. You know
+    20+ objects with their genders. You can describe them (big, new, red, blue). You
+    can count and talk about prices. You can point at things (this/that). You can
+    talk about groups (plurals). Next: A1.3 — Actions (verbs, what you do and like).'
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: 'Mixed gender/agreement review: choose correct form for noun+adjective pairs'
+  items: 10
+- type: fill-in
+  focus: Complete the shopping dialogue with correct demonstratives, adjectives, and
+    numbers
+  items: 8
+- type: group-sort
+  focus: 'Sort vocabulary from M08-M13 by category: objects, colors, numbers'
+  items: 12
+- type: quiz
+  focus: Singular or plural? Transform sentences from singular to plural
+  items: 8
+connects_to:
+- a1-015 (What I Like)
+prerequisites:
+- a1-013 (Many Things)
+grammar:
+- 'Review: gender agreement (m/f/n)'
+- 'Review: hard-stem vs soft-stem adjectives'
+- 'Review: demonstratives цей/ця/це, той/та/те'
+- 'Review: nominative plurals'
+- 'Review: numbers as vocabulary'
+register: розмовний
+references:
+- title: Synthesis of M08-M13 content
+  notes: No new material — review and integration of A1.2 phase.
+
+</plan_content>
+
+---
+
+## Knowledge Packet (textbook excerpts from RAG)
+
+Use these as source material. Cite specific examples and adapt pedagogy from Ukrainian textbooks. Write original prose — do not copy excerpts verbatim.
+
+<knowledge_packet>
+# Verified Knowledge Packet: Checkpoint: My World
+**Module:** checkpoint-my-world | **Phase:** A1.2 [My World]
+**Textbook grades searched:** 1, 2, 3
+
+---
+
+## Що ми знаємо? (What Do We Know?)
+
+> **Source:** unknown, Grade 1
+> **Score:** 0.50
+>
+> 73
+> 	 — Але ми все одно будемо дружи-
+> ти? Адже ми обидва їжаки.
+> 	 — Авжеж. Будемо (за Юрієм  Яр-
+> мишем).
+> 	 Прочитай заголовок казки. Що він тобі підка-
+> зав? Хто з ким познайомився? 
+> 	 Що любив слухати Їжак, який жив на гірці? 
+> Що любив слухати Морський Їжак? Чому 
+> вони любили різні звуки? 
+> Повторюємо разом
+> Абетка. Звуки та букви
+> 	 Звуки, які любили їжаки, є мовні чи немовні?
+> 	 Як називаємо підкреслені слова? 
+> протилежні за значенням
+> подібні за значенням
+> 	 Перепиши перше речення. Підкресли букви,
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.50
+>
+> 101
+> Зразок. Барвінок, клен, ніч. 
+> 2.	 Виконайте завдання на вибір.
+> 	 Напишіть два слова, що відповідають на питання хто? і два 
+> слова, що відповідають на питання що?
+> 	 Складіть і запишіть речення з двома іменниками, поєднайте 
+> їх службовими словами.
+> 361. 1.	 Відгадай загадку.
+> На зріст маленька 	 І у лісі в холодку
+> пташка сіренька. 	
+> все кує: «Ку-ку! Ку-ку!»
+> 2.	 Виконай завдання на вибір.
+> 	 Випиши прикметники до слова-відгадки.
+> 	 Добери і запиши дієслова до слова-відгадки.
+> 362. 1.	 Прочитай текст
+
+> **Source:** unknown, Grade 3
+> **Score:** 0.50
+>
+> 113
+> 317.	 Дослідиѳ речення.
+> Крок 1. Прочитай. Яку групу слів можна назвати речен- 
+> ням? Обґрунтуй свою відповідь. 
+> ЗВ’ЯЗОК СЛІВ У РЕЧЕННІ
+> Рудохвостий, білочки, жити, ліс.
+> Рудохвості білочки живуть у лісі.
+> Крок 2. Установи в реченні зв’язок між словами за допомогою 
+> питань:
+> Крок 3. Запиши парами слова, зв’язані між собою.  
+> Білочки (що роблять?) живуть; живуть (хто?) білочки; 
+> білочки (які?) рудохвості; живуть (де?) у лісі. 
+> Крок 4. Зроби висновок. Порівняй його з правилом.
+> Слова в реченні зв’яза
+
+> **Source:** unknown, Grade 1
+> **Score:** 0.33
+>
+> 50
+> 	
+> Що тобі відомо про героїнь казки «Дві білки»? 
+> 	
+> Розглянь малюнки. Дай відповідь на питан-
+> ня: що робить?
+> 	
+> Визнач, якому слову — назві намальованого 
+> предмета відповідає кожна схема.
+> [ =•|–•|–• ] 
+> [ –•|=•= ] 
+> [ =•–|– •–] 
+> 	 Назви слова, які відповідають схемам.
+> [ –•| – •| =•]
+> [ – –•| = •]
+> [ –    –•| –•| = •]
+> Що робить?
+> Pidruchnyk.com.ua
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.33
+>
+> 50
+> 179. 1.	 Гра «Відшукай слово». «Перестрибуючи» через одну 
+> літеру, прочитай слово.
+> 2.	 Знайди в тлумачному словнику значення слова диван.
+> 180. 1.	 Прочитай текст. Що нового ти дізнався (дізналася)?
+> Ми розмовляємо українською мовою. А мова скла-
+> дається зі слів. Слова можуть передати думки й почуття. 
+> Словом можна назвати предмет, ознаку, дію предмета. Кожне 
+> слово має своє значення. Значення 
+> слова — це той зміст, який вклали в 
+> нього люди. 
+> Що краще ми знаємо і розу-
+> міємо значення слова, то
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.33
+>
+> ЦІКАВИНКИ ЗВІДУСІЛЬ
+> Навчися швидко читати слова.
+> світлофор 
+> пофарбований 
+> використовували
+> залізничники 
+> звичайний 
+> відрізнялися
+> • Прочитай заголовок твору. Про що, на твою думку, ітиметься в 
+> тексті?
+> • Попрацюйте разом. Заповніть таблицю (на аркуші).
+> Прочитай.
+> Світлофор
+> Ми вже 
+> знаємо
+> Хочемо 
+> дізнатися
+> Де можна знайти 
+> інформацію
+> З ІСТОРІЇ СВІТЛОФОРА
+> Прародичами* світлофорів були звичайні прапорці. їх 
+> використовували залізничники, коли керували рухом поїздів. 
+> Таких прапорців було... Ану, здога
+
+## Читання (Reading Practice)
+
+> **Source:** unknown, Grade 1
+> **Score:** 0.50
+>
+> 3
+> Дорогий друже!
+> Ти хочеш учитися читати?
+> Ти прагнеш спілкуватися?
+> Ти любиш фантазувати?
+> Тоді ця книга саме для тебе! 
+> Вона допоможе тобі навчитися читати, 
+> висловлювати думки й почуття, спілкуватися.
+> Умовні позначення:
+>  
+>  — слухаю 
+>  
+> — досліджую мовлення
+>  
+>  — читаю 
+>  — обговорюю малюнок
+>  
+>  — спілкуюся 
+>  
+> — мислю критично
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.50
+>
+> Інна Большакова
+> Марина Пристінська
+> УКРАЇНСЬКА МОВА
+> ТА ЧИТАННЯ
+> ЧАСТИНА 1
+> 2 
+> КЛАС
+> ї
+> о
+> н
+> А
+> М
+
+> **Source:** unknown, Grade 3
+> **Score:** 0.50
+>
+> Здобуваємо інформацію 
+> з різних джерел.
+> Роз’єднай слова і прочитай.
+> Читаємо правильно.
+> Досліджуємо текст.
+> Міркуємо і відповідаємо.
+> Працюємо в групі. 
+> Звертаємо увагу.
+> Граємо сценку, виставу.
+> Фантазуємо і створюємо.
+> Дізнаємося значення слів.
+> Працюємо в парі.
+> УДК 811.161.2*кл3(075.2.)
+>  
+> С13
+> Рекомендовано Міністерством освіти і науки України
+> (наказ Міністерства освіти і науки України від 21.02.2020 № 271)
+> ISBN 978-966-991-019-6 (Ч. 2)
+> ISBN 978-966-991-024-0
+> © О. Я. Савченко, 2020
+> © УОВЦ «Оріон», 20
+
+> **Source:** unknown, Grade 1
+> **Score:** 0.33
+>
+> 52
+> Ц ц
+> Бачу  Ц, ц (це). Чую  [ц], [ц′].
+> а
+> о
+> у
+> и
+> і
+> Ц
+> ца
+> цо
+> цу
+> ци
+> ці
+> а
+> о
+> у
+> и
+> і
+> ац
+> оц
+> уц
+> иц
+> іц
+> Ц
+> цу
+> ци
+> це
+> цві
+> т
+> ркун
+> це
+> дра
+> сарка
+> ці
+> лина
+> кавий
+> 	
+> Пограємо в гру «Так / ні».
+> Летить 
+> ? — _____ !
+> Летить 
+> ?  — _____!
+> Летить 
+> ? — ____!
+> Летить 
+> ? — _______!
+> у
+> г о р о б е
+> в і р
+> ц
+> к
+> и м б
+> ц
+> а
+> ц
+>  [ –  =•– |–•– ]  
+>  [ –•| –•| –•= ] 
+> ь
+> л и
+> н
+> Pidruchnyk.com.ua
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.33
+>
+> 54
+> м’якиЙ ПоДовЖЕниЙ ПриГоЛосниЙ ЗвУк
+> Порівняй слова. У яких словах один зі звуків вимовляється 
+> подовжено? Як записали цей звук?
+> Колос — колосся, корінь — коріння, дозвіл — дозвілля, 
+> ліс — узлісся.
+> Є слова, у яких м’який приголосний звук вимовля-
+> ється довше, ніж інші звуки. Такий звук називають 
+> подовженим. Щоб позначити м’який 
+> подовжений приголосний, пиши дві 
+> однакові букви: нн, сс, лл. 
+> Наприклад: читання, волосся, гілля.
+> Прочитай речення, розглянь малюнки. Як ти гадаєш, кому 
+> належать
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.33
+>
+> Скільки персонажів у цьому творі? Назви їх.
+>  
+> 	 Розкажи про кожного з персонажів.
+> 	
+>   Як у вірші розповідається про появу білочки?
+> 	
+>   Прочитай, у кого сіра шубка.
+> 	
+>   Хто сміливо поглядає?
+> 	
+>   Хто ікластий?
+> 	
+>   Хто йде з медом?
+> 	
+>   А хто ледачий?
+>  
+> 	 Підготуйтеся до  читання вірша в  особах. Хто читатиме 
+> слова автора? Обговоріть, із  якою інтонацією треба 
+> читати слова кожної дійової особи.
+> 	
+> Уявіть себе художниками. Спробуйте створити свої ілю-
+> страції персонажів твору.
+> Оксана Кротюк
+> ВЕДМЕ
+
+## Граматика (Grammar Summary)
+
+> **Source:** unknown, Grade 1
+> **Score:** 0.50
+>
+> 48
+> Є є
+> Бачу  Є, є. Чую  [йе] або [е].
+> — не	
+> те	   се
+> — ен	
+> ет	   ес
+> — нє	
+> тє	   сє
+> — єн	
+> єт	   єс
+> І барвінком, і ру­тою,
+> і ряс­том квіт­чає
+> вес­на зем­лю, мов дів­чи­ну,
+> в зе­ле­но­му гаї.
+>                           Тарас Шев­чен­ко
+> [–•]
+> [•–]
+> [=•]
+> [=•–]
+> є д и н о р і
+> о л ь
+> к
+> є
+> а є *
+> з
+> ь
+> г
+>  [ –•|=  = • ]  
+>  [ –•|=•= ] 
+> [–•|=•]
+> [–  =•|–•|=•]
+> [–•|­=•]
+> кує
+>     квітує
+> синє
+>  [ к в′ і|т у| й е ] 
+>  [ с и|н′ е ]  
+>  [ к у|й е ]  
+> 	 Прочитай слова.
+> малю
+> вишива
+> співа
+> суму
+> чита
+> гра
+> є
+> є
+> Pidruchnyk.com.ua
+
+> **Source:** unknown, Grade 2
+> **Score:** 0.50
+>
+> 43
+> • Уяви, що малюнків було багато. Добери до слів — назв 
+> предметів слова — назви ознак.
+> Зразок. будинок (який?) червоний — будинки (які?) чер-
+> воні.    
+> Дах (який?) … — дахи (які?) … . 
+> Двері (які?) … . 
+> Вікно (яке?) … — вікна (які?) … . 
+> Стіна (яка?) … — стіни (які?) …  . 
+> Аркуш  (який) … — аркуші (які?) ... .
+>  
+> Допиши слова — назви предметів. 
+> 1. Дерев’яний, письмовий, коричневий … .
+> 2. Скляна, висока, прозора … .
+> 3. Паперове, різнобарвне, веселе … .
+> 4. Пластикові, довгі, тонкі … .
+> • Чому не
+
+> **Source:** unknown, Grade 3
+> **Score:** 0.50
+>
+> 157
+> РОЗМАЇТТЯМ  КОЛЬОРОВИМ  ПРИКРАШАЄ  ОСІНЬ  КРАЙ
+> 	
+> Інна Кульська. Вересень.............................................................................3
+> 	
+> Алевтина Волкова. Перший подих осені............
+
+... (truncated for context window)
+</knowledge_packet>
+
+---
+
+## Section Structure
+
+Write these sections as H2 headings, in this exact order:
+
+- `## Що ми знаємо? (What Do We Know?)` (~200 words)
+- `## Читання (Reading Practice)` (~250 words)
+- `## Граматика (Grammar Summary)` (~200 words)
+- `## Діалог (Connected Dialogue)` (~300 words)
+- `## Підсумок — Summary` (~250 words)
+- `## Підсумок — Summary` (~150 words)
+
+Each section should follow the word budget specified. The total must reach 1200 words minimum.
+
+---
+
+## Content Rules
+
+TARGET: 10-20% Ukrainian.
+LANGUAGE ROLES:
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+Ukrainian sentences max 10 words.
+
+HARD GRAMMAR RULES (audit will reject violations):
+- Max 10 words per Ukrainian sentence (STRICT — count every word)
+- ONLY 1 clause per sentence (no compound sentences)
+- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам, їм, -ові/-еві endings)
+  Exception: нам is taught as decodable vocabulary in M1 (reading drill word, not grammar)
+  Exception (M15 what-i-like): Dative forms мені/тобі/йому/їй/нам/вам/їм allowed
+    ONLY in the fixed construction «Мені подобається + noun/infinitive». Teach as a memorized
+    chunk — do NOT explain dative case rules or paradigms.
+- Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)
+  Exception: M37 introduces basic Instrumental 'з' (кава з молоком)
+- NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб, поки are ALL BANNED
+- Only imperfective aspect verbs
+- No participles
+- Allowed cases: Nominative, Accusative, Locative (from M30), Genitive (basics), Vocative
+
+### Pedagogy
+- Start each section with a real situation or dialogue (PPP: Present → Practice → Produce)
+- Every grammar rule needs 3+ Ukrainian examples with English translations
+- Teach through PATTERNS, not rules: show examples first, then name the pattern
+- Cultural context where relevant — this is Ukrainian, not generic L2
+- Use vocabulary from the plan's vocabulary_hints. Function words (pronouns, conjunctions) are always allowed.
+
+### Ukrainian Language Quality
+- **Zero Russian**: No ы, э, ё, ъ. No Russian words (кот→кіт, хорошо→добре, конечно→звичайно)
+- **Zero Surzhyk**: No шо→що, чо→чому, тіпа→типу
+- **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
+- **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
+- **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+**Authority hierarchy (if uncertain about a word, check in this order):**
+VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
+
+**Online fallbacks:** VESUM: vesum.com.ua | Правопис: 2019.pravopys.net | Горох: goroh.pp.ua | Антоненко-Давидович: ukrlib.com.ua/books/printit.php?tid=4002 | Грінченко: hrinchenko.com | Словник.ua: slovnyk.me
+
+### Writing Quality
+- Every paragraph: ONE clear point, logical flow to the next
+- Vary sentence length (short for emphasis, medium for explanation, long for examples)
+- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
+
+> **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
+> **Тарас:** Добре, дякую! А у тебе? *(Good, thanks! And you?)*
+> **Оленка:** Теж добре! *(Also good!)*
+
+Without speaker names, the reader cannot tell who is speaking. NEVER use anonymous em dashes (`— text`). After each dialogue, briefly explain the key phrases and patterns the learner just saw.
+- Dialogues: natural, not stilted. Real situations, real responses. **Use the knowledge packet** — it contains textbook excerpts with real Ukrainian dialogues and situations. Adapt them, don't invent artificial conversations. A dialogue about немає should show someone SEARCHING for something and not finding it (keys, notebook, phone), not an interrogation. A dialogue about the market should sound like a real market conversation. If the knowledge packet has a textbook dialogue on the topic, use that pattern.
+- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
+- **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
+
+### Forbidden Tropes
+
+If you write any of these patterns, the module will be rejected in review:
+
+- **The Cheerleader:** "Great job!", "Don't worry, it's easy!", "You're doing amazing!", "Good news!" — respect the learner's intelligence; stay professional.
+- **The Announcer:** "In this section, we will explore...", "Now let's dive into...", "Let's take a look at...", "To summarize what we learned..." — never use formulaic transitions. Just teach the concept directly.
+- **The Translator:** "The Ukrainian word for 'cat' is 'кіт'." — instead, present naturally: "A domestic cat is a **кіт**."
+- **The Wall of Text:** 3+ paragraphs of English theory without a single Ukrainian example — every concept must be anchored in immediate Ukrainian examples.
+- **The Filler:** "This is a very important concept that you will use frequently in your daily life." — empty sentences that add words but not meaning. Every sentence must teach something.
+
+GRAMMAR CONSTRAINTS (A1.2 — My World, M08-M14):
+Noun gender, adjective agreement, plurals, numbers, demonstratives.
+
+ALLOWED:
+- Це + noun, У мене є/немає
+- Adjective-noun agreement (nominative only)
+- Numbers 1-1000
+- Demonstratives цей/ця/це/ці
+- Question words: Який? Яка? Яке? Скільки?
+- Fixed verbal phrases from A1.1 (Мене звати, працювати)
+
+BANNED: Verb conjugation (taught in A1.3), past/future tense, cases beyond nominative,
+participles, passive voice, subordinate clauses
+
+### Vocabulary
+
+
+
+### Pronunciation Videos
+
+
+
+---
+
+### Style Reference (match this tone and structure)
+
+Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the first grade: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери**. We hear and pronounce sounds, but we see and write letters.
+
+These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама**. It means mother, and you already know how to read it. Now look at **тато**. It means father.
+
+*Note: English prose dominates. Ukrainian words appear bolded inline. Short Ukrainian sentences illustrate one concept at a time. No conjugated verbs. Tables and bulleted lists for vocabulary.*
+
+## Output Format
+
+Write in Markdown. Use:
+- `## Section Title` for main sections
+- `### Subsection` for subsections within a section
+- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- Tables for paradigms (conjugation, declension)
+- `:::tip` / `:::caution` / `:::note` for callout boxes
+- `:::quiz` / `:::fill-in` / `:::match-up` / `:::group-sort` / `:::true-false` for exercises (using the DSL formats above)
+
+Do NOT write MDX component syntax or JSON. Plain Markdown with the exercise DSL blocks described above.
+
+Begin writing now. Start with the first section heading.

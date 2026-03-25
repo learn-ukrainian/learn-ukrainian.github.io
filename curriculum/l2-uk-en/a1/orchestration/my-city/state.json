@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "my-city",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T02:48:43.847386+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T02:48:54.467184+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T02:50:10.945713+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T02:50:10.950122+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T02:50:10.950616+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T02:51:04.953608+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T02:51:05.355319+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T02:51:05.412786+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T02:58:24.792946+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T02:58:26.535524+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T02:58:26.584645+00:00"
+    }
+  }
+}

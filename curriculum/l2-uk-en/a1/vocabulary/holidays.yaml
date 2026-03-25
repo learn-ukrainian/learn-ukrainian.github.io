@@ -1,0 +1,217 @@
+vocabulary:
+- word: кутя́
+  translation: kutia
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: коля́дка
+  translation: carol
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пи́санка
+  translation: decorated Easter egg
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: па́ска
+  translation: Easter bread
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пара́д
+  translation: parade
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пра́пор
+  translation: flag
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виши́ва́нка
+  translation: embroidered shirt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: незале́жність
+  translation: independence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: салю́т
+  translation: fireworks
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: свя́то
+  translation: holiday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: святкува́ти
+  translation: to celebrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Різдво́
+  translation: Christmas
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Вели́кдень
+  translation: Easter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Новий рік
+  translation: New Year
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: віта́ти
+  translation: to congratulate/greet
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: З Різдвом!
+  translation: Merry Christmas!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З Різдвом Христовим!
+  translation: Merry Christmas!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День Незалежності
+  translation: Independence Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: державне свято
+  translation: national holiday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: конце́рт
+  translation: concert
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: З Днем Незалежності!
+  translation: Happy Independence Day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Слава Україні!
+  translation: Glory to Ukraine!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Героям слава!
+  translation: Glory to the heroes!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День Конституції
+  translation: Constitution Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День захисників і захисниць
+  translation: Defenders' Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вишиванковий день
+  translation: Vyshyvanka Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Свята вечеря
+  translation: Holy Supper
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дванадцять страв
+  translation: 12 dishes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коля́дники
+  translation: carolers
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: святити кошик
+  translation: to bless the basket
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ко́шик
+  translation: basket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Христос воскрес!
+  translation: Christ is risen!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Воістину воскрес!
+  translation: Indeed risen!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З Великоднем!
+  translation: Happy Easter!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З Новим роком!
+  translation: Happy New Year!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З днем народження!
+  translation: Happy birthday!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

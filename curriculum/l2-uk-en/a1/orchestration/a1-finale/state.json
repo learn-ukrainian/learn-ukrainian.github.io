@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "a1-finale",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T05:35:30.231248+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T05:35:41.525782+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T05:36:51.039752+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T05:36:51.043850+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T05:36:51.044290+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T05:37:40.554503+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T05:37:40.944264+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T05:37:41.026644+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T05:38:44.470845+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T05:38:46.860099+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T05:38:46.904889+00:00"
+    }
+  }
+}

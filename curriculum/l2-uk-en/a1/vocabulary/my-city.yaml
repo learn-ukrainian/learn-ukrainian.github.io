@@ -1,0 +1,157 @@
+vocabulary:
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суперма́ркет
+  translation: supermarket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: це́рква
+  translation: church
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дале́ко
+  translation: far
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: near / close
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бі́ля
+  translation: near
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: магази́н
+  translation: shop / store
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: готе́ль
+  translation: hotel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перехо́жий
+  translation: passerby
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кінотеа́тр
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стадіо́н
+  translation: stadium
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: в / у
+  translation: in
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: на
+  translation: at / on
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: Вибачте, де тут аптека?
+  translation: Excuse me, where is a pharmacy here?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що є біля твого дому?
+  translation: What is near your house?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля парку
+  translation: near the park
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля дому
+  translation: near the house
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля університету
+  translation: near the university
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля станції
+  translation: near the station
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля метро
+  translation: near the subway
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у центрі
+  translation: in the center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на розі
+  translation: on the corner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

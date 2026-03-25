@@ -1,0 +1,181 @@
+vocabulary:
+- word: четве́рта
+  translation: 4th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: п'ята́
+  translation: 5th
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шо́ста
+  translation: 6th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сьома
+  translation: 7th
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: во́сьма
+  translation: 8th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дев'я́та
+  translation: 9th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: деся́та
+  translation: 10th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: одина́дцята
+  translation: 11th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: двана́дцята
+  translation: 12th
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пів
+  translation: half
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: чверть
+  translation: quarter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: опі́вдні
+  translation: at noon
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: годи́на
+  translation: hour
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: котра́
+  translation: which
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пе́рша
+  translation: 1st
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дру́га
+  translation: 2nd
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тре́тя
+  translation: 3rd
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ве́чір
+  translation: evening
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Котра година?
+  translation: What time is it?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: О котрій?
+  translation: At what time?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: о
+  translation: at
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: об
+  translation: at
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: пів на
+  translation: half onto
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чверть на
+  translation: quarter onto
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за чверть
+  translation: in a quarter
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́нку
+  translation: in the morning
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дня
+  translation: in the afternoon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ве́чора
+  translation: in the evening
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: но́чі
+  translation: at night
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: опі́вночі
+  translation: at midnight
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

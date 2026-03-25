@@ -1,0 +1,28 @@
+- find: "- q: \"Мені ___ ця книга.\"\n  o: [\"подобається\", \"люблю\"]\n  a: 0"
+  replace: "- q: \"Мені ___ ця книга.\"\n  o: [\"люблю\", \"подобається\"]\n  a: 1"
+- find: "- q: \"Мені ___ музика.\"\n  o: [\"подобається\", \"люблю\"]\n  a: 0"
+  replace: "- q: \"Мені ___ музика.\"\n  o: [\"люблю\", \"подобається\"]\n  a: 1"
+- find: "- q: \"Я ___ співати.\"\n  o: [\"люблю\", \"подобається\"]\n  a: 0"
+  replace: "- q: \"Я ___ співати.\"\n  o: [\"подобається\", \"люблю\"]\n  a: 1"
+- find: "- q: \"Мені ___ Київ.\"\n  o: [\"подобається\", \"люблю\"]\n  a: 0"
+  replace: "- q: \"Мені ___ Київ.\"\n  o: [\"люблю\", \"подобається\"]\n  a: 1"
+- find: The key to mastering this module is remembering the strict and permanent division
+    between your actions and physical objects.
+  replace: 'The key to this module is learning a reliable starting framework: use
+    **люблю** when talking about activities, and **подобається** when reacting to
+    things around you. As your Ukrainian grows, you will discover that these patterns
+    can overlap — but this division gives you a solid foundation to build on.'
+- find: "- sentence: \"Я люблю готувати. → Я ___ готувати.\"\n  answer: \"не люблю\"\
+    \n- sentence: \"Мені подобається Київ. → Мені ___ Київ.\"\n  answer: \"не подобається\"\
+    \n- sentence: \"Я люблю співати. → Я ___ співати.\"\n  answer: \"не люблю\"\n\
+    - sentence: \"Мені подобається музика. → Мені ___ музика.\"\n  answer: \"не подобається\""
+  replace: "- sentence: \"Мені подобається Київ. → Мені ___ Київ.\"\n  answer: \"\
+    не подобається\"\n- sentence: \"Я люблю готувати. → Я ___ готувати.\"\n  answer:\
+    \ \"не люблю\"\n- sentence: \"Мені подобається музика. → Мені ___ музика.\"\n\
+    \  answer: \"не подобається\"\n- sentence: \"Я люблю співати. → Я ___ співати.\"\
+    \n  answer: \"не люблю\""
+- find: This ending is the grammatical marker that tells you the verb is in its raw,
+    unconjugated state.
+  replace: This suffix is the grammatical marker that tells you the verb is in its
+    raw, unconjugated state — what Ukrainian grammarians call the неозначена форма
+    (indefinite form).

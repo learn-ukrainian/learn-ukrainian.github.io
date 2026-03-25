@@ -1,0 +1,7 @@
+- source: auto-generated
+  date: '2026-03-25'
+  error_types:
+  - VOCABULARY
+  - WORD_COUNT
+  status: active
+  note: V6 build failed after 3 attempts

@@ -1,0 +1,23 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "WARNING",
+      "message": "Too long: 1854 words (target: 1200, ceiling: 1800)"
+    },
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/8 required vocab: викликати (to call/summon)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 3"
+    }
+  ],
+  "timestamp": "2026-03-25T05:33:42.406183+00:00"
+}

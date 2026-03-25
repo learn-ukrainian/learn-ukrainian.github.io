@@ -1,0 +1,241 @@
+vocabulary:
+- word: меню́
+  translation: menu
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: раху́нок
+  translation: bill
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: замовля́ти
+  translation: to order
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сма́чно
+  translation: delicious
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: будь ласка
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рекомендува́ти
+  translation: to recommend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чайові́
+  translation: tips
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ртка
+  translation: card
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: го́стре
+  translation: spicy
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вегетаріа́нський
+  translation: vegetarian
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пи́ти
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́ца
+  translation: pizza
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: без
+  translation: without
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: цу́кор
+  translation: sugar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лимо́н
+  translation: lemon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Що ви рекомендуєте?
+  translation: What do you recommend?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: одну хвилинку
+  translation: one minute
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені... будь ласка
+  translation: for me... please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна карткою?
+  translation: Is it possible by card?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: приходьте ще!
+  translation: come again!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна...?
+  translation: May I have...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка...
+  translation: Give me, please...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хочу...
+  translation: I want...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я буду...
+  translation: I will have...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А що це?
+  translation: And what is this?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це гостре?
+  translation: Is this spicy?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це з м'ясом?
+  translation: Is this with meat?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Є вегетаріанське меню?
+  translation: Is there a vegetarian menu?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вільно?
+  translation: Is it free?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут вільно?
+  translation: Is it free here?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна меню?
+  translation: Can I have the menu?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ще одну
+  translation: one more
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Без цукру
+  translation: Without sugar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З лимоном
+  translation: With lemon
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я плачу готівкою
+  translation: I am paying with cash
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Все було дуже смачно!
+  translation: Everything was very delicious!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

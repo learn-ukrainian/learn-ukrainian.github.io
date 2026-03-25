@@ -1,0 +1,51 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-places",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-25T03:30:53.050641+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-25T03:31:03.623356+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-25T03:33:24.149915+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-25T03:33:24.154124+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-25T03:33:24.154649+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-25T03:34:36.838727+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-25T03:34:37.330530+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-25T03:34:37.378987+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-25T03:40:15.711778+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-25T03:40:18.092354+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-25T03:40:18.140604+00:00"
+    }
+  }
+}

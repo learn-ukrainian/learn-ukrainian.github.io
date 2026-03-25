@@ -1,0 +1,13 @@
+- find: "- sentence: \"Вона ___ банку.\"\n  answer: \"у\""
+  replace: "- sentence: \"Вона ___ банку.\"\n  answer: \"в\""
+- find: "- sentence: \"Ми живемо ___ Києві.\"\n  answer: \"у\""
+  replace: "- sentence: \"Ми живемо ___ Києві.\"\n  answer: \"в\""
+- find: "- q: \"Ми ___ банку.\"\n  o: [\"у\", \"на\"]\n  a: 0"
+  replace: "- q: \"Ми ___ банку.\"\n  o: [\"в\", \"на\"]\n  a: 0"
+- find: '**Богдан:** На вулиці Хрещатик. *(On Khreshchatyk Street.)*'
+  replace: '**Богдан:** На вулиці Хрещатик. *(On Khreshchatyk Street.)*
+
+
+
+    *(На якій — locative of яка, "which" — you''ll learn adjective forms soon; for
+    now, treat it as a fixed phrase.)*'

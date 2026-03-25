@@ -46,7 +46,7 @@ In Ukrainian textbooks, a vowel sound is marked with a dot: [•]. A consonant s
 
 **Приголосні** (consonants) are sounds made when something in your mouth — lips, teeth, or tongue — blocks the airflow. Voice may or may not be involved. There are 32 consonant sounds, and Ukrainian textbooks have their own poem for these: *Приголосні деренча́ть, і тихе́нько шелестя́ть* — consonants rattle and quietly rustle.
 
-<Quiz client:only="react" questions={[{"question": "Що ми чуємо і вимовляємо?", "options": [{"text": "звуки", "correct": true}, {"text": "літери", "correct": false}, {"text": "слова́", "correct": false}]}, {"question": "Що ми бачимо і пишемо?", "options": [{"text": "літери", "correct": true}, {"text": "звуки", "correct": false}, {"text": "речення", "correct": false}]}, {"question": "Скі́льки лі́тер в абе́тці?", "options": [{"text": "38", "correct": false}, {"text": "33", "correct": true}, {"text": "32", "correct": false}]}, {"question": "Скільки звуків?", "options": [{"text": "33", "correct": false}, {"text": "10", "correct": false}, {"text": "38", "correct": true}]}, {"question": "Голосні — це звуки, які́ утво́рюються за допомо́гою...", "options": [{"text": "го́лосу", "correct": true}, {"text": "шу́му", "correct": false}, {"text": "ти́ші", "correct": false}]}, {"question": "При́голосних звуків в украї́нській мо́ві...", "options": [{"text": "6", "correct": false}, {"text": "32", "correct": true}, {"text": "33", "correct": false}]}]} />
+<Quiz client:only="react" instruction={"Звук чи лі́тера?"} questions={[{"question": "Що ми чуємо і вимовляємо?", "options": [{"text": "звуки", "correct": true}, {"text": "літери", "correct": false}, {"text": "слова́", "correct": false}]}, {"question": "Що ми бачимо і пишемо?", "options": [{"text": "літери", "correct": true}, {"text": "звуки", "correct": false}, {"text": "речення", "correct": false}]}, {"question": "Скі́льки лі́тер в абе́тці?", "options": [{"text": "38", "correct": false}, {"text": "33", "correct": true}, {"text": "32", "correct": false}]}, {"question": "Скільки звуків?", "options": [{"text": "33", "correct": false}, {"text": "10", "correct": false}, {"text": "38", "correct": true}]}, {"question": "Голосні — це звуки, які́ утво́рюються за допомо́гою...", "options": [{"text": "го́лосу", "correct": true}, {"text": "шу́му", "correct": false}, {"text": "ти́ші", "correct": false}]}, {"question": "При́голосних звуків в украї́нській мо́ві...", "options": [{"text": "6", "correct": false}, {"text": "32", "correct": true}, {"text": "33", "correct": false}]}]} />
 
 ## Пе́рші слова (First Words)
 
@@ -86,7 +86,7 @@ Practice reading with these tricky letters:
 - **ніс** (nose) — the **Н** is "n," not "h"
 - **ха́та** (house) — **Х** is that "ch" in "loch"
 
-<MatchUp client:only="react" pairs={[{"left": "В", "right": "sounds like «в», not «b»"}, {"left": "Н", "right": "sounds like «н», not «h»"}, {"left": "Р", "right": "sounds like «р» (rolled), not «p»"}, {"left": "С", "right": "sounds like «с», not «c/k»"}, {"left": "У", "right": "sounds like «у» (oo), not «y»"}, {"left": "Х", "right": "sounds like «х» (loch), not «x»"}]} />
+<MatchUp client:only="react" instruction={"Match false friend letters to their real sounds"} pairs={[{"left": "В", "right": "sounds like «в», not «b»"}, {"left": "Н", "right": "sounds like «н», not «h»"}, {"left": "Р", "right": "sounds like «р» (rolled), not «p»"}, {"left": "С", "right": "sounds like «с», not «c/k»"}, {"left": "У", "right": "sounds like «у» (oo), not «y»"}, {"left": "Х", "right": "sounds like «х» (loch), not «x»"}]} />
 
 ### New Shapes
 
@@ -104,7 +104,7 @@ Two special characters to notice: **Щ** always makes two sounds together — "s
 
 One more: **Ї** always represents two sounds — "yi." It is unique to Ukrainian and exists in no other Slavic language. The letters **Я**, **Ю**, and **Є** can also represent two sounds or soften a consonant — full exploration in Module 2. For now, just recognize them when you see them.
 
-<GroupSort client:only="react" groups={[{"name": "Голосні", "items": ["А", "О", "У", "Е", "И", "І"]}, {"name": "Приголосні", "items": ["К", "М", "Т", "В", "Н", "Р", "С", "Х"]}]} />
+<GroupSort client:only="react" instruction={"Голосні чи приголосні?"} groups={[{"name": "Голосні", "items": ["А", "О", "У", "Е", "И", "І"]}, {"name": "Приголосні", "items": ["К", "М", "Т", "В", "Н", "Р", "С", "Х"]}]} />
 
 ## Приві́т! (Hello!)
 
@@ -151,7 +151,7 @@ Now look at **Привіт** more closely. This single word contains letters fro
 
 Blend them together: При-віт! Two syllables. You just read your first Ukrainian word from scratch.
 
-<FillIn client:only="react" items={[{"sentence": "— ___! Як справи?", "answer": "Привіт"}, {"sentence": "— ___. А у тебе?", "answer": "Добре"}, {"sentence": "— ___!", "answer": "Чудово"}, {"sentence": "— Добре, дякую! А у ___?", "answer": "тебе"}]} />
+<FillIn client:only="react" instruction={"Привіт! Як справи?"} items={[{"sentence": "— ___! Як справи?", "answer": "Привіт"}, {"sentence": "— ___. А у тебе?", "answer": "Добре"}, {"sentence": "— ___!", "answer": "Чудово"}, {"sentence": "— Добре, дякую! А у ___?", "answer": "тебе"}]} />
 
 ## Чита́ємо (Reading Practice)
 
