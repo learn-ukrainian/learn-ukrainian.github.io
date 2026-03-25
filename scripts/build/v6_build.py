@@ -1934,6 +1934,126 @@ def step_activities(
     return None
 
 
+def _inject_abetka_activities(activities_path: Path, level: str, slug: str) -> None:
+    """Inject letter-grid and watch-and-repeat from l2-uk-direct abetka data.
+
+    Reads abetka-{1,2,3,4}.yaml, finds letters relevant to this module's plan,
+    and adds deterministic activities to the workbook. Only runs for A1 modules
+    whose plans have letter-grid or watch-and-repeat activity_hints.
+    """
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        return
+
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    hints = plan.get("activity_hints", [])
+    hint_types = {h.get("type") for h in hints}
+
+    if "letter-grid" not in hint_types and "watch-and-repeat" not in hint_types:
+        return
+
+    # Load all abetka files
+    abetka_dir = PROJECT_ROOT / "curriculum" / "l2-uk-direct" / "a1"
+    all_letters = []
+    for i in range(1, 5):
+        abetka_path = abetka_dir / f"abetka-{i}.yaml"
+        if abetka_path.exists():
+            abetka = yaml.safe_load(abetka_path.read_text("utf-8"))
+            all_letters.extend(abetka.get("letters", []))
+
+    if not all_letters:
+        _log("  ⚠️  No abetka data found in l2-uk-direct")
+        return
+
+    # Load existing activities — remove LLM-generated letter-grid/watch-and-repeat
+    # (deterministic injection replaces them with properly split versions)
+    data = yaml.safe_load(activities_path.read_text("utf-8"))
+    workbook = [
+        act for act in data.get("workbook", [])
+        if act.get("type") not in ("letter-grid", "watch-and-repeat")
+    ]
+
+    injected = 0
+
+    # letter-grid: split into multiple activities by abetka group
+    if "letter-grid" in hint_types:
+        # Group letters by sound type / category
+        vowels = [lt for lt in all_letters if lt.get("sound_type") == "vowel"]
+        consonants = [lt for lt in all_letters if lt.get("sound_type") == "consonant"]
+
+        # Split consonants into friendly, false friends, new shapes
+        friendly = [lt for lt in consonants if lt["upper"] in {"К", "М", "Т"}]
+        false_friends = [lt for lt in consonants if lt["upper"] in {"В", "Н", "Р", "С", "Х"}]
+        new_shapes = [lt for lt in consonants if lt["upper"] not in {"К", "М", "Т", "В", "Н", "Р", "С", "Х"}]
+        # Special letters (soft sign, iotated)
+        special = [lt for lt in all_letters if lt["upper"] in {"Ь", "Ї", "Я", "Ю", "Є"}]
+
+        for group_name, group_letters in [
+            ("Голосні — Vowels", vowels),
+            ("Friendly letters", friendly),
+            ("False friends!", false_friends),
+            ("New shapes", new_shapes),
+            ("Special letters", special),
+        ]:
+            grid_entries = []
+            for lt in group_letters:
+                entry = {
+                    "upper": lt["upper"],
+                    "lower": lt["lower"],
+                    "emoji": lt.get("emoji", ""),
+                    "key_word": lt.get("key_word", ""),
+                }
+                if lt.get("sound_type"):
+                    entry["sound_type"] = lt["sound_type"]
+                grid_entries.append(entry)
+
+            if grid_entries:
+                workbook.append({
+                    "type": "letter-grid",
+                    "instruction": group_name,
+                    "letters": grid_entries,
+                })
+                injected += 1
+
+        if injected > 0:
+            _log(f"  📝 Injected {injected} letter-grid activities from abetka")
+
+    # watch-and-repeat: split by abetka file (groups of 7-10 letters)
+    if "watch-and-repeat" in hint_types:
+        for i in range(1, 5):
+            abetka_path = abetka_dir / f"abetka-{i}.yaml"
+            if not abetka_path.exists():
+                continue
+            abetka = yaml.safe_load(abetka_path.read_text("utf-8"))
+            video_items = []
+            for lt in abetka.get("letters", []):
+                video_url = lt.get("pronunciation_video")
+                if video_url:
+                    video_items.append({
+                        "video": video_url,
+                        "letter": lt["upper"],
+                        "word": lt.get("key_word", ""),
+                        "note": lt.get("sentence", ""),
+                    })
+
+            if video_items:
+                letters_str = ", ".join(item["letter"] for item in video_items)
+                workbook.append({
+                    "type": "watch-and-repeat",
+                    "instruction": f"Watch and repeat: {letters_str}",
+                    "items": video_items,
+                })
+                injected += 1
+                _log(f"  📝 Injected watch-and-repeat: {letters_str} ({len(video_items)} videos)")
+
+    if injected > 0:
+        data["workbook"] = workbook
+        activities_path.write_text(
+            yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False),
+            "utf-8",
+        )
+
+
 def step_enrich(content_path: Path, level: str, slug: str) -> bool:
     """Step 7b: ENRICH — словник, videos, resources, dialogue formatting."""
     _log(f"\n{'='*60}")
@@ -2975,6 +3095,8 @@ def main():
             writer=args.writer,
         )
         if activity_path:
+            # Inject deterministic abetka activities (letter-grid, watch-and-repeat)
+            _inject_abetka_activities(activity_path, args.level, slug)
             _save_v6_state(args.level, slug, "activities")
         elif steps == "activities":
             _log("\n❌ Build FAILED at Step 5e (activity generation)")

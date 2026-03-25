@@ -1,0 +1,537 @@
+version: '1.0'
+module: sounds-letters-and-hello
+level: a1
+inline:
+- id: group-sort-vowels-consonants
+  type: group-sort
+  instruction: 'Sort these Ukrainian letters into two groups: vowels (голосні) and
+    consonants (приголосні).'
+  groups:
+  - label: Голосні (vowels)
+    items:
+    - А
+    - О
+    - У
+    - Е
+    - И
+    - І
+  - label: Приголосні (consonants)
+    items:
+    - К
+    - М
+    - Т
+    - В
+    - Н
+    - Р
+    - С
+    - Х
+- id: match-false-friends
+  type: match-up
+  instruction: Match each false friend letter to its REAL Ukrainian sound — not the
+    English sound it looks like!
+  pairs:
+  - left: В
+    right: '[в] — like "v"'
+  - left: Н
+    right: '[н] — like "n"'
+  - left: Р
+    right: '[р] — rolled "r"'
+  - left: С
+    right: '[с] — like "s"'
+  - left: У
+    right: '[у] — like "oo"'
+  - left: Х
+    right: '[х] — like "ch" in "loch"'
+- id: fill-in-greeting
+  type: fill-in
+  instruction: Complete this greeting dialogue by filling in the missing words.
+  items:
+  - sentence: — ____! Як справи?
+    answer: Привіт
+    options:
+    - Привіт
+    - Добре
+    - Чудово
+  - sentence: — ____. А у тебе?
+    answer: Добре
+    options:
+    - Привіт
+    - Добре
+    - Нормально
+  - sentence: — ____!
+    answer: Чудово
+    options:
+    - Чудово
+    - Привіт
+    - Добре
+  - sentence: — Як ____?
+    answer: справи
+    options:
+    - справи
+    - добре
+    - тебе
+- id: quiz-sounds-vs-letters
+  type: quiz
+  instruction: Answer the questions about Ukrainian sounds and letters.
+  items:
+  - question: What do we hear and pronounce?
+    options:
+    - звуки (sounds)
+    - літери (letters)
+    - слова (words)
+    correct: 0
+  - question: What do we see and write?
+    options:
+    - звуки (sounds)
+    - літери (letters)
+    - речення (sentences)
+    correct: 1
+  - question: How many letters are in the Ukrainian абетка (alphabet)?
+    options:
+    - '26'
+    - '33'
+    - '38'
+    correct: 1
+  - question: How many sounds does Ukrainian have?
+    options:
+    - '33'
+    - '36'
+    - '38'
+    correct: 2
+  - question: Which family of sounds is described as 'you hear them in a song'?
+    options:
+    - приголосні (consonants)
+    - голосні (vowels)
+    - йотовані (iotated)
+    correct: 1
+  - question: How many голосні звуки (vowel sounds) does Ukrainian have?
+    options:
+    - '6'
+    - '10'
+    - '33'
+    correct: 0
+workbook:
+- type: quiz
+  instruction: Choose the correct answer about Ukrainian letters and sounds.
+  items:
+  - question: The letter В in Ukrainian sounds like...
+    options:
+    - '"b" as in boy'
+    - '"v" as in voice'
+    - '"w" as in water'
+    correct: 1
+  - question: The letter Р in Ukrainian sounds like...
+    options:
+    - '"p" as in park'
+    - a rolled "r"
+    - '"r" as in red'
+    correct: 1
+  - question: The letter Н in Ukrainian sounds like...
+    options:
+    - '"h" as in hat'
+    - '"n" as in no'
+    - '"m" as in map'
+    correct: 1
+  - question: The letter С in Ukrainian sounds like...
+    options:
+    - '"k" as in cat'
+    - '"s" as in sun'
+    - '"c" as in city'
+    correct: 1
+  - question: Which letter is unique to Ukrainian and not found in Russian or Belarusian?
+    options:
+    - Я
+    - Ї
+    - Є
+    correct: 1
+- type: match-up
+  instruction: Match each Ukrainian word to its English meaning.
+  pairs:
+  - left: мама
+    right: mother
+  - left: тато
+    right: father
+  - left: вода
+    right: water
+  - left: рука
+    right: hand
+  - left: книга
+    right: book
+  - left: школа
+    right: school
+- type: match-up
+  instruction: Match each sign you might see in a Ukrainian city to its meaning.
+  pairs:
+  - left: Аптека
+    right: pharmacy
+  - left: Банк
+    right: bank
+  - left: Метро
+    right: metro
+  - left: Пошта
+    right: post office
+  - left: Зупинка
+    right: bus stop
+- type: quiz
+  instruction: Choose the correct response for each greeting situation.
+  items:
+  - question: Someone says "Привіт! Як справи?" — how do you reply?
+    options:
+    - Привіт!
+    - Добре!
+    - Як справи?
+    correct: 1
+  - question: You want to ask 'How are you?' in Ukrainian. What do you say?
+    options:
+    - Добре!
+    - А у тебе?
+    - Як справи?
+    correct: 2
+  - question: Your friend says things are fine and asks about you. What did they say?
+    options:
+    - Чудово! Привіт!
+    - Добре. А у тебе?
+    - Нормально. Як справи?
+    correct: 1
+  - question: 'A woman says she''s glad to see you. She says:'
+    options:
+    - Радий тебе бачити!
+    - Рада тебе бачити!
+    - Добре тебе бачити!
+    correct: 1
+- type: group-sort
+  instruction: 'Sort these letters: which ones look like Latin letters but make DIFFERENT
+    sounds (false friends), and which ones look AND sound similar (friendly letters)?'
+  groups:
+  - label: Friendly letters (look and sound similar)
+    items:
+    - А
+    - О
+    - К
+    - М
+    - Т
+  - label: False friends (look similar, sound different)
+    items:
+    - В
+    - Н
+    - Р
+    - С
+    - У
+    - Х
+- type: quiz
+  instruction: Use Це (this is) to identify things. Choose the correct sentence.
+  items:
+  - question: You point at a school. What do you say?
+    options:
+    - Це школа.
+    - Це банк.
+    - Це аптека.
+    correct: 0
+  - question: You want to say 'This is mom.' What do you say?
+    options:
+    - Хто це?
+    - Це тато.
+    - Це мама.
+    correct: 2
+  - question: You ask about a thing (not a person). Which question word do you use?
+    options:
+    - Хто це?
+    - Що це?
+    - Як справи?
+    correct: 1
+  - question: You ask about a person. Which question word do you use?
+    options:
+    - Що це?
+    - Хто це?
+    - Де це?
+    correct: 1
+- type: anagram
+  instruction: Unscramble the letters to form a Ukrainian word you learned in this
+    module.
+  items:
+  - letters:
+    - і
+    - в
+    - т
+    - р
+    - и
+    - п
+    answer: привіт
+    hint: a greeting — hi!
+  - letters:
+    - а
+    - м
+    - а
+    - м
+    answer: мама
+    hint: mother
+  - letters:
+    - о
+    - а
+    - д
+    - в
+    answer: вода
+    hint: water
+  - letters:
+    - г
+    - н
+    - и
+    - к
+    - а
+    answer: книга
+    hint: book
+- type: letter-grid
+  instruction: Голосні — Vowels
+  letters:
+  - upper: А
+    lower: а
+    emoji: "\U0001F34D"
+    key_word: ананас
+    sound_type: vowel
+  - upper: О
+    lower: о
+    emoji: "\U0001F441\uFE0F"
+    key_word: око
+    sound_type: vowel
+  - upper: У
+    lower: у
+    emoji: "\U0001F1FA\U0001F1E6"
+    key_word: Україна
+    sound_type: vowel
+  - upper: И
+    lower: и
+    emoji: "\U0001F41F"
+    key_word: риба
+    sound_type: vowel
+  - upper: І
+    lower: і
+    emoji: "\U0001F983"
+    key_word: індик
+    sound_type: vowel
+  - upper: Е
+    lower: е
+    emoji: "\U0001F4FA"
+    key_word: екран
+    sound_type: vowel
+  - upper: Я
+    lower: я
+    emoji: "\U0001F34E"
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: "\U0001F9D1"
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: "\U0001F99D"
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ї
+    lower: ї
+    emoji: "\U0001F994"
+    key_word: їжак
+    sound_type: vowel
+- type: letter-grid
+  instruction: Friendly letters
+  letters:
+  - upper: М
+    lower: м
+    emoji: "\U0001F955"
+    key_word: морква
+    sound_type: consonant
+  - upper: К
+    lower: к
+    emoji: "\U0001F431"
+    key_word: кіт
+    sound_type: consonant
+  - upper: Т
+    lower: т
+    emoji: "\U0001F42F"
+    key_word: тигр
+    sound_type: consonant
+- type: letter-grid
+  instruction: False friends!
+  letters:
+  - upper: Н
+    lower: н
+    emoji: "\u2702\uFE0F"
+    key_word: ножиці
+    sound_type: consonant
+  - upper: С
+    lower: с
+    emoji: "\U0001F45C"
+    key_word: сумка
+    sound_type: consonant
+  - upper: Р
+    lower: р
+    emoji: "\U0001F680"
+    key_word: ракета
+    sound_type: consonant
+  - upper: В
+    lower: в
+    emoji: "\U0001F43A"
+    key_word: вовк
+    sound_type: consonant
+  - upper: Х
+    lower: х
+    emoji: "\U0001F35E"
+    key_word: хліб
+    sound_type: consonant
+- type: letter-grid
+  instruction: New shapes
+  letters:
+  - upper: Л
+    lower: л
+    emoji: "\u2708\uFE0F"
+    key_word: літак
+    sound_type: consonant
+  - upper: Б
+    lower: б
+    emoji: "\U0001F34C"
+    key_word: банан
+    sound_type: consonant
+  - upper: Д
+    lower: д
+    emoji: "\U0001F3E0"
+    key_word: дім
+    sound_type: consonant
+  - upper: П
+    lower: п
+    emoji: "\U0001F577\uFE0F"
+    key_word: павук
+    sound_type: consonant
+  - upper: Г
+    lower: г
+    emoji: "\u26F0\uFE0F"
+    key_word: гора
+    sound_type: consonant
+  - upper: Ґ
+    lower: ґ
+    emoji: "\U0001F6AA"
+    key_word: ґанок
+    sound_type: consonant
+  - upper: З
+    lower: з
+    emoji: "\U0001F993"
+    key_word: зебра
+    sound_type: consonant
+  - upper: Ж
+    lower: ж
+    emoji: "\U0001FAB2"
+    key_word: жук
+    sound_type: consonant
+  - upper: Ш
+    lower: ш
+    emoji: "\U0001F9E2"
+    key_word: шапка
+    sound_type: consonant
+  - upper: Й
+    lower: й
+    emoji: "\U0001F95B"
+    key_word: йогурт
+    sound_type: consonant
+  - upper: Ч
+    lower: ч
+    emoji: "\U0001F422"
+    key_word: черепаха
+    sound_type: consonant
+  - upper: Щ
+    lower: щ
+    emoji: "\U0001FAA5"
+    key_word: щітка
+    sound_type: consonant
+  - upper: Ц
+    lower: ц
+    emoji: "\U0001F9C5"
+    key_word: цибуля
+    sound_type: consonant
+  - upper: Ф
+    lower: ф
+    emoji: "\U0001F9A9"
+    key_word: фламінго
+    sound_type: consonant
+- type: letter-grid
+  instruction: Special letters
+  letters:
+  - upper: Я
+    lower: я
+    emoji: "\U0001F34E"
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: "\U0001F9D1"
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: "\U0001F99D"
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ь
+    lower: ь
+    emoji: "\U0001F9C2"
+    key_word: сіль
+    sound_type: special
+  - upper: Ї
+    lower: ї
+    emoji: "\U0001F994"
+    key_word: їжак
+    sound_type: vowel
+- type: observe
+  instruction: 'Watch and repeat: А, М, Л, У, Н, С'
+  examples:
+  - 'А — ананас — «У нас ананас.» — Video: https://www.youtube.com/watch?v=hvB3VpcR3ZE'
+  - 'М — морква — «Мама сама.» — Video: https://www.youtube.com/watch?v=Ez95H4ibuJo'
+  - 'Л — літак — «Мала лама.» — Video: https://www.youtube.com/watch?v=v6-3Xg52Buk'
+  - 'У — Україна — «У нас мул.» — Video: https://www.youtube.com/watch?v=VB1O6PmtYRU'
+  - 'Н — ножиці — «У нас лан.» — Video: https://www.youtube.com/watch?v=vNUfiKHPYaU'
+  - 'С — сумка — «Сумна мама.» — Video: https://www.youtube.com/watch?v=7UsFBgSL91E'
+  prompt: Watch each video by Anna Ohoiko. Say the letter out loud, then the key word,
+    then the short phrase. Can you hear how each letter sounds on its own and inside
+    a word?
+- type: observe
+  instruction: 'Watch and repeat: К, И, Р, Б, В, Д, І'
+  examples:
+  - 'К — кіт — Video: https://www.youtube.com/watch?v=J7sGEI4-xJo'
+  - 'И — риба — Video: https://www.youtube.com/watch?v=W-1rCu0indE'
+  - 'Р — ракета — Video: https://www.youtube.com/watch?v=fMGsQ5KPQgg'
+  - 'Б — банан — Video: https://www.youtube.com/watch?v=V1hxBE_JbGg'
+  - 'В — вовк — Video: https://www.youtube.com/watch?v=aFcvYfvQ2X4'
+  - 'Д — дім — Video: https://www.youtube.com/watch?v=g4Bh-lqzd48'
+  - 'І — індик — Video: https://www.youtube.com/watch?v=Z9TH0H4ShGo'
+  prompt: Watch each video and repeat after Anna. Pay special attention to В (sounds
+    like "v", not "b") and Р (rolled, not like English "p"). Can you feel the difference?
+- type: observe
+  instruction: 'Watch and repeat: П, Т, Г, Ґ, Е, З, Ж, Ш, Х'
+  examples:
+  - 'П — павук — Video: https://www.youtube.com/watch?v=JksSjjxyW5Y'
+  - 'Т — тигр — Video: https://www.youtube.com/watch?v=m-jcLR_gK0k'
+  - 'Г — гора — Video: https://www.youtube.com/watch?v=gVnclpSI0DU'
+  - 'Ґ — ґанок — Video: https://www.youtube.com/watch?v=gNjHqjTW9WQ'
+  - 'Е — екран — Video: https://www.youtube.com/watch?v=KFlsroBW0dk'
+  - 'З — зебра — Video: https://www.youtube.com/watch?v=BhASNxitC1A'
+  - 'Ж — жук — Video: https://www.youtube.com/watch?v=dIrGVcqPwqM'
+  - 'Ш — шапка — Video: https://www.youtube.com/watch?v=1D-6MIw3OXY'
+  - 'Х — хліб — Video: https://www.youtube.com/watch?v=vpr58zJSJKc'
+  prompt: These letters have new shapes you have not seen in English. Watch each video
+    and try to memorize the shape alongside the sound. Which letters are hardest to
+    remember?
+- type: observe
+  instruction: 'Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф'
+  examples:
+  - 'Й — йогурт — Video: https://www.youtube.com/watch?v=aq0cjB90s3w'
+  - 'Ч — черепаха — Video: https://www.youtube.com/watch?v=UsJkbdsY2RA'
+  - 'Щ — щітка — Video: https://www.youtube.com/watch?v=QmBLieIuf6Q'
+  - 'Я — яблуко — Video: https://www.youtube.com/watch?v=yhSAf41LX8I'
+  - 'Ю — юнак — Video: https://www.youtube.com/watch?v=9JdIBYCTWGw'
+  - 'Є — єнот — Video: https://www.youtube.com/watch?v=O0bwRyyBQSc'
+  - 'Ь — сіль — Video: https://www.youtube.com/watch?v=cJlal8XKBxo'
+  - 'Ї — їжак — Video: https://www.youtube.com/watch?v=UcjdjQXhAY8'
+  - 'Ц — цибуля — Video: https://www.youtube.com/watch?v=u44eCjR2Oz8'
+  - 'Ф — фламінго — Video: https://www.youtube.com/watch?v=haHRsFFZRQI'
+  prompt: These are the remaining letters of the Ukrainian абетка. Watch each video
+    and repeat. Notice that Ь (soft sign) has no sound of its own — it only softens
+    the consonant before it. And Ї always sounds like [йі].

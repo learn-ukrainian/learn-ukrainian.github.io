@@ -1,38 +1,38 @@
 vocabulary:
-- word: банк
-  translation: bank
+- word: звук
+  translation: sound
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: апте́ка
-  translation: pharmacy
+- word: лі́тера
+  translation: letter (of the alphabet)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: метро́
-  translation: metro
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: по́шта
-  translation: post office
+- word: абе́тка
+  translation: alphabet
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: зупи́нка
-  translation: bus stop
+- word: голосни́й
+  translation: vowel
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: прикм.
+  gender: ''
   verified: true
-- word: норма́льно
-  translation: okay
+- word: при́голосний
+  translation: consonant
   expression: false
-  pos: присл.
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йото́вані
+  translation: iotated (letters representing two sounds)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
 - word: ма́ма
@@ -46,84 +46,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: вода́
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: рука́
-  translation: hand
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кни́га
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шко́ла
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: приві́т
-  translation: hi
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: як справи
-  translation: how are you
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до́бре
-  translation: good
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: чудо́во
-  translation: great
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: лі́тери
-  translation: letters
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зву́ки
-  translation: sounds
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: голосні́
-  translation: vowels
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: при́голосні
-  translation: consonants
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: слова́
-  translation: words
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: ко́ма
   translation: comma
@@ -149,11 +71,11 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: сон
-  translation: dream
+- word: вода́
+  translation: water
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
 - word: ніс
   translation: nose
@@ -161,14 +83,38 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: рука́
+  translation: hand
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сон
+  translation: dream
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ву́хо
+  translation: ear
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: ха́та
   translation: house
   expression: false
   pos: ім.
   gender: ж.
   verified: true
+- word: банк
+  translation: bank
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: дім
-  translation: house
+  translation: home
   expression: false
   pos: ім.
   gender: ч.
@@ -179,32 +125,128 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: а у тебе
-  translation: and you
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: їжа́к
+  translation: hedgehog
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Украї́на
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: приві́т
+  translation: hi (informal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Як справи?
+  translation: How are you?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: рада тебе бачити
-  translation: glad to see you (female speaker)
+- word: до́бре
+  translation: fine, good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: great, wonderful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: норма́льно
+  translation: okay
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: А у тебе?
+  translation: And you?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: радий тебе бачити
-  translation: glad to see you (male speaker)
+- word: дякую
+  translation: thanks
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Рада тебе бачити!
+  translation: Glad to see you! (said by a woman)
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: Радий тебе бачити!
+  translation: Glad to see you! (said by a man)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́да
+  translation: glad (feminine)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ра́дий
+  translation: glad (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: кафе́
-  translation: cafe
+  translation: café
   expression: false
   pos: ім.
   gender: с.
   verified: true
+- word: метро́
+  translation: metro
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: по́шта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: Ки́їв
-  translation: Kyiv
+  translation: Kyiv (capital of Ukraine)
   expression: false
   pos: ім.
   gender: ''
@@ -245,15 +287,27 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: що це
-  translation: what is this
+- word: Що це?
+  translation: What is this?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: хто це
-  translation: who is this
+- word: Хто це?
+  translation: Who is this?
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: що
+  translation: what
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: хто
+  translation: who
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true

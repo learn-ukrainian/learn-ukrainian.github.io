@@ -2,7 +2,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: '1.2'
+version: '1.1'
 title: Sounds, Letters, and Hello
 subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
@@ -96,17 +96,6 @@ activity_hints:
   focus: 'Sort Cyrillic letters into Голосні (vowels) and Приголосні (consonants). Голосні: А, О, У, Е, И, І. Приголосні:
     К, М, Т, В, Н, Р, С, Х.'
   items: 8
-- type: letter-grid
-  focus: 'Interactive alphabet card grid showing the first letters introduced in this module.
-    Each card: upper/lower case, emoji key word, vowel/consonant coloring.
-    Use data from l2-uk-direct/a1/abetka-1.yaml (А, О, М, Л, У, Н, С) +
-    false friend letters (В, Н, Р, С, У, Х) + new shape letters (Б, Г, Ґ, Д, Ж, З).'
-  items: 19
-- type: watch-and-repeat
-  focus: 'Pronunciation practice with Anna Ohoiko videos. Letters with videos from
-    abetka-1: А (hvB3VpcR3ZE), М (Ez95H4ibuJo), Л (v6-3Xg52Buk), У (VB1O6PmtYRU),
-    Н (vNUfiKHPYaU), С (7UsFBgSL91E). Each item: YouTube video + letter + key word.'
-  items: 6
 connects_to:
 - a1-002 (Reading Ukrainian)
 prerequisites: []

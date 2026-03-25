@@ -1,6 +1,6 @@
 # Build Summary: sounds-letters-and-hello (A1)
 
-Generated: 2026-03-26 00:33
+Generated: 2026-03-26 00:43
 
 ## Pipeline Phases
 
@@ -15,11 +15,11 @@ Generated: 2026-03-26 00:33
 | verify-exercises | complete | 2026-03-25 22:57:38 |
 | annotate | complete | 2026-03-25 22:57:38 |
 | vocab | complete | 2026-03-25 22:58:01 |
-| enrich | complete | 2026-03-25 23:33:28 |
+| enrich | complete | 2026-03-25 23:43:02 |
 | verify | complete | 2026-03-25 22:58:02 |
 | review | complete | 2026-03-25 23:16:07 |
-| stress | complete | 2026-03-25 23:33:28 |
-| publish | complete | 2026-03-25 23:33:28 |
+| stress | complete | 2026-03-25 23:43:02 |
+| publish | complete | 2026-03-25 23:43:02 |
 
 ## Reviews
 
@@ -39,6 +39,8 @@ Generated: 2026-03-26 00:33
 | activities | claude-tools (claude-opus-4-6) | 100s | ✅ |
 | activities | claude-tools (claude-opus-4-6) | 53s | ✅ |
 | activities | claude-tools (claude-opus-4-6) | 49s | ✅ |
+| activities | claude-tools (claude-opus-4-6) | 147s | ✅ |
+| activities | claude-tools (claude-opus-4-6) | 99s | ✅ |
 | vocab | claude (claude-opus-4-6) | 21s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 223s | ❌ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
