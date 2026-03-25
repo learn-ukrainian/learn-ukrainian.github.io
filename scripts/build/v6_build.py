@@ -60,22 +60,7 @@ def _build_tool_instructions(writer: str) -> str:
     tool calls.
     """
     # Tool name prefix differs: Claude uses mcp__rag__, Gemini uses rag_
-    if "claude" in writer:
-        vw = "mcp__rag__verify_word"
-        vws = "mcp__rag__verify_words"
-        vl = "mcp__rag__verify_lemma"
-        st = "mcp__rag__search_text"
-        sl = "mcp__rag__search_literary"
-        qp = "mcp__rag__query_pravopys"
-        qw = "mcp__rag__query_wikipedia"
-    else:
-        vw = "rag_verify_word"
-        vws = "rag_verify_words"
-        vl = "rag_verify_lemma"
-        st = "rag_search_text"
-        sl = "rag_search_literary"
-        qp = "rag_query_pravopys"
-        qw = "rag_query_wikipedia"
+    p = "mcp__rag__" if "claude" in writer else "rag_"
 
     return (
         "\n\n---\n\n"
@@ -84,41 +69,48 @@ def _build_tool_instructions(writer: str) -> str:
         "constructs **live as you write**. The research phase is already complete; "
         "use these tools strictly for targeted verification to ensure zero "
         "Russianisms, accurate grammar, and authentic usage.\n\n"
-        "**Available Tools:**\n"
-        f"- `{vws}` / `{vw}` / `{vl}` — VESUM morphological dictionary "
+        "**Core Tools:**\n"
+        f"- `{p}verify_words` / `{p}verify_word` / `{p}verify_lemma` — VESUM morphological dictionary "
         "(409K lemmas, 6.7M forms). Returns full declension/conjugation.\n"
-        f"- `{st}` — Ukrainian school textbooks (Grades 1-11, 23K chunks).\n"
-        f"- `{sl}` — Primary literary sources (chronicles, poetry, legal texts).\n"
-        f"- `{qp}` — Official Ukrainian orthography rules (Правопис 2019).\n"
-        f"- `{qw}` — Ukrainian Wikipedia.\n\n"
+        f"- `{p}search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).\n"
+        f"- `{p}search_literary` — Primary literary sources (chronicles, poetry, legal texts).\n"
+        f"- `{p}query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).\n"
+        f"- `{p}query_wikipedia` — Ukrainian Wikipedia.\n\n"
+        "**Dictionary Tools (NEW — use these for quality):**\n"
+        f"- `{p}search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** "
+        "Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.\n"
+        f"- `{p}query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is "
+        "level-appropriate (A1/A2/B1 etc.).\n"
+        f"- `{p}search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.\n"
+        f"- `{p}search_etymology` — Грінченко (67K entries). Historical forms, etymology.\n"
+        f"- `{p}search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.\n"
+        f"- `{p}search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.\n"
+        f"- `{p}translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.\n\n"
         "**WHEN to use tools (Specific Triggers):**\n\n"
         "1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**\n"
         "   - *Trigger:* You are about to use a word that sounds similar to Russian, "
         "a calque, or you are unsure of its exact Ukrainian equivalent.\n"
-        f"   - *Action:* Use `{vws}`. If VESUM does not recognize it, do not use it.\n"
-        "   - *Example:* Checking якщо *міроприємство* (wrong) or *захід* (right); "
-        "*вірний* (loyalty) vs *правильний* (correct).\n\n"
-        "2. **Grammar & Morphology Doubts:**\n"
-        "   - *Trigger:* You are unsure about a specific case ending (e.g., Gen. -а vs -у), "
-        "an irregular plural, or a verb conjugation/aspect pair.\n"
-        f"   - *Action:* Use `{vl}` to pull the complete declension/conjugation table.\n\n"
-        "3. **Drafting Grammar Rules:**\n"
-        "   - *Trigger:* You are writing an explanation for a phonetic, spelling, or punctuation rule.\n"
-        f"   - *Action:* Use `{qp}` to confirm the exact 2019 standard rule before "
-        "explaining it to the learner.\n\n"
-        "4. **Authentic Examples & Quotes:**\n"
-        "   - *Trigger:* You need a highly natural sentence example, or a quote from a "
-        "historical/literary figure.\n"
-        f"   - *Action:* Use `{st}` to see how textbooks use the word in context, or "
-        f"`{sl}` / `{qw}` to find exact, verbatim quotes.\n\n"
+        f"   - *Action:* Use `{p}search_style_guide` first (it knows calques). "
+        f"Then verify with `{p}verify_words`.\n"
+        "   - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).\n\n"
+        "2. **Vocabulary Level Check:**\n"
+        "   - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.\n"
+        f"   - *Action:* Use `{p}query_cefr_level` to verify the word's CEFR level.\n\n"
+        "3. **Grammar & Morphology Doubts:**\n"
+        "   - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.\n"
+        f"   - *Action:* Use `{p}verify_lemma` to pull the complete declension/conjugation.\n\n"
+        "4. **Natural Expressions:**\n"
+        "   - *Trigger:* You need a natural idiom or collocation for a dialogue.\n"
+        f"   - *Action:* Use `{p}search_idioms` for Ukrainian expressions, "
+        f"`{p}search_synonyms` for word variety.\n\n"
+        "5. **Drafting Grammar Rules:**\n"
+        "   - *Trigger:* You are explaining a spelling or phonetic rule.\n"
+        f"   - *Action:* Use `{p}query_pravopys` to confirm the exact 2019 standard.\n\n"
         "**Efficiency Rules:**\n"
-        f"- **Batch your checks:** Compile 5-15 high-risk words and check them all at once "
-        f"using `{vws}`. Do NOT make individual tool calls for every word.\n"
-        "- **Do NOT verify basic words:** Trust your knowledge for *мама*, *стіл*, *робити*. "
-        "Reserve tool calls for abstract nouns, idioms, technical terms, and complex verbs.\n"
-        "- **Zero invention:** If a tool returns no results for a word or form, treat it as "
-        "a hallucination. Find a verified alternative.\n"
-        "- **Target: 5-10 tool calls per module**, not 50.\n\n"
+        f"- **Batch your checks:** Use `{p}verify_words` with 5-15 words at once.\n"
+        "- **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.\n"
+        "- **Zero invention:** If VESUM doesn't know a word, don't use it.\n"
+        "- **Target: 8-15 tool calls per module**, not 50.\n\n"
         "IMPORTANT: After using tools, output your COMPLETE module content as plain text. "
         "Do NOT narrate your tool usage. Just output the final module content.\n"
     )
@@ -590,6 +582,13 @@ def step_write(level: str, module_num: int, slug: str,
                 "mcp__rag__search_literary,"
                 "mcp__rag__query_pravopys,"
                 "mcp__rag__query_wikipedia,"
+                "mcp__rag__search_style_guide,"
+                "mcp__rag__query_cefr_level,"
+                "mcp__rag__search_definitions,"
+                "mcp__rag__search_etymology,"
+                "mcp__rag__search_idioms,"
+                "mcp__rag__search_synonyms,"
+                "mcp__rag__translate_en_uk,"
                 "Read"
             )
             cmd = [
@@ -1505,6 +1504,24 @@ def step_review(content_path: Path, level: str, module_num: int,
         prompt = prompt + "\n\n" + vesum_report
         _log(f"  VESUM pre-verification: injected ({len(vesum_report)} chars)")
 
+    # Inject tool instructions for the reviewer
+    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
+    p = "mcp__rag__" if reviewer == "claude" else "rag_"
+    review_tools = (
+        "\n\n## Verification Tools (MCP)\n\n"
+        "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n"
+        f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM\n"
+        f"- `{p}search_style_guide` — check for calques/Russianisms (Антоненко-Давидович)\n"
+        f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate\n"
+        f"- `{p}search_definitions` — look up exact definitions (СУМ-11)\n"
+        f"- `{p}search_text` — check how textbooks teach the topic\n"
+        f"- `{p}query_pravopys` — verify orthography rules\n\n"
+        "Use tools to back up your findings with evidence. A review that says "
+        "\"this might be a Russicism\" is weak. A review that says \"search_style_guide "
+        "confirms 'приймати участь' is a calque — correct form: 'брати участь'\" is strong.\n"
+    )
+    prompt = prompt + review_tools
+
     # Save review prompt
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
@@ -1526,11 +1543,25 @@ def step_review(content_path: Path, level: str, module_num: int,
         )
     else:
         import subprocess
-        _log("  Dispatching to Claude for review...")
+        mcp_config = str(PROJECT_ROOT / ".mcp.json")
+        allowed_review_tools = (
+            "mcp__rag__verify_word,"
+            "mcp__rag__verify_words,"
+            "mcp__rag__verify_lemma,"
+            "mcp__rag__search_style_guide,"
+            "mcp__rag__query_cefr_level,"
+            "mcp__rag__search_definitions,"
+            "mcp__rag__search_text,"
+            "mcp__rag__query_pravopys,"
+            "Read"
+        )
+        _log("  Dispatching to Claude for review (with MCP tools)...")
         try:
             result = subprocess.run(
                 ["claude", "-p", "--model", "claude-opus-4-6",
-                 "--output-format", "text"],
+                 "--output-format", "text",
+                 "--mcp-config", mcp_config,
+                 "--allowedTools", allowed_review_tools],
                 input=prompt,
                 capture_output=True, text=True, timeout=600,
                 cwd=str(PROJECT_ROOT),
