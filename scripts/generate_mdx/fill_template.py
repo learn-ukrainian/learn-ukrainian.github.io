@@ -36,11 +36,16 @@ PLACEHOLDER_RE = re.compile(r"\{[A-Z][A-Z0-9_]+\}")
 
 
 def fill_template(template_text: str, placeholders: dict[str, str]) -> str:
-    """Replace {KEY} patterns in template with values from placeholders dict."""
+    """Replace {KEY} patterns in template with values from placeholders dict.
+
+    Runs two passes to handle nested placeholders (e.g. QUALITY_DIMENSIONS
+    containing {IMMERSION_RULE}).
+    """
     result = template_text
-    for key, value in placeholders.items():
-        token = "{" + key + "}"
-        result = result.replace(token, str(value))
+    for _pass in range(2):
+        for key, value in placeholders.items():
+            token = "{" + key + "}"
+            result = result.replace(token, str(value))
     return result
 
 

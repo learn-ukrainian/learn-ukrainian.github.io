@@ -124,6 +124,14 @@ def _parse_v6_body(body: str) -> tuple[str, str]:
 
 
 
+def _instruction_prop(title: str) -> str:
+    """Build the instruction={...} JSX prop from a DSL title, or empty string."""
+    if not title:
+        return ""
+    escaped = json.dumps(title, ensure_ascii=False)
+    return f" instruction={{{escaped}}}"
+
+
 def _clean_item(obj):
     """Recursively strip stray quotes from strings in dicts/lists."""
     if isinstance(obj, str):
@@ -141,7 +149,7 @@ def _clean_item(obj):
 
 def _convert_v6_quiz(body: str) -> str:
     """Convert V6 quiz DSL to <Quiz> component."""
-    _title, yaml_text = _parse_v6_body(body)
+    title, yaml_text = _parse_v6_body(body)
     try:
         items = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
@@ -162,14 +170,15 @@ def _convert_v6_quiz(body: str) -> str:
         questions.append({"question": q, "options": options})
 
     return (
-        f'<Quiz client:only="react" '
+        f'<Quiz client:only="react"'
+        f'{_instruction_prop(title)} '
         f'questions={{{json.dumps(questions, ensure_ascii=False)}}} />'
     )
 
 
 def _convert_v6_fill_in(body: str) -> str:
     """Convert V6 fill-in DSL to <FillIn> component."""
-    _title, yaml_text = _parse_v6_body(body)
+    title, yaml_text = _parse_v6_body(body)
     try:
         items = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
@@ -185,14 +194,15 @@ def _convert_v6_fill_in(body: str) -> str:
         fill_items.append({"sentence": sentence, "answer": answer})
 
     return (
-        f'<FillIn client:only="react" '
+        f'<FillIn client:only="react"'
+        f'{_instruction_prop(title)} '
         f'items={{{json.dumps(fill_items, ensure_ascii=False)}}} />'
     )
 
 
 def _convert_v6_match_up(body: str) -> str:
     """Convert V6 match-up DSL to <MatchUp> component."""
-    _title, yaml_text = _parse_v6_body(body)
+    title, yaml_text = _parse_v6_body(body)
     try:
         items = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
@@ -208,14 +218,15 @@ def _convert_v6_match_up(body: str) -> str:
         pairs.append({"left": left, "right": right})
 
     return (
-        f'<MatchUp client:only="react" '
+        f'<MatchUp client:only="react"'
+        f'{_instruction_prop(title)} '
         f'pairs={{{json.dumps(pairs, ensure_ascii=False)}}} />'
     )
 
 
 def _convert_v6_group_sort(body: str) -> str:
     """Convert V6 group-sort DSL to <GroupSort> component."""
-    _title, yaml_text = _parse_v6_body(body)
+    title, yaml_text = _parse_v6_body(body)
     try:
         data = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
@@ -230,14 +241,15 @@ def _convert_v6_group_sort(body: str) -> str:
 
     groups = _clean_item(groups)
     return (
-        f'<GroupSort client:only="react" '
+        f'<GroupSort client:only="react"'
+        f'{_instruction_prop(title)} '
         f'groups={{{json.dumps(groups, ensure_ascii=False)}}} />'
     )
 
 
 def _convert_v6_true_false(body: str) -> str:
     """Convert V6 true-false DSL to <TrueFalse> component."""
-    _title, yaml_text = _parse_v6_body(body)
+    title, yaml_text = _parse_v6_body(body)
     try:
         items = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
@@ -253,7 +265,8 @@ def _convert_v6_true_false(body: str) -> str:
         tf_items.append({"statement": statement, "answer": answer})
 
     return (
-        f'<TrueFalse client:only="react" '
+        f'<TrueFalse client:only="react"'
+        f'{_instruction_prop(title)} '
         f'items={{{json.dumps(tf_items, ensure_ascii=False)}}} />'
     )
 
