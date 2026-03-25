@@ -3017,79 +3017,125 @@ def main():
         _save_v6_state(args.level, slug, "review")
 
         # Fix loop: reviewer provides <fixes>, we apply deterministically.
-        # Max 2 rounds. Score should go UP each round (9.0→9.4→9.7+).
-        # Early termination: if score doesn't improve, stop to avoid degradation.
-        max_fix_rounds = 2
-        prev_score = score
-        for fix_round in range(1, max_fix_rounds + 1):
-            if passed:
-                _log(f"\n✅ Review PASSED ({score}/10)" if fix_round == 1
-                     else f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
-                break
-
+        # If score ≥ 9.0 and reviewer says REVISE with fixes, apply them
+        # and accept — re-review often degrades scores (9.8→9.3 pattern).
+        if passed:
+            _log(f"\n✅ Review PASSED ({score}/10)")
+        elif score >= 9.0:
+            # High-scoring REVISE: apply fixes and accept without re-review.
+            # The reviewer prescribed exact fixes at 9.8/10 — applying them
+            # makes the module better, not worse. Re-review introduces noise.
             fixes = _parse_review_fixes(review_text)
-            if not fixes:
-                _log(f"\n⚠️  Review {score}/10 — no <fixes> block in review output")
-                break
+            if fixes:
+                _log(f"\n🔧 Review {score}/10 REVISE — applying {len(fixes)} fix(es) and accepting")
 
-            _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
-
-            # Save fixes for traceability
-            orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
-            orch_dir.mkdir(parents=True, exist_ok=True)
-            (orch_dir / f"review-fixes-{fix_round}.yaml").write_text(
-                yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
-                "utf-8",
-            )
-
-            # Apply each fix to the content file
-            content = content_path.read_text("utf-8")
-            applied = 0
-            for fix in fixes:
-                find = fix.get("find", "")
-                replace = fix.get("replace", "")
-                insert_after = fix.get("insert_after", "")
-
-                if find and replace and find in content:
-                    content = content.replace(find, replace, 1)
-                    applied += 1
-                    _log(f"    ✅ Fixed: {find[:60]}...")
-                elif find and replace:
-                    _log(f"    ⚠️  Not found: {find[:60]}...")
-                elif insert_after and replace and insert_after in content:
-                    pos = content.index(insert_after) + len(insert_after)
-                    content = content[:pos] + "\n\n" + replace + content[pos:]
-                    applied += 1
-                    _log(f"    ✅ Inserted after: {insert_after[:60]}...")
-
-            if applied == 0:
-                _log(f"  ⚠️  No fixes could be applied (0/{len(fixes)} matched)")
-                break
-
-            content_path.write_text(content, "utf-8")
-            _log(f"  Applied {applied}/{len(fixes)} fixes")
-
-            # Re-enrich, re-verify, re-review
-            step_enrich(content_path, args.level, slug)
-            step_verify(content_path, args.level, args.module)
-
-            passed, score, review_text = step_review(
-                content_path, args.level, args.module, slug,
-                writer=args.writer,
-            )
-            _save_v6_state(args.level, slug, "review")
-
-            # Early termination: stop if score didn't improve
-            if not passed and score <= prev_score:
-                _log(
-                    f"\n⚠️  Fix round {fix_round} didn't improve score "
-                    f"({prev_score}→{score}), stopping early"
+                # Save fixes for traceability
+                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+                orch_dir.mkdir(parents=True, exist_ok=True)
+                (orch_dir / "review-fixes-1.yaml").write_text(
+                    yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
+                    "utf-8",
                 )
-                break
-            prev_score = score
 
-        if not passed:
-            _log(f"\n⚠️  Review {score}/10 after fix loop (max {max_fix_rounds} rounds)")
+                # Apply each fix to the content file
+                content = content_path.read_text("utf-8")
+                applied = 0
+                for fix in fixes:
+                    find = fix.get("find", "")
+                    replace = fix.get("replace", "")
+                    insert_after = fix.get("insert_after", "")
+
+                    if find and replace and find in content:
+                        content = content.replace(find, replace, 1)
+                        applied += 1
+                        _log(f"    ✅ Fixed: {find[:60]}...")
+                    elif find and replace:
+                        _log(f"    ⚠️  Not found: {find[:60]}...")
+                    elif insert_after and replace and insert_after in content:
+                        pos = content.index(insert_after) + len(insert_after)
+                        content = content[:pos] + "\n\n" + replace + content[pos:]
+                        applied += 1
+                        _log(f"    ✅ Inserted after: {insert_after[:60]}...")
+
+                if applied > 0:
+                    content_path.write_text(content, "utf-8")
+                    _log(f"  Applied {applied}/{len(fixes)} fixes")
+                    # Re-enrich after fixes (but skip re-review)
+                    step_enrich(content_path, args.level, slug)
+                    step_verify(content_path, args.level, args.module)
+
+                passed = True
+                _log(f"\n✅ Review ACCEPTED ({score}/10 + {applied} fixes applied)")
+            else:
+                _log(f"\n⚠️  Review {score}/10 REVISE but no <fixes> block")
+        else:
+            # Low-scoring REVISE: full fix loop with re-review
+            max_fix_rounds = 2
+            prev_score = score
+            for fix_round in range(1, max_fix_rounds + 1):
+                if passed:
+                    _log(f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
+                    break
+
+                fixes = _parse_review_fixes(review_text)
+                if not fixes:
+                    _log(f"\n⚠️  Review {score}/10 — no <fixes> block in review output")
+                    break
+
+                _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
+
+                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+                orch_dir.mkdir(parents=True, exist_ok=True)
+                (orch_dir / f"review-fixes-{fix_round}.yaml").write_text(
+                    yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
+                    "utf-8",
+                )
+
+                content = content_path.read_text("utf-8")
+                applied = 0
+                for fix in fixes:
+                    find = fix.get("find", "")
+                    replace = fix.get("replace", "")
+                    insert_after = fix.get("insert_after", "")
+
+                    if find and replace and find in content:
+                        content = content.replace(find, replace, 1)
+                        applied += 1
+                        _log(f"    ✅ Fixed: {find[:60]}...")
+                    elif find and replace:
+                        _log(f"    ⚠️  Not found: {find[:60]}...")
+                    elif insert_after and replace and insert_after in content:
+                        pos = content.index(insert_after) + len(insert_after)
+                        content = content[:pos] + "\n\n" + replace + content[pos:]
+                        applied += 1
+                        _log(f"    ✅ Inserted after: {insert_after[:60]}...")
+
+                if applied == 0:
+                    _log(f"  ⚠️  No fixes could be applied (0/{len(fixes)} matched)")
+                    break
+
+                content_path.write_text(content, "utf-8")
+                _log(f"  Applied {applied}/{len(fixes)} fixes")
+
+                step_enrich(content_path, args.level, slug)
+                step_verify(content_path, args.level, args.module)
+
+                passed, score, review_text = step_review(
+                    content_path, args.level, args.module, slug,
+                    writer=args.writer,
+                )
+                _save_v6_state(args.level, slug, "review")
+
+                if not passed and score <= prev_score:
+                    _log(
+                        f"\n⚠️  Fix round {fix_round} didn't improve score "
+                        f"({prev_score}→{score}), stopping early"
+                    )
+                    break
+                prev_score = score
+
+            if not passed:
+                _log(f"\n⚠️  Review {score}/10 after fix loop (max {max_fix_rounds} rounds)")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
