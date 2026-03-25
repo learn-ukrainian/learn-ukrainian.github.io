@@ -34,120 +34,66 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
 4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-5. **Write exercises directly** — write complete exercises in the DSL format below. Include real questions, real answers, and real distractors. A downstream tool converts them to interactive React components.
+5. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 7. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 8. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
-## Exercises — Write Them Directly
+## Exercise Placement — Markers Only
 
-After each key teaching point, write an exercise directly in DSL format.
+**Do NOT write exercises directly.** A separate pipeline step (ACTIVITIES) generates all exercises from the plan's `activity_hints`. Your job is to place markers showing WHERE exercises belong.
 
-**CRITICAL: Each exercise MUST match a specific `activity_hints` entry from the Plan.**
-- Use the EXACT `type` specified (quiz, fill-in, match-up, group-sort, true-false)
-- Follow the `focus` description EXACTLY — if the plan says "Answer: У тебе є...? Так / Ні", your quiz must test exactly that pattern
-- Match the `items` count specified
-- Do NOT invent different exercises — the plan's activity_hints are the specification
+### How It Works
 
-Write REAL content: real questions, real answers, real distractors. Every exercise must be solvable by a learner who read the preceding prose.
+1. Read the plan's `activity_hints` — each entry has an `id`, `type`, and `focus`
+2. After the relevant teaching section, place an injection marker
+3. The ACTIVITIES step reads your prose + the plan hints and generates complete exercises
 
-### DSL Format
+### Marker Format
 
-Use these exact formats. Each block starts with `:::type` and ends with `:::`.
-
-**Quiz** (multiple choice):
-```
-:::quiz
-title: "Звук чи літера?"
----
-- q: "Що ми чуємо і вимовляємо?"
-  o: ["звуки", "літери", "слова"]
-  a: 0
-- q: "Що ми бачимо і пишемо?"
-  o: ["літери", "звуки", "речення"]
-  a: 0
-:::
-```
-
-**Fill-in** (complete the sentence):
-```
-:::fill-in
-title: "Complete the greeting"
----
-- sentence: "Привіт! Як ___?"
-  answer: "справи"
-- sentence: "Дякую, ___."
-  answer: "добре"
-:::
-```
-
-**Match-up** (connect pairs):
-```
-:::match-up
-title: "Match false friend letters to their real sounds"
----
-- left: "В"
-  right: "sounds like [в], not [b]"
-- left: "Н"
-  right: "sounds like [н], not [h]"
-:::
-```
-
-**Group-sort** (classify into categories):
-```
-:::group-sort
-title: "Classify letters"
----
-groups:
-  - name: "Голосні"
-    items: ["А", "О", "У", "І"]
-  - name: "Приголосні"
-    items: ["М", "К", "Б", "Ш"]
-:::
-```
-
-**True-false**:
-```
-:::true-false
-title: "True or false?"
----
-- statement: "В українській мові 33 літери."
-  answer: true
-- statement: "Голосних звуків більше, ніж приголосних."
-  answer: false
-:::
-```
-
-Spread exercises evenly throughout the module. Never cluster them.
-
-### Exercise Placement Markers
-
-In addition to writing exercises directly in DSL, place **injection markers** where additional exercises should appear. A separate pipeline step will generate structured exercises at these points.
-
-Place 2-3 markers after key teaching sections using this format:
+Place markers after key teaching sections. Each marker corresponds to ONE `activity_hints` entry from the plan:
 
 ```
-<!-- INJECT_ACTIVITY: quiz-genders -->
+<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
 ```
 
-Use descriptive, lowercase, hyphenated IDs that describe the exercise focus:
-- `quiz-genders`, `fillin-possessives`, `observe-endings`
-- `quiz-verb-forms`, `match-nouns-gender`, `group-cases`
+Rules:
+- Use the EXACT `id` from the plan's `activity_hints` — do not invent new IDs
+- Place the marker right after the prose that teaches the concept the exercise tests
+- Spread markers evenly throughout the module — never cluster them
+- If the plan has 4 activity hints, you should place 4 markers in your prose
 
-These are HTML comments — invisible in rendered output. The activity generator will create matching exercises.
+### Example
 
-### Approved Exercise Patterns
+If the plan says:
+```yaml
+activity_hints:
+  - id: quiz-sounds-vs-letters
+    type: quiz
+    focus: "Distinguish звук from літера"
+  - id: match-false-friends
+    type: match-up
+    focus: "Match false friend Cyrillic letters to real sounds"
+```
 
-Use these Ukrainian textbook-inspired patterns (Заболотний, Авраменко) instead of generic "quiz" types:
+Your prose should contain (after the relevant sections):
+```
+[...prose about sounds and letters...]
 
-- **Знайди помилку (Find the error):** Give 3 correct sentences and 1 with an error. Learner identifies the mistake. Tests: grammar rules, calques, Russianisms.
-- **Обери правильне слово (Choose the right word):** Fill in the blank from 2-3 options (synonyms, paronyms, or confusable words). Tests: vocabulary nuance, register.
-- **Утвори пару (Match-up):** Match words to antonyms, translations, or grammatical pairs (e.g., masculine → feminine). Tests: vocabulary, morphology.
-- **Розподіли (Group-sort):** Sort items into 2-3 categories (e.g., голосні vs приголосні, hard vs soft consonants). Tests: foundational phonetics, grammar classification.
-- **Склади речення (Build a sentence):** Give scrambled words, learner arranges into correct order. Tests: word order, sentence structure.
-- **Знайди місце (Find the right place):** Give 4 sentences with blanks and 4 words — each word fits exactly one sentence. Tests: contextual meaning, collocations.
+<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
+
+[...prose about false friend letters...]
+
+<!-- INJECT_ACTIVITY: match-false-friends -->
+```
+
+### What NOT to Do
+
+- Do NOT write `:::quiz`, `:::fill-in`, `:::match-up`, or any DSL exercise blocks
+- Do NOT write exercise questions, answers, or options — the ACTIVITIES step handles all of this
+- Do NOT invent marker IDs — use only IDs from the plan's `activity_hints`
 
 ---
 
@@ -251,8 +197,8 @@ Write in Markdown. Use:
 - `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
-- `:::quiz` / `:::fill-in` / `:::match-up` / `:::group-sort` / `:::true-false` for exercises (using the DSL formats above)
+- `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
-Do NOT write MDX component syntax or JSON. Plain Markdown with the exercise DSL blocks described above.
+Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
 
 Begin writing now. Start with the first section heading.

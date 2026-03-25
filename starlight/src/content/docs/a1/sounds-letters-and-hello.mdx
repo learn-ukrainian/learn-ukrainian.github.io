@@ -11,7 +11,6 @@ import FillIn from '@site/src/components/FillIn';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -26,21 +25,15 @@ The first family of sounds is called **голосні** (vowels). These sounds a
 
 The second family of sounds is called **приголосні** (consonants). Unlike vowels, these sounds are made with voice plus noise, or sometimes with noise only. When you pronounce a consonant, your lips, teeth, and tongue work together to create an obstruction in your mouth. There are 32 consonant sounds in total. As the same textbook poem beautifully explains: "Приголосні деренча́ть, і тихе́нько шелестя́ть" (Consonants rattle, and quietly rustle).
 
-<Quiz client:only="react" instruction={"Звук чи лі́тера?"} questions={[{"question": "Що ми чуємо і вимовляємо?", "options": [{"text": "літери", "correct": false}, {"text": "звуки", "correct": true}, {"text": "слова́", "correct": false}]}, {"question": "Що ми бачимо і пишемо?", "options": [{"text": "літери", "correct": true}, {"text": "звуки", "correct": false}, {"text": "речення", "correct": false}]}, {"question": "Скі́льки лі́тер в абе́тці?", "options": [{"text": "38", "correct": false}, {"text": "10", "correct": false}, {"text": "33", "correct": true}]}, {"question": "Скільки зву́ків в украї́нській мо́ві?", "options": [{"text": "33", "correct": false}, {"text": "38", "correct": true}, {"text": "32", "correct": false}]}, {"question": "Які́ звуки утво́рюються ті́льки го́лосом?", "options": [{"text": "приголосні", "correct": false}, {"text": "голосні", "correct": true}]}, {"question": "Які звуки ство́рюють перешко́ду в ро́ті?", "options": [{"text": "приголосні", "correct": true}, {"text": "голосні", "correct": false}]}]} />
-
 ## Пе́рші слова (First Words)
 
 Many Cyrillic letters look exactly like Latin letters and sound almost identical to what an English speaker expects. These friendly letters are **А**, **О**, **К**, **М**, and **Т**. Because they are so familiar, you can start reading real Ukrainian words immediately. Look at the word **мама** (mother). You already know how to read it. Now look at **тато** (father), **кома** (comma), **атом** (atom), **мак** (poppy), and **око** (eye). One important detail: the Ukrainian **Т** is dental, meaning your tongue touches your upper teeth, not the gum ridge above them. Also, the letters **К** and **Т** are unaspirated, meaning there is no puff of air when you say them. You will refine this naturally as you hear more Ukrainian. 
 
 The biggest trap for English speakers is a group of letters we call the "False Friends." These letters look like English letters, but they produce completely different sounds. The letter **В** sounds like [в] (not "b"). The letter **Н** sounds like [н] (not "h"). The letter **Р** sounds like a rolled [р] (not "p"). The letter **С** sounds like [с] (not "c" or "k"). The letter **У** sounds like [у] (not "y"). The letter **Х** sounds like a breathy [х] (not "x"). You can practice these tricky letters with these words: **вода** (water), **рука** (hand), **сон** (dream), **ніс** (nose), and **хата** (house). 
 
-<MatchUp client:only="react" instruction={"Match false friend Cyrillic letters to their REAL sounds"} pairs={[{"left": "В", "right": "sounds like [в], not 'b"}, {"left": "Н", "right": "sounds like [н], not 'h"}, {"left": "Р", "right": "sounds like [р], not 'p"}, {"left": "С", "right": "sounds like [с], not 'c/k"}, {"left": "У", "right": "sounds like [у], not 'y"}, {"left": "Х", "right": "sounds like [х], not 'x"}]} />
-
 Next, you will encounter completely new shapes that have no direct Latin equivalent. These include **Б**, **Г**, **Ґ**, **Д**, **Ж**, **З**, **И**, **Й**, **Л**, **П**, **Ф**, **Ц**, **Ч**, **Ш**, and **Щ**. You can recognize them easily in words like **банк** (bank), **дім** (house), **зима** (winter), **книга** (book), and **школа** (school). Note that the letter **Щ** always makes two sounds together: [шч]. Additionally, the soft sign **Ь** has no sound of its own at all; it merely softens the consonant that comes directly before it.
 
 Finally, there are some special letters to recognize. The letter **Ї** is unique to the Ukrainian language. It always equals two sounds [йі] and it never softens the letter before it. The letters **Я**, **Ю**, and **Є** can either represent two sounds or soften a preceding consonant. This will be fully explored in the next module, but for now, just try to recognize their shapes.
-
-<GroupSort client:only="react" instruction={"Sort Cyrillic letters into Голосні (vowels) and Приголосні (consonants)"} groups={[{"name": "Голосні", "items": ["А", "О", "У", "Е", "И", "І"]}, {"name": "Приголосні", "items": ["К", "М", "Т", "В", "Н", "Р", "С", "Х"]}]} />
 
 ## Приві́т! (Hello!)
 
@@ -48,19 +41,13 @@ The most common informal greeting is **Привіт!** (Hi!). You will use this 
 
 <div class="dialogue">
 
-
 **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
-
 
 **Тарас:** Добре! А у тебе? *(Good! And you?)*
 
-
 **Оленка:** Чудово! *(Great!)*
 
-
 </div>
-
-
 
 One more phrase you will hear often is "Glad to see you!". In Ukrainian, this phrase changes depending on who is speaking. A female speaker says **Рада тебе ба́чити!** (Glad to see you!). A male speaker says **Радий тебе бачити!** (Glad to see you!). This is your first encounter with gender in the Ukrainian language. Words often change their endings based on whether they describe a masculine or feminine concept. This is a very important pattern that will become a major topic starting in module eight. 
 
@@ -68,33 +55,23 @@ Here is another greeting you will hear often:
 
 <div class="dialogue">
 
-
 **Марія:** Привіт, Андрію!
-
 
 **Андрій:** О, Марія! Привіт! Рада тебе бачити!
 
-
 **Марія:** Радий... Андрію, я — жі́нка. Я кажу́ «рада». А ти ка́жеш «радий».
-
 
 **Андрій:** Ой! Радий тебе бачити! А ти — рада?
 
-
 **Марія:** Так, рада! Як справи?
-
 
 **Андрій:** Чудово!
 
-
 </div>
-
 
 Notice how Марія corrects Андрій — she says **рада** (feminine), and he says **радий** (masculine). This playful moment shows how gender works naturally in Ukrainian conversation.
 
 Now try reading **Привіт!** letter by letter. Sound out each one and identify which group it belongs to. The letter **П** is a new shape. The letter **р** is a false friend. The letter **и** is a new vowel. The letter **в** is another false friend. The letter **і** is a familiar vowel, and the letter **т** is a familiar consonant. When you blend them all together into syllables, you get: При-віт!
-
-<FillIn client:only="react" instruction={"Complete a basic greeting dialogue with blanks"} items={[{"sentence": "— ___! Як справи?", "answer": "Привіт"}, {"sentence": "— Привіт! Як ___?", "answer": "справи"}, {"sentence": "— Добре. А у ___?", "answer": "тебе"}, {"sentence": "— ___.", "answer": "Чудово"}]} />
 
 ## Чита́ємо (Reading Practice)
 
@@ -106,15 +83,11 @@ The word **Це** (this is) lets you build simple sentences: **Це мама** (
 
 <Quiz client:only="react" questions={[{"question": "Що ми чуємо і вимовляємо?", "options": [{"text": "звуки", "correct": true}, {"text": "літери", "correct": false}, {"text": "слова", "correct": false}]}, {"question": "Що ми бачимо і пишемо?", "options": [{"text": "звуки", "correct": false}, {"text": "літери", "correct": true}, {"text": "слова", "correct": false}]}, {"question": "Скільки літер в українській абетці?", "options": [{"text": "32", "correct": false}, {"text": "33", "correct": true}, {"text": "38", "correct": false}]}, {"question": "Скільки звуків в українській мові?", "options": [{"text": "33", "correct": false}, {"text": "38", "correct": true}, {"text": "32", "correct": false}]}, {"question": "Які звуки утворюються тільки голосом?", "options": [{"text": "голосні", "correct": true}, {"text": "приголосні", "correct": false}, {"text": "літери", "correct": false}]}, {"question": "Які звуки створюють перешкоду в роті?", "options": [{"text": "голосні", "correct": false}, {"text": "приголосні", "correct": true}, {"text": "літери", "correct": false}]}]} instruction={"Оберіть правильну відповідь"} />
 
-
-
-
 ### Ві́део — Video
 
 <YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=ksXIXj7CXwc" label="Overview — Ukrainian Lessons" />
 
 [По́вний плейлист / Full playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
-
 
 ## Підсумок — Summary
 

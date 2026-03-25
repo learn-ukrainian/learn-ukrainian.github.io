@@ -2519,6 +2519,25 @@ def _parse_review_fixes(review_text: str) -> list[dict]:
     return []
 
 
+def _strip_dsl_blocks(text: str) -> tuple[str, int]:
+    """Strip legacy DSL exercise blocks (:::quiz, :::fill-in, etc.) from content.
+
+    Used when activities YAML exists — the YAML is the source of truth,
+    so inline DSL exercises would create duplicates.
+
+    Returns (stripped_text, count_stripped).
+    """
+    # Match :::type ... ::: blocks (DSL exercise format)
+    dsl_pattern = re.compile(
+        r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b.*?^:::$",
+        re.MULTILINE | re.DOTALL,
+    )
+    stripped, count = dsl_pattern.subn("", text)
+    # Clean up multiple blank lines left behind
+    stripped = re.sub(r"\n{3,}", "\n\n", stripped)
+    return stripped, count
+
+
 def _convert_tab_markers(content: str) -> str:
     """Convert <!-- TAB:name --> markers to <Tabs>/<TabItem> MDX components.
 
@@ -2692,16 +2711,24 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
 
     text = content_path.read_text("utf-8")
 
-    # --- Legacy DSL→MDX conversion (backward compatible) ---
-    mdx_content, dsl_count = convert_dsl_to_mdx(text)
-    if dsl_count > 0:
-        _log(f"  Converted {dsl_count} DSL exercise(s) to MDX components")
-
     # --- Activity V2: load YAML if it exists ---
     activities_data = _load_activities(level, slug)
     inline_activities = activities_data.get("inline", []) if activities_data else []
     workbook_activities = activities_data.get("workbook", []) if activities_data else []
     all_v2_activities = inline_activities + workbook_activities
+
+    if activities_data:
+        # When activities YAML exists, strip legacy DSL blocks first
+        # to avoid duplicate exercises (DSL in Урок + YAML in Зошит).
+        text, dsl_strip_count = _strip_dsl_blocks(text)
+        if dsl_strip_count > 0:
+            _log(f"  Stripped {dsl_strip_count} legacy DSL block(s) (replaced by activities YAML)")
+
+    # Always run convert_dsl_to_mdx — it handles YouTube URLs, bare links,
+    # and stray quote cleanup in addition to DSL→MDX conversion.
+    mdx_content, dsl_count = convert_dsl_to_mdx(text)
+    if dsl_count > 0:
+        _log(f"  Converted {dsl_count} DSL exercise(s) to MDX components")
 
     if activities_data:
         _log(f"  Activity V2: {len(inline_activities)} inline, {len(workbook_activities)} workbook")
@@ -2759,12 +2786,9 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
         tab_parts.append("")
         tab_parts.append("</TabItem>")
 
-        # Tab 4: Ресурси
-        resources_content = _build_resources_tab(level, slug)
-        # Check if ENRICH already added Ресурси content
+        # Tab 4: Ресурси (use existing from ENRICH if available)
         existing_resources = tab_sections.get("Ресурси", "")
-        if existing_resources:
-            resources_content = existing_resources
+        resources_content = existing_resources if existing_resources else _build_resources_tab(level, slug)
         tab_parts.append('<TabItem label="Ресурси">')
         tab_parts.append("")
         tab_parts.append(resources_content)
@@ -2927,9 +2951,15 @@ def main():
     else:
         content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
 
-    # Step 5b: EXERCISES
-    if steps in ("all", "exercises"):
+    # Step 5b: EXERCISES — legacy fallback (skip in full pipeline, ACTIVITIES replaces it)
+    if steps == "exercises":
+        # Only run when explicitly requested (single-step mode)
         step_exercises(content_path)
+        _save_v6_state(args.level, slug, "exercises")
+    elif steps == "all":
+        _log(f"\n{'='*60}")
+        _log("  Step 5b: EXERCISES — Skipped (ACTIVITIES step handles exercises)")
+        _log(f"{'='*60}")
         _save_v6_state(args.level, slug, "exercises")
 
     # Step 5e: ACTIVITIES — structured YAML generation (#1042)
