@@ -85,12 +85,19 @@ def _build_tool_instructions(writer: str) -> str:
         f"- `{p}search_etymology` — Грінченко (67K entries). Historical forms, etymology.\n"
         f"- `{p}search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.\n"
         f"- `{p}search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.\n"
-        f"- `{p}translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.\n\n"
+        f"- `{p}translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.\n"
+        f"- `{p}query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, "
+        "concordance. Use when unsure if a collocation is natural.\n"
+        f"- `{p}query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. "
+        "Use when verify_lemma isn't enough.\n"
+        f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word "
+        "might be a Russicism — finds the proper Ukrainian alternative.\n\n"
         "**WHEN to use tools (Specific Triggers):**\n\n"
         "1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**\n"
         "   - *Trigger:* You are about to use a word that sounds similar to Russian, "
         "a calque, or you are unsure of its exact Ukrainian equivalent.\n"
         f"   - *Action:* Use `{p}search_style_guide` first (it knows calques). "
+        f"Then `{p}query_r2u` for the proper Ukrainian equivalent. "
         f"Then verify with `{p}verify_words`.\n"
         "   - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).\n\n"
         "2. **Vocabulary Level Check:**\n"
@@ -106,6 +113,9 @@ def _build_tool_instructions(writer: str) -> str:
         "5. **Drafting Grammar Rules:**\n"
         "   - *Trigger:* You are explaining a spelling or phonetic rule.\n"
         f"   - *Action:* Use `{p}query_pravopys` to confirm the exact 2019 standard.\n\n"
+        "6. **Checking Collocations & Frequency:**\n"
+        "   - *Trigger:* You want to confirm a word combination is actually used by native speakers.\n"
+        f"   - *Action:* Use `{p}query_grac` with mode='collocations' to see real-world usage.\n\n"
         "**Efficiency Rules:**\n"
         f"- **Batch your checks:** Use `{p}verify_words` with 5-15 words at once.\n"
         "- **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.\n"
@@ -315,40 +325,12 @@ def step_skeleton(level: str, module_num: int, slug: str,
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
 
     # Dispatch to writer — skeleton is short output, tools not needed
+    from build.dispatch import dispatch_agent as _dispatch
+
     base_writer = "gemini" if "gemini" in writer else "claude"
-
-    if base_writer == "gemini":
-        from batch_gemini_config import PRO_MODEL
-        from pipeline.core import dispatch_gemini
-        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
-        ok, raw = dispatch_gemini(
-            prompt, task_id=f"v6-skeleton-{slug}",
-            model=PRO_MODEL,
-            stdout_only=True, timeout=300,
-        )
-    else:
-        import subprocess
-
-        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
-
-        model = CLAUDE_MODEL_CORE_CONTENT
-        _log(f"  Dispatching to Claude ({model})...")
-        try:
-            result = subprocess.run(
-                ["claude", "-p", "--model", model,
-                 "--output-format", "text"],
-                input=prompt,
-                capture_output=True, text=True, timeout=300,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-            if not ok:
-                _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
-        except subprocess.TimeoutExpired:
-            _log("  ❌ Claude timed out (300s)")
-            ok = False
-            raw = ""
+    ok, raw = _dispatch(
+        prompt, agent=base_writer, phase="skeleton", orch_dir=orch_dir, timeout=300,
+    )
 
     if not ok or not raw:
         _log("  ❌ Writer returned no skeleton output")
@@ -526,103 +508,29 @@ def step_write(level: str, module_num: int, slug: str,
     output_dir = CURRICULUM_ROOT / level
     output_path = output_dir / f"{slug}.md"
 
+    # Inject tool instructions for -tools writers
+    use_tools = writer.endswith("-tools")
+    if use_tools:
+        prompt = prompt + _build_tool_instructions(writer)
+
+    # Dispatch via unified dispatcher
+    from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
+
     if writer == "gemini":
-        from batch_gemini_config import PRO_MODEL
-        from pipeline.core import dispatch_gemini
-        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
-        ok, raw = dispatch_gemini(
-            prompt, task_id=f"v6-{slug}",
-            model=PRO_MODEL,
-            stdout_only=True, timeout=600,
+        ok, raw = dispatch_agent(
+            prompt, agent="gemini", phase="write", orch_dir=orch_dir, timeout=600,
         )
     elif writer == "gemini-tools":
-        import subprocess
-
-        from batch_gemini_config import PRO_MODEL
-        _log(f"  Dispatching to Gemini + MCP tools ({PRO_MODEL})...")
-        prompt = prompt + _build_tool_instructions("gemini-tools")
-
-        try:
-            result = subprocess.run(
-                ["gemini", "-m", PRO_MODEL, "-y",
-                 "--allowed-mcp-server-names", "rag"],
-                input=prompt,
-                capture_output=True, text=True, timeout=900,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-            if not ok:
-                _log(f"  ❌ Gemini returned error: {(result.stderr or '')[:200]}")
-        except subprocess.TimeoutExpired:
-            _log("  ❌ Gemini timed out (900s)")
-            ok = False
-            raw = ""
+        ok, raw = dispatch_agent(
+            prompt, agent="gemini-tools", phase="write", orch_dir=orch_dir,
+            timeout=900, mcp_tools=True,
+        )
     elif writer in ("claude", "claude-tools"):
-        import subprocess
-
-        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
-
-        model = CLAUDE_MODEL_CORE_CONTENT
-        use_tools = writer == "claude-tools"
-
-        if use_tools:
-            _log(f"  Dispatching to Claude + MCP tools ({model})...")
-            prompt = prompt + _build_tool_instructions("claude-tools")
-
-            # MCP config path
-            mcp_config = str(PROJECT_ROOT / ".mcp.json")
-            # Allow only RAG tools + Read (no Edit/Write/Bash)
-            allowed_tools = (
-                "mcp__rag__verify_word,"
-                "mcp__rag__verify_words,"
-                "mcp__rag__verify_lemma,"
-                "mcp__rag__search_text,"
-                "mcp__rag__search_images,"
-                "mcp__rag__search_literary,"
-                "mcp__rag__query_pravopys,"
-                "mcp__rag__query_wikipedia,"
-                "mcp__rag__search_style_guide,"
-                "mcp__rag__query_cefr_level,"
-                "mcp__rag__search_definitions,"
-                "mcp__rag__search_etymology,"
-                "mcp__rag__search_idioms,"
-                "mcp__rag__search_synonyms,"
-                "mcp__rag__translate_en_uk,"
-                "Read"
-            )
-            cmd = [
-                "claude", "-p",
-                "--model", model,
-                "--output-format", "text",
-                "--mcp-config", mcp_config,
-                "--allowedTools", allowed_tools,
-            ]
-            timeout = 900  # tool use takes longer
-        else:
-            _log(f"  Dispatching to Claude ({model})...")
-            cmd = [
-                "claude", "-p",
-                "--model", model,
-                "--output-format", "text",
-            ]
-            timeout = 600
-
-        try:
-            result = subprocess.run(
-                cmd,
-                input=prompt,
-                capture_output=True, text=True, timeout=timeout,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-            if not ok:
-                _log(f"  ❌ Claude returned error: {result.stderr[:200]}")
-        except subprocess.TimeoutExpired:
-            _log(f"  ❌ Claude timed out ({timeout}s)")
-            ok = False
-            raw = ""
+        ok, raw = dispatch_agent(
+            prompt, agent=writer, phase="write", orch_dir=orch_dir,
+            timeout=900 if use_tools else 600,
+            mcp_tools=use_tools, allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
+        )
     else:
         _log(f"  ❌ Unknown writer: {writer}")
         return None
@@ -1167,35 +1075,15 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     prompt = template.replace("{PLAN_VOCABULARY}", plan_vocab_text)
     prompt = prompt.replace("{MODULE_CONTENT}", module_content)
 
-    # Dispatch to writer
-    # Normalize writer — vocab step doesn't need tools, just the base model
+    # Dispatch to writer — vocab step doesn't need tools, just the base model
+    from build.dispatch import dispatch_agent as _dispatch
+
     base_writer = "claude" if "claude" in writer else "gemini"
-
-    if base_writer == "claude":
-        import subprocess
-
-        from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
-        model = CLAUDE_MODEL_CORE_CONTENT
-        _log(f"  Dispatching to Claude ({model})...")
-        try:
-            result = subprocess.run(
-                ["claude", "-p", "--model", model, "--output-format", "text"],
-                input=prompt, capture_output=True, text=True, timeout=120,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-        except subprocess.TimeoutExpired:
-            _log("  ❌ Timeout")
-            ok, raw = False, ""
-    else:
-        from batch_gemini_config import PRO_MODEL
-        from pipeline.core import dispatch_gemini
-        _log(f"  Dispatching to Gemini ({PRO_MODEL})...")
-        ok, raw = dispatch_gemini(
-            prompt, task_id=f"v6-vocab-{slug}",
-            model=PRO_MODEL, stdout_only=True, timeout=120,
-        )
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    ok, raw = _dispatch(
+        prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=120,
+    )
 
     if not ok or not raw:
         _log("  ❌ Writer returned no vocabulary output")
@@ -1509,16 +1397,27 @@ def step_review(content_path: Path, level: str, module_num: int,
     p = "mcp__rag__" if reviewer == "claude" else "rag_"
     review_tools = (
         "\n\n## Verification Tools (MCP)\n\n"
-        "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n"
-        f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM\n"
-        f"- `{p}search_style_guide` — check for calques/Russianisms (Антоненко-Давидович)\n"
-        f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate\n"
-        f"- `{p}search_definitions` — look up exact definitions (СУМ-11)\n"
-        f"- `{p}search_text` — check how textbooks teach the topic\n"
-        f"- `{p}query_pravopys` — verify orthography rules\n\n"
-        "Use tools to back up your findings with evidence. A review that says "
-        "\"this might be a Russicism\" is weak. A review that says \"search_style_guide "
-        "confirms 'приймати участь' is a calque — correct form: 'брати участь'\" is strong.\n"
+        "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
+        "**Core Verification:**\n"
+        f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)\n"
+        f"- `{p}verify_lemma` — full declension/conjugation for a lemma\n"
+        f"- `{p}search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)\n"
+        f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.\n"
+        f"- `{p}query_pravopys` — verify orthography rules (Правопис 2019)\n\n"
+        "**Content Quality:**\n"
+        f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
+        f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
+        f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
+        f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
+        f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
+        f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
+        "**Reference:**\n"
+        f"- `{p}search_text` — check how textbooks teach the topic (Grades 1-11)\n"
+        f"- `{p}search_literary` — verify literary references against primary sources\n"
+        f"- `{p}query_wikipedia` — fact-check historical/cultural claims\n\n"
+        "**Evidence standard:** A review that says \"this might be a Russicism\" is WEAK. "
+        "A review that says \"`search_style_guide` confirms 'приймати участь' is a calque — "
+        "correct form: 'брати участь'\" is STRONG. Cite tool results.\n"
     )
     prompt = prompt + review_tools
 
@@ -1529,62 +1428,23 @@ def step_review(content_path: Path, level: str, module_num: int,
     review_prompt_path.write_text(prompt, "utf-8")
 
     # Dispatch to reviewer (cross-agent: writer's opposite)
-    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"  # gemini/gemini-tools → claude reviews
+    from build.dispatch import CLAUDE_REVIEWER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
     _log(f"  Reviewer: {reviewer} (writer was {writer})")
 
     if reviewer == "gemini":
-        import subprocess
-
-        from batch_gemini_config import PRO_MODEL
-        _log(f"  Dispatching to Gemini ({PRO_MODEL}) with MCP tools...")
-        # Direct dispatch (bypass agent bridge ORCHESTRATED mode which blocks MCP)
-        try:
-            result = subprocess.run(
-                ["gemini", "-m", PRO_MODEL, "-y",
-                 "--allowed-mcp-server-names", "rag"],
-                input=prompt,
-                capture_output=True, text=True, timeout=600,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-            if not ok:
-                _log(f"  ❌ Gemini returned error: {(result.stderr or '')[:200]}")
-        except subprocess.TimeoutExpired:
-            _log("  ❌ Gemini review timed out (600s)")
-            ok = False
-            raw = ""
-    else:
-        import subprocess
-        mcp_config = str(PROJECT_ROOT / ".mcp.json")
-        allowed_review_tools = (
-            "mcp__rag__verify_word,"
-            "mcp__rag__verify_words,"
-            "mcp__rag__verify_lemma,"
-            "mcp__rag__search_style_guide,"
-            "mcp__rag__query_cefr_level,"
-            "mcp__rag__search_definitions,"
-            "mcp__rag__search_text,"
-            "mcp__rag__query_pravopys,"
-            "Read"
+        ok, raw = _dispatch(
+            prompt, agent="gemini-tools", phase="review", orch_dir=orch_dir,
+            timeout=600, mcp_tools=True,
         )
-        _log("  Dispatching to Claude for review (with MCP tools)...")
-        try:
-            result = subprocess.run(
-                ["claude", "-p", "--model", "claude-opus-4-6",
-                 "--output-format", "text",
-                 "--mcp-config", mcp_config,
-                 "--allowedTools", allowed_review_tools],
-                input=prompt,
-                capture_output=True, text=True, timeout=600,
-                cwd=str(PROJECT_ROOT),
-            )
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-        except subprocess.TimeoutExpired:
-            _log("  ❌ Claude review timed out")
-            ok = False
-            raw = ""
+    else:
+        ok, raw = _dispatch(
+            prompt, agent="claude-tools", phase="review", orch_dir=orch_dir,
+            timeout=600, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
+            model="claude-opus-4-6",
+        )
 
     if not ok or not raw:
         _log("  ❌ Reviewer returned no output")

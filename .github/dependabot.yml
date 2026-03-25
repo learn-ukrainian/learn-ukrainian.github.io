@@ -1,0 +1,44 @@
+# Dependabot — automated dependency updates
+# Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+version: 2
+updates:
+  # GitHub Actions — detect outdated SHA pins
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+    # Group all action updates into a single PR
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # npm (Starlight site)
+  - package-ecosystem: "npm"
+    directory: "/starlight"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
+    # Only security updates — we don't want churn on minor bumps
+    open-pull-requests-limit: 5
+
+  # pip (Python scripts)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 5
