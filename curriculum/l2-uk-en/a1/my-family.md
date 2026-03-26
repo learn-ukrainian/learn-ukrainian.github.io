@@ -27,6 +27,7 @@
 
 
 
+
 A few words to notice: **чи** (or) appears in yes/no questions when offering a choice. **Тільки** (only) is a useful word — it softens a statement. **Як його звати?** literally means "How is he called?" — you already know **Як тебе звати?** from Module 5, and **його** (his/him) simply replaces **тебе** (you).
 
 Maksym swipes to a group photo. Ukrainians often keep extended family photos on their phones — family ties run deep.
@@ -63,6 +64,7 @@ Maksym swipes to a group photo. Ukrainians often keep extended family photos on 
 
 
 
+
 **Хто це?** (Who is this?) is your go-to question when pointing at someone in a photo. **Її звати** (her name is) works exactly like **його звати** — just swap the pronoun.
 
 Notice the pattern **Це** + possessive + noun: **Це мій тато**, **Це моя мама**, **Це мої брати**. Ukrainian uses **Це** (this is) the same way English uses "This is" for introductions. Already you can see that **мій** and **моя** are different — this is because they match the gender of the person you are introducing.
@@ -94,6 +96,7 @@ Now Оля introduces her own family — a connected monologue combining everyth
 
 
 </div>
+
 
 
 
@@ -180,6 +183,7 @@ The **Це** + possessive + noun pattern is the workhorse for family introductio
 
 
 </div>
+
 
 
 
@@ -294,10 +298,6 @@ Advanced exercises for this module are in development. Check back soon!
 - [Talking about your family in Ukrainian + I have, you have](https://www.ukrainianlessons.com/episode6/) (ukrainianlessons.com)
 - [More about your family in Ukrainian + Possessive Pronouns](https://www.ukrainianlessons.com/episode7/) (ukrainianlessons.com)
 - [Talk Ukrainian: Family – Родина](https://talkukrainian.com/family/) (talkukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Family Vocabulary](https://www.ukrainianlessons.com/family-members/)
 
 **Подкасти — Podcasts**
 

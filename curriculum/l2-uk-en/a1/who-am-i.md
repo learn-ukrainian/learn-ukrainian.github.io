@@ -34,6 +34,7 @@ You arrive in Ukraine. At the hostel, someone smiles and says hello. At a confer
 
 
 
+
 Notice a few things here. **Тебе** (you, informal) signals that this is a casual conversation between peers. **Звідки** (where from) is how you ask about someone's origin. And **Дуже приємно!** (Very pleased!) is what Ukrainians say after exchanging names — never before.
 
 ### Dialogue 2 — At a conference
@@ -63,6 +64,7 @@ Notice a few things here. **Тебе** (you, informal) signals that this is a ca
 
 
 
+
 The shift from informal to formal is clear: **вас** (you, formal) replaces **тебе**, and **Ви** (you, formal) replaces **ти**. Use formal language with strangers, older people, and in professional settings. Use informal language with friends, peers, and children.
 
 ### Dialogue 3 — Introducing someone else
@@ -79,6 +81,7 @@ The shift from informal to formal is clear: **вас** (you, formal) replaces **
 
 
 </div>
+
 
 
 
@@ -122,6 +125,7 @@ To ask the question, put **Як** (how) at the front. Informally: **Як теб�
 
 
 
+
 Ukrainians also use a shorter form in casual speech. Instead of **Мене звати Олена**, you can simply say **Я — Олена** or even just **Я Олена**, dropping **звати** entirely. This is common and perfectly correct. Both forms work: **Мене звати Олена** = **Я Олена**.
 
 After exchanging names, Ukrainians say **Дуже приємно!** (Very pleasant!) or **Приємно познайомитись!** (Pleasant to get acquainted!). The other person responds **Мені також!** (Me too!). This greeting always comes AFTER names are exchanged, not before.
@@ -158,6 +162,7 @@ To ask questions with **Це**, use **Що це?** (What is this?) for things an
 
 
 </div>
+
 
 
 
@@ -243,6 +248,7 @@ The same pattern works for cities: **Я з Києва.** **Я зі Львова.
 
 
 </div>
+
 
 
 
@@ -351,10 +357,6 @@ Advanced exercises for this module are in development. Check back soon!
   _Де ви живете? Звідки ви?_
 - [ULP Season 1, Episode 8 — Jobs and Professions](https://www.ukrainianlessons.com/episode8/)
   _Profession vocabulary with gendered forms._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [How to Introduce Yourself in Ukrainian](https://www.ukrainianlessons.com/introduce-yourself/)
 
 **Подкасти — Podcasts**
 

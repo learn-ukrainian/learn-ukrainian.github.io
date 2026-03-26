@@ -151,15 +151,11 @@ Advanced exercises for this module are in development. Check back soon!
 - Большакова Grade 1, p.45-47
   _Тверді і пом'якшені приголосні звуки._
 
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Soft Sign and Apostrophe](https://www.ukrainianlessons.com/soft-sign-apostrophe/)
-
 **Для поглиблення — For deeper study (in Ukrainian)**
 
-- [Приголосні м'які й тверді, дзвінкі й глухі; вимова [ґ] і [г]](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-myaki-j-tverdi-dzvinki-j-glukhi-vimova-prigolosnikh-g-i-g-41845)
+- [Приголосні м'які й тверді, дзвінкі й глухі; вимова приголосних [ґ] і [г]](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885)
   _soft/hard consonants, voiced/voiceless, Ґ vs Г_
-- [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-myakshennia-41861)
+- [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
   _soft sign rules_
-- [Правила вживання апострофа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-41863)
+- [Правила вживання апострофа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-39782)
   _apostrophe rules_

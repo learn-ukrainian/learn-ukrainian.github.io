@@ -1,6 +1,6 @@
 # Build Summary: things-have-gender (A1)
 
-Generated: 2026-03-26 07:50
+Generated: 2026-03-26 07:59
 
 ## Pipeline Phases
 
@@ -15,11 +15,11 @@ Generated: 2026-03-26 07:50
 | verify-exercises | complete | 2026-03-26 01:29:21 |
 | annotate | complete | 2026-03-26 01:29:21 |
 | vocab | complete | 2026-03-26 01:29:44 |
-| enrich | complete | 2026-03-26 06:45:41 |
+| enrich | complete | 2026-03-26 06:59:08 |
 | verify | complete | 2026-03-26 01:29:45 |
 | review | complete | 2026-03-26 01:30:30 |
-| stress | complete | 2026-03-26 06:50:59 |
-| publish | complete | 2026-03-26 06:50:59 |
+| stress | complete | 2026-03-26 06:59:09 |
+| publish | complete | 2026-03-26 06:59:09 |
 
 ## Reviews
 

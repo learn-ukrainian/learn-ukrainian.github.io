@@ -218,13 +218,9 @@ Advanced exercises for this module are in development. Check back soon!
 - Захарійчук Grade 1 (NUS 2025), p.13-15
   _Sound notation: [•] for vowels, [–] for consonants, [=] for soft._
 
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [How to Read Ukrainian: A Step-by-Step Guide](https://www.ukrainianlessons.com/read-ukrainian/)
-
 **Для поглиблення — For deeper study (in Ukrainian)**
 
-- [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41849)
+- [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
   _sounds vs letters mismatch_
 - [Склад. Основні правила переносу](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sklad-osnovni-pravila-perenosu-41850)
   _syllables and syllable division_

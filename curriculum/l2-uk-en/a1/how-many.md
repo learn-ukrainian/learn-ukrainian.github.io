@@ -32,6 +32,7 @@ Numbers are part of every conversation. At a market, you ask about prices. When 
 
 
 
+
 The question **Скільки коштує?** (How much does it cost?) is the most useful phrase at any Ukrainian market or shop. **Гривень** (hryvnias) is the currency word after numbers like 5 and above. **Дорого** means "expensive," **дешевше** means "cheaper," and **я беру цю** (I'll take this one) is a fixed phrase — just memorize it as a chunk for now.
 
 <div class="dialogue">
@@ -59,6 +60,7 @@ The question **Скільки коштує?** (How much does it cost?) is the mo
 
 
 </div>
+
 
 
 
@@ -259,10 +261,6 @@ Advanced exercises for this module are in development. Check back soon!
   _Numbers 11-100 and prices._
 - Авраменко Grade 6, p.152
   _Числівники кількісні vs порядкові — basic classification._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Numbers 1-100](https://www.ukrainianlessons.com/ukrainian-numbers/)
 
 **Подкасти — Podcasts**
 
