@@ -1735,6 +1735,85 @@ def _build_activity_level_context(level: str, module_num: int, plan: dict) -> st
     )
 
 
+def _build_pedagogy_patterns(plan: dict, level: str) -> str:
+    """Load pedagogy pattern library and select patterns matching this module's topic.
+
+    Returns formatted text for injection into the activities prompt.
+    Issue: #1051
+    """
+    patterns_path = PROJECT_ROOT / "docs" / "rules" / "pedagogy-patterns.yaml"
+    if not patterns_path.exists():
+        return "(No pedagogy pattern library found.)"
+
+    try:
+        patterns_data = yaml.safe_load(patterns_path.read_text("utf-8"))
+    except Exception:
+        return "(Failed to load pedagogy patterns.)"
+
+    all_patterns = patterns_data.get("patterns", {})
+    if not all_patterns:
+        return "(Pattern library is empty.)"
+
+    # Build search terms from plan
+    title = plan.get("title", "").lower()
+    # Collect topic keywords from plan's content_outline section titles
+    search_terms: set[str] = set()
+    search_terms.update(title.split())
+    for section in plan.get("content_outline", []):
+        section_title = section.get("section", "").lower()
+        search_terms.update(section_title.split())
+    # Add activity hint focuses
+    for hint in plan.get("activity_hints", []):
+        focus = hint.get("focus", "").lower()
+        search_terms.update(focus.split())
+
+    # Match patterns by topic keywords (bidirectional substring for Cyrillic stems)
+    matched: list[tuple[str, dict]] = []
+    for pattern_id, pattern in all_patterns.items():
+        topics = [t.lower() for t in pattern.get("topics", [])]
+        hit = False
+        for topic in topics:
+            if topic in search_terms:
+                hit = True
+                break
+            # Bidirectional substring: "склади" matches "склад", "складоподіл" matches "склад"
+            for term in search_terms:
+                if len(term) > 3 and (term in topic or topic in term):
+                    hit = True
+                    break
+            if hit:
+                break
+        if hit:
+            matched.append((pattern_id, pattern))
+
+    if not matched:
+        # Fallback: include general patterns
+        for pattern_id, pattern in all_patterns.items():
+            if pattern_id.startswith("general-"):
+                matched.append((pattern_id, pattern))
+
+    if not matched:
+        return "(No matching patterns found for this module's topic.)"
+
+    # Format matched patterns
+    lines = []
+    for pattern_id, pattern in matched:
+        lines.append(f"### Pattern: {pattern_id}")
+        for ex in pattern.get("exercises", []):
+            ex_type = ex.get("type", "?")
+            name_uk = ex.get("name_uk", "")
+            focus = ex.get("focus", "")
+            lines.append(f"- **{ex_type}** — {name_uk}: {focus}")
+            example = ex.get("example")
+            if example:
+                instr = example.get("instruction", "")
+                if instr:
+                    lines.append(f"  - Instruction: *{instr}*")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
 def step_activities(
     content_path: Path, level: str, module_num: int, slug: str,
     writer: str = "gemini-tools", max_retries: int = 2,
@@ -1804,6 +1883,9 @@ def step_activities(
     # Build level context — critical for activity language and type selection
     level_context = _build_activity_level_context(level, module_num, plan)
 
+    # Build pedagogy patterns — topic-specific exercise recommendations (#1051)
+    pedagogy_patterns = _build_pedagogy_patterns(plan, level)
+
     # Fill template
     prompt = template
     replacements = {
@@ -1817,6 +1899,7 @@ def step_activities(
         "{MODULE_CONTENT}": module_content,
         "{TOOL_INSTRUCTIONS}": tool_instructions,
         "{LEVEL_CONTEXT}": level_context,
+        "{PEDAGOGY_PATTERNS}": pedagogy_patterns,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)

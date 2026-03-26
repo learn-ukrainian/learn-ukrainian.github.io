@@ -1,0 +1,289 @@
+# Pedagogy Pattern Library — exercise patterns by grammar topic
+#
+# Maps grammar topics to recommended exercise types and patterns,
+# sourced from МійКлас (Grade 5-11) and Ukrainian textbook analysis.
+#
+# The activities prompt injects topic-matching patterns so the LLM
+# generates the RIGHT kind of exercises for each concept.
+#
+# Issue: #1051
+# Format: topic → exercise patterns with Ukrainian instructions + examples
+
+patterns:
+
+  # =========================================================================
+  # PHONETICS (A1.1 — M01-M04)
+  # =========================================================================
+
+  phonetics-sounds-letters:
+    topics: ["sounds", "letters", "alphabet", "звуки", "літери", "алфавіт", "абетка"]
+    level: "A1.1"
+    exercises:
+      - type: quiz
+        name_uk: "Звук чи літера?"
+        focus: "Distinguish звук from літера — fundamental Ukrainian phonetics distinction"
+        example:
+          instruction: "Choose the correct answer"
+          question: "How many sounds does the word «яблуко» have?"
+          options: ["6 sounds", "5 sounds", "7 sounds"]
+          correct: 0
+      - type: match-up
+        name_uk: "Літера → Звук"
+        focus: "Match letters to their sound values, especially multi-sound letters (я, ю, є, ї)"
+        example:
+          instruction: "Match each letter to the sound(s) it represents"
+          pairs: [["я (at word start)", "[йа]"], ["я (after consonant)", "[а]"]]
+      - type: group-sort
+        name_uk: "Голосні й приголосні"
+        focus: "Sort letters/sounds into голосні (vowel) vs приголосні (consonant)"
+        example:
+          instruction: "Розподіліть звуки"
+          groups: [["Голосні", ["а", "о", "у"]], ["Приголосні", ["б", "в", "г"]]]
+      - type: image-to-letter
+        name_uk: "Знайди літеру"
+        focus: "See image, identify the Ukrainian letter it starts with"
+
+  phonetics-syllables:
+    topics: ["syllables", "складоподіл", "склад", "syllable division", "переніс"]
+    level: "A1.1"
+    exercises:
+      - type: divide-words
+        name_uk: "Поділи слова на склади"
+        focus: "Interactive syllable division — tap between letters to insert hyphens"
+        example:
+          instruction: "Поділіть слово на склади"
+          word: "молоко"
+          answer: "мо-ло-ко"
+      - type: count-syllables
+        name_uk: "Порахуй склади"
+        focus: "Count syllables — each vowel = one syllable (складотворчі голосні)"
+        example:
+          instruction: "How many syllables?"
+          word: "коридор"
+          answer: 3
+      - type: pick-syllables
+        name_uk: "Вибери закриті/відкриті склади"
+        focus: "Classify syllables as відкритий (ends vowel) or закритий (ends consonant)"
+        example:
+          instruction: "Select all closed syllables (закриті склади)"
+          options: ["ка", "ша", "май", "стер", "ре"]
+          correct: ["май", "стер"]
+      - type: odd-one-out
+        name_uk: "Четверте зайве"
+        focus: "Pick the word that doesn't belong — by syllable count, type, or pattern"
+        example:
+          instruction: "Яке слово зайве?"
+          options: ["кіт", "пес", "сік", "молоко"]
+          correct: "молоко"
+          explanation: "молоко — багатоскладове, решта — односкладові"
+
+  phonetics-soft-hard:
+    topics: ["soft sign", "м'який знак", "apostrophe", "апостроф", "м'які приголосні", "тверді приголосні"]
+    level: "A1.1"
+    exercises:
+      - type: group-sort
+        name_uk: "М'який чи твердий?"
+        focus: "Sort consonants/words by soft vs hard pronunciation"
+        example:
+          instruction: "Розподіліть"
+          groups: [["М'які", ["день", "сіль"]], ["Тверді", ["дом", "сон"]]]
+      - type: quiz
+        name_uk: "Де потрібен ь?"
+        focus: "Choose which word needs м'який знак"
+      - type: error-correction
+        name_uk: "Виправ помилку"
+        focus: "Find where м'який знак or апостроф is missing/wrong"
+
+  phonetics-stress:
+    topics: ["stress", "наголос", "accent", "melody", "інтонація"]
+    level: "A1.1"
+    exercises:
+      - type: quiz
+        name_uk: "Де наголос?"
+        focus: "Choose the correct stress position — critical for Ukrainian pronunciation"
+        example:
+          instruction: "Оберіть слово з правильним наголосом"
+          options: ["за́мок (castle)", "замо́к (lock)"]
+      - type: odd-one-out
+        name_uk: "Четверте зайве за наголосом"
+        focus: "Pick the word with different stress pattern"
+
+  # =========================================================================
+  # NOUNS & GENDER (A1.2 — M08-M14)
+  # =========================================================================
+
+  grammar-gender:
+    topics: ["gender", "рід", "masculine", "feminine", "neuter", "чоловічий", "жіночий", "середній"]
+    level: "A1.2"
+    exercises:
+      - type: group-sort
+        name_uk: "Він, вона чи воно?"
+        focus: "Sort nouns by grammatical gender using ending rules"
+        example:
+          instruction: "Розподіліть слова за родами"
+          groups: [["Він (чоловічий)", ["стіл", "брат"]], ["Вона (жіночий)", ["книга", "сестра"]], ["Воно (середнє)", ["вікно", "море"]]]
+      - type: quiz
+        name_uk: "Який рід?"
+        focus: "Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut"
+      - type: fill-in
+        name_uk: "Мій, моя чи моє?"
+        focus: "Choose possessive that matches noun gender"
+        example:
+          instruction: "Вставте правильне слово"
+          sentence: "Це ____ кімната."
+          answer: "моя"
+          options: ["мій", "моя", "моє"]
+      - type: match-up
+        name_uk: "Іменник + займенник"
+        focus: "Match nouns to він/вона/воно"
+
+  grammar-adjectives:
+    topics: ["adjectives", "прикметники", "який", "яка", "яке", "які", "agreement"]
+    level: "A1.2"
+    exercises:
+      - type: fill-in
+        name_uk: "Який? Яка? Яке?"
+        focus: "Choose adjective ending to match noun gender"
+        example:
+          instruction: "Вставте правильну форму"
+          sentence: "Це велик___ місто."
+          answer: "е"
+      - type: error-correction
+        name_uk: "Знайди помилку в узгодженні"
+        focus: "Find gender/number agreement errors between adjective and noun"
+      - type: match-up
+        name_uk: "Іменник + прикметник"
+        focus: "Match nouns to correct adjective forms"
+
+  grammar-numbers:
+    topics: ["numbers", "числівники", "counting", "лічба", "скільки"]
+    level: "A1.2"
+    exercises:
+      - type: quiz
+        name_uk: "Яке число?"
+        focus: "Recognize written number words"
+      - type: fill-in
+        name_uk: "Напиши цифру словом"
+        focus: "Write the number as a Ukrainian word"
+      - type: match-up
+        name_uk: "Цифра → слово"
+        focus: "Match digits to their Ukrainian word forms"
+
+  # =========================================================================
+  # VERBS (A1.3 — M15-M21)
+  # =========================================================================
+
+  grammar-verbs-present:
+    topics: ["verbs", "дієслова", "conjugation", "відмінювання", "present tense", "теперішній час"]
+    level: "A1.3"
+    exercises:
+      - type: fill-in
+        name_uk: "Відмінюй дієслово"
+        focus: "Fill in correct verb conjugation for given person/number"
+        example:
+          instruction: "Вставте правильну форму дієслова"
+          sentence: "Ми _____ (читати) книгу."
+          answer: "читаємо"
+      - type: group-sort
+        name_uk: "І чи ІІ дієвідміна?"
+        focus: "Sort verbs by conjugation class (I vs II)"
+      - type: match-up
+        name_uk: "Особа → форма"
+        focus: "Match personal pronouns to verb conjugation forms"
+        example:
+          instruction: "З'єднайте"
+          pairs: [["я", "читаю"], ["ти", "читаєш"], ["він/вона", "читає"]]
+      - type: error-correction
+        name_uk: "Виправ дієслово"
+        focus: "Find incorrectly conjugated verb and fix it"
+
+  # =========================================================================
+  # CASES (A1.4-A1.5 — M22-M35)
+  # =========================================================================
+
+  grammar-cases:
+    topics: ["cases", "відмінки", "declension", "відмінювання іменників", "accusative", "genitive", "dative", "locative"]
+    level: "A1.4"
+    exercises:
+      - type: fill-in
+        name_uk: "Який відмінок?"
+        focus: "Fill in the correct case ending for a noun in context"
+        example:
+          instruction: "Вставте іменник у правильній формі"
+          sentence: "Я бачу _____ (сестра)."
+          answer: "сестру"
+      - type: quiz
+        name_uk: "Визнач відмінок"
+        focus: "Identify which case a highlighted noun is in"
+      - type: group-sort
+        name_uk: "Розподіли за відмінками"
+        focus: "Sort noun forms by their case"
+      - type: error-correction
+        name_uk: "Знайди помилку у відмінку"
+        focus: "Find wrong case ending and correct it"
+
+  # =========================================================================
+  # ASPECT (B1)
+  # =========================================================================
+
+  grammar-verb-aspect:
+    topics: ["aspect", "вид", "доконаний", "недоконаний", "perfective", "imperfective"]
+    level: "B1"
+    exercises:
+      - type: group-sort
+        name_uk: "Доконаний чи недоконаний?"
+        focus: "Sort verbs by aspect — recognize aspect pairs"
+        example:
+          instruction: "Розподіліть дієслова за видами"
+          groups: [["Недоконаний", ["читати", "писати"]], ["Доконаний", ["прочитати", "написати"]]]
+      - type: match-up
+        name_uk: "Утвори видові пари"
+        focus: "Match imperfective ↔ perfective aspect pairs"
+        example:
+          instruction: "З'єднайте видові пари"
+          pairs: [["читати", "прочитати"], ["писати", "написати"]]
+      - type: fill-in
+        name_uk: "Який вид доречний?"
+        focus: "Choose correct aspect for context (duration vs completion)"
+        example:
+          instruction: "Оберіть правильну форму"
+          sentence: "Вчора він _____ (читати/прочитати) всю книгу."
+          answer: "прочитав"
+      - type: quiz
+        name_uk: "Визнач вид дієслова"
+        focus: "Identify aspect of a given verb"
+
+  # =========================================================================
+  # GENERAL PATTERNS (any level)
+  # =========================================================================
+
+  general-vocabulary:
+    topics: ["vocabulary", "лексика", "words", "thematic vocabulary"]
+    level: "any"
+    exercises:
+      - type: match-up
+        name_uk: "Слово → переклад"
+        focus: "Match Ukrainian words to English translations"
+      - type: fill-in
+        name_uk: "Вставте слово"
+        focus: "Fill in the missing word from context"
+      - type: anagram
+        name_uk: "Склади слово"
+        focus: "Rearrange letters to form the target word"
+      - type: odd-one-out
+        name_uk: "Четверте зайве"
+        focus: "Pick the word that doesn't belong to the semantic group"
+      - type: translate
+        name_uk: "Оберіть переклад"
+        focus: "Choose correct translation from options"
+
+  general-reading:
+    topics: ["reading", "comprehension", "розуміння тексту", "dialogue"]
+    level: "any"
+    exercises:
+      - type: true-false
+        name_uk: "Правда чи ні?"
+        focus: "Check comprehension of a passage or dialogue"
+      - type: quiz
+        name_uk: "Відповідь на запитання"
+        focus: "Answer questions about a text passage"

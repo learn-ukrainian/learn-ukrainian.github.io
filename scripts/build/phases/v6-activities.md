@@ -175,6 +175,16 @@ workbook:
 
 {LEVEL_CONTEXT}
 
+## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
+
+These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
+
+{PEDAGOGY_PATTERNS}
+
+**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+
+---
+
 ## Quality Rules
 
 1. **Instructions match learner level:**
