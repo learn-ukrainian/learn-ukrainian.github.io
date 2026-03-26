@@ -1,0 +1,325 @@
+version: '1.0'
+module: what-is-it-like
+level: a1
+inline:
+- id: quiz-yakyj-yaka-yake
+  type: quiz
+  instruction: 'Choose the correct question word: **який**, **яка**, or **яке**?'
+  items:
+  - question: _____ стіл?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 0
+  - question: _____ книга?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 1
+  - question: _____ вікно?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 2
+  - question: _____ кімната?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 1
+  - question: _____ ліжко?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 2
+  - question: _____ стілець?
+    options:
+    - який
+    - яка
+    - яке
+    correct: 0
+- id: fill-in-adj-endings
+  type: fill-in
+  instruction: Fill in the correct adjective form to match the noun's gender.
+  items:
+  - sentence: Нов___ книга
+    answer: нова
+    options:
+    - новий
+    - нова
+    - нове
+  - sentence: Велик___ стіл
+    answer: великий
+    options:
+    - великий
+    - велика
+    - велике
+  - sentence: Чист___ вікно
+    answer: чисте
+    options:
+    - чистий
+    - чиста
+    - чисте
+  - sentence: Стар___ шафа
+    answer: стара
+    options:
+    - старий
+    - стара
+    - старе
+  - sentence: Маленьк___ ліжко
+    answer: маленьке
+    options:
+    - маленький
+    - маленька
+    - маленьке
+  - sentence: Гарн___ кімната
+    answer: гарна
+    options:
+    - гарний
+    - гарна
+    - гарне
+  - sentence: Дорог___ сумка
+    answer: дорога
+    options:
+    - дорогий
+    - дорога
+    - дороге
+  - sentence: Дешев___ телефон
+    answer: дешевий
+    options:
+    - дешевий
+    - дешева
+    - дешеве
+  - sentence: Брудн___ вікно
+    answer: брудне
+    options:
+    - брудний
+    - брудна
+    - брудне
+  - sentence: Світл___ кімната
+    answer: світла
+    options:
+    - світлий
+    - світла
+    - світле
+- id: match-opposites
+  type: match-up
+  instruction: Match each adjective with its opposite.
+  pairs:
+  - left: великий
+    right: маленький
+  - left: новий
+    right: старий
+  - left: чистий
+    right: брудний
+  - left: дорогий
+    right: дешевий
+  - left: світлий
+    right: темний
+  - left: гарний
+    right: поганий
+- id: fill-in-describe-room
+  type: fill-in
+  instruction: Complete each sentence with the correct adjective form. Use the word
+    in parentheses.
+  items:
+  - sentence: Моя кімната _____ і _____. (великий, світлий)
+    answer: велика, світла
+  - sentence: Стіл _____. (новий)
+    answer: новий
+  - sentence: Вікно _____ і _____. (великий, чистий)
+    answer: велике, чисте
+  - sentence: Ліжко _____. (старий)
+    answer: старе
+  - sentence: Шафа _____. (маленький)
+    answer: маленька
+  - sentence: Тумбочка _____. (новий)
+    answer: нова
+workbook:
+- type: group-sort
+  instruction: 'Sort these adjective forms by gender: **masculine**, **feminine**,
+    or **neuter**.'
+  groups:
+  - label: Masculine (він)
+    items:
+    - великий
+    - новий
+    - чистий
+    - дорогий
+  - label: Feminine (вона)
+    items:
+    - велика
+    - нова
+    - чиста
+    - дорога
+  - label: Neuter (воно)
+    items:
+    - велике
+    - нове
+    - чисте
+    - дороге
+- type: quiz
+  instruction: Choose the correct adjective form to complete each sentence.
+  items:
+  - question: Сумка _____.
+    options:
+    - дорогий
+    - дорога
+    - дороге
+    correct: 1
+  - question: Стілець _____.
+    options:
+    - старий
+    - стара
+    - старе
+    correct: 0
+  - question: Вікно _____.
+    options:
+    - чистий
+    - чиста
+    - чисте
+    correct: 2
+  - question: Кімната _____, але _____.
+    options:
+    - маленький, але гарний
+    - маленька, але гарна
+    - маленьке, але гарне
+    correct: 1
+  - question: Ліжко _____ і _____.
+    options:
+    - великий і новий
+    - велика і нова
+    - велике і нове
+    correct: 2
+- type: true-false
+  instruction: Is each sentence correct? Answer **true** or **false**.
+  items:
+  - statement: Велика стіл.
+    correct: false
+    explanation: 'Стіл is masculine (він), so the adjective needs the masculine ending
+      -ий: великий стіл.'
+  - statement: Нове вікно.
+    correct: true
+    explanation: 'Вікно is neuter (воно), so the adjective takes the ending -е: нове.
+      Correct!'
+  - statement: Чистий кімната.
+    correct: false
+    explanation: 'Кімната is feminine (вона), so the adjective needs the feminine
+      ending -а: чиста кімната.'
+  - statement: Старий стілець.
+    correct: true
+    explanation: Стілець is masculine (він), so the adjective ending -ий is correct.
+  - statement: Маленька ліжко.
+    correct: false
+    explanation: 'Ліжко is neuter (воно), so the adjective needs the ending -е: маленьке
+      ліжко.'
+  - statement: Гарна сумка.
+    correct: true
+    explanation: Сумка is feminine (вона), so the adjective ending -а is correct.
+- type: error-correction
+  instruction: Each sentence has a wrong adjective ending. Find the error and fix
+    it.
+  items:
+  - sentence: Моя кімната великий і світлий.
+    error: великий і світлий
+    correction: велика і світла
+    error_type: word
+    options:
+    - великий і світлий
+    - велика і світла
+    - велике і світле
+    explanation: 'Кімната is feminine, so both adjectives need the feminine ending
+      -а: велика і світла.'
+  - sentence: Вікно нова і чиста.
+    error: нова і чиста
+    correction: нове і чисте
+    error_type: word
+    options:
+    - новий і чистий
+    - нова і чиста
+    - нове і чисте
+    explanation: 'Вікно is neuter, so both adjectives need the neuter ending -е: нове
+      і чисте.'
+  - sentence: Стіл маленьке, а стілець — старе.
+    error: маленьке
+    correction: маленький
+    error_type: word
+    options:
+    - маленький
+    - маленька
+    - маленьке
+    explanation: 'Стіл is masculine, so the adjective needs -ий: маленький стіл.'
+- type: translate
+  instruction: Choose the correct Ukrainian translation.
+  items:
+  - source: A new book
+    options:
+    - text: нова книга
+      correct: true
+    - text: новий книга
+      correct: false
+    - text: нове книга
+      correct: false
+  - source: A clean window
+    options:
+    - text: чистий вікно
+      correct: false
+    - text: чиста вікно
+      correct: false
+    - text: чисте вікно
+      correct: true
+  - source: A big desk
+    options:
+    - text: великий стіл
+      correct: true
+    - text: велика стіл
+      correct: false
+    - text: велике стіл
+      correct: false
+  - source: A small room
+    options:
+    - text: маленьке кімната
+      correct: false
+    - text: маленька кімната
+      correct: true
+    - text: маленький кімната
+      correct: false
+  - source: An old bed
+    options:
+    - text: старий ліжко
+      correct: false
+    - text: старе ліжко
+      correct: true
+    - text: стара ліжко
+      correct: false
+- type: fill-in
+  instruction: Use the words **а** or **але** to complete each sentence.
+  items:
+  - sentence: Стіл новий, _____ стілець старий.
+    answer: а
+    options:
+    - а
+    - але
+    - і
+  - sentence: Кімната маленька, _____ гарна.
+    answer: але
+    options:
+    - а
+    - але
+    - і
+  - sentence: Вікно чисте, _____ ліжко — брудне.
+    answer: а
+    options:
+    - а
+    - але
+    - і
+  - sentence: Сумка дорога, _____ дуже гарна.
+    answer: але
+    options:
+    - а
+    - але
+    - і

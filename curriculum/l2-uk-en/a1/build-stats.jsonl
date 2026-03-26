@@ -9,3 +9,4 @@
 {"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-26T01:20:37.732402+00:00"}
 {"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-26T01:21:59.012908+00:00"}
 {"slug": "things-have-gender", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T01:28:15.979010+00:00"}
+{"slug": "what-is-it-like", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T01:33:56.097307+00:00"}

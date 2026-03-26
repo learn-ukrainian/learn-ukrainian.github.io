@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers every outline point. Integrates the Вашуленко and Пономарова textbook
+    references seamlessly as requested in the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless adjective-noun gender agreement. Proper usage of contrastive
+    "а" vs "але". `mcp_rag_verify_word` and style checks confirm all vocabulary (e.g.,
+    "тумбочка") is authentic and natural.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP (Presentation, Practice, Production) flow. It establishes
+    the pattern through dialogue, breaks down the rule explicitly with a textbook
+    quote, and provides opposite pairs for easier memo
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (який/яка/яке, великий,
+    маленький, а, але, etc.) are used contextually and naturally in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Placeholders match the plan's activity hints perfectly in sequence, focus,
+    and type. (Content logic evaluation N/A as they are pending injection).
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is warm, clear, and encouraging. Slight deduction for minor meta-commentary
+    transitioning between sections ("That is exactly what the next section explains").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown formatting. All H2 headings from the plan are present.
+    Word count (1533) safely exceeds the 1200 minimum target, adhering to Hard Rule
+    1 (Word targets are MINIMUMS).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Relies on authentic Ukrainian pedagogical framing (citing native grade
+    school texts) rather than imperial language comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly contextual (window shopping, showing a room), correctly
+    formatted, and naturally demonstrate the grammatical points.
+findings: []
