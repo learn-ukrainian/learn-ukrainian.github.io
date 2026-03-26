@@ -351,8 +351,26 @@ def _build_resources(plan: dict, slug: str = "") -> str:
                 lines.append(f"- [{r['title']}]({r['url']}){source}")
             lines.append("")
 
+    # ULP resources (Anna Ohoiko — Ukrainian Lessons Podcast)
+    ulp_links = _load_resource_file("ulp-resources.yaml", slug, plan)
+    if ulp_links:
+        articles = [l for l in ulp_links if l.get("type") == "article"]
+        podcasts = [l for l in ulp_links if l.get("type") == "podcast"]
+        if articles:
+            lines.append("**Anna Ohoiko — Ukrainian Lessons**")
+            lines.append("")
+            for link in articles:
+                lines.append(f"- [{link['title']}]({link['url']})")
+            lines.append("")
+        if podcasts:
+            lines.append("**Подкасти — Podcasts**")
+            lines.append("")
+            for link in podcasts:
+                lines.append(f"- [{link['title']}]({link['url']})")
+            lines.append("")
+
     # МійКлас resources (Grade 5-11 Ukrainian school lessons)
-    miyklas_links = _load_miyklas_resources(slug, plan)
+    miyklas_links = _load_resource_file("miyklas-resources.yaml", slug, plan)
     if miyklas_links:
         lines.append("**Для поглиблення — For deeper study (in Ukrainian)**")
         lines.append("")
@@ -369,14 +387,18 @@ def _build_resources(plan: dict, slug: str = "") -> str:
     return "\n".join(lines)
 
 
-def _load_miyklas_resources(slug: str, plan: dict) -> list[dict]:
-    """Load МійКлас lesson links for this module from miyklas-resources.yaml."""
-    miyklas_path = _PROJECT_ROOT / "docs" / "resources" / "miyklas-resources.yaml"
-    if not miyklas_path.exists():
+def _load_resource_file(filename: str, slug: str, plan: dict) -> list[dict]:
+    """Load resource links for a module from a YAML mapping file.
+
+    Files like miyklas-resources.yaml and ulp-resources.yaml have structure:
+      {level}: {slug}: [{title, url, ...}, ...]
+    """
+    path = _PROJECT_ROOT / "docs" / "resources" / filename
+    if not path.exists():
         return []
 
     try:
-        data = yaml.safe_load(miyklas_path.read_text("utf-8"))
+        data = yaml.safe_load(path.read_text("utf-8"))
     except Exception:
         return []
 

@@ -1,0 +1,108 @@
+# Ukrainian Lessons Podcast (ULP) — Anna Ohoiko
+# Mapped to curriculum modules for the Ресурси tab
+#
+# Source: ukrainianlessons.com (user has premium subscription)
+# License: COMMERCIAL — link only, never copy content
+# See also: Anna's YouTube channel for per-letter pronunciation videos (abetka data)
+
+version: "1.0"
+
+# A1 modules → ULP episodes and blog articles
+a1:
+  sounds-letters-and-hello:
+    - title: "Ukrainian Cyrillic Alphabet — Letters and Sounds"
+      url: "https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/"
+      type: article
+    - title: "Ukrainian Alphabet: Full Guide with Examples and Pronunciation"
+      url: "https://www.ukrainianlessons.com/ukrainian-alphabet/"
+      type: article
+    - title: "ULP Episode 1 — Informal Greetings"
+      url: "https://www.ukrainianlessons.com/episode1/"
+      type: podcast
+
+  reading-ukrainian:
+    - title: "How to Read Ukrainian: A Step-by-Step Guide"
+      url: "https://www.ukrainianlessons.com/read-ukrainian/"
+      type: article
+
+  special-signs:
+    - title: "Ukrainian Soft Sign and Apostrophe"
+      url: "https://www.ukrainianlessons.com/soft-sign-apostrophe/"
+      type: article
+
+  stress-and-melody:
+    - title: "Ukrainian Word Stress — Наголос"
+      url: "https://www.ukrainianlessons.com/ukrainian-stress/"
+      type: article
+
+  who-am-i:
+    - title: "ULP Episode 2 — Introducing Yourself"
+      url: "https://www.ukrainianlessons.com/episode2/"
+      type: podcast
+    - title: "How to Introduce Yourself in Ukrainian"
+      url: "https://www.ukrainianlessons.com/introduce-yourself/"
+      type: article
+
+  my-family:
+    - title: "ULP Episode 4 — Family Members"
+      url: "https://www.ukrainianlessons.com/episode4/"
+      type: podcast
+    - title: "Ukrainian Family Vocabulary"
+      url: "https://www.ukrainianlessons.com/family-members/"
+      type: article
+
+  things-have-gender:
+    - title: "Ukrainian Noun Gender — How to Determine It"
+      url: "https://www.ukrainianlessons.com/ukrainian-noun-gender/"
+      type: article
+
+  what-is-it-like:
+    - title: "Ukrainian Adjectives — Basics"
+      url: "https://www.ukrainianlessons.com/ukrainian-adjectives/"
+      type: article
+
+  colors:
+    - title: "Colors in Ukrainian"
+      url: "https://www.ukrainianlessons.com/colors-in-ukrainian/"
+      type: article
+
+  how-many:
+    - title: "Ukrainian Numbers 1-100"
+      url: "https://www.ukrainianlessons.com/ukrainian-numbers/"
+      type: article
+    - title: "ULP Episode 7 — Numbers and Counting"
+      url: "https://www.ukrainianlessons.com/episode7/"
+      type: podcast
+
+  verbs-group-one:
+    - title: "Ukrainian Verb Conjugation — Group 1"
+      url: "https://www.ukrainianlessons.com/ukrainian-verb-conjugation/"
+      type: article
+
+  questions:
+    - title: "How to Ask Questions in Ukrainian"
+      url: "https://www.ukrainianlessons.com/ukrainian-questions/"
+      type: article
+
+  food-and-drink:
+    - title: "Ukrainian Food Vocabulary"
+      url: "https://www.ukrainianlessons.com/ukrainian-food/"
+      type: article
+
+  at-the-cafe:
+    - title: "Ordering at a Ukrainian Café"
+      url: "https://www.ukrainianlessons.com/ordering-at-cafe/"
+      type: article
+
+  weather:
+    - title: "Weather in Ukrainian"
+      url: "https://www.ukrainianlessons.com/ukrainian-weather/"
+      type: article
+
+  days-and-months:
+    - title: "Days of the Week and Months in Ukrainian"
+      url: "https://www.ukrainianlessons.com/days-months/"
+      type: article
+
+# TODO: Map A2 modules to ULP Season 2+ episodes
+# TODO: Verify all URLs are live (some blog posts may have moved)
