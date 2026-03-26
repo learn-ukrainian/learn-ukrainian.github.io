@@ -3400,15 +3400,12 @@ def main():
 
     # Pre-flight: check RAG server is running (needed for MCP tools)
     if "tools" in args.writer:
-        import socket
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(2)
-        rag_up = sock.connect_ex(("127.0.0.1", 8766)) == 0
-        sock.close()
-        if rag_up:
-            _log("   RAG server: ✅ running (port 8766)")
-        else:
-            _log("   ❌ RAG server is not running on port 8766. Start it: ./services.sh start")
+        import urllib.request
+        try:
+            resp = urllib.request.urlopen("http://127.0.0.1:8766/health", timeout=3)
+            _log(f"   RAG server: ✅ running ({resp.read().decode()})")
+        except Exception:
+            _log("   ❌ RAG server is not running. Start it: ./services.sh start")
             sys.exit(1)
 
     # Clean previous build artifacts for a fresh full build

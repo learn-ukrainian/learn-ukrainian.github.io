@@ -1047,6 +1047,9 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
 
     sse = SseServerTransport("/messages/")
 
+    async def handle_health(request):
+        return Response('{"status":"ok"}', media_type="application/json")
+
     async def handle_sse(request):
         try:
             async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
@@ -1062,6 +1065,7 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
 
     app = Starlette(
         routes=[
+            Route("/health", endpoint=handle_health),
             Route("/sse", endpoint=handle_sse),
             Mount("/messages/", app=sse.handle_post_message),
         ],
