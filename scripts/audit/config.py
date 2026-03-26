@@ -1462,7 +1462,7 @@ def get_a1_immersion_range(
     if module_num <= 6:
         return (5, 15)    # M1-M6: Phonetics — letters, sounds, syllables, stress
     elif module_num <= 14:
-        return (10, 20)   # M7-M14: First Contact — gender, greetings, basic sentences
+        return (10, 30)   # M7-M14: Gender, adjectives, numbers — grammar examples need Ukrainian
     elif module_num <= 24:
         return (15, 25)   # M15-M24: Sentence Building — verbs, questions, possessives
     elif module_num <= 34:

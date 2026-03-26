@@ -105,10 +105,17 @@ def get_schemas_dir() -> Path:
 
 
 def load_base_schema() -> dict:
-    """Load the base activities schema with all activity type definitions."""
-    schema_path = get_schemas_dir() / "activities-base.schema.json"
+    """Load the base activities schema with all activity type definitions.
+
+    Tries V2 schema first (activity-v2.schema.json), falls back to V1
+    (activities-base.schema.json) for backward compatibility.
+    """
+    v2_path = get_schemas_dir() / "activity-v2.schema.json"
+    v1_path = get_schemas_dir() / "activities-base.schema.json"
+
+    schema_path = v2_path if v2_path.exists() else v1_path
     if not schema_path.exists():
-        raise FileNotFoundError(f"Schema not found: {schema_path}")
+        raise FileNotFoundError(f"Schema not found: {v1_path}")
 
     with open(schema_path, encoding='utf-8') as f:
         return json.load(f)
@@ -120,7 +127,7 @@ def get_activity_schema(activity_type: str, base_schema: dict) -> dict | None:
     Checks for track-specific definitions first (e.g., reading-istorio),
     then falls back to the base type name (e.g., reading).
     """
-    definitions = base_schema.get('definitions', {})
+    definitions = base_schema.get('$defs', base_schema.get('definitions', {}))
     # Track-specific schemas name definitions as "type-track" (e.g., "reading-istorio")
     # Try all keys that start with the activity type and pick the first match
     for key in definitions:

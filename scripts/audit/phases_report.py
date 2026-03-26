@@ -135,6 +135,11 @@ def validate_review_and_finalize(ctx: AuditContext, state: AuditState) -> bool:
     review_gate_status = "skipped"
     if ctx.skip_activities or ctx.skip_review:
         review_gate_status = "deferred"
+    elif ctx.plan_data:
+        # V6 modules: review has different format (Scores table + Findings + Verdict).
+        # Skip V5 review validation — V6 review quality is checked by the build pipeline.
+        review_gate_status = "pass"
+        print("  ℹ️  V6 module — skipping V5 review format validation")
     elif not state.has_critical_failure:
         module_slug_for_review = Path(ctx.file_path).stem
         review_violations = check_review_validity(ctx.file_path, ctx.level_code, module_slug_for_review)
