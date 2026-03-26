@@ -353,6 +353,9 @@ def _build_resources(plan: dict, slug: str = "") -> str:
 
     # ULP resources (Anna Ohoiko — Ukrainian Lessons Podcast)
     ulp_links = _load_resource_file("ulp-resources.yaml", slug, plan)
+    if not ulp_links:
+        # Fallback: auto-match from tag-based index (#1056)
+        ulp_links = _match_resource_index("ulp-articles-index.yaml", plan)
     if ulp_links:
         articles = [l for l in ulp_links if l.get("type") == "article"]
         podcasts = [l for l in ulp_links if l.get("type") == "podcast"]
@@ -371,6 +374,9 @@ def _build_resources(plan: dict, slug: str = "") -> str:
 
     # МійКлас resources (Grade 5-11 Ukrainian school lessons)
     miyklas_links = _load_resource_file("miyklas-resources.yaml", slug, plan)
+    if not miyklas_links:
+        # Fallback: auto-match from tag-based index (#1040)
+        miyklas_links = _match_resource_index("miyklas-url-index.yaml", plan)
     if miyklas_links:
         lines.append("**Для поглиблення — For deeper study (in Ukrainian)**")
         lines.append("")
@@ -408,6 +414,80 @@ def _load_resource_file(filename: str, slug: str, plan: dict) -> list[dict]:
 
     level_data = data[level]
     return level_data.get(slug, [])
+
+
+def _match_resource_index(filename: str, plan: dict, max_results: int = 3) -> list[dict]:
+    """Auto-match resources from a tag-based index YAML (#1040, #1056).
+
+    Reads a YAML file with sections containing tagged lesson entries.
+    Matches plan topics against tags using bidirectional substring matching.
+    Returns list of {title, url, type} dicts compatible with the enrich format.
+    """
+    path = _PROJECT_ROOT / "docs" / "resources" / filename
+    if not path.exists():
+        return []
+
+    try:
+        data = yaml.safe_load(path.read_text("utf-8"))
+    except Exception:
+        return []
+
+    if not isinstance(data, dict):
+        return []
+
+    base_url = data.get("base_url", "")
+
+    # Build search terms from plan
+    search_terms: set[str] = set()
+    title = plan.get("title", "").lower()
+    search_terms.update(title.split())
+    for section in plan.get("content_outline", []):
+        search_terms.update(section.get("section", "").lower().split())
+    for hint in plan.get("activity_hints", []):
+        search_terms.update(hint.get("focus", "").lower().split())
+
+    # Collect all lessons from all sections
+    all_lessons: list[dict] = []
+    for key, value in data.items():
+        if key in ("base_url",):
+            continue
+        if isinstance(value, list):
+            all_lessons.extend(value)
+        elif isinstance(value, dict):
+            # Nested: grade_5: { lessons: [...], lexicology: [...] }
+            for _sub_key, sub_val in value.items():
+                if isinstance(sub_val, list):
+                    all_lessons.extend(sub_val)
+
+    # Match by tags
+    matched: list[dict] = []
+    for lesson in all_lessons:
+        if not isinstance(lesson, dict) or "path" not in lesson:
+            continue
+        tags = [t.lower() for t in lesson.get("tags", [])]
+        hit = False
+        for tag in tags:
+            if tag in search_terms:
+                hit = True
+                break
+            for term in search_terms:
+                if len(term) > 3 and (term in tag or tag in term):
+                    hit = True
+                    break
+            if hit:
+                break
+        if hit:
+            url = base_url + lesson["path"] if not lesson["path"].startswith("http") else lesson["path"]
+            matched.append({
+                "title": lesson.get("title", ""),
+                "url": url,
+                "type": "article",
+                "topic": ", ".join(tags[:3]),
+            })
+            if len(matched) >= max_results:
+                break
+
+    return matched
 
 
 def _format_dialogues(content: str) -> str:
