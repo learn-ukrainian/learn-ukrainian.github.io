@@ -1869,15 +1869,24 @@ def step_activities(
             error_context = "Writer returned empty output. Please output valid YAML."
             continue
 
-        # Strip markdown fences if present
+        # Extract YAML from LLM output (strip markdown, commentary, fences)
         clean = raw.strip()
+        # Remove markdown code fences
         if clean.startswith("```"):
-            # Remove opening fence
             first_newline = clean.index("\n")
             clean = clean[first_newline + 1:]
         if clean.endswith("```"):
             clean = clean[:-3]
         clean = clean.strip()
+
+        # If output starts with non-YAML (markdown bold, commentary), find the
+        # first line starting with "version:" or "module:" or "inline:" or "workbook:"
+        if clean and not clean.startswith(("version", "module", "level", "inline", "workbook")):
+            for yaml_start_key in ("version:", "module:", "level:", "inline:", "workbook:"):
+                idx = clean.find(f"\n{yaml_start_key}")
+                if idx != -1:
+                    clean = clean[idx + 1:]
+                    break
 
         # Parse YAML
         try:
@@ -1891,6 +1900,13 @@ def step_activities(
             _log(f"  ❌ Expected YAML mapping, got {type(data).__name__}")
             error_context = f"Expected YAML mapping at root, got {type(data).__name__}"
             continue
+
+        # Strip non-schema root keys (LLM commentary like "All 48 words verified...")
+        valid_root_keys = {"version", "module", "level", "inline", "workbook"}
+        extra_keys = [k for k in data if k not in valid_root_keys]
+        for k in extra_keys:
+            del data[k]
+        clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)

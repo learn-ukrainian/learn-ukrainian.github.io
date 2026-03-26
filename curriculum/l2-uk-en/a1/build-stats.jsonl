@@ -1,3 +1,4 @@
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-25T21:34:38.943726+00:00"}
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-25T22:54:16.075982+00:00"}
 {"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-25T23:57:06.856360+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T00:21:46.594609+00:00"}

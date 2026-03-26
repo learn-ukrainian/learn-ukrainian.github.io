@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers almost all points perfectly, but missed the specific word `путь`
+    required by the plan under `-ть`. Substituted the planned `пісня` with an even
+    better minimal pair (`буряк/бур'ян`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless. Correctly uses phonetic transcription `*[морос]` to contrast
+    Russian devoicing with Ukrainian. Excellent explanation of affricates (ДЗ, ДЖ).
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding. The use of the throat-vibration test for voiced consonants
+    and the smile-pull-back technique for И are highly effective.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are included naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: Cannot properly evaluate because the deterministic tool failed to inject
+    the filled exercises, leaving only placeholders. The score reflects the missing
+    content for the reviewer.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Engaging, direct, and avoids meta-commentary. Grounded in real textbook
+    references (Захарійчук).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan exactly. Word count (1388) exceeds the
+    minimum target (1200) without feeling bloated.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong decolonized stance on authentic Ukrainian non-devoicing at word
+    ends.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: No dialogues required, but the conversational, instructional voice is
+    excellent.
+findings: []

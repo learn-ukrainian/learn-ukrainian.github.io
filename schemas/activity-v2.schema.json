@@ -114,7 +114,7 @@
               "question": { "type": "string", "minLength": 1 },
               "options": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "maxItems": 5,
                 "items": { "type": "string", "minLength": 1 }
               },
@@ -155,7 +155,7 @@
               "answer": { "type": "string", "minLength": 1 },
               "options": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "maxItems": 5,
                 "items": { "type": "string", "minLength": 1 }
               },
@@ -178,7 +178,7 @@
         "notes": { "type": "string" },
         "pairs": {
           "type": "array",
-          "minItems": 3,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": ["left", "right"],
@@ -280,7 +280,7 @@
               },
               "options": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "maxItems": 5,
                 "items": { "type": "string", "minLength": 1 }
               },
@@ -387,13 +387,13 @@
             "properties": {
               "words": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "items": { "type": "string", "minLength": 1 },
                 "description": "Jumbled words"
               },
               "correct_order": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "items": { "type": "string", "minLength": 1 },
                 "description": "Words in correct order"
               },
@@ -434,7 +434,7 @@
               "answer": { "type": "string", "minLength": 1 },
               "options": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "maxItems": 5,
                 "items": { "type": "string", "minLength": 1 }
               }
@@ -464,7 +464,7 @@
               "question": { "type": "string", "minLength": 1 },
               "options": {
                 "type": "array",
-                "minItems": 3,
+                "minItems": 2,
                 "items": {
                   "type": "object",
                   "required": ["text", "correct"],
