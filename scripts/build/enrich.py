@@ -351,8 +351,41 @@ def _build_resources(plan: dict, slug: str = "") -> str:
                 lines.append(f"- [{r['title']}]({r['url']}){source}")
             lines.append("")
 
+    # МійКлас resources (Grade 5-11 Ukrainian school lessons)
+    miyklas_links = _load_miyklas_resources(slug, plan)
+    if miyklas_links:
+        lines.append("**Для поглиблення — For deeper study (in Ukrainian)**")
+        lines.append("")
+        for link in miyklas_links:
+            title = link.get("title", "")
+            url = link.get("url", "")
+            topic = link.get("topic", "")
+            lines.append(f"- [{title}]({url})")
+            if topic:
+                lines.append(f"  _{topic}_")
+        lines.append("")
+
     lines.append("")
     return "\n".join(lines)
+
+
+def _load_miyklas_resources(slug: str, plan: dict) -> list[dict]:
+    """Load МійКлас lesson links for this module from miyklas-resources.yaml."""
+    miyklas_path = _PROJECT_ROOT / "docs" / "resources" / "miyklas-resources.yaml"
+    if not miyklas_path.exists():
+        return []
+
+    try:
+        data = yaml.safe_load(miyklas_path.read_text("utf-8"))
+    except Exception:
+        return []
+
+    level = plan.get("level", "").lower()
+    if not level or level not in data:
+        return []
+
+    level_data = data[level]
+    return level_data.get(slug, [])
 
 
 def _format_dialogues(content: str) -> str:

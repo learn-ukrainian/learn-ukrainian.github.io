@@ -75,6 +75,7 @@ Here is what a greeting sounds like between two friends meeting on the street:
 
 
 
+
 Now imagine Тарас says the same thing back. He would say: **Радий тебе бачити!** Notice the difference? Women say **рада**, men say **радий**. This is your very first encounter with grammatical gender in Ukrainian — the language marks whether the speaker is male or female. This will become a major topic starting in Module 8. For now, just pick the form that matches you: **рада** if you are female, **радий** if you are male.
 
 Read **Привіт** letter by letter to see how far you have already come. **П** — a new shape (the doorway). **р** — a false friend (rolled, not "p"). **и** — a new vowel (between English "i" and "ih"). **в** — a false friend (not "b"). **і** — a vowel (like English "ee"). **т** — familiar, but dental. Blend into syllables: При-віт. This single word uses letters from all three groups — friendly, false friends, and new shapes.
@@ -113,6 +114,7 @@ Two essential question forms are: **Що це?** (What is this?) — for things 
 Notice the **що/хто** distinction: **що** for objects and places, **хто** for people. Ukrainian distinguishes animate from inanimate from the very start.
 
 <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
+
 
 
 
@@ -225,3 +227,10 @@ Advanced exercises for this module are in development. Check back soon!
   _38 звуків: 6 голосних + 32 приголосні._
 - [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
   _Привіт, Як справи?, response patterns._
+
+**Для поглиблення — For deeper study (in Ukrainian)**
+
+- [Голосні й приголосні звуки](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-j-prigolosni-zvuki-41843)
+  _vowels and consonants_
+- [Позначення звуків мовлення на письмі. Алфавіт](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41847)
+  _alphabet, letters and sounds relationship_
