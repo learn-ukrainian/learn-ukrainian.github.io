@@ -15,7 +15,7 @@ from typing import Any, Union
 import yaml
 
 try:
-    import jsonschema  # noqa: F401
+    import jsonschema
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False
@@ -507,7 +507,15 @@ class ActivityParser:
             raw_data = yaml.safe_load(f)
         if raw_data is None:
             return []
-        if isinstance(raw_data, dict) and 'activities' in raw_data:
+        # V2 format: dict with inline/workbook lists
+        if isinstance(raw_data, dict) and ('inline' in raw_data or 'workbook' in raw_data):
+            merged = []
+            for section in ('inline', 'workbook'):
+                section_data = raw_data.get(section, [])
+                if isinstance(section_data, list):
+                    merged.extend(section_data)
+            raw_data = merged
+        elif isinstance(raw_data, dict) and 'activities' in raw_data:
             raw_data = raw_data['activities']
         if not isinstance(raw_data, list):
             raise ValueError(f"Expected list of activities, got {type(raw_data)}")

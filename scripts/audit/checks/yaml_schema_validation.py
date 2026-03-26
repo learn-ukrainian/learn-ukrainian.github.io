@@ -385,8 +385,18 @@ def validate_activity_yaml_file(yaml_path: Path) -> tuple[bool, list[str]]:
     if not data:
         return len(errors) == 0, errors
 
-    # Handle both formats: list of activities or dict with 'activities' key
-    if isinstance(data, dict) and 'activities' in data:
+    # Handle multiple formats:
+    # V1: bare list of activities at root
+    # V1b: dict with 'activities' key wrapping a list
+    # V2: dict with 'version', 'module', 'inline', 'workbook' keys (activity-v2.schema.json)
+    if isinstance(data, dict) and ('inline' in data or 'workbook' in data):
+        # V2 format: merge inline + workbook into single list for validation
+        activities = []
+        for section in ('inline', 'workbook'):
+            section_data = data.get(section, [])
+            if isinstance(section_data, list):
+                activities.extend(section_data)
+    elif isinstance(data, dict) and 'activities' in data:
         activities = data.get('activities', [])
         errors.append(
             "⚠️ YAML uses dictionary wrapper (`activities:` key). "
@@ -658,7 +668,6 @@ __all__ = [
     'check_meta_yaml_schema',
     'check_plan_yaml_schema',
     'check_vocabulary_yaml_schema',
-    'fix_activity_violations',
     'fix_raw_yaml_text',
     'fix_yaml_file',
     'remove_forbidden_activities',

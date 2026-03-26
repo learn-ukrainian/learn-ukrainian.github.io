@@ -99,7 +99,9 @@ def count_words_and_engagement(ctx: AuditContext, state: AuditState) -> None:
 
     engagement_pattern = re.compile(
         r'(>\s*[\U0001f4a1\u26a1\U0001f3ac\U0001f3ad\U0001f4dc\u2694\ufe0f\U0001f517\U0001f30d\U0001f381\U0001f5e3\ufe0f\U0001f3e0\U0001f9ed\U0001f68c\U0001f687\U0001f39f\ufe0f\U0001f4f1\U0001f575\ufe0f\U0001f324\ufe0f\U0001f326\ufe0f\U0001f3b1\U0001f52e\U0001f1fa\U0001f1e6\U0001f550\ufe0f\u2753\U0001f6e0\ufe0f\U0001f482\U0001f96a\U0001f37a\U0001f6cd\ufe0f\U0001f3eb\U0001f3e5\U0001f48a\U0001f475\U0001f52c\U0001f3a8\U0001f504\U0001f4c5\U0001f343\u2744\ufe0f\U0001f682\u23f3\U0001f4da\U0001f372\U0001f963\U0001f957\U0001f959\U0001f95a\U0001f95b\U0001f9e9\u26a0\ufe0f\U0001f6d1\U0001f3af\U0001f3ae\U0001f393\U0001f50d])|'
-        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography|folk-wisdom)\])'
+        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography|folk-wisdom)\])|'
+        r'(^:::(note|tip|warning|caution|important))',  # Starlight callout syntax (V6)
+        re.MULTILINE,
     )
     state.engagement_count = len(engagement_pattern.findall(ctx.content))
 
@@ -143,7 +145,9 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
             state.has_critical_failure = True
 
         state.results['priority'] = evaluate_priority_types(unique_types, config['priority_types'])
-        if state.results['priority'].status == 'FAIL':
+        # Priority types are non-blocking for V6 modules with plan-driven activity_hints
+        has_plan_hints = ctx.plan_data and ctx.plan_data.get('activity_hints')
+        if state.results['priority'].status == 'FAIL' and not has_plan_hints:
             state.has_critical_failure = True
 
         required_types = config.get('required_types', set())
@@ -174,7 +178,8 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
     has_voice = has_persona and 'voice' in ctx.plan_data['persona']
     has_role = has_persona and 'role' in ctx.plan_data['persona']
     state.results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
-    if state.results['persona'].status == 'FAIL':
+    # Persona is optional for V6 plan-based modules — INFO, not blocking
+    if state.results['persona'].status == 'FAIL' and not ctx.plan_data:
         state.has_critical_failure = True
 
     state.lint_errors = run_lint_checks(ctx.content, ctx.section_map, ctx.module_num)

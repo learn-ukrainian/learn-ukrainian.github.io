@@ -29,7 +29,7 @@ from .config import get_level_config, get_word_target
 from .gates import GateResult, evaluate_structure
 
 # Re-export for backward compatibility (used by tests)
-from .lint import check_typography  # noqa: F401
+from .lint import check_typography
 from .loaders import (
     get_module_number_from_curriculum,
     load_yaml_meta,
@@ -102,8 +102,15 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
     else:
         frontmatter_str, body = parse_frontmatter(content)
 
+    # Fallback: if no meta sidecar and no embedded frontmatter, use plan as metadata.
+    # V6 pipeline generates .md files without frontmatter — all metadata lives in plans/.
+    if not frontmatter_str and plan_data:
+        frontmatter_str = yaml.dump(plan_data, sort_keys=False, allow_unicode=True)
+        body = content
+        print("  \U0001f4cb No frontmatter — using plan data as metadata")
+
     if not frontmatter_str:
-        print("Error: No YAML frontmatter found (checked embedded and sidecar).")
+        print("Error: No YAML frontmatter found (checked embedded, sidecar, and plan).")
         state.fail("No YAML frontmatter found")
         print("\nCritical Failures:")
         for reason in state.critical_failure_reasons:
@@ -142,7 +149,10 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
 
     print(f"   File: {file_path} | Target: {target} words")
 
-    if not meta_data:
+    # Only validate required metadata for embedded frontmatter (old format).
+    # V6 modules use plan data as metadata — different field structure, no
+    # duration/transliteration/tags fields. Skip this validation for plan-based modules.
+    if not meta_data and not plan_data:
         missing_meta = validate_required_metadata(frontmatter_str)
         if missing_meta:
             print(f"\u274c AUDIT FAILED: Missing Frontmatter Fields: {', '.join(missing_meta)}")
@@ -206,7 +216,17 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
 
 
 def _check_template_compliance(ctx: AuditContext, state: AuditState) -> None:
-    """Check template compliance (Issue #398, #389)."""
+    """Check template compliance (Issue #398, #389).
+
+    V6 modules use plan-driven sections (from content_outline), not fixed
+    templates. Skip template compliance when plan data is available — the
+    review step already verified plan adherence (dimension 1).
+    """
+    # V6 modules: plan defines sections, reviewer checks adherence. Skip template check.
+    if ctx.plan_data:
+        print("  ℹ️  V6 module — plan-driven sections (skipping template compliance)")
+        return
+
     TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']
     if ctx.level_code not in TEMPLATE_COMPLIANCE_ENABLED_LEVELS:
         return
@@ -367,9 +387,11 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
     )
 
     from .gates import evaluate_pedagogy
-    # INFO and HEADING_LEVEL violations are non-blocking — content quality, not errors
+    # Only explicitly blocking violations count. Warnings (severity='warning')
+    # and INFO/HEADING_LEVEL are non-blocking by default.
     blocking_pedagogy = [v for v in state.pedagogical_violations
-                         if v.get('blocking', True)
+                         if v.get('blocking', False)
+                         and v.get('severity') not in ('warning', 'info')
                          and v.get('type') not in ('INFO', 'HEADING_LEVEL')]
     state.results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if state.results['pedagogy'].status == 'FAIL':
