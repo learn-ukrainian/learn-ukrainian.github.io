@@ -636,7 +636,7 @@ class ActivityParser:
         return MatchUpActivity(title=data.get('title', ''), pairs=pairs)
 
     def _parse_group_sort(self, data: dict) -> GroupSortActivity:
-        groups = [GroupSortGroup(name=g['name'], items=g.get('items', [])) for g in data.get('groups', [])]
+        groups = [GroupSortGroup(name=g.get('name', g.get('label', '')), items=g.get('items', [])) for g in data.get('groups', [])]
         return GroupSortActivity(title=data.get('title', ''), groups=groups)
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:

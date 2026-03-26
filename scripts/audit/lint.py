@@ -94,7 +94,8 @@ def _lint_line_patterns(lines_raw: list[str], module_num: int) -> list[str]:
 
         if (stripped.startswith('- [')
                 and not re.match(r'- \[[ xX]\]', stripped)
-                and not re.match(r'- \[[^\]]+\]\(', stripped)):  # exclude markdown links
+                and '](http' not in stripped  # exclude markdown links (even with nested brackets)
+                and not re.match(r'- \[[^\]]+\]\(', stripped)):  # exclude simple markdown links
             lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
 
         is_vocab_row = (stripped.startswith('|') and stripped.count('|') >= 3)

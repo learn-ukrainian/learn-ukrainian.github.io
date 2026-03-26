@@ -15,7 +15,7 @@ from ..config import (
 )
 
 # Re-export from activity_counting for backward compatibility
-from .activity_counting import (  # noqa: F401
+from .activity_counting import (
     check_activity_ukrainian_content,
     check_anagram_min_letters,
     check_resources_placement,
@@ -25,7 +25,7 @@ from .activity_counting import (  # noqa: F401
 )
 
 # Re-export from activity_format_checks for backward compatibility
-from .activity_format_checks import (  # noqa: F401
+from .activity_format_checks import (
     check_activity_header_format,
     check_cloze_syntax_errors,
     check_error_correction_format,
@@ -38,7 +38,7 @@ from .activity_format_checks import (  # noqa: F401
 )
 
 # Re-export from activity_pedagogy_checks for backward compatibility
-from .activity_pedagogy_checks import (  # noqa: F401
+from .activity_pedagogy_checks import (
     check_activity_focus_alignment,
     check_activity_sequencing,
     check_activity_variety,

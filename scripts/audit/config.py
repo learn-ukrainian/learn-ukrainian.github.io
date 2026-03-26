@@ -1459,8 +1459,10 @@ def get_a1_immersion_range(
     When sandbox_lemma_count is provided and small (<20), the floor is lowered
     for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
-    if module_num <= 6:
-        return (5, 15)    # M1-M6: Phonetics — letters, sounds, syllables, stress
+    if module_num <= 3:
+        return (5, 15)    # M1-M3: Phonetics — letters, sounds, syllables (mostly English explanation)
+    elif module_num <= 6:
+        return (8, 25)    # M4-M6: Stress, identity, family — more Ukrainian names/phrases
     elif module_num <= 14:
         return (10, 30)   # M7-M14: Gender, adjectives, numbers — grammar examples need Ukrainian
     elif module_num <= 24:

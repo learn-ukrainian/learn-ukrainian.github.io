@@ -202,8 +202,11 @@ def normalize_section_name(name: str) -> str:
     """
     name = name.lower().strip()
 
-    # Remove em-dash subtitles (disabled because it breaks sections with common prefixes)
-    # name = re.sub(r"\s+[—–\-]\s+.*$", "", name)
+    # Remove stress marks (combining acute accent U+0301) — added by stress annotator
+    name = name.replace("\u0301", "")
+
+    # Remove em-dash subtitles — plan uses "(English)" but content uses "— English"
+    name = re.sub(r"\s*[—–]\s+.*$", "", name)
 
     # Remove parenthetical English translations — these cause false mismatches
     # e.g. "Тверда група (Hard Stem)" vs "Тверда група прикметників (Hard Stem Adjectives)"
