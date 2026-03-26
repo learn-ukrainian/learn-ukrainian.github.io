@@ -12,3 +12,4 @@
 {"slug": "what-is-it-like", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T01:33:56.097307+00:00"}
 {"slug": "colors", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T01:40:39.509803+00:00"}
 {"slug": "how-many", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T01:47:31.524013+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-26T11:51:36.885382+00:00"}

@@ -1,9 +1,9 @@
 {
   "exists": true,
-  "words": 4438,
+  "words": 4938,
   "quality": "solid",
   "score": 8,
-  "score_raw": 13,
+  "score_raw": 14,
   "score_max": 17,
   "markers": 8,
   "profile": "core",
@@ -11,12 +11,12 @@
     "state_standard": {
       "score": 2,
       "max": 2,
-      "detail": "6 sections covered"
+      "detail": "7 sections covered"
     },
     "vocabulary": {
       "score": 2,
       "max": 2,
-      "detail": "36 textbook excerpts"
+      "detail": "39 textbook excerpts"
     },
     "cultural_hooks": {
       "score": 0,
@@ -31,22 +31,22 @@
     "cross_references": {
       "score": 0,
       "max": 1,
-      "detail": "only 1 author(s)"
+      "detail": "only 2 author(s)"
     },
     "pedagogy_notes": {
       "score": 1,
       "max": 1,
-      "detail": "2 pedagogy references"
+      "detail": "14 pedagogy references"
     },
     "source_verification": {
-      "score": 1,
+      "score": 2,
       "max": 2,
-      "detail": "36 sources"
+      "detail": "39 cited sources"
     },
     "claim_grounding": {
       "score": 2,
       "max": 2,
-      "detail": "1644 Ukrainian terms"
+      "detail": "1968 Ukrainian terms"
     },
     "discovery_integration": {
       "score": 1,
@@ -56,12 +56,11 @@
     "specificity": {
       "score": 2,
       "max": 2,
-      "detail": "4438 words"
+      "detail": "4938 words"
     }
   },
   "gaps": [
     "cultural_hooks: no cultural references found",
-    "cross_references: only 1 author(s)",
-    "source_verification: 36 sources"
+    "cross_references: only 2 author(s)"
   ]
 }

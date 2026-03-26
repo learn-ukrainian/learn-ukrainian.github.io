@@ -101,6 +101,8 @@ Output ONLY the raw 1-10 scores in the table below. Do NOT calculate the weighte
 
 ### Step 5: List findings
 
+**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the evidence column of your scores table, you MUST also list it as a structured finding below AND include it in your `<fixes>` block.** Identifying an error in evidence but not outputting a finding+fix means the error ships to learners. This is a language curriculum — every error you identify must be fixed. No exceptions.
+
 For every issue found, provide:
 ```
 [DIMENSION] [SEVERITY: critical/major/minor]
@@ -109,7 +111,12 @@ Issue: [what's wrong]
 Fix: [exactly how to fix it]
 ```
 
-Critical = module cannot ship. Major = quality below standard. Minor = polish item.
+Severity guide:
+- **Critical** = factual/linguistic error that teaches wrong Ukrainian (wrong form, wrong rule, wrong example). Module cannot ship.
+- **Major** = quality below standard but not factually wrong (weak explanation, awkward phrasing, missing examples).
+- **Minor** = polish item (tone, word choice, style).
+
+**Any factual or linguistic error is CRITICAL, not minor.** A wrong syllable division, a wrong phonetic claim, a contradictory grammar rule — these are critical because learners will memorize them as truth.
 
 ### Step 6: Verdict
 
@@ -117,9 +124,9 @@ Base your verdict on the **severity of findings** — the pipeline calculates th
 
 | Verdict | Condition |
 |---------|-----------|
-| **PASS** | Zero critical findings, at most minor issues |
-| **REVISE** | Has major findings but no criticals — fixable without rewrite |
-| **REJECT** | Has any critical finding — fundamental problems requiring rewrite |
+| **PASS** | Zero findings mentioning errors/mistakes/inaccuracies. All dimensions ≥9. |
+| **REVISE** | Has findings with fixes. Any dimension <9 with identified errors = REVISE, not PASS. |
+| **REJECT** | Fundamental structural/pedagogical problems requiring rewrite. |
 
 ### Step 7: Fix it yourself (REVISE only)
 

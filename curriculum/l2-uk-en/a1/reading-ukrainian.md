@@ -2,19 +2,19 @@
 
 ## Склади (Syllables)
 
-You know all 33 Ukrainian letters from the previous module. You can recognize **А**, **М**, **К**, and the rest on sight. But knowing individual letters is like knowing individual notes on a piano — the real music happens when you combine them. Right now, you will learn to read *any* Ukrainian word, even ones you have never seen before. The secret? Ukrainian spelling is phonetic. Each letter makes one sound, every time. There are no silent letters, no spelling surprises, no guessing. If you can sound out syllables, you can read anything. So the question becomes: how do you break a word into syllables?
+You know all 33 Ukrainian letters from the previous module. You can recognize **А**, **М**, **К**, and the rest on sight. But knowing individual letters is like knowing individual notes on a piano — the real music happens when you combine them. Right now, you will learn to read *any* Ukrainian word, even ones you have never seen before. The secret? Ukrainian spelling is phonetic. Letters make consistent sounds, and the rules never change. There are no spelling surprises and no guessing. If you can sound out syllables, you can read anything. So the question becomes: how do you break a word into syllables?
 
-Ukrainian first-graders learn one golden rule from their very first **буквар** (primer). Большакова, Grade 1, page 25, states it clearly: **«У слові стільки складів, скільки голосних звуків.»** — "A word has as many syllables as it has vowel sounds." This rule never breaks. Not once, not ever. Count the vowels, count the syllables. Take **мама** (mother): the vowels are **А** and **А** — two vowels, two syllables: **ма-ма**. Now **молоко** (milk): **О**, **О**, **О** — three vowels, three syllables: **мо-ло-ко**. What about **банк** (bank)? Just one **А** — one vowel, one syllable. And **сон** (dream)? One **О** — one syllable. Try **аптека** (pharmacy): **А**, **Е**, **А** — three vowels, three syllables: **а-пте-ка**. Notice something: consonants prefer to start new syllables rather than close old ones. That is the open-syllable principle — **складоподіл** in Ukrainian. The word splits as **мо-ло-ко**, not "мол-ок-о."
+Ukrainian first-graders learn one golden rule from their very first **буквар** (primer). Большако́ва, Grade 1, page 25, states it clearly: **«У сло́ві сті́льки складів, скі́льки голосни́х зву́ків.»** — "A word has as many syllables as it has vowel sounds." This rule never breaks. Not once, not ever. Count the vowels, count the syllables. Take **мама** (mother): the vowels are **А** and **А** — two vowels, two syllables: **ма-ма**. Now **молоко** (milk): **О**, **О**, **О** — three vowels, three syllables: **мо-ло-ко**. What about **банк** (bank)? Just one **А** — one vowel, one syllable. And **сон** (dream)? One **О** — one syllable. Try **аптека** (pharmacy): **А**, **Е**, **А** — three vowels, three syllables: **а-пте-ка**. Notice something: consonants prefer to start new syllables rather than close old ones. That is the open-syllable principle — **складоподіл** in Ukrainian. The word splits as **мо-ло-ко**, not "мол-ок-о."
 
 Now you have the rule. Here is the method Ukrainian children use to read new words — the **звуковий аналіз** (sound analysis) method from Большакова, page 29. Four steps: (1) Find the vowels — circle them mentally, they are your anchors. (2) Split the word at syllable boundaries. (3) Sound out each syllable slowly. (4) Blend everything together at natural speed. Walk through **університет** (university): the vowels are **У**, **І**, **Е**, **И**, **Е** — five vowels, five syllables: **у-ні-вер-си-тет**. Now try **бібліотека** (library): **І**, **І**, **О**, **Е**, **А** — five vowels, five syllables: **бі-блі-о-те-ка**. The method works for every word, no matter how long.
 
 <!-- INJECT_ACTIVITY: fill-in-syllable-division -->
 
-## Голосні літери (Vowel Letters)
+## Голосні́ лі́тери (Vowel Letters)
 
-In Module 1, you learned that Ukrainian has 6 vowel sounds but 10 vowel letters. Now it is time to meet each one individually. The first group is straightforward — six simple vowels, each making exactly one sound, always: **А** sounds like the "a" in "father," **О** like the "o" in "or," **У** like the "oo" in "moon," **Е** like the "e" in "bet," **И** like a sound between English "i" and "e" (no exact English match), and **І** like the "ee" in "see." That is it. **А** always sounds the same. **О** always sounds the same. Compare that to English, where the letter "a" alone has five or more possible sounds. In Ukrainian: one letter, one sound, no exceptions.
+In Module 1, you learned that Ukrainian has 6 vowel sounds but 10 vowel letters. Now it is time to meet each one individually. The first group is straightforward — six simple vowels, each making exactly one sound, always: **А** sounds like the "a" in "father," **О** like the "o" in "or," **У** like the "oo" in "moon," **Е** like the "e" in "bet," **И** like a sound between English "i" and "e" (no exact English match), and **І** like the "ee" in "see." That is it. **А** always sounds the same. **О** always sounds the same. Compare that to English, where the letter "a" alone has five or more possible sounds. In Ukrainian: letters have consistent rules, with no unpredictable exceptions.
 
-The second group is where it gets interesting — the **iotated vowels**: **Я**, **Ю**, **Є**, and **Ї**. These are "two-in-one" letters. Their behavior depends on *where* they appear. At the start of a word or after another vowel, they produce two sounds: **Я** = [й] + [а] — hear it in **яблуко** (apple) and **моя** (my, feminine). **Ю** = [й] + [у] — hear it in **юнак** (young man). **Є** = [й] + [е] — hear it in **єнот** (raccoon) and **синє** (blue, neuter). But after a consonant, these letters soften that consonant and give only the vowel part: in **пісня** (song), the **Н** is softened by **Я**, and you hear just [а] after the soft **Н**. The Grade 2 textbook sums it up perfectly: **«Букви я, ю, є на початку складу позначають два звуки: [йа], [йу], [йе].»**
+The second group is where it gets interesting — the **iotated vowels**: **Я**, **Ю**, **Є**, and **Ї**. These are "two-in-one" letters. Their behavior depends on *where* they appear. At the start of a word or after another vowel, they produce two sounds: **Я** = [й] + [а] — hear it in **яблуко** (apple) and **моя** (my, feminine). **Ю** = [й] + [у] — hear it in **юнак** (young man). **Є** = [й] + [е] — hear it in **єнот** (raccoon) and **синє** (blue, neuter). But after a consonant, these letters soften that consonant and give only the vowel part: in **пісня** (song), the **Н** is softened by **Я**, and you hear just [а] after the soft **Н**. The Grade 2 textbook sums it up perfectly: **«Бу́кви я, ю, є на поча́тку скла́ду познача́ють два зву́ки: [йа], [йу], [йе].»**
 
 Then there is **Ї** — a letter unique to Ukrainian. It *always* makes two sounds: [й] + [і], no matter where it appears. It never softens a consonant. You will find it at the start of a word (**їжак** — hedgehog), after a vowel (**мої** — my, plural; **твої** — your, plural), or after an apostrophe. It never appears directly after a consonant — that is what makes it unique among the iotated vowels. No other Slavic language has this letter.
 
@@ -24,7 +24,7 @@ Finally, a critical distinction: **И** versus **І**. These two vowels change m
 
 <!-- INJECT_ACTIVITY: quiz-syllable-count -->
 
-## Читання слів (Reading Words)
+## Чита́ння слів (Reading Words)
 
 Time for a strategy shift. Stop reading letter by letter. Start reading syllable by syllable. When you encounter an unfamiliar word, follow this approach: find the vowels first — they are your anchors — then build syllables around them, then blend. Take **книга** (book): spot the vowels **И** and **А** — two syllables — **кни-га** — now say it at natural speed. Try **столиця** (capital city): **О**, **И**, **Я** — three syllables — **сто-ли-ця**. And **вулиця** (street): **У**, **И**, **Я** — three syllables — **ву-ли-ця**. The vowels are your roadmap through any Ukrainian word, no matter how unfamiliar it looks at first glance.
 
@@ -36,7 +36,7 @@ Watch for three special letter combinations (a preview — Module 3 covers them 
 
 Now build speed. Re-read the word lists above, faster each time. First pass: syllable by syllable. Second pass: whole words without pausing. Third pass: pairs of words in sequence. Ukrainian reading fluency comes from repetition and pattern recognition, not from memorizing definitions.
 
-## Читаємо разом (Reading Together)
+## Чита́ємо ра́зом (Reading Together)
 
 A progressive reading ladder. Start where you are comfortable, then push higher.
 
@@ -48,7 +48,7 @@ A progressive reading ladder. Start where you are comfortable, then push higher.
 
 Now, your first Ukrainian text. Read it aloud, sentence by sentence. Every word here uses only letters and patterns from Module 1 and this module:
 
-> **Це Київ.** *(This is Kyiv.)* **Це столиця.** *(This is the capital.)* **Тут аптека і банк.** *(Here is a pharmacy and a bank.)* **Там школа.** *(There is a school.)* **Що це?** *(What is this?)* **Це кафе.** *(This is a café.)* **А це пошта.** *(And this is a post office.)* **Ось бібліотека.** *(Here is a library.)* **Тут книги.** *(Here are books.)*
+> **Це Ки́їв.** *(This is Kyiv.)* **Це столиця.** *(This is the capital.)* **Тут аптека і банк.** *(Here is a pharmacy and a bank.)* **Там школа.** *(There is a school.)* **Що це?** *(What is this?)* **Це кафе́.** *(This is a café.)* **А це по́шта.** *(And this is a post office.)* **Ось бібліотека.** *(Here is a library.)* **Тут кни́ги.** *(Here are books.)*
 
 Read it again, faster. You just read real Ukrainian sentences — not isolated words, but connected meaning.
 
@@ -65,9 +65,9 @@ Next in Module 3: the soft sign, the apostrophe, and the uniquely Ukrainian lett
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **склад** | syllable | ім. | ч. |
 | **голосни́й** | vowel (sound/letter) | прикм. |  |
@@ -129,14 +129,14 @@ Next in Module 3: the soft sign, the apostrophe, and the uniquely Ukrainian lett
 | **кни́ги** | books | ім. | ж. |
 | **Ки́їв** | Kyiv | ім. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **звуковий аналіз** | sound analysis (method for reading new words) |
 | **У слові стільки складів, скільки голосних звуків.** | A word has as many syllables as it has vowel sounds. |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "склад", back: "syllable", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "голосни́й", back: "vowel (sound/letter)", subtitle: "прикм." }, { front: "при́голосний", back: "consonant", subtitle: "прикм." }, { front: "буква́р", back: "primer (first reading textbook)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́тера", back: "letter (of the alphabet)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "складопо́діл", back: "syllable division", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "люди́на", back: "person", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital (city)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фотогра́фія", back: "photography", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шокола́д", back: "chocolate", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "юна́к", back: "young man", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "єно́т", back: "raccoon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "їжа́к", back: "hedgehog", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рука́", back: "hand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ха́та", back: "house (traditional)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коза́", back: "goat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нога́", back: "foot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "па́рта", back: "desk (school desk)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ліс", back: "forest", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дуб", back: "oak", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "хліб", back: "bread", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кит", back: "whale", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіт", back: "cat", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дим", back: "smoke", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лис", back: "fox", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ще", back: "still, yet", subtitle: "присл." }, { front: "ща́стя", back: "happiness", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "день", back: "day", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сіль", back: "salt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кінь", back: "horse", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "п'ять", back: "five", subtitle: "числ." }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "мої́", back: "my (plural)", subtitle: "прикм." }, { front: "твої́", back: "your (plural)", subtitle: "прикм." }, { front: "си́нє", back: "blue (neuter)", subtitle: "прикм." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "там", back: "there", subtitle: "присл." }, { front: "ось", back: "here is (pointing)", subtitle: "част." }, { front: "а", back: "and, but", subtitle: "спол." }, { front: "і", back: "and", subtitle: "спол." }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́ги", back: "books", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }]} />
 
@@ -144,7 +144,7 @@ Next in Module 3: the soft sign, the apostrophe, and the uniquely Ukrainian lett
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -167,9 +167,9 @@ Advanced exercises for this module are in development. Check back soon!
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
 
-**Для поглиблення — For deeper study (in Ukrainian)**
+**Для погли́блення — For deeper study (in Ukrainian)**
 
-- [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
+- [Співвідно́шення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
   _sounds vs letters mismatch_
-- [Склад. Основні правила переносу](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sklad-osnovni-pravila-perenosu-41850)
+- [Склад. Основні правила перено́су](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sklad-osnovni-pravila-perenosu-41850)
   _syllables and syllable division_

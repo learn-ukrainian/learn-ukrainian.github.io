@@ -2577,9 +2577,20 @@ def step_review(content_path: Path, level: str, module_num: int,
         9: 0.10,  # Dialogue & conversation quality
     }
 
-    # Extract per-dimension scores from the markdown table
+    # Extract per-dimension scores from the markdown table (with evidence for floor check)
     score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
     raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
+
+    # Also parse full scores with evidence for dimension floor check
+    full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
+    parsed_scores = []
+    for m in full_score_pattern.finditer(raw):
+        parsed_scores.append({
+            "dimension": int(m.group(1)),
+            "name": m.group(2).strip(),
+            "score": int(m.group(3)),
+            "evidence": m.group(4).strip(),
+        })
 
     if raw_scores:
         # Use available scores even if fewer than 9 — normalize by available weights
@@ -2610,10 +2621,26 @@ def step_review(content_path: Path, level: str, module_num: int,
     # Two independent gates
     score_pass = score >= 8.0
     severity_pass = verdict == "PASS"
-    passed = score_pass and severity_pass
+
+    # Dimension floor: if ANY dimension scores <9 AND mentions errors/mistakes
+    # in evidence, force REVISE. A language curriculum cannot ship known errors.
+    dim_floor_fail = False
+    if parsed_scores:
+        error_keywords = ("error", "incorrect", "wrong", "mistake", "factual",
+                          "помилк", "невірн", "хибн", "contradictory")
+        for dim in parsed_scores:
+            dim_score = dim.get("score", 10)
+            evidence = dim.get("evidence", "").lower()
+            if dim_score < 9 and any(kw in evidence for kw in error_keywords):
+                dim_floor_fail = True
+                dim_name = dim.get("name", "?")
+                _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
+
+    passed = score_pass and severity_pass and not dim_floor_fail
 
     icon = "✅" if passed else "❌"
-    _log(f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — {verdict} (severity gate: {'✅' if severity_pass else '❌'})")
+    floor_msg = " (dimension floor FAIL)" if dim_floor_fail else ""
+    _log(f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — {verdict} (severity gate: {'✅' if severity_pass else '❌'}){floor_msg}")
 
     return passed, score, raw
 

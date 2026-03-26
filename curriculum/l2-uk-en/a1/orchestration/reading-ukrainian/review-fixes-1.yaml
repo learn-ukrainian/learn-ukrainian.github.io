@@ -1,25 +1,12 @@
-- find: '**рик** (roar) vs **рік** (year), **сир** (cheese) vs **сір** (grey). И is
-    a back vowel'
-  replace: '**рик** (roar) vs **рік** (year), **бик** (bull) vs **бік** (side). И
-    is a back vowel'
-- find: '**CVCCV** — a consonant cluster appears before the second vowel: **школа**
-    (school), **книга** (book), **парта** (desk).'
-  replace: '**CVCCV** — a consonant cluster appears before the second vowel: **лампа**
-    (lamp), **банда** (gang), **парта** (desk).'
-- find: '**CVC** — one syllable, closed by a consonant: **дім** (house), **сон** (dream),
-    **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank).'
-  replace: '**CVC** — one syllable, closed by a consonant: **дім** (house), **сон**
-    (dream), **ліс** (forest), **дуб** (oak), **мак** (poppy), **сир** (cheese).'
-- find: '**Level 1** (2 syllables): **мама** (mother), **тато** (father), **вода**
-    (water), **рука** (hand), **хата** (house), **каша** (porridge), **книга** (book),
-    **школа** (school).'
-  replace: '**Level 1** (2 syllables): **мама** (mother), **тато** (father), **вода**
-    (water), **рука** (hand), **хата** (house), **каша** (porridge), **книга** (book),
-    **школа** (school), **пісня** (song).'
-- find: '**Level 2** (3 syllables): **аптека** (pharmacy), **молоко** (milk), **людина**
-    (person), **вулиця** (street), **столиця** (capital), **пісня** (song).'
-  replace: '**Level 2** (3 syllables): **аптека** (pharmacy), **молоко** (milk), **людина**
-    (person), **вулиця** (street), **столиця** (capital), **машина** (car).'
-- find: The difference is subtle but it changes meaning entirely.
-  replace: The difference is subtle but it changes meaning entirely. Listen to Anna's
-    pronunciation videos for each pair to train your ear.
+- find: Each letter makes one sound, every time. There are no silent letters, no spelling
+    surprises, no guessing.
+  replace: Letters make consistent sounds, and the rules never change. There are no
+    spelling surprises and no guessing.
+- find: Є = [й] + [е] — hear it in єнот (raccoon) and синє (blue, neuter).
+  replace: Є = [й] + [е] — hear it in єнот (raccoon) and моє (my, neuter).
+- find: 'Two-syllable words with consonant clusters: школа (school), книга (book),
+    парта (desk). The cluster stays together in one syllable.'
+  replace: 'Two-syllable words with consonant clusters: школа (school), книга (book),
+    парта (desk). Notice how they divide: шко-ла, кни-га, пар-та.'
+- find: 'In Ukrainian: one letter, one sound, no exceptions.'
+  replace: 'In Ukrainian: letters have consistent rules, with no unpredictable exceptions.'

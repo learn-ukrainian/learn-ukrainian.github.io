@@ -133,118 +133,67 @@ references:
 <generated_module_content>
 ## Склади (Syllables)
 
-You know the Ukrainian alphabet from Module 1. You can name every letter. But a letter on its own is not reading — reading means looking at a word like **аптека** (pharmacy) and hearing it in your mind without stopping at each letter. How do Ukrainian children learn this skill? With one unbreakable rule, taught on page 25 of every first-grade textbook:
+You know all 33 Ukrainian letters from the previous module. You can recognize **А**, **М**, **К**, and the rest on sight. But knowing individual letters is like knowing individual notes on a piano — the real music happens when you combine them. Right now, you will learn to read *any* Ukrainian word, even ones you have never seen before. The secret? Ukrainian spelling is phonetic. Each letter makes one sound, every time. There are no silent letters, no spelling surprises, no guessing. If you can sound out syllables, you can read anything. So the question becomes: how do you break a word into syllables?
 
-:::tip
-**У слові стільки складів, скільки голосних звуків.**
-A word has as many syllables as it has vowel sounds.
-:::
+Ukrainian first-graders learn one golden rule from their very first **буквар** (primer). Большакова, Grade 1, page 25, states it clearly: **«У слові стільки складів, скільки голосних звуків.»** — "A word has as many syllables as it has vowel sounds." This rule never breaks. Not once, not ever. Count the vowels, count the syllables. Take **мама** (mother): the vowels are **А** and **А** — two vowels, two syllables: **ма-ма**. Now **молоко** (milk): **О**, **О**, **О** — three vowels, three syllables: **мо-ло-ко**. What about **банк** (bank)? Just one **А** — one vowel, one syllable. And **сон** (dream)? One **О** — one syllable. Try **аптека** (pharmacy): **А**, **Е**, **А** — three vowels, three syllables: **а-пте-ка**. Notice something: consonants prefer to start new syllables rather than close old ones. That is the open-syllable principle — **складоподіл** in Ukrainian. The word splits as **мо-ло-ко**, not "мол-ок-о."
 
-Count the vowels, count the syllables. It works every time. Look at **мама** (mother) — two vowels, А and А, so two syllables: ма-ма. Now **молоко** (milk) — three vowels, О, О, О — three syllables: мо-ло-ко. What about **банк** (bank)? One vowel, А — one syllable: банк. And **оса** (wasp)? Two vowels, О and А — two syllables: о-са. No exceptions. This rule never breaks.
-
-Now for the method itself. Ukrainian teachers use a process called **звуковий аналіз** (sound analysis), described in Большакова Grade 1 on page 29. Here is how to read any new word you encounter:
-
-1. **Find the vowels** — they are the cores of each syllable.
-2. **Split at syllable boundaries** — Ukrainian follows the open-syllable principle (складоподіл): consonants prefer to start new syllables rather than close old ones.
-3. **Sound out each syllable** separately.
-4. **Blend** the syllables into the full word at natural speed.
-
-Walk through **аптека** (pharmacy): the vowels are А, Е, А — three syllables. Split: а-пте-ка. Sound each piece, then blend them together. Now try **університет** (university): vowels У, І, Е, И, Е — five syllables. Split: у-ні-вер-си-тет. Five pieces, blended into one word.
-
-Try counting without splitting — just count the vowels. **Сон** (dream) — 1. **Сало** (lard) — 2. **Ламана** (broken line) — 3. **Смола** (resin) — 2. **Ананас** (pineapple) — 3. **Бібліотека** (library) — 5. Remember: Ь (soft sign) and the apostrophe are NOT vowels. Never count them. You may also notice that one syllable in each word sounds louder than the others — that is **наголос** (stress), which Module 3 covers fully. For now, focus on splitting and blending.
-
-<!-- INJECT_ACTIVITY: quiz-syllable-count -->
-
-## Голосні літери (Vowel Letters)
-
-Module 1 introduced this fact: Ukrainian has 6 vowel sounds but 10 vowel letters. Now meet all ten individually and understand exactly what each one does.
-
-The first six are simple — each letter represents ONE consistent sound, with no surprises:
-
-| Letter | Sound | Example |
-|--------|-------|---------|
-| **А** | [а] | **аптека** (pharmacy) |
-| **О** | [о] | **око** (eye) |
-| **У** | [у] | **рука** (hand) |
-| **Е** | [е] | **село** (village) |
-| **И** | [и] | **кит** (whale) |
-| **І** | [і] | **кіт** (cat) |
-
-Unlike English vowels, which shift depending on the word (compare the "a" in "father" versus "fate"), Ukrainian vowels stay constant. **А** is always [а]. **О** is always [о]. What you see is what you hear.
-
-The remaining four letters are called **iotated vowels** because they can represent TWO sounds — a [й] glide followed by a vowel. This happens at the beginning of a word or after another vowel.
-
-**Я** = [йа] at word start or after a vowel: **яблуко** (apple) sounds like [йаблуко], **моя** (my, feminine) sounds like [мойа]. But after a consonant, Я softens that consonant and contributes only [а]: in **пісня** (song), the Н before Я becomes soft.
-
-**Ю** follows the same pattern: [йу] at word start — **юнак** (young man) — or softening + [у] after a consonant: in the word **люблю** (I love), both Л sounds are softened by Ю.
-
-**Є** = [йе] at word start: **єнот** (raccoon). After a consonant, it softens + [е]: **синє** (blue, neuter).
-
-Then the unique one. **Ї** ALWAYS represents two sounds [йі] — it never softens a preceding consonant. It appears only at the start of a word, after a vowel, or after an apostrophe: **їжак** (hedgehog), **мої** (my, plural). Ї is uniquely Ukrainian — no other Slavic language has this letter.
-
-Now for minimal pairs where one vowel letter changes the entire meaning. **И** and **І** look similar but produce different sounds: **кит** (whale) vs **кіт** (cat), **дим** (smoke) vs **дім** (house), **лис** (fox) vs **ліс** (forest), **рик** (roar) vs **рік** (year), **сир** (cheese) vs **сір** (grey). И is a back vowel — your tongue pulls back. І is a front vowel — your tongue pushes forward. The difference is subtle but it changes meaning entirely.
-
-<!-- INJECT_ACTIVITY: match-iotated-vowels -->
+Now you have the rule. Here is the method Ukrainian children use to read new words — the **звуковий аналіз** (sound analysis) method from Большакова, page 29. Four steps: (1) Find the vowels — circle them mentally, they are your anchors. (2) Split the word at syllable boundaries. (3) Sound out each syllable slowly. (4) Blend everything together at natural speed. Walk through **університет** (university): the vowels are **У**, **І**, **Е**, **И**, **Е** — five vowels, five syllables: **у-ні-вер-си-тет**. Now try **бібліотека** (library): **І**, **І**, **О**, **Е**, **А** — five vowels, five syllables: **бі-блі-о-те-ка**. The method works for every word, no matter how long.
 
 <!-- INJECT_ACTIVITY: fill-in-syllable-division -->
 
+## Голосні літери (Vowel Letters)
+
+In Module 1, you learned that Ukrainian has 6 vowel sounds but 10 vowel letters. Now it is time to meet each one individually. The first group is straightforward — six simple vowels, each making exactly one sound, always: **А** sounds like the "a" in "father," **О** like the "o" in "or," **У** like the "oo" in "moon," **Е** like the "e" in "bet," **И** like a sound between English "i" and "e" (no exact English match), and **І** like the "ee" in "see." That is it. **А** always sounds the same. **О** always sounds the same. Compare that to English, where the letter "a" alone has five or more possible sounds. In Ukrainian: one letter, one sound, no exceptions.
+
+The second group is where it gets interesting — the **iotated vowels**: **Я**, **Ю**, **Є**, and **Ї**. These are "two-in-one" letters. Their behavior depends on *where* they appear. At the start of a word or after another vowel, they produce two sounds: **Я** = [й] + [а] — hear it in **яблуко** (apple) and **моя** (my, feminine). **Ю** = [й] + [у] — hear it in **юнак** (young man). **Є** = [й] + [е] — hear it in **єнот** (raccoon) and **синє** (blue, neuter). But after a consonant, these letters soften that consonant and give only the vowel part: in **пісня** (song), the **Н** is softened by **Я**, and you hear just [а] after the soft **Н**. The Grade 2 textbook sums it up perfectly: **«Букви я, ю, є на початку складу позначають два звуки: [йа], [йу], [йе].»**
+
+Then there is **Ї** — a letter unique to Ukrainian. It *always* makes two sounds: [й] + [і], no matter where it appears. It never softens a consonant. You will find it at the start of a word (**їжак** — hedgehog), after a vowel (**мої** — my, plural; **твої** — your, plural), or after an apostrophe. It never appears directly after a consonant — that is what makes it unique among the iotated vowels. No other Slavic language has this letter.
+
+Finally, a critical distinction: **И** versus **І**. These two vowels change meaning. **Кит** (whale) versus **кіт** (cat). **Дим** (smoke) versus **дім** (house). **Лис** (fox) versus **ліс** (forest). **И** is a back vowel — the tongue sits back, lips stay neutral. **І** is a front vowel — the tongue moves forward, lips spread slightly. The Большакова **буквар** places these pairs on the same page deliberately. Practice hearing and producing the difference, because it changes the meaning of words completely.
+
+<!-- INJECT_ACTIVITY: match-iotated-vowels -->
+
+<!-- INJECT_ACTIVITY: quiz-syllable-count -->
+
 ## Читання слів (Reading Words)
 
-Time to apply everything and read real Ukrainian words fluently. The key strategy: do not read letter-by-letter. Read syllable-by-syllable. Start with the vowels — they are your anchors — then build outward.
+Time for a strategy shift. Stop reading letter by letter. Start reading syllable by syllable. When you encounter an unfamiliar word, follow this approach: find the vowels first — they are your anchors — then build syllables around them, then blend. Take **книга** (book): spot the vowels **И** and **А** — two syllables — **кни-га** — now say it at natural speed. Try **столиця** (capital city): **О**, **И**, **Я** — three syllables — **сто-ли-ця**. And **вулиця** (street): **У**, **И**, **Я** — three syllables — **ву-ли-ця**. The vowels are your roadmap through any Ukrainian word, no matter how unfamiliar it looks at first glance.
 
-Take **книга** (book). Find the vowels: И, А — two syllables. Split: кни-га. Blend them together: книга. Now **шоколад** (chocolate): vowels О, О, А — three syllables. Split: шо-ко-лад. Blend: шоколад. One more: **вулиця** (street) — vowels У, И, Я — three syllables: ву-ли-ця. The more you practice this vowel-first approach, the faster you read any new word without hesitation.
+Here are common word patterns for reading practice. Two-syllable words with simple open syllables — the most natural Ukrainian rhythm: **мама** (mother), **тато** (father), **каша** (porridge), **вода** (water), **рука** (hand), **хата** (house), **коза** (goat), **нога** (foot). These flow easily — every syllable ends in a vowel. Two-syllable words with consonant clusters: **школа** (school), **книга** (book), **парта** (desk). The cluster stays together in one syllable. One-syllable words — just one vowel, quick to read: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank). Three-syllable words: **аптека** (pharmacy), **людина** (person), **вулиця** (street), **столиця** (capital). The more patterns your eyes recognize, the faster you read — your brain starts seeing syllable shapes automatically instead of processing individual letters.
 
-Common word patterns build reading speed. Start recognizing shapes:
+Watch for three special letter combinations (a preview — Module 3 covers them fully). **Щ** is always two sounds [шч]: **що** (what), **ще** (still/yet), **щастя** (happiness) — one letter, two sounds blended together. **Ь** (the soft sign) has no sound of its own — it softens the consonant before it: **день** (day), **сіль** (salt), **кінь** (horse). The apostrophe (**'**) separates a consonant from an iotated vowel: **сім'я** (family), **м'ясо** (meat), **п'ять** (five). Recognize these combinations when you encounter them — do not let them slow you down.
 
-**CVCV** (consonant-vowel-consonant-vowel) — the simplest pattern, two syllables of alternating sounds: **мама** (mother), **тато** (father), **каша** (porridge), **вода** (water), **рука** (hand), **хата** (house), **коза** (goat), **нога** (leg).
+<!-- INJECT_ACTIVITY: quiz-read-meaning -->
 
-**CVCCV** — a consonant cluster appears before the second vowel: **школа** (school), **книга** (book), **парта** (desk).
-
-**CVC** — one syllable, closed by a consonant: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank).
-
-Longer words follow the same logic: **аптека** (pharmacy) is V-CCV-CV, **молоко** (milk) is CV-CV-CV, **столиця** (capital) is CCV-CV-CV. Read each group aloud — start slow, then speed up. Pattern recognition is what turns mechanical decoding into natural reading.
-
-Watch for three special letter combinations. **Щ** always sounds like [шч]: **що** (what), **ще** (still), **щастя** (happiness). **Ь** (soft sign) has no sound of its own — it softens the consonant before it: **день** (day), **сіль** (salt), **кінь** (horse). The apostrophe separates a consonant from an iotated vowel: **сім'я** (family), **м'ясо** (meat), **п'ять** (five). Module 3 explores all three in depth — for now, just recognize them when you see them.
-
-<!-- INJECT_ACTIVITY: quiz-read-and-match -->
+Now build speed. Re-read the word lists above, faster each time. First pass: syllable by syllable. Second pass: whole words without pausing. Third pass: pairs of words in sequence. Ukrainian reading fluency comes from repetition and pattern recognition, not from memorizing definitions.
 
 ## Читаємо разом (Reading Together)
 
-A reading ladder — start where you feel comfortable, then climb.
+A progressive reading ladder. Start where you are comfortable, then push higher.
 
-**Level 1** (2 syllables): **мама** (mother), **тато** (father), **вода** (water), **рука** (hand), **хата** (house), **каша** (porridge), **книга** (book), **школа** (school).
+**Level 1** — two-syllable words (you should read these quickly by now): **мама**, **тато**, **вода**, **рука**, **хата**, **каша**, **школа**, **книга**.
 
-**Level 2** (3 syllables): **аптека** (pharmacy), **молоко** (milk), **людина** (person), **вулиця** (street), **столиця** (capital), **пісня** (song).
+**Level 2** — three-syllable words (find the vowels first): **аптека**, **молоко**, **людина**, **вулиця**, **столиця**, **пісня**.
 
-**Level 3** (4+ syllables): **університет** (university), **бібліотека** (library), **фотографія** (photography), **шоколадний** (chocolate, adjective).
+**Level 3** — four or more syllables (the real test): **університет**, **бібліотека**, **фотографія**, **шоколад**. If you can read **бібліотека** without stopping between syllables, you can read anything in Ukrainian.
 
-Read each level until it feels comfortable, then move to the next. Speed comes from practice, not rushing.
+Now, your first Ukrainian text. Read it aloud, sentence by sentence. Every word here uses only letters and patterns from Module 1 and this module:
 
-Now read a simple connected text. Every sentence uses **Це** (this is) + a noun, or a location word — no verbs yet:
+> **Це Київ.** *(This is Kyiv.)* **Це столиця.** *(This is the capital.)* **Тут аптека і банк.** *(Here is a pharmacy and a bank.)* **Там школа.** *(There is a school.)* **Що це?** *(What is this?)* **Це кафе.** *(This is a café.)* **А це пошта.** *(And this is a post office.)* **Ось бібліотека.** *(Here is a library.)* **Тут книги.** *(Here are books.)*
 
-> **Це Київ. Це столиця. Тут аптека і банк. Там школа. А це що? Це кафе. Поруч пошта. Тут вулиця, там парк.**
+Read it again, faster. You just read real Ukrainian sentences — not isolated words, but connected meaning.
 
-*(This is Kyiv. This is the capital. Here is a pharmacy and a bank. There is a school. And what is this? This is a café. Nearby is a post office. Here is a street, there is a park.)*
-
-Read it aloud three times: first slowly, syllable by syllable. Then at a normal pace. Then try reading without pausing between words. You just read Ukrainian sentences.
-
-Challenge round — try these longer words using the vowel-first method: **бібліотека** (library) — vowels І, І, О, Е, А → 5 syllables. **Університет** (university) — vowels У, І, Е, И, Е → 5 syllables. **Фотографія** (photography) — vowels О, О, А, І, Я → 5 syllables. If you can read these, you can read any Ukrainian word. The syllable rule and vowel-first strategy work every time.
+A few tips for self-study. Read aloud — Ukrainian is a phonetic language, and hearing yourself reinforces the letter-sound connections. Point to each syllable as you read, then graduate to pointing at whole words. Look for Ukrainian text online — signs, menus, social media posts — and try to sound out words before checking a translation. Every word you successfully decode builds confidence and speed. In Module 3, you will learn the special signs (**Ь**, the apostrophe, and the uniquely Ukrainian letter **Ґ**) in full detail and start reading longer texts.
 
 ## Підсумок — Summary
 
-This module gave you three tools that work together to unlock Ukrainian reading.
+Four skills from this module. First: the syllable rule — **«У слові стільки складів, скільки голосних звуків»** — count vowels to count syllables. This rule never breaks. **Молоко** has 3 vowels, so 3 syllables: **мо-ло-ко**. Second: the 10 vowel letters — six simple ones (**А**, **О**, **У**, **Е**, **И**, **І**), each making one predictable sound, and four iotated ones (**Я**, **Ю**, **Є**, **Ї**) that can produce two sounds or soften a consonant. Third: the reading strategy — find vowels first, build syllables around them, blend into words at natural speed. Fourth: pattern recognition — the more word shapes you see, the faster you read without thinking.
 
-**First: the syllable rule.** Count the vowels to count the syllables. **Молоко** — three vowels, three syllables. **Банк** — one vowel, one syllable. It never fails.
+Self-check: How many syllables in **бібліотека**? Five — count the vowels: **І**, **І**, **О**, **Е**, **А**. What two sounds does **Я** make at the start of **яблуко**? [й] + [а]. What is the difference between **кит** and **кіт**? Whale versus cat — **И** versus **І**, one vowel changes everything. What does **Ь** do? It softens the consonant before it, with no sound of its own. What does the apostrophe do? It separates a consonant from an iotated vowel, as in **сім'я**.
 
-**Second: the 10 vowel letters.** Six are simple — **А**, **О**, **У**, **Е**, **И**, **І** — each making one consistent sound. Four are iotated — **Я**, **Ю**, **Є**, **Ї** — capable of representing two sounds at word start or after a vowel. **Ї** is uniquely Ukrainian and always represents [йі].
+Next in Module 3: the soft sign, the apostrophe, and the uniquely Ukrainian letter **Ґ** — explored in full detail.
 
-**Third: the reading strategy.** Find the vowels first, split into syllables, sound out each piece, blend into the full word. These three tools let you read any Ukrainian word you encounter, even one you have never seen before.
-
-Self-check: How do you count syllables in a Ukrainian word? What are the 6 vowel sounds? Name the 4 iotated vowel letters. When does **Я** represent two sounds? What makes **Ї** unique? What does **Ь** do? Read this word: **бібліотека** — how many syllables?
-
-Coming in Module 3: **наголос** (stress), the soft sign and apostrophe in detail, and voiced versus voiceless consonant pairs.
-
-**Deterministic word count: 1477 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1630 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -397,17 +346,16 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 92 words | Not found: 6 words
+Verified: 82 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Большакова — NOT IN VESUM
+  ✗ блі — NOT IN VESUM
   ✗ вер — NOT IN VESUM
-  ✗ йаблуко — NOT IN VESUM
   ✗ кни — NOT IN VESUM
-  ✗ мойа — NOT IN VESUM
   ✗ пте — NOT IN VESUM
 
-All 92 other words are confirmed to exist in VESUM.
+All 82 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

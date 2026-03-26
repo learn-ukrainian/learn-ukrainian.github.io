@@ -11,23 +11,23 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: буква́р
+  translation: primer (first reading textbook)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: лі́тера
-  translation: letter
+  translation: letter (of the alphabet)
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: на́голос
-  translation: stress (accent)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: звуковий аналіз
-  translation: sound analysis
-  expression: true
-  pos: ''
-  gender: ''
   verified: true
 - word: складопо́діл
   translation: syllable division
@@ -35,44 +35,32 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: апте́ка
-  translation: pharmacy
+- word: звуковий аналіз
+  translation: sound analysis (method for reading new words)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ма́ма
+  translation: mother
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: університе́т
-  translation: university
+- word: та́то
+  translation: father
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: бібліоте́ка
-  translation: library
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: фотогра́фія
-  translation: photography
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шокола́д
-  translation: chocolate
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: я́блуко
-  translation: apple
+- word: молоко́
+  translation: milk
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: молоко́
-  translation: milk
+- word: я́блуко
+  translation: apple
   expression: false
   pos: ім.
   gender: с.
@@ -107,74 +95,68 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ма́ма
-  translation: mother
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: та́то
-  translation: father
+- word: університе́т
+  translation: university
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: о́ко
-  translation: eye
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: рука́
-  translation: hand
+- word: бібліоте́ка
+  translation: library
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: село́
-  translation: village
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кит
-  translation: whale
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кіт
-  translation: cat
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: оса́
-  translation: wasp
+- word: фотогра́фія
+  translation: photography
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: са́ло
-  translation: lard
+- word: шокола́д
+  translation: chocolate
   expression: false
   pos: ім.
-  gender: с.
+  gender: ч.
   verified: true
-- word: смола́
-  translation: resin
+- word: апте́ка
+  translation: pharmacy
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: анана́с
-  translation: pineapple
+- word: юна́к
+  translation: young man
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: єно́т
+  translation: raccoon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: їжа́к
+  translation: hedgehog
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: вода́
   translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рука́
+  translation: hand
   expression: false
   pos: ім.
   gender: ж.
@@ -192,7 +174,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: нога́
-  translation: leg
+  translation: foot
   expression: false
   pos: ім.
   gender: ж.
@@ -203,14 +185,8 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: кни́га
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: па́рта
-  translation: desk (school)
+  translation: desk (school desk)
   expression: false
   pos: ім.
   gender: ж.
@@ -229,6 +205,30 @@ vocabulary:
   verified: true
 - word: хліб
   translation: bread
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кит
+  translation: whale
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кіт
+  translation: cat
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дим
+  translation: smoke
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лис
+  translation: fox
   expression: false
   pos: ім.
   gender: ч.
@@ -281,24 +281,6 @@ vocabulary:
   pos: числ.
   gender: ''
   verified: true
-- word: юна́к
-  translation: young man
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: єно́т
-  translation: raccoon
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: їжа́к
-  translation: hedgehog
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: моя́
   translation: my (feminine)
   expression: false
@@ -311,35 +293,17 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: люблю́
-  translation: I love
+- word: твої́
+  translation: your (plural)
   expression: false
-  pos: дієсл.
+  pos: прикм.
   gender: ''
   verified: true
-- word: дим
-  translation: smoke
+- word: си́нє
+  translation: blue (neuter)
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лис
-  translation: fox
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: рік
-  translation: year
-  expression: false
-  pos: дієсл.
+  pos: прикм.
   gender: ''
-  verified: true
-- word: сир
-  translation: cheese
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: тут
   translation: here
@@ -353,10 +317,22 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: по́руч
-  translation: nearby
+- word: ось
+  translation: here is (pointing)
   expression: false
-  pos: присл.
+  pos: част.
+  gender: ''
+  verified: true
+- word: а
+  translation: and, but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: і
+  translation: and
+  expression: false
+  pos: спол.
   gender: ''
   verified: true
 - word: кафе́
@@ -371,28 +347,16 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: парк
-  translation: park
+- word: кни́ги
+  translation: books
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: шокола́дний
-  translation: chocolate (adjective)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сло́во
-  translation: word
+- word: Ки́їв
+  translation: Kyiv
   expression: false
   pos: ім.
-  gender: с.
-  verified: true
-- word: при́голосний
-  translation: consonant
-  expression: false
-  pos: прикм.
   gender: ''
   verified: true
 - word: У слові стільки складів, скільки голосних звуків.
