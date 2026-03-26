@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 4 sections perfectly, hitting all grammar and vocabulary points
+    from the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless. Proper distinction of soft/hard stems, correct case usage in
+    dialogues (e.g., "Бери червону").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and contrastive analysis, but docked slightly due to
+    the premature placement of the `fill-in` exercise before all required concepts
+    were taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words integrated naturally into the prose
+    and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The placeholder focus matches the plan, but the placement of the first
+    exercise breaks the pedagogical sequence.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Great dialogues and cultural context, but heavy deductions for meta-commentary.
+    Citing "Вашуленко Grade 3 p.130" and "from Кравцова Grade 2" directly to an A1
+    L2 learner breaks immersion and feels lik
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. Word count safely exceeds the 1200 minimum target (1462
+    words), which is explicitly encouraged by the project's hard rules.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Outstanding explanation of the two blues and the flag colors. Framing
+    `блакитний` vs `голубий` is a strong decolonial touch.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural, everyday scenarios with distinct voices showing color adjectives
+    in action.
+findings: []

@@ -1,0 +1,388 @@
+version: '1.0'
+module: colors
+level: a1
+inline:
+- id: fill-in-gender-agreement
+  type: fill-in
+  instruction: 'Fill in the correct color ending to match the noun''s gender. Remember:
+    **-ий** (masculine), **-а** (feminine), **-е** (neuter).'
+  items:
+  - sentence: Автобус червон____.
+    answer: червоний
+    options:
+    - червоний
+    - червона
+    - червоне
+  - sentence: Квітка жовт____.
+    answer: жовта
+    options:
+    - жовтий
+    - жовта
+    - жовте
+  - sentence: Яблуко зелен____.
+    answer: зелене
+    options:
+    - зелений
+    - зелена
+    - зелене
+  - sentence: Стіна біл____.
+    answer: біла
+    options:
+    - білий
+    - біла
+    - біле
+  - sentence: Кіт чорн____.
+    answer: чорний
+    options:
+    - чорний
+    - чорна
+    - чорне
+  - sentence: Крісло сір____.
+    answer: сіре
+    options:
+    - сірий
+    - сіра
+    - сіре
+- id: group-sort-hard-soft
+  type: group-sort
+  instruction: Sort these color forms into **тверда група** (-ий/-а/-е) and **м'яка
+    група** (-ій/-я/-є).
+  groups:
+  - label: Тверда група (-ий)
+    items:
+    - червоний
+    - жовтий
+    - зелений
+    - білий
+    - чорний
+    - сірий
+  - label: М'яка група (-ій)
+    items:
+    - синій
+    - синя
+    - синє
+    - синього
+- id: quiz-blue-shades
+  type: quiz
+  instruction: 'Choose the correct shade of blue: **синій** (dark blue) or **блакитний**
+    (light blue)?'
+  items:
+  - question: Яке небо в сонячний день? — ____.
+    options:
+    - синє
+    - блакитне
+    - біле
+    correct: 1
+  - question: Яке море вночі? — ____.
+    options:
+    - блакитне
+    - синє
+    - чорне
+    correct: 1
+  - question: Прапор України — синьо-жовтий. Синій — це колір ____.
+    options:
+    - неба
+    - моря
+    - квітки
+    correct: 0
+  - question: Незабудки — це ____ квітки.
+    options:
+    - сині
+    - блакитні
+    - фіолетові
+    correct: 1
+  - question: Олівець темно-синій. Він ____.
+    options:
+    - блакитний
+    - синій
+    - сірий
+    correct: 1
+  - question: Якого кольору чисте небо вдень?
+    options:
+    - синього
+    - блакитного
+    - білого
+    correct: 1
+- id: quiz-object-colors
+  type: quiz
+  instruction: Choose the correct color for each object. Pay attention to gender agreement!
+  items:
+  - question: Шоколад ____.
+    options:
+    - коричневий
+    - коричнева
+    - коричневе
+    correct: 0
+  - question: Квітка ____.
+    options:
+    - рожевий
+    - рожева
+    - рожеве
+    correct: 1
+  - question: Апельсин ____.
+    options:
+    - помаранчева
+    - помаранчеве
+    - помаранчевий
+    correct: 2
+  - question: Сукня ____.
+    options:
+    - фіолетовий
+    - фіолетова
+    - фіолетове
+    correct: 1
+workbook:
+- type: fill-in
+  instruction: Write the correct form of the color to match the noun. Use the color
+    in parentheses as a hint.
+  items:
+  - sentence: ____ книга (синій)
+    answer: синя
+    options:
+    - синій
+    - синя
+    - синє
+  - sentence: ____ стіл (червоний)
+    answer: червоний
+    options:
+    - червоний
+    - червона
+    - червоне
+  - sentence: ____ вікно (білий)
+    answer: біле
+    options:
+    - білий
+    - біла
+    - біле
+  - sentence: ____ шафа (коричневий)
+    answer: коричнева
+    options:
+    - коричневий
+    - коричнева
+    - коричневе
+  - sentence: ____ олівець (синій)
+    answer: синій
+    options:
+    - синій
+    - синя
+    - синє
+  - sentence: ____ небо (синій)
+    answer: синє
+    options:
+    - синій
+    - синя
+    - синє
+  - sentence: ____ крісло (чорний)
+    answer: чорне
+    options:
+    - чорний
+    - чорна
+    - чорне
+  - sentence: ____ квітка (жовтий)
+    answer: жовта
+    options:
+    - жовтий
+    - жовта
+    - жовте
+  - sentence: ____ килим (сірий)
+    answer: сірий
+    options:
+    - сірий
+    - сіра
+    - сіре
+  - sentence: ____ сукня (зелений)
+    answer: зелена
+    options:
+    - зелений
+    - зелена
+    - зелене
+- type: match-up
+  instruction: Match each object to its typical color.
+  pairs:
+  - left: сонце
+    right: жовте
+  - left: небо
+    right: блакитне
+  - left: кіт
+    right: чорний
+  - left: шоколад
+    right: коричневий
+  - left: стіна
+    right: біла
+  - left: море
+    right: синє
+  - left: яблуко
+    right: зелене
+  - left: апельсин
+    right: помаранчевий
+- type: quiz
+  instruction: '**Якого кольору?** Choose the correct color for each object. Watch
+    the gender!'
+  items:
+  - question: Якого кольору прапор України?
+    options:
+    - синьо-жовтий
+    - блакитно-жовтий
+    - зелено-червоний
+    correct: 0
+  - question: Якого кольору сонце?
+    options:
+    - біле
+    - жовте
+    - червоне
+    correct: 1
+  - question: Якого кольору море?
+    options:
+    - блакитне
+    - синє
+    - зелене
+    correct: 1
+  - question: Якого кольору стіна у кімнаті Тараса?
+    options:
+    - сіра
+    - біла
+    - жовта
+    correct: 1
+  - question: Якого кольору крісло Оленки?
+    options:
+    - коричневе
+    - сіре
+    - чорне
+    correct: 2
+  - question: Якого кольору килим Тараса?
+    options:
+    - сірий
+    - коричневий
+    - чорний
+    correct: 1
+  - question: Якого кольору квітка-незабудка?
+    options:
+    - синя
+    - блакитна
+    - фіолетова
+    correct: 1
+  - question: Якого кольору ручка?
+    options:
+    - синій
+    - синя
+    - синє
+    correct: 1
+- type: true-false
+  instruction: Read each statement. Is it **правда** (true) or **ні** (false)?
+  items:
+  - statement: Синій і блакитний — це один колір.
+    correct: false
+    explanation: В українській мові синій (dark blue) і блакитний (light blue) — це
+      два різні кольори, як red і pink в англійській.
+  - statement: Прапор України — синьо-жовтий.
+    correct: true
+    explanation: 'Так! Прапор — синьо-жовтий: синє — небо, жовте — жито (wheat).'
+  - statement: Синій belongs to тверда група (-ий).
+    correct: false
+    explanation: 'Синій belongs to м''яка група (-ій/-я/-є). Compare: червоний/-а/-е
+      (hard) vs. синій/-я/-є (soft).'
+  - statement: Червона книга — correct because книга is feminine.
+    correct: true
+    explanation: 'Книга is feminine, so the color takes the -а ending: червона.'
+  - statement: Голубий is the correct Ukrainian word for light blue.
+    correct: false
+    explanation: Голубий is a Russian-influenced form. The correct Ukrainian word
+      for light blue is блакитний.
+- type: error-correction
+  instruction: Each sentence has a wrong color ending. Find and fix it!
+  items:
+  - sentence: Книга синій.
+    error: синій
+    correction: синя
+    error_type: word
+    options:
+    - синя
+    - синє
+    - сині
+    explanation: 'Книга is feminine — use the soft feminine form: синя (not синій,
+      which is masculine).'
+  - sentence: Вікно білий.
+    error: білий
+    correction: біле
+    error_type: word
+    options:
+    - біла
+    - біле
+    - білі
+    explanation: 'Вікно is neuter — use the neuter form: біле (not білий, which is
+      masculine).'
+  - sentence: Стіл червона.
+    error: червона
+    correction: червоний
+    error_type: word
+    options:
+    - червоний
+    - червоне
+    - червоні
+    explanation: 'Стіл is masculine — use the masculine form: червоний (not червона,
+      which is feminine).'
+  - sentence: Крісло сірий.
+    error: сірий
+    correction: сіре
+    error_type: word
+    options:
+    - сіра
+    - сіре
+    - сірі
+    explanation: 'Крісло is neuter — use the neuter form: сіре (not сірий, which is
+      masculine).'
+- type: group-sort
+  instruction: Sort all twelve colors into **тверда група** (-ий/-а/-е) and **м'яка
+    група** (-ій/-я/-є).
+  groups:
+  - label: Тверда група (-ий)
+    items:
+    - червоний
+    - жовтий
+    - зелений
+    - білий
+    - чорний
+    - сірий
+    - блакитний
+    - коричневий
+    - рожевий
+    - помаранчевий
+    - фіолетовий
+  - label: М'яка група (-ій)
+    items:
+    - синій
+- type: translate
+  instruction: Choose the correct Ukrainian translation.
+  items:
+  - source: a white wall
+    options:
+    - text: біла стіна
+      correct: true
+    - text: білий стіна
+      correct: false
+    - text: біле стіна
+      correct: false
+  - source: a blue pen (dark blue)
+    options:
+    - text: синій ручка
+      correct: false
+    - text: синя ручка
+      correct: true
+    - text: блакитна ручка
+      correct: false
+  - source: a grey carpet
+    options:
+    - text: сіра килим
+      correct: false
+    - text: сіре килим
+      correct: false
+    - text: сірий килим
+      correct: true
+  - source: a green apple
+    options:
+    - text: зелений яблуко
+      correct: false
+    - text: зелена яблуко
+      correct: false
+    - text: зелене яблуко
+      correct: true
