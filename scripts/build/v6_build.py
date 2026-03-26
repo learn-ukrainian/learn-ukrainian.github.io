@@ -2888,6 +2888,15 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
             _log(f"  ⚠️  {len(unmatched)} inline activity/activities without markers → moved to Зошит")
             workbook_activities = unmatched + workbook_activities
 
+    # Strip any remaining INJECT_ACTIVITY markers (unmatched = no inline activity)
+    # HTML comments break MDX parsing — must be removed
+    leftover_markers = re.findall(r"<!--\s*INJECT_ACTIVITY:.*?-->", mdx_content)
+    if leftover_markers:
+        for marker in leftover_markers:
+            mdx_content = mdx_content.replace(marker, "")
+        _log(f"  ⚠️  Stripped {len(leftover_markers)} unmatched INJECT_ACTIVITY marker(s)")
+        mdx_content = re.sub(r"\n{3,}", "\n\n", mdx_content)
+
     # --- Build 4-tab structure ---
     # Split content at TAB markers (from ENRICH step)
     tab_marker_pattern = re.compile(r"<!-- TAB:(.+?) -->")
