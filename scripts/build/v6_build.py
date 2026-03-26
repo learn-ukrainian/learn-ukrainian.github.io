@@ -2024,16 +2024,11 @@ def step_activities(
             )
 
         # Dispatch — use tools mode for MCP access.
-        # A1-A2 activities: Flash-Lite (simple distractors, structured YAML).
-        # B1+: Pro (pedagogically sound complex distractors needed).
+        # All activities use Pro — Flash produced weak exercises (scored 6-7/10).
         if "gemini" in base_writer:
-            from batch_gemini_config import FLASH_LITE_MODEL
-            from batch_gemini_config import PRO_MODEL as _PRO
-            activity_model = FLASH_LITE_MODEL if level in ("a1", "a2") else _PRO
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
                 orch_dir=orch_dir, timeout=300, mcp_tools=True,
-                model=activity_model,
             )
         else:
             ok, raw = _dispatch(
@@ -3402,6 +3397,16 @@ def main():
     _log(f"   Writer: {args.writer}")
 
     steps = args.step
+
+    # Pre-flight: check RAG server is running (needed for MCP tools)
+    if "tools" in args.writer:
+        import urllib.request
+        try:
+            urllib.request.urlopen("http://127.0.0.1:8766/health", timeout=3)
+            _log("   RAG server: ✅ running")
+        except Exception:
+            _log("   ❌ RAG server is not running. Start it first: ./services.sh start")
+            sys.exit(1)
 
     # Clean previous build artifacts for a fresh full build
     if steps == "all":
