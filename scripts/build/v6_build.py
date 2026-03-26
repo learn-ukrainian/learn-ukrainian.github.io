@@ -2655,6 +2655,83 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score, raw
 
 
+def _generate_fixes_from_evidence(
+    review_text: str, content_path: Path, level: str, slug: str,
+) -> list[dict]:
+    """When Pro review identifies errors in evidence but outputs no <fixes>,
+    dispatch Flash-Lite to generate exact find/replace pairs.
+
+    Flash-Lite reads: (1) the error descriptions from evidence, (2) the module content.
+    Outputs: YAML list of {find, replace} pairs.
+    """
+    import re
+
+    from build.dispatch import dispatch_agent as _dispatch
+    error_lines = []
+    for m in re.finditer(
+        r"\|\s*\d+\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]+)\|", review_text
+    ):
+        dim_score = int(m.group(2))
+        evidence = m.group(3).strip()
+        if dim_score < 9 and any(
+            kw in evidence.lower()
+            for kw in ("error", "incorrect", "wrong", "mistake", "hallucination", "contradictory")
+        ):
+            error_lines.append(f"- {m.group(1).strip()} ({dim_score}/10): {evidence}")
+
+    if not error_lines:
+        return []
+
+    content = content_path.read_text("utf-8")
+    # Truncate to body only (before TAB markers)
+    tab_idx = content.find("<!-- TAB:")
+    body = content[:tab_idx] if tab_idx != -1 else content
+
+    prompt = f"""You are a copy-editor fixing errors in a Ukrainian language module.
+
+The reviewer identified these errors:
+{chr(10).join(error_lines)}
+
+Here is the module content:
+<content>
+{body[:8000]}
+</content>
+
+For EACH error above, output an exact find/replace fix. Output ONLY valid YAML:
+
+```yaml
+- find: "exact text from the module that contains the error"
+  replace: "corrected text"
+```
+
+Rules:
+- The `find` string MUST be an exact substring of the content above (copy-paste it)
+- Keep fixes minimal — change only what's wrong
+- If you can't find the exact error text, skip that fix
+- Output ONLY the YAML block, no explanation
+"""
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        from batch_gemini_config import FLASH_LITE_MODEL
+        ok, raw = _dispatch(
+            prompt, agent="gemini", phase="fix-evidence",
+            orch_dir=orch_dir, timeout=60,
+            model=FLASH_LITE_MODEL,
+        )
+    except Exception as e:
+        _log(f"  ❌ Flash-Lite dispatch failed: {e}")
+        return []
+
+    if not ok or not raw:
+        return []
+
+    # Parse YAML fixes from response
+    return _parse_review_fixes(raw)
+
+
 def _build_review_correction(review_text: str, score: float = 0.0) -> str:
     """Extract findings from a review and build a PATCH directive for retry.
 
@@ -3365,8 +3442,15 @@ def main():
 
                 fixes = _parse_review_fixes(review_text)
                 if not fixes:
-                    _log(f"\n⚠️  Review {score}/10 — no <fixes> block in review output")
-                    break
+                    # Pro identified errors but didn't output fixes.
+                    # Dispatch Flash-Lite to generate find/replace pairs from the evidence.
+                    _log(f"\n⚠️  Review {score}/10 — no <fixes> block. Dispatching Flash-Lite to generate fixes...")
+                    fixes = _generate_fixes_from_evidence(
+                        review_text, content_path, args.level, slug,
+                    )
+                    if not fixes:
+                        _log("  ❌ Flash-Lite also couldn't generate fixes")
+                        break
 
                 _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
 
