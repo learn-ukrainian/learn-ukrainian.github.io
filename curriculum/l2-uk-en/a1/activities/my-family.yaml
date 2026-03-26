@@ -1,0 +1,312 @@
+version: '1.0'
+module: my-family
+level: a1
+inline:
+- id: match-family-vocab
+  type: match-up
+  instruction: Match the Ukrainian family words to their English meanings.
+  pairs:
+  - left: батьки
+    right: parents
+  - left: дядько
+    right: uncle
+  - left: тітка
+    right: aunt
+  - left: дідусь
+    right: grandfather
+  - left: бабуся
+    right: grandmother
+  - left: брат
+    right: brother
+  - left: сестра
+    right: sister
+  - left: мама і тато
+    right: mother and father
+- id: quiz-u-tebe-ye
+  type: quiz
+  instruction: Answer the question using the pattern «У мене є...».
+  items:
+  - question: У тебе є брат?
+    options:
+    - Так, у мене є брат.
+    - Так, у тебе є брат.
+    - Так, мій брат.
+    correct: 0
+  - question: У тебе є сестра?
+    options:
+    - Ні, моя сестра.
+    - Так, у мене є сестра.
+    - Так, у тебе є сестра.
+    correct: 1
+  - question: У тебе є бабуся?
+    options:
+    - Так, у мене є бабуся.
+    - Так, моя бабуся.
+    - Так, у тебе є бабуся.
+    correct: 0
+  - question: У тебе є два брати?
+    options:
+    - Так, у тебе є два брати.
+    - Ні.
+    - Так, мої два брати.
+    correct: 1
+  - question: У тебе є дідусь?
+    options:
+    - Так, у тебе є дідусь.
+    - Так, мій дідусь.
+    - Так, у мене є дідусь.
+    correct: 2
+  - question: У тебе є син?
+    options:
+    - Ні.
+    - Так, у тебе є син.
+    - Ні, мій син.
+    correct: 0
+- id: fill-in-possessives
+  type: fill-in
+  instruction: Choose the correct possessive pronoun (мій, моя, моє, or мої).
+  items:
+  - sentence: Це ____ мама.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Де ____ тато?
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Ось ____ батьки.
+    answer: мої
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Це ____ брат.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Це ____ сестра.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Це ____ місто.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Де ____ бабуся?
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Це ____ дідусь.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+- id: fill-in-dialogue
+  type: fill-in
+  instruction: Complete the dialogue with the correct word.
+  items:
+  - sentence: — Привіт! Це ____ брат?
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - мій
+    - мої
+  - sentence: — Так, це мій брат. Ось мій ____.
+    answer: тато
+    options:
+    - тато
+    - мама
+    - сестра
+    - батьки
+  - sentence: — А це ____ мама?
+    answer: твоя
+    options:
+    - твій
+    - твоя
+    - мій
+    - моя
+  - sentence: — Так, її звати ____.
+    answer: Марина
+    options:
+    - Марина
+    - Максим
+    - мама
+    - тато
+workbook:
+- type: match-up
+  instruction: Match each Ukrainian word to its English meaning.
+  pairs:
+  - left: син
+    right: son
+  - left: дочка
+    right: daughter
+  - left: дружина
+    right: wife
+  - left: чоловік
+    right: husband
+  - left: сім'я
+    right: family
+- type: quiz
+  instruction: Choose the correct answer.
+  items:
+  - question: How do you say 'I have a sister' in Ukrainian?
+    options:
+    - У мене є сестра.
+    - Моя сестра є.
+    - Мене є сестра.
+    correct: 0
+  - question: Why is it «моя сестра» and not «мій сестра»?
+    options:
+    - Because the speaker is female
+    - Because «сестра» is a feminine noun
+    - Because «мій» is only for brothers
+    correct: 1
+  - question: What does «його» mean as a possessive?
+    options:
+    - her
+    - my
+    - his
+    correct: 2
+  - question: Which is correct for 'two sisters'?
+    options:
+    - два сестри
+    - дві сестри
+    - дві сестра
+    correct: 1
+- type: group-sort
+  instruction: Sort these words by grammatical gender.
+  groups:
+  - label: Masculine (мій)
+    items:
+    - тато
+    - брат
+    - син
+    - дідусь
+    - дядько
+  - label: Feminine (моя)
+    items:
+    - мама
+    - сестра
+    - бабуся
+    - дочка
+    - тітка
+- type: fill-in
+  instruction: 'Choose the correct possessive: твій, твоя, твоє, or твої.'
+  items:
+  - sentence: Це ____ дядько?
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+  - sentence: Де ____ тітка?
+    answer: твоя
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+  - sentence: Це ____ батьки?
+    answer: твої
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+  - sentence: Як ____ ім'я?
+    answer: твоє
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+- type: quiz
+  instruction: Read the mini-dialogue and choose the best reply.
+  items:
+  - question: — У тебе є брати чи сестри? — ...
+    options:
+    - Так, у мене є один брат і одна сестра.
+    - Так, мій брат і сестра.
+    - У тебе є брат.
+    correct: 0
+  - question: — Хто це на фотографії? — ...
+    options:
+    - Це у мене є мама.
+    - Це моя мама Марина.
+    - Моя мама є Марина.
+    correct: 1
+  - question: — Як його звати? — ...
+    options:
+    - Його мій Андрій.
+    - Він Андрій.
+    - Його звати Андрій.
+    correct: 2
+- type: observe
+  examples:
+  - Його мама, його тато, його сестра — always «його».
+  - Її брат, її мама, її місто — always «її».
+  - Мій тато, моя мама, моє місто, мої батьки — «мій» changes!
+  prompt: 'What is different about «його» and «її» compared to «мій»? (Hint: do «його»
+    and «її» change form?)'
+- type: anagram
+  instruction: Unscramble the letters to find a family word (hint provided).
+  items:
+  - letters:
+    - с
+    - е
+    - р
+    - т
+    - с
+    - а
+    answer: сестра
+    hint: sister
+  - letters:
+    - б
+    - а
+    - у
+    - б
+    - с
+    - я
+    answer: бабуся
+    hint: grandmother
+  - letters:
+    - д
+    - і
+    - д
+    - у
+    - с
+    - ь
+    answer: дідусь
+    hint: grandfather
+  - letters:
+    - б
+    - а
+    - т
+    - ь
+    - к
+    - и
+    answer: батьки
+    hint: parents

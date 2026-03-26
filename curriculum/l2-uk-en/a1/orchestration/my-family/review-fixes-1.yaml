@@ -1,0 +1,34 @@
+- find: '**Оля:** Як його звати? *(What''s his name?)*'
+  replace: '**Максим:** Як його звати? *(What''s his name?)*'
+- find: '**Максим:** Коля. *(Kolya.)*'
+  replace: '**Оля:** Коля. *(Kolya.)*'
+- find: '**Оля:** Його звати Андрій. *(His name is Andriy.)*'
+  replace: '**Оля:** Його звати Коля. *(His name is Kolya.)*'
+- find: 'Ukrainian does not use a verb for "have." Instead, the construction is literally
+    "At me there-is":'
+  replace: 'While Ukrainian does have a verb for "to have" (*мати*), everyday speech
+    prefers a different construction. It is literally "At me there-is":'
+- find: 'For now, avoid **У мене немає** (I don''t have) — it requires the genitive
+    case, which is A2 grammar. At A1, learners answer with: **Ні.** Or: **Ні, у мене
+    тільки один брат.**'
+  replace: 'For now, if you want to say you don''t have someone, just say **Ні** or
+    offer a correction: **Ні, у мене тільки один брат.** We will learn how to say
+    "I don''t have" later.'
+- find: The full paradigm (**наш**, **ваш**, **їхній**) comes in A2 — at A1, **мій/твій/його/її**
+    in the nominative case covers everything you need.
+  replace: We will learn other possessives like **наш** (our) and **ваш** (your, formal)
+    later — for now, **мій/твій/його/її** covers everything you need for simple introductions.
+- find: Already you can see that **мій** and **моя** are different — we will explore
+    why in the possessive pronouns section below.
+  replace: Already you can see that **мій** and **моя** are different — this is because
+    they match the gender of the person you are introducing.
+- find: 'Let us revisit Dialogue 2 to see possessives at work: **Це моя мама. Це мій
+    тато. Це моя сестра. Це мої брати.** The **Це** + possessive + noun pattern is
+    the workhorse for family introductions.'
+  replace: 'The **Це** + possessive + noun pattern is the workhorse for family introductions:
+    **Це моя мама. Це мій тато. Це моя сестра. Це мої брати.**'
+- find: 'Extended family members: **бабуся** / **баба** (grandmother), **дідусь**
+    / **дід** (grandfather), **тітка** (aunt), **дядько** (uncle).'
+  replace: 'Extended family members: **бабуся** / **баба** (grandmother), **дідусь**
+    / **дід** (grandfather), **тітка** (aunt), **дядько** (uncle), **дружина** (wife),
+    and **чоловік** (husband).'

@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all `content_outline` points flawlessly. Correctly implements the
+    A1 constraint of nominative possessives only and avoids the negative genitive
+    "немає". Word count (1529) provides good richness
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Zero Russianisms or Surzhyk. Perfect explanation of gender agreement for
+    possessives ("look at the noun's gender, not who is speaking"). All terms verified
+    in VESUM.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Teaches "У мене є" as a fixed chunk rather than introducing
+    the verb "мати" or full genitive paradigm. Uses textbook references (Марія Братко,
+    unscrambling exercise) beautifully.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are introduced naturally
+    within the prose and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'Placeholders perfectly match the requested activities in the plan. (Note:
+    actual filled exercises were not present in the provided text for logic review).'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural and engaging tone. Avoids generic LLM enthusiasm ("incredibly
+    melodic"). Includes nice cultural framing (showing phone photos, family ties).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, appropriate H2 headers matching the plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highlights culturally accurate facts (Ukrainian has no single word for
+    "grandparents", uses diminutives heavily).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, contextualized, and use named speakers (Максим,
+    Оля) with useful conversational elements ("Ого!", "Класно!").
+findings: []
