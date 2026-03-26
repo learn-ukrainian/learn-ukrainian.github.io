@@ -2735,6 +2735,127 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score, raw
 
 
+def _rewrite_weak_sections(
+    review_text: str, content_path: Path, level: str, slug: str,
+    writer: str = "claude",
+) -> bool:
+    """Rewrite entire sections that scored poorly — not find/replace.
+
+    Find/replace breaks prose flow. Section rewriting preserves context
+    because the rewriter sees the full section and rewrites holistically.
+
+    Returns True if any sections were rewritten.
+    """
+    import re
+
+    from build.dispatch import CLAUDE_WRITER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    # Parse which sections scored <9 with error evidence
+    weak_sections: list[dict] = []
+    full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
+    for m in full_score_pattern.finditer(review_text):
+        dim_score = int(m.group(3))
+        evidence = m.group(4).strip()
+        if dim_score < 9:
+            weak_sections.append({
+                "dimension": m.group(2).strip(),
+                "score": dim_score,
+                "evidence": evidence,
+            })
+
+    if not weak_sections:
+        return False
+
+    # Extract findings for more detail
+    findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
+    findings_text = findings_section.group(1).strip() if findings_section else ""
+
+    # Read content and split into sections
+    content = content_path.read_text("utf-8")
+    tab_idx = content.find("<!-- TAB:")
+    body = content[:tab_idx] if tab_idx != -1 else content
+    tail = content[tab_idx:] if tab_idx != -1 else ""
+
+    # Build the rewrite prompt
+    issues_summary = "\n".join(
+        f"- {s['dimension']} ({s['score']}/10): {s['evidence'][:200]}"
+        for s in weak_sections
+    )
+
+    prompt = f"""You are rewriting sections of a Ukrainian language module to fix errors identified by a reviewer.
+
+## Review Findings
+
+These dimensions scored below 9/10:
+{issues_summary}
+
+{f"Detailed findings:{chr(10)}{findings_text[:2000]}" if findings_text else ""}
+
+## Current Module Content
+
+<content>
+{body}
+</content>
+
+## Your Task
+
+Rewrite the ENTIRE module content above, fixing ALL identified errors while:
+1. Keeping all Ukrainian linguistically correct (use verify_word to check ANY claim about letters, sounds, or syllables)
+2. Maintaining warm, encouraging tone — not robotic or formulaic
+3. Preserving all ## section headings exactly as they are
+4. Preserving all <!-- INJECT_ACTIVITY: --> markers in their positions
+5. Keeping the same overall structure and word count (±10%)
+6. Making dialogues natural and contextual — real situations, not drills
+
+CRITICAL: For any phonetic claim (letter decomposition, syllable count, sound values), call verify_word FIRST. Do NOT write from memory.
+
+Output ONLY the rewritten module content. No preamble, no explanation. Start with the first ## heading.
+"""
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    # Use Claude with tools for rewriting (can verify Ukrainian)
+    reviewer_is_claude = writer in ("gemini", "gemini-tools")
+    if reviewer_is_claude:
+        ok, raw = _dispatch(
+            prompt, agent="claude-tools", phase="section-rewrite",
+            orch_dir=orch_dir, timeout=300,
+            mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
+        )
+    else:
+        # Gemini reviewed — use Gemini Pro for rewrite
+        ok, raw = _dispatch(
+            prompt, agent="gemini-tools", phase="section-rewrite",
+            orch_dir=orch_dir, timeout=300, mcp_tools=True,
+        )
+
+    if not ok or not raw:
+        _log("  ❌ Section rewrite failed — no output")
+        return False
+
+    # Validate the rewrite has the expected sections
+    original_h2s = re.findall(r"^## .+", body, re.MULTILINE)
+    rewrite_h2s = re.findall(r"^## .+", raw, re.MULTILINE)
+
+    if len(rewrite_h2s) < len(original_h2s) - 1:
+        _log(f"  ❌ Rewrite dropped sections ({len(original_h2s)} → {len(rewrite_h2s)}), rejecting")
+        return False
+
+    # Strip any preamble before first ## heading
+    first_h2 = raw.find("## ")
+    if first_h2 > 0:
+        raw = raw[first_h2:]
+
+    # Write the rewritten content + preserved tail (Словник, Ресурси tabs)
+    new_content = "<!-- TAB:Урок -->\n\n" + raw.strip() + "\n\n" + tail
+    content_path.write_text(new_content, "utf-8")
+
+    _log(f"  ✅ Section rewrite complete ({len(raw.split())} words, {len(rewrite_h2s)} sections)")
+    return True
+
+
 def _generate_fixes_with_claude(
     review_text: str, content_path: Path, level: str, slug: str,
 ) -> list[dict]:
@@ -3616,71 +3737,26 @@ def main():
             else:
                 _log(f"\n⚠️  Review {score}/10 REVISE but no <fixes> block")
         else:
-            # Low-scoring REVISE: full fix loop with re-review
-            max_fix_rounds = 3  # 3 rounds: enough to catch all errors (was 2, юрта/Київ slipped through)
+            # REVISE: section-level rewrite (not find/replace).
+            # Find/replace breaks prose flow — fixing one sentence damages
+            # surrounding context. Instead, rewrite entire weak sections.
+            max_fix_rounds = 2
             prev_score = score
             for fix_round in range(1, max_fix_rounds + 1):
                 if passed:
                     _log(f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
                     break
 
-                # Generate fixes: Claude (with tools) when it reviewed, Flash otherwise.
-                reviewer_is_claude = args.writer in ("gemini", "gemini-tools")
-                if reviewer_is_claude:
-                    # Claude reviewed — it already has context + MCP tools.
-                    # Try its own <fixes> block first (most precise).
-                    fixes = _parse_review_fixes(review_text)
-                    if not fixes:
-                        _log("\n  🔧 Claude review had no <fixes> — dispatching Claude to generate fixes...")
-                        fixes = _generate_fixes_with_claude(
-                            review_text, content_path, args.level, slug,
-                        )
-                else:
-                    # Gemini reviewed — dispatch Flash for fix generation.
-                    _log("\n  🔧 Dispatching Flash to generate fixes from review evidence...")
-                    fixes = _generate_fixes_from_evidence(
-                        review_text, content_path, args.level, slug,
-                    )
-                    if not fixes:
-                        fixes = _parse_review_fixes(review_text)
-                if not fixes:
-                    _log("  ❌ No fixes could be generated")
-                    break
+                _log(f"\n🔧 Review {score}/10 — section rewrite round {fix_round}/{max_fix_rounds}")
 
-                _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
-
-                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
-                orch_dir.mkdir(parents=True, exist_ok=True)
-                (orch_dir / f"review-fixes-{fix_round}.yaml").write_text(
-                    yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
-                    "utf-8",
+                rewritten = _rewrite_weak_sections(
+                    review_text, content_path, args.level, slug,
+                    writer=args.writer,
                 )
 
-                content = content_path.read_text("utf-8")
-                applied = 0
-                for fix in fixes:
-                    find = fix.get("find", "")
-                    replace = fix.get("replace", "")
-                    insert_after = fix.get("insert_after", "")
-
-                    if find and replace and find in content:
-                        content = content.replace(find, replace, 1)
-                        applied += 1
-                        _log(f"    ✅ Fixed: {find[:60]}...")
-                    elif find and replace:
-                        _log(f"    ⚠️  Not found: {find[:60]}...")
-                    elif insert_after and replace and insert_after in content:
-                        pos = content.index(insert_after) + len(insert_after)
-                        content = content[:pos] + "\n\n" + replace + content[pos:]
-                        applied += 1
-                        _log(f"    ✅ Inserted after: {insert_after[:60]}...")
-
-                if applied == 0:
-                    _log(f"  ⚠️  No fixes could be applied (0/{len(fixes)} matched)")
+                if not rewritten:
+                    _log("  ❌ Section rewrite produced no changes")
                     break
-
-                content_path.write_text(content, "utf-8")
-                _log(f"  Applied {applied}/{len(fixes)} fixes")
 
                 step_enrich(content_path, args.level, slug)
                 step_verify(content_path, args.level, args.module)
