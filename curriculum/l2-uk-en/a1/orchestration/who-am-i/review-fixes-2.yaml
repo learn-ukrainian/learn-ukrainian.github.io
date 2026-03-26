@@ -1,0 +1,39 @@
+- find: '**Софія:** Так, я з Києва. *(Yes, I''m from Kyiv.)*'
+  replace: '**Петро:** Так, я з Києва. *(Yes, I''m from Kyiv.)*'
+- find: Both **його** and **її** never change form — they stay the same no matter
+    how you use them.
+  replace: When used to mean "his" or "her", **його** and **її** never change form.
+- find: '**Оксана:** Це мій друг Андрій. *(This is my friend Andriy.)*
+
+
+
+    **Оксана:** Він зі Львова. Він — інженер. *(He''s from Lviv. He''s an engineer.)*
+
+
+
+    **Оксана:** А це Катерина. *(And this is Kateryna.)*
+
+
+
+    **Оксана:** Вона з Одеси. Вона — журналістка. *(She''s from Odesa. She''s a journalist.)*
+
+    '
+  replace: '**Оксана:** Це мій друг Андрій. Він зі Львова. Він — інженер. *(This is
+    my friend Andriy. He''s from Lviv. He''s an engineer.)*
+
+
+
+    **Оксана:** А це Катерина. Вона з Одеси. Вона — журналістка. *(And this is Kateryna.
+    She''s from Odesa. She''s a journalist.)*
+
+    '
+- find: Every one of these moments starts the same way — with a name, a place, and
+    a greeting. This module gives you the words for your first real conversations
+    in Ukrainian.
+  replace: Every one of these moments starts the same way — with a name, a place,
+    and a greeting. Here is how those first encounters sound in Ukrainian.
+- find: 'English needs three words — "my name is" — while Ukrainian needs just two:
+    **мене звати**. This is your first glimpse of how Ukrainian builds sentences differently
+    from English. More examples: **Мене звати Олена.**'
+  replace: 'English needs three words — "my name is" — while Ukrainian needs just
+    two: **мене звати**. More examples: **Мене звати Олена.**'

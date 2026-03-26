@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered all required vocabulary and structural points. Deducted slightly
+    because the recommended word "зараз" was omitted.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Major hallucination regarding phonetic rules: claims `зі` is used "before
+    consonant clusters starting with з or с", using "Штатів" and "Львова" as examples
+    (which start with Ш and Л).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Good contextualization and PPP flow, but Dialogue 2 contradicts a rule
+    taught later in the lesson (saying "Дуже приємно" before exchanging both names).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All 10 required words included naturally. Missed 1 recommended word ("зараз").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Perfect alignment with the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Warm and encouraging. Slightly generic intro ("You arrive in Ukraine...
+    This module gives you the words..."), but overall highly engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect section mapping, clean markdown, and healthy word count above
+    the minimum target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of the Grade 1 textbook reference, accurate natural
+    contexts for formal vs. informal.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues use named characters and natural pacing, though Dialogue 2 required
+    minor adjustment for pedagogical consistency.
+findings: []

@@ -1,0 +1,252 @@
+version: '1.0'
+module: who-am-i
+level: a1
+inline:
+- id: fill-in-self-intro
+  type: fill-in
+  instruction: Complete each self-introduction with the correct word.
+  items:
+  - sentence: _____ звати Олена.
+    answer: Мене
+    options:
+    - Мене
+    - Його
+    - Її
+  - sentence: Як _____ звати?
+    answer: тебе
+    options:
+    - тебе
+    - мене
+    - його
+  - sentence: Я _____ Канади.
+    answer: з
+    options:
+    - з
+    - це
+    - зі
+  - sentence: Мене звати Марко. Дуже _____!
+    answer: приємно
+    options:
+    - приємно
+    - привіт
+    - звати
+  - sentence: Я — _____. (student, female)
+    answer: студентка
+    options:
+    - студент
+    - студентка
+    - студенти
+  - sentence: _____ звати Андрій. (his name)
+    answer: Його
+    options:
+    - Його
+    - Її
+    - Мене
+- id: quiz-formal-informal
+  type: quiz
+  instruction: Choose the correct option — formal or informal?
+  items:
+  - question: You meet a colleague at a conference. How do you ask their name?
+    options:
+    - Як тебе звати?
+    - Як вас звати?
+    - Як його звати?
+    correct: 1
+  - question: You meet someone your age at a hostel. How do you greet them?
+    options:
+    - Добрий день!
+    - Привіт!
+    - Дуже приємно!
+    correct: 1
+  - question: You are speaking to a professor. How do you ask where they are from?
+    options:
+    - Звідки ти?
+    - Звідки вас?
+    - Звідки ви?
+    correct: 2
+  - question: Your new classmate just told you their name. What do you say?
+    options:
+    - Дуже приємно!
+    - Як тебе звати?
+    - Звідки ти?
+    correct: 0
+  - question: You want to say 'I am from Ukraine' — which is correct?
+    options:
+    - Я з Україна.
+    - Я з України.
+    - Я це Україна.
+    correct: 1
+  - question: A friend introduces someone new. Which phrase did they use?
+    options:
+    - Мене звати...
+    - Це мій друг...
+    - Як тебе звати?
+    correct: 1
+- id: match-professions
+  type: match-up
+  instruction: Match each masculine profession with its feminine form.
+  pairs:
+  - left: студент
+    right: студентка
+  - left: вчитель
+    right: вчителька
+  - left: лікар
+    right: лікарка
+  - left: програміст
+    right: програмістка
+  - left: журналіст
+    right: журналістка
+  - left: інженер
+    right: інженерка
+  - left: українець
+    right: українка
+  - left: канадієць
+    right: канадка
+- id: fill-in-dialogue
+  type: fill-in
+  instruction: Complete the dialogue with the correct phrase.
+  items:
+  - sentence: — _____! Як тебе звати? (greeting, informal)
+    answer: Привіт
+    options:
+    - Привіт
+    - Добрий день
+    - Дуже приємно
+  - sentence: — _____ звати Софія. А тебе?
+    answer: Мене
+    options:
+    - Мене
+    - Тебе
+    - Його
+  - sentence: — Я Джеймс. _____ ти? (where from)
+    answer: Звідки
+    options:
+    - Звідки
+    - Як
+    - Що
+  - sentence: — Я з Києва. Я — _____. (student, female)
+    answer: студентка
+    options:
+    - студент
+    - студентка
+    - вчителька
+  - sentence: — Я з Канади. Я — _____. (programmer, male)
+    answer: програміст
+    options:
+    - програміст
+    - програмістка
+    - інженер
+  - sentence: — Дуже _____!
+    answer: приємно
+    options:
+    - приємно
+    - привіт
+    - добрий
+workbook:
+- type: quiz
+  instruction: Choose the correct Ukrainian translation.
+  items:
+  - question: '"My name is Olena."'
+    options:
+    - Мене звати Олена.
+    - Як тебе звати Олена?
+    - Це Олена звати.
+    correct: 0
+  - question: '"This is my friend Andriy."'
+    options:
+    - Мене звати Андрій.
+    - Це мій друг Андрій.
+    - Він з Андрій.
+    correct: 1
+  - question: '"She is a doctor."'
+    options:
+    - Вона — лікар.
+    - Вона — лікарка.
+    - Він — лікар.
+    correct: 1
+  - question: '"Where are you from?" (to a friend)'
+    options:
+    - Звідки ви?
+    - Звідки ти?
+    - Як тебе звати?
+    correct: 1
+  - question: '"I am from Germany."'
+    options:
+    - Я з Німеччини.
+    - Я з Німеччина.
+    - Я це Німеччини.
+    correct: 0
+- type: group-sort
+  instruction: Sort these into masculine and feminine forms.
+  groups:
+  - label: Masculine
+    items:
+    - студент
+    - лікар
+    - журналіст
+    - інженер
+    - вчитель
+  - label: Feminine
+    items:
+    - студентка
+    - лікарка
+    - журналістка
+    - інженерка
+    - вчителька
+- type: fill-in
+  instruction: Write the correct form based on the hint.
+  items:
+  - sentence: Він — _____. (engineer, male)
+    answer: інженер
+  - sentence: Вона — _____. (journalist, female)
+    answer: журналістка
+  - sentence: Як _____ звати? (her name)
+    answer: її
+  - sentence: Як _____ звати? (his name)
+    answer: його
+  - sentence: Я з _____. (Canada)
+    answer: Канади
+  - sentence: Він зі _____. (Lviv)
+    answer: Львова
+- type: true-false
+  instruction: True or false? Read each statement carefully.
+  items:
+  - statement: «Як тебе звати?» is the formal way to ask someone's name.
+    correct: false
+    explanation: «Як тебе звати?» is informal. The formal version is «Як вас звати?»
+  - statement: Ukrainians say «Дуже приємно!» AFTER exchanging names, not before.
+    correct: true
+    explanation: Correct — first you exchange names, then you say «Дуже приємно!»
+  - statement: «Вона — лікар» is the correct way to say 'She is a doctor.'
+    correct: false
+    explanation: 'For a woman, use the feminine form: «Вона — лікарка.»'
+  - statement: «Це» can mean both 'this is' and 'these are.'
+    correct: true
+    explanation: Correct — «Це» works for singular and plural without changing.
+  - statement: In Ukrainian, you say «Я є студент» for 'I am a student.'
+    correct: false
+    explanation: Ukrainian has no 'to be' in present tense. The correct form is «Я
+      — студент.»
+- type: match-up
+  instruction: Match each question with its correct answer.
+  pairs:
+  - left: Як тебе звати?
+    right: Мене звати Олена.
+  - left: Звідки ти?
+    right: Я з України.
+  - left: Хто це?
+    right: Це мій друг Андрій.
+  - left: Що це?
+    right: Це кава.
+  - left: Як його звати?
+    right: Його звати Тарас.
+- type: observe
+  examples:
+  - студент → студентка
+  - вчитель → вчителька
+  - лікар → лікарка
+  - програміст → програмістка
+  - журналіст → журналістка
+  - інженер → інженерка
+  prompt: Look at the masculine → feminine pairs. What ending is added to make the
+    feminine form? Does the pattern hold for all of them?

@@ -1,0 +1,63 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "who-am-i",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-26T00:43:56.733706+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-26T00:44:13.749060+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-26T00:45:18.960141+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-26T00:46:42.422853+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-26T00:46:42.423168+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-26T00:47:40.502360+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-26T00:47:40.509795+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-26T00:47:40.510307+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-26T00:48:08.368498+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-26T00:48:09.399400+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-26T00:48:09.466392+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-26T00:54:23.877980+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-26T00:54:23.878815+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-26T00:54:23.939463+00:00"
+    }
+  }
+}

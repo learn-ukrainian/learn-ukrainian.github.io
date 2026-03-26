@@ -1,0 +1,13 @@
+- find: Notice **зі** before **Штатів** — Ukrainian uses **зі** instead of **з** before
+    consonant clusters starting with з or с, just like in **зі Львова**.
+  replace: Notice **зі** before **Штатів** — Ukrainian uses **зі** instead of **з**
+    before certain consonant clusters to make pronunciation easier, just like in **зі
+    Львова**.
+- find: '**Софія:** Мене звати Софія. Дуже приємно! *(My name is Sofiya. Very pleased!)*'
+  replace: '**Софія:** Мене звати Софія. А вас? *(My name is Sofiya. And yours?)*'
+- find: '**Петро:** Мене звати Петро. Ви з України? *(My name is Petro. Are you from
+    Ukraine?)*'
+  replace: '**Петро:** Мене звати Петро. Дуже приємно! *(My name is Petro. Very pleased!)*
+
+
+    **Софія:** Мені також! Ви з України? *(Me too! Are you from Ukraine?)*'
