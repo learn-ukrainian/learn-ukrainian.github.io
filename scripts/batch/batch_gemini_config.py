@@ -23,8 +23,9 @@ PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
 # Model Tiering — Gemini
-FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"  # Ultra-efficient: vocab, activities
-FLASH_MODEL = "gemini-3-flash-preview"               # Pro-grade intelligence, fast
+# Flash-Lite not yet available via gemini-cli (404). Using 3-flash as efficiency model.
+FLASH_LITE_MODEL = "gemini-3-flash-preview"          # Fast + cheap: vocab, activities, fixes
+FLASH_MODEL = "gemini-3-flash-preview"               # Same — aliased for clarity
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, review
 
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
