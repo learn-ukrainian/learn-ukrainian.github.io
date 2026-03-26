@@ -1,0 +1,66 @@
+# МійКлас (miyklas.com.ua) — Ukrainian school grammar lessons
+# Mapped to curriculum modules for the Ресурси tab
+# Pattern: learner finishes English lesson → revisits in Ukrainian
+#
+# Source: Teacher Alona's recommendation (#1040)
+# License: Educational content, linked (not copied) per fair use
+# Base URL: https://www.miyklas.com.ua/p/ukrainska-mova
+
+version: "1.0"
+
+# Grade 5 НУШ — Фонетика. Графіка. Орфоепія. Орфографія
+# Base: /5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/
+
+a1:
+  sounds-letters-and-hello:
+    - title: "Голосні й приголосні звуки"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-j-prigolosni-zvuki-41843"
+      topic: "vowels and consonants"
+    - title: "Позначення звуків мовлення на письмі. Алфавіт"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41847"
+      topic: "alphabet, letters and sounds relationship"
+
+  reading-ukrainian:
+    - title: "Співвідношення звуків і букв"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41849"
+      topic: "sounds vs letters mismatch"
+    - title: "Склад. Основні правила переносу"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sklad-osnovni-pravila-perenosu-41850"
+      topic: "syllables and syllable division"
+
+  special-signs:
+    - title: "Приголосні м'які й тверді, дзвінкі й глухі; вимова [ґ] і [г]"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-myaki-j-tverdi-dzvinki-j-glukhi-vimova-prigolosnikh-g-i-g-41845"
+      topic: "soft/hard consonants, voiced/voiceless, Ґ vs Г"
+    - title: "Правила вживання знака м'якшення"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-myakshennia-41861"
+      topic: "soft sign rules"
+    - title: "Правила вживання апострофа"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-41863"
+      topic: "apostrophe rules"
+
+  stress-and-melody:
+    - title: "Наголос"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/nagolos-41851"
+      topic: "stress (наголос)"
+    - title: "Вимова наголошених і ненаголошених голосних"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/vimova-nagoloshenikh-i-nenagoloshenikh-golosnikh-nenagoloshenni-golosni-e-i-o-v-koreniakh-sliv-41852"
+      topic: "stressed vs unstressed vowels"
+
+  euphony:
+    - title: "Основні випадки чергування у – в, і – й, з – із – зі"
+      url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-j-z-iz-zi-pravila-milozvuchnosti-41857"
+      topic: "euphony rules (милозвучність)"
+
+# Grade 5 НУШ — Лексикологія
+# Base: /5-klas/ (section II)
+
+# Grade 5 НУШ — Будова слова
+# Base: /5-klas/ (section III)
+
+# TODO: Map Grade 6-11 lessons to A2-C2 modules
+# Grade 6: Morphology (noun, adjective, numeral, pronoun)
+# Grade 7: Verb system, participles, adverbs, conjunctions
+# Grade 8: Syntax (sentence types, clauses)
+# Grade 9: Complex sentences
+# Grade 10-11: Norms + Practical Rhetoric → seminar activities

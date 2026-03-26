@@ -99,6 +99,22 @@ This session prioritized pipeline velocity over content quality. 11 modules were
 4. **`count-syllables`** (Один, два, три, чотири, п'ять) — given word, pick syllable count. Could be slider or number picker.
 5. Already have: **error-correction** (Це неправильно!), **group-sort** (Розподіли слова)
 
+**МійКлас videos in Ресурси tab — "Для поглиблення" (For deeper study):**
+Every module should link to the matching МійКлас lesson in the Ресурси tab. The learner finishes the English lesson, then revisits the same topic taught in Ukrainian. This is natural immersion through repetition.
+
+Mapping (base URL: `https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/`):
+- M01 → Голосні й приголосні звуки (`golosni-j-prigolosni-zvuki-41843`)
+- M01 → Позначення звуків на письмі. Алфавіт
+- M02 → Співвідношення звуків і букв
+- M02 → Склад. Основні правила переносу (`sklad-osnovni-pravila-perenosu-41850`)
+- M03 → Приголосні м'які й тверді, дзвінкі й глухі; [ґ] і [г]
+- M03 → Правила вживання знака м'якшення
+- M03 → Правила вживання апострофа
+- M04 → Наголос
+- M28 → Правила милозвучності (у–в, і–й, з–із–зі)
+
+Implementation: add `miyklas_links` field to plan YAML, enrich step reads it and adds to Ресурси tab.
+
 **For seminar tracks (Grade 7-11):**
 МійКлас has syntax, rhetoric, text analysis exercises that could map to HIST/BIO/LIT activities. Worth exploring in separate session.
 
