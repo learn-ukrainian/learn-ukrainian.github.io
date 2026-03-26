@@ -49,6 +49,33 @@ This session prioritized pipeline velocity over content quality. 11 modules were
 - **Never trade quality for speed.** 5 excellent modules beat 55 mediocre ones.
 - **The pipeline is a tool, not the product.** The product is a learner who thinks in Ukrainian. Every shortcut degrades that.
 
+## Action items from build review
+
+### Rebuilds needed
+1. **M02 (Reading Ukrainian)** — rebuild after learning from МійКлас how Ukrainian kids learn to read. Current content uses Ukrainian syllable method (good) but needs verification against real pedagogy. Also has wrong POS for рік (listed as verb, is noun) and наголос (listed as adverb, is noun).
+2. **M03 (Special Signs)** — check if МійКлас teaches Ь/apostrophe/Ґ differently. Rebuild if yes.
+3. **M07 (Checkpoint: First Contact)** — 6.0/10 REJECT. Needs full review of what went wrong + plan fix for checkpoint vocab validation + rebuild.
+
+### Bugs to fix
+4. **Stress marks not applying** — `step_annotate` reports 0 words on every module. This is a BUG in the deterministic annotator (`ukrainian-word-stress`), NOT a missing RAG feature. The annotator has 2.7M forms in SQLite — it should work. Investigate why it's not matching. Do NOT use RAG for stress — too slow (network call per word vs millisecond local lookup).
+5. **VESUM false positives** — whitelist POS abbreviations (дієсл, прикм, присл, ім, спол, числ, зам). Skip text inside `[...]` brackets.
+6. **Quick verify exercise warning** — update to count `<!-- INJECT_ACTIVITY:` markers instead of `:::quiz` blocks.
+
+### Review findings applied by Gemini (confirmed fixed)
+- M05: false rule about зі preposition → corrected
+- M06: dialogue continuity errors (Kolya→Andriy) + speaker swap → corrected
+- M06: meta-commentary about A2 grammar → reworded
+- M04: engagement tone issue → fixed
+
+### Modules with clean reviews (no action needed)
+- M08 Things Have Gender — 9.8/10 PASS
+- M09 What Is It Like? — 9.9/10 PASS
+- M10 Colors — 9.2/10 ACCEPTED
+- M11 How Many? — 10.0/10 PASS
+
+### Process: ask Gemini for second opinion
+Before rebuilding M02/M03, send the current content + МійКлас findings to Gemini for adversarial review of the pedagogical approach. Gemini may catch things Claude misses about Ukrainian teaching methodology.
+
 ## Critical: Quality issues NOT fixed — DO THESE FIRST
 
 ### 1. Reading pedagogy not verified (M02 and all modules)
