@@ -123,6 +123,124 @@ def _format_result(result: dict) -> str:
     return "\n".join(lines)
 
 
+def _match_miyklas_urls(plan: dict) -> list[dict]:
+    """Match plan topics to МійКлас URL index entries.
+
+    Returns list of matching lesson dicts with path, title, tags.
+    Issue: #1040
+    """
+    index_path = PROJECT_ROOT / "docs" / "resources" / "miyklas-url-index.yaml"
+    if not index_path.exists():
+        return []
+
+    try:
+        index = yaml.safe_load(index_path.read_text("utf-8"))
+    except Exception:
+        return []
+
+    # Build search terms from plan
+    search_terms: set[str] = set()
+    title = plan.get("title", "").lower()
+    search_terms.update(title.split())
+    for section in plan.get("content_outline", []):
+        section_title = section.get("section", "").lower()
+        search_terms.update(section_title.split())
+    for hint in plan.get("activity_hints", []):
+        search_terms.update(hint.get("focus", "").lower().split())
+
+    # Collect all lessons from all grades
+    all_lessons: list[dict] = []
+    for grade_key, grade_data in index.items():
+        if not grade_key.startswith("grade_"):
+            continue
+        if isinstance(grade_data, dict):
+            for _section_key, section_val in grade_data.items():
+                if isinstance(section_val, list):
+                    all_lessons.extend(section_val)
+
+    # Match by tags
+    base_url = index.get("base_url", "https://www.miyklas.com.ua")
+    matched: list[dict] = []
+    for lesson in all_lessons:
+        if not isinstance(lesson, dict):
+            continue
+        tags = [t.lower() for t in lesson.get("tags", [])]
+        hit = False
+        for tag in tags:
+            if tag in search_terms:
+                hit = True
+                break
+            for term in search_terms:
+                if len(term) > 3 and (term in tag or tag in term):
+                    hit = True
+                    break
+            if hit:
+                break
+        if hit:
+            lesson_copy = dict(lesson)
+            lesson_copy["full_url"] = base_url + lesson["path"]
+            matched.append(lesson_copy)
+
+    return matched[:3]  # Limit to 3 most relevant
+
+
+def _fetch_miyklas_theory(plan: dict) -> list[str]:
+    """Fetch МійКлас theory pages matching the plan's topics.
+
+    Uses WebFetch to get content. Returns formatted markdown lines.
+    Issue: #1040
+    """
+    import urllib.request
+
+    matched = _match_miyklas_urls(plan)
+    if not matched:
+        return []
+
+    lines: list[str] = []
+    for lesson in matched:
+        url = lesson["full_url"]
+        title = lesson.get("title", "Unknown")
+
+        try:
+            # Simple HTML fetch + extract text (no LLM needed for theory pages)
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+
+            # Extract main content (rough but functional — theory is in article/main)
+            # Strip HTML tags for a text-only version
+            text = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
+            text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
+            text = re.sub(r'<[^>]+>', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+
+            # Extract a relevant chunk (first 2000 chars after the title)
+            title_pos = text.lower().find(title[:20].lower())
+            chunk = text[title_pos:title_pos + 2000] if title_pos > 0 else text[500:2500]
+
+            if len(chunk) > 100:
+                lines.append(f"### {title}")
+                lines.append(f"> **Source:** МійКлас — [{title}]({url})")
+                lines.append("")
+                lines.append(chunk[:1500])  # Limit to 1500 chars
+                lines.append("")
+            else:
+                lines.append(f"### {title}")
+                lines.append(f"> **Source:** МійКлас — [{title}]({url})")
+                lines.append("*(Content too short or failed to extract)*")
+                lines.append("")
+
+        except Exception as e:
+            logger.warning("МійКлас fetch failed for %s: %s", url, e)
+            # Still add the link even if fetch fails
+            lines.append(f"### {title}")
+            lines.append(f"> **Source:** МійКлас — [{title}]({url})")
+            lines.append(f"*(Fetch failed: {e})*")
+            lines.append("")
+
+    return lines
+
+
 def build_packet(plan_path: Path) -> str:
     """Build a knowledge packet from a plan file.
 
@@ -204,6 +322,17 @@ def build_packet(plan_path: Path) -> str:
             else:
                 lines.append(f"*No grammar results for: {grammar_query}*")
                 lines.append("")
+
+    # МійКлас theory pages (#1040)
+    miyklas_content = _fetch_miyklas_theory(plan)
+    if miyklas_content:
+        lines.append("")
+        lines.append("## МійКлас Theory (miyklas.com.ua)")
+        lines.append("")
+        lines.append("*Ukrainian school curriculum theory — use this terminology and teaching approach.*")
+        lines.append("")
+        lines.extend(miyklas_content)
+        total_results += 1
 
     # Summary
     lines.append("---")
