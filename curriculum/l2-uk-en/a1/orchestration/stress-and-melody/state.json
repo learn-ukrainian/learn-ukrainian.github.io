@@ -1,0 +1,63 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "stress-and-melody",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-26T00:37:39.981692+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-26T00:37:51.984263+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-26T00:39:11.822031+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-26T00:40:39.361564+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-26T00:40:39.361714+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:33.269410+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:33.275705+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:33.276319+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:57.419481+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:58.314672+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-26T00:41:58.388171+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-26T00:43:35.153700+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-26T00:43:36.231127+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-26T00:43:36.297131+00:00"
+    }
+  }
+}

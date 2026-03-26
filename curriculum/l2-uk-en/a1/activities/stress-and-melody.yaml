@@ -1,0 +1,269 @@
+version: '1.0'
+module: stress-and-melody
+level: a1
+inline:
+- id: quiz-stress-syllable
+  type: quiz
+  instruction: Which syllable carries the stress? Choose the correct option.
+  items:
+  - question: кава (coffee)
+    options:
+    - 'first syllable: КА-ва'
+    - 'second syllable: ка-ВА'
+    correct: 0
+  - question: вода (water)
+    options:
+    - 'first syllable: ВО-да'
+    - 'second syllable: во-ДА'
+    correct: 1
+  - question: столиця (capital)
+    options:
+    - 'first syllable: СТО-ли-ця'
+    - 'second syllable: сто-ЛИ-ця'
+    - 'third syllable: сто-ли-ЦЯ'
+    correct: 1
+  - question: метро (metro)
+    options:
+    - 'first syllable: МЕ-тро'
+    - 'second syllable: ме-ТРО'
+    correct: 1
+  - question: ранок (morning)
+    options:
+    - 'first syllable: РА-нок'
+    - 'second syllable: ра-НОК'
+    correct: 0
+  - question: мама (mother)
+    options:
+    - 'first syllable: МА-ма'
+    - 'second syllable: ма-МА'
+    correct: 0
+  - question: аптека (pharmacy)
+    options:
+    - 'first syllable: АП-те-ка'
+    - 'second syllable: ап-ТЕ-ка'
+    - 'third syllable: ап-те-КА'
+    correct: 1
+  - question: дитина (child)
+    options:
+    - 'first syllable: ДИ-ти-на'
+    - 'second syllable: ди-ТИ-на'
+    - 'third syllable: ди-ти-НА'
+    correct: 2
+- id: quiz-sentence-type
+  type: quiz
+  instruction: What type of sentence is this? Look at the punctuation and choose.
+  items:
+  - question: Це кава.
+    options:
+    - Statement (розповідне) ↘
+    - Question (питальне) ↗
+    - Exclamation (окличне) ↘↘
+    correct: 0
+  - question: Це кава?
+    options:
+    - Statement (розповідне) ↘
+    - Question (питальне) ↗
+    - Exclamation (окличне) ↘↘
+    correct: 1
+  - question: Як гарно!
+    options:
+    - Statement (розповідне) ↘
+    - Question (питальне) ↗
+    - Exclamation (окличне) ↘↘
+    correct: 2
+  - question: Де метро?
+    options:
+    - Statement — voice falls ↘
+    - Yes/no question — voice rises ↗
+    - Question-word question — voice falls ↘
+    correct: 2
+  - question: Це метро?
+    options:
+    - Statement — voice falls ↘
+    - Yes/no question — voice rises ↗
+    - Question-word question — voice falls ↘
+    correct: 1
+  - question: Ось кава.
+    options:
+    - Statement (розповідне) ↘
+    - Question (питальне) ↗
+    - Exclamation (окличне) ↘↘
+    correct: 0
+- id: fill-in-punctuation
+  type: fill-in
+  instruction: Add the correct punctuation mark at the end of each sentence.
+  items:
+  - sentence: Це кава___
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+  - sentence: Де метро___
+    answer: '?'
+    options:
+    - .
+    - '?'
+    - '!'
+  - sentence: Як гарно___
+    answer: '!'
+    options:
+    - .
+    - '?'
+    - '!'
+  - sentence: Це нове кафе___
+    answer: '?'
+    options:
+    - .
+    - '?'
+    - '!'
+  - sentence: Так, це аптека___
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+  - sentence: Привіт___
+    answer: '!'
+    options:
+    - .
+    - '?'
+    - '!'
+- id: match-stress-pairs
+  type: match-up
+  instruction: Match each word to its meaning. The same spelling has different meanings
+    depending on stress!
+  pairs:
+  - left: зáмок (stress on 1st syllable)
+    right: castle
+  - left: замóк (stress on 2nd syllable)
+    right: lock
+  - left: мýка (stress on 1st syllable)
+    right: torment
+  - left: мукá (stress on 2nd syllable)
+    right: flour
+workbook:
+- type: group-sort
+  instruction: Sort these words by stress position. Where does the stress fall?
+  groups:
+  - label: First syllable
+    items:
+    - мама
+    - кава
+    - ранок
+    - тато
+    - книга
+  - label: Last syllable
+    items:
+    - вода
+    - зима
+    - метро
+    - кафе
+    - рука
+  - label: Middle syllable
+    items:
+    - столиця
+    - аптека
+    - дитина
+- type: quiz
+  instruction: Does the intonation rise ↗ or fall ↘? Choose the correct melody.
+  items:
+  - question: Як справи?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 1
+  - question: Це кафе?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 0
+  - question: Де кава?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 1
+  - question: Ти тут?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 0
+  - question: Що це?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 1
+  - question: Це аптека?
+    options:
+    - Voice rises ↗ (yes/no question)
+    - Voice falls ↘ (question-word question)
+    correct: 0
+- type: true-false
+  instruction: True or false? Read each statement about Ukrainian stress and intonation.
+  items:
+  - statement: Ukrainian stress always falls on the first syllable.
+    correct: false
+    explanation: 'Ukrainian has free stress — it can fall on any syllable. Compare:
+      МАма (first), воДА (last), стоЛИця (middle).'
+  - statement: The words замок (castle) and замок (lock) are spelled the same but
+      stressed differently.
+    correct: true
+    explanation: ЗАмок means castle (stress on 1st syllable), замОК means lock (stress
+      on 2nd syllable). Stress changes meaning.
+  - statement: Yes/no questions in Ukrainian have rising intonation ↗.
+    correct: true
+    explanation: Це кава? ↗ — the voice rises because you can answer так or ні.
+  - statement: The question Де метро? has rising intonation ↗.
+    correct: false
+    explanation: Де is a question word, so the intonation falls ↘. Only yes/no questions
+      (without question words) rise.
+  - statement: Stress in Ukrainian can move between different forms of the same word.
+    correct: true
+    explanation: рукА (hand) becomes РУки (hands) — the stress shifts from the last
+      syllable to the first.
+- type: quiz
+  instruction: How many syllables does each word have? Count the vowels — each vowel
+    = one syllable.
+  items:
+  - question: фотографія
+    options:
+    - 3 syllables
+    - 4 syllables
+    - 5 syllables
+    correct: 2
+  - question: кава
+    options:
+    - 1 syllable
+    - 2 syllables
+    - 3 syllables
+    correct: 1
+  - question: столиця
+    options:
+    - 2 syllables
+    - 3 syllables
+    - 4 syllables
+    correct: 1
+  - question: метро
+    options:
+    - 1 syllable
+    - 2 syllables
+    - 3 syllables
+    correct: 1
+- type: match-up
+  instruction: Match each sentence to its correct punctuation and intonation.
+  pairs:
+  - left: Це Київ (telling someone)
+    right: . ↘
+  - left: Це Київ (asking — is it?)
+    right: '? ↗'
+  - left: Де Київ (asking — where?)
+    right: '? ↘'
+  - left: Як гарно (exclaiming)
+    right: '! ↘↘'
+- type: observe
+  examples:
+  - рукА → рУки (stress moves from last to first)
+  - водА → вОди (stress moves from last to first)
+  - зимА → зИми (stress moves from last to first)
+  prompt: What pattern do you notice? When these words change form, where does the
+    stress move?
