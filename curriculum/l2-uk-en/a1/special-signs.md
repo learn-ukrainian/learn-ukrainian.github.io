@@ -1,10 +1,10 @@
 <!-- TAB:Урок -->
 
-## М'який знак (The Soft Sign — Ь)
+## М'яки́й знак (The Soft Sign — Ь)
 
 Look at these two words: **рис** (rice) and **рись** (lynx). The only difference is a small sign at the end — **Ь**, the soft sign. That tiny mark changes the meaning entirely.
 
-**Ь** has no sound of its own. It never speaks — its only job is to soften the consonant before it. Ukrainian distinguishes between **тверді** (hard) and **пом'якшені** (softened) consonants, and Ь is how writing shows the difference. In Ukrainian school textbooks, hard consonants are marked [–] and soft consonants are marked [=]. Compare: **тин** (fence) vs **тінь** (shadow), **син** (son) vs **синь** (blue expanse). Same letters, but Ь transforms the final consonant — and the entire word. As the poet Ганна Чубач wrote: «Ви без мене слово «камінь» прочитали б як «камін»!» — without Ь, the word **камінь** (stone) becomes **камін** (fireplace).
+**Ь** has no sound of its own. It never speaks — its only job is to soften the consonant before it. Ukrainian distinguishes between **тверді** (hard) and **пом'якшені** (softened) consonants, and Ь is how writing shows the difference. In Ukrainian school textbooks, hard consonants are marked [–] and soft consonants are marked [=]. Compare: **тин** (fence) vs **тінь** (shadow), **син** (son) vs **синь** (blue expanse). Same letters, but Ь transforms the final consonant — and the entire word. As the poet Га́нна Чу́бач wrote: «Ви без мене́ сло́во «ка́мінь» прочита́ли б як «камі́н»!» — without Ь, the word **камінь** (stone) becomes **камін** (fireplace).
 
 Where does Ь appear? It follows specific consonants in predictable patterns. After **Н**: **день** (day), **кінь** (horse), **осінь** (autumn), **камінь** (stone). After **Л**: **сіль** (salt), **біль** (pain). After **Т**: **мить** (moment), **радість** (joy). After **З**: **мазь** (ointment). You will see Ь in everyday words everywhere: **учитель** (teacher), **батько** (father), **маленький** (small), **стілець** (chair). One important rule — Ь appears only after consonants. It never starts a word, and it never stands alone.
 
@@ -14,7 +14,7 @@ When you see Ь while reading, soften the consonant before it. Imagine pressing 
 
 Ь softens consonants. But Ukrainian has another sign that does the opposite — it keeps consonants hard. That sign is the apostrophe.
 
-## Апостроф (The Apostrophe)
+## Апо́стро́ф (The Apostrophe)
 
 Compare two words: **моря** (seas) and **подвір'я** (yard). In **моря**, the Р is soft and the Я represents one sound. In **подвір'я**, the apostrophe after Р keeps it hard, and Я splits into two sounds: [й] + [а]. One small mark — completely different pronunciation.
 
@@ -28,11 +28,11 @@ Practice reading from textbook examples: **м'яч** (ball), **м'який** (so
 
 A quick comparison: **Ь** softens the consonant before it (**день**, **сіль**). The apostrophe keeps the consonant hard before **я**, **ю**, **є**, **ї** (**м'ясо**, **сім'я**). Two signs, opposite jobs. Both essential for reading Ukrainian correctly.
 
-## Дзвінкі і глухі (Voiced and Voiceless)
+## Дзвінкі́ і глухі́ (Voiced and Voiceless)
 
 Every consonant in Ukrainian is either **дзвінкий** (voiced) or **глухий** (voiceless). There is a simple test straight from Ukrainian classrooms: put your hand on your throat. Say **Б** — you feel vibration. Now say **П** — no vibration. Your lips are in the same position both times. The only difference is whether your vocal cords are active. Vibration means voiced. Silence means voiceless.
 
-Ukrainian consonants form eight voiced-voiceless pairs: **Б**–**П**, **Д**–**Т**, **Г**–**Х**, **Ґ**–**К**, **З**–**С**, **Ж**–**Ш**, **ДЗ**–**Ц**, **ДЖ**–**Ч**. Notice the last two pairs — **ДЗ** and **ДЖ**. These are written with two letters but represent single sounds. Linguists call them африкати (affricates). When you see **ДЗ** in a word like **дзвонити** (to ring), it is one sound, not Д + З. The same applies to **ДЖ** — one unified sound, like English "j" in "jump" but with the tongue slightly further forward.
+Ukrainian consonants form eight voiced-voiceless pairs: **Б**–**П**, **Д**–**Т**, **Г**–**Х**, **Ґ**–**К**, **З**–**С**, **Ж**–**Ш**, **ДЗ**–**Ц**, **ДЖ**–**Ч**. Notice the last two pairs — **ДЗ** and **ДЖ**. These are written with two letters but represent single sounds. Linguists call them африка́ти (affricates). When you see **ДЗ** in a word like **дзвонити** (to ring), it is one sound, not Д + З. The same applies to **ДЖ** — one unified sound, like English "j" in "jump" but with the tongue slightly further forward.
 
 Here is a critical difference from Russian: Ukrainian does NOT devoice consonants at word end. In Russian, the word for "oak" sounds like *[дуп], and "frost" sounds like *[морос]. In Ukrainian, **дуб** is [дуб] and **мороз** is [мороз]. Every consonant keeps its true voice all the way to the end of the word. This is authentic Ukrainian pronunciation — if you have been exposed to Russian, resist the habit of swallowing the final consonant's voice.
 
@@ -40,7 +40,7 @@ Here is a critical difference from Russian: Ukrainian does NOT devoice consonant
 
 Minimal pairs show why voicing matters: **балка** (beam) vs **палка** (stick), **коза** (goat) vs **коса** (braid). One sound changes — the entire meaning shifts. Getting voicing right is not optional decoration; it is the difference between words.
 
-## Важкі звуки (Tricky Sounds)
+## Важкі́ зву́ки (Tricky Sounds)
 
 **И** — the sound that trips up every English speaker. It is not English "ee" (as in "see") and not English "i" (as in "sit"). It lives somewhere between them. Here is the technique: start to smile as if you were going to say "ee," but pull your tongue back slightly. Your jaw drops a tiny bit compared to **І**. The result is a rounder, deeper vowel — distinctly Ukrainian. Practice words: **бик** (bull), **лист** (leaf), **зима** (winter), **тихо** (quietly), **синій** (blue). Now listen for the difference between **И** and **І**: **бик** (bull) vs **бік** (side), **лис** (fox) vs **ліс** (forest). They are different sounds, different letters, different words.
 
@@ -63,9 +63,9 @@ Final reading challenge — read these words aloud with confidence: **сім'я*
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Слово | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **сім'я́** | family | ім. | ж. |
 | **м'я́со** | meat | ім. | с. |
@@ -126,7 +126,7 @@ Final reading challenge — read these words aloud with confidence: **сім'я*
 | **ра́нок** | morning | ім. |  |
 | **на́голос** | stress (word accent) | присл. |  |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "га́рно", back: "beautifully, nicely", subtitle: "присл." }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ба́тько", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "учи́тель", back: "teacher", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "де́в'ять", back: "nine", subtitle: "числ." }, { front: "комп'ю́тер", back: "computer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'яки́й", back: "soft", subtitle: "прикм." }, { front: "рис", back: "rice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рись", back: "lynx", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "тверді", back: "hard (consonants)", subtitle: "прикм." }, { front: "пом'я́кшені", back: "softened (consonants)", subtitle: "прикм." }, { front: "тин", back: "fence", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тінь", back: "shadow", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "син", back: "son", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "синь", back: "blue expanse", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́мінь", back: "stone", subtitle: "ім." }, { front: "камі́н", back: "fireplace", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "о́сінь", back: "autumn", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "біль", back: "pain", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мить", back: "moment", subtitle: "дієсл." }, { front: "ра́дість", back: "joy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мазь", back: "ointment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мале́нький", back: "small", subtitle: "прикм." }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "подві́р'я", back: "yard", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "буря́к", back: "beetroot", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бур'я́н", back: "weeds", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'яч", back: "ball", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "п'я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ім'я́", back: "name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "здоро́в'я", back: "health", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "об'є́кт", back: "object", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дзвінки́й", back: "voiced (consonant)", subtitle: "прикм." }, { front: "глухи́й", back: "voiceless (consonant)", subtitle: "прикм." }, { front: "дзвони́ти", back: "to ring", subtitle: "дієсл." }, { front: "моро́з", back: "frost", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ба́лка", back: "beam", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "па́лка", back: "stick", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коза́", back: "goat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коса", back: "braid", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бик", back: "bull", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лист", back: "leaf", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ти́хо", back: "quietly", subtitle: "присл." }, { front: "си́ній", back: "blue", subtitle: "прикм." }, { front: "бік", back: "side", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "го́ри", back: "mountains", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голова́", back: "head", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гаря́чий", back: "hot", subtitle: "прикм." }, { front: "ґа́нок", back: "porch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ґу́дзик", back: "button", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ґре́чний", back: "polite", subtitle: "прикм." }, { front: "рука́", back: "hand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "на́голос", back: "stress (word accent)", subtitle: "присл." }]} />
 
@@ -134,7 +134,7 @@ Final reading challenge — read these words aloud with confidence: **сім'я*
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -148,14 +148,20 @@ Advanced exercises for this module are in development. Check back soon!
   _Apostrophe rule: after б,п,в,м,ф,р before я,ю,є,ї._
 - Захарійчук Grade 1 (NUS 2025), p.15
   _Hard [–] vs soft [=] consonant notation._
-- Большакова Grade 1, p.45-47
-  _Тверді і пом'якшені приголосні звуки._
+- Большако́ва Grade 1, p.45-47
+  _Тверді і пом'якшені при́голосні звуки._
 
-**Для поглиблення — For deeper study (in Ukrainian)**
+**Anna Ohoiko — Ukrainian Lessons**
 
-- [Приголосні м'які й тверді, дзвінкі й глухі; вимова приголосних [ґ] і [г]](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885)
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Ukrainian Tongue Twisters (Скоромо́вки)](https://www.ukrainianlessons.com/tonguetwisters/)
+- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
+
+**Для погли́блення — For deeper study (in Ukrainian)**
+
+- [Приголосні м'які́ й тверді, дзвінкі й глухі; вимо́ва при́голосних [ґ] і [г]](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885)
   _soft/hard consonants, voiced/voiceless, Ґ vs Г_
-- [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+- [Правила вжива́ння зна́ка м'я́кшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
   _soft sign rules_
-- [Правила вживання апострофа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-39782)
+- [Правила вживання апо́стро́фа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-39782)
   _apostrophe rules_

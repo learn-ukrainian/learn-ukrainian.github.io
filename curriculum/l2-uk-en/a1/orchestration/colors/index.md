@@ -1,6 +1,6 @@
 # Build Summary: colors (A1)
 
-Generated: 2026-03-26 07:59
+Generated: 2026-03-26 12:55
 
 ## Pipeline Phases
 
@@ -13,12 +13,12 @@ Generated: 2026-03-26 07:59
 | exercises | complete | 2026-03-26 01:40:39 |
 | activities | complete | 2026-03-26 01:41:47 |
 | verify-exercises | complete | 2026-03-26 01:41:47 |
-| annotate | complete | 2026-03-26 01:41:47 |
+| annotate | complete | 2026-03-26 11:50:48 |
 | vocab | complete | 2026-03-26 01:42:08 |
-| enrich | complete | 2026-03-26 06:59:22 |
+| enrich | complete | 2026-03-26 11:55:38 |
 | verify | complete | 2026-03-26 01:42:09 |
 | review | complete | 2026-03-26 01:44:02 |
-| stress | complete | 2026-03-26 06:59:22 |
+| stress | complete | 2026-03-26 11:55:53 |
 | publish | complete | 2026-03-26 06:59:22 |
 
 ## Reviews

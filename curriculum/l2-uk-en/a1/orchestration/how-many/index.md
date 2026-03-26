@@ -1,6 +1,6 @@
 # Build Summary: how-many (A1)
 
-Generated: 2026-03-26 07:59
+Generated: 2026-03-26 12:56
 
 ## Pipeline Phases
 
@@ -13,12 +13,12 @@ Generated: 2026-03-26 07:59
 | exercises | complete | 2026-03-26 01:47:31 |
 | activities | complete | 2026-03-26 01:48:47 |
 | verify-exercises | complete | 2026-03-26 01:48:47 |
-| annotate | complete | 2026-03-26 01:48:47 |
+| annotate | complete | 2026-03-26 11:51:00 |
 | vocab | complete | 2026-03-26 01:49:13 |
-| enrich | complete | 2026-03-26 06:59:29 |
+| enrich | complete | 2026-03-26 11:56:03 |
 | verify | complete | 2026-03-26 01:49:14 |
 | review | complete | 2026-03-26 01:52:50 |
-| stress | complete | 2026-03-26 06:59:29 |
+| stress | complete | 2026-03-26 11:56:23 |
 | publish | complete | 2026-03-26 06:59:30 |
 
 ## Reviews

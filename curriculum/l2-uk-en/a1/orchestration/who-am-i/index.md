@@ -1,6 +1,6 @@
 # Build Summary: who-am-i (A1)
 
-Generated: 2026-03-26 07:58
+Generated: 2026-03-26 12:54
 
 ## Pipeline Phases
 
@@ -13,12 +13,12 @@ Generated: 2026-03-26 07:58
 | exercises | complete | 2026-03-26 00:46:42 |
 | activities | complete | 2026-03-26 00:47:40 |
 | verify-exercises | complete | 2026-03-26 00:47:40 |
-| annotate | complete | 2026-03-26 00:47:40 |
+| annotate | complete | 2026-03-26 11:50:02 |
 | vocab | complete | 2026-03-26 00:48:08 |
-| enrich | complete | 2026-03-26 06:58:55 |
+| enrich | complete | 2026-03-26 11:53:58 |
 | verify | complete | 2026-03-26 00:48:09 |
 | review | complete | 2026-03-26 00:54:23 |
-| stress | complete | 2026-03-26 06:58:55 |
+| stress | complete | 2026-03-26 11:54:10 |
 | publish | complete | 2026-03-26 06:58:55 |
 
 ## Reviews

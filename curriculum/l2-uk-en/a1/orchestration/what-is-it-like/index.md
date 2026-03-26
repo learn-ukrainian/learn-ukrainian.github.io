@@ -1,6 +1,6 @@
 # Build Summary: what-is-it-like (A1)
 
-Generated: 2026-03-26 07:59
+Generated: 2026-03-26 12:55
 
 ## Pipeline Phases
 
@@ -13,12 +13,12 @@ Generated: 2026-03-26 07:59
 | exercises | complete | 2026-03-26 01:33:56 |
 | activities | complete | 2026-03-26 01:34:47 |
 | verify-exercises | complete | 2026-03-26 01:34:47 |
-| annotate | complete | 2026-03-26 01:34:47 |
+| annotate | complete | 2026-03-26 11:50:37 |
 | vocab | complete | 2026-03-26 01:35:05 |
-| enrich | complete | 2026-03-26 06:59:15 |
+| enrich | complete | 2026-03-26 11:55:16 |
 | verify | complete | 2026-03-26 01:35:05 |
 | review | complete | 2026-03-26 01:37:13 |
-| stress | complete | 2026-03-26 06:59:15 |
+| stress | complete | 2026-03-26 11:55:30 |
 | publish | complete | 2026-03-26 06:59:15 |
 
 ## Reviews

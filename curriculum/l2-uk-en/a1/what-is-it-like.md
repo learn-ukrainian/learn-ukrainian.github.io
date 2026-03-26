@@ -1,8 +1,8 @@
 <!-- TAB:Урок -->
 
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-When a friend visits your home, one of the first things you do is show them around. **Яка твоя кімната?** — "What's your room like?" This simple question opens the door to describing everything you see. The dialogue below is inspired by the "Моя кімната" task in Вашуленко Grade 3, where students describe their own space using adjectives.
+When a friend visits your home, one of the first things you do is show them around. **Яка твоя́ кімна́та?** — "What's your room like?" This simple question opens the door to describing everything you see. The dialogue below is inspired by the "Моя́ кімната" task in Вашуленко Grade 3, where students describe their own space using adjectives.
 
 <div class="dialogue">
 
@@ -10,28 +10,29 @@ When a friend visits your home, one of the first things you do is show them arou
 **Марко:** Яка твоя кімната? *(What is your room like?)*
 
 
-**Оленка:** Моя кімната велика і світла. *(My room is big and bright.)*
+**Оленка:** Моя кімната вели́ка і сві́тла. *(My room is big and bright.)*
 
 
 **Марко:** А стіл? *(And the desk?)*
 
 
-**Оленка:** Стіл новий. *(The desk is new.)*
+**Оленка:** Стіл нови́й. *(The desk is new.)*
 
 
-**Марко:** А ліжко? *(And the bed?)*
+**Марко:** А лі́жко? *(And the bed?)*
 
 
-**Оленка:** Ліжко старе. *(The bed is old.)*
+**Оленка:** Ліжко старе́. *(The bed is old.)*
 
 
-**Марко:** А вікно? *(And the window?)*
+**Марко:** А вікно́? *(And the window?)*
 
 
-**Оленка:** Вікно велике і чисте. *(The window is big and clean.)*
+**Оленка:** Вікно вели́ке і чи́сте. *(The window is big and clean.)*
 
 
 </div>
+
 
 
 
@@ -42,19 +43,19 @@ Now a different situation. Two friends are walking past a shop window, reacting 
 <div class="dialogue">
 
 
-**Андрій:** Дивись, яка гарна сумка! *(Look, what a nice bag!)*
+**Андрій:** Диви́сь, яка га́рна су́мка! *(Look, what a nice bag!)*
 
 
-**Софія:** Так, але вона дорога. *(Yes, but it's expensive.)*
+**Софія:** Так, але́ вона́ доро́га. *(Yes, but it's expensive.)*
 
 
-**Андрій:** А цей телефон? *(And this phone?)*
+**Андрій:** А цей телефо́н? *(And this phone?)*
 
 
-**Софія:** Він великий і дешевий. *(It's big and cheap.)*
+**Софія:** Він вели́кий і деше́вий. *(It's big and cheap.)*
 
 
-**Андрій:** Яке велике вікно! *(What a big window!)*
+**Андрій:** Яке́ велике вікно! *(What a big window!)*
 
 
 **Софія:** Так, і чисте! *(Yes, and clean!)*
@@ -64,30 +65,31 @@ Now a different situation. Two friends are walking past a shop window, reacting 
 
 
 
+
 Here again, the adjective shape-shifts. **Сумка** (bag) is feminine, so Андрій exclaimed **яка гарна** — both the question word and the adjective carry feminine endings. **Телефон** (phone) is masculine: **великий і дешевий**. **Вікно** (window) is neuter: **яке велике**. Also notice the word **але** (but) — Софія uses it to signal a contrast: the bag is nice, *but* expensive.
 
 Across both dialogues, one pattern repeats: the adjective mirrors the noun's gender. Masculine nouns get **-ий** adjectives, feminine nouns get **-а**, neuter nouns get **-е**. Can you predict what form an adjective takes just by knowing the noun's gender? That is exactly what the next section explains.
 
-## Який? Яка? Яке? (What kind?)
+## Яки́й? Яка? Яке? (What kind?)
 
 To ask "What kind?" in Ukrainian, you use **який** (what kind? — masculine), **яка** (what kind? — feminine), or **яке** (what kind? — neuter). The question word changes gender to match the noun you're asking about — the same logic as **мій/моя/моє** from Module 8. Here are three question-and-answer pairs:
 
 - **Який стіл?** — **Великий стіл.** *(What kind of desk? — A big desk.)*
-- **Яка книга?** — **Нова книга.** *(What kind of book? — A new book.)*
+- **Яка кни́га?** — **Нова книга.** *(What kind of book? — A new book.)*
 - **Яке вікно?** — **Чисте вікно.** *(What kind of window? — A clean window.)*
 
 Both the question word *and* the adjective in the answer change to reflect the noun's gender. The question word and the adjective move together as a team.
 
-Ukrainian textbooks state this rule clearly. Пономарова Grade 3 (p. 98) puts it simply: "Прикметник має такий рід, як іменник" — the adjective has the same gender as the noun it is connected to. Here are the endings:
+Ukrainian textbooks state this rule clearly. Пономарова Grade 3 (p. 98) puts it simply: "Прикме́тник ма́є таки́й рід, як іме́нник" — the adjective has the same gender as the noun it is connected to. Here are the endings:
 
 | Gender | Question word | Adjective ending | Examples |
 |---|---|---|---|
-| Masculine | **який?** | **-ий** | великий, новий, чистий |
-| Feminine | **яка?** | **-а** | велика, нова, чиста |
-| Neuter | **яке?** | **-е** | велике, нове, чисте |
+| Masculine | **який?** | **-ий** | великий, новий, чи́стий |
+| Feminine | **яка?** | **-а** | велика, нова, чи́ста |
+| Neuter | **яке?** | **-е** | велике, нове́, чисте |
 
 :::tip
-Soft-stem adjectives like **синій/синя/синє** (blue) follow a slightly different pattern — **-ій/-я/-є** instead of **-ий/-а/-е**. You'll meet those in M10 (Colors). For now, focus on the hard-stem **-ий/-а/-е** pattern.
+Soft-stem adjectives like **синій/си́ня/синє** (blue) follow a slightly different pattern — **-ій/-я/-є** instead of **-ий/-а/-е**. You'll meet those in M10 (Colors). For now, focus on the hard-stem **-ий/-а/-е** pattern.
 :::
 
 <!-- INJECT_ACTIVITY: quiz-yakyj-yaka-yake -->
@@ -104,30 +106,30 @@ You already learned noun genders in Module 8. Now that knowledge becomes practic
 
 One more thing to keep in mind: Ukrainian also has a plural question form — **які?** (what kind? — plural). When a noun is plural, all genders collapse into one ending: **-і**.
 
-- **Які стільці?** — **Нові стільці.** *(What kind of chairs? — New chairs.)*
-- **Які книги?** — **Нові книги.** *(What kind of books? — New books.)*
-- **Які вікна?** — **Нові вікна.** *(What kind of windows? — New windows.)*
+- **Які стільці́?** — **Нові стільці.** *(What kind of chairs? — New chairs.)*
+- **Які кни́ги?** — **Нові книги.** *(What kind of books? — New books.)*
+- **Які ві́кна?** — **Нові вікна.** *(What kind of windows? — New windows.)*
 
 No need to drill plurals now — just notice that **-і** works for all genders in the plural. And **який** can also express surprise or admiration in exclamations: **Яка гарна кімната!** means "What a beautiful room!" — you already saw this in Андрій's reaction at the shop window.
 
-## Прикметники (Common Adjectives)
+## Прикме́тники (Common Adjectives)
 
-Ukrainian textbooks teach adjectives in opposite pairs — Grade 2 textbooks call them "слова із протилежним значенням" (words with opposite meaning). Opposites are easier to remember because each word gives context to the other. Here are six essential pairs. For the first pair, all three gender forms are shown as a model:
+Ukrainian textbooks teach adjectives in opposite pairs — Grade 2 textbooks call them "слова́ із протиле́жним зна́ченням" (words with opposite meaning). Opposites are easier to remember because each word gives context to the other. Here are six essential pairs. For the first pair, all three gender forms are shown as a model:
 
-- **великий / велика / велике** (big) ↔ **маленький / маленька / маленьке** (small)
+- **великий / велика / велике** (big) ↔ **маленький / мале́нька / маленьке** (small)
 - **новий** (new) ↔ **старий** (old)
 - **гарний** (nice, beautiful) ↔ **поганий** (bad)
 - **чистий** (clean) ↔ **брудний** (dirty)
 - **дорогий** (expensive) ↔ **дешевий** (cheap)
 - **світлий** (light, bright) ↔ **темний** (dark)
 
-For the remaining five pairs, only the masculine form is listed. You can already predict the feminine and neuter: **новий → нова → нове**, **старий → стара → старе**, and so on. The **-ий/-а/-е** pattern works the same way for every adjective.
+For the remaining five pairs, only the masculine form is listed. You can already predict the feminine and neuter: **новий → нова → нове**, **старий → стара́ → старе**, and so on. The **-ий/-а/-е** pattern works the same way for every adjective.
 
 <!-- INJECT_ACTIVITY: match-opposites -->
 
 Now combine these adjectives with the nouns you learned in Module 8. Possessives, nouns, and adjectives all work together:
 
-- **У мене є великий стіл.** *(I have a big desk.)*
+- **У мене́ є великий стіл.** *(I have a big desk.)*
 - **Моя кімната маленька, але гарна.** *(My room is small but nice.)*
 - **Вікно велике і чисте.** *(The window is big and clean.)*
 - **Стілець старий, а ліжко — нове.** *(The chair is old, and the bed is new.)*
@@ -136,11 +138,11 @@ Two small words do important work here. **І** (and) joins things that go togeth
 
 Here is a full room description using everything from this module. Read it and try to identify each adjective's gender agreement:
 
-- **Моя кімната невелика, але світла.** *(My room is not big, but bright.)*
+- **Моя кімната невели́ка, але світла.** *(My room is not big, but bright.)*
 - **У мене є новий стіл і старий стілець.** *(I have a new desk and an old chair.)*
-- **Ліжко велике і зручне.** *(The bed is big and comfortable.)*
+- **Ліжко велике і зру́чне.** *(The bed is big and comfortable.)*
 - **Вікно чисте.** *(The window is clean.)*
-- **Шафа маленька, а тумбочка — нова.** *(The wardrobe is small, and the nightstand is new.)*
+- **Шафа маленька, а ту́мбочка — нова.** *(The wardrobe is small, and the nightstand is new.)*
 
 Count the adjectives: **невелика** (f), **світла** (f), **новий** (m), **старий** (m), **велике** (n), **зручне** (n), **чисте** (n), **маленька** (f), **нова** (f). Nine adjectives, each one matching its noun's gender perfectly. This is the pattern in action.
 
@@ -174,14 +176,14 @@ Now put it all together. Describe your own room in 3–5 sentences using adjecti
 
 Try to use different adjective pairs — not just **великий** everywhere. Mix opposites: **великий стіл, маленька шафа, чисте вікно**. Vary the genders so you practice all three endings.
 
-In Module 10 (Colors), you will meet soft-stem adjectives like **синій/синя/синє** (blue) — a small twist on today's pattern, where **-ій/-я/-є** replace **-ий/-а/-е**. You will also start combining colors with the adjectives you learned today: **великий червоний стіл** (a big red desk), **маленька синя сумка** (a small blue bag). For now, practice the **-ий/-а/-е** pattern until choosing the right ending feels automatic. The gender system you built in Module 8 is now a working tool — and every future module will build on it.
+In Module 10 (Colors), you will meet soft-stem adjectives like **синій/синя/синє** (blue) — a small twist on today's pattern, where **-ій/-я/-є** replace **-ий/-а/-е**. You will also start combining colors with the adjectives you learned today: **великий черво́ний стіл** (a big red desk), **маленька синя сумка** (a small blue bag). For now, practice the **-ий/-а/-е** pattern until choosing the right ending feels automatic. The gender system you built in Module 8 is now a working tool — and every future module will build on it.
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **яки́й** | what kind? (masculine) | прикм. |  |
 | **яка** | what kind? (feminine) | ім. | ч. |
@@ -207,14 +209,14 @@ In Module 10 (Colors), you will meet soft-stem adjectives like **синій/си
 | **телефо́н** | phone | ім. | ч. |
 | **ту́мбочка** | nightstand | ім. | ж. |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Яка твоя кімната?** | What is your room like? |
 | **Дивись!** | Look! |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "яки́й", back: "what kind? (masculine)", subtitle: "прикм." }, { front: "яка", back: "what kind? (feminine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "яке́", back: "what kind? (neuter)", subtitle: "прикм." }, { front: "які́", back: "what kind? (plural)", subtitle: "прикм." }, { front: "вели́кий", back: "big", subtitle: "прикм." }, { front: "мале́нький", back: "small", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "га́рний", back: "nice, beautiful", subtitle: "прикм." }, { front: "пога́ний", back: "bad", subtitle: "прикм." }, { front: "чи́стий", back: "clean", subtitle: "прикм." }, { front: "брудни́й", back: "dirty", subtitle: "прикм." }, { front: "дороги́й", back: "expensive", subtitle: "прикм." }, { front: "деше́вий", back: "cheap", subtitle: "прикм." }, { front: "сві́тлий", back: "light, bright", subtitle: "прикм." }, { front: "те́мний", back: "dark", subtitle: "прикм." }, { front: "але́", back: "but (stronger contrast)", subtitle: "спол." }, { front: "прикме́тник", back: "adjective", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "невели́кий", back: "not big, smallish", subtitle: "прикм." }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ту́мбочка", back: "nightstand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
 
@@ -222,7 +224,7 @@ In Module 10 (Colors), you will meet soft-stem adjectives like **синій/си
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -233,6 +235,21 @@ Advanced exercises for this module are in development. Check back soon!
 **Джерела — References**
 
 - Пономарова Grade 3, p.98
-  _'Прикметник має такий рід, як іменник, з яким він зв'язаний.'_
+  _'Прикметник має такий рід, як іменник, з яки́м він зв'я́заний.'_
 - Вашуленко Grade 3, p.128-131
-  _Adjective agreement exercises, 'Моя кімната' description task._
+  _Adjective agreement exercises, 'Моя́ кімната' description task._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Plural of Ukrainian Nouns — Special Forms](https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/)
+
+**Для погли́блення — For deeper study (in Ukrainian)**
+
+- [Правила вжива́ння зна́ка м'я́кшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+  _soft sign, м'яки́й знак, ь_
+- [Іменник як частина мови](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979)
+  _nouns, іменник, parts of speech_
+- [Рід іме́нників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+  _gender, рід, nouns_

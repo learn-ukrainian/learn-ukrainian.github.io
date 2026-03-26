@@ -3227,8 +3227,11 @@ def main():
 
     # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
     # Stress annotation moves to AFTER review to avoid wrong stress marks
-    # causing review rejection
-    if steps in ("all", "annotate"):
+    # causing review rejection.
+    # ONLY runs during full build — NOT when --step annotate is used standalone,
+    # because standalone annotate runs on already-enriched content and post-process
+    # would strip TAB markers added by ENRICH.
+    if steps == "all":
         _post_process_content(content_path)
         _save_v6_state(args.level, slug, "annotate")
 

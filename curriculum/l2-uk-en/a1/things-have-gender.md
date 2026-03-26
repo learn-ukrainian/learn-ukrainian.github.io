@@ -1,34 +1,35 @@
 <!-- TAB:Урок -->
 
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Оленка just moved into a new apartment. She video-calls her friend Марко to show off her room.
+Оле́нка just moved into a new apartment. She video-calls her friend Марко́ to show off her room.
 
 <div class="dialogue">
 
 
-**Оленка:** Привіт, Марку! Дивись, це моя кімната! *(Hi, Marko! Look, this is my room!)*
+**Оленка:** Приві́т, Марку! Диви́сь, це моя́ кімна́та! *(Hi, Marko! Look, this is my room!)*
 
 
-**Марко:** О, класно! Велика кімната! У тебе є стіл? *(Oh, cool! A big room! Do you have a table?)*
+**Марко:** О, кла́сно! Велика кімната! У тебе́ є стіл? *(Oh, cool! A big room! Do you have a table?)*
 
 
-**Оленка:** Так, у мене є стіл. Ось мій стіл. А ось моє ліжко. *(Yes, I have a table. Here's my table. And here's my bed.)*
+**Оленка:** Так, у мене́ є стіл. Ось мій стіл. А ось моє́ лі́жко. *(Yes, I have a table. Here's my table. And here's my bed.)*
 
 
-**Марко:** А лампа є? *(And is there a lamp?)*
+**Марко:** А ла́мпа є? *(And is there a lamp?)*
 
 
-**Оленка:** Так, моя лампа ось тут. І є вікно — моє вікно велике! *(Yes, my lamp is right here. And there's a window — my window is big!)*
+**Оленка:** Так, моя лампа ось тут. І є вікно́ — моє вікно вели́ке! *(Yes, my lamp is right here. And there's a window — my window is big!)*
 
 
-**Марко:** А комп'ютер? *(And a computer?)*
+**Марко:** А комп'ю́тер? *(And a computer?)*
 
 
-**Оленка:** Так, мій комп'ютер на столі. *(Yes, my computer is on the table.)*
+**Оленка:** Так, мій комп'ютер на столі́. *(Yes, my computer is on the table.)*
 
 
 </div>
+
 
 
 
@@ -39,22 +40,23 @@ The next day at university, Оленка and Марко compare what they have i
 <div class="dialogue">
 
 
-**Марко:** Що у тебе в сумці? *(What do you have in your bag?)*
+**Марко:** Що у тебе в су́мці? *(What do you have in your bag?)*
 
 
-**Оленка:** У мене є книга, ручка і зошит. А у тебе? *(I have a book, a pen, and a notebook. And you?)*
+**Оленка:** У мене є кни́га, ру́чка і зо́шит. А у тебе? *(I have a book, a pen, and a notebook. And you?)*
 
 
-**Марко:** У мене є телефон, ключ і фото. *(I have a phone, a key, and a photo.)*
+**Марко:** У мене є телефо́н, ключ і фо́то. *(I have a phone, a key, and a photo.)*
 
 
-**Оленка:** Фото? Яке фото? *(A photo? What photo?)*
+**Оленка:** Фото? Яке́ фото? *(A photo? What photo?)*
 
 
-**Марко:** Моє фото з Києва! *(My photo from Kyiv!)*
+**Марко:** Моє фото з Ки́єва! *(My photo from Kyiv!)*
 
 
 </div>
+
 
 
 
@@ -99,7 +101,7 @@ Here is the good news: you do not need the він/вона/воно test every t
 
 This covers the vast majority of nouns you will meet at this level. Some words ending in **-ь** (like **тінь** — shadow) are trickier — we will learn those later. For now, the rule is simple: consonant ending → **він**, ending in **-а/-я** → **вона**, ending in **-о/-е** → **воно**.
 
-## Предмети навколо (Objects Around Us)
+## Предме́ти навко́ло (Objects Around Us)
 
 Time for a tour of your room. Here are common objects organized by gender — practice saying **мій**, **моя**, or **моє** with each one.
 
@@ -107,33 +109,33 @@ Time for a tour of your room. Here are common objects organized by gender — pr
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
-| **стіл** | table | Мій стіл великий. |
-| **стілець** | chair | Мій стілець зручний. |
-| **телефон** | phone | Мій телефон новий. |
+| **стіл** | table | Мій стіл вели́кий. |
+| **стілець** | chair | Мій стілець зру́чний. |
+| **телефон** | phone | Мій телефон нови́й. |
 | **комп'ютер** | computer | Мій комп'ютер тут. |
-| **зошит** | notebook | Мій зошит синій. |
-| **ключ** | key | Мій ключ маленький. |
+| **зошит** | notebook | Мій зошит си́ній. |
+| **ключ** | key | Мій ключ мале́нький. |
 
 **Жіночий рід (вона, моя):**
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
-| **книга** | book | Моя книга цікава. |
-| **лампа** | lamp | Моя лампа яскрава. |
+| **книга** | book | Моя книга ціка́ва. |
+| **лампа** | lamp | Моя лампа яскра́ва. |
 | **сумка** | bag | Моя сумка велика. |
-| **ручка** | pen | Моя ручка червона. |
-| **кімната** | room | Моя кімната тепла. |
-| **стіна** | wall | Моя стіна біла. |
+| **ручка** | pen | Моя ручка черво́на. |
+| **кімната** | room | Моя кімната тепла́. |
+| **стіна** | wall | Моя стіна бі́ла. |
 
 **Середній рід (воно, моє):**
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
 | **вікно** | window | Моє вікно велике. |
-| **ліжко** | bed | Моє ліжко зручне. |
-| **крісло** | armchair | Моє крісло м'яке. |
-| **дзеркало** | mirror | Моє дзеркало кругле. |
-| **фото** | photo | Моє фото старе. |
+| **ліжко** | bed | Моє ліжко зру́чне. |
+| **крісло** | armchair | Моє крісло м'яке́. |
+| **дзеркало** | mirror | Моє дзеркало кру́гле. |
+| **фото** | photo | Моє фото старе́. |
 
 <!-- INJECT_ACTIVITY: group-sort-gender -->
 
@@ -161,10 +163,11 @@ Two friends comparing their rooms:
 **Оленка:** У мене є комп'ютер, а у тебе? *(I have a computer, and you?)*
 
 
-**Марко:** У мене немає комп'ютера, але є дзеркало. *(I don't have a computer, but I have a mirror.)*
+**Марко:** У мене нема́є комп'ю́тера, але́ є дзеркало. *(I don't have a computer, but I have a mirror.)*
 
 
 </div>
+
 
 
 
@@ -203,9 +206,9 @@ Now you know that every Ukrainian noun has a gender, and you have two tools to f
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **стіл** | table | ім. | ч. |
 | **кни́га** | book | ім. | ж. |
@@ -255,16 +258,16 @@ Now you know that every Ukrainian noun has a gender, and you have two tools to f
 | **рюкза́к** | backpack | ім. | ч. |
 | **мо́ре** | sea | ім. | ч. |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **чоловічий рід** | masculine gender |
 | **жіночий рід** | feminine gender |
 | **середній рід** | neuter gender |
 | **на столі** | on the table |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "стіл", back: "table", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ла́мпа", back: "lamp", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "комп'ю́тер", back: "computer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дзе́ркало", back: "mirror", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ключ", back: "key", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіна́", back: "wall", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вона́", back: "she (feminine gender pronoun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it (neuter gender pronoun)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "моє́", back: "my (neuter)", subtitle: "прикм." }, { front: "нема́є", back: "don't have / there is no" }, { front: "вели́кий", back: "big (masculine)", subtitle: "прикм." }, { front: "вели́ка", back: "big (feminine)", subtitle: "прикм." }, { front: "вели́ке", back: "big (neuter)", subtitle: "прикм." }, { front: "нови́й", back: "new (masculine)", subtitle: "прикм." }, { front: "зру́чний", back: "comfortable (masculine)", subtitle: "прикм." }, { front: "зру́чне", back: "comfortable (neuter)", subtitle: "прикм." }, { front: "си́ній", back: "blue (masculine)", subtitle: "прикм." }, { front: "мале́нький", back: "small (masculine)", subtitle: "прикм." }, { front: "ціка́ва", back: "interesting (feminine)", subtitle: "прикм." }, { front: "яскра́ва", back: "bright (feminine)", subtitle: "прикм." }, { front: "черво́на", back: "red (feminine)", subtitle: "прикм." }, { front: "тепла́", back: "warm (feminine)", subtitle: "прикм." }, { front: "бі́ла", back: "white (feminine)", subtitle: "прикм." }, { front: "м'яке́", back: "soft (neuter)", subtitle: "прикм." }, { front: "кру́гле", back: "round (neuter)", subtitle: "прикм." }, { front: "старе́", back: "old (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "диви́сь", back: "look (imperative)", subtitle: "дієсл." }, { front: "кла́сно", back: "cool / great", subtitle: "присл." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "па́рта", back: "desk (school)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мо́ре", back: "sea", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
@@ -272,7 +275,7 @@ Now you know that every Ukrainian noun has a gender, and you have two tools to f
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -288,3 +291,16 @@ Advanced exercises for this module are in development. Check back soon!
   _Gender endings table: consonant, -а/-я, -о/-е._
 - [ULP Season 1, Episode 6 — Gender naturally through family](https://www.ukrainianlessons.com/episode6/)
   _Gender emerges from possessives already taught._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/)
+
+**Для погли́блення — For deeper study (in Ukrainian)**
+
+- [Рід іме́нників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+  _gender, рід, nouns_
+- [Іме́нник. Рід іменників. Парале́льні родо́ві́ фо́рми](https://www.miyklas.com.ua/p/ukrainska-mova/10-klas/morfologichna-norma-373940/imennik-rid-imennikiv-paralelni-rodovi-formi-imennika-374830)
+  _gender, рід, nouns_

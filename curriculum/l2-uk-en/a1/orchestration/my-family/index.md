@@ -1,6 +1,6 @@
 # Build Summary: my-family (A1)
 
-Generated: 2026-03-26 07:59
+Generated: 2026-03-26 12:54
 
 ## Pipeline Phases
 
@@ -13,12 +13,12 @@ Generated: 2026-03-26 07:59
 | exercises | complete | 2026-03-26 01:02:28 |
 | activities | complete | 2026-03-26 01:03:19 |
 | verify-exercises | complete | 2026-03-26 01:03:19 |
-| annotate | complete | 2026-03-26 01:03:19 |
+| annotate | complete | 2026-03-26 11:50:14 |
 | vocab | complete | 2026-03-26 01:03:42 |
-| enrich | complete | 2026-03-26 06:59:02 |
+| enrich | complete | 2026-03-26 11:54:17 |
 | verify | complete | 2026-03-26 01:03:43 |
 | review | complete | 2026-03-26 01:09:54 |
-| stress | complete | 2026-03-26 06:59:02 |
+| stress | complete | 2026-03-26 11:54:36 |
 | publish | complete | 2026-03-26 06:59:02 |
 
 ## Reviews
