@@ -81,6 +81,10 @@ _TYPE_TO_COMPONENT: dict[str, str] = {
     "image-to-letter": "ImageToLetter",
     "letter-grid": "LetterGrid",
     "watch-and-repeat": "WatchAndRepeat",
+    "odd-one-out": "OddOneOut",
+    "divide-words": "DivideWords",
+    "count-syllables": "CountSyllables",
+    "pick-syllables": "PickSyllables",
     "phrase-table": "PhraseTable",
     "critical-analysis": "CriticalAnalysis",
     "essay-response": "EssayResponse",
@@ -514,6 +518,59 @@ def _render_watch_and_repeat(act: dict) -> str:
     return _component("WatchAndRepeat", props)
 
 
+def _render_odd_one_out(act: dict) -> str:
+    """odd-one-out → <OddOneOut items={[...]} />"""
+    items = []
+    for item in act.get("items", []):
+        entry = {
+            "words": item.get("words", []),
+            "correct": item.get("correct", 0),
+            "explanation": item.get("explanation", ""),
+        }
+        items.append(entry)
+    props = _prop("items", items)
+    props += _opt_prop("instruction", act.get("instruction"))
+    return _component("OddOneOut", props)
+
+
+def _render_divide_words(act: dict) -> str:
+    """divide-words → <DivideWords items={[...]} />"""
+    items = []
+    for item in act.get("items", []):
+        entry = {"word": item.get("word", ""), "answer": item.get("answer", "")}
+        if item.get("hint"):
+            entry["hint"] = item["hint"]
+        items.append(entry)
+    props = _prop("items", items)
+    props += _opt_prop("instruction", act.get("instruction"))
+    return _component("DivideWords", props)
+
+
+def _render_count_syllables(act: dict) -> str:
+    """count-syllables → <CountSyllables items={[...]} />"""
+    items = []
+    for item in act.get("items", []):
+        entry = {"word": item.get("word", ""), "correct": item.get("correct", 1)}
+        if item.get("translation"):
+            entry["translation"] = item["translation"]
+        items.append(entry)
+    props = _prop("items", items)
+    props += _opt_prop("instruction", act.get("instruction"))
+    if act.get("maxCount"):
+        props += f' maxCount={{{act["maxCount"]}}}'
+    return _component("CountSyllables", props)
+
+
+def _render_pick_syllables(act: dict) -> str:
+    """pick-syllables → <PickSyllables syllables={[...]} correctIndices={[...]} />"""
+    props = _prop("syllables", act.get("syllables", []))
+    props += _prop("correctIndices", act.get("correctIndices", []))
+    props += f' category="{act.get("category", "закриті")}"'
+    props += _opt_prop("instruction", act.get("instruction"))
+    props += _opt_prop("explanation", act.get("explanation"))
+    return _component("PickSyllables", props)
+
+
 def _render_phrase_table(act: dict) -> str:
     """phrase-table → <PhraseTable groups={[...]} />
 
@@ -764,6 +821,10 @@ _RENDERERS: dict[str, Any] = {
     "image-to-letter": _render_image_to_letter,
     "letter-grid": _render_letter_grid,
     "watch-and-repeat": _render_watch_and_repeat,
+    "odd-one-out": _render_odd_one_out,
+    "divide-words": _render_divide_words,
+    "count-syllables": _render_count_syllables,
+    "pick-syllables": _render_pick_syllables,
     "phrase-table": _render_phrase_table,
     # Seminar types
     "critical-analysis": _render_critical_analysis,
