@@ -454,6 +454,10 @@ def validate_morphology(
     issues: list[dict] = []
 
     content_clean = _STRIKETHROUGH_RE.sub("", content)
+    # Strip phonetic transcriptions in square brackets like [йаблуко], [н'].
+    # Single-line only (\n excluded) to avoid swallowing paragraphs on unmatched [.
+    # Negative lookahead preserves markdown link text: [слово](url) and [слово][ref].
+    content_clean = re.sub(r"\[[^\]\n]*\](?![(\[])", "", content_clean)
     word_lines = _extract_word_lines(content_clean)
 
     if not word_lines:

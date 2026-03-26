@@ -358,3 +358,48 @@ class TestRealModuleContent:
         text = "<!-- TAB:Урок -->\n\n## Діалоги (Dialogues)\n\nМоя мама працює."
         result, _ = annotate_stress(text)
         assert "<!-- TAB:Урок -->" in result
+
+
+# ---------------------------------------------------------------------------
+# annotate_file — safety check fix (#1052)
+# ---------------------------------------------------------------------------
+
+class TestAnnotateFileSafetyCheck:
+    """The 2% safety check should only count stress marks in the body,
+    not in Словник/Ресурси tabs that are pre-stressed by vocab_gen.py."""
+
+    def test_slovnyk_stress_does_not_trigger_skip(self, tmp_path):
+        """Stress marks in Словник section should NOT cause body to be skipped (#1052)."""
+        from scripts.pipeline.stress_annotator import annotate_file
+
+        # Simulate a module with pre-stressed vocabulary section but unstressed body
+        body = "Моя мама працює в школі. Українська мова дуже гарна.\n" * 20
+        # Add lots of stressed words in Словник (simulating vocab_gen.py output)
+        stressed_vocab = (f"ма{STRESS_MARK}ма | mother\n" * 50)
+        content = (
+            f"<!-- TAB:Урок -->\n\n{body}\n\n"
+            f"<!-- TAB:Словник -->\n\n{stressed_vocab}\n\n"
+            f"<!-- TAB:Ресурси -->\n\nSome resources.\n"
+        )
+
+        md_file = tmp_path / "test-module.md"
+        md_file.write_text(content, encoding="utf-8")
+
+        count = annotate_file(md_file)
+        # Body has Ukrainian words that should get stressed
+        assert count > 0, "Body content should have been stress-annotated"
+
+    def test_already_stressed_body_skips(self, tmp_path):
+        """If the body itself already has >5% stress marks, skip annotation."""
+        from scripts.pipeline.stress_annotator import annotate_file
+
+        # Body with lots of pre-existing stress marks (>5%)
+        stressed_body = (f"Моя{STRESS_MARK} ма{STRESS_MARK}ма працю{STRESS_MARK}є "
+                        f"в шко{STRESS_MARK}лі дуже до{STRESS_MARK}бре. ") * 30
+        content = f"<!-- TAB:Урок -->\n\n{stressed_body}\n"
+
+        md_file = tmp_path / "test-stressed.md"
+        md_file.write_text(content, encoding="utf-8")
+
+        count = annotate_file(md_file)
+        assert count == 0, "Already-stressed body should be skipped"

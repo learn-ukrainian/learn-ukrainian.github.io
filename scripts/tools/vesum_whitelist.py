@@ -13,6 +13,7 @@ Issue: #1017
 from __future__ import annotations
 
 import argparse
+import functools
 import sys
 from pathlib import Path
 
@@ -46,8 +47,9 @@ def load_whitelist(path: Path) -> dict[str, dict]:
     return result
 
 
+@functools.lru_cache(maxsize=1)
 def load_global_whitelist() -> dict[str, dict]:
-    """Load the global whitelist."""
+    """Load the global whitelist (cached — file parsed once per process)."""
     return load_whitelist(GLOBAL_WHITELIST)
 
 

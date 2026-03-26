@@ -235,19 +235,29 @@ def _check_exercise_items(content: str, plan: dict) -> list[QuickVerifyError]:
     if not activity_hints:
         return errors
 
-    # Count exercise placeholders in content
+    # Count INJECT_ACTIVITY markers (current pipeline) + legacy DSL blocks
+    activity_markers = re.findall(
+        r"<!--\s*INJECT_ACTIVITY:\s*[a-z0-9][a-z0-9-]*\s*-->",
+        content,
+    )
+
+    # Also check for already-injected JSX activity components
+    jsx_activities = re.findall(
+        r"^<(Quiz|FillIn|MatchUp|GroupSort|TrueFalse|OddOneOut|DivideWords|CountSyllables|PickSyllables)\b",
+        content, re.MULTILINE,
+    )
+
+    # Legacy: exercise placeholders and DSL blocks (kept for backward compat)
     placeholders = re.findall(
         r":::exercise-placeholder\s*\n(.*?):::",
         content, re.DOTALL,
     )
-
-    # Also check for already-filled exercises (:::quiz, :::fill-in, etc.)
     filled_exercises = re.findall(
         r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b",
         content, re.MULTILINE,
     )
 
-    total_exercises = len(placeholders) + len(filled_exercises)
+    total_exercises = len(activity_markers) + len(jsx_activities) + len(placeholders) + len(filled_exercises)
     expected = len(activity_hints)
 
     if total_exercises == 0 and activity_hints:

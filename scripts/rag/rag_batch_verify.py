@@ -127,6 +127,10 @@ def extract_ukrainian_text(md_path: Path) -> str:
         if stripped.startswith("#"):
             stripped = re.sub(r"^#+\s*", "", stripped)
 
+        # Strip phonetic transcriptions in square brackets: [йаблуко], [н'], etc.
+        # Preserve markdown link text: [слово](url) stays, [й] is stripped.
+        stripped = re.sub(r"\[[^\]\n]*\](?![(\[])", "", stripped)
+
         # Only include lines with Cyrillic characters
         if re.search(r"[\u0400-\u04FF]", stripped):
             lines.append(stripped)

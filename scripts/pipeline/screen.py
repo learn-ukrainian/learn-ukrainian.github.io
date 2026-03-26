@@ -507,6 +507,22 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
     if content_path and content_path.exists():
         try:
             stats, not_found, audit_suffix = _run_vesum_verify(content_path)
+            # Filter through global + per-module whitelist (#1053)
+            try:
+                from tools.vesum_whitelist import load_combined_whitelist
+                whitelisted = load_combined_whitelist(ctx.track, ctx.slug)
+                before = len(not_found)
+                not_found = [
+                    r for r in not_found
+                    if r.get("clean", r.get("original", "").lower().replace("\u0301", "")) not in whitelisted
+                ]
+                n_filtered = before - len(not_found)
+                if n_filtered > 0:
+                    _log(f"  D.0: VESUM whitelist filtered {n_filtered} false positive(s)")
+                    stats["not_found"] = max(0, stats.get("not_found", 0) - n_filtered)
+                    stats["vesum_hits"] = stats.get("vesum_hits", 0) + n_filtered
+            except (ImportError, FileNotFoundError, OSError, ValueError) as e:
+                logger.warning("D.0: VESUM whitelist loading failed: %s", e)
             result.vesum_stats = stats
             result.vesum_not_found = not_found
             result.audit_output += audit_suffix

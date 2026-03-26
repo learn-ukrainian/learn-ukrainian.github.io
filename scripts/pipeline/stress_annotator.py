@@ -23,6 +23,11 @@ logger = logging.getLogger(__name__)
 
 STRESS_MARK = "\u0301"
 
+# If >5% of body words already have stress marks, the file was likely already annotated.
+# Empirically: vocab_gen.py pre-stresses ~1-2% of body words via inline examples;
+# a fully annotated file has ~15-20%. The 5% threshold sits safely between.
+_ALREADY_STRESSED_THRESHOLD = 0.05
+
 # Match Ukrainian words (2+ Cyrillic chars, may include apostrophe/soft sign/stress mark)
 # Use lookbehind/lookahead instead of \b — \b doesn't work with Cyrillic
 # Include \u0301 (combining acute accent) so already-stressed words are matched whole
@@ -225,11 +230,22 @@ def annotate_file(path: Path) -> int:
 
     text = path.read_text("utf-8")
 
-    # Don't re-annotate if already has significant stress marks
-    existing = text.count(STRESS_MARK)
-    word_count = len(text.split())
-    if existing > word_count * 0.02:  # >2% of words already stressed
-        logger.info("stress_annotator: skipping %s — already has %d stress marks", path.name, existing)
+    # Don't re-annotate if the BODY content already has significant stress marks.
+    # We exclude the Словник/vocabulary section because vocab_gen.py pre-stresses
+    # those words — counting them would falsely trigger the skip threshold.
+    # Find the earliest tab marker to isolate body content
+    body_text = text
+    first_tab_idx = len(text)
+    for tab_marker in ("<!-- TAB:Словник -->", "<!-- TAB:Ресурси -->"):
+        idx = text.find(tab_marker)
+        if idx != -1 and idx < first_tab_idx:
+            first_tab_idx = idx
+    body_text = text[:first_tab_idx]
+
+    existing = body_text.count(STRESS_MARK)
+    word_count = len(body_text.split())
+    if word_count > 0 and existing > word_count * _ALREADY_STRESSED_THRESHOLD:
+        logger.info("stress_annotator: skipping %s — body already has %d stress marks", path.name, existing)
         return 0
 
     annotated, count = annotate_stress(text)

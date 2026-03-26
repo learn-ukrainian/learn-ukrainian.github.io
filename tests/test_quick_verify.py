@@ -310,6 +310,63 @@ def test_exercises_more_than_expected():
     assert len(ex_errors) == 0
 
 
+# --- INJECT_ACTIVITY marker counting (#1054) ---
+
+
+def test_exercises_inject_markers_count():
+    """INJECT_ACTIVITY markers count as exercises (#1054)."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+    ])
+    content = _make_content(extra=(
+        "\n<!-- INJECT_ACTIVITY: quiz-sounds -->\n"
+        "\n<!-- INJECT_ACTIVITY: fill-in-letters -->\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_inject_markers_zero_no_false_warning():
+    """Plan with hints + INJECT markers should NOT warn about 0 placeholders (#1054)."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+    ])
+    content = _make_content(extra="\n<!-- INJECT_ACTIVITY: quiz-test -->\n")
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_jsx_components_count():
+    """Already-injected JSX activity components count (#1054)."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+    ])
+    content = _make_content(extra='\n<Quiz id="test" items={[]} />\n')
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
+def test_exercises_mixed_inject_and_legacy():
+    """Mix of INJECT markers and legacy DSL counts correctly."""
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "quiz", "title": "Test 1"},
+        {"type": "fill-in", "title": "Test 2"},
+        {"type": "match-up", "title": "Test 3"},
+    ])
+    content = _make_content(extra=(
+        "\n<!-- INJECT_ACTIVITY: quiz-test -->\n"
+        "\n:::fill-in\nsome content\n:::\n"
+        "\n<MatchUp id=\"test\" items={[]} />\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert len(ex_errors) == 0
+
+
 # --- AC10: Retry catches bad output ---
 
 
