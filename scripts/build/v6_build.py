@@ -476,12 +476,14 @@ def step_skeleton(level: str, module_num: int, slug: str,
     prompt_path.write_text(prompt, "utf-8")
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
 
-    # Dispatch to writer — skeleton is short output, tools not needed
+    # Dispatch to writer — skeleton is structure planning, Sonnet is sufficient
     from build.dispatch import dispatch_agent as _dispatch
 
     base_writer = "gemini" if "gemini" in writer else "claude"
+    skeleton_model = "claude-sonnet-4-6" if "claude" in base_writer else None
     ok, raw = _dispatch(
         prompt, agent=base_writer, phase="skeleton", orch_dir=orch_dir, timeout=300,
+        model=skeleton_model,
     )
 
     if not ok or not raw:
@@ -1542,10 +1544,12 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
-    vocab_model = None  # default
+    # Vocab is structured output — use fast/cheap models
     if "gemini" in base_writer:
         from batch_gemini_config import FLASH_LITE_MODEL
         vocab_model = FLASH_LITE_MODEL
+    else:
+        vocab_model = "claude-sonnet-4-6"  # Sonnet for vocab, not Opus
 
     ok, raw = _dispatch(
         prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=120,
@@ -2056,10 +2060,12 @@ def step_activities(
                 orch_dir=orch_dir, timeout=300, mcp_tools=True,
             )
         else:
+            # Activities are structured YAML — use Sonnet, not Opus
             ok, raw = _dispatch(
                 current_prompt, agent="claude-tools", phase="activities",
                 orch_dir=orch_dir, timeout=300,
                 mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
+                model="claude-sonnet-4-6",
             )
 
         if not ok or not raw:
