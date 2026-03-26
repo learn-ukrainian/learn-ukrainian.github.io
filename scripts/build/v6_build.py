@@ -155,6 +155,69 @@ _ENRICH_FILTER_KEYWORDS = (
 )
 
 
+def _clean_build_artifacts(level: str, slug: str) -> None:
+    """Remove previous build artifacts for a clean full rebuild.
+
+    Preserves: plan YAML, orchestration/index.md, friction.yaml.
+    Removes: content .md, activities YAML, vocabulary YAML, review files,
+    audit files, status cache, dispatch logs, prompts, skeleton, state.
+    """
+    import shutil
+
+    base = CURRICULUM_ROOT / level
+    orch = base / "orchestration" / slug
+
+    removed = 0
+
+    # Content + vocab + activities
+    for path in [
+        base / f"{slug}.md",
+        base / "activities" / f"{slug}.yaml",
+        base / "vocabulary" / f"{slug}.yaml",
+    ]:
+        if path.exists():
+            path.unlink()
+            removed += 1
+
+    # Review files
+    review_dir = base / "review"
+    if review_dir.exists():
+        for f in review_dir.glob(f"{slug}-review*"):
+            f.unlink()
+            removed += 1
+
+    # Audit + status
+    for path in [
+        base / "audit" / f"{slug}-audit.md",
+        base / "status" / f"{slug}.json",
+    ]:
+        if path.exists():
+            path.unlink()
+            removed += 1
+
+    # Research
+    research = base / "research" / f"{slug}-knowledge-packet.md"
+    if research.exists():
+        research.unlink()
+        removed += 1
+
+    # Orchestration artifacts (keep index.md and friction.yaml)
+    if orch.exists():
+        keep = {"index.md", "friction.yaml"}
+        for f in orch.iterdir():
+            if f.name in keep:
+                continue
+            if f.is_dir():
+                shutil.rmtree(f)
+                removed += 1
+            else:
+                f.unlink()
+                removed += 1
+
+    if removed > 0:
+        _log(f"  🧹 Cleaned {removed} previous build artifact(s)")
+
+
 def _log(msg: str):
     print(msg, flush=True)
 
@@ -3261,6 +3324,10 @@ def main():
     _log(f"   Writer: {args.writer}")
 
     steps = args.step
+
+    # Clean previous build artifacts for a fresh full build
+    if steps == "all":
+        _clean_build_artifacts(args.level, slug)
 
     # Step 2: CHECK
     if steps in ("all", "check") and not step_check(args.level, args.module, slug):
