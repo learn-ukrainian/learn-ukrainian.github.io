@@ -1942,13 +1942,16 @@ def step_activities(
             )
 
         # Dispatch — use tools mode for MCP access.
-        # Activities use Flash-Lite (structured YAML output, lower reasoning needed).
+        # A1-A2 activities: Flash-Lite (simple distractors, structured YAML).
+        # B1+: Pro (pedagogically sound complex distractors needed).
         if "gemini" in base_writer:
             from batch_gemini_config import FLASH_LITE_MODEL
+            from batch_gemini_config import PRO_MODEL as _PRO
+            activity_model = FLASH_LITE_MODEL if level in ("a1", "a2") else _PRO
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
                 orch_dir=orch_dir, timeout=300, mcp_tools=True,
-                model=FLASH_LITE_MODEL,
+                model=activity_model,
             )
         else:
             ok, raw = _dispatch(
