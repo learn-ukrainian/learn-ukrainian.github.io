@@ -211,6 +211,21 @@ After fixing quick_verify for checkpoint modules.
 | `starlight/src/components/LevelLanding.module.css` | New styles |
 | `curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml` | v1.1→v1.2: letter-grid + watch-and-repeat hints |
 
+## Work plan for next session
+
+### Priority order
+1. **#1046** — Wire МійКлас resources + build 4 new activity types (odd-one-out, pick-syllables, divide-words, count-syllables)
+2. **#1047** — Fix ULP video mappings (V2→V3 slugs) so Anna's content reaches learners
+3. **#1048** — Rebuild M02 (складоподіл pedagogy) + check M03
+4. **Fix stress annotator bug** — investigate why step_annotate reports 0 words
+5. **Fix VESUM false positives** — whitelist POS abbreviations
+6. **Rebuild M07** — checkpoint module (6.0/10 REJECT)
+7. **Re-enrich M04-M11** — add МійКлас + ULP videos to Ресурси tab (content stays, just add resources)
+8. **Continue M12+** — only after 1-7 are done
+
+### Do NOT full-rewrite A1
+M04-M11 scored 9.2-10.0. Pedagogy issues are in M01-M03 (phonetics). Fix those surgically. Re-enrich the rest to add resources. User is spot-checking M05-M11 prose while Claude works on issues above.
+
 ## Build command
 ```bash
 .venv/bin/python scripts/build/v6_build.py a1 {N} --writer claude-tools
