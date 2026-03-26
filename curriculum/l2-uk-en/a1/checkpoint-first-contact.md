@@ -1,0 +1,198 @@
+<!-- TAB:Урок -->
+
+## Що ми знаємо? (What Do We Know?)
+
+You have successfully reached the end of the first major phase of your Ukrainian learning journey. Over the past six modules, you have mastered the foundational building blocks of the language. You have learned the 33 letters of the Ukrainian alphabet, discovered how the soft sign and the apostrophe change pronunciation, practiced placing word stress, and acquired essential greetings and family vocabulary. This checkpoint is designed to test whether you can combine all these individual skills into fluid, connected speech. There are absolutely no new words introduced here—every single word you will read and say comes directly from the previous modules.
+
+Take a moment to reflect on your progress. Ask yourself the following questions honestly to gauge your readiness: First, can you confidently read any Ukrainian word aloud, recognizing familiar letters without hesitation? Second, do you know exactly what the soft sign does in a word like **день** (day) or **сіль** (salt), and how the apostrophe functions in **сім'я** (family) or **м'який** (soft)? Third, can you correctly identify and emphasize the stressed syllable in words like **мама** (mother), **студент** (student), and **Україна** (Ukraine)? Fourth, are you able to naturally say **Привіт** (Hi), **Мене звати...** (My name is...), and **Я з...** (I am from...)? Finally, can you accurately name your family members using the correct possessive words **мій**, **моя**, or **моє** (my)?
+
+As you work through this module, read every Ukrainian sentence aloud. Try to perform the dialogues from memory before checking the text. Approach this entire section as a helpful self-assessment rather than a strict test. In Ukrainian, we say **«Це не іспит — це дзеркало»** (This isn't a test — it's a mirror). It reflects what you have solidly acquired and what might need a quick review. If any specific area feels slightly weak or hesitant, simply revisit that respective module before continuing to the next phase of the curriculum.
+
+## Читання (Reading Practice)
+
+Now it is time to put your reading skills into practice. Read the following text aloud at a comfortable, steady pace. Every single word in this passage is drawn from your previous lessons, meaning you already possess all the vocabulary required to understand it perfectly. Focus entirely on clear pronunciation, hitting the correct stressed syllables, and reading smoothly without pausing between every letter.
+
+**Привіт!** (Hi!)
+**Мене звати Оксана.** (My name is Oksana.)
+**Я — студентка.** (I am a student [female].)
+**Я з Києва.** (I am from Kyiv.)
+**Моя мама — лікарка.** (My mother is a doctor [female].)
+**Мій тато — інженер.** (My father is an engineer.)
+**У мене є брат.** (I have a brother.)
+**Його звати Тарас.** (His name is Taras.)
+**Він — учень.** (He is a student [schoolboy].)
+**Моя сім'я — невелика, але дружна.** (My family is not large, but friendly.)
+
+Before moving on to the grammatical breakdown, let us do a quick comprehension check to ensure you are grasping the meaning and not merely decoding the sounds. Ask yourself these three simple questions in English: What is Oksana's profession? What does her father do for a living? How many people are explicitly mentioned in her family? Answering these correctly confirms that your brain is successfully connecting the Cyrillic letters to real-world concepts.
+
+Let us put a pronunciation spotlight on a few specific words from the passage that perfectly test your early skills. Look closely at **сім'я** (family). Remember that the apostrophe forces a hard stop before the **я**, preventing the consonants from blending together. Pay attention to the word **звати** (to call), which begins with the consonant cluster **зв-**. You must pronounce both sounds clearly without inserting an extra vowel between them. In the word **невелика** (not large), ensure your voice rises on the stressed syllable **-ли-**. Finally, in the word **інженер** (engineer), remember to keep the consonant **н** slightly soft before the vowel **е**. None of these are new concepts; you practiced each phonetic pattern extensively when learning the alphabet.
+
+## Граматика (Grammar Summary)
+
+Throughout your first encounters with Ukrainian, you have absorbed grammar naturally through repeated exposure. These are the six key patterns you have already learned. You do not need to memorize complex rules at this stage; instead, you simply need to recognize and produce these structures automatically in conversation. Let us review each pattern with examples you already know.
+
+Pattern 1: The word **Це** (This is) followed by a noun is used for basic identification. You can point to someone or something and say **Це мама** (This is mom), **Це брат** (This is brother), or **Це Україна** (This is Ukraine). Notice that no verb corresponding to the English "is" is needed in the Ukrainian sentence.
+
+Pattern 2: When stating a subject and a noun directly, Ukrainian uses a grammatical dash instead of the verb "to be." You say **Я — студент** (I am a student), **Вона — лікарка** (She is a doctor), or **Тарас — учень** (Taras is a student). The dash functionally replaces the English word "is" or "am."
+
+Pattern 3: To express possession, you use the structure **У мене є** (I have) followed by a noun. You say **У мене є брат** (I have a brother) or **У мене є сім'я** (I have a family). Literally translated, Ukrainian says "by me there is" rather than using a direct verb for "have."
+
+Pattern 4: Asking for someone's name requires specific fixed phrases depending on the level of formality. In informal situations, you ask **Як тебе звати?** (What is your name?). The response is **Мене звати Оксана** (My name is Oksana). In formal situations, you shift to **Як вас звати?** (What is your name?). The response remains the same: **Мене звати Іван** (My name is Ivan).
+
+Pattern 5: Possessive words must align with the noun they describe. You use **мій**, **моя**, or **моє** (my) depending on the gender of the family member or object. You say **Мій тато** (My father) because it is masculine. You say **Моя мама** (My mother) because it is feminine. You say **Моє ім'я** (My name) because it is neuter.
+
+Pattern 6: Stating your origin uses the question **Звідки ти?** (Where are you from?) and the answer format **Я з...** (I am from...). You say **Я з Києва** (I am from Kyiv) or **Я з Канади** (I am from Canada). You have learned this as a fixed conversational chunk, and the full grammar rules for how place names change endings will be explored later in your studies.
+
+## Діалог (Capstone Dialogue)
+
+This is the capstone dialogue for your first major milestone. It combines every single communicative skill you have acquired into one cohesive, natural conversation. The setting is simple: two people meet for the first time at a **мовний клуб** (language club). Read both roles aloud, practicing the rhythm of a real exchange.
+
+<div class="dialogue">
+
+
+**Андрій:** Привіт! *(Hi!)*
+
+
+**Софія:** Добрий день! *(Good day!)*
+
+
+**Андрій:** Як тебе звати? *(What is your name?)*
+
+
+**Софія:** Мене звати Софія. А тебе? *(My name is Sofia. And you?)*
+
+
+**Андрій:** Мене звати Андрій. Звідки ти? *(My name is Andriy. Where are you from?)*
+
+
+**Софія:** Я з Львова. А ти? *(I am from Lviv. And you?)*
+
+
+**Андрій:** Я з Торонто. Я — програміст. А ти? *(I am from Toronto. I am a programmer. And you?)*
+
+
+**Софія:** Я — вчителька. *(I am a teacher.)*
+
+
+**Андрій:** У тебе є сім'я? *(Do you have a family?)*
+
+
+**Софія:** Так, у мене є мама, тато і сестра. *(Yes, I have a mom, a dad, and a sister.)*
+
+
+**Андрій:** Це моя сестра. Її звати Марія. *(This is my sister. Her name is Mariia.)*
+
+
+**Софія:** Дуже приємно! Бувай! *(Very nice to meet you! Bye!)*
+
+
+**Андрій:** До побачення! *(Goodbye!)*
+
+
+</div>
+
+Notice how this conversation flows naturally by building on simple blocks. It uses the informal register, employing words like **ти** (you), **Привіт** (Hi), and **Бувай** (Bye). The exchange relies heavily on question-answer pairs, and you can see how each grammatical pattern from the previous section appears naturally in context. Pay special attention to the echoing structure: **А ти?** (And you?) or **А ви?** (And you? [formal]). Ukrainian conversations frequently mirror questions back to keep the dialogue active.
+
+<!-- INJECT_ACTIVITY: match-up -->
+
+Now it is time to transition from reading a dialogue to delivering a monologue. It is your turn to speak. Instead of a back-and-forth conversation between two people, your goal is to produce a connected self-introduction. Consider this your graduation speech for this level—it represents everything you can confidently say about yourself in Ukrainian right now.
+
+Here is a model monologue showing what a complete introduction looks like, followed by a template with gaps for your personal information. First, review this completed example spoken by a fictional character:
+
+**Привіт! Мене звати Олена. Я з Відня. Я — студентка. Моя мама — лікарка. Мій тато — інженер. У мене є брат. Його звати Іван. Моя сім'я — велика. Дуже приємно!** (Hi! My name is Olena. I am from Vienna. I am a student. My mom is a doctor. My dad is an engineer. I have a brother. His name is Ivan. My family is large. Very nice to meet you!)
+
+Now, use this template to introduce yourself:
+**Привіт! Мене звати ___. Я з ___. Я — ___. Моя мама — ___. Мій тато — ___. У мене є ___. Його/Її звати ___. Моя сім'я — ___. Дуже приємно!**
+
+<!-- INJECT_ACTIVITY: fill-in -->
+
+To truly cement this skill, practice speaking your monologue aloud three times. The first time, simply read directly from the template, filling in your specific details. The second time, look away and glance back at the text only when you get stuck. The third time, perform it entirely from memory. If you can complete the third round smoothly, you have fully graduated this phase. As you speak, remember that small details matter: word stress changes how professional you sound, the apostrophe in **сім'я** (family) requires a hard pause, and the soft sign in **день** (day) completely changes the final consonant sound.
+
+## Підсумок — Summary
+
+To conclude this checkpoint, test yourself against these four final questions. One: How many letters are in the Ukrainian alphabet? (The answer is 33). How many sounds does it have? (The answer is 38). Two: Can you greet someone formally and informally? (**Добрий день** for formal, **Привіт** for informal). Three: Can you introduce yourself in five connected sentences covering your name, origin, profession, one family member, and a goodbye? Four: Can you pair the correct possessive words **мій**, **моя**, and **моє** with a family member or object representing each grammatical gender?
+
+If you could answer all four questions confidently, you are perfectly prepared for the next stage. Moving forward, Ukrainian introduces its first major grammatical framework: grammatical gender. Everything you have learned so far has relied on memorized chunks and conversational patterns. Starting in the next module, you will finally understand the deeper mechanics of the language and exactly WHY we say **моя мама** (my mother) but **мій тато** (my father). We will see you in the next step: **Речі мають рід** (Things Have Gender).
+
+<!-- INJECT_ACTIVITY: quiz -->
+
+
+<!-- TAB:Словник -->
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **сім'я́** | family | ім. | ж. |
+| **м'яки́й** | soft | прикм. |  |
+| **ма́ма** | mother, mom | ім. | ж. |
+| **та́то** | father, dad | ім. | ч. |
+| **сестра́** | sister | ім. | ж. |
+| **студе́нт** | student (male) | ім. | ч. |
+| **студе́нтка** | student (female) | ім. | ж. |
+| **у́чень** | student, schoolboy | ім. |  |
+| **лі́карка** | doctor (female) | ім. | ж. |
+| **інжене́р** | engineer | ім. | ч. |
+| **програмі́ст** | programmer | ім. | ч. |
+| **вчи́телька** | teacher (female) | ім. | ж. |
+| **Украї́на** | Ukraine | ім. | ж. |
+| **Ки́їв** | Kyiv | ім. |  |
+| **Торо́нто** | Toronto |  |  |
+| **Ві́день** | Vienna |  |  |
+| **Кана́да** | Canada |  |  |
+| **моя́** | my (feminine) | прикм. |  |
+| **моє́** | my (neuter) | прикм. |  |
+| **йо́го** | his; him | ім. | ч. |
+| **вона́** | she | ім. | ж. |
+| **але́** | but | спол. |  |
+| **у** | in; at; by | прийм. |  |
+| **вели́ка** | large (feminine) | прикм. |  |
+| **невели́ка** | not large, smallish (feminine) | прикм. |  |
+| **дру́жна** | friendly, close-knit (feminine) | прикм. |  |
+| **зва́ти** | to call (used for names) | дієсл. |  |
+| **ім'я́** | first name | ім. | с. |
+| **прі́звище** | surname | ім. | с. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **Привіт!** | Hi! |
+| **Добрий день!** | Good day! (formal greeting) |
+| **До побачення!** | Goodbye! |
+| **Бувай!** | Bye! (informal) |
+| **Мене звати...** | My name is... |
+| **Я з...** | I am from... |
+| **У мене є...** | I have... |
+| **У тебе є...?** | Do you have...? |
+| **А ти?** | And you? (informal) |
+| **А тебе?** | And you? (asking name back) |
+| **Я — студент.** | I am a student. |
+| **Це мама.** | This is mom. |
+| **мовний клуб** | language club |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м'яки́й", back: "soft", subtitle: "прикм." }, { front: "ма́ма", back: "mother, mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father, dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "студе́нт", back: "student (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "студе́нтка", back: "student (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "у́чень", back: "student, schoolboy", subtitle: "ім." }, { front: "лі́карка", back: "doctor (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інжене́р", back: "engineer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "програмі́ст", back: "programmer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́телька", back: "teacher (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Украї́на", back: "Ukraine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "Торо́нто", back: "Toronto" }, { front: "Ві́день", back: "Vienna" }, { front: "Кана́да", back: "Canada" }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "моє́", back: "my (neuter)", subtitle: "прикм." }, { front: "йо́го", back: "his; him", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "але́", back: "but", subtitle: "спол." }, { front: "у", back: "in; at; by", subtitle: "прийм." }, { front: "вели́ка", back: "large (feminine)", subtitle: "прикм." }, { front: "невели́ка", back: "not large, smallish (feminine)", subtitle: "прикм." }, { front: "дру́жна", back: "friendly, close-knit (feminine)", subtitle: "прикм." }, { front: "зва́ти", back: "to call (used for names)", subtitle: "дієсл." }, { front: "ім'я́", back: "first name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прі́звище", back: "surname", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розширені вправи для цього уроку ще в розробці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- [ULP Season 1, Episode 10 — Review 1-9](https://www.ukrainianlessons.com/episode10/)
+  _Anna's connected self-introduction review pattern._
+
+**Статті — Articles**
+
+- [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) (All 33 letters with audio)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) (Gender rules)

@@ -1,0 +1,24 @@
+{
+  "attempt": 3,
+  "passed": false,
+  "errors": [
+    {
+      "check": "VOCABULARY",
+      "severity": "ERROR",
+      "message": "Missing 1/1 required vocab: All vocabulary from M01-M06 is recycled — no new required words"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "WARNING",
+      "message": "Too long: 1820 words (target: 1200, ceiling: 1800)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 3 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-03-26T01:21:59.012721+00:00"
+}

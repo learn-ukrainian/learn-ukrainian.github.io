@@ -1,0 +1,253 @@
+vocabulary:
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: м'яки́й
+  translation: soft
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ма́ма
+  translation: mother, mom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: та́то
+  translation: father, dad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: студе́нт
+  translation: student (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: студе́нтка
+  translation: student (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у́чень
+  translation: student, schoolboy
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: лі́карка
+  translation: doctor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інжене́р
+  translation: engineer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: програмі́ст
+  translation: programmer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Украї́на
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Ки́їв
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Торо́нто
+  translation: Toronto
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Ві́день
+  translation: Vienna
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Кана́да
+  translation: Canada
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: моя́
+  translation: my (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́
+  translation: my (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йо́го
+  translation: his; him
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вона́
+  translation: she
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: у
+  translation: in; at; by
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: вели́ка
+  translation: large (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: невели́ка
+  translation: not large, smallish (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дру́жна
+  translation: friendly, close-knit (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зва́ти
+  translation: to call (used for names)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ім'я́
+  translation: first name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: прі́звище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Привіт!
+  translation: Hi!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий день!
+  translation: Good day! (formal greeting)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До побачення!
+  translation: Goodbye!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Бувай!
+  translation: Bye! (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мене звати...
+  translation: My name is...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я з...
+  translation: I am from...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене є...
+  translation: I have...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У тебе є...?
+  translation: Do you have...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А ти?
+  translation: And you? (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А тебе?
+  translation: And you? (asking name back)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я — студент.
+  translation: I am a student.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це мама.
+  translation: This is mom.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мовний клуб
+  translation: language club
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

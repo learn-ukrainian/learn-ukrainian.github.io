@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Covers all outline points but overshoots word budgets significantly using
+    English padding.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Almost perfect, but missed a basic euphony rule ("з Львова" instead of
+    "зі Львова").
+- dimension: 3
+  name: Pedagogical quality
+  score: 5
+  evidence: The grammar section contains heavy English theory with minimal Ukrainian
+    examples per rule. Relies on telling rather than showing.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Correctly recycles A1.1 vocabulary (сім'я, студент, лікарка, інженер,
+    etc.).
+- dimension: 5
+  name: Exercise quality
+  score: 1
+  evidence: Exercises are missing; only HTML comment placeholders are present.
+- dimension: 6
+  name: Engagement & tone
+  score: 2
+  evidence: Flooded with meta-commentary ("Let us review each pattern..."), motivational
+    fluff ("You have successfully reached the end of the first major phase..."), and
+    generic enthusiasm.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Actual word count (1834) exceeds target (1200) by over 50% due to English
+    bloat.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Uses natural Ukrainian names and cities (Оксана, Київ, Львів).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The dialogue is functionally correct but somewhat repetitive and mechanical
+    ("А ти? А ти?").
+findings: []
