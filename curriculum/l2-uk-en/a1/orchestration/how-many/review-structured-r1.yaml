@@ -1,0 +1,46 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Failed to include the required references to ULP Ep5, ULP Ep9, and Avramenko
+    Grade 6.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Forms are correct. Minor imprecision claiming `два стільці` is "(masculine/neuter)",
+    when `стільці` is masculine.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Generally excellent PPP flow, but the explanation of phone number chunking
+    is completely contradictory ("said individually (дев'яносто сім = 97)").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are included naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: (Assessed on placeholders) The sequence and focus of the placeholders
+    exactly match the pedagogical flow.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Clear and supportive, though slightly dragged down by meta-commentary
+    ("This module covers all three", "next you will learn").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections present, word count target met, headings match the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good details on currency, the apostrophe pronunciation, and the sound
+    of 'i' in 'сім'.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural, contextualized, and use real conversational features
+    ("А є дешевше?").
+findings: []

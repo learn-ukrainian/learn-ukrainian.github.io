@@ -1,0 +1,27 @@
+- find: A few pronunciation details matter here. **П'ять** and **дев'ять** both contain
+    an apostrophe
+  replace: A few pronunciation details matter here (for an excellent audio guide,
+    listen to Ukrainian Lessons Podcast Season 1, Episode 5). **П'ять** and **дев'ять**
+    both contain an apostrophe
+- find: These are patterns to memorize with familiar nouns, not grammar rules to analyze.
+    You already know the nouns
+  replace: These are patterns to memorize with familiar nouns, not grammar rules to
+    analyze. (In Ukrainian schools, such as in Avramenko's Grade 6 textbook, numbers
+    like these are formally classified as *кількісні числівники* — quantitative numbers
+    — distinct from ordinal ones). You already know the nouns
+- find: 'The word **гривня** (hryvnia, the Ukrainian currency ₴) changes form after
+    different numbers, following the same 1 / 2–4 / 5+ logic as **рік**:'
+  replace: 'To hear these money patterns in a real context, check out ULP Season 1,
+    Episode 9, where Anna teaches numbers through authentic market prices. The word
+    **гривня** (hryvnia, the Ukrainian currency ₴) changes form after different numbers,
+    following the same 1 / 2–4 / 5+ logic as **рік**:'
+- find: 'The same applies to **два**: **два** стільці (masculine/neuter) but **дві**
+    книги (feminine).'
+  replace: 'The same applies to **два**: **два** стільці (masculine) and **два** вікна
+    (neuter), but **дві** книги (feminine).'
+- find: Notice how the first three digits after **нуль** are said individually (дев'яносто
+    сім = 97, not "nine seven"), while the remaining pairs use regular two-digit numbers.
+  replace: Notice how the area code is usually read as **нуль** followed by a two-digit
+    number (дев'яносто сім = 97). For the main phone number, Ukrainians often group
+    the digits, but you can also read tricky parts digit by digit for clarity (like
+    **три два один**).

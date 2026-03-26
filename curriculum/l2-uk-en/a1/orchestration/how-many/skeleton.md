@@ -1,0 +1,35 @@
+## Діалоги (Dialogues) (~330 words total)
+
+- P1 (~40 words): Brief scene-setting — numbers are everywhere in daily life: prices at the market, ages when meeting people, phone numbers. This module teaches counting and using numbers in real situations. Transition to first dialogue.
+- Dialogue 1 (~100 words): At a market stall. Оксана shops for a bag. — Скільки коштує ця сумка? — Двісті гривень. — А ця? — Сто п'ятдесят. — Ой, дорого! А є дешевше? — Ось ця — вісімдесят гривень. — Добре, я беру цю. Include natural filler (ой, ось) and the chunk "я беру цю" without explaining accusative. Seller uses friendly tone.
+- P2 (~30 words): Brief gloss of key phrases from Dialogue 1: Скільки коштує? (How much does it cost?), гривень (hryvnias), дорого (expensive), дешевше (cheaper), я беру (I'll take). No grammar — just meaning.
+- Dialogue 2 (~100 words): At a student gathering, extending M05 introductions. — Привіт! Як тебе звати? — Андрій. А тебе? — Марина. Скільки тобі років? — Мені двадцять п'ять. А тобі? — Мені тридцять два. А це мій брат Тарас. — Скільки йому років? — Йому вісімнадцять. Include Мені/тобі/йому pattern naturally across three people.
+- P3 (~60 words): Gloss of the age chunk pattern: Мені ... років literally = "to me ... of years." Present the three forms as memorized chunks: рік (1 — двадцять один рік), роки (2-4 — двадцять два роки), років (5+ — двадцять п'ять років). Explicit note: just memorize the pattern, grammar comes later in A2.
+
+## Числа 1-20 (Numbers 1-20) (~330 words total)
+
+- P1 (~80 words): Numbers 1-10 presented in a clear list: один, два, три, чотири, п'ять, шість, сім, вісім, дев'ять, десять. Pronunciation notes: п'ять and дев'ять have apostrophe (the lips open wide for я after the consonant); сім (not "сем" — the і is clear); шість (soft ть at the end). Each number shown with a familiar noun from M08: один стіл, два стільці, три книги, чотири вікна.
+- P2 (~50 words): Gender note as chunk — один/одна/одне depending on the noun: один стіл, одна книга, одне вікно. Similarly два/дві: два стільці, дві книги. Present as patterns to memorize with familiar nouns, not as grammar rules. "You'll notice the noun changes too — just copy the patterns for now."
+- Exercise 1 (fill-in, 10 items): Write the number in words. Numerals shown: 3, 7, 5, 9, 1, 6, 10, 8, 4, 2. Mixed order to prevent mechanical counting.
+- P3 (~90 words): Numbers 11-19 built on the -надцять pattern: одинадцять, дванадцять, тринадцять, чотирнадцять, п'ятнадцять, шістнадцять, сімнадцять, вісімнадцять, дев'ятнадцять. Explain the pattern: base number + надцять (compare English "-teen"). Stress always on -на́-: одина́дцять, двана́дцять, п'ятна́дцять. Then двадцять (20) — stands alone, stress двáдцять. Note apostrophe carries over: п'ятнадцять, дев'ятнадцять.
+- P4 (~50 words): Mini counting practice — connect to real life. Скільки тобі років? Practice saying ages in the teens: Мені тринадцять. Мені п'ятнадцять. Мені вісімнадцять. Мені дев'ятнадцять. Reinforce the рік/роки/років pattern: тринадцять років, чотирнадцять років (all use років because 13-19 end in 5+).
+- Exercise 2 (quiz, 6 items): Скільки років? Match ages to descriptions: "Оксана is a university student (19)" → дев'ятнадцять; "Тарас just got his driver's license (18)" → вісімнадцять; etc.
+
+## Десятки і сотні (Tens and Hundreds) (~330 words total)
+
+- P1 (~80 words): Tens 20-90 as a clear list: двадцять (20), тридцять (30), сорок (40), п'ятдесят (50), шістдесят (60), сімдесят (70), вісімдесят (80), дев'яносто (90), сто (100). Highlight two irregulars with emphasis: сорок (NOT "чотиридесят") and дев'яносто (NOT "дев'ятдесят") — these must simply be memorized. The regular pattern: base + -десят (п'ять → п'ятдесят).
+- P2 (~60 words): Combined numbers — just add the unit after the ten: двадцять один (21), тридцять п'ять (35), сорок сім (47), п'ятдесят три (53), шістдесят вісім (68), дев'яносто дев'ять (99). No hyphen, no special joining — two separate words. Practice reading: your age, a friend's age, a parent's age.
+- Exercise 3 (fill-in, 10 items): Write the number in words: 15 → п'ятнадцять, 47 → сорок сім, 23 → двадцять три, 90 → дев'яносто, 40 → сорок, 68 → шістдесят вісім, 11 → одинадцять, 52 → п'ятдесят два, 34 → тридцять чотири, 99 → дев'яносто дев'ять.
+- P3 (~70 words): Hundreds for prices: сто (100), двісті (200), триста (300), чотириста (400), п'ятсот (500), шістсот (600), сімсот (700), вісімсот (800), дев'ятсот (900), тисяча (1000). Pattern: 2-4 use -ста (двісті is irregular), 5-9 use -сот. Combined: сто двадцять п'ять (125), двісті п'ятдесят (250), п'ятсот сімдесят три (573).
+- P4 (~70 words): Гривня with numbers — three memorized patterns: одна гривня (1), дві гривні (2-4: три гривні, чотири гривні), п'ять гривень (5+: десять гривень, сто гривень, двісті гривень). Real prices from Ukrainian life: кава — тридцять п'ять гривень, хліб — двадцять гривень, квиток у метро — вісім гривень. Reference ULP Ep9: Anna teaches numbers through real prices.
+- Exercise 4 (quiz, 8 items): Скільки коштує? Match price tags (shown as numerals: 250 грн, 45 грн, 1000 грн, etc.) to their written-out forms. Include гривня/гривні/гривень agreement in the options.
+
+## Підсумок — Summary (~330 words total)
+
+- P1 (~80 words): Phone numbers — Ukrainian format: +38 (0XX) XXX-XX-XX. Read digit by digit or in pairs: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім. Introduce нуль (zero). Practice with two example numbers: Мій номер — нуль дев'яносто три, п'ять сім два, тридцять один, дев'яносто два. Note: Ukrainians often say digits in pairs for the last six digits.
+- Exercise 5 (fill-in, 4 items): Phone number dictation — numbers shown as audio transcription prompts: "нуль дев'яносто сім, шість п'ять чотири, двадцять два, тридцять один" → student writes 097-654-22-31. Four different numbers.
+- P2 (~100 words): Three practical uses of numbers recap. 1. Prices: Скільки коштує? — Двісті п'ятдесят гривень. Дорого чи дешево? 2. Age: Скільки тобі/вам років? — Мені двадцять три роки. Remember: рік (1), роки (2-4), років (5+). 3. Phone: Мій номер телефону — ... Read pairs of digits. Нуль is zero. Quick reference table showing the рік/роки/років and гривня/гривні/гривень patterns side by side — same logic (1 = singular, 2-4 = special plural, 5+ = genitive plural), memorized as chunks.
+- P3 (~80 words): Self-check challenges — say these aloud in Ukrainian: your age (Мені ... років/роки/рік), a price (двісті п'ятдесят гривень for 250 UAH), your phone number digit by digit, count from 1 to 20 without pausing, say these numbers: 40, 90, 100, 500, 1000 (the tricky ones). Cultural note: Ukrainians use гривня (₴), divided into 100 копійок. One копійка, дві копійки, п'ять копійок.
+- P4 (~70 words): What's next preview — in Module 12 (This and That), you'll point at things and describe them. You already know ця сумка from the market dialogue — next you'll learn how to say "this one" and "that one" for all genders. The numbers from this module will keep appearing in every future module — prices, ages, addresses, dates. Keep practicing: say every number you see in Ukrainian.
+
+Grand total: ~1320 words

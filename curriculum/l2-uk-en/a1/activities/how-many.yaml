@@ -1,0 +1,406 @@
+version: '1.0'
+module: how-many
+level: a1
+inline:
+- id: fill-in-numbers-words
+  type: fill-in
+  instruction: Write the number in Ukrainian words
+  items:
+  - sentence: 7 = ____
+    answer: сім
+    options:
+    - сім
+    - шість
+    - вісім
+    - дев'ять
+  - sentence: 15 = ____
+    answer: п'ятнадцять
+    options:
+    - п'ятнадцять
+    - п'ятдесят
+    - чотирнадцять
+    - шістнадцять
+  - sentence: 3 = ____
+    answer: три
+    options:
+    - три
+    - тринадцять
+    - тридцять
+    - триста
+  - sentence: 18 = ____
+    answer: вісімнадцять
+    options:
+    - вісімнадцять
+    - вісімдесят
+    - вісім
+    - дев'ятнадцять
+  - sentence: 11 = ____
+    answer: одинадцять
+    options:
+    - одинадцять
+    - дванадцять
+    - один
+    - двадцять
+- id: quiz-ages
+  type: quiz
+  instruction: Choose the correct way to say the age in Ukrainian
+  items:
+  - question: I'm 13 — Мені тринадцять ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 2
+  - question: I'm 21 — Мені двадцять один ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 0
+  - question: I'm 34 — Мені тридцять чотири ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 1
+  - question: He's 18 — Йому вісімнадцять ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 2
+  - question: She's 42 — Їй сорок два ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 1
+  - question: I'm 15 — Мені п'ятнадцять ____.
+    options:
+    - рік
+    - роки
+    - років
+    correct: 2
+- id: fill-in-numbers-tens
+  type: fill-in
+  instruction: Write the two-digit number in Ukrainian words
+  items:
+  - sentence: 47 = ____ сім
+    answer: сорок
+    options:
+    - сорок
+    - тридцять
+    - п'ятдесят
+    - двадцять
+  - sentence: 53 = ____ три
+    answer: п'ятдесят
+    options:
+    - п'ятдесят
+    - шістдесят
+    - тридцять
+    - сорок
+  - sentence: 90 = ____
+    answer: дев'яносто
+    options:
+    - дев'яносто
+    - дев'ятсот
+    - дев'ятдесят
+    - дев'ять
+  - sentence: 68 = ____ вісім
+    answer: шістдесят
+    options:
+    - шістдесят
+    - сімдесят
+    - п'ятдесят
+    - вісімдесят
+  - sentence: 35 = ____ п'ять
+    answer: тридцять
+    options:
+    - тридцять
+    - двадцять
+    - сорок
+    - п'ятдесят
+- id: quiz-prices
+  type: quiz
+  instruction: Choose the correct price in Ukrainian
+  items:
+  - question: Coffee costs 35 ₴ — Кава коштує ____.
+    options:
+    - тридцять п'ять гривень
+    - тридцять п'ять гривні
+    - тридцять п'ять гривня
+    correct: 0
+  - question: The bag costs 200 ₴ — Сумка коштує ____.
+    options:
+    - двісті гривня
+    - двісті гривні
+    - двісті гривень
+    correct: 2
+  - question: Bread costs 20 ₴ — Хліб коштує ____.
+    options:
+    - двадцять гривень
+    - двадцять гривні
+    - двадцять гривня
+    correct: 0
+  - question: A metro ticket costs 8 ₴ — Квиток у метро коштує ____.
+    options:
+    - вісім гривня
+    - вісім гривні
+    - вісім гривень
+    correct: 2
+  - question: The bag costs 150 ₴ — Сумка коштує ____.
+    options:
+    - сто п'ятдесят гривень
+    - сто п'ятдесят гривні
+    - сто п'ятдесят гривня
+    correct: 0
+  - question: The ticket costs 3 ₴ — Квиток коштує ____.
+    options:
+    - три гривень
+    - три гривня
+    - три гривні
+    correct: 2
+  - question: Coffee costs 82 ₴ — Кава коштує ____.
+    options:
+    - вісімдесят дві гривні
+    - вісімдесят два гривні
+    - вісімдесят два гривень
+    correct: 0
+  - question: The book costs 1 ₴ — Книга коштує ____.
+    options:
+    - одна гривня
+    - один гривня
+    - одна гривні
+    correct: 0
+- id: fill-in-phone
+  type: fill-in
+  instruction: Fill in the missing part of the phone number read aloud in Ukrainian
+  items:
+  - sentence: '097-321-45-67: нуль дев''яносто сім, три два один, ____ п''ять, шістдесят
+      сім'
+    answer: сорок
+    options:
+    - сорок
+    - чотири
+    - чотирнадцять
+    - чотириста
+  - sentence: '093-572-31-92: нуль дев''яносто три, п''ять сім два, тридцять один,
+      ____'
+    answer: дев'яносто два
+    options:
+    - дев'яносто два
+    - дев'ять два
+    - дев'ятнадцять два
+    - дев'яносто дванадцять
+  - sentence: '068-415-70-83: нуль шістдесят вісім, чотири один п''ять, ____, вісімдесят
+      три'
+    answer: сімдесят
+    options:
+    - сімдесят
+    - сім нуль
+    - сімнадцять
+    - сімсот
+  - sentence: '050-246-18-50: ____ п''ятдесят, два чотири шість, вісімнадцять, п''ятдесят'
+    answer: нуль
+    options:
+    - нуль
+    - один
+    - десять
+    - сто
+workbook:
+- type: fill-in
+  instruction: Write each number in Ukrainian words
+  items:
+  - sentence: 12 = ____
+    answer: дванадцять
+  - sentence: 40 = ____
+    answer: сорок
+  - sentence: 99 = ____
+    answer: дев'яносто дев'ять
+  - sentence: 200 = ____
+    answer: двісті
+  - sentence: 573 = ____
+    answer: п'ятсот сімдесят три
+  - sentence: 16 = ____
+    answer: шістнадцять
+  - sentence: 80 = ____
+    answer: вісімдесят
+  - sentence: 1000 = ____
+    answer: тисяча
+  - sentence: 125 = ____
+    answer: сто двадцять п'ять
+  - sentence: 300 = ____
+    answer: триста
+- type: match-up
+  instruction: Match the number to its Ukrainian word
+  pairs:
+  - left: '40'
+    right: сорок
+  - left: '90'
+    right: дев'яносто
+  - left: '200'
+    right: двісті
+  - left: '500'
+    right: п'ятсот
+  - left: '1000'
+    right: тисяча
+  - left: '100'
+    right: сто
+- type: group-sort
+  instruction: 'Sort the numbers: which use **років**, which use **роки**, which use
+    **рік**?'
+  groups:
+  - label: рік (1)
+    items:
+    - двадцять один
+    - тридцять один
+    - сорок один
+  - label: роки (2–4)
+    items:
+    - двадцять два
+    - тридцять три
+    - сорок чотири
+  - label: років (5+)
+    items:
+    - п'ятнадцять
+    - двадцять п'ять
+    - сорок вісім
+- type: group-sort
+  instruction: 'Sort the prices: which use **гривня**, which use **гривні**, which
+    use **гривень**?'
+  groups:
+  - label: гривня (1)
+    items:
+    - одна
+    - двадцять одна
+  - label: гривні (2–4)
+    items:
+    - дві
+    - три
+    - двадцять чотири
+  - label: гривень (5+)
+    items:
+    - п'ять
+    - десять
+    - сто
+- type: quiz
+  instruction: Choose the correct Ukrainian for each price
+  items:
+  - question: 250 ₴
+    options:
+    - двісті п'ятдесят гривень
+    - двісті п'ятдесят гривні
+    - двісті п'ять гривень
+    - двісті п'ятдесят гривня
+    correct: 0
+  - question: 43 ₴
+    options:
+    - сорок три гривні
+    - сорок три гривень
+    - сорок три гривня
+    - чотири три гривні
+    correct: 0
+  - question: 501 ₴
+    options:
+    - п'ятсот одна гривня
+    - п'ятсот один гривня
+    - п'ятсот одна гривень
+    - п'ятсот один гривні
+    correct: 0
+  - question: 17 ₴
+    options:
+    - сімнадцять гривня
+    - сімнадцять гривні
+    - сімнадцять гривень
+    - сімнадцять гривню
+    correct: 2
+  - question: 84 ₴
+    options:
+    - вісімдесят чотири гривні
+    - вісімдесят чотири гривень
+    - вісімдесят чотири гривня
+    - вісім чотири гривні
+    correct: 0
+- type: true-false
+  instruction: True or false? Check if the number is written correctly in Ukrainian
+  items:
+  - statement: 47 = сорок сім
+    correct: true
+    explanation: Correct — сорок (40) + сім (7), two separate words.
+  - statement: 90 = дев'ятдесят
+    correct: false
+    explanation: Wrong — 90 is дев'яносто, not *дев'ятдесят. This is an irregular
+      form that must be memorized.
+  - statement: 40 = чотиридесят
+    correct: false
+    explanation: Wrong — 40 is сорок, not *чотиридесят. This is an irregular form
+      that must be memorized.
+  - statement: 15 = п'ятнадцять
+    correct: true
+    explanation: Correct — п'ять + надцять = п'ятнадцять. The apostrophe carries over
+      from п'ять.
+  - statement: Мені тринадцять років.
+    correct: true
+    explanation: Correct — numbers 11–19 all use років (the 5+ form).
+  - statement: Сумка коштує двісті гривні.
+    correct: false
+    explanation: 'Wrong — двісті requires гривень (genitive plural), not гривні. Correct:
+      двісті гривень.'
+- type: translate
+  instruction: Choose the correct Ukrainian translation
+  items:
+  - source: How much does this cost?
+    options:
+    - text: Скільки коштує це?
+      correct: true
+    - text: Скільки це рік?
+      correct: false
+    - text: Як коштує це?
+      correct: false
+  - source: I'm twenty-five years old.
+    options:
+    - text: Мені двадцять п'ять років.
+      correct: true
+    - text: Мені двадцять п'ять роки.
+      correct: false
+    - text: Мені двадцять п'ять рік.
+      correct: false
+  - source: My number is 097...
+    options:
+    - text: Мій номер — нуль дев'яносто сім...
+      correct: true
+    - text: Мій номер — нуль дев'ять сім...
+      correct: false
+    - text: Мій номер — дев'яносто сім...
+      correct: false
+- type: error-correction
+  instruction: Find and fix the mistake in each sentence
+  items:
+  - sentence: Мені тридцять два років.
+    error: років
+    correction: роки
+    error_type: word
+    options:
+    - роки
+    - рік
+    - років
+    explanation: After 2, 3, 4 (and compounds ending in them like 32), use роки —
+      not років.
+  - sentence: Кава коштує тридцять п'ять гривня.
+    error: гривня
+    correction: гривень
+    error_type: word
+    options:
+    - гривень
+    - гривні
+    - гривня
+    explanation: After 5+ (including 35), use гривень — the genitive plural form.
+  - sentence: Мені сорок одна років.
+    error: років
+    correction: рік
+    error_type: word
+    options:
+    - рік
+    - роки
+    - років
+    explanation: Numbers ending in 1 (like 41) use рік — the singular form.
