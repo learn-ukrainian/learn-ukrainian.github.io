@@ -1428,14 +1428,21 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     prompt = template.replace("{PLAN_VOCABULARY}", plan_vocab_text)
     prompt = prompt.replace("{MODULE_CONTENT}", module_content)
 
-    # Dispatch to writer — vocab step doesn't need tools, just the base model
+    # Dispatch to writer — vocab uses Flash-Lite (dictionary-like structured output).
     from build.dispatch import dispatch_agent as _dispatch
 
     base_writer = "claude" if "claude" in writer else "gemini"
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
+
+    vocab_model = None  # default
+    if "gemini" in base_writer:
+        from batch_gemini_config import FLASH_LITE_MODEL
+        vocab_model = FLASH_LITE_MODEL
+
     ok, raw = _dispatch(
         prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=120,
+        model=vocab_model,
     )
 
     if not ok or not raw:
@@ -1934,11 +1941,14 @@ def step_activities(
                 + prompt
             )
 
-        # Dispatch — use tools mode for MCP access
+        # Dispatch — use tools mode for MCP access.
+        # Activities use Flash-Lite (structured YAML output, lower reasoning needed).
         if "gemini" in base_writer:
+            from batch_gemini_config import FLASH_LITE_MODEL
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
                 orch_dir=orch_dir, timeout=300, mcp_tools=True,
+                model=FLASH_LITE_MODEL,
             )
         else:
             ok, raw = _dispatch(
