@@ -1,0 +1,307 @@
+vocabulary:
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ла́мпа
+  translation: lamp
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: комп'ю́тер
+  translation: computer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́мка
+  translation: bag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фо́то
+  translation: photo
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вона́
+  translation: she (feminine gender pronoun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воно́
+  translation: it (neuter gender pronoun)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: моя́
+  translation: my (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́
+  translation: my (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чоловічий рід
+  translation: masculine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жіночий рід
+  translation: feminine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: середній рід
+  translation: neuter gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нема́є
+  translation: don't have / there is no
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: big (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́ка
+  translation: big (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́ке
+  translation: big (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зру́чний
+  translation: comfortable (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зру́чне
+  translation: comfortable (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ній
+  translation: blue (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ціка́ва
+  translation: interesting (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: яскра́ва
+  translation: bright (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: черво́на
+  translation: red (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тепла́
+  translation: warm (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бі́ла
+  translation: white (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: м'яке́
+  translation: soft (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кру́гле
+  translation: round (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: старе́
+  translation: old (neuter)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: на столі
+  translation: on the table
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: диви́сь
+  translation: look (imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кла́сно
+  translation: cool / great
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: па́рта
+  translation: desk (school)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: оліве́ць
+  translation: pencil
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рюкза́к
+  translation: backpack
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
