@@ -1,0 +1,373 @@
+# ULP Blog Article Index — Ukrainian Lessons Podcast (ukrainianlessons.com)
+#
+# Source: ukrainianlessons.com/post-sitemap.xml
+# Built: 2026-03-26
+# Issue: #1056
+#
+# Grammar and vocabulary articles with audio examples by Anna Ohoiko.
+# Tags enable automatic matching to curriculum modules.
+
+base_url: "https://www.ukrainianlessons.com"
+
+# =========================================================================
+# Phonetics & Alphabet
+# =========================================================================
+
+phonetics:
+  - path: /ukrainian-cyrillic-alphabet/
+    title: "Ukrainian Cyrillic Alphabet"
+    tags: [alphabet, абетка, letters, літери, cyrillic]
+
+  - path: /h-g/
+    title: "Ukrainian Г vs Ґ"
+    tags: [sounds, г, ґ, consonants, приголосні, pronunciation]
+
+  - path: /transliteration/
+    title: "Ukrainian Transliteration"
+    tags: [transliteration, alphabet, латиниця]
+
+  - path: /tonguetwisters/
+    title: "Ukrainian Tongue Twisters (Скоромовки)"
+    tags: [pronunciation, скоромовки, phonetics, practice]
+
+# =========================================================================
+# Cases
+# =========================================================================
+
+cases:
+  - path: /ukrainian-cases-chart/
+    title: "Ukrainian Cases Chart (Overview)"
+    tags: [cases, відмінки, declension, chart, overview]
+
+  - path: /nominativecase/
+    title: "Nominative Case (Називний відмінок)"
+    tags: [nominative, називний, cases, відмінки]
+
+  - path: /genitive-case/
+    title: "Genitive Case (Родовий відмінок)"
+    tags: [genitive, родовий, cases, відмінки]
+
+  - path: /dative-case/
+    title: "Dative Case (Давальний відмінок)"
+    tags: [dative, давальний, cases, відмінки]
+
+  - path: /accusativecase/
+    title: "Accusative Case (Знахідний відмінок)"
+    tags: [accusative, знахідний, cases, відмінки]
+
+  - path: /instrumental-case/
+    title: "Instrumental Case (Орудний відмінок)"
+    tags: [instrumental, орудний, cases, відмінки]
+
+  - path: /locative-case/
+    title: "Locative Case (Місцевий відмінок)"
+    tags: [locative, місцевий, cases, відмінки]
+
+  - path: /prepositions-cases/
+    title: "Prepositions and Cases"
+    tags: [prepositions, прийменники, cases, відмінки]
+
+# =========================================================================
+# Nouns & Gender
+# =========================================================================
+
+nouns:
+  - path: /noun-genders-in-ukrainian/
+    title: "Noun Genders in Ukrainian"
+    tags: [gender, рід, nouns, іменник, masculine, feminine, neuter]
+
+  - path: /plural-of-ukrainian-nouns-special-forms/
+    title: "Plural of Ukrainian Nouns — Special Forms"
+    tags: [plural, множина, nouns, іменник]
+
+  - path: /nouns-after-numbers/
+    title: "Nouns After Numbers"
+    tags: [numbers, numerals, числівник, nouns, agreement]
+
+# =========================================================================
+# Pronouns
+# =========================================================================
+
+pronouns:
+  - path: /ukrainian-personal-pronouns/
+    title: "Ukrainian Personal Pronouns"
+    tags: [pronouns, займенник, особові, personal]
+
+  - path: /possessive-pronouns-declension/
+    title: "Possessive Pronouns Declension"
+    tags: [pronouns, присвійні, займенник, declension, мій, твій]
+
+  - path: /pronouns-this-that/
+    title: "Pronouns: This & That (цей, той)"
+    tags: [pronouns, вказівні, займенник, цей, той, demonstrative]
+
+  - path: /pronouns-ves-vsiakyi-kozhen/
+    title: "Pronouns: весь, всякий, кожен"
+    tags: [pronouns, означальні, займенник, весь, кожен]
+
+# =========================================================================
+# Verbs
+# =========================================================================
+
+verbs:
+  - path: /present-tense/
+    title: "Present Tense"
+    tags: [present tense, теперішній час, verbs, дієслово, conjugation]
+
+  - path: /past-tense/
+    title: "Past Tense"
+    tags: [past tense, минулий час, verbs, дієслово]
+
+  - path: /future-tense/
+    title: "Future Tense"
+    tags: [future tense, майбутній час, verbs, дієслово]
+
+  - path: /verb-aspect-in-ukrainian-differences/
+    title: "Verb Aspect — Differences"
+    tags: [aspect, вид, доконаний, недоконаний, verbs, дієслово]
+
+  - path: /perfective-verbs/
+    title: "Perfective Verbs"
+    tags: [perfective, доконаний вид, verbs, дієслово]
+
+  - path: /ukrainian-verb-prefixes/
+    title: "Ukrainian Verb Prefixes"
+    tags: [prefixes, verb prefixes, префікси, дієслово]
+
+  - path: /reflexive-verbs/
+    title: "Reflexive Verbs (-ся)"
+    tags: [reflexive, зворотні, -ся, verbs, дієслово]
+
+  - path: /imperative-mood/
+    title: "Imperative Mood (Наказовий спосіб)"
+    tags: [imperative, наказовий, mood, дієслово]
+
+  - path: /conditional-mood/
+    title: "Conditional Mood (Умовний спосіб)"
+    tags: [conditional, умовний, mood, дієслово]
+
+  - path: /ukrainian-tenses/
+    title: "Ukrainian Tenses (Overview)"
+    tags: [tenses, часи, verbs, дієслово, overview]
+
+  - path: /ukrainian-verbs-podcasts/
+    title: "Ukrainian Verbs — Podcast Episodes"
+    tags: [verbs, дієслово, podcast, audio]
+
+  - path: /participles/
+    title: "Participles (Дієприкметник)"
+    tags: [participles, дієприкметник, verb forms]
+
+  - path: /adjectival-participle/
+    title: "Adjectival Participle"
+    tags: [participle, дієприкметник, adjective forms]
+
+# =========================================================================
+# Adjectives & Adverbs
+# =========================================================================
+
+adjectives_adverbs:
+  - path: /adjectives-adverbs-chart/
+    title: "Adjectives & Adverbs Chart"
+    tags: [adjectives, adverbs, прикметник, прислівник, chart]
+
+  - path: /adverbs-frequency/
+    title: "Adverbs of Frequency"
+    tags: [adverbs, frequency, прислівник, часто, завжди]
+
+  - path: /adverbs-location/
+    title: "Adverbs of Location"
+    tags: [adverbs, location, прислівник, тут, там]
+
+# =========================================================================
+# Prepositions
+# =========================================================================
+
+prepositions:
+  - path: /prepositions-u-na/
+    title: "Prepositions У/В vs НА"
+    tags: [prepositions, у, в, на, прийменники]
+
+  - path: /prepositions-of-time-in-ukrainian/
+    title: "Prepositions of Time"
+    tags: [prepositions, time, час, прийменники]
+
+  - path: /location-destination-prepositions/
+    title: "Location vs Destination Prepositions"
+    tags: [prepositions, location, destination, прийменники, рух]
+
+# =========================================================================
+# Conjunctions & Other
+# =========================================================================
+
+conjunctions:
+  - path: /ukrainian-conjunctions/
+    title: "Ukrainian Conjunctions"
+    tags: [conjunctions, сполучники]
+
+  - path: /ukrainian-conjunctions-guide/
+    title: "Ukrainian Conjunctions — Complete Guide"
+    tags: [conjunctions, сполучники, guide]
+
+  - path: /exclamations/
+    title: "Ukrainian Exclamations (Вигуки)"
+    tags: [exclamations, вигуки, interjections]
+
+  - path: /ukrainian-punctuation/
+    title: "Ukrainian Punctuation"
+    tags: [punctuation, пунктуація, розділові знаки]
+
+  - path: /punctuation-marks/
+    title: "Punctuation Marks in Ukrainian"
+    tags: [punctuation, пунктуація, marks]
+
+# =========================================================================
+# Vocabulary & Phrases
+# =========================================================================
+
+vocabulary:
+  - path: /dates-in-ukrainian/
+    title: "Dates in Ukrainian"
+    tags: [dates, дати, numbers, vocabulary]
+
+  - path: /emotions-in-ukrainian/
+    title: "Emotions in Ukrainian"
+    tags: [emotions, емоції, vocabulary, feelings]
+
+  - path: /love-in-ukrainian/
+    title: "Love in Ukrainian"
+    tags: [love, кохання, vocabulary]
+
+  - path: /small-talk-in-ukrainian/
+    title: "Small Talk in Ukrainian"
+    tags: [conversation, small talk, спілкування, dialogue]
+
+  - path: /useful-ukrainian-questions/
+    title: "Useful Ukrainian Questions"
+    tags: [questions, запитання, conversation, dialogue]
+
+  - path: /birthday-wishes/
+    title: "Birthday Wishes in Ukrainian"
+    tags: [birthday, день народження, vocabulary, greetings]
+
+  - path: /vocabulary-praise-words/
+    title: "Praise Words (Vocabulary)"
+    tags: [praise, vocabulary, лексика, compliments]
+
+  - path: /something-hurts/
+    title: "Something Hurts (Describing Pain)"
+    tags: [health, pain, боліти, vocabulary, body]
+
+  - path: /too-much/
+    title: "Too Much in Ukrainian"
+    tags: [too much, занадто, vocabulary, adverbs]
+
+  - path: /12-ukrainian-words-without-translation/
+    title: "12 Ukrainian Words Without Translation"
+    tags: [untranslatable, vocabulary, culture, лексика]
+
+  - path: /20-ukrainian-idioms-proverbs-and-expressions/
+    title: "20 Ukrainian Idioms, Proverbs, and Expressions"
+    tags: [idioms, proverbs, фразеологізми, приказки, expressions]
+
+  - path: /powerful-ukrainian-words/
+    title: "Powerful Ukrainian Words"
+    tags: [vocabulary, powerful words, лексика, culture]
+
+  - path: /ukrainian-homonyms/
+    title: "Ukrainian Homonyms"
+    tags: [homonyms, омоніми, lexicology, лексика]
+
+# =========================================================================
+# Phrasebooks (ph-*)
+# =========================================================================
+
+phrasebooks:
+  - path: /ph-alphabet/
+    title: "Phrasebook: Alphabet"
+    tags: [alphabet, абетка, phrasebook]
+
+  - path: /ph-essential/
+    title: "Phrasebook: Essential Phrases"
+    tags: [essential, phrasebook, basic phrases]
+
+  - path: /ph-numbers/
+    title: "Phrasebook: Numbers"
+    tags: [numbers, числа, phrasebook]
+
+  - path: /ph-food/
+    title: "Phrasebook: Food"
+    tags: [food, їжа, phrasebook, vocabulary]
+
+  - path: /ph-health/
+    title: "Phrasebook: Health"
+    tags: [health, здоров'я, phrasebook]
+
+  - path: /ph-house/
+    title: "Phrasebook: House"
+    tags: [house, дім, phrasebook, vocabulary]
+
+  - path: /ph-feelings/
+    title: "Phrasebook: Feelings"
+    tags: [feelings, почуття, phrasebook]
+
+  - path: /ph-places/
+    title: "Phrasebook: Places"
+    tags: [places, місця, phrasebook]
+
+  - path: /ph-clothing/
+    title: "Phrasebook: Clothing"
+    tags: [clothing, одяг, phrasebook]
+
+  - path: /ph-work/
+    title: "Phrasebook: Work"
+    tags: [work, робота, phrasebook]
+
+  - path: /ph-money/
+    title: "Phrasebook: Money"
+    tags: [money, гроші, phrasebook]
+
+  - path: /ph-children/
+    title: "Phrasebook: Children"
+    tags: [children, діти, phrasebook]
+
+  - path: /ph-education/
+    title: "Phrasebook: Education"
+    tags: [education, освіта, phrasebook]
+
+  - path: /ph-language/
+    title: "Phrasebook: Language"
+    tags: [language, мова, phrasebook]
+
+  - path: /ph-animals/
+    title: "Phrasebook: Animals"
+    tags: [animals, тварини, phrasebook]
+
+# =========================================================================
+# Culture & Learning Resources
+# =========================================================================
+
+culture:
+  - path: /ukrainian-national-symbols/
+    title: "Ukrainian National Symbols"
+    tags: [culture, symbols, символи, Ukraine]
+
+  - path: /taras-shevchenko/
+    title: "Taras Shevchenko"
+    tags: [culture, Шевченко, literature, history]
+
+  - path: /ukrainian-history/
+    title: "Ukrainian History"
+    tags: [history, історія, culture]
+
+  - path: /christmas-new-year-in-ukraine/
+    title: "Christmas & New Year in Ukraine"
+    tags: [holidays, Різдво, Новий рік, culture]
+
+  - path: /begin-learning-ukrainian/
+    title: "Begin Learning Ukrainian"
+    tags: [beginner, getting started, learning]
+
+  - path: /ukrainian-language-resources/
+    title: "Ukrainian Language Resources"
+    tags: [resources, tools, learning]
