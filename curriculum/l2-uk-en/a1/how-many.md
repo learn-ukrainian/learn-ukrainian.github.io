@@ -31,6 +31,7 @@ Numbers are part of every conversation. At a market, you ask about prices. When 
 </div>
 
 
+
 The question **Скільки коштує?** (How much does it cost?) is the most useful phrase at any Ukrainian market or shop. **Гривень** (hryvnias) is the currency word after numbers like 5 and above. **Дорого** means "expensive," **дешевше** means "cheaper," and **я беру цю** (I'll take this one) is a fixed phrase — just memorize it as a chunk for now.
 
 <div class="dialogue">
@@ -58,6 +59,7 @@ The question **Скільки коштує?** (How much does it cost?) is the mo
 
 
 </div>
+
 
 
 The age question **Скільки тобі років?** literally translates as "How many to-you of-years?" The answer follows a simple pattern with three memorized forms: **рік** (year) after numbers ending in 1 — двадцять один рік; **роки** (years) after 2, 3, 4 — двадцять два роки; **років** (of years) after 5 and above — двадцять п'ять років. Do not try to analyze the grammar behind these forms — just learn them as fixed chunks. The full grammar arrives in A2.
@@ -257,3 +259,11 @@ Advanced exercises for this module are in development. Check back soon!
   _Numbers 11-100 and prices._
 - Авраменко Grade 6, p.152
   _Числівники кількісні vs порядкові — basic classification._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Numbers 1-100](https://www.ukrainianlessons.com/ukrainian-numbers/)
+
+**Подкасти — Podcasts**
+
+- [ULP Episode 7 — Numbers and Counting](https://www.ukrainianlessons.com/episode7/)

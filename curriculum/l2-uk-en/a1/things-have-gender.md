@@ -30,6 +30,7 @@
 
 </div>
 
+
 Did you notice something? Оленка says **мій стіл** (my table) but **моя лампа** (my lamp) and **моє ліжко** (my bed). Three different words for "my" — **мій**, **моя**, **моє**. Why does "my" keep changing? The answer has to do with gender — grammatical gender. Every Ukrainian noun belongs to one of three groups, and the word for "my" must match.
 
 The next day at university, Оленка and Марко compare what they have in their bags before class.
@@ -53,6 +54,7 @@ The next day at university, Оленка and Марко compare what they have i
 
 
 </div>
+
 
 Look at the nouns: **книга** (book) and **ручка** (pen) feel like **вона** words. **Телефон** (phone) and **ключ** (key) feel like **він** words. And **фото** (photo) feels like a **воно** word. Three different groups. Ukrainian nouns belong to three genders — and every noun you learn comes with one. Let's pull out the objects from both dialogues: **стіл** (table), **кімната** (room), **ліжко** (bed), **лампа** (lamp), **вікно** (window), **комп'ютер** (computer), **книга** (book), **ручка** (pen), **зошит** (notebook), **телефон** (phone), **ключ** (key), **фото** (photo). Some are **він** words, some **вона** words, some **воно** words. How do Ukrainian speakers know which is which? There is a simple test.
 
@@ -161,6 +163,7 @@ Two friends comparing their rooms:
 
 
 </div>
+
 
 A quick preview: **немає** means "don't have" — the opposite of **є**. A full explanation comes in a later module. For now, notice that even in this short exchange, the nouns reveal their gender. **Комп'ютер** — він (masculine, consonant ending). **Дзеркало** — воно (neuter, ends in **-о**). Gender is always present in every Ukrainian sentence, whether you see **мій/моя/моє** or not.
 
@@ -282,3 +285,7 @@ Advanced exercises for this module are in development. Check back soon!
   _Gender endings table: consonant, -а/-я, -о/-е._
 - [ULP Season 1, Episode 6 — Gender naturally through family](https://www.ukrainianlessons.com/episode6/)
   _Gender emerges from possessives already taught._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Noun Gender — How to Determine It](https://www.ukrainianlessons.com/ukrainian-noun-gender/)

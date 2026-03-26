@@ -55,6 +55,7 @@ Here is a short dialogue that uses all three intonation patterns. Two friends me
 </div>
 
 
+
 Notice: **Це нове кафе?** rises because it is a yes/no question. **Де кава?** falls because **де** is a question word. **Так, це нове кафе.** and **Ось кава.** both fall as statements. **Як гарно!** drops sharply as an exclamation. This dialogue recycles **кафе** and **кава** from the stress section and **Привіт** from Module 1.
 
 ## Читаємо вголос (Reading Aloud)
@@ -93,6 +94,7 @@ Finally, combine everything — stress and intonation together — in a dialogue
 
 
 </div>
+
 
 
 Read this with a partner or record yourself. Check: does your voice rise on **Як справи?** and fall on **Де кава?** Play it back and compare. The rising question **Як справи?** should feel different from the falling question **Де кава?** — that difference is intonation at work.
@@ -189,3 +191,14 @@ Advanced exercises for this module are in development. Check back soon!
   _Інтонація речень — розповідні, питальні, окличні._
 - [ULP Season 1, Episode 5 — Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/)
   _Stress practice with numbers._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Word Stress — Наголос](https://www.ukrainianlessons.com/ukrainian-stress/)
+
+**Для поглиблення — For deeper study (in Ukrainian)**
+
+- [Наголос](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/nagolos-41851)
+  _stress (наголос)_
+- [Вимова наголошених і ненаголошених голосних](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/vimova-nagoloshenikh-i-nenagoloshenikh-golosnikh-nenagoloshenni-golosni-e-i-o-v-koreniakh-sliv-41852)
+  _stressed vs unstressed vowels_

@@ -1,6 +1,6 @@
 # Build Summary: special-signs (A1)
 
-Generated: 2026-03-26 01:37
+Generated: 2026-03-26 07:45
 
 ## Pipeline Phases
 
@@ -14,11 +14,11 @@ Generated: 2026-03-26 01:37
 | verify-exercises | complete | 2026-03-26 00:25:38 |
 | annotate | complete | 2026-03-26 00:25:38 |
 | vocab | complete | 2026-03-26 00:26:02 |
-| enrich | complete | 2026-03-26 00:37:20 |
+| enrich | complete | 2026-03-26 06:45:15 |
 | verify | complete | 2026-03-26 00:26:03 |
 | review | complete | 2026-03-26 00:28:07 |
-| stress | complete | 2026-03-26 00:37:20 |
-| publish | complete | 2026-03-26 00:37:20 |
+| stress | complete | 2026-03-26 06:45:15 |
+| publish | complete | 2026-03-26 06:45:15 |
 | activities | complete | 2026-03-26 00:37:06 |
 
 ## Reviews

@@ -1,6 +1,6 @@
 # Build Summary: reading-ukrainian (A1)
 
-Generated: 2026-03-26 01:18
+Generated: 2026-03-26 07:45
 
 ## Pipeline Phases
 
@@ -14,11 +14,11 @@ Generated: 2026-03-26 01:18
 | verify-exercises | complete | 2026-03-25 23:59:46 |
 | annotate | complete | 2026-03-25 23:59:46 |
 | vocab | complete | 2026-03-26 00:00:15 |
-| enrich | complete | 2026-03-26 00:18:39 |
+| enrich | complete | 2026-03-26 06:45:08 |
 | verify | complete | 2026-03-26 00:00:16 |
 | review | complete | 2026-03-26 00:14:33 |
-| stress | complete | 2026-03-26 00:18:39 |
-| publish | complete | 2026-03-26 00:18:39 |
+| stress | complete | 2026-03-26 06:45:08 |
+| publish | complete | 2026-03-26 06:45:08 |
 | activities | complete | 2026-03-26 00:18:23 |
 
 ## Reviews

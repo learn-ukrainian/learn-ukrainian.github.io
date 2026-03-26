@@ -28,6 +28,7 @@ Two friends, Оленка and Тарас, are at an outdoor market looking for a
 </div>
 
 
+
 Notice something? Every color ended in **-а**: **червона**, **синя**, **зелена**, **жовта**, **біла**. That's because **сумка** (bag) is feminine. You already saw this pattern in M09 with adjectives like **гарна** and **велика**. Colors work exactly the same way — they change their ending to match the noun. Why not **червоний**? Because **червоний** is the masculine form, and **сумка** is feminine.
 
 Now a different scene. Оленка and Тарас are on a video call, and Тарас is showing his room — a chance to practice colors with furniture from M08.
@@ -57,6 +58,7 @@ Now a different scene. Оленка and Тарас are on a video call, and Та
 
 
 </div>
+
 
 
 Look at how the color endings shifted across this dialogue: **коричневий** килим (masculine) but **коричнева** шафа (feminine), **сіре** крісло (neuter) but **сірий** стіл (masculine), **білі** стіни and **білі** двері (plural). The color always follows the noun — just like M09 adjectives.
@@ -245,3 +247,7 @@ Advanced exercises for this module are in development. Check back soon!
   _Hard vs soft adjective groups: новий (тверда) vs синій (м'яка)._
 - Кравцова Grade 2, p.22-23
   _Синьо-жовтий прапор маєм: синє — небо, жовте — жито._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Colors in Ukrainian](https://www.ukrainianlessons.com/colors-in-ukrainian/)

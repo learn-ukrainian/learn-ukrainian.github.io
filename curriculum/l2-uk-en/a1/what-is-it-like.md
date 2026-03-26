@@ -33,6 +33,7 @@ When a friend visits your home, one of the first things you do is show them arou
 
 </div>
 
+
 Notice what happened in Оленка's answers. When she described **кімната** (room) — a feminine noun — she said **велика** and **світла**, with the ending **-а**. When she described **стіл** (desk) — a masculine noun — she said **новий**, ending in **-ий**. And **ліжко** (bed) — a neuter noun — got **старе**, ending in **-е**. The adjective ending changed each time, matching the noun's gender. This is adjective agreement, and it's the core pattern of this module.
 
 Now a different situation. Two friends are walking past a shop window, reacting to what they see.
@@ -59,6 +60,7 @@ Now a different situation. Two friends are walking past a shop window, reacting 
 
 
 </div>
+
 
 Here again, the adjective shape-shifts. **Сумка** (bag) is feminine, so Андрій exclaimed **яка гарна** — both the question word and the adjective carry feminine endings. **Телефон** (phone) is masculine: **великий і дешевий**. **Вікно** (window) is neuter: **яке велике**. Also notice the word **але** (but) — Софія uses it to signal a contrast: the bag is nice, *but* expensive.
 
@@ -232,3 +234,7 @@ Advanced exercises for this module are in development. Check back soon!
   _'Прикметник має такий рід, як іменник, з яким він зв'язаний.'_
 - Вашуленко Grade 3, p.128-131
   _Adjective agreement exercises, 'Моя кімната' description task._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Adjectives — Basics](https://www.ukrainianlessons.com/ukrainian-adjectives/)
