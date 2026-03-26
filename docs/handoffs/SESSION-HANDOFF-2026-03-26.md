@@ -73,6 +73,35 @@ This session prioritized pipeline velocity over content quality. 11 modules were
 - M10 Colors — 9.2/10 ACCEPTED
 - M11 How Many? — 10.0/10 PASS
 
+### МійКлас research findings (Grade 5 Фонетика — Склад. Складоподіл)
+
+**Theory concepts M02 should teach (from МійКлас):**
+1. **Склад** = part of word pronounced in one push of exhaled air (по-ра, о-чі, каз-ка)
+2. **Vowels are складотворчі** (syllable-forming) — each syllable has exactly ONE vowel
+3. **Word types:** односкладові (кіт), двоскладові (ти-ре), багатоскладові (ко-ри-дор)
+4. **Open vs closed syllables:** відкритий (ends vowel: ка-ре-та), закритий (ends consonant: май-стер)
+5. **Складоподіл rules:**
+   - Single consonant between vowels → NEXT syllable: ка-ша
+   - й, в, р, л, м, н after vowel → stay with PREVIOUS syllable: май-ка, пил-ка
+   - Two voiced/voiceless → both go to NEXT: ті-сто, кри-шталь
+   - Voiced+voiceless → split: каз-ка, рід-кий
+   - Doubled consonants split: під-да-шок
+
+**What M02 currently does wrong:**
+- Uses CVCCV/CVC pattern notation (English linguistics) instead of Ukrainian terms
+- Doesn't teach відкритий/закритий склад distinction
+- Doesn't teach the consonant grouping rules for складоподіл
+
+**New activity types to implement (from МійКлас — don't map to existing types, build proper components):**
+1. **`odd-one-out`** (Четверте «зайве») — show 4 words, pick the one that doesn't belong. Own component with explanation reveal.
+2. **`pick-syllables`** (Вибери закриті/відкриті склади) — multi-select syllable classification. Distinct from quiz.
+3. **`divide-words`** (Поділи слова на склади) — interactive syllable division (tap between letters to insert hyphens).
+4. **`count-syllables`** (Один, два, три, чотири, п'ять) — given word, pick syllable count. Could be slider or number picker.
+5. Already have: **error-correction** (Це неправильно!), **group-sort** (Розподіли слова)
+
+**For seminar tracks (Grade 7-11):**
+МійКлас has syntax, rhetoric, text analysis exercises that could map to HIST/BIO/LIT activities. Worth exploring in separate session.
+
 ### Process: ask Gemini for second opinion
 Before rebuilding M02/M03, send the current content + МійКлас findings to Gemini for adversarial review of the pedagogical approach. Gemini may catch things Claude misses about Ukrainian teaching methodology.
 
