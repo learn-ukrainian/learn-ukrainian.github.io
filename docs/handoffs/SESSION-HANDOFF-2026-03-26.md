@@ -36,6 +36,19 @@
 - B1: all old artifacts removed (2 modules)
 - HIST: all old artifacts removed (1 module)
 
+## Behavioral correction — READ THIS FIRST
+
+This session prioritized pipeline velocity over content quality. 11 modules were built in rapid succession without verifying that any of them actually teach correctly. That is wrong.
+
+**This is not a software project where you ship an MVP and iterate.** This is education. Real people with zero Ukrainian knowledge will use these modules as their first and possibly only contact with the language. If M02 teaches reading the English phonics way instead of the Ukrainian syllable way, that learner builds wrong habits that are hard to undo.
+
+**Rules for next session:**
+- **Build ONE module. Read it. Verify the pedagogy. Then build the next.** Not 11 in a row.
+- **Check textbook RAG before accepting any review score.** A 10/10 from Gemini means nothing if the teaching approach is wrong.
+- **Research how Ukrainian teachers teach each topic** before writing. Use RAG, МійКлас, textbook notes. The plan has textbook references — read them.
+- **Never trade quality for speed.** 5 excellent modules beat 55 mediocre ones.
+- **The pipeline is a tool, not the product.** The product is a learner who thinks in Ukrainian. Every shortcut degrades that.
+
 ## Critical: Quality issues NOT fixed — DO THESE FIRST
 
 ### 1. Reading pedagogy not verified (M02 and all modules)
