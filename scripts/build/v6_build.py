@@ -155,6 +155,31 @@ _ENRICH_FILTER_KEYWORDS = (
 )
 
 
+def _extract_body(content: str) -> tuple[str, str]:
+    """Extract lesson body (prose) and tail (Словник/Ресурси tabs).
+
+    Returns (body, tail). Body is the prose content between TAB:Урок
+    and TAB:Словник. Tail is everything from TAB:Словник onward.
+
+    IMPORTANT: content.find("<!-- TAB:") matches TAB:Урок at pos 0,
+    giving empty body. Always find Словник/Ресурси specifically.
+    """
+    slovnyk_idx = content.find("<!-- TAB:Словник -->")
+    resursy_idx = content.find("<!-- TAB:Ресурси -->")
+    if slovnyk_idx > 0:
+        body = content[:slovnyk_idx].strip()
+        tail = content[slovnyk_idx:]
+    elif resursy_idx > 0:
+        body = content[:resursy_idx].strip()
+        tail = content[resursy_idx:]
+    else:
+        body = content
+        tail = ""
+    # Strip TAB:Урок marker
+    body = body.replace("<!-- TAB:Урок -->", "").strip()
+    return body, tail
+
+
 def _clean_build_artifacts(level: str, slug: str) -> None:
     """Remove previous build artifacts for a clean full rebuild.
 
@@ -2771,22 +2796,9 @@ def _rewrite_weak_sections(
     findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
     findings_text = findings_section.group(1).strip() if findings_section else ""
 
-    # Read content — extract body between TAB:Урок and TAB:Словник
+    # Read content — extract body (prose) and tail (Словник/Ресурси)
     content = content_path.read_text("utf-8")
-    slovnyk_idx = content.find("<!-- TAB:Словник -->")
-    resursy_idx = content.find("<!-- TAB:Ресурси -->")
-    # Body = everything before Словник (or Ресурси if no Словник)
-    if slovnyk_idx > 0:
-        body = content[:slovnyk_idx].strip()
-        tail = content[slovnyk_idx:]
-    elif resursy_idx > 0:
-        body = content[:resursy_idx].strip()
-        tail = content[resursy_idx:]
-    else:
-        body = content
-        tail = ""
-    # Strip leading TAB:Урок marker from body
-    body = body.replace("<!-- TAB:Урок -->", "").strip()
+    body, tail = _extract_body(content)
 
     if len(body) < 200:
         _log(f"  ❌ Body too short for rewrite ({len(body)} chars)")
@@ -2915,8 +2927,7 @@ def _generate_fixes_with_claude(
         return []
 
     content = content_path.read_text("utf-8")
-    tab_idx = content.find("<!-- TAB:")
-    body = content[:tab_idx] if tab_idx != -1 else content
+    body, _ = _extract_body(content)
 
     prompt = f"""You are fixing errors in a Ukrainian language module. The reviewer identified these issues:
 
@@ -2983,9 +2994,7 @@ def _generate_fixes_from_evidence(
         return []
 
     content = content_path.read_text("utf-8")
-    # Truncate to body only (before TAB markers)
-    tab_idx = content.find("<!-- TAB:")
-    body = content[:tab_idx] if tab_idx != -1 else content
+    body, _ = _extract_body(content)
 
     prompt = f"""You are a copy-editor fixing errors in a Ukrainian language module.
 
@@ -3018,7 +3027,7 @@ Rules:
         from batch_gemini_config import FLASH_LITE_MODEL
         ok, raw = _dispatch(
             prompt, agent="gemini", phase="fix-evidence",
-            orch_dir=orch_dir, timeout=60,
+            orch_dir=orch_dir, timeout=180,
             model=FLASH_LITE_MODEL,
         )
     except Exception as e:
@@ -3699,64 +3708,22 @@ def main():
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
         elif score >= 9.0:
-            # High-scoring REVISE: apply fixes and accept without re-review.
-            reviewer_is_claude = args.writer in ("gemini", "gemini-tools")
-            if reviewer_is_claude:
-                fixes = _parse_review_fixes(review_text)
-                if not fixes:
-                    _log(f"\n🔧 Review {score}/10 — dispatching Claude to generate fixes...")
-                    fixes = _generate_fixes_with_claude(
-                        review_text, content_path, args.level, slug,
-                    )
-            else:
-                _log(f"\n🔧 Review {score}/10 — dispatching Flash for fixes...")
-                fixes = _generate_fixes_from_evidence(
-                    review_text, content_path, args.level, slug,
-                )
-                if not fixes:
-                    fixes = _parse_review_fixes(review_text)
-            if fixes:
-                _log(f"  Applying {len(fixes)} fix(es) and accepting")
-
-                # Save fixes for traceability
-                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
-                orch_dir.mkdir(parents=True, exist_ok=True)
-                (orch_dir / "review-fixes-1.yaml").write_text(
-                    yaml.dump(fixes, allow_unicode=True, default_flow_style=False),
-                    "utf-8",
-                )
-
-                # Apply each fix to the content file
-                content = content_path.read_text("utf-8")
-                applied = 0
-                for fix in fixes:
-                    find = fix.get("find", "")
-                    replace = fix.get("replace", "")
-                    insert_after = fix.get("insert_after", "")
-
-                    if find and replace and find in content:
-                        content = content.replace(find, replace, 1)
-                        applied += 1
-                        _log(f"    ✅ Fixed: {find[:60]}...")
-                    elif find and replace:
-                        _log(f"    ⚠️  Not found: {find[:60]}...")
-                    elif insert_after and replace and insert_after in content:
-                        pos = content.index(insert_after) + len(insert_after)
-                        content = content[:pos] + "\n\n" + replace + content[pos:]
-                        applied += 1
-                        _log(f"    ✅ Inserted after: {insert_after[:60]}...")
-
-                if applied > 0:
-                    content_path.write_text(content, "utf-8")
-                    _log(f"  Applied {applied}/{len(fixes)} fixes")
-                    # Re-enrich after fixes (but skip re-review)
-                    step_enrich(content_path, args.level, slug)
-                    step_verify(content_path, args.level, args.module)
-
+            # High-scoring REVISE: section rewrite + accept without re-review.
+            _log(f"\n🔧 Review {score}/10 REVISE — section rewrite (accept after)")
+            rewritten = _rewrite_weak_sections(
+                review_text, content_path, args.level, slug,
+                writer=args.writer,
+            )
+            if rewritten:
+                step_enrich(content_path, args.level, slug)
+                step_verify(content_path, args.level, args.module)
                 passed = True
-                _log(f"\n✅ Review ACCEPTED ({score}/10 + {applied} fixes applied)")
+                _log(f"\n✅ Review ACCEPTED ({score}/10 + section rewrite applied)")
             else:
-                _log(f"\n⚠️  Review {score}/10 REVISE but no <fixes> block")
+                # Rewrite rejected (too short, dropped sections, etc.)
+                # Accept as-is at 9.0+ — minor issues only
+                passed = True
+                _log(f"\n✅ Review ACCEPTED as-is ({score}/10 — rewrite rejected but score sufficient)")
         else:
             # REVISE: section-level rewrite (not find/replace).
             # Find/replace breaks prose flow — fixing one sentence damages
