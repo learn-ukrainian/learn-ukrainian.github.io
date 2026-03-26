@@ -2740,6 +2740,84 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score, raw
 
 
+def _generate_fixes_with_claude(
+    review_text: str, content_path: Path, level: str, slug: str,
+) -> list[dict]:
+    """Claude generates fixes using MCP tools to verify corrections.
+
+    Claude has verify_word, query_pravopys, search_text — it can check
+    what the correct Ukrainian actually is before writing the fix.
+    """
+    import re
+
+    from build.dispatch import CLAUDE_WRITER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    # Extract error evidence from review
+    error_lines = []
+    for m in re.finditer(
+        r"\|\s*\d+\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]+)\|", review_text
+    ):
+        dim_score = int(m.group(2))
+        evidence = m.group(3).strip()
+        if dim_score < 9 and any(
+            kw in evidence.lower()
+            for kw in ("error", "incorrect", "wrong", "mistake", "hallucination",
+                        "contradictory", "inaccurate", "fabricat")
+        ):
+            error_lines.append(f"- {m.group(1).strip()} ({dim_score}/10): {evidence}")
+
+    # Also extract structured findings
+    findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
+    if findings_section:
+        findings_text = findings_section.group(1).strip()
+        if findings_text and "no findings" not in findings_text.lower():
+            error_lines.append(f"\nStructured findings:\n{findings_text[:1500]}")
+
+    if not error_lines:
+        return []
+
+    content = content_path.read_text("utf-8")
+    tab_idx = content.find("<!-- TAB:")
+    body = content[:tab_idx] if tab_idx != -1 else content
+
+    prompt = f"""You are fixing errors in a Ukrainian language module. The reviewer identified these issues:
+
+{chr(10).join(error_lines)}
+
+Here is the module content:
+<content>
+{body[:10000]}
+</content>
+
+INSTRUCTIONS:
+1. For each error, use your MCP tools to verify what the CORRECT Ukrainian is:
+   - Use verify_word to check word forms
+   - Use query_pravopys to check spelling/phonetic rules
+   - Use search_text to check how textbooks teach this
+2. Then output exact find/replace pairs as YAML
+
+Output ONLY valid YAML — no markdown fencing, no explanation:
+
+- find: "exact text from the module"
+  replace: "corrected text (verified via tools)"
+"""
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    ok, raw = _dispatch(
+        prompt, agent="claude-tools", phase="fix-with-tools",
+        orch_dir=orch_dir, timeout=120,
+        mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
+    )
+
+    if not ok or not raw:
+        return []
+
+    return _parse_review_fixes(raw)
+
+
 def _generate_fixes_from_evidence(
     review_text: str, content_path: Path, level: str, slug: str,
 ) -> list[dict]:
@@ -3474,15 +3552,22 @@ def main():
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
         elif score >= 9.0:
-            # High-scoring REVISE: use Flash to generate fixes, apply, accept.
-            # Flash is fast + cheap for structured find/replace.
-            _log(f"\n🔧 Review {score}/10 REVISE — dispatching Flash for fixes...")
-            fixes = _generate_fixes_from_evidence(
-                review_text, content_path, args.level, slug,
-            )
-            if not fixes:
-                # Fallback: try Pro's own <fixes> block
+            # High-scoring REVISE: apply fixes and accept without re-review.
+            reviewer_is_claude = args.writer in ("gemini", "gemini-tools")
+            if reviewer_is_claude:
                 fixes = _parse_review_fixes(review_text)
+                if not fixes:
+                    _log(f"\n🔧 Review {score}/10 — dispatching Claude to generate fixes...")
+                    fixes = _generate_fixes_with_claude(
+                        review_text, content_path, args.level, slug,
+                    )
+            else:
+                _log(f"\n🔧 Review {score}/10 — dispatching Flash for fixes...")
+                fixes = _generate_fixes_from_evidence(
+                    review_text, content_path, args.level, slug,
+                )
+                if not fixes:
+                    fixes = _parse_review_fixes(review_text)
             if fixes:
                 _log(f"  Applying {len(fixes)} fix(es) and accepting")
 
@@ -3534,17 +3619,27 @@ def main():
                     _log(f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
                     break
 
-                # Always use Flash for fix generation — Pro reviews, Flash fixes.
-                # Flash is fast, cheap, and excellent at structured find/replace.
-                _log("\n  🔧 Dispatching Flash to generate fixes from review evidence...")
-                fixes = _generate_fixes_from_evidence(
-                    review_text, content_path, args.level, slug,
-                )
-                if not fixes:
-                    # Fallback: try parsing Pro's own <fixes> block if Flash failed
+                # Generate fixes: Claude (with tools) when it reviewed, Flash otherwise.
+                reviewer_is_claude = args.writer in ("gemini", "gemini-tools")
+                if reviewer_is_claude:
+                    # Claude reviewed — it already has context + MCP tools.
+                    # Try its own <fixes> block first (most precise).
                     fixes = _parse_review_fixes(review_text)
+                    if not fixes:
+                        _log("\n  🔧 Claude review had no <fixes> — dispatching Claude to generate fixes...")
+                        fixes = _generate_fixes_with_claude(
+                            review_text, content_path, args.level, slug,
+                        )
+                else:
+                    # Gemini reviewed — dispatch Flash for fix generation.
+                    _log("\n  🔧 Dispatching Flash to generate fixes from review evidence...")
+                    fixes = _generate_fixes_from_evidence(
+                        review_text, content_path, args.level, slug,
+                    )
+                    if not fixes:
+                        fixes = _parse_review_fixes(review_text)
                 if not fixes:
-                    _log("  ❌ Neither Flash nor Pro produced fixes")
+                    _log("  ❌ No fixes could be generated")
                     break
 
                 _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
