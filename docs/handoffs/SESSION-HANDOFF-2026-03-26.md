@@ -36,40 +36,102 @@
 - B1: all old artifacts removed (2 modules)
 - HIST: all old artifacts removed (1 module)
 
-## What to do next session
+## Critical: Quality issues NOT fixed — DO THESE FIRST
 
-### Continue A1 build (M12 onwards)
+### 1. Reading pedagogy not verified (M02 and all modules)
+M02 "Reading Ukrainian" teaches how to read Cyrillic — a foundational pedagogical question. **Nobody checked whether the content teaches reading the Ukrainian way.** Ukrainian Grade 1 textbooks (Большакова, Вашуленко) teach reading through:
+- Syllable chains (склад → злиття приголосного з голосним): ма-ма, ка-ша, мо-ло-ко
+- Sound models: [•] for vowels, [—] for consonants
+- Progressive letter introduction (not alphabetical order)
+
+**Actions:**
+1. RAG search Большакова Grade 1 for reading methodology
+2. Check МійКлас (miyklas.com.ua) — issue #1040 — for reading instruction approach
+3. Read M02 content critically — does it match Ukrainian pedagogy or English phonics?
+4. Rebuild M02 if the approach is wrong
+
+### 2. VESUM false positives — not fixed
+POS abbreviations (дієсл, прикм, присл) and phonetic descriptions in brackets ([йаблуко], [мойа]) are flagged as unknown words. Every module has 5-15 false positive "issues."
+
+**Fix:** Update VESUM verification to:
+- Whitelist POS abbreviations: дієсл, прикм, присл, ім, спол, числ, зам
+- Skip text inside square brackets `[...]` (phonetic descriptions)
+
+### 3. Stress marks not being applied
+`step_annotate` reports "Added stress marks to 0 words" on most modules. The stress annotation tool isn't working. This means all Ukrainian words in the published MDX lack stress marks (наголос), which is critical for learners.
+
+**Investigate:** Read the `step_annotate` / stress annotation code. Check if it requires the stress dictionary to be loaded, or if it's not matching words correctly.
+
+### 4. Quick verify exercise warning is noisy
+Always warns "Plan expects N exercises but content has 0 placeholders" because the writer now uses INJECT_ACTIVITY markers instead of DSL exercises. The quick verify check counts `:::quiz` blocks, not markers.
+
+**Fix:** Update quick_verify to count `<!-- INJECT_ACTIVITY:` markers instead of DSL blocks.
+
+### 5. M07 Checkpoint needs rebuild (6.0/10 REJECT)
+The checkpoint plan's vocabulary verification fails because checkpoints recycle M01-M06 vocab by design (no new required words). The quick_verify treats this as an error.
+
+**Fix options:**
+1. Fix quick_verify to skip vocabulary check for checkpoint modules
+2. Update checkpoint plan to explicitly state "recycled vocabulary"
+3. Rebuild with better prompt context for checkpoint format
+
+### 6. Content quality not spot-checked
+11 modules were built for pipeline velocity. None were read by a human. The review scores (9.0-10.0) come from Gemini reviewing Claude's work — but Gemini is not infallible. At minimum:
+- Read M01, M02, M05, M08 prose (alphabet, reading, identity, gender)
+- Check dialogues are natural (not interrogation patterns)
+- Verify Ukrainian examples are correct and pedagogically sound
+- Check the МійКлас site for how they teach these topics
+
+## What to do next session (in priority order)
+
+### P0: Fix quality issues above (items 1-4)
+Fix the source, not the symptom. These affect ALL modules, not just the ones built.
+
+### P1: Spot-check built content
+Read at least M01, M02, M05, M08 prose before building more.
+
+### P2: Continue A1 build (M12 onwards)
+Only after P0 and P1 are done. Build one at a time:
 ```bash
 .venv/bin/python scripts/build/v6_build.py a1 12 --writer claude-tools
 ```
-Build one at a time. Pipeline is stable — avg 5-7 min per module.
 
-### M07 (Checkpoint) needs rebuild
-The checkpoint plan's vocabulary verification doesn't fit checkpoint modules (they recycle M01-M06 vocab by design). Either:
-1. Fix the quick_verify vocabulary check to skip checkpoint modules
-2. Update the checkpoint plan to acknowledge recycled vocab
-3. Rebuild with better prompt context for checkpoint format
+### P3: Rebuild M07 checkpoint
+After fixing quick_verify for checkpoint modules.
 
-### Known issues to fix
-1. **VESUM false positives** — POS abbreviations (дієсл, прикм, присл) and phonetic descriptions ([йаблуко]) flagged as unknown words
-2. **Stress marks not applied** — `step_annotate` reports 0 words annotated on most modules (needs investigation)
-3. **Quick verify exercise warning** — always warns "Plan expects N exercises but content has 0 placeholders" because writer now uses markers only (not a real issue, but noisy)
+## Pipeline status — what IS working
 
-### Pipeline is working
 - Writer outputs markers only (no DSL) ✅
 - Activities step generates from plan hints ✅
 - Abetka injection adds letter-grid + watch-and-repeat for A1 ✅
 - FlashcardDeck in Словник ✅
-- Gemini review with retry ✅
-- High-scoring REVISE → accept ✅
+- Gemini review with retry on 429 ✅
+- High-scoring REVISE (≥9.0) → accept without re-review ✅
 - Landing pages with LevelLanding component ✅
+- Activity YAML extraction handles LLM commentary ✅
+- Schema relaxed to allow 2-option exercises ✅
 
-### Build command
+## Key files changed this session
+
+| File | What changed |
+|------|-------------|
+| `scripts/build/phases/v6-write.md` | Writer prompt: markers only, no DSL |
+| `scripts/build/v6_build.py` | DSL stripping, abetka injection, review logic, YAML extraction, Gemini retry |
+| `scripts/build/activity_renderer.py` | WatchAndRepeat renderer added |
+| `scripts/build/vocab_gen.py` | FlashcardDeck generation in Словник |
+| `scripts/build/enrich.py` | FlashcardDeck fallback, video dedup regex |
+| `scripts/build/build_landing_pages.py` | LevelLanding component integration |
+| `schemas/activity-v2.schema.json` | minItems 3→2 for options |
+| `starlight/src/components/LevelLanding.tsx` | New React component |
+| `starlight/src/components/LevelLanding.module.css` | New styles |
+| `curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml` | v1.1→v1.2: letter-grid + watch-and-repeat hints |
+
+## Build command
 ```bash
 .venv/bin/python scripts/build/v6_build.py a1 {N} --writer claude-tools
 ```
 
-### Services
+## Services
 ```bash
 ./services.sh status  # RAG on 8766, API on 8765, Starlight on 4321
 ```
