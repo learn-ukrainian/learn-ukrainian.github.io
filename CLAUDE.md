@@ -63,3 +63,16 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 - **Plan mode** for any non-trivial task (3+ steps or architectural decisions)
 - **Simplicity first**: minimal code impact, find root causes, verify before done
+
+### Claude Code Power Features
+
+| Feature | How | When |
+|---------|-----|------|
+| `/effort` | Set model effort dynamically mid-session | `low`: config/typo fixes. `medium`: code fixes (default). `high`: content review, plan review, module building, linguistic analysis |
+| Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
+| `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
+| `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
+| `PostCompact` hook | Auto-runs after context compaction | Restores current task, open issues, key reminders |
+| `FileChanged` hook | Auto-runs when `curriculum/**/*.md` changes | Triggers audit on module file edits |
+| `effort: high` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` |
+| `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |

@@ -1,3 +1,11 @@
+---
+paths:
+  - "curriculum/**"
+  - "orchestration/**"
+  - "docs/l2-*/**"
+  - "plans/**"
+---
+
 # Ukrainian Linguistic Principles
 
 When working with Ukrainian text (plans, content, reviews, code comments), follow these rules:

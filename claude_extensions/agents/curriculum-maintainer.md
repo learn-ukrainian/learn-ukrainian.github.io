@@ -3,6 +3,12 @@ name: curriculum-maintainer
 description: Maintains the world's first comprehensive Ukrainian language curriculum
 tools: "*"
 model: inherit
+initialPrompt: |
+  Get project context before starting work:
+  1. Run: curl -s http://localhost:8765/api/state/summary 2>/dev/null || echo "Monitor API unavailable"
+  2. Run: curl -s http://localhost:8765/api/state/failing 2>/dev/null || echo "No failing data"
+  3. Run: gh issue list --state open --limit 10 --json number,title 2>/dev/null || echo "GH unavailable"
+  Then proceed with the assigned task.
 ---
 
 # Curriculum Maintainer Agent

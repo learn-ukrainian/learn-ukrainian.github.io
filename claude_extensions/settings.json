@@ -657,6 +657,46 @@
           }
         ]
       }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-compact.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "matcher": "curriculum/l2-uk-en/**/*.md",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-audit.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "worktree": {
+    "sparsePaths": [
+      "curriculum/",
+      "scripts/",
+      "docs/",
+      "orchestration/",
+      "plans/",
+      "starlight/src/",
+      "claude_extensions/",
+      ".claude/",
+      "*.md",
+      "*.yaml",
+      "*.yml",
+      "*.json",
+      "*.py"
     ]
   },
   "plansDirectory": "docs/plans",

@@ -2,6 +2,7 @@
 name: content-review
 description: Post-build module quality review. Checks plan adherence, linguistic accuracy, pedagogical quality, activities, vocabulary completeness, engagement.
 argument-hint: <path-to-module.md | track slug>
+effort: high
 ---
 
 # Content Review: $ARGUMENTS

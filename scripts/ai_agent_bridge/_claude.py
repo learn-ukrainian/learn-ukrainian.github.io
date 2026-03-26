@@ -2,6 +2,7 @@
 
 import atexit
 import contextlib
+import os
 import subprocess
 import sys
 import uuid
@@ -88,8 +89,17 @@ def _print_claude_message_info(msg, fire_and_forget, no_timeout, claude_session_
 
 
 def _build_claude_command(prompt, claude_session_id, msg, new_session):
-    """Build the Claude CLI command."""
+    """Build the Claude CLI command.
+
+    Uses --bare for new non-session calls when ANTHROPIC_API_KEY is available
+    (skips hooks/LSP/plugins for speed). Resumed sessions cannot use --bare.
+    """
     cmd = [CLAUDE_CLI, "-p", prompt]
+    # --bare skips hooks, LSP, plugin sync, skill walks — much faster for scripted calls.
+    # Only use for stateless calls (not resuming or starting named sessions).
+    # Requires ANTHROPIC_API_KEY (--bare disables OAuth/keychain auth).
+    if not claude_session_id and not new_session and os.environ.get("ANTHROPIC_API_KEY"):
+        cmd.append("--bare")
     if claude_session_id:
         cmd.extend(["--resume", claude_session_id])
         print(f"   Resuming session: {claude_session_id[:8]}...")
