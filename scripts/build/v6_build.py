@@ -2494,7 +2494,8 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
 
 
 def step_review(content_path: Path, level: str, module_num: int,
-                slug: str, writer: str = "claude") -> tuple[bool, float, str]:
+                slug: str, writer: str = "claude",
+                reviewer_override: str | None = None) -> tuple[bool, float, str]:
     """Step 8: Cross-agent adversarial review.
 
     If Claude wrote → Gemini reviews (and vice versa).
@@ -2628,12 +2629,21 @@ def step_review(content_path: Path, level: str, module_num: int,
     from build.dispatch import CLAUDE_REVIEWER_TOOLS
     from build.dispatch import dispatch_agent as _dispatch
 
-    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
-    _log(f"  Reviewer: {reviewer} (writer was {writer})")
+    # Determine reviewer: explicit override, or cross-agent default
+    if reviewer_override:
+        reviewer = "claude" if "claude" in reviewer_override else "gemini"
+        reviewer_agent = reviewer_override
+    elif writer in ("claude", "claude-tools"):
+        reviewer = "gemini"
+        reviewer_agent = "gemini-tools"
+    else:
+        reviewer = "claude"
+        reviewer_agent = "claude-tools"
+    _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
 
     if reviewer == "gemini":
         ok, raw = _dispatch(
-            prompt, agent="gemini-tools", phase="review", orch_dir=orch_dir,
+            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
             timeout=600, mcp_tools=True,
         )
         # Retry once if Gemini fails (often rate-limited / no capacity)
@@ -2642,12 +2652,12 @@ def step_review(content_path: Path, level: str, module_num: int,
             import time
             time.sleep(30)
             ok, raw = _dispatch(
-                prompt, agent="gemini-tools", phase="review", orch_dir=orch_dir,
+                prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
                 timeout=600, mcp_tools=True,
             )
     else:
         ok, raw = _dispatch(
-            prompt, agent="claude-tools", phase="review", orch_dir=orch_dir,
+            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
             timeout=600, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
             model="claude-opus-4-6",
         )
@@ -3524,6 +3534,8 @@ def main():
     parser.add_argument("module", type=int, help="Module number")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini",
                         help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
+    parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
+                        help="Override reviewer. Default: cross-agent (opposite of writer)")
     parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
@@ -3698,7 +3710,7 @@ def main():
     if steps in ("all", "review"):
         passed, score, review_text = step_review(
             content_path, args.level, args.module, slug,
-            writer=args.writer,
+            writer=args.writer, reviewer_override=args.reviewer,
         )
         _save_v6_state(args.level, slug, "review")
 
@@ -3751,7 +3763,7 @@ def main():
 
                 passed, score, review_text = step_review(
                     content_path, args.level, args.module, slug,
-                    writer=args.writer,
+                    writer=args.writer, reviewer_override=args.reviewer,
                 )
                 _save_v6_state(args.level, slug, "review")
 
