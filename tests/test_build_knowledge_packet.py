@@ -199,3 +199,153 @@ def test_build_packet_no_rag(tmp_path):
     assert "# Knowledge Packet: Test Module" in result
     # No Cyrillic in points → no queries → "No search queries extracted"
     assert "0 textbook excerpts" in result
+
+
+# --- МійКлас integration tests (#1040) ---
+
+
+_FAKE_MIYKLAS_INDEX = [
+    {
+        "title": "Голосні й приголосні звуки",
+        "tags": ["звуки", "голосні", "приголосні", "фонетика"],
+        "url": "/p/ukrainska-mova/5-klas/fonetika/golosni",
+        "grade": 5,
+        "category": "phonetics",
+    },
+]
+
+
+def test_build_packet_includes_miyklas_section(tmp_path):
+    """build_packet appends МійКлас section when grammar matches."""
+    plan = {
+        "module": "a1-001",
+        "level": "A1",
+        "sequence": 1,
+        "slug": "test-phonetics",
+        "title": "Test Phonetics Module",
+        "grammar": ["Голосні і приголосні звуки"],
+        "focus": "phonetics",
+        "content_outline": [
+            {
+                "section": "Звуки (Sounds)",
+                "words": 300,
+                "points": ["Голосні та приголосні звуки української мови."],
+            },
+        ],
+        "references": [],
+    }
+
+    plan_path = tmp_path / "test-phonetics.yaml"
+    plan_path.write_text(yaml.dump(plan, allow_unicode=True), "utf-8")
+
+    with (
+        patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
+        patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
+    ):
+        result = build_packet(plan_path)
+
+    assert "МійКлас Grammar References" in result
+    assert "Голосні й приголосні звуки" in result
+    assert "miyklas.com.ua" in result
+
+
+def test_build_packet_no_miyklas_when_no_grammar_match(tmp_path):
+    """build_packet omits МійКлас section when no grammar overlap."""
+    plan = {
+        "module": "a1-001",
+        "level": "A1",
+        "sequence": 1,
+        "slug": "test-greetings",
+        "title": "Test Greetings Module",
+        "content_outline": [
+            {
+                "section": "Привітання (Greetings)",
+                "words": 300,
+                "points": ["Привіт, як справи?"],
+            },
+        ],
+        "references": [],
+    }
+
+    plan_path = tmp_path / "test-greetings.yaml"
+    plan_path.write_text(yaml.dump(plan, allow_unicode=True), "utf-8")
+
+    with (
+        patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
+        patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
+    ):
+        result = build_packet(plan_path)
+
+    assert "МійКлас Grammar References" not in result
+
+
+def test_build_packet_miyklas_failure_graceful(tmp_path):
+    """build_packet continues even if miyklas module raises."""
+    plan = {
+        "module": "a1-001",
+        "level": "A1",
+        "sequence": 1,
+        "slug": "test-fallback",
+        "title": "Test Fallback",
+        "grammar": ["Голосні звуки"],
+        "content_outline": [
+            {
+                "section": "Звуки (Sounds)",
+                "words": 300,
+                "points": ["Голосні звуки в українській."],
+            },
+        ],
+        "references": [],
+    }
+
+    plan_path = tmp_path / "test-fallback.yaml"
+    plan_path.write_text(yaml.dump(plan, allow_unicode=True), "utf-8")
+
+    def _failing_miyklas(*args, **kwargs):
+        raise RuntimeError("МійКлас unavailable")
+
+    with (
+        patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
+        patch("build.miyklas.build_miyklas_knowledge_section", side_effect=_failing_miyklas),
+    ):
+        result = build_packet(plan_path)
+
+    # Should still produce a valid packet without МійКлас
+    assert "# Knowledge Packet: Test Fallback" in result
+    assert "МійКлас" not in result
+
+
+def test_build_packet_miyklas_section_before_footer(tmp_path):
+    """МійКлас section appears between refs and footer."""
+    plan = {
+        "module": "a1-001",
+        "level": "A1",
+        "sequence": 1,
+        "slug": "test-order",
+        "title": "Test Order",
+        "grammar": ["Голосні і приголосні звуки"],
+        "content_outline": [
+            {
+                "section": "Звуки (Sounds)",
+                "words": 300,
+                "points": ["Голосні та приголосні звуки."],
+            },
+        ],
+        "references": [
+            {"title": "Ref Grade 1, p.10", "notes": "test ref"},
+        ],
+    }
+
+    plan_path = tmp_path / "test-order.yaml"
+    plan_path.write_text(yaml.dump(plan, allow_unicode=True), "utf-8")
+
+    with (
+        patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
+        patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
+    ):
+        result = build_packet(plan_path)
+
+    # МійКлас appears after references section and before footer
+    miyklas_pos = result.index("МійКлас Grammar References")
+    footer_pos = result.index("Knowledge Packet generated")
+    assert miyklas_pos < footer_pos
