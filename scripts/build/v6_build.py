@@ -2771,46 +2771,56 @@ def _rewrite_weak_sections(
     findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
     findings_text = findings_section.group(1).strip() if findings_section else ""
 
-    # Read content and split into sections
+    # Read content — extract body between TAB:Урок and TAB:Словник
     content = content_path.read_text("utf-8")
-    tab_idx = content.find("<!-- TAB:")
-    body = content[:tab_idx] if tab_idx != -1 else content
-    tail = content[tab_idx:] if tab_idx != -1 else ""
+    slovnyk_idx = content.find("<!-- TAB:Словник -->")
+    resursy_idx = content.find("<!-- TAB:Ресурси -->")
+    # Body = everything before Словник (or Ресурси if no Словник)
+    if slovnyk_idx > 0:
+        body = content[:slovnyk_idx].strip()
+        tail = content[slovnyk_idx:]
+    elif resursy_idx > 0:
+        body = content[:resursy_idx].strip()
+        tail = content[resursy_idx:]
+    else:
+        body = content
+        tail = ""
+    # Strip leading TAB:Урок marker from body
+    body = body.replace("<!-- TAB:Урок -->", "").strip()
+
+    if len(body) < 200:
+        _log(f"  ❌ Body too short for rewrite ({len(body)} chars)")
+        return False
+
+    original_word_count = len(body.split())
 
     # Build the rewrite prompt
     issues_summary = "\n".join(
-        f"- {s['dimension']} ({s['score']}/10): {s['evidence'][:200]}"
+        f"- {s['dimension']} ({s['score']}/10): {s['evidence'][:300]}"
         for s in weak_sections
     )
 
-    prompt = f"""You are rewriting sections of a Ukrainian language module to fix errors identified by a reviewer.
+    prompt = f"""Rewrite this Ukrainian language module to fix the errors below.
 
-## Review Findings
-
-These dimensions scored below 9/10:
+## Errors to Fix
 {issues_summary}
 
-{f"Detailed findings:{chr(10)}{findings_text[:2000]}" if findings_text else ""}
+{f"Detailed findings:{chr(10)}{findings_text[:3000]}" if findings_text else ""}
 
-## Current Module Content
+## Current Module ({original_word_count} words)
 
-<content>
 {body}
-</content>
 
-## Your Task
+## Rules
 
-Rewrite the ENTIRE module content above, fixing ALL identified errors while:
-1. Keeping all Ukrainian linguistically correct (use verify_word to check ANY claim about letters, sounds, or syllables)
-2. Maintaining warm, encouraging tone — not robotic or formulaic
-3. Preserving all ## section headings exactly as they are
-4. Preserving all <!-- INJECT_ACTIVITY: --> markers in their positions
-5. Keeping the same overall structure and word count (±10%)
-6. Making dialogues natural and contextual — real situations, not drills
-
-CRITICAL: For any phonetic claim (letter decomposition, syllable count, sound values), call verify_word FIRST. Do NOT write from memory.
-
-Output ONLY the rewritten module content. No preamble, no explanation. Start with the first ## heading.
+1. Output the COMPLETE rewritten module — every section, every paragraph, every example.
+2. Your output must be {original_word_count} words MINIMUM. Do NOT summarize or shorten.
+3. Fix EVERY error listed above. Do NOT output a changes table — just output the fixed content.
+4. Keep all ## section headings exactly as they appear above.
+5. Keep all <!-- INJECT_ACTIVITY: --> markers in their current positions.
+6. For any phonetic claim, call verify_word to check it. Do NOT guess.
+7. Use warm, direct tone. No "Let us..." or "You have now mastered..." patterns.
+8. Do NOT add preamble, explanation, or commentary. Start directly with ## heading.
 """
 
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
@@ -2835,18 +2845,29 @@ Output ONLY the rewritten module content. No preamble, no explanation. Start wit
         _log("  ❌ Section rewrite failed — no output")
         return False
 
-    # Validate the rewrite has the expected sections
+    # Strip any preamble/changes table before first ## heading
+    first_h2 = raw.find("## ")
+    if first_h2 > 0:
+        raw = raw[first_h2:]
+    # Also strip any "## Changes Made" or "## Changes" table that Claude likes to prepend
+    if raw.startswith("## Changes"):
+        next_h2 = raw.find("\n## ", 5)
+        if next_h2 > 0:
+            raw = raw[next_h2 + 1:]
+
+    # Validate: section count
     original_h2s = re.findall(r"^## .+", body, re.MULTILINE)
     rewrite_h2s = re.findall(r"^## .+", raw, re.MULTILINE)
-
     if len(rewrite_h2s) < len(original_h2s) - 1:
         _log(f"  ❌ Rewrite dropped sections ({len(original_h2s)} → {len(rewrite_h2s)}), rejecting")
         return False
 
-    # Strip any preamble before first ## heading
-    first_h2 = raw.find("## ")
-    if first_h2 > 0:
-        raw = raw[first_h2:]
+    # Validate: word count (reject if <70% of original — means it was truncated)
+    rewrite_words = len(raw.split())
+    min_words = int(original_word_count * 0.7)
+    if rewrite_words < min_words:
+        _log(f"  ❌ Rewrite too short ({rewrite_words} words, need ≥{min_words}), rejecting")
+        return False
 
     # Write the rewritten content + preserved tail (Словник, Ресурси tabs)
     new_content = "<!-- TAB:Урок -->\n\n" + raw.strip() + "\n\n" + tail
