@@ -2422,6 +2422,15 @@ def step_review(content_path: Path, level: str, module_num: int,
             prompt, agent="gemini-tools", phase="review", orch_dir=orch_dir,
             timeout=600, mcp_tools=True,
         )
+        # Retry once if Gemini fails (often rate-limited / no capacity)
+        if not ok or not raw:
+            _log("  ⚠️  Gemini review failed — retrying in 30s...")
+            import time
+            time.sleep(30)
+            ok, raw = _dispatch(
+                prompt, agent="gemini-tools", phase="review", orch_dir=orch_dir,
+                timeout=600, mcp_tools=True,
+            )
     else:
         ok, raw = _dispatch(
             prompt, agent="claude-tools", phase="review", orch_dir=orch_dir,

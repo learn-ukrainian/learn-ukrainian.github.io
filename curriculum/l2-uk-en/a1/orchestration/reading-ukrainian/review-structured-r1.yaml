@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covered almost everything (Большакова, складоподіл, syllable rules),
+    but missed the explicit instruction: "Listen to Anna''s pronunciation videos for
+    each".'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Several major phonetic errors: incorrectly classifying "пісня" as 3 syllables,
+    miscategorizing CCVCV/CVCC words as CVCCV/CVC, and inventing the false translation
+    "сір (grey)".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong application of the "звуковий аналіз" method and vowel-first reading
+    strategy. Deductions only because the faulty phonetic examples undermine the pattern
+    recognition taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is naturally integrated
+    into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise placeholders correctly injected and mapped to the plan's
+    `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Generally warm and supportive, but uses some gamified/generic AI phrasing
+    like "unlock Ukrainian reading" and "Challenge round".
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is clean, all H2 headings match the outline, and the word count
+    (1477) exceeds the 1200 minimum target comfortably.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply grounded in actual Ukrainian primary school methodology (Большакова
+    Grade 1). Excellent decolonized approach.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The simple reading text ("Це Київ. Це столиця...") perfectly fits the
+    A1.1 constraint of using "Це" + noun without complex verbs.
+findings: []
