@@ -1482,7 +1482,7 @@ def step_annotate(content_path: Path) -> bool:
     enriched content that ENRICH added.
     """
     _log(f"\n{'='*60}")
-    _log("  Step 6: ANNOTATE — Stress marks + post-processing")
+    _log("  Step 8b: ANNOTATE — Stress marks")
     _log(f"{'='*60}")
 
     if not content_path or not content_path.exists():
@@ -2596,8 +2596,12 @@ def step_review(content_path: Path, level: str, module_num: int,
         except Exception:
             pass  # Non-blocking
 
-    # Inject tool instructions for the reviewer
-    reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
+    # Determine reviewer BEFORE building tool instructions (bug fix: tool prefix
+    # must match the actual reviewer, not the cross-agent default)
+    if reviewer_override:
+        reviewer = "claude" if "claude" in reviewer_override else "gemini"
+    else:
+        reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
     p = "mcp__rag__" if reviewer == "claude" else "rag_"
     review_tools = (
         "\n\n## Verification Tools (MCP)\n\n"
@@ -2635,15 +2639,12 @@ def step_review(content_path: Path, level: str, module_num: int,
     from build.dispatch import CLAUDE_REVIEWER_TOOLS
     from build.dispatch import dispatch_agent as _dispatch
 
-    # Determine reviewer: explicit override, or cross-agent default
+    # reviewer already determined above (for tool prefix). Set reviewer_agent.
     if reviewer_override:
-        reviewer = "claude" if "claude" in reviewer_override else "gemini"
         reviewer_agent = reviewer_override
-    elif writer in ("claude", "claude-tools"):
-        reviewer = "gemini"
+    elif reviewer == "gemini":
         reviewer_agent = "gemini-tools"
     else:
-        reviewer = "claude"
         reviewer_agent = "claude-tools"
     _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
 
@@ -2905,156 +2906,8 @@ def _rewrite_weak_sections(
     return True
 
 
-def _generate_fixes_with_claude(
-    review_text: str, content_path: Path, level: str, slug: str,
-) -> list[dict]:
-    """Claude generates fixes using MCP tools to verify corrections.
-
-    Claude has verify_word, query_pravopys, search_text — it can check
-    what the correct Ukrainian actually is before writing the fix.
-    """
-    import re
-
-    from build.dispatch import CLAUDE_WRITER_TOOLS
-    from build.dispatch import dispatch_agent as _dispatch
-
-    # Extract error evidence from review
-    error_lines = []
-    for m in re.finditer(
-        r"\|\s*\d+\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]+)\|", review_text
-    ):
-        dim_score = int(m.group(2))
-        evidence = m.group(3).strip()
-        if dim_score < 9 and any(
-            kw in evidence.lower()
-            for kw in ("error", "incorrect", "wrong", "mistake", "hallucination",
-                        "contradictory", "inaccurate", "fabricat")
-        ):
-            error_lines.append(f"- {m.group(1).strip()} ({dim_score}/10): {evidence}")
-
-    # Also extract structured findings
-    findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
-    if findings_section:
-        findings_text = findings_section.group(1).strip()
-        if findings_text and "no findings" not in findings_text.lower():
-            error_lines.append(f"\nStructured findings:\n{findings_text[:1500]}")
-
-    if not error_lines:
-        return []
-
-    content = content_path.read_text("utf-8")
-    body, _ = _extract_body(content)
-
-    prompt = f"""You are fixing errors in a Ukrainian language module. The reviewer identified these issues:
-
-{chr(10).join(error_lines)}
-
-Here is the module content:
-<content>
-{body[:10000]}
-</content>
-
-INSTRUCTIONS:
-1. For each error, use your MCP tools to verify what the CORRECT Ukrainian is:
-   - Use verify_word to check word forms
-   - Use query_pravopys to check spelling/phonetic rules
-   - Use search_text to check how textbooks teach this
-2. Then output exact find/replace pairs as YAML
-
-Output ONLY valid YAML — no markdown fencing, no explanation:
-
-- find: "exact text from the module"
-  replace: "corrected text (verified via tools)"
-"""
-
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    orch_dir.mkdir(parents=True, exist_ok=True)
-
-    ok, raw = _dispatch(
-        prompt, agent="claude-tools", phase="fix-with-tools",
-        orch_dir=orch_dir, timeout=120,
-        mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
-    )
-
-    if not ok or not raw:
-        return []
-
-    return _parse_review_fixes(raw)
-
-
-def _generate_fixes_from_evidence(
-    review_text: str, content_path: Path, level: str, slug: str,
-) -> list[dict]:
-    """When Pro review identifies errors in evidence but outputs no <fixes>,
-    dispatch Flash-Lite to generate exact find/replace pairs.
-
-    Flash-Lite reads: (1) the error descriptions from evidence, (2) the module content.
-    Outputs: YAML list of {find, replace} pairs.
-    """
-    import re
-
-    from build.dispatch import dispatch_agent as _dispatch
-    error_lines = []
-    for m in re.finditer(
-        r"\|\s*\d+\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]+)\|", review_text
-    ):
-        dim_score = int(m.group(2))
-        evidence = m.group(3).strip()
-        if dim_score < 9 and any(
-            kw in evidence.lower()
-            for kw in ("error", "incorrect", "wrong", "mistake", "hallucination", "contradictory")
-        ):
-            error_lines.append(f"- {m.group(1).strip()} ({dim_score}/10): {evidence}")
-
-    if not error_lines:
-        return []
-
-    content = content_path.read_text("utf-8")
-    body, _ = _extract_body(content)
-
-    prompt = f"""You are a copy-editor fixing errors in a Ukrainian language module.
-
-The reviewer identified these errors:
-{chr(10).join(error_lines)}
-
-Here is the module content:
-<content>
-{body[:8000]}
-</content>
-
-For EACH error above, output an exact find/replace fix. Output ONLY valid YAML:
-
-```yaml
-- find: "exact text from the module that contains the error"
-  replace: "corrected text"
-```
-
-Rules:
-- The `find` string MUST be an exact substring of the content above (copy-paste it)
-- Keep fixes minimal — change only what's wrong
-- If you can't find the exact error text, skip that fix
-- Output ONLY the YAML block, no explanation
-"""
-
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    orch_dir.mkdir(parents=True, exist_ok=True)
-
-    try:
-        from batch_gemini_config import FLASH_LITE_MODEL
-        ok, raw = _dispatch(
-            prompt, agent="gemini", phase="fix-evidence",
-            orch_dir=orch_dir, timeout=180,
-            model=FLASH_LITE_MODEL,
-        )
-    except Exception as e:
-        _log(f"  ❌ Flash-Lite dispatch failed: {e}")
-        return []
-
-    if not ok or not raw:
-        return []
-
-    # Parse YAML fixes from response
-    return _parse_review_fixes(raw)
+    # _generate_fixes_with_claude and _generate_fixes_from_evidence REMOVED.
+    # Find/replace degraded content quality. Replaced by _rewrite_weak_sections.
 
 
 def _build_review_correction(review_text: str, score: float = 0.0) -> str:
