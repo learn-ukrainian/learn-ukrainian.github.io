@@ -3474,12 +3474,17 @@ def main():
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
         elif score >= 9.0:
-            # High-scoring REVISE: apply fixes and accept without re-review.
-            # The reviewer prescribed exact fixes at 9.8/10 — applying them
-            # makes the module better, not worse. Re-review introduces noise.
-            fixes = _parse_review_fixes(review_text)
+            # High-scoring REVISE: use Flash to generate fixes, apply, accept.
+            # Flash is fast + cheap for structured find/replace.
+            _log(f"\n🔧 Review {score}/10 REVISE — dispatching Flash for fixes...")
+            fixes = _generate_fixes_from_evidence(
+                review_text, content_path, args.level, slug,
+            )
+            if not fixes:
+                # Fallback: try Pro's own <fixes> block
+                fixes = _parse_review_fixes(review_text)
             if fixes:
-                _log(f"\n🔧 Review {score}/10 REVISE — applying {len(fixes)} fix(es) and accepting")
+                _log(f"  Applying {len(fixes)} fix(es) and accepting")
 
                 # Save fixes for traceability
                 orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
@@ -3529,17 +3534,18 @@ def main():
                     _log(f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
                     break
 
-                fixes = _parse_review_fixes(review_text)
+                # Always use Flash for fix generation — Pro reviews, Flash fixes.
+                # Flash is fast, cheap, and excellent at structured find/replace.
+                _log("\n  🔧 Dispatching Flash to generate fixes from review evidence...")
+                fixes = _generate_fixes_from_evidence(
+                    review_text, content_path, args.level, slug,
+                )
                 if not fixes:
-                    # Pro identified errors but didn't output fixes.
-                    # Dispatch Flash-Lite to generate find/replace pairs from the evidence.
-                    _log(f"\n⚠️  Review {score}/10 — no <fixes> block. Dispatching Flash-Lite to generate fixes...")
-                    fixes = _generate_fixes_from_evidence(
-                        review_text, content_path, args.level, slug,
-                    )
-                    if not fixes:
-                        _log("  ❌ Flash-Lite also couldn't generate fixes")
-                        break
+                    # Fallback: try parsing Pro's own <fixes> block if Flash failed
+                    fixes = _parse_review_fixes(review_text)
+                if not fixes:
+                    _log("  ❌ Neither Flash nor Pro produced fixes")
+                    break
 
                 _log(f"\n🔧 Review {score}/10 — fix round {fix_round}/{max_fix_rounds}, applying {len(fixes)} fix(es)")
 
