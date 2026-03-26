@@ -3522,7 +3522,7 @@ def main():
                 _log(f"\n⚠️  Review {score}/10 REVISE but no <fixes> block")
         else:
             # Low-scoring REVISE: full fix loop with re-review
-            max_fix_rounds = 2
+            max_fix_rounds = 3  # 3 rounds: enough to catch all errors (was 2, юрта/Київ slipped through)
             prev_score = score
             for fix_round in range(1, max_fix_rounds + 1):
                 if passed:
