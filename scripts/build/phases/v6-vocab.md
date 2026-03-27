@@ -1,3 +1,4 @@
+<!-- version: 1.0.0 | updated: 2026-03-27 -->
 # V6 Vocabulary Generation — Module Словник
 
 You just wrote a Ukrainian language module. Now list ALL new vocabulary the module teaches.

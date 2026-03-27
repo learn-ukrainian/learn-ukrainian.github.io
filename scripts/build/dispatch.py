@@ -13,6 +13,7 @@ Issue: #1029 (observability)
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import time
 from datetime import datetime

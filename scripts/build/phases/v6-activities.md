@@ -1,3 +1,4 @@
+<!-- version: 1.0.0 | updated: 2026-03-27 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.

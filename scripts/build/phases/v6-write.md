@@ -1,3 +1,4 @@
+<!-- version: 1.0.0 | updated: 2026-03-27 -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.

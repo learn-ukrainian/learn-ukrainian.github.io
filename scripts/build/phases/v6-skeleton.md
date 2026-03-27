@@ -1,3 +1,4 @@
+<!-- version: 1.0.0 | updated: 2026-03-27 -->
 # V6 Skeleton Prompt — Module Structure Planning
 
 You are planning the detailed paragraph-level structure of a Ukrainian language module. Do NOT write the full content — only plan the structure.
