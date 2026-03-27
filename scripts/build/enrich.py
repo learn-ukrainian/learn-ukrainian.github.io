@@ -264,17 +264,31 @@ def _build_video_embeds(plan: dict) -> str:
         lines.append(f"[Повний плейлист / Full playlist]({playlist})")
         lines.append("")
 
-    # Per-letter videos
+    # Per-letter videos — organized by group with subheadings
+    _GROUP_LABELS = {
+        "vowels": "Голосні — Vowels",
+        "consonants": "Приголосні — Consonants",
+        "special": "Спеціальні — Special letters",
+        "letters": "Літери — Letters",
+    }
     for key in ("vowels", "consonants", "special", "letters"):
         letter_dict = pv.get(key, {})
-        if letter_dict:
-            credit = pv.get("credit", "Ukrainian Lessons")
-            for letter, url in letter_dict.items():
-                lines.append(
-                    f'<YouTubeVideo client:only="react" url="{url}" '
-                    f'label="Літера {letter} — {credit}" />'
-                )
-                lines.append("")
+        if not letter_dict:
+            continue
+        # Filter out null values
+        valid_letters = {k: v for k, v in letter_dict.items() if v and v != "null"}
+        if not valid_letters:
+            continue
+        credit = pv.get("credit", "Ukrainian Lessons")
+        group_label = _GROUP_LABELS.get(key, key.capitalize())
+        lines.append(f"#### {group_label}")
+        lines.append("")
+        for letter, url in valid_letters.items():
+            lines.append(
+                f'<YouTubeVideo client:only="react" url="{url}" '
+                f'label="Літера {letter} — {credit}" />'
+            )
+            lines.append("")
 
     return "\n".join(lines)
 

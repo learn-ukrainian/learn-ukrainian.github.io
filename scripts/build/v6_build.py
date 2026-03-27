@@ -2995,6 +2995,7 @@ def step_review(content_path: Path, level: str, module_num: int,
 def _rewrite_weak_sections(
     review_text: str, content_path: Path, level: str, slug: str,
     writer: str = "claude",
+    verification_text: str = "",
 ) -> bool:
     """Rewrite entire sections that scored poorly — not find/replace.
 
@@ -3043,12 +3044,44 @@ def _rewrite_weak_sections(
         for s in weak_sections
     )
 
-    prompt = f"""Rewrite this Ukrainian language module to fix the errors below.
+    # Load knowledge packet for grounding
+    packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+    packet_text = ""
+    if packet_path.exists():
+        packet_text = packet_path.read_text("utf-8")
+        if len(packet_text) > 5000:
+            packet_text = packet_text[:5000] + "\n... (truncated)"
+
+    # Load pre-verified facts
+    if not verification_text:
+        verify_path = CURRICULUM_ROOT / level / "orchestration" / slug / "pre-verify-results.md"
+        if verify_path.exists():
+            verification_text = verify_path.read_text("utf-8")
+
+    prompt = f"""Fix ONLY the specific errors listed below. Do NOT rewrite from scratch.
+
+## CRITICAL RULE: Do NOT invent new claims or change text that wasn't flagged.
+
+The review found specific errors. Fix THOSE errors ONLY. Every sentence you don't
+touch is a sentence that stays correct. If you change something the review didn't
+flag, you risk introducing NEW errors — and the score will DROP instead of improving.
 
 ## Errors to Fix
 {issues_summary}
 
 {f"Detailed findings:{chr(10)}{findings_text[:3000]}" if findings_text else ""}
+
+## Pre-Verified Facts (GROUND TRUTH — use these for corrections)
+
+These facts were verified by MCP tools (VESUM, textbooks, Правопис). When fixing
+errors, use ONLY information from these verified facts. Do NOT invent phonetic
+claims, grammar rules, or cultural facts that aren't here.
+
+<pre_verified_facts>
+{verification_text if verification_text else "(No pre-verified facts available)"}
+</pre_verified_facts>
+
+{f"## Knowledge Packet (textbook excerpts){chr(10)}<knowledge_packet>{chr(10)}{packet_text}{chr(10)}</knowledge_packet>" if packet_text else ""}
 
 ## Current Module ({original_word_count} words)
 
@@ -3056,12 +3089,13 @@ def _rewrite_weak_sections(
 
 ## Rules
 
-1. Output the COMPLETE rewritten module — every section, every paragraph, every example.
+1. Output the COMPLETE module — every section, every paragraph, every example.
 2. Your output must be {original_word_count} words MINIMUM. Do NOT summarize or shorten.
-3. Fix EVERY error listed above. Do NOT output a changes table — just output the fixed content.
+3. Fix ONLY the errors listed above. Do NOT change text that wasn't flagged as an error.
 4. Keep all ## section headings exactly as they appear above.
 5. Keep all <!-- INJECT_ACTIVITY: --> markers in their current positions.
-6. For any phonetic claim, call verify_word to check it. Do NOT guess.
+6. Do NOT invent phonetic claims. If the pre-verified facts don't confirm a claim, remove it.
+7. Do NOT add new content that isn't in the knowledge packet or pre-verified facts.
 7. Use warm, direct tone. No "Let us..." or "You have now mastered..." patterns.
 8. Do NOT add preamble, explanation, or commentary. Start directly with ## heading.
 """
@@ -3681,6 +3715,7 @@ def main():
             rewritten = _rewrite_weak_sections(
                 review_text, content_path, args.level, slug,
                 writer=args.writer,
+                verification_text=verification_text,
             )
             if rewritten:
                 step_enrich(content_path, args.level, slug)
@@ -3718,6 +3753,7 @@ def main():
                 rewritten = _rewrite_weak_sections(
                     review_text, content_path, args.level, slug,
                     writer=args.writer,
+                    verification_text=verification_text,
                 )
 
                 if not rewritten:
