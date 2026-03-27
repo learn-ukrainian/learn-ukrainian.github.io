@@ -65,7 +65,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": [
@@ -80,8 +80,8 @@
               },
               "options": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
+                "minItems": 2,
+                "maxItems": 6,
                 "items": {
                   "type": "object",
                   "required": [
@@ -144,7 +144,7 @@
         },
         "pairs": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 3,
           "items": {
             "type": "object",
             "required": [
@@ -194,7 +194,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": [
@@ -214,8 +214,8 @@
               },
               "options": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
+                "minItems": 2,
+                "maxItems": 8,
                 "items": {
                   "type": "string",
                   "minLength": 1
@@ -311,7 +311,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 4,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": [
@@ -368,7 +368,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": [
@@ -586,7 +586,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 5,
+          "minItems": 2,
           "items": {
             "type": "object",
             "required": [
