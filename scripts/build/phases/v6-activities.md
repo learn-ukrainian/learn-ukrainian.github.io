@@ -188,19 +188,25 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-1. **Instructions match learner level:**
-   - **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
-   - **A1.2-A1.3 (M08-M21):** Instructions in simple English with Ukrainian key terms in bold. Learner knows basic words but not grammar terminology.
-   - **A1.4+ (M22-M55):** Instructions can be in simple Ukrainian with English translation in parentheses.
-   - **A2+:** Instructions in Ukrainian.
-   - **B1+:** Full Ukrainian, no English.
-2. **3-5 options per quiz/fill-in** — enough to prevent guessing, not so many to overwhelm
-3. **No duplicate options** — each option in a quiz item must be unique
-4. **Answer must be in options** — for quiz items, `correct` must be a valid index. For fill-in with options, `answer` must appear in `options`.
-5. **Plausible distractors** — wrong options should be real Ukrainian words that test the specific skill. Not random words.
-6. **Min 3 pairs for match-up** — to prevent trivial elimination
-7. **Explanations for true-false and error-correction** — help the learner understand WHY
-8. **Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills. Not "In what year..." factual recall.
+**ITEM COUNT MINIMUMS (non-negotiable):**
+- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
+- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
+- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+
+**Instructions match learner level:**
+1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
+2. **A1.2-A1.3 (M08-M21):** Instructions in simple English with Ukrainian key terms in bold. Learner knows basic words but not grammar terminology.
+3. **A1.4+ (M22-M55):** Instructions can be in simple Ukrainian with English translation in parentheses.
+4. **A2+:** Instructions in Ukrainian.
+5. **B1+:** Full Ukrainian, no English.
+
+**Other rules:**
+6. **No duplicate options** — each option in a quiz item must be unique
+7. **Answer must be in options** — for quiz items, `correct` must be a valid index. For fill-in with options, `answer` must appear in `options`.
+8. **Plausible distractors** — wrong options should be real Ukrainian words that test the specific skill. Not random words.
+9. **Min 6 pairs for match-up** — to prevent trivial elimination
+10. **Explanations for true-false and error-correction** — help the learner understand WHY
+11. **Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills. Not "In what year..." factual recall.
 
 ---
 
