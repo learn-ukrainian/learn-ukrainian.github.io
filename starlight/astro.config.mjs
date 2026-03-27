@@ -51,6 +51,16 @@ export default defineConfig({
             content: '1DB51F4A18C9DC67',
           },
         },
+        // Privacy-respecting analytics — no cookies, GDPR-compliant
+        // To activate: sign up at plausible.io and set data-domain
+        {
+          tag: 'script',
+          attrs: {
+            defer: true,
+            'data-domain': 'learn-ukrainian.github.io',
+            src: 'https://plausible.io/js/script.js',
+          },
+        },
       ],
       credits: false,
       components: {

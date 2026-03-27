@@ -1,0 +1,38 @@
+# Core dependencies for learn-ukrainian
+# Generated from .venv — use: pip install -r requirements.txt
+# Python 3.12.8 required (pyenv with --enable-loadable-sqlite-extensions)
+
+# YAML/JSON
+pyyaml>=6.0
+jsonschema>=4.20
+
+# API server
+fastapi>=0.115
+uvicorn>=0.34
+httpx>=0.28
+
+# RAG / embeddings
+qdrant-client>=1.14
+sentence-transformers>=3.4
+torch>=2.6
+
+# NLP / Ukrainian
+pymorphy2>=0.9
+ukrainian-word-stress>=1.0
+
+# Testing
+pytest>=9.0
+pytest-cov>=7.0
+
+# Linting
+ruff>=0.11
+
+# Database
+aiosqlite>=0.22
+
+# Web scraping (for resource discovery)
+beautifulsoup4>=4.14
+requests>=2.32
+
+# Build utilities
+jinja2>=3.1
