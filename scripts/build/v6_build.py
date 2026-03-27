@@ -3060,7 +3060,14 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     Returns (success, count_of_fixes_applied).
     Targeted fixes are better than section rewrites — they change
     only what the reviewer flagged, preserving everything else.
+
+    Stress-mark aware: reviewer sees content BEFORE stress annotation,
+    but fixes are applied AFTER. So find strings won't have stress marks
+    but the content will. We strip stress marks for matching, then apply
+    the fix to the original stressed content.
     """
+    STRESS_MARK = "\u0301"
+
     fixes = _parse_review_fixes(review_text)
     if not fixes:
         return False, 0
@@ -3073,12 +3080,44 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         replace_str = fix.get("replace", "")
         if not find_str or find_str == replace_str:
             continue
+
+        # Try exact match first
         if find_str in content:
             content = content.replace(find_str, replace_str, 1)
             applied += 1
-            _log(f"  ✅ Fix applied: '{find_str[:50]}...' → '{replace_str[:50]}...'")
-        else:
-            _log(f"  ⚠️  Fix not matched: '{find_str[:60]}...'")
+            _log(f"  ✅ Fix applied: '{find_str[:50]}...'")
+            continue
+
+        # Try stress-mark-aware match: strip stress from content for matching
+        content_unstressed = content.replace(STRESS_MARK, "")
+        if find_str in content_unstressed:
+            # Find the position in unstressed content
+            pos = content_unstressed.index(find_str)
+            # Count stress marks before this position in original content
+            stress_offset = content[:pos + len(find_str) * 2].count(STRESS_MARK)
+            # Find the actual substring in stressed content by scanning
+            # Use a sliding window approach
+            found = False
+            for start in range(max(0, pos - stress_offset - 5), min(len(content), pos + stress_offset + 5)):
+                candidate = content[start:start + len(find_str) + stress_offset + 10]
+                if candidate.replace(STRESS_MARK, "") .startswith(find_str):
+                    # Find exact end
+                    end = start
+                    unstressed_count = 0
+                    while end < len(content) and unstressed_count < len(find_str):
+                        if content[end] != STRESS_MARK:
+                            unstressed_count += 1
+                        end += 1
+                    content = content[:start] + replace_str + content[end:]
+                    applied += 1
+                    _log(f"  ✅ Fix applied (stress-aware): '{find_str[:50]}...'")
+                    found = True
+                    break
+            if not found:
+                _log(f"  ⚠️  Fix not matched (even stress-aware): '{find_str[:60]}...'")
+            continue
+
+        _log(f"  ⚠️  Fix not matched: '{find_str[:60]}...'")
 
     if applied > 0:
         content_path.write_text(content, "utf-8")
