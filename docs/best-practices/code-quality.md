@@ -10,12 +10,12 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build_module_v5.py bio 5
-scripts/audit_module.sh curriculum/l2-uk-en/bio/module.md  # wraps venv automatically
+.venv/bin/python scripts/build/v6_build.py a1 1
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
 
 # ❌ Wrong
-python3 scripts/build_module_v5.py   # missing deps
-python scripts/build_module_v5.py    # wrong version
+python3 scripts/build/v6_build.py a1 1   # missing deps
+python scripts/build/v6_build.py a1 1    # wrong version
 ```
 
 **Why:** The venv uses pyenv Python 3.12.8 compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec. Homebrew Python will silently fail on vector search.
@@ -31,12 +31,14 @@ rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 
 | Script | Use for | Status |
 |--------|---------|--------|
-| `build_module_v5.py` | All new builds | **Current** |
-| `pipeline_v5.py` | v5 pipeline phases | **Current** |
+| `scripts/build/v6_build.py` | All new builds | **Current (V6)** |
+| `scripts/build/dispatch.py` | LLM subprocess dispatch | **Current** |
+| `scripts/build/enrich.py` | Deterministic enrichment | **Current** |
+| `build_module_v5.py` | Legacy v5 pipeline | **RETIRED** — do not use |
+| `pipeline_v5.py` | Legacy v5 phases | **RETIRED** — do not use |
 | `build_module.py` | Legacy v4 pipeline | **RETIRED** — do not use |
-| `build_module_v2.py` | Legacy v2 pipeline | **RETIRED** — do not use |
 
-Always use v5. Legacy scripts remain for reference only.
+Always use V6 (`scripts/build/v6_build.py`). Legacy scripts remain for reference only.
 
 ---
 
