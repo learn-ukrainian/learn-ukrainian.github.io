@@ -1145,12 +1145,16 @@ def step_write(level: str, module_num: int, slug: str,
             "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
             "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
         }
+        _DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
+
         level_lower = level.lower()
-        # Try exact match first (lit-essay, b2-pro), then base level (a1, b2)
+        # Try exact match first (lit-essay, b2-pro), then base level (a1, b2), then default
         if level_lower in _PERSONAS:
             voice, role = _PERSONAS[level_lower]
         elif level_lower.split("-")[0] in _PERSONAS:
             voice, role = _PERSONAS[level_lower.split("-")[0]]
+        else:
+            voice, role = _DEFAULT_PERSONA
 
     if voice:
         persona_section = (
