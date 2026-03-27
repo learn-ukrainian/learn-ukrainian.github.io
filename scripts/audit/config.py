@@ -548,7 +548,7 @@ LEVEL_CONFIG = {
     'A1': {
         'target_words': 1200,  # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting
         'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
-        'min_items_per_activity': 6,  # Mar 2026: aligned with ACTIVITY_COMPLEXITY per-type floors (6-8)
+        'min_items_per_activity': 3,  # Mar 2026: lowered from 6→3 — LLM generates 3-5 items per activity, quality over quantity
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 1,  # Mar 2026: lowered from 3→2→1 — phonetics modules may have only 1 natural callout point

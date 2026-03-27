@@ -72,7 +72,6 @@
               "question",
               "options"
             ],
-            "additionalProperties": false,
             "properties": {
               "question": {
                 "type": "string",
@@ -81,29 +80,43 @@
               "options": {
                 "type": "array",
                 "minItems": 2,
-                "maxItems": 6,
+                "maxItems": 8,
                 "items": {
-                  "type": "object",
-                  "required": [
-                    "text",
-                    "correct"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "text": {
+                  "oneOf": [
+                    {
                       "type": "string",
                       "minLength": 1
                     },
-                    "correct": {
-                      "type": "boolean"
+                    {
+                      "type": "object",
+                      "required": [
+                        "text",
+                        "correct"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "correct": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
                     }
-                  }
+                  ]
                 }
+              },
+              "correct": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "0-based index (V2 format)"
               },
               "explanation": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
         "instruction": {
