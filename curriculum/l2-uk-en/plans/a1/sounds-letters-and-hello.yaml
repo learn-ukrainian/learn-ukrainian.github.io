@@ -2,7 +2,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: '1.2'
+version: '1.3'
 title: Sounds, Letters, and Hello
 subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
@@ -127,5 +127,42 @@ references:
   url: https://www.ukrainianlessons.com/episode1/
   notes: Привіт, Як справи?, response patterns.
 pronunciation_videos:
+  credit: Anna Ohoiko — Ukrainian Lessons
   overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  vowels:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: null
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  consonants:
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+    Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+  special:
+    Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+    Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+    Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
