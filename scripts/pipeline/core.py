@@ -148,7 +148,7 @@ def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> Non
 # 1-2. Config Tables & Resolver Functions (delegated to pipeline.config_tables)
 # ============================================================================
 
-from pipeline.config_tables import (  # noqa: F401
+from pipeline.config_tables import (
     ACTIVITY_CONFIGS,
     IMMERSION_RULES,
     LEVEL_CONSTRAINTS,
@@ -192,7 +192,7 @@ def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> su
 
 
 # Backward-compat re-exports from pipeline.dispatch
-from pipeline.dispatch import (  # noqa: F401
+from pipeline.dispatch import (
     dispatch_gemini,
     dispatch_gemini_raw,
     save_gemini_session,
