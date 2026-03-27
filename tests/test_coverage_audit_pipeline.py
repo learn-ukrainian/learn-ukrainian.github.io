@@ -1012,12 +1012,14 @@ class TestCheckContentReviewFormat:
 class TestCheckPipelineReviewFormat:
     """Tests for _check_pipeline_review_format."""
 
-    def test_status_fail(self):
+    def test_status_fail_no_longer_blocks(self):
+        """Review verdict FAIL is no longer an audit gate (#980 Phase 1)."""
         from audit.checks.review_validation import _check_pipeline_review_format
         content = "**Status:** FAIL\n## Scores\n| A | 5/10 |"
         cfg = {'required_headers': []}
         violations = _check_pipeline_review_format(content, cfg, "fix")
-        assert any(v['type'] == 'REVIEW_VERDICT_FAIL' for v in violations)
+        # REVIEW_VERDICT_FAIL was removed — review score blocks via dashboard, not audit
+        assert not any(v['type'] == 'REVIEW_VERDICT_FAIL' for v in violations)
 
     def test_missing_headers(self):
         from audit.checks.review_validation import _HEADER_ISSUES, _HEADER_SCORES, _check_pipeline_review_format

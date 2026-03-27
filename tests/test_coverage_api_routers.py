@@ -3,7 +3,6 @@
 Targets ~150+ tests for coverage improvement.
 """
 
-import asyncio
 import json
 import os
 import sqlite3
@@ -994,8 +993,9 @@ class TestAdminQdrantHelpers:
 
     @pytest.mark.anyio
     async def test_qdrant_get_failure(self):
-        from scripts.api.admin_router import _qdrant_get
         import httpx
+
+        from scripts.api.admin_router import _qdrant_get
         with patch("scripts.api.admin_router._qdrant_client") as mock_client:
             mock_client.get = AsyncMock(side_effect=httpx.ConnectError("fail"))
             result = await _qdrant_get("/test")
@@ -1003,8 +1003,9 @@ class TestAdminQdrantHelpers:
 
     @pytest.mark.anyio
     async def test_qdrant_post_failure(self):
-        from scripts.api.admin_router import _qdrant_post
         import httpx
+
+        from scripts.api.admin_router import _qdrant_post
         with patch("scripts.api.admin_router._qdrant_client") as mock_client:
             mock_client.post = AsyncMock(side_effect=httpx.ConnectError("fail"))
             result = await _qdrant_post("/test")
@@ -1027,8 +1028,12 @@ class TestAdminQdrantHelpers:
         mock_resp = MagicMock()
         mock_resp.json.return_value = {"result": "snapshot"}
         mock_resp.raise_for_status = MagicMock()
-        with patch("scripts.api.admin_router._qdrant_client") as mock_client:
-            mock_client.post = AsyncMock(return_value=mock_resp)
+        # _qdrant_post creates its own AsyncClient (not _qdrant_client)
+        mock_client = AsyncMock()
+        mock_client.post = AsyncMock(return_value=mock_resp)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        with patch("scripts.api.admin_router.httpx.AsyncClient", return_value=mock_client):
             result = await _qdrant_post("/test")
         assert result == {"result": "snapshot"}
 
@@ -1292,7 +1297,7 @@ class TestImagesCleanup:
         img_path = mock_project_root / "data" / "textbook_images" / "test.png"
         img_path.write_bytes(b"PNG")
         images_router._index._records = {
-            "img1": {"image_id": "img1", "image_path": f"data/textbook_images/test.png", "pdf_stem": "book", "page": 1},
+            "img1": {"image_id": "img1", "image_path": "data/textbook_images/test.png", "pdf_stem": "book", "page": 1},
         }
         images_router._index._by_pdf_page = {
             "book": {1: [images_router._index._records["img1"]]},
@@ -1380,7 +1385,7 @@ class TestImagesHelpers:
     """Tests for helper functions in images_router."""
 
     def test_cache_page_render_eviction(self):
-        from scripts.api.images_router import _cache_page_render, _page_cache, _PAGE_CACHE_MAX
+        from scripts.api.images_router import _PAGE_CACHE_MAX, _cache_page_render, _page_cache
         _page_cache.clear()
         # Fill cache beyond max
         for i in range(_PAGE_CACHE_MAX + 5):
