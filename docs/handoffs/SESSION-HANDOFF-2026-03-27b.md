@@ -49,11 +49,25 @@ M02 reading-ukrainian and M03 not audited (unstaged changes / needs rebuild).
 - **Gemini down** (2+ days) — cannot test dispatch, cross-agent review, or content builds
 - **85 pre-existing test failures** — mostly stale imports from project cleanup
 
+## Session continued — additional commits
+
+### Commit 2: `f4ab6b7` — Phase 2a+2b
+- Plausible analytics script tag in astro.config.mjs
+- requirements.txt + requirements-lock.txt
+
+### Commit 3: `11f48ab` — Phase 2c+2d
+- CONTRIBUTING.md rewritten with full setup guide
+- .gitleaks.toml + gitleaks CI job
+
+### Phase 3 started (code review)
+- Reviewed audit/core.py (438 lines) — clean, well-organized
+- Reviewed activity_renderer.py entry points — solid
+- Phase 3 continues in next session (13,500+ lines remaining)
+
 ## Next session priorities
-1. Continue fixing remaining test failures
-2. Phase 1e (#1070 Gemini MCP) when Gemini returns
-3. Phase 2a: Site analytics (#1086)
-4. Phase 2b: Pre-commit hooks (#1081)
+1. Phase 1e (#1070 Gemini MCP) when Gemini returns
+2. Phase 3: Continue backend code review (pipeline/, build/ remaining, research/)
+3. Phase 3b: Frontend code review (#1078)
 
 ## Key files changed
 | File | Changes |
