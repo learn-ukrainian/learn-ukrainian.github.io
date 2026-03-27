@@ -76,7 +76,7 @@ class ModelFamily:
     name: str           # "claude" or "gemini"
     thinking: str       # opus / pro — for write, review, rewrite
     fast: str           # sonnet / flash — for skeleton, activities, vocab
-    tool_prefix: str    # "mcp__rag__" or "rag_"
+    tool_prefix: str    # "mcp__rag__" (Claude) or "mcp_rag_" (Gemini)
 
 
 CLAUDE_FAMILY = ModelFamily(
@@ -90,7 +90,7 @@ GEMINI_FAMILY = ModelFamily(
     name="gemini",
     thinking="gemini-3.1-pro-preview",
     fast="gemini-3-flash-preview",
-    tool_prefix="rag_",
+    tool_prefix="mcp_rag_",
 )
 
 
