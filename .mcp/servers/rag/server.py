@@ -512,56 +512,78 @@ async def list_tools() -> list[Tool]:
     ]
 
 
+def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0,
+                   duration_s: float = 0.0, error: str = "") -> None:
+    """Log MCP tool call to JSONL for build analytics (#1095)."""
+    from datetime import datetime as _dt
+
+    log_dir = Path(__file__).resolve().parents[2].parent / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_path = log_dir / "mcp-rag-requests.jsonl"
+
+    entry = {
+        "ts": _dt.now().isoformat(),
+        "tool": name,
+        "args": {k: str(v)[:200] for k, v in arguments.items()},
+        "response_chars": response_chars,
+        "duration_s": round(duration_s, 2),
+    }
+    if error:
+        entry["error"] = error[:500]
+
+    try:
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass  # Logging must never break tool calls
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
+    import time as _time
+    _t0 = _time.monotonic()
     try:
-        if name == "search_text":
-            return await handle_search_text(arguments)
-        elif name == "search_images":
-            return await handle_search_images(arguments)
-        elif name == "search_literary":
-            return await handle_search_literary(arguments)
-        elif name == "get_full_text":
-            return await handle_get_full_text(arguments)
-        elif name == "get_chunk_context":
-            return await handle_get_chunk_context(arguments)
-        elif name == "collection_stats":
-            return await handle_collection_stats(arguments)
-        elif name == "verify_word":
-            return await handle_verify_word(arguments)
-        elif name == "verify_words":
-            return await handle_verify_words(arguments)
-        elif name == "verify_lemma":
-            return await handle_verify_lemma(arguments)
-        elif name == "query_wikipedia":
-            return await handle_query_wikipedia(arguments)
-        elif name == "query_grac":
-            return await handle_query_grac(arguments)
-        elif name == "query_ulif":
-            return await handle_query_ulif(arguments)
-        elif name == "query_r2u":
-            return await handle_query_r2u(arguments)
-        elif name == "query_pravopys":
-            return await handle_query_pravopys(arguments)
-        # Dictionary / reference collections (#1022)
-        elif name == "search_style_guide":
-            return await handle_dict_search(arguments, "style_guide", "Антоненко-Давидович")
-        elif name == "query_cefr_level":
-            return await handle_dict_search(arguments, "puls_cefr", "PULS CEFR")
-        elif name == "search_definitions":
-            return await handle_dict_search(arguments, "sum11", "СУМ-11")
-        elif name == "search_etymology":
-            return await handle_dict_search(arguments, "grinchenko_dict", "Грінченко")
-        elif name == "search_idioms":
-            return await handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний")
-        elif name == "search_synonyms":
-            return await handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet")
-        elif name == "translate_en_uk":
-            return await handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK")
+        # Dispatch to handler
+        _handlers = {
+            "search_text": lambda: handle_search_text(arguments),
+            "search_images": lambda: handle_search_images(arguments),
+            "search_literary": lambda: handle_search_literary(arguments),
+            "get_full_text": lambda: handle_get_full_text(arguments),
+            "get_chunk_context": lambda: handle_get_chunk_context(arguments),
+            "collection_stats": lambda: handle_collection_stats(arguments),
+            "verify_word": lambda: handle_verify_word(arguments),
+            "verify_words": lambda: handle_verify_words(arguments),
+            "verify_lemma": lambda: handle_verify_lemma(arguments),
+            "query_wikipedia": lambda: handle_query_wikipedia(arguments),
+            "query_grac": lambda: handle_query_grac(arguments),
+            "query_ulif": lambda: handle_query_ulif(arguments),
+            "query_r2u": lambda: handle_query_r2u(arguments),
+            "query_pravopys": lambda: handle_query_pravopys(arguments),
+            "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
+            "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
+            "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
+            "search_etymology": lambda: handle_dict_search(arguments, "grinchenko_dict", "Грінченко"),
+            "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
+            "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
+            "translate_en_uk": lambda: handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK"),
+        }
+        handler = _handlers.get(name)
+        if handler:
+            result = await handler()
         else:
-            return [TextContent(type="text", text=f"Unknown tool: {name}")]
+            result = [TextContent(type="text", text=f"Unknown tool: {name}")]
+            _log_tool_call(name, arguments, error="unknown tool")
+            return result
+
+        # Log successful call
+        _elapsed = _time.monotonic() - _t0
+        _resp_chars = sum(len(t.text) for t in result) if result else 0
+        _log_tool_call(name, arguments, response_chars=_resp_chars, duration_s=_elapsed)
+        return result
     except Exception as e:
+        _elapsed = _time.monotonic() - _t0
+        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}")
         return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
 
 
