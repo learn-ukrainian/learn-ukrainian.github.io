@@ -203,7 +203,8 @@ class TestQuiz:
         }])
         assert not is_valid(validator, doc)
 
-    def test_quiz_too_few_options(self, validator):
+    def test_quiz_two_options_valid(self, validator):
+        """Base schema allows 2 options — level-specific schemas enforce minimum."""
         doc = _doc_with_workbook([{
             "type": "quiz",
             "instruction": "Test",
@@ -213,7 +214,7 @@ class TestQuiz:
                 "correct": 0,
             }],
         }])
-        assert not is_valid(validator, doc)
+        assert is_valid(validator, doc)
 
 
 # ---------------------------------------------------------------------------
@@ -272,7 +273,8 @@ class TestMatchUp:
         }])
         assert is_valid(validator, doc)
 
-    def test_match_up_too_few_pairs(self, validator):
+    def test_match_up_two_pairs_valid(self, validator):
+        """Base schema allows 2 pairs — level-specific schemas enforce minimum."""
         doc = _doc_with_workbook([{
             "type": "match-up",
             "instruction": "Test",
@@ -281,7 +283,7 @@ class TestMatchUp:
                 {"left": "c", "right": "d"},
             ],
         }])
-        assert not is_valid(validator, doc)
+        assert is_valid(validator, doc)
 
 
 # ---------------------------------------------------------------------------
@@ -433,7 +435,8 @@ class TestUnjumble:
         }])
         assert is_valid(validator, doc)
 
-    def test_unjumble_too_few_words(self, validator):
+    def test_unjumble_two_words_valid(self, validator):
+        """Base schema allows 2 words — level-specific schemas enforce minimum."""
         doc = _doc_with_workbook([{
             "type": "unjumble",
             "instruction": "Test",
@@ -442,7 +445,7 @@ class TestUnjumble:
                 "correct_order": ["a", "b"],
             }],
         }])
-        assert not is_valid(validator, doc)
+        assert is_valid(validator, doc)
 
 
 # ---------------------------------------------------------------------------

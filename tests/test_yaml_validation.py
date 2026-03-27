@@ -2,21 +2,19 @@
 Tests for YAML schema validation logic.
 """
 
-import pytest
-from pathlib import Path
-import yaml
-import tempfile
 import os
 
 # Add scripts to path
 import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+import yaml
+
 sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
 
-from audit.checks.yaml_schema_validation import (
-    validate_activity,
-    validate_activity_yaml_file,
-    load_base_schema
-)
+from audit.checks.yaml_schema_validation import load_base_schema, validate_activity, validate_activity_yaml_file
 
 # =============================================================================
 # FIXTURES
@@ -30,16 +28,12 @@ def base_schema():
 def valid_quiz_data():
     return {
         "type": "quiz",
-        "title": "Valid Quiz",
+        "instruction": "Choose the correct answer",
         "items": [
             {
                 "question": "Question?",
-                "options": [
-                    {"text": "Correct", "correct": True},
-                    {"text": "Wrong 1", "correct": False},
-                    {"text": "Wrong 2", "correct": False},
-                    {"text": "Wrong 3", "correct": False}
-                ]
+                "options": ["Correct", "Wrong 1", "Wrong 2", "Wrong 3"],
+                "correct": 0,
             }
         ]
     }
@@ -92,7 +86,7 @@ class TestFileValidation:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
             yaml.dump([valid_quiz_data], f)
             temp_path = Path(f.name)
-        
+
         try:
             is_valid, errors = validate_activity_yaml_file(temp_path)
             assert is_valid
@@ -105,7 +99,7 @@ class TestFileValidation:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
             yaml.dump([invalid_quiz_data], f)
             temp_path = Path(f.name)
-        
+
         try:
             is_valid, errors = validate_activity_yaml_file(temp_path)
             assert not is_valid
@@ -118,7 +112,7 @@ class TestFileValidation:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
             f.write(" - this is : invalid : yaml : structure")
             temp_path = Path(f.name)
-        
+
         try:
             is_valid, errors = validate_activity_yaml_file(temp_path)
             assert not is_valid

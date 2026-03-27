@@ -425,14 +425,14 @@ class TestGetPedagogicalConstraints:
         result = get_pedagogical_constraints("a1", 47, plan)
         assert "ALLOWED" in result
 
-    def test_same_phase_same_constraints(self):
-        """Modules in the same phase get identical constraints."""
+    def test_same_band_same_constraints(self):
+        """Modules in the same sub-band get identical constraints."""
         from pipeline_lib import get_pedagogical_constraints
         plan1 = {"phase": "A1.1 [First Contact]"}
         plan2 = {"phase": "A1.1 [First Contact]"}
         r1 = get_pedagogical_constraints("a1", 1, plan1)
-        r4 = get_pedagogical_constraints("a1", 4, plan2)
-        assert r1 == r4  # Same phase → same constraints
+        r2 = get_pedagogical_constraints("a1", 2, plan2)
+        assert r1 == r2  # M01 and M02 are in the same phonetics band
 
     def test_different_phases_different_constraints(self):
         from pipeline_lib import get_pedagogical_constraints
@@ -522,7 +522,7 @@ class TestGetH3WordRange:
     def test_a1_early(self):
         from pipeline_lib import get_h3_word_range
         assert get_h3_word_range("a1", 1) == "30-50"
-        assert get_h3_word_range("a1", 4) == "30-50"
+        assert get_h3_word_range("a1", 4) == "40-60"
 
     def test_a1_mid(self):
         from pipeline_lib import get_h3_word_range
