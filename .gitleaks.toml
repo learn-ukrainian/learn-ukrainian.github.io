@@ -1,0 +1,16 @@
+title = "learn-ukrainian gitleaks config"
+
+[allowlist]
+  description = "Known safe patterns"
+  paths = [
+    '''\.lock$''',
+    '''requirements-lock\.txt$''',
+    '''package-lock\.json$''',
+  ]
+  # Algolia search key is a public search-only key (not admin)
+  regexTarget = "match"
+  regexes = [
+    '''4413bc11f7878cb2605766f6a050bdcc''',  # Algolia search API key (public)
+    '''1DB51F4A18C9DC67''',                   # Algolia site verification (public)
+    '''MFWOKG2YFD''',                         # Algolia app ID (public)
+  ]

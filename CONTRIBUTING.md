@@ -19,57 +19,142 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 - What actually happened
 - The module/page where the issue occurred
 
-### Code Contributions
+---
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-description`
-3. Make your changes
-4. Submit a pull request
+## Developer Setup
+
+### Prerequisites
+
+- macOS (primary dev platform)
+- [pyenv](https://github.com/pyenv/pyenv) with Python 3.12.8
+- Node.js 20+ (for Starlight frontend)
+
+### Installation
+
+```bash
+# 1. Clone
+git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
+cd learn-ukrainian.github.io
+
+# 2. Python environment (sqlite extensions required for VESUM)
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.8
+pyenv local 3.12.8
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+# 3. Frontend
+cd starlight && npm install && cd ..
+
+# 4. Start services
+./services.sh start   # RAG on 8766, API on 8765, Starlight on 4321
+
+# 5. Verify
+./services.sh status
+```
+
+### Services
+
+| Service | Port | Command |
+|---------|------|---------|
+| RAG MCP server | 8766 | `./services.sh start` |
+| Monitor API | 8765 | `./services.sh start` |
+| Starlight dev | 4321 | `./services.sh start` |
+
+```bash
+./services.sh start    # Start all
+./services.sh stop     # Stop all
+./services.sh status   # Check status
+```
+
+---
+
+## Workflow
+
+### Git: all work on `main`
+
+No feature branches. Use `git worktree` for isolation when needed. Only `git add` files you modified.
+
+### GitHub Issues
+
+Every non-trivial change needs a GH issue. Before starting: find or create an issue. After completing: update and close it. Master tracking: issue #1093.
+
+### Build a module
+
+```bash
+# Full build
+.venv/bin/python scripts/build/v6_build.py a1 2 --writer gemini
+
+# Single step
+.venv/bin/python scripts/build/v6_build.py a1 2 --step review
+
+# With MCP tools (VESUM/RAG during writing)
+.venv/bin/python scripts/build/v6_build.py a1 2 --writer claude-tools
+```
+
+### Audit a module
+
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
+```
+
+### Run tests
+
+```bash
+# Specific file (preferred)
+.venv/bin/pytest tests/test_audit_core.py -v --tb=short
+
+# Full suite (~2-3 min)
+.venv/bin/pytest tests/ -q
+```
+
+### Lint
+
+```bash
+.venv/bin/ruff check scripts/          # Check
+.venv/bin/ruff check --fix scripts/    # Auto-fix
+```
+
+Pre-commit hooks run ruff + pytest automatically on `git commit`.
+
+---
 
 ## Project Architecture
 
 ### Curriculum Structure
 
-Modules live in `curriculum/l2-uk-en/{track}/` with this structure per module:
+```
+curriculum/l2-uk-en/
+  plans/{level}/{slug}.yaml      # Module plan (source of truth, immutable)
+  {level}/{slug}.md              # Generated content
+  {level}/activities/{slug}.yaml # Exercise YAML
+  {level}/vocabulary/{slug}.yaml # Vocabulary
+  {level}/review/                # Review outputs
+  {level}/audit/                 # Audit reports
+  curriculum.yaml                # Module manifest (ordering)
+```
 
-| File | Purpose |
-|------|---------|
-| `plans/{track}/{slug}.yaml` | Module plan (immutable source of truth) |
-| `meta/{slug}.yaml` | Build configuration |
-| `{slug}.md` | Lesson content (Ukrainian prose) |
-| `activities/{slug}.yaml` | Interactive exercises |
-| `vocabulary/{slug}.yaml` | Vocabulary lists |
+### Pipeline V6
+
+The only active build pipeline. Phases: check → research → skeleton → write → activities → annotate → enrich → verify → review → publish.
+
+- **Gemini** writes content (default), **Claude** reviews (cross-agent adversarial)
+- Publish produces MDX with 4 tabs: Урок / Словник / Зошит / Ресурси
 
 ### Website
 
-The website is built with [Astro Starlight](https://starlight.astro.build/) and lives in `starlight/`. Module content is published as MDX files in `starlight/src/content/docs/`.
+Built with [Astro Starlight](https://starlight.astro.build/). 50+ React components for interactive exercises. MDX files in `starlight/src/content/docs/`.
 
-### Build Pipeline
-
-Content is generated through a multi-agent pipeline:
-- **Gemini** builds content (research, prose, activities)
-- **Claude** reviews for quality (adversarial cross-agent review)
-- Automated audits check word counts, vocabulary, activity schemas, and naturalness
-
-### Local Development
-
-```bash
-# Website
-npm run dev:starlight  # http://localhost:4321
-
-# Python tools (audits, batch processing)
-.venv/bin/python scripts/audit_module.py <path-to-module.md>
-```
-
-**Requirements:** Node.js 20+, Python 3.12+ with venv
+---
 
 ## Quality Standards
 
-- **Word count minimums**: A1: 2000, A2: 3000, B1-B2: 4000, Seminar: 5000
-- **All Ukrainian text** must be grammatically correct and natural-sounding
-- **No Russian calques** (e.g., use "добре" not "хорошо", "кіт" not "кот")
-- **Activities test language comprehension**, not content recall
-- **CEFR alignment** -- grammar and vocabulary must match the target level
+- **Word targets** (minimums): A1: 1200, A2: 2000, B1-C1: 4000, C2: 5000, Seminar: 5000
+- **All Ukrainian text** must be grammatically correct and natural
+- **No Russianisms**: use добре not хорошо, кіт not кот
+- **No calques**: use брати участь not приймати участь
+- **Activities test language skill**, not content recall
+- **VESUM-verified**: every Ukrainian word checked against the morphological dictionary
+- **Правопис 2019**: Ukrainian orthography standard
 
 ## Code of Conduct
 
