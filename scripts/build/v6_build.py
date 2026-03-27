@@ -2358,6 +2358,22 @@ def step_activities(
             error_context = f"JSON Schema validation errors:\n{error_text}"
             continue
 
+        # Strip forbidden activity types for this level
+        _A1_FORBIDDEN_TYPES = {"translate", "error-correction", "cloze", "unjumble"}
+        if level == "a1" and module_num <= 7:
+            for section in ("inline", "workbook"):
+                if section in data and isinstance(data[section], list):
+                    before = len(data[section])
+                    data[section] = [
+                        act for act in data[section]
+                        if act.get("type") not in _A1_FORBIDDEN_TYPES
+                    ]
+                    removed = before - len(data[section])
+                    if removed:
+                        _log(f"  🔧 Stripped {removed} forbidden activity type(s) from {section} (A1.1 level restriction)")
+            # Re-dump after stripping
+            clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
         # Additional semantic checks (inline id uniqueness + existence)
         semantic_errors = _check_activity_semantics(data)
         if semantic_errors:
