@@ -179,7 +179,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
                   disabled={showResults}
                 >
                   <option value=""></option>
-                  {shuffle(item.options).map((opt, i) => (
+                  {shuffle(item.options || []).map((opt, i) => (
                     <option key={i} value={opt}>
                       {opt}
                     </option>
