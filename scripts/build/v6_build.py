@@ -3526,6 +3526,8 @@ def main():
         sys.exit(1)
     slug = slugs[args.module - 1]
 
+    _build_start = time.monotonic()
+
     _log(f"\n🔨 V6 Build: {args.level.upper()} M{args.module:02d} ({slug})")
     _log(f"   Writer: {args.writer}")
 
@@ -3798,7 +3800,11 @@ def main():
     if result:
         _log(f"  📋 Orchestration index → {slug}/index.md")
 
+    _build_elapsed = time.monotonic() - _build_start
+    _minutes = int(_build_elapsed // 60)
+    _seconds = int(_build_elapsed % 60)
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
+    _log(f"   Total time: {_minutes}m {_seconds}s")
 
 
 if __name__ == "__main__":
