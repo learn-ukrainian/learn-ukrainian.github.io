@@ -492,9 +492,11 @@ def check_select_min_correct(yaml_activities: list) -> list:
 
 def check_quiz_single_correct(yaml_activities: list) -> list:
     """
-    Check that each quiz item has exactly one correct: true option.
+    Check that each quiz item has exactly one correct answer.
 
-    Bug pattern: 0 or 2+ options marked correct in a single quiz question.
+    Supports two formats:
+    - V1: options are [{text, correct: true/false}] — count correct: true
+    - V2: options are string[] + correct is integer index on the item
     """
     violations = []
 
@@ -511,7 +513,20 @@ def check_quiz_single_correct(yaml_activities: list) -> list:
             if not options:
                 continue
 
-            correct_count = _count_correct_options(options)
+            # Check for V2 format: correct is an integer index on the item
+            correct_idx = None
+            if hasattr(item, 'correct') and isinstance(item.correct, int):
+                correct_idx = item.correct
+            elif isinstance(item, dict) and isinstance(item.get('correct'), int):
+                correct_idx = item['correct']
+
+            if correct_idx is not None:
+                # V2: valid if index is in range
+                correct_count = 1 if 0 <= correct_idx < len(options) else 0
+            else:
+                # V1: count options with correct: true
+                correct_count = _count_correct_options(options)
+
             if correct_count != 1:
                 violations.append({
                     'type': 'QUIZ_CORRECT_COUNT',

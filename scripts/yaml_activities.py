@@ -566,10 +566,13 @@ class ActivityParser:
         for item_data in data.get('items', []):
             raw_options = item_data.get('options', [])
             correct_answer = item_data.get('answer')
+            correct_index = item_data.get('correct')  # V2: integer index
             options = []
-            for opt in raw_options:
+            for i, opt in enumerate(raw_options):
                 if isinstance(opt, str):
-                    options.append(QuizOption(text=opt, correct=(opt == correct_answer)))
+                    # V2: correct is integer index; V1: match by answer string
+                    is_correct = i == correct_index if isinstance(correct_index, int) else opt == correct_answer
+                    options.append(QuizOption(text=opt, correct=is_correct))
                 else:
                     options.append(QuizOption(text=opt['text'], correct=opt.get('correct', False)))
             question = item_data.get('question') or item_data.get('prompt', '')
