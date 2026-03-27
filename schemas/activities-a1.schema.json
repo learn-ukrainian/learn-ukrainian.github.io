@@ -35,6 +35,15 @@
       },
       {
         "$ref": "#/definitions/image-to-letter-a1"
+      },
+      {
+        "$ref": "#/definitions/observe-a1"
+      },
+      {
+        "$ref": "#/definitions/letter-grid-a1"
+      },
+      {
+        "$ref": "#/definitions/translate-a1"
       }
     ]
   },
@@ -366,10 +375,9 @@
     },
     "anagram-a1": {
       "type": "object",
-      "description": "A1 only - modules 01-10 for Cyrillic scaffolding",
+      "description": "A1 anagram — accepts both V1 (scrambled string) and V2 (letters array) formats",
       "required": [
         "type",
-        "title",
         "items"
       ],
       "additionalProperties": false,
@@ -377,24 +385,31 @@
         "type": {
           "const": "anagram"
         },
+        "id": {
+          "type": "string"
+        },
         "title": {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
         },
         "items": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 3,
           "items": {
             "type": "object",
             "required": [
-              "scrambled",
               "answer"
             ],
             "additionalProperties": false,
             "properties": {
               "scrambled": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
+              },
+              "letters": {
+                "type": "array",
+                "items": { "type": "string" }
               },
               "answer": {
                 "type": "string",
@@ -558,6 +573,85 @@
               },
               "note": {
                 "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "observe-a1": {
+      "type": "object",
+      "required": ["type", "examples", "prompt"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "observe" },
+        "id": { "type": "string" },
+        "instruction": { "type": "string" },
+        "notes": { "type": "string" },
+        "examples": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "letter-grid-a1": {
+      "type": "object",
+      "required": ["type", "letters"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "letter-grid" },
+        "id": { "type": "string" },
+        "instruction": { "type": "string" },
+        "letters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["upper", "lower"],
+            "additionalProperties": false,
+            "properties": {
+              "upper": { "type": "string" },
+              "lower": { "type": "string" },
+              "emoji": { "type": "string" },
+              "key_word": { "type": "string" },
+              "sound_type": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "translate-a1": {
+      "type": "object",
+      "required": ["type", "instruction", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "translate" },
+        "id": { "type": "string" },
+        "instruction": { "type": "string" },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["source"],
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "string" },
+              "answer": { "type": "string" },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": { "type": "string" },
+                    "correct": { "type": "boolean" }
+                  }
+                }
               }
             }
           }

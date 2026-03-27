@@ -11,11 +11,9 @@ Targets:
 """
 
 import json
-import re
 import sys
-import types
 from pathlib import Path
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -59,19 +57,19 @@ class TestFixExtraH1:
     def test_pidmsumok_h1_preserved(self):
         f = self._import()
         text = "# Title\n\n# Підсумок\n\nSome text"
-        result, count = f(text)
+        _result, count = f(text)
         assert count == 0
 
     def test_h1_in_code_block_ignored(self):
         f = self._import()
         text = "# Title\n\n```\n# Not a heading\n```\n\n# Another Title"
-        result, count = f(text)
+        _result, count = f(text)
         assert count == 1
 
     def test_no_h1_no_change(self):
         f = self._import()
         text = "## Section 1\n\n## Section 2"
-        result, count = f(text)
+        _result, count = f(text)
         assert count == 0
 
     def test_three_h1_all_extra_demoted(self):
@@ -107,7 +105,7 @@ class TestFixIpaBrackets:
         f = self._import()
         # bracket content < 2 chars won't match {2,40}
         text = "word [x] (test)"
-        result, count = f(text)
+        _result, count = f(text)
         assert count == 0
 
 
@@ -121,13 +119,13 @@ class TestFixH2Titles:
     def test_empty_outline_no_change(self):
         f = self._import()
         text = "## Section"
-        result, count = f(text, [])
+        _result, count = f(text, [])
         assert count == 0
 
     def test_exact_match_no_change(self):
         f = self._import()
         text = "## My Section"
-        result, count = f(text, [{"section": "My Section"}])
+        _result, count = f(text, [{"section": "My Section"}])
         assert count == 0
 
     @patch("pipeline.screen._log")
@@ -141,19 +139,19 @@ class TestFixH2Titles:
     def test_no_match_no_change(self):
         f = self._import()
         text = "## Completely Different"
-        result, count = f(text, [{"section": "Unrelated Topic"}])
+        _result, count = f(text, [{"section": "Unrelated Topic"}])
         assert count == 0
 
     def test_h2_in_code_block_ignored(self):
         f = self._import()
         text = "```\n## In Code\n```"
-        result, count = f(text, [{"section": "In Code"}])
+        _result, count = f(text, [{"section": "In Code"}])
         assert count == 0
 
     def test_h3_not_affected(self):
         f = self._import()
         text = "### Sub Section"
-        result, count = f(text, [{"section": "Sub Section"}])
+        _result, count = f(text, [{"section": "Sub Section"}])
         assert count == 0
 
     def test_title_key_used(self):
@@ -491,7 +489,7 @@ class TestDetectModelError:
 
 class TestColored:
     def _import(self):
-        from assess_research_helpers import _colored
+        from research.assess_research_helpers import _colored
         return _colored
 
     def test_known_quality(self):
@@ -513,7 +511,7 @@ class TestColored:
 
 class TestFormatQualityRow:
     def _import(self):
-        from assess_research_helpers import _format_quality_row
+        from research.assess_research_helpers import _format_quality_row
         return _format_quality_row
 
     def test_missing_info_show_gaps_false(self):
@@ -590,7 +588,7 @@ class TestFormatQualityRow:
 
 class TestParseSlugEntry:
     def _import(self):
-        from assess_research_helpers import _parse_slug_entry
+        from research.assess_research_helpers import _parse_slug_entry
         return _parse_slug_entry
 
     def test_string_entry(self):
@@ -608,7 +606,7 @@ class TestParseSlugEntry:
 
 class TestBuildRefreshQueue:
     def _import(self):
-        from assess_research_helpers import _build_refresh_queue
+        from research.assess_research_helpers import _build_refresh_queue
         return _build_refresh_queue
 
     def test_empty_results(self):
@@ -639,7 +637,7 @@ class TestBuildRefreshQueue:
 
 class TestBuildUpgradeQueue:
     def _import(self):
-        from assess_research_helpers import _build_upgrade_queue
+        from research.assess_research_helpers import _build_upgrade_queue
         return _build_upgrade_queue
 
     def test_below_threshold(self):
@@ -678,7 +676,7 @@ class TestBuildUpgradeQueue:
 
 class TestRenderModuleDimensions:
     def _import(self):
-        from assess_research_helpers import _render_module_dimensions
+        from research.assess_research_helpers import _render_module_dimensions
         return _render_module_dimensions
 
     def test_with_dimensions(self, capsys):
@@ -707,7 +705,7 @@ class TestRenderModuleDimensions:
 
 class TestRenderModuleGapsAlignment:
     def _import(self):
-        from assess_research_helpers import _render_module_gaps_alignment
+        from research.assess_research_helpers import _render_module_gaps_alignment
         return _render_module_gaps_alignment
 
     def test_with_gaps(self, capsys):
@@ -732,7 +730,7 @@ class TestRenderModuleGapsAlignment:
 
 class TestCoverageForTrack:
     def _import(self):
-        from assess_research_helpers import _coverage_for_track
+        from research.assess_research_helpers import _coverage_for_track
         return _coverage_for_track
 
     def test_unknown_track(self):
@@ -750,7 +748,7 @@ class TestCoverageForTrack:
         tracks = [{"id": "test", "path": str(tmp_path), "name": "Test"}]
         manifest = {"levels": {"test": {"modules": ["mod1", "mod2"]}}}
 
-        with patch("assess_research_helpers.find_research_path") as frp:
+        with patch("research.assess_research_helpers.find_research_path") as frp:
             frp.side_effect = lambda td, slug: Path("found") if slug == "mod1" else None
             result = f("test", manifest, tracks, Path("/"))
             assert result["total"] == 2
@@ -764,7 +762,7 @@ class TestCoverageForTrack:
 
 class TestStressedToIpa:
     def _import(self):
-        from vocab_extract_proper import stressed_to_ipa
+        from vocab.vocab_extract_proper import stressed_to_ipa
         return stressed_to_ipa
 
     def test_empty_string(self):
@@ -789,14 +787,13 @@ class TestStressedToIpa:
 
     def test_apostrophe_removed(self):
         f = self._import()
-        from vocab_extract_proper import CYRILLIC_TO_IPA
         result = f("м'який")
         assert "'" not in result.replace("'", "")
 
 
 class TestExtractUkrainianText:
     def _import(self):
-        from vocab_extract_proper import extract_ukrainian_text
+        from vocab.vocab_extract_proper import extract_ukrainian_text
         return extract_ukrainian_text
 
     def test_basic_extraction(self, tmp_path):
@@ -859,7 +856,7 @@ class TestExtractUkrainianText:
 
 class TestExtractModuleNumber:
     def _import(self):
-        from vocab_extract_proper import extract_module_number
+        from vocab.vocab_extract_proper import extract_module_number
         return extract_module_number
 
     def test_numeric_prefix(self, tmp_path):
@@ -881,7 +878,7 @@ class TestExtractModuleNumber:
 
 class TestGetKnownLemmas:
     def _import(self):
-        from vocab_extract_proper import get_known_lemmas
+        from vocab.vocab_extract_proper import get_known_lemmas
         return get_known_lemmas
 
     def test_nonexistent_db(self, tmp_path):
@@ -912,7 +909,7 @@ class TestGetKnownLemmas:
 
 class TestTokenizeAndLemmatize:
     def _import(self):
-        from vocab_extract_proper import tokenize_and_lemmatize
+        from vocab.vocab_extract_proper import tokenize_and_lemmatize
         return tokenize_and_lemmatize
 
     def test_basic_tokenization(self):
@@ -927,7 +924,7 @@ class TestTokenizeAndLemmatize:
         mock_parsed.tag = mock_tag
         mock_morph.parse.return_value = [mock_parsed]
 
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
             result = f("Великий будинок стоїть")
         assert "будинок" in result
 
@@ -942,14 +939,14 @@ class TestTokenizeAndLemmatize:
         mock_parsed.tag = mock_tag
         mock_morph.parse.return_value = [mock_parsed]
 
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
             result = f("на")
         assert "на" not in result
 
     def test_single_char_filtered(self):
         f = self._import()
         mock_morph = MagicMock()
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
             result = f("я")
         assert len(result) == 0
         mock_morph.parse.assert_not_called()
@@ -965,20 +962,20 @@ class TestTokenizeAndLemmatize:
         mock_parsed.tag = mock_tag
         mock_morph.parse.return_value = [mock_parsed]
 
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
             result = f("будинок", known_lemmas={"будинок"})
         assert "будинок" not in result
 
 
 class TestCreateVocabularyEntries:
     def _import(self):
-        from vocab_extract_proper import create_vocabulary_entries
+        from vocab.vocab_extract_proper import create_vocabulary_entries
         return create_vocabulary_entries
 
     def test_basic_entry_creation(self):
         f = self._import()
         mock_stressifier = MagicMock(return_value="бу\u0301динок")
-        with patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             entries = f({"будинок": {"pos": "noun", "gender": "m", "count": 3}})
         assert len(entries) == 1
         assert entries[0]["lemma"] == "будинок"
@@ -988,14 +985,14 @@ class TestCreateVocabularyEntries:
     def test_min_count_filter(self):
         f = self._import()
         mock_stressifier = MagicMock(return_value="тест")
-        with patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             entries = f({"тест": {"pos": "noun", "gender": None, "count": 1}}, min_count=2)
         assert len(entries) == 0
 
     def test_stressifier_error(self):
         f = self._import()
         mock_stressifier = MagicMock(side_effect=Exception("stress error"))
-        with patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             entries = f({"слово": {"pos": "noun", "gender": "n", "count": 1}})
         assert len(entries) == 1
         assert entries[0]["ipa"] == ""
@@ -1003,14 +1000,14 @@ class TestCreateVocabularyEntries:
     def test_no_gender(self):
         f = self._import()
         mock_stressifier = MagicMock(return_value="бігти")
-        with patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             entries = f({"бігти": {"pos": "verb", "gender": None, "count": 1}})
         assert "gender" not in entries[0]
 
 
 class TestProcessModule:
     def _import(self):
-        from vocab_extract_proper import process_module
+        from vocab.vocab_extract_proper import process_module
         return process_module
 
     def test_dry_run(self, tmp_path):
@@ -1029,8 +1026,8 @@ class TestProcessModule:
 
         mock_stressifier = MagicMock(return_value="те\u0301кст")
 
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph), \
-             patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph), \
+             patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             stats = f(md, dry_run=True)
 
         assert stats["module"] == "test.md"
@@ -1048,8 +1045,8 @@ class TestProcessModule:
         mock_morph.parse.return_value = []
         mock_stressifier = MagicMock()
 
-        with patch("vocab_extract_proper.get_morph", return_value=mock_morph), \
-             patch("vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph), \
+             patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
             stats = f(md, dry_run=True)
         # Can't easily check level from stats, but it shouldn't crash
 
@@ -1377,9 +1374,11 @@ class TestReplaceProseIpa:
 
 
 # ============================================================================
-# 6. import_zno.py
+# 6. import_zno.py (DELETED — script removed in project cleanup)
 # ============================================================================
 
+
+@pytest.mark.skip(reason="import_zno.py was deleted in project cleanup")
 class TestClassifyQuestion:
     def _import(self):
         from import_zno import classify_question
@@ -1431,6 +1430,7 @@ class TestClassifyQuestion:
         assert f("Оберіть правильний варіант", "наголос правильний") == "наголос"
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestFilterUkrainianLanguage:
     def _import(self):
         from import_zno import filter_ukrainian_language
@@ -1457,6 +1457,7 @@ class TestFilterUkrainianLanguage:
         assert len(f(records)) == 0
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestClassifyAll:
     def _import(self):
         from import_zno import classify_all
@@ -1477,9 +1478,10 @@ class TestClassifyAll:
         assert result[0]["skill_category"] == "наголос"
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestSaveLoadJsonl:
     def _import(self):
-        from import_zno import save_jsonl, load_jsonl
+        from import_zno import load_jsonl, save_jsonl
         return save_jsonl, load_jsonl
 
     def test_roundtrip(self, tmp_path):
@@ -1502,6 +1504,7 @@ class TestSaveLoadJsonl:
         assert path.exists()
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestConvertToActivity:
     def _import(self):
         from import_zno import convert_to_activity
@@ -1557,6 +1560,7 @@ class TestConvertToActivity:
         assert result["item"]["options"][0]["text"] == "opt1"
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestPrintStats:
     def _import(self):
         from import_zno import print_stats
@@ -1583,7 +1587,7 @@ class TestPrintStats:
 
 class TestMoveReviews:
     def _import(self):
-        from migrate_audit_review_paths import move_reviews
+        from migrate.migrate_audit_review_paths import move_reviews
         return move_reviews
 
     def test_no_audit_dir(self, tmp_path):
@@ -1664,7 +1668,7 @@ class TestMoveReviews:
 
 class TestRenameAuditReports:
     def _import(self):
-        from migrate_audit_review_paths import rename_audit_reports
+        from migrate.migrate_audit_review_paths import rename_audit_reports
         return rename_audit_reports
 
     def test_no_audit_dir(self, tmp_path):
@@ -1711,7 +1715,7 @@ class TestRenameAuditReports:
 
 class TestRenameAuditArtifacts:
     def _import(self):
-        from migrate_audit_review_paths import rename_audit_artifacts
+        from migrate.migrate_audit_review_paths import rename_audit_artifacts
         return rename_audit_artifacts
 
     def test_no_audit_dir(self, tmp_path):
@@ -1758,7 +1762,7 @@ class TestRenameAuditArtifacts:
 
 class TestRenameStatusFiles:
     def _import(self):
-        from migrate_audit_review_paths import rename_status_files
+        from migrate.migrate_audit_review_paths import rename_status_files
         return rename_status_files
 
     def test_no_status_dir(self, tmp_path):
@@ -1808,7 +1812,7 @@ class TestRenameStatusFiles:
 
 class TestUpdateStatusModuleField:
     def _import(self):
-        from migrate_audit_review_paths import _update_status_module_field
+        from migrate.migrate_audit_review_paths import _update_status_module_field
         return _update_status_module_field
 
     def test_updates_field(self, tmp_path):
@@ -1837,12 +1841,12 @@ class TestUpdateStatusModuleField:
 
 class TestCheckBatchLock:
     def _import(self):
-        from migrate_audit_review_paths import check_batch_lock
+        from migrate.migrate_audit_review_paths import check_batch_lock
         return check_batch_lock
 
     def test_no_lock_passes(self, tmp_path):
         f = self._import()
-        with patch("migrate_audit_review_paths.Path") as MockPath:
+        with patch("migrate.migrate_audit_review_paths.Path") as MockPath:
             mock_lock = MagicMock()
             mock_lock.exists.return_value = False
             # The function constructs the path via Path(__file__).parent.parent / ...
@@ -1862,8 +1866,8 @@ class TestCheckBatchLock:
         lock_file.write_text("locked")
 
         # Patch the path construction in the function
-        original_file = Path(__file__).parent.parent / "scripts" / "migrate_audit_review_paths.py"
-        with patch("migrate_audit_review_paths.Path") as MockPath:
+        original_file = Path(__file__).parent.parent / "scripts" / "migrate.migrate_audit_review_paths.py"
+        with patch("migrate.migrate_audit_review_paths.Path") as MockPath:
             # Make Path(__file__) return something that leads to our tmp lock
             mock_parent = MagicMock()
             mock_parent.parent.__truediv__ = lambda self, x: tmp_path / x if x == "batch_state" else MagicMock()
@@ -1886,17 +1890,18 @@ class TestPipelineScreenMtimeCache:
         assert isinstance(_deterministic_fix_mtimes, dict)
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestCefrMapping:
     """Test CEFR mapping in import_zno."""
 
     def test_all_skills_have_mapping(self):
-        from import_zno import SKILL_PATTERNS, CEFR_MAPPING
+        from import_zno import CEFR_MAPPING, SKILL_PATTERNS
         for category, _ in SKILL_PATTERNS:
             assert category in CEFR_MAPPING, f"Missing CEFR mapping for {category}"
 
     def test_mapping_structure(self):
         from import_zno import CEFR_MAPPING
-        for cat, levels in CEFR_MAPPING.items():
+        for _cat, levels in CEFR_MAPPING.items():
             assert "min" in levels
             assert "max" in levels
 
@@ -1905,19 +1910,19 @@ class TestVocabExtractConstants:
     """Test constants in vocab_extract_proper."""
 
     def test_pos_map_coverage(self):
-        from vocab_extract_proper import POS_MAP
+        from vocab.vocab_extract_proper import POS_MAP
         assert "NOUN" in POS_MAP
         assert "VERB" in POS_MAP
         assert "ADJF" in POS_MAP
 
     def test_gender_map(self):
-        from vocab_extract_proper import GENDER_MAP
+        from vocab.vocab_extract_proper import GENDER_MAP
         assert GENDER_MAP["masc"] == "m"
         assert GENDER_MAP["femn"] == "f"
         assert GENDER_MAP["neut"] == "n"
 
     def test_stopwords_not_empty(self):
-        from vocab_extract_proper import STOPWORDS
+        from vocab.vocab_extract_proper import STOPWORDS
         assert len(STOPWORDS) > 50
 
 
@@ -1958,6 +1963,7 @@ class TestSlugUtils:
         assert to_bare_slug("140-syntez-viyna") == "syntez-viyna"
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestExportByTopic:
     """Test export_by_topic from import_zno."""
 
@@ -2000,6 +2006,7 @@ class TestExportByTopic:
         assert len(list(by_topic.glob("*.yaml"))) == 0
 
 
+@pytest.mark.skip(reason="import_zno.py deleted in cleanup")
 class TestValidateSchema:
     """Test validate_schema from import_zno."""
 
@@ -2051,21 +2058,20 @@ class TestValidateSchema:
 
     def test_no_export_dir_exits(self, tmp_path):
         f = self._import()
-        with patch("import_zno.DATA_DIR", tmp_path):
-            with pytest.raises(SystemExit):
-                f()
+        with patch("import_zno.DATA_DIR", tmp_path), pytest.raises(SystemExit):
+            f()
 
 
 class TestRenderSingleModule:
     """Test _render_single_module."""
 
     def _import(self):
-        from assess_research_helpers import _render_single_module
+        from research.assess_research_helpers import _render_single_module
         return _render_single_module
 
     def test_missing_info(self, capsys):
         f = self._import()
-        with patch("assess_research_helpers.get_rubric", return_value="test"):
+        with patch("research.assess_research_helpers.get_rubric", return_value="test"):
             f("hist", {"num": 1, "slug": "test", "info": None})
         out = capsys.readouterr().out
         assert "not found" in out
@@ -2081,7 +2087,7 @@ class TestRenderSingleModule:
             "gaps": [],
             "content_alignment": None,
         }
-        with patch("assess_research_helpers.get_rubric", return_value="test"):
+        with patch("research.assess_research_helpers.get_rubric", return_value="test"):
             f("hist", {"num": 1, "slug": "test", "info": info})
         out = capsys.readouterr().out
         assert "500" in out
@@ -2090,7 +2096,7 @@ class TestRenderSingleModule:
     def test_no_score(self, capsys):
         f = self._import()
         info = {"words": 200, "profile": None, "score": None, "quality": None}
-        with patch("assess_research_helpers.get_rubric", return_value="test"):
+        with patch("research.assess_research_helpers.get_rubric", return_value="test"):
             f("hist", {"num": 1, "slug": "test", "info": info})
         out = capsys.readouterr().out
         assert "no rubric" in out
@@ -2100,7 +2106,7 @@ class TestRenderCoverageOnly:
     """Test _render_coverage_only."""
 
     def _import(self):
-        from assess_research_helpers import _render_coverage_only
+        from research.assess_research_helpers import _render_coverage_only
         return _render_coverage_only
 
     def test_with_researched(self, capsys):

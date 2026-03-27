@@ -55,6 +55,52 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
 
+# ---------------------------------------------------------------------------
+# Model Family — single source of truth for model selection (#1072)
+# ---------------------------------------------------------------------------
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class ModelFamily:
+    """Model configuration for a writer/reviewer family (Claude or Gemini).
+
+    Each family has two tiers:
+    - thinking: full reasoning model (write, review, section rewrite)
+    - fast: efficient model (skeleton, activities, vocab)
+
+    And a tool prefix for MCP tool instructions.
+    """
+
+    name: str           # "claude" or "gemini"
+    thinking: str       # opus / pro — for write, review, rewrite
+    fast: str           # sonnet / flash — for skeleton, activities, vocab
+    tool_prefix: str    # "mcp__rag__" or "rag_"
+
+
+CLAUDE_FAMILY = ModelFamily(
+    name="claude",
+    thinking="claude-opus-4-6",
+    fast="claude-sonnet-4-6",
+    tool_prefix="mcp__rag__",
+)
+
+GEMINI_FAMILY = ModelFamily(
+    name="gemini",
+    thinking="gemini-3.1-pro-preview",
+    fast="gemini-3-flash-preview",
+    tool_prefix="rag_",
+)
+
+
+def get_family(writer: str) -> ModelFamily:
+    """Resolve writer/reviewer string to a ModelFamily."""
+    if "claude" in writer:
+        return CLAUDE_FAMILY
+    return GEMINI_FAMILY
+
+
 def _build_tool_instructions(writer: str) -> str:
     """Build MCP tool-use instructions for the writer prompt.
 
@@ -62,8 +108,8 @@ def _build_tool_instructions(writer: str) -> str:
     when to use tools vs just write. Batching enforced to prevent excessive
     tool calls.
     """
-    # Tool name prefix differs: Claude uses mcp__rag__, Gemini uses rag_
-    p = "mcp__rag__" if "claude" in writer else "rag_"
+    # Tool name prefix differs by family
+    p = get_family(writer).tool_prefix
 
     return (
         "\n\n---\n\n"
@@ -476,14 +522,13 @@ def step_skeleton(level: str, module_num: int, slug: str,
     prompt_path.write_text(prompt, "utf-8")
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
 
-    # Dispatch to writer — skeleton is structure planning, Sonnet is sufficient
+    # Dispatch to writer — skeleton is structure planning, fast model sufficient
     from build.dispatch import dispatch_agent as _dispatch
 
-    base_writer = "gemini" if "gemini" in writer else "claude"
-    skeleton_model = "claude-sonnet-4-6" if "claude" in base_writer else None
+    family = get_family(writer)
     ok, raw = _dispatch(
-        prompt, agent=base_writer, phase="skeleton", orch_dir=orch_dir, timeout=300,
-        model=skeleton_model,
+        prompt, agent=family.name, phase="skeleton", orch_dir=orch_dir, timeout=300,
+        model=family.fast,
     )
 
     if not ok or not raw:
@@ -491,8 +536,7 @@ def step_skeleton(level: str, module_num: int, slug: str,
         return None
 
     # Extract skeleton from <skeleton> tags
-    import re as _re
-    skeleton_match = _re.search(r"<skeleton>(.*?)</skeleton>", raw, _re.DOTALL)
+    skeleton_match = re.search(r"<skeleton>(.*?)</skeleton>", raw, re.DOTALL)
     if skeleton_match:
         skeleton_text = skeleton_match.group(1).strip()
     else:
@@ -660,7 +704,7 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
-- **Write exercises directly** in DSL format (:::quiz, :::fill-in, etc.) if the skeleton places them in this section.
+- **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **NO meta-commentary** — no "In this section we will...", no vocabulary tables, no word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
@@ -719,7 +763,7 @@ def step_write_chunked(
 
     from build.dispatch import dispatch_agent as _dispatch
 
-    base_writer = "gemini" if "gemini" in writer else "claude"
+    use_tools = writer.endswith("-tools")
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
@@ -753,9 +797,12 @@ def step_write_chunked(
         chunk_prompt_path.write_text(prompt, "utf-8")
 
         # Dispatch — shorter timeout per section
+        from build.dispatch import CLAUDE_WRITER_TOOLS
         ok, raw = _dispatch(
-            prompt, agent=base_writer, phase=f"write-chunk-{i + 1:02d}",
-            orch_dir=orch_dir, timeout=300,
+            prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
+            orch_dir=orch_dir, timeout=450 if use_tools else 300,
+            mcp_tools=use_tools,
+            allowed_tools=CLAUDE_WRITER_TOOLS if (use_tools and writer.startswith("claude")) else None,
         )
 
         if not ok or not raw:
@@ -919,13 +966,38 @@ def step_write(level: str, module_num: int, slug: str,
         "{PRONUNCIATION_VIDEOS}": "\n".join(pv_lines),
         "{GOLDEN_FRAGMENT}": get_golden_fragment(level, module_num),
         "{SUMMARY_HEADING}": summary_heading,
+        "{SKELETON_SECTION}": "",  # Populated below for seminar templates
+        "{CORRECTION_SECTION}": "",  # Populated below for seminar templates
     }
+
+    # Build skeleton/correction blocks for seminar template placeholders
+    if is_seminar and skeleton:
+        replacements["{SKELETON_SECTION}"] = (
+            "---\n\n"
+            "## Skeleton — Follow This Structure Exactly\n\n"
+            "A detailed paragraph-level skeleton was generated for this module. "
+            "You MUST follow it precisely:\n"
+            "- Write every paragraph listed, in the order listed\n"
+            "- Hit each paragraph's word budget (+-10%)\n"
+            "- Place exercises exactly where the skeleton says\n"
+            "- Use the specific examples named in the skeleton\n"
+            "- Do NOT skip paragraphs, reorder sections, or add unplanned content\n\n"
+            "The skeleton replaces Step 1 (Pacing Plan) — do NOT output a "
+            "<pacing_plan> block. Start writing immediately from the first section.\n\n"
+            "<skeleton>\n"
+            f"{skeleton}\n"
+            "</skeleton>"
+        )
+        _log(f"  📐 Skeleton injected via seminar placeholder ({len(skeleton)} chars)")
+    if is_seminar and correction_directive:
+        replacements["{CORRECTION_SECTION}"] = correction_directive
 
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
     # Inject skeleton section when provided (Skeleton->Flesh architecture)
-    if skeleton:
+    # (skipped for seminar templates — already handled via {SKELETON_SECTION} placeholder)
+    if skeleton and not is_seminar:
         skeleton_section = (
             "\n\n---\n\n"
             "## Skeleton — Follow This Structure Exactly\n\n"
@@ -953,7 +1025,8 @@ def step_write(level: str, module_num: int, slug: str,
         _log(f"  📐 Skeleton injected ({len(skeleton)} chars)")
 
     # Inject correction directive at top of prompt (for retries)
-    if correction_directive:
+    # (skipped for seminar templates — already handled via {CORRECTION_SECTION} placeholder)
+    if correction_directive and not is_seminar:
         prompt = correction_directive + "\n\n" + prompt
         _log(f"  ⚠️  Correction directive injected ({len(correction_directive)} chars)")
 
@@ -1000,8 +1073,7 @@ def step_write(level: str, module_num: int, slug: str,
         return None
 
     # Save pacing plan if present (for debugging)
-    import re as _re
-    pacing_match = _re.search(r"<pacing_plan>(.*?)</pacing_plan>", raw, _re.DOTALL)
+    pacing_match = re.search(r"<pacing_plan>(.*?)</pacing_plan>", raw, re.DOTALL)
     if pacing_match:
         pacing_text = pacing_match.group(1).strip()
         _log(f"  📐 Pacing plan:\n{pacing_text}")
@@ -1023,8 +1095,8 @@ def step_write(level: str, module_num: int, slug: str,
         final_content = "\n".join(lines[content_start:])
 
     # Strip any pacing_plan/skeleton tags that leaked into content
-    final_content = _re.sub(r"</?pacing_plan>", "", final_content)
-    final_content = _re.sub(r"</?skeleton>", "", final_content)
+    final_content = re.sub(r"</?pacing_plan>", "", final_content)
+    final_content = re.sub(r"</?skeleton>", "", final_content)
 
     output_path.write_text(final_content, "utf-8")
     word_count = len(final_content.split())
@@ -1246,8 +1318,6 @@ def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
     Parses the ## Findings section for [DIMENSION] [SEVERITY] blocks.
     Saves to orchestration for aggregation across modules (#1027, #1028).
     """
-    import re
-
     findings = []
     # Match finding blocks: ```\n[DIMENSION] [SEVERITY]\n...\n```
     pattern = re.compile(
@@ -1388,7 +1458,6 @@ def step_exercises(content_path: Path) -> bool:
     text = content_path.read_text("utf-8")
 
     # Count writer-produced exercises
-    import re
     direct_exercises = len(re.findall(
         r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b",
         text, re.MULTILINE,
@@ -1416,7 +1485,6 @@ def _post_process_content(content_path: Path) -> int:
 
     # 1. Strip duplicate summary section (LLM sometimes writes two)
     # Keep the first "## Підсумок" or "## Summary", remove subsequent ones
-    import re
     summary_headings = list(re.finditer(
         r"^## (?:Підсумок|Summary).*$", text, re.MULTILINE
     ))
@@ -1540,20 +1608,14 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     # Dispatch to writer — vocab uses Flash-Lite (dictionary-like structured output).
     from build.dispatch import dispatch_agent as _dispatch
 
-    base_writer = "claude" if "claude" in writer else "gemini"
+    family = get_family(writer)
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
-    # Vocab is structured output — use fast/cheap models
-    if "gemini" in base_writer:
-        from batch_gemini_config import FLASH_LITE_MODEL
-        vocab_model = FLASH_LITE_MODEL
-    else:
-        vocab_model = "claude-sonnet-4-6"  # Sonnet for vocab, not Opus
-
+    # Vocab is structured output — use fast/cheap model
     ok, raw = _dispatch(
-        prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=180,
-        model=vocab_model,
+        prompt, agent=family.name, phase="vocab", orch_dir=orch_dir, timeout=180,
+        model=family.fast,
     )
 
     if not ok or not raw:
@@ -2060,12 +2122,12 @@ def step_activities(
                 orch_dir=orch_dir, timeout=300, mcp_tools=True,
             )
         else:
-            # Activities are structured YAML — use Sonnet, not Opus
+            # Activities are structured YAML — use fast model, not thinking
             ok, raw = _dispatch(
                 current_prompt, agent="claude-tools", phase="activities",
                 orch_dir=orch_dir, timeout=300,
                 mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
-                model="claude-sonnet-4-6",
+                model=CLAUDE_FAMILY.fast,
             )
 
         if not ok or not raw:
@@ -2431,7 +2493,6 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
     Whitelisted words (from global + per-module whitelists) are excluded from
     the "not found" list.
     """
-    import re
     import sqlite3
 
     vesum_db = PROJECT_ROOT / "data" / "vesum.db"
@@ -2531,7 +2592,6 @@ def step_review(content_path: Path, level: str, module_num: int,
 
     # Strip enrichment (tabs, словník, workbook, resources) before review.
     # The reviewer should evaluate the WRITER's prose, not ENRICH-generated content.
-    import re as _re
     generated_content = raw_content
     tab_marker = generated_content.find("<!-- TAB:Словник -->")
     if tab_marker != -1:
@@ -2539,7 +2599,7 @@ def step_review(content_path: Path, level: str, module_num: int,
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
 
     # Inject deterministic word count so reviewer doesn't guess
-    prose_words = len(_re.sub(r":::.*?:::", "", generated_content, flags=_re.DOTALL).split())
+    prose_words = len(re.sub(r":::.*?:::", "", generated_content, flags=re.DOTALL).split())
     word_count_note = f"\n\n**Deterministic word count: {prose_words} words** (calculated by pipeline, do NOT estimate manually)\n"
     generated_content = generated_content + word_count_note
 
@@ -2602,7 +2662,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         reviewer = "claude" if "claude" in reviewer_override else "gemini"
     else:
         reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
-    p = "mcp__rag__" if reviewer == "claude" else "rag_"
+    p = get_family(reviewer).tool_prefix
     review_tools = (
         "\n\n## Verification Tools (MCP)\n\n"
         "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
@@ -2666,7 +2726,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         ok, raw = _dispatch(
             prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
             timeout=600, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
-            model="claude-opus-4-6",
+            model=CLAUDE_FAMILY.thinking,
         )
 
     if not ok or not raw:
@@ -2694,7 +2754,6 @@ def step_review(content_path: Path, level: str, module_num: int,
     _save_structured_findings(raw, orch_dir, round_num)
 
     # Parse raw dimension scores from review output and calculate weighted total
-    import re
 
     # Dimension weights (must match v6-review.md)
     DIMENSION_WEIGHTS = {
@@ -2788,7 +2847,6 @@ def _rewrite_weak_sections(
 
     Returns True if any sections were rewritten.
     """
-    import re
 
     from build.dispatch import CLAUDE_WRITER_TOOLS
     from build.dispatch import dispatch_agent as _dispatch
@@ -2904,140 +2962,6 @@ def _rewrite_weak_sections(
     return True
 
 
-    # _generate_fixes_with_claude and _generate_fixes_from_evidence REMOVED.
-    # Find/replace degraded content quality. Replaced by _rewrite_weak_sections.
-
-
-def _build_review_correction(review_text: str, score: float = 0.0) -> str:
-    """Extract findings from a review and build a PATCH directive for retry.
-
-    ALWAYS PATCH, NEVER REWRITE. Gemini's analysis proved that "rewrite FROM
-    SCRATCH" degrades content (9.6→9.2→8.4). Each rewrite throws away 96% good
-    content and hits new problems. PATCH fixes only the specific issues.
-
-    Parses [DIMENSION] [SEVERITY] findings and formats them as a
-    patch directive that goes at the top of the retry prompt.
-    """
-    import re
-
-    lines = [
-        "<correction_directive>",
-        f"Your previous module scored {score}/10.",
-        "Do NOT rewrite from scratch. Keep the existing content intact.",
-        "Fix ONLY the specific issues listed below. Change as little as possible.",
-        "Every sentence you don't touch is a sentence that stays correct.",
-        "If an issue mentions словник/vocabulary TABLE — IGNORE it (added by a downstream tool, not your responsibility).\n",
-    ]
-
-    # Extract the raw findings section
-    findings_section = re.search(
-        r"## Findings\n(.*?)(?=\n## Verdict|\Z)",
-        review_text,
-        re.DOTALL,
-    )
-
-    if findings_section:
-        # Group lines into finding blocks (a finding starts with [DIMENSION])
-        # then filter ENTIRE blocks if any line contains ENRICH keywords.
-        # This prevents orphaned Location:/Issue:/Fix: lines from leaking through.
-        blocks: list[list[str]] = []
-        current_block: list[str] = []
-        for line in findings_section.group(1).strip().split("\n"):
-            line = line.strip()
-            if not line or line.startswith("```"):
-                continue
-            # New finding block starts with [DIMENSION] or severity marker
-            if "[DIMENSION" in line or "[SEVERITY" in line.upper():
-                if current_block:
-                    blocks.append(current_block)
-                current_block = [line]
-            elif current_block:
-                current_block.append(line)
-            else:
-                current_block = [line]
-        if current_block:
-            blocks.append(current_block)
-
-        for block in blocks:
-            block_text = " ".join(block).lower()
-            # Drop entire block if ANY line mentions ENRICH content
-            if any(kw in block_text for kw in _ENRICH_FILTER_KEYWORDS):
-                continue
-            for line in block:
-                if "critical" in line.lower() or "major" in line.lower():
-                    lines.append(f"- FIX: {line}")
-                elif "minor" in line.lower():
-                    lines.append(f"- NOTE: {line}")
-                elif line.startswith("Location:") or line.startswith("Issue:") or line.startswith("Fix:"):
-                    lines.append(f"  {line}")
-
-    # Also extract the linguistic scan errors (but skip ENRICH-related ones)
-    linguistic_section = re.search(
-        r"## Linguistic Scan\n(.*?)(?=\n## |\Z)",
-        review_text,
-        re.DOTALL,
-    )
-    if linguistic_section:
-        scan_text = linguistic_section.group(1).strip()
-        if scan_text and "no linguistic errors" not in scan_text.lower():
-            # Filter out словник-related linguistic findings
-            scan_lines = [
-                sl for sl in scan_text.split("\n")
-                if not any(kw in sl.lower() for kw in _ENRICH_FILTER_KEYWORDS)
-            ]
-            filtered = "\n".join(scan_lines).strip()
-            if filtered:
-                lines.append(f"\n- FIX (Linguistic): {filtered[:500]}")
-
-    if len(lines) <= 6:
-        # No specific findings extracted
-        lines.append("- Minor quality issues detected. Polish the content.")
-
-    lines.append("</correction_directive>")
-    return "\n".join(lines)
-
-
-def _parse_review_fixes(review_text: str) -> list[dict]:
-    """Parse <fixes> block from reviewer output into find/replace pairs.
-
-    Expected format:
-    <fixes>
-    - find: "exact text"
-      replace: "corrected text"
-    - find: "another problem"
-      replace: "the fix"
-    </fixes>
-
-    Returns list of dicts with 'find' and 'replace' (or 'insert_after') keys.
-    """
-    import re
-
-    match = re.search(r"<fixes>\s*\n(.*?)</fixes>", review_text, re.DOTALL)
-    if not match:
-        return []
-
-    fixes_text = match.group(1)
-
-    try:
-        fixes = yaml.safe_load(fixes_text)
-        if isinstance(fixes, list):
-            # Validate each fix has the required keys
-            valid = []
-            for fix in fixes:
-                if not isinstance(fix, dict):
-                    continue
-                # Normalize: "content" is an alias for "replace"
-                if "content" in fix and "replace" not in fix:
-                    fix["replace"] = fix.pop("content")
-                if "find" in fix or "insert_after" in fix:
-                    valid.append(fix)
-            return valid
-    except Exception:
-        pass
-
-    return []
-
-
 def _strip_dsl_blocks(text: str) -> tuple[str, int]:
     """Strip legacy DSL exercise blocks (:::quiz, :::fill-in, etc.) from content.
 
@@ -3065,7 +2989,6 @@ def _convert_tab_markers(content: str) -> str:
             <TabItem label="Урок">\n...content...\n</TabItem>
             <TabItem label="Словник">\n...
     """
-    import re
 
     tab_pattern = re.compile(r"<!-- TAB:(.+?) -->")
     tabs = list(tab_pattern.finditer(content))
@@ -3590,8 +3513,18 @@ def main():
                 _log(f"\n✅ Review ACCEPTED ({score}/10 + section rewrite applied)")
             else:
                 # Rewrite rejected (too short, dropped sections, etc.)
-                # Accept as-is at 9.0+ — minor issues only
+                # Accept as-is at 9.0+ — minor issues only, but warn about unfixed errors
                 passed = True
+                # Extract unfixed errors from review for visibility
+                unfixed = [
+                    line.strip() for line in review_text.split("\n")
+                    if any(sev in line.lower() for sev in ("critical", "major"))
+                    and any(dim in line for dim in ("[", "Issue:", "Fix:"))
+                ]
+                if unfixed:
+                    _log(f"\n⚠️  Rewrite rejected — {len(unfixed)} error(s) remain unfixed:")
+                    for uf in unfixed[:5]:
+                        _log(f"    • {uf[:120]}")
                 _log(f"\n✅ Review ACCEPTED as-is ({score}/10 — rewrite rejected but score sufficient)")
         else:
             # REVISE: section-level rewrite (not find/replace).

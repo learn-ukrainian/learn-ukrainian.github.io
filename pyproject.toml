@@ -51,7 +51,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
-"tests/*.py" = ["F841"]        # unused variables OK in tests
+"tests/*.py" = ["F841", "SIM117"]  # unused variables + nested with OK in tests
 "scripts/*.py" = ["F401", "F811", "E302", "F821"]  # stubs at root — redirect boilerplate
 
 [tool.mypy]

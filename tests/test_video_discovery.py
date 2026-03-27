@@ -7,33 +7,34 @@ from unittest.mock import patch
 
 import pytest
 
-# Ensure scripts/ is importable
+# Ensure scripts/ and scripts/content/ are importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "content"))
 
 from video_discovery import (
-    VideoCandidate,
+    DEFAULT_CHANNELS,
     DiscoveryResult,
+    VideoCandidate,
     clean_srt,
     download_transcript,
     filter_channels,
-    search_channel,
-    score_candidates,
-    run_discovery,
-    write_discovery_yaml,
-    read_discovery_yaml,
     format_discovery_for_template,
-    extract_lemmas_from_hints,
-    build_search_keywords,
-    build_discovery_keywords,
-    cap_query,
+    read_discovery_yaml,
+    run_discovery,
     search_blogs,
-    format_blog_discovery,
+    search_channel,
     search_rag,
-    format_rag_discovery,
-    _SEMINAR_TRACKS,
-    DEFAULT_CHANNELS,
+    write_discovery_yaml,
 )
-
+from video_discovery_helpers import (
+    _SEMINAR_TRACKS,
+    build_discovery_keywords,
+    build_search_keywords,
+    cap_query,
+    extract_lemmas_from_hints,
+    format_blog_discovery,
+    format_rag_discovery,
+)
 
 # ---------------------------------------------------------------------------
 # clean_srt
@@ -56,7 +57,7 @@ class TestCleanSrt:
     def test_strips_html_tags(self):
         srt = "1\n00:00:01,000 --> 00:00:02,000\n<c>Текст</c> з <b>тегами</b>\n"
         result = clean_srt(srt)
-        assert "Текст з тегами" == result
+        assert result == "Текст з тегами"
 
     def test_deduplicates_consecutive_lines(self):
         srt = (

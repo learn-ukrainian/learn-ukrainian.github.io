@@ -178,8 +178,8 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
     has_voice = has_persona and 'voice' in ctx.plan_data['persona']
     has_role = has_persona and 'role' in ctx.plan_data['persona']
     state.results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
-    # Persona is optional for V6 plan-based modules — INFO, not blocking
-    if state.results['persona'].status == 'FAIL' and not ctx.plan_data:
+    # Persona is optional for V6 plan-based modules — only blocking if no plan exists at all
+    if state.results['persona'].status == 'FAIL' and ctx.plan_data is None:
         state.has_critical_failure = True
 
     state.lint_errors = run_lint_checks(ctx.content, ctx.section_map, ctx.module_num)
