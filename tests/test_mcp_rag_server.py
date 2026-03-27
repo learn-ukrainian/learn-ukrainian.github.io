@@ -46,7 +46,9 @@ class TestListTools:
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_words", "verify_lemma",
             "query_wikipedia", "query_grac", "query_ulif",
-            "query_r2u", "query_pravopys",
+            "query_r2u", "query_pravopys", "query_cefr_level",
+            "search_style_guide", "search_definitions", "search_etymology",
+            "search_idioms", "search_synonyms", "translate_en_uk",
         }
         assert tool_names == expected
 
