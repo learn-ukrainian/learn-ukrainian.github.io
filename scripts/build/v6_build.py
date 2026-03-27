@@ -1112,6 +1112,27 @@ def step_write(level: str, module_num: int, slug: str,
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
+    # Inject persona/voice if available in plan (carries over from V5 seminar plans)
+    persona = plan.get("persona", {})
+    if isinstance(persona, dict) and (persona.get("voice") or persona.get("role")):
+        voice = persona.get("voice", "")
+        role = persona.get("role", "")
+        persona_section = (
+            "\n\n---\n\n"
+            "## Your Writing Identity\n\n"
+            f"**You are: {voice}.**"
+        )
+        if role:
+            persona_section += f" Your persona is *{role}*."
+        persona_section += (
+            "\n\nWrite with the authority, depth, and tone that this identity demands. "
+            "A history professor writes differently from a language tutor. "
+            "A paleographer writes differently from a biographer. "
+            "Let your expertise show in word choice, analytical depth, and cultural sensitivity.\n"
+        )
+        prompt = persona_section + "\n" + prompt
+        _log(f"  🎭 Persona injected: {voice} / {role}")
+
     # Inject pre-verified facts from tool calls (Phase A of two-phase write)
     if verification_text:
         verify_section = (
@@ -3192,8 +3213,20 @@ def _rewrite_weak_sections(
         if verify_path.exists():
             verification_text = verify_path.read_text("utf-8")
 
-    prompt = f"""Fix ONLY the specific errors listed below. Do NOT rewrite from scratch.
+    # Load persona for consistent voice
+    plan_path_for_persona = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    persona_text = ""
+    if plan_path_for_persona.exists():
+        plan_for_persona = yaml.safe_load(plan_path_for_persona.read_text("utf-8"))
+        persona = plan_for_persona.get("persona", {})
+        if isinstance(persona, dict) and persona.get("voice"):
+            persona_text = f"\n**Your identity: {persona['voice']}.**"
+            if persona.get("role"):
+                persona_text += f" Persona: *{persona['role']}*."
+            persona_text += " Maintain this voice in your fixes.\n"
 
+    prompt = f"""Fix ONLY the specific errors listed below. Do NOT rewrite from scratch.
+{persona_text}
 ## CRITICAL RULE: Do NOT invent new claims or change text that wasn't flagged.
 
 The review found specific errors. Fix THOSE errors ONLY. Every sentence you don't
