@@ -1552,7 +1552,7 @@ def step_vocab(content_path: Path, level: str, module_num: int,
         vocab_model = "claude-sonnet-4-6"  # Sonnet for vocab, not Opus
 
     ok, raw = _dispatch(
-        prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=120,
+        prompt, agent=base_writer, phase="vocab", orch_dir=orch_dir, timeout=180,
         model=vocab_model,
     )
 
@@ -2855,16 +2855,14 @@ def _rewrite_weak_sections(
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
-    # Use Claude with tools for rewriting (can verify Ukrainian)
-    reviewer_is_claude = writer in ("gemini", "gemini-tools")
-    if reviewer_is_claude:
+    # Rewrite with same family as writer (it wrote the content, can fix it)
+    if "claude" in writer:
         ok, raw = _dispatch(
             prompt, agent="claude-tools", phase="section-rewrite",
             orch_dir=orch_dir, timeout=300,
             mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
         )
     else:
-        # Gemini reviewed — use Gemini Pro for rewrite
         ok, raw = _dispatch(
             prompt, agent="gemini-tools", phase="section-rewrite",
             orch_dir=orch_dir, timeout=300, mcp_tools=True,
