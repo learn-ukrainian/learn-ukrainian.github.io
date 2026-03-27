@@ -2992,6 +2992,72 @@ def step_review(content_path: Path, level: str, module_num: int,
     return passed, score, raw
 
 
+def _parse_review_fixes(review_text: str) -> list[dict]:
+    """Parse <fixes> block from reviewer output into find/replace pairs.
+
+    Expected format:
+    <fixes>
+    - find: "exact text"
+      replace: "corrected text"
+    </fixes>
+
+    Returns list of dicts with 'find' and 'replace' keys.
+    """
+    match = re.search(r"<fixes>\s*\n(.*?)</fixes>", review_text, re.DOTALL)
+    if not match:
+        return []
+
+    fixes_text = match.group(1)
+    try:
+        fixes = yaml.safe_load(fixes_text)
+        if isinstance(fixes, list):
+            valid = []
+            for fix in fixes:
+                if not isinstance(fix, dict):
+                    continue
+                if "content" in fix and "replace" not in fix:
+                    fix["replace"] = fix.pop("content")
+                if "find" in fix and "replace" in fix:
+                    valid.append(fix)
+            return valid
+    except Exception:
+        pass
+    return []
+
+
+def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int]:
+    """Apply <fixes> find/replace pairs from reviewer to content.
+
+    Returns (success, count_of_fixes_applied).
+    Targeted fixes are better than section rewrites — they change
+    only what the reviewer flagged, preserving everything else.
+    """
+    fixes = _parse_review_fixes(review_text)
+    if not fixes:
+        return False, 0
+
+    content = content_path.read_text("utf-8")
+    applied = 0
+
+    for fix in fixes:
+        find_str = fix.get("find", "")
+        replace_str = fix.get("replace", "")
+        if not find_str or find_str == replace_str:
+            continue
+        if find_str in content:
+            content = content.replace(find_str, replace_str, 1)
+            applied += 1
+            _log(f"  ✅ Fix applied: '{find_str[:50]}...' → '{replace_str[:50]}...'")
+        else:
+            _log(f"  ⚠️  Fix not matched: '{find_str[:60]}...'")
+
+    if applied > 0:
+        content_path.write_text(content, "utf-8")
+        _log(f"  📝 {applied}/{len(fixes)} fixes applied to content")
+
+    return applied > 0, applied
+
+
 def _rewrite_weak_sections(
     review_text: str, content_path: Path, level: str, slug: str,
     writer: str = "claude",
@@ -3706,51 +3772,33 @@ def main():
         )
         _save_v6_state(args.level, slug, "review")
 
-        # Fix loop: reviewer provides <fixes>, we apply deterministically.
-        # If score ≥ 9.0 and reviewer says REVISE with fixes, apply them
-        # and accept — re-review often degrades scores (9.8→9.3 pattern).
+        # Fix strategy: <fixes> first (targeted), section rewrite as fallback.
+        # The reviewer outputs exact find/replace pairs in <fixes> blocks.
+        # These are precise and preserve surrounding text. Section rewriting
+        # is a last resort — it risks introducing new errors.
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
-        elif score >= 9.0:
-            # High-scoring REVISE: section rewrite + accept without re-review.
-            _log(f"\n🔧 Review {score}/10 REVISE — section rewrite (accept after)")
-            rewritten = _rewrite_weak_sections(
-                review_text, content_path, args.level, slug,
-                writer=args.writer,
-                verification_text=verification_text,
-            )
-            if rewritten:
+        elif not passed:
+            # Step 1: Try applying reviewer's <fixes> (deterministic find/replace)
+            fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+            if fixes_applied:
+                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-enriching")
                 step_enrich(content_path, args.level, slug)
                 step_verify(content_path, args.level, args.module)
-                passed = True
-                _log(f"\n✅ Review ACCEPTED ({score}/10 + section rewrite applied)")
-            else:
-                # Rewrite rejected (too short, dropped sections, etc.)
-                # Accept as-is at 9.0+ — minor issues only, but warn about unfixed errors
-                passed = True
-                # Extract unfixed errors from review for visibility
-                unfixed = [
-                    line.strip() for line in review_text.split("\n")
-                    if any(sev in line.lower() for sev in ("critical", "major"))
-                    and any(dim in line for dim in ("[", "Issue:", "Fix:"))
-                ]
-                if unfixed:
-                    _log(f"\n⚠️  Rewrite rejected — {len(unfixed)} error(s) remain unfixed:")
-                    for uf in unfixed[:5]:
-                        _log(f"    • {uf[:120]}")
-                _log(f"\n✅ Review ACCEPTED as-is ({score}/10 — rewrite rejected but score sufficient)")
-        else:
-            # REVISE: section-level rewrite (not find/replace).
-            # Find/replace breaks prose flow — fixing one sentence damages
-            # surrounding context. Instead, rewrite entire weak sections.
-            max_fix_rounds = 2
-            prev_score = score
-            for fix_round in range(1, max_fix_rounds + 1):
-                if passed:
-                    _log(f"\n✅ Review PASSED after fix round {fix_round - 1} ({score}/10)")
-                    break
 
-                _log(f"\n🔧 Review {score}/10 — section rewrite round {fix_round}/{max_fix_rounds}")
+                # Re-review after fixes
+                passed, score, review_text = step_review(
+                    content_path, args.level, args.module, slug,
+                    writer=args.writer, reviewer_override=args.reviewer,
+                )
+                _save_v6_state(args.level, slug, "review")
+
+                if passed:
+                    _log(f"\n✅ Review PASSED after fixes ({score}/10)")
+
+            # Step 2: If fixes didn't resolve or weren't available, try section rewrite (max 1 round)
+            if not passed:
+                _log(f"\n🔧 Review {score}/10 — section rewrite (fallback)")
 
                 rewritten = _rewrite_weak_sections(
                     review_text, content_path, args.level, slug,
@@ -3758,29 +3806,22 @@ def main():
                     verification_text=verification_text,
                 )
 
-                if not rewritten:
-                    _log("  ❌ Section rewrite produced no changes")
-                    break
+                if rewritten:
+                    step_enrich(content_path, args.level, slug)
+                    step_verify(content_path, args.level, args.module)
 
-                step_enrich(content_path, args.level, slug)
-                step_verify(content_path, args.level, args.module)
-
-                passed, score, review_text = step_review(
-                    content_path, args.level, args.module, slug,
-                    writer=args.writer, reviewer_override=args.reviewer,
-                )
-                _save_v6_state(args.level, slug, "review")
-
-                if not passed and score <= prev_score:
-                    _log(
-                        f"\n⚠️  Fix round {fix_round} didn't improve score "
-                        f"({prev_score}→{score}), stopping early"
+                    passed, score, review_text = step_review(
+                        content_path, args.level, args.module, slug,
+                        writer=args.writer, reviewer_override=args.reviewer,
                     )
-                    break
-                prev_score = score
+                    _save_v6_state(args.level, slug, "review")
 
-            if not passed:
-                _log(f"\n⚠️  Review {score}/10 after fix loop (max {max_fix_rounds} rounds)")
+                    if passed:
+                        _log(f"\n✅ Review PASSED after section rewrite ({score}/10)")
+                    else:
+                        _log(f"\n⚠️  Review {score}/10 after section rewrite — accepting as final")
+                else:
+                    _log(f"\n⚠️  Section rewrite produced no changes — accepting as final ({score}/10)")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
