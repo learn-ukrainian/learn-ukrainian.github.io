@@ -1119,19 +1119,38 @@ def step_write(level: str, module_num: int, slug: str,
     voice = persona.get("voice", "")
     role = persona.get("role", "")
 
-    # Fallback: core levels without plan persona get level-appropriate identity
+    # Fallback: levels/tracks without plan persona get appropriate identity
     if not voice:
-        _CORE_PERSONAS = {
+        _PERSONAS = {
+            # Core levels — progressive teacher identity
             "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
-            "a2": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
+            "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
             "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
             "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
-            "c1": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
-            "c2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+            "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
+            "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
+            # Seminar tracks — academic specialists
+            "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
+            "bio": ("Professor of Ukrainian Studies", "The Archival Detective"),
+            "istorio": ("Professor of Historiography", "The Source Critic"),
+            "lit": ("Professor of Ukrainian Literature", "The Stylistic Critic"),
+            "lit-essay": ("Professor of Ukrainian Literature", "The Essay Analyst"),
+            "lit-hist-fic": ("Professor of Ukrainian Literature", "The Historical Fiction Scholar"),
+            "lit-fantastika": ("Professor of Ukrainian Literature", "The Speculative Fiction Scholar"),
+            "lit-war": ("Professor of Ukrainian Literature", "The War Literature Scholar"),
+            "lit-humor": ("Professor of Ukrainian Literature", "The Satirist"),
+            "lit-youth": ("Professor of Ukrainian Literature", "The Youth Literature Scholar"),
+            "lit-drama": ("Professor of Ukrainian Drama", "The Theatre Scholar"),
+            "oes": ("Professor of Old East Slavic", "The Paleographer"),
+            "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
+            "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
         }
-        level_lower = level.lower().split("-")[0]
-        if level_lower in _CORE_PERSONAS:
-            voice, role = _CORE_PERSONAS[level_lower]
+        level_lower = level.lower()
+        # Try exact match first (lit-essay, b2-pro), then base level (a1, b2)
+        if level_lower in _PERSONAS:
+            voice, role = _PERSONAS[level_lower]
+        elif level_lower.split("-")[0] in _PERSONAS:
+            voice, role = _PERSONAS[level_lower.split("-")[0]]
 
     if voice:
         persona_section = (
