@@ -174,13 +174,17 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
     if state.results['structure'].status == 'FAIL':
         state.has_critical_failure = True
 
-    has_persona = ctx.plan_data is not None and 'persona' in ctx.plan_data
-    has_voice = has_persona and 'voice' in ctx.plan_data['persona']
-    has_role = has_persona and 'role' in ctx.plan_data['persona']
-    state.results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
-    # Persona is optional for V6 plan-based modules — only blocking if no plan exists at all
-    if state.results['persona'].status == 'FAIL' and ctx.plan_data is None:
-        state.has_critical_failure = True
+    # Persona was a V5 concept (writing persona in plan YAML). V6 controls tone
+    # via prompt templates + golden fragments instead. Skip for V6 modules.
+    if ctx.plan_data:
+        state.results['persona'] = GateResult('INFO', 'ℹ️', "N/A (V6 — tone set by prompt template)")
+    else:
+        has_persona = ctx.meta_data is not None and 'persona' in (ctx.meta_data or {})
+        has_voice = has_persona and 'voice' in ctx.meta_data['persona']
+        has_role = has_persona and 'role' in ctx.meta_data['persona']
+        state.results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
+        if state.results['persona'].status == 'FAIL':
+            state.has_critical_failure = True
 
     state.lint_errors = run_lint_checks(ctx.content, ctx.section_map, ctx.module_num)
     state.results['lint'] = evaluate_lint(len(state.lint_errors))
