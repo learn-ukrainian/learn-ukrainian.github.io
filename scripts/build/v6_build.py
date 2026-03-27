@@ -2317,7 +2317,6 @@ def step_activities(
         extra_keys = [k for k in data if k not in valid_root_keys]
         for k in extra_keys:
             del data[k]
-        clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         # Strip letter-grid and watch-and-repeat before validation —
         # these are replaced deterministically by _inject_abetka_activities()
@@ -2329,6 +2328,9 @@ def step_activities(
                     act for act in data[section]
                     if act.get("type") not in _DETERMINISTIC_TYPES
                 ]
+
+        # Re-dump after stripping deterministic types
+        clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)
