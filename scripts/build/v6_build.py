@@ -1670,7 +1670,18 @@ def _post_process_content(content_path: Path) -> int:
         fixes += 1
         _log("  🔧 Stripped writer-generated tab markers")
 
-    # 6. Strip stray single quotes from exercise DSL values
+    # 6. Strip writer-generated YouTube video embeds (ENRICH handles video placement)
+    video_pattern = re.compile(
+        r'\n*<YouTubeVideo\s[^>]*/?>\s*\n*',
+    )
+    new_text = video_pattern.sub("\n", text)
+    if new_text != text:
+        video_count = text.count("<YouTubeVideo") - new_text.count("<YouTubeVideo")
+        fixes += 1
+        text = new_text
+        _log(f"  🔧 Stripped {video_count} writer-generated YouTube embeds (ENRICH handles videos)")
+
+    # 7. Strip stray single quotes from exercise DSL values
     # LLMs sometimes produce: q: "'text'" or answer: "'word'"
     stray_quote_pattern = re.compile(
         r'''((?:q|answer|sentence|left|right|statement|name):\s*")'([^"]*)'("?)'''

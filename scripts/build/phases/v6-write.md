@@ -191,6 +191,9 @@ If you write any of these patterns, the module will be rejected in review:
 
 ### Pronunciation Videos
 
+**Do NOT embed YouTube videos in your prose.** A downstream ENRICH tool automatically places pronunciation videos from the plan. If you embed `<YouTubeVideo>` components, they will be duplicated. Simply reference the videos' existence when relevant (e.g., "Watch the pronunciation video for this letter") but do NOT insert `<YouTubeVideo>` tags.
+
+Available videos (for reference only — ENRICH handles placement):
 {PRONUNCIATION_VIDEOS}
 
 ---
