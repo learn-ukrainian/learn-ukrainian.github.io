@@ -1122,8 +1122,8 @@ def step_write(level: str, module_num: int, slug: str,
     # Fallback: core levels without plan persona get level-appropriate identity
     if not voice:
         _CORE_PERSONAS = {
-            "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
-            "a2": ("Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
+            "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
+            "a2": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
             "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
             "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
             "c1": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
