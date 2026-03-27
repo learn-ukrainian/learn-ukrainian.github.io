@@ -1112,11 +1112,28 @@ def step_write(level: str, module_num: int, slug: str,
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
-    # Inject persona/voice if available in plan (carries over from V5 seminar plans)
+    # Inject persona/voice — from plan (seminar tracks) or fallback (core tracks)
     persona = plan.get("persona", {})
-    if isinstance(persona, dict) and (persona.get("voice") or persona.get("role")):
-        voice = persona.get("voice", "")
-        role = persona.get("role", "")
+    if not isinstance(persona, dict):
+        persona = {}
+    voice = persona.get("voice", "")
+    role = persona.get("role", "")
+
+    # Fallback: core levels without plan persona get level-appropriate identity
+    if not voice:
+        _CORE_PERSONAS = {
+            "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
+            "a2": ("Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
+            "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
+            "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+            "c1": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+            "c2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+        }
+        level_lower = level.lower().split("-")[0]
+        if level_lower in _CORE_PERSONAS:
+            voice, role = _CORE_PERSONAS[level_lower]
+
+    if voice:
         persona_section = (
             "\n\n---\n\n"
             "## Your Writing Identity\n\n"
@@ -1127,11 +1144,11 @@ def step_write(level: str, module_num: int, slug: str,
         persona_section += (
             "\n\nWrite with the authority, depth, and tone that this identity demands. "
             "A history professor writes differently from a language tutor. "
-            "A paleographer writes differently from a biographer. "
-            "Let your expertise show in word choice, analytical depth, and cultural sensitivity.\n"
+            "A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. "
+            "Let your identity shape your word choice, pacing, and cultural sensitivity.\n"
         )
         prompt = persona_section + "\n" + prompt
-        _log(f"  🎭 Persona injected: {voice} / {role}")
+        _log(f"  🎭 Persona: {voice} / {role}")
 
     # Inject pre-verified facts from tool calls (Phase A of two-phase write)
     if verification_text:
