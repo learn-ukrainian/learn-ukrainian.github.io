@@ -455,6 +455,122 @@ def step_research(level: str, module_num: int, slug: str) -> Path | None:
     return output_path
 
 
+def step_pre_verify(level: str, module_num: int, slug: str,
+                    writer: str = "claude-tools") -> str | None:
+    """Step 3b: Pre-write verification — force MCP tool calls before writing.
+
+    Dispatches a short, focused prompt that REQUIRES the LLM to call tools:
+    - verify_words on all plan vocabulary
+    - search_text for each section topic
+    - query_pravopys for grammar rules
+    - search_style_guide for calque detection
+    - query_cefr_level for vocabulary level check
+
+    Returns the verification results text, or None on failure.
+    The results are injected into the write prompt so the writer has
+    pre-verified facts — no need to call tools during writing.
+
+    Issue: #1070
+    """
+    _log(f"\n{'='*60}")
+    _log(f"  Step 3b: PRE-VERIFY — Tool-forced fact checking ({writer})")
+    _log(f"{'='*60}")
+
+    # Load template
+    template_path = PHASES_DIR / "v6-pre-verify.md"
+    if not template_path.exists():
+        _log(f"  ❌ Template not found: {template_path}")
+        return None
+
+    template = template_path.read_text("utf-8")
+
+    # Load plan
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        _log(f"  ❌ Plan not found: {plan_path}")
+        return None
+
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+
+    # Build vocabulary list for verification
+    vocab_hints = plan.get("vocabulary_hints", {})
+    required = vocab_hints.get("required", [])
+    recommended = vocab_hints.get("recommended", [])
+    all_vocab = required + recommended
+    vocab_text = "\n".join(f"- {item}" for item in all_vocab) if all_vocab else "(No vocabulary hints in plan)"
+
+    # Build section queries from content_outline
+    sections = plan.get("content_outline", [])
+    section_queries = []
+    for s in sections:
+        title = s.get("section", "")
+        points = s.get("points", [])
+        points_text = "; ".join(str(p) for p in points[:3]) if points else ""
+        section_queries.append(f"- **{title}**: {points_text}")
+    queries_text = "\n".join(section_queries) if section_queries else "(No content outline)"
+
+    # Fill template
+    phase = plan.get("phase", "")
+    replacements = {
+        "{MODULE_NUM}": str(module_num),
+        "{TOPIC_TITLE}": plan.get("title", slug),
+        "{LEVEL}": level.upper(),
+        "{PHASE}": phase,
+        "{PLAN_VOCABULARY}": vocab_text,
+        "{SECTION_QUERIES}": queries_text,
+    }
+    prompt = template
+    for key, value in replacements.items():
+        prompt = prompt.replace(key, value)
+
+    # Save prompt for inspection
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    prompt_path = orch_dir / "v6-pre-verify-prompt.md"
+    prompt_path.write_text(prompt, "utf-8")
+    _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
+
+    # Dispatch — MUST use tools mode. Short prompt (~3-5K chars) encourages tool use.
+    from build.dispatch import CLAUDE_WRITER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    family = get_family(writer)
+    agent = f"{family.name}-tools"
+
+    ok, raw = _dispatch(
+        prompt, agent=agent, phase="pre-verify", orch_dir=orch_dir,
+        timeout=300,
+        mcp_tools=True,
+        allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
+        model=family.fast,  # Fast model sufficient — structured output, not creative
+    )
+
+    if not ok or not raw:
+        _log("  ❌ Pre-verify returned no output")
+        return None
+
+    # Extract <verification> block
+    verify_match = re.search(r"<verification>(.*?)</verification>", raw, re.DOTALL)
+    if verify_match:
+        verification_text = verify_match.group(1).strip()
+    else:
+        verification_text = raw.strip()
+        _log("  ⚠️  No <verification> tags found — using full output")
+
+    # Save verification results
+    verify_path = orch_dir / "pre-verify-results.md"
+    verify_path.write_text(verification_text, "utf-8")
+
+    # Count tool usage indicators in the output
+    tool_indicators = sum(1 for kw in ["VESUM", "Правопис", "textbook", "calque", "CEFR", "NOT FOUND", "Confirmed"]
+                         if kw.lower() in verification_text.lower())
+    _log(f"  ✅ Pre-verification complete ({len(verification_text)} chars, {tool_indicators} verification indicators)")
+    _log(f"  → {verify_path}")
+
+    _save_v6_state(level, slug, "pre-verify")
+    return verification_text
+
+
 def step_skeleton(level: str, module_num: int, slug: str,
                   packet_path: Path, writer: str = "gemini") -> str | None:
     """Step 4: Generate paragraph-level skeleton for large modules.
@@ -845,7 +961,8 @@ def step_write(level: str, module_num: int, slug: str,
                packet_path: Path, writer: str = "gemini",
                correction_directive: str = "",
                skeleton: str = "",
-               no_chunk: bool = False) -> Path | None:
+               no_chunk: bool = False,
+               verification_text: str = "") -> Path | None:
     """Step 5: Single LLM session — generate prose + exercise placeholders.
 
     When word_target >= 2000, the skeleton has multiple H2 sections, and
@@ -995,6 +1112,32 @@ def step_write(level: str, module_num: int, slug: str,
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
+    # Inject pre-verified facts from tool calls (Phase A of two-phase write)
+    if verification_text:
+        verify_section = (
+            "\n\n---\n\n"
+            "## Pre-Verified Facts (from MCP tools — use these, do NOT guess)\n\n"
+            "A verification step already called VESUM, textbooks, Правопис, and "
+            "style guide tools. The results below are GROUND TRUTH. Use them:\n"
+            "- If a word is marked ❌ NOT IN VESUM — do NOT use it\n"
+            "- If a textbook excerpt is provided — use that pedagogy\n"
+            "- If a calque is flagged — use the correct alternative\n"
+            "- If CEFR says a word is above target — find a simpler synonym\n\n"
+            "You do NOT need to call tools yourself — the facts are already verified.\n\n"
+            "<pre_verified_facts>\n"
+            f"{verification_text}\n"
+            "</pre_verified_facts>\n"
+        )
+        # Insert before Knowledge Packet (so it's seen early)
+        if "## Knowledge Packet" in prompt:
+            prompt = prompt.replace(
+                "## Knowledge Packet",
+                verify_section + "\n## Knowledge Packet",
+            )
+        else:
+            prompt = verify_section + prompt
+        _log(f"  🔍 Pre-verified facts injected ({len(verification_text)} chars)")
+
     # Inject skeleton section when provided (Skeleton->Flesh architecture)
     # (skipped for seminar templates — already handled via {SKELETON_SECTION} placeholder)
     if skeleton and not is_seminar:
@@ -1113,6 +1256,7 @@ def step_write_with_retry(
     max_retries: int = 2,
     skeleton: str = "",
     no_chunk: bool = False,
+    verification_text: str = "",
 ) -> Path | None:
     """Write content with quick verify and retry loop.
 
@@ -1150,6 +1294,7 @@ def step_write_with_retry(
             correction_directive=current_directive,
             skeleton=skeleton,
             no_chunk=no_chunk,
+            verification_text=verification_text,
         )
         if output is None:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
@@ -3316,7 +3461,7 @@ def main():
                         help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
@@ -3408,6 +3553,25 @@ def main():
             skeleton_text = existing_skeleton.read_text("utf-8")
             _log(f"  📐 Loaded existing skeleton ({len(skeleton_text.split())} words)")
 
+    # Step 3b: PRE-VERIFY — force tool calls before writing (#1070)
+    verification_text = ""
+    if steps in ("all", "write", "pre-verify"):
+        # Only run pre-verify when using -tools writers (tools must be available)
+        if "tools" in args.writer or steps == "pre-verify":
+            verification_text = step_pre_verify(
+                args.level, args.module, slug,
+                writer=args.writer if "tools" in args.writer else "claude-tools",
+            ) or ""
+        else:
+            _log("\n  ℹ️  Pre-verify skipped (writer has no tools — use --writer claude-tools)")
+
+    # Try to load existing pre-verify from disk if running single step
+    if steps == "write" and not verification_text:
+        existing_verify = CURRICULUM_ROOT / args.level / "orchestration" / slug / "pre-verify-results.md"
+        if existing_verify.exists():
+            verification_text = existing_verify.read_text("utf-8")
+            _log(f"  🔍 Loaded existing pre-verify ({len(verification_text)} chars)")
+
     # Step 5: WRITE + QUICK VERIFY + RETRY
     content_path = None
     if steps in ("all", "write"):
@@ -3416,6 +3580,7 @@ def main():
             writer=args.writer, max_retries=2,
             skeleton=skeleton_text,
             no_chunk=args.no_chunk,
+            verification_text=verification_text,
         )
         if not content_path:
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")

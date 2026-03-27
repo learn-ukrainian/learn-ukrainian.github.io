@@ -80,6 +80,7 @@ CLAUDE_REVIEWER_TOOLS = (
 
 # Phase → sequence number for predictable sort order
 _PHASE_SEQ = {
+    "pre-verify": "00",
     "skeleton": "01",
     "write": "02",
     "activities": "02b",
