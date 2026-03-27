@@ -2319,6 +2319,17 @@ def step_activities(
             del data[k]
         clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
+        # Strip letter-grid and watch-and-repeat before validation —
+        # these are replaced deterministically by _inject_abetka_activities()
+        # after this step. LLM generates wrong format; abetka injection fixes it.
+        _DETERMINISTIC_TYPES = {"letter-grid", "watch-and-repeat"}
+        for section in ("inline", "workbook"):
+            if section in data and isinstance(data[section], list):
+                data[section] = [
+                    act for act in data[section]
+                    if act.get("type") not in _DETERMINISTIC_TYPES
+                ]
+
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)
         errors = sorted(validator.iter_errors(data), key=lambda e: list(e.absolute_path))
