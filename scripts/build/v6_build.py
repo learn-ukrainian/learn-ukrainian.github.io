@@ -1148,11 +1148,7 @@ def step_write(level: str, module_num: int, slug: str,
             "oes": ("Professor of Old East Slavic", "The Paleographer"),
             "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
             "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
-            # Professional tracks
-            "b2-pro": ("Professional Ukrainian Business Instructor", "The Career Coach"),
-            "c1-pro": ("Expert Ukrainian Professional Communication Coach", "The Industry Specialist"),
             # Additional LIT sub-tracks
-            "lit-crimea": ("Professor of Crimean Tatar & Ukrainian Literature", "The Indigenous Voice Scholar"),
             "lit-doc": ("Professor of Ukrainian Documentary Literature", "The Chronicle Analyst"),
         }
         _DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
@@ -3361,13 +3357,13 @@ claims, grammar rules, or cultural facts that aren't here.
     # Validate: section count
     original_h2s = re.findall(r"^## .+", body, re.MULTILINE)
     rewrite_h2s = re.findall(r"^## .+", raw, re.MULTILINE)
-    if len(rewrite_h2s) < len(original_h2s) - 1:
+    if len(rewrite_h2s) != len(original_h2s):  # Gemini review: must be exact, plans are immutable
         _log(f"  ❌ Rewrite dropped sections ({len(original_h2s)} → {len(rewrite_h2s)}), rejecting")
         return False
 
     # Validate: word count (reject if <70% of original — means it was truncated)
     rewrite_words = len(raw.split())
-    min_words = int(original_word_count * 0.7)
+    min_words = int(original_word_count * 0.9)  # Gemini review: 70% was too lenient
     if rewrite_words < min_words:
         _log(f"  ❌ Rewrite too short ({rewrite_words} words, need ≥{min_words}), rejecting")
         return False
