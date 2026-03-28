@@ -1,0 +1,197 @@
+---
+/**
+ * Custom Sidebar — intelligent filtering to show only the active branch.
+ * With 1,735 modules across 15+ tracks, showing the full sidebar tree
+ * is overwhelming. This override finds the active section and only shows
+ * its children, plus a back link and progress indicator.
+ *
+ * Pattern from: KubeDojo starlight-theme-overhaul.md
+ */
+const route = Astro.locals.starlightRoute;
+const sidebar = route.sidebar as any[];
+
+// Walk sidebar tree to find the branch containing the current page
+function hasCurrent(entries: any[]): boolean {
+  return entries.some((e: any) =>
+    (e.type === 'link' && e.isCurrent) ||
+    (e.type === 'group' && hasCurrent(e.entries || []))
+  );
+}
+
+function findActiveBranch(entries: any[]): { label: string; entries: any[] } | null {
+  for (const e of entries) {
+    if (e.type !== 'group') continue;
+    if (!hasCurrent(e.entries)) continue;
+    return { label: e.label, entries: e.entries };
+  }
+  return null;
+}
+
+const branch = findActiveBranch(sidebar);
+
+// Count completed modules (links with isCurrent or already visited — for now just count all)
+function countLinks(entries: any[]): number {
+  let count = 0;
+  for (const e of entries) {
+    if (e.type === 'link') count++;
+    if (e.type === 'group') count += countLinks(e.entries);
+  }
+  return count;
+}
+
+const totalModules = branch ? countLinks(branch.entries) : 0;
+---
+
+{branch ? (
+  <aside class="lu-sidebar">
+    <a class="lu-sidebar-back" href="/">
+      <span aria-hidden="true">&larr;</span> {branch.label}
+    </a>
+
+    <div class="lu-sidebar-progress">
+      <div><strong>1</strong> of <strong>{totalModules}</strong> complete</div>
+      <div class="lu-mini-bar">
+        <div class="lu-mini-fill" style={`width: ${totalModules > 0 ? Math.round(1/totalModules*100) : 0}%`}></div>
+      </div>
+    </div>
+
+    <nav class="lu-sidebar-nav" aria-label="Module navigation">
+      {branch.entries.map(entry => {
+        if (entry.type === 'link') {
+          return (
+            <a
+              href={entry.href}
+              class:list={['lu-sidebar-link', { active: entry.isCurrent }]}
+              aria-current={entry.isCurrent ? 'page' : undefined}
+            >
+              <span class:list={['lu-check', { done: false, current: entry.isCurrent }]}>
+                {entry.isCurrent ? '○' : '○'}
+              </span>
+              {entry.label}
+            </a>
+          );
+        }
+        if (entry.type === 'group') {
+          return (
+            <div class="lu-sidebar-group">
+              <div class="lu-sidebar-label">{entry.label}</div>
+              {entry.entries.map(sub => {
+                if (sub.type === 'link') {
+                  return (
+                    <a
+                      href={sub.href}
+                      class:list={['lu-sidebar-link', { active: sub.isCurrent }]}
+                      aria-current={sub.isCurrent ? 'page' : undefined}
+                    >
+                      <span class:list={['lu-check', { current: sub.isCurrent }]}>
+                        {sub.isCurrent ? '○' : '○'}
+                      </span>
+                      {sub.label}
+                    </a>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          );
+        }
+        return null;
+      })}
+    </nav>
+  </aside>
+) : (
+  /* Fallback: no active branch found — render nothing (splash pages etc.) */
+  null
+)}
+
+<style>
+  .lu-sidebar {
+    padding: 1.25rem 1rem;
+    width: 100%;
+  }
+  .lu-sidebar-back {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .lu-sidebar-back:hover { background: color-mix(in srgb, var(--sl-color-accent) 10%, transparent); }
+
+  .lu-sidebar-progress {
+    margin: 0 0.5rem 1rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--sl-color-gray-6);
+    border-radius: 8px;
+    font-size: 0.75rem;
+  }
+  .lu-mini-bar {
+    height: 4px;
+    background: var(--sl-color-gray-5);
+    border-radius: 2px;
+    margin-top: 0.4rem;
+    overflow: hidden;
+  }
+  .lu-mini-fill {
+    height: 100%;
+    background: var(--sl-color-green-high, #2E7D32);
+    border-radius: 2px;
+  }
+
+  .lu-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .lu-sidebar-group {
+    margin-bottom: 0.75rem;
+  }
+  .lu-sidebar-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--sl-color-gray-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+  .lu-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--sl-color-white);
+    transition: all 0.15s;
+  }
+  .lu-sidebar-link:hover {
+    background: color-mix(in srgb, var(--sl-color-accent) 15%, transparent);
+    color: var(--sl-color-accent);
+  }
+  .lu-sidebar-link.active {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-weight: 600;
+  }
+  .lu-check {
+    width: 1rem;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--sl-color-gray-4);
+    flex-shrink: 0;
+  }
+  .lu-check.done { color: var(--sl-color-green-high, #2E7D32); }
+  .lu-check.current { color: var(--sl-color-accent); }
+
+  @media (max-width: 72rem) {
+    .lu-sidebar { display: none; }
+  }
+</style>

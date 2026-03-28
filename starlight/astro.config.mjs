@@ -67,6 +67,7 @@ export default defineConfig({
         Header: './src/components/overrides/Header.astro',
         Head: './src/components/overrides/Head.astro',
         PageTitle: './src/components/overrides/PageTitle.astro',
+        Sidebar: './src/components/overrides/Sidebar.astro',
         Footer: './src/components/overrides/Footer.astro',
       },
       customCss: [
