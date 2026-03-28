@@ -1067,6 +1067,21 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     from starlette.responses import Response
     from starlette.routing import Mount, Route
 
+    # Pre-load embedding model at startup to avoid lazy-load crashes in async threads.
+    # The BGE-M3 model uses PyTorch which can fail with "Cannot copy out of meta tensor"
+    # when lazy-loaded inside asyncio.to_thread() after the server has been running.
+    print("Pre-loading embedding model...")
+    try:
+        from rag.query import get_text_encoder
+        encoder = get_text_encoder()
+        encoder._load()
+        # Warm up with a test encode to ensure weights are materialized
+        encoder.encode(["тест"], batch_size=1)
+        print("Embedding model pre-loaded and verified ✅")
+    except Exception as e:
+        print(f"⚠️  Embedding model pre-load failed: {e}")
+        print("   search_text and dictionary searches will not work until model loads successfully")
+
     sse = SseServerTransport("/messages/")
 
     async def handle_health(request):
