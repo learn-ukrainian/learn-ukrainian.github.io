@@ -106,6 +106,8 @@ Your prose should contain (after the relevant sections):
 
 ---
 
+{PRE_VERIFIED_FACTS}
+
 ## Knowledge Packet (textbook excerpts from RAG)
 
 **MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.

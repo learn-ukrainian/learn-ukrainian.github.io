@@ -1175,10 +1175,9 @@ def step_write(level: str, module_num: int, slug: str,
         prompt = persona_section + "\n" + prompt
         _log(f"  🎭 Persona: {voice} / {role}")
 
-    # Inject pre-verified facts from tool calls (Phase A of two-phase write)
+    # Inject pre-verified facts via {PRE_VERIFIED_FACTS} placeholder in template
     if verification_text:
         verify_section = (
-            "\n\n---\n\n"
             "## Pre-Verified Facts (from MCP tools — use these, do NOT guess)\n\n"
             "A verification step already called VESUM, textbooks, Правопис, and "
             "style guide tools. The results below are GROUND TRUTH. Use them:\n"
@@ -1191,14 +1190,10 @@ def step_write(level: str, module_num: int, slug: str,
             f"{verification_text}\n"
             "</pre_verified_facts>\n"
         )
-        # Insert before Knowledge Packet (so it's seen early)
-        if "## Knowledge Packet" in prompt:
-            prompt = prompt.replace(
-                "## Knowledge Packet",
-                verify_section + "\n## Knowledge Packet",
-            )
-        else:
-            prompt = verify_section + prompt
+    else:
+        verify_section = ""
+    prompt = prompt.replace("{PRE_VERIFIED_FACTS}", verify_section)
+    if verification_text:
         _log(f"  🔍 Pre-verified facts injected ({len(verification_text)} chars)")
 
     # Inject skeleton section when provided (Skeleton->Flesh architecture)
