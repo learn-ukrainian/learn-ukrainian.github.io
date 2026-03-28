@@ -1,0 +1,649 @@
+# МійКлас (miyklas.com.ua) Ukrainian grammar theory — Grades 5-11, NUS aligned.
+#
+# Hand-curated topic→URL mapping for the V6 build pipeline.
+# URLs verified 2026-03-27 via WebFetch.
+#
+# Usage:
+#   - RESEARCH step: fetch theory page content for knowledge packet
+#   - ENRICH step: inject matching URLs into Ресурсі tab
+#
+# Matching: plan YAML `grammar` and `focus` fields are compared against
+# each entry's `tags` list using keyword overlap scoring.
+#
+# Issue: #1040
+
+version: "1.0"
+source: miyklas.com.ua
+updated: "2026-03-27"
+base_url: https://miyklas.com.ua
+
+topics:
+  # ── Grade 5: Phonetics ────────────────────────────────────────────
+  - title: "Голосні й приголосні звуки"
+    tags: [звуки, голосні, приголосні, фонетика, phonetics, vowels, consonants, sounds]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864
+    grade: 5
+    category: phonetics
+
+  - title: "Приголосні м'які й тверді, дзвінкі й глухі"
+    tags: [м'які, тверді, дзвінкі, глухі, приголосні, consonants, soft, hard, voiced, voiceless]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885
+    grade: 5
+    category: phonetics
+
+  - title: "Алфавіт (абетка, азбука)"
+    tags: [алфавіт, абетка, літери, букви, alphabet, letters]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41217
+    grade: 5
+    category: phonetics
+
+  - title: "Співвідношення звуків і букв"
+    tags: [звуки, букви, співвідношення, letters, sounds, mapping]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281
+    grade: 5
+    category: phonetics
+
+  - title: "Склад. Основні правила переносу"
+    tags: [склад, перенос, syllable, hyphenation]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sklad-osnovni-pravila-perenosu-41850
+    grade: 5
+    category: phonetics
+
+  - title: "Наголос"
+    tags: [наголос, stress, accent, ударение]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/nagolos-41958
+    grade: 5
+    category: phonetics
+
+  - title: "Ненаголошені голосні [е], [и], [о] в коренях слів"
+    tags: [ненаголошені, голосні, корінь, unstressed, vowels, root]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/vimova-nagoloshenikh-i-nenagoloshenikh-golosnikh-nenagolosheni-golosni-e-_-42492
+    grade: 5
+    category: phonetics
+
+  - title: "Уподібнення приголосних звуків"
+    tags: [уподібнення, приголосні, assimilation, consonants]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/vimova-prigolosnikh-zvukiv-upodibnennia-prigolosnikh-zvukiv-42793
+    grade: 5
+    category: phonetics
+
+  - title: "Спрощення в групах приголосних"
+    tags: [спрощення, приголосні, simplification, consonant clusters]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sproshchennia-v-grupakh-prigolosnikh-41974
+    grade: 5
+    category: phonetics
+
+  - title: "Чергування голосних у коренях слів"
+    tags: [чергування, голосні, корінь, alternation, vowels]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/cherguvannia-golosnikh-u-koreniakh-sliv-43524
+    grade: 5
+    category: phonetics
+
+  - title: "Зміни приголосних при словотворенні й формотворенні"
+    tags: [зміни, приголосні, словотворення, consonant changes, word formation]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/zmini-prigolosnikh-pri-slovotvorenni-i-formotvorenni-44357
+    grade: 5
+    category: phonetics
+
+  - title: "Чергування у–в, і–й, з–із–зі (правила милозвучності)"
+    tags: [чергування, милозвучність, euphony, у, в, і, й]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612
+    grade: 5
+    category: phonetics
+
+  - title: "Правила вживання знака м'якшення"
+    tags: [м'який знак, знак м'якшення, soft sign, ь]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904
+    grade: 5
+    category: phonetics
+
+  - title: "Правила вживання апострофа"
+    tags: [апостроф, apostrophe]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-apostrofa-39782
+    grade: 5
+    category: phonetics
+
+  - title: "Подвоєння букв. Подовження приголосних"
+    tags: [подвоєння, подовження, приголосні, doubling, lengthening]
+    url: /p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/podvoyennia-bukv-na-poznachennia-zbigu-odnakovikh-prigolosnikh-podovzhen_-441891
+    grade: 5
+    category: phonetics
+
+  # ── Grade 5: Lexicology ───────────────────────────────────────────
+  - title: "Лексичне значення слова. Однозначні й багатозначні слова"
+    tags: [лексика, значення, однозначні, багатозначні, lexicology, meaning, polysemy]
+    url: /p/ukrainska-mova/5-klas/leksikologiia-40143/leksichne-znachennia-slova-odnoznachni-i-bagatoznachni-slova-40128
+    grade: 5
+    category: lexicology
+
+  - title: "Синоніми. Синонімічний ряд"
+    tags: [синоніми, synonyms]
+    url: /p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151
+    grade: 5
+    category: lexicology
+
+  - title: "Антоніми"
+    tags: [антоніми, antonyms]
+    url: /p/ukrainska-mova/5-klas/leksikologiia-40143/antonimi-antonimi-v-prisliv-iakh-i-prikazkakh-40142
+    grade: 5
+    category: lexicology
+
+  # ── Grade 5: Word structure ───────────────────────────────────────
+  - title: "Основа слова і закінчення"
+    tags: [основа, закінчення, будова слова, stem, ending, word structure]
+    url: /p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400
+    grade: 5
+    category: word_formation
+
+  - title: "Префікс"
+    tags: [префікс, prefix]
+    url: /p/ukrainska-mova/5-klas/budova-slova-40702/prefiks-prefiksi-iaki-nadaiut-slovam-emotciinogo-zabarvlennia-ta-virazno_-436960
+    grade: 5
+    category: word_formation
+
+  - title: "Суфікс"
+    tags: [суфікс, suffix]
+    url: /p/ukrainska-mova/5-klas/budova-slova-40702/sufiks-sufiksi-iaki-nadaiut-slovam-emotciinogo-zabarvlennia-ta-viraznosti-438165
+    grade: 5
+    category: word_formation
+
+  # ── Grade 5: Syntax ───────────────────────────────────────────────
+  - title: "Словосполучення"
+    tags: [словосполучення, phrase, word combination]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/slovospoluchennia-39535
+    grade: 5
+    category: syntax
+
+  - title: "Речення, його граматична основа (підмет і присудок)"
+    tags: [речення, підмет, присудок, sentence, subject, predicate]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372
+    grade: 5
+    category: syntax
+
+  - title: "Речення з однорідними членами"
+    tags: [однорідні, члени, речення, homogeneous, sentence members]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-z-odnoridnimi-chlenami-koma-mizh-odnoridnimi-chlenami-rechennia-39061
+    grade: 5
+    category: syntax
+
+  - title: "Звертання"
+    tags: [звертання, vocative, address]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/zvertannia-neposhireni-i-poshireni-zvertannia-rozdilovi-znaki-pri-zvertan_-38855
+    grade: 5
+    category: syntax
+
+  - title: "Складні речення з безсполучниковим і сполучниковим зв'язком"
+    tags: [складне речення, сполучник, безсполучникове, complex sentence, conjunction]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/skladni-rechennia-z-bezspoluchnikovim-i-spoluchnikovim-zv-iazkom-38302
+    grade: 5
+    category: syntax
+
+  - title: "Пряма мова"
+    tags: [пряма мова, direct speech]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/priama-mova-37998
+    grade: 5
+    category: syntax
+
+  - title: "Діалог"
+    tags: [діалог, dialog, dialogue]
+    url: /p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999
+    grade: 5
+    category: syntax
+
+  # ── Grade 6: Noun (іменник) ───────────────────────────────────────
+  - title: "Іменник як частина мови"
+    tags: [іменник, noun, частина мови]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979
+    grade: 6
+    category: morphology
+
+  - title: "Рід іменників"
+    tags: [рід, іменник, gender, noun, чоловічий, жіночий, середній, masculine, feminine, neuter]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978
+    grade: 6
+    category: morphology
+
+  - title: "Число іменників"
+    tags: [число, іменник, number, noun, однина, множина, singular, plural]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147
+    grade: 6
+    category: morphology
+
+  - title: "Відмінки іменників"
+    tags: [відмінок, відмінки, іменник, case, noun, називний, родовий, давальний, знахідний, орудний, місцевий, кличний]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178
+    grade: 6
+    category: morphology
+
+  - title: "Поділ іменників на відміни та групи"
+    tags: [відміна, іменник, declension, noun]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/podil-imennikiv-na-vidmini-ta-grupi-45179
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання іменників І відміни"
+    tags: [відмінювання, іменник, перша відміна, declension, first]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/vidminiuvannia-imennikiv-i-vidmini-45547
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання іменників ІІ відміни"
+    tags: [відмінювання, іменник, друга відміна, declension, second]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/vidminiuvannia-imennikiv-ii-vidmini-45548
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання іменників ІІІ відміни"
+    tags: [відмінювання, іменник, третя відміна, declension, third]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/vidminiuvannia-imennikiv-iii-vidmini-46486
+    grade: 6
+    category: morphology
+
+  - title: "Кличний відмінок"
+    tags: [кличний, відмінок, іменник, vocative case, noun]
+    url: /p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889
+    grade: 6
+    category: morphology
+
+  # ── Grade 6: Adjective (прикметник) ───────────────────────────────
+  - title: "Прикметник як частина мови"
+    tags: [прикметник, adjective, частина мови]
+    url: /p/ukrainska-mova/6-klas/prikmetnik-47431/prikmetnik-iak-chastina-movi-46716
+    grade: 6
+    category: morphology
+
+  - title: "Групи прикметників за значенням"
+    tags: [прикметник, якісні, відносні, присвійні, adjective, qualitative, relative, possessive]
+    url: /p/ukrainska-mova/6-klas/prikmetnik-47431/grupi-prikmetnikiv-za-znachenniam-46717
+    grade: 6
+    category: morphology
+
+  - title: "Ступені порівняння якісних прикметників"
+    tags: [прикметник, ступені порівняння, вищий, найвищий, comparison, adjective, comparative, superlative]
+    url: /p/ukrainska-mova/6-klas/prikmetnik-47431/stupeni-porivniannia-iakisnikh-prikmetnikiv-46718
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання прикметників"
+    tags: [прикметник, відмінювання, adjective, declension]
+    url: /p/ukrainska-mova/6-klas/prikmetnik-47431/vidminiuvannia-prikmetnikiv-47111
+    grade: 6
+    category: morphology
+
+  # ── Grade 6: Numeral (числівник) ──────────────────────────────────
+  - title: "Числівник як частина мови"
+    tags: [числівник, numeral, number words]
+    url: /p/ukrainska-mova/6-klas/chislivnik-14257/chislivnik-iak-chastina-movi-37269
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання та правопис числівників"
+    tags: [числівник, відмінювання, numeral, declension]
+    url: /p/ukrainska-mova/6-klas/chislivnik-14257/vidminiuvannia-ta-pravopis-chislivnikiv-37361
+    grade: 6
+    category: morphology
+
+  # ── Grade 6: Pronoun (займенник) ──────────────────────────────────
+  - title: "Займенник як частина мови"
+    tags: [займенник, pronoun]
+    url: /p/ukrainska-mova/6-klas/zaimennik-51336/zaimennik-iak-chastina-movi-pravilne-nagoloshuvannia-zaimennikovikh-form-51337
+    grade: 6
+    category: morphology
+
+  - title: "Розряди займенників за значенням"
+    tags: [займенник, розряди, pronoun, types, особові, вказівні, присвійні]
+    url: /p/ukrainska-mova/6-klas/zaimennik-51336/rozriadi-zaimennikiv-za-znachenniam-zaimenniki-iak-zasib-zv-iazku-rechen_-467947
+    grade: 6
+    category: morphology
+
+  - title: "Відмінювання особових і зворотного займенників"
+    tags: [займенник, особовий, зворотний, pronoun, personal, reflexive, declension]
+    url: /p/ukrainska-mova/6-klas/zaimennik-51336/vidminiuvannia-osobovikh-i-zvorotnogo-zaimennikiv-etiketni-funktciyi-zaim_-51338
+    grade: 6
+    category: morphology
+
+  # ── Grade 6: Phraseology ──────────────────────────────────────────
+  - title: "Поняття про фразеологізм"
+    tags: [фразеологізм, idiom, phraseology, фразеологія]
+    url: /p/ukrainska-mova/6-klas/frazeologiia-40687/poniattia-pro-frazeologizm-iogo-leksichne-znachennia-40609
+    grade: 6
+    category: lexicology
+
+  # ── Grade 7: Verb (дієслово) ──────────────────────────────────────
+  - title: "Дієслово: загальне значення, морфологічні ознаки"
+    tags: [дієслово, verb, морфологія, частина мови]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/diyeslovo-zagalne-znachennia-morfologichni-oznaki-sintaksichna-rol-38752
+    grade: 7
+    category: morphology
+
+  - title: "Неозначена форма дієслова (інфінітив)"
+    tags: [дієслово, інфінітив, infinitive, verb]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/neoznachena-forma-diyeslova-infinitiv-468289
+    grade: 7
+    category: morphology
+
+  - title: "Вид дієслова"
+    tags: [дієслово, вид, доконаний, недоконаний, aspect, verb, perfective, imperfective]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/vid-diyeslova-468379
+    grade: 7
+    category: morphology
+
+  - title: "Часи дієслів. Теперішній час"
+    tags: [дієслово, час, теперішній, tense, verb, present]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373
+    grade: 7
+    category: morphology
+
+  - title: "Минулий час дієслів"
+    tags: [дієслово, минулий час, past tense, verb]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/minulii-chas-diyesliv-468469
+    grade: 7
+    category: morphology
+
+  - title: "Майбутній час дієслів"
+    tags: [дієслово, майбутній час, future tense, verb]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/maibutnii-chas-diyesliv-468490
+    grade: 7
+    category: morphology
+
+  - title: "І і ІІ дієвідміни. Дієвідмінювання дієслів"
+    tags: [дієслово, дієвідміна, conjugation, verb, перша, друга]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/i-i-ii-diyevidmini-diyevidminiuvannia-diyesliv-39539
+    grade: 7
+    category: morphology
+
+  - title: "Способи дієслів"
+    tags: [дієслово, спосіб, наказовий, умовний, mood, verb, imperative, conditional]
+    url: /p/ukrainska-mova/7-klas/diyeslovo-14736/sposobi-diyesliv-39998
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Participle (дієприкметник) ───────────────────────────
+  - title: "Дієприкметник як особлива форма дієслова"
+    tags: [дієприкметник, participle]
+    url: /p/ukrainska-mova/7-klas/diyeprikmetnik-43446/diyeprikmetnik-iak-osobliva-forma-diyeslova-41607
+    grade: 7
+    category: morphology
+
+  - title: "Дієприкметниковий зворот"
+    tags: [дієприкметниковий зворот, participial phrase]
+    url: /p/ukrainska-mova/7-klas/diyeprikmetnik-43446/diyeprikmetnikovii-zvorot-41608
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Gerund (дієприслівник) ───────────────────────────────
+  - title: "Дієприслівник як особлива форма дієслова"
+    tags: [дієприслівник, gerund, adverbial participle]
+    url: /p/ukrainska-mova/7-klas/diyeprislivnik-46606/diyeprislivnik-iak-osobliva-forma-diyeslova-45549
+    grade: 7
+    category: morphology
+
+  - title: "Дієприслівниковий зворот"
+    tags: [дієприслівниковий зворот, gerund phrase]
+    url: /p/ukrainska-mova/7-klas/diyeprislivnik-46606/diyeprislivnikovii-zvorot-46390
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Adverb (прислівник) ──────────────────────────────────
+  - title: "Прислівник як самостійна частина мови"
+    tags: [прислівник, adverb]
+    url: /p/ukrainska-mova/7-klas/prislivnik-45318/prislivnik-iak-samostiina-chastina-movi-44965
+    grade: 7
+    category: morphology
+
+  - title: "Ступені порівняння прислівників"
+    tags: [прислівник, ступені порівняння, adverb, comparison]
+    url: /p/ukrainska-mova/7-klas/prislivnik-45318/stupeni-porivniannia-prislivnikiv-45180
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Preposition (прийменник) ─────────────────────────────
+  - title: "Прийменник як службова частина мови"
+    tags: [прийменник, preposition]
+    url: /p/ukrainska-mova/7-klas/priimennik-48228/priimennik-iak-sluzhbova-chastina-movi-nepokhidni-i-pokhidni-priimenniki-48229
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Conjunction (сполучник) ──────────────────────────────
+  - title: "Сполучник як службова частина мови"
+    tags: [сполучник, conjunction, сурядний, підрядний]
+    url: /p/ukrainska-mova/7-klas/spoluchnik-313253/spoluchnik-iak-sluzhbova-chastina-movi-51548
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Particle (частка) ────────────────────────────────────
+  - title: "Загальна характеристика часток"
+    tags: [частка, particle]
+    url: /p/ukrainska-mova/7-klas/chastka-37195/zagalna-kharakteristika-chastok-37204
+    grade: 7
+    category: morphology
+
+  # ── Grade 7: Interjection (вигук) ─────────────────────────────────
+  - title: "Вигук як особлива частина мови"
+    tags: [вигук, interjection]
+    url: /p/ukrainska-mova/7-klas/viguk-38501/viguk-iak-osobliva-chastina-movi-grupi-vigukiv-za-znachenniam-38502
+    grade: 7
+    category: morphology
+
+  # ── Grade 8: Syntax — simple sentence ─────────────────────────────
+  - title: "Словосполучення і речення як одиниці синтаксису"
+    tags: [словосполучення, речення, синтаксис, syntax, phrase, sentence]
+    url: /p/ukrainska-mova/8-klas/slovospoluchennia-i-rechennia-39534/slovospoluchennia-i-rechennia-iak-odinitci-sintaksisu-39377
+    grade: 8
+    category: syntax
+
+  - title: "Підмет. Способи вираження підмета"
+    tags: [підмет, subject, речення, sentence]
+    url: /p/ukrainska-mova/8-klas/proste-rechennia-478879/pidmet-sposobi-virazhennia-pidmeta-40644
+    grade: 8
+    category: syntax
+
+  - title: "Присудок. Способи вираження простого присудка"
+    tags: [присудок, predicate, речення, sentence]
+    url: /p/ukrainska-mova/8-klas/proste-rechennia-478879/prisudok-sposobi-virazhennia-prostogo-prisudka-41667
+    grade: 8
+    category: syntax
+
+  - title: "Тире між підметом і присудком"
+    tags: [тире, підмет, присудок, dash, subject, predicate]
+    url: /p/ukrainska-mova/8-klas/proste-rechennia-478879/tire-mizh-pidmetom-i-prisudkom-42427
+    grade: 8
+    category: syntax
+
+  - title: "Означення"
+    tags: [означення, attribute, другорядні члени, secondary members]
+    url: /p/ukrainska-mova/8-klas/drugoriadni-chleni-rechennia-128066/oznachennia-50366
+    grade: 8
+    category: syntax
+
+  - title: "Додаток"
+    tags: [додаток, object, другорядні члени]
+    url: /p/ukrainska-mova/8-klas/drugoriadni-chleni-rechennia-128066/dodatok-51332
+    grade: 8
+    category: syntax
+
+  - title: "Обставина"
+    tags: [обставина, adverbial modifier, другорядні члени]
+    url: /p/ukrainska-mova/8-klas/drugoriadni-chleni-rechennia-128066/obstavina-51537
+    grade: 8
+    category: syntax
+
+  - title: "Односкладні речення"
+    tags: [односкладне, речення, one-part sentence, означено-особове, безособове]
+    url: /p/ukrainska-mova/8-klas/proste-odnoskladne-rechennia-nepovni-rechennia-135802/vidi-odnoskladnikh-rechen-oznacheno-osobovi-rechennia-135804
+    grade: 8
+    category: syntax
+
+  - title: "Безособові речення"
+    tags: [безособове, речення, impersonal sentence]
+    url: /p/ukrainska-mova/8-klas/proste-odnoskladne-rechennia-nepovni-rechennia-135802/bezosobovi-rechennia-226235
+    grade: 8
+    category: syntax
+
+  - title: "Однорідні члени речення"
+    tags: [однорідні, члени, речення, homogeneous members]
+    url: /p/ukrainska-mova/8-klas/proste-uskladnene-rechennia-46607/odnoridni-chleni-rechennia-46502
+    grade: 8
+    category: syntax
+
+  - title: "Відокремлені означення"
+    tags: [відокремлення, означення, detached attributes, apposition]
+    url: /p/ukrainska-mova/8-klas/rechennia-z-vidokremlenimi-chlenami-37190/vidokremleni-oznachennia-rozdilovi-znaki-v-rechenniakh-iz-vidokremlenimi_-483598
+    grade: 8
+    category: syntax
+
+  # ── Grade 9: Complex sentences ────────────────────────────────────
+  - title: "Поняття про складне речення"
+    tags: [складне речення, complex sentence]
+    url: /p/ukrainska-mova/9-klas/skladne-rechennia-39193/poniattia-pro-skladne-rechennia-37207
+    grade: 9
+    category: syntax
+
+  - title: "Складносурядне речення"
+    tags: [складносурядне, речення, compound sentence]
+    url: /p/ukrainska-mova/9-klas/skladnosuriadne-rechennia-39586/poniattia-pro-skladnosuriadne-rechennia-39513
+    grade: 9
+    category: syntax
+
+  - title: "Складнопідрядне речення"
+    tags: [складнопідрядне, речення, complex subordinate sentence]
+    url: /p/ukrainska-mova/9-klas/skladnopidriadne-rechennia-43534/poniattia-pro-skladnopidriadne-rechennia-41448
+    grade: 9
+    category: syntax
+
+  - title: "СПР з підрядними означальними"
+    tags: [складнопідрядне, означальне, relative clause, subordinate, attributive]
+    url: /p/ukrainska-mova/9-klas/skladnopidriadne-rechennia-43534/spr-z-pidriadnimi-oznachalnimi-42437
+    grade: 9
+    category: syntax
+
+  - title: "СПР з підрядними обставинними умови, мети, причини"
+    tags: [складнопідрядне, обставинне, умова, мета, причина, condition, purpose, cause, subordinate]
+    url: /p/ukrainska-mova/9-klas/skladnopidriadne-rechennia-43534/spr-z-pidriadnimi-obstavinnimi-umovi-meti-prichini-naslidkovimi-i-dopusto_-45320
+    grade: 9
+    category: syntax
+
+  - title: "Безсполучникове складне речення"
+    tags: [безсполучникове, складне речення, asyndetic, compound]
+    url: /p/ukrainska-mova/9-klas/bezspoluchnikove-skladne-rechennia-46707/poniattia-pro-bsr-rozdilovi-znaki-v-bsr-46385
+    grade: 9
+    category: syntax
+
+  # ── Grade 10: Orthoepy ────────────────────────────────────────────
+  - title: "Милозвучність. Чергування у//в, і//й, з//із//зі"
+    tags: [милозвучність, чергування, euphony, у, в, і, й]
+    url: /p/ukrainska-mova/10-klas/orfoepichna-norma-329328/poniattia-milozvuchnosti-cherguvannia-u-v-i-i-z-iz-zi-iak-zasib-milozvuc_-329327
+    grade: 10
+    category: phonetics
+
+  - title: "Основні правила вимови голосних звуків"
+    tags: [вимова, голосні, pronunciation, vowels]
+    url: /p/ukrainska-mova/10-klas/orfoepichna-norma-329328/osnovni-pravila-vimovi-golosnikh-zvukiv-332127
+    grade: 10
+    category: phonetics
+
+  - title: "Основні правила вимови приголосних звуків"
+    tags: [вимова, приголосні, pronunciation, consonants]
+    url: /p/ukrainska-mova/10-klas/orfoepichna-norma-329328/osnovni-pravila-vimovi-prigolosnikh-zvukiv-334761
+    grade: 10
+    category: phonetics
+
+  - title: "Наголос. Основні правила наголошування слів"
+    tags: [наголос, наголошування, stress, accent]
+    url: /p/ukrainska-mova/10-klas/orfoepichna-norma-329328/nagolos-osnovni-pravila-nagoloshuvannia-sliv-normativnii-nagolos-344850
+    grade: 10
+    category: phonetics
+
+  # ── Grade 10: Orthography ─────────────────────────────────────────
+  - title: "Чергування голосних"
+    tags: [чергування, голосні, alternation, vowels]
+    url: /p/ukrainska-mova/10-klas/orfografichna-norma-352880/cherguvannia-golosnikh-360923
+    grade: 10
+    category: phonetics
+
+  - title: "Чергування приголосних в українській мові"
+    tags: [чергування, приголосні, alternation, consonants]
+    url: /p/ukrainska-mova/10-klas/orfografichna-norma-352880/cherguvannia-prigolosnikh-v-ukrayinskii-movi-361758
+    grade: 10
+    category: phonetics
+
+  - title: "Подвоєння та подовження приголосних"
+    tags: [подвоєння, подовження, приголосні, doubling, lengthening, consonants]
+    url: /p/ukrainska-mova/10-klas/orfografichna-norma-352880/podvoyennia-ta-podovzhennia-prigolosnikh-364217
+    grade: 10
+    category: phonetics
+
+  - title: "Апостроф"
+    tags: [апостроф, apostrophe]
+    url: /p/ukrainska-mova/10-klas/orfografichna-norma-352880/apostrof-355181
+    grade: 10
+    category: phonetics
+
+  # ── Grade 10: Morphological norm ──────────────────────────────────
+  - title: "Іменник. Рід іменників. Паралельні родові форми"
+    tags: [іменник, рід, noun, gender, morphological norm]
+    url: /p/ukrainska-mova/10-klas/morfologichna-norma-373940/imennik-rid-imennikiv-paralelni-rodovi-formi-imennika-374830
+    grade: 10
+    category: morphology
+
+  - title: "Складні випадки відмінювання іменників"
+    tags: [іменник, відмінювання, noun, declension, advanced]
+    url: /p/ukrainska-mova/10-klas/morfologichna-norma-373940/skladni-vipadki-vidminiuvannia-imennikiv-zakinchennia-imennikiv-i-vidmin_-378953
+    grade: 10
+    category: morphology
+
+  - title: "Особливості кличного відмінка"
+    tags: [кличний, відмінок, vocative case]
+    url: /p/ukrainska-mova/10-klas/morfologichna-norma-373940/osoblivosti-klichnogo-vidminka-379283
+    grade: 10
+    category: morphology
+
+  # ── Grade 11: Morphological norm ──────────────────────────────────
+  - title: "Прикметник. Ступені порівняння"
+    tags: [прикметник, ступені порівняння, adjective, comparison, вищий, найвищий]
+    url: /p/ukrainska-mova/11-klas/morfologichna-norma-379685/vishchii-i-naivishchii-stupeni-porivniannia-prikmetnikiv-379713
+    grade: 11
+    category: morphology
+
+  - title: "Числівник. Складні випадки узгодження й відмінювання"
+    tags: [числівник, узгодження, відмінювання, numeral, agreement]
+    url: /p/ukrainska-mova/11-klas/morfologichna-norma-379685/chislivnik-skladni-vipadki-uzgodzhennia-i-vidminiuvannia-chislivnika-379884
+    grade: 11
+    category: morphology
+
+  - title: "Дієслово, дієслівні форми. Дієвідміни. Наказовий спосіб"
+    tags: [дієслово, дієвідміна, наказовий, verb, conjugation, imperative]
+    url: /p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008
+    grade: 11
+    category: morphology
+
+  - title: "Активні й пасивні дієприкметники"
+    tags: [дієприкметник, активний, пасивний, participle, active, passive]
+    url: /p/ukrainska-mova/11-klas/morfologichna-norma-379685/aktivni-i-pasivni-diyeprikmetniki-380066
+    grade: 11
+    category: morphology
+
+  # ── Grade 11: Syntactic norm ──────────────────────────────────────
+  - title: "Синтаксична норма. Складні випадки синтаксичного узгодження"
+    tags: [синтаксична норма, узгодження, syntax, agreement]
+    url: /p/ukrainska-mova/11-klas/sintaksichna-norma-380223/poniattia-sintaksichnoyi-normi-sintaksichna-pomilka-skladni-vipadki-sint_-380224
+    grade: 11
+    category: syntax
+
+  - title: "Уживання прийменників В і НА з географічними назвами"
+    tags: [прийменник, в, на, geographic, preposition usage]
+    url: /p/ukrainska-mova/11-klas/sintaksichna-norma-380223/uzhivannia-priimennikiv-v-i-na-z-geografichnimi-nazvami-i-prostorovimi-i_-380264
+    grade: 11
+    category: syntax
+
+  - title: "Пасивні конструкції з дієсловами на -ся"
+    tags: [пасивний, конструкція, -ся, passive voice, reflexive]
+    url: /p/ukrainska-mova/11-klas/sintaksichna-norma-380223/pasivni-konstruktciyi-z-diyeslovami-na-sia-381629
+    grade: 11
+    category: syntax
+
+  - title: "Правила побудови складних речень"
+    tags: [складне речення, побудова, complex sentence, construction]
+    url: /p/ukrainska-mova/11-klas/sintaksichna-norma-380223/pravila-pobudovi-skladnikh-rechen-384176
+    grade: 11
+    category: syntax

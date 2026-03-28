@@ -340,3 +340,104 @@ class TestEnrichIntegration:
         assert "<!-- TAB:Словник -->" in result
         assert "<!-- TAB:Зошит -->" in result
         assert "<!-- TAB:Ресурси -->" in result
+
+
+# ---------------------------------------------------------------------------
+# МійКлас integration in _build_resources (#1040)
+# ---------------------------------------------------------------------------
+
+
+class TestMiyklasResourceIntegration:
+    """Tests for МійКлас grammar entries injected into _build_resources()."""
+
+    _FAKE_INDEX = [
+        {
+            "title": "Голосні й приголосні звуки",
+            "tags": ["звуки", "голосні", "приголосні", "фонетика"],
+            "url": "/p/ukrainska-mova/5-klas/fonetika/golosni",
+            "grade": 5,
+            "category": "phonetics",
+        },
+    ]
+
+    def _patch_index(self):
+        from unittest.mock import patch
+        return patch(
+            "build.miyklas._load_index",
+            return_value=list(self._FAKE_INDEX),
+        )
+
+    def test_miyklas_section_appears_in_resources(self):
+        """When plan grammar matches, МійКлас section appears in output."""
+        plan = {
+            "grammar": ["Голосні і приголосні звуки"],
+            "level": "a1",
+        }
+        with self._patch_index():
+            result = _build_resources(plan)
+        assert "Граматика — Grammar (МійКлас)" in result
+        assert "miyklas.com.ua" in result
+
+    def test_miyklas_links_have_correct_format(self):
+        plan = {
+            "grammar": ["Голосні і приголосні звуки"],
+            "level": "a1",
+        }
+        with self._patch_index():
+            result = _build_resources(plan)
+        # Format: - [title](url) (source)
+        assert "[МійКлас: Голосні й приголосні звуки](" in result
+        assert "(miyklas.com.ua)" in result
+
+    def test_miyklas_alone_produces_output(self):
+        """Even with no refs/ext_resources, miyklas entries alone produce output."""
+        plan = {
+            "grammar": ["Голосні і приголосні звуки"],
+            "level": "a1",
+            # No "references" key — only miyklas matches
+        }
+        with self._patch_index():
+            result = _build_resources(plan)
+        assert result != ""
+        assert "МійКлас" in result
+
+    def test_miyklas_combined_with_refs(self):
+        """МійКлас entries appear alongside regular references."""
+        plan = {
+            "grammar": ["Голосні і приголосні звуки"],
+            "level": "a1",
+            "references": [
+                {"title": "Test Reference", "url": "https://example.com"},
+            ],
+        }
+        with self._patch_index():
+            result = _build_resources(plan)
+        assert "Джерела — References" in result
+        assert "Граматика — Grammar (МійКлас)" in result
+
+    def test_miyklas_failure_does_not_break_resources(self):
+        """If miyklas raises, _build_resources still works (try/except guards it)."""
+        from unittest.mock import patch
+        plan = {
+            "references": [
+                {"title": "Fallback ref", "url": "https://example.com"},
+            ],
+        }
+        with patch(
+            "build.miyklas.build_miyklas_resource_entries",
+            side_effect=RuntimeError("index unavailable"),
+        ):
+            result = _build_resources(plan)
+        # Regular refs still present
+        assert "Fallback ref" in result
+
+    def test_no_grammar_no_miyklas_section(self):
+        """Plan without grammar field produces no МійКлас section."""
+        plan = {
+            "references": [
+                {"title": "Only ref", "url": "https://example.com"},
+            ],
+        }
+        with self._patch_index():
+            result = _build_resources(plan)
+        assert "МійКлас" not in result

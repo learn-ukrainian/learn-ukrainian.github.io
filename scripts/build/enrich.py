@@ -251,7 +251,15 @@ def _build_resources(plan: dict, slug: str = "") -> str:
     refs = plan.get("references", [])
     ext_resources = _load_external_resources(slug, plan) if slug else []
 
-    if not refs and not ext_resources:
+    # МійКлас grammar references (#1040) — auto-matched by plan grammar/focus
+    miyklas_entries: list[dict] = []
+    try:
+        from build.miyklas import build_miyklas_resource_entries
+        miyklas_entries = build_miyklas_resource_entries(plan)
+    except Exception as e:
+        print(f"  ⚠️  МійКлас resource entries skipped: {e}")
+
+    if not refs and not ext_resources and not miyklas_entries:
         return ""
 
     lines = []
@@ -270,6 +278,13 @@ def _build_resources(plan: dict, slug: str = "") -> str:
                 lines.append(f"- {title}")
             if notes:
                 lines.append(f"  _{notes}_")
+        lines.append("")
+
+    if miyklas_entries:
+        lines.append("**Граматика — Grammar (МійКлас)**")
+        lines.append("")
+        for entry in miyklas_entries:
+            lines.append(f"- [{entry['title']}]({entry['url']}) ({entry['source']})")
         lines.append("")
 
     # External curated resources (ULP blog, Dobra Forma, Talk Ukrainian, etc.)

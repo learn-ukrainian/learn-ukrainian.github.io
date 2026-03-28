@@ -263,7 +263,22 @@ def build_packet(plan_path: Path) -> str:
         f"{total_hits} textbook excerpts from RAG.*\n"
     )
 
-    return header + "\n\n".join(section_packets) + "\n" + "\n".join(ref_lines) + footer
+    # МійКлас grammar references (#1040)
+    miyklas_section = ""
+    try:
+        from build.miyklas import build_miyklas_knowledge_section
+        miyklas_section = build_miyklas_knowledge_section(plan)
+    except Exception as e:
+        print(f"  ⚠️  МійКлас integration skipped: {e}")
+
+    return (
+        header
+        + "\n\n".join(section_packets)
+        + "\n"
+        + "\n".join(ref_lines)
+        + miyklas_section
+        + footer
+    )
 
 
 # CLI for testing

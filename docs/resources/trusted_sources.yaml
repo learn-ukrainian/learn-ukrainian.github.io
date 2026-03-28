@@ -105,6 +105,19 @@ sources:
     query_function: e2u_translate, e2u_reverse
     mcp_tool: query_e2u
 
+  - id: miyklas
+    name: МійКлас Ukrainian grammar
+    type: reference
+    url: https://miyklas.com.ua
+    description: >
+      Ukrainian grammar theory pages for Grades 5-11, NUS aligned.
+      Covers phonetics, morphology, syntax, word formation.
+      Theory pages readable via WebFetch without auth.
+      Exercise content behind Мій+ premium — not needed (we generate own exercises).
+    coverage: Grammar rules, phonetics, morphology, syntax (Grades 5-11)
+    index: data/miyklas/grammar_index.yaml
+    query_function: miyklas_match
+
   # ── Reference sources ─────────────────────────────────────────
   - id: pravopys
     name: Ukrainian Pravopys (2019)
