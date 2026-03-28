@@ -3133,7 +3133,12 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     if not fixes:
         return False, 0
 
-    content = content_path.read_text("utf-8")
+    raw_content = content_path.read_text("utf-8")
+
+    # The reviewer sees content with enrichment stripped (no TAB markers, no Словник tab).
+    # Extract just the body (prose) for matching, then write back the modified body + tail.
+    body, tail = _extract_body(raw_content)
+    content = body  # Apply fixes to body only
     applied = 0
 
     for fix in fixes:
@@ -3181,7 +3186,9 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         _log(f"  ⚠️  Fix not matched: '{find_str[:60]}...'")
 
     if applied > 0:
-        content_path.write_text(content, "utf-8")
+        # Reassemble body + tail (enrichment tabs)
+        full_content = "<!-- TAB:Урок -->\n\n" + content.strip() + "\n\n" + tail if tail else content
+        content_path.write_text(full_content, "utf-8")
         _log(f"  📝 {applied}/{len(fixes)} fixes applied to content")
 
     return applied > 0, applied
