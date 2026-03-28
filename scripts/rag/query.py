@@ -36,6 +36,7 @@ from rag.config import (
 _qdrant_client = None
 _text_encoder = None
 _image_encoder = None
+_cross_encoder = None
 _vesum_conn = None
 
 
@@ -64,6 +65,15 @@ def get_image_encoder():
         from rag.embed import ImageEncoder
         _image_encoder = ImageEncoder()
     return _image_encoder
+
+
+def get_cross_encoder():
+    """Lazy-load cross-encoder reranker (#1097). Only loads on first reranked query."""
+    global _cross_encoder
+    if _cross_encoder is None:
+        from rag.embed import CrossEncoderReranker
+        _cross_encoder = CrossEncoderReranker()
+    return _cross_encoder
 
 
 def build_filter(grade: int | None = None, subject: str | None = None,
@@ -230,12 +240,14 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
     else:
         results = hits
 
-    # ColBERT reranking: retrieve more candidates, rerank, return top N (#1099)
+    # Cross-encoder reranking for MCP tool calls (#1097)
     if rerank and len(results) > 1:
-        encoder = get_text_encoder()
-        # Over-fetch for reranking (already have results from retrieval)
-        candidates = results[:limit * 3]
-        results = encoder.colbert_rerank(query, candidates, text_key="text", limit=limit)
+        try:
+            reranker = get_cross_encoder()
+            candidates = results[:limit * 3]
+            results = reranker.rerank(query, candidates, text_key="text", limit=limit)
+        except Exception:
+            results = results[:limit]
     else:
         results = results[:limit]
 
@@ -509,14 +521,16 @@ def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict]:
     return context_chunks
 
 
-def search_dictionary(query: str, collection: str, limit: int = 5) -> list[dict]:
+def search_dictionary(query: str, collection: str, limit: int = 5,
+                      rerank: bool = True) -> list[dict]:
     """Generic semantic search across any dictionary/reference collection.
 
     Works for: style_guide, sum11, grinchenko_dict, frazeolohichnyi,
     balla_en_uk, ukrajinet, dmklinger_uk_en, wiktionary_uk, puls_cefr.
 
-    Uses dense-only search (BGE-M3) — dictionary collections are smaller
-    and don't need the full hybrid approach.
+    Uses dense-only search (BGE-M3) + cross-encoder reranking (#1097).
+    Dictionary lookups benefit most from reranking — exact term matching
+    where semantic similarity alone isn't enough.
     """
     client = get_client()
     encoder = get_text_encoder()
@@ -524,16 +538,18 @@ def search_dictionary(query: str, collection: str, limit: int = 5) -> list[dict]
     result = encoder.encode([query])
     dense_vec = result["dense_vecs"][0].tolist()
 
+    # Over-fetch for reranking
+    fetch_limit = limit * 3 if rerank else limit
+
     try:
         results = client.query_points(
             collection_name=collection,
             query=dense_vec,
             using="dense",
-            limit=limit,
+            limit=fetch_limit,
             with_payload=True,
         )
     except Exception:
-        # Collection may not exist or may not have dense index
         return []
 
     hits = []
@@ -547,6 +563,17 @@ def search_dictionary(query: str, collection: str, limit: int = 5) -> list[dict]
             "metadata": {k: v for k, v in payload.items()
                          if k not in ("text", "source", "headword", "word")},
         })
+
+    # Cross-encoder reranking for precision (#1097)
+    if rerank and len(hits) > 1:
+        try:
+            reranker = get_cross_encoder()
+            hits = reranker.rerank(query, hits, text_key="text", limit=limit)
+        except Exception:
+            hits = hits[:limit]
+    else:
+        hits = hits[:limit]
+
     return hits
 
 

@@ -1,9 +1,9 @@
-"""Embedding encoders for BGE-M3 (text) and SigLIP 2 (images).
+"""Embedding encoders for BGE-M3 (text), SigLIP 2 (images), and cross-encoder reranker.
 
 Lazy-loads models on first use to avoid startup cost.
 
 Usage as library:
-    from rag.embed import TextEncoder, ImageEncoder
+    from rag.embed import TextEncoder, ImageEncoder, CrossEncoderReranker
 
     text_enc = TextEncoder()
     results = text_enc.encode(["Привіт, світе!"])
@@ -150,6 +150,74 @@ class TextEncoder:
         for score, candidate in scored[:limit]:
             candidate = dict(candidate)  # Don't mutate original
             candidate["colbert_score"] = round(score, 4)
+            results.append(candidate)
+
+        return results
+
+
+# Cross-encoder reranker model
+RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
+
+
+class CrossEncoderReranker:
+    """BGE cross-encoder reranker for precise (query, document) scoring (#1097).
+
+    Scores query-document pairs jointly with full cross-attention.
+    More precise than ColBERT for short passages. Use for MCP tool calls
+    where latency matters (~50-100ms for 15 candidates).
+
+    ColBERT (TextEncoder.colbert_rerank) is better for batch operations
+    like knowledge packet building where more candidates are processed.
+    """
+
+    def __init__(self):
+        self._model = None
+
+    def _load(self):
+        if self._model is not None:
+            return
+        from FlagEmbedding import FlagReranker
+
+        print(f"[reranker] Loading cross-encoder from {RERANKER_MODEL}...")
+        self._model = FlagReranker(RERANKER_MODEL, use_fp16=True)
+        print("[reranker] Cross-encoder loaded.")
+
+    def rerank(
+        self,
+        query: str,
+        candidates: list[dict],
+        text_key: str = "text",
+        limit: int = 5,
+    ) -> list[dict]:
+        """Rerank candidates using cross-encoder scoring.
+
+        Args:
+            query: Search query text
+            candidates: List of dicts with text_key field
+            text_key: Key in candidate dicts containing the text
+            limit: Number of top results to return
+
+        Returns:
+            Reranked candidates with added 'rerank_score' key.
+        """
+        self._load()
+        if not candidates:
+            return []
+
+        pairs = [[query, c.get(text_key, "")[:512]] for c in candidates]
+        scores = self._model.compute_score(pairs, normalize=True)
+
+        # compute_score returns a single float for 1 pair, list for multiple
+        if isinstance(scores, (int, float)):
+            scores = [scores]
+
+        scored = list(zip(scores, candidates, strict=False))
+        scored.sort(key=lambda x: -x[0])
+
+        results = []
+        for score, candidate in scored[:limit]:
+            candidate = dict(candidate)
+            candidate["rerank_score"] = round(float(score), 4)
             results.append(candidate)
 
         return results
