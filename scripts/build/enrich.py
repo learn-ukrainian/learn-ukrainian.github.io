@@ -497,14 +497,28 @@ def _format_dialogues(content: str) -> str:
         > — **Привіт!** (Hi!)
         > — **Добре!** (Good!)
 
-    And converts them to a styled dialogue div with each turn separated:
+    And converts them to POC lesson design HTML:
         <div class="dialogue">
-        <p>— **Привіт!** (Hi!)</p>
-        <p>— **Добре!** (Good!)</p>
+        <div class="dialogue-line"><span class="speaker">Оленка:</span> Привіт!</div>
+        <div class="dialogue-line"><span class="speaker">Тарас:</span> Добре!</div>
         </div>
 
     Also handles non-blockquote dialogues (— at line start).
     """
+
+    def _format_dialogue_line(text: str) -> str:
+        """Format a single dialogue line with POC design classes."""
+        # Extract speaker name if present: **Name:** text or — **Name:** text
+        speaker_match = re.match(r"^—?\s*\*\*([^*]+):\*\*\s*(.*)", text)
+        if speaker_match:
+            speaker = speaker_match.group(1)
+            content = speaker_match.group(2)
+            return f'<div class="dialogue-line"><span class="speaker">{speaker}:</span> {content}</div>'
+        # Plain em-dash line
+        if text.startswith("—"):
+            return f'<div class="dialogue-line">{text}</div>'
+        return f'<div class="dialogue-line">{text}</div>'
+
     # Match a block of consecutive blockquote lines containing dialogue
     blockquote_dialogue = re.compile(
         r"((?:^> .+\n)+)",
@@ -514,19 +528,19 @@ def _format_dialogues(content: str) -> str:
     def _convert_blockquote(match: re.Match) -> str:
         block = match.group(1)
         lines = block.strip().split("\n")
-        # Check if this block has dialogue markers (— or **Name:**)
         has_dialogue = any(
             re.match(r"^>\s*(?:—\s|\*\*[^*]+:\*\*)", line) for line in lines
         )
         if not has_dialogue:
-            return match.group(0)  # Not a dialogue, leave as blockquote
+            return match.group(0)
 
         parts = ['<div class="dialogue">\n']
         for line in lines:
             text = re.sub(r"^>\s*", "", line).strip()
             if text:
-                parts.append(f"\n{text}\n")
-        parts.append("\n</div>\n")
+                parts.append(_format_dialogue_line(text))
+                parts.append("\n")
+        parts.append("</div>\n")
         return "\n".join(parts)
 
     result = blockquote_dialogue.sub(_convert_blockquote, content)
@@ -545,8 +559,9 @@ def _format_dialogues(content: str) -> str:
         for line in lines:
             text = line.strip()
             if text:
-                parts.append(f"\n{text}\n")
-        parts.append("\n</div>\n")
+                parts.append(_format_dialogue_line(text))
+                parts.append("\n")
+        parts.append("</div>\n")
         return "\n".join(parts)
 
     result = plain_dialogue.sub(_convert_plain, result)
@@ -562,8 +577,9 @@ def _format_dialogues(content: str) -> str:
         lines = [line.strip() for line in block.strip().split("\n") if line.strip()]
         parts = ['<div class="dialogue">\n']
         for line in lines:
-            parts.append(f"\n{line}\n")
-        parts.append("\n</div>\n")
+            parts.append(_format_dialogue_line(line))
+            parts.append("\n")
+        parts.append("</div>\n")
         return "\n".join(parts)
 
     result = named_dialogue.sub(_convert_named, result)
