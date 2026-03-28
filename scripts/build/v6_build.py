@@ -1148,6 +1148,12 @@ def step_write(level: str, module_num: int, slug: str,
             "oes": ("Professor of Old East Slavic", "The Paleographer"),
             "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
             "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
+            # Professional tracks
+            "b2-pro": ("Professional Ukrainian Business Instructor", "The Career Coach"),
+            "c1-pro": ("Expert Ukrainian Professional Communication Coach", "The Industry Specialist"),
+            # Additional LIT sub-tracks
+            "lit-crimea": ("Professor of Crimean Tatar & Ukrainian Literature", "The Indigenous Voice Scholar"),
+            "lit-doc": ("Professor of Ukrainian Documentary Literature", "The Chronicle Analyst"),
         }
         _DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
 
