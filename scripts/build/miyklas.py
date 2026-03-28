@@ -14,7 +14,6 @@ Issue: #1040
 from __future__ import annotations
 
 import re
-from functools import lru_cache
 from pathlib import Path
 
 import yaml
@@ -48,9 +47,8 @@ _FOCUS_CATEGORY: dict[str, str | None] = {
 }
 
 
-@lru_cache(maxsize=1)
 def _load_index() -> list[dict]:
-    """Load and cache the МійКлас grammar index YAML."""
+    """Load the МійКлас grammar index YAML. No caching — avoids poisoning on failure."""
     if not _INDEX_PATH.exists():
         return []
     try:
@@ -148,7 +146,7 @@ def find_matching_topics(plan: dict, max_results: int = 5) -> list[dict]:
             continue
 
         url_path = entry.get("url", "")
-        full_url = f"{_BASE_URL}{url_path}" if url_path.startswith("/") else url_path
+        full_url = f"{_BASE_URL}{url_path}" if url_path.startswith("/") else f"{_BASE_URL}/{url_path}" if url_path and not url_path.startswith("http") else url_path
 
         scored.append((score, {
             "title": entry.get("title", ""),

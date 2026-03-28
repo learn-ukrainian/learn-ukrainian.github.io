@@ -386,22 +386,8 @@ def _build_resources(plan: dict, slug: str = "") -> str:
                 lines.append(f"- [{link['title']}]({link['url']})")
             lines.append("")
 
-    # МійКлас resources (Grade 5-11 Ukrainian school lessons)
-    miyklas_links = _load_resource_file("miyklas-resources.yaml", slug, plan)
-    if not miyklas_links:
-        # Fallback: auto-match from tag-based index (#1040)
-        miyklas_links = _match_resource_index("miyklas-url-index.yaml", plan)
-    if miyklas_links:
-        lines.append("**Для поглиблення — For deeper study (in Ukrainian)**")
-        lines.append("")
-        for link in miyklas_links:
-            title = link.get("title", "")
-            url = link.get("url", "")
-            topic = link.get("topic", "")
-            lines.append(f"- [{title}]({url})")
-            if topic:
-                lines.append(f"  _{topic}_")
-        lines.append("")
+    # МійКлас resources — handled by build_miyklas_resource_entries() above (PR #1069)
+    # Old _match_resource_index("miyklas-url-index.yaml") removed to avoid duplicates.
 
     lines.append("")
     return "\n".join(lines)

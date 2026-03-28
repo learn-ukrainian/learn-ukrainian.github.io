@@ -10,8 +10,6 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import yaml
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build.miyklas import (
@@ -21,7 +19,6 @@ from build.miyklas import (
     build_miyklas_resource_entries,
     find_matching_topics,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures — synthetic index entries used across tests
@@ -452,12 +449,9 @@ class TestLoadIndex:
     def test_nonexistent_index_returns_empty(self, tmp_path):
         """When the index file doesn't exist, _load_index returns []."""
         with patch("build.miyklas._INDEX_PATH", tmp_path / "nonexistent.yaml"):
-            # Clear the lru_cache before testing
             from build.miyklas import _load_index
-            _load_index.cache_clear()
             result = _load_index()
             assert result == []
-            _load_index.cache_clear()
 
     def test_malformed_yaml_returns_empty(self, tmp_path):
         """Malformed YAML file gracefully returns []."""
@@ -465,10 +459,8 @@ class TestLoadIndex:
         bad_file.write_text(": : : invalid yaml [[[", "utf-8")
         with patch("build.miyklas._INDEX_PATH", bad_file):
             from build.miyklas import _load_index
-            _load_index.cache_clear()
             result = _load_index()
             assert result == []
-            _load_index.cache_clear()
 
     def test_yaml_without_topics_key_returns_empty(self, tmp_path):
         """YAML file that lacks 'topics' key returns []."""
@@ -476,7 +468,5 @@ class TestLoadIndex:
         no_topics.write_text("version: '1.0'\nsource: test\n", "utf-8")
         with patch("build.miyklas._INDEX_PATH", no_topics):
             from build.miyklas import _load_index
-            _load_index.cache_clear()
             result = _load_index()
             assert result == []
-            _load_index.cache_clear()
