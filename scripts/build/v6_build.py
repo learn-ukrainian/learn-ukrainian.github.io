@@ -3122,10 +3122,12 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     Targeted fixes are better than section rewrites — they change
     only what the reviewer flagged, preserving everything else.
 
-    Stress-mark aware: reviewer sees content BEFORE stress annotation,
-    but fixes are applied AFTER. So find strings won't have stress marks
-    but the content will. We strip stress marks for matching, then apply
-    the fix to the original stressed content.
+    The reviewer sees content with enrichment stripped and no stress marks.
+    The actual file has enrichment (TAB markers) and may have stress marks.
+    We extract the body, strip stress marks for matching, and apply fixes.
+
+    Reviewed by Gemini (2026-03-28) — fixed: stress offset calculation,
+    dangling combining chars, TAB:Урок duplication, find_str stress stripping.
     """
     STRESS_MARK = "\u0301"
 
@@ -3147,47 +3149,54 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         if not find_str or find_str == replace_str:
             continue
 
-        # Try exact match first
-        if find_str in content:
-            content = content.replace(find_str, replace_str, 1)
+        # Strip stress marks from find_str too — reviewer might include them
+        find_unstressed = find_str.replace(STRESS_MARK, "")
+        replace_unstressed = replace_str  # Keep replacement as-is
+
+        # Try exact match first (handles no-stress-mark case)
+        if find_unstressed in content:
+            content = content.replace(find_unstressed, replace_unstressed, 1)
             applied += 1
-            _log(f"  ✅ Fix applied: '{find_str[:50]}...'")
+            _log(f"  ✅ Fix applied: '{find_unstressed[:50]}...'")
             continue
 
         # Try stress-mark-aware match: strip stress from content for matching
         content_unstressed = content.replace(STRESS_MARK, "")
-        if find_str in content_unstressed:
-            # Find the position in unstressed content
-            pos = content_unstressed.index(find_str)
-            # Count stress marks before this position in original content
-            stress_offset = content[:pos + len(find_str) * 2].count(STRESS_MARK)
-            # Find the actual substring in stressed content by scanning
-            # Use a sliding window approach
-            found = False
-            for start in range(max(0, pos - stress_offset - 5), min(len(content), pos + stress_offset + 5)):
-                candidate = content[start:start + len(find_str) + stress_offset + 10]
-                if candidate.replace(STRESS_MARK, "") .startswith(find_str):
-                    # Find exact end
-                    end = start
-                    unstressed_count = 0
-                    while end < len(content) and unstressed_count < len(find_str):
-                        if content[end] != STRESS_MARK:
-                            unstressed_count += 1
-                        end += 1
-                    content = content[:start] + replace_str + content[end:]
-                    applied += 1
-                    _log(f"  ✅ Fix applied (stress-aware): '{find_str[:50]}...'")
-                    found = True
-                    break
-            if not found:
-                _log(f"  ⚠️  Fix not matched (even stress-aware): '{find_str[:60]}...'")
+        if find_unstressed in content_unstressed:
+            # Map from unstressed position to stressed position
+            # Build a mapping: unstressed_idx → stressed_idx
+            pos_unstressed = content_unstressed.index(find_unstressed)
+
+            # Walk through stressed content to find the real start position
+            stressed_idx = 0
+            unstressed_idx = 0
+            while unstressed_idx < pos_unstressed and stressed_idx < len(content):
+                if content[stressed_idx] != STRESS_MARK:
+                    unstressed_idx += 1
+                stressed_idx += 1
+            start = stressed_idx
+
+            # Find the end: walk through len(find_unstressed) base characters
+            end = start
+            base_count = 0
+            while end < len(content) and base_count < len(find_unstressed):
+                if content[end] != STRESS_MARK:
+                    base_count += 1
+                end += 1
+            # Consume any trailing stress mark attached to the last character
+            if end < len(content) and content[end] == STRESS_MARK:
+                end += 1
+
+            content = content[:start] + replace_unstressed + content[end:]
+            applied += 1
+            _log(f"  ✅ Fix applied (stress-aware): '{find_unstressed[:50]}...'")
             continue
 
-        _log(f"  ⚠️  Fix not matched: '{find_str[:60]}...'")
+        _log(f"  ⚠️  Fix not matched: '{find_unstressed[:60]}...'")
 
     if applied > 0:
-        # Reassemble body + tail (enrichment tabs)
-        full_content = "<!-- TAB:Урок -->\n\n" + content.strip() + "\n\n" + tail if tail else content
+        # Reassemble: body (TAB:Урок stripped by _extract_body) + tail (enrichment)
+        full_content = ("<!-- TAB:Урок -->\n\n" + content.strip() + "\n\n" + tail) if tail else content
         content_path.write_text(full_content, "utf-8")
         _log(f"  📝 {applied}/{len(fixes)} fixes applied to content")
 
