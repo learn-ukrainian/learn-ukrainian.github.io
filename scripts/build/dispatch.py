@@ -227,12 +227,18 @@ def dispatch_agent(
         )
         return ok, raw
 
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as e:
         elapsed = time.monotonic() - t0
         _log(f"  ❌ {agent_label} timed out ({timeout}s)")
+        # Capture partial output for debugging (e.g., stuck tool call visible in stderr)
+        partial_stderr = e.stderr.decode("utf-8") if isinstance(e.stderr, bytes) else (e.stderr or "")
+        partial_stdout = e.stdout.decode("utf-8") if isinstance(e.stdout, bytes) else (e.stdout or "")
         _save_dispatch_log(
             orch_dir, phase, agent_label,
             prompt_chars=len(prompt),
+            response_chars=len(partial_stdout),
+            stderr=partial_stderr,
             duration_s=elapsed,
+            ok=False,
         )
         return False, ""
