@@ -1,27 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Background circle with Ukrainian blue -->
+  <!-- Blue circle background -->
   <circle cx="50" cy="50" r="48" fill="#0057B7"/>
-
-  <!-- Inner yellow circle -->
-  <circle cx="50" cy="50" r="38" fill="#FFD700"/>
-
-  <!-- Book/curriculum symbol -->
-  <g transform="translate(25, 28)">
-    <!-- Open book pages -->
-    <path d="M25 0 L25 35 Q12.5 32 0 35 L0 5 Q12.5 2 25 5" fill="#0057B7"/>
-    <path d="M25 0 L25 35 Q37.5 32 50 35 L50 5 Q37.5 2 25 5" fill="#003b80"/>
-
-    <!-- Page lines on left -->
-    <line x1="5" y1="10" x2="20" y2="8" stroke="#FFD700" stroke-width="2"/>
-    <line x1="5" y1="17" x2="20" y2="15" stroke="#FFD700" stroke-width="2"/>
-    <line x1="5" y1="24" x2="20" y2="22" stroke="#FFD700" stroke-width="2"/>
-
-    <!-- Page lines on right -->
-    <line x1="30" y1="8" x2="45" y2="10" stroke="#FFD700" stroke-width="2"/>
-    <line x1="30" y1="15" x2="45" y2="17" stroke="#FFD700" stroke-width="2"/>
-    <line x1="30" y1="22" x2="45" y2="24" stroke="#FFD700" stroke-width="2"/>
+  <!-- Yellow inner ring -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#FFD700" stroke-width="3"/>
+  <!-- Open book -->
+  <g transform="translate(24, 26)">
+    <!-- Left page -->
+    <path d="M26 4 Q13 0 0 4 L0 38 Q13 34 26 38 Z" fill="#ffffff"/>
+    <!-- Right page -->
+    <path d="M26 4 Q39 0 52 4 L52 38 Q39 34 26 38 Z" fill="#e8e8e8"/>
+    <!-- Spine -->
+    <line x1="26" y1="4" x2="26" y2="38" stroke="#0057B7" stroke-width="1.5"/>
+    <!-- Lines on left page -->
+    <line x1="6" y1="12" x2="22" y2="10" stroke="#0057B7" stroke-width="1.5" opacity="0.6"/>
+    <line x1="6" y1="18" x2="22" y2="16" stroke="#0057B7" stroke-width="1.5" opacity="0.6"/>
+    <line x1="6" y1="24" x2="22" y2="22" stroke="#FFD700" stroke-width="1.5"/>
+    <!-- Lines on right page -->
+    <line x1="30" y1="10" x2="46" y2="12" stroke="#0057B7" stroke-width="1.5" opacity="0.6"/>
+    <line x1="30" y1="16" x2="46" y2="18" stroke="#0057B7" stroke-width="1.5" opacity="0.6"/>
+    <line x1="30" y1="22" x2="46" y2="24" stroke="#FFD700" stroke-width="1.5"/>
   </g>
-
-  <!-- "УК" letters (Ukrainian abbreviation) -->
-  <text x="50" y="82" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#0057B7" text-anchor="middle">CO</text>
+  <!-- Ukrainian trident (tryzub) simplified -->
+  <g transform="translate(38, 70)">
+    <path d="M12 0 L12 14 M6 3 L6 11 Q9 14 12 14 M18 3 L18 11 Q15 14 12 14"
+          fill="none" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
 </svg>

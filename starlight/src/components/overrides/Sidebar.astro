@@ -29,17 +29,27 @@ function findActiveBranch(entries: any[]): { label: string; entries: any[] } | n
 
 const branch = findActiveBranch(sidebar);
 
-// Count completed modules (links with isCurrent or already visited — for now just count all)
-function countLinks(entries: any[]): number {
+// Count module links — exclude index/landing pages
+function countModules(entries: any[]): number {
   let count = 0;
   for (const e of entries) {
-    if (e.type === 'link') count++;
-    if (e.type === 'group') count += countLinks(e.entries);
+    if (e.type === 'link' && !e.href.replace(/\/$/, '').endsWith('/' + branch?.label.split(' ')[0].toLowerCase())) {
+      // Skip links that point to the level index (e.g., /a1/)
+      const segments = e.href.replace(/\/$/, '').split('/').filter(Boolean);
+      if (segments.length >= 2) count++; // Only count actual module pages, not index
+    }
+    if (e.type === 'group') count += countModules(e.entries);
   }
   return count;
 }
 
-const totalModules = branch ? countLinks(branch.entries) : 0;
+const totalModules = branch ? countModules(branch.entries) : 0;
+
+// Check if a link is a level/track index page (e.g., /a1/ but not /a1/some-module/)
+function isIndexPage(href: string): boolean {
+  const segments = href.replace(/\/$/, '').split('/').filter(Boolean);
+  return segments.length <= 1; // e.g., /a1/ has 1 segment, /a1/sounds-letters/ has 2
+}
 ---
 
 {branch ? (
@@ -58,6 +68,7 @@ const totalModules = branch ? countLinks(branch.entries) : 0;
     <nav class="lu-sidebar-nav" aria-label="Module navigation">
       {branch.entries.map(entry => {
         if (entry.type === 'link') {
+          if (isIndexPage(entry.href)) return null; // Skip index pages
           return (
             <a
               href={entry.href}

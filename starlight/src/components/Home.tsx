@@ -266,45 +266,7 @@ export default function Home(): ReactNode {
         </section>
       </main>
 
-      <footer className={styles.siteFooter}>
-        <div className="container" style={{maxWidth: '1200px', margin: '0 auto', padding: '0 20px'}}>
-          <div className={styles.footerLinks}>
-            <div className={styles.footerCol}>
-              <h4>Learn</h4>
-              <ul>
-                <li><a href="/a1/">A1 - Beginner</a></li>
-                <li><a href="/a2/">A2 - Elementary</a></li>
-                <li><a href="/b1/">B1 - Intermediate</a></li>
-              </ul>
-            </div>
-            <div className={styles.footerCol}>
-              <h4>Advanced</h4>
-              <ul>
-                <li><a href="/b2/">B2 - Upper-Intermediate</a></li>
-                <li><a href="/c1/">C1 - Advanced</a></li>
-                <li><a href="/c2/">C2 - Mastery</a></li>
-              </ul>
-            </div>
-            <div className={styles.footerCol}>
-              <h4>Tracks</h4>
-              <ul>
-                <li><a href="/hist/">HIST - History</a></li>
-                <li><a href="/bio/">BIO - Biographies</a></li>
-                <li><a href="/lit/">LIT - Literature</a></li>
-              </ul>
-            </div>
-            <div className={styles.footerCol}>
-              <h4>More</h4>
-              <ul>
-                <li><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io" target="_blank" rel="noopener">GitHub</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className={styles.footerCopyright}>
-            Learn Ukrainian © 2026 — Слава Україні! 🇺🇦
-          </div>
-        </div>
-      </footer>
+      {/* Footer is rendered by Starlight's Footer.astro override — no duplicate needed here */}
     </div>
   );
 }
