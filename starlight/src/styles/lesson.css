@@ -438,6 +438,28 @@
   background: var(--ifm-card-background-color);
 }
 
+/* ============= 10. TYPOGRAPHY (POC #1067) ============= */
+
+/* Ukrainian text emphasis — blue bold for taught words */
+.ukr {
+  font-weight: 600;
+  color: var(--lesson-blue);
+}
+
+/* Translation/transliteration — gray italic */
+.trans {
+  color: var(--ifm-color-emphasis-600, #757575);
+  font-style: italic;
+  font-size: 0.875em;
+}
+
+/* Section headings — blue with yellow underline (POC style) */
+.content-area h2 {
+  color: var(--lesson-blue);
+  padding-bottom: 0.375rem;
+  border-bottom: 2px solid var(--lesson-yellow);
+}
+
 /* ============= RESPONSIVE ============= */
 @media (max-width: 600px) {
   .flashcards {
