@@ -98,7 +98,9 @@ def get_family(writer: str) -> ModelFamily:
     """Resolve writer/reviewer string to a ModelFamily."""
     if "claude" in writer:
         return CLAUDE_FAMILY
-    return GEMINI_FAMILY
+    if "gemini" in writer:
+        return GEMINI_FAMILY
+    raise ValueError(f"Unknown model family for writer: {writer}")
 
 
 def _build_tool_instructions(writer: str) -> str:
