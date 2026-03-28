@@ -14,7 +14,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^5.0.2",
     "@astrojs/sitemap": "^3.7.1",
     "@astrojs/starlight": "^0.38.2",
     "@astrojs/starlight-docsearch": "^0.6.1",
