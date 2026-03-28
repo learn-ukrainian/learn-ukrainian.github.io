@@ -1732,16 +1732,27 @@ def _post_process_content(content_path: Path) -> int:
         fixes += 1
         _log("  🔧 Stripped writer-generated tab markers")
 
-    # 6. Strip writer-generated YouTube video embeds (ENRICH handles video placement)
-    video_pattern = re.compile(
-        r'\n*<YouTubeVideo\s[^>]*/?>\s*\n*',
-    )
-    new_text = video_pattern.sub("\n", text)
-    if new_text != text:
-        video_count = text.count("<YouTubeVideo") - new_text.count("<YouTubeVideo")
-        fixes += 1
-        text = new_text
-        _log(f"  🔧 Stripped {video_count} writer-generated YouTube embeds (ENRICH handles videos)")
+    # 6. Strip writer-generated YouTube video embeds ONLY when plan has pronunciation_videos
+    # (ENRICH will add them properly). Seminar modules without pronunciation_videos
+    # may legitimately embed inline videos — don't strip those. (Gemini review #9)
+    slug = content_path.stem
+    level_dir = content_path.parent.name
+    plan_path = CURRICULUM_ROOT / "plans" / level_dir / f"{slug}.yaml"
+    has_plan_videos = False
+    if plan_path.exists():
+        try:
+            plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+            has_plan_videos = bool(plan_data.get("pronunciation_videos"))
+        except Exception:
+            pass
+    if has_plan_videos:
+        video_pattern = re.compile(r'\n*<YouTubeVideo\s[^>]*/?>\s*\n*')
+        new_text = video_pattern.sub("\n", text)
+        if new_text != text:
+            video_count = text.count("<YouTubeVideo") - new_text.count("<YouTubeVideo")
+            fixes += 1
+            text = new_text
+            _log(f"  🔧 Stripped {video_count} writer-generated YouTube embeds (ENRICH handles videos)")
 
     # 7. Strip stray single quotes from exercise DSL values
     # LLMs sometimes produce: q: "'text'" or answer: "'word'"
