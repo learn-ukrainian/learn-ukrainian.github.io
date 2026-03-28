@@ -571,7 +571,8 @@ class ActivityParser:
             for i, opt in enumerate(raw_options):
                 if isinstance(opt, str):
                     # V2: correct is integer index; V1: match by answer string
-                    is_correct = i == correct_index if isinstance(correct_index, int) else opt == correct_answer
+                    # Use type() not isinstance() — bool is subclass of int in Python
+                    is_correct = i == correct_index if type(correct_index) is int else opt == correct_answer
                     options.append(QuizOption(text=opt, correct=is_correct))
                 else:
                     options.append(QuizOption(text=opt['text'], correct=opt.get('correct', False)))

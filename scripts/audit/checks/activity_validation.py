@@ -514,10 +514,11 @@ def check_quiz_single_correct(yaml_activities: list) -> list:
                 continue
 
             # Check for V2 format: correct is an integer index on the item
+            # Use type() not isinstance() — bool is subclass of int in Python
             correct_idx = None
-            if hasattr(item, 'correct') and isinstance(item.correct, int):
+            if hasattr(item, 'correct') and type(item.correct) is int:
                 correct_idx = item.correct
-            elif isinstance(item, dict) and isinstance(item.get('correct'), int):
+            elif isinstance(item, dict) and type(item.get('correct')) is int:
                 correct_idx = item['correct']
 
             if correct_idx is not None:
