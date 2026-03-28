@@ -115,7 +115,8 @@ def _keyword_search(client, query: str, qfilter, limit: int) -> list[dict]:
 
 
 def search_text(query: str, grade: int | None = None, subject: str | None = None,
-                trust_tier: int | None = None, limit: int = 5) -> list[dict]:
+                trust_tier: int | None = None, limit: int = 5,
+                rerank: bool = False) -> list[dict]:
     """Hybrid text search combining dense + sparse + keyword scores.
 
     Three-leg search:
@@ -225,9 +226,20 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
             if h["chunk_id"] not in {kh["chunk_id"] for kh in keyword_hits}:
                 merged.append(h)
         merged.sort(key=lambda x: x["score"], reverse=True)
-        return merged[:limit]
+        results = merged
+    else:
+        results = hits
 
-    return hits[:limit]
+    # ColBERT reranking: retrieve more candidates, rerank, return top N (#1099)
+    if rerank and len(results) > 1:
+        encoder = get_text_encoder()
+        # Over-fetch for reranking (already have results from retrieval)
+        candidates = results[:limit * 3]
+        results = encoder.colbert_rerank(query, candidates, text_key="text", limit=limit)
+    else:
+        results = results[:limit]
+
+    return results
 
 
 def search_literary(query: str, work: str | None = None, genre: str | None = None,

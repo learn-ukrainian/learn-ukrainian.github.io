@@ -50,10 +50,10 @@ class TextEncoder:
             BGE_M3_MODEL,
             return_dense=True,
             return_sparse=True,
-            return_colbert_vecs=False,
+            return_colbert_vecs=True,  # Enable ColBERT for reranking (#1099)
             **kwargs,
         )
-        print("[embed] BGE-M3 loaded.")
+        print("[embed] BGE-M3 loaded (dense + sparse + ColBERT).")
 
     def encode(
         self,
@@ -82,6 +82,77 @@ class TextEncoder:
             "dense_vecs": result["dense_vecs"],
             "lexical_weights": result["lexical_weights"],
         }
+
+    def colbert_rerank(
+        self,
+        query: str,
+        candidates: list[dict],
+        text_key: str = "text",
+        limit: int = 5,
+    ) -> list[dict]:
+        """Rerank candidates using ColBERT MaxSim scoring (#1099).
+
+        ColBERT computes token-level similarity: for each query token,
+        find the max similarity across all document tokens, then sum.
+        This captures fine-grained term interactions that dense vectors miss.
+
+        Args:
+            query: Search query text
+            candidates: List of dicts with text_key field
+            text_key: Key in candidate dicts containing the text to score
+            limit: Number of top results to return
+
+        Returns:
+            Reranked candidates (top `limit`), each with added 'colbert_score' key.
+        """
+        import numpy as np
+
+        self._load()
+        if not candidates:
+            return []
+
+        # Encode query and all candidate texts in one batch
+        texts = [query] + [c.get(text_key, "")[:512] for c in candidates]
+        result = self._model.encode(
+            texts,
+            batch_size=len(texts),
+            max_length=512,
+            return_dense=False,
+            return_sparse=False,
+            return_colbert_vecs=True,
+        )
+
+        colbert_vecs = result["colbert_vecs"]
+        query_vecs = colbert_vecs[0]  # (num_query_tokens, 1024)
+
+        scored = []
+        for i, candidate in enumerate(candidates):
+            doc_vecs = colbert_vecs[i + 1]  # (num_doc_tokens, 1024)
+
+            # MaxSim: for each query token, find max cosine similarity with any doc token
+            # Normalize vectors for cosine similarity
+            q_norm = query_vecs / (np.linalg.norm(query_vecs, axis=1, keepdims=True) + 1e-8)
+            d_norm = doc_vecs / (np.linalg.norm(doc_vecs, axis=1, keepdims=True) + 1e-8)
+
+            # (num_query_tokens, num_doc_tokens) similarity matrix
+            sim_matrix = q_norm @ d_norm.T
+
+            # MaxSim: max over doc tokens for each query token, then sum
+            max_sim_score = float(sim_matrix.max(axis=1).sum())
+
+            scored.append((max_sim_score, candidate))
+
+        # Sort by ColBERT score descending
+        scored.sort(key=lambda x: -x[0])
+
+        # Add colbert_score to results
+        results = []
+        for score, candidate in scored[:limit]:
+            candidate = dict(candidate)  # Don't mutate original
+            candidate["colbert_score"] = round(score, 4)
+            results.append(candidate)
+
+        return results
 
 
 class ImageEncoder:

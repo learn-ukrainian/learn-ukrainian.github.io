@@ -66,17 +66,23 @@ def _extract_ukrainian_keywords(text: str) -> str:
 
 
 def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
-    """Search RAG textbooks for a query. Returns list of results."""
+    """Search RAG textbooks for a query with ColBERT reranking (#1099).
+
+    Over-fetches from dense+sparse retrieval, then reranks with ColBERT
+    MaxSim for fine-grained pedagogical relevance.
+    """
     try:
-        from rag.query import search_text
+        from rag.query import get_text_encoder, search_text
     except ImportError:
         logger.warning("RAG not available — install rag dependencies")
         return []
 
+    # Over-fetch: get 3x candidates for reranking
+    fetch_limit = limit * 3
     results = []
     for grade in grades:
         try:
-            hits = search_text(query, grade=grade, limit=limit)
+            hits = search_text(query, grade=grade, limit=fetch_limit)
             if hits:
                 results.extend(hits)
         except Exception as e:
@@ -91,9 +97,18 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
             seen_ids.add(chunk_id)
             unique.append(r)
 
-    # Sort by score descending
-    unique.sort(key=lambda x: x.get("score", 0), reverse=True)
-    return unique[:limit]  # Strict limit — no over-fetching
+    if not unique:
+        return []
+
+    # ColBERT reranking — token-level MaxSim for pedagogical relevance
+    try:
+        encoder = get_text_encoder()
+        reranked = encoder.colbert_rerank(query, unique, text_key="text", limit=limit)
+        return reranked
+    except Exception as e:
+        logger.warning("ColBERT reranking failed, falling back to score sort: %s", e)
+        unique.sort(key=lambda x: x.get("score", 0), reverse=True)
+        return unique[:limit]
 
 
 def _format_result(result: dict) -> str:
