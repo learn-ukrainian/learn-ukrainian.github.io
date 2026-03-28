@@ -93,7 +93,7 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
 
     # Sort by score descending
     unique.sort(key=lambda x: x.get("score", 0), reverse=True)
-    return unique[:limit * 2]  # Return top results across all grades
+    return unique[:limit]  # Strict limit — no over-fetching
 
 
 def _format_result(result: dict) -> str:
@@ -105,9 +105,19 @@ def _format_result(result: dict) -> str:
     score = result.get("score", result.get("relevance_score", 0))
     grade = result.get("grade", result.get("metadata", {}).get("grade", "?"))
 
-    # Truncate long texts
-    if len(text) > 500:
-        text = text[:500] + "..."
+    # Clean HTML entities (from МійКлас scraper)
+    import html
+    text = html.unescape(text)
+    # Strip navigation/copyright junk
+    for junk in ["Copyright ©", "Відправити відгук", "Знайшли помилку?",
+                 "Попередня тема", "Наступна тема", "Усі теми",
+                 "Матеріали для вчителів", "Додаткові завдання (Мій+)"]:
+        if junk in text:
+            text = text[:text.index(junk)].rstrip()
+
+    # Truncate — keep excerpts concise for the 8K prompt budget
+    if len(text) > 350:
+        text = text[:350] + "..."
 
     lines = []
     lines.append(f"> **Source:** {author}, Grade {grade}")
@@ -212,15 +222,30 @@ def _fetch_miyklas_theory(plan: dict) -> list[str]:
             text = re.sub(r'<[^>]+>', ' ', text)
             text = re.sub(r'\s+', ' ', text).strip()
 
-            # Extract a relevant chunk (first 2000 chars after the title)
+            # Clean HTML entities
+            import html as html_mod
+            text = html_mod.unescape(text)
+
+            # Strip junk (navigation, copyright, exercise lists)
+            for junk in ["Copyright ©", "Відправити відгук", "Знайшли помилку?",
+                         "Попередня тема", "Наступна тема", "Усі теми",
+                         "Матеріали для вчителів", "Додаткові завдання (Мій+)"]:
+                if junk in text:
+                    text = text[:text.index(junk)].rstrip()
+
+            # Extract theory section (first 400 chars after the title — concise for prompt budget)
             title_pos = text.lower().find(title[:20].lower())
-            chunk = text[title_pos:title_pos + 2000] if title_pos > 0 else text[500:2500]
+            chunk = text[title_pos:title_pos + 400] if title_pos > 0 else text[500:900]
+
+            # Strip exercise listings (Складність: ... N)
+            chunk = re.sub(r'Складність:\s*\w+\s*\d+', '', chunk)
+            chunk = re.sub(r'\s+', ' ', chunk).strip()
 
             if len(chunk) > 100:
                 lines.append(f"### {title}")
                 lines.append(f"> **Source:** МійКлас — [{title}]({url})")
                 lines.append("")
-                lines.append(chunk[:1500])  # Limit to 1500 chars
+                lines.append(chunk[:400])  # Concise for prompt budget
                 lines.append("")
             else:
                 lines.append(f"### {title}")
@@ -296,32 +321,44 @@ def build_packet(plan_path: Path) -> str:
             lines.append("")
             continue
 
-        results = _search_rag(query, grades, limit=3)
+        # Cap total excerpts to keep packet under 8K chars for the write prompt
+        MAX_EXCERPTS = 8
+        remaining_budget = max(0, MAX_EXCERPTS - total_results)
+        per_section = min(2, remaining_budget)
+        if per_section <= 0:
+            lines.append("*(Budget reached — see excerpts in earlier sections)*")
+            lines.append("")
+            continue
+
+        results = _search_rag(query, grades, limit=per_section)
 
         if results:
-            total_results += len(results)
             for r in results:
-                lines.append(_format_result(r))
+                if r.get("score", 0) >= 0.25:  # Skip low relevance
+                    total_results += 1
+                    lines.append(_format_result(r))
         else:
             lines.append(f"*No textbook results found for: {query}*")
             lines.append("")
 
-    # Grammar-specific search
-    if grammar:
+    # Grammar-specific search (only if budget allows)
+    if grammar and total_results < MAX_EXCERPTS:
         lines.append("## Grammar Reference")
         lines.append("")
         grammar_query = _extract_ukrainian_keywords(" ".join(str(g) for g in grammar))
         if grammar_query:
-            results = _search_rag(grammar_query, grades, limit=3)
+            grammar_budget = min(2, MAX_EXCERPTS - total_results)
+            results = _search_rag(grammar_query, grades, limit=grammar_budget)
             if results:
-                total_results += len(results)
                 for r in results:
-                    lines.append(_format_result(r))
+                    if r.get("score", 0) >= 0.25:
+                        total_results += 1
+                        lines.append(_format_result(r))
             else:
                 lines.append(f"*No grammar results for: {grammar_query}*")
                 lines.append("")
 
-    # МійКлас theory pages (#1040)
+    # МійКлас theory pages (#1040) — always include (concise links, not bulk text)
     miyklas_content = _fetch_miyklas_theory(plan)
     if miyklas_content:
         lines.append("")
