@@ -1,0 +1,8 @@
+---
+/**
+ * Custom Head — wraps Starlight's default Head to inject client-side scripts.
+ * This is the injection point for content-enhancer and future scripts.
+ */
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+<Default {...Astro.props}><slot /></Default>

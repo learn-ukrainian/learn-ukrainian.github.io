@@ -1,0 +1,43 @@
+---
+title: "A1 — Beginner"
+description: "First steps in Ukrainian: sounds, letters, greetings, and basic conversations"
+template: splash
+---
+
+import LevelLanding from '@site/src/components/LevelLanding';
+
+<LevelLanding
+  client:load
+  level="A1"
+  title="Перші кроки"
+  subtitle="First Steps — Sounds, letters, first words, and basic conversations"
+  moduleCount={64}
+  wordTarget={1200}
+  hours={80}
+  color="#2E7D32"
+  modules={[
+    {
+      unit: "Unit 1: Sounds & Letters",
+      items: [
+        { num: 1, slug: "sounds-letters-and-hello", title: "Sounds, Letters, and Hello", sub: "The Ukrainian alphabet, first sounds, basic greetings", status: "done" },
+        { num: 2, slug: "reading-ukrainian", title: "Reading Ukrainian", sub: "Syllable chains, reading practice, connecting letters to sounds", status: "active" },
+        { num: 3, slug: "special-signs", title: "Special Signs: Ь and '", sub: "Soft sign, apostrophe, and their effect on pronunciation", status: "todo" },
+      ]
+    },
+    {
+      unit: "Unit 2: First Conversations",
+      items: [
+        { num: 4, slug: "nice-to-meet-you", title: "Nice to Meet You", sub: "Introductions, asking someone's name, formal vs informal", status: "locked" },
+        { num: 5, slug: "numbers-1-10", title: "Numbers 1-10", sub: "Counting, phone numbers, basic math", status: "locked" },
+        { num: 6, slug: "at-the-cafe", title: "At the Cafe", sub: "Ordering food and drinks, polite requests", status: "locked" },
+      ]
+    },
+    {
+      unit: "Unit 3: Grammar Basics",
+      items: [
+        { num: 7, slug: "my-family", title: "Family", sub: "Family members, describing your family", status: "locked" },
+        { num: 8, slug: "things-have-gender", title: "Things Have Gender", sub: "Grammatical gender of Ukrainian nouns", status: "locked" },
+      ]
+    },
+  ]}
+/>

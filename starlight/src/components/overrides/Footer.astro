@@ -1,0 +1,108 @@
+---
+/**
+ * Custom Footer — Ukrainian-themed with track links.
+ * Replaces Starlight's default footer with project-specific layout.
+ */
+import Pagination from '@astrojs/starlight/components/Pagination.astro';
+
+const route = Astro.locals.starlightRoute;
+---
+
+{route.hasSidebar && (
+  <div class="lu-pagination-wrap">
+    <Pagination {...Astro.props} />
+  </div>
+)}
+
+<footer class="lu-footer">
+  <div class="lu-footer-inner">
+    <div class="lu-footer-grid">
+      <div class="lu-footer-brand">
+        <h3>🇺🇦 Learn Ukrainian</h3>
+        <p>The world's first comprehensive Ukrainian language curriculum. Open-source, decolonized, grounded in real Ukrainian pedagogy.</p>
+      </div>
+      <div class="lu-footer-col">
+        <h4>Learn</h4>
+        <a href="/a1/">A1 — Beginner</a>
+        <a href="/a2/">A2 — Elementary</a>
+        <a href="/b1/">B1 — Intermediate</a>
+        <a href="/b2/">B2 — Upper-Intermediate</a>
+        <a href="/c1/">C1 — Advanced</a>
+        <a href="/c2/">C2 — Mastery</a>
+      </div>
+      <div class="lu-footer-col">
+        <h4>Tracks</h4>
+        <a href="/hist/">HIST — History</a>
+        <a href="/lit/">LIT — Literature</a>
+        <a href="/bio/">BIO — Biographies</a>
+        <a href="/istorio/">ISTORIO</a>
+        <a href="/oes/">OES — Old East Slavic</a>
+        <a href="/ruth/">RUTH — Ruthenian</a>
+      </div>
+      <div class="lu-footer-col">
+        <h4>Project</h4>
+        <a href="https://github.com/learn-ukrainian">GitHub</a>
+      </div>
+    </div>
+    <div class="lu-footer-bottom">
+      <span>Learn Ukrainian &copy; 2026 — Слава Україні! 🇺🇦</span>
+      <a href="https://github.com/learn-ukrainian">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .lu-pagination-wrap {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .lu-footer {
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-3);
+    padding: 3rem 1.5rem 1.5rem;
+    margin-top: 3rem;
+    border-top: 4px solid var(--sl-color-accent);
+  }
+  .lu-footer-inner { max-width: 1200px; margin: 0 auto; }
+  .lu-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+  }
+  .lu-footer-brand h3 { color: var(--sl-color-white); font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .lu-footer-brand p { font-size: 0.8rem; line-height: 1.6; }
+  .lu-footer-col h4 {
+    color: var(--sl-color-accent);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+  }
+  .lu-footer-col a {
+    display: block;
+    color: var(--sl-color-gray-3);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.2rem 0;
+    transition: color 0.2s;
+  }
+  .lu-footer-col a:hover { color: var(--sl-color-accent); }
+  .lu-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    font-size: 0.75rem;
+  }
+  .lu-footer-bottom a { color: var(--sl-color-accent); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .lu-footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .lu-footer-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,257 @@
+---
+/**
+ * Custom Header — dropdown navigation for scalable track list.
+ * Core levels (A1-C2) as pills, seminars + linguistics as dropdowns.
+ * Reuses Starlight's built-in Search and ThemeSelect components.
+ */
+import Search from '@astrojs/starlight/components/Search.astro';
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
+import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+
+const route = Astro.locals.starlightRoute;
+const currentPath = Astro.url.pathname;
+
+// Determine which nav item is active
+function isActive(href: string) {
+  return currentPath.startsWith(href);
+}
+
+const coreLevels = [
+  { href: '/a1/', label: 'A1' },
+  { href: '/a2/', label: 'A2' },
+  { href: '/b1/', label: 'B1' },
+  { href: '/b2/', label: 'B2' },
+  { href: '/c1/', label: 'C1' },
+  { href: '/c2/', label: 'C2' },
+];
+
+const seminarTracks = [
+  { heading: 'History & Culture' },
+  { href: '/hist/', label: 'Історія України', icon: '🏰', count: 140 },
+  { href: '/istorio/', label: 'Історіографія', icon: '🔍', count: 136 },
+  { href: '/bio/', label: 'Біографії', icon: '🧑', count: 180 },
+  { href: '/folk/', label: 'Фольклор', icon: '🌾', count: 27 },
+  { divider: true },
+  { heading: 'Literature' },
+  { href: '/lit/', label: 'Література', icon: '📜', count: 232 },
+  { href: '/lit-essay/', label: 'Есеїстика', icon: '✍', count: 63 },
+  { href: '/lit-war/', label: 'Воєнна проза', icon: '⚔', count: 29 },
+  { href: '/lit-fantastika/', label: 'Фантастика', icon: '🚀', count: 25 },
+];
+
+const linguisticTracks = [
+  { href: '/oes/', label: 'Old East Slavic', icon: '📰', count: 102 },
+  { href: '/ruth/', label: 'Ruthenian', icon: '🏛', count: 115 },
+];
+
+const seminarActive = seminarTracks.some(t => 'href' in t && t.href && isActive(t.href));
+const lingActive = linguisticTracks.some(t => isActive(t.href));
+---
+
+<header class="lu-header">
+  <div class="lu-header-inner">
+    <a class="lu-logo" href={route.siteTitleHref}>
+      <img src="/assets/logo.svg" alt="Learn Ukrainian" width="28" height="28" />
+      <span class="lu-logo-text">Learn Ukrainian</span>
+    </a>
+
+    <nav class="lu-nav" aria-label="Main navigation">
+      {coreLevels.map(level => (
+        <a href={level.href} class:list={['lu-nav-pill', { active: isActive(level.href) }]}>
+          {level.label}
+        </a>
+      ))}
+
+      <div class="lu-nav-divider" aria-hidden="true"></div>
+
+      <div class="lu-dropdown">
+        <button class:list={['lu-dropdown-trigger', { 'has-active': seminarActive }]} aria-expanded="false">
+          Seminars <span class="lu-arrow" aria-hidden="true">▾</span>
+        </button>
+        <div class="lu-dropdown-menu" role="menu">
+          {seminarTracks.map(item => {
+            if ('heading' in item && item.heading) return <span class="lu-menu-heading">{item.heading}</span>;
+            if ('divider' in item) return <div class="lu-menu-divider"></div>;
+            return (
+              <a href={item.href} class:list={[{ active: item.href && isActive(item.href) }]} role="menuitem">
+                <span class="lu-menu-icon">{item.icon}</span>
+                <span class="lu-menu-label">{item.label}</span>
+                <span class="lu-menu-count">{item.count}</span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      <div class="lu-dropdown">
+        <button class:list={['lu-dropdown-trigger', { 'has-active': lingActive }]} aria-expanded="false">
+          Linguistics <span class="lu-arrow" aria-hidden="true">▾</span>
+        </button>
+        <div class="lu-dropdown-menu" role="menu">
+          {linguisticTracks.map(item => (
+            <a href={item.href} class:list={[{ active: isActive(item.href) }]} role="menuitem">
+              <span class="lu-menu-icon">{item.icon}</span>
+              <span class="lu-menu-label">{item.label}</span>
+              <span class="lu-menu-count">{item.count}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+
+    <div class="lu-header-right">
+      <Search {...Astro.props} />
+      <ThemeSelect {...Astro.props} />
+      <SocialIcons {...Astro.props} />
+    </div>
+  </div>
+</header>
+
+<style>
+  .lu-header {
+    background: var(--sl-color-bg);
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .lu-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    height: 3.5rem;
+    gap: 1rem;
+  }
+  .lu-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--sl-color-white);
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .lu-logo img { border-radius: 6px; }
+  .lu-nav {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+    align-items: center;
+  }
+  .lu-nav-pill {
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--sl-color-gray-3);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .lu-nav-pill:hover {
+    background: color-mix(in srgb, var(--sl-color-accent) 15%, transparent);
+    color: var(--sl-color-accent);
+  }
+  .lu-nav-pill.active {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+  }
+  .lu-nav-divider {
+    width: 1px;
+    background: var(--sl-color-gray-5);
+    margin: 0.5rem 0.4rem;
+    align-self: stretch;
+  }
+
+  /* Dropdown */
+  .lu-dropdown { position: relative; }
+  .lu-dropdown-trigger {
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all 0.2s;
+  }
+  .lu-dropdown-trigger:hover {
+    background: color-mix(in srgb, var(--sl-color-accent) 15%, transparent);
+    color: var(--sl-color-accent);
+  }
+  .lu-dropdown-trigger.has-active {
+    color: var(--sl-color-accent);
+    font-weight: 700;
+  }
+  .lu-arrow { font-size: 0.6rem; opacity: 0.6; transition: transform 0.2s; }
+  .lu-dropdown:hover .lu-arrow { transform: rotate(180deg); }
+  .lu-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background: var(--sl-color-bg);
+    border: 1px solid var(--sl-color-gray-6);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    padding: 6px;
+    min-width: 220px;
+    z-index: 50;
+  }
+  .lu-dropdown:hover .lu-dropdown-menu { display: block; }
+  .lu-dropdown-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--sl-color-white);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .lu-dropdown-menu a:hover {
+    background: color-mix(in srgb, var(--sl-color-accent) 15%, transparent);
+    color: var(--sl-color-accent);
+  }
+  .lu-dropdown-menu a.active {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+  }
+  .lu-menu-icon { width: 1.2rem; text-align: center; font-size: 0.85rem; }
+  .lu-menu-label { flex: 1; }
+  .lu-menu-count { font-size: 0.7rem; color: var(--sl-color-gray-3); }
+  .lu-menu-divider { height: 1px; background: var(--sl-color-gray-6); margin: 4px 8px; }
+  .lu-menu-heading {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--sl-color-gray-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0.7rem 2px;
+    display: block;
+  }
+  .lu-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  @media (max-width: 600px) {
+    .lu-nav { display: none; }
+    .lu-logo-text { display: none; }
+  }
+</style>

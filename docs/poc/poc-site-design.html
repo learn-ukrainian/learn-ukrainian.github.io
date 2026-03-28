@@ -69,7 +69,7 @@
     width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
     display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;
   }
-  .site-nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+  .site-nav { display: flex; gap: 2px; flex: 1; align-items: center; }
   .site-nav a {
     padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
     text-decoration: none; color: var(--gray-600); white-space: nowrap; transition: all 0.2s;
@@ -78,6 +78,40 @@
   .site-nav a.active { background: var(--blue); color: white; }
   .site-nav .nav-divider {
     width: 1px; background: var(--gray-200); margin: 8px 6px; flex-shrink: 0;
+  }
+  /* Dropdown menus */
+  .nav-dropdown {
+    position: relative;
+  }
+  .nav-dropdown-trigger {
+    padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    color: var(--gray-600); cursor: pointer; transition: all 0.2s; border: none;
+    background: none; font-family: inherit; display: flex; align-items: center; gap: 4px;
+  }
+  .nav-dropdown-trigger:hover { background: var(--blue-light); color: var(--blue); }
+  .nav-dropdown-trigger.has-active { color: var(--blue); font-weight: 700; }
+  .nav-dropdown-trigger .arrow { font-size: 10px; opacity: 0.6; transition: transform 0.2s; }
+  .nav-dropdown:hover .arrow { transform: rotate(180deg); }
+  .nav-dropdown-menu {
+    display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 10px;
+    box-shadow: var(--shadow-lg); padding: 6px; min-width: 220px; z-index: 50;
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+  .nav-dropdown-menu a {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--gray-800);
+    text-decoration: none; transition: all 0.15s;
+  }
+  .nav-dropdown-menu a:hover { background: var(--blue-light); color: var(--blue); }
+  .nav-dropdown-menu a.active { background: var(--blue); color: white; }
+  .nav-dropdown-menu .menu-icon { width: 20px; text-align: center; font-size: 14px; }
+  .nav-dropdown-menu .menu-label { flex: 1; }
+  .nav-dropdown-menu .menu-count { font-size: 11px; color: var(--gray-600); }
+  .nav-dropdown-menu .menu-divider { height: 1px; background: var(--gray-200); margin: 4px 8px; }
+  .nav-dropdown-menu .menu-heading {
+    font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 6px 12px 2px; display: block;
   }
   .header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: auto; }
   .search-box {
@@ -432,13 +466,29 @@
         <a href="/c1/">C1</a>
         <a href="/c2/">C2</a>
         <div class="nav-divider"></div>
-        <a href="/hist/">HIST</a>
-        <a href="/lit/">LIT</a>
-        <a href="/bio/">BIO</a>
-        <a href="/istorio/">ISTORIO</a>
-        <div class="nav-divider"></div>
-        <a href="/oes/">OES</a>
-        <a href="/ruth/">RUTH</a>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger">Seminars <span class="arrow">&#x25BC;</span></button>
+          <div class="nav-dropdown-menu">
+            <span class="menu-heading">History & Culture</span>
+            <a href="/hist/"><span class="menu-icon">&#x1F3F0;</span><span class="menu-label">Iсторія України</span><span class="menu-count">140</span></a>
+            <a href="/istorio/"><span class="menu-icon">&#x1F50D;</span><span class="menu-label">Iсторіографія</span><span class="menu-count">136</span></a>
+            <a href="/bio/"><span class="menu-icon">&#x1F9D1;</span><span class="menu-label">Біографії</span><span class="menu-count">180</span></a>
+            <a href="/folk/"><span class="menu-icon">&#x1F33E;</span><span class="menu-label">Фольклор</span><span class="menu-count">27</span></a>
+            <div class="menu-divider"></div>
+            <span class="menu-heading">Literature</span>
+            <a href="/lit/"><span class="menu-icon">&#x1F4DC;</span><span class="menu-label">Література</span><span class="menu-count">232</span></a>
+            <a href="/lit-essay/"><span class="menu-icon">&#x270D;</span><span class="menu-label">Есеїстика</span><span class="menu-count">63</span></a>
+            <a href="/lit-war/"><span class="menu-icon">&#x2694;</span><span class="menu-label">Воєнна проза</span><span class="menu-count">29</span></a>
+            <a href="/lit-fantastika/"><span class="menu-icon">&#x1F680;</span><span class="menu-label">Фантастика</span><span class="menu-count">25</span></a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger">Linguistics <span class="arrow">&#x25BC;</span></button>
+          <div class="nav-dropdown-menu">
+            <a href="/oes/"><span class="menu-icon">&#x1F4F0;</span><span class="menu-label">Old East Slavic</span><span class="menu-count">102</span></a>
+            <a href="/ruth/"><span class="menu-icon">&#x1F3DB;</span><span class="menu-label">Ruthenian</span><span class="menu-count">115</span></a>
+          </div>
+        </div>
       </nav>
       <div class="header-right">
         <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
@@ -650,10 +700,8 @@
         <a href="/a1/" class="active">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
         <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
         <div class="nav-divider"></div>
-        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
-        <a href="/istorio/">ISTORIO</a>
-        <div class="nav-divider"></div>
-        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Seminars <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><span class="menu-heading">History & Culture</span><a href="/hist/"><span class="menu-icon">&#x1F3F0;</span><span class="menu-label">Iсторія</span></a><a href="/bio/"><span class="menu-icon">&#x1F9D1;</span><span class="menu-label">Біографії</span></a><a href="/istorio/"><span class="menu-icon">&#x1F50D;</span><span class="menu-label">Iсторіографія</span></a><div class="menu-divider"></div><span class="menu-heading">Literature</span><a href="/lit/"><span class="menu-icon">&#x1F4DC;</span><span class="menu-label">Література</span></a></div></div>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Linguistics <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/oes/"><span class="menu-icon">&#x1F4F0;</span><span class="menu-label">Old East Slavic</span></a><a href="/ruth/"><span class="menu-icon">&#x1F3DB;</span><span class="menu-label">Ruthenian</span></a></div></div>
       </nav>
       <div class="header-right">
         <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
@@ -789,10 +837,8 @@
         <a href="/a1/">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
         <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
         <div class="nav-divider"></div>
-        <a href="/hist/" class="active">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
-        <a href="/istorio/">ISTORIO</a>
-        <div class="nav-divider"></div>
-        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger has-active">Seminars <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/hist/" class="active"><span class="menu-icon">&#x1F3F0;</span><span class="menu-label">Iсторія</span></a><a href="/bio/"><span class="menu-icon">&#x1F9D1;</span><span class="menu-label">Біографії</span></a><a href="/istorio/"><span class="menu-icon">&#x1F50D;</span><span class="menu-label">Iсторіографія</span></a><div class="menu-divider"></div><a href="/lit/"><span class="menu-icon">&#x1F4DC;</span><span class="menu-label">Література</span></a></div></div>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Linguistics <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/oes/"><span class="menu-icon">&#x1F4F0;</span><span class="menu-label">Old East Slavic</span></a><a href="/ruth/"><span class="menu-icon">&#x1F3DB;</span><span class="menu-label">Ruthenian</span></a></div></div>
       </nav>
       <div class="header-right">
         <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
@@ -936,10 +982,8 @@
         <a href="/a1/" class="active">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
         <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
         <div class="nav-divider"></div>
-        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
-        <a href="/istorio/">ISTORIO</a>
-        <div class="nav-divider"></div>
-        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Seminars <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/hist/"><span class="menu-icon">&#x1F3F0;</span><span class="menu-label">Iсторія</span></a><a href="/bio/"><span class="menu-icon">&#x1F9D1;</span><span class="menu-label">Біографії</span></a><a href="/istorio/"><span class="menu-icon">&#x1F50D;</span><span class="menu-label">Iсторіографія</span></a><div class="menu-divider"></div><a href="/lit/"><span class="menu-icon">&#x1F4DC;</span><span class="menu-label">Література</span></a></div></div>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Linguistics <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/oes/"><span class="menu-icon">&#x1F4F0;</span><span class="menu-label">Old East Slavic</span></a><a href="/ruth/"><span class="menu-icon">&#x1F3DB;</span><span class="menu-label">Ruthenian</span></a></div></div>
       </nav>
       <div class="header-right">
         <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
@@ -1038,8 +1082,8 @@
         <a href="/a1/">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
         <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
         <div class="nav-divider"></div>
-        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
-        <a href="/istorio/">ISTORIO</a>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Seminars <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/hist/"><span class="menu-icon">&#x1F3F0;</span><span class="menu-label">Iсторія</span></a><a href="/bio/"><span class="menu-icon">&#x1F9D1;</span><span class="menu-label">Біографії</span></a><a href="/istorio/"><span class="menu-icon">&#x1F50D;</span><span class="menu-label">Iсторіографія</span></a><div class="menu-divider"></div><a href="/lit/"><span class="menu-icon">&#x1F4DC;</span><span class="menu-label">Література</span></a></div></div>
+        <div class="nav-dropdown"><button class="nav-dropdown-trigger">Linguistics <span class="arrow">&#x25BC;</span></button><div class="nav-dropdown-menu"><a href="/oes/"><span class="menu-icon">&#x1F4F0;</span><span class="menu-label">Old East Slavic</span></a><a href="/ruth/"><span class="menu-icon">&#x1F3DB;</span><span class="menu-label">Ruthenian</span></a></div></div>
       </nav>
       <div class="header-right">
         <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>

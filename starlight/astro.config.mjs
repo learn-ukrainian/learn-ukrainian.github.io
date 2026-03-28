@@ -64,9 +64,10 @@ export default defineConfig({
       ],
       credits: false,
       components: {
-        // Suppress Starlight's auto-rendered PageTitle on splash pages — the
-        // custom Home component renders its own hero with a title.
+        Header: './src/components/overrides/Header.astro',
+        Head: './src/components/overrides/Head.astro',
         PageTitle: './src/components/overrides/PageTitle.astro',
+        Footer: './src/components/overrides/Footer.astro',
       },
       customCss: [
         './src/css/custom.css',
