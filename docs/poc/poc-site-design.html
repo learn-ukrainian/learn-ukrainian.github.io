@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Site Design — learn-ukrainian</title>
+<style>
+  :root {
+    --blue: #0057B8;
+    --blue-dark: #003d82;
+    --blue-light: #E8F0FE;
+    --yellow: #FFD700;
+    --yellow-dark: #D4AF37;
+    --yellow-light: #FFF9E0;
+    --green: #2E7D32;
+    --green-light: #E8F5E9;
+    --red: #C62828;
+    --red-light: #FFEBEE;
+    --purple: #6A1B9A;
+    --purple-light: #F3E5F5;
+    --orange: #E65100;
+    --orange-light: #FFF3E0;
+    --teal: #00695C;
+    --teal-light: #E0F2F1;
+    --gray-50: #FAFAFA; --gray-100: #F5F5F5; --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0; --gray-600: #757575; --gray-800: #424242; --gray-900: #212121;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+    --max-width: 1200px;
+    --content-width: 840px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.7; }
+
+  /* ========== PAGE SWITCHER ========== */
+  .page-switch {
+    background: var(--gray-900); color: white; padding: 10px 24px;
+    display: flex; align-items: center; gap: 16px; font-size: 13px;
+    position: sticky; top: 0; z-index: 200;
+  }
+  .page-switch label { opacity: 0.7; }
+  .page-switch select {
+    background: var(--gray-800); color: white; border: 1px solid var(--gray-600);
+    padding: 4px 12px; border-radius: 6px; font-size: 13px;
+  }
+  .page-switch .poc-label {
+    margin-left: auto; color: var(--yellow); font-weight: 600; letter-spacing: 0.5px;
+  }
+  .page-view { display: none; }
+  .page-view.active { display: block; }
+
+  /* ========== SHARED: HEADER ========== */
+  .site-header {
+    background: white; border-bottom: 1px solid var(--gray-200);
+    position: sticky; top: 38px; z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .site-header-inner {
+    max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; height: 56px; gap: 24px;
+  }
+  .site-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--gray-900); font-weight: 700; font-size: 17px;
+    flex-shrink: 0;
+  }
+  .site-logo-icon {
+    width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;
+  }
+  .site-nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+  .site-nav a {
+    padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-decoration: none; color: var(--gray-600); white-space: nowrap; transition: all 0.2s;
+  }
+  .site-nav a:hover { background: var(--blue-light); color: var(--blue); }
+  .site-nav a.active { background: var(--blue); color: white; }
+  .site-nav .nav-divider {
+    width: 1px; background: var(--gray-200); margin: 8px 6px; flex-shrink: 0;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: auto; }
+  .search-box {
+    display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+    background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 8px;
+    font-size: 13px; color: var(--gray-600); cursor: pointer; transition: all 0.2s;
+  }
+  .search-box:hover { border-color: var(--blue); }
+  .search-box kbd {
+    font-size: 11px; padding: 1px 5px; background: white; border: 1px solid var(--gray-300);
+    border-radius: 4px; font-family: inherit;
+  }
+  .theme-toggle {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--gray-200);
+    background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--blue); background: var(--blue-light); }
+
+  /* ========== SHARED: BREADCRUMBS ========== */
+  .breadcrumbs {
+    max-width: var(--max-width); margin: 0 auto; padding: 12px 24px 0;
+    font-size: 13px; color: var(--gray-600);
+  }
+  .breadcrumbs a { color: var(--blue); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 6px; opacity: 0.5; }
+
+  /* ========== SHARED: FOOTER ========== */
+  .site-footer {
+    background: var(--gray-900); color: rgba(255,255,255,0.7); padding: 48px 24px 24px;
+    margin-top: 60px; border-top: 4px solid var(--yellow);
+  }
+  .footer-inner { max-width: var(--max-width); margin: 0 auto; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+    padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-brand h3 { color: white; font-size: 18px; margin-bottom: 8px; }
+  .footer-brand p { font-size: 13px; line-height: 1.6; }
+  .footer-col h4 { color: var(--yellow); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; padding: 3px 0; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--yellow); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px; font-size: 12px;
+  }
+  .footer-bottom a { color: var(--yellow); text-decoration: none; }
+
+  /* ========== HOMEPAGE ========== */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 50%, #1a6fd4 100%);
+    color: white; padding: 80px 24px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3);
+    color: var(--yellow); font-size: 13px; font-weight: 600; padding: 4px 14px;
+    border-radius: 20px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+  .hero .tagline { font-size: 20px; opacity: 0.9; margin-bottom: 8px; font-style: italic; }
+  .hero .subtitle { font-size: 15px; opacity: 0.7; margin-bottom: 32px; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 12px 28px; background: var(--yellow); color: var(--gray-900);
+    font-weight: 700; font-size: 15px; border-radius: 10px; text-decoration: none;
+    transition: all 0.2s; border: 2px solid var(--yellow);
+  }
+  .btn-primary:hover { background: #e6c200; border-color: #e6c200; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,215,0,0.3); }
+  .btn-secondary {
+    padding: 12px 28px; background: transparent; color: white;
+    font-weight: 600; font-size: 15px; border-radius: 10px; text-decoration: none;
+    border: 2px solid rgba(255,255,255,0.3); transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+  .home-section { max-width: var(--max-width); margin: 0 auto; padding: 48px 24px; }
+  .home-section h2 {
+    font-size: 24px; color: var(--gray-900); margin-bottom: 6px; text-align: center;
+  }
+  .home-section .section-sub { text-align: center; color: var(--gray-600); font-size: 14px; margin-bottom: 32px; }
+
+  /* Feature cards */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .feature-card {
+    background: white; border-radius: var(--radius); padding: 24px;
+    border: 1px solid var(--gray-200); transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--blue); transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .feature-card:hover::before { transform: scaleX(1); }
+  .feature-icon { font-size: 28px; margin-bottom: 12px; }
+  .feature-card h3 { font-size: 16px; margin-bottom: 6px; }
+  .feature-card p { font-size: 13px; color: var(--gray-600); margin: 0; }
+
+  /* Level grid */
+  .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .level-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    border: 2px solid var(--gray-200); transition: all 0.2s; text-decoration: none; color: inherit;
+    display: block; position: relative; overflow: hidden;
+  }
+  .level-card:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .level-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .level-badge-sm {
+    font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 6px; color: white;
+  }
+  .badge-a1 { background: #4CAF50; }
+  .badge-a2 { background: #2196F3; }
+  .badge-b1 { background: #FF9800; }
+  .badge-b2 { background: #f44336; }
+  .badge-c1 { background: #9C27B0; }
+  .badge-c2 { background: var(--yellow-dark); color: var(--gray-900); }
+  .level-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .level-card .level-desc { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; }
+  .level-meta { display: flex; gap: 16px; font-size: 12px; color: var(--gray-600); }
+  .level-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* Track cards */
+  .track-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .track-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    border: 1px solid var(--gray-200); display: flex; gap: 16px; align-items: flex-start;
+    text-decoration: none; color: inherit; transition: all 0.2s;
+  }
+  .track-card:hover { box-shadow: var(--shadow); border-color: var(--blue); transform: translateY(-1px); }
+  .track-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .track-icon.hist { background: #FFF3E0; }
+  .track-icon.lit { background: var(--purple-light); }
+  .track-icon.bio { background: var(--blue-light); }
+  .track-icon.istorio { background: var(--red-light); }
+  .track-icon.oes { background: var(--yellow-light); }
+  .track-icon.ruth { background: var(--teal-light); }
+  .track-card h3 { font-size: 15px; margin-bottom: 2px; }
+  .track-card .track-sub { font-size: 12px; color: var(--gray-600); margin-bottom: 6px; }
+  .track-card .track-desc { font-size: 13px; color: var(--gray-600); margin: 0; }
+  .track-card .track-meta { font-size: 11px; color: var(--blue); font-weight: 600; margin-top: 6px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 48px; padding: 32px 24px;
+    background: white; border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 32px; font-weight: 800; color: var(--blue); }
+  .stat-label { font-size: 13px; color: var(--gray-600); }
+
+  /* ========== LEVEL LANDING ========== */
+  .level-hero {
+    padding: 32px 24px; color: white; border-bottom: 4px solid var(--yellow);
+  }
+  .level-hero.a1 { background: linear-gradient(135deg, #2E7D32, #4CAF50); }
+  .level-hero.a2 { background: linear-gradient(135deg, #1565C0, #2196F3); }
+  .level-hero.b1 { background: linear-gradient(135deg, #E65100, #FF9800); }
+  .level-hero.b2 { background: linear-gradient(135deg, #C62828, #f44336); }
+  .level-hero.c1 { background: linear-gradient(135deg, #6A1B9A, #9C27B0); }
+  .level-hero.c2 { background: linear-gradient(135deg, #8D6E00, var(--yellow-dark)); }
+  .level-hero-inner { max-width: var(--content-width); margin: 0 auto; }
+  .level-hero .level-badge-lg {
+    display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
+    padding: 4px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 10px;
+  }
+  .level-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .level-hero .level-subtitle { opacity: 0.85; font-size: 15px; margin-bottom: 16px; }
+  .level-stats {
+    display: flex; gap: 24px; font-size: 13px; opacity: 0.9;
+  }
+  .level-stats span { display: flex; align-items: center; gap: 6px; }
+
+  .level-content { max-width: var(--content-width); margin: 0 auto; padding: 28px 24px; }
+
+  /* Progress bar */
+  .progress-section { margin-bottom: 28px; }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-header h3 { font-size: 15px; }
+  .progress-header span { font-size: 13px; color: var(--gray-600); }
+  .progress-bar { height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .progress-fill.a1 { background: #4CAF50; }
+
+  /* Module list */
+  .module-list { list-style: none; }
+  .module-item {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+    border: 1px solid var(--gray-200); border-radius: 10px; margin-bottom: 8px;
+    background: white; transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit;
+  }
+  .module-item:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateX(4px); }
+  .module-num {
+    width: 32px; height: 32px; border-radius: 8px; display: flex;
+    align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .module-num.todo { background: var(--gray-100); color: var(--gray-600); }
+  .module-num.done { background: var(--green-light); color: var(--green); }
+  .module-num.active { background: var(--blue-light); color: var(--blue); border: 2px solid var(--blue); }
+  .module-info { flex: 1; min-width: 0; }
+  .module-title { font-size: 14px; font-weight: 600; }
+  .module-sub { font-size: 12px; color: var(--gray-600); }
+  .module-status { font-size: 18px; flex-shrink: 0; }
+  .module-item.locked { opacity: 0.5; }
+  .module-item.locked .module-title { color: var(--gray-600); }
+
+  /* Section divider in module list */
+  .module-section-title {
+    font-size: 13px; font-weight: 700; color: var(--blue); text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 20px 0 8px; padding-left: 4px;
+  }
+
+  /* ========== TRACK LANDING ========== */
+  .track-hero {
+    padding: 32px 24px; color: white; border-bottom: 4px solid var(--yellow);
+  }
+  .track-hero.hist { background: linear-gradient(135deg, #BF360C, #E65100); }
+  .track-hero.lit { background: linear-gradient(135deg, #4A148C, #6A1B9A); }
+  .track-hero.bio { background: linear-gradient(135deg, #0D47A1, #1565C0); }
+  .track-hero.istorio { background: linear-gradient(135deg, #880E4F, #AD1457); }
+  .track-hero.oes { background: linear-gradient(135deg, #33691E, #558B2F); }
+  .track-hero.ruth { background: linear-gradient(135deg, #004D40, #00695C); }
+  .track-hero-inner { max-width: var(--content-width); margin: 0 auto; }
+  .track-hero .track-badge {
+    display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
+    padding: 4px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 10px;
+  }
+  .track-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .track-hero .track-subtitle { opacity: 0.85; font-size: 15px; margin-bottom: 12px; }
+  .track-hero .track-description { opacity: 0.75; font-size: 13px; max-width: 600px; line-height: 1.6; margin-bottom: 16px; }
+  .track-hero .track-prereq {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    padding: 6px 14px; border-radius: 8px; font-size: 12px;
+  }
+
+  .track-content { max-width: var(--content-width); margin: 0 auto; padding: 28px 24px; }
+
+  /* Era groupings for HIST */
+  .era-group { margin-bottom: 28px; }
+  .era-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--yellow);
+  }
+  .era-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .era-header h3 { font-size: 16px; color: var(--blue); }
+  .era-header .era-range { font-size: 12px; color: var(--gray-600); margin-left: auto; }
+
+  /* ========== SHARED: SIDEBAR (docs pages) ========== */
+  .docs-layout {
+    display: grid; grid-template-columns: 260px 1fr; max-width: var(--max-width);
+    margin: 0 auto; gap: 0; min-height: 70vh;
+  }
+  .sidebar {
+    padding: 20px 16px; border-right: 1px solid var(--gray-200); background: white;
+    position: sticky; top: 94px; height: calc(100vh - 94px); overflow-y: auto;
+  }
+  .sidebar-section { margin-bottom: 16px; }
+  .sidebar-label {
+    font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 4px 8px; margin-bottom: 4px;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+    border-radius: 8px; font-size: 13px; text-decoration: none; color: var(--gray-800);
+    transition: all 0.15s;
+  }
+  .sidebar-link:hover { background: var(--blue-light); color: var(--blue); }
+  .sidebar-link.active { background: var(--blue); color: white; font-weight: 600; }
+  .sidebar-link .check { width: 16px; text-align: center; font-size: 12px; }
+  .sidebar-link .check.done { color: var(--green); }
+  .sidebar-link .check.todo { color: var(--gray-300); }
+  .sidebar-back {
+    display: flex; align-items: center; gap: 6px; padding: 8px 10px;
+    font-size: 12px; color: var(--blue); text-decoration: none; font-weight: 600;
+    margin-bottom: 12px; border-radius: 8px; transition: background 0.2s;
+  }
+  .sidebar-back:hover { background: var(--blue-light); }
+  .sidebar-progress {
+    margin: 12px 8px; padding: 10px 12px; background: var(--gray-100);
+    border-radius: 8px; font-size: 12px;
+  }
+  .sidebar-progress .mini-bar { height: 4px; background: var(--gray-200); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .sidebar-progress .mini-fill { height: 100%; background: var(--green); border-radius: 2px; }
+
+  /* ========== 404 PAGE ========== */
+  .error-page { text-align: center; padding: 80px 24px; }
+  .error-num { font-size: 120px; font-weight: 800; color: var(--blue); opacity: 0.15; line-height: 1; }
+  .error-page h2 { font-size: 24px; margin-bottom: 8px; }
+  .error-page p { color: var(--gray-600); margin-bottom: 24px; }
+  .error-page .btn-primary { display: inline-block; }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 900px) {
+    .features { grid-template-columns: 1fr; }
+    .level-grid { grid-template-columns: repeat(2, 1fr); }
+    .track-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .stats-bar { gap: 24px; flex-wrap: wrap; }
+    .docs-layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 28px; }
+    .hero .tagline { font-size: 16px; }
+    .level-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .site-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE SWITCHER ========== -->
+<div class="page-switch">
+  <label>Page:</label>
+  <select onchange="switchPage(this.value)">
+    <option value="home">Homepage</option>
+    <option value="level">Level Landing (A1)</option>
+    <option value="track">Track Landing (HIST)</option>
+    <option value="docs">Docs Layout (with Sidebar)</option>
+    <option value="404">404 Page</option>
+  </select>
+  <span class="poc-label">POC: Site Design — Page Types & Shared Chrome</span>
+</div>
+
+<!-- ==================== HOMEPAGE ==================== -->
+<div id="page-home" class="page-view active">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/">
+        <div class="site-logo-icon">&#x1F1FA;</div>
+        Learn Ukrainian
+      </a>
+      <nav class="site-nav">
+        <a href="/a1/" class="active">A1</a>
+        <a href="/a2/">A2</a>
+        <a href="/b1/">B1</a>
+        <a href="/b2/">B2</a>
+        <a href="/c1/">C1</a>
+        <a href="/c2/">C2</a>
+        <div class="nav-divider"></div>
+        <a href="/hist/">HIST</a>
+        <a href="/lit/">LIT</a>
+        <a href="/bio/">BIO</a>
+        <a href="/istorio/">ISTORIO</a>
+        <div class="nav-divider"></div>
+        <a href="/oes/">OES</a>
+        <a href="/ruth/">RUTH</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
+        <button class="theme-toggle">&#x263E;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">&#x1F1FA;&#x1F1E6; Open-source curriculum</div>
+      <h1>Learn Ukrainian</h1>
+      <div class="tagline">Мова &ndash; душа народу</div>
+      <div class="subtitle">The world's first comprehensive Ukrainian curriculum. From absolute beginner to native-level fluency, grounded in real Ukrainian pedagogy.</div>
+      <div class="hero-buttons">
+        <a href="/a1/" class="btn-primary">Start Learning (A1)</a>
+        <a href="#levels" class="btn-secondary">Explore All Tracks</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">1,735</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">CEFR Levels</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Seminar Tracks</div></div>
+    <div class="stat"><div class="stat-num">20,000+</div><div class="stat-label">Words</div></div>
+  </div>
+
+  <!-- Features -->
+  <section class="home-section">
+    <h2>Why Learn Ukrainian Here?</h2>
+    <div class="section-sub">Built by linguists, verified against real textbooks, designed for adults and teens</div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4DA;</div>
+        <h3>Ukrainian Pedagogy</h3>
+        <p>Grounded in how Ukrainian teachers actually teach. State Standard 2024, real textbook exercises, native methodology.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F3AF;</div>
+        <h3>Think in Ukrainian</h3>
+        <p>No English intermediary. Situation &rarr; Ukrainian thought &rarr; Ukrainian words. The way native speakers learn.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F30D;</div>
+        <h3>Decolonized</h3>
+        <p>Ukrainian on its own terms. Not "like Russian but..." Real history, real literature, real identity.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Levels -->
+  <section class="home-section" id="levels">
+    <h2>Core Levels</h2>
+    <div class="section-sub">Progressive language learning from A1 to C2</div>
+    <div class="level-grid">
+      <a class="level-card" href="/a1/">
+        <div class="level-card-header"><span class="level-badge-sm badge-a1">A1</span></div>
+        <h3>Beginner</h3>
+        <div class="level-desc">Sounds, letters, first words, basic greetings and simple sentences.</div>
+        <div class="level-meta"><span>&#x1F4D6; 64 modules</span><span>&#x1F4AC; 1,200 words</span></div>
+      </a>
+      <a class="level-card" href="/a2/">
+        <div class="level-card-header"><span class="level-badge-sm badge-a2">A2</span></div>
+        <h3>Elementary</h3>
+        <div class="level-desc">Everyday situations, basic grammar, expanding vocabulary.</div>
+        <div class="level-meta"><span>&#x1F4D6; 76 modules</span><span>&#x1F4AC; 2,000 words</span></div>
+      </a>
+      <a class="level-card" href="/b1/">
+        <div class="level-card-header"><span class="level-badge-sm badge-b1">B1</span></div>
+        <h3>Intermediate</h3>
+        <div class="level-desc">Complex grammar, abstract topics, cultural immersion begins.</div>
+        <div class="level-meta"><span>&#x1F4D6; 103 modules</span><span>&#x1F4AC; 4,000 words</span></div>
+      </a>
+      <a class="level-card" href="/b2/">
+        <div class="level-card-header"><span class="level-badge-sm badge-b2">B2</span></div>
+        <h3>Upper-Intermediate</h3>
+        <div class="level-desc">Fluent expression, nuance, professional contexts.</div>
+        <div class="level-meta"><span>&#x1F4D6; 89 modules</span><span>&#x1F4AC; 4,000 words</span></div>
+      </a>
+      <a class="level-card" href="/c1/">
+        <div class="level-card-header"><span class="level-badge-sm badge-c1">C1</span></div>
+        <h3>Advanced</h3>
+        <div class="level-desc">Academic Ukrainian, complex argumentation, literary analysis.</div>
+        <div class="level-meta"><span>&#x1F4D6; 111 modules</span><span>&#x1F4AC; 4,000 words</span></div>
+      </a>
+      <a class="level-card" href="/c2/">
+        <div class="level-card-header"><span class="level-badge-sm badge-c2">C2</span></div>
+        <h3>Mastery</h3>
+        <div class="level-desc">Near-native proficiency, stylistic precision, full cultural fluency.</div>
+        <div class="level-meta"><span>&#x1F4D6; 106 modules</span><span>&#x1F4AC; 5,000 words</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Seminar Tracks -->
+  <section class="home-section">
+    <h2>Seminar Tracks</h2>
+    <div class="section-sub">Deep immersion in Ukrainian history, literature, and linguistics</div>
+    <div class="track-grid">
+      <a class="track-card" href="/hist/">
+        <div class="track-icon hist">&#x1F3F0;</div>
+        <div>
+          <h3>Iсторія України</h3>
+          <div class="track-sub">HIST &middot; 140 modules</div>
+          <div class="track-desc">From Trypillians to the present. Ukrainian history taught properly.</div>
+          <div class="track-meta">Prerequisite: B2+</div>
+        </div>
+      </a>
+      <a class="track-card" href="/lit/">
+        <div class="track-icon lit">&#x1F4DC;</div>
+        <div>
+          <h3>Українська література</h3>
+          <div class="track-sub">LIT &middot; 232 modules</div>
+          <div class="track-desc">Literary analysis from Kotlyarevsky to contemporary authors.</div>
+          <div class="track-meta">Prerequisite: B2+</div>
+        </div>
+      </a>
+      <a class="track-card" href="/bio/">
+        <div class="track-icon bio">&#x1F9D1;</div>
+        <div>
+          <h3>Біографії українців</h3>
+          <div class="track-sub">BIO &middot; 180 modules</div>
+          <div class="track-desc">Key figures in Ukrainian history, science, culture, and politics.</div>
+          <div class="track-meta">Prerequisite: B2+</div>
+        </div>
+      </a>
+      <a class="track-card" href="/istorio/">
+        <div class="track-icon istorio">&#x1F50D;</div>
+        <div>
+          <h3>Iсторіографія</h3>
+          <div class="track-sub">ISTORIO &middot; 136 modules</div>
+          <div class="track-desc">How history is written, by whom, and why. Confronts imperial narratives.</div>
+          <div class="track-meta">Prerequisite: B2+</div>
+        </div>
+      </a>
+      <a class="track-card" href="/oes/">
+        <div class="track-icon oes">&#x1F4F0;</div>
+        <div>
+          <h3>Old East Slavic</h3>
+          <div class="track-sub">OES &middot; 102 modules</div>
+          <div class="track-desc">Historical linguistics: chronicles, legal texts, phonology labs.</div>
+          <div class="track-meta">Prerequisite: C1+</div>
+        </div>
+      </a>
+      <a class="track-card" href="/ruth/">
+        <div class="track-icon ruth">&#x1F3DB;</div>
+        <div>
+          <h3>Ruthenian</h3>
+          <div class="track-sub">RUTH &middot; 115 modules</div>
+          <div class="track-desc">Ruthenian language, Cossack-era documents, parallel text analysis.</div>
+          <div class="track-meta">Prerequisite: C1+</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>&#x1F1FA;&#x1F1E6; Learn Ukrainian</h3>
+          <p>The world's first comprehensive Ukrainian language curriculum. Open-source, decolonized, grounded in real Ukrainian pedagogy.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <a href="/a1/">A1 &mdash; Beginner</a>
+          <a href="/a2/">A2 &mdash; Elementary</a>
+          <a href="/b1/">B1 &mdash; Intermediate</a>
+          <a href="/b2/">B2 &mdash; Upper-Intermediate</a>
+          <a href="/c1/">C1 &mdash; Advanced</a>
+          <a href="/c2/">C2 &mdash; Mastery</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tracks</h4>
+          <a href="/hist/">HIST &mdash; History</a>
+          <a href="/lit/">LIT &mdash; Literature</a>
+          <a href="/bio/">BIO &mdash; Biographies</a>
+          <a href="/istorio/">ISTORIO</a>
+          <a href="/oes/">OES &mdash; Old East Slavic</a>
+          <a href="/ruth/">RUTH &mdash; Ruthenian</a>
+        </div>
+        <div class="footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/learn-ukrainian">GitHub</a>
+          <a href="#">About</a>
+          <a href="#">Contributing</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Learn Ukrainian &copy; 2026 &mdash; Слава Україні! &#x1F1FA;&#x1F1E6;</span>
+        <a href="https://github.com/learn-ukrainian">Open Source</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== LEVEL LANDING (A1) ==================== -->
+<div id="page-level" class="page-view">
+
+  <!-- Header (same) -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><div class="site-logo-icon">&#x1F1FA;</div> Learn Ukrainian</a>
+      <nav class="site-nav">
+        <a href="/a1/" class="active">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
+        <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
+        <div class="nav-divider"></div>
+        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
+        <a href="/istorio/">ISTORIO</a>
+        <div class="nav-divider"></div>
+        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
+        <button class="theme-toggle">&#x263E;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a href="/">Home</a> <span class="sep">&rsaquo;</span> A1 &mdash; Beginner
+  </nav>
+
+  <!-- Level Hero -->
+  <div class="level-hero a1">
+    <div class="level-hero-inner">
+      <span class="level-badge-lg">A1 &mdash; Beginner</span>
+      <h1>Перші кроки</h1>
+      <div class="level-subtitle">First Steps &mdash; Sounds, letters, first words, and basic conversations</div>
+      <div class="level-stats">
+        <span>&#x1F4D6; 64 modules</span>
+        <span>&#x1F4AC; 1,200 target words</span>
+        <span>&#x23F1; ~80 hours</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="level-content">
+
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <h3>Your Progress</h3>
+        <span>1 of 64 completed (2%)</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill a1" style="width: 2%"></div></div>
+    </div>
+
+    <!-- Module list -->
+    <div class="module-section-title">Unit 1: Sounds & Letters</div>
+    <div class="module-list">
+      <a class="module-item" href="/a1/sounds-letters-and-hello/">
+        <div class="module-num done">01</div>
+        <div class="module-info">
+          <div class="module-title">Sounds, Letters, and Hello</div>
+          <div class="module-sub">The Ukrainian alphabet, first sounds, basic greetings</div>
+        </div>
+        <div class="module-status">&#x2705;</div>
+      </a>
+      <a class="module-item" href="/a1/reading-ukrainian/">
+        <div class="module-num active">02</div>
+        <div class="module-info">
+          <div class="module-title">Reading Ukrainian</div>
+          <div class="module-sub">Syllable chains, reading practice, connecting letters to sounds</div>
+        </div>
+        <div class="module-status">&#x25B6;&#xFE0F;</div>
+      </a>
+      <a class="module-item" href="/a1/special-signs/">
+        <div class="module-num todo">03</div>
+        <div class="module-info">
+          <div class="module-title">Special Signs: Ь and '</div>
+          <div class="module-sub">Soft sign, apostrophe, and their effect on pronunciation</div>
+        </div>
+        <div class="module-status"></div>
+      </a>
+      <a class="module-item locked">
+        <div class="module-num todo">04</div>
+        <div class="module-info">
+          <div class="module-title">Nice to Meet You</div>
+          <div class="module-sub">Introductions, asking someone's name, formal vs informal</div>
+        </div>
+        <div class="module-status">&#x1F512;</div>
+      </a>
+      <a class="module-item locked">
+        <div class="module-num todo">05</div>
+        <div class="module-info">
+          <div class="module-title">Numbers 1-10</div>
+          <div class="module-sub">Counting, phone numbers, basic math</div>
+        </div>
+        <div class="module-status">&#x1F512;</div>
+      </a>
+      <a class="module-item locked">
+        <div class="module-num todo">06</div>
+        <div class="module-info">
+          <div class="module-title">At the Cafe</div>
+          <div class="module-sub">Ordering food and drinks, polite requests</div>
+        </div>
+        <div class="module-status">&#x1F512;</div>
+      </a>
+    </div>
+
+    <div class="module-section-title">Unit 2: First Conversations</div>
+    <div class="module-list">
+      <a class="module-item locked">
+        <div class="module-num todo">07</div>
+        <div class="module-info">
+          <div class="module-title">Family</div>
+          <div class="module-sub">Family members, describing your family</div>
+        </div>
+        <div class="module-status">&#x1F512;</div>
+      </a>
+      <a class="module-item locked">
+        <div class="module-num todo">08</div>
+        <div class="module-info">
+          <div class="module-title">Things Have Gender</div>
+          <div class="module-sub">Grammatical gender of Ukrainian nouns</div>
+        </div>
+        <div class="module-status">&#x1F512;</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <span>Learn Ukrainian &copy; 2026 &mdash; Слава Україні! &#x1F1FA;&#x1F1E6;</span>
+        <a href="https://github.com/learn-ukrainian">Open Source</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== TRACK LANDING (HIST) ==================== -->
+<div id="page-track" class="page-view">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><div class="site-logo-icon">&#x1F1FA;</div> Learn Ukrainian</a>
+      <nav class="site-nav">
+        <a href="/a1/">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
+        <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
+        <div class="nav-divider"></div>
+        <a href="/hist/" class="active">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
+        <a href="/istorio/">ISTORIO</a>
+        <div class="nav-divider"></div>
+        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
+        <button class="theme-toggle">&#x263E;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a href="/">Home</a> <span class="sep">&rsaquo;</span> HIST &mdash; Iсторія України
+  </nav>
+
+  <!-- Track Hero -->
+  <div class="track-hero hist">
+    <div class="track-hero-inner">
+      <span class="track-badge">HIST &middot; Seminar Track</span>
+      <h1>Iсторія України</h1>
+      <div class="track-subtitle">Ukrainian History &mdash; From Trypillians to the Present</div>
+      <div class="track-description">140 modules of real Ukrainian history, taught properly. Written 90-100% in Ukrainian, with primary sources, historiographic analysis, and critical thinking activities.</div>
+      <div class="track-prereq">&#x26A0;&#xFE0F; Prerequisite: B2 level or higher</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="track-content">
+
+    <div class="era-group">
+      <div class="era-header">
+        <div class="era-dot" style="background: #795548"></div>
+        <h3>Давня доба (Ancient Era)</h3>
+        <span class="era-range">6000 BCE &ndash; 882 CE</span>
+      </div>
+      <div class="module-list">
+        <a class="module-item" href="#">
+          <div class="module-num todo">01</div>
+          <div class="module-info">
+            <div class="module-title">Трипільська культура</div>
+            <div class="module-sub">Trypillia culture &mdash; Europe's first urban civilization</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">02</div>
+          <div class="module-info">
+            <div class="module-title">Скіфи та сармати</div>
+            <div class="module-sub">Scythians and Sarmatians on Ukrainian lands</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">03</div>
+          <div class="module-info">
+            <div class="module-title">Антська держава</div>
+            <div class="module-sub">The Antes &mdash; early Slavic polity</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="era-group">
+      <div class="era-header">
+        <div class="era-dot" style="background: var(--yellow-dark)"></div>
+        <h3>Княжа доба (Princely Era)</h3>
+        <span class="era-range">882 &ndash; 1349</span>
+      </div>
+      <div class="module-list">
+        <a class="module-item" href="#">
+          <div class="module-num todo">04</div>
+          <div class="module-info">
+            <div class="module-title">Заснування Києва</div>
+            <div class="module-sub">Founding of Kyiv &mdash; legend and archaeology</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">05</div>
+          <div class="module-info">
+            <div class="module-title">Володимир Великий</div>
+            <div class="module-sub">Volodymyr the Great &mdash; Christianization of Rus'</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">06</div>
+          <div class="module-info">
+            <div class="module-title">Ярослав Мудрий</div>
+            <div class="module-sub">Yaroslav the Wise &mdash; law, culture, diplomacy</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">07</div>
+          <div class="module-info">
+            <div class="module-title">Данило Галицький</div>
+            <div class="module-sub">Danylo of Halych &mdash; the last king of Rus'</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="era-group">
+      <div class="era-header">
+        <div class="era-dot" style="background: var(--blue)"></div>
+        <h3>Козацька доба (Cossack Era)</h3>
+        <span class="era-range">1490 &ndash; 1775</span>
+      </div>
+      <div class="module-list">
+        <a class="module-item" href="#">
+          <div class="module-num todo">08</div>
+          <div class="module-info">
+            <div class="module-title">Запорозька Січ</div>
+            <div class="module-sub">The Zaporozhian Sich &mdash; Cossack republic</div>
+          </div>
+        </a>
+        <a class="module-item" href="#">
+          <div class="module-num todo">09</div>
+          <div class="module-info">
+            <div class="module-title">Богдан Хмельницький</div>
+            <div class="module-sub">The great uprising of 1648</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <span>Learn Ukrainian &copy; 2026 &mdash; Слава Україні! &#x1F1FA;&#x1F1E6;</span>
+        <a href="https://github.com/learn-ukrainian">Open Source</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== DOCS LAYOUT (with sidebar) ==================== -->
+<div id="page-docs" class="page-view">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><div class="site-logo-icon">&#x1F1FA;</div> Learn Ukrainian</a>
+      <nav class="site-nav">
+        <a href="/a1/" class="active">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
+        <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
+        <div class="nav-divider"></div>
+        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
+        <a href="/istorio/">ISTORIO</a>
+        <div class="nav-divider"></div>
+        <a href="/oes/">OES</a><a href="/ruth/">RUTH</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
+        <button class="theme-toggle">&#x263E;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Docs layout with sidebar -->
+  <div class="docs-layout">
+    <!-- Sidebar (filtered to active branch) -->
+    <aside class="sidebar">
+      <a class="sidebar-back" href="/a1/">&larr; A1 &mdash; Beginner</a>
+
+      <div class="sidebar-progress">
+        <div><strong>1</strong> of <strong>64</strong> complete</div>
+        <div class="mini-bar"><div class="mini-fill" style="width: 2%"></div></div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Unit 1: Sounds & Letters</div>
+        <a class="sidebar-link" href="#">
+          <span class="check done">&#x2713;</span> 01. Sounds, Letters, and Hello
+        </a>
+        <a class="sidebar-link active" href="#">
+          <span class="check todo">&#x25CB;</span> 02. Reading Ukrainian
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 03. Special Signs
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Unit 2: First Conversations</div>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 04. Nice to Meet You
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 05. Numbers 1-10
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 06. At the Cafe
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Unit 3: Grammar Basics</div>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 07. Family
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 08. Things Have Gender
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 09. This and That
+        </a>
+        <a class="sidebar-link" href="#">
+          <span class="check todo">&#x25CB;</span> 10. Adjectives
+        </a>
+      </div>
+    </aside>
+
+    <!-- Content area (placeholder — actual lesson design is in poc-lesson-design.html) -->
+    <div style="padding: 24px; max-width: var(--content-width);">
+      <nav class="breadcrumbs" style="padding: 0; margin-bottom: 16px;">
+        <a href="/">Home</a> <span class="sep">&rsaquo;</span>
+        <a href="/a1/">A1</a> <span class="sep">&rsaquo;</span>
+        Reading Ukrainian
+      </nav>
+
+      <div style="background: var(--blue); color: white; padding: 20px 24px; border-radius: var(--radius); border-bottom: 4px solid var(--yellow); margin-bottom: 24px;">
+        <span style="display:inline-block; background: var(--yellow); color: var(--gray-900); font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px;">A1 Module 02</span>
+        <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 4px;">Читаємо українською</h1>
+        <div style="opacity: 0.85; font-size: 14px;">Reading Ukrainian &mdash; Syllable chains and reading practice</div>
+      </div>
+
+      <!-- Tab bar -->
+      <div style="display:flex; gap:0; border-bottom: 2px solid var(--gray-200); margin-bottom: 24px;">
+        <button style="padding: 11px 20px; font-size: 14px; font-weight: 600; color: var(--blue); background: none; border: none; border-bottom: 3px solid var(--blue); margin-bottom: -2px; cursor: pointer;">Урок</button>
+        <button style="padding: 11px 20px; font-size: 14px; font-weight: 600; color: var(--gray-600); background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer;">Словник</button>
+        <button style="padding: 11px 20px; font-size: 14px; font-weight: 600; color: var(--gray-600); background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer;">Зошит</button>
+        <button style="padding: 11px 20px; font-size: 14px; font-weight: 600; color: var(--gray-600); background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer;">Ресурси</button>
+      </div>
+
+      <p style="color: var(--gray-600); font-size: 14px; font-style: italic;">(Lesson content renders here &mdash; see <a href="poc-lesson-design.html" style="color: var(--blue);">poc-lesson-design.html</a> for the full module design)</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 404 PAGE ==================== -->
+<div id="page-404" class="page-view">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><div class="site-logo-icon">&#x1F1FA;</div> Learn Ukrainian</a>
+      <nav class="site-nav">
+        <a href="/a1/">A1</a><a href="/a2/">A2</a><a href="/b1/">B1</a>
+        <a href="/b2/">B2</a><a href="/c1/">C1</a><a href="/c2/">C2</a>
+        <div class="nav-divider"></div>
+        <a href="/hist/">HIST</a><a href="/lit/">LIT</a><a href="/bio/">BIO</a>
+        <a href="/istorio/">ISTORIO</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">&#x1F50D; Search <kbd>&#x2318;K</kbd></div>
+        <button class="theme-toggle">&#x263E;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="error-page">
+    <div class="error-num">404</div>
+    <h2>Сторінку не знайдено</h2>
+    <p>Page not found. The page you're looking for doesn't exist or has been moved.</p>
+    <a href="/" class="btn-primary">Go to Homepage</a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <span>Learn Ukrainian &copy; 2026 &mdash; Слава Україні! &#x1F1FA;&#x1F1E6;</span>
+        <a href="https://github.com/learn-ukrainian">Open Source</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========== JS ========== -->
+<script>
+function switchPage(id) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
