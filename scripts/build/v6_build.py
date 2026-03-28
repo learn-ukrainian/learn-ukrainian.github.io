@@ -492,25 +492,27 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
 
-    # Build vocabulary list for verification
-    vocab_hints = plan.get("vocabulary_hints", {})
-    required = vocab_hints.get("required", [])
-    recommended = vocab_hints.get("recommended", [])
+    # Build vocabulary list for verification (guard against None YAML values)
+    vocab_hints = plan.get("vocabulary_hints") or {}
+    required = vocab_hints.get("required") or []
+    recommended = vocab_hints.get("recommended") or []
     all_vocab = required + recommended
     vocab_text = "\n".join(f"- {item}" for item in all_vocab) if all_vocab else "(No vocabulary hints in plan)"
 
-    # Build section queries from content_outline
-    sections = plan.get("content_outline", [])
+    # Build section queries from content_outline (guard against None/malformed)
+    sections = plan.get("content_outline") or []
     section_queries = []
     for s in sections:
-        title = s.get("section", "")
-        points = s.get("points", [])
+        if not isinstance(s, dict):
+            continue
+        title = s.get("section") or ""
+        points = s.get("points") or []
         points_text = "; ".join(str(p) for p in points[:3]) if points else ""
         section_queries.append(f"- **{title}**: {points_text}")
     queries_text = "\n".join(section_queries) if section_queries else "(No content outline)"
 
     # Fill template
-    phase = plan.get("phase", "")
+    phase = str(plan.get("phase") or "")
     replacements = {
         "{MODULE_NUM}": str(module_num),
         "{TOPIC_TITLE}": plan.get("title", slug),
