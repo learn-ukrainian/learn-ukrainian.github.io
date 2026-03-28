@@ -98,14 +98,12 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
 
 def _format_result(result: dict) -> str:
     """Format a single RAG result as a citation block."""
-    source = result.get("source", result.get("metadata", {}).get("source", "unknown"))
-    section = result.get("section", result.get("metadata", {}).get("section", ""))
+    # RAG returns 'author' field directly; fall back to 'source' for legacy compat
+    author = result.get("author", result.get("source", result.get("metadata", {}).get("source", "unknown")))
+    section = result.get("section_title", result.get("section", result.get("metadata", {}).get("section", "")))
     text = result.get("text", result.get("content", "")).strip()
     score = result.get("score", result.get("relevance_score", 0))
     grade = result.get("grade", result.get("metadata", {}).get("grade", "?"))
-
-    # Extract author from source
-    author = source.split(",")[0] if "," in source else source
 
     # Truncate long texts
     if len(text) > 500:
