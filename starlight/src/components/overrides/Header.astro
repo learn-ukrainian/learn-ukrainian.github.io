@@ -8,6 +8,7 @@ import Search from '@astrojs/starlight/components/Search.astro';
 import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
 import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
 import logoSrc from '../../assets/logo.svg';
+import stats from '../../data/curriculum-stats.json';
 
 const route = Astro.locals.starlightRoute;
 const currentPath = Astro.url.pathname;
@@ -26,23 +27,24 @@ const coreLevels = [
   { href: '/c2/', label: 'C2' },
 ];
 
+const s = stats as Record<string, any>;
 const seminarTracks = [
   { heading: 'History & Culture' },
-  { href: '/hist/', label: 'Історія України', icon: '🏰', count: 140 },
-  { href: '/istorio/', label: 'Історіографія', icon: '🔍', count: 136 },
-  { href: '/bio/', label: 'Біографії', icon: '🧑', count: 180 },
-  { href: '/folk/', label: 'Фольклор', icon: '🌾', count: 27 },
+  { href: '/hist/', label: 'Історія України', icon: '🏰', count: s.hist?.modules },
+  { href: '/istorio/', label: 'Історіографія', icon: '🔍', count: s.istorio?.modules },
+  { href: '/bio/', label: 'Біографії', icon: '🧑', count: s.bio?.modules },
+  { href: '/folk/', label: 'Фольклор', icon: '🌾', count: s.folk?.modules },
   { divider: true },
   { heading: 'Literature' },
-  { href: '/lit/', label: 'Література', icon: '📜', count: 232 },
-  { href: '/lit-essay/', label: 'Есеїстика', icon: '✍', count: 63 },
-  { href: '/lit-war/', label: 'Воєнна проза', icon: '⚔', count: 29 },
-  { href: '/lit-fantastika/', label: 'Фантастика', icon: '🚀', count: 25 },
+  { href: '/lit/', label: 'Література', icon: '📜', count: s.lit?.modules },
+  { href: '/lit-essay/', label: 'Есеїстика', icon: '✍', count: s['lit-essay']?.modules },
+  { href: '/lit-war/', label: 'Воєнна проза', icon: '⚔', count: s['lit-war']?.modules },
+  { href: '/lit-fantastika/', label: 'Фантастика', icon: '🚀', count: s['lit-fantastika']?.modules },
 ];
 
 const linguisticTracks = [
-  { href: '/oes/', label: 'Old East Slavic', icon: '📰', count: 102 },
-  { href: '/ruth/', label: 'Ruthenian', icon: '🏛', count: 115 },
+  { href: '/oes/', label: 'Old East Slavic', icon: '📰', count: s.oes?.modules },
+  { href: '/ruth/', label: 'Ruthenian', icon: '🏛', count: s.ruth?.modules },
 ];
 
 const seminarActive = seminarTracks.some(t => 'href' in t && t.href && isActive(t.href));

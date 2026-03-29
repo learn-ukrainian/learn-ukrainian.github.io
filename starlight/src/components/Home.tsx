@@ -1,6 +1,12 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import styles from './Home.module.css';
+import curriculumStats from '../data/curriculum-stats.json';
+
+/** Get module count from curriculum.yaml-generated stats */
+function mc(level: string): number {
+  return (curriculumStats as Record<string, any>)[level.toLowerCase()]?.modules ?? 0;
+}
 
 function HomepageHeader() {
   return (
@@ -72,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        1,503 modules aligned with CEFR and Ukrainian State Standards.
+        {(curriculumStats as any)._total.toLocaleString()} modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -138,42 +144,42 @@ export default function Home(): ReactNode {
                 level="A1"
                 name="Beginner"
                 description="Cyrillic alphabet, basic phrases, practical scenarios"
-                modules={64}
+                modules={mc('a1')}
                 color="#2E7D32"
               />
               <LevelCard
                 level="A2"
                 name="Elementary"
                 description="All 7 cases, verb aspects, practical scenarios"
-                modules={76}
+                modules={mc('a2')}
                 color="#1565C0"
               />
               <LevelCard
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, communication skills"
-                modules={100}
+                modules={mc('b1')}
                 color="#E65100"
               />
               <LevelCard
                 level="B2"
                 name="Upper-Intermediate"
                 description="Passive voice, registers, professional basics"
-                modules={85}
+                modules={mc('b2')}
                 color="#C2185B"
               />
               <LevelCard
                 level="C1"
                 name="Advanced"
                 description="Stylistics, literature, complex grammar"
-                modules={106}
+                modules={mc('c1')}
                 color="#7B1FA2"
               />
               <LevelCard
                 level="C2"
                 name="Mastery"
                 description="Native-level proficiency"
-                modules={91}
+                modules={mc('c2')}
                 color="#C62828"
               />
             </div>
@@ -186,42 +192,42 @@ export default function Home(): ReactNode {
                 level="HIST"
                 name="History"
                 description="Ukrainian history from origins to present"
-                modules={140}
+                modules={mc('hist')}
                 color="#795548"
               />
               <LevelCard
                 level="ISTORIO"
                 name="Historiography"
                 description="Primary sources, imperial mechanisms, interethnic relations"
-                modules={136}
+                modules={mc('istorio')}
                 color="#6D4C41"
               />
               <LevelCard
                 level="BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
-                modules={176}
+                modules={mc('bio')}
                 color="#607D8B"
               />
               <LevelCard
                 level="B2-PRO"
                 name="Professional"
                 description="Business communication, technical domains"
-                modules={40}
+                modules={mc('b2-pro')}
                 color="#455A64"
               />
               <LevelCard
                 level="C1-PRO"
                 name="Professional Mastery"
                 description="Executive, academic, specialized"
-                modules={50}
+                modules={mc('c1-pro')}
                 color="#37474F"
               />
               <LevelCard
                 level="LIT"
                 name="Literature"
                 description="Ukrainian classics and literary analysis"
-                modules={221}
+                modules={mc('lit')}
                 color="#5D4037"
               />
             </div>

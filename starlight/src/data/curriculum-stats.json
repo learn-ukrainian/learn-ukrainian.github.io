@@ -1,0 +1,69 @@
+{
+  "a1": {
+    "modules": 55
+  },
+  "a2": {
+    "modules": 60
+  },
+  "b1": {
+    "modules": 91
+  },
+  "b2": {
+    "modules": 89
+  },
+  "c1": {
+    "modules": 111
+  },
+  "hist": {
+    "modules": 140
+  },
+  "bio": {
+    "modules": 180
+  },
+  "lit": {
+    "modules": 232
+  },
+  "istorio": {
+    "modules": 136
+  },
+  "b2-pro": {
+    "modules": 40
+  },
+  "c1-pro": {
+    "modules": 50
+  },
+  "c2": {
+    "modules": 106
+  },
+  "oes": {
+    "modules": 102
+  },
+  "ruth": {
+    "modules": 115
+  },
+  "lit-essay": {
+    "modules": 63
+  },
+  "lit-hist-fic": {
+    "modules": 23
+  },
+  "lit-fantastika": {
+    "modules": 25
+  },
+  "lit-war": {
+    "modules": 29
+  },
+  "lit-humor": {
+    "modules": 14
+  },
+  "lit-youth": {
+    "modules": 32
+  },
+  "lit-drama": {
+    "modules": 17
+  },
+  "folk": {
+    "modules": 27
+  },
+  "_total": 1737
+}
