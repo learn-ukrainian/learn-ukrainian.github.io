@@ -1,0 +1,66 @@
+{
+  "exists": true,
+  "words": 2544,
+  "quality": "solid",
+  "score": 8,
+  "score_raw": 14,
+  "score_max": 17,
+  "markers": 8,
+  "profile": "core",
+  "dimensions": {
+    "state_standard": {
+      "score": 2,
+      "max": 2,
+      "detail": "9 sections covered"
+    },
+    "vocabulary": {
+      "score": 2,
+      "max": 2,
+      "detail": "22 textbook excerpts"
+    },
+    "cultural_hooks": {
+      "score": 0,
+      "max": 2,
+      "detail": "no cultural references found"
+    },
+    "learner_errors": {
+      "score": 2,
+      "max": 2,
+      "detail": "N/A for V6 packets"
+    },
+    "cross_references": {
+      "score": 1,
+      "max": 1,
+      "detail": "4 authors"
+    },
+    "pedagogy_notes": {
+      "score": 1,
+      "max": 1,
+      "detail": "3 pedagogy references"
+    },
+    "source_verification": {
+      "score": 2,
+      "max": 2,
+      "detail": "22 cited sources"
+    },
+    "claim_grounding": {
+      "score": 2,
+      "max": 2,
+      "detail": "1079 Ukrainian terms"
+    },
+    "discovery_integration": {
+      "score": 1,
+      "max": 1,
+      "detail": "N/A for V6"
+    },
+    "specificity": {
+      "score": 1,
+      "max": 2,
+      "detail": "2544 words (need 3000+)"
+    }
+  },
+  "gaps": [
+    "cultural_hooks: no cultural references found",
+    "specificity: 2544 words (need 3000+)"
+  ]
+}

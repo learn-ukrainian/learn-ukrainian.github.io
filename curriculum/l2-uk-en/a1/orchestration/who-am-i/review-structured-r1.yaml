@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all content points. Deduct 1 point for adding an extra exercise
+    marker not present in the plan's `activity_hints`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Critical error: Translates the infinitive verb "звати" as "they-call"
+    (which is "звуть"). This is likely Russian interference (confusing with "зовут").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Explains "тебе" as just "the informal you" without noting it's an object
+    form; introduces the `-иця` feminine suffix without providing a single example;
+    confusing explanation of interchangeable greeti
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary is used naturally in the text
+    and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Injects a 5th activity marker (`match-question-words`) that does not exist
+    in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Natural conversational style without overly gamified language.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown and proper headings, though the word count exceeds the
+    target significantly (1843 vs 1200), but word targets are minimums.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses authentic names, cities, and standard conversational responses.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Situational dialogues correctly demonstrate the difference between formal
+    and informal registers.
+findings: []
