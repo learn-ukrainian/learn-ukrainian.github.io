@@ -62,8 +62,9 @@ def get_plan_data(level: str, slug: str) -> dict:
     return {}
 
 
-def escape_js_string(s: str) -> str:
+def escape_js_string(s: str | int | float) -> str:
     """Escape string for JavaScript object literal."""
+    s = str(s) if not isinstance(s, str) else s
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
 
 

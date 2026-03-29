@@ -1,250 +1,451 @@
 ---
-title: LIT - Українська література
-sidebar:
-  order: 1
+title: "LIT"
+description: " — 232 modules"
+template: splash
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="lit"
-  levelName="LIT - Українська література"
-  subtitle="Literature Track — 221 modules"
-  introduction="Literature — Ukrainian classics and literary analysis"
-  totalPlanned={221}
+  level="LIT"
+  title="LIT"
+  subtitle=" — 0/232 modules complete"
+  moduleCount={232}
+  wordTarget={4000}
+  color="#546E7A"
   modules={[
-  { num: 1, title: "Феномен Івана Котляревського", slug: "introduction-to-kotliarevsky", status: "wip" },
-  { num: 2, title: "Енеїда: Сміх над Безоднею (Частина I)", slug: "eneida-part-1", status: "wip" },
-  { num: 3, title: "Енеїда: Філософія Бенкету (Частина II)", slug: "eneida-feast", status: "wip" },
-  { num: 4, title: "Енеїда: Словник Війни", slug: "eneida-war", status: "wip" },
-  { num: 5, title: "Наталка Полтавка: Анатомія Почуттів", slug: "natalka-poltavka", status: "wip" },
-  { num: 6, title: "Батько Прози: Квітка-Основ'яненко", slug: "kvitka-bio", status: "wip" },
-  { num: 7, title: "Маруся: Ідеал Української Душі", slug: "marusya", status: "wip" },
-  { num: 8, title: "Конотопська Відьма: Сатира на Руїну", slug: "konotop-witch", status: "wip" },
-  { num: 9, title: "Етнографія як Література: Український Світ Квітки", slug: "ethnography", status: "wip" },
-  { num: 10, title: "Мова як Маніфест: Голос Слобожанщини", slug: "kvitka-language", status: "wip" },
-  { num: 11, title: "Тарас Шевченко: Від Кріпака до Пророка", slug: "young-shevchenko", status: "wip" },
-  { num: 12, title: "Балади: Між Світами", slug: "the-ballads", status: "wip" },
-  { num: 13, title: "Гайдамаки: Кривава Свобода", slug: "haidamaky", status: "wip" },
-  { num: 14, title: "Політична Сатира: Сон", slug: "son", status: "wip" },
-  { num: 15, title: "Заповіт", slug: "the-testament", status: "wip" },
-  { num: 16, title: "Біблійні теми: Давидові псалми і \"Марія\"", slug: "biblical-themes", status: "wip" },
-  { num: 17, title: "Художник: Шевченко-маляр", slug: "the-artist", status: "wip" },
-  { num: 18, title: "Жіноча доля в \"Кобзарі\"", slug: "women-in-kobzar", status: "wip" },
-  { num: 19, title: "Щоденник (\"Журнал\") Шевченка", slug: "shevchenkos-diary", status: "wip" },
-  { num: 20, title: "Культ Шевченка: Рецепція і Міфи", slug: "cult-of-shevchenko", status: "wip" },
-  { num: 21, title: "Kulish Literary Legacy", slug: "kulish-literary-legacy", status: "wip" },
-  { num: 22, title: "Чорна рада: Історичний контекст", slug: "black-council-history", status: "wip" },
-  { num: 23, title: "Чорна рада: Роман", slug: "black-council-plot", status: "wip" },
-  { num: 24, title: "Мовне питання", slug: "language-question-linguistics", status: "wip" },
-  { num: 25, title: "Кирило-Мефодіївське братство", slug: "cyrillo-methodian-brotherhood", status: "wip" },
-  { num: 26, title: "Іван Нечуй-Левицький: Літописець Українського Села", slug: "nechuy-levytsky", status: "wip" },
-  { num: 27, title: "Кайдашева сім'я: Галерея Характерів", slug: "kaidash-family-characters", status: "wip" },
-  { num: 28, title: "Кайдашева сім'я: Анатомія Конфлікту", slug: "kaidash-family-conflict", status: "wip" },
-  { num: 29, title: "Мова Реалізму: Стиль Нечуя-Левицького", slug: "language-of-realism", status: "wip" },
-  { num: 30, title: "Микола Джеря: Епос Кріпацької Долі", slug: "mykola-dzherya", status: "wip" },
-  { num: 31, title: "Панас Мирний: Корифей української прози", slug: "panas-myrny-intro", status: "wip" },
-  { num: 32, title: "Хіба ревуть воли...: Генезис та сюжет", slug: "khiba-revut-voly-1", status: "wip" },
-  { num: 33, title: "Хіба ревуть воли...: Образ Чіпки", slug: "khiba-revut-voly-2", status: "wip" },
-  { num: 34, title: "Стилістика соціально-психологічного роману", slug: "khiba-revut-voly-style", status: "wip" },
-  { num: 35, title: "Марко Вовчок: «Інститутка» та антикріпосницька проза", slug: "marko-vovchok-instytutka", status: "wip" },
-  { num: 36, title: "«Маруся»: Українська легенда в Європі", slug: "marko-vovchok-marusya", status: "wip" },
-  { num: 37, title: "Степан Руданський: Співомовки та гумор", slug: "stepan-rudansky", status: "wip" },
-  { num: 38, title: "Леонід Глібов: Майстер української байки", slug: "leonid-hlibov", status: "wip" },
-  { num: 39, title: "Михайло Старицький: Драматург та мовотворець", slug: "mykhailo-starytsky", status: "wip" },
-  { num: 40, title: "Борис Грінченко: Вартовий рідного слова", slug: "borys-hrinchenko", status: "wip" },
-  { num: 41, title: "Синтез: Горизонти епохи 1", slug: "synthesis-1", status: "wip" },
-  { num: 42, title: "Іван Франко: Титан праці", slug: "franko-biography", status: "wip" },
-  { num: 43, title: "«Захар Беркут»: Історична пам'ять та опір", slug: "franko-zakhar-berkut", status: "wip" },
-  { num: 44, title: "«Украдене щастя»: Соціально-психологічна драма", slug: "franko-stolen-happiness", status: "wip" },
-  { num: 45, title: "«Мойсей»: Філософська поема про пророка", slug: "franko-moses", status: "wip" },
-  { num: 46, title: "Franko Lviv Period", slug: "franko-lviv-period", status: "wip" },
-  { num: 47, title: "Franko Social Poetry", slug: "franko-social-poetry", status: "wip" },
-  { num: 48, title: "Franko Historical Prose", slug: "franko-historical-prose", status: "wip" },
-  { num: 49, title: "Franko Letters", slug: "franko-letters", status: "wip" },
-  { num: 50, title: "Леся Українка: Донька Прометея", slug: "lesia-ukrainka-intro", status: "wip" },
-  { num: 51, title: "«Лісова пісня»: Світ природи та духу", slug: "lesia-forest-song-1", status: "wip" },
-  { num: 52, title: "«Лісова пісня»: Трагедія нерозуміння", slug: "lesia-forest-song-2", status: "wip" },
-  { num: 53, title: "Lesia Cassandra", slug: "lesia-cassandra", status: "wip" },
-  { num: 54, title: "Lesia Stone Guest", slug: "lesia-stone-guest", status: "wip" },
-  { num: 55, title: "Lesia Blue Rose", slug: "lesia-blue-rose", status: "wip" },
-  { num: 56, title: "Lesia In The Catacombs", slug: "lesia-in-the-catacombs", status: "wip" },
-  { num: 57, title: "Kobylianska Nature", slug: "kobylianska-nature", status: "wip" },
-  { num: 58, title: "Ольга Кобилянська: «Земля» як фатум", slug: "kobylianska-zemlya", status: "wip" },
-  { num: 59, title: "Kobylianska Tsarivna", slug: "kobylianska-tsarivna", status: "wip" },
-  { num: 60, title: "Kobylianska Persona", slug: "kobylianska-persona", status: "wip" },
-  { num: 61, title: "Василь Стефаник: «Камінний хрест» — біль еміграції", slug: "stefanyk-stone-cross", status: "wip" },
-  { num: 62, title: "Stefanyk Blue Book", slug: "stefanyk-blue-book", status: "wip" },
-  { num: 63, title: "Stefanyk Novellas", slug: "stefanyk-novellas", status: "wip" },
-  { num: 64, title: "Khotkevych Prose", slug: "khotkevych-prose", status: "wip" },
-  { num: 65, title: "Михайло Коцюбинський: «Intermezzo» — сонцепоклонництво", slug: "kotsiubynsky-intermezzo", status: "wip" },
-  { num: 66, title: "«Тіні забутих предків»: Гуцульський міф", slug: "kotsiubynsky-shadows-forgotten", status: "wip" },
-  { num: 67, title: "Kotsiubynsky Apple Blossom", slug: "kotsiubynsky-apple-blossom", status: "wip" },
-  { num: 68, title: "Kotsiubynsky Fata Morgana", slug: "kotsiubynsky-fata-morgana", status: "wip" },
-  { num: 69, title: "Vynnychenko Black Panther", slug: "vynnychenko-black-panther", status: "wip" },
-  { num: 70, title: "Володимир Винниченко: «Сонячна машина» — перша утопія", slug: "vynnychenko-solar-machine", status: "wip" },
-  { num: 71, title: "Vynnychenko Honesty", slug: "vynnychenko-honesty", status: "wip" },
-  { num: 72, title: "Oles Oleksandr Liryka", slug: "oles-oleksandr-liryka", status: "wip" },
-  { num: 73, title: "Oles The Nightingale", slug: "oles-the-nightingale", status: "wip" },
-  { num: 74, title: "Voronyi Symbolism", slug: "voronyi-symbolism", status: "wip" },
-  { num: 75, title: "Voronyi Poetry", slug: "voronyi-poetry", status: "wip" },
-  { num: 76, title: "Lepkyi Mazepa Trilogy", slug: "lepkyi-mazepa-trilogy", status: "wip" },
-  { num: 77, title: "Синтез: Горизонти епохи 2", slug: "synthesis-2", status: "wip" },
-  { num: 78, title: "Михайль Семенко: Маніфест футуризму", slug: "semenko-futurism-manifesto", status: "wip" },
-  { num: 79, title: "Semenko Kobzar Burning", slug: "semenko-kobzar-burning", status: "wip" },
-  { num: 80, title: "Yanovsky Master Of The Ship", slug: "yanovsky-master-of-the-ship", status: "wip" },
-  { num: 81, title: "Yanovsky Four Sabres", slug: "yanovsky-four-sabres", status: "wip" },
-  { num: 82, title: "Павло Тичина: «Сонячні кларнети»", slug: "tychyna-clarinets", status: "wip" },
-  { num: 83, title: "Павло Тичина: Трагічний поворот до соцреалізму", slug: "tychyna-tragic-turn", status: "wip" },
-  { num: 84, title: "Tychyna Soviet Period", slug: "tychyna-soviet-period", status: "wip" },
-  { num: 85, title: "Rylsky Neoclassicism", slug: "rylsky-neoclassicism", status: "wip" },
-  { num: 86, title: "Rylsky Liryka", slug: "rylsky-liryka", status: "wip" },
-  { num: 87, title: "Rylsky Translations", slug: "rylsky-translations", status: "wip" },
-  { num: 88, title: "Микола Зеров: Київський Парнас", slug: "zerov-kyiv-parnassus", status: "wip" },
-  { num: 89, title: "Zerov Sonnets", slug: "zerov-sonnets", status: "wip" },
-  { num: 90, title: "Zerov Criticism", slug: "zerov-criticism", status: "wip" },
-  { num: 91, title: "Dray-Khmara Poetry", slug: "dray-khmara-poetry", status: "wip" },
-  { num: 92, title: "Fylypovych Poetry", slug: "fylypovych-poetry", status: "wip" },
-  { num: 93, title: "Klen Poetry", slug: "klen-poetry", status: "wip" },
-  { num: 94, title: "Khvylovy (Вступ)", slug: "khvylovy-intro", status: "wip" },
-  { num: 95, title: "Микола Хвильовий: «Я (Романтика)»", slug: "khvylovy-i-am-romance", status: "wip" },
-  { num: 96, title: "Khvylovy Woodsnipes", slug: "khvylovy-woodsnipes", status: "wip" },
-  { num: 97, title: "Khvylovy Pamphlets", slug: "khvylovy-pamphlets", status: "wip" },
-  { num: 98, title: "Валер'ян Підмогильний: «Місто» — урбаністичний роман", slug: "pidmohylny-city-1", status: "wip" },
-  { num: 99, title: "Pidmohylny City 2", slug: "pidmohylny-city-2", status: "wip" },
-  { num: 100, title: "Pidmohylny Small Prose", slug: "pidmohylny-small-prose", status: "wip" },
-  { num: 101, title: "Yohansen Doctor Leonardo", slug: "yohansen-doctor-leonardo", status: "wip" },
-  { num: 102, title: "Yohansen Experimental", slug: "yohansen-experimental", status: "wip" },
-  { num: 103, title: "Domontovych Girl Bear", slug: "domontovych-girl-bear", status: "wip" },
-  { num: 104, title: "Domontovych Dr Seraphicus", slug: "domontovych-dr-seraphicus", status: "wip" },
-  { num: 105, title: "Domontovych Intellectuals", slug: "domontovych-intellectuals", status: "wip" },
-  { num: 106, title: "Богдан-Ігор Антонич: «Зелена Євангелія»", slug: "antonych-green-gospel", status: "wip" },
-  { num: 107, title: "Antonych Urbanism", slug: "antonych-urbanism", status: "wip" },
-  { num: 108, title: "Antonych Mythology", slug: "antonych-mythology", status: "wip" },
-  { num: 109, title: "Sosiura Love Ukraine", slug: "sosiura-love-ukraine", status: "wip" },
-  { num: 110, title: "Sosiura Red Winter", slug: "sosiura-red-winter", status: "wip" },
-  { num: 111, title: "Sosiura Internal Conflict", slug: "sosiura-internal-conflict", status: "wip" },
-  { num: 112, title: "Pluzhnyk Galileo", slug: "pluzhnyk-galileo", status: "wip" },
-  { num: 113, title: "Pluzhnyk Poetry", slug: "pluzhnyk-poetry", status: "wip" },
-  { num: 114, title: "Bazhan Idols", slug: "bazhan-idols", status: "wip" },
-  { num: 115, title: "Bazhan Quiet Step", slug: "bazhan-quiet-step", status: "wip" },
-  { num: 116, title: "Antonenko Davydovych Smert", slug: "antonenko-davydovych-smert", status: "wip" },
-  { num: 117, title: "Antonenko Davydovych Prose", slug: "antonenko-davydovych-prose", status: "wip" },
-  { num: 118, title: "Сандармох: Трагедія знищеного покоління", slug: "sandarmokh-tragedy-erasure", status: "wip" },
-  { num: 119, title: "Розстріляне Відродження як культурний феномен", slug: "rozstriliane-vidrodzennia-phenomenon", status: "wip" },
-  { num: 120, title: "Kosynka Short Fiction", slug: "kosynka-short-fiction", status: "wip" },
-  { num: 121, title: "Синтез: Горизонти епохи 3", slug: "synthesis-3", status: "wip" },
-  { num: 122, title: "Lukash Translation As Resistance", slug: "lukash-translation-as-resistance", status: "wip" },
-  { num: 123, title: "Translation As Cultural Weapon", slug: "translation-as-cultural-weapon", status: "wip" },
-  { num: 124, title: "Bahrianyi Tiger Trappers", slug: "bahrianyi-tiger-trappers", status: "wip" },
-  { num: 125, title: "Bahrianyi Garden Gethsemane", slug: "bahrianyi-garden-gethsemane", status: "wip" },
-  { num: 126, title: "Bahrianyi Man Runs", slug: "bahrianyi-man-runs", status: "wip" },
-  { num: 127, title: "Dovzhenko Enchanted Desna", slug: "dovzhenko-enchanted-desna", status: "wip" },
-  { num: 128, title: "Dovzhenko Ukraine Flames", slug: "dovzhenko-ukraine-flames", status: "wip" },
-  { num: 129, title: "Dovzhenko Cinema As Literature", slug: "dovzhenko-cinema-as-literature", status: "wip" },
-  { num: 130, title: "Samchuk Maria", slug: "samchuk-maria", status: "wip" },
-  { num: 131, title: "Barka Yellow Prince", slug: "barka-yellow-prince", status: "wip" },
-  { num: 132, title: "Osmachka Prose", slug: "osmachka-prose", status: "wip" },
-  { num: 133, title: "Symonenko Knights", slug: "symonenko-knights", status: "wip" },
-  { num: 134, title: "Symonenko Truth", slug: "symonenko-truth", status: "wip" },
-  { num: 135, title: "Василь Стус: «Палімпсести»", slug: "stus-palimpsests", status: "wip" },
-  { num: 136, title: "Stus Moral Imperative", slug: "stus-moral-imperative", status: "wip" },
-  { num: 137, title: "Stus Letters To Son", slug: "stus-letters-to-son", status: "wip" },
-  { num: 138, title: "Stus Vertical Of Spirit", slug: "stus-vertical-of-spirit", status: "wip" },
-  { num: 139, title: "Ліна Костенко: «Маруся Чурай» — роман у віршах", slug: "kostenko-marusia-churai-1", status: "wip" },
-  { num: 140, title: "Kostenko Marusia Churai 2", slug: "kostenko-marusia-churai-2", status: "wip" },
-  { num: 141, title: "Kostenko Garden Of Unthawed Sculptures", slug: "kostenko-garden-of-unthawed-sculptures", status: "wip" },
-  { num: 142, title: "Kostenko Poetry", slug: "kostenko-poetry", status: "wip" },
-  { num: 143, title: "Tiutiunnyk Three Cuckoos", slug: "tiutiunnyk-three-cuckoos", status: "wip" },
-  { num: 144, title: "Tiutiunnyk Novella Mastery", slug: "tiutiunnyk-novella-mastery", status: "wip" },
-  { num: 145, title: "Honchar Cathedral", slug: "honchar-cathedral", status: "wip" },
-  { num: 146, title: "Honchar Banners", slug: "honchar-banners", status: "wip" },
-  { num: 147, title: "Malyshko Poetry", slug: "malyshko-poetry", status: "wip" },
-  { num: 148, title: "Malyshko Songs", slug: "malyshko-songs", status: "wip" },
-  { num: 149, title: "Malaniuk Poetry", slug: "malaniuk-poetry", status: "wip" },
-  { num: 150, title: "Teliha Poetry", slug: "teliha-poetry", status: "wip" },
-  { num: 151, title: "Olzhych Poetry", slug: "olzhych-poetry", status: "wip" },
-  { num: 152, title: "Vinhranovskyi Poetry", slug: "vinhranovskyi-poetry", status: "wip" },
-  { num: 153, title: "Vinhranovskyi Prose", slug: "vinhranovskyi-prose", status: "wip" },
-  { num: 154, title: "Drach Knife Sun", slug: "drach-knife-sun", status: "wip" },
-  { num: 155, title: "Drach Ballads", slug: "drach-ballads", status: "wip" },
-  { num: 156, title: "Sverstiuk Prodigal Sons Lit", slug: "sverstiuk-prodigal-sons-lit", status: "wip" },
-  { num: 157, title: "Sverstiuk Moral Resistance", slug: "sverstiuk-moral-resistance", status: "wip" },
-  { num: 158, title: "Dziuba Internationalism", slug: "dziuba-internationalism", status: "wip" },
-  { num: 159, title: "Dziuba Literature", slug: "dziuba-literature", status: "wip" },
-  { num: 160, title: "Holoborodko Flying Window", slug: "holoborodko-flying-window", status: "wip" },
-  { num: 161, title: "Holodomor In Literature", slug: "holodomor-in-literature", status: "wip" },
-  { num: 162, title: "Samvydav Underground Publishing", slug: "samvydav-underground-publishing", status: "wip" },
-  { num: 163, title: "Women Writers Resistance", slug: "women-writers-resistance", status: "wip" },
-  { num: 164, title: "Shestydesiatnyky As Phenomenon", slug: "shestydesiatnyky-as-phenomenon", status: "wip" },
-  { num: 165, title: "Валерій Шевчук: Дім на горі", slug: "valeriy-shevchuk-dim-na-hori", status: "wip" },
-  { num: 166, title: "Валерій Шевчук: Три листки за вікном та інша проза", slug: "valeriy-shevchuk-prose", status: "wip" },
-  { num: 167, title: "Ірина Вільде: Сестри Річинські", slug: "iryna-vilde-sestry-richynski", status: "wip" },
-  { num: 168, title: "Емма Андієвська: Нью-Йоркська група", slug: "emma-andiyevska-new-york-group", status: "wip" },
-  { num: 169, title: "Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи", slug: "yuriy-tarnavsky-new-york-group", status: "wip" },
-  { num: 170, title: "Синтез: Горизонти епохи 4", slug: "synthesis-4", status: "wip" },
-  { num: 171, title: "Bu Ba Bu Carnival", slug: "bu-ba-bu-carnival", status: "wip" },
-  { num: 172, title: "Bu Ba Bu The End Of Soviet", slug: "bu-ba-bu-the-end-of-soviet", status: "wip" },
-  { num: 173, title: "Юрій Андрухович: «Рекреації»", slug: "andrukhovych-recreations", status: "wip" },
-  { num: 174, title: "Andrukhovych Moscoviad", slug: "andrukhovych-moscoviad", status: "wip" },
-  { num: 175, title: "Andrukhovych Perverzion", slug: "andrukhovych-perverzion", status: "wip" },
-  { num: 176, title: "Andrukhovych Essays", slug: "andrukhovych-essays", status: "wip" },
-  { num: 177, title: "Оксана Забужко: «Польові дослідження з українського сексу»", slug: "zabuzhko-fieldwork", status: "wip" },
-  { num: 178, title: "Zabuzhko Museum", slug: "zabuzhko-museum", status: "wip" },
-  { num: 179, title: "Zabuzhko Notre Dame Lit", slug: "zabuzhko-notre-dame-lit", status: "wip" },
-  { num: 180, title: "Zabuzhko Longest Journey", slug: "zabuzhko-longest-journey", status: "wip" },
-  { num: 181, title: "Zhadan Depeche Mode", slug: "zhadan-depeche-mode", status: "wip" },
-  { num: 182, title: "Zhadan Voroshilovgrad", slug: "zhadan-voroshilovgrad", status: "wip" },
-  { num: 183, title: "Сергій Жадан: «Інтернат» — література війни", slug: "zhadan-orphanage", status: "wip" },
-  { num: 184, title: "Zhadan Poetry", slug: "zhadan-poetry", status: "wip" },
-  { num: 185, title: "Zhadan Kharkiv Landscape", slug: "zhadan-kharkiv-landscape", status: "wip" },
-  { num: 186, title: "Decolonization Theory Literature", slug: "decolonization-theory-literature", status: "wip" },
-  { num: 187, title: "Hundorova Post Chornobyl Library", slug: "hundorova-post-chornobyl-library", status: "wip" },
-  { num: 188, title: "Izdryk Votsatsek", slug: "izdryk-votsatsek", status: "wip" },
-  { num: 189, title: "Izdryk Poetry", slug: "izdryk-poetry", status: "wip" },
-  { num: 190, title: "Andijewska Magic Realism", slug: "andijewska-magic-realism", status: "wip" },
-  { num: 191, title: "Koval Storinky", slug: "koval-storinky", status: "wip" },
-  { num: 192, title: "Koval Prose Renaissance", slug: "koval-prose-renaissance", status: "wip" },
-  { num: 193, title: "Prokhasko Unsimple", slug: "prokhasko-unsimple", status: "wip" },
-  { num: 194, title: "Prokhasko Magical Carpathians", slug: "prokhasko-magical-carpathians", status: "wip" },
-  { num: 195, title: "Matios Sweet Darusia", slug: "matios-sweet-darusia", status: "wip" },
-  { num: 196, title: "Matios Bukovina Trauma", slug: "matios-bukovina-trauma", status: "wip" },
-  { num: 197, title: "Tanja Maljartschuk Biography", slug: "tanja-maljartschuk-biography", status: "wip" },
-  { num: 198, title: "Tanja Maljartschuk Prose", slug: "tanja-maljartschuk-prose", status: "wip" },
-  { num: 199, title: "Artem Chekh Absolute Zero", slug: "artem-chekh-absolute-zero", status: "wip" },
-  { num: 200, title: "Artem Chekh District D", slug: "artem-chekh-district-d", status: "wip" },
-  { num: 201, title: "Artem Chekh Who Are You", slug: "artem-chekh-who-are-you", status: "wip" },
-  { num: 202, title: "Deresh Cult", slug: "deresh-cult", status: "wip" },
-  { num: 203, title: "Deresh Intention", slug: "deresh-intention", status: "wip" },
-  { num: 204, title: "Kateryna Kalytko Poetry", slug: "kateryna-kalytko-poetry", status: "wip" },
-  { num: 205, title: "Kateryna Kalytko Prose", slug: "kateryna-kalytko-prose", status: "wip" },
-  { num: 206, title: "Sofia Andrukhovych Amados", slug: "sofia-andrukhovych-amados", status: "wip" },
-  { num: 207, title: "Sofia Andrukhovych Felix Austria", slug: "sofia-andrukhovych-felix-austria", status: "wip" },
-  { num: 208, title: "War Poetry 2014 2022", slug: "war-poetry-2014-2022", status: "wip" },
-  { num: 209, title: "War Poetry Full Scale", slug: "war-poetry-full-scale", status: "wip" },
-  { num: 210, title: "War Literature As Movement", slug: "war-literature-as-movement", status: "wip" },
-  { num: 211, title: "New Prose Displacement", slug: "new-prose-displacement", status: "wip" },
-  { num: 212, title: "New Prose Resistance", slug: "new-prose-resistance", status: "wip" },
-  { num: 213, title: "Pachlovska Diaspora Theory", slug: "pachlovska-diaspora-theory", status: "wip" },
-  { num: 214, title: "Diaspora Modern Lit", slug: "diaspora-modern-lit", status: "wip" },
-  { num: 215, title: "Diaspora Connections", slug: "diaspora-connections", status: "wip" },
-  { num: 216, title: "Diaspora Consciousness Mur", slug: "diaspora-consciousness-mur", status: "wip" },
-  { num: 217, title: "New York Group Poets", slug: "new-york-group-poets", status: "wip" },
-  { num: 218, title: "Мойсей Фішбейн: Апокриф", slug: "moisei-fishbein-poetry", status: "wip" },
-  { num: 219, title: "Алієв і Мусаєва: Кримськотатарські голоси українською", slug: "aliev-musayeva-crimean-tatar-ukrainian", status: "wip" },
-  { num: 220, title: "Наріман Джеляль: Листи з ув'язнення", slug: "nariman-dzhelyal-publicistics", status: "wip" },
-  { num: 221, title: "Євген Гуцало: лірична проза шістдесятника", slug: "yevhen-hutsalo-shistdesiatnyky", status: "wip" },
-  { num: 222, title: "Михайло Петренко: Дивлюсь я на небо", slug: "mykhailo-petrenko-romantyka", status: "wip" },
-  { num: 223, title: "Михайло Стельмах: Щедрий вечір", slug: "mykhailo-stelmakh-shchedryi-vechir", status: "wip" },
-  { num: 224, title: "Вікторія Амеліна: Нове Відродження", slug: "amelina-renaissance", status: "wip" },
-  { num: 225, title: "Синтез: Горизонти епохи 5", slug: "synthesis-5", status: "wip" },
-  { num: 226, title: "skovoroda-baroque-philosophy", slug: "skovoroda-baroque-philosophy", status: "wip" },
-  { num: 227, title: "kalynets-dissident-poetry", slug: "kalynets-dissident-poetry", status: "wip" },
-  { num: 228, title: "Baroque Poetry Velychkovsky", slug: "baroque-poetry-velychkovsky", status: "wip" },
-  { num: 229, title: "ruthenian-triad-rusalka-dnistrova", slug: "ruthenian-triad-rusalka-dnistrova", status: "wip" },
-  { num: 230, title: "kobrynska-pershyi-vinok", slug: "kobrynska-pershyi-vinok", status: "wip" },
-  { num: 231, title: "vaplite-literary-avant-garde", slug: "vaplite-literary-avant-garde", status: "wip" },
-  { num: 232, title: "kyiv-school-of-poetry", slug: "kyiv-school-of-poetry", status: "wip" }
+    {
+      unit: "LIT.1 Burlesque & Folk Origins",
+      items: [
+        { num: 1, slug: "introduction-to-kotliarevsky", title: "Феномен Івана Котляревського", sub: "Ivan Kotliarevsky", status: "locked" },
+        { num: 2, slug: "eneida-part-1", title: "Енеїда: Сміх над Безоднею (Частина I)", sub: "Eneida Part I", status: "locked" },
+        { num: 3, slug: "eneida-feast", title: "Енеїда: Філософія Бенкету (Частина II)", sub: "Eneida Part II: The Feast", status: "locked" },
+        { num: 4, slug: "eneida-war", title: "Енеїда: Словник Війни", sub: "LIT-004: Анатомія Козацького Бою", status: "locked" },
+        { num: 5, slug: "natalka-poltavka", title: "Наталка Полтавка: Анатомія Почуттів", sub: "LIT-005: Від Сміху до Сліз", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.2 Sentimentalism (Kvitka-Osnovianenko)",
+      items: [
+        { num: 6, slug: "kvitka-bio", title: "Батько Прози: Квітка-Основ'яненко", sub: "LIT-006: Слобожанський контекст", status: "locked" },
+        { num: 7, slug: "marusya", title: "Маруся: Ідеал Української Душі", sub: "LIT-007: Сентименталізм у дії", status: "locked" },
+        { num: 8, slug: "konotop-witch", title: "Конотопська Відьма: Сатира на Руїну", sub: "LIT-008: Гумор як Дзеркало Деградації", status: "locked" },
+        { num: 9, slug: "ethnography", title: "Етнографія як Література: Український Світ Квітки", sub: "LIT-009: Обряд як Сюжетний Каркас", status: "locked" },
+        { num: 10, slug: "kvitka-language", title: "Мова як Маніфест: Голос Слобожанщини", sub: "LIT-010: Як Квітка створив Літературну Норму", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.3 The Prophet (Taras Shevchenko)",
+      items: [
+        { num: 11, slug: "young-shevchenko", title: "Тарас Шевченко: Від Кріпака до Пророка", sub: "LIT-011: Анатомія Генія", status: "locked" },
+        { num: 12, slug: "the-ballads", title: "Балади: Між Світами", sub: "LIT-012: Містика і Метаморфози у Раннього Шевченка", status: "locked" },
+        { num: 13, slug: "haidamaky", title: "Гайдамаки: Кривава Свобода", sub: "LIT-013: Епос Гніву і Спокути", status: "locked" },
+        { num: 14, slug: "son", title: "Політична Сатира: Сон", sub: "LIT-014: Сміхове руйнування влади", status: "locked" },
+        { num: 15, slug: "the-testament", title: "Заповіт", sub: "The Testament", status: "locked" },
+        { num: 16, slug: "biblical-themes", title: "Біблійні теми: Давидові псалми і \"Марія\"", sub: "Biblical Themes: Psalms of David and \"Maria\"", status: "locked" },
+        { num: 17, slug: "the-artist", title: "Художник: Шевченко-маляр", sub: "The Artist: Shevchenko the Painter", status: "locked" },
+        { num: 18, slug: "women-in-kobzar", title: "Жіноча доля в \"Кобзарі\"", sub: "Women in Kobzar: The Tragic Archetype", status: "locked" },
+        { num: 19, slug: "shevchenkos-diary", title: "Щоденник (\"Журнал\") Шевченка", sub: "Shevchenko's Diary: The Inner World", status: "locked" },
+        { num: 20, slug: "cult-of-shevchenko", title: "Культ Шевченка: Рецепція і Міфи", sub: "The Cult of Shevchenko: Modern Reception", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Expansion",
+      items: [
+        { num: 21, slug: "kulish-literary-legacy", title: "Kulish Literary Legacy", sub: "Kulish Literary Legacy", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 The Intellectuals (Kulish & Kostomarov)",
+      items: [
+        { num: 22, slug: "black-council-history", title: "Чорна рада: Історичний контекст", sub: "The Black Council: Historical Context", status: "locked" },
+        { num: 23, slug: "black-council-plot", title: "Чорна рада: Роман", sub: "The Black Council: The Novel", status: "locked" },
+        { num: 24, slug: "language-question-linguistics", title: "Мовне питання", sub: "The Language Question", status: "locked" },
+        { num: 25, slug: "cyrillo-methodian-brotherhood", title: "Кирило-Мефодіївське братство", sub: "The Cyrillo-Methodian Brotherhood", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Realism",
+      items: [
+        { num: 26, slug: "nechuy-levytsky", title: "Іван Нечуй-Левицький: Літописець Українського Села", sub: "Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village", status: "locked" },
+        { num: 27, slug: "kaidash-family-characters", title: "Кайдашева сім'я: Галерея Характерів", sub: "Kaidash Family: A Gallery of Characters", status: "locked" },
+        { num: 28, slug: "kaidash-family-conflict", title: "Кайдашева сім'я: Анатомія Конфлікту", sub: "Kaidash Family: Anatomy of Conflict", status: "locked" },
+        { num: 29, slug: "language-of-realism", title: "Мова Реалізму: Стиль Нечуя-Левицького", sub: "The Language of Realism: Nechuy-Levytsky's Style", status: "locked" },
+        { num: 30, slug: "mykola-dzherya", title: "Микола Джеря: Епос Кріпацької Долі", sub: "Mykola Dzherya: Epic of Serf Fate", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.1 Foundations 1798-1890s",
+      items: [
+        { num: 31, slug: "panas-myrny-intro", title: "Панас Мирний: Корифей української прози", sub: "Panas Myrny Intro", status: "locked" },
+        { num: 32, slug: "khiba-revut-voly-1", title: "Хіба ревуть воли...: Генезис та сюжет", sub: "Khiba Revut Voly 1", status: "locked" },
+        { num: 33, slug: "khiba-revut-voly-2", title: "Хіба ревуть воли...: Образ Чіпки", sub: "Khiba Revut Voly 2", status: "locked" },
+        { num: 34, slug: "khiba-revut-voly-style", title: "Стилістика соціально-психологічного роману", sub: "Khiba Revut Voly Style", status: "locked" },
+        { num: 35, slug: "marko-vovchok-instytutka", title: "Марко Вовчок: «Інститутка» та антикріпосницька проза", sub: "Marko Vovchok Instytutka", status: "locked" },
+        { num: 36, slug: "marko-vovchok-marusya", title: "«Маруся»: Українська легенда в Європі", sub: "Marko Vovchok Marusya", status: "locked" },
+        { num: 37, slug: "stepan-rudansky", title: "Степан Руданський: Співомовки та гумор", sub: "Stepan Rudansky", status: "locked" },
+        { num: 38, slug: "leonid-hlibov", title: "Леонід Глібов: Майстер української байки", sub: "Leonid Hlibov", status: "locked" },
+        { num: 39, slug: "mykhailo-starytsky", title: "Михайло Старицький: Драматург та мовотворець", sub: "Mykhailo Starytsky", status: "locked" },
+        { num: 40, slug: "borys-hrinchenko", title: "Борис Грінченко: Вартовий рідного слова", sub: "Borys Hrinchenko", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Synthesis",
+      items: [
+        { num: 41, slug: "synthesis-1", title: "Синтез: Горизонти епохи 1", sub: "Intellectual Synthesis: Horizons of Era 1", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.2 European Modernism 1890s-1917",
+      items: [
+        { num: 42, slug: "franko-biography", title: "Іван Франко: Титан праці", sub: "Franko Biography", status: "locked" },
+        { num: 43, slug: "franko-zakhar-berkut", title: "«Захар Беркут»: Історична пам'ять та опір", sub: "Franko Zakhar Berkut", status: "locked" },
+        { num: 44, slug: "franko-stolen-happiness", title: "«Украдене щастя»: Соціально-психологічна драма", sub: "Franko Stolen Happiness", status: "locked" },
+        { num: 45, slug: "franko-moses", title: "«Мойсей»: Філософська поема про пророка", sub: "Franko Moses", status: "locked" },
+        { num: 46, slug: "franko-lviv-period", title: "Franko Lviv Period", sub: "Franko Lviv Period", status: "locked" },
+        { num: 47, slug: "franko-social-poetry", title: "Franko Social Poetry", sub: "Franko Social Poetry", status: "locked" },
+        { num: 48, slug: "franko-historical-prose", title: "Franko Historical Prose", sub: "Franko Historical Prose", status: "locked" },
+        { num: 49, slug: "franko-letters", title: "Franko Letters", sub: "Franko Letters", status: "locked" },
+        { num: 50, slug: "lesia-ukrainka-intro", title: "Леся Українка: Донька Прометея", sub: "Lesia Ukrainka Intro", status: "locked" },
+        { num: 51, slug: "lesia-forest-song-1", title: "«Лісова пісня»: Світ природи та духу", sub: "Lesia Forest Song 1", status: "locked" },
+        { num: 52, slug: "lesia-forest-song-2", title: "«Лісова пісня»: Трагедія нерозуміння", sub: "Lesia Forest Song 2", status: "locked" },
+        { num: 53, slug: "lesia-cassandra", title: "Lesia Cassandra", sub: "Lesia Cassandra", status: "locked" },
+        { num: 54, slug: "lesia-stone-guest", title: "Lesia Stone Guest", sub: "Lesia Stone Guest", status: "locked" },
+        { num: 55, slug: "lesia-blue-rose", title: "Lesia Blue Rose", sub: "Lesia Blue Rose", status: "locked" },
+        { num: 56, slug: "lesia-in-the-catacombs", title: "Lesia In The Catacombs", sub: "Lesia In The Catacombs", status: "locked" },
+        { num: 57, slug: "kobylianska-nature", title: "Kobylianska Nature", sub: "Kobylianska Nature", status: "locked" },
+        { num: 58, slug: "kobylianska-zemlya", title: "Ольга Кобилянська: «Земля» як фатум", sub: "Kobylianska Zemlya", status: "locked" },
+        { num: 59, slug: "kobylianska-tsarivna", title: "Kobylianska Tsarivna", sub: "Kobylianska Tsarivna", status: "locked" },
+        { num: 60, slug: "kobylianska-persona", title: "Kobylianska Persona", sub: "Kobylianska Persona", status: "locked" },
+        { num: 61, slug: "stefanyk-stone-cross", title: "Василь Стефаник: «Камінний хрест» — біль еміграції", sub: "Stefanyk Stone Cross", status: "locked" },
+        { num: 62, slug: "stefanyk-blue-book", title: "Stefanyk Blue Book", sub: "Stefanyk Blue Book", status: "locked" },
+        { num: 63, slug: "stefanyk-novellas", title: "Stefanyk Novellas", sub: "Stefanyk Novellas", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.3 Executed Renaissance 1917-1933",
+      items: [
+        { num: 64, slug: "khotkevych-prose", title: "Khotkevych Prose", sub: "Khotkevych Prose", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.2 European Modernism 1890s-1917",
+      items: [
+        { num: 65, slug: "kotsiubynsky-intermezzo", title: "Михайло Коцюбинський: «Intermezzo» — сонцепоклонництво", sub: "Kotsiubynsky Intermezzo", status: "locked" },
+        { num: 66, slug: "kotsiubynsky-shadows-forgotten", title: "«Тіні забутих предків»: Гуцульський міф", sub: "Kotsiubynsky Shadows Forgotten", status: "locked" },
+        { num: 67, slug: "kotsiubynsky-apple-blossom", title: "Kotsiubynsky Apple Blossom", sub: "Kotsiubynsky Apple Blossom", status: "locked" },
+        { num: 68, slug: "kotsiubynsky-fata-morgana", title: "Kotsiubynsky Fata Morgana", sub: "Kotsiubynsky Fata Morgana", status: "locked" },
+        { num: 69, slug: "vynnychenko-black-panther", title: "Vynnychenko Black Panther", sub: "Vynnychenko Black Panther", status: "locked" },
+        { num: 70, slug: "vynnychenko-solar-machine", title: "Володимир Винниченко: «Сонячна машина» — перша утопія", sub: "Vynnychenko Solar Machine", status: "locked" },
+        { num: 71, slug: "vynnychenko-honesty", title: "Vynnychenko Honesty", sub: "Vynnychenko Honesty", status: "locked" },
+        { num: 72, slug: "oles-oleksandr-liryka", title: "Oles Oleksandr Liryka", sub: "Oles Oleksandr Liryka", status: "locked" },
+        { num: 73, slug: "oles-the-nightingale", title: "Oles The Nightingale", sub: "Oles The Nightingale", status: "locked" },
+        { num: 74, slug: "voronyi-symbolism", title: "Voronyi Symbolism", sub: "Voronyi Symbolism", status: "locked" },
+        { num: 75, slug: "voronyi-poetry", title: "Voronyi Poetry", sub: "Voronyi Poetry", status: "locked" },
+        { num: 76, slug: "lepkyi-mazepa-trilogy", title: "Lepkyi Mazepa Trilogy", sub: "Lepkyi Mazepa Trilogy", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Synthesis",
+      items: [
+        { num: 77, slug: "synthesis-2", title: "Синтез: Горизонти епохи 2", sub: "Intellectual Synthesis: Horizons of Era 2", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.2 European Modernism 1890s-1917",
+      items: [
+        { num: 78, slug: "semenko-futurism-manifesto", title: "Михайль Семенко: Маніфест футуризму", sub: "Semenko Futurism Manifesto", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.3 Executed Renaissance 1917-1933",
+      items: [
+        { num: 79, slug: "semenko-kobzar-burning", title: "Semenko Kobzar Burning", sub: "Semenko Kobzar Burning", status: "locked" },
+        { num: 80, slug: "yanovsky-master-of-the-ship", title: "Yanovsky Master Of The Ship", sub: "Yanovsky Master Of The Ship", status: "locked" },
+        { num: 81, slug: "yanovsky-four-sabres", title: "Yanovsky Four Sabres", sub: "Yanovsky Four Sabres", status: "locked" },
+        { num: 82, slug: "tychyna-clarinets", title: "Павло Тичина: «Сонячні кларнети»", sub: "Tychyna Clarinets", status: "locked" },
+        { num: 83, slug: "tychyna-tragic-turn", title: "Павло Тичина: Трагічний поворот до соцреалізму", sub: "Tychyna Tragic Turn", status: "locked" },
+        { num: 84, slug: "tychyna-soviet-period", title: "Tychyna Soviet Period", sub: "Tychyna Soviet Period", status: "locked" },
+        { num: 85, slug: "rylsky-neoclassicism", title: "Rylsky Neoclassicism", sub: "Rylsky Neoclassicism", status: "locked" },
+        { num: 86, slug: "rylsky-liryka", title: "Rylsky Liryka", sub: "Rylsky Liryka", status: "locked" },
+        { num: 87, slug: "rylsky-translations", title: "Rylsky Translations", sub: "Rylsky Translations", status: "locked" },
+        { num: 88, slug: "zerov-kyiv-parnassus", title: "Микола Зеров: Київський Парнас", sub: "Zerov Kyiv Parnassus", status: "locked" },
+        { num: 89, slug: "zerov-sonnets", title: "Zerov Sonnets", sub: "Zerov Sonnets", status: "locked" },
+        { num: 90, slug: "zerov-criticism", title: "Zerov Criticism", sub: "Zerov Criticism", status: "locked" },
+        { num: 91, slug: "dray-khmara-poetry", title: "Dray-Khmara Poetry", sub: "Dray-Khmara Poetry", status: "locked" },
+        { num: 92, slug: "fylypovych-poetry", title: "Fylypovych Poetry", sub: "Fylypovych Poetry", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Diaspora and Dissidence 1933-1991",
+      items: [
+        { num: 93, slug: "klen-poetry", title: "Klen Poetry", sub: "Klen Poetry", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.3 Executed Renaissance 1917-1933",
+      items: [
+        { num: 94, slug: "khvylovy-intro", title: "Khvylovy (Вступ)", sub: "Khvylovy Intro", status: "locked" },
+        { num: 95, slug: "khvylovy-i-am-romance", title: "Микола Хвильовий: «Я (Романтика)»", sub: "Khvylovy I Am Romance", status: "locked" },
+        { num: 96, slug: "khvylovy-woodsnipes", title: "Khvylovy Woodsnipes", sub: "Khvylovy Woodsnipes", status: "locked" },
+        { num: 97, slug: "khvylovy-pamphlets", title: "Khvylovy Pamphlets", sub: "Khvylovy Pamphlets", status: "locked" },
+        { num: 98, slug: "pidmohylny-city-1", title: "Валер'ян Підмогильний: «Місто» — урбаністичний роман", sub: "Pidmohylny City 1", status: "locked" },
+        { num: 99, slug: "pidmohylny-city-2", title: "Pidmohylny City 2", sub: "Pidmohylny City 2", status: "locked" },
+        { num: 100, slug: "pidmohylny-small-prose", title: "Pidmohylny Small Prose", sub: "Pidmohylny Small Prose", status: "locked" },
+        { num: 101, slug: "yohansen-doctor-leonardo", title: "Yohansen Doctor Leonardo", sub: "Yohansen Doctor Leonardo", status: "locked" },
+        { num: 102, slug: "yohansen-experimental", title: "Yohansen Experimental", sub: "Yohansen Experimental", status: "locked" },
+        { num: 103, slug: "domontovych-girl-bear", title: "Domontovych Girl Bear", sub: "Domontovych Girl Bear", status: "locked" },
+        { num: 104, slug: "domontovych-dr-seraphicus", title: "Domontovych Dr Seraphicus", sub: "Domontovych Dr Seraphicus", status: "locked" },
+        { num: 105, slug: "domontovych-intellectuals", title: "Domontovych Intellectuals", sub: "Domontovych Intellectuals", status: "locked" },
+        { num: 106, slug: "antonych-green-gospel", title: "Богдан-Ігор Антонич: «Зелена Євангелія»", sub: "Antonych Green Gospel", status: "locked" },
+        { num: 107, slug: "antonych-urbanism", title: "Antonych Urbanism", sub: "Antonych Urbanism", status: "locked" },
+        { num: 108, slug: "antonych-mythology", title: "Antonych Mythology", sub: "Antonych Mythology", status: "locked" },
+        { num: 109, slug: "sosiura-love-ukraine", title: "Sosiura Love Ukraine", sub: "Sosiura Love Ukraine", status: "locked" },
+        { num: 110, slug: "sosiura-red-winter", title: "Sosiura Red Winter", sub: "Sosiura Red Winter", status: "locked" },
+        { num: 111, slug: "sosiura-internal-conflict", title: "Sosiura Internal Conflict", sub: "Sosiura Internal Conflict", status: "locked" },
+        { num: 112, slug: "pluzhnyk-galileo", title: "Pluzhnyk Galileo", sub: "Pluzhnyk Galileo", status: "locked" },
+        { num: 113, slug: "pluzhnyk-poetry", title: "Pluzhnyk Poetry", sub: "Pluzhnyk Poetry", status: "locked" },
+        { num: 114, slug: "bazhan-idols", title: "Bazhan Idols", sub: "Bazhan Idols", status: "locked" },
+        { num: 115, slug: "bazhan-quiet-step", title: "Bazhan Quiet Step", sub: "Bazhan Quiet Step", status: "locked" },
+        { num: 116, slug: "antonenko-davydovych-smert", title: "Antonenko Davydovych Smert", sub: "Antonenko Davydovych Smert", status: "locked" },
+        { num: 117, slug: "antonenko-davydovych-prose", title: "Antonenko Davydovych Prose", sub: "Antonenko Davydovych Prose", status: "locked" },
+        { num: 118, slug: "sandarmokh-tragedy-erasure", title: "Сандармох: Трагедія знищеного покоління", sub: "Sandarmokh Tragedy Erasure", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance 1933-1991",
+      items: [
+        { num: 119, slug: "rozstriliane-vidrodzennia-phenomenon", title: "Розстріляне Відродження як культурний феномен", sub: "Rozstriliane Vidrodzennia Phenomenon", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.3 Executed Renaissance 1917-1933",
+      items: [
+        { num: 120, slug: "kosynka-short-fiction", title: "Kosynka Short Fiction", sub: "Kosynka Short Fiction", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Synthesis",
+      items: [
+        { num: 121, slug: "synthesis-3", title: "Синтез: Горизонти епохи 3", sub: "Intellectual Synthesis: Horizons of Era 3", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance 1933-1991",
+      items: [
+        { num: 122, slug: "lukash-translation-as-resistance", title: "Lukash Translation As Resistance", sub: "Lukash Translation As Resistance", status: "locked" },
+        { num: 123, slug: "translation-as-cultural-weapon", title: "Translation As Cultural Weapon", sub: "Translation As Cultural Weapon", status: "locked" },
+        { num: 124, slug: "bahrianyi-tiger-trappers", title: "Bahrianyi Tiger Trappers", sub: "Bahrianyi Tiger Trappers", status: "locked" },
+        { num: 125, slug: "bahrianyi-garden-gethsemane", title: "Bahrianyi Garden Gethsemane", sub: "Bahrianyi Garden Gethsemane", status: "locked" },
+        { num: 126, slug: "bahrianyi-man-runs", title: "Bahrianyi Man Runs", sub: "Bahrianyi Man Runs", status: "locked" },
+        { num: 127, slug: "dovzhenko-enchanted-desna", title: "Dovzhenko Enchanted Desna", sub: "Dovzhenko Enchanted Desna", status: "locked" },
+        { num: 128, slug: "dovzhenko-ukraine-flames", title: "Dovzhenko Ukraine Flames", sub: "Dovzhenko Ukraine Flames", status: "locked" },
+        { num: 129, slug: "dovzhenko-cinema-as-literature", title: "Dovzhenko Cinema As Literature", sub: "Dovzhenko Cinema As Literature", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Expansion",
+      items: [
+        { num: 130, slug: "samchuk-maria", title: "Samchuk Maria", sub: "Samchuk Maria", status: "locked" },
+        { num: 131, slug: "barka-yellow-prince", title: "Barka Yellow Prince", sub: "Barka Yellow Prince", status: "locked" },
+        { num: 132, slug: "osmachka-prose", title: "Osmachka Prose", sub: "Osmachka Prose", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance 1933-1991",
+      items: [
+        { num: 133, slug: "symonenko-knights", title: "Symonenko Knights", sub: "Symonenko Knights", status: "locked" },
+        { num: 134, slug: "symonenko-truth", title: "Symonenko Truth", sub: "Symonenko Truth", status: "locked" },
+        { num: 135, slug: "stus-palimpsests", title: "Василь Стус: «Палімпсести»", sub: "Stus Palimpsests", status: "locked" },
+        { num: 136, slug: "stus-moral-imperative", title: "Stus Moral Imperative", sub: "Stus Moral Imperative", status: "locked" },
+        { num: 137, slug: "stus-letters-to-son", title: "Stus Letters To Son", sub: "Stus Letters To Son", status: "locked" },
+        { num: 138, slug: "stus-vertical-of-spirit", title: "Stus Vertical Of Spirit", sub: "Stus Vertical Of Spirit", status: "locked" },
+        { num: 139, slug: "kostenko-marusia-churai-1", title: "Ліна Костенко: «Маруся Чурай» — роман у віршах", sub: "Kostenko Marusia Churai 1", status: "locked" },
+        { num: 140, slug: "kostenko-marusia-churai-2", title: "Kostenko Marusia Churai 2", sub: "Kostenko Marusia Churai 2", status: "locked" },
+        { num: 141, slug: "kostenko-garden-of-unthawed-sculptures", title: "Kostenko Garden Of Unthawed Sculptures", sub: "Kostenko Garden Of Unthawed Sculptures", status: "locked" },
+        { num: 142, slug: "kostenko-poetry", title: "Kostenko Poetry", sub: "Kostenko Poetry", status: "locked" },
+        { num: 143, slug: "tiutiunnyk-three-cuckoos", title: "Tiutiunnyk Three Cuckoos", sub: "Tiutiunnyk Three Cuckoos", status: "locked" },
+        { num: 144, slug: "tiutiunnyk-novella-mastery", title: "Tiutiunnyk Novella Mastery", sub: "Tiutiunnyk Novella Mastery", status: "locked" },
+        { num: 145, slug: "honchar-cathedral", title: "Honchar Cathedral", sub: "Honchar Cathedral", status: "locked" },
+        { num: 146, slug: "honchar-banners", title: "Honchar Banners", sub: "Honchar Banners", status: "locked" },
+        { num: 147, slug: "malyshko-poetry", title: "Malyshko Poetry", sub: "Malyshko Poetry", status: "locked" },
+        { num: 148, slug: "malyshko-songs", title: "Malyshko Songs", sub: "Malyshko Songs", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Expansion",
+      items: [
+        { num: 149, slug: "malaniuk-poetry", title: "Malaniuk Poetry", sub: "Malaniuk Poetry", status: "locked" },
+        { num: 150, slug: "teliha-poetry", title: "Teliha Poetry", sub: "Teliha Poetry", status: "locked" },
+        { num: 151, slug: "olzhych-poetry", title: "Olzhych Poetry", sub: "Olzhych Poetry", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance 1933-1991",
+      items: [
+        { num: 152, slug: "vinhranovskyi-poetry", title: "Vinhranovskyi Poetry", sub: "Vinhranovskyi Poetry", status: "locked" },
+        { num: 153, slug: "vinhranovskyi-prose", title: "Vinhranovskyi Prose", sub: "Vinhranovskyi Prose", status: "locked" },
+        { num: 154, slug: "drach-knife-sun", title: "Drach Knife Sun", sub: "Drach Knife Sun", status: "locked" },
+        { num: 155, slug: "drach-ballads", title: "Drach Ballads", sub: "Drach Ballads", status: "locked" },
+        { num: 156, slug: "sverstiuk-prodigal-sons-lit", title: "Sverstiuk Prodigal Sons Lit", sub: "Sverstiuk Prodigal Sons Lit", status: "locked" },
+        { num: 157, slug: "sverstiuk-moral-resistance", title: "Sverstiuk Moral Resistance", sub: "Sverstiuk Moral Resistance", status: "locked" },
+        { num: 158, slug: "dziuba-internationalism", title: "Dziuba Internationalism", sub: "Dziuba Internationalism", status: "locked" },
+        { num: 159, slug: "dziuba-literature", title: "Dziuba Literature", sub: "Dziuba Literature", status: "locked" },
+        { num: 160, slug: "holoborodko-flying-window", title: "Holoborodko Flying Window", sub: "Holoborodko Flying Window", status: "locked" },
+        { num: 161, slug: "holodomor-in-literature", title: "Holodomor In Literature", sub: "Holodomor In Literature", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Independence Era 1991-Present",
+      items: [
+        { num: 162, slug: "samvydav-underground-publishing", title: "Samvydav Underground Publishing", sub: "Samvydav Underground Publishing", status: "locked" },
+        { num: 163, slug: "women-writers-resistance", title: "Women Writers Resistance", sub: "Women Writers Resistance", status: "locked" },
+        { num: 164, slug: "shestydesiatnyky-as-phenomenon", title: "Shestydesiatnyky As Phenomenon", sub: "Shestydesiatnyky As Phenomenon", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance and Resilience 1933-1991",
+      items: [
+        { num: 165, slug: "valeriy-shevchuk-dim-na-hori", title: "Валерій Шевчук: Дім на горі", sub: "Valeriy Shevchuk — House on the Hill", status: "locked" },
+        { num: 166, slug: "valeriy-shevchuk-prose", title: "Валерій Шевчук: Три листки за вікном та інша проза", sub: "Valeriy Shevchuk — Three Leaves and Other Prose", status: "locked" },
+        { num: 167, slug: "iryna-vilde-sestry-richynski", title: "Ірина Вільде: Сестри Річинські", sub: "Iryna Vilde — The Richynsky Sisters", status: "locked" },
+        { num: 168, slug: "emma-andiyevska-new-york-group", title: "Емма Андієвська: Нью-Йоркська група", sub: "Emma Andiyevska — New York Group Surrealism", status: "locked" },
+        { num: 169, slug: "yuriy-tarnavsky-new-york-group", title: "Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи", sub: "Yuriy Tarnavsky — New York Group Existentialism", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Synthesis",
+      items: [
+        { num: 170, slug: "synthesis-4", title: "Синтез: Горизонти епохи 4", sub: "Intellectual Synthesis: Horizons of Era 4", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Independence Era 1991-Present",
+      items: [
+        { num: 171, slug: "bu-ba-bu-carnival", title: "Bu Ba Bu Carnival", sub: "Bu Ba Bu Carnival", status: "locked" },
+        { num: 172, slug: "bu-ba-bu-the-end-of-soviet", title: "Bu Ba Bu The End Of Soviet", sub: "Bu Ba Bu The End Of Soviet", status: "locked" },
+        { num: 173, slug: "andrukhovych-recreations", title: "Юрій Андрухович: «Рекреації»", sub: "Andrukhovych Recreations", status: "locked" },
+        { num: 174, slug: "andrukhovych-moscoviad", title: "Andrukhovych Moscoviad", sub: "Andrukhovych Moscoviad", status: "locked" },
+        { num: 175, slug: "andrukhovych-perverzion", title: "Andrukhovych Perverzion", sub: "Andrukhovych Perverzion", status: "locked" },
+        { num: 176, slug: "andrukhovych-essays", title: "Andrukhovych Essays", sub: "Andrukhovych Essays", status: "locked" },
+        { num: 177, slug: "zabuzhko-fieldwork", title: "Оксана Забужко: «Польові дослідження з українського сексу»", sub: "Zabuzhko Fieldwork", status: "locked" },
+        { num: 178, slug: "zabuzhko-museum", title: "Zabuzhko Museum", sub: "Zabuzhko Museum", status: "locked" },
+        { num: 179, slug: "zabuzhko-notre-dame-lit", title: "Zabuzhko Notre Dame Lit", sub: "Zabuzhko Notre Dame Lit", status: "locked" },
+        { num: 180, slug: "zabuzhko-longest-journey", title: "Zabuzhko Longest Journey", sub: "Zabuzhko Longest Journey", status: "locked" },
+        { num: 181, slug: "zhadan-depeche-mode", title: "Zhadan Depeche Mode", sub: "Zhadan Depeche Mode", status: "locked" },
+        { num: 182, slug: "zhadan-voroshilovgrad", title: "Zhadan Voroshilovgrad", sub: "Zhadan Voroshilovgrad", status: "locked" },
+        { num: 183, slug: "zhadan-orphanage", title: "Сергій Жадан: «Інтернат» — література війни", sub: "Zhadan Orphanage", status: "locked" },
+        { num: 184, slug: "zhadan-poetry", title: "Zhadan Poetry", sub: "Zhadan Poetry", status: "locked" },
+        { num: 185, slug: "zhadan-kharkiv-landscape", title: "Zhadan Kharkiv Landscape", sub: "Zhadan Kharkiv Landscape", status: "locked" },
+        { num: 186, slug: "decolonization-theory-literature", title: "Decolonization Theory Literature", sub: "Decolonization Theory Literature", status: "locked" },
+        { num: 187, slug: "hundorova-post-chornobyl-library", title: "Hundorova Post Chornobyl Library", sub: "Hundorova Post Chornobyl Library", status: "locked" },
+        { num: 188, slug: "izdryk-votsatsek", title: "Izdryk Votsatsek", sub: "Izdryk Votsatsek", status: "locked" },
+        { num: 189, slug: "izdryk-poetry", title: "Izdryk Poetry", sub: "Izdryk Poetry", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Expansion",
+      items: [
+        { num: 190, slug: "andijewska-magic-realism", title: "Andijewska Magic Realism", sub: "Andijewska Magic Realism", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Independence Era 1991-Present",
+      items: [
+        { num: 191, slug: "koval-storinky", title: "Koval Storinky", sub: "Koval Storinky", status: "locked" },
+        { num: 192, slug: "koval-prose-renaissance", title: "Koval Prose Renaissance", sub: "Koval Prose Renaissance", status: "locked" },
+        { num: 193, slug: "prokhasko-unsimple", title: "Prokhasko Unsimple", sub: "Prokhasko Unsimple", status: "locked" },
+        { num: 194, slug: "prokhasko-magical-carpathians", title: "Prokhasko Magical Carpathians", sub: "Prokhasko Magical Carpathians", status: "locked" },
+        { num: 195, slug: "matios-sweet-darusia", title: "Matios Sweet Darusia", sub: "Matios Sweet Darusia", status: "locked" },
+        { num: 196, slug: "matios-bukovina-trauma", title: "Matios Bukovina Trauma", sub: "Matios Bukovina Trauma", status: "locked" },
+        { num: 197, slug: "tanja-maljartschuk-biography", title: "Tanja Maljartschuk Biography", sub: "Tanja Maljartschuk Biography", status: "locked" },
+        { num: 198, slug: "tanja-maljartschuk-prose", title: "Tanja Maljartschuk Prose", sub: "Tanja Maljartschuk Prose", status: "locked" },
+        { num: 199, slug: "artem-chekh-absolute-zero", title: "Artem Chekh Absolute Zero", sub: "Artem Chekh Absolute Zero", status: "locked" },
+        { num: 200, slug: "artem-chekh-district-d", title: "Artem Chekh District D", sub: "Artem Chekh District D", status: "locked" },
+        { num: 201, slug: "artem-chekh-who-are-you", title: "Artem Chekh Who Are You", sub: "Artem Chekh Who Are You", status: "locked" },
+        { num: 202, slug: "deresh-cult", title: "Deresh Cult", sub: "Deresh Cult", status: "locked" },
+        { num: 203, slug: "deresh-intention", title: "Deresh Intention", sub: "Deresh Intention", status: "locked" },
+        { num: 204, slug: "kateryna-kalytko-poetry", title: "Kateryna Kalytko Poetry", sub: "Kateryna Kalytko Poetry", status: "locked" },
+        { num: 205, slug: "kateryna-kalytko-prose", title: "Kateryna Kalytko Prose", sub: "Kateryna Kalytko Prose", status: "locked" },
+        { num: 206, slug: "sofia-andrukhovych-amados", title: "Sofia Andrukhovych Amados", sub: "Sofia Andrukhovych Amados", status: "locked" },
+        { num: 207, slug: "sofia-andrukhovych-felix-austria", title: "Sofia Andrukhovych Felix Austria", sub: "Sofia Andrukhovych Felix Austria", status: "locked" },
+        { num: 208, slug: "war-poetry-2014-2022", title: "War Poetry 2014 2022", sub: "War Poetry 2014 2022", status: "locked" },
+        { num: 209, slug: "war-poetry-full-scale", title: "War Poetry Full Scale", sub: "War Poetry Full Scale", status: "locked" },
+        { num: 210, slug: "war-literature-as-movement", title: "War Literature As Movement", sub: "War Literature As Movement", status: "locked" },
+        { num: 211, slug: "new-prose-displacement", title: "New Prose Displacement", sub: "New Prose Displacement", status: "locked" },
+        { num: 212, slug: "new-prose-resistance", title: "New Prose Resistance", sub: "New Prose Resistance", status: "locked" },
+        { num: 213, slug: "pachlovska-diaspora-theory", title: "Pachlovska Diaspora Theory", sub: "Pachlovska Diaspora Theory", status: "locked" },
+        { num: 214, slug: "diaspora-modern-lit", title: "Diaspora Modern Lit", sub: "Diaspora Modern Lit", status: "locked" },
+        { num: 215, slug: "diaspora-connections", title: "Diaspora Connections", sub: "Diaspora Connections", status: "locked" },
+        { num: 216, slug: "diaspora-consciousness-mur", title: "Diaspora Consciousness Mur", sub: "Diaspora Consciousness Mur", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Diaspora and Dissidence 1933-1991",
+      items: [
+        { num: 217, slug: "new-york-group-poets", title: "New York Group Poets", sub: "New York Group Poets", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Independence Era 1991-Present",
+      items: [
+        { num: 218, slug: "moisei-fishbein-poetry", title: "Мойсей Фішбейн: Апокриф", sub: "Moisei Fishbein — Jewish-Ukrainian Poetry", status: "locked" },
+        { num: 219, slug: "aliev-musayeva-crimean-tatar-ukrainian", title: "Алієв і Мусаєва: Кримськотатарські голоси українською", sub: "Aliev and Musayeva — Crimean Tatar Voices in Ukrainian", status: "locked" },
+        { num: 220, slug: "nariman-dzhelyal-publicistics", title: "Наріман Джеляль: Листи з ув'язнення", sub: "Nariman Dzhelyal — Letters from Captivity", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance and Resilience 1933-1991",
+      items: [
+        { num: 221, slug: "yevhen-hutsalo-shistdesiatnyky", title: "Євген Гуцало: лірична проза шістдесятника", sub: "Lyrical prose of the Sixtiers generation and the decolonial turn of Mentalnist o", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.1 Foundations 1798-1890s",
+      items: [
+        { num: 222, slug: "mykhailo-petrenko-romantyka", title: "Михайло Петренко: Дивлюсь я на небо", sub: "Romantic poetry, national identity formation, and the first Ukrainian song in sp", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.4 Resistance and Resilience 1933-1991",
+      items: [
+        { num: 223, slug: "mykhailo-stelmakh-shchedryi-vechir", title: "Михайло Стельмах: Щедрий вечір", sub: "Autobiographical prose, masterful Ukrainian lyrical sentence, and ethnography wi", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.5 Independence Era 1991-Present",
+      items: [
+        { num: 224, slug: "amelina-renaissance", title: "Вікторія Амеліна: Нове Відродження", sub: "Amelina Renaissance", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Synthesis",
+      items: [
+        { num: 225, slug: "synthesis-5", title: "Синтез: Горизонти епохи 5", sub: "Intellectual Synthesis: Horizons of Era 5", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Modules",
+      items: [
+        { num: 226, slug: "skovoroda-baroque-philosophy", title: "Skovoroda Baroque Philosophy", sub: "", status: "locked" },
+        { num: 227, slug: "kalynets-dissident-poetry", title: "Kalynets Dissident Poetry", sub: "", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT.0 Baroque Heritage 1620-1798",
+      items: [
+        { num: 228, slug: "baroque-poetry-velychkovsky", title: "Baroque Poetry Velychkovsky", sub: "Baroque Poetry Velychkovsky", status: "locked" },
+      ]
+    },
+    {
+      unit: "LIT Modules",
+      items: [
+        { num: 229, slug: "ruthenian-triad-rusalka-dnistrova", title: "Ruthenian Triad Rusalka Dnistrova", sub: "", status: "locked" },
+        { num: 230, slug: "kobrynska-pershyi-vinok", title: "Kobrynska Pershyi Vinok", sub: "", status: "locked" },
+        { num: 231, slug: "vaplite-literary-avant-garde", title: "Vaplite Literary Avant Garde", sub: "", status: "locked" },
+        { num: 232, slug: "kyiv-school-of-poetry", title: "Kyiv School Of Poetry", sub: "", status: "locked" },
+      ]
+    },
   ]}
 />
