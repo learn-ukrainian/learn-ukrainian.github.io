@@ -3908,6 +3908,7 @@ def main():
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
+    import subprocess as _subprocess
     if args.range is not None:
         end = args.range
         start = args.module
@@ -3923,7 +3924,7 @@ def main():
             _log(f"  [{n - start + 1}/{end - start + 1}] Building M{n:02d}...")
             _log(f"{'─'*60}")
             try:
-                result = subprocess.run(
+                result = _subprocess.run(
                     [sys.executable, __file__, args.level, str(n),
                      "--writer", args.writer,
                      "--step", args.step,
@@ -3937,7 +3938,7 @@ def main():
                 if result.returncode != 0:
                     failed.append(n)
                     _log(f"  ❌ M{n:02d} failed (rc={result.returncode})")
-            except subprocess.TimeoutExpired:
+            except _subprocess.TimeoutExpired:
                 failed.append(n)
                 _log(f"  ❌ M{n:02d} timed out (1h)")
             except Exception as e:
