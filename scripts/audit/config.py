@@ -1460,7 +1460,7 @@ def get_a1_immersion_range(
     for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
     if module_num <= 3:
-        return (5, 15)    # M1-M3: Phonetics — letters, sounds, syllables (mostly English explanation)
+        return (5, 25)    # M1-M3: Phonetics — letters, sounds, textbook quotes, minimal pairs push Ukrainian up naturally
     elif module_num <= 6:
         return (8, 25)    # M4-M6: Stress, identity, family — more Ukrainian names/phrases
     elif module_num <= 14:
