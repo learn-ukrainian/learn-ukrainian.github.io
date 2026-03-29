@@ -1,0 +1,355 @@
+version: '1.0'
+module: things-have-gender
+level: a1
+inline:
+- id: quiz-gender-pronoun
+  type: quiz
+  instruction: Which pronoun fits? Choose **він** (he), **вона** (she), or **воно**
+    (it) for each noun.
+  items:
+  - question: стіл (table)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: книга (book)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+  - question: вікно (window)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 2
+  - question: телефон (phone)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: кімната (room)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+  - question: ліжко (bed)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 2
+  - question: ключ (key)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: лампа (lamp)
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+- id: quiz-gender-ending
+  type: quiz
+  instruction: Look at the ending. What gender is this noun?
+  items:
+  - question: ручка — ends in **-а**
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 1
+  - question: зошит — ends in a consonant
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 0
+  - question: крісло — ends in **-о**
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 2
+  - question: стіна — ends in **-а**
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 1
+  - question: комп'ютер — ends in a consonant
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 0
+  - question: дзеркало — ends in **-о**
+    options:
+    - чоловічий рід (він)
+    - жіночий рід (вона)
+    - середній рід (воно)
+    correct: 2
+- id: group-sort-gender
+  type: group-sort
+  instruction: Sort the nouns into the correct gender group.
+  groups:
+  - label: Чоловічий рід — він, мій
+    items:
+    - стіл
+    - стілець
+    - телефон
+    - ключ
+  - label: Жіночий рід — вона, моя
+    items:
+    - книга
+    - лампа
+    - ручка
+    - сумка
+  - label: Середній рід — воно, моє
+    items:
+    - вікно
+    - ліжко
+    - крісло
+    - фото
+- id: fill-in-possessive
+  type: fill-in
+  instruction: Fill in the blank with **мій**, **моя**, or **моє**.
+  items:
+  - sentence: Це ____ стіл.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ книга.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ вікно.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ телефон.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ кімната.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ ліжко.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ ключ.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ лампа.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+workbook:
+- type: match-up
+  instruction: Match each noun to its gender pronoun (**він**, **вона**, or **воно**).
+  pairs:
+  - left: стіл
+    right: він
+  - left: книга
+    right: вона
+  - left: вікно
+    right: воно
+  - left: ручка
+    right: вона
+  - left: зошит
+    right: він
+  - left: крісло
+    right: воно
+  - left: стіна
+    right: вона
+  - left: комп'ютер
+    right: він
+  - left: фото
+    right: воно
+- type: true-false
+  instruction: True or false? Read each statement about Ukrainian gender.
+  items:
+  - statement: The word **стіл** is feminine (жіночий рід).
+    correct: false
+    explanation: '**стіл** ends in a consonant (л), so it is masculine: він, мій стіл.'
+  - statement: The word **книга** is feminine (жіночий рід).
+    correct: true
+    explanation: '**книга** ends in -а, so it is feminine: вона, моя книга.'
+  - statement: The word **вікно** is neuter (середній рід).
+    correct: true
+    explanation: '**вікно** ends in -о, so it is neuter: воно, моє вікно.'
+  - statement: '**Моя** is used with masculine nouns like **стіл** and **телефон**.'
+    correct: false
+    explanation: '**Моя** is used with feminine nouns (вона). Masculine nouns use
+      **мій**.'
+  - statement: The word **лампа** is masculine (чоловічий рід).
+    correct: false
+    explanation: '**лампа** ends in -а, so it is feminine: вона, моя лампа.'
+  - statement: The word **ліжко** is neuter (середній рід).
+    correct: true
+    explanation: '**ліжко** ends in -о, so it is neuter: воно, моє ліжко.'
+  - statement: '**Мій** is used with **телефон** and **зошит** because they end in
+      consonants.'
+    correct: true
+    explanation: 'Both end in consonants, making them masculine: мій телефон, мій
+      зошит.'
+- type: error-correction
+  instruction: Find the wrong word and choose the correct form.
+  items:
+  - sentence: Це моє стіл.
+    error: моє
+    correction: мій
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**стіл** is masculine (він), so the correct possessive is **мій**.'
+  - sentence: Це мій книга.
+    error: мій
+    correction: моя
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**книга** is feminine (вона), so the correct possessive is **моя**.'
+  - sentence: Це моя вікно.
+    error: моя
+    correction: моє
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**вікно** is neuter (воно), so the correct possessive is **моє**.'
+  - sentence: Це моє телефон.
+    error: моє
+    correction: мій
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**телефон** ends in a consonant, so it is masculine (він): **мій
+      телефон**.'
+  - sentence: Це мій лампа.
+    error: мій
+    correction: моя
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**лампа** ends in -а, so it is feminine (вона): **моя лампа**.'
+  - sentence: Це мій ліжко.
+    error: мій
+    correction: моє
+    error_type: word
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: '**ліжко** ends in -о, so it is neuter (воно): **моє ліжко**.'
+- type: translate
+  instruction: Choose the correct Ukrainian translation.
+  items:
+  - source: my table
+    options:
+    - text: мій стіл
+      correct: true
+    - text: моя стіл
+      correct: false
+    - text: моє стіл
+      correct: false
+  - source: my book
+    options:
+    - text: мій книга
+      correct: false
+    - text: моя книга
+      correct: true
+    - text: моє книга
+      correct: false
+  - source: my window
+    options:
+    - text: мій вікно
+      correct: false
+    - text: моя вікно
+      correct: false
+    - text: моє вікно
+      correct: true
+  - source: my phone
+    options:
+    - text: мій телефон
+      correct: true
+    - text: моя телефон
+      correct: false
+    - text: моє телефон
+      correct: false
+  - source: my room
+    options:
+    - text: мій кімната
+      correct: false
+    - text: моя кімната
+      correct: true
+    - text: моє кімната
+      correct: false
+  - source: my bed
+    options:
+    - text: мій ліжко
+      correct: false
+    - text: моя ліжко
+      correct: false
+    - text: моє ліжко
+      correct: true
+  - source: my key
+    options:
+    - text: мій ключ
+      correct: true
+    - text: моя ключ
+      correct: false
+    - text: моє ключ
+      correct: false
+  - source: my lamp
+    options:
+    - text: мій лампа
+      correct: false
+    - text: моя лампа
+      correct: true
+    - text: моє лампа
+      correct: false
+- type: observe
+  examples:
+  - стіл → він → мій стіл (ends in consonant л)
+  - книга → вона → моя книга (ends in -а)
+  - вікно → воно → моє вікно (ends in -о)
+  - телефон → він → мій телефон (ends in consonant н)
+  - лампа → вона → моя лампа (ends in -а)
+  - ліжко → воно → моє ліжко (ends in -о)
+  prompt: What pattern connects the noun ending to the possessive form? Can you predict
+    the possessive for a new noun just by looking at its ending?

@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covered all outline points (Dialogues, he/she/it test, endings, summary).
+    Used the exact dialogue structures provided in the plan ("Привіт! Дивись, це моя
+    кімната. — Класно! У тебе є стіл?").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Generally excellent, but contains a factually wrong grammatical claim:
+    "Перевір закінчення — приголосна?" Consonants are not endings in Ukrainian; masculine
+    words have a zero ending.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Introduces gender implicitly through possessives in
+    the dialogue, explains the rule clearly using the textbook `він/вона/воно` test,
+    and follows up with structured vocabulary and p
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is included naturally
+    in dialogues and the categorized table.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are correctly placed after their corresponding teaching
+    sections and match the plan's hints perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Contains meta-commentary that breaks immersion: "...and that''s what
+    this module is about" and "That cognitive shift is the real goal of this module."'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all H2 headings match the plan exactly. Word count is
+    1360 (safely within the 1200 minimum target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses appropriate context (room, school bag) and correctly applies Ukrainian
+    pedagogical methods (Пономарова / Вашуленко textbook rules).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Follows the plan's dialogue well, though slightly transactional. Captures
+    the possessive gender agreement naturally.
+findings: []

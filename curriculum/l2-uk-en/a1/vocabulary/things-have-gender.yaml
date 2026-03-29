@@ -1,0 +1,187 @@
+vocabulary:
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ла́мпа
+  translation: lamp
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: комп'ю́тер
+  translation: computer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́мка
+  translation: bag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фо́то
+  translation: photo
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вона́
+  translation: 'she (also: gender test pronoun for feminine nouns)'
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воно́
+  translation: 'it (also: gender test pronoun for neuter nouns)'
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: моя́
+  translation: my (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́
+  translation: my (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рід
+  translation: gender (grammatical)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чоловічий рід
+  translation: masculine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жіночий рід
+  translation: feminine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: середній рід
+  translation: neuter gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іме́нник
+  translation: noun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: закі́нчення
+  translation: ending (grammatical)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: при́голосна
+  translation: consonant
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зру́чний
+  translation: comfortable (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Який рід у слова «___»?
+  translation: What gender does the word «___» have?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як сказати ___ українською?
+  translation: How do you say ___ in Ukrainian?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

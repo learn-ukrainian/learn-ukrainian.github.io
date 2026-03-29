@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "things-have-gender",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-29T21:43:19.606407+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-29T21:44:05.130466+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-29T21:45:03.253949+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-29T21:47:11.112307+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-29T21:48:31.333788+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T21:48:31.333993+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:19.953179+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:19.962174+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:19.967776+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:40.505398+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:41.238859+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-29T21:50:41.308892+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-29T21:52:17.102106+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-29T21:52:24.920111+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-29T21:52:25.009249+00:00"
+    }
+  }
+}
