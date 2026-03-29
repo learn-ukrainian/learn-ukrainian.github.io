@@ -1,36 +1,48 @@
 ## Linguistic Scan
-No linguistic errors found.
+- **Euphony Error (Pravopys § 23)**: The text uses "А у тебе?" instead of "А в тебе?". Because the preceding word "А" ends in a vowel, and the following word starts with a consonant ("т"), the preposition must be "в" to maintain Ukrainian милозвучність (euphony). This is a critical error for an A1 module, as it teaches incorrect rhythmic patterns.
+- No Russianisms, Surzhyk, calques, or paronyms were found. The text uses highly authentic Ukrainian terminology (голосні, приголосні, м'який знак, абетка, звуковий аналіз).
+- Verified that the unusual verb "точуть" in Большакова's poem is an accurate and direct quotation from the 1st-grade textbook (verified via RAG).
 
 ## Exercise Check
-All 6 activity markers from the plan are present and logically distributed:
-- `<!-- INJECT_ACTIVITY: quiz -->` is placed after the "Звуки і літери" section to test the core concept.
-- `<!-- INJECT_ACTIVITY: watch-and-repeat -->`, `<!-- INJECT_ACTIVITY: match-up -->`, and `<!-- INJECT_ACTIVITY: letter-grid -->` are clustered after "Приголосні звуки", which is the appropriate place since the full alphabet and consonant/vowel mechanics have now been introduced.
-- `<!-- INJECT_ACTIVITY: fill-in -->` correctly follows the dialogue in the "Привіт!" section.
-- `<!-- INJECT_ACTIVITY: group-sort -->` is placed at the end after the Summary to serve as a final check.
+- **Inventory**: 7 markers injected for 6 planned activities (`watch-and-repeat` was correctly split into two separate markers for vowels and consonants).
+- **Placement**: Excellent. Each marker immediately follows the relevant instructional section (e.g., the vowel pronunciation video marker is placed right after the vowel section).
+- **Alignment**: The markers perfectly align with the plan's `activity_hints`. 
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all textbook references precisely (Zabolotnyi, Litvinova, Bolshakova, and Zakhariichuk). Word count is 1466 (respecting the "word targets are MINIMUMS" rule). |
-| 2. Linguistic accuracy | 10/10 | Zero Russianisms or Surzhyk. Ukrainian phonetic rules (33 letters vs 38 sounds, hard/soft pairs) are described accurately. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow. Drilling the distinction between hearing/pronouncing sounds and seeing/writing letters right from the start is highly effective. |
-| 4. Vocabulary coverage | 10/10 | All required (звук, літера, голосний, приголосний, привіт, як справи, добре, чудово, мама, молоко) and recommended (нормально, тато, око, дім, ніс, сон) vocabulary are used naturally in context. |
-| 5. Exercise quality | 10/10 | Activity markers match the plan exactly and are placed at the correct teaching moments to reinforce newly introduced concepts. |
-| 6. Engagement & tone | 9/10 | The tone is warm, encouraging, and clear without using corporate-speak. However, there is a minor typo in an English word ("conants" instead of "consonants"). |
-| 7. Structural integrity | 10/10 | Clean markdown, all H2 headings match the plan perfectly. The summary section effectively wraps up the module. |
-| 8. Cultural accuracy | 10/10 | Fully decolonized and grounded authentically in the Ukrainian school curriculum and teaching methods. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue is natural, informal, and perfectly demonstrates the gendered grammar of "Рада/Радий" in context. |
+| 1. Plan adherence | 8/10 | The text successfully incorporated the vast majority of the plan's textbook references. However, it completely omitted the vowel notation point ("Захарійчук Grade 1 p.13 notation: vowel sounds are marked [•] in sound models"), which is a notable gap since it correctly included the `[–]` and `[=]` notation for consonants later. |
+| 2. Linguistic accuracy | 8/10 | The use of "А у тебе?" violates foundational Ukrainian euphony rules. It must be "А в тебе?". Otherwise, the Ukrainian text and phonetics explanations are flawless. |
+| 3. Pedagogical quality | 10/10 | Outstanding. Grounding the distinction between sounds and letters in physical reality ("vibrations shaped by breath" vs "shapes printed in ink") is highly effective. Using real Ukrainian primary school pedagogical methods is exactly what this curriculum needs. |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary is naturally integrated. Missed a couple of the optional recommended words ("тато", "сон"), but effectively used others ("око", "дім", "ніс"). |
+| 5. Exercise quality | 10/10 | The placement of the markers is perfectly timed for immediate practice of the concepts just taught. |
+| 6. Engagement & tone | 10/10 | The tone is authoritative, clear, and free of generic AI fluff. The direct analogies make abstract linguistic concepts tangible for beginners. |
+| 7. Structural integrity | 10/10 | All H2 headings match the plan, and the word counts per section perfectly align with the prescribed pacing. |
+| 8. Cultural accuracy | 10/10 | Brilliant use of actual Ukrainian school textbook quotes (Вашуленко, Большакова). Explaining the hard/soft consonant distinction as a uniquely Slavic feature is perfectly framed. |
+| 9. Dialogue & conversation quality | 10/10 | The mini-dialogue is completely natural, effectively introduces gender agreement ("рада" vs "радий"), and uses proper vocative case forms ("Олю", "Тарасе"). |
 
 ## Findings
-[Engagement & tone] [minor]
-Location: Звуки і літери (Sounds and Letters) — "one of two categories: **голосні** (vowels) and **приголосні** (conants)."
-Issue: Typo in the English translation word "consonants" (spelled "conants").
-Fix: Replace "conants" with "consonants".
+
+[Linguistic accuracy] [critical]
+Location: Section "Привіт! (Hello!)", dialogue and explanatory text.
+Issue: The phrase "А у тебе?" violates Pravopys § 23 rules for euphony (чергування у-в). Following a word that ends in a vowel ("А") and preceding a consonant ("т"), the preposition must be "в" ("А в тебе?"). Using "у" here sounds distinctly unnatural and drills broken rhythm into beginners.
+Fix: Change "А у тебе" to "А в тебе" in all three occurrences in the text.
+
+[Plan adherence] [major]
+Location: Section "Голосні звуки (Vowel Sounds)", paragraph starting with "Hear vowels in real words."
+Issue: The text omitted a specific plan directive: "Захарійчук Grade 1 p.13 notation: vowel sounds are marked [•] in sound models." This creates a pedagogical imbalance, as the corresponding notation for consonants ([–] and [=]) was correctly included in the next section.
+Fix: Insert the missing notation rule immediately before the vowel examples.
 
 ## Verdict: REVISE
-The module is outstanding in pedagogy, linguistic accuracy, and cultural grounding. It successfully meets the plan's objectives. A single English typo needs to be fixed before it passes.
+The module is exceptionally well-written, engaging, and accurately leverages the Ukrainian educational standard. However, it contains a critical euphony error ("А у тебе?") that must not ship to learners, and it missed a specific structural notation requirement from the plan. A REVISE verdict is required to apply the necessary deterministic fixes.
 
 <fixes>
-- find: "**приголосні** (conants)."
-  replace: "**приголосні** (consonants)."
+- find: "Добре, дякую. А у тебе? *(Good, thanks. And you?)*"
+  replace: "Добре, дякую. А в тебе? *(Good, thanks. And you?)*"
+- find: "To return the question: **А у тебе?** (And you?)."
+  replace: "To return the question: **А в тебе?** (And you?)."
+- find: "**Нормально** — then **А у тебе?**"
+  replace: "**Нормально** — then **А в тебе?**"
+- find: "Hear vowels in real words. **мАмА** — two [а] sounds."
+  replace: "In Ukrainian school sound models (like Захарійчук Grade 1, p. 13), vowel sounds are marked with a dot: **[•]**. Hear vowels in real words. **мАмА** — two [а] sounds."
 </fixes>

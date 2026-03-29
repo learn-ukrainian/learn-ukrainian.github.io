@@ -2,13 +2,13 @@
   "module": "sounds-letters-and-hello",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-29T00:52:45.296741Z",
+  "last_audit": "2026-03-29T21:42:19.258272Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T00:23:56.090184Z",
+    "md": "2026-03-29T21:28:13.866118Z",
     "meta": null,
-    "activities": "2026-03-29T00:08:56.441956Z",
-    "vocabulary": "2026-03-29T00:09:36.250148Z",
+    "activities": "2026-03-29T21:22:44.526409Z",
+    "vocabulary": "2026-03-29T21:22:58.739929Z",
     "research": null,
     "plan": "2026-03-28T22:26:24.672860Z"
   },
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1845/1200 (raw: 2184)"
+      "message": "2079/1200 (raw: 2584)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/0"
+      "message": "13/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "28/1"
+      "message": "32/1"
     },
     "naturalness": {
       "status": "info",

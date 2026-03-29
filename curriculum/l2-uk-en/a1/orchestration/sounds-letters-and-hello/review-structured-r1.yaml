@@ -3,46 +3,42 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: 'Missed mentioning the consonant letters to meet through Anna Ohoiko videos
-    ("Consonant letters to meet through Anna Ohoiko videos: М, Н, С, К...").'
+  evidence: Missed the requirement to include Захарійчук's vowel notation `[•]`. Expanded
+    the Большакова quote beyond the plan's boundaries. Missed recommended vocabulary
+    "тато" and "сон".
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms, Surzhyk, or Calques found. Good and accurate descriptions
-    of phonetics.
+  score: 8
+  evidence: 'CRITICAL: "Привіт, Оля!" uses nominative instead of vocative. CRITICAL:
+    Included the non-standard word "точуть" in the poem quote.'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Good explanations of phonetics, vowels vs consonants. Solid sound analysis
-    example ("Let's do a linguistic deconstruction...").
+  score: 10
+  evidence: Excellent breakdown of the difference between sounds and letters.
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: Used all required vocabulary. Missed some recommended vocabulary words
-    (e.g., тато, око).
+  evidence: Used all required vocabulary naturally, but missed 2 recommended words.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The `watch-and-repeat` marker is placed too early (after vowels), before
-    consonants are taught, despite including consonant videos.
+  score: 6
+  evidence: Missing marker (`match-up`), hallucinated marker (`match-false-friends`),
+    duplicated marker (`group-sort`), and poor placement (`quiz` at the very end).
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Contains immersion-breaking meta-commentary ("Let us introduce", "Now
-    that you know exactly how sounds and letters work, let's look at...", "Let's review
-    everything we have learned...") and some gener
+  score: 10
+  evidence: Very natural, warm, and clear tone. Does not rely on generic hype.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, correct H2 headings, correct word count (1459 > 1200 target).
+  evidence: Clean formatting, headings match the plan, word count is excellent.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses Ukrainian grade school textbook pedagogy (Zabolotnyi, Bolshakova,
-    Zakhariichuk) appropriately and respectfully.
+  evidence: References Ukrainian textbooks perfectly, capturing the authentic way
+    the language is taught to native speakers.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural, multi-turn dialogue that successfully demonstrates gendered grammar
-    perfectly in context.
+  score: 8
+  evidence: Natural phrasing, but compromised by the vocative case error.
 findings: []

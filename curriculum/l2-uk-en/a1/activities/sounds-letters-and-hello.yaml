@@ -2,111 +2,13 @@ version: '1.0'
 module: sounds-letters-and-hello
 level: a1
 inline:
-- id: quiz
-  type: quiz
-  instruction: Choose the correct answer about sounds and letters.
-  items:
-  - question: What do we hear and pronounce?
-    options:
-    - звуки (sounds)
-    - літери (letters)
-    - слова (words)
-    correct: 0
-  - question: What do we see and write?
-    options:
-    - звуки (sounds)
-    - літери (letters)
-    - пісні (songs)
-    correct: 1
-  - question: How many letters are in the Ukrainian alphabet?
-    options:
-    - '26'
-    - '33'
-    - '38'
-    correct: 1
-  - question: How many sounds are there in the Ukrainian language?
-    options:
-    - '33'
-    - '38'
-    - '10'
-    correct: 1
-  - question: Can you say 'vowel letter' in Ukrainian grammar?
-    options:
-    - Yes, it is common
-    - No, a vowel is a sound, not a letter
-    correct: 1
-  - question: Which of these is a pure voice sound with no obstruction?
-    options:
-    - голосний (vowel)
-    - приголосний (consonant)
-    correct: 0
-- id: match-up
-  type: match-up
-  instruction: Match the Ukrainian letter to the sound it represents.
-  pairs:
-  - left: А
-    right: '[а]'
-  - left: О
-    right: '[о]'
-  - left: У
-    right: '[у]'
-  - left: М
-    right: '[м]'
-  - left: К
-    right: '[к]'
-  - left: Н
-    right: '[н]'
-- id: fill-in
-  type: fill-in
-  instruction: Complete the greeting dialogue.
-  items:
-  - sentence: — ____! Як справи?
-    answer: Привіт
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - Чудово
-  - sentence: — Привіт! Як ____?
-    answer: справи
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-  - sentence: — ____. А у тебе?
-    answer: Добре
-    options:
-    - Привіт
-    - Добре
-    - Чудово
-    - тебе
-  - sentence: — Добре. А у ____?
-    answer: тебе
-    options:
-    - справи
-    - Добре
-    - Чудово
-    - тебе
-  - sentence: — ____.
-    answer: Чудово
-    options:
-    - Привіт
-    - Добре
-    - Нормально
-    - Чудово
-  - sentence: — ____, дякую.
-    answer: Нормально
-    options:
-    - Нормально
-    - Привіт
-    - справи
-    - тебе
 - id: group-sort
   type: group-sort
-  instruction: Sort the Ukrainian sounds into Vowels and Consonants.
+  instruction: 'Sort these sounds into two groups — Голосні (Vowel sounds) and Приголосні
+    (Consonant sounds). Remember: vowel sounds flow freely and can be sung; consonants
+    are blocked.'
   groups:
-  - label: Голосні (Vowels)
+  - label: Голосні звуки (Vowel sounds)
     items:
     - '[а]'
     - '[о]'
@@ -114,7 +16,7 @@ inline:
     - '[е]'
     - '[и]'
     - '[і]'
-  - label: Приголосні (Consonants)
+  - label: Приголосні звуки (Consonant sounds)
     items:
     - '[к]'
     - '[м]'
@@ -124,87 +26,338 @@ inline:
     - '[р]'
     - '[с]'
     - '[х]'
-workbook:
-- type: quiz
-  instruction: Choose the correct Ukrainian word.
+- id: fill-in
+  type: fill-in
+  instruction: Complete the Ukrainian greeting dialogue. Choose the correct word for
+    each blank.
   items:
-  - question: How do you say 'Hello' (informal)?
+  - sentence: — ____! Як справи?
+    answer: Привіт
     options:
-    - Добре
     - Привіт
-    - Чудово
-    correct: 1
-  - question: How do you say 'How are you?'
-    options:
-    - Як справи?
-    - Нормально?
-    - Привіт?
-    correct: 0
-  - question: How do you say 'Fine' or 'Good'?
-    options:
+    - справи
+    - Добре
+    - тебе
     - Чудово
     - Нормально
-    - Добре
-    correct: 2
-  - question: How do you say 'Great'?
+  - sentence: — Привіт! Як ____?
+    answer: справи
     options:
-    - Чудово
+    - Привіт
+    - справи
     - Добре
-    - Нормально
-    correct: 0
-  - question: How do you say 'Okay'?
-    options:
-    - Добре
+    - тебе
     - Чудово
     - Нормально
-    correct: 2
-  - question: How do you say 'mother'?
+  - sentence: — ____, дякую. А у тебе?
+    answer: Добре
     options:
-    - тато
-    - мама
-    - молоко
-    correct: 1
-- type: match-up
-  instruction: Match the English word to its Ukrainian equivalent.
-  pairs:
-  - left: sound
-    right: звук
-  - left: letter
-    right: літера
-  - left: vowel
-    right: голосний
-  - left: consonant
-    right: приголосний
-  - left: hello
-    right: привіт
-  - left: mother
-    right: мама
-  - left: milk
-    right: молоко
-  - left: eye
-    right: око
-- type: true-false
-  instruction: True or False?
+    - Привіт
+    - справи
+    - Добре
+    - тебе
+    - Чудово
+    - Нормально
+  - sentence: — А у ____?
+    answer: тебе
+    options:
+    - Привіт
+    - справи
+    - Добре
+    - тебе
+    - Чудово
+    - Нормально
+  - sentence: — ____!
+    answer: Чудово
+    options:
+    - Привіт
+    - справи
+    - Добре
+    - тебе
+    - Чудово
+    - Нормально
+  - sentence: — ____.
+    answer: Нормально
+    options:
+    - Привіт
+    - справи
+    - Добре
+    - тебе
+    - Чудово
+    - Нормально
+- id: quiz-sounds-vs-letters
+  type: quiz
+  instruction: Test yourself on sounds vs letters. Choose the correct answer.
   items:
-  - statement: There are 33 letters in the Ukrainian alphabet.
+  - question: What do we HEAR and PRONOUNCE in language?
+    options:
+    - звуки (sounds)
+    - літери (letters)
+    - слова (words)
+    - склади (syllables)
+    correct: 0
+  - question: What do we SEE and WRITE?
+    options:
+    - звуки (sounds)
+    - літери (letters)
+    - голосні (vowels)
+    - приголосні (consonants)
+    correct: 1
+  - question: How many LETTERS (літери) are in the Ukrainian alphabet (абетка)?
+    options:
+    - '26'
+    - '30'
+    - '33'
+    - '38'
+    correct: 2
+  - question: How many SOUNDS (звуки) does Ukrainian have?
+    options:
+    - '30'
+    - '33'
+    - '36'
+    - '38'
+    correct: 3
+  - question: Is it correct to say 'голосна літера' (vowel letter)?
+    options:
+    - Yes — both letters and sounds can be голосні
+    - No — голосний describes a SOUND, not a letter
+    - Only for the letters А and О
+    - Yes, in informal speech
+    correct: 1
+  - question: Which letter represents NO sound at all?
+    options:
+    - Й
+    - Ь
+    - Ї
+    - Є
+    correct: 1
+- id: match-false-friends
+  type: match-up
+  instruction: Ukrainian letters can look like English letters — but sound completely
+    different! Match each Ukrainian letter to its actual sound.
+  pairs:
+  - left: В
+    right: '[в] — like ''v'' in ''voice'' (not like English B)'
+  - left: Н
+    right: '[н] — like ''n'' in ''no'' (not like English H)'
+  - left: Р
+    right: '[р] — a rolled ''r'' (not like English P)'
+  - left: С
+    right: '[с] — like ''s'' in ''sun'' (not like English C)'
+  - left: У
+    right: '[у] — like ''oo'' in ''moon'' (not like English Y)'
+  - left: Х
+    right: '[х] — like ''ch'' in Scottish ''loch'' (not like English X)'
+  - left: Е
+    right: '[е] — like ''e'' in ''bed'''
+  - left: І
+    right: '[і] — like ''ee'' in ''see'''
+workbook:
+- type: match-up
+  instruction: Match each Ukrainian word to its English meaning.
+  pairs:
+  - left: звук
+    right: sound
+  - left: літера
+    right: letter
+  - left: голосний
+    right: vowel sound
+  - left: приголосний
+    right: consonant sound
+  - left: привіт
+    right: hi / hello (informal)
+  - left: добре
+    right: good / fine
+  - left: чудово
+    right: great / wonderful
+  - left: нормально
+    right: okay / so-so
+  - left: мама
+    right: mother
+  - left: молоко
+    right: milk
+- type: true-false
+  instruction: True or false? Think carefully about what you learned in this module.
+  items:
+  - statement: Ukrainian has 33 letters in its alphabet.
     correct: true
-    explanation: The Ukrainian alphabet has exactly 33 letters.
-  - statement: There are more letters than sounds in Ukrainian.
+    explanation: Yes — the абетка has exactly 33 letters, from А to Я.
+  - statement: Ukrainian has 33 sounds — the same number as letters.
     correct: false
-    explanation: There are 38 sounds and 33 letters.
-  - statement: Vowels (голосні) are produced with obstruction in the mouth.
+    explanation: Ukrainian has 38 sounds. Letters Я, Ю, Є, Ї can each represent two
+      sounds; Ь represents no sound at all.
+  - statement: The letter Ь (м'який знак) makes its own special soft sound.
     correct: false
-    explanation: Vowels are produced freely with voice. Consonants have obstruction.
-  - statement: The letter Ь (soft sign) represents a vowel sound.
-    correct: false
-    explanation: The Ь makes no sound of its own. It softens the consonant before
-      it.
-  - statement: '''Привіт'' is a formal way to say hello.'
-    correct: false
-    explanation: '''Привіт'' is informal, used for friends and family.'
-  - statement: Ukrainian spelling is highly phonetic.
+    explanation: Ь represents NO sound. It only softens the consonant before it, then
+      disappears from the sound picture entirely.
+  - statement: Vowel sounds (голосні) can be sung indefinitely.
     correct: true
-    explanation: What you see is almost exactly what you hear.
+    explanation: Yes — air flows freely for голосні, so you can hold and sing А-А-А
+      or О-О-О as long as you have breath.
+  - statement: The word 'мама' has 4 letters and 4 sounds.
+    correct: true
+    explanation: М-А-М-А = 4 letters. [м]-[а]-[м]-[а] = 4 sounds. Letters and sounds
+      match exactly for мама.
+  - statement: Ukrainian has 6 vowel sounds.
+    correct: true
+    explanation: The six vowel sounds are [а], [о], [у], [е], [и], [і]. There are
+      10 vowel LETTERS, but only 6 vowel sounds.
+  - statement: It is correct to say 'голосна літера' (vowel letter).
+    correct: false
+    explanation: No — голосний describes a SOUND, not a letter. Letters only represent
+      sounds; they are not sounds themselves.
+  - statement: In the word 'Привіт', there are 2 vowel sounds.
+    correct: true
+    explanation: П[р][и]В[і]Т — the vowel sounds are [и] and [і], giving 2 голосні
+      звуки and 4 приголосні.
+- type: anagram
+  instruction: Rearrange the letters to form a Ukrainian vocabulary word. Use the
+    English hint to help you.
+  items:
+  - letters:
+    - м
+    - а
+    - м
+    - а
+    answer: мама
+    hint: mother
+  - letters:
+    - т
+    - а
+    - т
+    - о
+    answer: тато
+    hint: father
+  - letters:
+    - н
+    - і
+    - с
+    answer: ніс
+    hint: nose
+  - letters:
+    - с
+    - о
+    - н
+    answer: сон
+    hint: dream
+  - letters:
+    - о
+    - к
+    - о
+    answer: oko
+    hint: eye
+  - letters:
+    - з
+    - в
+    - у
+    - к
+    answer: звук
+    hint: sound
+  - letters:
+    - д
+    - і
+    - м
+    answer: дім
+    hint: house
+  - letters:
+    - ч
+    - а
+    - й
+    answer: чай
+    hint: tea
+- type: quiz
+  instruction: More questions about the Ukrainian alphabet and sounds. Choose the
+    correct answer.
+  items:
+  - question: The letter Щ represents how many sounds?
+    options:
+    - One sound
+    - 'Two sounds: [шч]'
+    - Three sounds
+    - No sound
+    correct: 1
+  - question: What does 'Як справи?' mean in English?
+    options:
+    - What is your name?
+    - How are you?
+    - Good morning!
+    - Thank you!
+    correct: 1
+  - question: How many VOWEL SOUNDS does Ukrainian have?
+    options:
+    - '4'
+    - '5'
+    - '6'
+    - '8'
+    correct: 2
+  - question: How many vowel LETTERS does Ukrainian have?
+    options:
+    - '6'
+    - '8'
+    - '10'
+    - '12'
+    correct: 2
+  - question: Which phrase is an informal greeting in Ukrainian?
+    options:
+    - добре
+    - привіт
+    - чудово
+    - нормально
+    correct: 1
+  - question: 'How many syllables does ''мама'' have? (Tip: count the vowel sounds!)'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    correct: 1
+  - question: How many vowel sounds are in the word 'молоко' (milk)?
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    correct: 2
+- type: group-sort
+  instruction: 'Sort these Ukrainian letters into their correct category — vowel letters
+    or consonant letters. Remember: Ь is neither (it is special — no sound).'
+  groups:
+  - label: Голосні літери (Vowel letters)
+    items:
+    - А
+    - Е
+    - И
+    - І
+    - О
+    - У
+    - Є
+    - Ї
+    - Ю
+    - Я
+  - label: Приголосні літери (Consonant letters)
+    items:
+    - Б
+    - В
+    - Г
+    - Ґ
+    - Д
+    - Ж
+    - З
+    - Й
+    - К
+    - Л
+    - М
+    - Н
+    - Р
+    - С
+    - Т
+    - Ф
+    - Х
+    - Ц
+    - Ч
+    - Ш
+    - Щ
+    - П
 - type: letter-grid
   instruction: Голосні — Vowels
   letters:
