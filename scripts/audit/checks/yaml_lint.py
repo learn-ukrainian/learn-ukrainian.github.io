@@ -46,6 +46,7 @@ def lint_yaml_file(file_path: str) -> list[dict]:
 
         # 2. Check for unquoted colons in values
         # Matches "key: value" or "- key: value" pattern
+        # Skip continuation lines of multi-line quoted strings (indented, no key)
         # Group 1: optional dash and space "- "
         # Group 2: key
         # Group 3: distinct separator ": "
@@ -55,8 +56,21 @@ def lint_yaml_file(file_path: str) -> list[dict]:
             # key = match.group(3)
             value = match.group(4)
 
+            # Skip if this line's value starts a quoted string (handled correctly)
+            if value.startswith('"') or value.startswith("'"):
+                continue
+
+            # Skip continuation lines: if previous line ends with an open quote
+            # (single or double), this line is part of that string
+            if line_num > 1:
+                prev = lines[line_num - 2] if line_num - 1 < len(lines) else ""
+                prev_stripped = prev.rstrip()
+                # Count quotes — odd number means string is still open
+                if prev_stripped.count("'") % 2 == 1 or prev_stripped.count('"') % 2 == 1:
+                    continue
+
             # If value contains a colon
-            if ':' in value and not (value.startswith('"') or value.startswith("'")) and (': ' in value or value.strip().endswith(':')):
+            if ':' in value and (': ' in value or value.strip().endswith(':')):
                 errors.append({
                     'line': line_num,
                     'message': "Unquoted colon detected in value. YAML parsers may fail.",
