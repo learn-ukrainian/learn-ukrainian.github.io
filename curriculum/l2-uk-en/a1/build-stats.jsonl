@@ -35,3 +35,5 @@
 {"slug": "checkpoint-first-contact", "error_type": "VOCABULARY", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-29T21:46:52.075052+00:00"}
 {"slug": "checkpoint-first-contact", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-29T21:48:18.333068+00:00"}
 {"slug": "things-have-gender", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T21:48:31.333439+00:00"}
+{"slug": "what-is-it-like", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T22:23:48.427814+00:00"}
+{"slug": "checkpoint-first-contact", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T22:23:55.115183+00:00"}

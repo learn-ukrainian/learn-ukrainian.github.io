@@ -1,0 +1,307 @@
+vocabulary:
+- word: яки́й
+  translation: what kind? (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: яка
+  translation: what kind? (feminine)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: яке́
+  translation: what kind? (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: big (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́ка
+  translation: big (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́ке
+  translation: big (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нова́
+  translation: new (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нове́
+  translation: new (neuter)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стари́й
+  translation: old (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: старе́
+  translation: old (neuter)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: га́рний
+  translation: nice, beautiful (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: га́рна
+  translation: nice, beautiful (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пога́ний
+  translation: bad (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чи́стий
+  translation: clean (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чи́ста
+  translation: clean (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чи́сте
+  translation: clean (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: брудни́й
+  translation: dirty (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дороги́й
+  translation: expensive (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: доро́га
+  translation: expensive (feminine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: деше́вий
+  translation: cheap (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тлий
+  translation: light, bright (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тла
+  translation: light, bright (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тле
+  translation: light, bright (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: те́мний
+  translation: dark (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зеле́ний
+  translation: green (masculine, hard-stem example)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ній
+  translation: blue (masculine, soft-stem)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: невели́кий
+  translation: not big, small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: і
+  translation: and (linking parallel qualities)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: а
+  translation: and/but (soft contrast)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but (stronger contrast)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ша́фа
+  translation: wardrobe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підло́га
+  translation: floor
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: су́мка
+  translation: bag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кущ
+  translation: bush
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трава́
+  translation: grass
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: де́рево
+  translation: tree
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: прикме́тник
+  translation: adjective
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: іме́нник
+  translation: noun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Яка твоя кімната?
+  translation: What is your room like?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який він?
+  translation: What is it like? (masculine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яке воно?
+  translation: What is it like? (neuter)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Прикметник — дзеркало іменника.
+  translation: The adjective is the noun's mirror.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
