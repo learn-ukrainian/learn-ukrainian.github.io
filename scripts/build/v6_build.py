@@ -3858,6 +3858,16 @@ build_status: draft
     mdx_path.write_text(frontmatter + imports + mdx_content, "utf-8")
     _log(f"  ✅ MDX written → {mdx_path}")
 
+    # Validate MDX
+    from build.mdx_validate import validate_mdx
+    mdx_errors = validate_mdx(mdx_path)
+    if mdx_errors:
+        _log(f"  ⚠️  MDX validation: {len(mdx_errors)} issue(s):")
+        for err in mdx_errors[:5]:
+            _log(f"    {err}")
+    else:
+        _log("  ✅ MDX validation passed")
+
     return True
 
 
