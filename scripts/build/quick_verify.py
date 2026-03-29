@@ -198,6 +198,14 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
     for item in required:
         if not isinstance(item, str):
             continue
+        # Skip descriptive/meta entries (checkpoint modules, etc.)
+        # These describe the vocab policy, not actual words to check
+        item_lower = str(item).lower()
+        if any(skip in item_lower for skip in (
+            "recycled", "no new", "all vocabulary from", "revision",
+            "checkpoint", "no required", "see m0",
+        )):
+            continue
         # Extract the Ukrainian word (before parenthetical translation)
         # e.g., "стіл (table, m)" → "стіл"
         word = re.split(r"\s*\(", str(item))[0].strip().lower()
