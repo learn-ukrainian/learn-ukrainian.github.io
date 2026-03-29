@@ -3294,6 +3294,21 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
             _log(f"  ✅ Fix applied: '{find_unstressed[:50]}...'")
             continue
 
+        # Try whitespace-normalized match for multi-line fixes
+        # Reviewer may output \n\n where content has \n, or vice versa
+        if "\n" in find_unstressed:
+            # Normalize runs of whitespace to single \n for matching
+            import re as _re
+            find_norm = _re.sub(r"\n\s*\n", "\n", find_unstressed).strip()
+            content_norm = _re.sub(r"\n\s*\n", "\n", content).strip()
+            if find_norm in content_norm:
+                pos_norm = content_norm.index(find_norm)
+                replace_norm = _re.sub(r"\n\s*\n", "\n", replace_unstressed).strip()
+                content = content_norm[:pos_norm] + replace_norm + content_norm[pos_norm + len(find_norm):]
+                applied += 1
+                _log(f"  ✅ Fix applied (whitespace-normalized): '{find_unstressed[:50]}...'")
+                continue
+
         # Try stress-mark-aware match: strip stress from content for matching
         content_unstressed = content.replace(STRESS_MARK, "")
         if find_unstressed in content_unstressed:
