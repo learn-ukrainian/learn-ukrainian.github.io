@@ -166,3 +166,17 @@ frictions:
       preceding H2 section that teaches it.
     source: "M03 special-signs R1/R2 review — activity placed before apostrophe taught (2026-03-29)"
     date_added: "2026-03-29"
+
+  - id: gf-014
+    status: active
+    type: linguistic
+    description: >
+      Euphony alternation у/в and і/й are MINOR stylistic issues, NEVER critical
+      errors. Both forms are attested in published Ukrainian literature (GRAC corpus
+      confirms). Правопис §23 gives rules, but authors regularly deviate in dialogue
+      for rhythm, pause, and emphasis. Reviewers must NOT flag euphony as CRITICAL
+      or fail a module for it. Mark as MINOR/WARNING at most. Example: "А у тебе?"
+      and "А в тебе?" are both acceptable — prefer "в" per §23.2.6 but do not
+      penalize "у". Verified with Gemini (native speaker perspective) and GRAC corpus.
+    source: "M01 review — reviewer flagged 'А у тебе' as CRITICAL (2026-03-29)"
+    date_added: "2026-03-29"

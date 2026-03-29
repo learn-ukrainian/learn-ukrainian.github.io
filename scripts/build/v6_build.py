@@ -2436,13 +2436,25 @@ def step_activities(
         clean = clean.strip()
 
         # If output starts with non-YAML (markdown bold, commentary), find the
-        # first line starting with "version:" or "module:" or "inline:" or "workbook:"
+        # first line starting with a YAML root key or document separator
         if clean and not clean.startswith(("version", "module", "level", "inline", "workbook")):
+            # Try to find a YAML root key
+            found = False
             for yaml_start_key in ("version:", "module:", "level:", "inline:", "workbook:"):
                 idx = clean.find(f"\n{yaml_start_key}")
                 if idx != -1:
                     clean = clean[idx + 1:]
+                    found = True
                     break
+            # Fallback: strip everything before --- document separator
+            if not found:
+                sep_idx = clean.find("\n---\n")
+                if sep_idx != -1:
+                    clean = clean[sep_idx + 4:].lstrip("\n")
+
+        # Strip leading YAML document separators (--- or ...)
+        while clean.startswith("---"):
+            clean = clean[3:].lstrip("\n")
 
         # Parse YAML
         try:
