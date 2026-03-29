@@ -4146,6 +4146,40 @@ def main():
             else:
                 _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
 
+        # ── POST-REVIEW VERIFICATION ──
+        # 1. Verify all fixes were applied (grep content for find/replace strings)
+        if latest_fixes:
+            content_text = content_path.read_text("utf-8") if content_path.exists() else ""
+            unapplied = []
+            applied_ok = []
+            for fix in latest_fixes:
+                find_str = fix.get("find", "")
+                replace_str = fix.get("replace", "")
+                if not find_str:
+                    continue
+                # Check: old text should be GONE, new text should be PRESENT
+                old_gone = find_str not in content_text
+                new_present = not replace_str or replace_str in content_text
+                if old_gone and new_present:
+                    applied_ok.append(find_str[:50])
+                else:
+                    unapplied.append(find_str[:80])
+            if unapplied:
+                _log(f"\n⚠️  FIX VERIFICATION: {len(unapplied)}/{len(latest_fixes)} fix(es) NOT applied:")
+                for u in unapplied[:5]:
+                    _log(f"    ❌ '{u}...'")
+            else:
+                _log(f"\n✅ FIX VERIFICATION: all {len(applied_ok)} fix(es) confirmed in content")
+
+        # 2. Check for remaining known issues (Russianisms, calques)
+        if content_path.exists():
+            from build.quick_verify import _check_toxic_tokens
+            remaining_toxins = _check_toxic_tokens(content_path.read_text("utf-8"))
+            if remaining_toxins:
+                _log(f"\n⚠️  POST-REVIEW TOXIN CHECK: {len(remaining_toxins)} issue(s) remain:")
+                for t in remaining_toxins[:5]:
+                    _log(f"    {t}")
+
         # Log final status
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
