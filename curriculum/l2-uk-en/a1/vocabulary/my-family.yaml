@@ -1,0 +1,301 @@
+vocabulary:
+- word: сім'я́
+  translation: family (apostrophe word)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: роди́на
+  translation: family (alternate, interchangeable with сім'я)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́ма
+  translation: mother (informal)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́ти
+  translation: mother (formal/literary)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: та́то
+  translation: father (informal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ба́тько
+  translation: father (formal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: брат
+  translation: brother
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бабу́ся
+  translation: grandmother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ба́ба
+  translation: grandma (colloquial variant of бабуся)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ба́бця
+  translation: grandma (regional/affectionate variant)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діду́сь
+  translation: grandfather
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дід
+  translation: grandpa (colloquial variant of дідусь)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ті́тка
+  translation: aunt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дя́дько
+  translation: uncle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дочка́
+  translation: daughter (everyday form)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́нька
+  translation: daughter (warm/affectionate variant)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: син
+  translation: son
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: батьки́
+  translation: parents (always plural)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дружи́на
+  translation: wife
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чолові́к
+  translation: husband / man (context-dependent)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тату́сь
+  translation: dad (warm diminutive of тато)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мій
+  translation: my (masculine noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моя́
+  translation: my (feminine noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́
+  translation: my (neuter noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мої́
+  translation: my (plural)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твій
+  translation: your — informal (masculine noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твоя́
+  translation: your — informal (feminine noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твоє́
+  translation: your — informal (neuter noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твої́
+  translation: your — informal (plural)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йо́го
+  translation: his (never changes)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: оди́н
+  translation: one (masculine)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: одна́
+  translation: one (feminine)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: два
+  translation: two (masculine)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: дві
+  translation: two (feminine)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: чи
+  translation: or (in yes/no questions)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: ті́льки
+  translation: only
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: нема́є
+  translation: there is not (requires genitive — preview only)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інжене́р
+  translation: engineer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́карка
+  translation: doctor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: студе́нт
+  translation: student
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у мене є
+  translation: I have (lit. at me there-is)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у тебе є
+  translation: you have — informal (lit. at you there-is)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у вас є
+  translation: you have — formal/plural
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це мій...
+  translation: This is my... (masculine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це моя...
+  translation: This is my... (feminine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Його звати...
+  translation: His name is...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Її звати...
+  translation: Her name is...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка гарна родина!
+  translation: What a lovely family!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
