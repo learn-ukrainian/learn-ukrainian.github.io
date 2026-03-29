@@ -4147,12 +4147,12 @@ def main():
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
     # (e.g., бра́ти vs брати́) that caused review rejections
-    if steps in ("all", "publish", "annotate"):
+    if steps in ("all", "review", "publish", "annotate"):
         step_annotate(content_path)
         _save_v6_state(args.level, slug, "stress")
 
     # Step 9: PUBLISH
-    if steps in ("all", "publish"):
+    if steps in ("all", "review", "publish"):
         step_publish(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "publish")
 
