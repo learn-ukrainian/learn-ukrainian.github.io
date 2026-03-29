@@ -23,3 +23,9 @@
 {"slug": "special-signs", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T15:04:25.717419+00:00"}
 {"slug": "special-signs", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T15:09:45.225740+00:00"}
 {"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T15:47:10.491311+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T17:10:16.387409+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T18:23:32.512515+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T18:58:13.660063+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T19:54:55.203911+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T20:09:39.916206+00:00"}
+{"slug": "stress-and-melody", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T20:21:41.581122+00:00"}

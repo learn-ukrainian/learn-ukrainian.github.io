@@ -1,0 +1,289 @@
+vocabulary:
+- word: на́голос
+  translation: stress (linguistic accent)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наголошений склад
+  translation: stressed syllable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: замок
+  translation: castle (stress on first syllable)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: замок
+  translation: lock (stress on second syllable)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мука
+  translation: torment, suffering (stress on first syllable)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мука
+  translation: flour (stress on last syllable)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: атлас
+  translation: atlas, map collection (stress on first syllable)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: атлас
+  translation: satin fabric (stress on second syllable)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ма
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: та́то
+  translation: father
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ра́нок
+  translation: morning
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зима́
+  translation: winter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: метро́
+  translation: metro, subway
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: фотогра́фія
+  translation: photograph
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інтона́ція
+  translation: intonation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: розповідне речення
+  translation: declarative sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: питальне речення
+  translation: interrogative sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: спонукальне речення
+  translation: imperative sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: окличне речення
+  translation: exclamatory sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хто
+  translation: who
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: де
+  translation: where
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Це кава.
+  translation: This is coffee. (statement, falling intonation)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це кава?
+  translation: Is this coffee? (yes/no question, rising intonation)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як гарно!
+  translation: How beautiful! (exclamation)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́хід
+  translation: exit
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вго́лос
+  translation: aloud, out loud
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: читати вголос
+  translation: to read aloud
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: украї́нська
+  translation: Ukrainian (adjective)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відпочи́нок
+  translation: rest, vacation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Ки́їв
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: столи́ця
+  translation: capital city
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Добре!
+  translation: Good! / Fine!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Теж добре, дякую!
+  translation: Also good, thanks!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Привіт!
+  translation: Hi! / Hello! (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую!
+  translation: Thank you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Так
+  translation: 'Yes'
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Ось він.
+  translation: Here it is. (masculine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мене звати...
+  translation: 'My name is... (literally: I am called...)'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як тебе звати?
+  translation: What is your name? (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дуже приємно!
+  translation: Very nice to meet you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
