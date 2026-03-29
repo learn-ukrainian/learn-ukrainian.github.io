@@ -1,0 +1,223 @@
+vocabulary:
+- word: ім'я́
+  translation: first name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: прі́звище
+  translation: surname, last name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зупи́нка
+  translation: stop (bus/tram stop)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: роди́на
+  translation: family (extended family)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ру́ки
+  translation: hands
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: студе́нт
+  translation: student (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: студе́нтка
+  translation: student (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́кар
+  translation: doctor (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́карка
+  translation: doctor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інжене́р
+  translation: engineer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: програмі́ст
+  translation: programmer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бабу́ся
+  translation: grandmother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діду́сь
+  translation: grandfather
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: старший
+  translation: older, elder
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моло́дша
+  translation: younger (female)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: теж
+  translation: also, too
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: село́
+  translation: village
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Добрий день!
+  translation: Good day! (formal greeting)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мене звати ___.
+  translation: My name is ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Його звати ___.
+  translation: His name is ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Її звати ___.
+  translation: Her name is ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я з ___.
+  translation: I am from ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене є ___.
+  translation: I have ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У тебе є ___?
+  translation: Do you have ___?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: І мені приємно.
+  translation: Nice to meet you too.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До зустрічі!
+  translation: See you! (until we meet again)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Справді?
+  translation: Really?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Цікаво!
+  translation: Interesting!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я дуже люблю свою родину.
+  translation: I love my family very much.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це — ___.
+  translation: This is ___.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я — ___.
+  translation: I am ___. (with identifying dash)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

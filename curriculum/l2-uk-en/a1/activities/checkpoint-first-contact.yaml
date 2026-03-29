@@ -1,0 +1,330 @@
+version: '1.0'
+module: checkpoint-first-contact
+level: a1
+inline:
+- id: quiz-sounds-vs-letters
+  type: quiz
+  instruction: Choose the correct answer about Ukrainian sounds and letters.
+  items:
+  - question: How many letters are in the Ukrainian alphabet?
+    options:
+    - '26'
+    - '32'
+    - '33'
+    - '30'
+    correct: 2
+  - question: What does the soft sign (ь) do in words like 'сіль' or 'день'?
+    options:
+    - It adds a vowel sound after the consonant
+    - It softens the preceding consonant
+    - It separates a consonant from the next vowel
+    - It marks where stress falls
+    correct: 1
+  - question: What does the apostrophe (') do in 'м'яч' or 'сім'я'?
+    options:
+    - It marks stress on the syllable
+    - It softens the preceding consonant
+    - It separates a consonant from a following vowel sound
+    - It makes the word plural
+    correct: 2
+  - question: How many basic vowel letters does Ukrainian have?
+    options:
+    - '4'
+    - '5'
+    - '6'
+    - '7'
+    correct: 2
+  - question: Which of these words contains a soft sign (ь)?
+    options:
+    - мама
+    - тато
+    - сіль
+    - брат
+    correct: 2
+  - question: Which of these words contains an apostrophe (')?
+    options:
+    - студент
+    - лікар
+    - інженер
+    - сім'я
+    correct: 3
+  - question: In the word 'читати', on which syllable does stress fall?
+    options:
+    - First syllable (чи-)
+    - Second syllable (-та-)
+    - Third syllable (-ти)
+    - All syllables equally
+    correct: 1
+  - question: The letter 'я' at the beginning of a word (like 'Як') represents how
+      many sounds?
+    options:
+    - 'One sound: the vowel [a]'
+    - 'Two sounds: [й] and [а]'
+    - No sound — it is silent
+    - Three sounds
+    correct: 1
+- id: fill-in-self-intro
+  type: fill-in
+  instruction: Complete each sentence with the correct Ukrainian word. All sentences
+    follow patterns from the self-introduction monologue.
+  items:
+  - sentence: Привіт! Мене ____ Олена.
+    answer: звати
+    options:
+    - звати
+    - є
+    - має
+    - знати
+  - sentence: Я ____ Харкова.
+    answer: з
+    options:
+    - з
+    - в
+    - до
+    - на
+  - sentence: ____ тато — інженер.
+    answer: Мій
+    options:
+    - Мій
+    - Моя
+    - Моє
+    - Мої
+  - sentence: Моя мама — ____.
+    answer: лікарка
+    options:
+    - лікарка
+    - лікар
+    - вчитель
+    - студент
+  - sentence: У мене ____ молодша сестра.
+    answer: є
+    options:
+    - є
+    - має
+    - була
+    - стала
+  - sentence: ____ звати Ганна.
+    answer: Її
+    options:
+    - Її
+    - Його
+    - Вони
+    - Мене
+  - sentence: Я живу ____ Львові.
+    answer: у
+    options:
+    - у
+    - з
+    - до
+    - за
+  - sentence: Я дуже люблю свою ____.
+    answer: родину
+    options:
+    - родину
+    - родина
+    - родині
+    - родиною
+- id: match-questions-answers
+  type: match-up
+  instruction: Match each question with its correct Ukrainian answer.
+  pairs:
+  - left: Як тебе звати?
+    right: Мене звати Тарас.
+  - left: Звідки ти?
+    right: Я з Одеси.
+  - left: Хто це?
+    right: Це моя мама.
+  - left: У тебе є брат?
+    right: Так, у мене є брат.
+  - left: Ким працює твоя мама?
+    right: Моя мама — лікарка.
+  - left: Як звати твою сестру?
+    right: Її звати Ганна.
+  - left: Ти студент?
+    right: Так, я — студент.
+  - left: Як вас звати?
+    right: Мене звати Олексій.
+- id: quiz-comprehensive-review
+  type: quiz
+  instruction: Choose the correct answer. This review covers everything from M01 to
+    M06.
+  items:
+  - question: How do you say 'My name is Olena' in Ukrainian?
+    options:
+    - Я Олена.
+    - Мене звати Олена.
+    - Моє ім'я є Олена.
+    - Я маю ім'я Олена.
+    correct: 1
+  - question: Which greeting is formal?
+    options:
+    - Привіт!
+    - Добрий день!
+    - Бувай!
+    - Агов!
+    correct: 1
+  - question: How do you say 'I have a sister' in Ukrainian?
+    options:
+    - Я є сестра.
+    - Моя є сестра.
+    - У мене є сестра.
+    - Сестра у мене.
+    correct: 2
+  - question: Which word means 'grandmother'?
+    options:
+    - дідусь
+    - тато
+    - бабуся
+    - сестра
+    correct: 2
+  - question: How do you ask 'Where are you from?' informally in Ukrainian?
+    options:
+    - Де ти живеш?
+    - Звідки ти?
+    - Де ти є?
+    - Ти з де?
+    correct: 1
+  - question: Which possessive pronoun goes with the feminine noun 'мама'?
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+    correct: 1
+  - question: What does 'До зустрічі!' mean in English?
+    options:
+    - Good morning!
+    - Nice to meet you!
+    - See you!
+    - Good night!
+    correct: 2
+  - question: How does Ukrainian express 'He is a doctor' in the present tense?
+    options:
+    - Він є лікар.
+    - Він лікар є.
+    - Він — лікар.
+    - Він буде лікар.
+    correct: 2
+  - question: Which phrase means 'older brother'?
+    options:
+    - молодший брат
+    - старший брат
+    - великий брат
+    - перший брат
+    correct: 1
+  - question: How do you say 'I am a female student' in Ukrainian?
+    options:
+    - Я — студент.
+    - Я — студентка.
+    - Я є студентка.
+    - Я студентко.
+    correct: 1
+  - question: What is the Ukrainian word for 'family'?
+    options:
+    - родич
+    - сім'я
+    - люди
+    - народ
+    correct: 1
+  - question: Which sentence correctly uses the 'Це + noun' identification pattern?
+    options:
+    - Це є мій брат.
+    - Це мій брат.
+    - Мій брат — це.
+    - Є це мій брат.
+    correct: 1
+workbook:
+- type: match-up
+  instruction: Match each Ukrainian word with its English meaning.
+  pairs:
+  - left: ім'я
+    right: first name
+  - left: прізвище
+    right: surname / last name
+  - left: сім'я
+    right: family
+  - left: родина
+    right: family / relatives
+  - left: бабуся
+    right: grandmother
+  - left: дідусь
+    right: grandfather
+  - left: лікарка
+    right: doctor (female)
+  - left: вчитель
+    right: teacher (male)
+- type: group-sort
+  instruction: Sort these Ukrainian words into the correct category.
+  groups:
+  - label: Family members
+    items:
+    - мама
+    - тато
+    - брат
+    - сестра
+    - бабуся
+    - дідусь
+  - label: Professions
+    items:
+    - лікар
+    - інженер
+    - вчитель
+    - студент
+    - програміст
+    - лікарка
+- type: true-false
+  instruction: Read each statement about Ukrainian. Is it true or false?
+  items:
+  - statement: 'Ukrainian uses the verb ''є'' (to be) when identifying someone in
+      the present tense: ''Він є лікар.'''
+    correct: false
+    explanation: Ukrainian drops 'to be' in the present tense. The correct form is
+      'Він — лікар.' A dash replaces the missing verb.
+  - statement: The soft sign (ь) softens the preceding consonant.
+    correct: true
+    explanation: 'For example: ''сіль'' (salt) and ''день'' (day) — the ь makes the
+      preceding consonant soft.'
+  - statement: The apostrophe (') in 'сім'я' marks where the stress falls.
+    correct: false
+    explanation: The apostrophe separates the consonant from the following vowel sound.
+      It is not a stress mark.
+  - statement: '''Як тебе звати?'' is the formal way to ask someone''s name.'
+    correct: false
+    explanation: '''Як тебе звати?'' is INFORMAL (used with friends). The formal version
+      is ''Як вас звати?'''
+  - statement: In Ukrainian, stress can change the meaning of a word.
+    correct: true
+    explanation: For example, 'руки' means 'hands' or 'of a hand' depending on which
+      syllable carries the stress.
+  - statement: The Ukrainian alphabet has 26 letters, the same as English.
+    correct: false
+    explanation: The Ukrainian alphabet has 33 letters.
+  - statement: '''У мене є сестра'' is the correct way to say ''I have a sister''
+      in Ukrainian.'
+    correct: true
+    explanation: The pattern 'У мене є + noun' is the standard way to express possession
+      in Ukrainian.
+  - statement: '''Моя'' is used with masculine nouns like ''тато''.'
+    correct: false
+    explanation: '''Мій'' is used with masculine nouns: ''мій тато''. ''Моя'' is used
+      with feminine nouns: ''моя мама''.'
+- type: group-sort
+  instruction: Sort these Ukrainian words by which possessive pronoun they take. Use
+    'мій' for masculine nouns and 'моя' for feminine nouns.
+  groups:
+  - label: мій ___ (masculine)
+    items:
+    - тато
+    - брат
+    - дідусь
+    - інженер
+    - студент
+    - програміст
+  - label: моя ___ (feminine)
+    items:
+    - мама
+    - сестра
+    - бабуся
+    - лікарка
+    - вчителька
+    - студентка
