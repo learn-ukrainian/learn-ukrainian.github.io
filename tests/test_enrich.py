@@ -2,6 +2,7 @@
 
 import re
 import sys
+import typing
 from pathlib import Path
 
 import yaml
@@ -120,10 +121,12 @@ class TestM01EnrichedContent:
             import pytest
             pytest.skip("M01 content/plan not available")
 
+        # Videos are handled by watch-and-repeat activity injection in the workbook,
+        # NOT by enrich into the lesson tab. Verify they are NOT in the lesson content.
         pv = plan.get("pronunciation_videos", {})
         if pv.get("overview") or any(pv.get(k) for k in ("vowels", "consonants", "special", "letters")):
-            assert "YouTubeVideo" in content, (
-                "M01 plan has pronunciation_videos but content has no video embeds"
+            assert "YouTubeVideo" not in content.split("<!-- TAB:Словник -->")[0], (
+                "Videos should not be in lesson tab — they belong in workbook activities"
             )
 
     def test_references_present(self):
@@ -249,7 +252,7 @@ class TestEnrichIntegration:
         result, actions = enrich(content, plan)
 
         assert "slovnyk-table" in actions
-        assert "video-embeds" in actions
+        # video-embeds no longer in enrich — handled by watch-and-repeat activities
         assert "external-resources" in actions
         assert "tab-structure" in actions
 
@@ -286,14 +289,9 @@ class TestEnrichIntegration:
         }
 
         result, _actions = enrich(content, plan)
-        # Video appears in the Урок tab (before Словник tab marker)
-        urok_marker = result.index("<!-- TAB:Урок -->")
-        video_pos = result.index("YouTubeVideo")
-        if "<!-- TAB:Словник -->" in result:
-            slovnyk_marker = result.index("<!-- TAB:Словник -->")
-        else:
-            slovnyk_marker = result.index("<!-- TAB:Зошит -->")
-        assert urok_marker < video_pos < slovnyk_marker
+        # Videos are NOT in the Урок tab — they're handled by workbook activities
+        urok_content = result.split("<!-- TAB:Словник -->")[0] if "<!-- TAB:Словник -->" in result else result.split("<!-- TAB:Зошит -->")[0]
+        assert "YouTubeVideo" not in urok_content, "Videos should not be in lesson tab"
 
     def test_m01_plan_enrichment(self):
         """Test with actual M01 plan data."""
@@ -326,13 +324,12 @@ class TestEnrichIntegration:
         content = "## Звуки і літери\n\nContent.\n\n## Підсумок — Summary\n\nDone."
         result, actions = enrich(content, plan)
 
-        assert len(actions) >= 4  # videos, slovnyk, resources, tabs, workbook
+        assert len(actions) >= 3  # slovnyk, resources, tabs, workbook
         # All 10 required words in table
         assert result.count("| **") >= 10
-        # Video embed
-        assert "ksXIXj7CXwc" in result
-        # Playlist link
-        assert "PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV" in result
+        # Videos NOT in enrich output — handled by workbook activities
+        urok_tab = result.split("<!-- TAB:Словник -->")[0]
+        assert "YouTubeVideo" not in urok_tab
         # References
         assert "ukrainianlessons.com" in result
         # All 4 tabs
@@ -350,7 +347,7 @@ class TestEnrichIntegration:
 class TestMiyklasResourceIntegration:
     """Tests for МійКлас grammar entries injected into _build_resources()."""
 
-    _FAKE_INDEX = [
+    _FAKE_INDEX: typing.ClassVar = [
         {
             "title": "Голосні й приголосні звуки",
             "tags": ["звуки", "голосні", "приголосні", "фонетика"],

@@ -191,7 +191,7 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
         hits.append({
             "score": point.score if hasattr(point, 'score') else 0,
             "chunk_id": chunk_id,
-            "text": payload.get("text", "")[:500],
+            "text": payload.get("text", ""),
             "section_title": payload.get("section_title", ""),
             "grade": payload.get("grade", 0),
             "author": payload.get("author", ""),
@@ -213,7 +213,7 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
             keyword_hits.append({
                 "score": 0,  # placeholder, will be set below
                 "chunk_id": chunk_id,
-                "text": payload.get("text", "")[:500],
+                "text": payload.get("text", ""),
                 "section_title": payload.get("section_title", ""),
                 "grade": payload.get("grade", 0),
                 "author": payload.get("author", ""),
@@ -287,7 +287,7 @@ def search_literary(query: str, work: str | None = None, genre: str | None = Non
         hit = {
             "score": score,
             "chunk_id": payload.get("chunk_id", ""),
-            "text": payload.get("text", "")[:500],
+            "text": payload.get("text", ""),
             "work": payload.get("work", ""),
             "author": payload.get("author", ""),
             "year": payload.get("year", 0),
@@ -296,7 +296,7 @@ def search_literary(query: str, work: str | None = None, genre: str | None = Non
             "source_url": payload.get("source_url", ""),
         }
         if payload.get("original_text"):
-            hit["original_text"] = payload["original_text"][:300]
+            hit["original_text"] = payload["original_text"]
         return hit
 
     seen_ids = set()

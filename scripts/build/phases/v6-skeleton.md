@@ -49,7 +49,7 @@ Be SPECIFIC about what each paragraph covers — not "explain grammar" but "expl
 ...
 
 ## {SUMMARY_HEADING} (~150 words)
-- P1 (~150 words): [recap key concepts, encourage practice]
+- P1 (~150 words): [Follow the plan's points for this section EXACTLY. If the plan says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan says "recap", write a brief recap.]
 
 Grand total: ~{WORD_TARGET} words
 </skeleton>

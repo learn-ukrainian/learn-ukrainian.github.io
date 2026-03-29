@@ -42,25 +42,21 @@ content_outline:
     (house). Listen to Anna''s pronunciation videos for each — the difference is subtle
     but changes meaning.'
 - section: Читання слів (Reading Words)
-  words: 300
+  words: 500
   points:
   - 'Apply M01 letter knowledge to read real words fluently. Strategy: don''t read
     letter-by-letter. Read syllable-by-syllable. Start with the vowels (find them
     first), then build outward. Example: книга — find vowels И, А → кни-га → read.'
   - 'Common word patterns for reading practice: CVCV: мама, тато, каша, вода, рука,
     хата, коза, нога CVCCV: школа, книга, банда, парта CVC: дім, сон, ліс, дуб, хліб,
-    банк The more patterns you see, the faster you read.'
-  - 'Special letter combinations to watch for: Щ is always [шч] — що, ще, щастя. Ь
-    has no sound — it softens: день, сіль, кінь. '' (apostrophe) separates: сім''я,
+    банк. The more patterns you see, the faster you read.'
+  - 'Progressive difficulty — start simple, build up: Level 1 (2 syllables):
+    мама, тато, вода, рука, хата, каша. Level 2 (3 syllables): аптека, молоко, людина,
+    вулиця. Level 3 (4+ syllables): університет, бібліотека, фотографія.
+    Ukrainian city names: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва.'
+  - 'Special letter combinations to watch for (preview for M03): Щ is always [шч] — що, ще.
+    Ь has no sound — it softens: день, сіль, кінь. Apostrophe separates: сім''я,
     м''ясо, п''ять. These will be explored fully in M03.'
-- section: Читаємо разом (Reading Together)
-  words: 200
-  points:
-  - 'Progressive reading practice — start simple, build up: Level 1 (2 syllables):
-    мама, тато, вода, рука, хата, каша Level 2 (3 syllables): аптека, молоко, людина,
-    вулиця Level 3 (4+ syllables): університет, бібліотека, фотографія'
-  - 'Reading a simple text (all Це + noun, no verbs): Це Київ. Це столиця. Тут аптека
-    і банк. Там школа. Що це? Це кафе. А це пошта.'
 - section: Підсумок — Summary
   words: 150
   points:

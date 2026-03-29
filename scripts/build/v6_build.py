@@ -543,14 +543,25 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
     ok, raw = _dispatch(
         prompt, agent=agent, phase="pre-verify", orch_dir=orch_dir,
-        timeout=300,
+        timeout=600,
         mcp_tools=True,
         allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
         model=family.fast,  # Fast model sufficient — structured output, not creative
     )
 
+    # Retry once on timeout — pre-verify is critical for grounding the writer
     if not ok or not raw:
-        _log("  ❌ Pre-verify returned no output")
+        _log("  ⚠️  Pre-verify failed — retrying once (timeout=600s)")
+        ok, raw = _dispatch(
+            prompt, agent=agent, phase="pre-verify-retry", orch_dir=orch_dir,
+            timeout=600,
+            mcp_tools=True,
+            allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
+            model=family.fast,
+        )
+
+    if not ok or not raw:
+        _log("  ❌ Pre-verify returned no output after retry")
         return None
 
     # Extract <verification> block
@@ -1754,7 +1765,26 @@ def _post_process_content(content_path: Path) -> int:
             text = new_text
             _log(f"  🔧 Stripped {video_count} writer-generated YouTube embeds (ENRICH handles videos)")
 
-    # 7. Strip stray single quotes from exercise DSL values
+    # 7. Strip motivational closers — LLMs consistently produce these despite prompting
+    motivational_patterns = [
+        r"By mastering these[^.]*\.",
+        r"You have successfully[^.]*\.",
+        r"Your journey[^.]*has officially begun[^.]*\.",
+        r"You now have the (?:foundational )?tools[^.]*\.",
+        r"you have laid the groundwork[^.]*\.",
+        r"you are (?:now )?ready to[^.]*\.",
+    ]
+    for pat in motivational_patterns:
+        new_text = re.sub(pat, "", text, flags=re.IGNORECASE)
+        if new_text != text:
+            fixes += 1
+            text = new_text
+            _log(f"  🔧 Stripped motivational closer: {pat[:40]}...")
+
+    # Clean up double blank lines from stripped content
+    text = re.sub(r'\n{3,}', '\n\n', text)
+
+    # 8. Strip stray single quotes from exercise DSL values
     # LLMs sometimes produce: q: "'text'" or answer: "'word'"
     stray_quote_pattern = re.compile(
         r'''((?:q|answer|sentence|left|right|statement|name):\s*")'([^"]*)'("?)'''
@@ -2673,14 +2703,24 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
         stats, not_found, _ = _run_vesum_verify(content_path)
         vesum_hits = stats.get("vesum_hits", 0)
         total = stats.get("total", 0)
-        # Filter proper nouns and phonetic fragments
-        _phonetic_fragments = {"йа", "йе", "йі", "йу", "шч", "ка", "пт", "пте", "дж", "дз"}
+        # Filter proper nouns and whitelisted words (all modules)
         real_not_found = [
             r for r in not_found
             if not (r.get("original", "")[0:1].isupper() and r.get("source") == "prose")
-            and r.get("original", "").lower() not in _phonetic_fragments
             and r.get("original", "").lower() not in whitelist
         ]
+
+        # A1 phonetics phase (M01-M03): also skip single letters, phonetic fragments,
+        # and syllable parts that appear in letter/sound teaching content.
+        if level == "a1" and module_num <= 3:
+            _UKRAINIAN_LETTERS = set("абвгґдежзиійклмнопрстуфхцчшщьюяєї")
+            _phonetic_fragments = {"йа", "йе", "йі", "йу", "шч", "дж", "дз"}
+            real_not_found = [
+                r for r in real_not_found
+                if r.get("original", "").lower() not in _UKRAINIAN_LETTERS
+                and r.get("original", "").lower() not in _phonetic_fragments
+                and len(r.get("original", "")) >= 3  # Skip 1-2 char syllable parts
+            ]
         if real_not_found:
             _log(f"  ⚠️  VESUM: {len(real_not_found)} word(s) not found:")
             for r in real_not_found[:5]:
@@ -2848,13 +2888,32 @@ def step_review(content_path: Path, level: str, module_num: int,
     plan = yaml.safe_load(plan_content) if plan_content else {}
     raw_content = content_path.read_text("utf-8")
 
-    # Strip enrichment (tabs, словník, workbook, resources) before review.
+    # Strip enrichment (tabs, словník, workbook, resources, videos) before review.
     # The reviewer should evaluate the WRITER's prose, not ENRICH-generated content.
     generated_content = raw_content
     tab_marker = generated_content.find("<!-- TAB:Словник -->")
     if tab_marker != -1:
         generated_content = generated_content[:tab_marker].strip()
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
+
+    # Strip video embeds injected by ENRICH — reviewer must not see/score these
+    # Covers: <YouTubeVideo ... />, ### Відео — Video sections, video sub-headers
+    generated_content = re.sub(
+        r'<YouTubeVideo[^/]*/>\s*', '', generated_content,
+    )
+    generated_content = re.sub(
+        r'\[Повний плейлист / Full playlist\]\([^)]*\)\s*', '', generated_content,
+    )
+    # Strip the entire "### Відео — Video" section if present (header + content until next ##)
+    generated_content = re.sub(
+        r'###\s*Відео\s*—\s*Video.*?(?=\n##\s|\Z)', '', generated_content, flags=re.DOTALL,
+    )
+    # Strip leftover video sub-headers (#### Голосні — Vowels, etc.)
+    generated_content = re.sub(
+        r'####\s*(Голосні|Приголосні|Спеціальні)\s*—\s*\w+\s*\n?', '', generated_content,
+    )
+    # Clean up multiple blank lines left by stripping
+    generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
     # Inject deterministic word count so reviewer doesn't guess
     prose_words = len(re.sub(r":::.*?:::", "", generated_content, flags=re.DOTALL).split())
@@ -3105,7 +3164,13 @@ def _parse_review_fixes(review_text: str) -> list[dict]:
 
     Returns list of dicts with 'find' and 'replace' keys.
     """
-    match = re.search(r"<fixes>\s*\n(.*?)</fixes>", review_text, re.DOTALL)
+    # Strip markdown code fences that Gemini sometimes wraps around the review
+    text = review_text
+    if text.strip().startswith("```"):
+        text = re.sub(r"^```\w*\n?", "", text.strip())
+        text = re.sub(r"\n?```\s*$", "", text)
+
+    match = re.search(r"<fixes>\s*\n(.*?)</fixes>", text, re.DOTALL)
     if not match:
         return []
 
@@ -3338,21 +3403,25 @@ claims, grammar rules, or cultural facts that aren't here.
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
+    # Backup content before rewrite — restore if validation fails
+    backup_content = content_path.read_text("utf-8")
+
     # Rewrite with same family as writer (it wrote the content, can fix it)
     if "claude" in writer:
         ok, raw = _dispatch(
             prompt, agent="claude-tools", phase="section-rewrite",
-            orch_dir=orch_dir, timeout=300,
+            orch_dir=orch_dir, timeout=600,
             mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
         )
     else:
         ok, raw = _dispatch(
             prompt, agent="gemini-tools", phase="section-rewrite",
-            orch_dir=orch_dir, timeout=300, mcp_tools=True,
+            orch_dir=orch_dir, timeout=600, mcp_tools=True,
         )
 
     if not ok or not raw:
-        _log("  ❌ Section rewrite failed — no output")
+        _log("  ❌ Section rewrite failed — no output, keeping original")
+        content_path.write_text(backup_content, "utf-8")
         return False
 
     # Strip any preamble/changes table before first ## heading
@@ -3369,14 +3438,16 @@ claims, grammar rules, or cultural facts that aren't here.
     original_h2s = re.findall(r"^## .+", body, re.MULTILINE)
     rewrite_h2s = re.findall(r"^## .+", raw, re.MULTILINE)
     if len(rewrite_h2s) != len(original_h2s):  # Gemini review: must be exact, plans are immutable
-        _log(f"  ❌ Rewrite dropped sections ({len(original_h2s)} → {len(rewrite_h2s)}), rejecting")
+        _log(f"  ❌ Rewrite dropped sections ({len(original_h2s)} → {len(rewrite_h2s)}), rejecting — restoring original")
+        content_path.write_text(backup_content, "utf-8")
         return False
 
-    # Validate: word count (reject if <70% of original — means it was truncated)
+    # Validate: word count (reject if <90% of original — means it was truncated)
     rewrite_words = len(raw.split())
     min_words = int(original_word_count * 0.9)  # Gemini review: 70% was too lenient
     if rewrite_words < min_words:
-        _log(f"  ❌ Rewrite too short ({rewrite_words} words, need ≥{min_words}), rejecting")
+        _log(f"  ❌ Rewrite too short ({rewrite_words} words, need ≥{min_words}), rejecting — restoring original")
+        content_path.write_text(backup_content, "utf-8")
         return False
 
     # Write the rewritten content + preserved tail (Словник, Ресурси tabs)
@@ -3941,21 +4012,21 @@ def main():
         )
         _save_v6_state(args.level, slug, "review")
 
-        # Fix strategy: <fixes> first (targeted), section rewrite as fallback.
-        # The reviewer outputs exact find/replace pairs in <fixes> blocks.
-        # These are precise and preserve surrounding text. Section rewriting
-        # is a last resort — it risks introducing new errors.
-        if passed:
-            _log(f"\n✅ Review PASSED ({score}/10)")
-        elif not passed:
+        # Fix strategy:
+        # 1. If PASSED → apply any <fixes> anyway (minor improvements), done.
+        # 2. If score ≥ 9.0 → apply <fixes>, done (no re-review, avoids degradation).
+        # 3. If score < 9.0 → apply <fixes>, re-review. If still failing, section rewrite + re-review.
+        # 4. GUARANTEE: before leaving this block, ALWAYS apply the latest review's <fixes>.
+        #    No review fix is ever left unapplied.
+
+        if not passed and score < 9.0:
             # Step 1: Try applying reviewer's <fixes> (deterministic find/replace)
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
             if fixes_applied:
-                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-enriching")
+                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-enriching + re-reviewing")
                 step_enrich(content_path, args.level, slug)
                 step_verify(content_path, args.level, args.module)
 
-                # Re-review after fixes
                 passed, score, review_text = step_review(
                     content_path, args.level, args.module, slug,
                     writer=args.writer, reviewer_override=args.reviewer,
@@ -3965,8 +4036,8 @@ def main():
                 if passed:
                     _log(f"\n✅ Review PASSED after fixes ({score}/10)")
 
-            # Step 2: If fixes didn't resolve or weren't available, try section rewrite (max 1 round)
-            if not passed:
+            # Step 2: If still failing, try section rewrite (max 1 round)
+            if not passed and score < 9.0:
                 _log(f"\n🔧 Review {score}/10 — section rewrite (fallback)")
 
                 rewritten = _rewrite_weak_sections(
@@ -3988,9 +4059,30 @@ def main():
                     if passed:
                         _log(f"\n✅ Review PASSED after section rewrite ({score}/10)")
                     else:
-                        _log(f"\n⚠️  Review {score}/10 after section rewrite — accepting as final")
+                        _log(f"\n⚠️  Review {score}/10 after section rewrite")
                 else:
-                    _log(f"\n⚠️  Section rewrite produced no changes — accepting as final ({score}/10)")
+                    _log(f"\n⚠️  Section rewrite produced no changes ({score}/10)")
+
+        # GUARANTEE: Always apply the latest review's <fixes> before accepting.
+        # This catches typos, tone issues, and minor fixes from ANY review round.
+        # Even PASSED reviews may have minor <fixes> worth applying.
+        latest_fixes = _parse_review_fixes(review_text)
+        total_fixes = len(latest_fixes) if latest_fixes else 0
+        if total_fixes > 0:
+            final_applied, final_count = _apply_review_fixes(review_text, content_path)
+            if final_applied:
+                _log(f"\n🔧 Final fix pass: applied {final_count}/{total_fixes} fix(es) from latest review")
+                step_enrich(content_path, args.level, slug)
+            else:
+                _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
+
+        # Log final status
+        if passed:
+            _log(f"\n✅ Review PASSED ({score}/10)")
+        elif score >= 9.0:
+            _log(f"\n✅ Score {score}/10 ≥ 9.0 — accepting")
+        else:
+            _log(f"\n⚠️  Score {score}/10 — accepting as final (fix rounds exhausted)")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs

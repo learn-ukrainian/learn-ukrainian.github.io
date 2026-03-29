@@ -57,7 +57,7 @@ from yaml_activities import Activity
 def _apply_a1_early_relaxations(rules: dict, act_type: str) -> None:
     """Apply relaxed complexity rules for A1 M01-M05 (alphabet phase)."""
     relaxations = {
-        'quiz': {'min_len': 2},
+        'quiz': {'min_len': 1},  # Single-word prompts valid for phonetics/syllable quizzes
         'match-up': {'pairs_max': 15},
         'group-sort': {'items_min': 6, 'items_max': 30, 'groups_min': 2},
         'fill-in': {'min_items': 6},

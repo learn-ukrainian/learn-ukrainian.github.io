@@ -664,19 +664,9 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
 
     # 3. Build tab content
     slovnyk = _build_slovnyk(plan, content, slug=slug)
-    videos = _build_video_embeds(plan)
     resources = _build_resources(plan, slug=slug)
 
-    # 4. Insert inline videos into the prose (Урок tab)
-    # Videos go right before Summary if it exists, otherwise at end of prose
-    if videos:
-        summary_match = re.search(r"^(## (?:Підсумок|Summary))", content, re.MULTILINE)
-        video_section = f"\n### Відео — Video\n\n{videos}\n"
-        if summary_match:
-            content = content[:summary_match.start()] + video_section + "\n" + content[summary_match.start():]
-        else:
-            content = content.rstrip() + "\n" + video_section
-        actions.append("video-embeds")
+    # 4. Videos handled by watch-and-repeat activity injection — not by enrich.
 
     # 5. Assemble with tab markers
     parts = []
@@ -691,7 +681,8 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         parts.append(slovnyk.strip())
         actions.append("slovnyk-table")
 
-    # Tab 3: Зошит (Coming soon)
+    # Tab 3: Зошит (workbook — extended exercises + watch-and-repeat activities)
+    # Videos are handled by watch-and-repeat activity injection, not here.
     parts.append("\n<!-- TAB:Зошит -->")
     parts.append(
         ":::note\n"

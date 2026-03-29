@@ -1,0 +1,24 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "батько",
+      "гарно",
+      "дев'ять",
+      "день",
+      "комп'ютер",
+      "м'який",
+      "м'ясо",
+      "п'ять",
+      "риба",
+      "сіль",
+      "сім'я",
+      "учитель"
+    ]
+  },
+  "all_grounded": true
+}

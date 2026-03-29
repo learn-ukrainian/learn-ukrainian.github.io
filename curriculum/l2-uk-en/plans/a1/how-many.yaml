@@ -18,9 +18,10 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — At a market stall: — Скільки коштує ця сумка? — Двісті гривень.
-    — А ця? — Сто п''ятдесят. — Добре, я беру цю. (Accusative ''цю'' as chunk — no
-    grammar.) Numbers emerge through real shopping context.'
+  - 'Dialogue 1 — At a market stall: — Скільки коштує сумка? — Двісті гривень.
+    — А маленька? — Сто п''ятдесят. — Добре, дякую!
+    Numbers emerge through real shopping context. Uses only vocabulary from M08-M10
+    (gender, adjectives, colors). Demonstratives (ця/та) come in M12.'
   - 'Dialogue 2 — Meeting someone new (extending M05): — Скільки тобі років? — Мені
     двадцять п''ять. А тобі? — Мені тридцять два. А твоя сестра? — Їй вісімнадцять.
     Age formula as chunk: Мені/тобі/їй + number + років/роки/рік.'

@@ -39,21 +39,22 @@ content_outline:
   points:
   - 'Consonants come in voiced-voiceless pairs. Hand on throat test: vibration = voiced.
     Pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.'
-  - 'Critical difference from Russian: Ukrainian does NOT devoice consonants at word
-    end. дуб is [дуб], NOT *[дуп]. мороз is [мороз], NOT *[морос]. This is authentic
-    Ukrainian.'
+  - 'Ukrainian pronounces voiced consonants clearly at word end — дуб is [дуб], мороз is
+    [мороз]. Every consonant keeps its true sound in every position. This is a defining
+    feature of Ukrainian phonetics.'
   - 'Minimal pairs for ear training: балка (beam) vs палка (stick), коза (goat) vs
     коса (braid).'
-- section: Важкі звуки (Tricky Sounds)
+- section: Вимова українських звуків (Pronouncing Ukrainian Sounds)
   words: 250
   points:
-  - 'И — not English ''ee'' or ''i''. Between them. Smile for ''ee'' but pull tongue
-    back slightly. Practice: бик, лист, зима, тихо, синій.'
-  - 'Г — voiced glottal fricative [ɦ]. NOT Russian hard [g]. Like saying ''h'' but
-    with voice. Words: гарно, гори, голова. Ґ = hard [g], only in: ґанок, ґудзик,
-    ґречний.'
-  - 'Р — rolled/trilled, like Spanish. Practice: рука, робота, ранок, риба. Even imperfect
-    Р is understood — don''t stress about it.'
+  - 'И [и] — a unique Ukrainian vowel. It is NOT the same as І [і]. Minimal pairs to hear
+    the difference: бик (bull) vs бік (side), дим (smoke) vs дім (house), лист (letter/leaf)
+    vs ліс (forest), кит (whale) vs кіт (cat). Practice with Anna Ohoiko''s И video.'
+  - 'Г [ɦ] vs Ґ [g] — two different letters, two different sounds. Г is a soft voiced sound
+    (гарно, гора, голова). Ґ is a hard sound (ґанок, ґудзик). Ґ is uniquely
+    Ukrainian — an important part of Ukrainian phonetic identity.'
+  - 'Р [р] — the Ukrainian rolled/trilled Р. Practice with Anna Ohoiko''s video: рука, робота,
+    ранок, риба. An imperfect Р is always understood — focus on getting comfortable, not perfect.'
 - section: Підсумок — Summary
   words: 200
   points:

@@ -1,0 +1,15 @@
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T14:14:13.020791+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-28T14:20:30.585234+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T14:24:04.473074+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T19:10:17.521150+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-28T20:29:39.957147+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "WRITE_FAILED", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-03-28T20:33:59.563382+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 3, "model": "claude", "success": true, "timestamp": "2026-03-28T20:35:27.501822+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T20:53:15.456425+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-28T21:30:27.940874+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T21:31:58.029374+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T22:13:26.554624+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T23:07:20.557554+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T23:33:37.763102+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T00:04:17.149509+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T00:26:49.379096+00:00"}

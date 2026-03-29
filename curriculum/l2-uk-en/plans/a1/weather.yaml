@@ -75,14 +75,14 @@ activity_hints:
 - type: match-up
   focus: Match the weather phrase to its logical context or season
   pairs:
-  - іде дощ ↔ потрібна парасолька (umbrella)
+  - іде дощ ↔ холодно і мокро
   - іде сніг ↔ зима
   - світить сонце ↔ сонячно
-  - дме вітер ↔ дерева шумлять (trees rustle)
+  - дме вітер ↔ прохолодно
   - мінус десять ↔ холодно
   - плюс тридцять ↔ спекотно
   - плюс двадцять ↔ тепло
-  - сіре небо ↔ хмарно
+  - хмарно ↔ сонце не світить
 - type: fill-in
   focus: Choose the logical weather for the season
   items:

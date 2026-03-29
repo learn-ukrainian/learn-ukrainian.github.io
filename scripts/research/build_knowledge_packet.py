@@ -130,9 +130,17 @@ def _format_result(result: dict) -> str:
         if junk in text:
             text = text[:text.index(junk)].rstrip()
 
-    # Truncate — keep excerpts concise for the 8K prompt budget
-    if len(text) > 350:
-        text = text[:350] + "..."
+    # Truncate at sentence boundary — keep excerpts useful
+    # Average chunk is 1400 chars; show up to 800 to preserve pedagogical content
+    if len(text) > 800:
+        # Find last sentence-ending punctuation before 800 chars
+        for end_char in [". ", ".\n", "? ", "!\n"]:
+            last_end = text[:800].rfind(end_char)
+            if last_end > 300:  # Don't truncate too aggressively
+                text = text[:last_end + 1]
+                break
+        else:
+            text = text[:800] + "..."
 
     lines = []
     lines.append(f"> **Source:** {author}, Grade {grade}")
@@ -210,14 +218,29 @@ def _match_miyklas_urls(plan: dict) -> list[dict]:
 def _fetch_miyklas_theory(plan: dict) -> list[str]:
     """Fetch МійКлас theory pages matching the plan's topics.
 
-    Uses WebFetch to get content. Returns formatted markdown lines.
+    Uses lightpanda headless browser for JS-rendered content.
+    Falls back to link-only if lightpanda is not available.
     Issue: #1040
     """
-    import urllib.request
+    import shutil
+    import subprocess
 
     matched = _match_miyklas_urls(plan)
     if not matched:
         return []
+
+    lightpanda_bin = shutil.which("lightpanda")
+    if not lightpanda_bin:
+        logger.warning("lightpanda not found — МійКлас content will be link-only")
+        lines: list[str] = []
+        for lesson in matched:
+            title = lesson.get("title", "Unknown")
+            url = lesson["full_url"]
+            lines.append(f"### {title}")
+            lines.append(f"> **Source:** МійКлас — [{title}]({url})")
+            lines.append("*(lightpanda not installed — install with: brew or binary download)*")
+            lines.append("")
+        return lines
 
     lines: list[str] = []
     for lesson in matched:
@@ -225,42 +248,94 @@ def _fetch_miyklas_theory(plan: dict) -> list[str]:
         title = lesson.get("title", "Unknown")
 
         try:
-            # Simple HTML fetch + extract text (no LLM needed for theory pages)
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                html = resp.read().decode("utf-8", errors="replace")
+            # Step 1: Fetch the topic index page to find the first theory sub-page
+            result = subprocess.run(
+                [lightpanda_bin, "fetch", "--dump", "markdown",
+                 "--wait-until", "networkidle", "--wait-ms", "5000",
+                 "--strip-mode", "ui,css", url],
+                capture_output=True, text=True, timeout=30,
+            )
+            if result.returncode != 0 or not result.stdout:
+                raise RuntimeError(f"lightpanda exit {result.returncode}")
 
-            # Extract main content (rough but functional — theory is in article/main)
-            # Strip HTML tags for a text-only version
-            text = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
-            text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
-            text = re.sub(r'<[^>]+>', ' ', text)
-            text = re.sub(r'\s+', ' ', text).strip()
+            # Find the first theory sub-page link (contains /re- in the URL)
+            theory_url = None
+            for match in re.finditer(r'\((https://www\.miyklas\.com\.ua/[^)]+/re-[^)]+)\)', result.stdout):
+                theory_url = match.group(1)
+                break
 
-            # Clean HTML entities
-            import html as html_mod
-            text = html_mod.unescape(text)
+            if not theory_url:
+                raise RuntimeError("No theory sub-page found on index page")
 
-            # Strip junk (navigation, copyright, exercise lists)
+            # Step 2: Fetch the actual theory content page
+            result = subprocess.run(
+                [lightpanda_bin, "fetch", "--dump", "markdown",
+                 "--wait-until", "networkidle", "--wait-ms", "5000",
+                 "--strip-mode", "ui,css", theory_url],
+                capture_output=True, text=True, timeout=30,
+            )
+            if result.returncode != 0 or not result.stdout:
+                raise RuntimeError(f"lightpanda exit {result.returncode} on theory page")
+
+            text = result.stdout
+
+            # Find theory section start FIRST — then strip junk only after it
+            theory_start = -1
+            for marker in ["### Теорія", "Теорія:", "# 1.", f"# {title[:30]}"]:
+                pos = text.find(marker)
+                if pos >= 0:
+                    theory_start = pos
+                    break
+            if theory_start < 0:
+                theory_start = len(text) // 3  # Skip nav, take middle
+
+            chunk = text[theory_start:]
+
+            # Strip trailing junk AFTER extracting the theory chunk
             for junk in ["Copyright ©", "Відправити відгук", "Знайшли помилку?",
                          "Попередня тема", "Наступна тема", "Усі теми",
-                         "Матеріали для вчителів", "Додаткові завдання (Мій+)"]:
-                if junk in text:
-                    text = text[:text.index(junk)].rstrip()
+                         "Додаткові завдання"]:
+                if junk in chunk:
+                    chunk = chunk[:chunk.index(junk)].rstrip()
 
-            # Extract theory section (first 400 chars after the title — concise for prompt budget)
-            title_pos = text.lower().find(title[:20].lower())
-            chunk = text[title_pos:title_pos + 400] if title_pos > 0 else text[500:900]
+            # Strip navigation lines (links with empty text, menu items)
+            chunk_lines = []
+            for line in chunk.split("\n"):
+                # Skip lines that are pure navigation: empty links, menu items, image refs
+                if re.match(r'^\s*\(\[?\]\(', line):
+                    continue
+                if re.match(r'^\s*!\[', line):
+                    continue
+                if re.match(r'^\s*\*\*\s*$', line):
+                    continue
+                if any(nav in line for nav in ["МійВчитель", "Початок", "Вебінари",
+                       "Новини сайту", "Пошук на сайті", "Оновлення", "cdn.miyklas"]):
+                    continue
+                chunk_lines.append(line)
+            chunk = "\n".join(chunk_lines)
 
-            # Strip exercise listings (Складність: ... N)
+            # Strip remaining markdown links and images but keep text
+            chunk = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', chunk)
+            chunk = re.sub(r'!\[[^\]]*\]\([^)]*\)', '', chunk)
+            # Strip exercise listings
             chunk = re.sub(r'Складність:\s*\w+\s*\d+', '', chunk)
-            chunk = re.sub(r'\s+', ' ', chunk).strip()
+            chunk = re.sub(r'\n{3,}', '\n\n', chunk).strip()
+
+            # Truncate at sentence boundary — keep it useful but concise
+            if len(chunk) > 800:
+                for end_char in [". ", ".\n", "? ", "!\n"]:
+                    last_end = chunk[:800].rfind(end_char)
+                    if last_end > 300:
+                        chunk = chunk[:last_end + 1]
+                        break
+                else:
+                    chunk = chunk[:800] + "..."
 
             if len(chunk) > 100:
                 lines.append(f"### {title}")
                 lines.append(f"> **Source:** МійКлас — [{title}]({url})")
                 lines.append("")
-                lines.append(chunk[:400])  # Concise for prompt budget
+                lines.append(chunk)
                 lines.append("")
             else:
                 lines.append(f"### {title}")
@@ -270,7 +345,6 @@ def _fetch_miyklas_theory(plan: dict) -> list[str]:
 
         except Exception as e:
             logger.warning("МійКлас fetch failed for %s: %s", url, e)
-            # Still add the link even if fetch fails
             lines.append(f"### {title}")
             lines.append(f"> **Source:** МійКлас — [{title}]({url})")
             lines.append(f"*(Fetch failed: {e})*")
@@ -336,11 +410,16 @@ def build_packet(plan_path: Path) -> str:
             lines.append("")
             continue
 
-        # Cap total excerpts to keep packet under 8K chars for the write prompt
-        MAX_EXCERPTS = 8
-        remaining_budget = max(0, MAX_EXCERPTS - total_results)
-        per_section = min(2, remaining_budget)
-        if per_section <= 0:
+        # Budget: guarantee every section gets at least 2 excerpts.
+        # Total cap = 20 excerpts (~10K chars). Each section gets 2-3.
+        MAX_EXCERPTS = 20
+        n_sections = len([s for s in sections if isinstance(s, dict)])
+        remaining_sections = max(1, n_sections - sections.index(section))
+        # Reserve 2 per remaining section, give this section up to 3
+        reserved = 2 * (remaining_sections - 1)
+        available = max(0, MAX_EXCERPTS - total_results - reserved)
+        per_section = min(3, max(2, available))
+        if total_results >= MAX_EXCERPTS:
             lines.append("*(Budget reached — see excerpts in earlier sections)*")
             lines.append("")
             continue

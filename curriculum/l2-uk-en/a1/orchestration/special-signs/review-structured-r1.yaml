@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text covers all points from the plan and uses all required vocabulary.
+    However, it placed an activity combining Ь and apostrophe before teaching the
+    apostrophe.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'There are semantically nonsensical dialogue lines: "Що це? Це день."
+    and "А це гора? Так, дуже гарно." The phonetic rules are accurately described.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Teaching is clear and progressive, but testing learners on the apostrophe
+    before it is introduced breaks the pedagogical progression.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (сім'я, день, сіль, м'ясо, п'ять, гарно, риба) and recommended
+    words are included naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The exercises match the plan, but `fill-in-missing-sign` (testing both
+    Ь and apostrophe) is placed too early, violating the rule against testing concepts
+    before they are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: The text contains meta-commentary explicitly forbidden by the prompt ("Let
+    us look at how this works...", "Now, meet its exact opposite...", "Now we must
+    look closely...").
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All H2 headings from the plan are present. No stray tags. Word count comfortably
+    exceeds the minimum target. Minor deduction for meta-commentary padding.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Phonetic comparisons emphasize Ukrainian's unique phonetic identity (e.g.,
+    non-devoicing, Г vs Ґ) properly without relying on Russian comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: Dialogues are robotic and semantically broken in a couple of places. "Що
+    це? Це день." and "А це гора? Так, дуже гарно." are unnatural.
+findings: []

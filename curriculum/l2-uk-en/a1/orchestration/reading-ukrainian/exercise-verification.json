@@ -1,0 +1,23 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 11,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "бібліотека",
+      "вулиця",
+      "каша",
+      "людина",
+      "молоко",
+      "пісня",
+      "столиця",
+      "університет",
+      "фотографія",
+      "шоколад",
+      "яблуко"
+    ]
+  },
+  "all_grounded": true
+}

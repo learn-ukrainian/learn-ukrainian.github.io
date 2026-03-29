@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all outline points, integrates Bolshakova references, and explains
+    the Open Syllable principle and Lego method correctly.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Zero Russianisms or Surzhyk. Accurately explains Ukrainian phonetic rules
+    (И vs І, Iotated vowels).
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear progression from syllables to vowels to reading words. The explanation
+    of "відкритий склад" is excellent.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    embedded in the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'DEDUCT: There is an extra `quiz` marker before the "Читання слів" section,
+    breaking the 1-to-1 mapping with the plan''s 4 activity hints.'
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: 'DEDUCT: The text is filled with corporate-speak ("immediate practice",
+    "foundational concept") and meta-commentary ("Let us look at...", "Before you
+    start memorizing..."). It tells rather than shows ('
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Proper H2 headings, correct markdown formatting, and clear sections matching
+    the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of authentic Ukrainian reading strategies ("звуковий
+    аналіз") used by native children.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: 'DEDUCT: The dialogue under "Читання слів" is extremely robotic and transactional
+    ("Де університет? Університет тут. Де бібліотека? Бібліотека там.").'
+findings: []

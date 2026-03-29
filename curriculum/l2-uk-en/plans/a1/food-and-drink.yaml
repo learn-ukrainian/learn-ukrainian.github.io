@@ -80,6 +80,13 @@ vocabulary_hints:
   - сметана (sour cream, f)
   - компот (compote, m)
   - курка (chicken, f)
+  - салат (salad, m)
+  - піца (pizza, f)
+  - помідор (tomato, m)
+  - огірок (cucumber, m)
+  - яблуко (apple, n)
+  - банан (banana, m)
+  - лимон (lemon, m)
 activity_hints:
 - type: match-up
   focus: Match Ukrainian food and drink words to English

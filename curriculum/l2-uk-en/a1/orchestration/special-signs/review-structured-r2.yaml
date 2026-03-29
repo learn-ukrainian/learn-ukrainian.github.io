@@ -1,0 +1,47 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The writer missed the `fill-in` activity marker entirely. Used "лис" instead
+    of the planned "лист" for the minimal pair.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Incorrect terminology ("м'якшені" instead of "м'які"). Semantic error
+    in dialogue ("Так, дуже гарно" responding to "А це гора?").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent physical descriptions of pronunciation (e.g., "Hand flat against
+    the front of your throat").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is integrated naturally
+    into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: The plan requires 4 activities, but only 3 markers are present in the
+    text. The `fill-in` activity is missing.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: The text relies on meta-commentary ("You have just seen how...", "To truly
+    understand why...") which breaks immersion and "tells instead of shows".
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headers match the outline perfectly. Clean Markdown structure.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strongly emphasizes Ukrainian phonetic identity (Г vs Ґ, non-devoicing)
+    without centering Russian comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: Dialogues are highly stilted and contain semantic mismatches (e.g., responding
+    "Yes, very nicely" to a question about a mountain).
+findings: []

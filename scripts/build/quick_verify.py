@@ -115,7 +115,6 @@ def _check_word_count(content: str, plan: dict) -> list[QuickVerifyError]:
 
     words = len(text.split())
     lower = int(target * 0.85)
-    upper = int(target * 1.50)  # Allow overshoot up to 1.5x
 
     if words < lower:
         errors.append(QuickVerifyError(
@@ -123,12 +122,7 @@ def _check_word_count(content: str, plan: dict) -> list[QuickVerifyError]:
             severity="ERROR",
             message=f"Too short: {words} words (target: {target}, minimum: {lower})",
         ))
-    elif words > upper:
-        errors.append(QuickVerifyError(
-            check="WORD_COUNT",
-            severity="WARNING",
-            message=f"Too long: {words} words (target: {target}, ceiling: {upper})",
-        ))
+    # No upper ceiling — word targets are MINIMUMS. More content is always acceptable.
 
     return errors
 

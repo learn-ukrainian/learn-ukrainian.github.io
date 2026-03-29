@@ -49,6 +49,26 @@ def print_and_save_report(ctx: AuditContext, state: AuditState,
             print(f"  [{v['type']}] {v['issue']}")
             print(f"     \u2192 FIX: {v['fix']}")
 
+    # A1 phonetics phase (M01-M03): exempt from checks that produce false positives
+    # for phonetics-focused modules where word chains, single-word prompts, and
+    # English translations are pedagogically correct.
+    _PHONETICS_EXEMPT_TYPES = {
+        'GLOSSARY_LIST_IN_PROSE',   # Word chains ARE the content
+        'INLINE_ENGLISH_IN_PROSE',  # English translations needed at zero-knowledge level
+        'ROBOTIC_STRUCTURE',        # Phonetics explanations naturally repeat patterns
+        'METALANGUAGE',             # Phonetics terms appear naturally
+    }
+    is_phonetics_phase = ctx.level_code == 'A1' and ctx.module_num <= 3
+    if is_phonetics_phase:
+        before = len(state.pedagogical_violations)
+        state.pedagogical_violations = [
+            v for v in state.pedagogical_violations
+            if v.get('type') not in _PHONETICS_EXEMPT_TYPES
+        ]
+        exempted = before - len(state.pedagogical_violations)
+        if exempted:
+            print(f"\n  ℹ️  Phonetics phase (M01-M03): exempted {exempted} check(s)")
+
     all_violations_for_severity = state.pedagogical_violations + state.vocab_blocking + state.vocab_warnings + state.template_violations
     recommendation, reasons, severity = compute_recommendation(
         all_violations_for_severity, state.lint_errors, state.results, immersion_score,

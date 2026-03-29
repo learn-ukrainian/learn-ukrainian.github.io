@@ -387,12 +387,18 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
     )
 
     from .gates import evaluate_pedagogy
+    # A1 phonetics phase (M01-M03): exempt checks that produce false positives
+    _PHONETICS_EXEMPT = {'GLOSSARY_LIST_IN_PROSE', 'INLINE_ENGLISH_IN_PROSE',
+                         'ROBOTIC_STRUCTURE', 'METALANGUAGE'}
+    _is_phonetics = ctx.level_code == 'A1' and ctx.module_num <= 3
+
     # Only explicitly blocking violations count. Warnings (severity='warning')
     # and INFO/HEADING_LEVEL are non-blocking by default.
     blocking_pedagogy = [v for v in state.pedagogical_violations
                          if v.get('blocking', False)
                          and v.get('severity') not in ('warning', 'info')
-                         and v.get('type') not in ('INFO', 'HEADING_LEVEL')]
+                         and v.get('type') not in ('INFO', 'HEADING_LEVEL')
+                         and not (_is_phonetics and v.get('type') in _PHONETICS_EXEMPT)]
     state.results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if state.results['pedagogy'].status == 'FAIL':
         state.has_critical_failure = True

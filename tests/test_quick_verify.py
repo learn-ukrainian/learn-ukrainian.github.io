@@ -96,13 +96,13 @@ def test_word_count_too_short():
     assert "Too short" in wc_errors[0].message
 
 
-def test_word_count_too_long():
+def test_word_count_over_target_is_ok():
+    """Word targets are MINIMUMS — exceeding them is always acceptable."""
     plan = _make_plan(word_target=1200)
-    content = _make_content(word_count=2400)  # Way over 1.5x
+    content = _make_content(word_count=2400)  # 2x target — fine
     results = quick_verify(content, plan)
     wc_errors = [r for r in results if r.check == "WORD_COUNT"]
-    assert len(wc_errors) == 1
-    assert wc_errors[0].severity == "WARNING"
+    assert len(wc_errors) == 0  # No ceiling — more content is always OK
 
 
 # --- Toxic token checks ---
@@ -439,7 +439,7 @@ def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
 
     def fake_step_write(level, module_num, slug, packet_path,
                         writer="gemini", correction_directive="", skeleton="",
-                        no_chunk=False):
+                        no_chunk=False, **kwargs):
         """Always return the bad content file."""
         content_path.write_text(bad_md, "utf-8")
         return content_path

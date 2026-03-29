@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all required points, successfully integrates textbook references
+    (Zabolotnyi, Bolshakova, Zakhariichuk, Litvinova). Did not include the recommended
+    vocabulary.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All phonetic rules and Ukrainian examples are flawlessly integrated and
+    accurate according to standard conventions. No Russianisms or Surzhyk.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and strong use of school textbook metaphors. Slight
+    disconnect in the vowel section referencing the video activity before it appears.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required vocabulary is used naturally, but none of the 5 recommended words
+    (тато, око, дім, ніс, сон) were included in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 activity markers are present, matching the IDs from the plan, and
+    logically placed to test the immediately preceding concepts.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Uses overly dramatic phrasing ("sacred distinction", "absolute foundation")
+    and generic enthusiasm ("ultimate key", "powerful motor") in several places, violating
+    the tone guidelines.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown and perfect structure. Word count is 1425, exceeding the
+    1200 target by >10%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent framing of phonetic learning within the context of the authentic
+    Ukrainian school system methods.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The greeting dialogue is highly natural, uses named speakers (Оленка,
+    Тарас), and correctly demonstrates gendered language forms.
+findings: []

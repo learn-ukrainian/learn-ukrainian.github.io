@@ -24,8 +24,8 @@ content_outline:
   - 'Dialogue 2 — At a conference (formal, following Anna Ep3-4): — Добрий день! Як
     вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так,
     я з Києва.'
-  - 'Dialogue 3 — Introducing someone else: Це мій друг Андрій. Він зі Львова. Він
-    — інженер.'
+  - 'Dialogue 3 — Introducing someone else: Це Андрій. Він зі Львова. Він
+    — інженер. А це Оксана. Вона з Одеси. Вона — лікарка.'
 - section: Мене звати... (My name is...)
   words: 250
   points:
@@ -38,10 +38,17 @@ content_outline:
   words: 200
   points:
   - 'Це = ''this is / it is / these are.'' No verb ''to be'' needed. Це кава. Це Київ.
-    Це мій друг. Questions: Що це? (What is this?) Хто це? (Who is this?) Question
+    Це Андрій. Questions: Що це? (What is this?) Хто це? (Who is this?) Question
     words go FIRST: Хто це? not *Це хто?'
+- section: Особові займенники (Personal Pronouns)
+  words: 100
+  points:
+  - 'The basic personal pronouns: я (I), ти (you, informal), він (he), вона (she),
+    ми (we), ви (you, formal/plural), вони (they). Note: ви is both formal singular
+    and plural — like English ''you'' but written with capital В (Ви) when formal.
+    These pronouns are needed for every sentence from now on.'
 - section: Я — студент (I am a student)
-  words: 200
+  words: 150
   points:
   - 'No verb ''to be'' in present tense. Subject — Noun: Я — студент. Він — лікар.
     Вона — вчителька. The dash (—) marks where ''is'' would go.'
@@ -62,6 +69,11 @@ content_outline:
   - Self-check folded into dialogue practice above.
 vocabulary_hints:
   required:
+  - я (I)
+  - ти (you, informal)
+  - він (he)
+  - вона (she)
+  - ви (you, formal/plural)
   - мене звати (my name is)
   - як тебе звати? (what's your name, informal)
   - як вас звати? (what's your name, formal)
@@ -73,11 +85,11 @@ vocabulary_hints:
   - українець, українка (Ukrainian m/f)
   - Україна (Ukraine)
   recommended:
+  - ми (we)
+  - вони (they)
   - програміст, програмістка (programmer m/f)
-  - журналіст, журналістка (journalist m/f)
   - інженер, інженерка (engineer m/f)
   - звідки (where from)
-  - зараз (now, currently)
   - друг (friend, male)
   - його (his — doesn't change)
   - її (her — doesn't change)
@@ -101,6 +113,7 @@ connects_to:
 prerequisites:
 - a1-004 (Stress and Melody)
 grammar:
+- "Personal pronouns: я, ти, він, вона, ми, ви, вони (nominative only)"
 - Мене звати construction (impersonal)
 - Це + noun identification
 - Zero copula (Я — студент, no verb 'is')

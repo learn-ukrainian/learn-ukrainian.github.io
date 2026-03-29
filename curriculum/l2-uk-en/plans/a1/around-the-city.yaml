@@ -63,8 +63,6 @@ vocabulary_hints:
   - ідіть (go! — imperative, preview)
   - їдьте (go by transport! — imperative, preview)
   - поруч (nearby)
-  - навпроти (opposite)
-  - між (between)
 activity_hints:
 - type: fill-in
   focus: Give directions using прямо, направо, наліво

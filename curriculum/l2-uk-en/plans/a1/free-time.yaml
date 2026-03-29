@@ -82,7 +82,7 @@ activity_hints:
   - ходити ↔ в кіно
   - ходити ↔ в театр
   - читати ↔ книгу
-  - малювати ↔ картину
+  - малювати ↔ вдома
 - type: fill-in
   focus: Complete the invitations and frequency sentences
   items:
@@ -97,7 +97,7 @@ activity_hints:
   items:
   - Він грає {на|у|в} піаніно.
   - Ми граємо {у|на|в} футбол.
-  - Я хочу піти {на|в|у} концерт.
+  - Я хочу ходити {на|в|у} концерт.
   - Вони ходять {в|на|у} театр раз на місяць.
 connects_to:
 - a1-027 (Checkpoint — Time and Nature)
