@@ -1,64 +1,44 @@
 ## Linguistic Scan
-- Semantic error: The dialogue response "Так, дуже гарно. (Yes, very nicely.)" to "А це гора?" is nonsensical. 
-- Incorrect terminology: The word "м'якшені" is a non-standard form not found in VESUM; the correct linguistic term opposite to "тверді" (hard) is "м'які" (soft).
+No linguistic errors found. The phonetic explanations, minimal pairs, and vocabulary usage are factually accurate and free of Surzhyk or Russianisms.
 
 ## Exercise Check
-- The plan specifies 4 activities, but only 3 `<!-- INJECT_ACTIVITY -->` markers are present in the text.
-- The missing marker corresponds to the `fill-in` activity focused on adding the missing Ь or apostrophe.
+- `<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->` is placed at the end of Section 1. This tests the apostrophe before it is taught in Section 2.
+- `<!-- INJECT_ACTIVITY: fill-in-soft-sign-apostrophe -->` is placed correctly at the end of Section 2.
+- `<!-- INJECT_ACTIVITY: match-voiced-voiceless -->` is placed correctly at the end of Section 3.
+- `<!-- INJECT_ACTIVITY: quiz-g-vs-g -->` is placed correctly at the end of Section 4.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The writer missed the `fill-in` activity marker entirely. Used "лис" instead of the planned "лист" for the minimal pair. |
-| 2. Linguistic accuracy | 8/10 | Incorrect terminology ("м'якшені" instead of "м'які"). Semantic error in dialogue ("Так, дуже гарно" responding to "А це гора?"). |
-| 3. Pedagogical quality | 9/10 | Excellent physical descriptions of pronunciation (e.g., "Hand flat against the front of your throat"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary from the plan is integrated naturally into the text. |
-| 5. Exercise quality | 6/10 | The plan requires 4 activities, but only 3 markers are present in the text. The `fill-in` activity is missing. |
-| 6. Engagement & tone | 7/10 | The text relies on meta-commentary ("You have just seen how...", "To truly understand why...") which breaks immersion and "tells instead of shows". |
-| 7. Structural integrity | 10/10 | All H2 headers match the outline perfectly. Clean Markdown structure. |
-| 8. Cultural accuracy | 10/10 | Strongly emphasizes Ukrainian phonetic identity (Г vs Ґ, non-devoicing) without centering Russian comparisons. |
-| 9. Dialogue & conversation quality | 6/10 | Dialogues are highly stilted and contain semantic mismatches (e.g., responding "Yes, very nicely" to a question about a mountain). |
+| 1. Plan adherence | 10/10 | Covers all 4 planned sections perfectly, integrates all required/recommended vocab, and comfortably exceeds the 1200-word target (1640 words). |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, calques, or Surzhyk. The phonetic descriptions (e.g., "voiced consonants form with голос (voice) + шум (noise)") are highly accurate and native. |
+| 3. Pedagogical quality | 8/10 | DEDUCT for two pedagogical sequencing errors: injecting an exercise that tests apostrophes before they are taught, and including prefix-based apostrophe words (`під'їзд`, `з'їзд`) immediately after teaching the rigid A1 labial/Р rule, which visually contradicts the rule. |
+| 4. Vocabulary coverage | 10/10 | All required words (`сім'я`, `день`, `сіль`, `м'ясо`, `п'ять`, `гарно`, `риба`) and recommended words (`батько`, `учитель`, `дев'ять`, `комп'ютер`, `м'який`) are used naturally in context. |
+| 5. Exercise quality | 8/10 | DEDUCT because the placement of `quiz-soft-sign-apostrophe` at the end of Section 1 asks the learner to analyze apostrophes before they possess the knowledge to do so. |
+| 6. Engagement & tone | 10/10 | Outstanding. Avoiding generic fluff, the text uses tactile discovery ("Place your fingers on your throat", "The tip of your tongue moves forward and up") which is perfect for teaching phonetics. |
+| 7. Structural integrity | 10/10 | Clean markdown, precise adherence to the planned H2 outlines, no stray tags. |
+| 8. Cultural accuracy | 10/10 | Excellent decolonized framing. It highlights the letter `Ґ` as a mark of Ukrainian phonetic independence and non-devoicing as a defining phonetic feature. |
+| 9. Dialogue & conversation quality | 10/10 | N/A (Phonetics module without dialogues), but the curated reading drills and minimal pairs act as an excellent conversational guide for the reader. |
 
 ## Findings
-[DIMENSION] 5. Exercise quality [SEVERITY: major]
-Location: Section "Апостроф (The Apostrophe)"
-Issue: The plan requires 4 activities, including a `fill-in` activity focusing on adding Ь or apostrophe. The generated text only includes 3 `<!-- INJECT_ACTIVITY -->` markers, omitting the fill-in exercise.
-Fix: Add the `<!-- INJECT_ACTIVITY: fill-in-missing-sign -->` marker alongside the apostrophe quiz.
+[Pedagogical quality] [Major]
+Location: `## М'який знак (The Soft Sign — Ь)`
+Issue: Activity 1 (`quiz-soft-sign-apostrophe`) is designed by the plan to test "Does this word have a soft sign, apostrophe, or neither?". However, its marker is injected at the end of Section 1, BEFORE the apostrophe is introduced. Learners cannot answer questions about the apostrophe before learning its rules.
+Fix: Move the `<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->` marker to the end of Section 2, so it appears after both concepts have been taught.
 
-[DIMENSION] 2. Linguistic accuracy [SEVERITY: critical]
-Location: Section "Вимова українських звуків (Pronouncing Ukrainian Sounds)" - Dialogue
-Issue: The dialogue exchange `Юлія: А це гора? / Віктор: Так, дуже гарно. *(Yes, very nicely.)*` is semantically incorrect. "Гарно" means beautiful/nice. Responding to "is this a mountain?" with "yes, very nicely" is nonsensical.
-Fix: Change the response to `Так, там дуже гарно. *(Yes, it is very beautiful there.)*`
-
-[DIMENSION] 2. Linguistic accuracy [SEVERITY: minor]
-Location: Section "М'який знак (The Soft Sign — Ь)" - "...and soft consonants, known as **м'якшені приголосні**."
-Issue: "М'якшені" is a non-standard form not found in VESUM. The correct linguistic term opposite to "тверді" (hard) is "м'які" (soft).
-Fix: Change `м'якшені` to `м'які`.
-
-[DIMENSION] 1. Plan adherence [SEVERITY: minor]
-Location: Section "Вимова українських звуків (Pronouncing Ukrainian Sounds)" - "The word **лис** is a wild fox, but **ліс** is a dense forest."
-Issue: The writer used the minimal pair "лис vs ліс" instead of the plan's required "лист vs ліс".
-Fix: Update the sentence to use the planned minimal pair.
-
-[DIMENSION] 6. Engagement & tone [SEVERITY: minor]
-Location: Section "Апостроф (The Apostrophe)" - "You have just seen how the soft sign blends a consonant into a soft, flowing sound." and "To truly understand why this separation is necessary, we must listen to the difference in real speech. Look at the word..."
-Issue: The text uses instructional meta-commentary ("telling instead of showing") that breaks immersion.
-Fix: Remove the meta-commentary sentences.
+[Pedagogical quality] [Major]
+Location: `## Апостроф (The Apostrophe)`
+Issue: The text explicitly teaches the simplified A1 rule that the apostrophe appears only after "Б, П, В, М, Ф, Р". However, the reading drill immediately includes `під'їзд` and `з'їзд`. Since these words have apostrophes after `Д` and `З` (due to prefixes), they visually contradict the rule just taught and will confuse beginners who haven't learned the prefix rule yet.
+Fix: Remove `під'їзд` and `з'їзд` from the reading drill list to maintain pedagogical consistency with the stated A1 rule.
 
 ## Verdict: REVISE
-The module covers the phonetic concepts well and hits the required vocabulary targets, but it contains a critical semantic error in a dialogue, uses non-standard linguistic terminology, and completely misses one of the planned activities. These issues must be fixed before publishing.
+The text is beautifully written, highly accurate linguistically, and features excellent tone and tactile explanations. However, it requires a REVISE verdict due to two major pedagogical sequencing errors (testing a concept before it is taught, and contradicting a simplified grammar rule with advanced exceptions). Applying the fixes will make this a flawless A1 module.
 
 <fixes>
-- find: "<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->"
-  replace: "<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->\n\n<!-- INJECT_ACTIVITY: fill-in-missing-sign -->"
-- find: "> <div class=\"dialogue-line\"><span class=\"speaker\">Віктор:</span> Так, дуже **гарно**. *(Yes, very nicely.)*</div>"
-  replace: "> <div class=\"dialogue-line\"><span class=\"speaker\">Віктор:</span> Так, там дуже **гарно**. *(Yes, it is very beautiful there.)*</div>"
-- find: "and soft consonants, known as **м'якшені приголосні**."
-  replace: "and soft consonants, known as **м'які приголосні**."
-- find: "The word **лис** is a wild fox, but **ліс** is a dense forest."
-  replace: "The word **лист** is a leaf or letter, but **ліс** is a dense forest."
-- find: "You have just seen how the soft sign blends a consonant into a soft, flowing sound. The exact opposite of the soft sign is the apostrophe, or **апостроф**."
-  replace: "The exact opposite of the soft sign is the apostrophe, or **апостроф**."
-- find: "To truly understand why this separation is necessary, we must listen to the difference in real speech. Look at the word **пісня**"
-  replace: "Look at the word **пісня**"
+- find: "Can you feel the tongue shift on each final consonant?\n\n<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->\n\n## Апостроф (The Apostrophe)"
+  replace: "Can you feel the tongue shift on each final consonant?\n\n## Апостроф (The Apostrophe)"
+- find: "Here is the reading drill from that poem: **м'яз** (muscle), **м'яч** (ball), **під'їзд** (entrance), **в'юн** (loach fish), **м'якуш** (soft part of bread), **бар'єр** (barrier), **з'їзд** (congress), **п'ятниця** (Friday), **ім'я** (name)."
+  replace: "Here is the reading drill from that poem: **м'яз** (muscle), **м'яч** (ball), **в'юн** (loach fish), **м'якуш** (soft part of bread), **бар'єр** (barrier), **п'ятниця** (Friday), **ім'я** (name)."
+- find: "Here are eight apostrophe words to memorize — they cover every vowel that can follow the apostrophe (Я, Ю, Є, Ї): **п'ять, дев'ять** (nine), **сім'я, м'ясо, м'яч, ім'я, об'єкт** (object), **здоров'я** (health).\n\n<!-- INJECT_ACTIVITY: fill-in-soft-sign-apostrophe -->"
+  replace: "Here are eight apostrophe words to memorize — they cover every vowel that can follow the apostrophe (Я, Ю, Є, Ї): **п'ять, дев'ять** (nine), **сім'я, м'ясо, м'яч, ім'я, об'єкт** (object), **здоров'я** (health).\n\n<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->\n<!-- INJECT_ACTIVITY: fill-in-soft-sign-apostrophe -->"
 </fixes>

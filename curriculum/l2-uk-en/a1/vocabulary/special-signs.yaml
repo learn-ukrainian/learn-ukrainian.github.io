@@ -1,4 +1,34 @@
 vocabulary:
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: м'я́со
+  translation: meat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: п'ять
+  translation: five
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: га́рно
+  translation: nicely, beautifully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ри́ба
+  translation: fish
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: ба́тько
   translation: father
   expression: false
@@ -29,35 +59,65 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: сім'я́
-  translation: family
+- word: м'який знак
+  translation: soft sign (the letter Ь)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: апо́стро́ф
+  translation: apostrophe
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тверді приголосні
+  translation: hard consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: м'якшені приголосні
+  translation: soft consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дзвінкі приголосні
+  translation: voiced consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: глухі приголосні
+  translation: voiceless consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ка́мінь
+  translation: stone
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: камі́н
+  translation: fireplace
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тінь
+  translation: shadow
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: м'я́со
-  translation: meat
+- word: лінь
+  translation: laziness
   expression: false
   pos: ім.
-  gender: с.
-  verified: true
-- word: п'ять
-  translation: five
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: га́рно
-  translation: nicely
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ри́ба
-  translation: fish
-  expression: false
-  pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
 - word: кінь
   translation: horse
@@ -83,29 +143,53 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: путь
-  translation: way
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: мазь
   translation: ointment
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: мідь
-  translation: copper
+- word: тин
+  translation: wattle fence
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рись
+  translation: lynx
   expression: false
   pos: ім.
   gender: ж.
   verified: true
+- word: рис
+  translation: rice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: мале́нький
-  translation: small
+  translation: small, little
   expression: false
   pos: прикм.
   gender: ''
+  verified: true
+- word: сті́льчик
+  translation: little chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́сня
+  translation: song
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: м'яз
+  translation: muscle
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: м'яч
   translation: ball
@@ -113,20 +197,122 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: під'ї́зд
+  translation: building entrance
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: в'юн
+  translation: loach (a fish)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: м'яку́ш
+  translation: soft part of bread, crumb
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бар'є́р
+  translation: barrier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: з'їзд
+  translation: congress, assembly
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: п'я́тниця
+  translation: Friday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ім'я́
+  translation: first name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: об'є́кт
   translation: object
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: коза́
-  translation: goat
+- word: здоро́в'я
+  translation: health
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: го́лос
+  translation: voice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шум
+  translation: noise
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: суп
+  translation: soup
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гу́ска
+  translation: goose
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: коса
-  translation: braid
+- word: ху́стка
+  translation: kerchief, headscarf
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ґа́ва
+  translation: jackdaw
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зли́ва
+  translation: downpour, heavy rain
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сли́ва
+  translation: plum
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: жа́бка
+  translation: little frog
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ша́пка
+  translation: hat, winter cap
   expression: false
   pos: ім.
   gender: ж.
@@ -137,14 +323,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ніж
-  translation: knife
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
 - word: ба́лка
-  translation: beam
+  translation: beam, girder
   expression: false
   pos: ім.
   gender: ж.
@@ -155,11 +335,35 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: лис
-  translation: fox
+- word: коза́
+  translation: goat
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
+  verified: true
+- word: коса
+  translation: braid; scythe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фа́рба
+  translation: paint
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́зка
+  translation: fairy tale
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ска
+  translation: helmet
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: бик
   translation: bull
@@ -169,6 +373,12 @@ vocabulary:
   verified: true
 - word: бік
   translation: side
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лис
+  translation: fox
   expression: false
   pos: ім.
   gender: ч.
@@ -186,7 +396,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: ґа́нок
-  translation: porch
+  translation: porch, entrance steps
   expression: false
   pos: ім.
   gender: ч.
@@ -198,13 +408,13 @@ vocabulary:
   gender: ч.
   verified: true
 - word: рука́
-  translation: hand
+  translation: hand, arm
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: робо́та
-  translation: work
+  translation: work, job
   expression: false
   pos: ім.
   gender: ч.
@@ -215,21 +425,9 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: А що це?
-  translation: And what is this?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: М'ясо там
-  translation: The meat is over there
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дуже гарно
-  translation: Very nicely
-  expression: true
-  pos: ''
+- word: на́голос
+  translation: stress, accent (on a syllable)
+  expression: false
+  pos: присл.
   gender: ''
   verified: true

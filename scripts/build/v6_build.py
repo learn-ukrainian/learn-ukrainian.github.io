@@ -2378,13 +2378,13 @@ def step_activities(
         if "gemini" in base_writer:
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
-                orch_dir=orch_dir, timeout=300, mcp_tools=True,
+                orch_dir=orch_dir, timeout=600, mcp_tools=True,
             )
         else:
             # Activities are structured YAML — use fast model, not thinking
             ok, raw = _dispatch(
                 current_prompt, agent="claude-tools", phase="activities",
-                orch_dir=orch_dir, timeout=300,
+                orch_dir=orch_dir, timeout=600,
                 mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
                 model=CLAUDE_FAMILY.fast,
             )

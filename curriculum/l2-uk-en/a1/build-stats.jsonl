@@ -13,3 +13,13 @@
 {"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-28T23:33:37.763102+00:00"}
 {"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T00:04:17.149509+00:00"}
 {"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T00:26:49.379096+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T12:19:32.686657+00:00"}
+{"slug": "special-signs", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T13:24:56.917805+00:00"}
+{"slug": "special-signs", "error_type": "WRITE_FAILED", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T13:39:26.200783+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 3, "model": "claude", "success": true, "timestamp": "2026-03-29T13:41:06.645225+00:00"}
+{"slug": "special-signs", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T14:48:21.649281+00:00"}
+{"slug": "special-signs", "error_type": "TOXIC", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T14:49:58.457640+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 3, "model": "claude", "success": true, "timestamp": "2026-03-29T14:51:16.080145+00:00"}
+{"slug": "special-signs", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-29T15:04:25.717419+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-03-29T15:09:45.225740+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-29T15:47:10.491311+00:00"}

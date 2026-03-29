@@ -151,3 +151,18 @@ frictions:
       untaught vocabulary words, and grammar analysis before its module.
     source: "A1.2 plan review — Gemini flagged Мені подобається as forward-ref (2026-03-28)"
     date_added: "2026-03-28"
+
+  - id: gf-013
+    status: active
+    type: pedagogical
+    description: >
+      Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear
+      AFTER all concepts they test have been taught. If an activity tests both
+      soft signs and apostrophes, it must appear after BOTH sections, not after
+      the first one. This is critical in Ukrainian where apostrophe rules
+      (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe
+      exercise before the apostrophe section teaches wrong sequencing.
+      Rule: scan each activity's items and verify every tested concept has a
+      preceding H2 section that teaches it.
+    source: "M03 special-signs R1/R2 review — activity placed before apostrophe taught (2026-03-29)"
+    date_added: "2026-03-29"

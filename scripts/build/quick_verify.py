@@ -272,6 +272,90 @@ def _check_exercise_items(content: str, plan: dict) -> list[QuickVerifyError]:
     return errors
 
 
+def _check_activity_sequencing(content: str, plan: dict) -> list[QuickVerifyError]:
+    """Check that inline activity markers appear AFTER all concepts they test.
+
+    gf-013: An activity that tests multiple concepts (e.g., soft sign AND
+    apostrophe) must be placed after ALL those concepts are taught. This is
+    critical for Ukrainian where apostrophe rules appear constantly.
+
+    Strategy: parse H2 section positions, parse INJECT_ACTIVITY positions,
+    then cross-reference activity hint focus text against section titles.
+    """
+    errors = []
+    activity_hints = plan.get("activity_hints", [])
+    if not activity_hints:
+        return errors
+
+    # Build a map: activity hint focus → keywords for matching
+    # e.g., "Does this word have a soft sign, apostrophe, or neither?" → ["soft sign", "apostrophe"]
+    _CONCEPT_KEYWORDS = {
+        "apostrophe": ["апостроф", "apostrophe", "апо́стро́ф"],
+        "soft sign": ["м'який знак", "soft sign", "м'яки́й знак", "missing ь", "missing Ь"],
+        "voiced": ["дзвінкі", "voiced", "voiceless", "глухі"],
+        "г vs ґ": ["вимова", "pronounc", "г vs ґ", "ґ"],
+    }
+
+    # Find H2 section positions (line numbers)
+    lines = content.split("\n")
+    section_positions: dict[str, int] = {}  # concept_key → first line where taught
+    for i, line in enumerate(lines):
+        if line.startswith("## "):
+            title_lower = line.lower()
+            for concept, keywords in _CONCEPT_KEYWORDS.items():
+                if any(kw.lower() in title_lower for kw in keywords) and concept not in section_positions:
+                    section_positions[concept] = i
+
+    # Find ALL INJECT_ACTIVITY marker positions (including duplicates)
+    marker_occurrences: list[tuple[str, int]] = []  # (marker_id, line_number)
+    for i, line in enumerate(lines):
+        m = re.match(r"<!--\s*INJECT_ACTIVITY:\s*([a-z0-9][a-z0-9-]*)\s*-->", line)
+        if m:
+            marker_occurrences.append((m.group(1), i))
+
+    # Cross-reference: for each activity hint, check if its marker appears
+    # after all concepts mentioned in the hint's focus text
+    for hint in activity_hints:
+        focus = (hint.get("focus", "") or "").lower()
+        if not focus:
+            continue
+
+        # Find which concepts this activity tests
+        tested_concepts = []
+        for concept, keywords in _CONCEPT_KEYWORDS.items():
+            if any(kw.lower() in focus for kw in keywords):
+                tested_concepts.append(concept)
+
+        if len(tested_concepts) < 2:
+            # Single-concept activities can't have sequencing issues
+            continue
+
+        # Find markers for this hint (match by type in marker id)
+        hint_type = hint.get("type", "")
+        matching_markers = [
+            (mid, pos) for mid, pos in marker_occurrences
+            if hint_type in mid
+        ]
+
+        for marker_id, marker_line in matching_markers:
+            # Check that ALL tested concepts have a section BEFORE this marker
+            for concept in tested_concepts:
+                section_line = section_positions.get(concept)
+                if section_line is not None and marker_line < section_line:
+                    errors.append(QuickVerifyError(
+                        check="ACTIVITY_SEQUENCE",
+                        severity="ERROR",
+                        message=(
+                            f"Activity marker '<!-- INJECT_ACTIVITY: {marker_id} -->' "
+                            f"(line {marker_line + 1}) tests '{concept}' but appears "
+                            f"BEFORE the section that teaches it (line {section_line + 1}). "
+                            f"Move the marker after all tested concepts are taught."
+                        ),
+                    ))
+
+    return errors
+
+
 def quick_verify(content: str, plan: dict) -> list[QuickVerifyError]:
     """Run all quick verification checks.
 
@@ -288,6 +372,7 @@ def quick_verify(content: str, plan: dict) -> list[QuickVerifyError]:
     errors.extend(_check_toxic_tokens(content))
     errors.extend(_check_vocabulary(content, plan))
     errors.extend(_check_exercise_items(content, plan))
+    errors.extend(_check_activity_sequencing(content, plan))
     return errors
 
 

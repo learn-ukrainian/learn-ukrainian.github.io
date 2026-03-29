@@ -1,63 +1,62 @@
 ## Linguistic Scan
-- "А що це? Це день." (What is this? This is a day) - Semantically unnatural and incorrect. "Що це?" is used for physical objects, not abstract states or time of day.
-- "А це гора? Так, дуже гарно." (Is this a mountain? Yes, very nicely.) - Semantically mismatched. "Так, дуже гарно" does not directly answer "А це гора?".
+Errors found:
+1. `туп` is incorrectly translated as `dull` to create a minimal pair. The adjective "dull" is `тупий`; `туп` is merely an onomatopoeia.
+2. The word `м'який` does not contain a soft sign (`ь`), it ends in the letter `й`. The text falsely claims `Ь` softens the `Й` at the end of this word.
+3. `м'якшені` and `м'якшує` are non-existent word forms (morphological errors/Surzhyk, verified via VESUM). The correct linguistic terms are `м'які` or `пом'якшені` (for the adjective) and `пом'якшує` (for the verb).
 
 ## Exercise Check
-- The marker `<!-- INJECT_ACTIVITY: fill-in-missing-sign -->` is placed directly after the "М'який знак" section. However, the plan indicates this activity focuses on "Add the missing Ь or apostrophe". Placing it here forces learners to fill in apostrophes before they have been taught what an apostrophe is. It should be moved to follow the apostrophe section.
-- `<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->` correctly follows the apostrophe section.
-- `<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->` correctly follows the Voiced/Voiceless section.
-- `<!-- INJECT_ACTIVITY: quiz-g-vs-ge -->` correctly follows the pronunciation section.
+All four `INJECT_ACTIVITY` markers (`quiz-soft-sign-apostrophe`, `fill-in-soft-sign-apostrophe`, `match-voiced-voiceless`, `quiz-g-vs-g`) are present.
+They appear immediately after the relevant teaching sections and align perfectly with the plan's `activity_hints`.
+The total count of exercises matches the plan. No DSL exercise logic issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The text covers all points from the plan and uses all required vocabulary. However, it placed an activity combining Ь and apostrophe before teaching the apostrophe. |
-| 2. Linguistic accuracy | 7/10 | There are semantically nonsensical dialogue lines: "Що це? Це день." and "А це гора? Так, дуже гарно." The phonetic rules are accurately described. |
-| 3. Pedagogical quality | 8/10 | Teaching is clear and progressive, but testing learners on the apostrophe before it is introduced breaks the pedagogical progression. |
-| 4. Vocabulary coverage | 10/10 | All required (сім'я, день, сіль, м'ясо, п'ять, гарно, риба) and recommended words are included naturally. |
-| 5. Exercise quality | 7/10 | The exercises match the plan, but `fill-in-missing-sign` (testing both Ь and apostrophe) is placed too early, violating the rule against testing concepts before they are taught. |
-| 6. Engagement & tone | 6/10 | The text contains meta-commentary explicitly forbidden by the prompt ("Let us look at how this works...", "Now, meet its exact opposite...", "Now we must look closely..."). |
-| 7. Structural integrity | 9/10 | All H2 headings from the plan are present. No stray tags. Word count comfortably exceeds the minimum target. Minor deduction for meta-commentary padding. |
-| 8. Cultural accuracy | 10/10 | Phonetic comparisons emphasize Ukrainian's unique phonetic identity (e.g., non-devoicing, Г vs Ґ) properly without relying on Russian comparisons. |
-| 9. Dialogue & conversation quality | 5/10 | Dialogues are robotic and semantically broken in a couple of places. "Що це? Це день." and "А це гора? Так, дуже гарно." are unnatural. |
+| 1. Plan adherence | 9/10 | Covers all topics perfectly, but leaves two table rows empty for voiced-voiceless pairs ("ДЖ - Ч" and "ДЗ - Ц"). |
+| 2. Linguistic accuracy | 5/10 | Critical errors: hallucinated that `м'який` has a soft sign, incorrectly labeled `туп` as "dull", and used non-existent forms `м'якшені` and `м'якшує` (confirmed via VESUM). |
+| 3. Pedagogical quality | 9/10 | Excellent tactile explanations ("Place your fingers on your throat", "cover the Ь with your finger"). Minor deduction for the false claim about `м'який` which would severely confuse a learner before the fix. |
+| 4. Vocabulary coverage | 10/10 | Integrates all required and recommended vocabulary naturally within the prose (e.g., "п'ять, дев'ять, сім'я, м'ясо..."). |
+| 5. Exercise quality | 10/10 | Activity markers are placed logically and test the skills exactly as mapped in the plan. |
+| 6. Engagement & tone | 10/10 | Tone is instructional, clear, and grounded. No gamified language or generic motivational fluff. Uses textbooks as natural authorities. |
+| 7. Structural integrity | 8/10 | Missing data in the markdown table ("ДЖ/Ч" and "ДЗ/Ц" rows have empty `Word pair` columns). |
+| 8. Cultural accuracy | 10/10 | Perfectly explains the unique nature of Ukrainian sounds (Ґ, И, and voiced consonants at word end). |
+| 9. Dialogue & conversation quality | 10/10 | No dialogues present or required by the plan. |
 
 ## Findings
-[DIMENSION] 2. Linguistic accuracy [SEVERITY: critical]
-Location: М'який знак (The Soft Sign — Ь) dialogue
-Issue: "А що це? Це день." (And what is this? This is a day.) is semantically nonsensical. "Що це?" is for pointing at physical objects.
-Fix: Change the question to ask about the state of day, such as "Це ніч?" and the response to "Ні, це день."
+[2. Linguistic accuracy] [Critical]
+Location: `One word has BOTH signs: **м'який** (soft). The apostrophe keeps **М** hard, and the **Ь** at the end softens the **Й**.`
+Issue: Factually incorrect. The word `м'який` does not contain a soft sign (`ь`), it ends in the semivowel `й`.
+Fix: Replace with a factual observation about the apostrophe in `м'який`.
 
-[DIMENSION] 2. Linguistic accuracy [SEVERITY: critical]
-Location: Вимова українських звуків (Pronouncing Ukrainian Sounds) dialogue
-Issue: "А це гора? Так, дуже гарно." (Is this a mountain? Yes, very nicely.) The response does not logically answer the question.
-Fix: Change the question to "А там гора?" and the response to "Так, там дуже гарно."
+[2. Linguistic accuracy] [Critical]
+Location: `| **Д** | **Т** | **дуб** (oak) — **туп** (dull) |`
+Issue: `туп` is an onomatopoeia, not the adjective `dull` (`тупий`). It's a hallucinated minimal pair.
+Fix: Replace with a valid minimal pair like `діло (deed) — тіло (body)`.
 
-[DIMENSION] 5. Exercise quality [SEVERITY: major]
-Location: `<!-- INJECT_ACTIVITY: fill-in-missing-sign -->`
-Issue: Placed before the apostrophe is taught, but the plan states it tests both Ь and the apostrophe.
-Fix: Move the marker to after the Apostrophe section.
+[7. Structural integrity] [Major]
+Location: `| **ДЖ** | **Ч** | |` and `| **ДЗ** | **Ц** | |`
+Issue: The table has completely empty cells for the word pairs of ДЖ/Ч and ДЗ/Ц.
+Fix: Add valid word pairs: `бджола (bee) — чоловік (man)` and `дзеркало (mirror) — цукерка (candy)`.
 
-[DIMENSION] 6. Engagement & tone [SEVERITY: minor]
-Location: Multiple paragraphs
-Issue: Uses forbidden meta-commentary ("Let us look at how this works...", "Now, meet its exact opposite...", "Now we must look closely...")
-Fix: Remove the meta-commentary phrases to make the text more direct.
+[2. Linguistic accuracy] [Major]
+Location: `soft consonants (м'якшені приголосні)` and `It softens (м'якшує) the consonant before it.`
+Issue: `м'якшені` and `м'якшує` are not valid Ukrainian words (confirmed via VESUM). The correct terminology is `м'які` or `пом'якшені` and `пом'якшує`.
+Fix: Change `м'якшені` to `м'які` and `м'якшує` to `пом'якшує`.
 
 ## Verdict: REVISE
-The module contains critical semantic errors in its Ukrainian dialogues and a major pedagogical error in exercise placement. These must be addressed before publishing.
+The module is beautifully written and explains phonetic concepts excellently, but it contains critical linguistic hallucinations (a non-existent soft sign in `м'який`, an invented word meaning for `туп`) and structural omissions (empty table cells). These must be corrected before shipping.
 
 <fixes>
-- find: "<div class=\"dialogue-line\"><span class=\"speaker\">Оксана:</span> А що це? *(And what is this?)*</div>\n\n<div class=\"dialogue-line\"><span class=\"speaker\">Марк:</span> Це **день**. *(This is a day.)*</div>"
-  replace: "<div class=\"dialogue-line\"><span class=\"speaker\">Оксана:</span> Це ніч? *(Is it night?)*</div>\n\n<div class=\"dialogue-line\"><span class=\"speaker\">Марк:</span> Ні, це **день**. *(No, it is day.)*</div>"
-- find: "<div class=\"dialogue-line\"><span class=\"speaker\">Юлія:</span> А це **гора**? *(And is this a mountain?)*</div>\n\n<div class=\"dialogue-line\"><span class=\"speaker\">Віктор:</span> Так, дуже **гарно**. *(Yes, very nicely.)*</div>"
-  replace: "<div class=\"dialogue-line\"><span class=\"speaker\">Юлія:</span> А там **гора**? *(And is that a mountain there?)*</div>\n\n<div class=\"dialogue-line\"><span class=\"speaker\">Віктор:</span> Так, там дуже **гарно**. *(Yes, it is very beautiful there.)*</div>"
-- find: "Let us look at how this works at the end of words, which is an extremely common grammatical pattern. Consider the hard consonant **Н**."
-  replace: "This pattern is extremely common at the end of words. Consider the hard consonant **Н**."
-- find: "Now, meet its exact opposite: the apostrophe, or **апостроф**."
-  replace: "The exact opposite of the soft sign is the apostrophe, or **апостроф**."
-- find: "Now we must look closely at a few specific sounds that require special attention, starting with the tricky vowel **И**."
-  replace: "A few specific sounds require special attention, starting with the tricky vowel **И**."
-- find: "the **Ь** never, ever appears at the start of a word.\n\n<!-- INJECT_ACTIVITY: fill-in-missing-sign -->\n\n## Апостроф (The Apostrophe)"
-  replace: "the **Ь** never, ever appears at the start of a word.\n\n## Апостроф (The Apostrophe)"
-- find: "rely on it for clarity. Even adjectives like **м'який** (soft) use the apostrophe to establish their fundamental rhythm.\n\n<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->"
-  replace: "rely on it for clarity. Even adjectives like **м'який** (soft) use the apostrophe to establish their fundamental rhythm.\n\n<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->\n\n<!-- INJECT_ACTIVITY: fill-in-missing-sign -->"
+- find: "One word has BOTH signs: **м'який** (soft). The apostrophe keeps **М** hard, and the **Ь** at the end softens the **Й**."
+  replace: "The word **м'який** (soft) is a great example: the apostrophe keeps **М** hard before the **Я**."
+- find: "| **Д** | **Т** | **дуб** (oak) — **туп** (dull) |"
+  replace: "| **Д** | **Т** | **діло** (deed) — **тіло** (body) |"
+- find: "| **ДЖ** | **Ч** | |"
+  replace: "| **ДЖ** | **Ч** | **бджола** (bee) — **чоловік** (man) |"
+- find: "| **ДЗ** | **Ц** | |"
+  replace: "| **ДЗ** | **Ц** | **дзеркало** (mirror) — **цукерка** (candy) |"
+- find: "soft consonants (м'якшені приголосні)"
+  replace: "soft consonants (м'які приголосні)"
+- find: "It softens (м'якшує) the consonant before it."
+  replace: "It softens (пом'якшує) the consonant before it."
 </fixes>

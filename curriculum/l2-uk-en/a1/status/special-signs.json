@@ -2,13 +2,13 @@
   "module": "special-signs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-29T01:43:36.148279Z",
+  "last_audit": "2026-03-29T18:43:24.872048Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T01:35:59.158517Z",
+    "md": "2026-03-29T18:14:26.000190Z",
     "meta": null,
-    "activities": "2026-03-29T01:28:00.526902Z",
-    "vocabulary": "2026-03-29T01:28:23.290059Z",
+    "activities": "2026-03-29T17:54:14.187708Z",
+    "vocabulary": "2026-03-29T17:54:57.999369Z",
     "research": null,
     "plan": "2026-03-28T22:26:24.673137Z"
   },
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2524/1200 (raw: 2953)"
+      "message": "2401/1200 (raw: 3247)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "39/1"
+      "message": "72/1"
     },
     "naturalness": {
       "status": "info",

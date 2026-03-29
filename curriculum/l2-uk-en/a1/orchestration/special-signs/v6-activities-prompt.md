@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-missing-sign -->`
-- `<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->`
-- `<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->`
-- `<!-- INJECT_ACTIVITY: quiz-g-vs-ge -->`
+- `<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->`
+- `<!-- INJECT_ACTIVITY: fill-in-soft-sign-apostrophe -->`
+- `<!-- INJECT_ACTIVITY: match-voiced-voiceless -->`
+- `<!-- INJECT_ACTIVITY: quiz-g-vs-g -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,77 +87,102 @@ required:
 <module_content>
 ## М'який знак (The Soft Sign — Ь)
 
-> **Оксана:** Це **кінь**? *(Is this a horse?)*
-> **Марк:** Так, це **кінь**. *(Yes, this is a horse.)*
-> **Оксана:** А що це? *(And what is this?)*
-> **Марк:** Це **день**. *(This is a day.)*
+The word **камінь** (stone) and the word **камін** (fireplace) look almost identical. One small sign at the end — **Ь** — changes the meaning completely. This sign is called the **м'який знак** (soft sign), and it has no sound of its own. Its single job: soften the consonant before it. Ukrainian distinguishes between hard consonants (тверді приголосні) and soft consonants (м'якшені приголосні). In Ukrainian textbooks, hard consonants are marked with [–] and soft consonants with [=] — a notation from Захарійчук's Grade 1 textbook. So **камінь** has a soft **Н** at the end [=], while **камін** has a hard **Н** [–]. Look at more words where Ь changes everything: **тінь** (shadow), **лінь** (laziness), **сіль** (salt), **кінь** (horse).
 
-When you read Ukrainian, you will often encounter a symbol that changes everything about how a word feels in your mouth. Look at the letter **Ь**. It looks like a lowercase English "b", but in Ukrainian, it has a completely different job. The **Ь** is called the soft sign, or **м'який знак**. It is a very special character because it is the only letter in the entire Ukrainian alphabet that does not produce a sound of its own. Instead, it acts purely as a phonetic modifier for the consonant that comes immediately before it. The Ukrainian linguistic system draws a strict line between hard consonants, known as **тверді приголосні**, and soft consonants, known as **м'якшені приголосні**. In the authoritative Захарійчук Grade 1 textbook on page 15, this distinction is mapped out clearly for young learners: a hard consonant is marked in phonetic models with a dash [–], while a soft consonant is marked with an equals sign [=]. The soft sign's entire purpose is to change that hard [–] into a soft [=], making the sound gentler and often changing the very meaning of the word.
+Where does Ь commonly appear? It follows specific consonant patterns. Here are the most frequent endings:
 
-Let us look at how this works at the end of words, which is an extremely common grammatical pattern. Consider the hard consonant **Н**. In a word like **стан** (condition), the tongue hits the roof of the mouth firmly. Now, add the soft sign to get the soft combination **НЬ**. The middle of your tongue presses up against the hard palate, creating a much softer, almost breathy sound. You can hear this soft ending clearly in the word **день** (day), the word **кінь** (horse), or the word **осінь** (autumn). The same process happens with the letter **Л**. Without the soft sign, it is hard and firm, but with it, it becomes **ЛЬ**. Try pronouncing **сіль** (salt) or **біль** (pain). Your tongue spreads out flat across the roof of your mouth, making the sound flow smoothly. Another common pairing is **ТЬ**, as you see in **мить** (moment) or **путь** (way), and **ЗЬ**, as in **мазь** (ointment). You can also hear it clearly in **мідь** (copper).
+- **-нь** → **день** (day), **кінь** (horse), **осінь** (autumn)
+- **-ль** → **сіль** (salt), **біль** (pain)
+- **-ть** → **мить** (moment)
+- **-зь** → **мазь** (ointment)
 
-The soft sign does not only live at the very end of words. It frequently appears right in the middle, sitting patiently between two consonants. When you see this arrangement, the **Ь** softens the first consonant, while the second one remains completely unaffected. For example, look at the formal word for father: **батько**. The **Т** is soft, but the **К** is hard. You will also see this in the word **учитель** (teacher), where it softens the final letter, or in the middle of descriptive adjectives like **маленький** (small). Because the soft sign's only job is to modify a consonant that comes before it, there is an unbreakable rule in Ukrainian orthography: the **Ь** never, ever appears at the start of a word.
+One key rule: Ь appears only AFTER a consonant, never at the start of a word, never after a vowel. The Літвінова Grade 5 textbook gives a handy mnemonic for which consonants can be softened — the phrase «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи» covers all seven: Д, Т, З, С, Ц, Л, Н (plus ДЗ).
 
-<!-- INJECT_ACTIVITY: fill-in-missing-sign -->
+Minimal pairs prove that hard vs. soft is a real meaning distinction — not just decoration. These pairs come directly from Захарійчук's Grade 1 textbook:
+
+- **тин** (wattle fence) vs **тінь** (shadow)
+- **рис** (rice) vs **рись** (lynx)
+
+Try this yourself: cover the Ь with your finger and read the word. Then uncover it and read again. You should hear — and feel — the difference. The tip of your tongue moves forward and up for the soft consonant.
+
+A few more practice words from Ukrainian textbooks: **учитель** (teacher), **батько** (father), **маленький** (small), **стільчик** (little chair). The Большакова Grade 2 textbook uses this sentence for practice: «Василько сів на маленький стільчик.» Read these words aloud as a drill: **сіль, день, кінь, мить, учитель, осінь**. Can you feel the tongue shift on each final consonant?
+
+<!-- INJECT_ACTIVITY: quiz-soft-sign-apostrophe -->
 
 ## Апостроф (The Apostrophe)
 
-> **Тарас:** Це **сім'я**? *(Is this a family?)*
-> **Анна:** Так, це **сім'я**. *(Yes, this is a family.)*
-> **Тарас:** А де **м'ясо**? *(And where is the meat?)*
-> **Анна:** **М'ясо** там. *(The meat is over there.)*
+The apostrophe is not a letter — it is a separator sign, a tiny signal between a consonant and a vowel. The rule, straight from Захарійчук's Grade 1 textbook (p. 97) and confirmed by Большакова Grade 2 (p. 57): the apostrophe appears after the consonants **Б, П, В, М, Ф, Р** when followed by the vowels **Я, Ю, Є, Ї**. These six consonants would normally soften before those vowels. The apostrophe says: "Stay hard." Without it, the consonant softens. With it, the consonant stays hard and the vowel splits into two sounds.
 
-You have just seen how the soft sign blends a consonant into a soft, flowing sound. Now, meet its exact opposite: the apostrophe, or **апостроф**. In Ukrainian, the apostrophe is not used for possession or contractions like it is in English. Instead, it is a critical letter-level symbol that enforces a strict "secret separation." Its visual role is to build a wall between a consonant and a vowel, preventing them from blending together. The rules for where it appears are precise. According to the foundational rule found in the Захарійчук Grade 1 textbook on page 97, the apostrophe generally only appears after the specific labial consonants **Б**, **П**, **В**, **М**, **Ф**, and the trilled **Р**. It is placed immediately before the special vowels **Я**, **Ю**, **Є**, **Ї**. Its core job is to keep that preceding consonant absolutely hard.
+Here is the contrast. In the word **пісня** (song), the **Н** softens — you hear one merged, soft sound. But in **п'ять** (five), the **П** stays hard, and the **Я** splits into two distinct sounds: [й] + [а]. You hear the hard **П**, then a clear [й] launching the vowel. Walk through each example with this in mind:
 
-To truly understand why this separation is necessary, we must listen to the difference in real speech. Look at the word **пісня** (song). Here, there is no apostrophe, so the **Н** becomes naturally soft and flows right into the vowel sound. But what happens when we want the consonant to stay firm and hard? We must use the apostrophe. Look at the word for family: **сім'я**. The apostrophe tells you to pronounce the **М** hard, stop for a microsecond, and then pronounce the following vowel as two distinct sounds: a "y" sound followed by an "a" sound. This hard-stop-vowel pattern is crucial for proper pronunciation. You can practice this clear separation with the word **м'ясо** (meat). It is also highly visible in numbers, such as **п'ять** (five) and **дев'ять** (nine). You will also see it in everyday items like a **м'яч** (ball).
+- **сім'я** (family) — hard **М**, then [й]+[а]
+- **м'ясо** (meat) — hard **М**, then [й]+[а]
+- **п'ять** (five) — hard **П**, then [й]+[а]
+- **комп'ютер** (computer) — hard **П**, then [й]+[у]. A cognate you can verify immediately.
 
-This rule is not just reserved for old, traditional vocabulary. The apostrophe is incredibly active in digital and modern word formation, helping integrate global concepts into the Ukrainian phonetic system. For instance, the modern word **комп'ютер** (computer) uses the apostrophe to maintain the hard **П** before the **Ю**, matching the original English rhythm perfectly while strictly following Ukrainian phonetic rules. Similarly, the word **об'єкт** (object) relies on it for clarity. Even adjectives like **м'який** (soft) use the apostrophe to establish their fundamental rhythm.
+A poem from Захарійчук Grade 1 (p. 71) lists apostrophe words in a playful rhyme. Here is the reading drill from that poem: **м'яз** (muscle), **м'яч** (ball), **під'їзд** (entrance), **в'юн** (loach fish), **м'якуш** (soft part of bread), **бар'єр** (barrier), **з'їзд** (congress), **п'ятниця** (Friday), **ім'я** (name). From Большакова Grade 1: Ukrainian proper names also use the apostrophe — **Дар'я**, **Мар'яна**, **Лук'ян**. Read each word aloud. Feel the consonant stay firm, then hear the [й] launch the vowel.
 
-<!-- INJECT_ACTIVITY: quiz-apostrophe-or-soft-sign -->
+One word has BOTH signs: **м'який** (soft). The apostrophe keeps **М** hard, and the **Ь** at the end softens the **Й**. Here are eight apostrophe words to memorize — they cover every vowel that can follow the apostrophe (Я, Ю, Є, Ї): **п'ять, дев'ять** (nine), **сім'я, м'ясо, м'яч, ім'я, об'єкт** (object), **здоров'я** (health).
+
+<!-- INJECT_ACTIVITY: fill-in-soft-sign-apostrophe -->
 
 ## Дзвінкі і глухі (Voiced and Voiceless)
 
-> **Максим:** Це **дуб**? *(Is this an oak tree?)*
-> **Олена:** Так, це **дуб**. *(Yes, this is an oak tree.)*
-> **Максим:** А там що? *(And what is over there?)*
-> **Олена:** Там **коза**. *(There is a goat over there.)*
-> **Максим:** Ні, це **коса**! *(No, this is a braid!)*
+Place your fingers on your throat. Say **Б**. You feel vibration — your vocal cords are working. Now say **П**. Silence — only air. This is the difference between voiced (дзвінкі) and voiceless (глухі) consonants. As Большакова's Grade 2 textbook puts it: voiced consonants form with голос (voice) + шум (noise); voiceless consonants form with шум alone. This is a tactile discovery, not a rule to memorize — feel it with your own throat.
 
-Place your hand flat against the front of your throat. Now, say the sound of the letter **З**, mimicking a buzzing bee. You will immediately feel a strong vibration under your fingers. Now, switch to the sound of the letter **С**, imitating a snake hissing. The vibration in your throat stops completely. This physical difference is the foundation of voiced and voiceless consonants, known in Ukrainian linguistics as **дзвінкі і глухі приголосні**. Voiced sounds, the **дзвінкі**, use your vocal cords to create a ringing, humming noise that carries across a room. Voiceless sounds, the **глухі**, use only rushing air to create a whispering noise. The Ukrainian language strictly organizes these sounds into eight essential pairs. These mirror pairs are **Б**-**П**, **Д**-**Т**, **Г**-**Х**, **Ґ**-**К**, **З**-**С**, **Ж**-**Ш**, **ДЗ**-**Ц**, and **ДЖ**-**Ч**. Every time you speak, you are constantly switching between these vibrating and breathy states.
+Ukrainian consonants form eight core voiced-voiceless pairs. Here they are, with a word pair for each from Большакова Grade 2 (p. 62):
 
-Understanding these pairs leads to a defining feature of Ukrainian phonetic identity: the absolute rule of no devoicing. In many other European languages, such as Russian or German, a voiced consonant at the very end of a word becomes lazy. It drops its voice and turns into its voiceless partner, meaning a "b" sound acts like a "p" sound. Ukrainian firmly rejects this shortcut. In Ukrainian, every letter keeps its true voice in every possible position. When you read the word **дуб** (oak tree), you must pronounce a clear, strongly vibrating **Б** at the very end. It never, ever turns into a **П**. When you read **мороз** (frost), that final **З** must buzz strongly until the word is finished. The same principle applies to **ніж** (knife), where the **Ж** remains fully voiced. This commitment to clear, strong consonant endings gives spoken Ukrainian its distinct, resonant energy.
+| Voiced | Voiceless | Word pair |
+|--------|-----------|-----------|
+| **Б** | **П** | **дуб** (oak) — **суп** (soup) |
+| **Г** | **Х** | **гуска** (goose) — **хустка** (kerchief) |
+| **Ґ** | **К** | **ґава** (jackdaw) — **кава** (coffee) |
+| **Д** | **Т** | **дуб** (oak) — **туп** (dull) |
+| **З** | **С** | **злива** (downpour) — **слива** (plum) |
+| **Ж** | **Ш** | **жабка** (little frog) — **шапка** (hat) |
+| **ДЖ** | **Ч** | |
+| **ДЗ** | **Ц** | |
 
-To truly master this concept, you can train your ear with minimal pairs, where one single vibration changes the entire meaning of the vocabulary word. Contrast the vibrating **Б** in **балка** (beam) with the breathy **П** in **палка** (stick). Feel the buzzing **З** in **коза** (goat) compared to the sharp, hissing **С** in **коса** (braid). Practicing these pairs will lock the sounds into your muscle memory.
+Read each pair aloud. Apply the throat test to confirm which is voiced and which is voiceless.
 
-<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->
+Ukrainian has one defining phonetic feature: voiced consonants keep their full sound at the end of a word. The word **дуб** is pronounced [дуб] — you hear the full voiced **Б** at the end. The word **мороз** (frost) is pronounced [мороз] — the **З** stays voiced. Every consonant keeps its true sound in every position. This is a core feature of Ukrainian phonetics. Minimal pairs for ear training: **балка** (beam) vs **палка** (stick); **коза** (goat) vs **коса** (braid). Say **дуб** aloud — keep the [б] fully voiced at the end.
+
+Some voiced consonants have no voiceless partner at all: **В, Л, М, Н, Й, Р** — these are always voiced. And voiceless **Ф** has no voiced partner (Ukrainian words with **Ф** are mostly loanwords: **фото**, **фарба** — paint). Short practice list: **жабка, шапка, дуб, суп, казка** (fairy tale), **каска** (helmet).
+
+<!-- INJECT_ACTIVITY: match-voiced-voiceless -->
 
 ## Вимова українських звуків (Pronouncing Ukrainian Sounds)
 
-> **Віктор:** Це **кіт**. *(This is a cat.)*
-> **Юлія:** А де **кит**? *(And where is the whale?)*
-> **Віктор:** **Кит** там! *(The whale is over there!)*
-> **Юлія:** А це **гора**? *(And is this a mountain?)*
-> **Віктор:** Так, дуже **гарно**. *(Yes, very nicely.)*
+**И** is a uniquely Ukrainian vowel. It is NOT the same as **І** — they are two different letters representing two different sounds. With **И**, the tongue sits slightly lower and further back in the mouth. With **І**, it moves forward and up. The difference is not decorative — it changes the meaning of a word. Minimal pairs directly from Большакова's Grade 1 Буквар:
 
-Now we must look closely at a few specific sounds that require special attention, starting with the tricky vowel **И**. This letter looks exactly like a backward English "N", but it represents a sound that simply does not exist in standard English. It is a mid-retracted vowel, produced deeper and lower in the mouth. It is absolutely distinct from the high-front vowel **І**, which sounds very much like the "ee" in the English word "see". Mixing these two vowels up will cause immediate confusion. We can see this dynamic clearly in four classic minimal pairs. If you say **кит**, you are talking about a massive whale, but **кіт** is a domestic cat. The word **дим** means smoke from a fire, while **дім** means a house. The word **лис** is a wild fox, but **ліс** is a dense forest. Finally, **бик** is a strong bull, but **бік** is a side. You can practice this sound with Anna Ohoiko's pronunciation video for the letter И.
+- **бик** (bull) vs **бік** (side)
+- **дим** (smoke) vs **дім** (house)
+- **лис** (fox) vs **ліс** (forest)
+- **кит** (whale) vs **кіт** (cat)
 
-Next is the famous phonetic battle of the G letters: **Г** versus **Ґ**. They look quite similar on the page, but they represent entirely different sounds. The standard letter **Г** is a voiced glottal fricative. It sounds like a strong, voiced exhalation of breath, similar to the "h" in the English word "ahead", but with more vibration. You hear this soft, warm sound in common words like **гарно** (nicely), **гора** (mountain), and **голова** (head). The letter **Ґ**, with its little hook on top, is the familiar hard plosive, sounding exactly like the English "g" in "good" or "gate". You use it in specific words like **ґанок** (porch) and **ґудзик** (button). The letter **Ґ** is an important historical symbol of Ukrainian linguistic identity, distinguishing the language perfectly.
+Read each pair aloud. The **И** word sounds lower and darker than the **І** word. Never confuse them — they are different letters, different sounds, different words.
 
-Finally, we have the rolling letter **Р**. The Ukrainian **Р** is trilled or tapped swiftly against the roof of the mouth, just behind your teeth. You can practice this lively sound with words like **рука** (hand), **робота** (work), **риба** (fish), and **ранок** (morning). Do not worry if you cannot roll it perfectly right away. Clear, confident communication is always much more important than achieving a perfect, theatrical trill. Practice with Anna Ohoiko's video to find your rhythm.
+**Г** and **Ґ** are two different Ukrainian letters for two different sounds. **Г** is a voiced fricative — air flows through a narrowed throat without full closure: **гарно** (nicely), **гора** (mountain), **голова** (head). Compare it to the "h" in "behind" — but voiced and slightly rougher. **Ґ** is a hard stop — full closure of the throat, then a burst of air: **ґанок** (porch), **ґудзик** (button). From Большакова Grade 2: the pair **ґава** (jackdaw) vs **кава** (coffee) shows **Ґ** alongside its voiceless partner **К**. The letter **Ґ** is uniquely Ukrainian — its presence in the alphabet is a mark of Ukrainian phonetic independence. As the Літвінова Grade 5 textbook confirms: both sounds are authentically Ukrainian, but **Ґ** appears in fewer words.
 
-<!-- INJECT_ACTIVITY: quiz-g-vs-ge -->
+**Р** is the Ukrainian rolled, trilled **Р**. It is not the English "r" — the tongue taps the ridge behind the upper teeth. Practice words: **рука** (hand), **робота** (work), **ранок** (morning), **риба** (fish). A tip: start by saying [д] rapidly several times — that quick tongue tap is close to a single trill. An imperfect **Р** is always understood — native speakers never mishear a learner's **Р** for another sound. Focus on getting comfortable, not perfect.
+
+Short reading drill combining all four sounds from this section: **риба, дим, гарно, ґудзик, кит, бік, голова, ранок, ґанок, лис**. Read each word aloud. Check yourself: **И** or **І**? **Г** or **Ґ**? Is the **Р** rolled?
+
+<!-- INJECT_ACTIVITY: quiz-g-vs-g -->
 
 ## Підсумок — Summary
 
-You have learned the essential mechanics of Ukrainian phonetics. To ensure these concepts are solid, ask yourself these self-check questions. First, what is the exact job of the soft sign, the **Ь**? Its only purpose is to soften the consonant that comes right before it, acting as a phonetic modifier rather than an independent sound. Second, after which six letters does the apostrophe usually appear? According to standard orthography rules, you will see it following the labial consonants **Б**, **П**, **В**, **М**, **Ф**, and the letter **Р**. Third, name three voiced-voiceless pairs. You could name **Б**-**П**, **Д**-**Т**, or **З**-**С**. Fourth, how do you pronounce a word like **дуб** at the very end? You must pronounce it with a clear, fully vibrating, voiced **Б**, because Ukrainian completely rejects the devoicing of final consonants. Finally, what is the crucial difference between the letters **Г** and **Ґ**? The letter **Г** is a soft, voiced glottal fricative that sounds like a warm breath, while **Ґ** is a hard, sharp plosive.
+Four topics, one thread: Ukrainian gives you precise tools to control how consonants and vowels sound. **Ь** softens — the consonant before it changes its character. The apostrophe hardens — the consonant stays firm, and the vowel after it splits into two sounds. Voiced consonants vibrate; voiceless ones do not — and Ukrainian keeps every consonant's true sound in every position. **И**, **Г**, and **Ґ** are uniquely Ukrainian sounds that don't exist in English — they are worth the extra practice.
 
-By understanding these elements, you have mastered the special signs that give the Ukrainian language its unique, resonant melody. The process of consonant softening makes the spoken language gentle and flowing. At the same time, the strict use of the apostrophe and the absolute rule of non-devoicing give the language its structural clarity and rhythmic strength.
+**Self-check — answer these before moving on:**
 
-To build your confidence, use this reading list for daily practice. Read these words aloud, focusing on the specific phonetic rules they represent:
-- **сім'я** (family) — practice the hard **М** stop before the vowel.
-- **день** (day) — practice the soft **НЬ** ending.
-- **п'ять** (five) — practice the apostrophe separation.
-- **гарно** (nicely) — practice the warm, breathing **Г** sound.
+- **What does Ь do?** → It softens (м'якшує) the consonant before it. It has no sound of its own.
+- **After which consonants does the apostrophe appear?** → After **Б, П, В, М, Ф, Р** — when followed by **Я, Ю, Є, Ї**.
+- **Name 3 voiced-voiceless pairs.** → **Б-П, З-С, Ж-Ш** (any three from the eight pairs).
+- **How is Г different from Ґ?** → **Г** is a voiced fricative (as in **гарно**); **Ґ** is a hard stop (as in **ґудзик**).
+- **Read these words aloud:** **сім'я, день, п'ять, гарно, ґудзик, риба.**
+
+These three signs — Ь, the apostrophe, and the voiced-voiceless system — are the foundation of Ukrainian pronunciation. With them, you can read almost any Ukrainian word and know how it sounds. The next module adds the final layer: **наголос** (stress). Once you know where the stress falls, pronunciation clicks into place.
 
 </module_content>
 
@@ -370,68 +395,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
+- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
+   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
+   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

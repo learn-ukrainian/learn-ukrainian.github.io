@@ -2,50 +2,48 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The text covers all points from the plan and uses all required vocabulary.
-    However, it placed an activity combining Ь and apostrophe before teaching the
-    apostrophe.
+  score: 9
+  evidence: Covers all topics perfectly, but leaves two table rows empty for voiced-voiceless
+    pairs ("ДЖ - Ч" and "ДЗ - Ц").
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'There are semantically nonsensical dialogue lines: "Що це? Це день."
-    and "А це гора? Так, дуже гарно." The phonetic rules are accurately described.'
+  score: 5
+  evidence: 'Critical errors: hallucinated that `м''який` has a soft sign, incorrectly
+    labeled `туп` as "dull", and used non-existent forms `м''якшені` and `м''якшує`
+    (confirmed via VESUM).'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Teaching is clear and progressive, but testing learners on the apostrophe
-    before it is introduced breaks the pedagogical progression.
+  score: 9
+  evidence: Excellent tactile explanations ("Place your fingers on your throat", "cover
+    the Ь with your finger"). Minor deduction for the false claim about `м'який` which
+    would severely confuse a learner before t
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required (сім'я, день, сіль, м'ясо, п'ять, гарно, риба) and recommended
-    words are included naturally.
+  evidence: Integrates all required and recommended vocabulary naturally within the
+    prose (e.g., "п'ять, дев'ять, сім'я, м'ясо...").
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: The exercises match the plan, but `fill-in-missing-sign` (testing both
-    Ь and apostrophe) is placed too early, violating the rule against testing concepts
-    before they are taught.
+  score: 10
+  evidence: Activity markers are placed logically and test the skills exactly as mapped
+    in the plan.
 - dimension: 6
   name: Engagement & tone
-  score: 6
-  evidence: The text contains meta-commentary explicitly forbidden by the prompt ("Let
-    us look at how this works...", "Now, meet its exact opposite...", "Now we must
-    look closely...").
+  score: 10
+  evidence: Tone is instructional, clear, and grounded. No gamified language or generic
+    motivational fluff. Uses textbooks as natural authorities.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: All H2 headings from the plan are present. No stray tags. Word count comfortably
-    exceeds the minimum target. Minor deduction for meta-commentary padding.
+  score: 8
+  evidence: Missing data in the markdown table ("ДЖ/Ч" and "ДЗ/Ц" rows have empty
+    `Word pair` columns).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Phonetic comparisons emphasize Ukrainian's unique phonetic identity (e.g.,
-    non-devoicing, Г vs Ґ) properly without relying on Russian comparisons.
+  evidence: Perfectly explains the unique nature of Ukrainian sounds (Ґ, И, and voiced
+    consonants at word end).
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 5
-  evidence: Dialogues are robotic and semantically broken in a couple of places. "Що
-    це? Це день." and "А це гора? Так, дуже гарно." are unnatural.
+  score: 10
+  evidence: No dialogues present or required by the plan.
 findings: []
