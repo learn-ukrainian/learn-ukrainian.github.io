@@ -3874,7 +3874,9 @@ build_status: draft
 def main():
     parser = argparse.ArgumentParser(description="V6 Pipeline Build")
     parser.add_argument("level", help="Level (e.g., a1)")
-    parser.add_argument("module", type=int, help="Module number")
+    parser.add_argument("module", type=int, help="Module number (or start of range with --range)")
+    parser.add_argument("--range", type=int, default=None, metavar="END",
+                        help="Build modules from MODULE to END (inclusive). E.g., a1 7 --range 14")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini",
                         help="Default: gemini. *-tools = with MCP (VESUM/RAG) access during writing")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
@@ -3889,6 +3891,50 @@ def main():
     parser.add_argument("--no-chunk", action="store_true",
                         help="Disable section-by-section chunked generation (always single-call)")
     args = parser.parse_args()
+
+    # --range: build multiple modules sequentially
+    if args.range is not None:
+        end = args.range
+        start = args.module
+        if end < start:
+            _log(f"❌ --range {end} is less than start module {start}")
+            sys.exit(1)
+        _log(f"\n{'='*60}")
+        _log(f"  BATCH BUILD: {args.level.upper()} M{start:02d}–M{end:02d}")
+        _log(f"{'='*60}")
+        failed = []
+        for n in range(start, end + 1):
+            _log(f"\n{'─'*60}")
+            _log(f"  [{n - start + 1}/{end - start + 1}] Building M{n:02d}...")
+            _log(f"{'─'*60}")
+            try:
+                result = subprocess.run(
+                    [sys.executable, __file__, args.level, str(n),
+                     "--writer", args.writer,
+                     "--step", args.step,
+                     *(["--reviewer", args.reviewer] if args.reviewer else []),
+                     *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
+                     *(["--no-chunk"] if args.no_chunk else []),
+                     ],
+                    cwd=str(PROJECT_ROOT),
+                    timeout=3600,  # 1 hour per module max
+                )
+                if result.returncode != 0:
+                    failed.append(n)
+                    _log(f"  ❌ M{n:02d} failed (rc={result.returncode})")
+            except subprocess.TimeoutExpired:
+                failed.append(n)
+                _log(f"  ❌ M{n:02d} timed out (1h)")
+            except Exception as e:
+                failed.append(n)
+                _log(f"  ❌ M{n:02d} error: {e}")
+
+        _log(f"\n{'='*60}")
+        _log(f"  BATCH COMPLETE: {end - start + 1 - len(failed)}/{end - start + 1} succeeded")
+        if failed:
+            _log(f"  Failed: {', '.join(f'M{n:02d}' for n in failed)}")
+        _log(f"{'='*60}")
+        sys.exit(1 if failed else 0)
 
     # Resolve slug
     manifest = CURRICULUM_ROOT / "curriculum.yaml"
