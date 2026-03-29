@@ -9,6 +9,7 @@ on:
       - 'claude_extensions/phases/**/*.md'
       - 'claude_extensions/skills/**/*.md'
       - 'gemini_extensions/skills/**/*.md'
+      - 'starlight/**'
   pull_request:
     paths:
       - 'scripts/**/*.py'
@@ -17,6 +18,7 @@ on:
       - 'claude_extensions/phases/**/*.md'
       - 'claude_extensions/skills/**/*.md'
       - 'gemini_extensions/skills/**/*.md'
+      - 'starlight/**'
   workflow_dispatch:
 
 jobs:
@@ -148,6 +150,26 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+
+  frontend:
+    name: Frontend (build + vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: starlight/package-lock.json
+
+      - name: Install dependencies
+        working-directory: starlight
+        run: npm ci
+
+      - name: Run vitest (unit + build quality gate)
+        working-directory: starlight
+        run: npm test
 
   secret-scan:
     name: Secret Scanning (gitleaks)
