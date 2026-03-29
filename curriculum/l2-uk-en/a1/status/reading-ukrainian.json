@@ -2,13 +2,13 @@
   "module": "reading-ukrainian",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-29T21:00:22.346551Z",
+  "last_audit": "2026-03-29T22:58:12.704462Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T01:10:26.885282Z",
+    "md": "2026-03-29T22:51:21.499382Z",
     "meta": null,
-    "activities": "2026-03-29T01:06:12.040213Z",
-    "vocabulary": "2026-03-29T01:06:36.866373Z",
+    "activities": "2026-03-29T22:14:05.126905Z",
+    "vocabulary": "2026-03-29T22:14:23.256238Z",
     "research": null,
     "plan": "2026-03-29T00:33:54.498004Z"
   },
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2068/1200 (raw: 2626)"
+      "message": "2087/1200 (raw: 2600)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "56/1"
+      "message": "48/1"
     },
     "naturalness": {
       "status": "info",

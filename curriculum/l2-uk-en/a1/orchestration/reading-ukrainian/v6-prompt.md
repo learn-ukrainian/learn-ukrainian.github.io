@@ -39,16 +39,17 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ---
 
-## 8 Hard Rules
+## 9 Hard Rules
 
-1. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
-2. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-3. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
-4. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-5. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
-6. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
-7. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
-8. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+1. **IMMERSION TARGET: 5-15% Ukrainian MAXIMUM. THE LEARNER CANNOT READ CYRILLIC YET. English must dominate completely. Ukrainian appears ONLY as bolded inline words with immediate English translation.** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
+3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
+7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
+8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -238,39 +239,123 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: яблуко, молоко, людина, вулиця, столиця, каша, пісня, університет, бібліотека, фотографія, шоколад, мама, тато, аптека, кит, кіт, дим, дім, вода, рука, хата, коза, нога, школа, книга, банда, парта, сон, ліс, дуб, хліб, банк, Київ, Львів, Одеса, Харків, Дніпро, Полтава.
-- Not found: [] (All words verified)
+
+**11/11 words confirmed in VESUM:**
+
+- ✅ яблуко (noun)
+- ✅ молоко (noun)
+- ✅ людина (noun)
+- ✅ вулиця (noun)
+- ✅ столиця (noun)
+- ✅ каша (noun)
+- ✅ пісня (noun)
+- ✅ університет (noun)
+- ✅ бібліотека (noun)
+- ✅ фотографія (noun)
+- ✅ шоколад (noun)
+
+**Not found:** none — all 11 plan vocabulary words are safe to use.
+
+---
 
 ## Textbook Excerpts
+
 ### Section: Склади (Syllables)
-> Склад слова. Поділи слова на склади. Визнач наголошений склад.
-> Source: Zaharijchuk, Grade 1 (p.9)
+
+> «У слові стільки складів, скільки в ньому голосних звуків. НАПРИКЛАД: у слові Юлія 3 голосних: [у], [і], [а]. Отже, у цьому слові 3 склади: Ю-лі-я.»
+> Source: Заболотний, Grade 5, tier 1 (p.90) — **exact match to plan's Большакова rule**
+
+> «Склад – це частина слова, яку вимовляють одним поштовхом видихуваного повітря.»
+> Source: Заболотний, Grade 5, tier 1
+
+> «Залежно від кількості складів слова поділяються на односкладові, двоскладові, трискладові та багатоскладові, наприклад: матч, Хар-ків, ма-ту-ся, у-ні-вер-си-тет.»
+> Source: Литвинова, Grade 5, tier 1 (p.170) — **directly confirms у-ні-вер-си-тет syllable split from plan**
+
+> «Якщо збігаються підряд два або більше приголосних, то їх розділяємо так, щоб до попереднього складу відходив звук, у якому є більше голосу, ніж у наступному: книж-ка, сон-це, вер-ба.»
+> Source: Карaman, Grade 10, tier 2 — confirms open-syllable preference for consonant clusters
+
+> «У кожному складі обов'язково є голосний звук. Він утворює склад.»
+> Source: Вашуленко, Grade 2, tier 2 (p.18)
 
 ### Section: Голосні літери (Vowel Letters)
-> Голосні звуки утворюються за допомогою голосу... Легко вимовляються, весело співаються!
-> Source: Bolshakova, Grade 1 (p.24)
+
+> «Літери я, ю, є позначають два звуки в таких позиціях: на початку слова — яблуко [йаблуко]; після голосного — мию [ми·йу]; після апострофа та м'якого знака — п'ять [пйатʹ]. Літери ї та щ завжди позначають два звуки [йі] та [шч] відповідно: їжак [йіжак].»
+> Source: Литвинова, Grade 5, tier 1 (p.137) — **exact pedagogical structure for plan's iotated vowel section**
+
+> «Букви я, ю, є на початку складу позначають два звуки: [йа], [йу], [йе]. Буква ї завжди позначає два звуки — [йі]. / Після приголосних букви я, ю, є позначають один звук: [а], [у], [е].»
+> Source: Кравцова, Grade 2, tier 2 (p.10) — **confirms both rules in plan**
+
+> «В українській мові є шість голосних звуків. Ти можеш позначити їх на письмі десятьма буквами. Голосні звуки: [а], [о], [у], [е], [и], [і]. Букви, що позначають голосні звуки: а, о, у, е, и, і, я, ю, є, ї.»
+> Source: Большакова, Grade 2, tier 2 (p.34) — **directly supports "6 sounds, 10 letters" rule in plan**
 
 ### Section: Читання слів (Reading Words)
-> Як зробити звуковий аналіз слова: 1. Визначаю в слові голосні звуки. 2. Ділю слово на склади. 3. Ставлю наголос.
-> Source: Bolshakova, Grade 1 (p.29)
+
+> «Слова поділяються на склади — частини слова, що утворюються з одного чи кількох звуків і вимовляються одним поштовхом видихуваного повітря. У складі обов'язково має бути один голосний звук, саме він утворює склад. Коли переносимо слова з рядка в рядок, ділимо їх за складами: мо-ло-ко, ком-п'ю-тер.»
+> Source: Литвинова, Grade 5, tier 1 (p.170) — **confirms мо-ло-ко split from plan's Level 1 examples**
+
+> «Визначте кількість складів у словах, не поділяючи їх на склади: бібліотека, книгосховище, грамота, наука, мудрість.»
+> Source: Вашуленко, Grade 2, tier 2 (p.19) — **бібліотека appears as a canonical multi-syllable practice word**
+
+### Section: Підсумок — Summary
+
+> «Запитання для самоперевірки: Чим звук відрізняється від букви? Які особливості вимови українських звуків? ...»
+> Source: Литвинова, Grade 5, tier 1 (p.187) — **validates self-check format used in plan's summary section**
+
+---
 
 ## Grammar Rules
-- Кількість складів: У слові стільки складів, скільки голосних звуків. (Fundamental phonetic rule confirmed in school textbooks)
-- Я, Ю, Є: Правопис §4 — На початку слова, після голосного та після апострофа позначають [йа], [йу], [йе]. Після приголосного позначають його м’якість.
-- Апостроф: Правопис §7 — Роздільність вимови я, ю, є, ї та попереднього твердого приголосного на письмі позначаємо апострофом.
-- М'який знак: Правопис §26 — Буквою ь позначаємо на письмі м’якість приголосних звуків.
+
+- **6 голосних звуків / 10 голосних букв**: Confirmed in textbooks (Большакова Grade 2, Вашуленко Grade 2). The rule "В українській мові шість голосних звуків" is universally attested Grade 1-10.
+
+- **Iotated vowels (я, ю, є, ї)**: Правопис §7 — Апостроф. The apostrophe rule confirms that я/ю/є/ї signal iotation after hard consonants (б, п, в, м, ф; р; prefixes). Textbook rule: *two sounds at word start / after vowel / after apostrophe or ь; one sound (softening) after consonant*.
+
+- **М'який знак**: Правопис §26 — Ь. "Буквою ь позначаємо на письмі м'якість приголосних звуків." Applies after д, т, з, с, дз, ц, л, н at word/syllable end. Confirmed: пісня — Н is softened by Я (not by Ь, but by iotated vowel in post-consonant position).
+
+- **Syllable rule**: No specific Правопис §, but unanimously confirmed in every grade: «У слові стільки складів, скільки в ньому голосних звуків» — Заболотний Grade 5, Вашуленко Grade 2, Литвинова Grade 5, Karaman Grade 10.
+
+---
 
 ## Calque Warnings
-- приймати участь: Calque — Correct form: брати участь
-- мати місце: Calque (if meaning "take place") — Correct form: відбуватися
-- посилання: OK (meaning "link") or OK (meaning "reference") — No calque here for the context of reading.
+
+- **«читати по складах»**: Searched Антоненко-Давидович — no calque warning found. Phrase is standard Ukrainian pedagogical language (attested in textbooks). ✅ OK
+- **«столиця»**: Confirmed as natural Ukrainian by Антоненко-Давидович (uses it himself: «столиця України — Києві»). ✅ OK
+- **«брати душ»**: ⚠️ CALQUE — not in plan vocabulary but worth noting if it appears in module content. Correct Ukrainian: *митися під душем*. The plan does not use this phrase, so no action needed.
+
+**No calques found in plan content.**
+
+---
 
 ## CEFR Check
-- яблуко: A1 (Grade 1 Bolshakova p.69) — OK
-- вулиця: A1 (Grade 1 Bolshakova p.75) — OK
-- столиця: A1 (Grade 1 Bolshakova p.51) — OK
-- фотографія: A1 (Grade 1 Bolshakova p.76) — OK
-- університет: A1 (Essential adult vocabulary, phonetic structure) — OK
+
+All vocabulary confirmed at A1 level via PULS database:
+
+| Word | PULS Level | Status |
+|------|-----------|--------|
+| яблуко | A1 | ✅ Appropriate |
+| молоко | A1 | ✅ Appropriate |
+| людина | A1 | ✅ Appropriate |
+| вулиця | A1 | ✅ Appropriate |
+| університет | A1 | ✅ Appropriate |
+| бібліотека | A1 | ✅ Appropriate |
+| фотографія | A1 | ✅ Appropriate |
+| шоколад | A1 | ✅ Appropriate |
+| столиця | not in PULS | ⚠️ Not rated — but common civic vocabulary, attested A1 in Ukrainian school Grade 1 (Буквар) |
+| каша | not in PULS | ⚠️ Not rated — basic food word, clearly A1 register |
+| пісня | not in PULS | ⚠️ Not rated — basic cultural word, clearly A1 register |
+
+**No vocabulary is above A1 level.** The three PULS-unrated words (столиця, каша, пісня) are all basic words that appear in Grade 1-2 textbooks.
+
+---
+
+## Summary: CLEAR TO BUILD
+
+- ✅ All 11 vocabulary words verified in VESUM
+- ✅ All core grammar rules (склади, голосні, iotation, м'який знак) confirmed in multiple textbooks
+- ✅ Syllable division of план examples (мо-ло-ко, у-ні-вер-си-тет, бі-блі-о-те-ка) confirmed in Литвинова Grade 5
+- ✅ Textbook authority confirmed: Большакова, Вашуленко, Заболотний, Литвинова all teach the same rules as the plan
+- ✅ No calques in plan content
+- ✅ All PULS-rated vocabulary is A1
+- ⚠️ One note: plan states «яблуко [йа]» — confirmed by Литвинова Grade 5 as яблуко [йаблуко]. The notation in the plan should write the full word phonetics, not just the initial vowel sound, when giving the example.
 </pre_verified_facts>
 
 
@@ -765,8 +850,19 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 > **Оленка:** Теж добре! *(Also good!)*
 
 Without speaker names, the reader cannot tell who is speaking. NEVER use anonymous em dashes (`— text`). After each dialogue, briefly explain the key phrases and patterns the learner just saw.
-- Dialogues: natural, not stilted. Real situations, real responses. **Use the knowledge packet** — it contains textbook excerpts with real Ukrainian dialogues and situations. Adapt them, don't invent artificial conversations. A dialogue about немає should show someone SEARCHING for something and not finding it (keys, notebook, phone), not an interrogation. A dialogue about the market should sound like a real market conversation. If the knowledge packet has a textbook dialogue on the topic, use that pattern.
-- **Tone:** Authoritative but warm. Like a skilled Ukrainian teacher — confident, clear, culturally grounded. Let the content be interesting on its own.
+- **Dialogues must sound like real people talking.** Test: would two Ukrainians actually say this to each other? If the dialogue sounds like a textbook drill ("Це кінь? — Так, це кінь."), rewrite it. Good dialogues have context, reactions, and personality:
+
+  BAD (interrogation): "Це сім'я? — Так, це сім'я. — А де м'ясо? — М'ясо там."
+  GOOD (natural): "Це твоя сім'я на фото? — Так! Нас п'ять. — А що ви їсте? М'ясо? — Так, дуже смачне!"
+
+  BAD (labeling objects): "Це дуб. — А там коза. — Ні, це коса."
+  GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
+
+  Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
+- **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
+
+  BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
+  GOOD: "Ukrainian spelling is highly phonetic — what you see is what you hear."
 - **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
 
 ### Forbidden Tropes
@@ -781,6 +877,16 @@ If you write any of these patterns, the module will be rejected in review:
 
 GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M03):
 NO CONJUGATED VERBS. NO IMPERATIVES. This is the phonetics phase.
+
+VIDEO-FIRST PEDAGOGY (M01-M03 ONLY):
+The learner CANNOT read Cyrillic yet. Letters are introduced BY VIDEO, not by text.
+When the plan provides Anna Ohoiko pronunciation videos, structure each letter as:
+1. Embed the video (the pipeline handles the actual embed)
+2. Short English note about what the learner just heard/saw
+3. Example words with English translations
+Do NOT write paragraphs describing how to position your tongue or shape your mouth.
+The video shows pronunciation — your job is to explain what the learner heard,
+point out patterns, and give practice words. Keep it short and visual.
 
 ALLOWED structures (Ukrainian examples only):
 - Це + noun: «Це кіт», «Це мама»
@@ -834,40 +940,45 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Склади — Syllables (~275 words total)
-- P1 (~65 words): [Introduction to the "Golden Rule" of Ukrainian reading. Following Bolshakova (Grade 1, p.25), explain that a word has exactly as many syllables as it has vowels (голосні звуки). Illustrate with simple math: мама (2 vowels = 2 syllables), мо-ло-ко (3 vowels = 3 syllables), банк (1 vowel = 1 syllable).]
-- P2 (~75 words): [Explain the mechanics of syllable division (складоподіл). Introduce the "Open Syllable Principle": Ukrainian consonants prefer to jump to the start of the next syllable rather than closing the previous one. Compare а-пте-ка (consonant cluster ПТ splits) with simple мо-ло-ко. Explain why this makes Ukrainian sound "melodic" and "open."]
-- P3 (~65 words): [The 4-step "Sound Analysis" method (звуковий аналіз) from Bolshakova p.29. 1. Find the vowels. 2. Mark the syllable boundaries. 3. Sound out each block slowly. 4. Blend at natural speed. Practice examples: у-ні-вер-си-тет, шо-ко-лад, ка-ша.]
-- Exercise: [fill-in, focus: Divide words into syllables (складоподіл), 8 items: мо-ло-ко, ап-те-ка, сто-ли-ця, кни-га, ма-ма, та-то, во-да, ха-та.]
-- Exercise: [quiz, focus: How many syllables? Count the vowels based on the rule, 8 items: книгарня, телефон, хліб, бібліотека, шоколад, яблуко, столиця, вулиця.]
+## Склади (Syllables) (~275 words total)
 
-## Голосні літери — Vowel Letters (~340 words total)
-- P1 (~60 words): [Review the 6-10 mapping from M01. Focus on the 6 "Simple Vowels": А, О, У, Е, И, І. Explain that these are the "honest" letters — they represent one sound each, every time. Contrast with English vowels that change based on context.]
-- P2 (~75 words): [The "Tricky Pair": И vs І. Explain the phonetic difference: І [i] is high and "smiling" (like "see"), while И [ɪ] is lower and "relaxed" (like "bit"). Use the critical minimal pairs to show meaning change: кит (whale) vs кіт (cat), дим (smoke) vs дім (house).]
-- P3 (~85 words): [Iotated Vowels (йотовані) Part 1: Я, Ю, Є. Explain their dual role: at the start of a word (яблуко) or after a vowel (моя), they represent [й] + vowel. After a consonant (пісня), they soften the consonant and provide the vowel sound. Use людина (person) as a softening example.]
-- P4 (~65 words): [Iotated Vowels Part 2: Ї. Explain why Ї is the "King" of vowels. It ALWAYS represents two sounds [йі] and NEVER softens the preceding consonant (it usually appears after vowels or apostrophes). Examples: Україна, поїзд, їжа.]
-- Exercise: [match-up, focus: Match iotated vowels to their sound components (e.g., Я = [й] + [а]), 4 items: Я, Ю, Є, Ї.]
-- Exercise: [quiz, focus: Read the word and choose its meaning, 6 items: яблуко (apple), людина (person), вулиця (street), столиця (capital), каша (porridge), пісня (song).]
+- P1 (~60 words): Introduce the core rule from Большакова p.25: "У слові стільки складів, скільки голосних звуків." Frame it as the master key to reading Ukrainian — before you read any word, count the vowels. Demonstrate with мама (А, А = 2 vowels = 2 syllables: ма-ма) and молоко (О, О, О = 3 vowels = 3 syllables: мо-ло-ко) and банк (А = 1 vowel = 1 syllable).
+- P2 (~80 words): Teach the 4-step reading method (following Большакова p.29 звуковий аналіз): (1) Scan the word and spot the vowels. (2) Split into syllables — consonants prefer to start a new syllable (open-syllable principle: складоподіл). (3) Sound out each syllable separately. (4) Blend at natural speed. Walk through the steps live with аптека: spot А, Е, А → ап-те-ка → read each → аптека.
+- P3 (~70 words): Apply the method to three progressively longer words: шоколад (3 vowels: шо-ко-лад), університет (6 vowels: у-ні-вер-си-тет), бібліотека (5 vowels: біб-лі-о-те-ка). Show that even a terrifyingly long word is manageable once you count the vowels. Reassure the learner: the rule never breaks.
+- Exercise: quiz — "How many syllables?" Count the vowels. 8 items: сон, оса, каша, аптека, молоко, університет, Київ, шоколад. (Matches activity_hint: quiz, "How many syllables? Count the vowels," 8 items.)
 
-## Читання слів — Reading Words (~550 words total)
-- P1 (~75 words): [Reading strategy: "The Lego Method." Advise the learner not to look at individual letters but to scan for the vowel "cores" and build syllables around them. Demonstrate with кни-га: see И and А, build syllables, blend. Contrast with the slower letter-by-letter approach.]
-- P2 (~85 words): [Pattern 1: CVCV (Consonant-Vowel-Consonant-Vowel). This is the foundation of Ukrainian fluency. Practice rhythmic reading with "family" words from Kravcova p.32: ма-ма, та-то, во-да, ру-ка, ха-та, ко-за, но-га. Focus on steady pacing.]
-- P3 (~85 words): [Pattern 2: CVCCV and CVC. Introduce consonant clusters and closed syllables. Explain that the rule still holds: one vowel, one syllable. Examples: шко-ла, па-рта, бан-да, дім, сон, ліс, дуб, хліб. Practice the abrupt stop of the CVC pattern.]
-- P4 (~85 words): [Progressive Difficulty Level 2: 3-syllable words. Move beyond basic chunks. Practice maintaining the "Open Syllable" flow in longer words: ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця, сто-ли-ця. Ensure the learner doesn't pause too long between syllables.]
-- P5 (~95 words): [Progressive Difficulty Level 3: 4+ syllables and City Names. Practice high-value vocabulary: у-ні-вер-си-тет, бі-блі-о-те-ка, фо-то-гра-фі-я. Introduce major Ukrainian city names as reading exercises: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва.]
-- P6 (~85 words): [Special signs preview (leading into M03). Briefly introduce three visual markers that change reading: Щ is always [шч] (що, ще), Ь (soft sign) which is silent but changes the consonant (день, сіль), and the Apostrophe which forces a hard break (сім’я, м’ясо).]
-- Exercise: [quiz, focus: Read the word and choose its meaning (including long words and city names), 6 items: університет, бібліотека, фотографія, шоколад, Київ, Львів.]
+## Голосні літери (Vowel Letters) (~330 words total)
 
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): [Recap of the syllable rule and the 10-vowel mapping. Provide a bulleted self-check list:
-  * How do you count syllables in a Ukrainian word? (Count the vowels!)
-  * What are the 6 basic vowel sounds? ([а], [о], [у], [е], [и], [і])
-  * Name the 4 iotated vowel letters. (Я, Ю, Є, Ї)
-  * What does the letter Ь do? (Softens the consonant, has no sound of its own)
-  * What does the apostrophe do? (Forces a hard separation between sounds)
-  * Challenge: How many syllables are in бі-блі-о-те-ка? (5 syllables)]
+- P1 (~70 words): Recall from M01: Ukrainian has 6 vowel sounds but 10 vowel letters. Introduce the simple six first — А [а], О [о], У [у], Е [е], И [и], І [і]. Each makes exactly one consistent sound, no exceptions. Give one anchor word for each: а — аптека, о — молоко, у — рука, е — вечір, и — кит, і — кіт. Stress that these are reliable: what you see is what you say.
+- P2 (~90 words): Introduce the four iotated vowels: Я, Ю, Є, Ї. Explain the two-sound rule: when Я appears at the start of a word or after another vowel, it equals [йа] — e.g., яблуко ([йа]блуко), моя (мо-[йа]). After a consonant, Я does NOT produce [й] — instead it softens the preceding consonant and adds [а]: пісня (Н becomes soft). Same pattern for Ю ([йу]/softening+у) and Є ([йе]/softening+е). Illustrate with людина (Л softened by Ю) and вечірнє (Н softened by Є).
+- Exercise: match-up — match iotated vowels to their sound components: Я=[й]+[а], Ю=[й]+[у], Є=[й]+[е], Ї=[й]+[і]. 4 items. (Matches activity_hint: match-up, "iotated vowels to their sound components.")
+- P3 (~60 words): Single out Ї — it always equals [йі], no exceptions. It never softens the consonant before it because it never appears after a consonant — only at word start (їжак), after a vowel (країна), or after an apostrophe (з'їсти). Ї is a distinctly Ukrainian letter: Russian has no equivalent.
+- P4 (~70 words): Critical minimal pairs — И vs І. Show кит (whale) [кит] vs кіт (cat) [кіт], дим (smoke) [дим] vs дім (house) [дім]. The difference between [и] (more central/back) and [і] (high front) changes meaning. These are not interchangeable — they are two distinct phonemes. Encourage the learner to listen carefully to model pronunciations before drilling.
+- Exercise: fill-in — divide words into syllables: мо-ло-ко, ап-те-ка, яб-лу-ко, лю-ди-на, ву-ли-ця, пі-сня, їжак, сто-ли-ця. 8 items. (Matches activity_hint: fill-in, "Divide words into syllables.")
 
-Grand total: ~1315 words
+## Читання слів (Reading Words) (~560 words total)
+
+- P1 (~80 words): Bridge from analysis to fluency. The syllable method is a scaffold, not a permanent crutch: count vowels → split → blend → read. The goal is to internalize the rhythm so you stop reading letter-by-letter. Explain the reading strategy in order: (1) spot the vowels first (they are the cores), (2) build the consonant clusters around them, (3) read syllable-by-syllable, (4) accelerate with repetition until the word flows. Demonstrate with книга: vowels И, А → кни-га → книга.
+- P2 (~100 words): Introduce the three core CVCV/CVCCV/CVC word patterns with real Ukrainian examples. CVCV words (alternating consonant-vowel — easiest): мама, тато, каша, вода, рука, хата, коза, нога. CVCCV words (consonant cluster before a vowel — slightly harder): школа, книга, парта, вулка. CVC words (closed syllable — one syllable, ends in consonant): дім, сон, ліс, дуб, хліб, банк. Practice each group separately before mixing. Note that most Ukrainian words are open-syllable (ending in a vowel), which makes blending easier.
+- Exercise: quiz — "Read the word and choose its meaning." 6 items using vocabulary from the module: яблуко, молоко, столиця, шоколад, людина, каша. Distractors should be plausible (столиця = capital / library / street). (Matches activity_hint: quiz, "Read the word and choose its meaning," 6 items.)
+- P3 (~120 words): Progressive reading drill across three difficulty levels. Level 1 — 2-syllable words: мама, тато, вода, рука, хата, каша. Read each twice — once split (ма-ма), once blended (мама). Level 2 — 3-syllable words: аптека, молоко, людина, вулиця. Split first: ап-те-ка. Then blend. Level 3 — 4+ syllable words: університет (6 syllables: у-ні-вер-си-тет), бібліотека (5 syllables: біб-лі-о-те-ка), фотографія (5 syllables: фо-то-гра-фі-я). These look intimidating but the vowel-counting method conquers them completely. Finish with Ukrainian city names as a confidence-builder: Ки-їв, Льо-вів (note Ї), О-де-са, Хар-ків, Дні-про, Пол-та-ва.
+- P4 (~110 words): Introduce three special combinations as a preview (detailed in M03, not the focus now). (1) Щ always reads as [шч] — one letter, two sounds: що [шчо], ще [шче]. Never guess it as [ш] alone. (2) Ь (м'який знак) has no sound of its own — it only softens the consonant before it: день (Н is soft), сіль (Л is soft), кінь (Н is soft). Think of Ь as a silent softener. (3) The apostrophe (') separates — it prevents the iotated vowel from softening the consonant: сім'я (М stays hard, then [йа]), м'ясо, п'ять. These three features will be drilled in M03; today, recognize them when you see them.
+- Dialogue (~90 words): Short 4-line exchange modelling the syllable-reading strategy in context. Two characters, one helping the other read a new word. E.g., Аня reads бібліотека slowly by syllable (Аня: «Біб-лі-о-те-ка... бібліотека!»), partner confirms and gives meaning. Incorporate яблуко and шоколад in two more turns. Shows learner that the method works in real interaction, not just exercises.
+- Exercise: fill-in — 8 items dividing longer words into syllables (overlapping with the drill above but learner now writes the splits): університет, бібліотека, фотографія, шоколад, столиця, людина, вулиця, яблуко.
+
+## Підсумок — Summary (~155 words total)
+
+- P1 (~155 words): Self-check — bulleted Q&A list (not prose):
+  - How do you count syllables in a Ukrainian word? → Count the vowels. Each vowel = one syllable.
+  - What are the 6 vowel sounds? → [а], [о], [у], [е], [и], [і].
+  - Name the 4 iotated vowel letters. → Я, Ю, Є, Ї.
+  - What do Я, Ю, Є do at the start of a word? → They produce two sounds: Я=[йа], Ю=[йу], Є=[йе].
+  - What does Ї always produce? → Always [йі] — two sounds, no exceptions.
+  - What does Ь do? → It softens the consonant before it but has no sound of its own.
+  - What does the apostrophe do? → It separates the consonant from a following iotated vowel so no softening occurs.
+  - Read this word and count syllables: бібліотека. → Біб-лі-о-те-ка. 5 syllables (5 vowels: І, І, О, Е, А).
+
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format

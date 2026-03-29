@@ -1,7 +1,7 @@
 # Audit Report: M01 — sounds-letters-and-hello.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-29 00:52:45
+**Generated:** 2026-03-29 21:42:19
 
 ## Configuration
 **Type:** A1
@@ -18,49 +18,55 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 6 | 6 | ✅ |
-| 2 | match-up |  | 6 | 6 | ✅ |
-| 3 | fill-in |  | 6 | 6 | ✅ |
-| 4 | group-sort |  | 14 | 6 | ✅ |
-| 5 | quiz |  | 6 | 6 | ✅ |
-| 6 | match-up |  | 8 | 6 | ✅ |
-| 7 | true-false |  | 6 | 6 | ✅ |
-| 8 | watch-and-repeat |  | 6 | 1 | ✅ |
-| 9 | watch-and-repeat |  | 7 | 1 | ✅ |
-| 10 | watch-and-repeat |  | 9 | 1 | ✅ |
-| 11 | watch-and-repeat |  | 10 | 1 | ✅ |
+| 1 | group-sort |  | 14 | 6 | ✅ |
+| 2 | fill-in |  | 6 | 6 | ✅ |
+| 3 | quiz |  | 6 | 6 | ✅ |
+| 4 | match-up |  | 8 | 6 | ✅ |
+| 5 | match-up |  | 10 | 6 | ✅ |
+| 6 | true-false |  | 8 | 6 | ✅ |
+| 7 | anagram |  | 8 | 6 | ✅ |
+| 8 | quiz |  | 7 | 6 | ✅ |
+| 9 | group-sort |  | 32 | 6 | ✅ |
+| 10 | watch-and-repeat |  | 6 | 1 | ✅ |
+| 11 | watch-and-repeat |  | 7 | 1 | ✅ |
+| 12 | watch-and-repeat |  | 9 | 1 | ✅ |
+| 13 | watch-and-repeat |  | 10 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 4/8 (fill-in, match-up, quiz, watch-and-repeat) ✅
+- Total activities: 13 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 5/8 (anagram, fill-in, match-up, quiz, watch-and-repeat) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_OPTIONS]** quiz '' Q5 has 2 options (target: [3, 4])
-  - FIX: Provide [3, 4] options for A1 quizzes.
-- **[COMPLEXITY_OPTIONS]** quiz '' Q6 has 2 options (target: [3, 4])
-  - FIX: Provide [3, 4] options for A1 quizzes.
+- **[GRAMMAR]** Subordinate clause marker at A1: 'і коли м'
+  - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
+- **[ANAGRAM_LETTER_MISMATCH]** Anagram '' item 5: scrambled letters ['К', 'О', 'О'] don't match answer 'oko' letters ['K', 'O', 'O'].
+  - FIX: Scrambled letters must be exactly the same letters as the answer, just reordered.
+- **[COMPLEXITY]** group-sort '' has 32 items (target: 6-30)
+  - FIX: Adjust number of items to sort to 6-30.
+- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 2 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1845/1200 (raw: 2184)
-- **Activities:** ✅ 11/0
+- **Words:** ✅ 2079/1200 (raw: 2584)
+- **Activities:** ✅ 13/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/1
+- **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 16.1% (target 5-15%, within tolerance (M01))
+- **Immersion:** 🇺🇦 19.9% (target 5-25% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -69,8 +75,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Зву́ки і лі́тери (Sounds and Letters)** | ✅ | 435 | Included in Core |
-| **Голосні звуки (Vowel Sounds)** | ✅ | 332 | Included in Core |
-| **Приголосні звуки (Consonant Sounds)** | ✅ | 313 | Included in Core |
-| **Приві́т! (Hello!)** | ✅ | 216 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 549 | Included in Core |
+| **Зву́ки і лі́тери (Sounds and Letters)** | ✅ | 479 | Included in Core |
+| **Голосні звуки (Vowel Sounds)** | ✅ | 336 | Included in Core |
+| **Приголосні звуки (Consonant Sounds)** | ✅ | 312 | Included in Core |
+| **Приві́т! (Hello!)** | ✅ | 294 | Included in Core |
+| **Підсумок (Summary)** | ✅ | 658 | Included in Core |

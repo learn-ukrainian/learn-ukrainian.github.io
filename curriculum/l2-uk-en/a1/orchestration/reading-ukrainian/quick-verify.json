@@ -4,10 +4,10 @@
   "errors": [],
   "warnings": [
     {
-      "check": "TOXIC",
+      "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Latin characters mixed with Cyrillic: s, x"
+      "message": "Missing 1/7 required vocab: столиця (capital) — Київ — столиця України"
     }
   ],
-  "timestamp": "2026-03-29T00:04:17.149326+00:00"
+  "timestamp": "2026-03-29T20:09:39.915977+00:00"
 }

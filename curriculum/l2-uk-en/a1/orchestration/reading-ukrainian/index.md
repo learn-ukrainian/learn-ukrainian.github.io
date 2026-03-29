@@ -1,26 +1,26 @@
 # Build Summary: reading-ukrainian (A1)
 
-Generated: 2026-03-29 01:10
+Generated: 2026-03-29 22:51
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-03-28 23:55:31 |
-| research | complete | 2026-03-28 23:56:22 |
-| skeleton | complete | 2026-03-28 23:56:56 |
-| pre-verify | complete | 2026-03-29 00:02:12 |
-| write | complete | 2026-03-29 00:04:17 |
-| exercises | complete | 2026-03-29 00:04:17 |
-| activities | complete | 2026-03-29 00:06:12 |
-| verify-exercises | complete | 2026-03-29 00:06:12 |
-| annotate | complete | 2026-03-29 00:06:12 |
-| vocab | complete | 2026-03-29 00:06:36 |
-| enrich | complete | 2026-03-29 00:06:37 |
-| verify | complete | 2026-03-29 00:06:38 |
-| review | complete | 2026-03-29 00:10:16 |
-| stress | complete | 2026-03-29 00:10:26 |
-| publish | complete | 2026-03-29 00:10:26 |
+| check | complete | 2026-03-29 20:04:35 |
+| research | complete | 2026-03-29 20:05:25 |
+| skeleton | complete | 2026-03-29 20:06:29 |
+| pre-verify | complete | 2026-03-29 20:08:06 |
+| write | complete | 2026-03-29 20:09:39 |
+| exercises | complete | 2026-03-29 20:09:39 |
+| activities | complete | 2026-03-29 20:14:05 |
+| verify-exercises | complete | 2026-03-29 20:14:05 |
+| annotate | complete | 2026-03-29 20:14:05 |
+| vocab | complete | 2026-03-29 20:14:23 |
+| enrich | complete | 2026-03-29 20:14:24 |
+| verify | complete | 2026-03-29 20:14:25 |
+| review | complete | 2026-03-29 20:51:20 |
+| stress | complete | 2026-03-29 20:31:08 |
+| publish | complete | 2026-03-29 20:31:08 |
 
 ## Reviews
 
@@ -33,13 +33,16 @@ Generated: 2026-03-29 01:10
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 316s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 34s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 124s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 115s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 23s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 163s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+| pre-verify | claude-tools (claude-sonnet-4-6) | 97s | ✅ |
+| skeleton | claude (claude-sonnet-4-6) | 64s | ✅ |
+| write | claude-tools (claude-opus-4-6) | 94s | ✅ |
+| activities | claude-tools (claude-sonnet-4-6) | 265s | ✅ |
+| vocab | claude (claude-sonnet-4-6) | 16s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 328s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 286s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 284s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 138s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 106s | ✅ |
 
 ## Files
 

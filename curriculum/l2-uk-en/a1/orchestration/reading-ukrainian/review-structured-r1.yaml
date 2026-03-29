@@ -2,48 +2,47 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all outline points, integrates Bolshakova references, and explains
-    the Open Syllable principle and Lego method correctly.
+  score: 7
+  evidence: Missed the word "банда" from the CVCCV plan point. Ignored the phonetic
+    division from the plan ("а-пте-ка"), using "ап-те-ка" instead. Inserted an extra
+    activity marker (`fill-in-longer-words`) not pr
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Zero Russianisms or Surzhyk. Accurately explains Ukrainian phonetic rules
-    (И vs І, Iotated vowels).
+  score: 7
+  evidence: The text correctly explains that Ukrainian follows the open-syllable principle
+    ("consonants prefer to start a new syllable"). However, it immediately violates
+    this rule in its examples by splitting wo
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Clear progression from syllables to vowels to reading words. The explanation
-    of "відкритий склад" is excellent.
+  score: 8
+  evidence: Explanations are generally clear, but there is a jarring "acting confused"
+    moment where the text hallucinates 6 vowels for "університет" before correcting
+    itself ("six vowels... wait, let us count car
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items from the plan are naturally
-    embedded in the prose and examples.
+  evidence: All required vocabulary is used naturally in the text.
 - dimension: 5
   name: Exercise quality
   score: 8
-  evidence: 'DEDUCT: There is an extra `quiz` marker before the "Читання слів" section,
-    breaking the 1-to-1 mapping with the plan''s 4 activity hints.'
+  evidence: All required activity markers are present and well-placed, but an extra
+    unauthorized marker was added.
 - dimension: 6
   name: Engagement & tone
-  score: 4
-  evidence: 'DEDUCT: The text is filled with corporate-speak ("immediate practice",
-    "foundational concept") and meta-commentary ("Let us look at...", "Before you
-    start memorizing..."). It tells rather than shows ('
+  score: 7
+  evidence: 'The dialogue is excellent. However, there is a lot of instructional meta-commentary
+    ("Time for a progressive reading drill", "as a confidence-builder", "These look
+    intimidating") which makes the text '
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Proper H2 headings, correct markdown formatting, and clear sections matching
-    the plan.
+  evidence: Clean formatting, correct headers, word count is on target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Excellent integration of authentic Ukrainian reading strategies ("звуковий
-    аналіз") used by native children.
+  evidence: Accurate positioning of the letter Ї as uniquely Ukrainian.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 6
-  evidence: 'DEDUCT: The dialogue under "Читання слів" is extremely robotic and transactional
-    ("Де університет? Університет тут. Де бібліотека? Бібліотека там.").'
+  score: 9
+  evidence: The sounding-out dialogue with Аня and Марко perfectly fits the A1.1 context.
 findings: []
