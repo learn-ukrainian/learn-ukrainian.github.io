@@ -2422,7 +2422,17 @@ def step_activities(
 
         if not ok or not raw:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
-            error_context = "Writer returned empty output. Please output valid YAML."
+            error_context = "Writer returned empty output. Please output valid YAML starting with version: '1.0'."
+            continue
+
+        # Reject tiny responses — likely commentary instead of YAML
+        if len(raw.strip()) < 2000:
+            _log(f"  ❌ Response too short ({len(raw.strip())} chars) — likely commentary, not YAML")
+            error_context = (
+                "Your response was too short and appears to be commentary instead of YAML. "
+                "Output ONLY the raw YAML document. Your first character must be 'version:'. "
+                "No markdown, no file paths, no explanation."
+            )
             continue
 
         # Extract YAML from LLM output (strip markdown, commentary, fences)
