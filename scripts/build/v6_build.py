@@ -4036,6 +4036,9 @@ def main():
     # because standalone annotate runs on already-enriched content and post-process
     # would strip TAB markers added by ENRICH.
     if steps == "all":
+        if not content_path or not content_path.exists():
+            _log("\n❌ Build FAILED — no content file exists (write step failed)")
+            sys.exit(1)
         _post_process_content(content_path)
         _save_v6_state(args.level, slug, "annotate")
 
