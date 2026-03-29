@@ -203,6 +203,36 @@ _ENRICH_FILTER_KEYWORDS = (
 )
 
 
+def _get_immersion_target_short(level: str, module_num: int) -> str:
+    """Return a short immersion target string for the Hard Rules section.
+
+    M01-M03 get an extra warning because the learner cannot read Cyrillic yet.
+    """
+    base = level.split("-")[0]
+    if base == "a1":
+        if module_num <= 3:
+            return (
+                "5-15% Ukrainian MAXIMUM. THE LEARNER CANNOT READ CYRILLIC YET. "
+                "English must dominate completely. Ukrainian appears ONLY as bolded "
+                "inline words with immediate English translation."
+            )
+        if module_num <= 6:
+            return "5-15% Ukrainian"
+        if module_num <= 14:
+            return "10-20% Ukrainian"
+        if module_num <= 24:
+            return "15-25% Ukrainian"
+        if module_num <= 34:
+            return "15-30% Ukrainian"
+        return "20-35% Ukrainian"
+    elif base == "a2":
+        return "25-40% Ukrainian"
+    elif base == "b1":
+        return "40-60% Ukrainian"
+    else:
+        return "60-90%+ Ukrainian"
+
+
 def _extract_body(content: str) -> tuple[str, str]:
     """Extract lesson body (prose) and tail (Словник/Ресурси tabs).
 
@@ -1092,6 +1122,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{KNOWLEDGE_PACKET}": packet,
         "{EXACT_SECTION_TITLES}": "\n".join(section_titles),
         "{IMMERSION_RULE}": get_immersion_rule(level, module_num),
+        "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
         "{PEDAGOGICAL_CONSTRAINTS}": get_pedagogical_constraints(level, module_num, plan),
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
@@ -3026,19 +3057,23 @@ def step_review(content_path: Path, level: str, module_num: int,
     _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
 
     if reviewer == "gemini":
-        ok, raw = _dispatch(
-            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=600, mcp_tools=True,
-        )
-        # Retry once if Gemini fails (often rate-limited / no capacity)
-        if not ok or not raw:
-            _log("  ⚠️  Gemini review failed — retrying in 30s...")
-            import time
-            time.sleep(30)
+        import time
+        ok, raw = None, None
+        _GEMINI_REVIEW_RETRIES = 3
+        _GEMINI_REVIEW_BACKOFFS = [30, 60, 120]
+        for attempt in range(1, _GEMINI_REVIEW_RETRIES + 1):
             ok, raw = _dispatch(
                 prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
                 timeout=600, mcp_tools=True,
             )
+            if ok and raw:
+                break
+            if attempt < _GEMINI_REVIEW_RETRIES:
+                wait = _GEMINI_REVIEW_BACKOFFS[attempt - 1]
+                _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_RETRIES}) — retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_RETRIES} attempts")
     else:
         ok, raw = _dispatch(
             prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,

@@ -13,6 +13,7 @@ Issue: #1029 (observability)
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import time
@@ -198,6 +199,8 @@ def dispatch_agent(
             cmd.extend(["--mcp-config", mcp_config, "--allowedTools", allowed_tools])
 
     # Execute with timing
+    # Set LEARN_UKRAINIAN_PIPELINE to skip SessionStart/UserPromptSubmit hooks
+    env = {**os.environ, "LEARN_UKRAINIAN_PIPELINE": "1"}
     t0 = time.monotonic()
     try:
         result = subprocess.run(
@@ -207,6 +210,7 @@ def dispatch_agent(
             text=True,
             timeout=timeout,
             cwd=str(PROJECT_ROOT),
+            env=env,
         )
         elapsed = time.monotonic() - t0
         ok = result.returncode == 0
