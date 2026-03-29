@@ -2,7 +2,7 @@
   "module": "reading-ukrainian",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-29T01:13:25.056351Z",
+  "last_audit": "2026-03-29T21:00:22.346551Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-29T01:10:26.885282Z",
@@ -24,9 +24,9 @@
       "message": "2068/1200 (raw: 2626)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/0 | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

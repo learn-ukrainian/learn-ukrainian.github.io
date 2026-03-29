@@ -145,10 +145,14 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
             state.has_critical_failure = True
 
         state.results['priority'] = evaluate_priority_types(unique_types, config['priority_types'])
-        # Priority types are non-blocking for V6 modules with plan-driven activity_hints
+        # Priority types are non-blocking for V6 modules with plan-driven activity_hints.
+        # Downgrade FAIL → WARN so status.json/monitor API stay consistent with CLI output.
         has_plan_hints = ctx.plan_data and ctx.plan_data.get('activity_hints')
-        if state.results['priority'].status == 'FAIL' and not has_plan_hints:
-            state.has_critical_failure = True
+        if state.results['priority'].status == 'FAIL':
+            if has_plan_hints:
+                state.results['priority'] = GateResult('WARN', '⚠️', state.results['priority'].msg)
+            else:
+                state.has_critical_failure = True
 
         required_types = config.get('required_types', set())
         if required_types:

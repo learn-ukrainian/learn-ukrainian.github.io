@@ -2,30 +2,24 @@
 Tests for YAML activity parsing, validation, and conversion.
 """
 
-import pytest
-from pathlib import Path
-import json
 
 # Add scripts to path
 import sys
+from pathlib import Path
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
 
 from yaml_activities import (
     ActivityParser,
-    QuizActivity, QuizItem, QuizOption,
-    MatchUpActivity, MatchPair,
-    FillInActivity, FillInItem,
-    TrueFalseActivity, TrueFalseItem,
-    GroupSortActivity, GroupSortGroup,
-    UnjumbleActivity, UnjumbleItem,
-    ClozeActivity, ClozeBlank,
-    ErrorCorrectionActivity, ErrorCorrectionItem,
-    MarkTheWordsActivity,
-    SelectActivity, SelectItem,
-    TranslateActivity, TranslateItem,
+    MatchPair,
+    MatchUpActivity,
+    QuizActivity,
+    QuizItem,
+    QuizOption,
     ValidationResult,
 )
-
 
 # =============================================================================
 # FIXTURES
@@ -289,3 +283,99 @@ class TestParserEdgeCases:
         activities = parser.parse(yaml_file)
         assert len(activities) == 1
         assert activities[0].type == "translate"
+
+
+class TestAnagramParsing:
+    """Tests for anagram activity parsing — both V2 (letters array) and legacy (scrambled string)."""
+
+    @pytest.fixture
+    def parser(self):
+        return ActivityParser()
+
+    def test_parse_anagram_letters_format(self, parser, tmp_path):
+        """V2 schema: letters as array of chars → joined as space-separated scrambled string."""
+        yaml_file = tmp_path / "anagram.yaml"
+        yaml_file.write_text(
+            "- type: anagram\n"
+            "  instruction: Rearrange the letters.\n"
+            "  items:\n"
+            "    - letters: [м, о, л, о, к, о]\n"
+            "      answer: молоко\n"
+            "      hint: milk\n"
+            "    - letters: [к, і, т]\n"
+            "      answer: кіт\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        act = activities[0]
+        assert act.type == "anagram"
+        assert len(act.items) == 2
+        assert act.items[0].scrambled == "м о л о к о"
+        assert act.items[0].answer == "молоко"
+        assert act.items[0].hint == "milk"
+        assert act.items[1].scrambled == "к і т"
+        assert act.items[1].answer == "кіт"
+
+    def test_parse_anagram_scrambled_format(self, parser, tmp_path):
+        """Legacy V1 format: scrambled as a string (e.g., from older builds)."""
+        yaml_file = tmp_path / "anagram_legacy.yaml"
+        yaml_file.write_text(
+            "- type: anagram\n"
+            "  items:\n"
+            "    - scrambled: к і т\n"
+            "      answer: кіт\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].items[0].scrambled == "к і т"
+        assert activities[0].items[0].answer == "кіт"
+
+    def test_parse_anagram_error_does_not_crash_other_activities(self, parser, tmp_path):
+        """A bad activity should be skipped, not crash the whole file."""
+        yaml_file = tmp_path / "mixed.yaml"
+        yaml_file.write_text(
+            "- type: quiz\n"
+            "  items:\n"
+            "    - question: Що це?\n"
+            "      options: [кіт, собака]\n"
+            "      correct: 0\n"
+            "- type: anagram\n"
+            "  items:\n"
+            "    - bad_key: something_invalid\n"
+            "      answer: кіт\n"
+            "- type: true-false\n"
+            "  items:\n"
+            "    - statement: Кіт — тварина.\n"
+            "      correct: true\n"
+        )
+        # Should parse quiz and true-false; anagram skipped with warning
+        activities = parser.parse(yaml_file)
+        types = [a.type for a in activities]
+        assert "quiz" in types
+        assert "true-false" in types
+        # Anagram with bad key is skipped (no scrambled and no letters key)
+        assert len(activities) == 2
+
+    def test_parse_v2_activities_file_with_anagram(self, parser, tmp_path):
+        """V2 format (inline/workbook split) with anagram in workbook parses all sections."""
+        yaml_file = tmp_path / "v2.yaml"
+        yaml_file.write_text(
+            "version: '1.0'\n"
+            "module: test-module\n"
+            "level: a1\n"
+            "inline:\n"
+            "  - type: quiz\n"
+            "    items:\n"
+            "      - question: Що це?\n"
+            "        options: [кіт, собака]\n"
+            "        correct: 0\n"
+            "workbook:\n"
+            "  - type: anagram\n"
+            "    items:\n"
+            "      - letters: [к, і, т]\n"
+            "        answer: кіт\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 2
+        types = {a.type for a in activities}
+        assert types == {"quiz", "anagram"}

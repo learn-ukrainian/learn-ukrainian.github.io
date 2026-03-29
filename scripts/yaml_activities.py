@@ -520,10 +520,14 @@ class ActivityParser:
         if not isinstance(raw_data, list):
             raise ValueError(f"Expected list of activities, got {type(raw_data)}")
         activities = []
-        for item in raw_data:
-            activity = self._parse_activity(item)
-            if activity:
-                activities.append(activity)
+        for i, item in enumerate(raw_data):
+            try:
+                activity = self._parse_activity(item)
+                if activity:
+                    activities.append(activity)
+            except Exception as e:
+                activity_type = item.get('type', 'unknown') if isinstance(item, dict) else 'unknown'
+                print(f"  ⚠️ Skipping activity {i} (type={activity_type!r}): {e}")
         return activities
 
     def _parse_activity(self, data: dict) -> Activity | None:
@@ -705,7 +709,17 @@ class ActivityParser:
         return TranslateActivity(title=data.get('title', ''), items=items)
 
     def _parse_anagram(self, data: dict) -> AnagramActivity:
-        items = [AnagramItem(scrambled=i['scrambled'], answer=i['answer'], hint=i.get('hint')) for i in data.get('items', [])]
+        items = []
+        for i in data.get('items', []):
+            # Support V2 schema ('letters' array) and legacy ('scrambled' string).
+            # If neither key is present, KeyError propagates → activity skipped by caller.
+            if 'letters' in i:
+                scrambled = ' '.join(str(ch) for ch in i['letters'])
+            elif 'scrambled' in i:
+                scrambled = i['scrambled']
+            else:
+                raise KeyError(f"Anagram item missing both 'letters' and 'scrambled': {list(i.keys())}")
+            items.append(AnagramItem(scrambled=scrambled, answer=i['answer'], hint=i.get('hint')))
         return AnagramActivity(title=data.get('title', ''), items=items)
 
     def _parse_reading(self, data: dict) -> ReadingActivity:

@@ -1,7 +1,7 @@
 # Audit Report: M02 — reading-ukrainian.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-29 01:13:25
+**Generated:** 2026-03-29 21:00:22
 
 ## Configuration
 **Type:** A1
@@ -18,12 +18,19 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | Чита́ння слів (Reading Words) | 85 | 2 | ✅ |
+| 1 | fill-in |  | 8 | 6 | ✅ |
+| 2 | quiz |  | 8 | 6 | ✅ |
+| 3 | match-up |  | 6 | 6 | ✅ |
+| 4 | quiz |  | 6 | 6 | ✅ |
+| 5 | quiz |  | 6 | 6 | ✅ |
+| 6 | group-sort |  | 18 | 6 | ✅ |
+| 7 | true-false |  | 6 | 6 | ✅ |
+| 8 | anagram |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 1 (target: 0-4) ✅
-- Unique types: 1 (minimum: 0) ✅
-- Priority types used: 0/8 (none) ❌
+- Total activities: 8 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -35,8 +42,8 @@
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "*(This is a cat.)*</div>
 > <div class="dialogue-line"><span class="speaker">Анна:</span> Де кит?". Shares significant keywords with sentence at index 2.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in reading-ukrainian.yaml: Schema validation error at key '0': {'id': 'fill-in', 'type': 'fill-in', 'instruction': 'Divide the words into syllables using hyphens based on the Open Syllable Principle (e.g., мо-ло-ко, а-пте-ка).', 'items': [{'sentence': 'університет -> _____', 'answer': 'у-ні-вер-си-тет'}, {'sentence': 'бібліотека -> _____', 'answer': 'бі-блі-о-те-ка'}, {'sentence': 'фотографія -> _____', 'answer': 'фо-то-гра-фі-я'}, {'sentence': 'аптека -> _____', 'answer': 'а-пте-ка'}, {'sentence': 'молоко -> _____', 'answer': 'мо-ло-ко'}, {'sentence': 'шоколад -> _____', 'answer': 'шо-ко-лад'}, {'sentence': 'вулиця -> _____', 'answer': 'ву-ли-ця'}, {'sentence': 'людина -> _____', 'answer': 'лю-ди-на'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
+- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
@@ -45,10 +52,10 @@
 
 ## Gates
 - **Words:** ✅ 2068/1200 (raw: 2626)
-- **Activities:** ✅ 1/0
+- **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 1/0 types
-- **Priority:** ❌ No priority types
+- **Unique_types:** ✅ 7/0 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 56/1
@@ -56,7 +63,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 13.1% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 13.1% (target 5-25% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -67,5 +74,5 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Склади (Syllables)** | ✅ | 330 | Included in Core |
 | **Голосні лі́тери (Vowel Letters)** | ✅ | 446 | Included in Core |
-| **Чита́ння слів (Reading Words)** | 🎮 | 85 | Activity (85 items, min 2) |
+| **Чита́ння слів (Reading Words)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Підсумок — Summary** | ✅ | 802 | Included in Core |
