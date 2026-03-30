@@ -1,0 +1,74 @@
+{
+  "bge-m3-dense": {
+    "metrics": {
+      "overall": {
+        "recall@5": 0.6166666666666667,
+        "recall@10": 0.6555555555555554,
+        "ndcg@10": 0.598985326752963
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.35,
+          "recall@10": 0.4,
+          "ndcg@10": 0.3790386479549506
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.5333333333333333,
+          "recall@10": 0.6,
+          "ndcg@10": 0.44138126860507637
+        },
+        "modern": {
+          "recall@5": 0.9666666666666666,
+          "recall@10": 0.9666666666666666,
+          "ndcg@10": 0.9765360636988621
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.4523809523809523,
+        "recall@10": 0.5079365079365079,
+        "ndcg@10": 0.4271218953613758
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 3785.0625,
+    "mps_memory_mb": 1085.035888671875,
+    "encode_time_s": 357.0843713283539
+  },
+  "bge-m3-hybrid": {
+    "metrics": {
+      "overall": {
+        "recall@5": 0.5444444444444444,
+        "recall@10": 0.5777777777777777,
+        "ndcg@10": 0.5325205527139372
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.25,
+          "recall@10": 0.3,
+          "ndcg@10": 0.2375325938735648
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.41666666666666663,
+          "recall@10": 0.4666666666666666,
+          "ndcg@10": 0.38674620222046774
+        },
+        "modern": {
+          "recall@5": 0.9666666666666666,
+          "recall@10": 0.9666666666666666,
+          "ndcg@10": 0.9732828620477791
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.3492063492063492,
+        "recall@10": 0.39682539682539675,
+        "ndcg@10": 0.33372136180614026
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 3785.0625,
+    "mps_memory_mb": 1085.035888671875,
+    "encode_time_s": 357.0843713283539
+  }
+}

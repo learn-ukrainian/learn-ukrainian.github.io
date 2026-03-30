@@ -1,24 +1,27 @@
-"""Benchmark BGE-M3 vs EmbeddingGemma-300M for Ukrainian retrieval.
+"""Benchmark embedding models for Ukrainian retrieval.
 
 Compares embedding quality across three language periods:
 - Old East Slavic (X-XIII c.)
 - Middle Ukrainian (XIV-XVIII c.)
 - Modern Ukrainian (textbooks)
 
+Models: BGE-M3 (current), EmbeddingGemma-300M, Qwen3-Embedding-0.6B
+
 Approach:
   1. Load ground-truth queries from benchmark_queries.yaml
   2. Sample chunks from Qdrant collections
-  3. Embed queries + chunks with both models (+ BGE-M3 dense-only)
+  3. Embed queries + chunks with each model (+ BGE-M3 dense-only)
   4. Compute Recall@K and nDCG@K via numpy (no new Qdrant collections needed)
   5. Profile peak memory for each model
 
 Usage:
-    # Full benchmark (loads both models sequentially to fit in 16GB)
+    # Full benchmark (loads models sequentially to fit in 16GB)
     .venv/bin/python scripts/rag/benchmark_embeddings.py
 
     # Only run one model (useful for debugging)
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model bge-m3
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model gemma
+    .venv/bin/python scripts/rag/benchmark_embeddings.py --model qwen3
 
     # Adjust sample size
     .venv/bin/python scripts/rag/benchmark_embeddings.py --sample-size 500
@@ -52,6 +55,9 @@ QUERIES_PATH = SCRIPT_DIR / "benchmark_queries.yaml"
 # EmbeddingGemma config
 GEMMA_MODEL_NAME = "google/embeddinggemma-300m"
 GEMMA_DIM = 768
+
+# Qwen3 Embedding config
+QWEN3_EMB_MODEL = "Qwen/Qwen3-Embedding-0.6B"
 
 # Evaluation constants
 METRICS = ("recall@5", "recall@10", "ndcg@10")
@@ -268,6 +274,56 @@ class GemmaEncoder:
         except Exception:
             pass
         print("[bench] EmbeddingGemma-300M unloaded.")
+
+
+class Qwen3Encoder:
+    """Wraps Qwen3-Embedding-0.6B for benchmark. Same size class as BGE-M3."""
+
+    def __init__(self):
+        self._model = None
+
+    def load(self):
+        if self._model is not None:
+            return
+        from sentence_transformers import SentenceTransformer
+
+        print(f"[bench] Loading {QWEN3_EMB_MODEL}...")
+        self._model = SentenceTransformer(
+            QWEN3_EMB_MODEL,
+            trust_remote_code=True,
+        )
+        dim = self._model.get_sentence_embedding_dimension()
+        print(f"[bench] Qwen3-Embedding-0.6B loaded (dim={dim}).")
+
+    def encode(self, texts: list[str], batch_size: int = 4) -> dict:
+        """Returns {dense: np.ndarray}. Qwen3 is dense-only (no sparse).
+
+        Qwen3-Embedding-0.6B is a decoder model (not BERT-like), so it uses
+        significantly more memory per token. We truncate to 512 tokens to match
+        BGE-M3's max_length for a fair comparison, and use small batches.
+        """
+        self.load()
+        # Truncate texts to ~512 tokens (~2000 chars) to match BGE-M3
+        truncated = [t[:2000] for t in texts]
+        vecs = self._model.encode(
+            truncated,
+            batch_size=batch_size,
+            show_progress_bar=True,
+            normalize_embeddings=True,
+        )
+        return {"dense": np.array(vecs)}
+
+    def unload(self):
+        del self._model
+        self._model = None
+        gc.collect()
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+        except Exception:
+            pass
+        print("[bench] Qwen3-Embedding-0.6B unloaded.")
 
 
 # ── Sparse scoring ────────────────────────────────────────────────
@@ -606,6 +662,49 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         encoder.unload()
 
+    # ── Qwen3-Embedding-0.6B ─────────────────────────────────────
+    if model_filter in (None, "qwen3"):
+        print("\n" + "=" * 60)
+        print("MODEL: Qwen3-Embedding-0.6B (dense only)")
+        print("=" * 60)
+
+        encoder = Qwen3Encoder()
+        encoder.load()
+
+        t0 = time.time()
+
+        # Encode queries
+        print("  Encoding queries...")
+        q_result = encoder.encode(query_texts)
+        q_dense = q_result["dense"]
+
+        # Encode chunks per collection (small batches for M4 Air memory)
+        c_dense = {}
+        for coll, texts in collection_texts.items():
+            print(f"  Encoding {len(texts)} chunks from {coll}...")
+            c_result = encoder.encode(texts)  # uses default batch_size=8
+            c_dense[coll] = c_result["dense"]
+
+        encode_time = time.time() - t0
+        peak_rss = get_peak_memory_mb()
+
+        # Evaluate
+        print("\n  Evaluating Qwen3-Embedding-0.6B...")
+        qwen3_metrics = evaluate_model(
+            queries_with_gt, q_dense, None,
+            collection_ids, c_dense, None, mode="dense"
+        )
+
+        mps_mem = get_mps_memory_mb()
+        results["qwen3-0.6b"] = {
+            "metrics": qwen3_metrics,
+            "peak_rss_mb": peak_rss,
+            "mps_memory_mb": mps_mem,
+            "encode_time_s": encode_time,
+        }
+
+        encoder.unload()
+
     # ── Report ────────────────────────────────────────────────────
     print_report(results)
 
@@ -783,8 +882,8 @@ def print_report(results: dict):
 
 def main():
     parser = argparse.ArgumentParser(description="Benchmark BGE-M3 vs EmbeddingGemma-300M")
-    parser.add_argument("--model", choices=["bge-m3", "gemma"], default=None,
-                        help="Run only one model (default: both)")
+    parser.add_argument("--model", choices=["bge-m3", "gemma", "qwen3"], default=None,
+                        help="Run only one model (default: all three)")
     parser.add_argument("--sample-size", type=int, default=1000,
                         help="Number of chunks to sample per collection (default: 1000)")
     parser.add_argument("--populate-ground-truth", action="store_true",

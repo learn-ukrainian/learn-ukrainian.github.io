@@ -110,16 +110,101 @@ def _extract_grade_hint(plan: dict) -> int | None:
     return None
 
 
+# Priority textbook authors by grade range (Tetiana-recommended)
+_PRIORITY_AUTHORS_EARLY = {"bolshakova", "vashulenko", "zaharijchuk"}  # Grade 1-2
+_PRIORITY_AUTHORS_LATE = {"zabolotnyi", "avramenko", "litvinova", "golub"}  # Grade 5-11
+
+# Exercise markers — chunks that are mostly student instructions, not theory
+_EXERCISE_MARKERS = (
+    "Вправа ", "вправа ", "Завдання", "завдання",
+    "Спишіть", "спишіть", "Прочитайте", "прочитайте",
+    "Запишіть", "запишіть", "Випишіть", "випишіть",
+    "Перепишіть", "перепишіть", "Доберіть", "доберіть",
+    "Складіть", "складіть", "Поставте", "поставте",
+    "Визначте", "визначте", "Утворіть", "утворіть",
+)
+
+
+def _is_exercise_chunk(text: str) -> bool:
+    """Detect if a chunk is primarily exercises, not theory.
+
+    Exercise chunks are low-value for knowledge packets — we want
+    explanations and examples, not instructions to students.
+    """
+    marker_count = sum(1 for m in _EXERCISE_MARKERS if m in text)
+    return marker_count >= 3
+
+
+def _heuristic_score(hit: dict, grade_hint: int | None) -> float:
+    """Compute a heuristic boost/penalty for pedagogical relevance (#1098).
+
+    Applied after initial retrieval to reorder results by:
+    - Author priority (textbook authors recommended by Teacher Tetiana)
+    - Grade match (prefer chunks from the target grade)
+    - Exercise penalty (demote exercise-heavy chunks)
+    - Length bonus (longer theory excerpts have more context)
+
+    Returns a modifier (-0.3 to +0.3) added to the retrieval score.
+    """
+    boost = 0.0
+    author = hit.get("author", "").lower()
+    grade = hit.get("grade", 0)
+    text = hit.get("text", "")
+
+    # Author priority
+    target_early = grade_hint is not None and grade_hint <= 4
+    if target_early:
+        if author in _PRIORITY_AUTHORS_EARLY:
+            boost += 0.15
+    else:
+        if author in _PRIORITY_AUTHORS_LATE:
+            boost += 0.15
+
+    # Grade match
+    if grade_hint and grade == grade_hint:
+        boost += 0.10
+    elif grade_hint and grade and abs(grade - grade_hint) <= 1:
+        boost += 0.05  # Adjacent grade — still useful
+
+    # Exercise penalty
+    if _is_exercise_chunk(text):
+        boost -= 0.25
+
+    # Length bonus for theory-rich excerpts
+    if len(text) > 500 and not _is_exercise_chunk(text):
+        boost += 0.05
+
+    return boost
+
+
 def _search_rag(query: str, grade: int | None = None,
                 limit: int = 3) -> list[dict]:
-    """Query the RAG textbook index. Returns list of hit dicts."""
+    """Query the RAG textbook index with heuristic reranking (#1098).
+
+    Over-fetches 3x candidates, then reranks by pedagogical relevance:
+    author priority, grade match, exercise penalty.
+    """
     try:
         from rag.query import search_text
-        return search_text(query, grade=grade, limit=limit)
+        # Over-fetch for reranking headroom
+        candidates = search_text(query, grade=grade, limit=limit * 3)
     except Exception as e:
         # RAG server might not be running — degrade gracefully
         print(f"  ⚠️  RAG search failed for '{query}': {e}")
         return []
+
+    if not candidates:
+        return []
+
+    # Apply heuristic boosts
+    for hit in candidates:
+        base_score = hit.get("score", 0)
+        h_boost = _heuristic_score(hit, grade)
+        hit["final_score"] = base_score + h_boost
+
+    # Re-sort by boosted score
+    candidates.sort(key=lambda x: x.get("final_score", 0), reverse=True)
+    return candidates[:limit]
 
 
 def _format_hit(hit: dict) -> str:

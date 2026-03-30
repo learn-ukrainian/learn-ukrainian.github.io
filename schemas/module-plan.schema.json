@@ -225,12 +225,13 @@
       "description": "B2+ structured production tasks. See docs/best-practices/b2-c2-plan-architecture.md",
       "items": {
         "type": "object",
-        "required": ["task_type", "prompt", "motivation"],
+        "required": ["task_type", "prompt", "motivation", "model_answer"],
         "properties": {
           "task_type": { "type": "string", "enum": ["есе", "офіційний лист", "відгук", "репортаж", "власне висловлення"] },
           "prompt": { "type": "string", "description": "The assignment for the learner" },
           "requirements": { "type": "array", "items": { "type": "string" }, "description": "e.g., 'мінімум 200 слів', 'використати пасивний стан'" },
-          "motivation": { "type": "string", "description": "Why this task?" }
+          "motivation": { "type": "string", "description": "Why this task?" },
+          "model_answer": { "type": "string", "description": "Description of what the model answer should contain" }
         },
         "additionalProperties": false
       }

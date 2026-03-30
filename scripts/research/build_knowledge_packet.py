@@ -65,11 +65,66 @@ def _extract_ukrainian_keywords(text: str) -> str:
     return " ".join(keywords[:10])  # Limit to 10 keywords
 
 
-def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
-    """Search RAG textbooks for a query with ColBERT reranking (#1099).
+def _is_exercise_chunk(text: str) -> bool:
+    """Detect if a chunk is primarily exercises, not theory.
 
-    Over-fetches from dense+sparse retrieval, then reranks with ColBERT
-    MaxSim for fine-grained pedagogical relevance.
+    Exercise chunks are low-value for knowledge packets — we want
+    explanations and examples, not instructions to students.
+    """
+    exercise_markers = [
+        "Вправа ", "вправа ", "Завдання", "завдання",
+        "Спишіть", "спишіть", "Прочитайте", "прочитайте",
+        "Запишіть", "запишіть", "Випишіть", "випишіть",
+        "Перепишіть", "перепишіть", "Доберіть", "доберіть",
+        "Складіть", "складіть", "Поставте", "поставте",
+        "Визначте", "визначте", "Утворіть", "утворіть",
+    ]
+    marker_count = sum(1 for m in exercise_markers if m in text)
+    # If 3+ exercise markers in one chunk, it's mostly exercises
+    return marker_count >= 3
+
+
+def _heuristic_score(result: dict, grades: list[int]) -> float:
+    """Compute a heuristic boost/penalty for pedagogical relevance.
+
+    Applied AFTER ColBERT reranking to fine-tune ordering.
+    Returns a modifier (-0.3 to +0.3) added to the ColBERT score.
+    """
+    boost = 0.0
+    author = result.get("author", "").lower()
+    grade = result.get("grade", 0)
+    text = result.get("text", "")
+
+    # Author priority: Большакова/Вашуленко for Grade 1-2, Заболотний/Авраменко for 5-11
+    target_early = max(grades) <= 4 if grades else False
+    if target_early:
+        if author in PRIORITY_AUTHORS_EARLY:
+            boost += 0.15
+    else:
+        if author in PRIORITY_AUTHORS_LATE:
+            boost += 0.15
+
+    # Grade match: prefer chunks from the exact target grades
+    if grade in grades:
+        boost += 0.10
+    elif grade and grades and abs(grade - min(grades)) <= 1:
+        boost += 0.05  # Adjacent grade — still useful
+
+    # Exercise penalty: demote exercise-heavy chunks
+    if _is_exercise_chunk(text):
+        boost -= 0.25
+
+    # Length bonus: longer theory excerpts have more context
+    if len(text) > 500 and not _is_exercise_chunk(text):
+        boost += 0.05
+
+    return boost
+
+
+def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
+    """Search RAG textbooks for a query with ColBERT reranking + heuristics (#1098).
+
+    Pipeline: dense+sparse retrieval → ColBERT reranking → heuristic boosts.
     """
     try:
         from rag.query import get_text_encoder, search_text
@@ -100,15 +155,26 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
     if not unique:
         return []
 
-    # ColBERT reranking — token-level MaxSim for pedagogical relevance
+    # Stage 1: ColBERT reranking — token-level MaxSim
     try:
         encoder = get_text_encoder()
-        reranked = encoder.colbert_rerank(query, unique, text_key="text", limit=limit)
-        return reranked
+        # Get more candidates from ColBERT than we need, so heuristics can reorder
+        colbert_limit = min(len(unique), limit * 2)
+        reranked = encoder.colbert_rerank(query, unique, text_key="text", limit=colbert_limit)
     except Exception as e:
         logger.warning("ColBERT reranking failed, falling back to score sort: %s", e)
         unique.sort(key=lambda x: x.get("score", 0), reverse=True)
-        return unique[:limit]
+        reranked = unique[:limit * 2]
+
+    # Stage 2: Heuristic reranking — author priority, exercise penalty, grade match
+    for r in reranked:
+        base_score = r.get("colbert_score", r.get("score", 0))
+        h_boost = _heuristic_score(r, grades)
+        r["final_score"] = base_score + h_boost
+        r["heuristic_boost"] = round(h_boost, 3)
+
+    reranked.sort(key=lambda x: x.get("final_score", 0), reverse=True)
+    return reranked[:limit]
 
 
 def _format_result(result: dict) -> str:

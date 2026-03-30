@@ -15,6 +15,8 @@ from build.research.build_knowledge_packet import (
     _extract_search_queries,
     _format_hit,
     _has_cyrillic,
+    _heuristic_score,
+    _is_exercise_chunk,
     build_packet,
 )
 
@@ -109,6 +111,96 @@ def test_format_hit_truncates_long_text():
     assert "..." in result
     # Text portion should be truncated
     assert len(result) < 600
+
+
+# --- Heuristic reranking tests (#1098) ---
+
+
+def test_is_exercise_chunk_detects_exercises():
+    exercise_text = (
+        "Вправа 42\n"
+        "1. Прочитайте текст і випишіть іменники.\n"
+        "2. Визначте рід і число кожного іменника.\n"
+        "3. Запишіть слова у зошит.\n"
+    )
+    assert _is_exercise_chunk(exercise_text) is True
+
+
+def test_is_exercise_chunk_passes_theory():
+    theory_text = (
+        "Іменник — це самостійна частина мови, яка називає предмет "
+        "і відповідає на питання хто? що? Іменники бувають трьох родів: "
+        "чоловічого, жіночого і середнього."
+    )
+    assert _is_exercise_chunk(theory_text) is False
+
+
+def test_is_exercise_chunk_single_marker_passes():
+    """A single exercise marker doesn't trigger — it might be an example."""
+    text = "Прочитайте правило у рамці. Іменник називає предмет."
+    assert _is_exercise_chunk(text) is False
+
+
+def test_heuristic_score_priority_author_early():
+    hit = {"author": "bolshakova", "grade": 1, "text": "Theory text " * 100}
+    score = _heuristic_score(hit, grade_hint=1)
+    assert score > 0.2  # Author boost + grade match + length bonus
+
+
+def test_heuristic_score_priority_author_late():
+    hit = {"author": "avramenko", "grade": 7, "text": "Theory text " * 100}
+    score = _heuristic_score(hit, grade_hint=7)
+    assert score > 0.2
+
+
+def test_heuristic_score_exercise_penalty():
+    hit = {
+        "author": "unknown",
+        "grade": 5,
+        "text": "Вправа 1\nСпишіть слова.\nЗапишіть речення.\nВипишіть іменники.\nВизначте рід.",
+    }
+    score = _heuristic_score(hit, grade_hint=1)
+    # Exercise penalty with no boosts → negative
+    assert score < 0.0
+
+
+def test_heuristic_score_grade_mismatch():
+    hit = {"author": "unknown", "grade": 11, "text": "Short text"}
+    score = _heuristic_score(hit, grade_hint=1)
+    assert score == 0.0  # No boosts, no penalties
+
+
+def test_heuristic_score_adjacent_grade():
+    hit = {"author": "unknown", "grade": 2, "text": "Short text"}
+    score = _heuristic_score(hit, grade_hint=1)
+    assert score == 0.05  # Adjacent grade boost only
+
+
+def test_heuristic_reranking_reorders_results():
+    """Priority author should outrank a higher-scored non-priority hit."""
+    from unittest.mock import patch as _patch
+
+    hits = [
+        {"text": "Generic content " * 50, "grade": 1, "author": "unknown",
+         "score": 0.90, "chunk_id": "c1", "page": "1"},
+        {"text": "Priority author content " * 50, "grade": 1, "author": "bolshakova",
+         "score": 0.85, "chunk_id": "c2", "page": "2"},
+    ]
+
+    def mock_search(query, grade=None, limit=5):
+        return [dict(h) for h in hits]  # Return copies
+
+    with _patch("build.research.build_knowledge_packet._search_rag.__wrapped__", mock_search, create=True):
+        # Test via _heuristic_score directly — cleaner than mocking imports
+        pass
+
+    # Direct test: apply heuristic scores and verify reordering
+    for h in hits:
+        h["final_score"] = h["score"] + _heuristic_score(h, grade_hint=1)
+
+    hits.sort(key=lambda x: x["final_score"], reverse=True)
+    # bolshakova (0.85 + 0.25 boost = 1.10) should outrank unknown (0.90 + 0.10 = 1.00)
+    assert hits[0]["author"] == "bolshakova"
 
 
 # --- Integration test with mocked RAG ---

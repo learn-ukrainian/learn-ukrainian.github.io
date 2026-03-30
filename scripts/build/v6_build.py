@@ -3957,6 +3957,17 @@ build_status: draft
     else:
         _log("  ✅ MDX validation passed")
 
+    # Regenerate landing page so module status stays current
+    try:
+        from generate_landing_pages import generate_landing_page
+        landing_mdx = generate_landing_page(level)
+        if landing_mdx:
+            landing_path = mdx_path.parent / "index.mdx"
+            landing_path.write_text(landing_mdx, "utf-8")
+            _log(f"  ✅ Landing page updated → {landing_path}")
+    except Exception as e:
+        _log(f"  ⚠️  Landing page update skipped: {e}")
+
     return True
 
 

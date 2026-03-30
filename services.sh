@@ -83,6 +83,8 @@ _stop_service() {
 
     if ! _is_running "$name"; then
         echo "  $name is not running"
+        # Clean up stale PID file if it exists
+        rm -f "$pidfile"
         return 0
     fi
 
@@ -106,6 +108,19 @@ _stop_service() {
     fi
 
     rm -f "$pidfile"
+
+    # Starlight: clear Astro content collection cache on stop.
+    # Astro 6 doesn't reliably pick up new MDX files added while the
+    # dev server is running (content-layer deferred modules). Clearing
+    # the data-store forces a full re-index on next start.
+    if [[ "$name" == "starlight" ]]; then
+        local cache_file="$PROJECT_ROOT/starlight/.astro/data-store.json"
+        if [[ -f "$cache_file" ]]; then
+            rm -f "$cache_file"
+            echo "  Cleared Astro content cache (data-store.json)"
+        fi
+    fi
+
     echo "  $name stopped"
 }
 
