@@ -3133,18 +3133,21 @@ def step_review(content_path: Path, level: str, module_num: int,
     if reviewer == "gemini":
         import time
         ok, raw = None, None
-        _GEMINI_REVIEW_RETRIES = 3
-        _GEMINI_REVIEW_BACKOFFS = [30, 60, 120]
-        for attempt in range(1, _GEMINI_REVIEW_RETRIES + 1):
+        _GEMINI_REVIEW_MAX_RETRIES = 5
+        for attempt in range(1, _GEMINI_REVIEW_MAX_RETRIES + 1):
+            t0 = time.monotonic()
             ok, raw = _dispatch(
                 prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-                timeout=600, mcp_tools=True,
+                timeout=900, mcp_tools=True,
             )
+            elapsed = time.monotonic() - t0
             if ok and raw:
                 break
-            if attempt < _GEMINI_REVIEW_RETRIES:
-                wait = _GEMINI_REVIEW_BACKOFFS[attempt - 1]
-                _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_RETRIES}) — retrying in {wait}s...")
+            if attempt < _GEMINI_REVIEW_MAX_RETRIES:
+                # Adaptive backoff: wait at least as long as the failed attempt took
+                # (Gemini is overloaded — give it time to recover)
+                wait = max(60, min(int(elapsed * 0.5), 300))
+                _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_MAX_RETRIES}, {int(elapsed)}s) — retrying in {wait}s...")
                 time.sleep(wait)
             else:
                 _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_RETRIES} attempts")
