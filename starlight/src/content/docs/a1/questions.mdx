@@ -1,0 +1,207 @@
+---
+title: "Questions"
+sidebar:
+  order: 19
+  label: "19. Questions"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діало́ги (Dialogues)
+Ukrainian uses special question words — **питальні слова** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
+### Dialogue 1 — Getting to know someone
+> <div class="dialogue-line"><span class="speaker">Андрій:</span> Приві́т! Хто ти? *(Hi! Who are you?)*</div>
+> <div class="dialogue-line"><span class="speaker">Олег:</span> Я студе́нт. А ти? *(I'm a student. And you?)*</div>
+> <div class="dialogue-line"><span class="speaker">Андрій:</span> Я теж студент. Що ти вивча́єш? *(I'm also a student. What do you study?)*</div>
+> <div class="dialogue-line"><span class="speaker">Олег:</span> Я вивча́ю украї́нську мо́ву. *(I study the Ukrainian language.)*</div>
+> <div class="dialogue-line"><span class="speaker">Андрій:</span> Де ти живе́ш? *(Where do you live?)*</div>
+> <div class="dialogue-line"><span class="speaker">Олег:</span> Я живу́ у Льво́ві. *(I live in Lviv.)*</div>
+> <div class="dialogue-line"><span class="speaker">Андрій:</span> Ко́ли ти працю́єш? *(When do you work?)*</div>
+> <div class="dialogue-line"><span class="speaker">Олег:</span> Вра́нці. А ти? *(In the morning. And you?)*</div>
+> <div class="dialogue-line"><span class="speaker">Андрій:</span> Уве́чері. Як тебе́ зва́ти? *(In the evening. What's your name?)*</div>
+> <div class="dialogue-line"><span class="speaker">Олег:</span> Ме́не звати Олег. *(My name is Oleh.)*</div>
+
+Every question here starts with a different question word: **Хто** (who) asks about a person, **Що** (what) asks about a thing or activity, **Де** (where) asks about location, **Коли** (when) asks about time, and **Як** (how) asks about manner. Notice how the answer always matches what the question word asks about — **Хто ти?** gets a person (**студент**), **Де ти живеш?** gets a place (**у Львові**).
+### Dialogue 2 — At home
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Де моя́ кни́га? *(Where is my book?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Я не зна́ю. *(I don't know.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> А хто зна́є? *(And who knows?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Ма́ма знає. *(Mom knows.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Чо́му мама? *(Why mom?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Тому́ що вона́ все знає! *(Because she knows everything!)*</div>
+
+This dialogue combines question words with simple negation (**не**). Notice three things the dialogues just showed you:
+1. **Question words come at the start** of the sentence: **Де** моя книга? **Хто** знає? **Чому** мама?
+2. **Word order after the question word stays natural** — you don't need to rearrange anything. Just put the question word first and the sentence works.
+3. **Не** goes before the verb: **Я не знаю**. We will also study double negation (**нічого не...**) in detail below.
+## Питальні слова (Question Words)
+Seven question words cover almost everything you need to ask at A1. Here they are as a set, each with the anchor example you already saw in the dialogues:
+- **Хто?** (who) — Хто ти?
+- **Що?** (what) — Що ти вивчаєш?
+- **Де?** (where) — Де ти живеш?
+- **Куди?** (where to) — Куди ти йдеш?
+- **Коли?** (when) — Коли ти працюєш?
+- **Чому?** (why) — Чому ти не відповіда́єш?
+- **Як?** (how) — Як тебе звати?
+Ukrainian textbooks introduce **Хто?** and **Що?** from the very first grade to distinguish living things (**хто** — people, animals) from non-living things (**що** — objects, concepts). The remaining five — **Де? Куди? Коли? Чому? Як?** — appear as question words for adverbs (Кравцо́ва, Grade 2). They also serve as the foundation for the Ukrainian case system (Варзацька, Grade 4).
+### Де vs. Куди — the pair learners confuse
+**Де** asks about a static location — where something already is. **Куди** asks about direction — where something is moving toward. Compare:
+- **Де** ти живеш? — Where do you live? (you are there)
+- **Куди** ти йдеш? — Where are you going? (you are moving there)
+- **Де** книга? — Where is the book? (it is somewhere)
+- **Куди** вони́ ї́дуть? — Where are they driving? (they are heading somewhere)
+The rule: use **де** with verbs of being or staying (**жити**, **бути**, **стояти**). Use **куди** with verbs of movement (**іти**, **їхати**, **ходити**).
+<Quiz client:only="react" questions={[{"question": "_____ ти живеш?", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Коли", "correct": false}]}, {"question": "_____ ти йдеш?", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Хто", "correct": false}]}, {"question": "_____ ти?", "options": [{"text": "Що", "correct": false}, {"text": "Хто", "correct": true}, {"text": "Де", "correct": false}]}, {"question": "_____ ти вивчаєш?", "options": [{"text": "Хто", "correct": false}, {"text": "Що", "correct": true}, {"text": "Як", "correct": false}]}, {"question": "_____ ти працюєш?", "options": [{"text": "Де", "correct": false}, {"text": "Коли", "correct": true}, {"text": "Чому", "correct": false}]}, {"question": "_____ ти не відповідаєш?", "options": [{"text": "Як", "correct": false}, {"text": "Де", "correct": false}, {"text": "Чому", "correct": true}]}, {"question": "_____ тебе звати?", "options": [{"text": "Що", "correct": false}, {"text": "Як", "correct": true}, {"text": "Хто", "correct": false}]}, {"question": "_____ знає, де книга?", "options": [{"text": "Що", "correct": false}, {"text": "Де", "correct": false}, {"text": "Хто", "correct": true}]}]} instruction={"Choose the correct **питальне слово** (question word) to complete each sentence."} />
+### Word order in questions
+As noted in Ukrainian Lessons Podcast (Episode 35), the typical pattern is question word + verb + subject, but Ukrainian is flexible. All of these are acceptable:
+- **Де ти живеш?** (standard)
+- **Ти де живеш?** (conversational)
+- **Живеш де?** (very informal)
+The question word carries the emphasis regardless of its position. In everyday speech, the first two options are most natural. Written Ukrainian prefers the question word at the start.
+### Yes/no questions
+To ask a yes/no question, you do not need a special word — just raise your intonation at the end of the sentence:
+- Ти гово́риш украї́нською? ↑ *(Do you speak Ukrainian?)*
+- Він живе́ тут? ↑ *(Does he live here?)*
+- Вона знає? ↑ *(Does she know?)*
+English needs "do" or "does" to form these questions. Ukrainian does not — the sentence stays exactly the same, and only the rising intonation ↑ tells the listener it is a question. In formal or written Ukrainian, you may also see **чи** (whether) at the beginning: **Чи ти розумі́єш?** (Do you understand?) Recognise **чи** when you see it, but for everyday A1 speech, intonation alone is enough.
+<MatchUp client:only="react" pairs={[{"left": "Хто ти?", "right": "Я студент."}, {"left": "Де ти живеш?", "right": "Я живу у Львові."}, {"left": "Що ти вивчаєш?", "right": "Я вивчаю українську мову."}, {"left": "Коли ти працюєш?", "right": "Вранці."}, {"left": "Як тебе звати?", "right": "Мене звати Олег."}, {"left": "Чому ти не відповідаєш?", "right": "Тому що я не чув."}, {"left": "Що це на столі?", "right": "Нічого цікавого."}]} instruction={"Match each question to the correct answer from the dialogues."} />
+## Запере́чення (Negation)
+The particle **не** (not) goes directly before the verb — never separated from it. Here are five examples using verbs you already know from Modules 16–18:
+- Я **не** знаю. — I don't know.
+- Він **не** працю́є. — He doesn't work.
+- Ми **не** розумі́ємо. — We don't understand.
+- Вона **не** хо́че. — She doesn't want to.
+- Ме́ні **не** подо́бається. — I don't like it.
+- Вони **не** гово́рять. — They don't speak.
+In English, "do not" is two words; in Ukrainian, **не** is a single particle that sits right before the verb. It is almost always unstressed — the stress stays on the verb. No matter how long the sentence is, **не** stays glued to its verb: Я **не** хо́чу, Вони **не** розумі́ють.
+### Ні — standalone "no" and the ні- pronouns
+As a standalone word, **ні** (no) answers a question directly:
+- Ти зна́єш? — **Ні**, не знаю. *(Do you know? — No, I don't know.)*
+But **ні** also forms a family of negative words by attaching to question-word pronouns and adverbs:
+| Ukrainian | English | Example |
+|-----------|---------|---------|
+| **ніхто** | nobody | Ніхто не знає. |
+| **нічого** | nothing | Я нічого не ба́чу. |
+| **ніколи** | never | Він ніколи не працює. |
+| **ніде** | nowhere | Я ніде не працю́ю. |
+| **нікуди** | to nowhere | Він нікуди не йде. |
+Notice the pattern: the prefix **ні-** attaches directly to the question word — **хто** → **ніхто**, **коли** → **ніколи**, **де** → **ніде**, **куди** → **нікуди**. Ukrainian textbooks (Заболо́тний, Grade 6) teach these as negative pronouns and adverbs formed from their question-word counterparts with the prefix **ні-**.
+### Double negation — the most important rule
+Ukrainian requires both the **ні-** word AND **не** before the verb. This is mandatory — dropping either one makes the sentence ungrammatical.
+Wrong (English pattern): ~~Ніхто знає.~~
+Correct: **Ніхто не знає.** *(Nobody knows.)*
+Four more examples:
+- **Я нічого не знаю.** — I don't know anything. (literally: I nothing don't know.)
+- **Ніхто не гово́рить.** — Nobody speaks.
+- **Він ніколи не працює.** — He never works.
+- **Він нікуди не йде.** — He isn't going anywhere.
+This is not a logic error and does not create a "double positive" like it would in English. It is standard Ukrainian grammar — both parts are required (Литви́нова, Grade 6: «Ніхто не мо́же зму́сити вас...»).
+<FillIn client:only="react" items={[{"sentence": "Він _____ знає.", "answer": "не", "options": ["не", "ні", "нічого"]}, {"sentence": "Ми _____ розуміємо.", "answer": "не", "options": ["не", "ніколи", "ніхто"]}, {"sentence": "Вона _____ говорить.", "answer": "не", "options": ["не", "ніде", "нічого"]}, {"sentence": "_____ не знає.", "answer": "Ніхто", "options": ["Ніхто", "Нічого", "Ніколи"]}, {"sentence": "Я _____ не бачу.", "answer": "нічого", "options": ["нічого", "ніхто", "ніде"]}, {"sentence": "Вона _____ не запізнюється.", "answer": "ніколи", "options": ["ніколи", "нічого", "ніхто"]}, {"sentence": "Він _____ не йде.", "answer": "нікуди", "options": ["нікуди", "ніде", "ніколи"]}, {"sentence": "_____ не було.", "answer": "Ніде", "options": ["Ніде", "Нікуди", "Ніхто"]}]} instruction={"Fill in the blank with **не**, **ніхто**, **нічого**, **ніколи**, **ніде**, or **нікуди**."} />
+### Не vs. ні- at a glance
+**Не** alone negates one verb: **Я не знаю** (I don't know — but someone else might). A **ні-** word negates the entire idea and still needs **не** with the verb: **Ніхто не знає** (nobody at all knows). Here is the contrast in question-and-answer pairs:
+- **Хто це?** — **Ніхто.** *(Who is this? — Nobody.)*
+- **Що ти ба́чиш?** — **Нічого не бачу.** *(What do you see? — I see nothing.)*
+When answering with a single word, you can say **Ніхто** or **Нічого** alone. But as soon as the answer becomes a full sentence with a verb, double negation kicks in: **Нічого не бачу**.
+<Quiz client:only="react" questions={[{"question": "How do you say 'Nobody knows' in Ukrainian?", "options": [{"text": "Ніхто знає.", "correct": false}, {"text": "Ніхто не знає.", "correct": true}, {"text": "Не ніхто знає.", "correct": false}]}, {"question": "How do you say 'I don't know anything' in Ukrainian?", "options": [{"text": "Я знаю нічого.", "correct": false}, {"text": "Я нічого знаю.", "correct": false}, {"text": "Я нічого не знаю.", "correct": true}]}, {"question": "How do you say 'She is never late' in Ukrainian?", "options": [{"text": "Вона ніколи не запізнюється.", "correct": true}, {"text": "Вона ніколи запізнюється.", "correct": false}, {"text": "Вона не ніколи запізнюється.", "correct": false}]}, {"question": "How do you say 'He isn't going anywhere' in Ukrainian?", "options": [{"text": "Він не нікуди йде.", "correct": false}, {"text": "Він нікуди йде.", "correct": false}, {"text": "Він нікуди не йде.", "correct": true}]}, {"question": "How do you say 'Nobody speaks' in Ukrainian?", "options": [{"text": "Ніхто говорить.", "correct": false}, {"text": "Не говорить ніхто.", "correct": false}, {"text": "Ніхто не говорить.", "correct": true}]}, {"question": "Which sentence uses **подвійне заперечення** correctly?", "options": [{"text": "Я нічого не бачу.", "correct": true}, {"text": "Я нічого бачу.", "correct": false}, {"text": "Я не нічого бачу.", "correct": false}]}]} instruction={"Ukrainian requires **подвійне заперечення** (double negation). Choose the correct sentence."} />
+## Підсумок — Summary
+Here is everything from this module in one place:
+- **Питальні слова:** **Хто? Що? Де? Куди? Коли? Чому? Як?** — seven question words. Place the question word first; word order after it is flexible.
+- **Де vs. Куди:** **Де** = location (Де книга?); **Куди** = direction (Куди ти йдеш?).
+- **Так/ні пита́ння:** rising intonation only — Ти знаєш? ↑ No special word needed. In formal writing, **чи** may appear at the start.
+- **Не:** directly before the verb, never separated — Я **не** знаю. Він **не** прихо́дить.
+- **Подвійне заперечення:** **ніхто/нічого/ніколи/ніде** + **не** + verb — both parts required. **Ніхто не знає.** **Я нічого не бачу.**
+:::tip Self-check — try this now
+1. Ask three questions about a friend: **Де вона живе? Що він вивча́є? Коли вони прихо́дять?**
+2. Make two negative sentences: **Я нічого не знаю. Ніхто не розумі́є.**
+3. Turn a statement into a yes/no question: Він говорить українською. → Він говорить українською? ↑
+:::
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язко́ві та рекомендо́вані слова
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **куди́** | where to (direction) | присл. |  |
+| **коли́** | when | ім. |  |
+| **чому́** | why | присл. |  |
+| **як** | how | присл. |  |
+| **ні** | no | част. |  |
+| **ніхто́** | nobody | ім. | ч. |
+| **ні́чого** | nothing | ім. | с. |
+| **ніколи** | never | присл. |  |
+| **ніде** | nowhere | присл. |  |
+| **нікуди** | to nowhere, not anywhere | присл. |  |
+| **жи́ти** | to live | дієсл. |  |
+| **розумі́ти** | to understand | дієсл. |  |
+| **зна́ти** | to know | дієсл. |  |
+| **вивча́ти** | to study, to learn | дієсл. |  |
+| **працюва́ти** | to work | дієсл. |  |
+| **відповіда́ти** | to answer | дієсл. |  |
+| **чу́ти** | to hear | дієсл. |  |
+| **іти́** | to go (on foot) | дієсл. |  |
+| **ї́хати** | to go (by vehicle), to drive | дієсл. |  |
+| **запере́чення** | negation | ім. | с. |
+| **запі́знюватися** | to be late | дієсл. |  |
+| **вра́нці** | in the morning | присл. |  |
+| **уве́чері** | in the evening | присл. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **питальні слова** | question words |
+| **тому що** | because |
+| **подвійне заперечення** | double negation |
+| **Я не знаю.** | I don't know. |
+
+### Картки́ — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "куди́", back: "where to (direction)", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "чому́", back: "why", subtitle: "присл." }, { front: "як", back: "how", subtitle: "присл." }, { front: "ні", back: "no", subtitle: "част." }, { front: "ніхто́", back: "nobody", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ні́чого", back: "nothing", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ніколи", back: "never", subtitle: "присл." }, { front: "ніде", back: "nowhere", subtitle: "присл." }, { front: "нікуди", back: "to nowhere, not anywhere", subtitle: "присл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "розумі́ти", back: "to understand", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "відповіда́ти", back: "to answer", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "іти́", back: "to go (on foot)", subtitle: "дієсл." }, { front: "ї́хати", back: "to go (by vehicle), to drive", subtitle: "дієсл." }, { front: "запере́чення", back: "negation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "запі́знюватися", back: "to be late", subtitle: "дієсл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Де (location)": ["Де ти живеш?", "Де книга?", "Де стіл?", "Де ти?", "Де студент?", "Де Олег?"], "Куди (direction)": ["Куди ти йдеш?", "Куди вони їдуть?", "Куди він іде?", "Куди вона йде?", "Куди ти їдеш?", "Куди ми йдемо?"]}} instruction={"Sort each question into the correct group: **Де** (location — where something *is*) or **Куди** (direction — where something is *going*)."} />
+
+<MatchUp client:only="react" pairs={[{"left": "Хто?", "right": "a person"}, {"left": "Що?", "right": "a thing or activity"}, {"left": "Де?", "right": "a location (where something is)"}, {"left": "Куди?", "right": "a direction (where something is going)"}, {"left": "Коли?", "right": "a time (when)"}, {"left": "Чому?", "right": "a reason (why)"}, {"left": "Як?", "right": "a manner (how)"}]} instruction={"Match each **питальне слово** (question word) to what it asks about."} />
+
+<TrueFalse client:only="react" items={[{"statement": "**Де** asks about direction — where you are going.", "isTrue": false, "explanation": "Де asks about static location (where something IS). Куди asks about direction (where something is GOING)."}, {"statement": "**Куди** asks about movement — where something or someone is heading.", "isTrue": true, "explanation": "Куди is used with verbs of movement like йти, їхати, ходити."}, {"statement": "To make a yes/no question in Ukrainian, you MUST add **чи** at the beginning.", "isTrue": false, "explanation": "Rising intonation alone is enough: Ти знаєш? ↑ Чи is optional and used mainly in formal written Ukrainian."}, {"statement": "**Не** goes directly before the verb in Ukrainian negation: Я **не** знаю.", "isTrue": true, "explanation": "Не is a particle placed immediately before the verb. It is almost never separated from it."}, {"statement": "**Ніхто не знає** is correct Ukrainian — both ніхто AND не are required.", "isTrue": true, "explanation": "Ukrainian requires double negation: the ні- word AND не before the verb. Both parts are mandatory."}, {"statement": "You can say **Ніхто знає** (without не) to mean 'Nobody knows' in Ukrainian.", "isTrue": false, "explanation": "Ukrainian requires double negation: Ніхто не знає. Dropping не makes the sentence ungrammatical."}, {"statement": "The prefix **ні-** attaches to question words to form negative words: хто → ніхто, де → ніде, коли → ніколи.", "isTrue": true, "explanation": "Ні- + хто = ніхто (nobody), ні- + де = ніде (nowhere), ні- + коли = ніколи (never), ні- + куди = нікуди (to nowhere)."}]} instruction={"True or false? Read each statement about Ukrainian questions and negation."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Що ти — студент?", "errorWord": "Що", "correctForm": "Хто", "options": ["Хто", "Де", "Як"], "explanation": "Хто asks about a person's identity. Що asks about things or activities. When asking who someone is (a person), use Хто."}, {"sentence": "Хто ти вивчаєш? Українську мову?", "errorWord": "Хто", "correctForm": "Що", "options": ["Що", "Де", "Коли"], "explanation": "Що asks about activities and things. Хто asks about people. Вивчати is an activity, so use Що."}, {"sentence": "Де ти йдеш? До Львова?", "errorWord": "Де", "correctForm": "Куди", "options": ["Куди", "Коли", "Як"], "explanation": "Йти is a movement verb, so use Куди (direction), not Де (location). Де would ask where you already are."}, {"sentence": "Куди ти живеш? У Львові?", "errorWord": "Куди", "correctForm": "Де", "options": ["Де", "Як", "Хто"], "explanation": "Жити is a verb of being/staying, not movement. Use Де (location), not Куди (direction)."}, {"sentence": "Я ні знаю, де книга.", "errorWord": "ні", "correctForm": "не", "options": ["не", "ніхто", "нічого"], "explanation": "Не is the particle that negates a verb directly (Я не знаю). Ні is a standalone 'no' used to answer a question."}, {"sentence": "Я ніхто не бачу на столі.", "errorWord": "ніхто", "correctForm": "нічого", "options": ["нічого", "ніколи", "ніде"], "explanation": "Ніхто means 'nobody' (a person). Нічого means 'nothing' (a thing). When you see nothing on the table, use нічого."}]} instruction={"Each sentence has one error. Find the wrong word and correct it."} />
+
+<FillIn client:only="react" items={[{"sentence": "_____ не знає, де книга.", "answer": "Ніхто", "options": ["Ніхто", "Нічого", "Ніколи"]}, {"sentence": "Я _____ не бачу на столі.", "answer": "нічого", "options": ["нічого", "ніхто", "ніде"]}, {"sentence": "Вона _____ не запізнюється.", "answer": "ніколи", "options": ["ніколи", "нічого", "ніхто"]}, {"sentence": "Він _____ не йде.", "answer": "нікуди", "options": ["нікуди", "ніде", "ніколи"]}, {"sentence": "_____ не було.", "answer": "Ніде", "options": ["Ніде", "Нікуди", "Ніхто"]}, {"sentence": "Ми _____ не розуміємо.", "answer": "нічого", "options": ["нічого", "ніхто", "ніколи"]}, {"sentence": "_____ не приходить.", "answer": "Ніхто", "options": ["Ніхто", "Нічого", "Ніде"]}, {"sentence": "Ти _____ не чуєш?", "answer": "нічого", "options": ["нічого", "ніхто", "ніколи"]}]} instruction={"Fill in the blank with the correct **ні-** word: **ніхто**, **нічого**, **ніколи**, **ніде**, or **нікуди**."} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- Варзацька Grade 4, p.41
+  _Question words in case system context (хто? що? кого? чого́?)._
+- [ULP Season 1, Episode 35](https://www.ukrainianlessons.com/episode35/)
+  _Questions in Ukrainian — word order and intonation._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
+- [Small Talk in Ukrainian](https://www.ukrainianlessons.com/small-talk-in-ukrainian/)
+
+</TabItem>
+</Tabs>

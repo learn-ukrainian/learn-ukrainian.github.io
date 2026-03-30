@@ -1,0 +1,235 @@
+---
+title: "This And That"
+sidebar:
+  order: 12
+  label: "12. This And That"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Observe from '@site/src/components/Observe';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діало́ги (Dialogues)
+
+Іри́на walks into a department store. Bags hang on the wall in front of her, backpacks line a shelf to her left — and she needs to tell the shop assistant exactly which one she wants. **Цей** (this one) or **той** (that one)?
+
+### Dialogue 1 — Shopping for a bag
+
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Скі́льки ко́шту́є ця су́мка? *(How much is this bag?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Яка? Ця черво́на? *(Which one? This red one?)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Ні, та си́ня. *(No, that blue one.)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> А цей рюкза́к? *(And this backpack?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> До́бре, беру́ цей рюкзак. *(Okay, I'll take this backpack.)*</div>
+
+Notice how Ірина and the Консультант use **ця** and **та** to avoid confusion. When Ірина says **ця сумка** (this bag), she means the one right in front of her — she could touch it. When she says **та синя** (that blue one), she points to the bag farther away on the display. The shop assistant immediately understands which item she means. **Цей рюкзак** (this backpack) works the same way — it is close to Ірина, within reach.
+
+### Dialogue 2 — Comparing furniture in the showroom
+
+Ірина walks through to the office behind the counter, where the Консультант works.
+
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Що це? *(What is this?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Це мій стіл. *(This is my desk.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> А те? *(And that?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Те — крі́сло. *(That is an armchair.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Так, цей зру́чний, а той — ні. *(Yes, this one is comfortable, and that one — no.)*</div>
+
+Two patterns emerge here. First, **Це мій стіл** uses **це** to introduce something — "This is my desk." Second, **цей стілець** uses **цей** to point at a specific chair — "this chair." Both are natural, and context always makes the meaning clear. When the Консультант says **Те — крісло**, the dash replaces the verb "is" — standard written Ukrainian for equative sentences like "That is an armchair."
+
+## Цей, ця, це (This)
+
+Ukrainian has three forms of "this" because every noun has a grammatical gender. You already know this pattern from **мій/моя́/моє** (my) in Module 6 and **який/яка/яке** (which) in Module 9. Demonstrative pronouns follow exactly the same logic:
+
+- **Цей стіл** (m) — this table
+- **Ця книга** (f) — this book
+- **Це вікно́** (n) — this window
+
+The feminine and neuter endings match what you have already seen: **-а** for feminine, **-е** for neuter — just like моя/моє and яка/яке. The masculine forms vary (цей, мій, який, той), but feminine and neuter are always consistent. As Заболо́тний (Grade 6, p. 210) puts it: вказівні́ займе́нники цей, той змі́нюються за родами — demonstrative pronouns change by gender. At A1, we only use the nominative forms listed above. Other case forms come later.
+
+How do you know which form to use? Match it to the noun's gender — the gender you already learned in Module 8. Here are more examples across all three genders:
+
+- **Цей телефон** (m) — this phone
+- **Цей оліве́ць** (m) — this pencil
+- **Ця камера** (f) — this camera
+- **Ця ру́чка** (f) — this pen
+- **Це ра́діо** (n) — this radio
+- **Це місто** (n) — this city
+
+**Цей/ця/це** always refers to something near the speaker — the thing you can reach, hold, or are standing next to. If it is close enough to touch, use **цей/ця/це**.
+
+Demonstratives combine naturally with adjectives and colors. The word order is the same as English — demonstrative first, then adjective(s), then noun:
+
+- **Цей вели́кий черво́ний стіл.** — This big red table.
+- **Ця нова́ синя сумка.** — This new blue bag.
+- **Це мале́ньке бі́ле вікно.** — This small white window.
+
+Ukrainian word order is more flexible than English in general, but demonstrative + adjective + noun is the most natural, unmarked order. At A1, stick with this pattern and it will always sound right.
+
+<Quiz client:only="react" questions={[{"question": "___ стіл", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "___ книга", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "___ вікно", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}, {"question": "___ телефон", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "___ камера", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "___ радіо", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}, {"question": "___ олівець", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "___ ручка", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}]} instruction={"Choose **цей**, **ця**, or **це** — the correct form of 'this' for each noun."} />
+
+<FillIn client:only="react" items={[{"sentence": "___ стіл великий.", "answer": "цей", "options": ["цей", "ця", "це"]}, {"sentence": "___ книга нова.", "answer": "ця", "options": ["цей", "ця", "це"]}, {"sentence": "___ вікно велике.", "answer": "це", "options": ["цей", "ця", "це"]}, {"sentence": "___ телефон дорогий.", "answer": "цей", "options": ["цей", "ця", "це"]}, {"sentence": "___ сумка синя.", "answer": "ця", "options": ["цей", "ця", "це"]}, {"sentence": "___ крісло зручне.", "answer": "це", "options": ["цей", "ця", "це"]}, {"sentence": "___ олівець маленький.", "answer": "цей", "options": ["цей", "ця", "це"]}, {"sentence": "___ радіо нове.", "answer": "це", "options": ["цей", "ця", "це"]}]} instruction={"Fill in the blank with **цей**, **ця**, or **це**."} />
+
+## Той, та, те (That)
+
+"That" works exactly like "this" — same three genders, same endings. The only difference is distance: **той/та/те** points at something farther away from the speaker, or something mentioned earlier.
+
+- **Той стіл** (m) — that table
+- **Та книга** (f) — that book
+- **Те вікно** (n) — that window
+
+Contrast pairs make the near/far distinction vivid:
+
+- **Цей стілець новий, а той — старий.** — This chair is new, and that one is old.
+- **Цей рюкзак си́ній, а той — чо́рний.** — This backpack is blue, and that one is black.
+- **Це крісло зру́чне, а те — ні.** — This armchair is comfortable, and that one — no.
+
+:::caution
+The word **та** has two meanings. As a demonstrative pronoun, **та** means "that" (feminine) and always appears directly before a noun: **та книга** (that book). As a conjunction, **та** means "and" (like **і** or **й**) and connects two words: **мама та тато** (mom and dad). A quick test: is **та** followed directly by a noun it describes? Then it means "that." Does **та** link two separate words? Then it means "and."
+
+- **Та книга ціка́ва.** — That book is interesting. (demonstrative — **та** + noun)
+- **Ірина та Максим** — Iryna and Maksym (conjunction — **та** links two names)
+:::
+
+Demonstratives pair naturally with question words to help you choose between objects. The question particle **чи** (or) connects the options:
+
+- **Який стіл? — Цей чи той?** — Which table? This one or that one?
+- **Яка сумка? — Ця червона чи та синя?** — Which bag? This red one or that blue one?
+- **Яке вікно? — Це вели́ке чи те маленьке?** — Which window? This big one or that small one?
+
+The pointing word **ось** (here is / look) and the adverb **там** (there) pair naturally with demonstratives: **Ось цей телефон — дороги́й.** (Here, this phone — expensive.) **А той, там, — ні.** (And that one, over there — no.)
+
+One more thing worth noting. **Це** can stand alone to introduce or name something — **Це вікно.** means "This is a window." But **це** can also modify a noun directly — **Це вікно велике.** means "This window is big." Context always makes the meaning clear. You have been using **Це...** as "This is..." since Module 3, and now you are adding **це** as "this" before neuter nouns. Both uses are completely natural.
+
+<Quiz client:only="react" questions={[{"question": "___ рюкзак", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}, {"question": "___ книга", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "___ крісло", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}, {"question": "___ стілець", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}, {"question": "___ камера", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "___ вікно", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}]} instruction={"Choose **той**, **та**, or **те** — the correct form of 'that' for each noun."} />
+
+<MatchUp client:only="react" pairs={[{"left": "цей", "right": "мій"}, {"left": "ця", "right": "моя"}, {"left": "це", "right": "моє"}, {"left": "той", "right": "який"}, {"left": "та", "right": "яка"}, {"left": "те", "right": "яке"}]} instruction={"Match each demonstrative on the left with the pronoun on the right that belongs to the **same gender**. Notice the pattern!"} />
+
+## Підсумок — Summary
+
+Two sets of demonstrative pronouns, one simple system. **Цей/ця/це** points to things near you — this phone in your hand, this book on your desk. **Той/та/те** points to things farther away — that laptop on the shelf, that bag across the store. Both sets follow the same gender endings as **мій/моя/моє** and **який/яка/яке** — Ukrainian gender agreement is one consistent pattern you apply everywhere.
+
+Here are all four paradigms together:
+
+| Pattern | m | f | n |
+|---|---|---|---|
+| Possessives (M06) | **мій** | **моя** | **моє** |
+| Questions (M09) | **який** | **яка** | **яке** |
+| This (M12) | **цей** | **ця** | **це** |
+| That (M12) | **той** | **та** | **те** |
+
+Same endings, same logic — learn the pattern once, apply it everywhere.
+
+Remember the **та** double meaning: **Та книга цікава** (that book — demonstrative, before a noun) vs **Ірина та Максим** (and — conjunction, between names). Quick test: is **та** followed by a noun it describes? → "that." Does it link two words? → "and."
+
+Try this self-check to practise what you have learned:
+
+- Look around — pick 3 objects near you. Say: **Це ___.** Then: **Цей/Ця/Це ___ (adjective) ___ (noun).**
+- Now pick 3 objects far away. Say: **Те ___.** Then: **Той/Та/Те ___ (adjective) ___ (noun).**
+- Choose between **цей** and **той**: ___ телефон (in your hand) **чи** ___ ноутбу́к (on that shelf)?
+- Point at something and ask: **Яка сумка? — Ця чи та?** Now do the same for a masculine and a neuter noun.
+- Translate into Ukrainian: "That old chair." / "This new blue bag." / "Is this a window or a door?" / "This red pen or that blue pencil?"
+
+If you can point at objects around you and name them with the right demonstrative and gender — congratulations, you are thinking in Ukrainian. The gender system that seemed like three separate sets of words in Modules 6, 9, and now 12 is really one pattern repeated. Every new word you learn simply plugs into this system.
+
+<FillIn client:only="react" items={[{"sentence": "___ стілець новий, а той — старий.", "answer": "цей", "options": ["цей", "ця", "це"]}, {"sentence": "Цей рюкзак синій, а ___ — чорний.", "answer": "той", "options": ["той", "та", "те"]}, {"sentence": "Ця сумка червона, а ___ — синя.", "answer": "та", "options": ["той", "та", "те"]}, {"sentence": "___ крісло зручне, а те — ні.", "answer": "це", "options": ["цей", "ця", "це"]}, {"sentence": "Цей телефон дорогий, а ___ — ні.", "answer": "той", "options": ["той", "та", "те"]}, {"sentence": "___ книга цікава, а та — ні.", "answer": "ця", "options": ["цей", "ця", "це"]}, {"sentence": "___ вікно велике, а те — маленьке.", "answer": "це", "options": ["цей", "ця", "це"]}, {"sentence": "Той стіл старий, а ___ — новий.", "answer": "цей", "options": ["цей", "ця", "це"]}]} instruction={"Fill in the blank with the correct demonstrative. Watch the gender — and whether the object is **near** (цей/ця/це) or **far** (той/та/те)."} />
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **цей** | this (masculine) | прикм. |  |
+| **ця** | this (feminine) | прикм. |  |
+| **той** | that (masculine) | прикм. |  |
+| **та** | that (feminine); and (conjunction) | спол. |  |
+| **те** | that (neuter) | ім. | с. |
+| **ось** | here is, look (pointing word) | част. |  |
+| **там** | there | присл. |  |
+| **тут** | here | присл. |  |
+| **вона́** | she | ім. | ж. |
+| **воно́** | it | ім. | с. |
+| **консульта́нт** | shop assistant, consultant | ім. | ч. |
+| **су́мка** | bag | ім. | ж. |
+| **рюкза́к** | backpack | ім. | ч. |
+| **стіле́ць** | chair | ім. | ч. |
+| **крі́сло** | armchair | ім. | с. |
+| **вікно́** | window | ім. | с. |
+| **телефо́н** | phone | ім. | ч. |
+| **ноутбу́к** | laptop | ім. | ч. |
+| **оліве́ць** | pencil | ім. | ч. |
+| **ка́мера** | camera | ім. | ж. |
+| **ру́чка** | pen | ім. | ж. |
+| **ра́діо** | radio | ім. | с. |
+| **мі́сто** | city | ім. | с. |
+| **кни́га** | book | ім. | ж. |
+| **дві́сті** | two hundred | числ. |  |
+| **зру́чний** | comfortable | прикм. |  |
+| **нови́й** | new | прикм. |  |
+| **стари́й** | old | прикм. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **вказівні займенники** | demonstrative pronouns |
+| **Беру цей.** | I'll take this one. |
+
+### Картки́ — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "цей", back: "this (masculine)", subtitle: "прикм." }, { front: "ця", back: "this (feminine)", subtitle: "прикм." }, { front: "той", back: "that (masculine)", subtitle: "прикм." }, { front: "та", back: "that (feminine); and (conjunction)", subtitle: "спол." }, { front: "те", back: "that (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ось", back: "here is, look (pointing word)", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "консульта́нт", back: "shop assistant, consultant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ноутбу́к", back: "laptop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́мера", back: "camera", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́діо", back: "radio", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"цей — masculine": ["рюкзак", "стіл", "стілець", "телефон", "олівець", "ноутбук"], "ця або це — feminine or neuter": ["сумка", "камера", "ручка", "книга", "крісло", "вікно"]}} instruction={"Sort the nouns into two groups by the form of 'this' they take."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Цей книга нова.", "errorWord": "Цей", "correctForm": "Ця", "options": ["Цей", "Ця", "Це"], "explanation": "книга is feminine — it needs ця, not masculine цей. Same logic as моя книга and яка книга."}, {"sentence": "Це стіл великий.", "errorWord": "Це", "correctForm": "Цей", "options": ["Це", "Цей", "Ця"], "explanation": "стіл is masculine — when describing it with an adjective (великий), use цей. (Це стіл = 'This is a table' is a separate introductory construction with no adjective.)"}, {"sentence": "Той крісло зручне.", "errorWord": "Той", "correctForm": "Те", "options": ["Той", "Та", "Те"], "explanation": "крісло is neuter — the correct far form is те. Той is masculine only."}, {"sentence": "Та рюкзак синій.", "errorWord": "Та", "correctForm": "Той", "options": ["Та", "Той", "Те"], "explanation": "рюкзак is masculine — use той (far) or цей (near), not feminine та."}, {"sentence": "Ця вікно велике.", "errorWord": "Ця", "correctForm": "Це", "options": ["Ця", "Це", "Цей"], "explanation": "вікно is neuter — it needs це, not feminine ця."}, {"sentence": "Те телефон дорогий.", "errorWord": "Те", "correctForm": "Той", "options": ["Те", "Той", "Та"], "explanation": "телефон is masculine — use той (far) or цей (near), not neuter те."}]} instruction={"Find the wrong demonstrative and choose the correct one."} />
+
+<TrueFalse client:only="react" items={[{"statement": "Цей is correct before masculine nouns like стіл and телефон.", "isTrue": true, "explanation": "Yes — цей matches masculine nouns, just like мій and який."}, {"statement": "Ця вікно велике is correct Ukrainian for 'this window is big'.", "isTrue": false, "explanation": "Wrong — вікно is neuter, so the correct form is Це вікно велике."}, {"statement": "The word та can mean both 'that (feminine)' and 'and'.", "isTrue": true, "explanation": "Та книга = 'that book' (demonstrative before a noun). Ірина та Максим = 'Iryna and Maksym' (conjunction linking two names)."}, {"statement": "Той and цей both agree with masculine nouns — the only difference is distance.", "isTrue": true, "explanation": "Correct — цей рюкзак = this backpack (near you), той рюкзак = that backpack (over there). Same masculine form, different near/far meaning."}, {"statement": "Це крісло зручне means 'That armchair is comfortable.'", "isTrue": false, "explanation": "No — це means 'this' (near). 'That armchair is comfortable' = Те крісло зручне."}, {"statement": "The gender endings of цей/ця/це are the same pattern as мій/моя/моє and який/яка/яке.", "isTrue": true, "explanation": "Exactly — one pattern, three sets of words. Learn the pattern once and it works for possessives, question words, and demonstratives."}]} instruction={"True or false? Check each statement about Ukrainian demonstratives."} />
+
+<Translate client:only="react" questions={[{"source": "This new phone", "options": [{"text": "Цей новий телефон", "correct": true}, {"text": "Ця нова телефон", "correct": false}, {"text": "Це новий телефон", "correct": false}]}, {"source": "That blue bag", "options": [{"text": "Та синій сумка", "correct": false}, {"text": "Та синя сумка", "correct": true}, {"text": "Той синя сумка", "correct": false}]}, {"source": "This comfortable armchair", "options": [{"text": "Цей зручний крісло", "correct": false}, {"text": "Це зручне крісло", "correct": true}, {"text": "Ця зручна крісло", "correct": false}]}, {"source": "That old table", "options": [{"text": "Та стара стіл", "correct": false}, {"text": "Те старе стіл", "correct": false}, {"text": "Той старий стіл", "correct": true}]}, {"source": "This big window", "options": [{"text": "Цей великий вікно", "correct": false}, {"text": "Це велике вікно", "correct": true}, {"text": "Ця велика вікно", "correct": false}]}, {"source": "That black backpack", "options": [{"text": "Та чорна рюкзак", "correct": false}, {"text": "Той чорний рюкзак", "correct": true}, {"text": "Те чорне рюкзак", "correct": false}]}]} instruction={"Choose the correct Ukrainian translation."} />
+
+<Observe client:only="react" examples={["Цей стіл — мій стіл — який стіл? → all masculine", "Ця книга — моя книга — яка книга? → all feminine", "Це вікно — моє вікно — яке вікно? → all neuter", "Цей рюкзак (near) ↔ Той рюкзак (far) → same masculine form, different distance", "Ця сумка (near) ↔ Та сумка (far) → same feminine form, different distance", "Це крісло (near) ↔ Те крісло (far) → same neuter form, different distance"]} prompt={"What do цей/ця/це share with мій/моя/моє and який/яка/яке? And what is the only difference between цей and той, ця and та, це and те?"} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- Заболотний Grade 6, p.210
+  _Вказівні займенники цей, той змінюються за родами, чи́слами, відмі́нками._
+- Літвінова Grade 6, p.273
+  _Full declension table for той — we use nominative only at A1._
+
+**Граматика — Grammar (МійКлас)**
+
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/)
+
+</TabItem>
+</Tabs>

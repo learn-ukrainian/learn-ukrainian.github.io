@@ -1,0 +1,255 @@
+---
+title: "Where From"
+sidebar:
+  order: 34
+  label: "34. Where From"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діало́ги (Dialogues)
+
+It's the first week of the semester, and students from all over the world are meeting at a Kyiv university. Everyone wants to know the same thing: **Звідки ти?** (Where are you from?) Here's how that conversation sounds in Ukrainian — using **з** (from) plus a country or city name.
+
+### Діало́г 1 — На зу́стрічі студе́нтів (At a student mixer)
+
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Приві́т! Ме́не зва́ти Тарас. Звідки ти? *(Hi! My name is Taras. Where are you from?)*</div>
+> <div class="dialogue-line"><span class="speaker">Лена:</span> Я з Украї́ни, з Ки́єва. А ти? *(I'm from Ukraine, from Kyiv. And you?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Я з Кана́ди, із Торо́нто. *(I'm from Canada, from Toronto.)*</div>
+> <div class="dialogue-line"><span class="speaker">Лена:</span> Давно́ тут? *(Been here long?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Ні, я приї́хав мі́сяць тому́. А ти, Кенджі? *(No, I arrived a month ago. And you, Kenji?)*</div>
+> <div class="dialogue-line"><span class="speaker">Кенджі:</span> Я з Япо́нії, з То́кіо. *(I'm from Japan, from Tokyo.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Як ціка́во! *(How interesting!)*</div>
+
+:::tip
+**Я приїхав** (I arrived) — memorize this as a ready-made chunk. The full verb **приїхати** belongs to A2. For now, just use **я приїхав** (masculine) or **я приїхала** (feminine) when you need to say "I arrived."
+:::
+
+Notice how Dialogue 1 uses **з** (from) with both countries and cities. The same question — **Звідки ти?** — works for both. When Lena answers **Я з України, з Києва**, she's layering: country first, then city. Think of it as zooming in: "from Ukraine, from Kyiv." Taras does the same: **Я з Канади, із Торонто** — from Canada, from Toronto.
+
+### Діалог 2 — На ву́лиці (On the street)
+
+> <div class="dialogue-line"><span class="speaker">Оксана:</span> Звідки ти йдеш? *(Where are you coming from?)*</div>
+> <div class="dialogue-line"><span class="speaker">Микола:</span> Я йду з робо́ти. А ти? *(I'm coming from work. And you?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оксана:</span> Я зі шко́ли. Куди́ ти за́раз? *(From school. Where are you headed now?)*</div>
+> <div class="dialogue-line"><span class="speaker">Микола:</span> Додо́му. А Оле́на де? *(Home. And where's Olena?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оксана:</span> Вона́ ще в магази́ні. Але́ ско́ро йде з магази́ну додому. *(She's still at the store. But she's heading home from the store soon.)*</div>
+> <div class="dialogue-line"><span class="speaker">Микола:</span> До́бре. Бува́й! *(Okay. Bye!)*</div>
+
+:::note
+**з роботи** = from work | **зі школи** = from school | **додому** = homeward (direction)
+:::
+
+Look at what both dialogues share. **Звідки?** always triggers **з/із/зі** plus a place name: **з Японії** (from Japan), **з роботи** (from work), **зі школи** (from school). But notice two different uses: (1) **Звідки ти?** asks about your origin or nationality — **Я з Японії**; (2) **Звідки ти йдеш?** asks where you're physically coming from right now — **з роботи**, **зі школи**. Both use the same preposition family. Up next: the full direction trio **Де?–Куди?–Звідки?** — the three questions every Ukrainian speaker uses constantly.
+
+<FillIn client:only="react" items={[{"sentence": "Звідки ти? — Я ____.", "answer": "з України", "options": ["з України", "з Канади", "в Україні"]}, {"sentence": "Вона ____.", "answer": "з Канади", "options": ["з Канади", "зі Львова", "в Канаді"]}, {"sentence": "Ми ____, а ви?", "answer": "з Києва", "options": ["з Києва", "з Одеси", "в Києві"]}, {"sentence": "Джон ____.", "answer": "зі США", "options": ["зі США", "з США", "в США"]}, {"sentence": "Мій друг ____.", "answer": "з Німеччини", "options": ["з Німеччини", "з Польщі", "в Німеччині"]}, {"sentence": "Я ____.", "answer": "зі Львова", "options": ["зі Львова", "з Києва", "у Львові"]}, {"sentence": "Вони ____.", "answer": "з Англії", "options": ["з Англії", "з Польщі", "в Англії"]}, {"sentence": "Олена ____.", "answer": "з Одеси", "options": ["з Одеси", "з Харкова", "в Одесі"]}]} instruction={"Вставте правильну форму (Insert the correct form)"} />
+
+## Звідки? (Where From?)
+
+You already know two of the three essential location questions. **Де ти?** (Where are you?) appeared in M05. **Куди ти ї́деш?** (Where are you going?) came in M33. Now the trio is complete with **Звідки ти?** (Where are you from?). Here's the whole system — one country, three different forms, three different questions:
+
+- **Де ти?** — **В Украї́ні.** (locative — where you ARE right now)
+- **Куди ти їдеш?** — **В Украї́ну.** (accusative — direction TO)
+- **Звідки ти?** — **З України.** (genitive chunk — origin FROM)
+
+See how **Україна** changes shape each time? **В Україні**, **В Україну**, **З України** — three different endings for three different situations. Native speakers switch between them automatically. We learn the pattern now and the full grammar of these endings (**відмінки**) in A2.
+
+### З / із / зі — the euphony rule
+
+Remember the euphony patterns from M28? The preposition **з** (from) follows the same logic. It has three forms to keep Ukrainian sounding smooth:
+
+**With Ukrainian cities:**
+- **з Києва**, **з Одеси**, **з Харкова**, **з Дніпра**
+- **зі Львова** — **зі** before the лв- cluster
+
+**With countries:**
+- **з Канади**, **з Англії**, **з Польщі**, **з Фра́нції**, **з Японії**, **з Німеччини**
+- **зі США** / **зі Шта́тів** — **зі** before the шт- cluster
+
+**With everyday places:**
+- **з роботи**, **з магазину**, **з банку**, **з парку**
+- **зі школи** — **зі** before шк-
+
+The pattern: **з** before most consonants and vowels; **із** between awkward consonant clusters; **зі** before combinations starting with з-, с-, ш-. At A1, don't calculate — just recognize the pattern and memorize the fixed phrases from the lists above.
+
+### Memorize as chunks
+
+Treat **з** + place as sealed units, the same way you learned **в Україні** as a single phrase back in M30. English speakers don't think "in + Ukraine" as separate words — they say "in Ukraine" as one chunk. Do the same here. **Я з України**, **з Києва**, **з роботи** — three set phrases to know by heart. Why does **Київ** become **Києва** and **Україна** become **України**? Those are genitive case endings — full A2 grammar. For now, recognize and reproduce the forms from this module's vocabulary. If you can say **Я з Києва** without hesitating, you're doing it right.
+
+<GroupSort client:only="react" groups={{"Де? (Where?)": ["в Україні", "у Києві", "на роботі", "у Харкові", "в Канаді", "у школі"], "Куди? (Where to?)": ["в Україну", "у Київ", "на роботу", "у Харків", "в Канаду", "у школу"], "Звідки? (Where from?)": ["з України", "з Києва", "з роботи", "з Харкова", "з Канади", "зі школи"]}} instruction={"Розподіліть фрази за питанням (Sort the phrases by their question)"} />
+
+## Краї́ни і міста́ (Countries and Cities)
+
+### Украї́нські міста (Ukrainian cities)
+
+Here are six major Ukrainian cities with their **з**-forms — the shape they take after **Звідки?**:
+
+| Мі́сто (City) | Звідки? (From where?) |
+|---|---|
+| **Київ** (Kyiv) | **з Києва** |
+| **Львів** (Lviv) | **зі Львова** |
+| **Одеса** (Odesa) | **з Одеси** |
+| **Харків** (Kharkiv) | **з Харкова** |
+| **Дніпро** (Dnipro) | **з Дніпра** |
+| **Запоріжжя** (Zaporizhzhia) | **із Запоріжжя** |
+
+Ukrainian city names carry history. **Київ** takes its name from Кий, a legendary Polanian prince. **Львів** is named for Prince Лев Дани́лович — Lev, son of Danylo. When you say **зі Львова**, you're using a form shaped by centuries of Ukrainian language. Notice **зі Львова** specifically — the **зі** form prevents an awkward зл- consonant cluster.
+
+### Країни (Countries)
+
+Countries follow the same pattern. Here are the ones you'll use most often:
+
+**Nearby:** **Польща** → **з Польщі** | **Угорщина** (Hungary) → **з Уго́рщини** | **Румунія** (Romania) → **з Руму́нії**
+
+**Further away:** **Канада** → **з Канади** | **США** → **зі США** (**зі Штатів**) | **Англія** (England) → **з Англії** | **Німеччина** (Germany) → **з Німеччини** | **Франція** (France) → **з Франції** | **Японія** (Japan) → **з Японії** | **Італія** (Italy) → **з Іта́лії**
+
+One important note: these are Ukrainian names, not transliterations of English. Germany is **Німеччина** (not "Герма́нія"). Japan is **Японія**. Canada is **Канада** (not "Кенада"). Always use the Ukrainian forms.
+
+### Націона́льність і мо́ва (Nationality and language)
+
+Back in M05, you learned to introduce yourself. Now extend that chain with origin:
+
+- **Я з України** → **Я украї́нець** (m) / **українка** (f) → **Я говорю́ украї́нською.**
+- **Я з Польщі** → **Я поляк** (m) / **полька** (f) → **Я говорю по́льською.**
+
+And here's a new contrast — where you live now versus where you're originally from:
+
+- **Я живу́ в Ки́єві, але я зі Львова.** (I live in Kyiv, but I'm from Lviv.)
+- **Вона живе́ в Кана́ді, але вона з України.** (She lives in Canada, but she's from Ukraine.)
+
+The pattern: **живу в** [place — locative] + **але я з** [place — genitive chunk]. This is how diaspora Ukrainians talk about themselves every day.
+
+<Quiz client:only="react" questions={[{"question": "Я йду ___ роботи.", "options": [{"text": "з", "correct": true}, {"text": "на", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Вона йде ___ школу.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "зі", "correct": false}]}, {"question": "Ми зараз ___ Україні.", "options": [{"text": "в", "correct": true}, {"text": "з", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Я їду ___ Канаду.", "options": [{"text": "в", "correct": true}, {"text": "з", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Він ___ Німеччини.", "options": [{"text": "з", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Вони ___ Львові.", "options": [{"text": "у", "correct": true}, {"text": "зі", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Я йду ___ магазину.", "options": [{"text": "з", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Олена ___ школи.", "options": [{"text": "зі", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}]} instruction={"Оберіть правильний прийменник (Choose the correct preposition)"} />
+
+<FillIn client:only="react" items={[{"sentence": "Я живу ____, але я зі Львова.", "answer": "в Києві", "options": ["в Києві", "зі Львова", "з Києва"]}, {"sentence": "Вона живе в Канаді, але вона ____.", "answer": "з України", "options": ["з України", "в Україні", "в Україну"]}, {"sentence": "Ми зараз ____, але ми з Польщі.", "answer": "в Англії", "options": ["в Англії", "з Англії", "в Англію"]}, {"sentence": "Він живе ____, але він з Харкова.", "answer": "в Одесі", "options": ["в Одесі", "з Одеси", "в Одесу"]}, {"sentence": "Я з Німеччини, але зараз я ____.", "answer": "в Україні", "options": ["в Україні", "з України", "в Україну"]}, {"sentence": "Ти ____, але живеш у Києві.", "answer": "зі США", "options": ["зі США", "з США", "у Києві"]}]} instruction={"Вставте правильну форму: де живе чи звідки? (Fill in: where they live or where they're from?)"} />
+
+## Підсумок — Summary
+
+You now have all three direction questions that Ukrainian speakers use constantly. Here's the complete trio — three questions, three preposition families, three memorized chunk sets:
+
+| Пита́ння (Question) | Прийме́нник (Preposition) | Приклад (Example) | Meaning |
+|---|---|---|---|
+| **Де?** | в/на + locative chunk | **В Україні. У Києві. На робо́ті.** | where you ARE |
+| **Куди?** | в/на + accusative chunk | **В Україну. У Київ. На робо́ту.** | where you're GOING |
+| **Звідки?** | з/із/зі + genitive chunk | **З України. З Києва. З роботи.** | where you're FROM |
+
+Why does **Київ** become **Києва** in one column and **Києві** in another? Those are different case endings — the genitive and locative. Full case grammar arrives in A2. For now: recognize the pattern, memorize the fixed forms from this module. You already have all three direction questions. Use them.
+
+### Переві́р себе́ (Self-check)
+
+Answer these three questions out loud in Ukrainian. Switch the prepositions correctly for each:
+
+- **Звідки ти?** (З яко́ї країни? З яко́го міста?)
+- **Де ти зараз?** (В яко́му мі́сті? В які́й краї́ні?)
+- **Куди ти йдеш пі́сля цього́ уро́ку?** (Додому? На роботу? В магази́н?)
+
+If you can answer all three — switching smoothly between **з/із/зі**, **в/на**, and **в/на** — the **Де?/Куди?/Звідки?** trio is yours.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **зві́дки** | where from | присл. |  |
+| **Украї́на** | Ukraine | ім. | ж. |
+| **Ки́їв** | Kyiv | ім. |  |
+| **Оде́са** | Odesa |  |  |
+| **Кана́да** | Canada |  |  |
+| **США** | USA |  |  |
+| **А́нглія** | England |  |  |
+| **Німе́ччина** | Germany |  |  |
+| **По́льща** | Poland |  |  |
+| **додо́му** | home (direction, homeward) | присл. |  |
+| **Дніпро́** | Dnipro |  |  |
+| **Запорі́жжя** | Zaporizhzhia |  |  |
+| **Уго́рщина** | Hungary |  |  |
+| **Руму́нія** | Romania |  |  |
+| **Фра́нція** | France |  |  |
+| **Япо́нія** | Japan |  |  |
+| **Іта́лія** | Italy |  |  |
+| **Торо́нто** | Toronto |  |  |
+| **То́кіо** | Tokyo |  |  |
+| **робо́та** | work | ім. | ч. |
+| **шко́ла** | school | ім. | ж. |
+| **магази́н** | store, shop | ім. | ч. |
+| **мі́сяць** | month | ім. | ч. |
+| **тому́** | ago | ім. | с. |
+| **ско́ро** | soon | присл. |  |
+| **за́раз** | now | присл. |  |
+| **давно́** | long ago, for a long time | присл. |  |
+| **але́** | but | спол. |  |
+| **куди́** | where to (direction) | присл. |  |
+| **украї́нець** | Ukrainian (male) | ім. | ч. |
+| **украї́нка** | Ukrainian (female) | ім. | ж. |
+| **поля́к** | Polish person (male) | ім. | ч. |
+| **по́лька** | Polish person (female) | ім. | ж. |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **Я з України.** | I am from Ukraine. |
+| **Я приїхав** | I arrived (masculine) |
+| **Я приїхала** | I arrived (feminine) |
+| **Як цікаво!** | How interesting! |
+| **Давно тут?** | Been here long? |
+| **Звідки ти йдеш?** | Where are you coming from? |
+| **з роботи** | from work |
+| **зі школи** | from school |
+| **з магазину** | from the store |
+| **Я живу в Києві, але я зі Львова.** | I live in Kyiv, but I am from Lviv. |
+
+### Картки́ — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "зві́дки", back: "where from", subtitle: "присл." }, { front: "Украї́на", back: "Ukraine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "Оде́са", back: "Odesa" }, { front: "Кана́да", back: "Canada" }, { front: "США", back: "USA" }, { front: "А́нглія", back: "England" }, { front: "Німе́ччина", back: "Germany" }, { front: "По́льща", back: "Poland" }, { front: "додо́му", back: "home (direction, homeward)", subtitle: "присл." }, { front: "Дніпро́", back: "Dnipro" }, { front: "Запорі́жжя", back: "Zaporizhzhia" }, { front: "Уго́рщина", back: "Hungary" }, { front: "Руму́нія", back: "Romania" }, { front: "Фра́нція", back: "France" }, { front: "Япо́нія", back: "Japan" }, { front: "Іта́лія", back: "Italy" }, { front: "Торо́нто", back: "Toronto" }, { front: "То́кіо", back: "Tokyo" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "store, shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сяць", back: "month", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тому́", back: "ago", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ско́ро", back: "soon", subtitle: "присл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "давно́", back: "long ago, for a long time", subtitle: "присл." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "куди́", back: "where to (direction)", subtitle: "присл." }, { front: "украї́нець", back: "Ukrainian (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "украї́нка", back: "Ukrainian (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "поля́к", back: "Polish person (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́лька", back: "Polish person (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<MatchUp client:only="react" pairs={[{"left": "Київ", "right": "з Києва"}, {"left": "Львів", "right": "зі Львова"}, {"left": "Одеса", "right": "з Одеси"}, {"left": "Харків", "right": "з Харкова"}, {"left": "Україна", "right": "з України"}, {"left": "Канада", "right": "з Канади"}, {"left": "Англія", "right": "з Англії"}, {"left": "Польща", "right": "з Польщі"}]} instruction={"З'єднайте місто або країну з формою 'Звідки?' (Match each city or country to its 'Where from?' form)"} />
+
+<Quiz client:only="react" questions={[{"question": "В Україні", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}]}, {"question": "З Канади", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": true}]}, {"question": "В Київ", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": true}, {"text": "Звідки?", "correct": false}]}, {"question": "Зі школи", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": true}]}, {"question": "На роботі", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}]}, {"question": "Додому", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": true}, {"text": "Звідки?", "correct": false}]}, {"question": "З Харкова", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": true}]}, {"question": "В Одесу", "options": [{"text": "Де?", "correct": false}, {"text": "Куди?", "correct": true}, {"text": "Звідки?", "correct": false}]}]} instruction={"На яке питання відповідає ця фраза? (Which question does this phrase answer?)"} />
+
+<TrueFalse client:only="react" items={[{"statement": "На питання 'Звідки?' завжди відповідають з прийменником з/із/зі.", "isTrue": true, "explanation": "Так: Я з України, зі школи, із Запоріжжя — всі форми з/із/зі."}, {"statement": "На питання 'Де?' відповідають з прийменником з/із/зі.", "isTrue": false, "explanation": "Ні. Де? = в/на + locative: в Україні, на роботі. З/із/зі — це Звідки?"}, {"statement": "'В Україні' відповідає на питання 'Де?'", "isTrue": true, "explanation": "Так. В Україні = locative, де ти є зараз."}, {"statement": "Форма 'зі Львова' вживається тому, що лв- — важке поєднання приголосних.", "isTrue": true, "explanation": "Так. зі вживається перед складними кластерами: зі Львова, зі школи, зі США."}, {"statement": "На питання 'Куди?' відповідають з прийменником з/із/зі.", "isTrue": false, "explanation": "Ні. Куди? = в/на + accusative: в Україну, на роботу, в Київ."}, {"statement": "'Додому' відповідає на питання 'Куди?'", "isTrue": true, "explanation": "Так. Додому = homeward — напрям руху, як в Київ, на роботу."}, {"statement": "'Я з Канаду' — правильна форма для відповіді на 'Звідки?'", "isTrue": false, "explanation": "Ні. Звідки? вимагає genitive: з Канади (не Канаду). Канаду — це accusative для Куди?"}, {"statement": "'З роботи' означає coming from work і відповідає на питання 'Звідки?'", "isTrue": true, "explanation": "Так. З роботи — genitive chunk після з, відповідає на Звідки? Де? — на роботі."}]} instruction={"Правда чи ні? (True or false?)"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Я живу з Києві.", "errorWord": "з", "correctForm": "в", "options": ["в", "з", "на"], "explanation": "Де? (where you live) = в/на + locative. з/із/зі = Звідки? (where you're from)."}, {"sentence": "Зі Харкова він.", "errorWord": "Зі", "correctForm": "З", "options": ["З", "Зі", "Із"], "explanation": "з Харкова: Х is a single consonant — з, not зі. зі is for clusters: лв-, шк-, шт-, шт-."}, {"sentence": "Звідки ти? — Я в України.", "errorWord": "в", "correctForm": "з", "options": ["з", "в", "на"], "explanation": "Звідки? requires з/із/зі: Я з України. В Україні = Де? form."}, {"sentence": "Вона з Одесу.", "errorWord": "Одесу", "correctForm": "Одеси", "options": ["Одеси", "Одесу", "Одесі"], "explanation": "Звідки? requires genitive: Одеса → Одеси. Одесу is accusative (Куди?)."}, {"sentence": "Я йду на роботи.", "errorWord": "на", "correctForm": "з", "options": ["з", "на", "в"], "explanation": "з роботи = coming FROM work (Звідки?). на роботу = going TO work (Куди?)."}, {"sentence": "Вона живе з Канаді.", "errorWord": "з", "correctForm": "в", "options": ["в", "з", "на"], "explanation": "живе в Канаді (Де? = в/на + locative). з Канади = Звідки? — where she's from."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
+
+<Translate client:only="react" questions={[{"source": "Where are you from?", "options": [{"text": "Звідки ти?", "correct": true}, {"text": "Де ти?", "correct": false}, {"text": "Куди ти?", "correct": false}]}, {"source": "I'm from Ukraine.", "options": [{"text": "Я з України.", "correct": true}, {"text": "Я в Україні.", "correct": false}, {"text": "Я в Україну.", "correct": false}]}, {"source": "She's coming from work.", "options": [{"text": "Вона йде з роботи.", "correct": true}, {"text": "Вона йде на роботу.", "correct": false}, {"text": "Вона йде в роботі.", "correct": false}]}, {"source": "I live in Kyiv, but I'm from Lviv.", "options": [{"text": "Я живу в Києві, але я зі Львова.", "correct": true}, {"text": "Я живу з Києва, але я у Львові.", "correct": false}, {"text": "Я живу в Київ, але я з Львова.", "correct": false}]}, {"source": "He's from Germany.", "options": [{"text": "Він з Німеччини.", "correct": true}, {"text": "Він в Німеччині.", "correct": false}, {"text": "Він в Німеччину.", "correct": false}]}, {"source": "They're heading home.", "options": [{"text": "Вони йдуть додому.", "correct": true}, {"text": "Вони йдуть з дому.", "correct": false}, {"text": "Вони йдуть в домі.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- [ULP Season 1, Episode 4](https://www.ukrainianlessons.com/episode4/)
+  _Where are you from? — nationalities and countries._
+
+**Граматика — Grammar (МійКлас)**
+
+- [МійКлас: Відмінки іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Genitive Case (Родо́ви́й відмі́нок)](https://www.ukrainianlessons.com/genitive-case/)
+- [Accusative Case (Знахі́дний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
+
+</TabItem>
+</Tabs>
