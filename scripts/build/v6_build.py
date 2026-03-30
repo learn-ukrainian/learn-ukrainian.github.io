@@ -30,7 +30,8 @@ Usage:
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini  # default
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude
     .venv/bin/python scripts/build/v6_build.py a1 1 --resume       # resume from last completed phase
-    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (auto-resumes each module)
+    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (skips complete, rebuilds partial)
+    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14 --resume  # batch + resume partial modules
 
 Issue: #993, #998
 """
@@ -4015,7 +4016,7 @@ def main():
                     [sys.executable, __file__, args.level, str(n),
                      "--writer", args.writer,
                      "--step", args.step,
-                     "--resume",  # always resume within --range
+                     *(["--resume"] if args.resume else []),
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
                      *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
                      *(["--no-chunk"] if args.no_chunk else []),
