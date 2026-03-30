@@ -1,7 +1,7 @@
 # Audit Report: M03 — special-signs.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-29 18:43:24
+**Generated:** 2026-03-30 21:25:40
 
 ## Configuration
 **Type:** A1
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 16.9% (target 5-15%, within tolerance (M03))
+- **Immersion:** 🇺🇦 16.9% (target 5-25% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

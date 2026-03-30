@@ -2,15 +2,15 @@
   "module": "what-is-it-like",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T00:32:25.709982Z",
+  "last_audit": "2026-03-30T21:25:46.668185Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T00:28:02.836937Z",
+    "md": "2026-03-30T13:55:18.378982Z",
     "meta": null,
-    "activities": "2026-03-30T00:26:15.948454Z",
-    "vocabulary": "2026-03-30T00:26:48.594744Z",
+    "activities": "2026-03-30T13:51:43.694511Z",
+    "vocabulary": "2026-03-30T13:52:04.193362Z",
     "research": null,
-    "plan": "2026-03-28T22:26:24.675580Z"
+    "plan": "2026-03-30T10:55:42.566441Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1889/1200 (raw: 2593)"
+      "message": "2216/1200 (raw: 2880)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "7/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "51/1"
+      "message": "62/1"
     },
     "naturalness": {
       "status": "info",

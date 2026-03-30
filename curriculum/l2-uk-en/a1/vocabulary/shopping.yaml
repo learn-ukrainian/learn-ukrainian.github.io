@@ -1,0 +1,349 @@
+vocabulary:
+- word: ри́нок
+  translation: market (open-air)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: суперма́ркет
+  translation: supermarket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магази́н
+  translation: shop, store
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: крамни́ця
+  translation: store (distinctly Ukrainian word, common in western Ukraine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: продаве́ць
+  translation: vendor, seller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: каси́р
+  translation: cashier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ціна́
+  translation: price
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зни́жка
+  translation: discount
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гри́вня
+  translation: hryvnia (Ukrainian currency)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: копі́йка
+  translation: kopeck (1/100 of a hryvnia)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ртка
+  translation: card (payment card)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гроші
+  translation: money
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кілогра́м
+  translation: kilogram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: літр
+  translation: liter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́чка
+  translation: pack, packet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пля́шка
+  translation: bottle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: буха́нка
+  translation: loaf (used only for bread)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відділ
+  translation: section, department (in a store)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ряд
+  translation: aisle, row
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ви́бір
+  translation: selection, choice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поку́пка
+  translation: purchase
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ковбаса́
+  translation: sausage
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́сло
+  translation: butter
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: я́блука
+  translation: apples
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: помідо́ри
+  translation: tomatoes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́ки
+  translation: medicine, medication
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: холоди́льник
+  translation: refrigerator, fridge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: молочний відділ
+  translation: dairy section
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хлібний відділ
+  translation: bread section
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: м'ясний відділ
+  translation: meat section
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: овочевий відділ
+  translation: vegetable/produce section
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ко́штува́ти
+  translation: to cost
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: купува́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бра́ти
+  translation: 'to take (in shopping context: to buy)'
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: до́рого
+  translation: expensive (adverb)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: де́шево
+  translation: cheap (adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: деше́вший
+  translation: cheaper (comparative adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: скі́льки
+  translation: how much, how many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: право́руч
+  translation: to the right
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ліво́руч
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Скільки коштують?
+  translation: How much do they cost? (plural item)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка,
+  translation: Please give me… (standard buying request)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за кілограм
+  translation: per kilogram
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки за все?
+  translation: How much is everything? / What is the total?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна готівкою?
+  translation: Can I pay cash?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна пляшку води?
+  translation: Can I have a bottle of water?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дорого!
+  translation: Expensive!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дешево!
+  translation: Cheap!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Нормальна ціна.
+  translation: Fair price.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Є знижка?
+  translation: Is there a discount?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Є дешевший?
+  translation: Is there a cheaper one?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добре, беру.
+  translation: OK, I'll take it.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякуємо за покупку!
+  translation: Thanks for the purchase!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

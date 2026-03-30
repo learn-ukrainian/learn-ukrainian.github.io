@@ -1,0 +1,395 @@
+version: '1.0'
+module: hey-friend
+level: a1
+inline:
+- id: quiz-vocative
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Як правильно звернутися до Олени? (How do you address Olena directly?)
+    options:
+    - Олено
+    - Олена
+    - Оленці
+    correct: 0
+  - question: Як Тарас кличе Андрія у діалозі? (How does Taras call Andrii?)
+    options:
+    - Андрію
+    - Андрій
+    - Андріє
+    correct: 0
+  - question: 'Мама каже: ''На столі, ___.'''
+    options:
+    - синку
+    - синок
+    - синові
+    correct: 0
+  - question: Яке речення НЕ використовує кличний відмінок? (Which sentence does NOT
+      use the vocative?)
+    options:
+    - Олена прийшла.
+    - Андрію, привіт!
+    - Мамо, де ключі?
+    correct: 0
+  - question: Як змінюється 'мама' у кличному відмінку?
+    options:
+    - мамо
+    - мами
+    - мамі
+    correct: 0
+  - question: Як звернутися до Тараса? (How do you address Taras?)
+    options:
+    - Тарасе
+    - Тарас
+    - Тарасу
+    correct: 0
+  - question: 'Оля каже бабусі: ''_____, ми йдемо!'''
+    options:
+    - Бабусю
+    - Бабуся
+    - Бабусі
+    correct: 0
+  - question: Коли ми використовуємо кличний відмінок? (When do we use the vocative?)
+    options:
+    - Коли говоримо ДО людини
+    - Коли говоримо ПРО людину
+    - Коли питаємо про людину
+    correct: 0
+- id: fill-in-vocative
+  type: fill-in
+  instruction: Вставте кличний відмінок (Write the vocative form)
+  items:
+  - sentence: _____ (Олена), привіт!
+    answer: Олено
+    options:
+    - Олено
+    - Олена
+    - Оленці
+  - sentence: Як справи, _____ (Тарас)?
+    answer: Тарасе
+    options:
+    - Тарасе
+    - Тарас
+    - Тарасу
+  - sentence: Дякую, _____ (мама)!
+    answer: мамо
+    options:
+    - мамо
+    - мама
+    - мамі
+  - sentence: Ходи сюди, _____ (Іван)!
+    answer: Іване
+    options:
+    - Іване
+    - Іван
+    - Івану
+  - sentence: До побачення, _____ (сестра)!
+    answer: сестро
+    options:
+    - сестро
+    - сестра
+    - сестрі
+  - sentence: Привіт, _____ (Андрій)!
+    answer: Андрію
+    options:
+    - Андрію
+    - Андрій
+    - Андріє
+  - sentence: Ходи сюди, _____ (подруга)!
+    answer: подруго
+    options:
+    - подруго
+    - подруга
+    - подрузі
+  - sentence: Слухай, _____ (брат)!
+    answer: брате
+    options:
+    - брате
+    - брат
+    - братові
+  - sentence: _____ (Марія), як справи?
+    answer: Маріє
+    options:
+    - Маріє
+    - Марія
+    - Марії
+  - sentence: До побачення, _____ (бабуся)!
+    answer: бабусю
+    options:
+    - бабусю
+    - бабуся
+    - бабусі
+- id: quiz-choose-vocative
+  type: quiz
+  instruction: Оберіть правильну форму кличного відмінка (Choose the correct vocative
+    form)
+  items:
+  - question: ___, привіт!
+    options:
+    - Олено
+    - Олена
+    - Оленю
+    correct: 0
+  - question: Як справи, ___?
+    options:
+    - Тарасе
+    - Тарас
+    - Тарасу
+    correct: 0
+  - question: Дякую, ___!
+    options:
+    - мамо
+    - мама
+    - маме
+    correct: 0
+  - question: Ходи сюди, ___!
+    options:
+    - Іване
+    - Іван
+    - Івану
+    correct: 0
+  - question: Будь обережний, ___!
+    options:
+    - синку
+    - синок
+    - синке
+    correct: 0
+  - question: Що ти робиш, ___?
+    options:
+    - брате
+    - брат
+    - брату
+    correct: 0
+  - question: Добрий день, ___!
+    options:
+    - пане
+    - пан
+    - пану
+    correct: 0
+  - question: Привіт, ___!
+    options:
+    - Андрію
+    - Андрій
+    - Андріє
+    correct: 0
+- id: group-sort-vocative
+  type: group-sort
+  instruction: Розподіліть слова за закінченням кличного відмінка (Sort by vocative
+    ending)
+  groups:
+  - label: -о (жіночий рід / feminine)
+    items:
+    - Олено
+    - мамо
+    - сестро
+    - подруго
+    - дочко
+    - Оксано
+  - label: -е (чоловічий твердий / masculine hard)
+    items:
+    - Тарасе
+    - Іване
+    - брате
+    - пане
+    - друже
+    - козаче
+  - label: -ю / -у (м'який та особливі / soft and exceptional)
+    items:
+    - Андрію
+    - дідусю
+    - вчителю
+    - тату
+    - синку
+    - бабусю
+workbook:
+- type: fill-in
+  instruction: Завершіть діалог — вставте кличний відмінок (Complete the dialogue
+    — write the vocative form)
+  items:
+  - sentence: — _____ (Олена), привіт! Як справи?
+    answer: Олено
+  - sentence: — Добре, дякую, _____ (Тарас)!
+    answer: Тарасе
+  - sentence: — _____ (Мама), де мій телефон?
+    answer: Мамо
+  - sentence: — На столі, _____ (синок).
+    answer: синку
+  - sentence: — _____ (Бабуся), ми йдемо!
+    answer: Бабусю
+  - sentence: — Добре, до побачення, _____ (Андрій)!
+    answer: Андрію
+  - sentence: — _____ (Дідусь), як справи?
+    answer: Дідусю
+  - sentence: — Вибачте, _____ (пан)!
+    answer: пане
+- type: match-up
+  instruction: 'З''єднайте: називний → кличний відмінок (Match: nominative → vocative)'
+  pairs:
+  - left: Олена
+    right: Олено
+  - left: Тарас
+    right: Тарасе
+  - left: Андрій
+    right: Андрію
+  - left: мама
+    right: мамо
+  - left: бабуся
+    right: бабусю
+  - left: брат
+    right: брате
+  - left: дідусь
+    right: дідусю
+  - left: Марія
+    right: Маріє
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: '''Олено, привіт!'' — правильний кличний відмінок.'
+    correct: true
+    explanation: Так! Олена → Олено (жіночий рід -а → -о).
+  - statement: '''Тарас, ходи сюди!'' — правильний кличний відмінок.'
+    correct: false
+    explanation: 'Ні. Тарас → Тарасе (чоловічий твердий + -е). Правильно: ''Тарасе,
+      ходи сюди!'''
+  - statement: '''Андрію, привіт!'' — правильний кличний відмінок.'
+    correct: true
+    explanation: Так! Андрій → Андрію (чоловічий -й → -ю).
+  - statement: Кличний відмінок використовується, коли ми говоримо ПРО людину.
+    correct: false
+    explanation: Ні. Кличний відмінок використовується, коли ми говоримо ДО людини.
+  - statement: '''Маріє, як справи?'' — правильний кличний відмінок.'
+    correct: true
+    explanation: Так! Марія → Маріє (жіночий -ія → -іє).
+  - statement: '''Бабусю, ми йдемо!'' — правильний кличний відмінок.'
+    correct: true
+    explanation: Так! Бабуся → Бабусю (жіночий -уся → -усю).
+  - statement: '''Друг, привіт!'' — правильний кличний відмінок.'
+    correct: false
+    explanation: 'Ні. Друг → Друже (г → ж + -е). Правильно: ''Друже, привіт!'''
+  - statement: Кличний відмінок — це старомодна форма, яку рідко використовують сьогодні.
+    correct: false
+    explanation: 'Ні! Кличний відмінок — живий і повсякденний. Кожен українець використовує
+      його постійно: у текстах, вдома, з друзями.'
+- type: error-correction
+  instruction: Виправте помилку — знайдіть неправильну форму (Find and correct the
+    error)
+  items:
+  - sentence: Тарас, ходи сюди!
+    error: Тарас
+    correction: Тарасе
+    error_type: word
+    options:
+    - Тарасе
+    - Тарасу
+    - Тарасові
+    explanation: Тарас (чоловічий твердий) → Тарасе (+ -е).
+  - sentence: Мама, де мій рюкзак?
+    error: Мама
+    correction: Мамо
+    error_type: word
+    options:
+    - Мамо
+    - Мами
+    - Мамі
+    explanation: Мама (жіночий -а) → Мамо (-а → -о).
+  - sentence: Андрій, привіт!
+    error: Андрій
+    correction: Андрію
+    error_type: word
+    options:
+    - Андрію
+    - Андрієві
+    - Андрієм
+    explanation: Андрій (чоловічий -й) → Андрію (-й → -ю).
+  - sentence: Бабуся, ми йдемо!
+    error: Бабуся
+    correction: Бабусю
+    error_type: word
+    options:
+    - Бабусю
+    - Бабусі
+    - Бабусе
+    explanation: Бабуся (жіночий -уся) → Бабусю (-уся → -усю).
+  - sentence: Слухай, друг!
+    error: друг
+    correction: друже
+    error_type: word
+    options:
+    - друже
+    - другу
+    - другові
+    explanation: Друг → Друже (г → ж + -е).
+  - sentence: Дякую, сестра!
+    error: сестра
+    correction: сестро
+    error_type: word
+    options:
+    - сестро
+    - сестрі
+    - сестру
+    explanation: Сестра (жіночий -а) → Сестро (-а → -о).
+- type: observe
+  examples:
+  - Олена → Олено
+  - мама → мамо
+  - сестра → сестро
+  - подруга → подруго
+  - дочка → дочко
+  - Оксана → Оксано
+  prompt: Яке закінчення змінюється в кличному відмінку для іменників жіночого роду
+    на -а? Запишіть правило одним реченням. (What ending changes in the vocative for
+    feminine nouns ending in -а? Write the rule in one sentence.)
+- type: quiz
+  instruction: Приголосний чергування — оберіть правильну форму (Consonant alternations
+    — choose the correct form)
+  items:
+  - question: друг → ___
+    options:
+    - друже
+    - другу
+    - друге
+    correct: 0
+  - question: козак → ___
+    options:
+    - козаче
+    - козаку
+    - козаке
+    correct: 0
+  - question: Яке чергування відбувається у слові 'друг → друже'? (What alternation
+      occurs?)
+    options:
+    - г → ж
+    - г → к
+    - г → х
+    correct: 0
+  - question: Яке чергування відбувається у слові 'козак → козаче'? (What alternation
+      occurs?)
+    options:
+    - к → ч
+    - к → г
+    - к → х
+    correct: 0
+  - question: вчитель → ___
+    options:
+    - вчителю
+    - вчителе
+    - вчителі
+    correct: 0
+  - question: дідусь → ___
+    options:
+    - дідусю
+    - дідусе
+    - дідусі
+    correct: 0
+  - question: пан → ___
+    options:
+    - пане
+    - пану
+    - панові
+    correct: 0
+  - question: Марія → ___
+    options:
+    - Маріє
+    - Марію
+    - Маріє
+    correct: 0

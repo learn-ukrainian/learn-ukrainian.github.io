@@ -1,0 +1,371 @@
+version: '1.0'
+module: my-morning
+level: a1
+inline:
+- id: fill-in-add-sya
+  type: fill-in
+  instruction: Choose the correct **-ся** verb form for each pronoun
+  items:
+  - sentence: Я ___ о сьомій. (прокидатися)
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+    - прокидаємося
+  - sentence: Ти ___ в ванній. (вмиватися)
+    answer: вмиваєшся
+    options:
+    - вмиваюся
+    - вмиваєшся
+    - вмивається
+    - вмиваємося
+  - sentence: Він ___ швидко. (одягатися)
+    answer: одягається
+    options:
+    - одягаюся
+    - одягаєшся
+    - одягається
+    - одягаємося
+  - sentence: Ми ___ разом. (навчатися)
+    answer: навчаємося
+    options:
+    - навчаюся
+    - навчаємося
+    - навчаєтеся
+    - навчаються
+  - sentence: Ви ___ довго! (збиратися)
+    answer: збираєтеся
+    options:
+    - збираєшся
+    - збираємося
+    - збираєтеся
+    - збираються
+  - sentence: Вони ___ додому о шостій. (повертатися)
+    answer: повертаються
+    options:
+    - повертаюся
+    - повертаєшся
+    - повертається
+    - повертаються
+  - sentence: Я ___ вранці. (вмиватися)
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - вмиваєшся
+    - вмивається
+    - вмиваємося
+  - sentence: Ти ___ пізно. (прокидатися)
+    answer: прокидаєшся
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+    - прокидаються
+  - sentence: Вона ___ щодня. (навчатися)
+    answer: навчається
+    options:
+    - навчаюся
+    - навчаєшся
+    - навчається
+    - навчаємося
+  - sentence: Він ___ о восьмій. (збиратися)
+    answer: збирається
+    options:
+    - збираюся
+    - збираєшся
+    - збирається
+    - збираємося
+- id: quiz-reflexive-or-not
+  type: quiz
+  instruction: Choose **reflexive (-ся)** or **non-reflexive** — which fits the meaning?
+  items:
+  - question: Я ___ руки. (I wash my hands.)
+    options:
+    - вмиваю
+    - вмиваюся
+    correct: 0
+  - question: Я ___ вранці о сьомій. (I wash up in the morning.)
+    options:
+    - вмиваю
+    - вмиваюся
+    correct: 1
+  - question: Мама ___ дитину. (Mom dresses the child.)
+    options:
+    - одягає
+    - одягається
+    correct: 0
+  - question: Він ___ швидко. (He gets dressed quickly.)
+    options:
+    - одягає
+    - одягається
+    correct: 1
+  - question: Ти ___ довго! (You take a long time getting ready!)
+    options:
+    - збираєш
+    - збираєшся
+    correct: 1
+  - question: Вона ___ додому о другій. (She returns home at two.)
+    options:
+    - повертає
+    - повертається
+    correct: 1
+  - question: Настя ___ у суботу. (Nastya studies on Saturday.)
+    options:
+    - навчає
+    - навчається
+    correct: 1
+  - question: Ти ___ речі у сумку. (You pack things into the bag.)
+    options:
+    - збираєш
+    - збираєшся
+    correct: 0
+- id: fill-in-morning-order
+  type: fill-in
+  instruction: 'Complete with the correct sequence word: **спочатку**, **потім**,
+    **після цього**, **нарешті**'
+  items:
+  - sentence: ___ я прокидаюся о сьомій.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+    - Нарешті
+  - sentence: ___ вмиваюся і одягаюся.
+    answer: Потім
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+    - Нарешті
+  - sentence: ___ снідаю і п'ю каву.
+    answer: Після цього
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+    - Нарешті
+  - sentence: ___ йду на роботу о восьмій.
+    answer: Нарешті
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+    - Нарешті
+  - sentence: У суботу ___ я навчаюся вранці.
+    answer: спочатку
+    options:
+    - спочатку
+    - потім
+    - після цього
+    - нарешті
+  - sentence: ___ гуляю і повертаюся додому.
+    answer: Потім
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+    - Нарешті
+- id: fill-in-describe-morning
+  type: fill-in
+  instruction: Complete each sentence to describe a morning routine. Use the correct
+    verb.
+  items:
+  - sentence: Спочатку я ___ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - снідаю
+    - йду
+    - повертаюся
+  - sentence: Потім я ___ в ванній.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - одягаюся
+    - снідаю
+    - збираюся
+  - sentence: Після цього я ___.
+    answer: одягаюся
+    options:
+    - одягаюся
+    - прокидаюся
+    - повертаюся
+    - навчаюся
+  - sentence: Я ___ о восьмій годині.
+    answer: снідаю
+    options:
+    - снідаю
+    - гуляю
+    - поспішаю
+    - навчаюся
+  - sentence: Нарешті я ___ на роботу.
+    answer: йду
+    options:
+    - йду
+    - вмиваюся
+    - снідаю
+    - збираюся
+  - sentence: Вранці я не ___. Це вихідний!
+    answer: поспішаю
+    options:
+    - поспішаю
+    - снідаю
+    - гуляю
+    - навчаюся
+workbook:
+- type: match-up
+  instruction: Match each pronoun with the correct form of **вмиватися**
+  pairs:
+  - left: я
+    right: вмиваюся
+  - left: ти
+    right: вмиваєшся
+  - left: він/вона
+    right: вмивається
+  - left: ми
+    right: вмиваємося
+  - left: ви
+    right: вмиваєтеся
+  - left: вони
+    right: вмиваються
+- type: group-sort
+  instruction: 'Sort the verbs: **з -ся** (reflexive) or **без -ся** (non-reflexive)?'
+  groups:
+  - label: З -ся (reflexive)
+    items:
+    - прокидаюся
+    - вмиваюся
+    - одягаюся
+    - збираюся
+    - навчаюся
+    - повертаюся
+  - label: Без -ся (non-reflexive)
+    items:
+    - снідаю
+    - гуляю
+    - поспішаю
+    - йду
+    - лежу
+    - п'ю
+- type: error-correction
+  instruction: Fix the wrong verb form in each sentence
+  items:
+  - sentence: Я вмиваєшся вранці.
+    error: вмиваєшся
+    correction: вмиваюся
+    error_type: word
+    options:
+    - вмиваюся
+    - вмивається
+    - вмиваємося
+    explanation: For 'я', the ending is -юся, not -єшся
+  - sentence: Ти одягаюся швидко.
+    error: одягаюся
+    correction: одягаєшся
+    error_type: word
+    options:
+    - одягаєшся
+    - одягається
+    - одягаємося
+    explanation: For 'ти', the ending is -єшся, not -юся
+  - sentence: Він збираємося довго.
+    error: збираємося
+    correction: збирається
+    error_type: word
+    options:
+    - збирається
+    - збираюся
+    - збираються
+    explanation: For 'він', the ending is -ється, not -ємося
+  - sentence: Ми прокидаюся о сьомій.
+    error: прокидаюся
+    correction: прокидаємося
+    error_type: word
+    options:
+    - прокидаємося
+    - прокидаєшся
+    - прокидаються
+    explanation: For 'ми', the ending is -ємося, not -юся
+  - sentence: Вони навчаємося разом.
+    error: навчаємося
+    correction: навчаються
+    error_type: word
+    options:
+    - навчаються
+    - навчається
+    - навчаєшся
+    explanation: For 'вони', the ending is -ються, not -ємося
+  - sentence: Ви повертаюся додому.
+    error: повертаюся
+    correction: повертаєтеся
+    error_type: word
+    options:
+    - повертаєтеся
+    - повертається
+    - повертаємося
+    explanation: For 'ви', the ending is -єтеся, not -юся
+- type: quiz
+  instruction: Choose the correct form of the irregular verb **йти** (to go)
+  items:
+  - question: Я ___ на роботу.
+    options:
+    - йду
+    - йдеш
+    - йде
+    correct: 0
+  - question: Ти ___ до школи?
+    options:
+    - йду
+    - йдеш
+    - йде
+    correct: 1
+  - question: Він ___ зараз.
+    options:
+    - йдуть
+    - йдемо
+    - йде
+    correct: 2
+  - question: Ми ___ разом.
+    options:
+    - йдемо
+    - йдете
+    - йдуть
+    correct: 0
+  - question: Ви ___ вже?
+    options:
+    - йдемо
+    - йдете
+    - йдуть
+    correct: 1
+  - question: Вони ___ пізно.
+    options:
+    - йде
+    - йдемо
+    - йдуть
+    correct: 2
+- type: true-false
+  instruction: Read the sentences about the dialogues — true or false?
+  items:
+  - statement: Ліна прокидається о сьомій.
+    correct: true
+    explanation: 'Ліна says: ''Я прокидаюся о сьомій.'''
+  - statement: Настя прокидається о восьмій.
+    correct: false
+    explanation: Настя says 'Я прокидаюся о шостій' — at six, not eight.
+  - statement: Ліна йде на роботу о восьмій.
+    correct: true
+    explanation: 'Ліна says: ''О восьмій'' when asked when she goes to work.'
+  - statement: Ліна спочатку одягається, потім вмивається.
+    correct: false
+    explanation: Ліна says 'Спочатку вмиваюся, потім одягаюся' — washing comes first.
+  - statement: Настя довго збирається.
+    correct: true
+    explanation: 'Настя says: ''Довго збираюся!'''
+  - statement: У суботу Ліна поспішає.
+    correct: false
+    explanation: 'Ліна says: ''У суботу я не поспішаю'' — she does NOT rush.'
+  - statement: Настя повертається додому о другій.
+    correct: true
+    explanation: 'Настя says: ''Я повертаюся додому о другій.'''

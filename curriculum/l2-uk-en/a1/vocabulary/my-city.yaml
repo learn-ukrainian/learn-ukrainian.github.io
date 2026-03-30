@@ -1,0 +1,289 @@
+vocabulary:
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: магази́н
+  translation: shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: готе́ль
+  translation: hotel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суперма́ркет
+  translation: supermarket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́шта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: це́рква
+  translation: church
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дале́ко
+  translation: far
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: near, close
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бі́ля
+  translation: near, next to (+ genitive)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: теа́тр
+  translation: theatre
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кінотеа́тр
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стадіо́н
+  translation: stadium
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: університе́т
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: пло́ща
+  translation: square
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: метро́
+  translation: metro, subway
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: райо́н
+  translation: neighborhood, district
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ву́лиця
+  translation: street
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: центр
+  translation: center
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: недале́ко
+  translation: not far, nearby
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: перехо́жий
+  translation: passerby, stranger (on the street)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́ки
+  translation: medicine (plural)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: по́тяг
+  translation: train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: є
+  translation: there is, there are
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нема́є
+  translation: there is no, there are no (+ genitive)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: надсила́ю
+  translation: I send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дивлю́ся
+  translation: I watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпочива́ю
+  translation: I relax, I rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чека́ю
+  translation: I wait
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́бачте
+  translation: excuse me (polite, to a stranger)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Будь ласка!
+  translation: You're welcome!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де тут…?
+  translation: Where is… here? / Where can I find…?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля парку
+  translation: near the park
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля дому
+  translation: near the house
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у центрі міста
+  translation: in the city center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на розі вулиці
+  translation: on the corner of the street
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у нашому районі
+  translation: in our neighborhood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: далеко від центру
+  translation: far from the center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чекаю на потяг
+  translation: I wait for a train
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що є біля твого дому?
+  translation: What is near your house?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

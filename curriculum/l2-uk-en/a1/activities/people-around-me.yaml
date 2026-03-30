@@ -1,0 +1,410 @@
+version: '1.0'
+module: people-around-me
+level: a1
+inline:
+- id: fill-in-animate-accusative
+  type: fill-in
+  instruction: Вставте правильну форму (Fill in the correct accusative form — кого?)
+  items:
+  - sentence: Я бачу ___.
+    answer: брата
+    options:
+    - брат
+    - брата
+    - братом
+  - sentence: Я знаю ___.
+    answer: друга
+    options:
+    - друг
+    - друга
+    - другу
+  - sentence: Я чекаю ___.
+    answer: лікаря
+    options:
+    - лікар
+    - лікаря
+    - лікарем
+  - sentence: Я шукаю ___.
+    answer: вчителя
+    options:
+    - вчитель
+    - вчителя
+    - вчителю
+  - sentence: Я бачу ___.
+    answer: тата
+    options:
+    - тато
+    - тата
+    - татом
+  - sentence: Я знаю ___.
+    answer: сусіда
+    options:
+    - сусід
+    - сусіда
+    - сусідом
+  - sentence: Я люблю ___.
+    answer: викладача
+    options:
+    - викладач
+    - викладача
+    - викладачем
+  - sentence: Я бачу ___.
+    answer: колегу
+    options:
+    - колега
+    - колегу
+    - колеги
+- id: fill-in-family-friends
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: — Кого ти ___?
+    answer: бачиш
+    options:
+    - бачиш
+    - бачити
+    - бачить
+  - sentence: — Я бачу ___ і маму.
+    answer: брата
+    options:
+    - брата
+    - брат
+    - братом
+  - sentence: — Ти знаєш мого ___ Тараса?
+    answer: друга
+    options:
+    - друга
+    - друг
+    - другу
+  - sentence: — Ні, я не ___ твого друга.
+    answer: знаю
+    options:
+    - знаю
+    - знає
+    - знати
+  - sentence: — А кого ти ___?
+    answer: чекаєш
+    options:
+    - чекаєш
+    - чекати
+    - чекає
+  - sentence: — Я чекаю ___.
+    answer: лікаря
+    options:
+    - лікаря
+    - лікар
+    - лікарем
+  - sentence: Я люблю ___.
+    answer: подругу
+    options:
+    - подруга
+    - подругу
+    - подруги
+  - sentence: Я знаю ___.
+    answer: Олену
+    options:
+    - Олена
+    - Олену
+    - Олени
+- id: group-sort-animate-inanimate
+  type: group-sort
+  instruction: 'Розподіліть слова (Sort: animate — кого? or inanimate — що?)'
+  groups:
+  - label: Animate — кого?
+    items:
+    - брата
+    - маму
+    - друга
+    - лікаря
+    - Олену
+    - сусіда
+    - вчителя
+  - label: Inanimate — що?
+    items:
+    - хліб
+    - каву
+    - воду
+    - чай
+    - борщ
+    - стіл
+    - книгу
+- id: quiz-accusative-animate
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct accusative form)
+  items:
+  - question: Я знаю ___.
+    options:
+    - Олену
+    - Олена
+    - Олени
+    correct: 0
+  - question: Я бачу ___.
+    options:
+    - брата
+    - брат
+    - братом
+    correct: 0
+  - question: Я люблю ___.
+    options:
+    - подругу
+    - подруга
+    - подруги
+    correct: 0
+  - question: Я чекаю ___.
+    options:
+    - сусіда
+    - сусід
+    - сусідом
+    correct: 0
+  - question: Я шукаю ___.
+    options:
+    - вчителя
+    - вчитель
+    - вчителю
+    correct: 0
+  - question: Я знаю ___.
+    options:
+    - лікаря
+    - лікар
+    - лікарем
+    correct: 0
+  - question: Я бачу ___.
+    options:
+    - колегу
+    - колега
+    - колеги
+    correct: 0
+  - question: Я люблю ___.
+    options:
+    - тата
+    - тато
+    - татом
+    correct: 0
+workbook:
+- type: match-up
+  instruction: З'єднайте слово з формою знахідного відмінка (Match each noun to its
+    accusative form)
+  pairs:
+  - left: мама
+    right: маму
+  - left: тато
+    right: тата
+  - left: брат
+    right: брата
+  - left: друг
+    right: друга
+  - left: лікар
+    right: лікаря
+  - left: вчитель
+    right: вчителя
+  - left: подруга
+    right: подругу
+  - left: сусід
+    right: сусіда
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error in each sentence)
+  items:
+  - sentence: Я бачу брат.
+    error: брат
+    correction: брата
+    error_type: word
+    options:
+    - брата
+    - братом
+    - братові
+    explanation: 'Animate masculine accusative = genitive: брат → брата (кого?)'
+  - sentence: Я знаю Олена.
+    error: Олена
+    correction: Олену
+    error_type: word
+    options:
+    - Олену
+    - Олени
+    - Оленою
+    explanation: 'Feminine animate accusative: -а → -у: Олена → Олену'
+  - sentence: Я чекаю лікар.
+    error: лікар
+    correction: лікаря
+    error_type: word
+    options:
+    - лікаря
+    - лікарем
+    - лікарю
+    explanation: 'Animate masculine accusative = genitive: лікар → лікаря (кого?)'
+  - sentence: Я люблю подруга.
+    error: подруга
+    correction: подругу
+    error_type: word
+    options:
+    - подругу
+    - подруги
+    - подрузі
+    explanation: 'Feminine animate accusative: -а → -у: подруга → подругу'
+  - sentence: Я шукаю вчитель.
+    error: вчитель
+    correction: вчителя
+    error_type: word
+    options:
+    - вчителя
+    - вчителем
+    - вчителю
+    explanation: 'Animate masculine accusative = genitive: вчитель → вчителя (кого?)'
+  - sentence: Я бачу сусід.
+    error: сусід
+    correction: сусіда
+    error_type: word
+    options:
+    - сусіда
+    - сусідом
+    - сусіду
+    explanation: 'Animate masculine accusative = genitive: сусід → сусіда (кого?)'
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: '''маму'' is the correct accusative form of ''мама''.'
+    correct: true
+    explanation: 'Yes — feminine accusative: -а → -у. Мама → маму.'
+  - statement: '''брат'' is the correct accusative form of ''брат'' in ''Я знаю брат''.'
+    correct: false
+    explanation: 'No — animate masculine accusative = genitive: брат → брата. Correct:
+      Я знаю брата.'
+  - statement: '''хліб'' is the correct accusative form of ''хліб'' in ''Я бачу хліб''.'
+    correct: true
+    explanation: 'Yes — inanimate masculine accusative = nominative: хліб stays хліб
+      (що?).'
+  - statement: '''лікар'' is correct in ''Я чекаю лікар''.'
+    correct: false
+    explanation: 'No — animate masculine accusative = genitive: лікар → лікаря. Correct:
+      Я чекаю лікаря.'
+  - statement: '''Олену'' is the correct accusative form of ''Олена''.'
+    correct: true
+    explanation: 'Yes — feminine accusative: -а → -у. Олена → Олену.'
+  - statement: '''стіл'' is the correct accusative form of ''стіл'' in ''Я бачу стіл''.'
+    correct: true
+    explanation: 'Yes — inanimate masculine accusative = nominative: стіл stays стіл
+      (що?).'
+  - statement: '''друг'' is the correct accusative form in ''Я знаю друг''.'
+    correct: false
+    explanation: 'No — animate masculine accusative = genitive: друг → друга. Correct:
+      Я знаю друга.'
+  - statement: The accusative of a masculine animate noun has the same form as the
+      genitive.
+    correct: true
+    explanation: 'Yes — this is the key rule: Знахідний відмінок чоловічого роду живих
+      істот = родовий.'
+- type: classify
+  instruction: Розподіліть слова за правилом знахідного відмінка (Sort by accusative
+    rule)
+  categories:
+  - label: Animate masculine — genitive form (кого?)
+    items:
+    - брата
+    - друга
+    - тата
+    - лікаря
+    - вчителя
+    - сусіда
+  - label: Animate feminine — ends in -у/-ю (кого?)
+    items:
+    - маму
+    - сестру
+    - Олену
+    - подругу
+    - тітку
+    - наречену
+  - label: Inanimate masculine — no change (що?)
+    items:
+    - хліб
+    - стіл
+    - чай
+    - борщ
+    - сік
+    - суп
+- type: unjumble
+  instruction: Складіть правильне речення (Put the words in the correct order)
+  items:
+  - words:
+    - Я
+    - брата
+    - бачу
+    - і
+    - маму
+    correct_order:
+    - Я
+    - бачу
+    - брата
+    - і
+    - маму
+  - words:
+    - знаєш
+    - Ти
+    - Тараса
+    - друга
+    - мого
+    correct_order:
+    - Ти
+    - знаєш
+    - мого
+    - друга
+    - Тараса
+  - words:
+    - чекаю
+    - зараз
+    - Я
+    - лікаря
+    correct_order:
+    - Я
+    - чекаю
+    - лікаря
+    - зараз
+  - words:
+    - нашого
+    - шукаємо
+    - сусіда
+    - Ми
+    correct_order:
+    - Ми
+    - шукаємо
+    - нашого
+    - сусіда
+  - words:
+    - любить
+    - подругу
+    - Вона
+    - свою
+    correct_order:
+    - Вона
+    - любить
+    - свою
+    - подругу
+  - words:
+    - знаю
+    - вчителя
+    - нового
+    - Я
+    correct_order:
+    - Я
+    - знаю
+    - нового
+    - вчителя
+  - words:
+    - колегу
+    - Ти
+    - бачиш
+    - мого
+    correct_order:
+    - Ти
+    - бачиш
+    - мого
+    - колегу
+- type: observe
+  examples:
+  - Я бачу хліб. (хліб → хліб — no change)
+  - Я бачу брата. (брат → брата — changes!)
+  - Я п'ю чай. (чай → чай — no change)
+  - Я знаю друга. (друг → друга — changes!)
+  - Я їм борщ. (борщ → борщ — no change)
+  - Я чекаю лікаря. (лікар → лікаря — changes!)
+  prompt: What is the pattern? When does a masculine noun change its ending, and when
+    does it stay the same? What question word tells you which rule applies — кого?
+    or що?

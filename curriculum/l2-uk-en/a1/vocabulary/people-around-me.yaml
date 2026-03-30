@@ -1,0 +1,181 @@
+vocabulary:
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чека́ти
+  translation: to wait for
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шука́ти
+  translation: to look for
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по́друга
+  translation: friend (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́кар
+  translation: doctor (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусі́д
+  translation: neighbor (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: та́то
+  translation: dad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ма
+  translation: mom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ті́тка
+  translation: aunt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бабу́ся
+  translation: grandmother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нарече́на
+  translation: bride
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: коле́га
+  translation: colleague (m/f)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виклада́ч
+  translation: lecturer (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: продаве́ць
+  translation: seller (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: покупе́ць
+  translation: buyer (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: весі́лля
+  translation: wedding
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: родовий відмінок
+  translation: genitive case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: живі́
+  translation: animate (living beings)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: неживі́
+  translation: inanimate (things)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кого?
+  translation: whom? (animate accusative question)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́руч
+  translation: next to, beside
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ще не
+  translation: not yet
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: до́брий
+  translation: kind, good
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: познайо́мити
+  translation: to introduce
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

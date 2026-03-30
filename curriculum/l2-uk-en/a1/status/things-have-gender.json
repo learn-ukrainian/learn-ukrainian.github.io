@@ -2,15 +2,15 @@
   "module": "things-have-gender",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T00:16:44.267716Z",
+  "last_audit": "2026-03-30T21:25:45.362743Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T23:52:24.919553Z",
+    "md": "2026-03-30T12:43:06.023893Z",
     "meta": null,
-    "activities": "2026-03-29T23:50:19.948755Z",
-    "vocabulary": "2026-03-29T23:50:40.504894Z",
+    "activities": "2026-03-30T11:37:36.133738Z",
+    "vocabulary": "2026-03-30T11:38:01.592223Z",
     "research": null,
-    "plan": "2026-03-23T23:29:57.865784Z"
+    "plan": "2026-03-30T10:55:42.563116Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1739/1200 (raw: 2207)"
+      "message": "1621/1200 (raw: 2130)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "31/1"
+      "message": "41/1"
     },
     "naturalness": {
       "status": "info",

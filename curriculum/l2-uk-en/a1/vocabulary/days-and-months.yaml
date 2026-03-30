@@ -1,0 +1,415 @@
+vocabulary:
+- word: понеді́лок
+  translation: Monday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вівто́рок
+  translation: Tuesday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: середа́
+  translation: Wednesday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: четве́р
+  translation: Thursday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: п'я́тниця
+  translation: Friday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: субо́та
+  translation: Saturday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неді́ля
+  translation: Sunday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зима́
+  translation: winter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: весна́
+  translation: spring
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́то
+  translation: summer
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: о́сінь
+  translation: autumn
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сі́чень
+  translation: January
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лю́тий
+  translation: February
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бе́резень
+  translation: March
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кві́тень
+  translation: April
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тра́вень
+  translation: May
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: че́рвень
+  translation: June
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ли́пень
+  translation: July
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: се́рпень
+  translation: August
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ве́ресень
+  translation: September
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: жо́втень
+  translation: October
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: листопа́д
+  translation: November
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гру́день
+  translation: December
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: день народження
+  translation: birthday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у понеділок
+  translation: on Monday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у вівторок
+  translation: on Tuesday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у середу
+  translation: on Wednesday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у четвер
+  translation: on Thursday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у п'ятницю
+  translation: on Friday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в суботу
+  translation: on Saturday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в неділю
+  translation: on Sunday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у січні
+  translation: in January
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у лютому
+  translation: in February
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в березні
+  translation: in March
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у квітні
+  translation: in April
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у травні
+  translation: in May
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в червні
+  translation: in June
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в липні
+  translation: in July
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в серпні
+  translation: in August
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у вересні
+  translation: in September
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в жовтні
+  translation: in October
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в листопаді
+  translation: in November
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в грудні
+  translation: in December
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: взи́мку
+  translation: in winter
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: навесні́
+  translation: in spring
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: влі́тку
+  translation: in summer
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: восени́
+  translation: in autumn
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бере́за
+  translation: birch tree
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ли́па
+  translation: linden tree
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ли́стя
+  translation: leaves
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: па́дати
+  translation: to fall
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сніг
+  translation: snow
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хо́лод
+  translation: cold (noun)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кві́ти
+  translation: flowers
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: warmth; it is warm
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: со́нце
+  translation: sun
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дощ
+  translation: rain
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: со́нячно
+  translation: it is sunny
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вільний день
+  translation: free day, day off
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Якого числа?
+  translation: What date? (lit. Of what number?)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який сьогодні день?
+  translation: What day is today?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який зараз місяць?
+  translation: What month is it now?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка зараз пора року?
+  translation: What season is it now?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пора року
+  translation: season (of the year)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to hang out, to go for a walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study, to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: четве́ртий
+  translation: fourth
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

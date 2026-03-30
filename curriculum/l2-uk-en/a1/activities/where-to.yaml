@@ -1,0 +1,380 @@
+version: '1.0'
+module: where-to
+level: a1
+inline:
+- id: fill-in
+  type: fill-in
+  instruction: Вставте іменник у правильній формі (Fill in the noun in the correct
+    form — accusative after куди)
+  items:
+  - sentence: Я йду у ___ (school).
+    answer: школу
+    options:
+    - школа
+    - школу
+    - школі
+  - sentence: Він іде в ___ (bank).
+    answer: банк
+    options:
+    - банку
+    - банк
+    - банком
+  - sentence: Вона йде у ___ (library).
+    answer: бібліотеку
+    options:
+    - бібліотека
+    - бібліотеці
+    - бібліотеку
+  - sentence: Ми йдемо у ___ (store).
+    answer: магазин
+    options:
+    - магазині
+    - магазин
+    - магазина
+  - sentence: Ти йдеш на ___ (work).
+    answer: роботу
+    options:
+    - робота
+    - роботі
+    - роботу
+  - sentence: Він іде в ___ (pharmacy).
+    answer: аптеку
+    options:
+    - аптека
+    - аптеці
+    - аптеку
+  - sentence: Вона йде на ___ (post office).
+    answer: пошту
+    options:
+    - пошта
+    - пошті
+    - пошту
+- id: group-sort
+  type: group-sort
+  instruction: Розподіліть фрази за питаннями (Sort the phrases by question)
+  groups:
+  - label: Де? (locative — already there)
+    items:
+    - у школі
+    - в банку
+    - у магазині
+    - на роботі
+    - у бібліотеці
+    - у парку
+  - label: Куди? (accusative — going there)
+    items:
+    - у школу
+    - в банк
+    - у магазин
+    - на роботу
+    - у бібліотеку
+    - у парк
+- id: quiz-motion-verbs
+  type: quiz
+  instruction: 'Оберіть правильне дієслово: йти чи їхати? (Choose the correct verb:
+    on foot or by transport?)'
+  items:
+  - question: Я ___ у магазин. (It's two blocks away — on foot.)
+    options:
+    - їду
+    - йду
+    - іде
+    correct: 1
+  - question: Ми ___ у Львів. (We're taking the train.)
+    options:
+    - йдемо
+    - їдемо
+    - ідемо
+    correct: 1
+  - question: Вона ___ в аптеку. (It's around the corner.)
+    options:
+    - їде
+    - іде
+    - їдеш
+    correct: 1
+  - question: Він ___ в Одесу. (He's taking a bus.)
+    options:
+    - іде
+    - їдеш
+    - їде
+    correct: 2
+  - question: Ти ___ у бібліотеку. (It's in the same building.)
+    options:
+    - їдеш
+    - йдеш
+    - їде
+    correct: 1
+  - question: Вони ___ на вокзал. (They're driving there by car.)
+    options:
+    - ідуть
+    - йдуть
+    - їдуть
+    correct: 2
+- id: quiz-de-kudy
+  type: quiz
+  instruction: Яке запитання підходить? (Which question fits — Де? or Куди?)
+  items:
+  - question: Він у банку.
+    options:
+    - Де?
+    - Куди?
+    correct: 0
+  - question: Вона йде у школу.
+    options:
+    - Де?
+    - Куди?
+    correct: 1
+  - question: Я на роботі.
+    options:
+    - Де?
+    - Куди?
+    correct: 0
+  - question: Ми їдемо в Одесу.
+    options:
+    - Де?
+    - Куди?
+    correct: 1
+  - question: Вони у парку.
+    options:
+    - Де?
+    - Куди?
+    correct: 0
+  - question: Ти йдеш у магазин.
+    options:
+    - Де?
+    - Куди?
+    correct: 1
+  - question: Він іде в аптеку.
+    options:
+    - Де?
+    - Куди?
+    correct: 1
+  - question: Вона у бібліотеці.
+    options:
+    - Де?
+    - Куди?
+    correct: 0
+workbook:
+- type: fill-in
+  instruction: Вставте правильну форму іменника — Де? чи Куди? (Fill in the correct
+    noun form — location or direction?)
+  items:
+  - sentence: Я йду у ___ (school).
+    answer: школу
+    options:
+    - школа
+    - школу
+    - школі
+  - sentence: Він зараз у ___ (bank).
+    answer: банку
+    options:
+    - банк
+    - банку
+    - банком
+  - sentence: Вона їде в ___ (Odesa).
+    answer: Одесу
+    options:
+    - Одеса
+    - Одесі
+    - Одесу
+  - sentence: Ми йдемо у ___ (restaurant).
+    answer: ресторан
+    options:
+    - ресторані
+    - ресторан
+    - ресторана
+  - sentence: Ти зараз на ___ (work).
+    answer: роботі
+    options:
+    - робота
+    - роботу
+    - роботі
+  - sentence: Він іде у ___ (library).
+    answer: бібліотеку
+    options:
+    - бібліотека
+    - бібліотеці
+    - бібліотеку
+  - sentence: Вони сидять у ___ (café).
+    answer: кафе
+    options:
+    - кафе
+    - кафі
+    - кафу
+  - sentence: Я їду у ___ (city).
+    answer: місто
+    options:
+    - місті
+    - міста
+    - місто
+  - sentence: Ти йдеш на ___ (post office).
+    answer: пошту
+    options:
+    - пошта
+    - пошті
+    - пошту
+  - sentence: Вона стоїть у ___ (store).
+    answer: магазині
+    options:
+    - магазин
+    - магазину
+    - магазині
+- type: quiz
+  instruction: Де чи Куди? Оберіть правильне запитання (Де? or Куди? — choose the
+    question that fits)
+  items:
+  - question: Я в банку.
+    options:
+    - Де ти?
+    - Куди ти йдеш?
+    - Куди ти їдеш?
+    correct: 0
+  - question: Вона йде у школу.
+    options:
+    - Де вона?
+    - Куди вона йде?
+    - Куди вона їде?
+    correct: 1
+  - question: Ми у кафе.
+    options:
+    - Де ми?
+    - Куди ми йдемо?
+    - Куди ми їдемо?
+    correct: 0
+  - question: Він їде в Одесу.
+    options:
+    - Де він?
+    - Куди він іде?
+    - Куди він їде?
+    correct: 2
+  - question: Вони у парку.
+    options:
+    - Де вони?
+    - Куди вони йдуть?
+    - Куди вони їдуть?
+    correct: 0
+  - question: Ти йдеш на роботу.
+    options:
+    - Де ти?
+    - Куди ти йдеш?
+    - Куди ти їдеш?
+    correct: 1
+  - question: Я у магазині.
+    options:
+    - Де я?
+    - Куди я йду?
+    - Куди я їду?
+    correct: 0
+  - question: Вона іде в аптеку.
+    options:
+    - Де вона?
+    - Куди вона йде?
+    - Куди вона їде?
+    correct: 1
+- type: group-sort
+  instruction: 'Розподіліть фрази: Де? (місцевий відмінок) чи Куди? (знахідний відмінок)
+    — Sort phrases: locative or accusative?'
+  groups:
+  - label: Де? — locative (already there)
+    items:
+    - у школі
+    - в банку
+    - у ресторані
+    - на роботі
+    - у бібліотеці
+    - у магазині
+    - в аптеці
+    - у парку
+    - на пошті
+    - у місті
+  - label: Куди? — accusative (going there)
+    items:
+    - у школу
+    - в банк
+    - у ресторан
+    - на роботу
+    - у бібліотеку
+    - у магазин
+    - в аптеку
+    - у парк
+    - на пошту
+    - у місто
+- type: error-correction
+  instruction: Знайдіть помилку і виправте (Find the error and correct it)
+  items:
+  - sentence: Я йду у школі.
+    error: школі
+    correction: школу
+    error_type: word
+    options:
+    - школу
+    - школа
+    - школою
+    explanation: 'Куди? needs accusative: школа → школу (feminine -а → -у)'
+  - sentence: Він зараз у банк.
+    error: банк
+    correction: банку
+    error_type: word
+    options:
+    - банку
+    - банком
+    - банків
+    explanation: 'Де? needs locative: банк → банку (masculine noun)'
+  - sentence: Вона їде у Одеса.
+    error: Одеса
+    correction: Одесу
+    error_type: word
+    options:
+    - Одесу
+    - Одесі
+    - Одесою
+    explanation: 'Куди? needs accusative: Одеса → Одесу (feminine -а → -у)'
+  - sentence: Ми йдемо у бібліотеці.
+    error: бібліотеці
+    correction: бібліотеку
+    error_type: word
+    options:
+    - бібліотеку
+    - бібліотека
+    - бібліотекою
+    explanation: 'Куди? needs accusative: бібліотека → бібліотеку (feminine -а → -у)'
+  - sentence: Вони зараз на роботу.
+    error: роботу
+    correction: роботі
+    error_type: word
+    options:
+    - роботі
+    - робота
+    - роботою
+    explanation: 'Де? (зараз = right now, static position) needs locative: робота
+      → роботі'
+  - sentence: Він іде у магазині.
+    error: магазині
+    correction: магазин
+    error_type: word
+    options:
+    - магазин
+    - магазином
+    - магазина
+    explanation: 'Куди? needs accusative: магазин → магазин (masculine inanimate —
+      no change)'
+- type: match-up
+  instruction: З'єднайте форму Де? з формою Куди? для кожного місця (Match each locative
+    form with its accusative pair)
+  pairs:
+  - left: у школі (Де?)
+    right: у школу (Куди?)
+  - left: в банку (Де?)
+    right: в банк (Куди?)
+  - left: у магазині (Де?)
+    right: у магазин (Куди?)
+  - left: на роботі (Де?)
+    right: на роботу (Куди?)
+  - left: у бібліотеці (Де?)
+    right: у бібліотеку (Куди?)
+  - left: в аптеці (Де?)
+    right: в аптеку (Куди?)
+  - left: у парку (Де?)
+    right: у парк (Куди?)
+  - left: на пошті (Де?)
+    right: на пошту (Куди?)

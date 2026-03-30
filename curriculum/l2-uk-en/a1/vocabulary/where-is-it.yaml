@@ -1,0 +1,361 @@
+vocabulary:
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: в школі
+  translation: at/in school (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: робо́та
+  translation: work
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на роботі
+  translation: at work (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у банку
+  translation: at/in the bank (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: магази́н
+  translation: shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у/в магазині
+  translation: in/at the shop (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ву́лиця
+  translation: street
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на вулиці
+  translation: on the street (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: у/в місті
+  translation: in the city (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у/в парку
+  translation: in the park (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у лікарні
+  translation: in/at the hospital (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кафе́
+  translation: café (indeclinable)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: в кафе
+  translation: in/at the café (locative — never changes)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пло́ща
+  translation: square (public space)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на площі
+  translation: on the square (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на вокзалі
+  translation: at the train station (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́шта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на пошті
+  translation: at the post office (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: в офісі
+  translation: in the office (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: університе́т
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: в університеті
+  translation: at the university (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: уро́к
+  translation: lesson
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: на уроці
+  translation: at the lesson (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на морі
+  translation: at the sea (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дива́н
+  translation: sofa
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на дивані
+  translation: on the sofa (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: в кімнаті
+  translation: in the room (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: центр
+  translation: center, downtown
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у центрі
+  translation: in the center (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пове́рх
+  translation: floor, storey
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на другому поверсі
+  translation: on the second floor (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: місцевий відмінок
+  translation: locative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вдо́ма
+  translation: at home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: now, currently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: жи́ти
+  translation: to live
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study, to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́тися
+  translation: to play
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: в Україні
+  translation: in Ukraine (locative — always в, never на)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Києві
+  translation: in Kyiv (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Львові
+  translation: in Lviv (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в Одесі
+  translation: in Odesa (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Харкові
+  translation: in Kharkiv (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на Майдані Незалежності
+  translation: on Independence Square (locative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: understood, I see
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: wonderful, great
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Де ти зараз?
+  translation: Where are you now?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти живеш?
+  translation: Where do you live?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти працюєш?
+  translation: Where do you work?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти навчаєшся?
+  translation: Where do you study?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скажи, будь ласка
+  translation: Tell me please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

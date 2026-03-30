@@ -1,0 +1,392 @@
+version: '1.0'
+module: where-from
+level: a1
+inline:
+- id: fill-in-zvidky
+  type: fill-in
+  instruction: Вставте правильну форму (Insert the correct form)
+  items:
+  - sentence: Звідки ти? — Я ____.
+    answer: з України
+    options:
+    - з України
+    - з Канади
+    - в Україні
+  - sentence: Вона ____.
+    answer: з Канади
+    options:
+    - з Канади
+    - зі Львова
+    - в Канаді
+  - sentence: Ми ____, а ви?
+    answer: з Києва
+    options:
+    - з Києва
+    - з Одеси
+    - в Києві
+  - sentence: Джон ____.
+    answer: зі США
+    options:
+    - зі США
+    - з США
+    - в США
+  - sentence: Мій друг ____.
+    answer: з Німеччини
+    options:
+    - з Німеччини
+    - з Польщі
+    - в Німеччині
+  - sentence: Я ____.
+    answer: зі Львова
+    options:
+    - зі Львова
+    - з Києва
+    - у Львові
+  - sentence: Вони ____.
+    answer: з Англії
+    options:
+    - з Англії
+    - з Польщі
+    - в Англії
+  - sentence: Олена ____.
+    answer: з Одеси
+    options:
+    - з Одеси
+    - з Харкова
+    - в Одесі
+- id: group-sort-location-trio
+  type: group-sort
+  instruction: Розподіліть фрази за питанням (Sort the phrases by their question)
+  groups:
+  - label: Де? (Where?)
+    items:
+    - в Україні
+    - у Києві
+    - на роботі
+    - у Харкові
+    - в Канаді
+    - у школі
+  - label: Куди? (Where to?)
+    items:
+    - в Україну
+    - у Київ
+    - на роботу
+    - у Харків
+    - в Канаду
+    - у школу
+  - label: Звідки? (Where from?)
+    items:
+    - з України
+    - з Києва
+    - з роботи
+    - з Харкова
+    - з Канади
+    - зі школи
+- id: quiz-prepositions
+  type: quiz
+  instruction: Оберіть правильний прийменник (Choose the correct preposition)
+  items:
+  - question: Я йду ___ роботи.
+    options:
+    - з
+    - на
+    - в
+    correct: 0
+  - question: Вона йде ___ школу.
+    options:
+    - в
+    - на
+    - зі
+    correct: 0
+  - question: Ми зараз ___ Україні.
+    options:
+    - в
+    - з
+    - на
+    correct: 0
+  - question: Я їду ___ Канаду.
+    options:
+    - в
+    - з
+    - на
+    correct: 0
+  - question: Він ___ Німеччини.
+    options:
+    - з
+    - в
+    - на
+    correct: 0
+  - question: Вони ___ Львові.
+    options:
+    - у
+    - зі
+    - на
+    correct: 0
+  - question: Я йду ___ магазину.
+    options:
+    - з
+    - в
+    - на
+    correct: 0
+  - question: Олена ___ школи.
+    options:
+    - зі
+    - в
+    - на
+    correct: 0
+- id: fill-in-location-vs-origin
+  type: fill-in
+  instruction: 'Вставте правильну форму: де живе чи звідки? (Fill in: where they live
+    or where they''re from?)'
+  items:
+  - sentence: Я живу ____, але я зі Львова.
+    answer: в Києві
+    options:
+    - в Києві
+    - зі Львова
+    - з Києва
+  - sentence: Вона живе в Канаді, але вона ____.
+    answer: з України
+    options:
+    - з України
+    - в Україні
+    - в Україну
+  - sentence: Ми зараз ____, але ми з Польщі.
+    answer: в Англії
+    options:
+    - в Англії
+    - з Англії
+    - в Англію
+  - sentence: Він живе ____, але він з Харкова.
+    answer: в Одесі
+    options:
+    - в Одесі
+    - з Одеси
+    - в Одесу
+  - sentence: Я з Німеччини, але зараз я ____.
+    answer: в Україні
+    options:
+    - в Україні
+    - з України
+    - в Україну
+  - sentence: Ти ____, але живеш у Києві.
+    answer: зі США
+    options:
+    - зі США
+    - з США
+    - у Києві
+workbook:
+- type: match-up
+  instruction: З'єднайте місто або країну з формою 'Звідки?' (Match each city or country
+    to its 'Where from?' form)
+  pairs:
+  - left: Київ
+    right: з Києва
+  - left: Львів
+    right: зі Львова
+  - left: Одеса
+    right: з Одеси
+  - left: Харків
+    right: з Харкова
+  - left: Україна
+    right: з України
+  - left: Канада
+    right: з Канади
+  - left: Англія
+    right: з Англії
+  - left: Польща
+    right: з Польщі
+- type: quiz
+  instruction: На яке питання відповідає ця фраза? (Which question does this phrase
+    answer?)
+  items:
+  - question: В Україні
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 0
+  - question: З Канади
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 2
+  - question: В Київ
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 1
+  - question: Зі школи
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 2
+  - question: На роботі
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 0
+  - question: Додому
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 1
+  - question: З Харкова
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 2
+  - question: В Одесу
+    options:
+    - Де?
+    - Куди?
+    - Звідки?
+    correct: 1
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: На питання 'Звідки?' завжди відповідають з прийменником з/із/зі.
+    correct: true
+    explanation: 'Так: Я з України, зі школи, із Запоріжжя — всі форми з/із/зі.'
+  - statement: На питання 'Де?' відповідають з прийменником з/із/зі.
+    correct: false
+    explanation: 'Ні. Де? = в/на + locative: в Україні, на роботі. З/із/зі — це Звідки?'
+  - statement: '''В Україні'' відповідає на питання ''Де?'''
+    correct: true
+    explanation: Так. В Україні = locative, де ти є зараз.
+  - statement: Форма 'зі Львова' вживається тому, що лв- — важке поєднання приголосних.
+    correct: true
+    explanation: 'Так. зі вживається перед складними кластерами: зі Львова, зі школи,
+      зі США.'
+  - statement: На питання 'Куди?' відповідають з прийменником з/із/зі.
+    correct: false
+    explanation: 'Ні. Куди? = в/на + accusative: в Україну, на роботу, в Київ.'
+  - statement: '''Додому'' відповідає на питання ''Куди?'''
+    correct: true
+    explanation: Так. Додому = homeward — напрям руху, як в Київ, на роботу.
+  - statement: '''Я з Канаду'' — правильна форма для відповіді на ''Звідки?'''
+    correct: false
+    explanation: 'Ні. Звідки? вимагає genitive: з Канади (не Канаду). Канаду — це
+      accusative для Куди?'
+  - statement: '''З роботи'' означає coming from work і відповідає на питання ''Звідки?'''
+    correct: true
+    explanation: Так. З роботи — genitive chunk після з, відповідає на Звідки? Де?
+      — на роботі.
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
+  - sentence: Я живу з Києві.
+    error: з
+    correction: в
+    error_type: word
+    options:
+    - в
+    - з
+    - на
+    explanation: Де? (where you live) = в/на + locative. з/із/зі = Звідки? (where
+      you're from).
+  - sentence: Зі Харкова він.
+    error: Зі
+    correction: З
+    error_type: word
+    options:
+    - З
+    - Зі
+    - Із
+    explanation: 'з Харкова: Х is a single consonant — з, not зі. зі is for clusters:
+      лв-, шк-, шт-, шт-.'
+  - sentence: Звідки ти? — Я в України.
+    error: в
+    correction: з
+    error_type: word
+    options:
+    - з
+    - в
+    - на
+    explanation: 'Звідки? requires з/із/зі: Я з України. В Україні = Де? form.'
+  - sentence: Вона з Одесу.
+    error: Одесу
+    correction: Одеси
+    error_type: word
+    options:
+    - Одеси
+    - Одесу
+    - Одесі
+    explanation: 'Звідки? requires genitive: Одеса → Одеси. Одесу is accusative (Куди?).'
+  - sentence: Я йду на роботи.
+    error: на
+    correction: з
+    error_type: word
+    options:
+    - з
+    - на
+    - в
+    explanation: з роботи = coming FROM work (Звідки?). на роботу = going TO work
+      (Куди?).
+  - sentence: Вона живе з Канаді.
+    error: з
+    correction: в
+    error_type: word
+    options:
+    - в
+    - з
+    - на
+    explanation: живе в Канаді (Де? = в/на + locative). з Канади = Звідки? — where
+      she's from.
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: Where are you from?
+    options:
+    - text: Звідки ти?
+      correct: true
+    - text: Де ти?
+      correct: false
+    - text: Куди ти?
+      correct: false
+  - source: I'm from Ukraine.
+    options:
+    - text: Я з України.
+      correct: true
+    - text: Я в Україні.
+      correct: false
+    - text: Я в Україну.
+      correct: false
+  - source: She's coming from work.
+    options:
+    - text: Вона йде з роботи.
+      correct: true
+    - text: Вона йде на роботу.
+      correct: false
+    - text: Вона йде в роботі.
+      correct: false
+  - source: I live in Kyiv, but I'm from Lviv.
+    options:
+    - text: Я живу в Києві, але я зі Львова.
+      correct: true
+    - text: Я живу з Києва, але я у Львові.
+      correct: false
+    - text: Я живу в Київ, але я з Львова.
+      correct: false
+  - source: He's from Germany.
+    options:
+    - text: Він з Німеччини.
+      correct: true
+    - text: Він в Німеччині.
+      correct: false
+    - text: Він в Німеччину.
+      correct: false
+  - source: They're heading home.
+    options:
+    - text: Вони йдуть додому.
+      correct: true
+    - text: Вони йдуть з дому.
+      correct: false
+    - text: Вони йдуть в домі.
+      correct: false

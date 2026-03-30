@@ -1,0 +1,59 @@
+{
+  "module": "around-the-city",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-30T21:26:07.539403Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-30T15:14:15.217010Z",
+    "meta": null,
+    "activities": "2026-03-30T15:11:37.620453Z",
+    "vocabulary": "2026-03-30T15:12:10.987264Z",
+    "research": null,
+    "plan": "2026-03-30T10:59:40.271721Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1778/1200 (raw: 2425)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "49/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

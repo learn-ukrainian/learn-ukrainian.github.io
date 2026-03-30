@@ -1,0 +1,381 @@
+version: '1.0'
+module: checkpoint-my-world
+level: a1
+inline:
+- id: quiz-gender-agreement
+  type: quiz
+  instruction: Choose the correct adjective form to match the noun. The noun's gender
+    (masculine / feminine / neuter) determines the ending.
+  items:
+  - question: _____ стіл
+    options:
+    - великий
+    - велика
+    - велике
+    correct: 0
+  - question: _____ книга
+    options:
+    - великий
+    - велика
+    - велике
+    correct: 1
+  - question: _____ вікно
+    options:
+    - великий
+    - велика
+    - велике
+    correct: 2
+  - question: _____ лампа
+    options:
+    - маленький
+    - маленька
+    - маленьке
+    correct: 1
+  - question: _____ глечик
+    options:
+    - коричневий
+    - коричнева
+    - коричневе
+    correct: 0
+  - question: _____ намисто
+    options:
+    - синій
+    - синя
+    - синє
+    correct: 2
+  - question: _____ вишиванка
+    options:
+    - гарний
+    - гарна
+    - гарне
+    correct: 1
+  - question: _____ зошит
+    options:
+    - новий
+    - нова
+    - нове
+    correct: 0
+  - question: _____ сумка
+    options:
+    - червоний
+    - червона
+    - червоне
+    correct: 1
+  - question: _____ олівець
+    options:
+    - жовтий
+    - жовта
+    - жовте
+    correct: 0
+- id: fill-in-shopping-dialogue
+  type: fill-in
+  instruction: Complete each sentence with the correct word. Choose the right demonstrative
+    (**цей/ця/це/ці**), adjective form, or number.
+  items:
+  - sentence: _____ вишиванка дуже гарна.
+    answer: Ця
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ глечик великий, а той маленький.
+    answer: Цей
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ намисто синє й біле.
+    answer: Це
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: Вишиванка _____.
+    answer: гарна
+    options:
+    - гарний
+    - гарна
+    - гарне
+  - sentence: Глечик _____.
+    answer: великий
+    options:
+    - великий
+    - велика
+    - велике
+  - sentence: Намисто _____.
+    answer: гарне
+    options:
+    - гарний
+    - гарна
+    - гарне
+  - sentence: Маленький глечик коштує _____ гривень.
+    answer: сто
+    options:
+    - сто
+    - двісті
+    - триста
+  - sentence: _____ писанки — по двадцять п'ять гривень.
+    answer: Ці
+    options:
+    - Цей
+    - Ця
+    - Ці
+- id: group-sort-vocabulary
+  type: group-sort
+  instruction: 'Sort all the words into three categories: **предмети** (objects),
+    **кольори** (colors), and **числа** (numbers).'
+  groups:
+  - label: Предмети (Objects)
+    items:
+    - стіл
+    - книга
+    - вікно
+    - лампа
+    - глечик
+    - намисто
+  - label: Кольори (Colors)
+    items:
+    - червоний
+    - синій
+    - білий
+    - жовтий
+    - блакитний
+    - коричневий
+  - label: Числа (Numbers)
+    items:
+    - двадцять
+    - сто
+    - двісті
+    - три
+    - п'ять
+    - триста
+- id: quiz-singular-plural
+  type: quiz
+  instruction: Choose the correct **plural** form of the noun.
+  items:
+  - question: стіл →
+    options:
+    - столи
+    - стола
+    - столів
+    correct: 0
+  - question: книга →
+    options:
+    - книги
+    - книгу
+    - книгів
+    correct: 0
+  - question: вікно →
+    options:
+    - вікна
+    - вікни
+    - вікнів
+    correct: 0
+  - question: лампа →
+    options:
+    - лампи
+    - лампу
+    - лампів
+    correct: 0
+  - question: олівець →
+    options:
+    - олівці
+    - олівця
+    - олівцей
+    correct: 0
+  - question: зошит →
+    options:
+    - зошити
+    - зошита
+    - зошитів
+    correct: 0
+  - question: намисто →
+    options:
+    - намиста
+    - намисти
+    - намистів
+    correct: 0
+  - question: вишиванка →
+    options:
+    - вишиванки
+    - вишиванку
+    - вишиванків
+    correct: 0
+workbook:
+- type: match-up
+  instruction: 'Match each noun to its gender pronoun (**він**, **вона**, or **воно**).
+    Use the ending rule: consonant → він, **-а/-я** → вона, **-о/-е** → воно.'
+  pairs:
+  - left: стіл
+    right: він
+  - left: книга
+    right: вона
+  - left: вікно
+    right: воно
+  - left: лампа
+    right: вона
+  - left: глечик
+    right: він
+  - left: намисто
+    right: воно
+  - left: вишиванка
+    right: вона
+  - left: зошит
+    right: він
+- type: error-correction
+  instruction: Each sentence has ONE wrong word — the adjective or demonstrative does
+    not agree with the noun. Find the error and choose the correct form.
+  items:
+  - sentence: Великий книга на столі.
+    error: Великий
+    correction: Велика
+    error_type: word
+    options:
+    - Великий
+    - Велика
+    - Велике
+    explanation: 'книга is feminine (ends in -а), so the adjective must be feminine:
+      Велика.'
+  - sentence: Нове стіл коричневий.
+    error: Нове
+    correction: Новий
+    error_type: word
+    options:
+    - Новий
+    - Нова
+    - Нове
+    explanation: 'стіл is masculine (ends in a consonant), so the adjective must be
+      masculine: Новий.'
+  - sentence: Синя вікно велике.
+    error: Синя
+    correction: Синє
+    error_type: word
+    options:
+    - Синій
+    - Синя
+    - Синє
+    explanation: вікно is neuter (ends in -о), and синій is a soft-stem adjective,
+      so the neuter form is Синє.
+  - sentence: Ця глечик маленький.
+    error: Ця
+    correction: Цей
+    error_type: word
+    options:
+    - Цей
+    - Ця
+    - Це
+    explanation: 'глечик is masculine (ends in a consonant), so the demonstrative
+      must be masculine: Цей.'
+  - sentence: Це лампа жовта.
+    error: Це
+    correction: Ця
+    error_type: word
+    options:
+    - Цей
+    - Ця
+    - Це
+    explanation: 'лампа is feminine (ends in -а), so the demonstrative must be feminine:
+      Ця.'
+  - sentence: Той вишиванка гарна.
+    error: Той
+    correction: Та
+    error_type: word
+    options:
+    - Той
+    - Та
+    - Те
+    explanation: 'вишиванка is feminine, so the distal demonstrative must also be
+      feminine: Та.'
+- type: true-false
+  instruction: 'Read each statement about the reading passage and decide: **правда**
+    (true) or **ні** (false).'
+  items:
+  - statement: Стіл великий і коричневий.
+    correct: true
+    explanation: 'The text says: «Мій стіл великий і коричневий.»'
+  - statement: На столі є п'ять книг.
+    correct: false
+    explanation: 'The text says: «На столі є три книги.» — three books, not five.'
+  - statement: Маленька лампа біла.
+    correct: true
+    explanation: 'The text says: «Моя лампа маленька і біла.»'
+  - statement: Та лампа синя.
+    correct: false
+    explanation: 'The text says: «А та лампа жовта.» — that lamp is yellow, not blue.'
+  - statement: Олівці жовті й сині.
+    correct: true
+    explanation: 'The text says: «Олівці жовті й сині.»'
+  - statement: За вікном є парк.
+    correct: true
+    explanation: 'The text says: «За вікном є парк.»'
+  - statement: Стіни жовті.
+    correct: false
+    explanation: 'The text says: «Мої стіни білі.» — the walls are white, not yellow.'
+- type: fill-in
+  instruction: 'Fill in the correct demonstrative: **цей** (m), **ця** (f), **це**
+    (n), **ці** (plural). The noun''s gender decides the form.'
+  items:
+  - sentence: _____ стіл великий.
+    answer: Цей
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ книга нова.
+    answer: Ця
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ вікно велике.
+    answer: Це
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ лампа маленька.
+    answer: Ця
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ глечик коричневий.
+    answer: Цей
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ намисто синє.
+    answer: Це
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: _____ книги нові.
+    answer: Ці
+    options:
+    - Ці
+    - Ті
+    - Це
+  - sentence: _____ олівці жовті.
+    answer: Ці
+    options:
+    - Ці
+    - Ті
+    - Це
+- type: match-up
+  instruction: Match the number to its Ukrainian word. These are the prices from the
+    ярмарок dialogue — no formulas needed, just vocabulary.
+  pairs:
+  - left: '20'
+    right: двадцять
+  - left: '25'
+    right: двадцять п'ять
+  - left: '75'
+    right: сімдесят п'ять
+  - left: '100'
+    right: сто
+  - left: '200'
+    right: двісті
+  - left: '300'
+    right: триста

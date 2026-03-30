@@ -1,0 +1,217 @@
+vocabulary:
+- word: хоті́ти
+  translation: to want (irregular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: to be able to, can (irregular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сити
+  translation: to must, to have to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ка́ва
+  translation: coffee (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ї́сти
+  translation: to eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шко́да́
+  translation: pity, unfortunately
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: допомогти́
+  translation: to help (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пора́дити
+  translation: to recommend, to advise (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: тре́ба
+  translation: one needs to, it is necessary (impersonal)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: вихідні́
+  translation: weekend (pl)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk, to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: неді́ля
+  translation: Sunday (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кіно́
+  translation: cinema, movies (n, indeclinable)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зві́сно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: офіціа́нт
+  translation: waiter (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вели́кий
+  translation: large, big
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small, little
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: wonderful, great
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пі́ца
+  translation: pizza (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́тися
+  translation: to study, to learn (reflexive)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зустрі́тися
+  translation: to meet (perfective, reflexive)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak, to talk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: піти
+  translation: to go (perfective)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: йти
+  translation: to go (imperfective, on foot)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́ти
+  translation: to study, to learn (transitive)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ма́ти
+  translation: 'to have (also used as modal: маю = I need to)'
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: мо́жна
+  translation: one may, it is allowed (impersonal)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: Домовилися!
+  translation: Deal! It's agreed!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти хочеш робити?
+  translation: What do you want to do?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не можу.
+  translation: I can't.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хочу мати...
+  translation: I want to have...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мушу йти.
+  translation: I have to go.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ти можеш допомогти?
+  translation: Can you help?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

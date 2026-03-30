@@ -1,7 +1,7 @@
 # Audit Report: M02 — reading-ukrainian.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-29 22:58:12
+**Generated:** 2026-03-30 21:28:53
 
 ## Configuration
 **Type:** A1
@@ -38,18 +38,15 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'язкові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "*(And this?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аня:</span> Шо-ко-лад...". Shares significant keywords with sentence at index 60.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[SECTION_BALANCE_BLOATED]** Section 'Чита́ння слів (Reading Words)' has 607 words (42% of total). Bloated sections: 'Чита́ння слів (Reading Words)' (42%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2087/1200 (raw: 2600)

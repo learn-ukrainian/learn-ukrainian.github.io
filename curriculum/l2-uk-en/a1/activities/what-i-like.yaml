@@ -1,0 +1,338 @@
+version: '1.0'
+module: what-i-like
+level: a1
+inline:
+- id: fill-in-infinitive-picture
+  type: fill-in
+  instruction: Look at each activity clue and complete the sentence. Choose the correct
+    verb.
+  items:
+  - sentence: 🎵 Я люблю ____.  (sing)
+    answer: співати
+    options:
+    - співати
+    - малювати
+    - готувати
+  - sentence: 📚 Я люблю ____.  (read)
+    answer: читати
+    options:
+    - читати
+    - гуляти
+    - слухати
+  - sentence: 🍳 Я люблю ____.  (cook)
+    answer: готувати
+    options:
+    - готувати
+    - дивитися
+    - співати
+  - sentence: 🎨 Я люблю ____.  (draw)
+    answer: малювати
+    options:
+    - малювати
+    - читати
+    - грати
+  - sentence: 🎧 Я люблю ____ музику.  (listen to)
+    answer: слухати
+    options:
+    - слухати
+    - подорожувати
+    - готувати
+  - sentence: 🚶 Я люблю ____ в парку.  (walk)
+    answer: гуляти
+    options:
+    - гуляти
+    - малювати
+    - дивитися
+  - sentence: 🎮 Я люблю ____ в ігри.  (play)
+    answer: грати
+    options:
+    - грати
+    - читати
+    - співати
+  - sentence: ✈️ Я люблю ____.  (travel)
+    answer: подорожувати
+    options:
+    - подорожувати
+    - готувати
+    - слухати
+- id: match-infinitives-meanings
+  type: match-up
+  instruction: Match each Ukrainian verb to its English meaning.
+  pairs:
+  - left: читати
+    right: to read
+  - left: гуляти
+    right: to walk / hang out
+  - left: готувати
+    right: to cook
+  - left: слухати
+    right: to listen
+  - left: дивитися
+    right: to watch
+  - left: грати
+    right: to play
+  - left: малювати
+    right: to draw
+  - left: співати
+    right: to sing
+  - left: подорожувати
+    right: to travel
+- id: quiz-structure-choice
+  type: quiz
+  instruction: 'Choose the correct structure. Remember: **Я люблю** = activity (verb),
+    **Мені подобається** = thing or place (noun).'
+  items:
+  - question: ___ читати. (I like to read — activity)
+    options:
+    - Я люблю
+    - Мені подобається
+    - Я не люблю
+    correct: 0
+  - question: ___ ця книга. (I like this book — thing)
+    options:
+    - Мені подобається
+    - Я люблю
+    - Тобі подобається
+    correct: 0
+  - question: ___ гуляти в парку. (I like to walk — activity)
+    options:
+    - Я люблю
+    - Мені подобається
+    - Я не подобається
+    correct: 0
+  - question: ___ джаз. (I like jazz — thing)
+    options:
+    - Мені подобається
+    - Я люблю
+    - Я не люблю
+    correct: 0
+  - question: ___ цей фільм. (I like this film — thing)
+    options:
+    - Мені подобається
+    - Я люблю
+    - Тобі подобається
+    correct: 0
+  - question: ___ співати. (I like to sing — activity)
+    options:
+    - Я люблю
+    - Мені подобається
+    - Мені не подобається
+    correct: 0
+  - question: ___ класична музика. (I like classical music — thing)
+    options:
+    - Мені подобається
+    - Я люблю
+    - Я не люблю
+    correct: 0
+  - question: ___ малювати. (I like to draw — activity)
+    options:
+    - Я люблю
+    - Мені подобається
+    - Тобі подобається
+    correct: 0
+- id: fill-in-negative
+  type: fill-in
+  instruction: Make each sentence negative by placing **не** in the blank.
+  items:
+  - sentence: Я ____ люблю готувати.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+  - sentence: Мені ____ подобається цей фільм.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+  - sentence: Я ____ люблю слухати музику.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+  - sentence: Мені ____ подобається ця книга.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+  - sentence: Я ____ люблю малювати.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+  - sentence: Мені ____ подобається кава.
+    answer: не
+    options:
+    - не
+    - ні
+    - нема
+workbook:
+- type: fill-in
+  instruction: 'Complete each sentence. Choose the correct infinitive from the box:
+    **читати, гуляти, готувати, слухати, малювати, подорожувати, співати, дивитися**.'
+  items:
+  - sentence: Я люблю ____ в парку щовечора.
+    answer: гуляти
+    options:
+    - гуляти
+    - малювати
+    - слухати
+  - sentence: Вона любить ____ фільми вдома.
+    answer: дивитися
+    options:
+    - дивитися
+    - читати
+    - співати
+  - sentence: Мій брат любить ____ борщ і вареники.
+    answer: готувати
+    options:
+    - готувати
+    - слухати
+    - гуляти
+  - sentence: Я люблю ____ музику ввечері.
+    answer: слухати
+    options:
+    - слухати
+    - дивитися
+    - готувати
+  - sentence: Ми любимо ____ картини.
+    answer: малювати
+    options:
+    - малювати
+    - читати
+    - грати
+  - sentence: Я люблю ____ цікаві книги.
+    answer: читати
+    options:
+    - читати
+    - подорожувати
+    - дивитися
+  - sentence: Вона любить ____ у хорі.
+    answer: співати
+    options:
+    - співати
+    - готувати
+    - малювати
+  - sentence: Він любить ____ до нових міст.
+    answer: подорожувати
+    options:
+    - подорожувати
+    - слухати
+    - читати
+- type: group-sort
+  instruction: 'Sort these phrases into two groups based on which structure fits:
+    **Я люблю ___** or **Мені подобається ___**.'
+  groups:
+  - label: Я люблю ___
+    items:
+    - читати
+    - гуляти
+    - готувати
+    - співати
+    - малювати
+    - подорожувати
+  - label: Мені подобається ___
+    items:
+    - ця книга
+    - джаз
+    - цей фільм
+    - класична музика
+    - Київ
+    - кава
+- type: true-false
+  instruction: True or false? Think carefully about the dialogue and the grammar rules.
+  items:
+  - statement: In the dialogue, Анна says she likes to cook.
+    correct: false
+    explanation: 'Анна says she likes to read and listen to music: **Я люблю читати
+      і слухати музику**. Віктор is the one who likes to cook.'
+  - statement: '**Я люблю читати** means ''I like to read.'''
+    correct: true
+    explanation: Yes — **люблю** + infinitive (**читати**, ending **-ти**) = I like
+      to read.
+  - statement: '**Мені подобається** is used with activities (infinitives like **читати**).'
+    correct: false
+    explanation: '**Мені подобається** is used with things and places (nouns). For
+      activities, use **Я люблю** + infinitive.'
+  - statement: To make **Я люблю готувати** negative, you say **Я не люблю готувати**.
+    correct: true
+    explanation: 'Correct — **не** goes directly before the verb: **Я не люблю готувати**.'
+  - statement: '**Мені подобається джаз** means ''I like to play jazz.'''
+    correct: false
+    explanation: It means 'I like jazz' (the thing). To say 'I like to play jazz'
+      you would need **Я люблю грати джаз**.
+  - statement: Every Ukrainian infinitive ends in **-ти**.
+    correct: true
+    explanation: Yes — **читати, гуляти, готувати, слухати, малювати, співати** all
+      end in **-ти**. This is how you recognise an infinitive.
+  - statement: '**Тобі подобається?** means ''Do you like it?'' (asking someone you
+      call **ти**).'
+    correct: true
+    explanation: 'Yes — when you switch from **мені** (I) to **тобі** (you), **подобається**
+      stays the same: **Тобі подобається?**'
+- type: observe
+  examples:
+  - Я люблю **читати**. (I like to read.)
+  - Я люблю **гуляти** в парку. (I like to walk in the park.)
+  - Я люблю **готувати**. (I like to cook.)
+  - Я люблю **слухати** музику. (I like to listen to music.)
+  - Я люблю **малювати**. (I like to draw.)
+  - Я люблю **подорожувати**. (I like to travel.)
+  prompt: What do all the verbs after **люблю** have in common? What two letters do
+    they all end with?
+- type: translate
+  instruction: Choose the correct Ukrainian translation. Watch for the **люблю / подобається**
+    distinction.
+  items:
+  - source: I like to watch films.
+    options:
+    - text: Я люблю дивитися фільми.
+      correct: true
+    - text: Мені подобається фільми.
+      correct: false
+    - text: Я люблю фільми дивитися не.
+      correct: false
+  - source: I like this film.
+    options:
+    - text: Мені подобається цей фільм.
+      correct: true
+    - text: Я люблю цей фільм дивитися.
+      correct: false
+    - text: Мені люблю цей фільм.
+      correct: false
+  - source: I don't like to cook.
+    options:
+    - text: Я не люблю готувати.
+      correct: true
+    - text: Я люблю не готувати.
+      correct: false
+    - text: Мені не подобається готувати.
+      correct: false
+  - source: I like jazz.
+    options:
+    - text: Мені подобається джаз.
+      correct: true
+    - text: Я люблю джаз слухати.
+      correct: false
+    - text: Мені люблю джаз.
+      correct: false
+  - source: I like to sing.
+    options:
+    - text: Я люблю співати.
+      correct: true
+    - text: Мені подобається пісня.
+      correct: false
+    - text: Я люблю пісню.
+      correct: false
+  - source: I don't like this book.
+    options:
+    - text: Мені не подобається ця книга.
+      correct: true
+    - text: Я не люблю читати книга.
+      correct: false
+    - text: Ця книга не люблю мені.
+      correct: false

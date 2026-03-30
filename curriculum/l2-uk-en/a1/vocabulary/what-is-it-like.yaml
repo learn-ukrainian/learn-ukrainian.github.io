@@ -41,6 +41,18 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: мале́нька
+  translation: small (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́ньке
+  translation: small (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: нови́й
   translation: new (masculine)
   expression: false
@@ -65,6 +77,12 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: стара́
+  translation: old (feminine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: старе́
   translation: old (neuter)
   expression: false
@@ -83,8 +101,26 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: га́рне
+  translation: nice, beautiful (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: пога́ний
   translation: bad (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пога́на
+  translation: bad (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: погане
+  translation: bad (neuter)
   expression: false
   pos: прикм.
   gender: ''
@@ -113,6 +149,18 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: брудна́
+  translation: dirty (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: брудне́
+  translation: dirty (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: дороги́й
   translation: expensive (masculine)
   expression: false
@@ -125,8 +173,26 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: дороге́
+  translation: expensive (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: деше́вий
   translation: cheap (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: деше́ва
+  translation: cheap (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: деше́ве
+  translation: cheap (neuter)
   expression: false
   pos: прикм.
   gender: ''
@@ -155,40 +221,52 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: зеле́ний
-  translation: green (masculine, hard-stem example)
+- word: те́мна
+  translation: dark (feminine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: те́мне
+  translation: dark (neuter)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: си́ній
-  translation: blue (masculine, soft-stem)
+- word: зру́чний
+  translation: comfortable (masculine)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: невели́кий
-  translation: not big, small
+- word: зру́чна
+  translation: comfortable (feminine)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: і
-  translation: and (linking parallel qualities)
+- word: зру́чне
+  translation: comfortable (neuter)
   expression: false
-  pos: спол.
+  pos: прикм.
   gender: ''
   verified: true
-- word: а
-  translation: and/but (soft contrast)
+- word: яскра́вий
+  translation: bright, vivid (masculine)
   expression: false
-  pos: спол.
+  pos: прикм.
   gender: ''
   verified: true
-- word: але́
-  translation: but (stronger contrast)
+- word: яскра́ва
+  translation: bright, vivid (feminine)
   expression: false
-  pos: спол.
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: яскра́ве
+  translation: bright, vivid (neuter)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
 - word: кімна́та
@@ -203,23 +281,11 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: вікно́
-  translation: window
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: стіле́ць
   translation: chair
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: ша́фа
-  translation: wardrobe
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: підло́га
   translation: floor
@@ -227,44 +293,20 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: крі́сло
-  translation: armchair
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: су́мка
-  translation: bag
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: телефо́н
-  translation: phone
+- word: плака́т
+  translation: poster
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: кни́га
-  translation: book
+- word: листі́вка
+  translation: postcard
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: кущ
-  translation: bush
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: трава́
-  translation: grass
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: де́рево
-  translation: tree
+- word: фо́то
+  translation: photo
   expression: false
   pos: ім.
   gender: с.
@@ -275,11 +317,41 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: іме́нник
-  translation: noun
+- word: анто́нім
+  translation: antonym
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: і
+  translation: and (parallel — both things are true)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: а
+  translation: and/but (contrast between two things)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: спра́вді
+  translation: indeed, really
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: подиви́сь
+  translation: look (imperative, singular)
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: Яка твоя кімната?
   translation: What is your room like?
@@ -287,20 +359,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Який він?
-  translation: What is it like? (masculine)
+- word: Який цікавий атлас!
+  translation: What an interesting atlas!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Яке воно?
-  translation: What is it like? (neuter)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Прикметник — дзеркало іменника.
-  translation: The adjective is the noun's mirror.
+- word: У мене є великий стіл.
+  translation: I have a big table.
   expression: true
   pos: ''
   gender: ''

@@ -1,0 +1,207 @@
+<!-- TAB:Урок -->
+
+## Діало́ги (Dialogues)
+
+Іри́на walks into a department store. Bags hang on the wall in front of her, backpacks line a shelf to her left — and she needs to tell the shop assistant exactly which one she wants. **Цей** (this one) or **той** (that one)?
+
+### Dialogue 1 — Shopping for a bag
+
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Скі́льки ко́шту́є ця су́мка? *(How much is this bag?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Яка? Ця черво́на? *(Which one? This red one?)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Ні, та си́ня. *(No, that blue one.)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> А цей рюкза́к? *(And this backpack?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> До́бре, беру́ цей рюкзак. *(Okay, I'll take this backpack.)*</div>
+
+
+Notice how Ірина and the Консультант use **ця** and **та** to avoid confusion. When Ірина says **ця сумка** (this bag), she means the one right in front of her — she could touch it. When she says **та синя** (that blue one), she points to the bag farther away on the display. The shop assistant immediately understands which item she means. **Цей рюкзак** (this backpack) works the same way — it is close to Ірина, within reach.
+
+### Dialogue 2 — Comparing furniture in the showroom
+
+Ірина walks through to the office behind the counter, where the Консультант works.
+
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Що це? *(What is this?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Це мій стіл. *(This is my desk.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> А те? *(And that?)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Те — крі́сло. *(That is an armchair.)*</div>
+> <div class="dialogue-line"><span class="speaker">Ірина:</span> Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*</div>
+> <div class="dialogue-line"><span class="speaker">Консультант:</span> Так, цей зру́чний, а той — ні. *(Yes, this one is comfortable, and that one — no.)*</div>
+
+
+Two patterns emerge here. First, **Це мій стіл** uses **це** to introduce something — "This is my desk." Second, **цей стілець** uses **цей** to point at a specific chair — "this chair." Both are natural, and context always makes the meaning clear. When the Консультант says **Те — крісло**, the dash replaces the verb "is" — standard written Ukrainian for equative sentences like "That is an armchair."
+
+## Цей, ця, це (This)
+
+Ukrainian has three forms of "this" because every noun has a grammatical gender. You already know this pattern from **мій/моя́/моє** (my) in Module 6 and **який/яка/яке** (which) in Module 9. Demonstrative pronouns follow exactly the same logic:
+
+- **Цей стіл** (m) — this table
+- **Ця книга** (f) — this book
+- **Це вікно́** (n) — this window
+
+The feminine and neuter endings match what you have already seen: **-а** for feminine, **-е** for neuter — just like моя/моє and яка/яке. The masculine forms vary (цей, мій, який, той), but feminine and neuter are always consistent. As Заболо́тний (Grade 6, p. 210) puts it: вказівні́ займе́нники цей, той змі́нюються за родами — demonstrative pronouns change by gender. At A1, we only use the nominative forms listed above. Other case forms come later.
+
+How do you know which form to use? Match it to the noun's gender — the gender you already learned in Module 8. Here are more examples across all three genders:
+
+- **Цей телефон** (m) — this phone
+- **Цей оліве́ць** (m) — this pencil
+- **Ця камера** (f) — this camera
+- **Ця ру́чка** (f) — this pen
+- **Це ра́діо** (n) — this radio
+- **Це місто** (n) — this city
+
+**Цей/ця/це** always refers to something near the speaker — the thing you can reach, hold, or are standing next to. If it is close enough to touch, use **цей/ця/це**.
+
+Demonstratives combine naturally with adjectives and colors. The word order is the same as English — demonstrative first, then adjective(s), then noun:
+
+- **Цей вели́кий черво́ний стіл.** — This big red table.
+- **Ця нова́ синя сумка.** — This new blue bag.
+- **Це мале́ньке бі́ле вікно.** — This small white window.
+
+Ukrainian word order is more flexible than English in general, but demonstrative + adjective + noun is the most natural, unmarked order. At A1, stick with this pattern and it will always sound right.
+
+<!-- INJECT_ACTIVITY: quiz-demonstratives-this -->
+
+<!-- INJECT_ACTIVITY: fill-in-demonstratives-this -->
+
+## Той, та, те (That)
+
+"That" works exactly like "this" — same three genders, same endings. The only difference is distance: **той/та/те** points at something farther away from the speaker, or something mentioned earlier.
+
+- **Той стіл** (m) — that table
+- **Та книга** (f) — that book
+- **Те вікно** (n) — that window
+
+Contrast pairs make the near/far distinction vivid:
+
+- **Цей стілець новий, а той — старий.** — This chair is new, and that one is old.
+- **Цей рюкзак си́ній, а той — чо́рний.** — This backpack is blue, and that one is black.
+- **Це крісло зру́чне, а те — ні.** — This armchair is comfortable, and that one — no.
+
+:::caution
+The word **та** has two meanings. As a demonstrative pronoun, **та** means "that" (feminine) and always appears directly before a noun: **та книга** (that book). As a conjunction, **та** means "and" (like **і** or **й**) and connects two words: **мама та тато** (mom and dad). A quick test: is **та** followed directly by a noun it describes? Then it means "that." Does **та** link two separate words? Then it means "and."
+
+- **Та книга ціка́ва.** — That book is interesting. (demonstrative — **та** + noun)
+- **Ірина та Максим** — Iryna and Maksym (conjunction — **та** links two names)
+:::
+
+Demonstratives pair naturally with question words to help you choose between objects. The question particle **чи** (or) connects the options:
+
+- **Який стіл? — Цей чи той?** — Which table? This one or that one?
+- **Яка сумка? — Ця червона чи та синя?** — Which bag? This red one or that blue one?
+- **Яке вікно? — Це вели́ке чи те маленьке?** — Which window? This big one or that small one?
+
+The pointing word **ось** (here is / look) and the adverb **там** (there) pair naturally with demonstratives: **Ось цей телефон — дороги́й.** (Here, this phone — expensive.) **А той, там, — ні.** (And that one, over there — no.)
+
+One more thing worth noting. **Це** can stand alone to introduce or name something — **Це вікно.** means "This is a window." But **це** can also modify a noun directly — **Це вікно велике.** means "This window is big." Context always makes the meaning clear. You have been using **Це...** as "This is..." since Module 3, and now you are adding **це** as "this" before neuter nouns. Both uses are completely natural.
+
+<!-- INJECT_ACTIVITY: quiz-demonstratives-that -->
+
+<!-- INJECT_ACTIVITY: match-up-gender-paradigm -->
+
+## Підсумок — Summary
+
+Two sets of demonstrative pronouns, one simple system. **Цей/ця/це** points to things near you — this phone in your hand, this book on your desk. **Той/та/те** points to things farther away — that laptop on the shelf, that bag across the store. Both sets follow the same gender endings as **мій/моя/моє** and **який/яка/яке** — Ukrainian gender agreement is one consistent pattern you apply everywhere.
+
+Here are all four paradigms together:
+
+| Pattern | m | f | n |
+|---|---|---|---|
+| Possessives (M06) | **мій** | **моя** | **моє** |
+| Questions (M09) | **який** | **яка** | **яке** |
+| This (M12) | **цей** | **ця** | **це** |
+| That (M12) | **той** | **та** | **те** |
+
+Same endings, same logic — learn the pattern once, apply it everywhere.
+
+Remember the **та** double meaning: **Та книга цікава** (that book — demonstrative, before a noun) vs **Ірина та Максим** (and — conjunction, between names). Quick test: is **та** followed by a noun it describes? → "that." Does it link two words? → "and."
+
+Try this self-check to practise what you have learned:
+
+- Look around — pick 3 objects near you. Say: **Це ___.** Then: **Цей/Ця/Це ___ (adjective) ___ (noun).**
+- Now pick 3 objects far away. Say: **Те ___.** Then: **Той/Та/Те ___ (adjective) ___ (noun).**
+- Choose between **цей** and **той**: ___ телефон (in your hand) **чи** ___ ноутбу́к (on that shelf)?
+- Point at something and ask: **Яка сумка? — Ця чи та?** Now do the same for a masculine and a neuter noun.
+- Translate into Ukrainian: "That old chair." / "This new blue bag." / "Is this a window or a door?" / "This red pen or that blue pencil?"
+
+If you can point at objects around you and name them with the right demonstrative and gender — congratulations, you are thinking in Ukrainian. The gender system that seemed like three separate sets of words in Modules 6, 9, and now 12 is really one pattern repeated. Every new word you learn simply plugs into this system.
+
+<!-- INJECT_ACTIVITY: fill-in-demonstratives-contrast -->
+
+
+<!-- TAB:Словник -->
+
+### Обов'язко́ві та рекомендо́вані слова́
+
+| Сло́во | Переклад | Части́на мо́ви | Рід |
+|-------|----------|-------------|-----|
+| **цей** | this (masculine) | прикм. |  |
+| **ця** | this (feminine) | прикм. |  |
+| **той** | that (masculine) | прикм. |  |
+| **та** | that (feminine); and (conjunction) | спол. |  |
+| **те** | that (neuter) | ім. | с. |
+| **ось** | here is, look (pointing word) | част. |  |
+| **там** | there | присл. |  |
+| **тут** | here | присл. |  |
+| **вона́** | she | ім. | ж. |
+| **воно́** | it | ім. | с. |
+| **консульта́нт** | shop assistant, consultant | ім. | ч. |
+| **су́мка** | bag | ім. | ж. |
+| **рюкза́к** | backpack | ім. | ч. |
+| **стіле́ць** | chair | ім. | ч. |
+| **крі́сло** | armchair | ім. | с. |
+| **вікно́** | window | ім. | с. |
+| **телефо́н** | phone | ім. | ч. |
+| **ноутбу́к** | laptop | ім. | ч. |
+| **оліве́ць** | pencil | ім. | ч. |
+| **ка́мера** | camera | ім. | ж. |
+| **ру́чка** | pen | ім. | ж. |
+| **ра́діо** | radio | ім. | с. |
+| **мі́сто** | city | ім. | с. |
+| **кни́га** | book | ім. | ж. |
+| **дві́сті** | two hundred | числ. |  |
+| **зру́чний** | comfortable | прикм. |  |
+| **нови́й** | new | прикм. |  |
+| **стари́й** | old | прикм. |  |
+
+### Ви́рази
+
+| Ви́раз | Переклад |
+|-------|----------|
+| **вказівні займенники** | demonstrative pronouns |
+| **Беру цей.** | I'll take this one. |
+
+### Картки́ — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "цей", back: "this (masculine)", subtitle: "прикм." }, { front: "ця", back: "this (feminine)", subtitle: "прикм." }, { front: "той", back: "that (masculine)", subtitle: "прикм." }, { front: "та", back: "that (feminine); and (conjunction)", subtitle: "спол." }, { front: "те", back: "that (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ось", back: "here is, look (pointing word)", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "консульта́нт", back: "shop assistant, consultant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ноутбу́к", back: "laptop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́мера", back: "camera", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́діо", back: "radio", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }]} />
+
+
+<!-- TAB:Зошит -->
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+
+<!-- TAB:Ресурси -->
+
+**Джерела — References**
+
+- Заболотний Grade 6, p.210
+  _Вказівні займенники цей, той змінюються за родами, чи́слами, відмі́нками._
+- Літвінова Grade 6, p.273
+  _Full declension table for той — we use nominative only at A1._
+
+**Граматика — Grammar (МійКлас)**
+
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/)

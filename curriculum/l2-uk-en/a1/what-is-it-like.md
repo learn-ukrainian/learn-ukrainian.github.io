@@ -2,161 +2,124 @@
 
 ## Діало́ги (Dialogues)
 
-Everything around you has qualities — a table can be big or small, a room can be bright or dark. Ukrainian adjectives bring these descriptions to life, but they have a trick: their endings change depending on the noun they describe. Two everyday conversations will show you exactly how this works.
+You already know Ukrainian nouns have gender — **стіл** (table) is masculine, **книга** (book) is feminine, **вікно** (window) is neuter. But how do you describe what these things are actually like? That is where adjectives come in. Adjectives tell you about a noun's qualities — big, small, new, old. Two dialogues below show adjectives at work: first in a room at home, then at a weekend book fair.
 
-### Dialogue 1 — Describing a Room
-
-Imagine two friends talking about one of their rooms at home. Notice how the adjective endings shift as the nouns change.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Яка твоя́ кімна́та? *(What is your room like?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А стіл? Яки́й він? *(And the table? What is it like?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Яка твоя́ кімна́та? *(What is your room like?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> А стіл? *(And the table?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Стіл нови́й. *(The table is new.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> А лі́жко? *(And the bed?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Воно́ старе́. *(It is old.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Вікно? *(The window?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Вікно чи́сте і вели́ке. *(The window is clean and big.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> А стіле́ць? *(And the chair?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оля:</span> Мале́нький, але́ зру́чний. *(Small, but comfortable.)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Стіл нови́й. А лі́жко — старе́. *(The table is new. And the bed is old.)*</div>
+Notice what just happened: **кімната** (room) is feminine, so Тарас asked **Яка** твоя кімната? But **стіл** (table) is masculine, and **ліжко** (bed) is neuter. The question word changed every time. All the nouns here — **кімната**, **стіл**, **ліжко**, **вікно**, **стілець** (chair) — come from M08. Now they have adjectives attached to them.
+
+Same question words — **Який?** **Яка?** **Яке?** — but a brand-new setting: a weekend book fair. Тарас and Софія browse books, maps, and posters. Watch how the question word shifts with each noun.
+
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Який ціка́вий атлас! *(What an interesting atlas!)*</div>
+> <div class="dialogue-line"><span class="speaker">Софія:</span> Так, але він дороги́й. *(Yes, but it is expensive.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> А ця книга? Яка вона́? *(And this book? What is it like?)*</div>
+> <div class="dialogue-line"><span class="speaker">Софія:</span> Нова́ і деше́ва. *(New and cheap.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Яке га́рне фо́то! *(What a nice photo!)*</div>
+> <div class="dialogue-line"><span class="speaker">Софія:</span> Спра́вді! А плака́т? *(Indeed! And the poster?)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Вели́кий і яскра́вий. *(Big and bright.)*</div>
+> <div class="dialogue-line"><span class="speaker">Софія:</span> Подиви́сь — мале́нька листі́вка. *(Look — a small postcard.)*</div>
+> <div class="dialogue-line"><span class="speaker">Тарас:</span> Яка вона? *(What is it like?)*</div>
+> <div class="dialogue-line"><span class="speaker">Софія:</span> Стара́, але га́рна. *(Old, but nice.)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А вікно́? Яке́ воно́? *(And the window? What is it like?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Вікно вели́ке і чи́сте. *(The window is big and clean.)*</div>
-
-
-</div>
-
-This short exchange uses six adjectives on four nouns — and every ending tells you the noun's gender. The word **кімната** (room) is feminine, so we hear **велика** and **світла** — both ending in **-а**. The word **стіл** (table) is masculine, so the adjective is **новий** — ending in **-ий**. And **ліжко** (bed) and **вікно** (window) are neuter, giving us **старе**, **велике**, and **чисте** — all ending in **-е**.
-
-Look at the pattern: the noun changed, and the adjective ending followed. This is exactly like **мій/моя/моє** from the previous module — the same gender logic, applied to a new set of words.
-
-### Dialogue 2 — Window Shopping
-
-Now two friends are walking past shop windows. A new question word appears — **яке** (what kind? — neuter).
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Яка га́рна су́мка! *(What a nice bag!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Так, але́ вона́ доро́га. *(Yes, but it's expensive.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> А телефо́н? Який він? *(And the phone? What is it like?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Він вели́кий і деше́вий. *(It's big and cheap.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> А це крі́сло? Яке́ воно́? *(And this armchair? What is it like?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Воно́ вели́ке і доро́ге. *(It's big and expensive.)*</div>
-
-
-</div>
-
-Both dialogues reveal the same pattern: the question word matches the noun's gender. For masculine nouns you ask **який** (what kind?), for feminine — **яка**, and for neuter — **яке**. These three question forms are the key to describing anything in Ukrainian, and the next section explains exactly why they work this way.
-
-## Який? Яка? Яке? (What kind?)
-
-The question "What kind?" in Ukrainian is not a single word — it shifts to match the noun, just like **мій/моя/моє** from Module 8. Think of **який** as a mini-adjective: it agrees with whatever noun it asks about.
-
-| Gender | Question word | Example | Answer |
-|---|---|---|---|
-| Masculine | **який** | **Який стіл?** *(What kind of table?)* | **Великий стіл.** *(A big table.)* |
-| Feminine | **яка** | **Яка кни́га?** *(What kind of book?)* | **Нова книга.** *(A new book.)* |
-| Neuter | **яке** | **Яке вікно?** *(What kind of window?)* | **Чисте вікно.** *(A clean window.)* |
-
-Each answer follows the same rule: the adjective ending mirrors the noun's gender. Masculine adjectives end in **-ий** (**великий**, **новий**, **чистий**). Feminine adjectives end in **-а** (**велика**, **нова**, **чиста**). Neuter adjectives end in **-е** (**велике**, **нове**, **чисте**). This is the hard-stem pattern, and it covers most adjectives you will meet at this level.
-
-Ukrainian textbooks state this rule simply: «Прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний» — the adjective takes the same gender as the noun it is connected to (Пономарова, Grade 3, p. 98). Look at how one root shifts across all three genders:
-
-- **зелений кущ** *(a green bush — masculine)*
-- **зелена трава** *(green grass — feminine)*
-- **зелене дерево** *(a green tree — neuter)*
-
-The root **зелен-** stays the same. Only the ending changes: **-ий**, **-а**, **-е**.
+Look at the pattern in Dialogue 2: **атлас** (atlas, m) → **Який**, **книга** (book, f) → **Яка**, **фото** (photo, n) → **Яке**. The question word matched the noun's gender each time. **Плакат** (poster) is masculine, **листівка** (postcard) is feminine — five nouns, three genders, all represented. That pattern is the entire grammar point for this module.
 
 <!-- INJECT_ACTIVITY: quiz-yakyi-yaka-yake -->
 
-There is another ending set — soft-stem adjectives like **синій/си́ня/синє** (blue). These follow the same gender logic but use endings **-ій**, **-я**, **-є**. You will learn them properly in Module 10 (Colors). For now, just know they exist — the agreement principle is identical.
+## Який? Яка? Яке? (What kind?)
 
-This ending pattern reappears in every grammatical case you will study later. Learn it well now, and every future module becomes easier. Practice recognizing the gender by the ending with these chains:
+The question "What kind?" in Ukrainian changes its ending to match the noun's gender — the same principle as **мій/моя/моє** from M08. Here is the core pattern:
 
-- **новий стіл** / **нова сумка** / **нове ліжко**
-- **чистий стіле́ць** / **чиста підлога** / **чисте вікно**
-- **гарний телефон** / **гарна кімната** / **гарне крі́сло**
+- Masculine noun → **Який?** — **Який стіл?** → **Великий стіл.** *(What kind of table? → A big table.)*
+- Feminine noun → **Яка?** — **Яка книга?** → **Нова книга.** *(What kind of book? → A new book.)*
+- Neuter noun → **Яке?** — **Яке вікно?** → **Чисте вікно.** *(What kind of window? → A clean window.)*
 
-:::tip
-Think of the adjective as a mirror: «Прикметник — дзе́ркало іме́нника.» *(The adjective is the noun's mirror.)* Whatever gender the noun has, the adjective reflects it. The question words **який/яка/яке** follow the same mirror rule. As Zaharijchuk's Grade 1 textbook (p. 101) puts it: words that answer the questions **який? яка? яке?** point to a quality of an object.
-:::
+Three questions, three answers — the gender matches in each pair.
 
-## Прикме́тники (Common Adjectives)
+Adjectives change their ending in exactly the same way as the question word. Masculine adjectives end in **-ий**: **великий** (big), **новий** (new), **чистий** (clean), **дорогий** (expensive). Feminine adjectives end in **-а**: **велика**, **нова**, **чиста**, **дорога**. Neuter adjectives end in **-е**: **велике**, **нове**, **чисте**, **дороге**. This comes directly from the Ukrainian textbook rule: «Прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний» (Пономарова, Grade 3, p.98) — the adjective takes the same gender as its noun. Always.
 
-The fastest way to learn adjectives is in opposite pairs — when you learn **великий** (big), learn **маленький** (small) at the same time. Your brain remembers contrasts better than isolated words. Here are six essential pairs:
-
-| Adjective | Meaning | Opposite | Meaning |
-|---|---|---|---|
-| **великий** | big | **маленький** | small |
-| **новий** | new | **старий** | old |
-| **гарний** | nice, beautiful | **поганий** | bad |
-| **чистий** | clean | **брудний** | dirty |
-| **дорогий** | expensive | **дешевий** | cheap |
-| **світлий** | light, bright | **темний** | dark |
-
-<!-- INJECT_ACTIVITY: match-adjective-opposites -->
-
-Now combine these adjectives with the room nouns you already know from Module 8. Every model sentence below deliberately uses a different gender so you can see all three endings in action:
-
-- **У мене́ є великий стіл.** *(I have a big table. — masculine)*
-- **Моя кімната мале́нька, але гарна.** *(My room is small but nice. — feminine)*
-- **Вікно велике і чисте.** *(The window is big and clean. — neuter)*
-- **Стілець старий, а ліжко — нове.** *(The chair is old, and the bed is new. — m + n)*
-- **Шафа нова і велика.** *(The wardrobe is new and big. — feminine)*
-- **Підлога чиста.** *(The floor is clean. — feminine)*
-- **Сумка дорога.** *(The bag is expensive. — feminine)*
-- **Телефон дешевий і новий.** *(The phone is cheap and new. — masculine)*
-
-Notice two little words connecting ideas in these sentences. The conjunction **і** (and) links parallel qualities: **велике і чисте** — both describe the window equally. The conjunction **а** (and/but) marks a softer contrast: **Стілець старий, а ліжко — нове** — the chair is one thing, the bed is another. For a stronger contrast, use **але** (but): **Кімната маленька, але гарна** — the room is small, *however* it is nice. Ukrainian textbooks present these connectors alongside adjective pairs — the antonym pairs naturally invite contrast words (Вашуленко, Grade 2, p. 31).
+This is not a new concept — you already know it from M08. You learned **мій стіл** (my table, m), **моя книга** (my book, f), **моє вікно** (my window, n). Adjectives follow the exact same logic. If you can say **мій стіл**, you can say **великий стіл**. If you can say **моя книга**, you can say **нова книга**. The gender lives in the noun — the adjective just agrees with it.
 
 <!-- INJECT_ACTIVITY: fill-in-adjective-endings -->
 
-Now try building your own description. Here is a model — four sentences, all three genders present:
+A quick note about what comes next. Some adjectives have a soft stem and end in **-ій/-я/-є** instead — for example, **синій** (blue, m), **синя** (f), **синє** (n). These follow the same gender logic, but they appear in M10 (Colors). For now, every adjective in this module ends in the hard pattern: **-ий** (m), **-а** (f), **-е** (n). One pattern, one module.
 
-- **Моя кімната невели́ка.** *(My room is not big.)*
-- **Стіл новий і чистий.** *(The table is new and clean.)*
-- **Вікно велике і сві́тле.** *(The window is big and bright.)*
-- **Шафа стара́, але гарна.** *(The wardrobe is old but nice.)*
+Here are three complete sentences combining M08 nouns with M09 adjectives. Notice the adjective can appear before or after the noun — both positions are correct in Ukrainian:
 
-Your turn: describe your own room in three to four sentences using adjectives from the pairs above. Try to include at least one masculine, one feminine, and one neuter noun. This is exactly the oral task from Вашуленко's Grade 3 textbook (p. 131): «Склади у́сну ро́зповідь на те́му "Моя кімната"» — compose an oral description on the topic "My Room."
+- **У мене́ є великий стіл.** *(I have a big table.)* — masculine
+- **Моя кімната маленька, але гарна.** *(My room is small, but nice.)* — feminine
+- **Вікно велике і чисте.** *(The window is big and clean.)* — neuter
+
+## Прикме́тники (Common Adjectives)
+
+Ukrainian vocabulary sticks better when you learn words in opposite pairs — your brain stores both at once. This module's core adjectives come in six pairs. For each pair, an example sentence shows both words in action with a noun you already know from M08.
+
+1. **великий** (big) ↔ **маленький** (small)
+   - **Стіл великий, а стілець маленький.** *(The table is big, and/but the chair is small.)*
+
+2. **новий** (new) ↔ **старий** (old)
+   - **Книга нова, але атлас старий.** *(The book is new, but the atlas is old.)*
+
+3. **гарний** (nice, beautiful) ↔ **поганий** (bad)
+   - **Яка гарна листівка! А цей плакат поганий.** *(What a nice postcard! And this poster is bad.)*
+
+4. **чистий** (clean) ↔ **брудний** (dirty)
+   - **Вікно чисте, а підло́га брудна́.** *(The window is clean, and/but the floor is dirty.)*
+
+5. **дорогий** (expensive) ↔ **дешевий** (cheap)
+   - **Атлас дорогий. Книга дешева.** *(The atlas is expensive. The book is cheap.)*
+
+6. **світлий** (light, bright) ↔ **темний** (dark)
+   - **Кімната світла і велика.** *(The room is bright and big.)*
+
+Teaching adjectives in antonym pairs is exactly how Ukrainian textbooks do it from Grade 3 onward (Вашуленко, Grade 3, p.56 — «Протиле́жні за зна́ченням слова — анто́німи»). Notice how the adjective endings shift depending on the noun: **чисте вікно** (n, -е) but **брудна підлога** (f, -а). The gender of the noun controls everything.
+
+<!-- INJECT_ACTIVITY: match-adjective-opposites -->
+
+Now let's build full descriptions — combining several M08 nouns with M09 adjectives into connected sentences. Read this short paragraph describing a room:
+
+- **У мене є маленька кімната.** *(I have a small room.)*
+- **Стіл новий, а ліжко старе.** *(The table is new, and/but the bed is old.)*
+- **Вікно велике і чисте.** *(The window is big and clean.)*
+- **Стілець маленький і старий, але зручний.** *(The chair is small and old, but comfortable.)*
+
+Two connectors to notice: **і** (and) links things that are both true in parallel — **велике і чисте** means the window is both big AND clean. **А** (and/but) marks a contrast between two things — **Стіл новий, а ліжко старе** highlights that one is new while the other is old. Compare: **Кімната маленька і темна** (the room is small AND dark — both true, no contrast) vs. **Стіл новий, а стілець старий** (the table is new BUT the chair is old — deliberate contrast).
 
 <!-- INJECT_ACTIVITY: fill-in-describe-room -->
 
 ## Підсумок — Summary
 
-Today you learned adjective-noun agreement in the nominative case — the adjective ending mirrors the noun's gender, every time.
+Here is today's core lesson in one sentence: Ukrainian adjectives change their ending to match the gender of the noun they describe. Three endings to remember right now: **-ий** for masculine, **-а** for feminine, **-е** for neuter. The question words **Який?** (m), **Яка?** (f), **Яке?** (n) follow the same pattern. The adjective always agrees with its noun — no exceptions in this module.
 
 Test yourself with these questions:
 
-- What ending does a masculine adjective have? → **-ий** / **-ій** (**великий**, **новий**, **синій**)
-- What about feminine? → **-а** / **-я** (**велика**, **нова**, **синя**)
-- And neuter? → **-е** / **-є** (**велике**, **нове**, **синє**)
-- Which question word goes with a masculine noun? → **Який?**
-- With a feminine noun? → **Яка?**
-- With a neuter noun? → **Яке?**
-- What is the difference between **а** and **але**? → **А** marks a soft contrast; **але** is a stronger "but."
+- What ending does a masculine adjective have? → **-ий** (**великий**, **новий**, **чистий**)
+- What ending does a feminine adjective have? → **-а** (**велика**, **нова**, **чиста**)
+- What ending does a neuter adjective have? → **-е** (**велике**, **нове**, **чисте**)
+- Which question word goes with **книга**? → **Яка?** (**Яка книга?**)
+- Which question word goes with **стіл**? → **Який?** (**Який стіл?**)
+- Which question word goes with **вікно**? → **Яке?** (**Яке вікно?**)
+- What is the difference between **і** and **а**? → **і** means "and" (parallel: both true); **а** means "and/but" (contrast between two things)
+- Name three adjective opposites. → **великий/маленький**, **новий/старий**, **дорогий/дешевий**
 
-Module 10 (Colors) introduces soft-stem adjectives like **синій** (blue) and **зелений** (green) — the same agreement logic, but with the endings **-ій/-я/-є** instead of **-ий/-а/-е**. Later modules will apply these adjectives beyond the nominative case. What you learned today — matching the adjective to the noun's gender — is the foundation for every descriptive sentence you will ever build in Ukrainian.
+Colors in Ukrainian (M10) introduce soft-stem adjectives: **синій** (blue, m), **синя** (f), **синє** (n) — the same gender logic, but with a different ending pattern. After M10, describing objects fully unlocks: **великий синій стіл** (a big blue table), **нова черво́на книга** (a new red book), **чисте бі́ле вікно** (a clean white window). The pattern you learned today carries forward into every module that follows. Gender agreement is the backbone of Ukrainian adjectives — and you already have it.
+
+Now it is your turn. Write three sentences describing your real room or your desk using today's adjectives. Use one masculine noun with an adjective, one feminine noun with an adjective, and one neuter noun with an adjective. Connect at least one pair with **і** or **а**. No English — think directly in Ukrainian. Ask yourself: **Який мій стіл?** → **Мій стіл ____.** **Яка моя кімната?** → **Моя кімната ____.** **Яке моє вікно?** → **Моє вікно ____.** Fill in the blanks. Describe, don't translate.
 
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язко́ві та рекомендо́вані слова
 
 | Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
@@ -167,59 +130,70 @@ Module 10 (Colors) introduces soft-stem adjectives like **синій** (blue) an
 | **вели́ка** | big (feminine) | прикм. |  |
 | **вели́ке** | big (neuter) | прикм. |  |
 | **мале́нький** | small (masculine) | прикм. |  |
+| **мале́нька** | small (feminine) | прикм. |  |
+| **мале́ньке** | small (neuter) | прикм. |  |
 | **нови́й** | new (masculine) | прикм. |  |
 | **нова́** | new (feminine) | прикм. |  |
 | **нове́** | new (neuter) | ім. | с. |
 | **стари́й** | old (masculine) | прикм. |  |
+| **стара́** | old (feminine) | ім. | ж. |
 | **старе́** | old (neuter) | ім. | с. |
 | **га́рний** | nice, beautiful (masculine) | прикм. |  |
 | **га́рна** | nice, beautiful (feminine) | прикм. |  |
+| **га́рне** | nice, beautiful (neuter) | прикм. |  |
 | **пога́ний** | bad (masculine) | прикм. |  |
+| **пога́на** | bad (feminine) | прикм. |  |
+| **погане** | bad (neuter) | прикм. |  |
 | **чи́стий** | clean (masculine) | прикм. |  |
 | **чи́ста** | clean (feminine) | прикм. |  |
 | **чи́сте** | clean (neuter) | прикм. |  |
 | **брудни́й** | dirty (masculine) | прикм. |  |
+| **брудна́** | dirty (feminine) | прикм. |  |
+| **брудне́** | dirty (neuter) | прикм. |  |
 | **дороги́й** | expensive (masculine) | прикм. |  |
 | **доро́га** | expensive (feminine) | ім. | ж. |
+| **дороге́** | expensive (neuter) | прикм. |  |
 | **деше́вий** | cheap (masculine) | прикм. |  |
+| **деше́ва** | cheap (feminine) | прикм. |  |
+| **деше́ве** | cheap (neuter) | прикм. |  |
 | **сві́тлий** | light, bright (masculine) | прикм. |  |
 | **сві́тла** | light, bright (feminine) | прикм. |  |
 | **сві́тле** | light, bright (neuter) | прикм. |  |
 | **те́мний** | dark (masculine) | прикм. |  |
-| **зеле́ний** | green (masculine, hard-stem example) | прикм. |  |
-| **си́ній** | blue (masculine, soft-stem) | прикм. |  |
-| **невели́кий** | not big, small | прикм. |  |
-| **і** | and (linking parallel qualities) | спол. |  |
-| **а** | and/but (soft contrast) | спол. |  |
-| **але́** | but (stronger contrast) | спол. |  |
+| **те́мна** | dark (feminine) | ім. | ж. |
+| **те́мне** | dark (neuter) | прикм. |  |
+| **зру́чний** | comfortable (masculine) | прикм. |  |
+| **зру́чна** | comfortable (feminine) | прикм. |  |
+| **зру́чне** | comfortable (neuter) | прикм. |  |
+| **яскра́вий** | bright, vivid (masculine) | прикм. |  |
+| **яскра́ва** | bright, vivid (feminine) | прикм. |  |
+| **яскра́ве** | bright, vivid (neuter) | прикм. |  |
 | **кімна́та** | room | ім. | ж. |
 | **лі́жко** | bed | ім. | с. |
-| **вікно́** | window | ім. | с. |
 | **стіле́ць** | chair | ім. | ч. |
-| **ша́фа** | wardrobe | ім. | ж. |
 | **підло́га** | floor | ім. | ж. |
-| **крі́сло** | armchair | ім. | с. |
-| **су́мка** | bag | ім. | ж. |
-| **телефо́н** | phone | ім. | ч. |
-| **кни́га** | book | ім. | ж. |
-| **кущ** | bush | ім. | ч. |
-| **трава́** | grass | ім. | ж. |
-| **де́рево** | tree | ім. | с. |
+| **плака́т** | poster | ім. | ч. |
+| **листі́вка** | postcard | ім. | ж. |
+| **фо́то** | photo | ім. | с. |
 | **прикме́тник** | adjective | ім. | ч. |
-| **іме́нник** | noun | ім. | ч. |
+| **анто́нім** | antonym | ім. | ч. |
+| **і** | and (parallel — both things are true) | спол. |  |
+| **а** | and/but (contrast between two things) | спол. |  |
+| **але́** | but | спол. |  |
+| **спра́вді** | indeed, really | присл. |  |
+| **подиви́сь** | look (imperative, singular) | дієсл. |  |
 
 ### Ви́рази
 
 | Ви́раз | Переклад |
 |-------|----------|
 | **Яка твоя кімната?** | What is your room like? |
-| **Який він?** | What is it like? (masculine) |
-| **Яке воно?** | What is it like? (neuter) |
-| **Прикметник — дзеркало іменника.** | The adjective is the noun's mirror. |
+| **Який цікавий атлас!** | What an interesting atlas! |
+| **У мене є великий стіл.** | I have a big table. |
 
 ### Картки́ — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "яки́й", back: "what kind? (masculine)", subtitle: "прикм." }, { front: "яка", back: "what kind? (feminine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "яке́", back: "what kind? (neuter)", subtitle: "прикм." }, { front: "вели́кий", back: "big (masculine)", subtitle: "прикм." }, { front: "вели́ка", back: "big (feminine)", subtitle: "прикм." }, { front: "вели́ке", back: "big (neuter)", subtitle: "прикм." }, { front: "мале́нький", back: "small (masculine)", subtitle: "прикм." }, { front: "нови́й", back: "new (masculine)", subtitle: "прикм." }, { front: "нова́", back: "new (feminine)", subtitle: "прикм." }, { front: "нове́", back: "new (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стари́й", back: "old (masculine)", subtitle: "прикм." }, { front: "старе́", back: "old (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "га́рний", back: "nice, beautiful (masculine)", subtitle: "прикм." }, { front: "га́рна", back: "nice, beautiful (feminine)", subtitle: "прикм." }, { front: "пога́ний", back: "bad (masculine)", subtitle: "прикм." }, { front: "чи́стий", back: "clean (masculine)", subtitle: "прикм." }, { front: "чи́ста", back: "clean (feminine)", subtitle: "прикм." }, { front: "чи́сте", back: "clean (neuter)", subtitle: "прикм." }, { front: "брудни́й", back: "dirty (masculine)", subtitle: "прикм." }, { front: "дороги́й", back: "expensive (masculine)", subtitle: "прикм." }, { front: "доро́га", back: "expensive (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "деше́вий", back: "cheap (masculine)", subtitle: "прикм." }, { front: "сві́тлий", back: "light, bright (masculine)", subtitle: "прикм." }, { front: "сві́тла", back: "light, bright (feminine)", subtitle: "прикм." }, { front: "сві́тле", back: "light, bright (neuter)", subtitle: "прикм." }, { front: "те́мний", back: "dark (masculine)", subtitle: "прикм." }, { front: "зеле́ний", back: "green (masculine, hard-stem example)", subtitle: "прикм." }, { front: "си́ній", back: "blue (masculine, soft-stem)", subtitle: "прикм." }, { front: "невели́кий", back: "not big, small", subtitle: "прикм." }, { front: "і", back: "and (linking parallel qualities)", subtitle: "спол." }, { front: "а", back: "and/but (soft contrast)", subtitle: "спол." }, { front: "але́", back: "but (stronger contrast)", subtitle: "спол." }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ша́фа", back: "wardrobe", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "підло́га", back: "floor", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кущ", back: "bush", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "трава́", back: "grass", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "де́рево", back: "tree", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прикме́тник", back: "adjective", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "іме́нник", back: "noun", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "яки́й", back: "what kind? (masculine)", subtitle: "прикм." }, { front: "яка", back: "what kind? (feminine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "яке́", back: "what kind? (neuter)", subtitle: "прикм." }, { front: "вели́кий", back: "big (masculine)", subtitle: "прикм." }, { front: "вели́ка", back: "big (feminine)", subtitle: "прикм." }, { front: "вели́ке", back: "big (neuter)", subtitle: "прикм." }, { front: "мале́нький", back: "small (masculine)", subtitle: "прикм." }, { front: "мале́нька", back: "small (feminine)", subtitle: "прикм." }, { front: "мале́ньке", back: "small (neuter)", subtitle: "прикм." }, { front: "нови́й", back: "new (masculine)", subtitle: "прикм." }, { front: "нова́", back: "new (feminine)", subtitle: "прикм." }, { front: "нове́", back: "new (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стари́й", back: "old (masculine)", subtitle: "прикм." }, { front: "стара́", back: "old (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "старе́", back: "old (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "га́рний", back: "nice, beautiful (masculine)", subtitle: "прикм." }, { front: "га́рна", back: "nice, beautiful (feminine)", subtitle: "прикм." }, { front: "га́рне", back: "nice, beautiful (neuter)", subtitle: "прикм." }, { front: "пога́ний", back: "bad (masculine)", subtitle: "прикм." }, { front: "пога́на", back: "bad (feminine)", subtitle: "прикм." }, { front: "погане", back: "bad (neuter)", subtitle: "прикм." }, { front: "чи́стий", back: "clean (masculine)", subtitle: "прикм." }, { front: "чи́ста", back: "clean (feminine)", subtitle: "прикм." }, { front: "чи́сте", back: "clean (neuter)", subtitle: "прикм." }, { front: "брудни́й", back: "dirty (masculine)", subtitle: "прикм." }, { front: "брудна́", back: "dirty (feminine)", subtitle: "прикм." }, { front: "брудне́", back: "dirty (neuter)", subtitle: "прикм." }, { front: "дороги́й", back: "expensive (masculine)", subtitle: "прикм." }, { front: "доро́га", back: "expensive (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дороге́", back: "expensive (neuter)", subtitle: "прикм." }, { front: "деше́вий", back: "cheap (masculine)", subtitle: "прикм." }, { front: "деше́ва", back: "cheap (feminine)", subtitle: "прикм." }, { front: "деше́ве", back: "cheap (neuter)", subtitle: "прикм." }, { front: "сві́тлий", back: "light, bright (masculine)", subtitle: "прикм." }, { front: "сві́тла", back: "light, bright (feminine)", subtitle: "прикм." }, { front: "сві́тле", back: "light, bright (neuter)", subtitle: "прикм." }, { front: "те́мний", back: "dark (masculine)", subtitle: "прикм." }, { front: "те́мна", back: "dark (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "те́мне", back: "dark (neuter)", subtitle: "прикм." }, { front: "зру́чний", back: "comfortable (masculine)", subtitle: "прикм." }, { front: "зру́чна", back: "comfortable (feminine)", subtitle: "прикм." }, { front: "зру́чне", back: "comfortable (neuter)", subtitle: "прикм." }, { front: "яскра́вий", back: "bright, vivid (masculine)", subtitle: "прикм." }, { front: "яскра́ва", back: "bright, vivid (feminine)", subtitle: "прикм." }, { front: "яскра́ве", back: "bright, vivid (neuter)", subtitle: "прикм." }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "підло́га", back: "floor", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "плака́т", back: "poster", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "листі́вка", back: "postcard", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прикме́тник", back: "adjective", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "анто́нім", back: "antonym", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "і", back: "and (parallel — both things are true)", subtitle: "спол." }, { front: "а", back: "and/but (contrast between two things)", subtitle: "спол." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "спра́вді", back: "indeed, really", subtitle: "присл." }, { front: "подиви́сь", back: "look (imperative, singular)", subtitle: "дієсл." }]} />
 
 
 <!-- TAB:Зошит -->

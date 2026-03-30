@@ -2,7 +2,7 @@
   "module": "checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T00:48:30.409603Z",
+  "last_audit": "2026-03-30T21:25:44.292108Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-30T00:47:02.468866Z",
@@ -10,7 +10,7 @@
     "activities": "2026-03-30T00:40:10.548361Z",
     "vocabulary": "2026-03-30T00:41:50.815493Z",
     "research": null,
-    "plan": "2026-03-23T23:29:57.685165Z"
+    "plan": "2026-03-30T02:07:01.247958Z"
   },
   "gates": {
     "meta": {

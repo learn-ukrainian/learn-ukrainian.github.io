@@ -1,0 +1,420 @@
+version: '1.0'
+module: where-is-it
+level: a1
+inline:
+- id: fill-in
+  type: fill-in
+  instruction: Вставте правильну форму (Fill in the correct locative form)
+  items:
+  - sentence: Де Олена? — Вона зараз _____.
+    answer: в школі
+    options:
+    - в школі
+    - школа
+    - школи
+    - школою
+  - sentence: Де тато? — Він _____.
+    answer: у банку
+    options:
+    - у банку
+    - банк
+    - банку
+    - банком
+  - sentence: Де діти? — Вони граються _____.
+    answer: у парку
+    options:
+    - у парку
+    - парк
+    - паркові
+    - парком
+  - sentence: Де мама? — Вона _____.
+    answer: у лікарні
+    options:
+    - у лікарні
+    - лікарня
+    - лікарнею
+    - лікарню
+  - sentence: Де ви живете? — Ми живемо _____.
+    answer: у місті
+    options:
+    - у місті
+    - місто
+    - міста
+    - містом
+  - sentence: Де він купує хліб? — Він _____.
+    answer: у магазині
+    options:
+    - у магазині
+    - магазин
+    - магазину
+    - магазином
+  - sentence: Де Тарас? — Він _____.
+    answer: на роботі
+    options:
+    - на роботі
+    - робота
+    - роботи
+    - роботою
+  - sentence: Де Емілі та Назар? — Вони _____.
+    answer: на вулиці
+    options:
+    - на вулиці
+    - вулиця
+    - вулицею
+    - вулицю
+- id: quiz
+  type: quiz
+  instruction: В/у чи на? Оберіть правильний прийменник (В/у or на? Choose the correct
+    preposition)
+  items:
+  - question: _____ школі
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ роботі
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ вулиці
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ банку
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ вокзалі
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ пошті
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ місті
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ площі
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ кафе
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ магазині
+    options:
+    - в/у
+    - на
+    correct: 0
+- id: match-up
+  type: match-up
+  instruction: З'єднайте іменник з формою місцевого відмінку (Match the noun to its
+    locative form)
+  pairs:
+  - left: школа
+    right: в школі
+  - left: банк
+    right: у банку
+  - left: робота
+    right: на роботі
+  - left: вулиця
+    right: на вулиці
+  - left: магазин
+    right: у магазині
+  - left: лікарня
+    right: у лікарні
+  - left: місто
+    right: у місті
+  - left: парк
+    right: у парку
+- id: quiz
+  type: quiz
+  instruction: Де це? Оберіть правильну форму (Where is it? Choose the correct locative
+    form)
+  items:
+  - question: Він читає книгу _____. (in the park)
+    options:
+    - у парку
+    - парк
+    - паркові
+    - парком
+    correct: 0
+  - question: Вона навчається _____. (at school)
+    options:
+    - школа
+    - школою
+    - в школі
+    - школи
+    correct: 2
+  - question: Я їм _____. (at the café)
+    options:
+    - кафе
+    - до кафе
+    - в кафе
+    - на кафе
+    correct: 2
+  - question: Поїзд зупиняється _____. (at the train station)
+    options:
+    - вокзал
+    - у вокзалі
+    - на вокзалі
+    - вокзалом
+    correct: 2
+  - question: Листи отримують _____. (at the post office)
+    options:
+    - пошту
+    - поштою
+    - у пошті
+    - на пошті
+    correct: 3
+  - question: Ми живемо _____. (in the city)
+    options:
+    - місто
+    - у місті
+    - на місті
+    - міста
+    correct: 1
+workbook:
+- type: quiz
+  instruction: В/у чи на? Оберіть правильний прийменник для кожного місця (В/у or
+    на? Choose the correct preposition for each place)
+  items:
+  - question: _____ школі (school)
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ роботі (work)
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ вокзалі (train station)
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ банку (bank)
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ площі (square)
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ кафе (café)
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ пошті (post office)
+    options:
+    - в/у
+    - на
+    correct: 1
+  - question: _____ магазині (shop)
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ лікарні (hospital)
+    options:
+    - в/у
+    - на
+    correct: 0
+  - question: _____ вулиці (street)
+    options:
+    - в/у
+    - на
+    correct: 1
+- type: fill-in
+  instruction: Відповідайте на питання Де? (Answer the question Де? — Where?)
+  items:
+  - sentence: Де Олена? — Олена _____.
+    answer: в школі
+    options:
+    - в школі
+    - школа
+    - школи
+    - школою
+  - sentence: Де Тарас? — Тарас _____.
+    answer: на роботі
+    options:
+    - на роботі
+    - робота
+    - роботи
+    - роботою
+  - sentence: Де Марія? — Марія _____.
+    answer: у лікарні
+    options:
+    - у лікарні
+    - лікарня
+    - лікарнею
+    - лікарню
+  - sentence: Де діти? — Діти _____.
+    answer: у парку
+    options:
+    - у парку
+    - парк
+    - паркові
+    - парком
+  - sentence: Де ти? — Я _____.
+    answer: у магазині
+    options:
+    - у магазині
+    - магазин
+    - магазину
+    - магазином
+  - sentence: Де кіт? — Кіт _____.
+    answer: на вулиці
+    options:
+    - на вулиці
+    - вулиця
+    - вулицею
+    - вулицю
+  - sentence: Де Назар? — Назар _____.
+    answer: у банку
+    options:
+    - у банку
+    - банк
+    - банком
+    - банків
+  - sentence: Де Емілі? — Емілі _____.
+    answer: у місті
+    options:
+    - у місті
+    - місто
+    - міста
+    - містом
+- type: match-up
+  instruction: З'єднайте іменник у називному відмінку з формою місцевого відмінку
+    (Match nominative to locative form)
+  pairs:
+  - left: школа
+    right: в школі
+  - left: банк
+    right: у банку
+  - left: робота
+    right: на роботі
+  - left: вулиця
+    right: на вулиці
+  - left: магазин
+    right: у магазині
+  - left: лікарня
+    right: у лікарні
+  - left: місто
+    right: у місті
+  - left: площа
+    right: на площі
+- type: quiz
+  instruction: Де це? Оберіть правильну форму місцевого відмінку (Where is it? Choose
+    the correct locative form)
+  items:
+  - question: Він читає книгу _____. (in the park)
+    options:
+    - у парку
+    - парк
+    - паркові
+    - парком
+    correct: 0
+  - question: Вона їсть _____. (at the café)
+    options:
+    - кафе
+    - до кафе
+    - в кафе
+    - на кафе
+    correct: 2
+  - question: Поїзд зупиняється _____. (at the train station)
+    options:
+    - вокзал
+    - вокзалу
+    - на вокзалі
+    - у вокзалі
+    correct: 2
+  - question: Я отримую листи _____. (at the post office)
+    options:
+    - пошту
+    - поштою
+    - у пошті
+    - на пошті
+    correct: 3
+  - question: Ми живемо _____. (in the city)
+    options:
+    - місто
+    - у місті
+    - на місті
+    - міста
+    correct: 1
+  - question: Вона стоїть _____. (on the square)
+    options:
+    - площа
+    - площею
+    - у площі
+    - на площі
+    correct: 3
+- type: group-sort
+  instruction: Розподіліть місця за прийменником (Sort the places by their preposition
+    — в/у or на)
+  groups:
+  - label: в / у
+    items:
+    - школа
+    - банк
+    - магазин
+    - лікарня
+    - місто
+    - кафе
+  - label: на
+    items:
+    - робота
+    - вулиця
+    - площа
+    - вокзал
+    - пошта
+    - урок
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: «На Україні» — це правильна форма.
+    correct: false
+    explanation: 'Неправильно. Правильно: «в Україні». Ukraine is a sovereign state
+      — always «в Україні», never «на Україні».'
+  - statement: Слово «кафе» змінює закінчення у місцевому відмінку (наприклад, «в
+      кафі»).
+    correct: false
+    explanation: Неправильно. «Кафе» is an indeclinable noun — it never changes its
+      ending. The correct form is always «в кафе».
+  - statement: Місцевий відмінок відповідає на питання «Де?».
+    correct: true
+    explanation: Правильно. The locative case (М.в.) always answers the question «Де?»
+      (Where?).
+  - statement: Місцевий відмінок може стояти в реченні без прийменника.
+    correct: false
+    explanation: Неправильно. The locative case ALWAYS requires a preposition (в/у
+      or на). It never stands alone in a sentence.
+  - statement: Прийменник «на» вживається тільки з відкритими просторами.
+    correct: false
+    explanation: 'Не зовсім. «На» is also used by convention: «на роботі», «на вокзалі»,
+      «на пошті» — these are set phrases, not always open spaces.'
+  - statement: Міста та країни завжди вживаються з прийменником «в/у».
+    correct: true
+    explanation: 'Правильно. Cities and countries always use «в/у»: «в Україні», «у
+      Києві», «у Харкові», «в Одесі».'
+  - statement: Іменники жіночого роду у місцевому відмінку зазвичай мають закінчення
+      «-і».
+    correct: true
+    explanation: 'Правильно. Feminine nouns usually take «-і» in the locative: школа
+      → в школі, вулиця → на вулиці, лікарня → у лікарні.'

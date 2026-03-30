@@ -1,0 +1,145 @@
+vocabulary:
+- word: куди́
+  translation: where to (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to go by vehicle/transport
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: робо́та
+  translation: work, job
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: магази́н
+  translation: store, shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́шта
+  translation: post office
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мі́сто
+  translation: city, town
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Оде́са
+  translation: Odesa (city in southern Ukraine)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: залиша́тися
+  translation: to stay, to remain
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вдо́ма
+  translation: at home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: знахідний відмінок
+  translation: accusative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then, afterwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зустрі́немося
+  translation: let's meet, we will meet
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Куди ти йдеш?
+  translation: Where are you going? (on foot)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Куди ти їдеш?
+  translation: Where are you going? (by transport)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я йду в/у...
+  translation: I'm going to... (on foot)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я їду в/у...
+  translation: I'm going to... (by transport)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ході́мо
+  translation: let's go (on foot)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

@@ -1,0 +1,272 @@
+vocabulary:
+- word: у/в
+  translation: in, at (alternating preposition — у before/after consonant clusters,
+    в near vowels)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: і/й
+  translation: and (alternating conjunction — і between consonants, й near vowels)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: із
+  translation: with, from (variant between two consonant sounds)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: Ки́їв
+  translation: Kyiv (capital of Ukraine)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Оде́са
+  translation: Odesa (city in southern Ukraine)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ваго́н
+  translation: train car, wagon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: свя́то
+  translation: holiday, celebration
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сад
+  translation: garden
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: город
+  translation: vegetable garden
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кві́тка
+  translation: flower
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кві́ти
+  translation: flowers
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: есе́й
+  translation: essay
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: секре́т
+  translation: secret
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мо́ва
+  translation: language
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́ма
+  translation: mom, mother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: та́то
+  translation: dad, father
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: голосни́й
+  translation: 'vowel (also: loud — contextual meaning here is vowel)'
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation (of sound variants)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: милозву́чність
+  translation: euphony, melodiousness (the principle behind Ukrainian sound alternation)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пра́вильно
+  translation: correct, correctly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ва́жко
+  translation: hard, difficult
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ле́гко
+  translation: easy, easily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ти́хо
+  translation: quietly, silently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: га́рно
+  translation: nicely, beautifully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: warm, warmly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: да́лі
+  translation: next, further on, continue
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тут
+  translation: here
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вона́
+  translation: she
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жи́ти
+  translation: to live
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: звуча́ти
+  translation: to sound
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверну́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зрозумі́в
+  translation: understood, got it (past tense, m)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по-спра́вжньому
+  translation: truly, genuinely, really
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Зі святом!
+  translation: Happy holiday! Congratulations on the holiday!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Слухай!
+  translation: Listen! Hey, listen! (informal imperative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: солов'їна мова
+  translation: nightingale language (poetic name for Ukrainian)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

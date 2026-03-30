@@ -1,0 +1,277 @@
+vocabulary:
+- word: пого́да
+  translation: weather
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хо́лодно
+  translation: it's cold (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: it's warm (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: спекотно
+  translation: it's hot (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: прохоло́дно
+  translation: it's cool (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хма́рно
+  translation: it's cloudy (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: я́сно
+  translation: it's clear (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: со́нячно
+  translation: it's sunny (weather adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ві́тер
+  translation: wind
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: со́нце
+  translation: sun
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: гра́дус
+  translation: degree (temperature)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сього́дні
+  translation: today
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вчо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: іде дощ
+  translation: it's raining (lit. rain goes)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іде сніг
+  translation: it's snowing (lit. snow goes)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дме вітер
+  translation: the wind is blowing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: світить сонце
+  translation: the sun is shining
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка сьогодні погода?
+  translation: What's the weather like today?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бу́де
+  translation: will be (future marker)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зима́
+  translation: winter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: весна́
+  translation: spring
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́то
+  translation: summer
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: о́сінь
+  translation: autumn
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: взи́мку
+  translation: in winter
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: навесні́
+  translation: in spring
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: влі́тку
+  translation: in summer
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: восени́
+  translation: in autumn
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: плюс
+  translation: plus (positive temperature)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: мі́нус
+  translation: minus (negative temperature)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: без
+  translation: without
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: без вітру
+  translation: without wind
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: right now, currently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тоді́
+  translation: then, in that case
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чому́
+  translation: why?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: краси́во
+  translation: it's beautiful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ідеа́льна
+  translation: ideal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: все
+  translation: everything
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бі́ле
+  translation: white (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зеле́не
+  translation: green (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жо́вте
+  translation: yellow (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ли́стя
+  translation: leaves (collective)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кві́тне
+  translation: blooms, is in bloom
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: гарний день
+  translation: a nice day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дуже холодно
+  translation: very cold
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка твоя ідеальна погода?
+  translation: What's your ideal weather?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

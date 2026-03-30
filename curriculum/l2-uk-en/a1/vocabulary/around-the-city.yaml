@@ -1,0 +1,295 @@
+vocabulary:
+- word: ви́бачте
+  translation: excuse me (formal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хвили́на
+  translation: minute
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: райо́н
+  translation: neighborhood, district
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: діста́тися
+  translation: to get to, to reach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іді́ть
+  translation: go! (on foot, formal imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́дьте
+  translation: go! (by vehicle, formal imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по́руч
+  translation: nearby, next to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пря́мо
+  translation: straight ahead
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: напра́во
+  translation: to the right
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: налі́во
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: на розі
+  translation: at the corner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дале́ко
+  translation: far
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: near, close
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: метро́
+  translation: metro, subway
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: авто́бусом
+  translation: by bus (instrumental)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупи́нка
+  translation: stop (bus/tram stop)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пло́ща
+  translation: square (city square)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ву́лиця
+  translation: street
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: магази́н
+  translation: store, shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проспе́кт
+  translation: avenue, boulevard
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перехо́жий
+  translation: passer-by, pedestrian
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тури́ст
+  translation: tourist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: робо́та
+  translation: work, job
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сто
+  translation: city, town
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: де?
+  translation: where? (static location)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to? (motion toward)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first, at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then, afterwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: на метро
+  translation: by metro, on the metro
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іду пішки
+  translation: I walk, I go on foot
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їду автобусом
+  translation: I ride by bus
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля мого дому
+  translation: near my house
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: далеко від
+  translation: far from
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: близько від
+  translation: near, close to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на околиці
+  translation: on the outskirts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: треба їхати
+  translation: must go (by vehicle), need to take transport
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: можна піти пішки
+  translation: can go on foot, it's possible to walk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: де знаходиться...?
+  translation: where is...? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять хвилин пішки
+  translation: five minutes on foot
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

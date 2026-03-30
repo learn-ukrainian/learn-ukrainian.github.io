@@ -1,0 +1,343 @@
+version: '1.0'
+module: euphony
+level: a1
+inline:
+- id: quiz-u-or-v
+  type: quiz
+  instruction: 'Оберіть правильний варіант (Choose the correct form: у or в)'
+  items:
+  - question: Я живу ___ Києві.
+    options:
+    - у
+    - в
+    correct: 1
+  - question: Тарас живе ___ Львові.
+    options:
+    - у
+    - в
+    correct: 0
+  - question: Таня працює ___ офісі.
+    options:
+    - у
+    - в
+    correct: 1
+  - question: ___ мене є квіти.
+    options:
+    - У
+    - В
+    correct: 0
+  - question: Він ___ парку.
+    options:
+    - у
+    - в
+    correct: 0
+  - question: Ми ___ театрі.
+    options:
+    - у
+    - в
+    correct: 1
+  - question: ___ Одесі тепло.
+    options:
+    - У
+    - В
+    correct: 1
+  - question: Вона їде ___ вагоні.
+    options:
+    - у
+    - в
+    correct: 0
+  - question: Максим ___ банку.
+    options:
+    - у
+    - в
+    correct: 0
+  - question: ___ саду тихо.
+    options:
+    - У
+    - В
+    correct: 0
+- id: quiz-i-or-y
+  type: quiz
+  instruction: 'Оберіть правильний варіант (Choose the correct form: і or й)'
+  items:
+  - question: Мама ___ тато.
+    options:
+    - і
+    - й
+    correct: 1
+  - question: Брат ___ сестра.
+    options:
+    - і
+    - й
+    correct: 0
+  - question: Тарас ___ Максим.
+    options:
+    - і
+    - й
+    correct: 0
+  - question: Ти ___ Олена.
+    options:
+    - і
+    - й
+    correct: 1
+  - question: Вона ___ він.
+    options:
+    - і
+    - й
+    correct: 1
+  - question: Максим ___ Семен.
+    options:
+    - і
+    - й
+    correct: 0
+  - question: Офіс ___ парк.
+    options:
+    - і
+    - й
+    correct: 0
+  - question: Дарина ___ Олексій.
+    options:
+    - і
+    - й
+    correct: 1
+- id: fill-in-z-iz-zi
+  type: fill-in
+  instruction: 'Вставте правильну форму: з, із або зі (Fill in: з, із, or зі)'
+  items:
+  - sentence: Я ___ Одеси.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Максим ___ Семеном.
+    answer: із
+    options:
+    - з
+    - із
+    - зі
+  - sentence: ___ святом!
+    answer: Зі
+    options:
+    - З
+    - Із
+    - Зі
+  - sentence: Вона прийшла ___ школи.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Він ___ братом.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Тарас ___ Києва.
+    answer: із
+    options:
+    - з
+    - із
+    - зі
+- id: quiz-which-sounds-natural
+  type: quiz
+  instruction: Яке речення звучить природно? (Which sentence sounds natural?)
+  items:
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Я живу в Львові.
+    - Я живу у Львові.
+    correct: 1
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Він живе в Києві.
+    - Він живе у Києві.
+    correct: 0
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Вона й він.
+    - Вона і він.
+    correct: 0
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Брат і сестра.
+    - Брат й сестра.
+    correct: 0
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Зі святом!
+    - З святом!
+    correct: 0
+  - question: 'Оберіть правильне речення:'
+    options:
+    - Максим із Семеном.
+    - Максим з Семеном.
+    correct: 0
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the euphony error)
+  items:
+  - sentence: Вона у парку.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - у
+    - в
+    explanation: '«Вона» закінчується на голосну А → вживається «в»: «Вона в парку».'
+  - sentence: Я живу у Києві.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - у
+    - в
+    explanation: «Живу» закінчується на голосну У, «Київ» не починається на в/ф →
+      вживається «в».
+  - sentence: Таня в Львові.
+    error: в
+    correction: у
+    error_type: word
+    options:
+    - у
+    - в
+    explanation: '«Львів» починається на льв — важкий збіг, тому завжди «у»: «Таня
+      у Львові».'
+  - sentence: Мама і тато.
+    error: і
+    correction: й
+    error_type: word
+    options:
+    - і
+    - й
+    explanation: «Мама» закінчується на А (голосна), «тато» починається на Т (перед
+      голосною) → «й».
+  - sentence: Брат й сестра.
+    error: й
+    correction: і
+    error_type: word
+    options:
+    - і
+    - й
+    explanation: «Брат» закінчується на приголосну Т, «сестра» починається на приголосну
+      С → «і».
+  - sentence: Максим з Семеном.
+    error: з
+    correction: із
+    error_type: word
+    options:
+    - з
+    - із
+    - зі
+    explanation: «Максим» закінчується на приголосну М, «Семен» починається на приголосну
+      С → «із».
+- type: group-sort
+  instruction: Розподіліть речення за формою прийменника (Sort by the correct preposition
+    form)
+  groups:
+  - label: У
+    items:
+    - Тарас ___ Львові
+    - Максим ___ банку
+    - Він їде ___ вагоні
+    - ___ саду тихо (початок речення)
+    - Брат ___ театрі
+    - Олексій ___ Львові
+  - label: В
+    items:
+    - Я живу ___ Києві
+    - Таня ___ офісі
+    - Ми ___ театрі
+    - ___ Одесі тепло (початок речення)
+    - Вона ___ парку
+    - Дарина ___ саду
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: «У/в» чергуються, щоб уникнути важкого збігу приголосних.
+    correct: true
+    explanation: 'Так — це основа милозвучності: мова обирає форму, яка легше вимовляється.'
+  - statement: «Й» вживається між двома приголосними.
+    correct: false
+    explanation: Ні — «й» вживається, коли поряд є голосна. «І» вживається між приголосними.
+  - statement: «Зі» вживається перед важкими збігами приголосних, зокрема зі, ш, щ.
+    correct: true
+    explanation: Так — «зі мною», «зі святом», «зі школи».
+  - statement: На початку речення перед приголосною завжди вживається «в».
+    correct: false
+    explanation: 'Ні — на початку речення перед приголосною вживається «у»: «У мене
+      є квіти».'
+  - statement: Перед словами, що починаються на «в» або «ф», вживається «у».
+    correct: true
+    explanation: 'Так — «у вагоні», «у фоє» — щоб уникнути подвоєння звуків: в+в або
+      в+ф.'
+  - statement: «З» — це основна форма прийменника з/із/зі.
+    correct: true
+    explanation: Так — «з» вживається за замовчуванням; «із» та «зі» лише при важких
+      збігах.
+- type: fill-in
+  instruction: 'Вставте правильну форму: у/в, і/й або з/із/зі (Fill in the correct
+    euphony form)'
+  items:
+  - sentence: Дарина ___ Олексій сидять за столом.
+    answer: й
+    options:
+    - і
+    - й
+  - sentence: Я ___ Львові.
+    answer: у
+    options:
+    - у
+    - в
+  - sentence: Вона прийшла ___ мною.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Офіс ___ парк поряд.
+    answer: і
+    options:
+    - і
+    - й
+  - sentence: Таня ___ другом.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Ми ___ театрі.
+    answer: в
+    options:
+    - у
+    - в
+  - sentence: Тарас ___ Семен — друзі.
+    answer: і
+    options:
+    - і
+    - й
+  - sentence: ___ Одесі тепло.
+    answer: В
+    options:
+    - У
+    - В
+- type: match-up
+  instruction: З'єднайте правило з прикладом (Match each rule to its example)
+  pairs:
+  - left: в — після голосної перед приголосною
+    right: живу в Києві
+  - left: у — після приголосної перед приголосною
+    right: Тарас у Львові
+  - left: у — перед словом на льв/в/ф
+    right: їду у вагоні
+  - left: й — між голосними
+    right: мама й тато
+  - left: і — між приголосними
+    right: брат і сестра
+  - left: зі — перед важким збігом
+    right: зі святом
+  - left: із — між двома приголосними
+    right: Максим із Семеном
+  - left: з — основна форма перед голосною
+    right: я з Одеси

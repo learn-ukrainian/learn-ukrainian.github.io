@@ -1,0 +1,318 @@
+version: '1.0'
+module: weather
+level: a1
+inline:
+- id: fill-in-weather-season
+  type: fill-in
+  instruction: Вставте правильне слово (Choose the correct word)
+  items:
+  - sentence: Сьогодні мінус десять — дуже ____.
+    answer: холодно
+    options:
+    - холодно
+    - тепло
+    - спекотно
+  - sentence: Плюс тридцять — це дуже ____.
+    answer: спекотно
+    options:
+    - спекотно
+    - прохолодно
+    - холодно
+  - sentence: Плюс п'ятнадцять — сьогодні ____.
+    answer: тепло
+    options:
+    - тепло
+    - холодно
+    - прохолодно
+  - sentence: Плюс десять — сьогодні ____.
+    answer: прохолодно
+    options:
+    - прохолодно
+    - спекотно
+    - тепло
+  - sentence: Небо в хмарах. Сьогодні ____.
+    answer: хмарно
+    options:
+    - хмарно
+    - сонячно
+    - ясно
+  - sentence: Сонце світить. Сьогодні ____.
+    answer: сонячно
+    options:
+    - сонячно
+    - хмарно
+    - прохолодно
+  - sentence: Сьогодні сонячно і ____.
+    answer: ясно
+    options:
+    - ясно
+    - хмарно
+    - холодно
+- id: fill-in-weather-for-season
+  type: fill-in
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - sentence: Взимку часто ____.
+    answer: іде сніг
+    options:
+    - іде сніг
+    - іде дощ
+    - світить сонце
+  - sentence: Влітку дуже ____.
+    answer: спекотно
+    options:
+    - спекотно
+    - холодно
+    - хмарно
+  - sentence: Восени часто ____.
+    answer: іде дощ
+    options:
+    - іде дощ
+    - іде сніг
+    - сонячно
+  - sentence: Навесні ____ і красиво.
+    answer: тепло
+    options:
+    - тепло
+    - холодно
+    - спекотно
+  - sentence: Сьогодні мінус п'ять, дуже ____.
+    answer: холодно
+    options:
+    - холодно
+    - тепло
+    - спекотно
+  - sentence: Сьогодні плюс двадцять п'ять, ____.
+    answer: тепло
+    options:
+    - тепло
+    - прохолодно
+    - холодно
+- id: match-weather-context
+  type: match-up
+  instruction: З'єднайте пари (Match the pairs)
+  pairs:
+  - left: іде дощ
+    right: восени і навесні
+  - left: іде сніг
+    right: зима
+  - left: світить сонце
+    right: сонячно
+  - left: дме вітер
+    right: прохолодно
+  - left: мінус десять
+    right: холодно
+  - left: плюс тридцять
+    right: спекотно
+  - left: плюс двадцять
+    right: тепло
+  - left: хмарно
+    right: сонце не світить
+- id: fill-in-dialogue-weather
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: — Яка сьогодні ____ ? — Сьогодні тепло.
+    answer: погода
+    options:
+    - погода
+    - сонце
+    - дощ
+  - sentence: — Завтра ____ сонячно. — Добре, гуляємо!
+    answer: буде
+    options:
+    - буде
+    - є
+    - був
+  - sentence: — Яка пора року тобі ____ ? — Літо.
+    answer: подобається
+    options:
+    - подобається
+    - любить
+    - робить
+  - sentence: — Чому ти любиш літо? — Тому що влітку ____.
+    answer: сонячно
+    options:
+    - сонячно
+    - холодно
+    - хмарно
+  - sentence: — Взимку у Києві ____. — Так, і йде сніг!
+    answer: холодно
+    options:
+    - холодно
+    - спекотно
+    - тепло
+  - sentence: — Я люблю літо, тому що ____. — Я теж!
+    answer: спекотно
+    options:
+    - спекотно
+    - холодно
+    - хмарно
+workbook:
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Взимку холодно і йде сніг.
+    correct: true
+    explanation: Yes — взимку холодно. Іде сніг. Все біле.
+  - statement: Навесні холодно і йде сніг.
+    correct: false
+    explanation: No — навесні тепло і іде дощ. Все зелене.
+  - statement: Влітку спекотно і світить сонце.
+    correct: true
+    explanation: Yes — влітку спекотно. Світить сонце. Все квітне.
+  - statement: Восени тепло і сонячно.
+    correct: false
+    explanation: No — восени прохолодно. Дме вітер. Листя жовте.
+  - statement: Плюс тридцять — це дуже спекотно.
+    correct: true
+    explanation: Yes — плюс тридцять = спекотно. It's the hottest temperature adverb.
+  - statement: Мінус десять — це тепло.
+    correct: false
+    explanation: No — мінус десять = дуже холодно. Negative temperatures are always
+      cold.
+- type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort words into categories)
+  groups:
+  - label: Холодна пора (Cold seasons)
+    items:
+    - взимку
+    - холодно
+    - іде сніг
+    - восени
+    - іде дощ
+    - прохолодно
+  - label: Тепла пора (Warm seasons)
+    items:
+    - влітку
+    - спекотно
+    - сонячно
+    - навесні
+    - тепло
+    - ясно
+- type: unjumble
+  instruction: Складіть речення (Put the words in order)
+  items:
+  - words:
+    - сьогодні
+    - холодно
+    - і
+    - йде
+    - дощ
+    correct_order:
+    - Сьогодні
+    - холодно
+    - і
+    - йде
+    - дощ
+  - words:
+    - завтра
+    - буде
+    - тепло
+    - і
+    - сонячно
+    correct_order:
+    - Завтра
+    - буде
+    - тепло
+    - і
+    - сонячно
+  - words:
+    - взимку
+    - іде
+    - сніг
+    correct_order:
+    - Взимку
+    - іде
+    - сніг
+  - words:
+    - влітку
+    - спекотно
+    - і
+    - світить
+    - сонце
+    correct_order:
+    - Влітку
+    - спекотно
+    - і
+    - світить
+    - сонце
+  - words:
+    - яка
+    - сьогодні
+    - погода
+    correct_order:
+    - Яка
+    - сьогодні
+    - погода
+  - words:
+    - мені
+    - подобається
+    - осінь
+    correct_order:
+    - Мені
+    - подобається
+    - осінь
+  - words:
+    - восени
+    - прохолодно
+    - і
+    - дме
+    - вітер
+    correct_order:
+    - Восени
+    - прохолодно
+    - і
+    - дме
+    - вітер
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: It's raining.
+    options:
+    - text: Іде дощ.
+      correct: true
+    - text: Іде сніг.
+      correct: false
+    - text: Дме вітер.
+      correct: false
+  - source: Tomorrow it will be sunny.
+    options:
+    - text: Завтра буде сонячно.
+      correct: true
+    - text: Вчора було сонячно.
+      correct: false
+    - text: Завтра хмарно.
+      correct: false
+  - source: What's the weather like today?
+    options:
+    - text: Яка сьогодні погода?
+      correct: true
+    - text: Яка завтра погода?
+      correct: false
+    - text: Яка сьогодні пора року?
+      correct: false
+  - source: In winter it's cold.
+    options:
+    - text: Взимку холодно.
+      correct: true
+    - text: Влітку холодно.
+      correct: false
+    - text: Взимку тепло.
+      correct: false
+  - source: The wind is blowing.
+    options:
+    - text: Дме вітер.
+      correct: true
+    - text: Іде вітер.
+      correct: false
+    - text: Світить вітер.
+      correct: false
+  - source: I like autumn because it's cool.
+    options:
+    - text: Мені подобається осінь, тому що восени прохолодно.
+      correct: true
+    - text: Мені подобається літо, тому що влітку прохолодно.
+      correct: false
+    - text: Мені подобається осінь, тому що восени спекотно.
+      correct: false

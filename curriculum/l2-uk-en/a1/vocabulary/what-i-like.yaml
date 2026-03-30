@@ -1,0 +1,253 @@
+vocabulary:
+- word: люби́ти
+  translation: to love/like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люблю́
+  translation: I like/love (1st person singular of любити)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лю́биш
+  translation: you like/love (2nd person singular of любити)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to be pleasing (used as 'to like')
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk, to hang out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play (a game, an instrument)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співа́ти
+  translation: to sing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фільм
+  translation: film
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: борщ
+  translation: borshch (traditional Ukrainian beet soup)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: варе́ники
+  translation: varenyky (stuffed dumplings)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: джаз
+  translation: jazz
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́суд
+  translation: dishes, kitchenware
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мити посуд
+  translation: to wash dishes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гла́дити
+  translation: to iron
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: інфініти́в
+  translation: infinitive (base form of a verb)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Я люблю...
+  translation: I like... (used with infinitive for activities)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені подобається...
+  translation: I like... (used with nouns for things/places)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені не подобається...
+  translation: I don't like... (negated)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не люблю...
+  translation: I don't like... (negated, used with infinitive)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти любиш робити?
+  translation: What do you like to do?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що тобі подобається?
+  translation: What do you like?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тобі подобається?
+  translation: Do you like it?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ти любиш читати?
+  translation: Do you like to read?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати в ігри
+  translation: to play games
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати в шахи
+  translation: to play chess
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати на гітарі
+  translation: to play guitar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сма́чно
+  translation: delicious, yummy
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: wonderful, great
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ціка́во
+  translation: interesting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пра́вда
+  translation: really? is that true? (as a question); truth
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: класична музика
+  translation: classical music
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені теж
+  translation: me too, I also
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
