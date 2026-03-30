@@ -3066,6 +3066,7 @@ def step_review(content_path: Path, level: str, module_num: int,
     plan_content = plan_path.read_text("utf-8") if plan_path.exists() else ""
     plan = yaml.safe_load(plan_content) if plan_content else {}
     raw_content = content_path.read_text("utf-8")
+    raw_word_count = len(raw_content.split())
 
     # Strip enrichment (tabs, словník, workbook, resources, videos) before review.
     # The reviewer should evaluate the WRITER's prose, not ENRICH-generated content.
@@ -3074,6 +3075,25 @@ def step_review(content_path: Path, level: str, module_num: int,
     if tab_marker != -1:
         generated_content = generated_content[:tab_marker].strip()
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
+
+    # Safety check: if the body is empty but the raw file had content, enrich
+    # ate the prose. Re-read and try without tab stripping.
+    if len(generated_content.split()) < 50 and raw_word_count > 200:
+        _log(f"  ⚠️  Body extraction yielded {len(generated_content.split())} words "
+             f"but raw file has {raw_word_count} — possible enrich corruption. "
+             f"Falling back to raw content (stripping словнік table).")
+        # Fall back: use raw content, just strip the markdown table and tab markers
+        generated_content = raw_content
+        # Remove the Словник table (starts with | Сло́во | or similar)
+        generated_content = re.sub(
+            r'\n### Обов.*?(?=\n<!-- TAB:|\n## |\Z)', '', generated_content, flags=re.DOTALL,
+        )
+        for marker in ("<!-- TAB:Урок -->", "<!-- TAB:Словник -->",
+                        "<!-- TAB:Зошит -->", "<!-- TAB:Ресурси -->"):
+            generated_content = generated_content.replace(marker, "")
+        # Strip workbook placeholder
+        generated_content = re.sub(r':::note\n.*?:::', '', generated_content, flags=re.DOTALL)
+        generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
     # Strip video embeds injected by ENRICH — reviewer must not see/score these
     # Covers: <YouTubeVideo ... />, ### Відео — Video sections, video sub-headers

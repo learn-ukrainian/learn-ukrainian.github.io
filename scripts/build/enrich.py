@@ -607,6 +607,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         Tuple of (enriched content, list of enrichment actions taken).
     """
     actions: list[str] = []
+    original_content = content  # Preserve for safety check
 
     # 1. Revert any previously converted dialogues back to blockquote format,
     # then re-format. This ensures idempotent dialogue processing.
@@ -670,6 +671,19 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
 
     # 5. Assemble with tab markers
     parts = []
+
+    # Safety: if content stripping left an empty body, something is wrong.
+    # Refuse to produce an enriched file with empty Урок tab.
+    # Real modules have 1000+ words. A completely empty body after stripping
+    # means the regex ate the prose — refuse to enrich to prevent data loss.
+    if not content.strip():
+        import logging
+        logging.error(
+            f"enrich: body content is only {len(content.strip().split())} words "
+            f"after stripping — refusing to enrich (would lose prose). "
+            f"First 200 chars: {content.strip()[:200]!r}"
+        )
+        return original_content, []
 
     # Tab 1: Урок (the prose content with inline exercises and videos)
     parts.append("<!-- TAB:Урок -->")
