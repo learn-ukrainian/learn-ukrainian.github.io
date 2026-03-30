@@ -20,7 +20,7 @@ dialogue_situations:
     crafts: вишиванка (f, embroidered shirt), глечик (m, jug), намисто (n, necklace),
     писанки (pl, decorated eggs). Describe, count, point, buy.'
   speakers:
-  - Ваня (tourist)
+  - Іванко (tourist)
   - Катя (local friend)
   motivation: 'Consolidation with Ukrainian cultural objects: вишиванка, глечик, писанка'
 content_outline:

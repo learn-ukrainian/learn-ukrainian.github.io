@@ -17,7 +17,7 @@ objectives:
 dialogue_situations:
 - setting: 'Police report — describing a stolen велосипед (m, bicycle): Я припаркував
     велосипед біля магазину (m). Потім зайшов у кав''ярню (f). Коли вийшов, велосипед
-    зник. Бачив чоловіка (m) в синій куртці (f).'
+    зник. Бачив чоловіка (m) в куртці (f) та кепці (f, cap).'
   speakers:
   - Свідок (witness)
   - Поліцейський

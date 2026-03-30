@@ -15,13 +15,13 @@ objectives:
 - Recognize common classroom and daily-life imperatives
 - Distinguish ти-imperatives from ви-imperatives
 dialogue_situations:
-- setting: 'Rearranging a classroom before an event — giving instructions: Постав
-    стілець (m) тут! Перенеси дошку (f)! Відкрий вікно (n)! Принеси маркер (m)! Поклади
-    книги (pl) на стіл!'
+- setting: 'Volleyball practice — coach gives warm-up instructions: Принеси м''яч (m,
+    ball)! Розстав конуси (pl, cones)! Натягни сітку (f, net)! Поклади рушники (pl,
+    towels) на лавку (f, bench)! Відкрий двері (pl)!'
   speakers:
-  - Вчитель (teacher)
-  - Учні (students)
-  motivation: Imperative with стілець(m), дошка(f), вікно(n), маркер(m), книги(pl)
+  - Тренер (coach)
+  - Гравці (players)
+  motivation: Imperative with м'яч(m), конуси(pl), сітка(f), рушники(pl), лавка(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

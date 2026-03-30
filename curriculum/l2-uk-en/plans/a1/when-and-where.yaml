@@ -15,13 +15,13 @@ objectives:
 - Distinguish що/де/коли as question words vs conjunctions
 - Combine main clause + subordinate clause naturally
 dialogue_situations:
-- setting: 'Explaining to a lost friend how to find your apartment: Коли побачиш аптеку
-    (f), поверни ліворуч. Де побачиш парк (m), зупинись. Будинок (m), що стоїть біля
-    дерева (n).'
+- setting: 'Explaining to a lost friend how to find your apartment: Коли побачиш фонтан
+    (m, fountain), поверни ліворуч. Де побачиш парк (m), зупинись. Будинок (m), що
+    стоїть біля дерева (n).'
   speakers:
   - Господар (on phone)
   - Гість (lost outside)
-  motivation: 'Complex sentences: що, де, коли with аптека(f), парк(m), будинок(m)'
+  motivation: 'Complex sentences: що, де, коли with фонтан(m), парк(m), будинок(m)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

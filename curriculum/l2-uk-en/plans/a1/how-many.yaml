@@ -16,7 +16,7 @@ objectives:
 - Read and say Ukrainian phone numbers
 dialogue_situations:
 - setting: 'At a bakery — ordering bread, pastries, and cakes for a family gathering.
-    Count: хліб (m, bread), булочка (f, bun), тістечко (n, pastry). Prices in гривні.
+    Count: один хліб (m, bread), одна булочка (f, bun), одне тістечко (n, pastry). Prices in гривні.
     Ask: Скільки коштує торт? А три булочки?'
   speakers:
   - Покупець

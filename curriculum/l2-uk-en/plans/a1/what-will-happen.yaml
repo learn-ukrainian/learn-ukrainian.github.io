@@ -15,9 +15,9 @@ objectives:
 - Use future tense to talk about plans and intentions
 - Ask and answer "What will you do?" (Що ти будеш робити?)
 dialogue_situations:
-- setting: 'Fortune teller at a fun fair — predicting the future: Ти будеш подорожувати.
-    Знайдеш нову роботу (f). Зустрінеш друга (m). Отримаєш подарунок (m, gift). Будеш
-    щасливий/щаслива!'
+- setting: 'Fortune teller at a fun fair — predicting the future: Ти будеш багато
+    подорожувати. Будеш знаходити нових друзів (m). Будеш отримувати подарунки (pl).
+    Будеш щасливий/щаслива!'
   speakers:
   - Ворожка (fortune teller)
   - Клієнт
