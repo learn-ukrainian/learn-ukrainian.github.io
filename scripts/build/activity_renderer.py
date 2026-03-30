@@ -71,6 +71,7 @@ _TYPE_TO_COMPONENT: dict[str, str] = {
     "anagram": "Anagram",
     "translate": "Translate",
     "unjumble": "Unjumble",
+    "order": "Order",
     "cloze": "Cloze",
     "select": "Select",
     "grammar-identify": "GrammarIdentify",
@@ -319,6 +320,17 @@ def _render_unjumble(act: dict) -> str:
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
     return _component("Unjumble", props)
+
+
+def _render_order(act: dict) -> str:
+    """order → <Order items={[...]} correct_order={[...]} instruction="..." />
+
+    For dialogue/sequence ordering. Items displayed shuffled, learner clicks to reorder.
+    """
+    props = _prop("items", act.get("items", []))
+    props += _prop("correct_order", act.get("correct_order", []))
+    props += _opt_prop("instruction", act.get("instruction"))
+    return _component("Order", props)
 
 
 def _render_cloze(act: dict) -> str:
@@ -811,6 +823,7 @@ _RENDERERS: dict[str, Any] = {
     "anagram": _render_anagram,
     "translate": _render_translate,
     "unjumble": _render_unjumble,
+    "order": _render_order,
     "cloze": _render_cloze,
     "select": _render_select,
     "grammar-identify": _render_grammar_identify,

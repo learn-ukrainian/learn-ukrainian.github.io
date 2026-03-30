@@ -70,6 +70,7 @@
         { "$ref": "#/$defs/anagram" },
         { "$ref": "#/$defs/translate" },
         { "$ref": "#/$defs/unjumble" },
+        { "$ref": "#/$defs/order" },
         { "$ref": "#/$defs/cloze" },
         { "$ref": "#/$defs/select" },
         { "$ref": "#/$defs/grammar-identify" },
@@ -405,6 +406,30 @@
             },
             "additionalProperties": false
           }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "order": {
+      "type": "object",
+      "required": ["type", "instruction", "items", "correct_order"],
+      "properties": {
+        "type": { "const": "order" },
+        "id": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Lines/sentences/steps to put in order (displayed shuffled)"
+        },
+        "correct_order": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "integer", "minimum": 0 },
+          "description": "Zero-based indices of items in correct order"
         }
       },
       "additionalProperties": false
