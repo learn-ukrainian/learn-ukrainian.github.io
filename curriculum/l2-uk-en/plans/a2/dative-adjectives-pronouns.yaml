@@ -95,6 +95,9 @@ activity_hints:
 - type: group-sort
   focus: Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им)
   items: 8
+- type: error-correction
+  focus: Find and fix adjective-pronoun agreement errors in dative phrases (e.g., *моїй другові → моєму другові, *нашому вчительці → нашій вчительці)
+  items: 6
 references:
 - title: "Заболотний Grade 10, §157"
   notes: "Dative case paradigm with examples of adjective+noun agreement"

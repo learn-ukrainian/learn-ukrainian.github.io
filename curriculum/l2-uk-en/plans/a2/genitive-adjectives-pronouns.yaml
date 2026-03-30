@@ -93,6 +93,9 @@ activity_hints:
 - type: fill-in
   focus: Build complete Genitive phrases with demonstrative + adjective + noun
   items: 8
+- type: error-correction
+  focus: Find and fix adjective-noun agreement errors in Genitive phrases (e.g., *нової друга → нового друга, *цієї будинку → цього будинку)
+  items: 6
 references:
 - title: Заболотний Grade 6, §48-49
   notes: Відмінювання прикметників, присвійних та вказівних займенників

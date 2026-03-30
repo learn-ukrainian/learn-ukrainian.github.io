@@ -4,7 +4,7 @@ sequence: 43
 slug: purpose-clauses
 version: '1.0'
 title: Щоб зрозуміти...
-subtitle: Підрядні речення мети та непряма мова
+subtitle: Підрядні речення мети та базова непряма мова
 focus: grammar
 pedagogy: PPP
 phase: A2.7 [Complex Sentences and Conditionals]
@@ -40,9 +40,13 @@ content_outline:
   - 'Contrast with тому що: тому що answers Чому? (looking back at the cause), щоб
     answers Для чого? (looking forward at the purpose). Я вчу, бо хочу розуміти vs.
     Я вчу, щоб розуміти.'
-- section: 'Непряма мова: він сказав, що... (Reported Speech: He Said That...)'
+- section: 'Базова непряма мова: він сказав, що... (Basic Reported Speech: He Said
+    That...)'
   words: 700
   points:
+  - 'A2 scope: basic reported speech with що and чи only. Sequence of tenses,
+    якби-constructions, and complex transformations are B1. Here we learn the
+    high-frequency relay pattern: він сказав, що...'
   - 'Introducing reported speech with що: transforming direct speech into indirect.
     "Я прийду завтра" -> Він сказав, що прийде завтра.'
   - 'Reporting verbs: сказати, відповісти, пояснити, запитати, додати. Each takes
@@ -92,6 +96,9 @@ activity_hints:
   focus: Transform direct speech into reported speech — match the original quote to
     its indirect version
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions)
+  items: 6
 references:
 - title: Заболотний Grade 5, §28
   notes: Складнопідрядні речення з підрядними частинами мети, умови, допусту — with

@@ -99,6 +99,9 @@ activity_hints:
   focus: Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs.
     протиставлення (але, проте, однак)
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct compound sentences with тому що, бо, and хоча
+  items: 6
 references:
 - title: Заболотний Grade 5, §28
   notes: Складнопідрядні речення з підрядними причини, мети, умови — primary

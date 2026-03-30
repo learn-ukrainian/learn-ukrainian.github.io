@@ -108,6 +108,9 @@ activity_hints:
   focus: Sort verb forms into two groups — synthetic future (perfective) and
     analytical future (imperfective)
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms
+  items: 6
 references:
 - title: Заболотний Grade 6, §47-48
   notes: Майбутній час дієслів доконаного і недоконаного виду

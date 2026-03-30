@@ -33,7 +33,9 @@ content_outline:
     писати. Connect to what they learned in A2.1 aspect modules.'
   - 'Спосіб (mood): дійсний спосіб (indicative — stating facts),
     наказовий спосіб (imperative — giving commands: читай!),
-    умовний спосіб (conditional — би: читав би).'
+    умовний спосіб (conditional — label only: читав би. Production
+    is B1; here we learn the term so learners can read grammar
+    references).'
 - section: 'Дієвідміна та особа (Conjugation and Person)'
   words: 450
   points:
@@ -85,7 +87,7 @@ vocabulary_hints:
   recommended:
   - дійсний спосіб (indicative mood)
   - наказовий спосіб (imperative mood)
-  - умовний спосіб (conditional mood)
+  - умовний спосіб (conditional mood — label only, production is B1)
   - скорочення (abbreviation)
 activity_hints:
 - type: match-up

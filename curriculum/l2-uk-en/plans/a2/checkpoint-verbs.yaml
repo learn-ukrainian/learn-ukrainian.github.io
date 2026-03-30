@@ -92,6 +92,9 @@ activity_hints:
   focus: Sort verb forms into categories — imperfective past, perfective past,
     synthetic future, analytical future, imperative
   items: 8
+- type: error-correction
+  focus: Find and fix verb form errors — wrong aspect, wrong motion verb type, wrong imperative form, wrong future tense construction
+  items: 6
 references:
 - title: Заболотний Grade 6, §45-55
   notes: Comprehensive verb chapter covering aspect, tenses, motion, and

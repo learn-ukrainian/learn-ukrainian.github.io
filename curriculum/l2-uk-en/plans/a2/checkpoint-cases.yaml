@@ -89,6 +89,9 @@ activity_hints:
 - type: group-sort
   focus: Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.)
   items: 8
+- type: error-correction
+  focus: Find and fix mixed case errors in sentences — wrong endings after prepositions, animate/inanimate confusion, Gen.Pl. mistakes
+  items: 6
 references:
 - title: Заболотний Grade 6, Повторення вивченого
   notes: End-of-chapter review exercises covering all cases

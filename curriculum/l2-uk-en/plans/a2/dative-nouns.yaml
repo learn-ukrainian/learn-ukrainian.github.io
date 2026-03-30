@@ -95,6 +95,9 @@ activity_hints:
 - type: match-up
   focus: Match verb + dative noun phrases to their English meanings
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct dative constructions with indirect objects (e.g., подарувати братові книгу)
+  items: 6
 references:
 - title: "Заболотний Grade 10, §157"
   notes: "Dative endings for II declension masculine nouns with parallel -ові/-еві/-єві and -у/-ю, style rule for alternating"

@@ -90,6 +90,9 @@ activity_hints:
 - type: match-up
   focus: Choose the Correct Aspect (Context-based)
   items: 8
+- type: error-correction
+  focus: Find and fix wrong aspect choice in sentences (e.g., *Він щодня зробив вправи → робив, *Вона довго написала листа → писала)
+  items: 6
 references:
 - title: Заболотний Grade 6, §52-54
   notes: 'Вид дієслова: доконаний і недоконаний'

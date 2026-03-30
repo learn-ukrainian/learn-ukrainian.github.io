@@ -109,6 +109,9 @@ activity_hints:
 - type: match-up
   focus: Match expressions with себе to their meanings
   items: 8
+- type: error-correction
+  focus: Find and fix incorrect usage of свій and себе (e.g., *Він читає його книгу when meaning his own → свою, *Я почуваю себе when missing adverb)
+  items: 6
 references:
 - title: Заболотний Grade 6, Займенник
   notes: Section on possessive and reflexive pronouns with exercises

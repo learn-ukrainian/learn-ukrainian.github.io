@@ -117,6 +117,9 @@ activity_hints:
   focus: Match motion verbs with the correct preposition and case for direction
     (до + Gen., на + Acc., з + Gen.)
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct directional sentences with motion verbs and prepositions (іду до школи, їду на роботу)
+  items: 6
 references:
 - title: Заболотний Grade 6, §39-41
   notes: Дієвідміни дієслів, чергування приголосних при дієвідмінюванні

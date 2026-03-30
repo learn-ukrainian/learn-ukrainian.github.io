@@ -86,6 +86,9 @@ activity_hints:
 - type: match-up
   focus: Translate sentences with 'a lot of...' / 'I don't have...'
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct genitive phrases with немає and quantity expressions
+  items: 6
 references:
 - title: "ULP: 10 Uses of Genitive Case"
   url: "https://www.ukrainianlessons.com/genitive-case/"

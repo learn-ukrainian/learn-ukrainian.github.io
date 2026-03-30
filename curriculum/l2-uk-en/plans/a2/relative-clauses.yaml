@@ -95,6 +95,9 @@ activity_hints:
 - type: true-false
   focus: Judge whether relative clauses have correct agreement and comma placement
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки
+  items: 6
 references:
 - title: Заболотний Grade 5, §28
   notes: Означальні підрядні речення — який, котрий, де, куди, звідки as relative

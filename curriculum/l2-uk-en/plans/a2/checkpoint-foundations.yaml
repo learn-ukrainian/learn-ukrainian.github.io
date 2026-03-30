@@ -77,6 +77,9 @@ activity_hints:
 - type: match-up
   focus: Short written response
   items: 8
+- type: error-correction
+  focus: Find and fix mixed grammar errors — wrong aspect choice, wrong genitive endings, agreement mistakes
+  items: 6
 references:
 - title: Заболотний Grade 5-6
   notes: Повторення вивченого

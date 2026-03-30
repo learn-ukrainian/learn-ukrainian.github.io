@@ -106,6 +106,9 @@ activity_hints:
   focus: Build full sentences using preposition + pronoun + adjective + noun in
     Instrumental
   items: 8
+- type: error-correction
+  focus: Find and fix agreement errors in Instrumental phrases (e.g., *з моїм новою другом → з моїм новим другом, *моєю великим містом → моїм великим містом)
+  items: 6
 references:
 - title: Захарійчук Grade 4, с. 85-92
   notes: Full adjective declension tables for hard and soft groups, including Instrumental

@@ -126,6 +126,9 @@ activity_hints:
   focus: Match Vocative + imperative + Instrumental combinations to create
     correct wishes (Оленко + будь + щасливою)
   items: 8
+- type: unjumble
+  focus: Reorder words to form correct imperative sentences — commands, suggestions with -мо, and wishes with Vocative + будь + Instrumental
+  items: 6
 references:
 - title: Заболотний Grade 6, §50-51
   notes: Наказовий спосіб дієслів — formation for all persons
