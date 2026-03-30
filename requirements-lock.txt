@@ -89,7 +89,7 @@ markdownify==1.2.2
 marker-pdf==1.10.2
 MarkupSafe==3.0.3
 mcp==1.26.0
-mcp-memory-service==10.4.1
+mcp-memory-service==10.29.1
 mdurl==0.1.2
 more-itertools==10.8.0
 mpmath==1.3.0
