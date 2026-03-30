@@ -16,17 +16,20 @@ objectives:
   lacks
 - Describe objects using color + M09 adjective combinations
 dialogue_situations:
-- setting: Choosing paint colors for redecorating a friend's apartment
+- setting: 'At an outdoor flower market — choosing bouquets for different occasions.
+    Describe: червоні троянди (roses), білі лілії (lilies), жовті соняшники (sunflowers),
+    синя ваза (f), зелене листя (n, leaves). Use flowers, plants, and wrapping.'
   speakers:
   - Наталка
-  - Дмитро
-  motivation: 'Color adjectives + gender agreement: синя стіна, жовте вікно, білий
-    стіл'
-- setting: At an outdoor market choosing flowers for a gift
+  - Продавець (flower seller)
+  motivation: 'Color adjectives: червоний/а/е with троянда(f), соняшник(m), листя(n)'
+- setting: 'Choosing an outfit for a party from a friend''s wardrobe. Describe: чорна
+    сукня (f, dress), білий светр (m, sweater), сіре пальто (n, coat), коричневі черевики
+    (pl, shoes). Use clothing items, NOT bags.'
   speakers:
-  - Покупець (buyer)
-  - Продавець (seller)
-  motivation: 'Colors in real shopping: червоні троянди, білі лілії'
+  - Дмитро
+  - Ліза
+  motivation: 'Color + gender: сукня(f), светр(m), пальто(n), черевики(pl)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

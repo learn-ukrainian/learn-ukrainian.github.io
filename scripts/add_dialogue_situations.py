@@ -49,45 +49,63 @@ A1_SITUATIONS: dict[str, list[dict]] = {
          "motivation": "Consolidation: name, origin, profession, family — full introduction"},
     ],
     "things-have-gender": [
-        {"setting": "Moving into a dorm room — unpacking boxes and deciding where things go",
-         "speakers": ["Марія (new roommate)", "Оленка (showing the room)"],
-         "motivation": "Він/вона/воно test with real objects: стіл, лампа, ліжко"},
+        {"setting": "At a pet shop — looking at animals and their accessories. "
+         "A кіт (m) sleeps in a кошик (m, basket), a рибка (f) swims in an акваріум (m), "
+         "a черепаха (f, turtle) sits near a дзеркало (n, mirror). "
+         "Use animals and pet items to demonstrate він/вона/воно — not room furniture.",
+         "speakers": ["Марія", "Оленка"],
+         "motivation": "Він/вона/воно with кіт(m), рибка(f), кошеня(n), акваріум(m), черепаха(f)"},
     ],
     "what-is-it-like": [
-        {"setting": "Shopping for a birthday gift in a department store",
-         "speakers": ["Оленка", "Тарас"],
-         "motivation": "Який/яка/яке? to describe items, adjective agreement with real products"},
+        {"setting": "At a weekend book fair — browsing books, maps, and posters. "
+         "Describe items: новий атлас (m), цікава книга (f), старе фото (n), "
+         "великий плакат (m), маленька листівка (f, postcard). NOT bags or furniture.",
+         "speakers": ["Тарас", "Софія"],
+         "motivation": "Який/яка/яке? with книга(f), атлас(m), фото(n), плакат(m), листівка(f)"},
     ],
     "colors": [
-        {"setting": "Choosing paint colors for redecorating a friend's apartment",
-         "speakers": ["Наталка", "Дмитро"],
-         "motivation": "Color adjectives + gender agreement: синя стіна, жовте вікно, білий стіл"},
-        {"setting": "At an outdoor market choosing flowers for a gift",
-         "speakers": ["Покупець (buyer)", "Продавець (seller)"],
-         "motivation": "Colors in real shopping: червоні троянди, білі лілії"},
+        {"setting": "At an outdoor flower market — choosing bouquets for different occasions. "
+         "Describe: червоні троянди (roses), білі лілії (lilies), жовті соняшники (sunflowers), "
+         "синя ваза (f), зелене листя (n, leaves). Use flowers, plants, and wrapping.",
+         "speakers": ["Наталка", "Продавець (flower seller)"],
+         "motivation": "Color adjectives: червоний/а/е with троянда(f), соняшник(m), листя(n)"},
+        {"setting": "Choosing an outfit for a party from a friend's wardrobe. "
+         "Describe: чорна сукня (f, dress), білий светр (m, sweater), сіре пальто (n, coat), "
+         "коричневі черевики (pl, shoes). Use clothing items, NOT bags.",
+         "speakers": ["Дмитро", "Ліза"],
+         "motivation": "Color + gender: сукня(f), светр(m), пальто(n), черевики(pl)"},
     ],
     "how-many": [
-        {"setting": "At a farmers market — checking prices and counting change",
-         "speakers": ["Покупець", "Продавець"],
-         "motivation": "Скільки коштує? Numbers with гривень, counting items"},
-        {"setting": "Planning a birthday party — counting guests, plates, chairs",
-         "speakers": ["Ліза", "Максим"],
-         "motivation": "Numbers 1-100 in practical planning context"},
+        {"setting": "At a bakery — ordering bread, pastries, and cakes for a family gathering. "
+         "Count: хліб (m, bread), булочка (f, bun), тістечко (n, pastry). "
+         "Prices in гривні. Ask: Скільки коштує торт? А три булочки?",
+         "speakers": ["Покупець", "Пекар (baker)"],
+         "motivation": "Скільки коштує? with торт(m), булочка(f), тістечко(n), хліб(m)"},
+        {"setting": "Counting items in a school backpack before class — "
+         "ручка (f, pen), олівець (m, pencil), зошит (m, notebook), підручник (m, textbook).",
+         "speakers": ["Учень (student)", "Мама"],
+         "motivation": "Numbers with school supplies: один олівець, дві ручки, п'ять зошитів"},
     ],
     "this-and-that": [
-        {"setting": "At a flea market — pointing at items on different tables",
-         "speakers": ["Ірина", "Олег"],
-         "motivation": "Цей/ця/це (close) vs той/та/те (far) with real distance"},
+        {"setting": "At an electronics store — comparing phones, laptops, and headphones "
+         "on different shelves. Цей телефон (m, this phone near you) vs той ноутбук (m, "
+         "that laptop over there). Ця камера (f) vs та. Це радіо (n) vs те.",
+         "speakers": ["Ірина", "Консультант (shop assistant)"],
+         "motivation": "Цей/ця/це vs той/та/те with телефон(m), камера(f), радіо(n)"},
     ],
     "many-things": [
-        {"setting": "Packing a suitcase for a school trip — listing what to bring",
-         "speakers": ["Мама", "Петрик"],
-         "motivation": "Singular → plural: одна книга → три книги, один зошит → зошити"},
+        {"setting": "Setting up a classroom for a Ukrainian lesson — counting and arranging items. "
+         "Singular → plural: один стілець → стільці, одна дошка → дошки, "
+         "одне крісло → крісла. Also: олівці, ручки, підручники, карти.",
+         "speakers": ["Вчитель (teacher)", "Учні (students)"],
+         "motivation": "Plurals with classroom items: стілець→стільці, дошка→дошки, крісло→крісла"},
     ],
     "checkpoint-my-world": [
-        {"setting": "Showing a friend around your neighborhood on a walk",
-         "speakers": ["Ваня", "Катя"],
-         "motivation": "Consolidation: gender, adjectives, colors, numbers, demonstratives"},
+        {"setting": "Walking through a Ukrainian street market (ярмарок) — "
+         "pointing at handmade crafts: вишиванка (f, embroidered shirt), глечик (m, jug), "
+         "намисто (n, necklace), писанки (pl, decorated eggs). Describe, count, point, buy.",
+         "speakers": ["Ваня (tourist)", "Катя (local friend)"],
+         "motivation": "Consolidation with Ukrainian cultural objects: вишиванка, глечик, писанка"},
     ],
     "what-i-like": [
         {"setting": "First day at a language exchange — sharing hobbies over tea",

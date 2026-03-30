@@ -15,11 +15,14 @@ objectives:
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
 dialogue_situations:
-- setting: Moving into a dorm room — unpacking boxes and deciding where things go
+- setting: At a pet shop — looking at animals and their accessories. A кіт (m) sleeps
+    in a кошик (m, basket), a рибка (f) swims in an акваріум (m), a черепаха (f, turtle)
+    sits near a дзеркало (n, mirror). Use animals and pet items to demonstrate він/вона/воно
+    — not room furniture.
   speakers:
-  - Марія (new roommate)
-  - Оленка (showing the room)
-  motivation: 'Він/вона/воно test with real objects: стіл, лампа, ліжко'
+  - Марія
+  - Оленка
+  motivation: Він/вона/воно with кіт(m), рибка(f), кошеня(n), акваріум(m), черепаха(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -15,11 +15,13 @@ objectives:
 - Combine demonstratives with adjectives and colors (цей великий червоний стіл)
 - Distinguish цей (near/this) from той (far/that)
 dialogue_situations:
-- setting: At a flea market — pointing at items on different tables
+- setting: At an electronics store — comparing phones, laptops, and headphones on
+    different shelves. Цей телефон (m, this phone near you) vs той ноутбук (m, that
+    laptop over there). Ця камера (f) vs та. Це радіо (n) vs те.
   speakers:
   - Ірина
-  - Олег
-  motivation: Цей/ця/це (close) vs той/та/те (far) with real distance
+  - Консультант (shop assistant)
+  motivation: Цей/ця/це vs той/та/те with телефон(m), камера(f), радіо(n)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

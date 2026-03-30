@@ -16,11 +16,13 @@ objectives:
 - Point at and identify objects using demonstratives
 - Use basic plurals for familiar nouns
 dialogue_situations:
-- setting: Showing a friend around your neighborhood on a walk
+- setting: 'Walking through a Ukrainian street market (ярмарок) — pointing at handmade
+    crafts: вишиванка (f, embroidered shirt), глечик (m, jug), намисто (n, necklace),
+    писанки (pl, decorated eggs). Describe, count, point, buy.'
   speakers:
-  - Ваня
-  - Катя
-  motivation: 'Consolidation: gender, adjectives, colors, numbers, demonstratives'
+  - Ваня (tourist)
+  - Катя (local friend)
+  motivation: 'Consolidation with Ukrainian cultural objects: вишиванка, глечик, писанка'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

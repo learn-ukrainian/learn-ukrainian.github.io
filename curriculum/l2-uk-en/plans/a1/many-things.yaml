@@ -15,11 +15,13 @@ objectives:
 - Use adjective plural form (-і) with plural nouns
 - Describe groups of objects using plurals + adjectives + colors
 dialogue_situations:
-- setting: Packing a suitcase for a school trip — listing what to bring
+- setting: 'Setting up a classroom for a Ukrainian lesson — counting and arranging
+    items. Singular → plural: один стілець → стільці, одна дошка → дошки, одне крісло
+    → крісла. Also: олівці, ручки, підручники, карти.'
   speakers:
-  - Мама
-  - Петрик
-  motivation: 'Singular → plural: одна книга → три книги, один зошит → зошити'
+  - Вчитель (teacher)
+  - Учні (students)
+  motivation: 'Plurals with classroom items: стілець→стільці, дошка→дошки, крісло→крісла'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

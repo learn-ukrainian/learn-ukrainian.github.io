@@ -15,11 +15,13 @@ objectives:
 - Describe objects and rooms using common adjective pairs
 - Build descriptive sentences combining M08 nouns with M09 adjectives
 dialogue_situations:
-- setting: Shopping for a birthday gift in a department store
+- setting: 'At a weekend book fair — browsing books, maps, and posters. Describe items:
+    новий атлас (m), цікава книга (f), старе фото (n), великий плакат (m), маленька
+    листівка (f, postcard). NOT bags or furniture.'
   speakers:
-  - Оленка
   - Тарас
-  motivation: Який/яка/яке? to describe items, adjective agreement with real products
+  - Софія
+  motivation: Який/яка/яке? with книга(f), атлас(m), фото(n), плакат(m), листівка(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

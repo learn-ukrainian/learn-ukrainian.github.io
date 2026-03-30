@@ -15,16 +15,19 @@ objectives:
 - Give age using Мені ... років (as memorized chunk — NO case grammar)
 - Read and say Ukrainian phone numbers
 dialogue_situations:
-- setting: At a farmers market — checking prices and counting change
+- setting: 'At a bakery — ordering bread, pastries, and cakes for a family gathering.
+    Count: хліб (m, bread), булочка (f, bun), тістечко (n, pastry). Prices in гривні.
+    Ask: Скільки коштує торт? А три булочки?'
   speakers:
   - Покупець
-  - Продавець
-  motivation: Скільки коштує? Numbers with гривень, counting items
-- setting: Planning a birthday party — counting guests, plates, chairs
+  - Пекар (baker)
+  motivation: Скільки коштує? with торт(m), булочка(f), тістечко(n), хліб(m)
+- setting: Counting items in a school backpack before class — ручка (f, pen), олівець
+    (m, pencil), зошит (m, notebook), підручник (m, textbook).
   speakers:
-  - Ліза
-  - Максим
-  motivation: Numbers 1-100 in practical planning context
+  - Учень (student)
+  - Мама
+  motivation: 'Numbers with school supplies: один олівець, дві ручки, п''ять зошитів'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
