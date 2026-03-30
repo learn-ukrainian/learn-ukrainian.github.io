@@ -20,6 +20,15 @@ objectives:
   (вранці я встаю о сьомій годині, снідаю з родиною, їду на роботу).
 - Learner can participate in a dialogue about visiting someone's home, asking about
   rooms and routines using the full case system naturally.
+dialogue_situations:
+- setting: 'Scenario 1: Video tour of your помешкання (n, apartment) — кухня (f, kitchen),
+    вітальня (f, living room), спальня (f, bedroom). Scenario 2: Describing your розпорядок
+    дня (m, daily routine). Scenario 3: Visiting Ukrainian friends — bringing гостинці
+    (pl, gifts).'
+  speakers:
+  - Мешканець
+  - Онлайн-друг / Господарі
+  motivation: 'Home + daily life: кухня(f), вітальня(f), спальня(f), гостинці(pl)'
 content_outline:
 - section: 'Сценарій 1: Моє помешкання (Scenario 1: My Home)'
   words: 600

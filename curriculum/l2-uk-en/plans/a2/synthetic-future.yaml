@@ -20,6 +20,12 @@ objectives:
 - Learner can choose between synthetic and analytical future based on whether the
   action is a single completed result (perfective) or an ongoing/repeated process
   (imperfective).
+dialogue_situations:
+- setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я вивчу
+    іспанську (f)! Він прочитає 50 книг! Вона здасть іспит (m, exam)!
+  speakers:
+  - Група друзів на Новий рік
+  motivation: 'Perfective future: написати→напишу, вивчити→вивчу, здати→здам'
 content_outline:
 - section: Два майбутніх часи (Two Futures in Ukrainian)
   words: 450

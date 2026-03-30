@@ -16,6 +16,14 @@ objectives:
 - Learner can produce correctly agreeing noun phrases in the dative (моєму старшому братові,
   нашій новій вчительці).
 - Learner can use demonstrative pronouns цьому/цій/тому/тій in dative noun phrases.
+dialogue_situations:
+- setting: 'Teacher handing back graded essays — giving to specific students: Моєму
+    найкращому студентові — десятка! Нашій новій студентці — дев''ятка. Цьому хлопцю
+    треба більше працювати.'
+  speakers:
+  - Вчитель
+  - Студенти
+  motivation: 'Full dative phrases: моєму студентові, нашій студентці, цьому хлопцю'
 content_outline:
 - section: 'Прикметники у давальному відмінку (Adjectives in the Dative Case)'
   words: 600

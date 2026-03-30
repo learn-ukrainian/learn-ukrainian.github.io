@@ -18,6 +18,15 @@ objectives:
   the process) and perfective (stating the result).
 - Learner can understand and respond to questions involving aspect and the Genitive
   case.
+dialogue_situations:
+- setting: 'Scenario 1: Planning a housewarming party — buying торт (m, cake), напої
+    (pl, drinks), серветки (pl, napkins). Скільки гостей? Десять. Scenario 2: At a
+    Kyiv farmers market — buying мед (m, honey), сир (m, cheese), ягоди (pl, berries).
+    Скільки коштує кілограм меду?'
+  speakers:
+  - Друзі (friends)
+  - Продавець (vendor)
+  motivation: 'Genitive in real life: counting, prices, absence'
 content_outline:
 - section: 'Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party)'
   words: 600

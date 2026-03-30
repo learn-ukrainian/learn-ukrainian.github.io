@@ -18,6 +18,14 @@ objectives:
   spatial) in a single extended conversation.
 - Learner can use Instrumental noun phrases with adjectives and pronouns in
   communicative contexts.
+dialogue_situations:
+- setting: 'Job interview at a restaurant — talking about experience and cooking a
+    test dish: Ким ви працювали? Кухарем (m, cook). Що ви вмієте готувати? Борщ з
+    яловичиною (f, beef), вареники з картоплею (f, potato).'
+  speakers:
+  - Шеф-кухар (head chef)
+  - Кандидат
+  motivation: 'Professions + cooking: кухар→кухарем, з яловичиною, з картоплею'
 content_outline:
 - section: 'Розмова про професії (Talking About Professions)'
   words: 550

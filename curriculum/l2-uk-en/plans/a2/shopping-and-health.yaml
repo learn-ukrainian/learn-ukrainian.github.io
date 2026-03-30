@@ -18,6 +18,15 @@ objectives:
   quantities, and preferences.
 - Learner can participate in a basic doctor visit dialogue including describing
   symptoms and understanding simple instructions.
+dialogue_situations:
+- setting: 'At a Kyiv ринок (m, market) — buying produce: Дайте мені кілограм помідорів
+    (m, tomatoes) і півкіло огірків (m, cucumbers). Then at the лікар (m, doctor):
+    У мене болить горло (n, throat). Then at the аптека (f, pharmacy): Мені потрібні
+    краплі (pl, drops).'
+  speakers:
+  - Покупець/Пацієнт
+  - Продавець/Лікар/Фармацевт
+  motivation: 'Three real situations: помідор(m), огірок(m), горло(n), краплі(pl)'
 content_outline:
 - section: 'На ринку: скільки вам? (At the Market: How Much Do You Want?)'
   words: 750

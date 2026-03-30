@@ -18,6 +18,14 @@ objectives:
   але...; Я не зовсім згоден/згодна...).
 - Learner can participate in a structured opinion exchange about everyday
   topics (food, travel, hobbies, lifestyle choices).
+dialogue_situations:
+- setting: 'Debate at a book club — comparing two novels: Мені більше подобається
+    цей роман (m, novel). На мою думку, авторка (f) пише краще. Я не згоден — ця повість
+    (f, novella) цікавіша!'
+  speakers:
+  - Члени книжкового клубу
+  motivation: 'Opinions: подобається, на мою думку, згоден/не згоден with роман(m),
+    повість(f)'
 content_outline:
 - section: 'Що тобі більше подобається? (What Do You Prefer?)'
   words: 500

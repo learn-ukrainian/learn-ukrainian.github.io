@@ -17,6 +17,14 @@ objectives:
 - Learner can use з + Instrumental to express an attribute or ingredient (чай з
   лимоном, хліб з маслом, кава з молоком).
 - Learner can choose the correct variant (з/із/зі) based on phonetic context.
+dialogue_situations:
+- setting: 'Planning a picnic — who''s coming with whom and bringing what: Я іду з
+    Олегом (m). Вона прийде з подругою (f, girlfriend). Візьмемо каву з молоком (n,
+    milk). Бутерброди з шинкою (f, ham).'
+  speakers:
+  - Організатор пікніку
+  - Друзі
+  motivation: 'З + instrumental: з Олегом, з подругою, з молоком, з шинкою'
 content_outline:
 - section: 'Орудний відмінок: Знайомство (The Instrumental Case: Introduction)'
   words: 450

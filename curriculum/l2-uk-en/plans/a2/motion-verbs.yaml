@@ -21,6 +21,14 @@ objectives:
   (-отися reflexive) — and apply these patterns to similar verbs.
 - Learner can use motion verbs with appropriate prepositions and cases to
   describe direction (іти до школи, їхати на роботу, летіти в Україну).
+dialogue_situations:
+- setting: 'Airport chaos — everyone going in different directions: Я іду (on foot)
+    до виходу (m, gate). Він їде (by vehicle) в місто. Літак (m, plane) летить до
+    Парижа. Ми пішли (left) о третій.'
+  speakers:
+  - Пасажири
+  - Друг (on phone)
+  motivation: 'Motion verbs: іти/їхати/летіти with real travel situations'
 content_outline:
 - section: Три пари дієслів руху (Three Pairs of Motion Verbs)
   words: 500

@@ -18,6 +18,14 @@ objectives:
   (допоможіть мені, дякую вам).
 - Learner can write a short message or address using dative forms (Дорогому другові
   Андрію, Любій бабусі Олені).
+dialogue_situations:
+- setting: 'At Укрпошта (Ukrainian postal service) — sending a parcel to relatives:
+    Бандероль (f, parcel) для сестри в Канаду. Скільки коштує? Заповніть бланк (m,
+    form). Адреса одержувача (m, recipient)?'
+  speakers:
+  - Відправник
+  - Працівник пошти
+  motivation: 'Post office: бандероль(f), бланк(m), адреса(f), одержувач(m)'
 content_outline:
 - section: 'На пошті: Базова лексика (At the Post Office: Essential Vocabulary)'
   words: 400

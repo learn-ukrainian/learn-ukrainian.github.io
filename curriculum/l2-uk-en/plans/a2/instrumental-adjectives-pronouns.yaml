@@ -18,6 +18,13 @@ objectives:
   agreement (з гарним другом, за нашим будинком, під великою ялинкою).
 - Learner can use demonstrative pronouns цим/цією, тим/тією in Instrumental
   phrases.
+dialogue_situations:
+- setting: 'Writing a diary entry about your perfect day — full instrumental phrases:
+    Гуляла з моїм найкращим другом (m). Обідала зі своєю старшою сестрою (f). Пила
+    каву з тим новим колегою (m).'
+  speakers:
+  - Автор щоденника (diary writer, narrating)
+  motivation: 'Full instrumental: з моїм другом, зі своєю сестрою, з тим колегою'
 content_outline:
 - section: 'Прикметники в орудному відмінку (Adjectives in the Instrumental Case)'
   words: 550

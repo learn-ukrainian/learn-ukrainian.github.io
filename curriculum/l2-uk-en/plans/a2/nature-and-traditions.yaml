@@ -18,6 +18,14 @@ objectives:
   complex sentences with тому що, коли, щоб.
 - Learner can integrate all A2 grammar (cases, aspect, comparison,
   adjectives) in a sustained communicative context.
+dialogue_situations:
+- setting: 'Ukrainian family preparing for Івана Купала — weaving вінок (m, wreath),
+    jumping over вогнище (n, bonfire), searching for цвіт папороті (m, fern flower).
+    Also: Різдво (n) — колядки (pl, carols), Великдень (m) — писанки (pl, Easter eggs).'
+  speakers:
+  - Родина
+  - Іноземний гість
+  motivation: 'Traditions: вінок(m), вогнище(n), колядки(pl), писанки(pl)'
 content_outline:
 - section: 'Чотири пори року (The Four Seasons)'
   words: 550

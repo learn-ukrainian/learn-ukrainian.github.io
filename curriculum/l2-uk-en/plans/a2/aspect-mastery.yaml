@@ -20,6 +20,14 @@ objectives:
   interruption, habitual action, and single result — beyond simple signal words.
 - Learner can use aspect pairs fluently in short dialogues about daily plans,
   completed tasks, and ongoing activities.
+dialogue_situations:
+- setting: 'Parent and child doing homework — choosing the right aspect: Ти написав
+    (pf) домашнє завдання? Ні, я ще пишу (impf). Прочитай (pf) цей абзац. Я читаю
+    (impf) вже годину!'
+  speakers:
+  - Мама/Тато
+  - Школяр (student)
+  motivation: '30 aspect pairs in homework context: писати/написати, читати/прочитати'
 content_outline:
 - section: Як утворюються видові пари (How Aspect Pairs Are Formed)
   words: 500

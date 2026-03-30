@@ -17,6 +17,14 @@ objectives:
 - Learner can distinguish accompaniment (з другом) from tool/means usage (писати
   ручкою) — preposition vs. no preposition.
 - Learner can form Instrumental plural endings for common nouns (-ами, -ями).
+dialogue_situations:
+- setting: 'Art class — discussing tools and methods: Малюю олівцем (m, pencil). Фарбую
+    пензлем (m, brush). Різаю ножицями (pl, scissors). Їду на виставку автобусом (m,
+    bus).'
+  speakers:
+  - Вчитель мистецтва
+  - Учні
+  motivation: 'Instrumental of means: олівець→олівцем, пензель→пензлем, ножиці→ножицями'
 content_outline:
 - section: 'Чим? Знаряддя дії (With What? The Tool of an Action)'
   words: 550

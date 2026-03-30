@@ -20,6 +20,13 @@ objectives:
   about where they went, how they traveled, what they did, and what happened.
 - Learner can write a short narrative (8-10 sentences) about a real or imagined
   journey, integrating past tense aspect, motion verbs, and time expressions.
+dialogue_situations:
+- setting: 'Scenario 1: A funny thing happened at the вокзал (m, train station) yesterday.
+    Scenario 2: Planning a trip to Карпати (pl) — booking хатинка (f, cabin). Scenario
+    3: Showing vacation photos from Одеса — пляж (m), море (n), ресторан (m).'
+  speakers:
+  - Друзі (sharing stories)
+  motivation: 'Past + future + travel: вокзал(m), хатинка(f), пляж(m), море(n)'
 content_outline:
 - section: 'Сценарій 1: Що вчора трапилось? (Scenario 1: What Happened Yesterday?)'
   words: 550

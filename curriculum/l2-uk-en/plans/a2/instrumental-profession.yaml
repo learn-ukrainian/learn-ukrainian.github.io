@@ -18,6 +18,12 @@ objectives:
   (Я буду вчителем) and understand when each is appropriate.
 - Learner can ask and answer questions about professions using Ким? and Хто ти за
   фахом?
+dialogue_situations:
+- setting: 'High school reunion — catching up on careers: Я стала лікаркою (f). Він
+    працює інженером (m). Вона хоче бути журналісткою (f). А ти?'
+  speakers:
+  - Колишні однокласники (former classmates)
+  motivation: 'Бути + instrumental: лікарка→лікаркою, інженер→інженером'
 content_outline:
 - section: 'Бути ким? Професія в орудному відмінку (To Be Whom? Profession in the
     Instrumental)'

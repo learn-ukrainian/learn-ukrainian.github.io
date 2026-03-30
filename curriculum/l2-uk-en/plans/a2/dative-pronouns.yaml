@@ -18,6 +18,14 @@ objectives:
   тобі потрібно, їй цікаво).
 - Learner can distinguish between accusative (бачу тебе) and dative (кажу тобі) pronoun
   forms in context.
+dialogue_situations:
+- setting: 'Distributing birthday gifts at a family gathering — who gets what: Мені
+    — книгу. Тобі — шоколад. Йому — шарф (m, scarf). Їй — квіти (pl, flowers). Нам
+    — торт!'
+  speakers:
+  - Іменинник
+  - Родина
+  motivation: 'Dative pronouns: мені, тобі, йому, їй with подарунок(m), книга(f)'
 content_outline:
 - section: 'Давальний відмінок: Кому? (The Dative Case: To Whom?)'
   words: 500

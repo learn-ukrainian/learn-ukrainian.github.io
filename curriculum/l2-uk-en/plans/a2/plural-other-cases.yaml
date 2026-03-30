@@ -18,6 +18,14 @@ objectives:
   prepositions (у/в, на, по).
 - Learner can use all three plural cases in practical sentences about doing things
   with friends, giving things to people, and describing locations.
+dialogue_situations:
+- setting: 'Organizing a school trip — all cases in plural: Розкажіть дітям (dat pl)
+    план. Їдемо автобусами (inst pl). Зупинимося в готелях (loc pl). Купимо подарунки
+    для батьків (gen pl).'
+  speakers:
+  - Вчитель
+  - Учні
+  motivation: 'All plural cases: дітям, автобусами, готелях, батьків'
 content_outline:
 - section: 'Давальний множини: Кому? (Dative Plural: To Whom?)'
   words: 550

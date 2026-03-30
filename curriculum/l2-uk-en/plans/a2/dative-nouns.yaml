@@ -17,6 +17,14 @@ objectives:
 - Learner can form dative singular endings for neuter nouns (-у/-ю).
 - Learner can use dative nouns as indirect objects with verbs like подарувати, показати,
   розповісти, написати.
+dialogue_situations:
+- setting: 'At a post office — addressing packages to different people: Студентові
+    Петренку — підручник (m, textbook). Сестрі Олені — листівка (f, postcard). Дитині
+    — іграшка (f, toy).'
+  speakers:
+  - Відправник (sender)
+  - Працівник пошти
+  motivation: 'Dative nouns: студент→студентові, сестра→сестрі, дитина→дитині'
 content_outline:
 - section: 'Давальний відмінок іменників чоловічого роду (Dative of Masculine Nouns)'
   words: 650

@@ -18,6 +18,14 @@ objectives:
   Мені двадцять п'ять).
 - Learner can distinguish verbs that take dative from verbs that take accusative in
   sentence production.
+dialogue_situations:
+- setting: 'Community volunteer day — helping different people: Допомагаю бабусі (f,
+    grandma) нести сумки. Дзвоню другові (m, friend). Раджу сусідці (f, neighbor)
+    нового лікаря. Мені подобається допомагати!'
+  speakers:
+  - Волонтер
+  - Різні люди
+  motivation: 'Dative verbs: допомагати бабусі, дзвонити другові, радити сусідці'
 content_outline:
 - section: 'Дієслова з давальним відмінком (Verbs That Take the Dative)'
   words: 600

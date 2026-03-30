@@ -18,6 +18,14 @@ objectives:
   де я навчаюся... / Компанія, в якій я працюю...).
 - Learner can discuss plans and conditions related to education and career using
   real conditionals (Якщо я складу іспит, то вступлю до університету).
+dialogue_situations:
+- setting: Career counseling session at a university — Що ви вивчаєте? Право (n, law).
+    Ким хочете стати? Адвокатом (m, lawyer). Де хочете працювати? В юридичній фірмі
+    (f, law firm).
+  speakers:
+  - Консультант
+  - Студент
+  motivation: 'Education + career: право(n), адвокат(m), фірма(f)'
 content_outline:
 - section: 'Про освіту: школа та університет (About Education: School and University)'
   words: 700

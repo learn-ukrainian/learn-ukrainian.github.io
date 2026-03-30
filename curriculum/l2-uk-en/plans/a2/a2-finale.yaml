@@ -18,6 +18,15 @@ objectives:
   buy tickets, ask for help, describe a problem).
 - Learner can demonstrate readiness for B1 through integrated use of
   cases, aspect, comparison, complex sentences, and opinion expression.
+dialogue_situations:
+- setting: 'Full day in Lviv — morning: arriving at вокзал (m), checking into готель
+    (m, hotel). Day: Площа Ринок (f, main square), кав''ярня (f), книгарня (f, bookshop).
+    Evening: зустріч з друзями (meeting friends), вечеря (f, dinner), обговорення
+    планів на майбутнє.'
+  speakers:
+  - Турист
+  - Різні мешканці Львова
+  motivation: 'Full A2 capstone: all cases, aspects, tenses in one day trip'
 content_outline:
 - section: 'Ранок: прибуття та орієнтація (Morning: Arrival and Orientation)'
   words: 400

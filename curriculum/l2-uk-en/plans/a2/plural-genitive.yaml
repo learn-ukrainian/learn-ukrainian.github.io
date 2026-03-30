@@ -19,6 +19,14 @@ objectives:
   numerals 5+) with the Genitive plural correctly.
 - Learner can produce short utterances about quantities in everyday contexts (shopping,
   describing a room, talking about family).
+dialogue_situations:
+- setting: 'School cafeteria inventory — counting remaining items: Скільки тарілок
+    (f, plates)? Двадцять. Виделок (f, forks)? П''ятнадцять. Ложок (f, spoons)? Десять.
+    Склянок (f, glasses)? Немає склянок!'
+  speakers:
+  - Завідувач їдальні (cafeteria manager)
+  - Помічник
+  motivation: 'Genitive plural: тарілка→тарілок, виделка→виделок, склянка→склянок'
 content_outline:
 - section: 'Чому родовий множини такий складний? (Why Is the Genitive Plural So Hard?)'
   words: 400

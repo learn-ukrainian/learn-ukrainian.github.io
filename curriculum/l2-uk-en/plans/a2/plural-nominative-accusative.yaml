@@ -18,6 +18,14 @@ objectives:
   syntactic role (subject vs. direct object).
 - Learner can produce correct plural Nom/Acc forms in short sentences describing groups
   of people and collections of objects.
+dialogue_situations:
+- setting: 'At a zoo — identifying animals and their groups: Дивись — леви (m, lions)!
+    Бачиш тих жирафів (m, giraffes)? А ось мавпи (f, monkeys)! Діти люблять пінгвінів
+    (m, penguins).'
+  speakers:
+  - Батько/Мати
+  - Діти
+  motivation: 'Nom plural: лев→леви. Acc animate plural: жираф→жирафів, пінгвін→пінгвінів'
 content_outline:
 - section: 'Множина називного відмінка (Nominative Plural)'
   words: 650

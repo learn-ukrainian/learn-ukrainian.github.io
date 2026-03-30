@@ -18,6 +18,14 @@ objectives:
   process from M31.
 - Learner can sustain a short conversation (8-10 exchanges) on an everyday topic,
   using at least 5 different cases correctly.
+dialogue_situations:
+- setting: 'Dialogue 1: Organizing a surprise birthday party at a ресторан (m) — calling,
+    ordering торт (m), buying подарунок (m) для подруги (f). Dialogue 2: At a лікарня
+    (f) — describing symptoms to лікар (m). Dialogue 3: Planning a trip across Ukraine
+    — Львів, Одеса, Карпати.'
+  speakers:
+  - Various speakers per dialogue
+  motivation: 'All cases in real scenarios: restaurant, hospital, travel'
 content_outline:
 - section: 'Діалог 1: Організовуємо день народження (Dialogue 1: Organizing a
     Birthday Party)'

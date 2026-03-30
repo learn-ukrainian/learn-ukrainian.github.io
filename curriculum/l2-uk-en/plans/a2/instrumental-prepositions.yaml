@@ -18,6 +18,14 @@ objectives:
   location.
 - Learner can distinguish за + Instrumental (behind) from за + Accusative (for/in
   favor of) in context.
+dialogue_situations:
+- setting: 'Giving directions inside a museum — spatial prepositions: Картина (f,
+    painting) над каміном (m, fireplace). Скульптура (f) між вікнами (pl). Лавка (f,
+    bench) під деревом (n, tree). Кафе за музеєм (m).'
+  speakers:
+  - Гід музею
+  - Відвідувачі
+  motivation: 'Над/під/між/за + instrumental: камін→каміном, вікно→вікнами, дерево→деревом'
 content_outline:
 - section: 'Просторові прийменники: Де це? (Spatial Prepositions: Where Is It?)'
   words: 600
