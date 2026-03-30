@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct headings. Dialogue
+    1 covers Saturday errands with банк, пошта, аптека, бібліотека, кафе — matching
+    plan's dialogue_situations. Dialogue 2 covers cit
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All Ukrainian forms VESUM-verified. Accusative: школу, бібліотеку, аптеку,
+    пошту, банк, кафе, місто — all correct. Locative: школі, роботі, банку, парку,
+    магазині, бібліотеці — all correct. Conjugatio'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: dialogues present the pattern in context (Presentation),
+    grammar section explains rules with the Grade 4 "бачу" helper (Practice framework),
+    exercises test understanding (Productio'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 6 required vocab items used naturally in prose: куди (dialogue +
+    section headers), йти (dialogues + examples), їхати (dialogue 2 + section 3),
+    школа→у школу (table + examples), робота→на роботу (d'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints mapped to markers. Placement is pedagogically
+    sound — each marker follows the section teaching the tested skill. Cannot evaluate
+    actual exercise content (generated separately
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no meta-commentary, no "Let us explore," no
+    gamification. Opens with concrete situation: "It''s Saturday morning. Оксана and
+    Степан stand outside their apartment building." The'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 headings match the plan (Діалоги, Куди? Знахідний відмінок, Де
+    чи куди?, Підсумок). Clean markdown with proper dialogue formatting, tables, and
+    tip box. Word count 1376/1200 target — 15% over
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms — no comparisons to Russian.
+    Uses Ukrainian cities (Львів, Одеса) as natural examples. References Ukrainian
+    school pedagogy (Grade 4 textbook method). Nam
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Dialogue 1: natural Saturday errand-splitting between two named friends,
+    multi-turn (8 lines), ends with a plan to meet at a café — feels real. Dialogue
+    2: weekend travel planning, introduces a third '
+findings: []

@@ -28,6 +28,15 @@ objectives:
 - Recognize gender by word endings (consonant = m, -а/-я = f, -о/-е = n)
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
+dialogue_situations:
+- setting: At a pet shop — looking at animals and their accessories. A кіт (m) sleeps
+    in a кошик (m, basket), a рибка (f) swims in an акваріум (m), a черепаха (f, turtle)
+    sits near a дзеркало (n, mirror). Use animals and pet items to demonstrate він/вона/воно
+    — not room furniture.
+  speakers:
+  - Марія
+  - Оленка
+  motivation: Він/вона/воно with кіт(m), рибка(f), кошеня(n), акваріум(m), черепаха(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
@@ -122,127 +131,106 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Марія is on a video call, showing her room to her friend. As she points at objects around her, something interesting happens — the word for "my" keeps changing: **мій**, **моя**, **моє**. Why? Because every noun in Ukrainian has a **рід** (gender).
+Every Ukrainian noun belongs to one of three gender families: **він** (he), **вона** (she), or **воно** (it). Before learning the rules, meet gender in action through two short conversations.
 
-<div class="dialogue">
+> <div class="dialogue-line"><span class="speaker">Марія:</span> Приві́т! Диви́сь, це моя́ кімна́та. *(Hi! Look, this is my room.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> Кла́сно! У тебе́ є стіл? *(Cool! Do you have a table?)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> Так, є. Це мій стіл, а ось моє́ лі́жко. *(Yes. This is my table, and here's my bed.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> А що ще є? *(What else is there?)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> Є ла́мпа — моя лампа. І ще є крі́сло. *(There's a lamp — my lamp. And there's an armchair too.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> Моє крісло ду́же зру́чне! *(My armchair is very comfortable!)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> А моє — нове́! *(And mine is new!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марія:</span> Привіт! Дивись, це моя кімната. *(Hi! Look, this is my room.)*</div>
+Did you notice? **Стіл** gets **мій**, **кімната** gets **моя**, **ліжко** gets **моє**. Every noun belongs to a gender family. That family decides which form of "my" goes with it.
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Класно! У тебе є стіл? *(Cool! Do you have a table?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> Що у тебе в су́мці? *(What do you have in your bag?)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> У мене́ є кни́га, телефо́н і фо́то. *(I have a book, a phone, and a photo.)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> А у мене є ру́чка і зо́шит. *(And I have a pen and a notebook.)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> Кни́га — це ціка́во! Яка́ кни́га? *(A book — that's interesting! What book?)*</div>
+> <div class="dialogue-line"><span class="speaker">Оленка:</span> Це моя́ кни́га. Вона́ украї́нська! *(This is my book. It's Ukrainian!)*</div>
+> <div class="dialogue-line"><span class="speaker">Марія:</span> А мій зо́шит нови́й. *(And my notebook is new.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марія:</span> Так, у мене є стіл і ліжко. *(Yes, I have a table and a bed.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А комп'ютер? *(And a computer?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> У мене є комп'ютер і лампа. *(I have a computer and a lamp.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А ліжко? Яке воно? *(And the bed? What is it like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Моє ліжко зручне! *(My bed is comfortable!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А стіл — мій стіл теж зручний! *(And the table — my table is also comfortable!)*</div>
-
-</div>
-
-Notice how Марія says **моя кімната** (my room), **моє ліжко** (my bed), and Оленка says **мій стіл** (my table). Three different words for "my" — and each one matches the noun it describes. That pattern is not random. It's gender at work.
-
-Now another situation: at school, two students check what's in their bags before class.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Що у тебе є? *(What do you have?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Соня:</span> У мене є книга, ручка і зошит. А у тебе? *(I have a book, a pen, and a notebook. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> У мене є телефон і сумка. *(I have a phone and a bag.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Соня:</span> А ключ у тебе є? *(Do you have a key?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Так, ось мій ключ. *(Yes, here's my key.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Соня:</span> А це моє фото — з сім'єю. *(And this is my photo — with family.)*</div>
-
-</div>
-
-Again — **мій ключ** (my key), **моє фото** (my photo). Соня's bag holds **книга** (book), **ручка** (pen), **сумка** (bag) — all feminine. Олег's **телефон** (phone), **зошит** (notebook), **ключ** (key) — all masculine. And **фото** (photo) is neuter.
-
-Did you notice **мій**, **моя**, **моє** changing? That's because every **іменник** (noun) in Ukrainian has a **рід** (gender). Understanding gender is the key to speaking Ukrainian correctly — and that's what this module is about.
+These nouns fall into **три групи** (three groups) — three families. One family goes with **він** and **мій**. One goes with **вона** and **моя**. One goes with **воно** and **моє**. Ukrainian grammar calls this **рід** (gender) — and every single noun has one.
 
 ## Він, вона, воно (The Gender Test)
 
-Every Ukrainian noun belongs to one of three genders: **чоловічий рід** (masculine), **жіночий рід** (feminine), or **середній рід** (neuter). Ukrainian textbooks teach a simple test — try replacing the noun with **він** (he), **вона** (she), or **воно** (it). Whichever fits, that's the gender. Take **стіл** (table): you can say **він** about it, so it's **чоловічий рід**. Take **книга** (book): you'd say **вона**, so it's **жіночий рід**. And **вікно** (window)? That's **воно** — **середній рід**.
+Ukrainian has three grammatical genders, taught to every Ukrainian student starting in Grade 3 (Vashulenko p. 110, Ponomarova p. 86). **Чоловічий рід** (masculine) — use **він** and **мій**. **Жіночий рід** (feminine) — use **вона** and **моя**. **Середній рід** (neuter) — use **воно** and **моє**. Every Ukrainian noun belongs to exactly one of these three families — permanently. A noun's gender never changes.
 
-Gender connects directly to the possessives you already saw in the dialogues — and that you know from Module 6 (family). Masculine nouns (**він**) take **мій**: **мій стіл** (my table), **мій телефон** (my phone), **мій зошит** (my notebook). Feminine nouns (**вона**) take **моя**: **моя книга** (my book), **моя кімната** (my room), **моя лампа** (my lamp). Neuter nouns (**воно**) take **моє**: **моє вікно** (my window), **моє ліжко** (my bed), **моє фото** (my photo). The possessives **мій**, **моя**, **моє** from the dialogues map exactly onto gender — this is why they kept changing.
+Here is the test, step by step. Take **стіл** (table). Ask yourself: **він стіл**? Yes — that feels right. **Вона стіл**? No — sounds wrong. **Воно стіл**? Also wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **вона книга**? Yes — **жіночий рід** (feminine). Try **вікно** (window): **воно вікно**? Yes — **середній рід** (neuter). Now confirm with possessives: **мій стіл** (m) → **моя книга** (f) → **моє вікно** (n). The він/вона/воно test and the possessive test always agree.
 
-<!-- INJECT_ACTIVITY: quiz-gender-pronoun -->
+In M06 you learned **У мене є** (I have) with family members. The same structure works for objects. **У мене є стіл.** **У мене є книга.** **У мене є вікно.** Now you know each of those nouns carries a gender, which matters the moment you say **мій**, **моя**, or **моє**.
 
-Now here's a useful shortcut. Most nouns follow predictable ending patterns, as described in Вашуленко's Grade 3 textbook. **Чоловічий рід** — the noun usually ends in a consonant: **стіл**, **телефон**, **зошит**, **ключ**, **стілець** (chair). **Жіночий рід** — the noun usually ends in **-а** or **-я**: **книга**, **лампа**, **кімната**, **ручка** (pen), **сумка** (bag), **стіна** (wall). **Середній рід** — the noun usually ends in **-о** or **-е**: **вікно**, **ліжко**, **крісло** (armchair), **дзеркало** (mirror), **фото**. This pattern covers roughly 90% of the nouns you'll encounter at this level. There are exceptions — for instance, some words ending in **-ь** like **ніч** (night) — but those come in a later module.
+<!-- INJECT_ACTIVITY: quiz-vin-vona-vono -->
 
-So you have a reliable two-step method. Step 1: say **він**, **вона**, or **воно** with the noun — which one fits naturally? Step 2: check the ending for confirmation. Take **телефон** — it ends in a consonant (н), and you'd say **він** about it, so it's masculine: **мій телефон**. Take **кімната** — it ends in **-а**, and you'd say **вона**, so it's feminine: **моя кімната**. Take **ліжко** — it ends in **-о**, and you'd say **воно**, so it's neuter: **моє ліжко**. Two clues always pointing the same direction makes gender predictable, not arbitrary.
+Do you have to test every noun from scratch forever? No. Look at the ending. Ukrainian endings carry the gender with them — a built-in shortcut that native speakers use instinctively. This covers about 90% of all nouns you will meet at the A1 level. Exceptions exist, but they come later.
 
-<!-- INJECT_ACTIVITY: quiz-gender-ending -->
+Here are the patterns, confirmed by Vashulenko Grade 3, p. 112. Masculine nouns usually end in a consonant: **стіл** (-л), **телефон** (-н), **зошит** (-т), **ключ** (-ч), **комп'ютер** (-р), **стілець** (-ць). Feminine nouns usually end in **-а** or **-я**: **книжка** (-а), **лампа** (-а), **кімната** (-а), **ручка** (-а), **сумка** (-а), **стіна** (-а). Neuter nouns usually end in **-о** or **-е**: **вікно** (-о), **ліжко** (-о), **крісло** (-о), **дзеркало** (-о). When you learn a new noun, notice the ending first — it announces the gender before you even need to test with він/вона/воно.
 
-## Предмети навколо (Objects Around Us)
+## Предме́ти навко́ло (Objects Around Us)
 
-Let's look around a typical Ukrainian room and a school bag. The objects here cover all three genders. Learning them now with gender attached — not just **стіл**, but **стіл — він** — builds the right habit from the start. In Ukrainian, you always know a noun's gender. It's built into how you speak about every single object.
+Your room, bag, and desk are full of Ukrainian nouns waiting to be named. Here are common objects organized by gender. For each one, check the ending, then confirm with він/вона/воно — both tests point to the same family.
 
-Here are 18 common objects organized by gender:
+**Чоловічий рід** (він, мій) — **стіл** (table), **стілець** (chair), **телефон** (phone), **комп'ютер** (computer), **зошит** (notebook), **ключ** (key). Every noun ends in a consonant — the ending signals masculine before you even say the word. A few short sentences to make each word stick:
 
-| Чоловічий рід (він, мій) | Жіночий рід (вона, моя) | Середній рід (воно, моє) |
-|---|---|---|
-| **стіл** — table | **книга** — book | **вікно** — window |
-| **стілець** — chair | **лампа** — lamp | **ліжко** — bed |
-| **телефон** — phone | **сумка** — bag | **крісло** — armchair |
-| **комп'ютер** — computer | **ручка** — pen | **дзеркало** — mirror |
-| **зошит** — notebook | **кімната** — room | **фото** — photo |
-| **ключ** — key | **стіна** — wall | |
+- **Це мій стіл.** *(This is my table.)*
+- **Він дерев'я́ний.** *(It's wooden.)*
+- **Де мій телефон?** *(Where is my phone?)*
+- **Він тут.** *(It's here.)*
+- **Ось він, мій ключ.** *(Here it is, my key.)*
 
-Notice the pattern: every masculine noun ends in a consonant, every feminine noun ends in **-а**, and every neuter noun ends in **-о**. The endings are not decoration — they are signals.
+**Жіночий рід** (вона, моя) — **книга** (book), **лампа** (lamp), **сумка** (bag), **ручка** (pen), **кімната** (room), **стіна** (wall). Every noun ends in **-а** — the pattern is visible in every example:
+
+- **Це моя книга.** *(This is my book.)*
+- **Вона ціка́ва.** *(It's interesting.)*
+- **Моя сумка — си́ня.** *(My bag is blue.)*
+- **Де ручка?** *(Where's the pen?)*
+- **Ось вона, моя ручка.** *(Here it is, my pen.)*
+- **Це кімната — моя кімната.** *(This is a room — my room.)*
+
+**Середній рід** (воно, моє) — **вікно** (window), **ліжко** (bed), **крісло** (armchair), **дзеркало** (mirror), **фото** (photo). All end in **-о**. Note that **фото** is a borrowed word — it never changes its ending — but **воно** and **моє** still apply:
+
+- **Це моє вікно.** *(This is my window.)*
+- **Воно вели́ке.** *(It's big.)*
+- **Де моє ліжко?** *(Where's my bed?)*
+- **Ось воно.** *(Here it is.)*
+- **У мене є дзеркало і фото.** *(I have a mirror and a photo.)*
 
 <!-- INJECT_ACTIVITY: group-sort-gender -->
 
-Now let's extend the **У мене є** pattern you learned in Module 6 with family members. Same structure, new world of objects:
-
-- **У мене є стіл.** — I have a table.
-- **У мене є книга.** — I have a book.
-- **У мене є вікно.** — I have a window.
-- **У мене є крісло.** — I have an armchair.
-
-The phrase stays exactly the same — only the noun changes. And when you add a possessive, gender shows up: **Це мій стіл** (This is my table), **Це моя книга** (This is my book), **Це моє вікно** (This is my window). The possessive always matches the gender of the noun that follows it.
+Now link what you know. **У мене є** works the same way it did in M06 with family — just swap in objects. **У мене є стіл.** **У мене є книжка.** **У мене є вікно.** Add a possessive and you get two connected sentences: **Це мій стіл.** **Це моя книжка.** **Це моє вікно.** Same noun, two structures — and gender ties them together.
 
 <!-- INJECT_ACTIVITY: fill-in-possessive -->
 
-:::tip
-In Ukrainian, gender is not just abstract grammar — it shapes how speakers relate to every object. Unlike English, where "it" covers everything, Ukrainian speakers feel the gender of every noun. **Стіл** is **він**, **книга** is **вона**, **вікно** is **воно** — each has its own identity. When you start thinking of objects this way — not translating "my table" but feeling **мій стіл** — you're beginning to think in Ukrainian. That cognitive shift is the real goal of this module.
-:::
-
 ## Підсумок — Summary
 
-Gender determination works in three steps:
-
-1. **Скажи він, вона, або воно з іменником — яке підходить?** Say **він**, **вона**, or **воно** with the noun — which one fits?
-2. **Перевір закінчення — приголосна? -а/-я? -о/-е?** Check the ending — consonant? **-а/-я**? **-о/-е**?
-3. **Вибери мій, моя, або моє.** Choose the right possessive — **мій**, **моя**, or **моє**.
-
-Each step reinforces the others. The gender test, the ending pattern, and the possessive all point to the same answer. Three clues, one gender — no guessing needed.
+Three steps to determine any noun's gender. Step 1 — try **він/вона/воно** with the noun: which fits? Step 2 — check the ending: consonant → **чоловічий**, **-а/-я** → **жіночий**, **-о/-е** → **середній**. Step 3 — use the matching possessive: **мій** / **моя** / **моє**. Both methods give the same answer. Use whichever is faster for you. With practice, gender recognition becomes automatic — just like native Ukrainian speakers do it.
 
 Test yourself with these questions:
 
-- **Який рід у слова «стіл»?** → Чоловічий (**він**, **мій**) — ends in a consonant (л).
-- **Який рід у слова «книга»?** → Жіночий (**вона**, **моя**) — ends in **-а**.
-- **Який рід у слова «вікно»?** → Середній (**воно**, **моє**) — ends in **-о**.
-- **Як сказати "I have a chair" українською?** → **У мене є стілець.**
-- **Як сказати "my lamp" і "my mirror"?** → **Моя лампа** (feminine), **моє дзеркало** (neuter).
-- **Яке закінчення у слів жіночого роду?** → **-а** або **-я**.
-- **Яке закінчення у слів середнього роду?** → **-о** або **-е**.
+- Яко́го ро́ду сло́во **стіл**? → Чолові́чого. Закі́нчення на при́голосний (-л). → **Мій стіл.**
+- Якого роду **книга**? → Жіно́чого. Закінчення -а. → **Моя книга.**
+- А **вікно**? → Сере́днього. Закінчення -о. → **Моє вікно.**
+- Say "I have a chair" in Ukrainian. → **У мене є стілець.**
+- Say "This is my mirror." → **Це моє дзеркало.**
 
-In the next module, you'll learn to describe these objects: **великий стіл** (big table), **маленьке вікно** (small window), **нова книга** (new book). Adjectives in Ukrainian also change their endings based on gender — but you already hold the key to adjective agreement, because you know gender. Everything connects.
+<!-- INJECT_ACTIVITY: quiz-gender-by-ending -->
 
-Here's a micro-challenge: look around where you are right now. Pick three objects. What gender would each one be in Ukrainian? Say aloud: **У мене є ___. Це мій/моя/моє ___.** Start noticing gender everywhere — it will become instinct.
+In the next module you will meet adjectives: **великий** (big), **маленький** (small), **синій** (blue). Every adjective must agree with its noun's gender — **великий стіл** (m), **велика книжка** (f), **велике вікно** (n). The gender system you learned today is the foundation. Every adjective, every possessive, every demonstrative pronoun in Ukrainian depends on gender — and you now have all three.
 
-**Deterministic word count: 1360 words** (calculated by pipeline, do NOT estimate manually)
+Here are all the nouns from this module with their gender:
+
+| Він (чоловічий) | Вона (жіночий) | Воно (середній) |
+|---|---|---|
+| стіл (table) | книга (book) | вікно (window) |
+| стілець (chair) | лампа (lamp) | ліжко (bed) |
+| телефон (phone) | ручка (pen) | крісло (armchair) |
+| комп'ютер (computer) | сумка (bag) | дзеркало (mirror) |
+| зошит (notebook) | кімната (room) | фото (photo) |
+| ключ (key) | стіна (wall) | |
+
+**Deterministic word count: 1296 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -420,16 +408,39 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 74 words | Not found: 5 words
+Verified: 68 words | Not found: 28 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Вашуленко' — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Жіно — NOT IN VESUM
+  ✗ Закі — NOT IN VESUM
+  ✗ Кла — NOT IN VESUM
+  ✗ Кни — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
-  ✗ Олег — NOT IN VESUM
-  ✗ Олег' — NOT IN VESUM
-  ✗ Соня' — NOT IN VESUM
+  ✗ Предме — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ дерев'я — NOT IN VESUM
+  ✗ днього — NOT IN VESUM
+  ✗ жко — NOT IN VESUM
+  ✗ зру — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ крі — NOT IN VESUM
+  ✗ кімна — NOT IN VESUM
+  ✗ мпа — NOT IN VESUM
+  ✗ мці — NOT IN VESUM
+  ✗ нови — NOT IN VESUM
+  ✗ нська — NOT IN VESUM
+  ✗ нчення — NOT IN VESUM
+  ✗ сло — NOT IN VESUM
+  ✗ сно — NOT IN VESUM
+  ✗ телефо — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
+  ✗ ціка — NOT IN VESUM
+  ✗ чка — NOT IN VESUM
+  ✗ чне — NOT IN VESUM
+  ✗ шит — NOT IN VESUM
 
-All 74 other words are confirmed to exist in VESUM.
+All 68 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -438,23 +449,23 @@ All 74 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
+- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp__rag__search_literary` — verify literary references against primary sources
+- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

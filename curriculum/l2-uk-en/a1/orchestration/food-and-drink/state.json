@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "food-and-drink",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T13:40:42.710075+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T13:41:19.883028+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T13:42:22.697510+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T13:44:50.816977+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T13:46:16.935920+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T13:46:16.936172+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T13:49:39.924903+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T13:49:39.933433+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T13:49:39.939039+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T13:50:21.094374+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T13:50:22.223062+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T13:50:22.340949+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-30T13:53:32.500291+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-30T19:48:50.204258+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-30T19:48:50.356347+00:00"
+    }
+  }
+}

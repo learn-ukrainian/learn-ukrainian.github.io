@@ -1,3 +1,22 @@
+<correction_directive>
+CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
+
+- FIX: Too short: 391 words (target: 1200, minimum: 1020)
+- NOTE: Plan expects 4 exercise(s) but content has 3
+</correction_directive>
+
+LEARNINGS FROM PAST BUILDS (same error patterns seen before):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
+- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
+- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
+- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
+- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
+- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
+
 
 
 ---
@@ -128,6 +147,14 @@ objectives:
 - Ask "What kind?" with який/яка/яке
 - Describe objects and rooms using common adjective pairs
 - Build descriptive sentences combining M08 nouns with M09 adjectives
+dialogue_situations:
+- setting: 'At a weekend book fair — browsing books, maps, and posters. Describe items:
+    новий атлас (m), цікава книга (f), старе фото (n), великий плакат (m), маленька
+    листівка (f, postcard). NOT bags or furniture.'
+  speakers:
+  - Тарас
+  - Софія
+  motivation: Який/яка/яке? with книга(f), атлас(m), фото(n), плакат(m), листівка(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
@@ -226,109 +253,89 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-**Confirmed (17/17):** All plan vocabulary words exist in VESUM.
+- **Confirmed (17/17):** який (adj), яка (adj form of який), яке (adj form of який), великий (adj), маленький (adj), новий (adj), старий (adj), гарний (adj), чистий (adj), дорогий (adj), дешевий (adj), поганий (adj), брудний (adj), світлий (adj), темний (adj), а (conj/part/intj), але (conj/part/intj)
+- **Not found:** — (none)
 
-- ✅ який — adj (interrogative/relative)
-- ✅ яка — adj (fem form of який)
-- ✅ яке — adj (neut form of який)
-- ✅ великий — adj
-- ✅ маленький — adj
-- ✅ новий — adj
-- ✅ старий — adj
-- ✅ гарний — adj
-- ✅ чистий — adj
-- ✅ дорогий — adj
-- ✅ дешевий — adj
-- ✅ поганий — adj
-- ✅ брудний — adj
-- ✅ світлий — adj
-- ✅ темний — adj
-- ✅ але — conj/intj/part
-- ✅ а — conj/intj/part
-
-**Not found:** none.
+All 17 plan vocabulary words are fully attested in VESUM. No substitutions needed.
 
 ---
 
 ## Textbook Excerpts
 
-### Section: Діалоги — Describing a room (Dialogue 1)
+### Section: Діалоги — Describing a room
+> «Одна кімната велика. У ній є зручний вихід на балкон. Друга — менша, але вона світла й затишна.»
+> Source: Вашуленко, Grade 3, p.130 (§41 «Змінювання прикметників за родами»)
 
-> «Склади усну розповідь на тему "Моя кімната", використовуючи іменники з довідки. Добери до іменників прикметники і використай їх у тексті. Кімната, двері, вікно, стеля, стіни, шафа, стіл, стілець, тумбочка, ліжко, підлога. — Рід і число прикметників визначаються за формами роду і числа іменників, з якими зв'язані прикметники.»
-> **Source: Vashulenko, Grade 3, p.131** ✅ — directly matches plan reference "Вашуленко Grade 3 p.131 'Моя кімната'". Confirms real textbook grounding for the room description dialogue.
+**Note:** Plan cites p.131 «Моя кімната»; RAG confirms adjacent p.130 has the room description. Same lesson unit — page reference is ±1 due to scan pagination. Content fully confirmed. The exact string «Яка твоя кімната? — Моя кімната велика і світла» is a natural A1 derivative of this textbook context.
 
-### Section: Діалоги — Shopping (Dialogue 2)
+### Section: Діалоги — Shopping (window shopping)
+> «— Боже ж мій, яка сумка! [...] Це дешевий клатч! [...] Справді, для тебе — дешевий?»; also: «— Скільки вона коштує? — Дев'ять тисяч гривень.» (music shop dialogue with price question)
+> Source 1: Заболотний, Grade 8, p.194 (natural shopping/window-shopping scene with дорогий/дешевий)
+> Source 2: Авраменко, Grade 6, p.18 (§8 «Пряма мова. Діалог» — model shop dialogue)
 
-> «У крамниці музичних інструментів: — Чи є у вас трембіта? — Так, є, — відповіла продавчиня. — Скільки вона коштує? — Дев'ять тисяч гривень.»
-> **Source: Avramenko, Grade 6, p.18** — Shop dialogue structure confirmed. No direct A1-level shopping dialogue with adjectives found in the RAG, but the крамниця context with direct questions is textbook-grounded. The plan's "Яка гарна сумка! — Так, але вона дорога." follows exactly this dialogue pattern. ✅
+The Grade 8 extract is too lexically complex for A1. However it confirms that «яка сумка!» + price discussion is a **textbook-attested natural situation**, not an invented one. The Grade 6 shop dialogue confirms the pattern «Скільки це коштує?» as the natural price question. Plan dialogue is pedagogically grounded. ✅
 
-### Section: Який? Яка? Яке? — Adjective gender agreement
+### Section: Який? Яка? Яке? — Gender agreement table
+> «Прикметники чоловічого роду мають закінчення -ий, -ій (гарний чоловік, синій колір), жіночого роду — -а, -я (гарна жінка, синя хустка), середнього роду — -е, -є (гарне пальто, синє небо).»
+> Source: Пономарова, Grade 3, p.99 (§ «Визначаю родові закінчення прикметників»)
 
-> «У називному відмінку однини: Ч. р.: -ий / -ій — Ж. р.: -а / -я — С. р.: -е / -є. Відмінкові закінчення прикметників в однині залежать від кінцевого приголосного основи.»
-> **Source: Kravtsova, Grade 4, p.68** — Full declension table with question forms (який? яка? яке?) confirmed.
+> Corroborated by table in Кравцова, Grade 3, p.72: «який? ч. р. → -ий, -ій / яка? ж. р. → -а, -я / яке? с. р. → -е, -є / які? → -і»
+> Source: Кравцова, Grade 3, p.72
 
-> «Займенники який, чий, котрий змінюємо за відмінками, родами й числами. — Яке твоє ім'я? Скільки тобі років?»
-> **Source: Litvinova, Grade 6, p.264** — The question form «Яке твоє ім'я?» directly mirrors the plan's «Яка твоя кімната?» ✅
+**Note:** Вашуленко (p.130) lists neuter ending as «-о, -є» (archaic/regional variant). Пономарова and Кравцова give «-е, -є», which matches the plan's examples (чисте вікно, нове ліжко). Plan is correct — use Пономарова/Кравцова as authority here.
 
 ### Section: Прикметники — Antonym pairs
+> «Слова «великий» і «малий», «сідати» і «вставати», «холодний» — «теплий» антонімами звати.»; also «темний — світлий, сідати — уставати» as canonical antonym pairs.
+> Source 1: Кравцова, Grade 3, p.95 (вірш про антоніми — explicit antonym pairs cited)
+> Source 2: Авраменко, Grade 10, p.28 (антоніми — «темний — світлий» as example pair)
+> Source 3: Вашуленко, Grade 3, p.56 (§18 «Протилежні за значенням слова — антоніми»)
 
-> «Маленька праця краща за велике безділля… Слова, які мають протилежне значення, називаються антонімами. Старе дерево — [антонім], велика [кімнатка] — маленька квартира.»
-> **Source: Zabolotnyi, Grade 5, p.28–29** — Antonym pairs taught explicitly as a grammar device. Confirms the plan's pedagogical approach of presenting adjectives in opposite pairs. ✅
+Teaching adjectives in antonym pairs is **explicitly the Ukrainian textbook method** from Grade 3 upward. Plan structure is fully textbook-aligned. ✅
 
-> «Катруся жила в маленькій квартирі… У неї була своя велика кімнатка… Кімнатка була настільки брудною.»
-> **Source: Zaharijchuk, Grade 4, p.65** — Real classroom text uses великий/маленький + брудний in exactly the кімната context. Strong precedent for the plan's vocabulary. ✅
-
-### Section: Підсумок / Summary
-
-> «Рід і число прикметників визначаються за формами роду і числа іменників, з якими зв'язані прикметники. НАПРИКЛАД: висока береза / високий клен / високе дерево.»
-> **Source: Vashulenko, Grade 3, p.131** — The summary self-check questions (What ending for masculine? etc.) align precisely with how Vashulenko teaches adjective gender. ✅
+### Section: Підсумок — Self-check summary
+No direct textbook match for a self-check summary of adjective gender endings specifically at A1 level. However, the question pattern «Яке закінчення мають прикметники чоловічого/жіночого/середнього роду?» is the standard Кравцова/Пономарова consolidation format (Grade 3). Plan's self-check questions («What ending does a masculine adjective have?») directly mirror this textbook approach. ✅
 
 ---
 
 ## Grammar Rules
 
-- **Adjective gender agreement (nominative):** Правопис §33 covers adjectival suffixes. The core paradigm (м.: -ий/-ій, ж.: -а/-я, с.: -е/-є) is confirmed by Zabolotnyi Grade 6, p.143 full declension table (тверда група: новий / нова / нове; м'яка група: синій / синя / синє). Plan correctly restricts soft-stem adjectives (-ій/-я/-є) to M10 — appropriate scope management. ✅
+- **Adjective gender agreement (endings -ий/-а/-е):** Confirmed by Пономарова Grade 3 §«Визначаю родові закінчення прикметників» and Кравцова Grade 3 p.72. Rule: «Прикметники в однині змінюються за родами. Чол. рід: -ий/-ій; Жін. рід: -а/-я; Сер. рід: -е/-є.»
 
-- **Note on §33:** Правопис §33 addresses adjective *suffixes* (-н-, -ичн-, etc.), not the gender-agreement paradigm specifically. The agreement rule is presented in textbook grammar sections (not правопис per se) and confirmed by multiple Grade 3–6 sources above. No правопис rule contradicts anything in the plan.
+- **Правопис §33** (returned by query): Covers adjective *derivational* suffixes (-н-, -ист-, -ев- etc.) — **not** relevant to this module's gender agreement rule. Gender agreement endings for adjectives are covered in Ukrainian school grammar (morphology), not Правопис 2019 per se. No Правопис section conflict — gender agreement is unambiguous.
+
+- **Adjective agrees in gender with its noun:** Confirmed by Заболотний Grade 11 (coordination/узгодження rule): «Залежне слово вживається у тому самому роді, числі й відмінку, що й головне слово» — covers the agreement principle underlying this module.
 
 ---
 
 ## Calque Warnings
 
-- **"гарний"** (nice/beautiful) — ✅ CORRECT. Антоненко-Давидович explicitly recommends **гарний** over *красивий* for everyday usage: *"Який красивий будинок! — може краще сказати: гарний (чудовий) будинок."* The plan uses гарний throughout — this is the right native word. Avoid красивий in content.
+- **«гарний» vs «красивий»:** ✅ OK — Антоненко-Давидович explicitly recommends гарний over красивий: *«Який красивий будинок! — не замислюючись над тим що, може краще сказати: гарний (чудовий) будинок»*. Plan correctly uses **гарний**. Do NOT use красивий in this module.
 
-- **"великий"** (big) — ✅ OK. Style guide confirms "великий" is natural Ukrainian (cited as preferred alternative to "значний" for overuse contexts). No calque risk here.
+- **«а» (contrast) vs «але» (adversative):** ✅ OK — Антоненко-Давидович confirms «а» is used for contrast in Ukrainian (е.g. «Брати працювали, а я сидів»). Plan correctly distinguishes «а» (contrast/and-but) from «але» (stronger adversative). Note: also confirmed in plan example «Стілець старий, а ліжко — нове» — this is textbook-natural.
 
-- **"але" / "а" contrast** — ✅ OK. No calque issue found. Both conjunctions are fully native Ukrainian. The plan's distinction (а = contrast/and, але = but) is linguistically correct per textbook usage.
-
-- **"поганий"** (bad) — ✅ OK. Антоненко-Давидович lists "поганий" among adjectives taking preposition **на** in specific collocations (e.g., *поганий на обличчя*), but in the general meaning "bad" it is natural Ukrainian. No calque risk.
-
-- **"дешевий" / "дорогий"** — ✅ OK. No calque issues. These are native Ukrainian words with no Russian ghost risk.
+- **«дешевий/дорогий»:** ✅ No calque issues. Both are native Ukrainian words with no style guide concerns.
 
 ---
 
 ## CEFR Check
 
 | Word | PULS Level | Status |
-|------|-----------|--------|
-| великий | **A1** | ✅ On target |
-| маленький | **A1** | ✅ On target |
-| новий | **A1** | ✅ On target |
-| старий | **A1** | ✅ On target |
-| гарний | **A1** | ✅ On target |
-| поганий | **A1** | ✅ On target |
-| темний | **A1** | ✅ On target |
-| світлий | **A1** | ✅ On target |
-| дорогий | **A1** | ✅ On target |
-| дешевий | **A2** | ⚠️ One level above target |
-| чистий | **A2** | ⚠️ One level above target |
-| брудний | **A2** | ⚠️ One level above target |
+|---|---|---|
+| який | A1 | ✅ On target |
+| великий | A1 | ✅ On target |
+| маленький | A1 | ✅ On target |
+| новий | A1 | ✅ On target |
+| старий | A1 | ✅ On target |
+| гарний | A1 | ✅ On target |
+| дорогий | A1 | ✅ On target |
+| поганий | A1 | ✅ On target |
+| темний | A1 | ✅ On target |
+| світлий | A1 | ✅ On target |
+| чистий | A2 | ⚠️ One level above target |
+| брудний | A2 | ⚠️ One level above target |
+| дешевий | A2 | ⚠️ One level above target |
 
-**Three words (дешевий, чистий, брудний) are rated A2 by PULS.** However:
-- All three are semantically transparent antonym-partners of A1 words (дорогий, брудний↔чистий)
-- They appear in Grades 3–4 textbooks in the кімната context (брудна кімнатка — Zaharijchuk G4)
-- Teaching in A1 as **stretch/receptive vocabulary** within established pairs is pedagogically justified — note them as slightly above A1 in the module's vocabulary list so the writer is aware
-- They do **not** need to be removed — just flagged
+**Assessment on A2-tagged words:** чистий, брудний, and дешевий are PULS-tagged A2, but this is **M09 in A1.2** (not A1.1 beginner). All three are: (a) VESUM-confirmed standard adjectives, (b) part of the pedagogically essential antonym pairs (чистий↔брудний, дорогий↔дешевий), and (c) thematically necessary for describing rooms and shopping. **Recommend retaining all three** — they are appropriate stretch vocabulary for A1.2 and directly serve the module's paired-antonym teaching strategy.
 </pre_verified_facts>
 
 
@@ -379,34 +386,6 @@ You do NOT need to call tools yourself — the facts are already verified.
 > 4   Прочитайте сполучення слів і порівняйте їх.
 
 ## Який? Яка? Яке? (What kind?)
-
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 35
-> **Score:** 0.50
->
-> 35
-> Книжки треба шанувати. Не можна 
-> їх бруднити, рвати. Пошкоджені книжки 
-> слід полагодити.
-> Прочитай і розкажи 
-> у класі.
-> Я — учителька
-> Я — учитель
-> Якщо речення вимовляють з особ­
-> ливим почуттям, із підсилювальною 
-> інтонацією, то вони стають оклич-
-> ними. У кінці окличних речень став-
-> лять знак оклику.
-> 2   Прочитай текст. Визнач, які це речення 
-> за метою висловлювання.
-> 	 	
-> 3   Розгляньте малюнки. Складіть за одним із них невеликий 
-> текст, використовуючи окличні речення. Прочитайте його 
-> з потрібною інтонацією.
-> 	 	
->   Перебудуй речення так, щоб вони стали спонукальними. Запиши 
-> утворений текст.
->   Запишіть текст, ставлячи потрібні розділові знаки в кінці речень.
 
 > **Source:** bolshakova, Grade 1
 > **Section:** Сторінка 66
@@ -477,6 +456,34 @@ You do NOT need to call tools yourself — the facts are already verified.
 > 4
 > Я я
 > я|бл у|к о
+
+> **Source:** vashulenko, Grade 3
+> **Section:** Сторінка 35
+> **Score:** 0.50
+>
+> 35
+> Книжки треба шанувати. Не можна 
+> їх бруднити, рвати. Пошкоджені книжки 
+> слід полагодити.
+> Прочитай і розкажи 
+> у класі.
+> Я — учителька
+> Я — учитель
+> Якщо речення вимовляють з особ­
+> ливим почуттям, із підсилювальною 
+> інтонацією, то вони стають оклич-
+> ними. У кінці окличних речень став-
+> лять знак оклику.
+> 2   Прочитай текст. Визнач, які це речення 
+> за метою висловлювання.
+> 	 	
+> 3   Розгляньте малюнки. Складіть за одним із них невеликий 
+> текст, використовуючи окличні речення. Прочитайте його 
+> з потрібною інтонацією.
+> 	 	
+>   Перебудуй речення так, щоб вони стали спонукальними. Запиши 
+> утворений текст.
+>   Запишіть текст, ставлячи потрібні розділові знаки в кінці речень.
 
 > **Source:** bolshakova, Grade 2
 > **Section:** Сторінка 36
@@ -833,6 +840,18 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
 
   Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
+- **DIALOGUE VARIETY — CRITICAL.** Each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
+
+  BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.
+
+  REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
+
+  **Module-specific dialogue settings (from plan):**
+  1. **At a weekend book fair — browsing books, maps, and posters. Describe items: новий атлас (m), цікава книга (f), старе фото (n), великий плакат (m), маленька листівка (f, postcard). NOT bags or furniture.**
+     Speakers: Тарас, Софія
+     Why: Який/яка/яке? with книга(f), атлас(m), фото(n), плакат(m), листівка(f)
+
+  Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
@@ -903,49 +922,78 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 <skeleton>
 ## Діалоги (Dialogues) (~330 words total)
 
-- P1 (~40 words): Brief framing sentence: adjectives come alive when we describe real things. Introduce the two dialogue scenarios — a room and a shop window — so the learner knows what to expect.
-- Dialogue 1 (~110 words): Яка твоя кімната? / Моя кімната велика і світла. / А стіл? Який він? / Стіл новий. А ліжко — старе. / А вікно? / Вікно велике і чисте. Full exchange using 6 adjectives (велика, світла, новий, старе, велике, чисте) on M08 nouns (кімната, стіл, ліжко, вікно). Source: Вашуленко Grade 3 p.131 'Моя кімната' task.
-- P2 (~20 words): One-sentence note pointing out that стіл→новий (m), ліжко→старе (n), кімната→велика (f) — the ending changed because the noun changed. Preview that the next section explains why.
-- Dialogue 2 (~110 words): Window-shopping exchange — Яка гарна сумка! / Так, але вона дорога. / А телефон? Який він? / Він великий і дешевий. / А це вікно? Яке воно? / Воно чисте і світле. Full exchange adds яке/воно, consolidates три gender question words in natural context.
-- P3 (~50 words): Highlight the pattern emerging from both dialogues: the question word matches the noun's gender — який (m), яка (f), яке (n). Learner's attention drawn to the три question forms before the grammar section formalises them.
+- P1 (~35 words): Scene-setting intro. Adjectives describe what nouns ARE LIKE. Two dialogues show this in real life: first, a room at home; second, browsing a book fair. No grammar yet — just exposure.
+
+- Dialogue 1 (~90 words): Room description (Вашуленко Grade 3 p.131 pattern). Тарас asks, Оля answers. 5 exchanges: — Яка твоя кімната? — Велика і світла. — А стіл? — Стіл новий. — А ліжко? — Воно старе. — Вікно? — Вікно чисте і велике. — А стілець? — Маленький, але зручний. Nouns: кімната (f), стіл (m), ліжко (n), вікно (n), стілець (m) — all M08 nouns, now with adjectives attached.
+
+- P2 (~30 words): Bridge note. Same question word — Який? Яка? Яке? — but a new setting: a weekend book fair. Watch how the question word shifts with each noun.
+
+- Dialogue 2 (~100 words): Book fair. Тарас і Софія browse. 6 exchanges: — Який цікавий атлас! — Так, але він дорогий. — А ця книга? Яка вона? — Нова і дешева. — Яке гарне фото! — Справді. А плакат? — Великий і яскравий. — Подивись — маленька листівка. Яка вона? — Стара, але гарна. Items: атлас (m), книга (f), фото (n), плакат (m), листівка (f) — five genders represented deliberately.
+
+- P3 (~30 words): Observation prompt. In Dialogue 2: атлас → який, книга → яка, фото → яке. The question word matched the noun. That pattern is the entire grammar point for this module.
+
+- Exercise (~45 words): **Comprehension check (3 true/false statements)** — "Атлас дешевий. True or false?" / "Книга стара. True or false?" / "Листівка маленька. True or false?" Forces learners to re-read dialogues for adjective meaning before studying the pattern formally.
 
 ---
 
 ## Який? Яка? Яке? (What kind?) (~330 words total)
 
-- P1 (~80 words): Introduce the question word as a mini-adjective that agrees with the noun. Parallel to мій/моя/моє from M08 — same logic, new word. Table of three forms: Який стіл? → masculine (-ий); Яка книга? → feminine (-а); Яке вікно? → neuter (-е). Three concrete noun examples from M08 vocabulary anchor each gender.
-- P2 (~90 words): Explain the hard-stem adjective ending pattern: masculine -ий (великий, новий, чистий), feminine -а (велика, нова, чиста), neuter -е (велике, нове, чисте). Cite Пономарова Grade 3 p.98: «Прикметник має такий рід, як іменник, з яким він зв'язаний.» Show three chains: зелена трава / зелене дерево / зелений кущ → same root, ending shifts.
-- Exercise 1 (~30 words overhead): Fill-in (6 items) — choose який/яка/яке for: ___ стіл, ___ книга, ___ вікно, ___ телефон, ___ кімната, ___ ліжко. Matches activity_hint quiz item.
-- P3 (~80 words): Soft-stem note (синій/синя/синє) flagged as coming in M10 Colors — one sentence only, no detail. Reinforce that this ending pattern reappears in every case learners will study. "Learn it now — it will save you time in every future module." Three additional practice chains: новий стіл / нова сумка / нове ліжко, чистий стілець / чиста підлога / чисте вікно, гарний телефон / гарна кімната / гарне крісло.
-- P4 (~50 words): Agreement rule restated as a one-line мнемоніка: «Прикметник — дзеркало іменника.» The adjective mirrors its noun's gender. Reinforce with Zaharijchuk Grade 1 p.101 grammar note: «Слова, які відповідають на питання який? яка? яке? які?, указують на ознаку предмета.»
+- P1 (~60 words): Core rule. In Ukrainian, the question "What kind?" changes its ending to match the noun's gender — just like мій/моя/моє from M08. Masculine noun → Який? (Який стіл? → Великий стіл.) Feminine noun → Яка? (Яка книга? → Нова книга.) Neuter noun → Яке? (Яке вікно? → Чисте вікно.) Three questions, three answers — same gender in each pair.
+
+- P2 (~70 words): Ending pattern laid out clearly. Adjectives change the same way as the question word. Masculine: -ий (великий, новий, чистий, дорогий). Feminine: -а (велика, нова, чиста, дорога). Neuter: -е (велике, нове, чисте, дороге). Source: Пономарова Grade 3 p.98: "Прикметник має такий рід, як іменник, з яким він зв'язаний." The adjective copies the gender of its noun — always.
+
+- P3 (~50 words): Pattern comparison to мій/моя/моє. Learners already know: мій стіл, моя книга, моє вікно. Adjectives follow the exact same rule. If you can say мій стіл, you can say великий стіл. The gender is in the noun — the adjective just agrees.
+
+- Exercise (~45 words): **Fill-in (10 items)** — add correct ending: нов__ книга → нова; велик__ стіл → великий; чист__ вікно → чисте; стар__ атлас → старий; дорог__ листівка → дорога; нов__ фото → нове; маленьк__ плакат → маленький; гарн__ кімната → гарна; дешев__ олівець → дешевий; чист__ небо → чисте.
+
+- P4 (~55 words): Soft-stem preview note. Some adjectives end in -ій/-я/-є (синій, синя, синє). These follow the same gender logic but with a soft stem. They appear in M10 (Colors) — don't worry about them now. For this module: всі прикметники end in hard -ий/-а/-е. One pattern, one module.
+
+- P5 (~50 words): Three mini-sentences modeling full descriptions using M08 nouns + M09 adjectives together: У мене є великий стіл. (m) / Моя кімната маленька, але гарна. (f) / Вікно велике і чисте. (n) — Learners see the adjective placed both before and after the noun. Both positions are correct in Ukrainian.
 
 ---
 
 ## Прикметники (Common Adjectives) (~330 words total)
 
-- P1 (~60 words): Introduce the six opposite pairs as a memory strategy — учіть прикметники парами. Paired learning is faster than isolated lists (педагогічна нотатка). Present all six pairs in a compact display: великий ↔ маленький, новий ↔ старий, гарний ↔ поганий, чистий ↔ брудний, дорогий ↔ дешевий, світлий ↔ темний.
-- Exercise 2 (~30 words overhead): Match-up (6 pairs) — match каждый adjective with its opposite. Matches activity_hint match-up item.
-- P2 (~80 words): Build descriptions by combining M08 room nouns with the new adjectives. Present eight model sentences: У мене є великий стіл. Моя кімната маленька, але гарна. Вікно велике і чисте. Стілець старий, а ліжко — нове. Шафа нова і велика. Підлога чиста. Сумка дорога. Телефон дешевий і новий. Each sentence deliberately varies gender so all three endings appear.
-- P3 (~70 words): Contrast connectors — а (contrast: Стіл новий, а стілець старий) vs і (parallel: Кімната велика і світла). Bolshakova Grade 2 p.31 pair: красивий — гарний — хороший as synonyms. Explain але (stronger but: Кімната маленька, але гарна) vs а (softer contrast). Four mini-examples, one per connector pattern.
-- Exercise 3 (~30 words overhead): Fill-in (10 items) — supply the correct adjective ending: нов__ книга, велик__ стіл, чист__ вікно, маленьк__ ліжко, стар__ стілець, гарн__ кімната, брудн__ підлога, дорог__ сумка, дешев__ телефон, світл__ вікно. Matches activity_hint fill-in (endings).
-- P4 (~60 words): Descriptive paragraph task — model text describing a room (4 sentences, all three genders present): Моя кімната невелика. Стіл новий і чистий. Вікно велике і світле. Шафа стара, але гарна. Learner prompt: опишіть свою кімнату у 3-4 реченнях, використовуючи прикметники. Matches activity_hint fill-in (describe the room). Source: Вашуленко Grade 3 p.131 oral task.
+- P1 (~45 words): Strategy note. Ukrainian vocabulary is easier to learn in opposites — your brain stores both at once. This module's core adjectives come in six pairs. Each pair, one example sentence shows both words in use together with an M08 noun.
+
+- P2 (~120 words): Six adjective pairs with example sentences for each:
+  1. великий ↔ маленький — Стіл великий, а стілець маленький.
+  2. новий ↔ старий — Книга нова, але атлас старий.
+  3. гарний ↔ поганий — Яка гарна листівка! А цей плакат поганий.
+  4. чистий ↔ брудний — Вікно чисте, а підлога брудна.
+  5. дорогий ↔ дешевий — Атлас дорогий. Книга дешева.
+  6. світлий ↔ темний — Кімната світла і велика.
+  Each pair presented as: bold headword (m form) ↔ bold headword (m form), then one sentence showing both in action. Feminine and neuter forms illustrated where the example sentence uses f or n nouns.
+
+- Exercise (~40 words): **Match-up (6 pairs)** — match adjective opposites: великий / маленький / новий / старий / чистий / брудний / дорогий / дешевий / світлий / темний / гарний / поганий. Reinforces both vocabulary and the concept of opposition.
+
+- P3 (~70 words): Building full descriptions — combining M08 nouns with M09 adjectives into connected sentences. Model paragraph about a room: У мене є маленька кімната. Стіл новий, а ліжко старе. Вікно велике і чисте. Стілець — маленький і старий, але зручний. — Point out two connectors: і = and (both true in parallel); а = and/but (contrast between two things). Example: Стіл новий, а стілець старий. vs. Кімната мала і темна.
+
+- Exercise (~55 words): **Fill-in (6 items)** — describe a room using given noun + adjective pair. Learner writes the full sentence with correct agreement: (вікно / чистий) → Вікно чисте. (кімната / світлий) → Кімната світла. (стіл / новий) → Стіл новий. (ліжко / старий) → Ліжко старе. (стілець / маленький) → Стілець маленький. (книга / цікавий) → Книга цікава.
 
 ---
 
-## Підсумок — Summary (~170 words total)
+## Підсумок — Summary (~330 words total)
 
-- P1 (~30 words): One-sentence recap: today you learned adjective-noun agreement in the nominative case — the adjective ending mirrors the noun's gender.
-- P2 — Self-check Q&A (~90 words):
-  - Яке закінчення має прикметник чоловічого роду? → -ий / -ій (великий, новий, синій)
-  - Жіночого роду? → -а / -я (велика, нова, синя)
-  - Середнього роду? → -е / -є (велике, нове, синє)
-  - Яке питання ставимо до прикметника чоловічого роду? → Який?
-  - Яке питання ставимо до прикметника жіночого роду? → Яка?
-  - Яке питання ставимо до прикметника середнього роду? → Яке?
-  - Яка різниця між «а» і «але»? → «а» — м'який контраст; «але» — сильніший.
-- P3 (~50 words): Look-ahead connector: M10 Colors introduces soft-stem adjectives (синій, зелений) — same agreement logic, new endings. M11 will apply these adjectives in accusative case. What you learned today is the foundation for every descriptive sentence in Ukrainian.
+- P1 (~50 words): Module recap. Today's core: adjectives in Ukrainian change their ending to match the gender of the noun they describe. Three endings to know now: -ий (m), -а (f), -е (n). The question words Який? Яка? Яке? follow the same pattern. The adjective always agrees with its noun.
 
-Grand total: ~1160 words prose + ~30+30+30 = 90 words exercise overhead = ~1250 words
+- Self-check Q&A (~100 words):
+  - What ending does a masculine adjective have? → -ий (великий, новий, чистий)
+  - What ending does a feminine adjective have? → -а (велика, нова, чиста)
+  - What ending does a neuter adjective have? → -е (велике, нове, чисте)
+  - Which question word goes with книга? → Яка? (Яка книга?)
+  - Which question word goes with стіл? → Який? (Який стіл?)
+  - Which question word goes with вікно? → Яке? (Яке вікно?)
+  - What's the difference between і and а? → і = and (parallel); а = and/but (contrast)
+  - Name three adjective opposites. → великий/маленький, новий/старий, дорогий/дешевий
+
+- Exercise (~60 words): **Quiz (6 items)** — choose Який / Яка / Яке for each noun: стіл → Який; кімната → Яка; фото → Яке; плакат → Який; книга → Яка; ліжко → Яке. Immediate application of the gender-agreement rule before the module closes.
+
+- P2 (~60 words): What's coming next. Colors in Ukrainian (M10) introduce soft-stem adjectives: синій (m) / синя (f) / синє (n) — the same gender logic, different stem. After M10, describing objects will be fully unlocked: великий синій стіл, нова червона книга, чисте біле вікно. The pattern you learned today carries forward into every module that follows.
+
+- P3 (~60 words): Production prompt. Write 3 sentences describing your real room or your desk using today's adjectives. Try to use: one masculine noun + adjective, one feminine noun + adjective, one neuter noun + adjective. Use і or а to connect at least one pair. No English. Think in Ukrainian: Який мій стіл? → Мій стіл ____. Don't translate — describe directly.
+
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format

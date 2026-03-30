@@ -1,0 +1,23 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-food-shopping",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T19:54:35.215602+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T19:55:33.170700+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T19:56:20.687025+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T19:58:16.355183+00:00"
+    }
+  }
+}

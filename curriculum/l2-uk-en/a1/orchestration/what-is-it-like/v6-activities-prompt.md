@@ -28,8 +28,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-yakyi-yaka-yake -->`
-- `<!-- INJECT_ACTIVITY: match-adjective-opposites -->`
 - `<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->`
+- `<!-- INJECT_ACTIVITY: match-adjective-opposites -->`
 - `<!-- INJECT_ACTIVITY: fill-in-describe-room -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -90,126 +90,117 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Everything around you has qualities — a table can be big or small, a room can be bright or dark. Ukrainian adjectives bring these descriptions to life, but they have a trick: their endings change depending on the noun they describe. Two everyday conversations will show you exactly how this works.
+You already know Ukrainian nouns have gender — **стіл** (table) is masculine, **книга** (book) is feminine, **вікно** (window) is neuter. But how do you describe what these things are actually like? That is where adjectives come in. Adjectives tell you about a noun's qualities — big, small, new, old. Two dialogues below show adjectives at work: first in a room at home, then at a weekend book fair.
 
-### Dialogue 1 — Describing a Room
+> **Тарас:** Яка твоя кімната? *(What is your room like?)*
+> **Оля:** Моя кімната велика і світла. *(My room is big and bright.)*
+> **Тарас:** А стіл? *(And the table?)*
+> **Оля:** Стіл новий. *(The table is new.)*
+> **Тарас:** А ліжко? *(And the bed?)*
+> **Оля:** Воно старе. *(It is old.)*
+> **Тарас:** Вікно? *(The window?)*
+> **Оля:** Вікно чисте і велике. *(The window is clean and big.)*
+> **Тарас:** А стілець? *(And the chair?)*
+> **Оля:** Маленький, але зручний. *(Small, but comfortable.)*
 
-Imagine two friends talking about one of their rooms at home. Notice how the adjective endings shift as the nouns change.
+Notice what just happened: **кімната** (room) is feminine, so Тарас asked **Яка** твоя кімната? But **стіл** (table) is masculine, and **ліжко** (bed) is neuter. The question word changed every time. All the nouns here — **кімната**, **стіл**, **ліжко**, **вікно**, **стілець** (chair) — come from M08. Now they have adjectives attached to them.
 
-> **Оленка:** Яка твоя кімната? *(What is your room like?)*
-> **Тарас:** Моя кімната велика і світла. *(My room is big and bright.)*
-> **Оленка:** А стіл? Який він? *(And the table? What is it like?)*
-> **Тарас:** Стіл новий. А ліжко — старе. *(The table is new. And the bed is old.)*
-> **Оленка:** А вікно? Яке воно? *(And the window? What is it like?)*
-> **Тарас:** Вікно велике і чисте. *(The window is big and clean.)*
+Same question words — **Який?** **Яка?** **Яке?** — but a brand-new setting: a weekend book fair. Тарас and Софія browse books, maps, and posters. Watch how the question word shifts with each noun.
 
-This short exchange uses six adjectives on four nouns — and every ending tells you the noun's gender. The word **кімната** (room) is feminine, so we hear **велика** and **світла** — both ending in **-а**. The word **стіл** (table) is masculine, so the adjective is **новий** — ending in **-ий**. And **ліжко** (bed) and **вікно** (window) are neuter, giving us **старе**, **велике**, and **чисте** — all ending in **-е**.
+> **Тарас:** Який цікавий атлас! *(What an interesting atlas!)*
+> **Софія:** Так, але він дорогий. *(Yes, but it is expensive.)*
+> **Тарас:** А ця книга? Яка вона? *(And this book? What is it like?)*
+> **Софія:** Нова і дешева. *(New and cheap.)*
+> **Тарас:** Яке гарне фото! *(What a nice photo!)*
+> **Софія:** Справді! А плакат? *(Indeed! And the poster?)*
+> **Тарас:** Великий і яскравий. *(Big and bright.)*
+> **Софія:** Подивись — маленька листівка. *(Look — a small postcard.)*
+> **Тарас:** Яка вона? *(What is it like?)*
+> **Софія:** Стара, але гарна. *(Old, but nice.)*
 
-Look at the pattern: the noun changed, and the adjective ending followed. This is exactly like **мій/моя/моє** from the previous module — the same gender logic, applied to a new set of words.
-
-### Dialogue 2 — Window Shopping
-
-Now two friends are walking past shop windows. A new question word appears — **яке** (what kind? — neuter).
-
-> **Марія:** Яка гарна сумка! *(What a nice bag!)*
-> **Андрій:** Так, але вона дорога. *(Yes, but it's expensive.)*
-> **Марія:** А телефон? Який він? *(And the phone? What is it like?)*
-> **Андрій:** Він великий і дешевий. *(It's big and cheap.)*
-> **Марія:** А це вікно? Яке воно? *(And this window? What is it like?)*
-> **Андрій:** Воно чисте і світле. *(It's clean and bright.)*
-
-Both dialogues reveal the same pattern: the question word matches the noun's gender. For masculine nouns you ask **який** (what kind?), for feminine — **яка**, and for neuter — **яке**. These three question forms are the key to describing anything in Ukrainian, and the next section explains exactly why they work this way.
-
-## Який? Яка? Яке? (What kind?)
-
-The question "What kind?" in Ukrainian is not a single word — it shifts to match the noun, just like **мій/моя/моє** from Module 8. Think of **який** as a mini-adjective: it agrees with whatever noun it asks about.
-
-| Gender | Question word | Example | Answer |
-|---|---|---|---|
-| Masculine | **який** | **Який стіл?** *(What kind of table?)* | **Великий стіл.** *(A big table.)* |
-| Feminine | **яка** | **Яка книга?** *(What kind of book?)* | **Нова книга.** *(A new book.)* |
-| Neuter | **яке** | **Яке вікно?** *(What kind of window?)* | **Чисте вікно.** *(A clean window.)* |
-
-Each answer follows the same rule: the adjective ending mirrors the noun's gender. Masculine adjectives end in **-ий** (**великий**, **новий**, **чистий**). Feminine adjectives end in **-а** (**велика**, **нова**, **чиста**). Neuter adjectives end in **-е** (**велике**, **нове**, **чисте**). This is the hard-stem pattern, and it covers most adjectives you will meet at this level.
-
-Ukrainian textbooks state this rule simply: «Прикметник має такий рід, як іменник, з яким він зв'язаний» — the adjective takes the same gender as the noun it is connected to (Пономарова, Grade 3, p. 98). Look at how one root shifts across all three genders:
-
-- **зелений кущ** *(a green bush — masculine)*
-- **зелена трава** *(green grass — feminine)*
-- **зелене дерево** *(a green tree — neuter)*
-
-The root **зелен-** stays the same. Only the ending changes: **-ий**, **-а**, **-е**.
+Look at the pattern in Dialogue 2: **атлас** (atlas, m) → **Який**, **книга** (book, f) → **Яка**, **фото** (photo, n) → **Яке**. The question word matched the noun's gender each time. **Плакат** (poster) is masculine, **листівка** (postcard) is feminine — five nouns, three genders, all represented. That pattern is the entire grammar point for this module.
 
 <!-- INJECT_ACTIVITY: quiz-yakyi-yaka-yake -->
 
-There is another ending set — soft-stem adjectives like **синій/синя/синє** (blue). These follow the same gender logic but use endings **-ій**, **-я**, **-є**. You will learn them properly in Module 10 (Colors). For now, just know they exist — the agreement principle is identical.
+## Який? Яка? Яке? (What kind?)
 
-This ending pattern reappears in every grammatical case you will study later. Learn it well now, and every future module becomes easier. Practice recognizing the gender by the ending with these chains:
+The question "What kind?" in Ukrainian changes its ending to match the noun's gender — the same principle as **мій/моя/моє** from M08. Here is the core pattern:
 
-- **новий стіл** / **нова сумка** / **нове ліжко**
-- **чистий стілець** / **чиста підлога** / **чисте вікно**
-- **гарний телефон** / **гарна кімната** / **гарне крісло**
+- Masculine noun → **Який?** — **Який стіл?** → **Великий стіл.** *(What kind of table? → A big table.)*
+- Feminine noun → **Яка?** — **Яка книга?** → **Нова книга.** *(What kind of book? → A new book.)*
+- Neuter noun → **Яке?** — **Яке вікно?** → **Чисте вікно.** *(What kind of window? → A clean window.)*
 
-:::tip
-Think of the adjective as a mirror: «Прикметник — дзеркало іменника.» *(The adjective is the noun's mirror.)* Whatever gender the noun has, the adjective reflects it. The question words **який/яка/яке** follow the same mirror rule. As Zaharijchuk's Grade 1 textbook (p. 101) puts it: words that answer the questions **який? яка? яке?** point to a quality of an object.
-:::
+Three questions, three answers — the gender matches in each pair.
 
-## Прикметники (Common Adjectives)
+Adjectives change their ending in exactly the same way as the question word. Masculine adjectives end in **-ий**: **великий** (big), **новий** (new), **чистий** (clean), **дорогий** (expensive). Feminine adjectives end in **-а**: **велика**, **нова**, **чиста**, **дорога**. Neuter adjectives end in **-е**: **велике**, **нове**, **чисте**, **дороге**. This comes directly from the Ukrainian textbook rule: «Прикметник має такий рід, як іменник, з яким він зв'язаний» (Пономарова, Grade 3, p.98) — the adjective takes the same gender as its noun. Always.
 
-The fastest way to learn adjectives is in opposite pairs — when you learn **великий** (big), learn **маленький** (small) at the same time. Your brain remembers contrasts better than isolated words. Here are six essential pairs:
-
-| Adjective | Meaning | Opposite | Meaning |
-|---|---|---|---|
-| **великий** | big | **маленький** | small |
-| **новий** | new | **старий** | old |
-| **гарний** | nice, beautiful | **поганий** | bad |
-| **чистий** | clean | **брудний** | dirty |
-| **дорогий** | expensive | **дешевий** | cheap |
-| **світлий** | light, bright | **темний** | dark |
-
-<!-- INJECT_ACTIVITY: match-adjective-opposites -->
-
-Now combine these adjectives with the room nouns you already know from Module 8. Every model sentence below deliberately uses a different gender so you can see all three endings in action:
-
-- **У мене є великий стіл.** *(I have a big table. — masculine)*
-- **Моя кімната маленька, але гарна.** *(My room is small but nice. — feminine)*
-- **Вікно велике і чисте.** *(The window is big and clean. — neuter)*
-- **Стілець старий, а ліжко — нове.** *(The chair is old, and the bed is new. — m + n)*
-- **Шафа нова і велика.** *(The wardrobe is new and big. — feminine)*
-- **Підлога чиста.** *(The floor is clean. — feminine)*
-- **Сумка дорога.** *(The bag is expensive. — feminine)*
-- **Телефон дешевий і новий.** *(The phone is cheap and new. — masculine)*
-
-Notice two little words connecting ideas in these sentences. The conjunction **і** (and) links parallel qualities: **велике і чисте** — both describe the window equally. The conjunction **а** (and/but) marks a softer contrast: **Стілець старий, а ліжко — нове** — the chair is one thing, the bed is another. For a stronger contrast, use **але** (but): **Кімната маленька, але гарна** — the room is small, *however* it is nice. Ukrainian textbooks present these connectors alongside adjective pairs — the antonym pairs naturally invite contrast words (Вашуленко, Grade 2, p. 31).
+This is not a new concept — you already know it from M08. You learned **мій стіл** (my table, m), **моя книга** (my book, f), **моє вікно** (my window, n). Adjectives follow the exact same logic. If you can say **мій стіл**, you can say **великий стіл**. If you can say **моя книга**, you can say **нова книга**. The gender lives in the noun — the adjective just agrees with it.
 
 <!-- INJECT_ACTIVITY: fill-in-adjective-endings -->
 
-Now try building your own description. Here is a model — four sentences, all three genders present:
+A quick note about what comes next. Some adjectives have a soft stem and end in **-ій/-я/-є** instead — for example, **синій** (blue, m), **синя** (f), **синє** (n). These follow the same gender logic, but they appear in M10 (Colors). For now, every adjective in this module ends in the hard pattern: **-ий** (m), **-а** (f), **-е** (n). One pattern, one module.
 
-- **Моя кімната невелика.** *(My room is not big.)*
-- **Стіл новий і чистий.** *(The table is new and clean.)*
-- **Вікно велике і світле.** *(The window is big and bright.)*
-- **Шафа стара, але гарна.** *(The wardrobe is old but nice.)*
+Here are three complete sentences combining M08 nouns with M09 adjectives. Notice the adjective can appear before or after the noun — both positions are correct in Ukrainian:
 
-Your turn: describe your own room in three to four sentences using adjectives from the pairs above. Try to include at least one masculine, one feminine, and one neuter noun. This is exactly the oral task from Вашуленко's Grade 3 textbook (p. 131): «Склади усну розповідь на тему "Моя кімната"» — compose an oral description on the topic "My Room."
+- **У мене є великий стіл.** *(I have a big table.)* — masculine
+- **Моя кімната маленька, але гарна.** *(My room is small, but nice.)* — feminine
+- **Вікно велике і чисте.** *(The window is big and clean.)* — neuter
+
+## Прикметники (Common Adjectives)
+
+Ukrainian vocabulary sticks better when you learn words in opposite pairs — your brain stores both at once. This module's core adjectives come in six pairs. For each pair, an example sentence shows both words in action with a noun you already know from M08.
+
+1. **великий** (big) ↔ **маленький** (small)
+   - **Стіл великий, а стілець маленький.** *(The table is big, and/but the chair is small.)*
+
+2. **новий** (new) ↔ **старий** (old)
+   - **Книга нова, але атлас старий.** *(The book is new, but the atlas is old.)*
+
+3. **гарний** (nice, beautiful) ↔ **поганий** (bad)
+   - **Яка гарна листівка! А цей плакат поганий.** *(What a nice postcard! And this poster is bad.)*
+
+4. **чистий** (clean) ↔ **брудний** (dirty)
+   - **Вікно чисте, а підлога брудна.** *(The window is clean, and/but the floor is dirty.)*
+
+5. **дорогий** (expensive) ↔ **дешевий** (cheap)
+   - **Атлас дорогий. Книга дешева.** *(The atlas is expensive. The book is cheap.)*
+
+6. **світлий** (light, bright) ↔ **темний** (dark)
+   - **Кімната світла і велика.** *(The room is bright and big.)*
+
+Teaching adjectives in antonym pairs is exactly how Ukrainian textbooks do it from Grade 3 onward (Вашуленко, Grade 3, p.56 — «Протилежні за значенням слова — антоніми»). Notice how the adjective endings shift depending on the noun: **чисте вікно** (n, -е) but **брудна підлога** (f, -а). The gender of the noun controls everything.
+
+<!-- INJECT_ACTIVITY: match-adjective-opposites -->
+
+Now let's build full descriptions — combining several M08 nouns with M09 adjectives into connected sentences. Read this short paragraph describing a room:
+
+- **У мене є маленька кімната.** *(I have a small room.)*
+- **Стіл новий, а ліжко старе.** *(The table is new, and/but the bed is old.)*
+- **Вікно велике і чисте.** *(The window is big and clean.)*
+- **Стілець маленький і старий, але зручний.** *(The chair is small and old, but comfortable.)*
+
+Two connectors to notice: **і** (and) links things that are both true in parallel — **велике і чисте** means the window is both big AND clean. **А** (and/but) marks a contrast between two things — **Стіл новий, а ліжко старе** highlights that one is new while the other is old. Compare: **Кімната мала і темна** (the room is small AND dark — both true, no contrast) vs. **Стіл новий, а стілець старий** (the table is new BUT the chair is old — deliberate contrast).
 
 <!-- INJECT_ACTIVITY: fill-in-describe-room -->
 
 ## Підсумок — Summary
 
-Today you learned adjective-noun agreement in the nominative case — the adjective ending mirrors the noun's gender, every time.
+Here is today's core lesson in one sentence: Ukrainian adjectives change their ending to match the gender of the noun they describe. Three endings to remember right now: **-ий** for masculine, **-а** for feminine, **-е** for neuter. The question words **Який?** (m), **Яка?** (f), **Яке?** (n) follow the same pattern. The adjective always agrees with its noun — no exceptions in this module.
 
 Test yourself with these questions:
 
-- What ending does a masculine adjective have? → **-ий** / **-ій** (**великий**, **новий**, **синій**)
-- What about feminine? → **-а** / **-я** (**велика**, **нова**, **синя**)
-- And neuter? → **-е** / **-є** (**велике**, **нове**, **синє**)
-- Which question word goes with a masculine noun? → **Який?**
-- With a feminine noun? → **Яка?**
-- With a neuter noun? → **Яке?**
-- What is the difference between **а** and **але**? → **А** marks a soft contrast; **але** is a stronger "but."
+- What ending does a masculine adjective have? → **-ий** (**великий**, **новий**, **чистий**)
+- What ending does a feminine adjective have? → **-а** (**велика**, **нова**, **чиста**)
+- What ending does a neuter adjective have? → **-е** (**велике**, **нове**, **чисте**)
+- Which question word goes with **книга**? → **Яка?** (**Яка книга?**)
+- Which question word goes with **стіл**? → **Який?** (**Який стіл?**)
+- Which question word goes with **вікно**? → **Яке?** (**Яке вікно?**)
+- What is the difference between **і** and **а**? → **і** means "and" (parallel: both true); **а** means "and/but" (contrast between two things)
+- Name three adjective opposites. → **великий/маленький**, **новий/старий**, **дорогий/дешевий**
 
-Module 10 (Colors) introduces soft-stem adjectives like **синій** (blue) and **зелений** (green) — the same agreement logic, but with the endings **-ій/-я/-є** instead of **-ий/-а/-е**. Later modules will apply these adjectives beyond the nominative case. What you learned today — matching the adjective to the noun's gender — is the foundation for every descriptive sentence you will ever build in Ukrainian.
+Colors in Ukrainian (M10) introduce soft-stem adjectives: **синій** (blue, m), **синя** (f), **синє** (n) — the same gender logic, but with a different ending pattern. After M10, describing objects fully unlocks: **великий синій стіл** (a big blue table), **нова червона книга** (a new red book), **чисте біле вікно** (a clean white window). The pattern you learned today carries forward into every module that follows. Gender agreement is the backbone of Ukrainian adjectives — and you already have it.
+
+Now it is your turn. Write three sentences describing your real room or your desk using today's adjectives. Use one masculine noun with an adjective, one feminine noun with an adjective, and one neuter noun with an adjective. Connect at least one pair with **і** or **а**. No English — think directly in Ukrainian. Ask yourself: **Який мій стіл?** → **Мій стіл ____.** **Яка моя кімната?** → **Моя кімната ____.** **Яке моє вікно?** → **Моє вікно ____.** Fill in the blanks. Describe, don't translate.
 
 </module_content>
 

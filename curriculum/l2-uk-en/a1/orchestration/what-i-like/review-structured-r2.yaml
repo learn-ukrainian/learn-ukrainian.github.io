@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. All plan
+    points covered: Dialogue 1 uses люблю + infinitive pattern (читати, слухати, гуляти,
+    готувати); Dialogue 2 introduces подобається'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 24 content words VESUM-verified. Verb conjugation forms correct:
+    люблю (1st sg), любиш (2nd sg), любить (3rd sg) — all confirmed in VESUM paradigm
+    for любити. Vocative "Анно" confirmed. "грати в ш'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present patterns in context → "Я люблю..."
+    section explains the pattern with 9+ examples → "Мені подобається..." contrasts
+    the two structures → Summary consolidates. Each gr'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocabulary items appear in context: любити ✓ (throughout),
+    подобатися ✓ (throughout), читати ✓ (dialogue + examples), гуляти ✓ ("Люблю гуляти
+    в парку"), готувати ✓ (dialogue + examples)'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers match all 4 plan activity_hints in type and focus. Markers
+    placed after relevant teaching: fill-in-infinitive after dialogues introduce the
+    pattern, match-up after vocab table, quiz after tw'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Natural café setting for dialogues ("cozy language café in Kyiv, two
+    cups of tea steaming"). Culturally specific details: борщ, вареники, Київ, джаз.
+    No motivational openers or meta-commentary ("Let u'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections match plan: Діалоги, Я люблю..., Мені подобається...,
+    Підсумок. Clean markdown. No duplicate summaries. No meta-commentary sections.
+    No stray tags. 1490 words > 1200 target. All sect'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented entirely on its own terms. No "like Russian but..."
+    comparisons. борщ transliterated as "Borshch" (Ukrainian, not "borscht" via Russian/Yiddish).
+    Culturally grounded examples: борщ'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Two natural multi-turn dialogues with named speakers (Анна, Віктор) and
+    distinct voices. Dialogue 1: organic hobby-sharing over tea, flows from question
+    → answer → follow-up → reciprocal question → sp'
+findings: []

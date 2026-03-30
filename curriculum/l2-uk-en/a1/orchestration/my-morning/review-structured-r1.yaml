@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed the "Self-check: Describe your morning in 4-5 sentences" point
+    from the `Підсумок — Summary` section outline.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent overall accuracy. Minor euphony clash ("в ванній" instead of
+    "у ванній") which disrupts natural phonetic flow for learners.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Great explanation of reflexive verbs looping back to the subject. Good
+    pacing and examples. Pronunciation shift is explained perfectly.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are included
+    naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Missing the final `fill-in` activity for describing a morning routine,
+    leaving learners without the crucial production step at the end.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging tone without being generic. The dialogues feel like
+    real roommate conversations.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, appropriate H2 headings, correct word count.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate contexts and names. Accurate grounding in Ukrainian
+    textbook concepts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, establish a clear scene, and perfectly illustrate
+    the grammar point in action.
+findings: []

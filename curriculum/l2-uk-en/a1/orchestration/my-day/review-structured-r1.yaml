@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Every point in the `content_outline` is covered accurately. Past tense
+    ("працювала") and future ("буду працювати") are correctly introduced as chunks
+    without full grammar overhead.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent, natural Ukrainian. However, there are minor factual inaccuracies
+    in the metalanguage: "вечеряти" is grouped as an "-ати" verb (it ends in -яти),
+    "після обіду" is erroneously listed as havin'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The progression from dialogues to specific grammar parts is excellent.
+    However, the summary formula "**[Time expression] + [Sequence word] + [Verb +
+    object]**" contradicts the very example that follow
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is seamlessly integrated into the natural flow
+    of the text. Most recommended vocabulary is also utilized natively.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed optimally after the relevant instructional blocks,
+    completely aligning with the pedagogical strategy.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very encouraging and practical. The "story" framing of the day makes the
+    grammar highly accessible and grounded in real-world application.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan perfectly. The word count (1526 words)
+    is a healthy, natural expansion from the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic daily situations, accurate reflections of working/leisure hours
+    in a standard Ukrainian context.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The conversations are concise but highly communicative. The contrast between
+    yesterday (past) and tomorrow (future) is an elegant way to teach chunks.
+findings: []

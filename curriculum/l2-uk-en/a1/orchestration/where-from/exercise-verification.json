@@ -1,0 +1,25 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 13,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "англія",
+      "додому",
+      "звідки",
+      "зі",
+      "канада",
+      "київ",
+      "львів",
+      "німеччина",
+      "одеса",
+      "польща",
+      "україна",
+      "харків",
+      "із"
+    ]
+  },
+  "all_grounded": true
+}

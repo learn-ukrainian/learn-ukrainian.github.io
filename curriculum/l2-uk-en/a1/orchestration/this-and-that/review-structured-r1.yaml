@@ -1,0 +1,56 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 content_outline sections present. Zaболотний Grade 6 p.210 cited
+    ("вказівні займенники цей, той змінюються за родами"). **Deductions:** (a) Intro
+    paragraph says "Phones line the counter... lapto
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'All Ukrainian forms VESUM-verified (26/26 found). Gender agreement correct
+    throughout. **Deduction:** The claim "The endings match: **-ий** for masculine"
+    is factually wrong — цей has -ей, not -ий. VE'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present demonstratives in context → explicit
+    rules → practice. 6+ examples per grammar point in the Цей section. Textbook reference
+    integrated naturally. Near/far distinctio'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required vocab used naturally in prose: цей/ця/це ✓, той/та/те ✓,
+    чи ✓. Recommended: ось ✓ ("Ось цей телефон"), там ✓. **Minor:** тут (recommended)
+    not used in prose; він/вона/воно (recommended re'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '5 markers for 4 plan hints — good coverage with bonus contrast exercise.
+    Types match plan (2 quiz, 1 fill-in, 1 match-up + 1 bonus fill-in). **Minor:**
+    First quiz placed before formal teaching of the '
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: No motivational filler, no meta-commentary, no "Let us explore." Concrete
+    scene-setting ("Phones line the counter in front of her"), practical examples.
+    Direct teacher voice throughout. The "Quick tes
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all 4 H2 sections present and ordered per plan. Word count
+    1322 vs 1200 target ✓. No stray tags, no duplicate summaries. Table in Summary
+    renders correctly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian" comparisons. Гривні
+    used naturally. Store scenario is culturally appropriate.
+- dimension: 9
+  name: Dialogue quality
+  score: 8
+  evidence: 'Dialogue 1 is natural and well-paced — Ірина makes a real purchase decision.
+    **Deductions:** (a) Intro says electronics store but Dialogue 1 is about bags
+    — jarring scene break. (b) Dialogue 2: "Це мі'
+findings: []

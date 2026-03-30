@@ -1,0 +1,45 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Diverged significantly from the text provided in the `content_outline`
+    for Dialogue 2, which was specifically designed for A1 pacing.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or Calques detected. Excellent distinction between
+    "Де" and "Куди".
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'DEDUCT for: Using past tense ("не чув", "не було") and a complex reflexive
+    verb ("запізнюється") in A1.3, which requires grammar not yet taught.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (хто, що, де, куди, коли, чому, як, не, ні) are integrated
+    naturally into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are present and correspond to the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The explanation of why English needs "do/does" but Ukrainian doesn't is
+    an excellent anchor for English speakers.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, accurate H2 sections, perfect word count.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Proper citations of Ukrainian textbooks (Кравцова, Заболотний, Літвінова).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogue 1 is natural. Dialogue 2 in the generated text was disjointed
+    because the writer forced double-negation examples into it.
+findings: []

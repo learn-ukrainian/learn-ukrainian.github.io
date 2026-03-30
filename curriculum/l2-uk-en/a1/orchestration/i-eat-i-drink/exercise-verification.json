@@ -1,0 +1,26 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "воду",
+      "каву",
+      "картоплю",
+      "кашу",
+      "п'ю",
+      "п'ють",
+      "п'є",
+      "пити",
+      "рибу",
+      "сметану",
+      "їдять",
+      "їм",
+      "їсти",
+      "їсть"
+    ]
+  },
+  "all_grounded": true
+}

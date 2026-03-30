@@ -1,0 +1,27 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вікна",
+      "дзеркала",
+      "зошити",
+      "книги",
+      "крісла",
+      "лампи",
+      "мої",
+      "речі",
+      "ручки",
+      "столи",
+      "стільці",
+      "сумки",
+      "ті",
+      "ці",
+      "які"
+    ]
+  },
+  "all_grounded": true
+}

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '`content_outline` followed precisely — all 4 sections present with correct
+    content. Dialogues match outline descriptions verbatim ("Вибачте, де тут аптека?"
+    / "Що є біля твого дому?"). All `vocabulary'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 17 locative forms VESUM-verified. All verb forms correct (їси, їм,
+    надсилаю). Preposition assignment (в/на) confirmed by Avramenko Grade 11. No Russianisms,
+    Surzhyk, calques, or paronyms. Zero Rus
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues introduce vocabulary in context → vocabulary
+    section organizes by gender and preposition → "Де це?" teaches location expressions
+    with examples → summary consolidates. Each g'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 8 required words from `vocabulary_hints` present: аптека ✓, бібліотека
+    ✓, магазин ✓, ресторан ✓, готель ✓, вокзал ✓, тут ✓, там ✓. All 8 recommended
+    words present: лікарня ✓, супермаркет ✓, пошта '
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '5 markers for 4 planned activities + 1 bonus. Markers correctly placed
+    after teaching sections. Types and focus match plan: match-up (place↔activity),
+    quiz (в/на), fill-in (describe city), quiz (where'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Cultural paragraph about Хрещатик and Майдан Незалежності is a strong
+    specific detail. Named speakers with distinct voices. Natural dialogue situations.
+    **Deductions:** (1) "the центральна площа that '
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown, all 4 H2 sections present and correctly ordered. Word
+    count 1624/1200 — well above target. No stray tags or formatting artifacts. Cultural
+    bridge paragraph at end of Діалоги is slightl
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized — Ukrainian presented entirely on its own terms. No "like
+    Russian but…" framing. Kyiv landmarks (Хрещатик, Майдан Незалежності), Lviv's
+    площа Ринок, вулиця Лесі Українки — all culturally a
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two distinct situations: stranger-on-street (polite register with Вибачте)
+    and friend-neighborhood chat (informal ти). Named speakers (Аліна, Ігор, Перехожий).
+    Multi-turn exchanges with natural flow. '
+findings: []

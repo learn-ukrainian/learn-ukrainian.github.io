@@ -1,0 +1,75 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and fully covered. Dialogue 1 (wedding
+    photos with Наречена/Друг) matches plan's dialogue_situations exactly. Dialogue
+    2 (workplace with вчительку/лікаря) matche
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All Ukrainian forms VESUM-verified (маму, тата, брата, друга, лікаря,
+    вчителя, сусіда, подругу, вчительку, наречену — all correct). Gender/case endings
+    all correct. One factual error: "Карамань" shoul'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: dialogues present the pattern in context → "Кого?"
+    section explains the animate/inanimate distinction with contrastive examples →
+    "Знахідний відмінок — живе" drills the rule → Summ'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 5 required verbs present in prose with full examples: бачити ("Я
+    бачу маму"), знати ("Ти знаєш мого брата?"), любити ("Я люблю подругу"), чекати
+    ("Я чекаю лікаря"), шукати ("Ми шукаємо нашого сусі'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '3 well-placed markers matching 3 of 4 plan activity_hints. Each marker
+    follows its teaching section correctly. Missing quiz marker for plan hint #3.
+    Activity types varied (2× fill-in, 1× group-sort). '
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Zero motivational openers, zero meta-commentary, zero "Let us explore."
+    Clean, direct teaching voice throughout. The wedding photo dialogue is a natural,
+    culturally appropriate situation. "Notice the '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 headings from plan present in correct order: Діалоги → Кого?
+    → Знахідний відмінок — живе → Підсумок. Clean markdown, no stray tags. Word count
+    1244 within target range (1200). No duplicate su'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian presented on its own terms. Uses Ukrainian
+    grammatical terminology throughout (знахідний відмінок, родовий відмінок, живі/неживі).
+    No "like Russian but..." framing anywhe
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: 'Dialogue 1: natural multi-turn (7 lines) between bride and friend looking
+    at wedding photos. Named speakers (Наречена, Друг). Real motivation — identifying
+    people in photos naturally triggers accusati'
+findings:
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: '"Знахідний відмінок — живе" section, paragraph 2: "The textbook (Карамань,
+    Grade 10) states it directly"'
+  issue: 'Wrong author surname. The Grade 10 Ukrainian language textbook is by Караман
+    (Караман С. О.), not "Карамань." Confirmed by RAG: textbook file is `10-klas-ukrmova-karaman-2018`.
+    "Карамань" is a non-existent name — a learner or teacher attempting to verify
+    this reference would find nothing.'
+  fix: Replace "Карамань" with "Караман"
+- dimension: EXERCISE QUALITY
+  severity: MINOR
+  location: Module-wide — activity markers
+  issue: 'Plan specifies 4 activity_hints (fill-in ×2, group-sort, quiz). Only 3 markers
+    present in prose. Missing a quiz marker (plan hint #3: "Choose correct: Я знаю
+    (Олена / Олену / Олени)"). The quiz would logically appear in or after the Підсумок
+    section.'
+  fix: 'Add `<!-- INJECT_ACTIVITY: quiz-accusative-animate -->` after the five key
+    verbs list in the Підсумок section.'

@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '**Covered:** All 4 content_outline sections present with correct headings.
+    Numbers 1–20 ✓, tens/hundreds ✓, prices ✓, age formula ✓, phone numbers ✓. Vashulenko
+    and Голуб textbook references integrate'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All Ukrainian forms VESUM-verified. Number forms correct (двісті, триста,
+    п'ятсот). Gender agreement correct (одне тістечко — neuter, одна гривня — feminine).
+    Case forms correct (п'ять гривень — genit
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues introduce numbers in situation (bakery,
+    age), then systematic teaching, then summary practice. 5+ examples per number
+    group. Counting rhyme is excellent authentic pedagog'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocabulary groups present and used in context: один–десять
+    ✓, двадцять/тридцять/сорок ✓, сто/тисяча ✓, скільки ✓, коштує ✓, гривня ✓, рік/роки/років
+    ✓. All 6 recommended items present: '
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan activity_hints by type and focus. Each marker
+    placed after relevant teaching. Age quiz tests language (dative pronoun + number
+    + рік/роки/років pattern), not content reca
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No LLM filler detected. No "Let us explore," no "incredibly," no motivational
+    openers. Concrete throughout: real bakery prices (15₴, 45₴, 200₴), real phone
+    number format, the Вознюк counting rhyme. Na'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 headings match plan exactly: Діалоги ✓, Числа 1-20 ✓, Десятки
+    і сотні ✓, Підсумок ✓. Word count 1338 > 1200 target ✓. Clean markdown, no stray
+    tags, no duplicate sections. Activity markers pr'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized — "сім" explicitly contrasted with Russian ghost form "сем"
+    without framing Ukrainian as derivative. Etymology of сорок presented from Ukrainian
+    textbook (Голуб), grounded in Ukrainian tra
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Bakery dialogue is natural: multi-turn, named speakers (Покупець/Пекар),
+    escalating complexity (торт → хліб → три булочки → одне тістечко), ends with natural
+    farewell. Age dialogue has named teen spea'
+findings: []

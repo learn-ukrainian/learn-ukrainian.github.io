@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections covered with correct pacing. All 4 objectives
+    met: counting 1–100 (§2–§3), prices with гривня (§3 + Dialogue 1), age formula
+    as chunk (Dialogue 2 + §4), phone numbers (§'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms VESUM-verified (29/29 batch check). гривня/гривна
+    distinction verified via СУМ-11 and VESUM lemma lookup. Stress claim on -надцять
+    confirmed by three independent textbook sources (
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present numbers in context (bakery prices,
+    age exchange) → explicit pattern teaching (chunks, not grammar analysis) → practice
+    integration (self-check questions). Numbers ta'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required vocab used naturally in prose: один–десять (§2), двадцять/тридцять/сорок
+    (§3), сто/тисяча (§3), скільки (Dialogues + §4), коштує (Dialogue 1 + §4), гривня/гривні/гривень
+    (§3 + §4), рік/ро'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers matching 4 plan hints exactly. Each placed after its teaching
+    section. Types match plan: 2× fill-in (numbers, phone) + 2× quiz (ages, prices).
+    Markers cannot be evaluated for answer logic (g'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "Let us explore...", no "You have unlocked..."
+    Zero LLM filler detected. Tone is direct and instructional: "Three of these need
+    extra attention when you say them aloud" (co'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections from plan present and correctly ordered: Діалоги →
+    Числа 1-20 → Десятки і сотні → Підсумок. No duplicate summaries, no meta-commentary
+    sections, no stray tags. Clean markdown. Word c'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Decolonized: Ukrainian presented entirely on its own terms. сорок etymology
+    grounded in Ukrainian/East Slavic trade history, not compared to Russian. сім
+    explicitly distinguished from Russian "сем." г'
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Named speakers throughout: Покупець/Пекар (Dialogue 1), Оленка/Тарас
+    (Dialogue 2). Dialogue 1 is a natural multi-turn bakery exchange with realistic
+    price progression (200₴ cake, 15₴ bread, 45₴ buns, '
+findings: []

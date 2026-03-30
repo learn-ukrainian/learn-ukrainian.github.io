@@ -1,0 +1,19 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 7,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "зі",
+      "київ",
+      "львів",
+      "офіс",
+      "парк",
+      "театр",
+      "із"
+    ]
+  },
+  "all_grounded": true
+}

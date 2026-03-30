@@ -1,0 +1,11 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "please-do-this",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T20:20:58.241673+00:00"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and covered. Dialogue 1 follows
+    plan exactly (ця сумка/та синя/цей рюкзак with prices). Dialogue 2 follows plan
+    exactly (Це мій стіл/А те?/Цей стілець новий, а т
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 37 verified Ukrainian words confirmed in VESUM. Gender assignments
+    correct throughout (цей стіл m, ця книга f, це вікно n). Case endings correct.
+    Заболотний reference matches RAG textbook search v
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: dialogues present demonstratives in natural situation
+    → explicit pattern teaching with cross-references to M06/M09 → self-check practice.
+    6+ examples per grammar point in the Цей s'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required vocab used naturally: цей/ця/це throughout, той/та/те throughout,
+    чи in question patterns ("Цей чи той?"). Recommended ось and там both used in
+    Той section ("Ось цей телефон — дорогий. А '
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 plan activity hints have corresponding markers. Markers placed after
+    relevant teaching (quiz-this after Цей section, quiz-that after Той section).
+    One extra fill-in marker provides additional pr
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: No motivational openers, no meta-commentary, no "Let us explore." Opening
+    paragraph drops the learner directly into a concrete situation (Ірина in a store
+    needing to point at specific items). Explanat
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All 4 H2 sections present and correctly ordered. Word count 1382/1200
+    target ✅. Clean markdown throughout. **Issue:** The gender paradigm comparison
+    table in the Summary has misaligned columns. The ta
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms throughout. No "like Russian but..."
+    comparisons. Currency in hryvnias. Ukrainian names (Ірина). Shopping scenario
+    culturally appropriate. The та="and" disambiguat
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogue 1 is a natural shopping exchange — Ірина asks about a bag, gets
+    clarification, switches to a backpack, makes a decision. Multi-turn with real
+    purpose. Named speakers (Ірина, Консультант) with
+findings: []

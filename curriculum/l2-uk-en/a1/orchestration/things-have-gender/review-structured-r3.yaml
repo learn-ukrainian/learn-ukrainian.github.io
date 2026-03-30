@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Dialogue
+    1 (room video call with мій/моя/моє) and Dialogue 2 (what's in your bag with У
+    мене є) match plan exactly. Vashulenko p.112 and P
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 22 key words verified against VESUM — all found. No Russianisms, surzhyk,
+    calques, or paronyms. Gender assignments correct throughout. Case forms in dialogues
+    verified (e.g., "у тебе" — locative ✓
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues show gender in action (Presentation), rules
+    taught with він/вона/воно test + ending patterns (Practice), then objects section
+    provides guided production. Multiple examples p'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required (10/10 present):** стіл ✓, книга ✓, вікно ✓, кімната ✓, ліжко
+    ✓, стілець ✓, лампа ✓, телефон ✓, комп''ютер ✓, він/вона/воно ✓. **Recommended
+    (8/8 present):** зошит ✓, ручка ✓, сумка ✓, крісл'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 markers match plan activity_hints in type and focus. Placement
+    is pedagogically correct — each follows its teaching section. Spread is even across
+    the module. The inline self-check questions in '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "magic of" language, no generic enthusiasm.
+    Concrete examples throughout. "Did you notice?" is instructional and appropriate.
+    Dialogue personality: "Моє крісло дуже зручне!'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 headings match plan sections. Clean markdown throughout. No duplicate
+    sections, no meta-commentary, no stray tags. Word count 1296/1200 ✓ (meets target).
+    Activity markers well-formatted. Summ
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    framing anywhere. Gender is presented as a Ukrainian grammatical concept using
+    Ukrainian terminology (чоловічий/жіночий/середній
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Named speakers (Марія, Оленка) with distinct voices. Multi-turn exchanges
+    (7 lines and 6 lines respectively). Natural situations: showing your room to a
+    friend on video call, comparing bag contents. N'
+findings: []

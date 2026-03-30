@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all required outline sections. Word counts meet the minimums. Seamlessly
+    integrates the specific A1.3 review requirements.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains a well-known textbook calque ("Як ти себе почуваєш?" instead
+    of "Як ти почуваєшся?"). Otherwise, conjugation forms, idioms, and vocabulary
+    usage are accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of Group I and Group II rules, using the 3rd person
+    plural to practically identify groups. The flow logically progresses from recognition
+    to explicit rules to connected speech.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Seamlessly integrates A1.3 vocabulary (actions, morning routine, time
+    expressions) without introducing unauthorized new words.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All required exercise markers are present, mapped to the correct plan
+    items, and strategically placed immediately after the relevant instructional sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains minor meta-commentary ("This is not a test. It is a mirror",
+    "This is a major milestone"), which borders on telling instead of showing, but
+    the overall tone remains supportive and clear.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect markdown structure, dialogue tags are correctly applied, and all
+    headers match the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural framing of routines and professions without any culturally discordant
+    elements.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogue is highly natural, multi-turn, and effectively synthesizes all
+    grammar points (both verb groups, modals, questions, reflexives) into a realistic
+    Saturday morning conversation.
+findings: []

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Both dialogue
+    situations from plan covered (birthday party in Dialogue 1; family at home in
+    Dialogue 2). All vocabulary_hints required wor
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All vocative forms VESUM-verified correct. No Russianisms, Surzhyk, or
+    calques. Gender/case usage correct throughout. One factual error: wrong textbook
+    attribution — Насте/Катре forms attributed to "L'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: dialogues present the pattern in context → explanation
+    section builds conceptual understanding → endings section provides systematic
+    rules → summary consolidates. Grade 4 helper word '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 6 required vocabulary items from plan used naturally in prose within
+    dialogues and explanations. All 6 recommended items present and contextualized.
+    New words introduced through dialogue first, th
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers matching 4 plan hints. Good placement: quiz after concept introduction,
+    fill-in and group-sort after pattern teaching, final quiz at summary. Self-check
+    exercise at end is well-designed. Min'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no meta-commentary, no filler. Cultural framing
+    is specific: "the vocative is one of the ways Ukrainian encodes human connection
+    directly into grammar" — this is concrete and '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 headings match plan sections. Clean markdown. Word count 1239
+    ≥ 1200 target. No stray tags, no formatting artifacts. Activity markers properly
+    placed as HTML comments.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian vocative presented as a living, vibrant feature ("You hear
+    it everywhere"), not as archaic or formal. No "like Russian but..." framing. Vocative
+    correctly described as mandatory in everyday '
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: 'Dialogue 1: natural multi-turn greeting + introduction scenario with
+    named speakers (Тарас, Олена, Андрій). Dialogue 2: realistic family scene with
+    named speakers (Марко, Оля) — searching for phone, k'
+findings: []

@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-time-nature",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T06:28:08.416772+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T06:29:01.914942+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T06:30:27.000563+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T06:32:43.700772+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T06:34:10.972143+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T06:34:10.972519+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T06:43:30.540555+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T06:43:30.546633+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T06:43:30.550699+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T06:44:12.691550+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T06:44:13.733034+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T06:44:13.846940+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-30T11:40:55.749563+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-30T19:48:18.316517+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-30T19:48:18.459837+00:00"
+    }
+  }
+}

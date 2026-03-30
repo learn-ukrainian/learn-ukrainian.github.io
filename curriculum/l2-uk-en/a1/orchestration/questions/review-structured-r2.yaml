@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Missed two references explicitly requested by the plan (`Варзацька Grade
+    4` and `ULP Season 1, Episode 35`). Also missed the plan's outline directive to
+    review `Мені не подобається` in the negation se
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Flawless grammar and vocabulary usage, but spelled the textbook author's
+    name as `Літвінова` instead of the correct standard Ukrainian `Литвинова`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent explanation of yes/no questions using rising intonation compared
+    to English "do/does", and a very clear, accurate breakdown of double negation.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (`хто, що, де, куди, коли, чому, як, не, ні`) and recommended
+    (`ніхто, нічого, ніколи, жити, розуміти, тому що`) vocabulary words are included
+    naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's hints and are placed exactly after
+    the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, conversational tone with dialogues that organically introduce
+    the grammar concepts without feeling overly academic.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections from the plan are present, headers match exactly, clean markdown
+    formatting, and word count safely meets the minimum targets.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic use of names and textbook references (Kravtsova, Zabolotnyi).
+    Accurate presentation of Ukrainian sentence structure as flexible rather than
+    strictly rigid.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel real and multi-turn. Asking "Why Mom? -> Because she knows
+    everything!" perfectly demonstrates both `чому` and natural family dynamics.
+findings: []

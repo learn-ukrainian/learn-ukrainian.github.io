@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "people-around-me",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T14:42:53.114438+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T14:43:24.883851+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T19:42:10.939632+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T19:43:56.048381+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T19:44:51.740592+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T19:44:51.740863+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:39.678041+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:39.686225+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:39.691997+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:58.444128+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:59.652989+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T19:50:59.906828+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-30T19:54:26.722827+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-30T19:54:34.207104+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-30T19:54:34.274701+00:00"
+    }
+  }
+}

@@ -128,6 +128,15 @@ objectives:
 - Recognize gender by word endings (consonant = m, -а/-я = f, -о/-е = n)
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
+dialogue_situations:
+- setting: At a pet shop — looking at animals and their accessories. A кіт (m) sleeps
+    in a кошик (m, basket), a рибка (f) swims in an акваріум (m), a черепаха (f, turtle)
+    sits near a дзеркало (n, mirror). Use animals and pet items to demonstrate він/вона/воно
+    — not room furniture.
+  speakers:
+  - Марія
+  - Оленка
+  motivation: Він/вона/воно with кіт(m), рибка(f), кошеня(n), акваріум(m), черепаха(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
@@ -234,117 +243,103 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-**Confirmed (23/23):** All plan vocabulary words exist in VESUM.
+**Batch 1 (12/12 confirmed):**
+- ✅ стіл (noun)
+- ✅ книга (noun)
+- ✅ вікно (noun)
+- ✅ кімната (noun)
+- ✅ ліжко (noun)
+- ✅ стілець (noun)
+- ✅ лампа (noun)
+- ✅ телефон (noun)
+- ✅ комп'ютер (noun)
+- ✅ він (pronoun — filed as noun-class in VESUM, normal)
+- ✅ вона (pronoun — filed as noun-class in VESUM, normal)
+- ✅ воно (pronoun — filed as noun-class in VESUM, normal)
 
-- стіл ✅ noun
-- книга ✅ noun
-- вікно ✅ noun
-- кімната ✅ noun
-- ліжко ✅ noun
-- стілець ✅ noun
-- лампа ✅ noun
-- телефон ✅ noun
-- комп'ютер ✅ noun
-- він ✅ pronoun
-- вона ✅ pronoun
-- воно ✅ pronoun
-- зошит ✅ noun
-- ручка ✅ noun
-- сумка ✅ noun
-- крісло ✅ noun
-- дзеркало ✅ noun
-- ключ ✅ noun
-- фото ✅ noun (17 matches — confirmed indeclinable)
-- стіна ✅ noun
-- мій ✅ adjective (possessive)
-- моя ✅ adjective (lemma: мій)
-- моє ✅ adjective (lemma: мій)
+**Batch 2 (11/11 confirmed):**
+- ✅ зошит (noun)
+- ✅ ручка (noun)
+- ✅ сумка (noun)
+- ✅ крісло (noun)
+- ✅ дзеркало (noun)
+- ✅ ключ (noun)
+- ✅ фото (noun, 17 lemma matches — fully inflectable)
+- ✅ стіна (noun)
+- ✅ мій (adj, 3 matches)
+- ✅ моя (adj — correctly resolves to lemma мій)
+- ✅ моє (adj — correctly resolves to lemma мій)
 
-**Not found: none.**
+**Not found:** none — all 23 words cleared.
 
 ---
 
 ## Textbook Excerpts
 
 ### Section: Він, вона, воно (The Gender Test)
+> «Іменники, які можна замінити словом він, належать до чоловічого роду. До них можна додати слово мій. Наприклад: плащ (він, мій). Іменники, які можна замінити словом вона, належать до жіночого роду. До них можна додати слово моя. Наприклад: куртка (вона, моя). Іменники, які можна замінити словом воно, належать до середнього роду. До них можна додати слово моє. Наприклад: пальто (воно, моє).»
+> Source: Ponomarova, Grade 3, p. 86 ← **direct match to plan pedagogy**
 
-> **Іменники, до яких можна додати слова мій, він, — чоловічого роду:** тато, батько, ранок, січень. **Іменники, до яких можна додати слова моя, вона, — жіночого роду:** мати, бабуся, річка, зима. **Іменники, до яких можна додати слова моє, воно — середнього роду:** маля, серце, життя, літо.
-> Source: Вашуленко, Grade 3, §34 «Рід іменників: чоловічий, жіночий, середній», p.110
+> «Іменники, до яких можна додати слова мій, він, — чоловічого роду: тато, батько, ранок, січень. Іменники, до яких можна додати слова моя, вона, — жіночого роду: мати, бабуся, річка, зима. Іменники, до яких можна додати слова моє, воно — середнього роду: маля, серце, життя, літо.»
+> Source: Vashulenko, Grade 3, p. 110 (Lesson 34: «Рід іменників: чоловічий, жіночий, середній») ← **direct match to plan pedagogy**
 
-> Таблиця: Чоловічий рід (він, мій) — берег, кінь, батько; Жіночий рід (вона, моя) — річка, бабуся, ніч; Середній рід (воно, моє) — серце, село, курча, ягня.
-> Source: Ponomarova, Grade 4, p.35 «ВИЗНАЧАЮ РІД І ЧИСЛО ІМЕННИКІВ»
+### Section: Предмети навколо (Objects Around Us) — Endings by gender
+> «Чоловічий рід: можна додати слова мій, він, закінчення -о або нульове. Жіночий рід: можна додати слова моя, вона, закінчення -а, -я або нульове. Середній рід: можна додати слова моє, воно, закінчення -о, -е, -а, -я.»
+> Source: Vashulenko, Grade 3, p. 112 ← confirms the endings rule in the plan
 
-⚠️ **Plan reference mismatch:** The plan cites "Пономарова Grade 3 p.86" for gender content. RAG confirms Ponomarova covers noun gender in **Grade 4 p.35**, not Grade 3 p.86. Correct reference: **Вашуленко Grade 3 §34 p.110** or **Ponomarova Grade 4 p.35**.
-
-### Section: Предмети навколо (Objects Around Us)
-
-> Стіл і ясенові лави стояли на своїх місцях. Двоспальне ліжко, заслане ковдрою, з горою подушок… столик, на якому була ручна швейна машина… під вікном — етажерка з книгами, менший стіл із дзеркалом…
-> Source: Зaболотний, Grade 6, p.241 «Будова опису приміщення»
-
-> Із меблів були поширені лави, стіл і скрині. Заможні містяни мали стільці й ліжка…
-> Source: Галімов, Grade 7 (Istoria), p.76
+> «Склади усну розповідь на тему "Моя кімната", використовуючи іменники з довідки. Кімната, двері, вікно, стеля, стіни, коридор, шафа, стіл, стілець, тумбочка, ліжко, підлога.»
+> Source: Vashulenko, Grade 3, p. 131 ← **direct confirmation**: стіл, стілець, вікно, ліжко are standard Grade 3 room vocabulary, used in the exact activity type planned.
 
 ### Section: Діалоги (Dialogues)
+> «Перед мандрівниками була велика вітальня... Біля каміна стояв невеличкий столик і два крісла.»
+> Source: Zabolotnyi, Grade 6, p. 244 — room description with крісло, стіни, вікна in context.
 
-> «У мене є брошка, нічого особливого… Одного разу в метро до мене підсідає незнайома бабуся і просить продати їй прикрасу…» [Context: naturally demonstrates «У мене є + noun» construction]
-> Source: Голуб, Grade 5, p.137 — dialogue composition task
+> Room dialogue format with short exchanges confirmed in Kravcova Grade 2, p. 111: «— Привіт, Кирилку! — Привіт, Соломійко!» with terse reply structure matching the plan's proposed dialogues.
 
-> Завдання: «Прочитай, уставляючи замість крапок слова **мій, моя, моє, він, вона, воно**» [Exercise with мій/моя/моє tied directly to gender identification]
-> Source: Вашуленко, Grade 3, §34 p.110
-
-### Section: Підсумок — Summary
-
-> «Ч. р. (він, мій); ж. р. (вона, моя); с. р. (воно, моє)» — used as column headers for a three-column sorting exercise.
-> Source: Zaharijchuk, Grade 4, p.39, exercise 96
+### Section: Підсумок — possessive agreement мій/моя/моє
+> «дерев'яний стіл / дерев'яна шафа / дерев'яне ліжко» and «синій диван / синя скатертина / синє крісло»
+> Source: Vashulenko, Grade 3, p. 130 ← exact three-gender adjective/possessive agreement demonstrated with room furniture, including plan vocabulary стіл, ліжко, крісло.
 
 ---
 
 ## Grammar Rules
 
-- **Noun gender identification:** Правопис 2019 does not cover grammatical gender (it governs orthography, not morphology). However, the rule is confirmed by all Grade 3–6 textbooks using a consistent formulation: substitute він/цей (masculine), вона/ця (feminine), воно/це (neuter). Source: Голуб Grade 6 p.68 — official reference table.
+The Правопис 2019 does **not** cover noun gender or noun endings — these are morphology/grammar topics, not orthography. No Правопис section applies. This is correct and expected.
 
-- **Noun endings by gender (pedagogical rule from textbooks):**
-  - Masculine: typically ends in a consonant — стіл, зошит, телефон, ключ
-  - Feminine: typically ends in -а / -я — книга, лампа, кімната, ручка, сумка, стіна
-  - Neuter: typically ends in -о / -е — вікно, ліжко, крісло, фото, дзеркало
-
-  Note: This "~90% rule" approach is confirmed by Вашуленко Grade 3 §34 and appropriate for A1. Exceptions (-ь words) are correctly deferred to later modules as the plan states.
-
-- **Possessive pronoun мій/моя/моє declension:** Confirmed Авраменко Grade 6 §95–96 p.186: Н.в. мій / моя / моє / мої — this is the nominative form used in the module. ✅
+**Authoritative source for the module's grammar:**
+- Noun gender (3 types): Ponomarova Grade 3 p. 86; Vashulenko Grade 3 pp. 110–112
+- Possessive pronoun agreement мій/моя/моє: Vashulenko Grade 3 p. 130; Zabolotnyi Grade 6 p. 207 (full declension table)
+- Standard school rule (confirmed across Grade 3 and Grade 6 Tier 1 and Tier 2 sources): *Рід іменника визначаємо, підставляючи він/вона/воно або мій/моя/моє.*
 
 ---
 
 ## Calque Warnings
 
-- **"відкрий вікно"** — ⚠️ CALQUE RISK. Антоненко-Давидович explicitly flags this: Ukrainian distinguishes **відчиняти** (doors, windows — physical opening action) vs **відкривати** (open a business, reveal). If any dialogue uses "відкрий вікно," it must be **відчини вікно**. Current plan dialogues do NOT include opening a window, so no immediate risk — but note for activities.
-
-- **"знаходиться"** — ⚠️ CALQUE. Антоненко-Давидович: "Моя квартира знаходиться на другому поверсі" is wrong. Use **стоїть / є / розташована** for locations of objects. Ensure no dialogue uses "де знаходиться стіл?" — should be "де стоїть стіл?" or "Де є стіл?"
-
-- **"у мене є"** — ✅ NATURAL UKRAINIAN. Антоненко-Давидович confirms "є" as the correct copula in all persons (бути → є). Pattern "У мене є стіл" is confirmed natural in Grade 5 Голуб textbook example ("У мене є брошка"). No calque issue.
+- **«у мене є»**: ✅ OK — natural Ukrainian possessive construction. Антоненко-Давидович (ad-156) explicitly confirms «у мене є» / «є у мене» as the correct Ukrainian form. The calque to avoid is «матися» (from Russian «иметься»), which does not appear in the plan.
+- **«класно»**: ✅ OK — no calque flagged by Антоненко-Давидович. Colloquial but authentic Ukrainian usage in dialogue.
+- **«дивись»**: ✅ OK — imperative of «дивитися», natural Ukrainian attention-getter in dialogue. No calque warning. (The style guide entry on «не дивлячись» concerns the participle misuse, not the imperative.)
 
 ---
 
 ## CEFR Check
 
 | Word | PULS Level | Status |
-|------|-----------|--------|
-| стіл | A1 | ✅ on target |
-| стілець | A1 | ✅ on target |
-| вікно | A1 | ✅ on target |
-| кімната | A1 | ✅ on target |
-| телефон | A1 | ✅ on target |
-| комп'ютер | A1 | ✅ on target |
-| зошит | A1 | ✅ on target |
-| ліжко | A1 | ✅ on target |
-| ручка | A1 | ✅ on target |
-| сумка | A1 | ✅ on target |
-| лампа | A1 | ✅ on target |
-| стіна | A1 | ✅ on target |
-| фото | A1 | ✅ on target |
-| крісло | A1 | ✅ on target |
-| **книга** | **A2** | ⚠️ one level above target — PULS lists **книжка** as A1. Consider using книжка as the primary form, introducing книга as a variant. Both are VESUM-confirmed. |
-| **дзеркало** | **A2** | ⚠️ one level above target — usable as a neuter -о example, but flag as "bonus vocabulary" or move to A1.3+ if the module feels heavy. |
-| **ключ** | **A2** | ⚠️ one level above target — useful for masculine consonant-ending paradigm, but consider swapping for a pure A1 word (e.g., **стіл** already covers this slot). |
+|---|---|---|
+| стіл | A1 | ✅ On target |
+| стілець | A1 | ✅ On target |
+| вікно | A1 | ✅ On target |
+| кімната | A1 | ✅ On target |
+| телефон | A1 | ✅ On target |
+| комп'ютер | A1 | ✅ On target |
+| зошит | A1 | ✅ On target |
+| фото | A1 | ✅ On target |
+| книга | **A2** | ⚠️ Above target — PULS rates **книжка** as A1. Prefer **книжка** in module text; книга acceptable as passive exposure. |
+| ключ | **A2** | ⚠️ Slightly above target — usable as enrichment word but flag for writer; not core A1 |
+| дзеркало | **A2** | ⚠️ Slightly above target — usable as enrichment word; not core A1 |
+
+**Writer guidance on flagged words:**
+- **книга → книжка**: Swap to **книжка** (A1) throughout. Both words exist and mean "book"; книжка is the A1-level everyday form. книга = A2 (more formal/literary). The dialogues should use книжка.
+- **ключ, дзеркало**: Keep in vocabulary lists as labeled enrichment (marked with ★ or "bonus word"), not as core tested vocabulary. Do not test these in fill-in or quiz activities — use only in the vocabulary table for exposure.
 </pre_verified_facts>
 
 
@@ -512,6 +507,37 @@ You do NOT need to call tools yourself — the facts are already verified.
 > закінчення.
 > 1.
 
+> **Source:** vashulenko, Grade 3
+> **Section:** Сторінка 110
+> **Score:** 0.50
+>
+> 110
+> Навчаюся визначати рід іменників
+> 34
+> Рід іменників:  
+> чоловічий, жіночий, середній
+> 	 	
+> 1   Визначте, істоту якого роду називає 
+> кожний іменник.
+> 	 	
+> 3   Допишіть пари слів за зразком.
+> 2   Прочитай, уставляючи замість крапок слова мій, моя, моє, він, 
+> вона, воно. Визнач рід іменників і поясни свою відповідь. Запиши 
+> утворені речення.
+> мати — тато
+> дочка — син
+> малюк — маля
+> Іменники бувають чоловічого, 
+> жіночого і середнього роду. 
+> Досліди, як визнача-
+> ють рід іменників.
+> Я — дослідник
+> Я — дослідниця
+> Іменники, до яких можна додати слова мій, він, — 
+> чоловічого роду: тато, батько, ранок, січень.
+> Іменники, до яких можна додати слова моя, вона, — 
+> жіночого роду: мати, бабуся, річка, зима.
+
 ## Предмети навколо (Objects Around Us)
 
 > **Source:** bolshakova, Grade 2
@@ -667,60 +693,6 @@ You do NOT need to call tools yourself — the facts are already verified.
 >         (він, мій)                   (вона, моя)               (воно, моє)
 > 3.
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 112
-> **Score:** 0.25
->
-> 112
-> Спостерігаю за закінченнями 
-> іменників різних родів
-> Пригадай і розкажи 
-> у класі.
-> Я — учителька
-> Я — учитель
-> Чоловічий рід
-> можна додати  
-> слова мій, він,  
-> закінчення -о  
-> або нульове
->  тато, Петро
->  вечір, Артем
-> Жіночий рід
-> можна додати  
-> слова моя, вона,  
-> закінчення -а, -я 
-> або нульове
->  мама, Оксана
->  земля, Юлія
->  тінь, заметіль
-> Середній рід
-> можна додати  
-> слова моє, воно,  
-> закінчення  
-> -о, -е, -а, -я
->  літо
->  сонце
->  курча
->  маля
-> 6   Прочитай. Наведи власні приклади іменників. 
-> учень
-> школяр
-> українець 
-> учениця
-> школярка
-> українка
-> дівча
-> хлоп’я
-> дитя
-> 	 	
->   Запиши ці слова, познач закінчення іменників.
-> 	 	
->   Зроби висновок, до якого роду належать імен­ники кожної групи.
-> 	 	
-> 7   Відгадайте загадки. Визначте рід відгаданих іменників. Назвіть 
-> закінчення.
-> 1.
-
 > **Source:** kravtsova, Grade 3
 > **Section:** Сторінка 64
 > **Score:** 0.50
@@ -730,7 +702,10 @@ You do NOT need to call tools yourself — the facts are already verified.
 > У країні Мови жив король Іменник. Інколи він полюбляв 
 > поділяти слова на групи. Тоді він вигукував:   
 > — Він мій! Вона моя! Воно моє!
-> Крок 1. Назвиѳ предмети,
+> Крок 1. Назвиѳ предмети, зображені на малюнку.
+> 2.	 Виконай завдання на вибір.
+> 	 Випиши іменники в однині, познач закінчення. 
+> 	 Випиши наз
 
 ... (truncated for context window)
 </knowledge_packet>
@@ -815,6 +790,18 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
 
   Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
+- **DIALOGUE VARIETY — CRITICAL.** Each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
+
+  BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.
+
+  REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
+
+  **Module-specific dialogue settings (from plan):**
+  1. **At a pet shop — looking at animals and their accessories. A кіт (m) sleeps in a кошик (m, basket), a рибка (f) swims in an акваріум (m), a черепаха (f, turtle) sits near a дзеркало (n, mirror). Use animals and pet items to demonstrate він/вона/воно — not room furniture.**
+     Speakers: Марія, Оленка
+     Why: Він/вона/воно with кіт(m), рибка(f), кошеня(n), акваріум(m), черепаха(f)
+
+  Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
@@ -883,51 +870,58 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги (Dialogues) (~310 words)
 
-- P1 (~40 words): Short scene-setter — Mariia is on a video call showing her room to a friend. One sentence of context: Марія показує свою кімнату подрузі по відеодзвінку. Signals that gender will emerge naturally through objects we see.
-- Dialogue 1 (~110 words): 8-turn video-call exchange. Марія says "Дивись, це моя кімната — тут є стіл, ліжко і вікно." Friend asks "У тебе є комп'ютер?" Марія answers "Так, у мене є комп'ютер і лампа." Friend: "А ліжко? Яке воно?" Марія: "Моє ліжко зручне." Include мій стіл, моя лампа, моє ліжко in natural flow. No metalanguage — gender emerges through possessives.
-- P2 (~30 words): Brief transition — Now another situation: at school, two students check what's in their bags before class.
-- Dialogue 2 (~100 words): 6-turn bag-check exchange. Олег: "Що у тебе є?" Соня: "У мене є книга, ручка і зошит. А у тебе?" Олег: "У мене є телефон і сумка. А ключ у тебе є?" Соня: "Так, ось мій ключ." Олег: "А це моє фото — з сім'єю." Covers all three genders: книга/ручка/сумка (f), телефон/зошит/ключ (m), фото (n).
-- P3 (~50 words): Observation prompt — Ask the learner: did you notice мій, моя, моє changing? That's because кожен іменник (every noun) in Ukrainian has a рід (gender). That's what this module is about. Transition into the gender test.
-
----
-
-## Він, вона, воно (The Gender Test) (~330 words total)
-
-- P1 (~70 words): Introduce the він/вона/воно test (Пономарова Grade 3 p.86). Every Ukrainian noun belongs to one of three genders: чоловічий рід (masculine), жіночий рід (feminine), середній рід (neuter). The test: can you naturally replace the noun with він, вона, or воно? Стіл → він ✓ → чоловічий рід. Книга → вона ✓ → жіночий рід. Вікно → воно ✓ → середній рід.
-- P2 (~80 words): Tie gender directly to possessives the learner already knows from M06. Masculine (він) → мій: мій стіл, мій телефон, мій зошит. Feminine (вона) → моя: моя книга, моя кімната, моя лампа. Neuter (воно) → моє: моє вікно, моє ліжко, моє фото. Point out: мій/моя/моє from dialogues above maps exactly onto gender — this is why possessives change.
-- Exercise: **Quiz** — він, вона, or воно? 8 nouns from vocabulary_hints (стіл, книга, вікно, телефон, лампа, ліжко, ключ, фото). Learner selects the pronoun that fits each noun.
-- P3 (~100 words): Ending patterns as a shortcut (Вашуленко Grade 3 p.112). Most nouns follow predictable endings: Чоловічий рід — ends in a consonant: стіл, телефон, зошит, ключ, стілець. Жіночий рід — ends in -а or -я: книга, лампа, кімната, ручка, сумка, стіна. Середній рід — ends in -о or -е: вікно, ліжко, крісло, дзеркало, фото. This covers ~90% of nouns learners will encounter at A1. Note: there are exceptions (e.g., words ending in -ь like ніч), but those come in a later module.
-- P4 (~80 words): Reinforce the two-step method: Step 1 — say він/вона/воно with the noun. Step 2 — check the ending for confirmation. Examples: телефон — ends in consonant (н) → він ✓ → мій телефон. Кімната — ends in -а → вона ✓ → моя кімната. Ліжко — ends in -о → воно ✓ → моє ліжко. Two clues always pointing the same direction makes gender predictable, not arbitrary.
-- Exercise: **Quiz** — What gender? Look at the ending. 6 new nouns: стілець, сумка, крісло, зошит, стіна, дзеркало. Learner identifies gender from the ending alone.
+- P1 (~30 words): Frame — every Ukrainian noun belongs to one of three gender families: він (masculine), вона (feminine), воно (neuter). Before learning the rules, meet gender in action.
+- Dialogue 1 (~110 words): Video call between Марія and Оленка, 7 turns. Марія shows her room: — Привіт! Дивись, це моя кімната. — Класно! У тебе є стіл? — Так, є. Це мій стіл, а ось моє ліжко. — А що ще є? — Є лампа — моя лампа, і ще є крісло. Моє крісло дуже зручне! Gender surfaces in possessives мій стіл (m), моя кімната/лампа (f), моє ліжко/крісло (n) — no explanation, just exposure.
+- P2 (~25 words): Observation bridge — "Did you notice? стіл gets мій, кімната gets моя, ліжко gets моє. Every noun belongs to a gender family. That family decides which word goes with it."
+- Dialogue 2 (~110 words): Classroom, 6 turns. Оленка and Марія compare bag contents: — Що у тебе в сумці? — У мене є книга, телефон і фото. — А у мене є ручка і зошит. — Книга — це цікаво! Яка книга? — Це моя книга. Вона українська! — А мій зошит новий. Uses книга (f), телефон (m), фото (n), ручка (f), зошит (m) — mixed genders across both nouns and possessive echoes вона/він.
+- P3 (~35 words): Wrap-up — these nouns fall into три групи, three families. One family goes with він and мій. One with вона and моя. One with воно and моє. Ukrainian grammar calls this рід — gender.
 
 ---
 
-## Предмети навколо (Objects Around Us) (~330 words total)
+## Він, вона, воно (The Gender Test) (~340 words)
 
-- P1 (~60 words): Framing — Let's look around a typical Ukrainian teenage room and a school bag. The objects here cover all three genders. Learning them now with gender attached (не просто стіл — а стіл-він) builds the habit from the start. In Ukrainian, you always know a noun's gender — it's built into how you speak about it.
-- P2 (~100 words): Room vocabulary organized by gender — presented as three groups with він/вона/воно labels. Чоловічий рід (він, мій): стіл (table), стілець (chair), телефон (phone), комп'ютер (computer), зошит (notebook), ключ (key). Жіночий рід (вона, моя): книга (book), лампа (lamp), сумка (bag), ручка (pen), кімната (room), стіна (wall). Середній рід (воно, моє): вікно (window), ліжко (bed), крісло (armchair), дзеркало (mirror), фото (photo). 18 nouns total — all from vocabulary_hints.
-- Exercise: **Group-sort** — 12 objects (стіл, книга, вікно, лампа, телефон, ліжко, зошит, сумка, крісло, ключ, стіна, дзеркало) sorted into three columns: він (мій) / вона (моя) / воно (моє).
-- P3 (~80 words): Extending У мене є to objects, building on M06 pattern with family. Same structure, new world: У мене є стіл. — I have a table. У мене є книга. — I have a book. У мене є вікно. — I have a window. У мене немає крісла. — I don't have an armchair. Four examples per gender. Point out: the phrase stays exactly the same — only the noun (and its gender when you use possessives) changes.
-- Exercise: **Fill-in** — мій/моя/моє ___ (8 items). Learner sees a noun and fills in the correct possessive: ___ стіл → мій стіл; ___ лампа → моя лампа; ___ ліжко → моє ліжко, etc. All 8 items drawn from vocabulary_hints words.
-- P4 (~90 words): Short cultural note — In Ukrainian, gender is not just grammar — it's built into the language's identity. Unlike English (where "it" covers everything), Ukrainian speakers feel the gender of every object. Стіл is він, книга is вона, вікно is воно — each has its own character. When you start thinking of objects this way, you're beginning to think in Ukrainian rather than translating from English. This cognitive shift is the real goal of the module.
+- P1 (~55 words): Introduce the three genders formally (Вашуленко Grade 3 p.110, Ponomarova Grade 3 p.86). Чоловічий рід (masculine) — use він and мій. Жіночий рід (feminine) — use вона and моя. Середній рід (neuter) — use воно and моє. Every Ukrainian noun belongs to exactly one of these three families — permanently.
+- P2 (~85 words): The test step-by-step. Take стіл. Ask: він стіл? ✓ — feels right. вона стіл? ✗ — sounds wrong. воно стіл? ✗ — also wrong. Result: стіл is чоловічий. Try книга: вона книга? ✓ — жіночий. Try вікно: воно вікно? ✓ — середній. Reinforce with мій/моя/моє: мій стіл (m) → моя книга (f) → моє вікно (n). The он/вона/воно test and the possessive test always agree.
+- P3 (~55 words): Real-world context — in M06 you used У мене є with family members. Same structure works for objects. У мене є стіл. У мене є книга. У мене є вікно. Now you know each of those nouns carries a gender, which matters the moment you say мій, моя, or моє.
+
+- **Exercise (Quiz — 8 items):** він, вона, or воно? Learner assigns gender to: телефон / лампа / ліжко / зошит / сумка / крісло / ключ / фото. Items span all three genders and cover required + recommended vocabulary.
+
+- P4 (~55 words): Transition to endings — "Do you have to test every noun from scratch forever? No. Look at the ending. Ukrainian endings carry the gender with them — a built-in shortcut. This covers about 90% of all nouns you'll meet at A1."
+- P5 (~90 words): Endings rule (Вашуленко Grade 3 p.112). Masculine — ends in a consonant: стіл (-л), телефон (-н), зошит (-т), ключ (-ч). Feminine — ends in -а or -я: книга, лампа, кімната, ручка, сумка. Neuter — ends in -о or -е: вікно (-о), ліжко (-о), крісло (-о), дзеркало (-о). Tip: when you learn a new noun, notice the ending first — it announces the gender.
 
 ---
 
-## Підсумок — Summary (~330 words total)
+## Предмети навколо (Objects Around Us) (~340 words)
 
-- P1 (~100 words): Three-step recap — Gender determination in three steps: 1. Скажи він, вона, або воно з іменником — яке підходить? (Say він, вона, or воно with the noun — which fits?). 2. Перевір закінчення — приголосна? -а/-я? -о/-е? (Check the ending — consonant? -а/-я? -о/-е?). 3. Вибери правильний присвійний займенник — мій, моя, або моє. (Choose the right possessive — мій, моя, or моє). Each step reinforces the others: gender test → ending pattern → possessive all point to the same answer.
-- Self-check questions (bulleted Q&A, ~130 words):
-  - Який рід у слова «стіл»? → Чоловічий (він, мій) — закінчення на приголосну (л).
-  - Який рід у слова «книга»? → Жіночий (вона, моя) — закінчення -а.
-  - Який рід у слова «вікно»? → Середній (воно, моє) — закінчення -о.
-  - Як сказати «I have a chair» українською? → У мене є стілець.
-  - Як сказати «my lamp» і «my mirror»? → Моя лампа (f), моє дзеркало (n).
-  - Яке закінчення у слів жіночого роду? → -а або -я.
-  - Яке закінчення у слів середнього роду? → -о або -е.
-- P2 (~60 words): Bridge to M09 — In the next module, you'll learn to describe these objects: великий стіл, маленьке вікно, нова книга. Adjectives in Ukrainian also change their endings based on the gender of the noun they describe — but you already know the key to adjective agreement, because you know gender. Everything connects.
-- P3 (~40 words): Micro-challenge — Look around where you are right now. Pick three objects. What gender is each? Say: У мене є ___. Це мій/моя/моє ___. Start noticing gender everywhere — it will become instinct.
+- P1 (~45 words): Setup — your room, bag, and desk are full of Ukrainian nouns waiting to be named. Here are 20 common objects organized by gender. For each one, check the ending, then confirm with він/вона/воно — both tests point to the same family.
+- P2 (~85 words): Masculine objects (він, мій) — стіл, стілець, телефон, комп'ютер, зошит, ключ. Short illustrative sentences to make each word stick: Це мій стіл. Він дерев'яний. Де мій телефон? — Він тут, на столі. Де ключ? — Ось він, мій ключ. Every noun ends in a consonant — the ending signals чоловічий рід before learners even say the word.
+- P3 (~85 words): Feminine objects (вона, моя) — книга, лампа, сумка, ручка, кімната, стіна. Sentences: Це моя книга. Вона цікава. Моя сумка — синя. Де ручка? — Ось вона, моя ручка. Це кімната — моя кімната. Every noun ends in -а — the pattern is visible in every example. Learners see the rule confirmed, not stated.
+- P4 (~75 words): Neuter objects (воно, моє) — вікно, ліжко, крісло, дзеркало, фото. Sentences: Це моє вікно. Воно велике. Де моє ліжко? — Ось воно. У мене є дзеркало і фото. All end in -о (фото is indeclinable but follows neuter agreement). Briefly flag: фото never changes its ending — it's a borrowed word — but voно and моє still apply.
+
+- **Exercise (Group-sort — 12 items):** Sort into три колонки: він, мій | вона, моя | воно, моє. Items: стілець, ручка, фото, комп'ютер, лампа, крісло, ключ, кімната, дзеркало, телефон, книга, вікно. Equal 4 items per column.
+
+- P5 (~50 words): У мене є bridge from M06 (family vocabulary). Same construction, new objects: У мене є стіл. У мене є книга. У мене є вікно. Now add a possessive: Це мій стіл. Це моя книга. Це моє вікно. Two sentences, same noun — links the structures already known.
+
+- **Exercise (Fill-in — 8 items):** мій, моя, or моє? _____ стіл / _____ книга / _____ вікно / _____ сумка / _____ крісло / _____ ключ / _____ лампа / _____ ліжко. Learner applies the rule, not just recognizes it.
+
+---
+
+## Підсумок — Summary (~330 words)
+
+- P1 (~70 words): Three-step gender check (following plan's point exactly). Step 1 — Try він/вона/воно with the noun: which fits? Step 2 — Check the ending: consonant → чоловічий, -а/-я → жіночий, -о/-е → середній. Step 3 — Use the matching possessive: мій / моя / моє. Both methods give the same answer. Use whichever is faster for you. With practice, gender recognition becomes automatic.
+- P2 (~90 words): Self-check Q&A list (plan's point: "Self-check questions"):
+  - Якого роду слово «стіл»? → Чоловічого. Він закінчується на приголосний (-л). → Мій стіл.
+  - Якого роду «книга»? → Жіночого. Закінчення -а. → Моя книга.
+  - А «вікно»? → Середнього. Закінчення -о. → Моє вікно.
+  - Скажіть: "I have a chair." → У мене є стілець.
+  - Скажіть: "This is my mirror." → Це моє дзеркало.
+
+- **Exercise (Quiz — 6 items):** What gender? Look at the ending only, no testing needed. Nouns: зошит (consonant -т → m), ручка (-а → f), крісло (-о → n), ліжко (-о → n), ключ (consonant -ч → m), стіна (-а → f). Learner states gender + ending evidence.
+
+- P3 (~80 words): Looking ahead to M09 — "In the next module you'll meet adjectives: великий, маленький, синій. Every adjective must agree with its noun's gender — великий стіл (m), велика книга (f), велике вікно (n). The gender system you learned today is the foundation. Every adjective, every possessive, every demonstrative pronoun in Ukrainian depends on gender — and you now have all three."
+- P4 (~90 words): Vocabulary recap — all 20 words with gender label in a clean two-column format: стіл (він, м) | книга (вона, ж) | вікно (воно, с) | стілець (він, м) | лампа (вона, ж) | ліжко (воно, с) | телефон (він, м) | ручка (вона, ж) | крісло (воно, с) | зошит (він, м) | сумка (вона, ж) | дзеркало (воно, с) | ключ (він, м) | кімната (вона, ж) | фото (воно, с) | комп'ютер (він, м) | стіна (вона, ж).
 
 Grand total: ~1320 words
 </skeleton>

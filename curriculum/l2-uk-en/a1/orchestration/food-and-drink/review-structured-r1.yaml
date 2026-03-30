@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct focus. Dialogue 1
+    covers breakfast with каву з молоком/хліб з маслом/чай з цукром/кашу (matches
+    plan exactly). Dialogue 2 covers суп/салат/м'ясо з к
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian verified. Zero Russianisms, zero Surzhyk, zero calques.
+    Every instrumental form checked against VESUM. Verb forms (їси, їсть, п'ю, п'є,
+    п'ємо) verified. Gender assignments all correct. А
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situation (breakfast dialogue) → pattern recognition
+    ("з + noun" chunks) → practice (self-check questions). Excellent decision to teach
+    instrumental forms as memorized chunks, not gra'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 14 required words used naturally in prose: їжа, напій, хліб, кава,
+    чай, вода, молоко, сік, м''ясо, риба, суп, сніданок, обід, вечеря. 17/18 recommended
+    words present (борщ, вареник, каша, сир, масл'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 4 activity markers matching all 4 plan activity_hints. Each placed after
+    relevant teaching. Plan's fill-in activity tests "з + noun" chunks with varied
+    items. Quiz has plausible distractors (борщ/каша
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Dialogues are warm and natural — Мама/Оленка banter ("Каву? Ти ж маленька
+    ще!" / "Мамо, я вже доросла!") gives personality. Cultural sections use real textbook
+    quotes (Авраменко, folk rhyme) rather th
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All 4 H2 sections present in correct order. Word count (1687) well above
+    1200 target. Clean markdown overall. **However:** In the Їжа section, vocabulary
+    categories Овочі/Фрукти/Молочне/Інше are wrapp
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian food presented on its own terms — no comparisons to Russian
+    cuisine. Борщ correctly described as "the national dish" (not "Eastern European
+    soup"). Вареники quote from Авраменко textbook is '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Both dialogues are natural multi-turn exchanges with named speakers. Мама/Оленка
+    dynamic is warm and realistic — teasing about coffee, sharing excitement about
+    каша, enthusiasm for вареники. "Каву? Ти
+findings: []

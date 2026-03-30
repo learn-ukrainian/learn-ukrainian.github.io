@@ -1,0 +1,26 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "готувати",
+      "грати",
+      "гуляти",
+      "дивитися",
+      "книга",
+      "любити",
+      "малювати",
+      "музика",
+      "подобатися",
+      "подорожувати",
+      "слухати",
+      "співати",
+      "фільм",
+      "читати"
+    ]
+  },
+  "all_grounded": true
+}

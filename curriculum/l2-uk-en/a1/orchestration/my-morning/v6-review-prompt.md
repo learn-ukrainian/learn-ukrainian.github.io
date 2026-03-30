@@ -1,0 +1,532 @@
+<!-- version: 1.0.0 | updated: 2026-03-27 -->
+# V6 Review Prompt — Adversarial Module Quality Review
+
+You are reviewing a Ukrainian language module for quality. The writer used a different AI model — your job is adversarial: find every flaw. Be harsh but fair. Every issue you catch now prevents 54 bad modules later.
+
+## Module Under Review
+
+**Module:** 20: My Morning (A1, A1.3 [Actions])
+**Writer:** Gemini Pro
+**Word target:** 1200
+
+## Plan (source of truth)
+
+<plan_content>
+module: a1-020
+level: A1
+sequence: 20
+slug: my-morning
+version: '1.2'
+title: My Morning
+subtitle: Прокидаюся, вмиваюся — reflexive verbs and routines
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Actions]
+word_target: 1200
+objectives:
+- Recognize and use reflexive verbs with -ся/-сь
+- Describe a morning routine using sequence words
+- Conjugate reflexive verbs in present tense (same endings + ся)
+- Tell a simple daily story in sequence
+dialogue_situations:
+- setting: Two roommates comparing their morning routines before leaving for work
+  speakers:
+  - Ліна
+  - Настя
+  motivation: 'Reflexive verbs: прокидаюся, вмиваюся, одягаюся in sequence'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - 'Dialogue 1 — Morning routine: — Коли ти прокидаєшся? — Я прокидаюся о сьомій.
+    — Що ти робиш потім? — Вмиваюся, одягаюся і снідаю. — А коли ти йдеш на роботу?
+    — О восьмій. Reflexive verbs emerge through describing the morning.'
+  - 'Dialogue 2 — Weekend morning (contrast): — У суботу я не поспішаю. Прокидаюся
+    пізно, лежу, дивлюся телефон. — А я навчаюся вранці. Потім гуляю. Mix of reflexive
+    and non-reflexive verbs.'
+- section: Дієслова на -ся (Reflexive Verbs)
+  words: 300
+  points:
+  - 'Караман Grade 10 p.176: Дієслова із суфіксом -ся(-сь) означають дію, спрямовану
+    на себе. вмивати (to wash someone) → вмиватися (to wash oneself). одягати (to
+    dress someone) → одягатися (to dress oneself). The -ся attaches to the end of
+    every conjugated form: я вмиваюся, ти вмиваєшся, він/вона вмивається.'
+  - 'Кравцова Grade 4 p.113: pronunciation note: -шся sounds like [с'':а] (long soft
+    с): вмиваєшся → [вмиваєс'':а]. -ться sounds like [ц'':а] (long soft ц): вмивається
+    → [вмиваєц'':а]. The spelling and pronunciation differ — learn both!'
+- section: Мій ранок (My Morning)
+  words: 300
+  points:
+  - 'Morning routine vocabulary (reflexive verbs): прокидатися (to wake up), вмиватися
+    (to wash face/hands), одягатися (to get dressed), збиратися (to get ready), повертатися
+    (to return home). Non-reflexive morning verbs for contrast: снідати (to have breakfast),
+    пити каву (to drink coffee). Йти (to go) — irregular: я йду, ти йдеш, він/вона
+    йде. Learn these forms — they don''t follow Group I or II patterns.'
+  - 'Sequence words for telling a story: спочатку (first), потім (then), після цього
+    (after this), нарешті (finally). Мій ранок: Спочатку я прокидаюся. Потім вмиваюся
+    і одягаюся. Після цього снідаю. Нарешті йду на роботу.'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Reflexive verbs = regular verb + ся at the end. я -юся, ти -єшся, він/вона -ється
+    (Group I pattern + ся). Morning routine: прокидатися → вмиватися → одягатися →
+    снідати → йти. Sequence words: спочатку, потім, після цього, нарешті. Self-check:
+    Describe your morning in 4-5 sentences using sequence words.'
+vocabulary_hints:
+  required:
+  - прокидатися (to wake up)
+  - вмиватися (to wash face/hands)
+  - одягатися (to get dressed)
+  - снідати (to have breakfast)
+  - йти (to go — irregular)
+  - спочатку (first, at first)
+  - потім (then, next)
+  recommended:
+  - збиратися (to get ready)
+  - повертатися (to return)
+  - навчатися (to study/learn)
+  - поспішати (to hurry)
+  - після цього (after this)
+  - нарешті (finally)
+  - вранці (in the morning)
+  - пізно (late)
+activity_hints:
+- type: fill-in
+  focus: 'Add -ся: я вмиваю__ , ти одягаєш__ , він прокидаєть__'
+  items: 10
+- type: quiz
+  focus: 'Reflexive or not? Choose: Я (вмиваю/вмиваюся) руки.'
+  items: 8
+- type: fill-in
+  focus: 'Put the morning routine in order: спочатку ___, потім ___, нарешті ___'
+  items: 6
+- type: fill-in
+  focus: Describe your morning in 3 sentences
+  items: 3
+connects_to:
+- a1-021 (Checkpoint — Actions)
+prerequisites:
+- a1-019 (Questions)
+grammar:
+- 'Reflexive verbs: regular conjugation + -ся/-сь suffix'
+- 'Pronunciation: -шся=[с'':а], -ться=[ц'':а] (gemination)'
+- 'Sequence words: спочатку, потім, після цього, нарешті'
+register: розмовний
+references:
+- title: Караман Grade 10, p.176
+  notes: 'Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе.'
+- title: Кравцова Grade 4, p.113
+  notes: 'Pronunciation: -шся=[с''а], -ться=[ц''а].'
+- title: Захарійчук Grade 4, p.162
+  notes: 'Дієслова на -ся: вправи з вимовою та правописом.'
+
+</plan_content>
+
+## Generated Content
+
+<generated_module_content>
+## Діалоги (Dialogues)
+
+It's Monday morning. Ліна and Настя share an apartment. They're both in the kitchen — one is already dressed, the other still half-asleep. Their conversation is about to teach you one of the most useful verb patterns in Ukrainian.
+
+### Діалог 1 — Ранок у будні (Weekday morning)
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> Ліно, коли ти прокидаєшся? *(Lina, when do you wake up?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> Я прокидаюся о сьомій. *(I wake up at seven.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> А що ти робиш потім? *(And what do you do next?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> Спочатку вмиваюся, потім одягаюся і снідаю. *(First I wash up, then I get dressed and have breakfast.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> А коли йдеш на роботу? *(And when do you go to work?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> О восьмій. А ти? *(At eight. And you?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> Я прокидаюся о шостій. Довго збираюся! *(I wake up at six. I take a long time getting ready!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> О шостій? Це рано! *(At six? That's early!)*</div>
+
+</div>
+
+Look at the verbs Ліна uses to describe her morning: **прокидаюся** (I wake up), **вмиваюся** (I wash up), **одягаюся** (I get dressed), **збираюся** (I get ready). Every single one ends in **-ся**. That's not a coincidence — it's a pattern, and it's the grammar heart of this module.
+
+### Діалог 2 — Вихідний ранок (Weekend morning)
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> У суботу я не поспішаю. *(On Saturday I don't rush.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> А що ти робиш? *(And what do you do?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> Прокидаюся пізно, лежу, дивлюся в телефон. *(I wake up late, lie around, look at my phone.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> А я навчаюся вранці. Снідаю, потім гуляю. *(And I study in the morning. I have breakfast, then go for a walk.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> Ти навчаєшся у суботу? *(You study on Saturday?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Настя:</span> Так! Я повертаюся додому о другій. *(Yes! I come back home at two.)*</div>
+
+</div>
+
+This dialogue mixes two kinds of verbs. Some end in **-ся**: **прокидаюся**, **дивлюся**, **навчаюся** (I study), **повертаюся** (I return). Others don't: **снідаю** (I have breakfast), **гуляю** (I walk), **лежу** (I lie down). Notice the difference? Verbs with **-ся** describe actions you do *to yourself* or *for yourself*. Verbs without it describe actions directed outward. The next section explains exactly how this works.
+
+## Дієслова на -ся (Reflexive Verbs)
+
+Ukrainian textbooks call these **зворотні дієслова** — verbs where the action turns back onto the person doing it. The suffix **-ся** (short for the old pronoun **себе**, meaning "oneself") attaches to the end of the verb and changes its direction.
+
+Compare these pairs:
+
+- **вмивати** (to wash someone) → **вмиватися** (to wash oneself)
+- **одягати** (to dress someone) → **одягатися** (to dress oneself)
+
+A mother washes her child: **Мама вмиває дитину.** *(Mom washes the child.)* But when you wash your own face in the morning: **Я вмиваюся.** *(I wash up.)* The action loops back — that's what **-ся** signals.
+
+### How to conjugate reflexive verbs
+
+The good news: reflexive verbs use the same endings as regular Group I verbs. You just add **-ся** after every ending. Here is **вмиватися** (to wash up) in the present tense:
+
+| | вмиватися |
+|---|---|
+| я | вмиваюся |
+| ти | вмиваєшся |
+| він/вона | вмивається |
+| ми | вмиваємося |
+| ви | вмиваєтеся |
+| вони | вмиваються |
+
+The pattern is identical for **прокидатися** (to wake up): **я прокидаюся, ти прокидаєшся, він прокидається**. Once you know how to conjugate one reflexive verb, you can conjugate them all.
+
+### Pronunciation secret
+
+Here's something that trips up learners: the way you *write* these endings and the way you *say* them are different.
+
+- **-шся** (written) sounds like a long, soft "с" — say it quickly and your mouth naturally makes the right sound. So **вмиваєшся** sounds like "вмиваєс':а" in fast speech.
+- **-ться** (written) sounds like a long, soft "ц" — so **вмивається** sounds like "вмиваєц':а."
+
+:::tip
+Don't overthink the pronunciation. Spell it correctly on paper: **вмиваєшся**, **вмивається**. When you say it aloud at normal speed, the sounds merge naturally. Ukrainian children learn this the same way — Kravtsova's Grade 4 textbook has students whisper the endings quickly to discover the sound shift themselves.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-add-sya -->
+
+<!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->
+
+## Мій ранок (My Morning)
+
+Now you have the tools to describe an entire morning. Let's build your vocabulary in two groups: reflexive verbs (actions on yourself) and non-reflexive verbs (actions on the world around you).
+
+### Reflexive morning verbs
+
+Each of these describes something you do to or for yourself:
+
+- **прокидатися** (to wake up) — Я прокидаюся о сьомій годині. *(I wake up at seven o'clock.)*
+- **вмиватися** (to wash face/hands) — Вона вмивається в ванній. *(She washes up in the bathroom.)*
+- **одягатися** (to get dressed) — Він одягається швидко. *(He gets dressed quickly.)*
+- **збиратися** (to get ready) — Ти збираєшся довго! *(You take a long time getting ready!)*
+- **навчатися** (to study) — Ми навчаємося разом. *(We study together.)*
+- **повертатися** (to return) — Я повертаюся додому о шостій. *(I return home at six.)*
+
+### Non-reflexive morning verbs
+
+These describe actions directed at something else — food, coffee, the outside world:
+
+- **снідати** (to have breakfast) — Я снідаю о восьмій. *(I have breakfast at eight.)*
+- **пити каву** (to drink coffee) — Він п'є каву. *(He drinks coffee.)*
+- **гуляти** (to walk/stroll) — Вона гуляє вранці. *(She takes a walk in the morning.)*
+
+No **-ся** here — because you eat breakfast, you don't "breakfast yourself." The action goes outward.
+
+### The irregular verb йти (to go)
+
+One essential morning verb breaks the rules. **Йти** (to go on foot) has its own conjugation that doesn't follow Group I or Group II patterns. Memorize these forms:
+
+| | йти |
+|---|---|
+| я | йду |
+| ти | йдеш |
+| він/вона | йде |
+| ми | йдемо |
+| ви | йдете |
+| вони | йдуть |
+
+- Я йду на роботу о восьмій. *(I go to work at eight.)*
+- Вона йде до школи. *(She goes to school.)*
+- Ти йдеш зараз? *(Are you going now?)*
+
+### Telling your morning as a story
+
+Four words let you string your morning into a sequence:
+
+- **спочатку** (first, at first)
+- **потім** (then, next)
+- **після цього** (after this)
+- **нарешті** (finally)
+
+Put them together and you get a complete mini-narrative:
+
+- Спочатку я прокидаюся о сьомій. *(First I wake up at seven.)*
+- Потім вмиваюся і одягаюся. *(Then I wash up and get dressed.)*
+- Після цього снідаю і п'ю каву. *(After this I have breakfast and drink coffee.)*
+- Нарешті йду на роботу о восьмій. *(Finally I go to work at eight.)*
+
+These sequence words typically stand at the beginning of the sentence. They're the glue that turns isolated actions into a real story.
+
+<!-- INJECT_ACTIVITY: fill-in-morning-order -->
+
+## Підсумок — Summary
+
+### Grammar recap
+
+Reflexive verbs = a regular verb + the suffix **-ся**. The suffix never changes — it attaches after every personal ending: **-юся, -єшся, -ється, -ємося, -єтеся, -ються** (Group I pattern). The action turns back onto the person doing it: **вмивати** (to wash someone else) versus **вмиватися** (to wash yourself).
+
+Two pronunciation rules to keep in mind: **-шся** sounds like a long soft "с," and **-ться** sounds like a long soft "ц." Write the full spelling, say the short form.
+
+One irregular verb to know by heart: **я йду, ти йдеш, він йде, ми йдемо, ви йдете, вони йдуть**.
+
+### Your morning vocabulary
+
+Here's the full chain for describing a morning routine:
+
+**Reflexive chain:** прокидатися (to wake up) → вмиватися (to wash up) → одягатися (to get dressed) → збиратися (to get ready) → йти на роботу (to go to work)
+
+**Return:** повертатися додому (to return home)
+
+**Non-reflexive:** снідати (to have breakfast), пити каву (to drink coffee), гуляти (to walk)
+
+**Supporting words:** вранці (in the morning), пізно (late), поспішати (to hurry), навчатися (to study)
+
+**Sequence glue:** спочатку (first), потім (then), після цього (after this), нарешті (finally)
+
+### The reflexive test
+
+:::note
+How do you know if a verb is reflexive? Ask: can I do this action *to another person*? If yes, the non-reflexive form exists and means something different. **Вмивати когось** (to wash someone) ≠ **вмиватися** (to wash oneself). **Одягати дитину** (to dress a child) ≠ **одягатися** (to get dressed). The **-ся** signals the action loops back to the subject.
+:::
+
+**Deterministic word count: 1301 words** (calculated by pipeline, do NOT estimate manually)
+
+</generated_module_content>
+
+---
+
+## Review Protocol
+
+### Step 1: Scan for linguistic errors
+
+Scan the Ukrainian text for errors. Report ONLY problems found — do not echo correct text.
+
+**Four SEPARATE checks (these are four different problems):**
+1. **Russianisms** — Russian words used instead of Ukrainian (кот→кіт, хорошо→добре, конечно→звичайно, сейчас→зараз)
+2. **Surzhyk** — mixed Russian-Ukrainian forms (шо→що, чо→чому, тіпа→типу)
+3. **Calques** — literal translations from Russian that sound wrong in Ukrainian (приймати душ→брати душ, приймати рішення→ухвалювати рішення)
+4. **Paronyms** — similar-sounding words with different meanings used incorrectly (тактична≠тактовна, ефектний≠ефективний)
+
+**Also check:**
+- Russian characters (ы, э, ё, ъ) — these must NEVER appear
+- Incorrect gender assignment or case endings
+- Factually wrong claims about Ukrainian phonetics, grammar, or culture
+
+**Authority hierarchy for verification (check in this order):**
+1. VESUM — does this word/form exist? POS? Gender? (415K lemmas)
+2. Правопис 2019 — is it spelled correctly? Orthography rules.
+3. Горох — stress position, word frequency, synonyms.
+4. Антоненко-Давидович «Як ми говоримо» — is this natural Ukrainian or a calque/Russicism?
+5. Грінченко «Словарь» — etymology, original meaning.
+
+**Online fallbacks (if RAG/tools are unavailable):**
+- VESUM: https://vesum.com.ua/
+- Правопис 2019: https://2019.pravopys.net/
+- Горох: https://goroh.pp.ua/
+- Антоненко-Давидович: https://www.ukrlib.com.ua/books/printit.php?tid=4002
+- Грінченко: https://hrinchenko.com/
+- Словник.ua (aggregator): https://slovnyk.me/
+
+**VESUM verification data is provided at the end of this prompt.** Use it to verify word existence before flagging linguistic errors. If a word is marked ✓ in the VESUM data, it EXISTS in Ukrainian — do not flag it as an error. If a word is marked ✗ (NOT IN VESUM), investigate further — it may be a proper noun, a compound, or genuinely wrong.
+
+**CRITICAL: Your pre-training is contaminated by Russian.** Do NOT trust your instincts about Ukrainian words. If you are not 100% certain a word/form/usage is wrong, you MUST flag it as `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error. Wrong review findings cause wrong fixes. A false positive in the review is worse than a missed error.
+
+If no errors found, state: "No linguistic errors found."
+
+**Do NOT check for stress marks** — stress annotation is handled by a separate deterministic tool after the review phase. Their absence is correct.
+
+### Step 2: Check exercises
+
+The writer places `<!-- INJECT_ACTIVITY: {id} -->` markers in the prose. A separate ACTIVITIES step generates structured YAML exercises (`activities/{slug}.yaml`) that are injected at these markers during PUBLISH.
+
+Check the markers and any inline exercises:
+- Does each marker appear AFTER the relevant teaching section? (exercise should test what was just taught)
+- Do marker IDs match the plan's `activity_hints`? (each hint should have a corresponding marker)
+- Are markers spread evenly through the module? (not clustered at the end)
+- For seminar modules: DSL exercise blocks (:::quiz, :::fill-in) may appear inline — check their logic
+
+For each exercise (DSL or marker), check:
+- Does the exercise test what was just taught? (language skill, not content recall)
+- Is the logic correct? (correct answers are actually correct, distractors are plausible but wrong)
+- Can a learner complete this with the knowledge taught so far in this module?
+- Does the exercise match one of the plan's `activity_hints` in type and focus?
+
+Also check: Are there enough exercise markers/blocks total? The plan's `activity_hints` specifies the expected count.
+
+**Note:** Exercise content is generated by a separate tool from YAML. If exercise LOGIC is wrong, flag it. If the FORMAT looks unusual (React components, YAML structure), that is expected.
+
+### PROOF OF ABSENCE — mandatory before claiming ANYTHING is missing
+
+**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use your MCP tools (`verify_words`, `search_text`) or carefully re-read the specific section where it should appear.
+
+Rules:
+- If you claim "[•] notation is missing" — you must have searched the content for `[•]` and confirmed 0 occurrences
+- If you claim "vocabulary word X is missing" — you must have searched for that exact word
+- If you claim "plan point Y was not covered" — you must quote which section you expected it in and confirm it's not there
+- **NO CLAIMS OF ABSENCE WITHOUT EVIDENCE.** Your tokenizer can miss special characters like [•], [–], [=], «», and other non-alphanumeric symbols. Do not trust a quick scan.
+- Euphony alternation (у/в, і/й) is a MINOR stylistic issue, NEVER a critical error. Both forms are attested in published Ukrainian literature.
+
+**A false finding wastes an entire rebuild cycle. Be precise.**
+
+### Step 3: Score on 9 dimensions
+
+Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quote the actual text).
+
+| # | Dimension | Weight | What to check |
+|---|-----------|--------|---------------|
+| 1 | **Plan adherence** | 15% | DEDUCT for: missing content_outline points, section word budgets off by >10%, plan references not cited, vocabulary from plan absent from prose. REWARD for: every plan point covered with specific examples, correct section pacing, textbook references integrated naturally. Quote the plan point that was missed or covered. |
+| 2 | **Linguistic accuracy** | 15% | All Ukrainian correct? No Russianisms/Surzhyk/calques? Correct phonetic descriptions? Gender/case correct? |
+| 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
+| 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
+| 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
+| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
+| 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
+
+**Note:** Vocabulary tables (словник), video embeds, and external resource links are added by a downstream ENRICH step — do NOT penalize their absence or quality. If you see a vocabulary table with wrong translations, missing words, or formatting issues, that content was NOT written by the writer — it was generated deterministically by the ENRICH step. Do NOT flag словník problems as linguistic errors or deduct points from the writer. Report them separately under "ENRICH issues" in your findings (informational only, not scored).
+
+### Step 4: Output raw scores
+
+Output ONLY the raw 1-10 scores in the table below. Do NOT calculate the weighted total — the pipeline script handles the math deterministically. Just write your per-dimension scores.
+
+### Step 5: List findings
+
+**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the evidence column of your scores table, you MUST also list it as a structured finding below AND include it in your `<fixes>` block.** Identifying an error in evidence but not outputting a finding+fix means the error ships to learners. This is a language curriculum — every error you identify must be fixed. No exceptions.
+
+For every issue found, provide:
+```
+[DIMENSION] [SEVERITY: critical/major/minor]
+Location: [specific section/paragraph — quote the actual text]
+Issue: [what's wrong]
+Fix: [exactly how to fix it]
+```
+
+Severity guide:
+- **Critical** = factual/linguistic error that teaches wrong Ukrainian (wrong form, wrong rule, wrong example). Module cannot ship.
+- **Major** = quality below standard but not factually wrong (weak explanation, awkward phrasing, missing examples).
+- **Minor** = polish item (tone, word choice, style).
+
+**Any factual or linguistic error is CRITICAL, not minor.** A wrong syllable division, a wrong phonetic claim, a contradictory grammar rule — these are critical because learners will memorize them as truth.
+
+### Step 6: Verdict
+
+Base your verdict on the **severity of findings** — the pipeline calculates the weighted score separately.
+
+| Verdict | Condition |
+|---------|-----------|
+| **PASS** | Zero findings mentioning errors/mistakes/inaccuracies. All dimensions ≥9. |
+| **REVISE** | Has findings with fixes. Any dimension <9 with identified errors = REVISE, not PASS. |
+| **REJECT** | Fundamental structural/pedagogical problems requiring rewrite. |
+
+### Step 7: Fix it yourself (REVISE only)
+
+If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find/replace pairs. The pipeline applies these deterministically — no LLM regeneration, no rewriting from scratch.
+
+Rules for fixes:
+- Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
+- The `find` string must be an EXACT substring of the module content — copy-paste it
+- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
+- For word count issues: add content as a new `insert_after:` entry instead of find/replace
+
+---
+
+## Output Format
+
+```
+## Linguistic Scan
+[errors found, or "No linguistic errors found"]
+
+## Exercise Check
+[placeholder inventory and issues]
+
+## Scores
+| Dimension | Score | Evidence |
+|-----------|-------|----------|
+| 1. Plan adherence | X/10 | [specific evidence from the text] |
+| ... | ... | ... |
+
+## Findings
+[list all findings with dimension/severity/location/issue/fix]
+
+## Verdict: PASS / REVISE / REJECT
+[justification — reference both score gate and severity gate]
+
+<fixes>
+- find: "exact text from module"
+  replace: "corrected text"
+- find: "another exact problem"
+  replace: "the fix"
+</fixes>
+```
+
+**The `<fixes>` block is REQUIRED for REVISE verdicts.** Without it, the pipeline cannot apply your fixes. For PASS verdicts, omit the `<fixes>` block. For REJECT verdicts, the module needs a full rebuild — `<fixes>` is optional.
+
+
+<vesum_verification>
+The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
+
+Verified: 102 words | Not found: 13 words
+
+Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Ліна — NOT IN VESUM
+  ✗ Ліно — NOT IN VESUM
+  ✗ Настя — NOT IN VESUM
+  ✗ вмиваєс — NOT IN VESUM
+  ✗ вмиваєц — NOT IN VESUM
+  ✗ ться — NOT IN VESUM
+  ✗ шся — NOT IN VESUM
+  ✗ юся — NOT IN VESUM
+  ✗ ються — NOT IN VESUM
+  ✗ ємося — NOT IN VESUM
+  ✗ єтеся — NOT IN VESUM
+  ✗ ється — NOT IN VESUM
+  ✗ єшся — NOT IN VESUM
+
+All 102 other words are confirmed to exist in VESUM.
+
+</vesum_verification>
+
+## Verification Tools (MCP)
+
+You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+
+**Core Verification:**
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+
+**Content Quality:**
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+
+**Reference:**
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+
+**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

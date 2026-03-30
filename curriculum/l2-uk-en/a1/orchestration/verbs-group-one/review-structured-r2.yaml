@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct topics. Both dialogues
+    match plan specs (Dialogue 1: kitchen/what do you do with я/ти/він,вона; Dialogue
+    2: work/school context). Варзацька Grade 4 '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: '**Critical error:** вивчати and малювати wrongly classified as -яти infinitives
+    (see Linguistic Scan). All conjugated forms verified correct against VESUM (читаю/читаєш/читає
+    ✓, готую/готуєш/готує ✓, '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues present verbs in situation → conjugation
+    table extracts pattern → person-focused practice drills. RAG-confirmed textbook
+    approach (Варзацька p.129, Захарійчук p.110 parad'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 6 required verbs (читати, знати, працювати, слухати, гуляти, готувати)
+    used naturally in dialogues and examples — not as bare lists. Recommended: робити
+    ✓ (as chunk), вивчати ✓ (Dialogue 2), малюв'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan hints in type and focus. Markers placed
+    after relevant teaching sections. Fill-in-conjugation after table ✓, quiz after
+    person examples ✓, match-up after drilling persons
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no "Let us explore," no gamified language. Opens
+    with a concrete scene: "Юля is in the kitchen. Something smells amazing." Dialogue
+    tip uses genuine pattern observation ("Помі'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present in plan order. Word count 1308/1200 (109% —
+    within range). No duplicate summaries. No meta-commentary. Clean markdown. Conjugation
+    tables render correctly. No stray tags or f
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
+    Textbook source (Варзацька) properly cited. Names are Ukrainian (Юля, Сашко, Олена,
+    Андрій, Марина). Setting is natural (sha
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Dialogue 1: kitchen scene with named speakers (Юля cooking, Сашко curious),
+    natural flow, three persons emerge organically, ends with personality detail ("Вона
+    завжди слухає музику!"). Dialogue 2: pos'
+findings: []

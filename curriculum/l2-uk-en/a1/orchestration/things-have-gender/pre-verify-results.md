@@ -1,113 +1,99 @@
 ## VESUM Verification
 
-**Confirmed (23/23):** All plan vocabulary words exist in VESUM.
+**Batch 1 (12/12 confirmed):**
+- ✅ стіл (noun)
+- ✅ книга (noun)
+- ✅ вікно (noun)
+- ✅ кімната (noun)
+- ✅ ліжко (noun)
+- ✅ стілець (noun)
+- ✅ лампа (noun)
+- ✅ телефон (noun)
+- ✅ комп'ютер (noun)
+- ✅ він (pronoun — filed as noun-class in VESUM, normal)
+- ✅ вона (pronoun — filed as noun-class in VESUM, normal)
+- ✅ воно (pronoun — filed as noun-class in VESUM, normal)
 
-- стіл ✅ noun
-- книга ✅ noun
-- вікно ✅ noun
-- кімната ✅ noun
-- ліжко ✅ noun
-- стілець ✅ noun
-- лампа ✅ noun
-- телефон ✅ noun
-- комп'ютер ✅ noun
-- він ✅ pronoun
-- вона ✅ pronoun
-- воно ✅ pronoun
-- зошит ✅ noun
-- ручка ✅ noun
-- сумка ✅ noun
-- крісло ✅ noun
-- дзеркало ✅ noun
-- ключ ✅ noun
-- фото ✅ noun (17 matches — confirmed indeclinable)
-- стіна ✅ noun
-- мій ✅ adjective (possessive)
-- моя ✅ adjective (lemma: мій)
-- моє ✅ adjective (lemma: мій)
+**Batch 2 (11/11 confirmed):**
+- ✅ зошит (noun)
+- ✅ ручка (noun)
+- ✅ сумка (noun)
+- ✅ крісло (noun)
+- ✅ дзеркало (noun)
+- ✅ ключ (noun)
+- ✅ фото (noun, 17 lemma matches — fully inflectable)
+- ✅ стіна (noun)
+- ✅ мій (adj, 3 matches)
+- ✅ моя (adj — correctly resolves to lemma мій)
+- ✅ моє (adj — correctly resolves to lemma мій)
 
-**Not found: none.**
+**Not found:** none — all 23 words cleared.
 
 ---
 
 ## Textbook Excerpts
 
 ### Section: Він, вона, воно (The Gender Test)
+> «Іменники, які можна замінити словом він, належать до чоловічого роду. До них можна додати слово мій. Наприклад: плащ (він, мій). Іменники, які можна замінити словом вона, належать до жіночого роду. До них можна додати слово моя. Наприклад: куртка (вона, моя). Іменники, які можна замінити словом воно, належать до середнього роду. До них можна додати слово моє. Наприклад: пальто (воно, моє).»
+> Source: Ponomarova, Grade 3, p. 86 ← **direct match to plan pedagogy**
 
-> **Іменники, до яких можна додати слова мій, він, — чоловічого роду:** тато, батько, ранок, січень. **Іменники, до яких можна додати слова моя, вона, — жіночого роду:** мати, бабуся, річка, зима. **Іменники, до яких можна додати слова моє, воно — середнього роду:** маля, серце, життя, літо.
-> Source: Вашуленко, Grade 3, §34 «Рід іменників: чоловічий, жіночий, середній», p.110
+> «Іменники, до яких можна додати слова мій, він, — чоловічого роду: тато, батько, ранок, січень. Іменники, до яких можна додати слова моя, вона, — жіночого роду: мати, бабуся, річка, зима. Іменники, до яких можна додати слова моє, воно — середнього роду: маля, серце, життя, літо.»
+> Source: Vashulenko, Grade 3, p. 110 (Lesson 34: «Рід іменників: чоловічий, жіночий, середній») ← **direct match to plan pedagogy**
 
-> Таблиця: Чоловічий рід (він, мій) — берег, кінь, батько; Жіночий рід (вона, моя) — річка, бабуся, ніч; Середній рід (воно, моє) — серце, село, курча, ягня.
-> Source: Ponomarova, Grade 4, p.35 «ВИЗНАЧАЮ РІД І ЧИСЛО ІМЕННИКІВ»
+### Section: Предмети навколо (Objects Around Us) — Endings by gender
+> «Чоловічий рід: можна додати слова мій, він, закінчення -о або нульове. Жіночий рід: можна додати слова моя, вона, закінчення -а, -я або нульове. Середній рід: можна додати слова моє, воно, закінчення -о, -е, -а, -я.»
+> Source: Vashulenko, Grade 3, p. 112 ← confirms the endings rule in the plan
 
-⚠️ **Plan reference mismatch:** The plan cites "Пономарова Grade 3 p.86" for gender content. RAG confirms Ponomarova covers noun gender in **Grade 4 p.35**, not Grade 3 p.86. Correct reference: **Вашуленко Grade 3 §34 p.110** or **Ponomarova Grade 4 p.35**.
-
-### Section: Предмети навколо (Objects Around Us)
-
-> Стіл і ясенові лави стояли на своїх місцях. Двоспальне ліжко, заслане ковдрою, з горою подушок… столик, на якому була ручна швейна машина… під вікном — етажерка з книгами, менший стіл із дзеркалом…
-> Source: Зaболотний, Grade 6, p.241 «Будова опису приміщення»
-
-> Із меблів були поширені лави, стіл і скрині. Заможні містяни мали стільці й ліжка…
-> Source: Галімов, Grade 7 (Istoria), p.76
+> «Склади усну розповідь на тему "Моя кімната", використовуючи іменники з довідки. Кімната, двері, вікно, стеля, стіни, коридор, шафа, стіл, стілець, тумбочка, ліжко, підлога.»
+> Source: Vashulenko, Grade 3, p. 131 ← **direct confirmation**: стіл, стілець, вікно, ліжко are standard Grade 3 room vocabulary, used in the exact activity type planned.
 
 ### Section: Діалоги (Dialogues)
+> «Перед мандрівниками була велика вітальня... Біля каміна стояв невеличкий столик і два крісла.»
+> Source: Zabolotnyi, Grade 6, p. 244 — room description with крісло, стіни, вікна in context.
 
-> «У мене є брошка, нічого особливого… Одного разу в метро до мене підсідає незнайома бабуся і просить продати їй прикрасу…» [Context: naturally demonstrates «У мене є + noun» construction]
-> Source: Голуб, Grade 5, p.137 — dialogue composition task
+> Room dialogue format with short exchanges confirmed in Kravcova Grade 2, p. 111: «— Привіт, Кирилку! — Привіт, Соломійко!» with terse reply structure matching the plan's proposed dialogues.
 
-> Завдання: «Прочитай, уставляючи замість крапок слова **мій, моя, моє, він, вона, воно**» [Exercise with мій/моя/моє tied directly to gender identification]
-> Source: Вашуленко, Grade 3, §34 p.110
-
-### Section: Підсумок — Summary
-
-> «Ч. р. (він, мій); ж. р. (вона, моя); с. р. (воно, моє)» — used as column headers for a three-column sorting exercise.
-> Source: Zaharijchuk, Grade 4, p.39, exercise 96
+### Section: Підсумок — possessive agreement мій/моя/моє
+> «дерев'яний стіл / дерев'яна шафа / дерев'яне ліжко» and «синій диван / синя скатертина / синє крісло»
+> Source: Vashulenko, Grade 3, p. 130 ← exact three-gender adjective/possessive agreement demonstrated with room furniture, including plan vocabulary стіл, ліжко, крісло.
 
 ---
 
 ## Grammar Rules
 
-- **Noun gender identification:** Правопис 2019 does not cover grammatical gender (it governs orthography, not morphology). However, the rule is confirmed by all Grade 3–6 textbooks using a consistent formulation: substitute він/цей (masculine), вона/ця (feminine), воно/це (neuter). Source: Голуб Grade 6 p.68 — official reference table.
+The Правопис 2019 does **not** cover noun gender or noun endings — these are morphology/grammar topics, not orthography. No Правопис section applies. This is correct and expected.
 
-- **Noun endings by gender (pedagogical rule from textbooks):**
-  - Masculine: typically ends in a consonant — стіл, зошит, телефон, ключ
-  - Feminine: typically ends in -а / -я — книга, лампа, кімната, ручка, сумка, стіна
-  - Neuter: typically ends in -о / -е — вікно, ліжко, крісло, фото, дзеркало
-
-  Note: This "~90% rule" approach is confirmed by Вашуленко Grade 3 §34 and appropriate for A1. Exceptions (-ь words) are correctly deferred to later modules as the plan states.
-
-- **Possessive pronoun мій/моя/моє declension:** Confirmed Авраменко Grade 6 §95–96 p.186: Н.в. мій / моя / моє / мої — this is the nominative form used in the module. ✅
+**Authoritative source for the module's grammar:**
+- Noun gender (3 types): Ponomarova Grade 3 p. 86; Vashulenko Grade 3 pp. 110–112
+- Possessive pronoun agreement мій/моя/моє: Vashulenko Grade 3 p. 130; Zabolotnyi Grade 6 p. 207 (full declension table)
+- Standard school rule (confirmed across Grade 3 and Grade 6 Tier 1 and Tier 2 sources): *Рід іменника визначаємо, підставляючи він/вона/воно або мій/моя/моє.*
 
 ---
 
 ## Calque Warnings
 
-- **"відкрий вікно"** — ⚠️ CALQUE RISK. Антоненко-Давидович explicitly flags this: Ukrainian distinguishes **відчиняти** (doors, windows — physical opening action) vs **відкривати** (open a business, reveal). If any dialogue uses "відкрий вікно," it must be **відчини вікно**. Current plan dialogues do NOT include opening a window, so no immediate risk — but note for activities.
-
-- **"знаходиться"** — ⚠️ CALQUE. Антоненко-Давидович: "Моя квартира знаходиться на другому поверсі" is wrong. Use **стоїть / є / розташована** for locations of objects. Ensure no dialogue uses "де знаходиться стіл?" — should be "де стоїть стіл?" or "Де є стіл?"
-
-- **"у мене є"** — ✅ NATURAL UKRAINIAN. Антоненко-Давидович confirms "є" as the correct copula in all persons (бути → є). Pattern "У мене є стіл" is confirmed natural in Grade 5 Голуб textbook example ("У мене є брошка"). No calque issue.
+- **«у мене є»**: ✅ OK — natural Ukrainian possessive construction. Антоненко-Давидович (ad-156) explicitly confirms «у мене є» / «є у мене» as the correct Ukrainian form. The calque to avoid is «матися» (from Russian «иметься»), which does not appear in the plan.
+- **«класно»**: ✅ OK — no calque flagged by Антоненко-Давидович. Colloquial but authentic Ukrainian usage in dialogue.
+- **«дивись»**: ✅ OK — imperative of «дивитися», natural Ukrainian attention-getter in dialogue. No calque warning. (The style guide entry on «не дивлячись» concerns the participle misuse, not the imperative.)
 
 ---
 
 ## CEFR Check
 
 | Word | PULS Level | Status |
-|------|-----------|--------|
-| стіл | A1 | ✅ on target |
-| стілець | A1 | ✅ on target |
-| вікно | A1 | ✅ on target |
-| кімната | A1 | ✅ on target |
-| телефон | A1 | ✅ on target |
-| комп'ютер | A1 | ✅ on target |
-| зошит | A1 | ✅ on target |
-| ліжко | A1 | ✅ on target |
-| ручка | A1 | ✅ on target |
-| сумка | A1 | ✅ on target |
-| лампа | A1 | ✅ on target |
-| стіна | A1 | ✅ on target |
-| фото | A1 | ✅ on target |
-| крісло | A1 | ✅ on target |
-| **книга** | **A2** | ⚠️ one level above target — PULS lists **книжка** as A1. Consider using книжка as the primary form, introducing книга as a variant. Both are VESUM-confirmed. |
-| **дзеркало** | **A2** | ⚠️ one level above target — usable as a neuter -о example, but flag as "bonus vocabulary" or move to A1.3+ if the module feels heavy. |
-| **ключ** | **A2** | ⚠️ one level above target — useful for masculine consonant-ending paradigm, but consider swapping for a pure A1 word (e.g., **стіл** already covers this slot). |
+|---|---|---|
+| стіл | A1 | ✅ On target |
+| стілець | A1 | ✅ On target |
+| вікно | A1 | ✅ On target |
+| кімната | A1 | ✅ On target |
+| телефон | A1 | ✅ On target |
+| комп'ютер | A1 | ✅ On target |
+| зошит | A1 | ✅ On target |
+| фото | A1 | ✅ On target |
+| книга | **A2** | ⚠️ Above target — PULS rates **книжка** as A1. Prefer **книжка** in module text; книга acceptable as passive exposure. |
+| ключ | **A2** | ⚠️ Slightly above target — usable as enrichment word but flag for writer; not core A1 |
+| дзеркало | **A2** | ⚠️ Slightly above target — usable as enrichment word; not core A1 |
+
+**Writer guidance on flagged words:**
+- **книга → книжка**: Swap to **книжка** (A1) throughout. Both words exist and mean "book"; книжка is the A1-level everyday form. книга = A2 (more formal/literary). The dialogues should use книжка.
+- **ключ, дзеркало**: Keep in vocabulary lists as labeled enrichment (marked with ★ or "bonus word"), not as core tested vocabulary. Do not test these in fill-in or quiz activities — use only in the vocabulary table for exposure.
