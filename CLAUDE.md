@@ -32,6 +32,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Audit standards | [`audit-standards.md`](docs/best-practices/audit-standards.md) |
 | Vocabulary & activities | [`vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) |
 | Track architecture | [`track-architecture.md`](docs/best-practices/track-architecture.md) |
+| Dialogue situations | [`dialogue-situations.md`](docs/best-practices/dialogue-situations.md) |
 
 ---
 

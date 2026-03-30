@@ -164,6 +164,32 @@
         }
       }
     },
+    "dialogue_situations": {
+      "type": "array",
+      "description": "Unique dialogue settings with specific objects and genders. See docs/best-practices/dialogue-situations.md",
+      "items": {
+        "type": "object",
+        "required": ["setting", "speakers", "motivation"],
+        "properties": {
+          "setting": {
+            "type": "string",
+            "minLength": 30,
+            "description": "WHERE + WHAT: specific location and objects with gender labels (m/f/n/pl)"
+          },
+          "speakers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Speaker names with roles in Ukrainian"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "WHY: which grammar this setting naturally produces"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "connects_to": {
       "oneOf": [
         {
