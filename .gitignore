@@ -156,3 +156,4 @@ data/ukrajinet/
 data/wiktionary/
 data/puls/
 data/literary_texts/*.jsonl
+.build.lock

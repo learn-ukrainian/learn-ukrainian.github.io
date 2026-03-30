@@ -39,7 +39,9 @@ Issue: #993, #998
 from __future__ import annotations
 
 import argparse
+import fcntl
 import logging
+import os
 import re
 import sys
 import time
@@ -55,6 +57,77 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 logger = logging.getLogger(__name__)
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+
+
+# ─── Module-level build lock ────────────────────────────────────────
+# Prevents two v6_build.py processes from racing on the same module.
+# Uses fcntl.flock (advisory lock) — automatically released on crash/exit.
+
+class ModuleBuildLock:
+    """File-based lock per module. Prevents concurrent builds on the same slug."""
+
+    def __init__(self, level: str, slug: str):
+        lock_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+        lock_dir.mkdir(parents=True, exist_ok=True)
+        self._lock_path = lock_dir / ".build.lock"
+        self._fd: int | None = None
+
+    def acquire(self) -> bool:
+        """Try to acquire the lock. Returns False if another build holds it.
+
+        Uses fcntl.flock (advisory lock) — automatically released when the
+        process exits, even on crash or kill -9. Locks CANNOT get stuck.
+        As extra safety: if the lock file's PID is dead, we steal the lock.
+        """
+        self._fd = os.open(str(self._lock_path), os.O_CREAT | os.O_RDWR)
+        try:
+            fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            # Write PID for diagnostics
+            os.ftruncate(self._fd, 0)
+            os.write(self._fd, f"{os.getpid()}\n".encode())
+            return True
+        except OSError:
+            # Another process holds the lock — check if it's still alive
+            try:
+                os.lseek(self._fd, 0, os.SEEK_SET)
+                locked_pid_str = os.read(self._fd, 32).decode().strip()
+                locked_pid = int(locked_pid_str)
+                # Check if the locking process is still running
+                os.kill(locked_pid, 0)  # signal 0 = check existence
+            except (ValueError, ProcessLookupError):
+                # PID is dead or invalid — steal the lock
+                # (This shouldn't normally happen since flock auto-releases,
+                # but handles edge cases like NFS or manual lock file creation)
+                os.close(self._fd)
+                self._fd = os.open(str(self._lock_path), os.O_CREAT | os.O_RDWR | os.O_TRUNC)
+                try:
+                    fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    os.write(self._fd, f"{os.getpid()}\n".encode())
+                    _log("  🔓 Stale lock detected (dead PID) — acquired.")
+                    return True
+                except OSError:
+                    pass
+            except OSError:
+                locked_pid_str = "?"
+
+            os.close(self._fd)
+            self._fd = None
+            _log(f"  ⚠️  LOCKED by PID {locked_pid_str} — another build is running on this module. Skipping.")
+            return False
+
+    def release(self) -> None:
+        """Release the lock."""
+        if self._fd is not None:
+            try:
+                fcntl.flock(self._fd, fcntl.LOCK_UN)
+                os.close(self._fd)
+            except OSError:
+                pass
+            self._fd = None
+            # Clean up lock file
+            import contextlib
+            with contextlib.suppress(OSError):
+                self._lock_path.unlink(missing_ok=True)
 PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
 
@@ -4064,6 +4137,11 @@ def main():
         sys.exit(1)
     slug = slugs[args.module - 1]
 
+    # Acquire build lock — prevents two processes from racing on the same module
+    build_lock = ModuleBuildLock(args.level, slug)
+    if not build_lock.acquire():
+        sys.exit(2)  # Exit code 2 = locked by another build
+
     _build_start = time.monotonic()
 
     _log(f"\n🔨 V6 Build: {args.level.upper()} M{args.module:02d} ({slug})")
@@ -4422,6 +4500,9 @@ def main():
     _seconds = int(_build_elapsed % 60)
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
     _log(f"   Total time: {_minutes}m {_seconds}s")
+
+    # Release build lock
+    build_lock.release()
 
 
 if __name__ == "__main__":
