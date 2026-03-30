@@ -60,7 +60,7 @@ httpx-sse==0.4.3
 huggingface_hub==0.36.2
 humanfriendly==10.0
 hyperframe==6.1.0
-identify==2.6.16
+identify==2.6.18
 idna==3.11
 ifaddr==0.2.0
 ijson==3.5.0
