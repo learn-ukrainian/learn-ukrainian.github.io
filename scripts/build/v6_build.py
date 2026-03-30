@@ -233,6 +233,26 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
         return "60-90%+ Ukrainian"
 
 
+def _build_dialogue_situations(plan: dict) -> str:
+    """Build dialogue situation hints from plan's dialogue_situations field."""
+    situations = plan.get("dialogue_situations", [])
+    if not situations:
+        return "(No specific dialogue situations in plan — pick a unique real-world setting that motivates the grammar.)"
+
+    lines = ["**Module-specific dialogue settings (from plan):**"]
+    for i, sit in enumerate(situations, 1):
+        setting = sit.get("setting", "")
+        speakers = sit.get("speakers", [])
+        motivation = sit.get("motivation", "")
+        lines.append(f"  {i}. **{setting}**")
+        if speakers:
+            lines.append(f"     Speakers: {', '.join(speakers)}")
+        if motivation:
+            lines.append(f"     Why: {motivation}")
+    lines.append("\n  Use these settings. Do NOT substitute with a room description or generic greeting.")
+    return "\n".join(lines)
+
+
 def _extract_body(content: str) -> tuple[str, str]:
     """Extract lesson body (prose) and tail (Словник/Ресурси tabs).
 
@@ -1128,6 +1148,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
         "{PRONUNCIATION_VIDEOS}": "\n".join(pv_lines),
         "{GOLDEN_FRAGMENT}": get_golden_fragment(level, module_num),
+        "{DIALOGUE_SITUATIONS}": _build_dialogue_situations(plan),
         "{SUMMARY_HEADING}": summary_heading,
         "{SKELETON_SECTION}": "",  # Populated below for seminar templates
         "{CORRECTION_SECTION}": "",  # Populated below for seminar templates

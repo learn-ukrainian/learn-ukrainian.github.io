@@ -14,6 +14,12 @@ objectives:
 - Use negation with не (verb) and ні (nothing/nobody)
 - Form yes/no questions with intonation (no word order change)
 - Combine question words with verbs from M16-M18
+dialogue_situations:
+- setting: A tourist asking a local for help navigating the city center
+  speakers:
+  - Турист
+  - Перехожий (passerby)
+  motivation: 'Question words: Де? Куди? Як? Коли? in real navigation'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

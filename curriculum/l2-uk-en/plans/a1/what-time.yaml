@@ -14,6 +14,12 @@ objectives:
 - Tell time on the hour and half hour
 - Use "at" + time (о + locative as chunk — no case grammar)
 - Schedule simple events using time expressions
+dialogue_situations:
+- setting: Coordinating a meeting time over the phone — both checking schedules
+  speakers:
+  - Марина
+  - Олексій
+  motivation: О котрій годині? time expressions in scheduling
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

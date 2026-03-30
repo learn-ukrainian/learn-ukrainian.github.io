@@ -14,6 +14,11 @@ objectives:
 - Express reasons with бо and тому що
 - Build longer, more natural sentences instead of choppy short ones
 - Recognize conjunctions in spoken and written Ukrainian
+dialogue_situations:
+- setting: Debating where to go on vacation — comparing options
+  speakers:
+  - Подружжя (couple)
+  motivation: 'І, а, але, бо: Гори гарні, але далеко. Море тепле, бо літо.'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

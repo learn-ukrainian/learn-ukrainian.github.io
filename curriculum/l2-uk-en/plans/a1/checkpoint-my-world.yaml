@@ -15,6 +15,12 @@ objectives:
 - Use numbers in practical contexts (prices, age)
 - Point at and identify objects using demonstratives
 - Use basic plurals for familiar nouns
+dialogue_situations:
+- setting: Showing a friend around your neighborhood on a walk
+  speakers:
+  - Ваня
+  - Катя
+  motivation: 'Consolidation: gender, adjectives, colors, numbers, demonstratives'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

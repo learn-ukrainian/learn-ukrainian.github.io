@@ -14,6 +14,12 @@ objectives:
 - Use sequence words to connect events (спочатку, потім, після того, нарешті)
 - Combine time (M22), days (M23), weather (M24), and verbs (A1.3)
 - Tell a simple coherent story about a typical or specific day
+dialogue_situations:
+- setting: Writing a blog post / diary entry about your day — reading it to a friend
+  speakers:
+  - Автор (narrator)
+  - Друг (listener, reacting)
+  motivation: 'Sequence words: спочатку, потім, нарешті in narration'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

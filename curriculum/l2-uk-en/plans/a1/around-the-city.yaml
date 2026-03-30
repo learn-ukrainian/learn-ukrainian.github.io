@@ -14,6 +14,12 @@ objectives:
 - Give and follow simple directions
 - Describe your neighborhood and daily routes
 - Synthesize M28-M32 skills in connected urban communication
+dialogue_situations:
+- setting: A walking tour guide showing a small group around the old town
+  speakers:
+  - Гід (guide)
+  - Туристи
+  motivation: 'Де?/Куди? combined: Ми зараз на площі, Далі підемо в музей'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

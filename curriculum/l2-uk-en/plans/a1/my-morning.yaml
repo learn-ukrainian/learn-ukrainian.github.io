@@ -14,6 +14,12 @@ objectives:
 - Describe a morning routine using sequence words
 - Conjugate reflexive verbs in present tense (same endings + ся)
 - Tell a simple daily story in sequence
+dialogue_situations:
+- setting: Two roommates comparing their morning routines before leaving for work
+  speakers:
+  - Ліна
+  - Настя
+  motivation: 'Reflexive verbs: прокидаюся, вмиваюся, одягаюся in sequence'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -14,6 +14,12 @@ objectives:
 - Use Ukrainian currency (гривня, копійка) and numbers with prices
 - Buy things at a shop or market using polite phrases
 - Express quantities (кілограм, літр, пачка, пляшка)
+dialogue_situations:
+- setting: At a Ukrainian supermarket — comparing prices and reading labels
+  speakers:
+  - Мама
+  - Дочка/Син
+  motivation: Скільки коштує? Гривень in real grocery shopping
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

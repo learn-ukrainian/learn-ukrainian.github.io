@@ -14,6 +14,11 @@ objectives:
 - Name Ukrainian cities and common countries
 - Complete the location trio: Де? / Куди? / Звідки?
 - Talk about origins, nationality, and travel history
+dialogue_situations:
+- setting: International student mixer — everyone sharing where they're from
+  speakers:
+  - Кілька студентів (group)
+  motivation: 'Звідки? + з + genitive: Я з Канади, Вона з Японії'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

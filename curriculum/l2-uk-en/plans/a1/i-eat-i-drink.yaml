@@ -14,6 +14,12 @@ objectives:
 - Use accusative case for inanimate direct objects (Я їм хліб, п'ю каву)
 - Recognize feminine accusative ending change (-а → -у): кава → каву, вода → воду
 - Describe eating and drinking habits using accusative
+dialogue_situations:
+- setting: Lunch break at work — sharing food and talking about what you eat
+  speakers:
+  - Колега 1
+  - Колега 2
+  motivation: 'Accusative: Я їм хліб, п''ю каву — real mealtime exchange'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

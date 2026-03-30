@@ -14,6 +14,17 @@ objectives:
 - Say prices using гривня and round numbers up to 1000
 - Give age using Мені ... років (as memorized chunk — NO case grammar)
 - Read and say Ukrainian phone numbers
+dialogue_situations:
+- setting: At a farmers market — checking prices and counting change
+  speakers:
+  - Покупець
+  - Продавець
+  motivation: Скільки коштує? Numbers with гривень, counting items
+- setting: Planning a birthday party — counting guests, plates, chairs
+  speakers:
+  - Ліза
+  - Максим
+  motivation: Numbers 1-100 in practical planning context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

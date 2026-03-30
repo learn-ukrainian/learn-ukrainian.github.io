@@ -15,6 +15,12 @@ objectives:
 - Ask questions using all 7 question words
 - Describe a routine using reflexive verbs and sequence words
 - Combine A1.1-A1.3 skills in connected speech
+dialogue_situations:
+- setting: Job interview — describing your typical day, skills, and schedule
+  speakers:
+  - Кандидат (applicant)
+  - Менеджер
+  motivation: 'Consolidation: verbs, modals, questions, reflexives'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

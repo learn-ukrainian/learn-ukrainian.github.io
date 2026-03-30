@@ -14,6 +14,12 @@ objectives:
 - Point at and identify objects using demonstratives + nouns from M08-M10
 - Combine demonstratives with adjectives and colors (цей великий червоний стіл)
 - Distinguish цей (near/this) from той (far/that)
+dialogue_situations:
+- setting: At a flea market — pointing at items on different tables
+  speakers:
+  - Ірина
+  - Олег
+  motivation: Цей/ця/це (close) vs той/та/те (far) with real distance
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

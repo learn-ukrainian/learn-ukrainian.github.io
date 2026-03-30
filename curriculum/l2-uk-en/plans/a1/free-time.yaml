@@ -14,6 +14,12 @@ objectives:
 - Invite someone to an activity using Ходімо! / Давай!
 - Express frequency (часто, іноді, рідко, ніколи)
 - Combine all A1.4 skills: time + day + weather + activities
+dialogue_situations:
+- setting: At a community center bulletin board — discussing activity sign-ups
+  speakers:
+  - Вітя
+  - Лєна
+  motivation: 'Frequency adverbs: Часто ходиш? Іноді. Ходімо разом!'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

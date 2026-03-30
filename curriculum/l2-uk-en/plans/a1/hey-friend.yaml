@@ -14,6 +14,12 @@ objectives:
 - Use vocative in greetings and direct address (Привіт, Андрію!)
 - Recognize vocative endings for masculine (-е, -у/-ю) and feminine (-о, -ю, -є) nouns
 - Address people naturally using vocative in everyday situations
+dialogue_situations:
+- setting: At a busy birthday party — calling people across the room
+  speakers:
+  - Іменинник (birthday person)
+  - Друзі
+  motivation: 'Vocative: Олено! Тарасе! Друже! Мамо! in noisy social setting'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

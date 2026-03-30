@@ -14,6 +14,12 @@ objectives:
 - Use polite request phrases (Можна...? Дайте, будь ласка...)
 - Read a simple Ukrainian menu and ask about items
 - Understand Ukrainian cafe culture (tipping, paying)
+dialogue_situations:
+- setting: A date at a cozy Lviv café — ordering and chatting
+  speakers:
+  - Ростик
+  - Іванка
+  motivation: Мені, будь ласка + ordering vocabulary in romantic context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

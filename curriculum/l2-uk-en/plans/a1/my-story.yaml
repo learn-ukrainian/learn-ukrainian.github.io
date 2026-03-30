@@ -14,6 +14,12 @@ objectives:
 - Tell a simple life story: where you were born, where you live, what you plan
 - Use time expressions to signal tense shifts
 - Understand a short biography read aloud or in text
+dialogue_situations:
+- setting: Grandparent telling their life story to grandchildren
+  speakers:
+  - Дідусь/Бабуся
+  - Онуки
+  motivation: 'Three tenses: Я народився в селі, Зараз живу в місті, Буду відпочивати'
 content_outline:
 - section: Dialogues
   words: 300

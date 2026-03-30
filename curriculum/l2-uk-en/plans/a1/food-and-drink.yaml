@@ -14,6 +14,12 @@ objectives:
 - Use кава з молоком, чай з цукром as memorized chunks (NOT instrumental grammar)
 - Talk about what you eat and drink daily
 - Recognize iconic Ukrainian dishes (борщ, вареники, сало)
+dialogue_situations:
+- setting: Cooking traditional borshch together — listing ingredients
+  speakers:
+  - Бабуся (teaching)
+  - Онук/Онучка (learning)
+  motivation: 'Food vocabulary in recipe context: буряк, картопля, м''ясо'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

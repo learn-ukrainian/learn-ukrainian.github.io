@@ -14,6 +14,12 @@ objectives:
 - Call 112 and explain a basic emergency in Ukrainian
 - Ask for help at a pharmacy, hospital, or police station
 - Give basic personal information in an emergency (name, address, phone)
+dialogue_situations:
+- setting: A minor car accident — calling for help and explaining the situation
+  speakers:
+  - Водій (driver)
+  - Оператор 103 (emergency)
+  motivation: 'Emergency imperatives: Допоможіть! Викличте швидку! Location phrases'
 content_outline:
 - section: Dialogues
   words: 300

@@ -14,6 +14,12 @@ objectives:
 - Give instructions and make requests using будь ласка
 - Recognize common classroom and daily-life imperatives
 - Distinguish ти-imperatives from ви-imperatives
+dialogue_situations:
+- setting: Moving furniture in a new apartment — giving each other instructions
+  speakers:
+  - Олег
+  - Наталя
+  motivation: 'Imperative: Постав тут! Підніми! Поклади туди! in physical task'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

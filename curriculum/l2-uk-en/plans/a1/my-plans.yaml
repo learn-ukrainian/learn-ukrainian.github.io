@@ -14,6 +14,11 @@ objectives:
 - Schedule activities with specific days and times
 - Combine future tense with time expressions (у суботу, о третій, ввечері)
 - Invite someone and respond to invitations using future tense
+dialogue_situations:
+- setting: Friends coordinating schedules for the coming week via messaging
+  speakers:
+  - Група друзів (3 people)
+  motivation: 'Future + days: У суботу буду... Може, зустрінемося? Ходімо!'
 content_outline:
 - section: Dialogues
   words: 300

@@ -14,6 +14,12 @@ objectives:
 - Use 6 high-frequency Group I verbs in sentences
 - Recognize the Group I ending pattern (-у/-ю, -єш, -є, -ємо, -єте, -ють)
 - Build simple sentences about daily activities
+dialogue_situations:
+- setting: In a shared kitchen — one person cooking, other asking what they're doing
+  speakers:
+  - Юля (cooking)
+  - Сашко (curious)
+  motivation: 'Group I verbs in action: читаєш, працюєш, готуєш'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -14,6 +14,12 @@ objectives:
 - Use locative case from M29 with city vocabulary
 - Describe what you do at each place (combining verbs from A1.3)
 - Give simple directions using є (there is) and тут/там
+dialogue_situations:
+- setting: Drawing a map of your neighborhood for a pen pal letter
+  speakers:
+  - Аліна (describing)
+  - Ігор (asking questions)
+  motivation: 'City vocabulary + location: бібліотека тут, аптека там, біля парку'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

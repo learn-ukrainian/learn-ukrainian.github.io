@@ -14,6 +14,12 @@ objectives:
 - Recognize gender by word endings (consonant = m, -а/-я = f, -о/-е = n)
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
+dialogue_situations:
+- setting: Moving into a dorm room — unpacking boxes and deciding where things go
+  speakers:
+  - Марія (new roommate)
+  - Оленка (showing the room)
+  motivation: 'Він/вона/воно test with real objects: стіл, лампа, ліжко'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

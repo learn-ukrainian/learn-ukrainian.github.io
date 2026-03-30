@@ -14,6 +14,18 @@ objectives:
 - Use "У мене є" to say what you have (memorized chunk)
 - Use possessive pronouns мій/моя/моє in nominative only
 - Introduce family members using Це + possessives
+dialogue_situations:
+- setting: Video call showing phone photos to a new friend
+  speakers:
+  - Оля
+  - Марк
+  motivation: У мене є + family members, possessives мій/моя with photos
+- setting: Filling out a visa application together — helping each other with family
+    questions
+  speakers:
+  - Даша (applicant)
+  - Андрій (friend helping)
+  motivation: Family vocabulary, У тебе є брати? in practical context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 400

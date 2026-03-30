@@ -14,6 +14,12 @@ objectives:
 - Express desires, abilities, and obligations in present tense
 - Handle irregular conjugation of хотіти and могти
 - Build practical sentences for everyday needs
+dialogue_situations:
+- setting: Planning a weekend — negotiating what to do
+  speakers:
+  - Оля
+  - Денис
+  motivation: 'Хочу/можу/мушу + infinitive: Хочу піти в кіно, Не можу, мушу працювати'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

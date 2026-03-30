@@ -14,6 +14,17 @@ objectives:
 - Use the Це construction to identify things and people
 - Ask and answer "What is your name?" formally and informally
 - Understand the Ukrainian sentence without verb "to be" (Я — студент)
+dialogue_situations:
+- setting: Hostel common room — two backpackers meet for the first time
+  speakers:
+  - Марко (Canadian student)
+  - Олена (from Kyiv)
+  motivation: Мене звати, Звідки ти? — real first-meeting context
+- setting: University orientation day — students introduce themselves to the group
+  speakers:
+  - Тарас (new student)
+  - Софія (second-year volunteer)
+  motivation: Formal vs informal register, professions with Я — студент
 content_outline:
 - section: Діалоги (Dialogues)
   words: 350

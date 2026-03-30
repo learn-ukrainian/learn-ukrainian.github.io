@@ -15,6 +15,11 @@ objectives:
 - Recognize that Ukrainian past tense marks GENDER, not person
 - Use past tense to describe completed actions in simple sentences
 - Ask and answer "What did you do?" (Що ти робив/робила?)
+dialogue_situations:
+- setting: Monday morning at work — colleagues sharing weekend stories
+  speakers:
+  - Колеги (coworkers)
+  motivation: 'Past tense: Що ти робив? Я ходив у кіно. А ти? Я читала.'
 content_outline:
 - section: Dialogues
   words: 300

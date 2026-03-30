@@ -14,6 +14,12 @@ objectives:
 - Use time markers to structure a narrative (зранку, вдень, ввечері)
 - Combine past tense with known vocabulary (food, places, people)
 - Tell a short personal story about yesterday
+dialogue_situations:
+- setting: Police report — describing what happened step by step
+  speakers:
+  - Свідок (witness)
+  - Поліцейський
+  motivation: 'Past tense narration: Спочатку я побачив, потім почув, нарешті зателефонував'
 content_outline:
 - section: Dialogues
   words: 300

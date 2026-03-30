@@ -14,6 +14,12 @@ objectives:
 - Ask "What kind?" with який/яка/яке
 - Describe objects and rooms using common adjective pairs
 - Build descriptive sentences combining M08 nouns with M09 adjectives
+dialogue_situations:
+- setting: Shopping for a birthday gift in a department store
+  speakers:
+  - Оленка
+  - Тарас
+  motivation: Який/яка/яке? to describe items, adjective agreement with real products
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

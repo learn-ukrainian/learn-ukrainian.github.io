@@ -14,6 +14,12 @@ objectives:
 - Use "іде дощ / іде сніг" pattern for precipitation
 - Combine weather with seasons and months
 - Ask and answer "What's the weather like?"
+dialogue_situations:
+- setting: Two friends deciding whether to go hiking — checking weather together
+  speakers:
+  - Іванко
+  - Галя
+  motivation: 'Impersonal: Сьогодні холодно, Завтра буде тепло, Іде дощ'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

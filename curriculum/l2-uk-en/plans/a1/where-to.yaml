@@ -14,6 +14,12 @@ objectives:
 - Distinguish Де? (locative = static) from Куди? (accusative = direction)
 - Form basic accusative endings for place nouns
 - Navigate between locations using йти/їхати + direction
+dialogue_situations:
+- setting: Running errands together — splitting up and meeting later
+  speakers:
+  - Оксана
+  - Степан
+  motivation: 'Куди? + accusative: Я іду в банк, А я — на пошту'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -14,6 +14,12 @@ objectives:
 - Form basic locative endings for familiar nouns
 - Distinguish в (inside) from на (on/at) with place vocabulary
 - Use the Grade 4 helper word method: М. (на, у) — "на/у кому? на/у чому?"
+dialogue_situations:
+- setting: First week in a new city — asking where everything is
+  speakers:
+  - Новий мешканець (newcomer)
+  - Сусід (neighbor)
+  motivation: 'В/на + locative: Де аптека? В аптеці. Де пошта? На пошті.'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

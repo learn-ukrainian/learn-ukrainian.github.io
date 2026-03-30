@@ -14,6 +14,12 @@ objectives:
 - Recognize the three main plural patterns (-и, -і, -а/-я)
 - Use adjective plural form (-і) with plural nouns
 - Describe groups of objects using plurals + adjectives + colors
+dialogue_situations:
+- setting: Packing a suitcase for a school trip — listing what to bring
+  speakers:
+  - Мама
+  - Петрик
+  motivation: 'Singular → plural: одна книга → три книги, один зошит → зошити'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

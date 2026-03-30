@@ -14,6 +14,12 @@ objectives:
 - Use мені подобається + noun to express what you like (as memorized chunk)
 - Recognize Ukrainian infinitive form (-ти ending)
 - Talk about hobbies and interests using simple verb phrases
+dialogue_situations:
+- setting: First day at a language exchange — sharing hobbies over tea
+  speakers:
+  - Анна (learner)
+  - Віктор (tandem partner)
+  motivation: 'Люблю + infinitive: Люблю читати, Люблю малювати'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

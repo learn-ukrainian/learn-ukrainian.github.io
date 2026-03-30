@@ -14,6 +14,12 @@ objectives:
 - Name all 12 months and 4 seasons
 - Say dates using ordinal numbers (as chunks)
 - Plan a week using days, times, and activities
+dialogue_situations:
+- setting: At a doctor's reception — booking an appointment
+  speakers:
+  - Пацієнт
+  - Реєстратор
+  motivation: 'Days and months: У понеділок? Ні, у середу. В якому місяці?'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

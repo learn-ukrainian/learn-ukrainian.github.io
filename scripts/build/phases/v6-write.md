@@ -185,14 +185,9 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
 
   BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.
 
-  REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules. Examples of good variety:
-  - Numbers module → at a market checking prices, NOT counting objects in a room
-  - Colors module → choosing clothes at a shop, NOT describing room objects
-  - Plurals module → packing a suitcase for a trip, NOT listing classroom items
-  - Time module → planning a meeting point, NOT reading a clock
-  - Food module → cooking together from a recipe, NOT ordering at a generic cafe
+  REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
 
-  The plan's topic and vocabulary should drive the setting. Ask: "Where would a real person USE this grammar?" — that's your dialogue setting.
+  {DIALOGUE_SITUATIONS}
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."

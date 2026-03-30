@@ -15,6 +15,12 @@ objectives:
 - Describe weather using impersonal constructions
 - Tell a coherent story about a typical day
 - Discuss hobbies and make plans using frequency words
+dialogue_situations:
+- setting: Planning a road trip together — dates, weather, schedule
+  speakers:
+  - Організатор
+  - Друзі
+  motivation: 'Consolidation: time, calendar, weather, daily routine'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

@@ -15,6 +15,18 @@ objectives:
 - Distinguish синій (dark blue) from блакитний (light blue) — a distinction English
   lacks
 - Describe objects using color + M09 adjective combinations
+dialogue_situations:
+- setting: Choosing paint colors for redecorating a friend's apartment
+  speakers:
+  - Наталка
+  - Дмитро
+  motivation: 'Color adjectives + gender agreement: синя стіна, жовте вікно, білий
+    стіл'
+- setting: At an outdoor market choosing flowers for a gift
+  speakers:
+  - Покупець (buyer)
+  - Продавець (seller)
+  motivation: 'Colors in real shopping: червоні троянди, білі лілії'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

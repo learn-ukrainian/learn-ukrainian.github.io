@@ -14,6 +14,12 @@ objectives:
 - Use accusative case correctly for both inanimate and animate nouns
 - Order at a cafe and buy things at a shop/market
 - Combine all A1.6 skills in connected scenarios
+dialogue_situations:
+- setting: Hosting a dinner party — shopping, cooking, and serving guests
+  speakers:
+  - Господар/Господиня (host)
+  - Гості (guests)
+  motivation: 'Consolidation: food, ordering, prices, accusative'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

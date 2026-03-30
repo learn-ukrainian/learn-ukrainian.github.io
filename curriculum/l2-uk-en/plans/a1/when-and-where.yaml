@@ -14,6 +14,12 @@ objectives:
 - Build sentences like Я знаю, що...; Я не знаю, де...; Скажи, коли...
 - Distinguish що/де/коли as question words vs conjunctions
 - Combine main clause + subordinate clause naturally
+dialogue_situations:
+- setting: Explaining to a friend how to find your apartment building
+  speakers:
+  - Господар (host, on phone)
+  - Гість (lost outside)
+  motivation: 'Complex sentences: Коли побачиш аптеку, поверни ліворуч'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

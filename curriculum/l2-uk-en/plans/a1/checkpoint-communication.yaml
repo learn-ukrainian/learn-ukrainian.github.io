@@ -15,6 +15,12 @@ objectives:
 - Connect ideas with conjunctions (і, а, але, бо, тому що)
 - Build complex sentences with що, де, коли
 - Use holiday greetings and vocabulary in context
+dialogue_situations:
+- setting: Organizing a charity event — delegating tasks and coordinating
+  speakers:
+  - Організатор
+  - Волонтери
+  motivation: 'Consolidation: vocative, imperative, conjunctions, complex sentences'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

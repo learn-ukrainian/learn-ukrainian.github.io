@@ -14,6 +14,12 @@ objectives:
 - Apply і/й alternation in conjunctions
 - Use з/із/зі correctly before different consonant clusters
 - Understand WHY Ukrainian has these rules (avoiding consonant clusters)
+dialogue_situations:
+- setting: Proofreading a friend's Ukrainian essay — spotting у/в and і/й errors
+  speakers:
+  - Студент (writing)
+  - Друг (correcting)
+  motivation: У/в, і/й alternation in real written context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

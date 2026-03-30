@@ -14,6 +14,12 @@ objectives:
 - Distinguish analytic future from present tense
 - Use future tense to talk about plans and intentions
 - Ask and answer "What will you do?" (Що ти будеш робити?)
+dialogue_situations:
+- setting: Fortune teller at a fun fair — predicting the future playfully
+  speakers:
+  - Ворожка (fortune teller)
+  - Клієнт
+  motivation: 'Future tense: Ти будеш подорожувати, Будеш жити довго'
 content_outline:
 - section: Dialogues
   words: 300

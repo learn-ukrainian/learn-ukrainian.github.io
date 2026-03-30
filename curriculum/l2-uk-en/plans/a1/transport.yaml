@@ -14,6 +14,12 @@ objectives:
 - Buy a ticket and ask about routes
 - Use їхати + transport expressions (їхати автобусом / на метро)
 - Combine transport with direction (куди) and locative (де) from M29-31
+dialogue_situations:
+- setting: Explaining how to get from the airport to the hotel
+  speakers:
+  - Приїжджий (visitor)
+  - Друг (local, giving directions)
+  motivation: 'Transport: автобусом, потягом, на метро in real route'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
