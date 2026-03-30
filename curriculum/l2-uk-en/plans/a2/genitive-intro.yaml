@@ -18,6 +18,14 @@ objectives:
   plural.
 - Learner can form the Genitive plural endings for all three noun genders (-ів, -ей,
   нульове закінчення).
+dialogue_situations:
+- setting: 'Moving into a new apartment — discovering what''s missing: Немає холодильника
+    (m, fridge)! Немає плити (f, stove)! Немає дзеркала (n, mirror)! Є багато коробок
+    (pl, boxes) але мало меблів (pl, furniture).'
+  speakers:
+  - Сусідка (neighbor)
+  - Нова мешканка (new tenant)
+  motivation: 'Genitive with немає: холодильник→холодильника, плита→плити, дзеркало→дзеркала'
 content_outline:
 - section: 'Родовий відмінок: Коли чогось немає (The Genitive Case: When Something
     Isn''t There)'

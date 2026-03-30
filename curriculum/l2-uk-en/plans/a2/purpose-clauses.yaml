@@ -18,6 +18,14 @@ objectives:
   with correct word order.
 - Learner can use purpose and reported speech structures in everyday communication
   scenarios (explaining reasons, relaying messages).
+dialogue_situations:
+- setting: 'Parent explaining to a child why things are done: Ми йдемо в магазин,
+    щоб купити хліб (m). Вчителька сказала, що завтра екскурсія (f). Тато попросив,
+    щоб ти прибрав кімнату (f).'
+  speakers:
+  - Мама
+  - Дитина
+  motivation: Щоб + infinitive, що (reported speech) with хліб(m), екскурсія(f)
 content_outline:
 - section: 'Щоб + інфінітив: для чого? (In Order To: What For?)'
   words: 700

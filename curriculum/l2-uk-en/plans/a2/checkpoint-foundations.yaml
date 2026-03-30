@@ -18,6 +18,14 @@ objectives:
   complete a sentence based on context.
 - Learner can synthesize the new grammar in a short paragraph describing plans or
   past events.
+dialogue_situations:
+- setting: 'Language test preparation — a tutor quizzes the student: Утвори родовий
+    від ''книга''. Книги! А від ''стілець''? Стільця! Який вид: ''читав'' чи ''прочитав''?
+    Перший — недоконаний, другий — доконаний.'
+  speakers:
+  - Репетитор (tutor)
+  - Студент
+  motivation: 'Consolidation: genitive forms, aspect recognition in quiz format'
 content_outline:
 - section: 'Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)'
   words: 400

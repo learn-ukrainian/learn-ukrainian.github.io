@@ -17,6 +17,14 @@ objectives:
   to expand simple ideas into longer utterances.
 - Learner can distinguish between причина (cause with бо/тому що) and допуст
   (concession with хоча) in context.
+dialogue_situations:
+- setting: 'Two students debating whether to skip class — giving reasons: Я не піду,
+    бо хворію. Але тобі треба, тому що завтра контрольна (f, test)! Хоча я втомився,
+    я все одно піду.'
+  speakers:
+  - Студент 1
+  - Студент 2
+  motivation: Бо, тому що, хоча, але with контрольна(f), лекція(f)
 content_outline:
 - section: 'Чому? Тому що... / Бо... (Why? Because...)'
   words: 700

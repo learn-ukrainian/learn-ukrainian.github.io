@@ -18,6 +18,14 @@ objectives:
   exceptions).
 - Learner can use Genitive plural correctly after quantity words (кілька, багато,
   мало, скільки) and numerals 5+.
+dialogue_situations:
+- setting: 'Inventory check at a small village shop — counting what''s left: Скільки
+    пляшок (f, bottles) води? П''ять. Скільки банок (f, jars) меду? Три. А булок (f,
+    buns)? Немає булок!'
+  speakers:
+  - Продавець
+  - Помічник (assistant)
+  motivation: 'Genitive plural: пляшок, банок, булок — feminine zero ending'
 content_outline:
 - section: 'Чоловічий рід: -ів, -їв та нульове закінчення (Masculine: -ів, -їв and
     Zero Ending)'

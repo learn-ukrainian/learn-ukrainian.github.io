@@ -21,6 +21,14 @@ objectives:
 - Learner can choose the correct aspect for imperatives — imperfective for
   general/repeated actions (читай щодня) vs. perfective for specific/one-time
   results (прочитай цю книгу).
+dialogue_situations:
+- setting: 'Ukrainian cooking class — the chef gives commands to students: Наріжте
+    цибулю (f, onion)! Хай вода (f) закипить! Помішаймо разом! Нехай соус (m) настоїться!'
+  speakers:
+  - Шеф-кухар
+  - Учасники класу
+  motivation: 'All imperative forms: наріжте (2pl), хай закипить (3sg), помішаймо
+    (1pl)'
 content_outline:
 - section: 'Хай і нехай: Наказ для третіх осіб (3rd Person Imperatives)'
   words: 550

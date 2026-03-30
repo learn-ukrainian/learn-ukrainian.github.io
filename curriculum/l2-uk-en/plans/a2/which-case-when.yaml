@@ -21,6 +21,14 @@ objectives:
   (у 2014 році).
 - Learner can apply a systematic decision process (verb/preposition → case → ending)
   to determine the correct form of any noun in context.
+dialogue_situations:
+- setting: 'Grammar detective game — reading a Ukrainian newspaper article and identifying
+    which case is used and why: Президент (nom) зустрівся з прем''єром (inst). Для
+    журналістів (gen) підготували зал (acc).'
+  speakers:
+  - Вчитель
+  - Студенти
+  motivation: 'Case identification: nom, gen, dat, acc, inst, loc in real text'
 content_outline:
 - section: 'Дієслово вирішує: Який відмінок після дієслова? (The Verb Decides:
     Which Case After a Verb?)'

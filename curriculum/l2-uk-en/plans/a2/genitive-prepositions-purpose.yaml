@@ -16,6 +16,14 @@ objectives:
   a reference point.
 - Learner can form the Genitive correctly for hard-stem, soft-stem, and mixed-group
   nouns after these prepositions.
+dialogue_situations:
+- setting: 'Packing for a camping trip — deciding what''s needed: Для кого ця ковдра
+    (f, blanket)? Для Олени. Без ліхтарика (m, flashlight) — ніяк! Біля річки (f,
+    river) поставимо намет (m, tent).'
+  speakers:
+  - Ігор
+  - Марта
+  motivation: 'Для/без/біля + genitive: ковдра(f), ліхтарик(m), річка(f), намет(m)'
 content_outline:
 - section: 'Для кого це? Для + родовий (Who Is It For? Для + Genitive)'
   words: 550

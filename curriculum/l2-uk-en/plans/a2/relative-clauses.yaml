@@ -18,6 +18,14 @@ objectives:
   clauses (Будинок, який стоїть на розі...).
 - Learner can produce natural sentences with relative clauses to describe people,
   objects, and places.
+dialogue_situations:
+- setting: 'Real estate agent showing apartments — describing features: Це квартира
+    (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який
+    живе поруч, дуже тихий.'
+  speakers:
+  - Ріелтор
+  - Покупець
+  motivation: Який/яка/яке, де, куди with квартира(f), балкон(m), кімната(f)
 content_outline:
 - section: 'Який? Яка? Яке? Які? (Which? What Kind?)'
   words: 750

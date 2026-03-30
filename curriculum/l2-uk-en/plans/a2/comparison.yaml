@@ -18,6 +18,15 @@ objectives:
   добрий → кращий, поганий → гірший, малий → менший).
 - Learner can use comparative constructions with ніж and за + Accusative
   to compare two objects.
+dialogue_situations:
+- setting: 'Choosing a new phone — comparing models in a store: Цей телефон (m) більший,
+    але дорожчий. Той дешевший, але менший. Який найкращий? Найкращий — той, що має
+    найбільший екран (m, screen).'
+  speakers:
+  - Покупець
+  - Консультант
+  motivation: 'Comparative/superlative: більший, дорожчий, найкращий with телефон(m),
+    екран(m)'
 content_outline:
 - section: 'Вищий ступінь: порівнюємо два предмети (Comparative: Comparing Two Things)'
   words: 650

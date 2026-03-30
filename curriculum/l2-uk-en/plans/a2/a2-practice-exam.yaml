@@ -17,6 +17,14 @@ objectives:
 - Learner can produce a short written response (80-100 words) on a
   familiar topic using correct grammar and vocabulary.
 - Learner can self-assess readiness for B1 based on exam performance.
+dialogue_situations:
+- setting: 'Mock oral exam — examiner asks situational questions: Розкажіть про свій
+    день. Що ви робили вчора? Які плани на літо? Порівняйте Київ і ваше місто. Опишіть
+    свою сім''ю.'
+  speakers:
+  - Екзаменатор
+  - Кандидат
+  motivation: Full A2 oral exam simulation — all tenses, cases, vocabulary
 content_outline:
 - section: 'Частина 1: Читання (Part 1: Reading)'
   words: 450

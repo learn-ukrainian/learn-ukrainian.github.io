@@ -17,6 +17,14 @@ objectives:
 - Learner can list and use approximately 20 essential A2-level aspectual pairs in
   simple sentences.
 - Given one verb from a common pair, the learner can name its aspectual partner.
+dialogue_situations:
+- setting: 'Cooking varenyky together — one person reads the recipe step by step:
+    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
+    Звари (pf) до готовності.'
+  speakers:
+  - Бабуся (teaching recipe)
+  - Онучка (cooking)
+  motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
 content_outline:
 - section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
   words: 400

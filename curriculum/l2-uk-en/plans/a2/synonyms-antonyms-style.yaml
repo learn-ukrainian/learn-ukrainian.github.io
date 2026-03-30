@@ -18,6 +18,14 @@ objectives:
   -ик, -ок, -ечк-, -очк- to express endearment and emotional nuance.
 - "Learner can recognize syntactic stylistic devices — еліпсис (ellipsis)
   and повтор (repetition) — in Ukrainian texts and proverbs."
+dialogue_situations:
+- setting: 'Creative writing workshop — improving a bland text: Замість ''великий
+    будинок'' — ''величезний палац (m, palace)''. Замість ''маленька дівчинка'' —
+    ''крихітна дівчинка''. Антонім: ''холодний вітер (m)'' ↔ ''теплий вечір (m)''.'
+  speakers:
+  - Викладач
+  - Студенти-письменники
+  motivation: 'Synonyms/antonyms/diminutives: палац(m), дівчинка(f), вітер(m)'
 content_outline:
 - section: 'Синоніми та антоніми: збагачуємо мовлення (Synonyms and Antonyms:
     Enriching Speech)'

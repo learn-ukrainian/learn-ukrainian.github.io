@@ -18,6 +18,14 @@ objectives:
   (М17 recall).
 - Learner can use dative-governing verbs, подобатися, and age constructions correctly
   in context (М18 recall).
+dialogue_situations:
+- setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві
+    (m)? Книгу! А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f, mug). Шефу
+    (m) — вино.'
+  speakers:
+  - Організатор
+  - Колеги
+  motivation: 'Dative consolidation: Олексієві, Наталці, колезі, шефу'
 content_outline:
 - section: 'Частина 1: Розпізнавання (Part 1: Recognition)'
   words: 400

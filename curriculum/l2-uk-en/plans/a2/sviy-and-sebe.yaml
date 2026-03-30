@@ -18,6 +18,15 @@ objectives:
   собою) and understand that it has no Nominative form.
 - Learner can use common expressions with себе and свій in natural
   Ukrainian speech.
+dialogue_situations:
+- setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні, це
+    свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться на
+    себе у дзеркало (n).'
+  speakers:
+  - Брат
+  - Сестра
+  - Мама (розводить руками)
+  motivation: 'Свій vs мій/твій, себе: светр(m), сумка(f), дзеркало(n)'
 content_outline:
 - section: 'Свій: чий саме? (Свій: Whose Exactly?)'
   words: 600

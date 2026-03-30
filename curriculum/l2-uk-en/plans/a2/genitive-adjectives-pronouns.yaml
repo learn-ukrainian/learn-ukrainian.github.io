@@ -17,6 +17,14 @@ objectives:
 - Learner can use demonstrative pronouns in the Genitive (цього, того; цієї, тієї).
 - Learner can produce full Genitive noun phrases with adjective + pronoun + noun
   agreement across all three genders.
+dialogue_situations:
+- setting: 'At a lost-and-found office — describing lost items with full adjective
+    phrases: Це сумка мого старшого брата (m). Ви не бачили цієї червоної парасольки
+    (f, umbrella)? Тут немає нашого великого чемодану (m, suitcase)?'
+  speakers:
+  - Власник (owner)
+  - Працівник бюро знахідок
+  motivation: 'Genitive adj+noun: мого брата, цієї парасольки, нашого чемодану'
 content_outline:
 - section: 'Який? Якого? Прикметники в родовому (Which? Whose? Adjectives in the Genitive)'
   words: 700

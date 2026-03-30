@@ -16,6 +16,15 @@ objectives:
 - Learner can use the Genitive case for the direct object in a negated sentence.
 - Learner can ask and answer basic questions about quantity, dates, and negated actions
   using the Genitive case.
+dialogue_situations:
+- setting: 'Booking a hotel room over the phone — dates and prices: З якого числа?
+    З п''ятого березня. До якого? До десятого. Скільки номерів? Два номери. Скільки
+    гостей? П''ять гостей.'
+  speakers:
+  - Гість
+  - Адміністратор готелю
+  motivation: 'Genitive with dates: п''ятого березня, and counting: два номери, п''ять
+    гостей'
 content_outline:
 - section: Яке сьогодні число? Родовий з датами (What's the Date? Genitive with Dates)
   words: 500

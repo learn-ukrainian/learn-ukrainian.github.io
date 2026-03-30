@@ -18,6 +18,13 @@ objectives:
   agreement (з моїм новим другом, під великою ялинкою).
 - Learner can synthesize Instrumental knowledge in a short paragraph describing
   their daily routine, profession, and surroundings.
+dialogue_situations:
+- setting: 'Describing a perfect picnic — everything with instrumental: Поїхали автобусом
+    (m). Гуляли з дітьми (pl). Їли бутерброди з ковбасою (f). Сиділи під деревом (n).
+    Цей день був найкращим!'
+  speakers:
+  - Друзі (згадуючи)
+  motivation: 'All instrumental: автобусом, з дітьми, з ковбасою, під деревом'
 content_outline:
 - section: 'Частина 1: Розпізнавання та форми (Part 1: Recognition and Forms)'
   words: 400

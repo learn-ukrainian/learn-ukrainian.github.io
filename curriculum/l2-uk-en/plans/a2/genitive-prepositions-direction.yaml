@@ -15,6 +15,14 @@ objectives:
 - Learner can use до + Genitive to express purpose ('to see someone', 'to the doctor').
 - Learner can contrast до with other directional constructions (в/на + Accusative)
   and explain when each is appropriate.
+dialogue_situations:
+- setting: 'Giving directions to a taxi driver — a series of destinations: До вокзалу
+    (m, station), будь ласка. Потім до аптеки (f, pharmacy). Чекайте до п''ятої години.
+    А потім до готелю (m, hotel).'
+  speakers:
+  - Пасажир
+  - Таксист
+  motivation: 'До + genitive: вокзал→вокзалу, аптека→аптеки, готель→готелю'
 content_outline:
 - section: 'Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive
     for Direction)'

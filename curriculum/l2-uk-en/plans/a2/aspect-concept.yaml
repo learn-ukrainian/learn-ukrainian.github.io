@@ -18,6 +18,13 @@ objectives:
   tense).
 - Given a simple action, learner can describe it as a process (imperfective) and as
   a completed result (perfective).
+dialogue_situations:
+- setting: 'Watching a football match on TV — commenting on what''s happening vs what
+    just happened: Він біжить (impf, running)! Він забив гол (pf, scored)! Вони грають
+    (impf) добре. Вона передала (pf) м''яч (m, ball).'
+  speakers:
+  - Два друзі (watching together)
+  motivation: Impf (process) vs pf (result) with гра(f), гол(m), м'яч(m)
 content_outline:
 - section: Що таке вид дієслова? (What is Verb Aspect?)
   words: 500

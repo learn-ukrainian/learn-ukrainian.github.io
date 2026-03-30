@@ -18,6 +18,14 @@ objectives:
   natural-sounding Ukrainian.
 - Learner can understand the roadmap for the A2 level, including the introduction
   of the Genitive, Dative, and Instrumental cases.
+dialogue_situations:
+- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
+    you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську мову (accusative).
+    Я живу в Києві (locative).'
+  speakers:
+  - Новий студент
+  - Викладач (teacher)
+  motivation: Review all A1 cases in a natural intro conversation
 content_outline:
 - section: Пригадуємо відмінки (Reviewing Cases)
   words: 600

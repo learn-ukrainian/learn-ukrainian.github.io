@@ -623,6 +623,150 @@ A2_SITUATIONS = {
          "speakers": ["Турист", "Різні мешканці Львова"],
          "motivation": "Full A2 capstone: all cases, aspects, tenses in one day trip"},
     ],
+    # ── Remaining A2 modules that need dialogue situations ──
+    "aspect-concept": [
+        {"setting": "Watching a football match on TV — commenting on what's happening vs what just happened: "
+         "Він біжить (impf, running)! Він забив гол (pf, scored)! "
+         "Вони грають (impf) добре. Вона передала (pf) м'яч (m, ball).",
+         "speakers": ["Два друзі (watching together)"],
+         "motivation": "Impf (process) vs pf (result) with гра(f), гол(m), м'яч(m)"},
+    ],
+    "checkpoint-foundations": [
+        {"setting": "Language test preparation — a tutor quizzes the student: "
+         "Утвори родовий від 'книга'. Книги! А від 'стілець'? Стільця! "
+         "Який вид: 'читав' чи 'прочитав'? Перший — недоконаний, другий — доконаний.",
+         "speakers": ["Репетитор (tutor)", "Студент"],
+         "motivation": "Consolidation: genitive forms, aspect recognition in quiz format"},
+    ],
+    "genitive-prepositions-source": [
+        {"setting": "International potluck dinner — everyone brought something from their country: "
+         "Це сир (m) з Франції. Оливки (pl) з Греції. Шоколад (m) від бабусі з Бельгії. "
+         "А це вино (n) після подорожі Італією.",
+         "speakers": ["Учасники вечірки"],
+         "motivation": "З/від/після + genitive: з Франції, від бабусі, після подорожі"},
+    ],
+    "genitive-prepositions-direction": [
+        {"setting": "Giving directions to a taxi driver — a series of destinations: "
+         "До вокзалу (m, station), будь ласка. Потім до аптеки (f, pharmacy). "
+         "Чекайте до п'ятої години. А потім до готелю (m, hotel).",
+         "speakers": ["Пасажир", "Таксист"],
+         "motivation": "До + genitive: вокзал→вокзалу, аптека→аптеки, готель→готелю"},
+    ],
+    "checkpoint-genitive": [
+        {"setting": "Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: "
+         "Біля Софійського собору (m, cathedral). Без квитка (m, ticket) не можна. "
+         "Для групи з десяти людей. До Хрещатику (m) п'ять хвилин.",
+         "speakers": ["Гід", "Туристи"],
+         "motivation": "All genitive patterns: біля собору, без квитка, для групи, до Хрещатику"},
+    ],
+    "checkpoint-dative": [
+        {"setting": "Secret Santa at the office — matching gifts to people: "
+         "Що подарувати Олексієві (m)? Книгу! А Наталці (f)? Шоколад! "
+         "Новому колезі (m) — кружку (f, mug). Шефу (m) — вино.",
+         "speakers": ["Організатор", "Колеги"],
+         "motivation": "Dative consolidation: Олексієві, Наталці, колезі, шефу"},
+    ],
+    "checkpoint-instrumental": [
+        {"setting": "Describing a perfect picnic — everything with instrumental: "
+         "Поїхали автобусом (m). Гуляли з дітьми (pl). Їли бутерброди з ковбасою (f). "
+         "Сиділи під деревом (n). Цей день був найкращим!",
+         "speakers": ["Друзі (згадуючи)"],
+         "motivation": "All instrumental: автобусом, з дітьми, з ковбасою, під деревом"},
+    ],
+    "which-case-when": [
+        {"setting": "Grammar detective game — reading a Ukrainian newspaper article "
+         "and identifying which case is used and why: "
+         "Президент (nom) зустрівся з прем'єром (inst). "
+         "Для журналістів (gen) підготували зал (acc).",
+         "speakers": ["Вчитель", "Студенти"],
+         "motivation": "Case identification: nom, gen, dat, acc, inst, loc in real text"},
+    ],
+    "checkpoint-cases": [
+        {"setting": "Planning a wedding — every case appears naturally: "
+         "Запрошення для гостей (gen). Подарунок нареченій (dat). "
+         "Бачу наречену (acc). Фото з молодятами (inst). На весіллі (loc). Олено! (voc)",
+         "speakers": ["Наречена", "Подруга"],
+         "motivation": "All 7 cases in wedding planning: gen, dat, acc, inst, loc, voc"},
+    ],
+    "aspect-in-past": [
+        {"setting": "Two friends comparing how they spent Sunday — process vs result: "
+         "Я читала (impf) весь день. А ти? Я прочитав (pf) роман (m)! "
+         "Я готувала (impf) обід. Я приготувала (pf) борщ.",
+         "speakers": ["Оля", "Тарас"],
+         "motivation": "Past aspect: читала(impf, process) vs прочитав(pf, finished)"},
+    ],
+    "because-and-although": [
+        {"setting": "Two students debating whether to skip class — giving reasons: "
+         "Я не піду, бо хворію. Але тобі треба, тому що завтра контрольна (f, test)! "
+         "Хоча я втомився, я все одно піду.",
+         "speakers": ["Студент 1", "Студент 2"],
+         "motivation": "Бо, тому що, хоча, але with контрольна(f), лекція(f)"},
+    ],
+    "purpose-clauses": [
+        {"setting": "Parent explaining to a child why things are done: "
+         "Ми йдемо в магазин, щоб купити хліб (m). Вчителька сказала, що завтра екскурсія (f). "
+         "Тато попросив, щоб ти прибрав кімнату (f).",
+         "speakers": ["Мама", "Дитина"],
+         "motivation": "Щоб + infinitive, що (reported speech) with хліб(m), екскурсія(f)"},
+    ],
+    "relative-clauses": [
+        {"setting": "Real estate agent showing apartments — describing features: "
+         "Це квартира (f), яка має балкон (m). Ось кімната (f), де можна працювати. "
+         "Сусід (m), який живе поруч, дуже тихий.",
+         "speakers": ["Ріелтор", "Покупець"],
+         "motivation": "Який/яка/яке, де, куди with квартира(f), балкон(m), кімната(f)"},
+    ],
+    "real-conditionals": [
+        {"setting": "Planning a garden — if/then decisions about planting: "
+         "Якщо буде сонце (n, sun), посадимо помідори (pl). "
+         "Якщо йтиме дощ (m, rain), польємо пізніше. "
+         "Якщо ти купиш насіння (n, seeds), я підготую грядку (f, garden bed).",
+         "speakers": ["Подружжя (на дачі)"],
+         "motivation": "Якщо + future: сонце(n), дощ(m), насіння(n), грядка(f)"},
+    ],
+    "comparison": [
+        {"setting": "Choosing a new phone — comparing models in a store: "
+         "Цей телефон (m) більший, але дорожчий. Той дешевший, але менший. "
+         "Який найкращий? Найкращий — той, що має найбільший екран (m, screen).",
+         "speakers": ["Покупець", "Консультант"],
+         "motivation": "Comparative/superlative: більший, дорожчий, найкращий with телефон(m), екран(m)"},
+    ],
+    "numerals-and-cases": [
+        {"setting": "Organizing a school sports day — counting teams, equipment, prizes: "
+         "Перша (f) команда — десять учнів. Другий (m) забіг о десятій. "
+         "Одного м'яча (m) не вистачає. П'ять медалей (f, medals) для переможців.",
+         "speakers": ["Вчитель фізкультури", "Учні"],
+         "motivation": "Ordinals + cases: перша, другий, одного м'яча, п'ять медалей"},
+    ],
+    "sviy-and-sebe": [
+        {"setting": "Family argument about whose things are whose: "
+         "Це мій светр (m)! Ні, це свій — я його купив собі! "
+         "Вона взяла свою сумку (f), а не твою. Він дивиться на себе у дзеркало (n).",
+         "speakers": ["Брат", "Сестра", "Мама (розводить руками)"],
+         "motivation": "Свій vs мій/твій, себе: светр(m), сумка(f), дзеркало(n)"},
+    ],
+    "indefinite-negative-pronouns": [
+        {"setting": "Mystery party game — who did it and who saw what: "
+         "Хтось з'їв торт (m)! Ніхто не бачив! Щось впало на кухні (f)! "
+         "Дехто підозрює Олега. Будь-хто міг це зробити.",
+         "speakers": ["Гості на вечірці"],
+         "motivation": "Хтось, ніхто, щось, дехто, будь-хто with торт(m), кухня(f)"},
+    ],
+    "synonyms-antonyms-style": [
+        {"setting": "Creative writing workshop — improving a bland text: "
+         "Замість 'великий будинок' — 'величезний палац (m, palace)'. "
+         "Замість 'маленька дівчинка' — 'крихітна дівчинка'. "
+         "Антонім: 'холодний вітер (m)' ↔ 'теплий вечір (m)'.",
+         "speakers": ["Викладач", "Студенти-письменники"],
+         "motivation": "Synonyms/antonyms/diminutives: палац(m), дівчинка(f), вітер(m)"},
+    ],
+    "a2-practice-exam": [
+        {"setting": "Mock oral exam — examiner asks situational questions: "
+         "Розкажіть про свій день. Що ви робили вчора? Які плани на літо? "
+         "Порівняйте Київ і ваше місто. Опишіть свою сім'ю.",
+         "speakers": ["Екзаменатор", "Кандидат"],
+         "motivation": "Full A2 oral exam simulation — all tenses, cases, vocabulary"},
+    ],
 }
 
 

@@ -16,6 +16,13 @@ objectives:
   cluster.
 - Learner can use від + Genitive to express 'from a person' or 'from a source'.
 - Learner can use після + Genitive to express 'after' an event or time period.
+dialogue_situations:
+- setting: 'International potluck dinner — everyone brought something from their country:
+    Це сир (m) з Франції. Оливки (pl) з Греції. Шоколад (m) від бабусі з Бельгії.
+    А це вино (n) після подорожі Італією.'
+  speakers:
+  - Учасники вечірки
+  motivation: 'З/від/після + genitive: з Франції, від бабусі, після подорожі'
 content_outline:
 - section: 'Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive)'
   words: 700

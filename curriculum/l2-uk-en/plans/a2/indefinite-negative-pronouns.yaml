@@ -19,6 +19,13 @@ objectives:
   будь- for any whatsoever).
 - Learner can use double negation correctly in Ukrainian (Ніхто не прийшов.
   Я нічого не бачу.).
+dialogue_situations:
+- setting: 'Mystery party game — who did it and who saw what: Хтось з''їв торт (m)!
+    Ніхто не бачив! Щось впало на кухні (f)! Дехто підозрює Олега. Будь-хто міг це
+    зробити.'
+  speakers:
+  - Гості на вечірці
+  motivation: Хтось, ніхто, щось, дехто, будь-хто with торт(m), кухня(f)
 content_outline:
 - section: 'Хтось, щось: невідоме, але конкретне (Someone, Something: Unknown
     but Specific)'

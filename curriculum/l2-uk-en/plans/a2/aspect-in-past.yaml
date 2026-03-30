@@ -20,6 +20,14 @@ objectives:
   зробив/зробила/зробили).
 - Learner can narrate a simple sequence of events using perfective past for
   completed steps and imperfective past for background actions.
+dialogue_situations:
+- setting: 'Two friends comparing how they spent Sunday — process vs result: Я читала
+    (impf) весь день. А ти? Я прочитав (pf) роман (m)! Я готувала (impf) обід. Я приготувала
+    (pf) борщ.'
+  speakers:
+  - Оля
+  - Тарас
+  motivation: 'Past aspect: читала(impf, process) vs прочитав(pf, finished)'
 content_outline:
 - section: Два питання — два види (Two Questions — Two Aspects)
   words: 500

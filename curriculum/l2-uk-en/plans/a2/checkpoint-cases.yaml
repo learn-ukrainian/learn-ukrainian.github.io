@@ -18,6 +18,14 @@ objectives:
   conscious control over the case system.
 - Learner can produce a short coherent text (8-10 sentences) that naturally uses
   at least 5 different cases in both singular and plural.
+dialogue_situations:
+- setting: 'Planning a wedding — every case appears naturally: Запрошення для гостей
+    (gen). Подарунок нареченій (dat). Бачу наречену (acc). Фото з молодятами (inst).
+    На весіллі (loc). Олено! (voc)'
+  speakers:
+  - Наречена
+  - Подруга
+  motivation: 'All 7 cases in wedding planning: gen, dat, acc, inst, loc, voc'
 content_outline:
 - section: 'Частина 1: Форми множини (Part 1: Plural Forms)'
   words: 450

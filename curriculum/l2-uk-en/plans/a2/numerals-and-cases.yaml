@@ -18,6 +18,14 @@ objectives:
   5-20 + Genitive plural, 21 restarts the cycle."
 - Learner can use numerals in practical contexts such as dates, prices,
   ages, and addresses.
+dialogue_situations:
+- setting: 'Organizing a school sports day — counting teams, equipment, prizes: Перша
+    (f) команда — десять учнів. Другий (m) забіг о десятій. Одного м''яча (m) не вистачає.
+    П''ять медалей (f, medals) для переможців.'
+  speakers:
+  - Вчитель фізкультури
+  - Учні
+  motivation: 'Ordinals + cases: перша, другий, одного м''яча, п''ять медалей'
 content_outline:
 - section: 'Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій)'
   words: 550
