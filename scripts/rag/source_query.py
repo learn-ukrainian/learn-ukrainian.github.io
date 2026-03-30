@@ -552,18 +552,32 @@ def r2u_translate(russian_word: str) -> list[dict[str, str]]:
 E2U_BASE = "https://e2u.org.ua"
 
 
-def e2u_translate(english_word: str) -> list[dict[str, str]]:
+def e2u_translate(english_word: str, exact: bool = True) -> list[dict[str, str]]:
     """Look up English→Ukrainian translation on e2u.org.ua.
 
     Uses the /s endpoint (?w=word). 331,723 entries across general, IT,
     scientific, EU, business, and legal dictionaries.
+
+    Args:
+        english_word: English word or phrase to look up.
+        exact: If True, only return entries whose headword starts with the
+               search word (filters out compound-word noise).
     """
     try:
         r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20)
         if r.status_code == 404:
             return []
         r.raise_for_status()
-        return _parse_dict_entries(r.text)
+        entries = _parse_dict_entries(r.text)
+        if exact:
+            lower = english_word.lower()
+            # Exact headword matches first, then startswith matches
+            exact_matches = [e for e in entries if e["headword"].lower() == lower]
+            prefix_matches = [e for e in entries
+                              if e["headword"].lower().startswith(lower)
+                              and e["headword"].lower() != lower]
+            entries = exact_matches + prefix_matches
+        return entries
     except requests.RequestException:
         return []
 

@@ -509,6 +509,21 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
+        Tool(
+            name="query_e2u",
+            description=(
+                "Live query e2u.org.ua English→Ukrainian dictionary (331K entries). "
+                "Broader coverage than Балла. Use when translate_en_uk has no results, "
+                "or for specialized/modern vocabulary. Returns headword + full translation."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {"type": "string", "description": "English word to translate to Ukrainian"},
+                },
+                "required": ["word"]
+            },
+        ),
     ]
 
 
@@ -559,6 +574,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
             "query_r2u": lambda: handle_query_r2u(arguments),
+            "query_e2u": lambda: handle_query_e2u(arguments),
             "query_pravopys": lambda: handle_query_pravopys(arguments),
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
@@ -994,6 +1010,21 @@ async def handle_query_r2u(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=f"No r2u translation found for: '{word}'")]
 
     lines = [f"Russian→Ukrainian translations for '{word}':\n"]
+    for entry in results[:10]:
+        lines.append(f"- **{entry['headword']}**: {entry['translation'][:200]}")
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_e2u(args: dict) -> list[TextContent]:
+    word = args["word"]
+
+    from rag.source_query import e2u_translate
+    results = await asyncio.to_thread(e2u_translate, word)
+
+    if not results:
+        return [TextContent(type="text", text=f"No e2u translation found for: '{word}'")]
+
+    lines = [f"English→Ukrainian translations for '{word}' (e2u.org.ua):\n"]
     for entry in results[:10]:
         lines.append(f"- **{entry['headword']}**: {entry['translation'][:200]}")
     return [TextContent(type="text", text="\n".join(lines))]
