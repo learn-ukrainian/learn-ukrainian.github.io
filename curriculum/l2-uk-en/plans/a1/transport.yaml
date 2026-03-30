@@ -15,11 +15,13 @@ objectives:
 - Use їхати + transport expressions (їхати автобусом / на метро)
 - Combine transport with direction (куди) and locative (де) from M29-31
 dialogue_situations:
-- setting: Explaining how to get from the airport to the hotel
+- setting: Explaining how to get from Kyiv airport (Бориспіль) to the hotel — автобус
+    (m), потяг (m, train), таксі (n), метро (n). Їхати автобусом, потягом. Їхати на
+    метро, на таксі.
   speakers:
   - Приїжджий (visitor)
-  - Друг (local, giving directions)
-  motivation: 'Transport: автобусом, потягом, на метро in real route'
+  - Друг (local)
+  motivation: 'Transport: автобус(m), потяг(m), таксі(n), метро(n)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -15,11 +15,13 @@ objectives:
 - Recognize feminine accusative ending change (-а → -у): кава → каву, вода → воду
 - Describe eating and drinking habits using accusative
 dialogue_situations:
-- setting: Lunch break at work — sharing food and talking about what you eat
+- setting: 'Lunch break at work — unpacking lunch boxes: Я їм бутерброд (m, sandwich)
+    і п''ю чай (m, tea). А ти? Я їм салат (m) і п''ю каву (f, coffee). Also: яблуко
+    (n), банан (m), вода (f), сік (m, juice).'
   speakers:
   - Колега 1
   - Колега 2
-  motivation: 'Accusative: Я їм хліб, п''ю каву — real mealtime exchange'
+  motivation: 'Accusative: бутерброд(m), салат(m), каву(f→acc), яблуко(n), чай(m)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

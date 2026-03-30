@@ -15,11 +15,13 @@ objectives:
 - Talk about what you eat and drink daily
 - Recognize iconic Ukrainian dishes (борщ, вареники, сало)
 dialogue_situations:
-- setting: Cooking traditional borshch together — listing ingredients
+- setting: 'Cooking борщ (m, borshch) with grandma — listing ingredients: буряк (m,
+    beetroot), картопля (f, potato), капуста (f, cabbage), м''ясо (n, meat), морква
+    (f, carrot), цибуля (f, onion), сметана (f, sour cream).'
   speakers:
   - Бабуся (teaching)
-  - Онук/Онучка (learning)
-  motivation: 'Food vocabulary in recipe context: буряк, картопля, м''ясо'
+  - Онучка (learning)
+  motivation: Food with буряк(m), картопля(f), капуста(f), м'ясо(n), сметана(f)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

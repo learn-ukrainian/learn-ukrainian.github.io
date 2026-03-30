@@ -15,11 +15,13 @@ objectives:
 - Read a simple Ukrainian menu and ask about items
 - Understand Ukrainian cafe culture (tipping, paying)
 dialogue_situations:
-- setting: A date at a cozy Lviv café — ordering and chatting
+- setting: 'A date at a cozy Lviv café — ordering from the menu: кава (f, coffee),
+    чай (m, tea), тістечко (n, pastry), круасан (m, croissant), вода (f, water), сік
+    (m, juice). Мені каву, будь ласка. А мені — чай і тістечко.'
   speakers:
   - Ростик
   - Іванка
-  motivation: Мені, будь ласка + ordering vocabulary in romantic context
+  motivation: Ordering with кава(f), чай(m), тістечко(n), круасан(m)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

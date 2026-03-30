@@ -15,11 +15,13 @@ objectives:
 - Use time expressions to signal tense shifts
 - Understand a short biography read aloud or in text
 dialogue_situations:
-- setting: Grandparent telling their life story to grandchildren
+- setting: Grandparent telling their life story — Я народився в селі (n, village).
+    Ходив у школу (f). Зараз живу в місті (n, city). Працюю в лікарні (f, hospital).
+    Буду відпочивати на дачі (f, dacha).
   speakers:
   - Дідусь/Бабуся
   - Онуки
-  motivation: 'Three tenses: Я народився в селі, Зараз живу в місті, Буду відпочивати'
+  motivation: Three tenses with село(n), школа(f), місто(n), лікарня(f), дача(f)
 content_outline:
 - section: Dialogues
   words: 300

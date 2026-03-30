@@ -15,11 +15,13 @@ objectives:
 - Distinguish animate vs inanimate accusative
 - Talk about people in your daily life using accusative
 dialogue_situations:
-- setting: Showing wedding photos — identifying people in each picture
+- setting: 'Showing wedding photos — identifying people: Бачиш маму (f→acc)? А тата
+    (m→acc)? Знаєш Олену (f→acc)? Це мій дядько (m), а це тітка (f). Ось наречена
+    (f) і наречений (m).'
   speakers:
-  - Наречена/Наречений
+  - Наречена
   - Друг
-  motivation: 'Accusative animate: Бачиш маму? Знаєш Олену? Це мій дядько.'
+  motivation: 'Accusative animate: маму(f), тата(m), Олену(f), дядька(m)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -16,10 +16,12 @@ objectives:
 - Use past tense to describe completed actions in simple sentences
 - Ask and answer "What did you do?" (Що ти робив/робила?)
 dialogue_situations:
-- setting: Monday morning at work — colleagues sharing weekend stories
+- setting: 'Monday morning at work — sharing weekend: Я ходив на концерт (m). Я читала
+    роман (m). Ми гуляли в парку (m). Він дивився фільм (m). Вона готувала вечерю
+    (f).'
   speakers:
   - Колеги (coworkers)
-  motivation: 'Past tense: Що ти робив? Я ходив у кіно. А ти? Я читала.'
+  motivation: Past tense with концерт(m), роман(m), парк(m), фільм(m), вечеря(f)
 content_outline:
 - section: Dialogues
   words: 300

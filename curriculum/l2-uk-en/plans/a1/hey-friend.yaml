@@ -15,11 +15,13 @@ objectives:
 - Recognize vocative endings for masculine (-е, -у/-ю) and feminine (-о, -ю, -є) nouns
 - Address people naturally using vocative in everyday situations
 dialogue_situations:
-- setting: At a busy birthday party — calling people across the room
+- setting: 'At a busy birthday party — calling people across the room by name: Олено!
+    Тарасе! Друже! Мамо! Бабусю! Дідусю! Each person is doing something different
+    (dancing, eating, talking).'
   speakers:
   - Іменинник (birthday person)
   - Друзі
-  motivation: 'Vocative: Олено! Тарасе! Друже! Мамо! in noisy social setting'
+  motivation: 'Vocative: Олена→Олено, Тарас→Тарасе, мама→мамо, бабуся→бабусю'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

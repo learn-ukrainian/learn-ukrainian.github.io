@@ -15,11 +15,13 @@ objectives:
 - Combine past tense with known vocabulary (food, places, people)
 - Tell a short personal story about yesterday
 dialogue_situations:
-- setting: Police report — describing what happened step by step
+- setting: 'Police report — describing a stolen велосипед (m, bicycle): Я припаркував
+    велосипед біля магазину (m). Потім зайшов у кав''ярню (f). Коли вийшов, велосипед
+    зник. Бачив чоловіка (m) в синій куртці (f).'
   speakers:
   - Свідок (witness)
   - Поліцейський
-  motivation: 'Past tense narration: Спочатку я побачив, потім почув, нарешті зателефонував'
+  motivation: Past narration with велосипед(m), магазин(m), кав'ярня(f), куртка(f)
 content_outline:
 - section: Dialogues
   words: 300

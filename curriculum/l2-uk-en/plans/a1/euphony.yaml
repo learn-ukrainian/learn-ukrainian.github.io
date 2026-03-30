@@ -15,11 +15,13 @@ objectives:
 - Use з/із/зі correctly before different consonant clusters
 - Understand WHY Ukrainian has these rules (avoiding consonant clusters)
 dialogue_situations:
-- setting: Proofreading a friend's Ukrainian essay — spotting у/в and і/й errors
+- setting: 'Proofreading a friend''s Ukrainian essay about their город (garden) —
+    spotting у/в and і/й errors. Text mentions: у городі/в городі, і яблука/й яблука,
+    у школі/в школі. Read sentences aloud to hear the difference.'
   speakers:
   - Студент (writing)
   - Друг (correcting)
-  motivation: У/в, і/й alternation in real written context
+  motivation: У/в, і/й alternation with город(m), школа(f), яблуко(n)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

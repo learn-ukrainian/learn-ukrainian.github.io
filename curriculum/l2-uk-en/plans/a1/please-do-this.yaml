@@ -15,11 +15,13 @@ objectives:
 - Recognize common classroom and daily-life imperatives
 - Distinguish ти-imperatives from ви-imperatives
 dialogue_situations:
-- setting: Moving furniture in a new apartment — giving each other instructions
+- setting: 'Rearranging a classroom before an event — giving instructions: Постав
+    стілець (m) тут! Перенеси дошку (f)! Відкрий вікно (n)! Принеси маркер (m)! Поклади
+    книги (pl) на стіл!'
   speakers:
-  - Олег
-  - Наталя
-  motivation: 'Imperative: Постав тут! Підніми! Поклади туди! in physical task'
+  - Вчитель (teacher)
+  - Учні (students)
+  motivation: Imperative with стілець(m), дошка(f), вікно(n), маркер(m), книги(pl)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

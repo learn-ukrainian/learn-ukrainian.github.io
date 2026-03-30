@@ -15,11 +15,13 @@ objectives:
 - Describe your neighborhood and daily routes
 - Synthesize M28-M32 skills in connected urban communication
 dialogue_situations:
-- setting: A walking tour guide showing a small group around the old town
+- setting: Walking tour of Lviv old town — going from Площа Ринок (f, main square)
+    to Оперний театр (m, Opera house) to Високий замок (m, High Castle). Де ми? На
+    площі. Куди далі? В театр. Звідки прийшли? З замку.
   speakers:
   - Гід (guide)
   - Туристи
-  motivation: 'Де?/Куди? combined: Ми зараз на площі, Далі підемо в музей'
+  motivation: Де/Куди/Звідки with площа(f), театр(m), замок(m), парк(m)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -16,11 +16,13 @@ objectives:
 - Answer Звідки? with genitive chunks
 - Combine all A1.5 skills in connected urban scenarios
 dialogue_situations:
-- setting: Giving a video tour of your city to an online friend
+- setting: 'Video-calling a friend while walking through Одеса (Odesa) — showing:
+    Дерибасівська вулиця (f), Потьомкінські сходи (pl, Potemkin Stairs), порт (m,
+    port), пляж (m, beach). Describing where you are, where you''re going.'
   speakers:
-  - Мешканець (resident, filming)
-  - Онлайн-друг (watching, asking)
-  motivation: 'Consolidation: where/where-to/where-from + city vocab + transport'
+  - Мешканець (filming)
+  - Онлайн-друг (watching)
+  motivation: Consolidation with вулиця(f), сходи(pl), порт(m), пляж(m)
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

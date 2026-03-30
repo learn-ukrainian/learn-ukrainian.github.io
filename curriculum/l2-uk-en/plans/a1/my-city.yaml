@@ -15,11 +15,13 @@ objectives:
 - Describe what you do at each place (combining verbs from A1.3)
 - Give simple directions using є (there is) and тут/там
 dialogue_situations:
-- setting: Drawing a map of your neighborhood for a pen pal letter
+- setting: 'Drawing a map of your Kyiv neighborhood for a pen pal — marking: бібліотека
+    (f), музей (m, museum), площа (f, square), озеро (n, lake), зупинка (f, bus stop),
+    церква (f, church). Use біля, поруч з, далеко від for distances.'
   speakers:
   - Аліна (describing)
   - Ігор (asking questions)
-  motivation: 'City vocabulary + location: бібліотека тут, аптека там, біля парку'
+  motivation: City vocab with бібліотека(f), музей(m), площа(f), озеро(n)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

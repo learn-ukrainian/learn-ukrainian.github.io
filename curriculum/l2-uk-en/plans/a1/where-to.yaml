@@ -15,11 +15,13 @@ objectives:
 - Form basic accusative endings for place nouns
 - Navigate between locations using йти/їхати + direction
 dialogue_situations:
-- setting: Running errands together — splitting up and meeting later
+- setting: 'Running Saturday errands together — splitting up: Я іду в банк (m), а
+    ти — на пошту (f). Потім зустрінемося в кафе (n). Also: в аптеку, на зупинку,
+    в бібліотеку.'
   speakers:
   - Оксана
   - Степан
-  motivation: 'Куди? + accusative: Я іду в банк, А я — на пошту'
+  motivation: 'Куди? + accusative: банк(m), пошта(f), кафе(n), аптека(f)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

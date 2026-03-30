@@ -15,10 +15,12 @@ objectives:
 - Build longer, more natural sentences instead of choppy short ones
 - Recognize conjunctions in spoken and written Ukrainian
 dialogue_situations:
-- setting: Debating where to go on vacation — comparing options
+- setting: Debating where to go on vacation — comparing Карпати (pl, Carpathians)
+    vs море (n, sea). Гори гарні, але далеко. Море тепле, бо літо. Я хочу в гори,
+    а ти — на море. Поїдемо в Карпати, бо там дешевше.
   speakers:
   - Подружжя (couple)
-  motivation: 'І, а, але, бо: Гори гарні, але далеко. Море тепле, бо літо.'
+  motivation: І, а, але, бо with Карпати(pl), море(n), гори(pl)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

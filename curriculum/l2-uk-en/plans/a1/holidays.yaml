@@ -15,11 +15,13 @@ objectives:
 - Talk about what people do on holidays using known vocabulary
 - Understand the cultural significance of Ukrainian holidays
 dialogue_situations:
-- setting: Ukrainian Christmas Eve dinner — explaining traditions to a foreign guest
+- setting: 'Ukrainian Святвечір (m, Christmas Eve) dinner — explaining 12 dishes:
+    кутя (f, kutia), борщ (m), вареники (pl), риба (f, fish), узвар (m, dried fruit
+    compote). З Різдвом! З Новим роком!'
   speakers:
   - Українська родина
   - Іноземний гість
-  motivation: Holiday vocabulary + З Різдвом! greetings in cultural context
+  motivation: 'Holiday food: кутя(f), борщ(m), вареники(pl), узвар(m) + greetings'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

@@ -15,11 +15,13 @@ objectives:
 - Buy things at a shop or market using polite phrases
 - Express quantities (кілограм, літр, пачка, пляшка)
 dialogue_situations:
-- setting: At a Ukrainian supermarket — comparing prices and reading labels
+- setting: 'At a Ukrainian supermarket — comparing prices of: хліб (m, bread) — 25
+    грн, молоко (n, milk) — 42 грн, сир (m, cheese) — 89 грн, ковбаса (f, sausage)
+    — 120 грн, масло (n, butter) — 65 грн. Скільки коштує сир? А молоко?'
   speakers:
   - Мама
-  - Дочка/Син
-  motivation: Скільки коштує? Гривень in real grocery shopping
+  - Дочка
+  motivation: Prices with хліб(m), молоко(n), сир(m), ковбаса(f), масло(n)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

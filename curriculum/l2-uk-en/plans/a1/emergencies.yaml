@@ -15,11 +15,13 @@ objectives:
 - Ask for help at a pharmacy, hospital, or police station
 - Give basic personal information in an emergency (name, address, phone)
 dialogue_situations:
-- setting: A minor car accident — calling for help and explaining the situation
+- setting: 'A minor car accident on вулиця Хрещатик (f) — calling 103: Допоможіть!
+    Аварія (f, accident) на Хрещатику! Потрібна швидка (f, ambulance)! Є постраждалий
+    (m, injured person). Машина (f, car) пошкоджена.'
   speakers:
   - Водій (driver)
-  - Оператор 103 (emergency)
-  motivation: 'Emergency imperatives: Допоможіть! Викличте швидку! Location phrases'
+  - Оператор 103
+  motivation: Emergency with аварія(f), швидка(f), машина(f), вулиця(f)
 content_outline:
 - section: Dialogues
   words: 300

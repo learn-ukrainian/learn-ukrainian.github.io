@@ -16,11 +16,13 @@ objectives:
 - Build complex sentences with що, де, коли
 - Use holiday greetings and vocabulary in context
 dialogue_situations:
-- setting: Organizing a charity event — delegating tasks and coordinating
+- setting: 'Organizing a шкільний ярмарок (m, school fair) — delegating: Олено, принеси
+    плакати (pl)! Тарасе, постав столи (pl)! Ми маємо квитки (pl) і напої (pl). Нам
+    потрібні стільці, бо людей багато.'
   speakers:
   - Організатор
   - Волонтери
-  motivation: 'Consolidation: vocative, imperative, conjunctions, complex sentences'
+  motivation: Vocative + imperative + conjunctions with плакат(m), квиток(m), напій(m)
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

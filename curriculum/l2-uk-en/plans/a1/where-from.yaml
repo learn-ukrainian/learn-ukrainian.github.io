@@ -15,10 +15,12 @@ objectives:
 - Complete the location trio: Де? / Куди? / Звідки?
 - Talk about origins, nationality, and travel history
 dialogue_situations:
-- setting: International student mixer — everyone sharing where they're from
+- setting: 'International student mixer at a Kyiv university — sharing origins: Я
+    з Канади, Вона з Японії, Він з Німеччини. Also: З якого міста? З Торонто, з Токіо,
+    з Берліна.'
   speakers:
   - Кілька студентів (group)
-  motivation: 'Звідки? + з + genitive: Я з Канади, Вона з Японії'
+  motivation: 'Звідки? + з: Канада(f), Японія(f), Німеччина(f), Торонто(n)'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

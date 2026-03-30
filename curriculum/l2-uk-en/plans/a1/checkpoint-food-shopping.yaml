@@ -15,11 +15,13 @@ objectives:
 - Order at a cafe and buy things at a shop/market
 - Combine all A1.6 skills in connected scenarios
 dialogue_situations:
-- setting: Hosting a dinner party — shopping, cooking, and serving guests
+- setting: 'Hosting a вечеря (f, dinner party) — full flow: shopping for продукти
+    (pl) at the ринок (m, market), cooking вареники (pl) and салат (m), setting the
+    table with тарілки (pl, plates) and склянки (pl, glasses), serving guests.'
   speakers:
-  - Господар/Господиня (host)
+  - Господиня (host)
   - Гості (guests)
-  motivation: 'Consolidation: food, ordering, prices, accusative'
+  motivation: 'Consolidation: продукти(pl), вареники(pl), тарілка(f), склянка(f)'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200

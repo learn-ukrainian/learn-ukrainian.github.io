@@ -15,11 +15,13 @@ objectives:
 - Distinguish в (inside) from на (on/at) with place vocabulary
 - Use the Grade 4 helper word method: М. (на, у) — "на/у кому? на/у чому?"
 dialogue_situations:
-- setting: First week in a new city — asking where everything is
+- setting: 'First week in a new city — asking a neighbor where to find: аптека (f,
+    pharmacy), банк (m, bank), пошта (f, post office), кафе (n, café), лікарня (f,
+    hospital), парк (m, park). В аптеці, на пошті, у банку.'
   speakers:
   - Новий мешканець (newcomer)
   - Сусід (neighbor)
-  motivation: 'В/на + locative: Де аптека? В аптеці. Де пошта? На пошті.'
+  motivation: В/на + locative with аптека(f), банк(m), пошта(f), кафе(n)
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300

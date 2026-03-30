@@ -15,11 +15,13 @@ objectives:
 - Tell a doctor or pharmacist what hurts
 - Use basic health vocabulary in practical situations
 dialogue_situations:
-- setting: At the doctor's office — describing symptoms
+- setting: 'At the doctor''s office — describing symptoms: У мене болить голова (f,
+    head). Болить горло (n, throat). Болить живіт (m, stomach). Нежить (m, runny nose).
+    Кашель (m, cough). Температура (f, fever).'
   speakers:
   - Пацієнт
   - Лікар
-  motivation: У мене болить голова / горло / живіт — body parts in medical context
+  motivation: 'Body parts: голова(f), горло(n), живіт(m), температура(f)'
 content_outline:
 - section: Dialogues
   words: 300

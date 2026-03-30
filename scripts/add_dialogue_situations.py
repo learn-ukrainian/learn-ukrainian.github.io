@@ -173,139 +173,202 @@ A1_SITUATIONS: dict[str, list[dict]] = {
          "motivation": "Consolidation: time, calendar, weather, daily routine"},
     ],
     "euphony": [
-        {"setting": "Proofreading a friend's Ukrainian essay — spotting у/в and і/й errors",
+        {"setting": "Proofreading a friend's Ukrainian essay about their город (garden) — "
+         "spotting у/в and і/й errors. Text mentions: у городі/в городі, і яблука/й яблука, "
+         "у школі/в школі. Read sentences aloud to hear the difference.",
          "speakers": ["Студент (writing)", "Друг (correcting)"],
-         "motivation": "У/в, і/й alternation in real written context"},
+         "motivation": "У/в, і/й alternation with город(m), школа(f), яблуко(n)"},
     ],
     "where-is-it": [
-        {"setting": "First week in a new city — asking where everything is",
+        {"setting": "First week in a new city — asking a neighbor where to find: "
+         "аптека (f, pharmacy), банк (m, bank), пошта (f, post office), кафе (n, café), "
+         "лікарня (f, hospital), парк (m, park). В аптеці, на пошті, у банку.",
          "speakers": ["Новий мешканець (newcomer)", "Сусід (neighbor)"],
-         "motivation": "В/на + locative: Де аптека? В аптеці. Де пошта? На пошті."},
+         "motivation": "В/на + locative with аптека(f), банк(m), пошта(f), кафе(n)"},
     ],
     "my-city": [
-        {"setting": "Drawing a map of your neighborhood for a pen pal letter",
+        {"setting": "Drawing a map of your Kyiv neighborhood for a pen pal — "
+         "marking: бібліотека (f), музей (m, museum), площа (f, square), "
+         "озеро (n, lake), зупинка (f, bus stop), церква (f, church). "
+         "Use біля, поруч з, далеко від for distances.",
          "speakers": ["Аліна (describing)", "Ігор (asking questions)"],
-         "motivation": "City vocabulary + location: бібліотека тут, аптека там, біля парку"},
+         "motivation": "City vocab with бібліотека(f), музей(m), площа(f), озеро(n)"},
     ],
     "where-to": [
-        {"setting": "Running errands together — splitting up and meeting later",
+        {"setting": "Running Saturday errands together — splitting up: "
+         "Я іду в банк (m), а ти — на пошту (f). Потім зустрінемося в кафе (n). "
+         "Also: в аптеку, на зупинку, в бібліотеку.",
          "speakers": ["Оксана", "Степан"],
-         "motivation": "Куди? + accusative: Я іду в банк, А я — на пошту"},
+         "motivation": "Куди? + accusative: банк(m), пошта(f), кафе(n), аптека(f)"},
     ],
     "transport": [
-        {"setting": "Explaining how to get from the airport to the hotel",
-         "speakers": ["Приїжджий (visitor)", "Друг (local, giving directions)"],
-         "motivation": "Transport: автобусом, потягом, на метро in real route"},
+        {"setting": "Explaining how to get from Kyiv airport (Бориспіль) to the hotel — "
+         "автобус (m), потяг (m, train), таксі (n), метро (n). "
+         "Їхати автобусом, потягом. Їхати на метро, на таксі.",
+         "speakers": ["Приїжджий (visitor)", "Друг (local)"],
+         "motivation": "Transport: автобус(m), потяг(m), таксі(n), метро(n)"},
     ],
     "around-the-city": [
-        {"setting": "A walking tour guide showing a small group around the old town",
+        {"setting": "Walking tour of Lviv old town — going from Площа Ринок (f, main square) "
+         "to Оперний театр (m, Opera house) to Високий замок (m, High Castle). "
+         "Де ми? На площі. Куди далі? В театр. Звідки прийшли? З замку.",
          "speakers": ["Гід (guide)", "Туристи"],
-         "motivation": "Де?/Куди? combined: Ми зараз на площі, Далі підемо в музей"},
+         "motivation": "Де/Куди/Звідки with площа(f), театр(m), замок(m), парк(m)"},
     ],
     "where-from": [
-        {"setting": "International student mixer — everyone sharing where they're from",
+        {"setting": "International student mixer at a Kyiv university — "
+         "sharing origins: Я з Канади, Вона з Японії, Він з Німеччини. "
+         "Also: З якого міста? З Торонто, з Токіо, з Берліна.",
          "speakers": ["Кілька студентів (group)"],
-         "motivation": "Звідки? + з + genitive: Я з Канади, Вона з Японії"},
+         "motivation": "Звідки? + з: Канада(f), Японія(f), Німеччина(f), Торонто(n)"},
     ],
     "checkpoint-places": [
-        {"setting": "Giving a video tour of your city to an online friend",
-         "speakers": ["Мешканець (resident, filming)", "Онлайн-друг (watching, asking)"],
-         "motivation": "Consolidation: where/where-to/where-from + city vocab + transport"},
+        {"setting": "Video-calling a friend while walking through Одеса (Odesa) — "
+         "showing: Дерибасівська вулиця (f), Потьомкінські сходи (pl, Potemkin Stairs), "
+         "порт (m, port), пляж (m, beach). Describing where you are, where you're going.",
+         "speakers": ["Мешканець (filming)", "Онлайн-друг (watching)"],
+         "motivation": "Consolidation with вулиця(f), сходи(pl), порт(m), пляж(m)"},
     ],
     "food-and-drink": [
-        {"setting": "Cooking traditional borshch together — listing ingredients",
-         "speakers": ["Бабуся (teaching)", "Онук/Онучка (learning)"],
-         "motivation": "Food vocabulary in recipe context: буряк, картопля, м'ясо"},
+        {"setting": "Cooking борщ (m, borshch) with grandma — listing ingredients: "
+         "буряк (m, beetroot), картопля (f, potato), капуста (f, cabbage), "
+         "м'ясо (n, meat), морква (f, carrot), цибуля (f, onion), сметана (f, sour cream).",
+         "speakers": ["Бабуся (teaching)", "Онучка (learning)"],
+         "motivation": "Food with буряк(m), картопля(f), капуста(f), м'ясо(n), сметана(f)"},
     ],
     "i-eat-i-drink": [
-        {"setting": "Lunch break at work — sharing food and talking about what you eat",
+        {"setting": "Lunch break at work — unpacking lunch boxes: "
+         "Я їм бутерброд (m, sandwich) і п'ю чай (m, tea). "
+         "А ти? Я їм салат (m) і п'ю каву (f, coffee). "
+         "Also: яблуко (n), банан (m), вода (f), сік (m, juice).",
          "speakers": ["Колега 1", "Колега 2"],
-         "motivation": "Accusative: Я їм хліб, п'ю каву — real mealtime exchange"},
+         "motivation": "Accusative: бутерброд(m), салат(m), каву(f→acc), яблуко(n), чай(m)"},
     ],
     "at-the-cafe": [
-        {"setting": "A date at a cozy Lviv café — ordering and chatting",
+        {"setting": "A date at a cozy Lviv café — ordering from the menu: "
+         "кава (f, coffee), чай (m, tea), тістечко (n, pastry), "
+         "круасан (m, croissant), вода (f, water), сік (m, juice). "
+         "Мені каву, будь ласка. А мені — чай і тістечко.",
          "speakers": ["Ростик", "Іванка"],
-         "motivation": "Мені, будь ласка + ordering vocabulary in romantic context"},
+         "motivation": "Ordering with кава(f), чай(m), тістечко(n), круасан(m)"},
     ],
     "shopping": [
-        {"setting": "At a Ukrainian supermarket — comparing prices and reading labels",
-         "speakers": ["Мама", "Дочка/Син"],
-         "motivation": "Скільки коштує? Гривень in real grocery shopping"},
+        {"setting": "At a Ukrainian supermarket — comparing prices of: "
+         "хліб (m, bread) — 25 грн, молоко (n, milk) — 42 грн, "
+         "сир (m, cheese) — 89 грн, ковбаса (f, sausage) — 120 грн, "
+         "масло (n, butter) — 65 грн. Скільки коштує сир? А молоко?",
+         "speakers": ["Мама", "Дочка"],
+         "motivation": "Prices with хліб(m), молоко(n), сир(m), ковбаса(f), масло(n)"},
     ],
     "people-around-me": [
-        {"setting": "Showing wedding photos — identifying people in each picture",
-         "speakers": ["Наречена/Наречений", "Друг"],
-         "motivation": "Accusative animate: Бачиш маму? Знаєш Олену? Це мій дядько."},
+        {"setting": "Showing wedding photos — identifying people: "
+         "Бачиш маму (f→acc)? А тата (m→acc)? Знаєш Олену (f→acc)? "
+         "Це мій дядько (m), а це тітка (f). Ось наречена (f) і наречений (m).",
+         "speakers": ["Наречена", "Друг"],
+         "motivation": "Accusative animate: маму(f), тата(m), Олену(f), дядька(m)"},
     ],
     "checkpoint-food-shopping": [
-        {"setting": "Hosting a dinner party — shopping, cooking, and serving guests",
-         "speakers": ["Господар/Господиня (host)", "Гості (guests)"],
-         "motivation": "Consolidation: food, ordering, prices, accusative"},
+        {"setting": "Hosting a вечеря (f, dinner party) — full flow: "
+         "shopping for продукти (pl) at the ринок (m, market), "
+         "cooking вареники (pl) and салат (m), "
+         "setting the table with тарілки (pl, plates) and склянки (pl, glasses), "
+         "serving guests.",
+         "speakers": ["Господиня (host)", "Гості (guests)"],
+         "motivation": "Consolidation: продукти(pl), вареники(pl), тарілка(f), склянка(f)"},
     ],
     "hey-friend": [
-        {"setting": "At a busy birthday party — calling people across the room",
+        {"setting": "At a busy birthday party — calling people across the room by name: "
+         "Олено! Тарасе! Друже! Мамо! Бабусю! Дідусю! "
+         "Each person is doing something different (dancing, eating, talking).",
          "speakers": ["Іменинник (birthday person)", "Друзі"],
-         "motivation": "Vocative: Олено! Тарасе! Друже! Мамо! in noisy social setting"},
+         "motivation": "Vocative: Олена→Олено, Тарас→Тарасе, мама→мамо, бабуся→бабусю"},
     ],
     "please-do-this": [
-        {"setting": "Moving furniture in a new apartment — giving each other instructions",
-         "speakers": ["Олег", "Наталя"],
-         "motivation": "Imperative: Постав тут! Підніми! Поклади туди! in physical task"},
+        {"setting": "Rearranging a classroom before an event — giving instructions: "
+         "Постав стілець (m) тут! Перенеси дошку (f)! Відкрий вікно (n)! "
+         "Принеси маркер (m)! Поклади книги (pl) на стіл!",
+         "speakers": ["Вчитель (teacher)", "Учні (students)"],
+         "motivation": "Imperative with стілець(m), дошка(f), вікно(n), маркер(m), книги(pl)"},
     ],
     "linking-ideas": [
-        {"setting": "Debating where to go on vacation — comparing options",
+        {"setting": "Debating where to go on vacation — comparing Карпати (pl, Carpathians) "
+         "vs море (n, sea). Гори гарні, але далеко. Море тепле, бо літо. "
+         "Я хочу в гори, а ти — на море. Поїдемо в Карпати, бо там дешевше.",
          "speakers": ["Подружжя (couple)"],
-         "motivation": "І, а, але, бо: Гори гарні, але далеко. Море тепле, бо літо."},
+         "motivation": "І, а, але, бо with Карпати(pl), море(n), гори(pl)"},
     ],
     "when-and-where": [
-        {"setting": "Explaining to a friend how to find your apartment building",
-         "speakers": ["Господар (host, on phone)", "Гість (lost outside)"],
-         "motivation": "Complex sentences: Коли побачиш аптеку, поверни ліворуч"},
+        {"setting": "Explaining to a lost friend how to find your apartment: "
+         "Коли побачиш аптеку (f), поверни ліворуч. Де побачиш парк (m), "
+         "зупинись. Будинок (m), що стоїть біля дерева (n).",
+         "speakers": ["Господар (on phone)", "Гість (lost outside)"],
+         "motivation": "Complex sentences: що, де, коли with аптека(f), парк(m), будинок(m)"},
     ],
     "holidays": [
-        {"setting": "Ukrainian Christmas Eve dinner — explaining traditions to a foreign guest",
+        {"setting": "Ukrainian Святвечір (m, Christmas Eve) dinner — explaining 12 dishes: "
+         "кутя (f, kutia), борщ (m), вареники (pl), риба (f, fish), "
+         "узвар (m, dried fruit compote). З Різдвом! З Новим роком!",
          "speakers": ["Українська родина", "Іноземний гість"],
-         "motivation": "Holiday vocabulary + З Різдвом! greetings in cultural context"},
+         "motivation": "Holiday food: кутя(f), борщ(m), вареники(pl), узвар(m) + greetings"},
     ],
     "checkpoint-communication": [
-        {"setting": "Organizing a charity event — delegating tasks and coordinating",
+        {"setting": "Organizing a шкільний ярмарок (m, school fair) — "
+         "delegating: Олено, принеси плакати (pl)! Тарасе, постав столи (pl)! "
+         "Ми маємо квитки (pl) і напої (pl). Нам потрібні стільці, бо людей багато.",
          "speakers": ["Організатор", "Волонтери"],
-         "motivation": "Consolidation: vocative, imperative, conjunctions, complex sentences"},
+         "motivation": "Vocative + imperative + conjunctions with плакат(m), квиток(m), напій(m)"},
     ],
     "what-happened": [
-        {"setting": "Monday morning at work — colleagues sharing weekend stories",
+        {"setting": "Monday morning at work — sharing weekend: "
+         "Я ходив на концерт (m). Я читала роман (m). Ми гуляли в парку (m). "
+         "Він дивився фільм (m). Вона готувала вечерю (f).",
          "speakers": ["Колеги (coworkers)"],
-         "motivation": "Past tense: Що ти робив? Я ходив у кіно. А ти? Я читала."},
+         "motivation": "Past tense with концерт(m), роман(m), парк(m), фільм(m), вечеря(f)"},
     ],
     "yesterday": [
-        {"setting": "Police report — describing what happened step by step",
+        {"setting": "Police report — describing a stolen велосипед (m, bicycle): "
+         "Я припаркував велосипед біля магазину (m). Потім зайшов у кав'ярню (f). "
+         "Коли вийшов, велосипед зник. Бачив чоловіка (m) в синій куртці (f).",
          "speakers": ["Свідок (witness)", "Поліцейський"],
-         "motivation": "Past tense narration: Спочатку я побачив, потім почув, нарешті зателефонував"},
+         "motivation": "Past narration with велосипед(m), магазин(m), кав'ярня(f), куртка(f)"},
     ],
     "what-will-happen": [
-        {"setting": "Fortune teller at a fun fair — predicting the future playfully",
+        {"setting": "Fortune teller at a fun fair — predicting the future: "
+         "Ти будеш подорожувати. Знайдеш нову роботу (f). "
+         "Зустрінеш друга (m). Отримаєш подарунок (m, gift). Будеш щасливий/щаслива!",
          "speakers": ["Ворожка (fortune teller)", "Клієнт"],
-         "motivation": "Future tense: Ти будеш подорожувати, Будеш жити довго"},
+         "motivation": "Future with робота(f), друг(m), подарунок(m)"},
     ],
     "my-plans": [
-        {"setting": "Friends coordinating schedules for the coming week via messaging",
+        {"setting": "Group chat planning the weekend — "
+         "У суботу буду прибирати квартиру (f). А я буду бігати в парку (m). "
+         "Може, ввечері підемо в кіно (n)? Ходімо! О котрій?",
          "speakers": ["Група друзів (3 people)"],
-         "motivation": "Future + days: У суботу буду... Може, зустрінемося? Ходімо!"},
+         "motivation": "Future + scheduling with квартира(f), парк(m), кіно(n)"},
     ],
     "my-story": [
-        {"setting": "Grandparent telling their life story to grandchildren",
+        {"setting": "Grandparent telling their life story — "
+         "Я народився в селі (n, village). Ходив у школу (f). "
+         "Зараз живу в місті (n, city). Працюю в лікарні (f, hospital). "
+         "Буду відпочивати на дачі (f, dacha).",
          "speakers": ["Дідусь/Бабуся", "Онуки"],
-         "motivation": "Three tenses: Я народився в селі, Зараз живу в місті, Буду відпочивати"},
+         "motivation": "Three tenses with село(n), школа(f), місто(n), лікарня(f), дача(f)"},
     ],
     "health": [
-        {"setting": "At the doctor's office — describing symptoms",
+        {"setting": "At the doctor's office — describing symptoms: "
+         "У мене болить голова (f, head). Болить горло (n, throat). "
+         "Болить живіт (m, stomach). Нежить (m, runny nose). Кашель (m, cough). "
+         "Температура (f, fever).",
          "speakers": ["Пацієнт", "Лікар"],
-         "motivation": "У мене болить голова / горло / живіт — body parts in medical context"},
+         "motivation": "Body parts: голова(f), горло(n), живіт(m), температура(f)"},
     ],
     "emergencies": [
-        {"setting": "A minor car accident — calling for help and explaining the situation",
-         "speakers": ["Водій (driver)", "Оператор 103 (emergency)"],
-         "motivation": "Emergency imperatives: Допоможіть! Викличте швидку! Location phrases"},
+        {"setting": "A minor car accident on вулиця Хрещатик (f) — "
+         "calling 103: Допоможіть! Аварія (f, accident) на Хрещатику! "
+         "Потрібна швидка (f, ambulance)! Є постраждалий (m, injured person). "
+         "Машина (f, car) пошкоджена.",
+         "speakers": ["Водій (driver)", "Оператор 103"],
+         "motivation": "Emergency with аварія(f), швидка(f), машина(f), вулиця(f)"},
     ],
     "a1-finale": [
         {"setting": "Full day in Kyiv — from hotel checkout to evening train departure",
