@@ -73,6 +73,16 @@ content_outline:        # ← dialogue_situations goes BEFORE this
 | B1 | Sophisticated (university, workplace, travel) | 5-8 objects, Ukrainian-specific | Deep (literature, history, regions) |
 | B2+ | Full immersion (academic, professional, cultural) | Domain-specific terminology | Expert (politics, science, arts) |
 
+## Beyond Dialogues: B2-C2 Situations
+
+At B2 level and above, the curriculum evolves beyond simple dialogues. Plans for B2, C1, and C2 must incorporate:
+- **Reading Situations**: Analytical reading of articles, literature, and documents.
+- **Listening Situations**: Comprehension of videos, podcasts, and lectures.
+- **Writing Tasks**: Structured production (essays, formal letters, ZNO-style "власне висловлення").
+- **Discussion Topics**: Argumentative speaking and debates.
+
+For detailed guidance on B2+ plan fields, see [B2-C2 Plan Architecture](b2-c2-plan-architecture.md).
+
 ### Script
 
 Generate and apply dialogue situations:

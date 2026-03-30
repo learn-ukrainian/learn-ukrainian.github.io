@@ -190,6 +190,65 @@
         "additionalProperties": false
       }
     },
+    "reading_situations": {
+      "type": "array",
+      "description": "B2+ analytical reading passages. See docs/best-practices/b2-c2-plan-architecture.md",
+      "items": {
+        "type": "object",
+        "required": ["source_type", "topic", "motivation"],
+        "properties": {
+          "source_type": { "type": "string", "description": "e.g., 'наукова стаття', 'художній уривок', 'офіційний лист'" },
+          "topic": { "type": "string", "description": "What the text is about" },
+          "key_elements": { "type": "array", "items": { "type": "string" }, "description": "Terms or devices to include" },
+          "motivation": { "type": "string", "description": "Why this text motivates the grammar/focus" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "listening_situations": {
+      "type": "array",
+      "description": "B2+ listening comprehension tasks. See docs/best-practices/b2-c2-plan-architecture.md",
+      "items": {
+        "type": "object",
+        "required": ["media_type", "setting", "motivation"],
+        "properties": {
+          "media_type": { "type": "string", "enum": ["відео", "аудіо", "інтерв'ю", "подкаст", "лекція"] },
+          "setting": { "type": "string", "description": "Context of the recording" },
+          "focus_points": { "type": "array", "items": { "type": "string" }, "description": "What to capture" },
+          "motivation": { "type": "string", "description": "Pedagogical goal" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "writing_tasks": {
+      "type": "array",
+      "description": "B2+ structured production tasks. See docs/best-practices/b2-c2-plan-architecture.md",
+      "items": {
+        "type": "object",
+        "required": ["task_type", "prompt", "motivation"],
+        "properties": {
+          "task_type": { "type": "string", "enum": ["есе", "офіційний лист", "відгук", "репортаж", "власне висловлення"] },
+          "prompt": { "type": "string", "description": "The assignment for the learner" },
+          "requirements": { "type": "array", "items": { "type": "string" }, "description": "e.g., 'мінімум 200 слів', 'використати пасивний стан'" },
+          "motivation": { "type": "string", "description": "Why this task?" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "discussion_topics": {
+      "type": "array",
+      "description": "B2+ oral production/debate prompts. See docs/best-practices/b2-c2-plan-architecture.md",
+      "items": {
+        "type": "object",
+        "required": ["context", "questions", "motivation"],
+        "properties": {
+          "context": { "type": "string", "description": "Scenario or controversial statement for debate" },
+          "questions": { "type": "array", "items": { "type": "string" }, "description": "Prompts for discussion" },
+          "motivation": { "type": "string", "description": "Pedagogical goal" }
+        },
+        "additionalProperties": false
+      }
+    },
     "connects_to": {
       "oneOf": [
         {
