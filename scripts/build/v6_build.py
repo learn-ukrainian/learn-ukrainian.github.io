@@ -4339,40 +4339,36 @@ def main():
             final_applied, final_count = _apply_review_fixes(review_text, content_path)
             if final_applied:
                 _log(f"\n🔧 Final fix pass: applied {final_count}/{total_fixes} fix(es) from latest review")
+
+                # ── VERIFY FIXES IMMEDIATELY (before enrich changes the content) ──
+                _STRESS = "\u0301"
+                content_text = content_path.read_text("utf-8") if content_path.exists() else ""
+                content_unstressed = content_text.replace(_STRESS, "")
+                unapplied = []
+                applied_ok = []
+                for fix in latest_fixes:
+                    find_str = fix.get("find", "")
+                    replace_str = fix.get("replace", "")
+                    if not find_str:
+                        continue
+                    find_clean = find_str.replace(_STRESS, "")
+                    replace_clean = replace_str.replace(_STRESS, "")
+                    old_gone = find_clean not in content_unstressed
+                    new_present = not replace_clean or replace_clean in content_unstressed
+                    if old_gone and new_present:
+                        applied_ok.append(find_str[:50])
+                    else:
+                        unapplied.append(find_str[:80])
+                if unapplied:
+                    _log(f"\n⚠️  FIX VERIFICATION: {len(unapplied)}/{total_fixes} fix(es) NOT applied:")
+                    for u in unapplied[:5]:
+                        _log(f"    ❌ '{u}...'")
+                else:
+                    _log(f"\n✅ FIX VERIFICATION: all {len(applied_ok)} fix(es) confirmed in content")
+
                 step_enrich(content_path, args.level, slug)
             else:
                 _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
-
-        # ── POST-REVIEW VERIFICATION ──
-        # 1. Verify all fixes were applied (grep content for find/replace strings)
-        # NOTE: Content may have stress marks (´) added by annotator after fixes.
-        # Strip stress marks from both sides before comparing.
-        _STRESS = "\u0301"
-        if latest_fixes:
-            content_text = content_path.read_text("utf-8") if content_path.exists() else ""
-            content_unstressed = content_text.replace(_STRESS, "")
-            unapplied = []
-            applied_ok = []
-            for fix in latest_fixes:
-                find_str = fix.get("find", "")
-                replace_str = fix.get("replace", "")
-                if not find_str:
-                    continue
-                find_clean = find_str.replace(_STRESS, "")
-                replace_clean = replace_str.replace(_STRESS, "")
-                # Check: old text should be GONE, new text should be PRESENT
-                old_gone = find_clean not in content_unstressed
-                new_present = not replace_clean or replace_clean in content_unstressed
-                if old_gone and new_present:
-                    applied_ok.append(find_str[:50])
-                else:
-                    unapplied.append(find_str[:80])
-            if unapplied:
-                _log(f"\n⚠️  FIX VERIFICATION: {len(unapplied)}/{len(latest_fixes)} fix(es) NOT applied:")
-                for u in unapplied[:5]:
-                    _log(f"    ❌ '{u}...'")
-            else:
-                _log(f"\n✅ FIX VERIFICATION: all {len(applied_ok)} fix(es) confirmed in content")
 
         # 2. Check for remaining known issues (Russianisms, calques)
         if content_path.exists():
