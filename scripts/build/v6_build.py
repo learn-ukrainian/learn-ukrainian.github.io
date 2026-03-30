@@ -29,6 +29,8 @@ Usage:
     .venv/bin/python scripts/build/v6_build.py a1 1 --step write  # run single step
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini  # default
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude
+    .venv/bin/python scripts/build/v6_build.py a1 1 --resume       # resume from last completed phase
+    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (auto-resumes each module)
 
 Issue: #993, #998
 """
@@ -377,6 +379,35 @@ def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
     state["phases"] = phases
 
     state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+
+
+# All phases in pipeline order (used by --resume)
+_ALL_PHASES = [
+    "check", "research", "skeleton", "pre-verify", "write",
+    "exercises", "activities", "verify-exercises", "annotate",
+    "vocab", "enrich", "verify", "review", "stress", "publish",
+]
+
+
+def _load_completed_phases(level: str, slug: str) -> set[str]:
+    """Read state.json and return set of completed phase names."""
+    import json
+
+    state_path = CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
+    if not state_path.exists():
+        return set()
+    try:
+        state = json.loads(state_path.read_text())
+    except Exception:
+        return set()
+    phases = state.get("phases", {})
+    return {name for name, info in phases.items() if info.get("status") == "complete"}
+
+
+def _all_phases_complete(level: str, slug: str) -> bool:
+    """Check if all pipeline phases are complete for a module."""
+    completed = _load_completed_phases(level, slug)
+    return all(p in completed for p in _ALL_PHASES)
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
@@ -3926,11 +3957,15 @@ def main():
                                 help="Skip skeleton step even for large modules")
     parser.add_argument("--no-chunk", action="store_true",
                         help="Disable section-by-section chunked generation (always single-call)")
+    parser.add_argument("--resume", action="store_true",
+                        help="Resume from last completed phase (reads state.json, skips completed phases)")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
     import subprocess as _subprocess
     if args.range is not None:
+        manifest = CURRICULUM_ROOT / "curriculum.yaml"
+        data = yaml.safe_load(manifest.read_text())
         end = args.range
         start = args.module
         if end < start:
@@ -3940,7 +3975,17 @@ def main():
         _log(f"  BATCH BUILD: {args.level.upper()} M{start:02d}–M{end:02d}")
         _log(f"{'='*60}")
         failed = []
+        skipped = []
         for n in range(start, end + 1):
+            # Auto-resume: resolve slug and check if fully complete
+            _range_slugs = data.get("levels", {}).get(args.level, {}).get("modules", [])
+            if n <= len(_range_slugs):
+                _range_slug = _range_slugs[n - 1]
+                if _all_phases_complete(args.level, _range_slug):
+                    _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — all phases complete, skipping")
+                    skipped.append(n)
+                    continue
+
             _log(f"\n{'─'*60}")
             _log(f"  [{n - start + 1}/{end - start + 1}] Building M{n:02d}...")
             _log(f"{'─'*60}")
@@ -3949,6 +3994,7 @@ def main():
                     [sys.executable, __file__, args.level, str(n),
                      "--writer", args.writer,
                      "--step", args.step,
+                     "--resume",  # always resume within --range
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
                      *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
                      *(["--no-chunk"] if args.no_chunk else []),
@@ -3967,7 +4013,9 @@ def main():
                 _log(f"  ❌ M{n:02d} error: {e}")
 
         _log(f"\n{'='*60}")
-        _log(f"  BATCH COMPLETE: {end - start + 1 - len(failed)}/{end - start + 1} succeeded")
+        total = end - start + 1
+        built = total - len(failed) - len(skipped)
+        _log(f"  BATCH COMPLETE: {built}/{total} built, {len(skipped)} skipped (already complete)")
         if failed:
             _log(f"  Failed: {', '.join(f'M{n:02d}' for n in failed)}")
         _log(f"{'='*60}")
@@ -3989,6 +4037,18 @@ def main():
 
     steps = args.step
 
+    # --resume: load completed phases and restore dependency variables
+    completed_phases: set[str] = set()
+    if args.resume and steps == "all":
+        completed_phases = _load_completed_phases(args.level, slug)
+        if completed_phases:
+            _log(f"   Resuming — {len(completed_phases)} phase(s) already complete:")
+            for p in _ALL_PHASES:
+                if p in completed_phases:
+                    _log(f"     ⏭️  {p}")
+        else:
+            _log("   Resume requested but no completed phases found — starting fresh")
+
     # Pre-flight: check RAG server is running (needed for MCP tools)
     if "tools" in args.writer:
         import urllib.request
@@ -3999,33 +4059,67 @@ def main():
             _log("   ❌ RAG server is not running. Start it: ./services.sh start")
             sys.exit(1)
 
-    # Clean previous build artifacts for a fresh full build
-    if steps == "all":
+    # Clean previous build artifacts for a fresh full build (skip when resuming)
+    if steps == "all" and not completed_phases:
         _clean_build_artifacts(args.level, slug)
 
+    # --resume: restore dependency variables from disk if their phases are complete
+    # These variables are normally set by earlier phases; when resuming we load from disk
+    packet_path = None
+    skeleton_text = ""
+    verification_text = ""
+    content_path = None
+
+    if completed_phases:
+        # Restore packet_path (from research phase)
+        if "research" in completed_phases:
+            _p = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
+            if _p.exists():
+                packet_path = _p
+                _log(f"   Restored: packet_path ({_p.name})")
+
+        # Restore skeleton_text (from skeleton phase)
+        if "skeleton" in completed_phases:
+            _s = CURRICULUM_ROOT / args.level / "orchestration" / slug / "skeleton.md"
+            if _s.exists():
+                skeleton_text = _s.read_text("utf-8")
+                _log(f"   Restored: skeleton_text ({len(skeleton_text.split())} words)")
+
+        # Restore verification_text (from pre-verify phase)
+        if "pre-verify" in completed_phases:
+            _v = CURRICULUM_ROOT / args.level / "orchestration" / slug / "pre-verify-results.md"
+            if _v.exists():
+                verification_text = _v.read_text("utf-8")
+                _log(f"   Restored: verification_text ({len(verification_text)} chars)")
+
+        # Restore content_path (from write phase)
+        if "write" in completed_phases:
+            _c = CURRICULUM_ROOT / args.level / f"{slug}.md"
+            if _c.exists():
+                content_path = _c
+                _log(f"   Restored: content_path ({_c.name})")
+
     # Step 2: CHECK
-    if steps in ("all", "check") and not step_check(args.level, args.module, slug):
-        _log("\n❌ Build FAILED at Step 2 (plan check)")
-        sys.exit(1)
-    if steps in ("all", "check"):
+    if steps in ("all", "check") and "check" not in completed_phases:
+        if not step_check(args.level, args.module, slug):
+            _log("\n❌ Build FAILED at Step 2 (plan check)")
+            sys.exit(1)
         _save_v6_state(args.level, slug, "check")
 
     # Step 3: RESEARCH
-    packet_path = None
-    if steps in ("all", "research"):
+    if steps in ("all", "research") and "research" not in completed_phases:
         packet_path = step_research(args.level, args.module, slug)
         if not packet_path:
             _log("\n❌ Build FAILED at Step 3 (research)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "research")
-    else:
-        # Try to find existing packet
-        packet_path = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
-        if not packet_path.exists():
-            packet_path = None
+    elif steps not in ("all", "research") and packet_path is None:
+        # Try to find existing packet (single-step mode, no resume)
+        _p = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
+        if _p.exists():
+            packet_path = _p
 
     # Step 4: SKELETON (always on, use --no-skeleton to skip)
-    skeleton_text = ""
     plan_path = CURRICULUM_ROOT / "plans" / args.level / f"{slug}.yaml"
     word_target = yaml.safe_load(plan_path.read_text("utf-8")).get("word_target", 1200) if plan_path.exists() else 1200
 
@@ -4034,19 +4128,19 @@ def main():
     # Use --no-skeleton to opt out.
     use_skeleton = not args.no_skeleton
 
-    if steps in ("all", "skeleton") and use_skeleton:
+    if steps in ("all", "skeleton") and use_skeleton and "skeleton" not in completed_phases:
         skeleton_text = step_skeleton(
             args.level, args.module, slug, packet_path,
             writer=args.writer,
         ) or ""
         if not skeleton_text and steps == "skeleton":
             _log("\n  SKELETON step returned empty — continuing without skeleton")
-    elif steps == "skeleton":
+    elif steps == "skeleton" and "skeleton" not in completed_phases:
         _log(f"\n  ℹ️  Skeleton skipped (word_target={word_target} < 3000, use --skeleton to force)")
 
     if use_skeleton and skeleton_text:
         _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
-    elif use_skeleton and not skeleton_text:
+    elif use_skeleton and not skeleton_text and "skeleton" not in completed_phases:
         _log("\n  ⚠️  Skeleton was requested but generation failed — writing without skeleton")
 
     # Try to load existing skeleton from disk if running single step
@@ -4057,8 +4151,7 @@ def main():
             _log(f"  📐 Loaded existing skeleton ({len(skeleton_text.split())} words)")
 
     # Step 3b: PRE-VERIFY — force tool calls before writing (#1070)
-    verification_text = ""
-    if steps in ("all", "write", "pre-verify"):
+    if steps in ("all", "write", "pre-verify") and "pre-verify" not in completed_phases:
         # Only run pre-verify when using -tools writers (tools must be available)
         if "tools" in args.writer or steps == "pre-verify":
             verification_text = step_pre_verify(
@@ -4076,8 +4169,7 @@ def main():
             _log(f"  🔍 Loaded existing pre-verify ({len(verification_text)} chars)")
 
     # Step 5: WRITE + QUICK VERIFY + RETRY
-    content_path = None
-    if steps in ("all", "write"):
+    if steps in ("all", "write") and "write" not in completed_phases:
         content_path = step_write_with_retry(
             args.level, args.module, slug, packet_path,
             writer=args.writer, max_retries=2,
@@ -4089,22 +4181,22 @@ def main():
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "write")
-    else:
+    elif content_path is None:
         content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
 
     # Step 5b: EXERCISES — legacy fallback (skip in full pipeline, ACTIVITIES replaces it)
-    if steps == "exercises":
+    if steps == "exercises" and "exercises" not in completed_phases:
         # Only run when explicitly requested (single-step mode)
         step_exercises(content_path)
         _save_v6_state(args.level, slug, "exercises")
-    elif steps == "all":
+    elif steps == "all" and "exercises" not in completed_phases:
         _log(f"\n{'='*60}")
         _log("  Step 5b: EXERCISES — Skipped (ACTIVITIES step handles exercises)")
         _log(f"{'='*60}")
         _save_v6_state(args.level, slug, "exercises")
 
     # Step 5e: ACTIVITIES — structured YAML generation (#1042)
-    if steps in ("all", "activities"):
+    if steps in ("all", "activities") and "activities" not in completed_phases:
         activity_path = step_activities(
             content_path, args.level, args.module, slug,
             writer=args.writer,
@@ -4118,7 +4210,7 @@ def main():
             sys.exit(1)
 
     # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
-    if steps in ("all", "exercises", "verify-exercises"):
+    if steps in ("all", "exercises", "verify-exercises") and "verify-exercises" not in completed_phases:
         step_verify_exercises(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "verify-exercises")
 
@@ -4128,7 +4220,7 @@ def main():
     # ONLY runs during full build — NOT when --step annotate is used standalone,
     # because standalone annotate runs on already-enriched content and post-process
     # would strip TAB markers added by ENRICH.
-    if steps == "all":
+    if steps == "all" and "annotate" not in completed_phases:
         if not content_path or not content_path.exists():
             _log("\n❌ Build FAILED — no content file exists (write step failed)")
             sys.exit(1)
@@ -4136,7 +4228,7 @@ def main():
         _save_v6_state(args.level, slug, "annotate")
 
     # Step 5c: VOCAB — writer generates словник YAML
-    if steps in ("all", "write"):
+    if steps in ("all", "write") and "vocab" not in completed_phases:
         vocab_path = step_vocab(
             content_path, args.level, args.module, slug,
             writer=args.writer,
@@ -4145,12 +4237,12 @@ def main():
             _save_v6_state(args.level, slug, "vocab")
 
     # Step 7b: ENRICH
-    if steps in ("all", "enrich"):
+    if steps in ("all", "enrich") and "enrich" not in completed_phases:
         step_enrich(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "enrich")
 
     # Step 7: VERIFY
-    if steps in ("all", "verify"):
+    if steps in ("all", "verify") and "verify" not in completed_phases:
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
 
@@ -4158,7 +4250,7 @@ def main():
     # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
     # We apply them deterministically — no LLM regeneration, no rewriting.
     # Then re-enrich and re-review to verify.
-    if steps in ("all", "review"):
+    if steps in ("all", "review") and "review" not in completed_phases:
         passed, score, review_text = step_review(
             content_path, args.level, args.module, slug,
             writer=args.writer, reviewer_override=args.reviewer,
@@ -4280,12 +4372,12 @@ def main():
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
     # (e.g., бра́ти vs брати́) that caused review rejections
-    if steps in ("all", "review", "publish", "annotate"):
+    if steps in ("all", "review", "publish", "annotate") and "stress" not in completed_phases:
         step_annotate(content_path)
         _save_v6_state(args.level, slug, "stress")
 
     # Step 9: PUBLISH
-    if steps in ("all", "review", "publish"):
+    if steps in ("all", "review", "publish") and "publish" not in completed_phases:
         step_publish(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "publish")
 
