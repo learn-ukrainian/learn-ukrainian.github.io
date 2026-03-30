@@ -17,7 +17,7 @@
     "@astrojs/react": "^5.0.2",
     "@astrojs/sitemap": "^3.7.2",
     "@astrojs/starlight": "^0.38.2",
-    "@astrojs/starlight-docsearch": "^0.6.1",
+    "@astrojs/starlight-docsearch": "^0.7.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.1.1",
