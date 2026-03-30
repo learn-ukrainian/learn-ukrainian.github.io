@@ -328,8 +328,15 @@ def check_activity_level_restrictions(content: str, level_code: str, module_num:
     violations = []
     rules = ACTIVITY_RESTRICTIONS.get(level_code, {})
 
+    # Checkpoint modules (consolidation) get relaxed restrictions —
+    # error-correction is valid for testing knowledge the learner already has
+    _CHECKPOINT_RELAXED = {'error-correction', 'select', 'translate'}
+    is_checkpoint = 'checkpoint' in (content[:500].lower())
+
     for forbidden in rules.get('forbidden', []):
         if forbidden in activity_types:
+            if is_checkpoint and forbidden in _CHECKPOINT_RELAXED:
+                continue  # Allow in checkpoints
             violations.append({
                 'type': 'LEVEL_RESTRICTION',
                 'issue': f"Activity '{forbidden}' not allowed at {level_code}",

@@ -450,10 +450,7 @@
             "type": "object",
             "required": [
               "sentence",
-              "error",
-              "answer",
-              "options",
-              "explanation"
+              "error"
             ],
             "additionalProperties": false,
             "properties": {
@@ -473,7 +470,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -488,6 +490,11 @@
               "explanation": {
                 "type": "string",
                 "minLength": 1
+              },
+              "correction": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The correct word or phrase (alternative to 'answer')"
               }
             }
           }

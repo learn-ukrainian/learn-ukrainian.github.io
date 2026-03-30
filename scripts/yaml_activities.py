@@ -661,7 +661,13 @@ class ActivityParser:
         return UnjumbleActivity(title=data.get('title', ''), items=items)
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
-        items = [ErrorCorrectionItem(sentence=i['sentence'], error=i['error'], answer=i['answer'], options=i.get('options', []), explanation=i.get('explanation', '')) for i in data.get('items', [])]
+        items = [ErrorCorrectionItem(
+            sentence=i['sentence'],
+            error=i['error'],
+            answer=i.get('answer') or i.get('correction', ''),
+            options=i.get('options', []),
+            explanation=i.get('explanation', ''),
+        ) for i in data.get('items', [])]
         return ErrorCorrectionActivity(title=data.get('title', ''), items=items)
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:

@@ -464,10 +464,7 @@
             "type": "object",
             "required": [
               "sentence",
-              "error",
-              "answer",
-              "options",
-              "explanation"
+              "error"
             ],
             "additionalProperties": false,
             "properties": {
@@ -507,6 +504,11 @@
               "explanation": {
                 "type": "string",
                 "minLength": 1
+              },
+              "correction": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The correct word or phrase (alternative to 'answer')"
               }
             }
           }
