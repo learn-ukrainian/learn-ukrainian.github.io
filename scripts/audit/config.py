@@ -8,24 +8,35 @@ and activity requirements for each CEFR level.
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
 PROPER_NAME_WHITELIST: set[str] = {
-    # Common Ukrainian given names
+    # Common Ukrainian given names (+ common declined forms)
     "Микола", "Олег", "Олена", "Тарас", "Іван", "Марія", "Андрій", "Петро",
     "Богдан", "Василь", "Ганна", "Дмитро", "Катерина", "Леся", "Оксана",
     "Степан", "Ярослав", "Григорій", "Софія", "Наталя", "Юрій", "Володимир",
     "Максим", "Олександр", "Олександра", "Михайло", "Данило", "Роман", "Сергій",
-    # Ukrainian cities and regions
+    "Оля", "Олю", "Аня", "Марта", "Тарасе", "Василько", "Кирилко",
+    "Соломійка", "Соломійко", "Мар'яна", "Дар'я", "Лук'ян",
+    # Ukrainian cities and regions (+ declined forms)
     "Київ", "Львів", "Одеса", "Харків", "Дніпро", "Запоріжжя", "Полтава",
     "Чернігів", "Суми", "Вінниця", "Тернопіль", "Луцьк", "Рівне", "Ужгород",
     "Івано-Франківськ", "Чернівці", "Миколаїв", "Херсон", "Кропивницький",
-    # Countries and regions
+    "Києва", "Львова", "Одеси", "Харкова",
+    # Countries and regions (+ declined forms)
     "Україна", "Галичина", "Волинь", "Поділля", "Слобожанщина", "Буковина",
     "Закарпаття", "Крим", "Донбас",
-    # Historical figures (surnames)
+    "Канада", "Канади", "Австралії", "Британії", "Німеччини",
+    # Historical figures and textbook authors (surnames)
     "Шевченко", "Франко", "Грушевський", "Хмельницький", "Мазепа", "Сковорода",
     "Котляревський", "Леонтович", "Лисенко",
-    # Common abbreviations
+    "Большакова", "Вашуленко", "Захарійчук", "Кравцова", "Авраменко",
+    "Заболотний", "Літвінова", "Білоус",
+    # Common abbreviations and brand names
     "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
+    "МійКлас",
 }
+
+# Minimum word length for VESUM verification.
+# Syllable fragments (ка, ра, ль, нь, шч) in phonetics modules are not words.
+VESUM_MIN_WORD_LENGTH = 3
 
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {

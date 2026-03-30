@@ -203,17 +203,62 @@ def extract_words_from_yaml(yaml_path: Path, is_vocab: bool = False) -> dict[str
                     if clean not in words:
                         words[clean] = original
     else:
-        # Activities: walk all strings and extract Ukrainian tokens
-        all_strings = _walk_yaml_strings(data)
-        # Skip blending formula strings (e.g. "М + А + М + А → ___")
-        # — they contain pedagogical syllables (ЛО, КІ, МА) that aren't words.
-        # Filter: "→" catches result arrows, " + " catches letter addition notation.
-        filtered = [s for s in all_strings if "→" not in s and " + " not in s]
-        combined = "\n".join(filtered)
-        tokens = tokenize_all_ukrainian(combined)
-        for original, clean in tokens:
-            if clean not in words:
-                words[clean] = original
+        # Activities: walk all strings, but SKIP intentionally wrong answers
+        # in error-correction activities (they contain deliberate misspellings).
+        _extract_activity_words(data, words)
+
+    return words
+
+
+def _extract_activity_words(data, words: dict[str, str]) -> None:
+    """Extract Ukrainian words from activity YAML, skipping intentional errors.
+
+    Many activity types contain deliberate misspellings as distractors:
+    - error-correction: 'sentence' field has the error
+    - quiz: wrong 'options' that aren't the 'answer'
+    - fill-in: distractor options
+
+    Strategy: only extract from SAFE fields (answers, corrections, hints, titles).
+    Skip all distractor/incorrect content.
+    """
+    # Handle both bare list and dict-with-keys formats
+    if isinstance(data, dict):
+        activity_list = data.get("inline", []) + data.get("workbook", [])
+    elif isinstance(data, list):
+        activity_list = data
+    else:
+        return
+
+    # Fields that contain CORRECT Ukrainian (safe to verify)
+    _SAFE_FIELDS = {
+        "title", "answer", "correction", "correct_order", "hint",
+        "explanation", "focus", "left", "right",  # match-up pairs
+        "groups",  # group-sort group names and items
+        "category", "label",
+    }
+
+    # Fields that may contain intentional errors (skip these)
+    _SKIP_FIELDS = {"sentence", "options", "scrambled", "incorrect"}
+
+    def _extract_safe(obj: object, in_safe_context: bool = True) -> None:
+        """Recursively extract words, but only from safe fields."""
+        if isinstance(obj, str):
+            if in_safe_context and "→" not in obj and " + " not in obj:
+                    for original, clean in tokenize_all_ukrainian(obj):
+                        if clean not in words:
+                            words[clean] = original
+        elif isinstance(obj, list):
+            for item in obj:
+                _extract_safe(item, in_safe_context)
+        elif isinstance(obj, dict):
+            for key, val in obj.items():
+                if key in _SKIP_FIELDS:
+                    continue
+                _extract_safe(val, in_safe_context)
+
+    for activity in activity_list:
+        if isinstance(activity, dict):
+            _extract_safe(activity)
 
     return words
 
@@ -409,7 +454,7 @@ def verify_module(md_path: Path, use_rag: bool = True,
         rag_results = {w: {"textbook": False, "literary": False, "error": False} for w in vesum_misses}
 
     # 5. Build results
-    from audit.config import PROPER_NAME_WHITELIST
+    from audit.config import PROPER_NAME_WHITELIST, VESUM_MIN_WORD_LENGTH
     results = []
     stats = {
         "total": len(all_words),
@@ -434,13 +479,20 @@ def verify_module(md_path: Path, use_rag: bool = True,
             literary_hit = rag.get("literary", False)
             rag_error = rag.get("error", False)
 
+        # Skip fragments shorter than minimum length (syllables like ка, ра, ль
+        # in phonetics modules). Not words — pedagogical notation.
+        if len(clean) < VESUM_MIN_WORD_LENGTH:
+            continue
+
         # Check proper name whitelist before marking as not-found.
         # Only explicit whitelist — no capitalization heuristic (sentence-initial
         # words are capitalized too, which would suppress real VESUM failures).
+        # Check both original and titlecase forms for declined names.
         is_proper_name = (
             not vesum_hit and not textbook_hit and not literary_hit
             and (original in PROPER_NAME_WHITELIST
-                 or clean in PROPER_NAME_WHITELIST)
+                 or clean in PROPER_NAME_WHITELIST
+                 or original.title() in PROPER_NAME_WHITELIST)
         )
 
         # Determine status

@@ -145,7 +145,7 @@ def _build_sentence_stress_map(
                 stressed = stressifier(word)
             except Exception:
                 continue
-            if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == word:
+            if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == word.replace(STRESS_MARK, ""):
                 stress_map[m.start(1)] = stressed
         return stress_map
 
@@ -153,7 +153,11 @@ def _build_sentence_stress_map(
         orig_word = orig_m.group(1)
         stressed_word = stress_m.group(1)
 
-        if stressed_word.replace(STRESS_MARK, "") != orig_word:
+        # Strip stress marks from BOTH sides before comparing — the original
+        # text may already contain some stress marks from vocab_gen or manual
+        # annotation. Without this, pre-stressed words like "Зву́ки" fail the
+        # comparison because stressed_clean="Звуки" != orig="Зву́ки".
+        if stressed_word.replace(STRESS_MARK, "") != orig_word.replace(STRESS_MARK, ""):
             continue
 
         if STRESS_MARK in stressed_word:
@@ -182,12 +186,33 @@ def annotate_stress(text: str) -> tuple[str, int]:
 
     count = 0
 
-    # First pass: find first occurrence of each word form (forward order)
+    # Per-word fallback: if the sentence-level stressifier didn't stress a word,
+    # try stressing it in isolation. The sentence processor sometimes drops words
+    # (especially in mixed-language or tabular content).
+    stressifier = _get_stressifier()
+    for m in matches:
+        pos = m.start(1)
+        if pos in stress_map:
+            continue
+        word = m.group(1)
+        clean = word.replace(STRESS_MARK, "")
+        if _count_syllables(clean) < 2:
+            continue
+        try:
+            stressed = stressifier(clean)
+        except Exception:
+            continue
+        if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == clean:
+            stress_map[pos] = stressed
+
+    # First pass: find first ANNOTATABLE occurrence of each word form.
+    # Must exclude skip ranges — otherwise the first occurrence lands inside
+    # a code block/tag and all later occurrences are never annotated.
     first_occurrences: dict[str, int] = {}
     for i, m in enumerate(matches):
         word = m.group(1)
         lower = word.lower().replace(STRESS_MARK, "")
-        if lower not in first_occurrences:
+        if lower not in first_occurrences and not _in_skip_range(m.start(), skip_ranges):
             first_occurrences[lower] = i
 
     # Second pass: annotate only first occurrences (reverse for safe replacement)
@@ -198,9 +223,6 @@ def annotate_stress(text: str) -> tuple[str, int]:
         lower = word.lower().replace(STRESS_MARK, "")
 
         if first_occurrences.get(lower) != i:
-            continue
-
-        if _in_skip_range(m.start(), skip_ranges):
             continue
 
         if _already_stressed(word):
