@@ -20,6 +20,15 @@ objectives:
   responding naturally to questions and expressing opinions"
 - "Learner can self-evaluate writing and speaking performance using
   B1 criteria: граматика, лексика, зв'язність, вимова"
+dialogue_situations:
+- setting: 'Mock ЗНО writing section — writing a formal лист (m, letter) to a newspaper
+    about забруднення (n, pollution) in your місто (n, city): Use formal register.
+    Include argumentation. Minimum 150 words.'
+  speakers:
+  - Кандидат (пише)
+  - Екзаменатор (оцінює)
+  motivation: 'Writing exam: formal letter with argumentation, register control, complex
+    syntax'
 content_outline:
 - section: "Вступ: формат екзамену (Introduction: exam format)"
   words: 300

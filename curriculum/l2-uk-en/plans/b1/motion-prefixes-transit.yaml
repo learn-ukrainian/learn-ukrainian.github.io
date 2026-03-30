@@ -18,6 +18,14 @@ objectives:
   по + Д.в.)
 - Learner can distinguish пере- (crossing boundary) from про- (passing by/through without stopping) in spoken and written
   Ukrainian
+dialogue_situations:
+- setting: 'Driving lesson in Харків — instructor teaches route navigation: Перейдіть
+    (cross) дорогу (f, road) на зеленому. Проїдьте (pass through) два перехрестя (n,
+    intersection). Переїдьте (cross) міст (m, bridge) і зверніть ліворуч.'
+  speakers:
+  - Інструктор з водіння
+  - Учень
+  motivation: 'Transit prefixes: перейти (пере-), проїхати (про-), переїхати (пере-)'
 content_outline:
 - section: 'Перетинати i проходити: рух наскрізь (Crossing and passing: through-motion)'
   words: 550

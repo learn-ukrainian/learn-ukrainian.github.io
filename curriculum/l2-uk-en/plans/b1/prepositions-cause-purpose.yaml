@@ -22,6 +22,14 @@ objectives:
   для того щоб in complex sentences (preview of Phase 8 subordination)"
 - "Learner can distinguish cause from purpose in ambiguous contexts
   and choose the appropriate construction"
+dialogue_situations:
+- setting: 'Student explaining absences to the dean at a Одеський університет — giving
+    reasons: Через хворобу (f, illness) пропустив лекції. Для отримання стипендії
+    (f, scholarship) треба здати іспити. Завдяки допомозі (f, help) друзів встиг.'
+  speakers:
+  - Декан
+  - Студент
+  motivation: 'Cause/purpose: через + acc, для + gen, завдяки + dat, заради + gen'
 content_outline:
 - section: "Причина: через та завдяки (Cause: through and thanks to)"
   words: 800

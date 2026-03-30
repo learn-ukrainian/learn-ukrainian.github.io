@@ -20,6 +20,14 @@ objectives:
   with expanded verb range (дарувати другові, завдячувати батькам)"
 - "Learner can distinguish dative from other cases in ambiguous
   constructions and explain why the dative is required"
+dialogue_situations:
+- setting: 'A cold winter day in Київ — everyone experiencing different states: Мені
+    холодно (I''m cold). Дитині (f, child) нудно (bored). Бабусі (f) важко ходити.
+    Студентам (pl) цікаво на лекції (f).'
+  speakers:
+  - Родина на прогулянці
+  motivation: 'Experiencer dative: мені холодно, дитині нудно, бабусі важко, студентам
+    цікаво'
 content_outline:
 - section: "Давальний суб'єкта стану (Dative of experiencer)"
   words: 800

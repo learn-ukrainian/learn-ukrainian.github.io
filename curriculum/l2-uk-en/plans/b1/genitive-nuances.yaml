@@ -20,6 +20,14 @@ objectives:
   другого лютого, минулого року, цього тижня"
 - "Learner can choose between -а/-я and -у/-ю endings in masculine genitive
   singular (Р.в. ІІ відміни) based on semantic categories"
+dialogue_situations:
+- setting: 'At a Одеський ринок Привоз (m, Privoz market) — haggling: Дайте склянку
+    (f) меду (partitive gen). Трохи сиру (partitive gen). Немає свіжого молока (n,
+    milk)? Шматок хліба (m), будь ласка.'
+  speakers:
+  - Покупець
+  - Продавець
+  motivation: 'Partitive genitive: меду, сиру, молока, хліба — quantity expressions'
 content_outline:
 - section: "Частковий родовий (Partitive genitive)"
   words: 700

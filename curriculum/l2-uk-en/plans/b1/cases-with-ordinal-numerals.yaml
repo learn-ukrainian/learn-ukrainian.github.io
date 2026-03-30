@@ -20,6 +20,15 @@ objectives:
   order (перший раз, другий раз), centuries (у двадцять першому столітті)"
 - "Learner can decline compound ordinal numerals where only the last word
   changes (двісті двадцять п'ята — двісті двадцять п'ятої)"
+dialogue_situations:
+- setting: 'Buying train tickets at Київський вокзал — specifying dates and platforms:
+    Квиток (m, ticket) на п''яте березня. З першого вагона (m, car). Третій перон
+    (m, platform). На другому поверсі (m, floor) — каса (f, ticket office).'
+  speakers:
+  - Пасажир
+  - Касир (cashier)
+  motivation: 'Ordinal numerals in cases: п''яте березня(acc), першого вагона(gen),
+    третій перон(nom)'
 content_outline:
 - section: "Відмінювання порядкових числівників (Declension of ordinals)"
   words: 700

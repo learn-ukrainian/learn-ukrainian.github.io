@@ -19,6 +19,14 @@ objectives:
 - "Learner can punctuate діалог correctly with тире"
 - "Learner can use both пряма and непряма мова naturally in storytelling
   and reporting at B1 level"
+dialogue_situations:
+- setting: 'Journalist interviewing a Київський мер (m, Kyiv mayor) — transforming
+    direct to indirect speech: Мер сказав: ''Ми побудуємо метро (n).'' → Мер сказав,
+    що вони побудують метро. ''Чи буде парковка (f)?'' → Мене запитали, чи буде парковка.'
+  speakers:
+  - Журналіст
+  - Мер
+  motivation: 'Direct → indirect speech: сказав що, запитав чи, попросив щоб'
 content_outline:
 - section: "Пряма мова: будова і розділові знаки (Direct speech: structure and punctuation)"
   words: 800

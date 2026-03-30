@@ -20,6 +20,15 @@ objectives:
   and literary texts and understand their expressive function"
 - "Learner can distinguish between short-form adjectives and усічені
   прикметники (shortened for meter) in poetry"
+dialogue_situations:
+- setting: 'Reading a classic Ukrainian poem aloud at a літературний вечір (m, literary
+    evening) in Чернігові — discussing archaic and elevated forms: Рад (glad) бачити
+    вас! Годен (capable) працювати. Певен (certain) у собі. Ладен (willing) допомогти.'
+  speakers:
+  - Ведучий вечора
+  - Слухачі
+  motivation: 'Short-form adjectives: рад, годен, певен, ладен — elevated/literary
+    usage'
 content_outline:
 - section: "Повні та короткі форми прикметників (Full and short forms)"
   words: 700

@@ -21,6 +21,13 @@ objectives:
   нікого немає (absence) vs нікого й спитати (impossibility)"
 - "Learner can produce natural Ukrainian negative sentences avoiding the
   English-influenced single-negation error (*ніхто знає instead of ніхто не знає)"
+dialogue_situations:
+- setting: 'Mystery novel reading club in Тернополі — discussing plot with double
+    negatives: Ніхто нічого не бачив. Ніде немає слідів (pl, traces). Ніколи не знайдуть
+    відповіді (f, answer). Ніяких доказів (pl, evidence) немає.'
+  speakers:
+  - Члени книжкового клубу
+  motivation: 'Double negation: ніхто не, ніде немає, ніколи не, ніяких немає'
 content_outline:
 - section: "Заперечення в українській мові: принцип подвійності (Negation in Ukrainian: the principle of doubling)"
   words: 650

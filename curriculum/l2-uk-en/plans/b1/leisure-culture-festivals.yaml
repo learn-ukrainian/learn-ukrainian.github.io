@@ -19,6 +19,14 @@ objectives:
 - "Learner can express opinions about cultural events using argumentation
   patterns: Хоча..., проте... / Я вважаю, що... тому що..."
 - "Learner can use all Phase 8 syntax structures in connected communicative discourse"
+dialogue_situations:
+- setting: 'Великдень (m, Easter) in a Ukrainian village — full celebration: Ми святкуємо
+    Великдень, хоча погода холодна. Мама сказала, що паска (f, Easter bread) готова.
+    Якщо встанемо рано, встигнемо на службу (f, church service). Коли повернемося,
+    будемо бити писанки (pl, Easter eggs).'
+  speakers:
+  - Родина
+  motivation: 'Culture integration: all subordinate clause types in Великдень celebration'
 content_outline:
 - section: "Дозвілля і захоплення (Leisure and hobbies)"
   words: 700

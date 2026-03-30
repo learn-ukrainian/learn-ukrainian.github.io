@@ -20,6 +20,15 @@ objectives:
   (більш весело, найбільш цікаво) and knows when to use each form"
 - "Learner can identify the main ways of adverb formation: суфіксальний,
   префіксальний, суфіксально-префіксальний, складання"
+dialogue_situations:
+- setting: 'Running club in Київському парку Шевченка — comparing performance: Ти
+    бігаєш швидше (faster) за мене! Він тренується найчастіше (most often). Вона стрибає
+    вище (higher). Ми прийшли раніше (earlier) за всіх.'
+  speakers:
+  - Тренер
+  - Бігуни (runners)
+  motivation: 'Adverb comparison: швидше, найчастіше, вище, раніше — formation and
+    usage'
 content_outline:
 - section: "Як утворюються прислівники? (How are adverbs formed?)"
   words: 700

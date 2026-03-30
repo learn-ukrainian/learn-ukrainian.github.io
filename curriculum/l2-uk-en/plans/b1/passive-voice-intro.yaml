@@ -17,6 +17,15 @@ objectives:
 - Learner understands that Ukrainian AVOIDS passive constructions and prefers active voice — this is a key stylistic difference
   from English
 - Learner can transform passive sentences to active and vice versa, choosing the more natural Ukrainian option in context
+dialogue_situations:
+- setting: 'Guided tour of a newly renovated Палац культури (m, Palace of Culture)
+    in Дніпро — describing what was done: Цей зал (m, hall) був побудований у 1960-х.
+    Стіни (pl, walls) були пофарбовані минулого місяця. Вхід (m, entrance) буде відкрито
+    для публіки завтра.'
+  speakers:
+  - Архітектор
+  - Журналіст
+  motivation: 'Passive voice: був побудований, були пофарбовані, буде відкрито'
 content_outline:
 - section: Активний i пасивний стан (Active and passive voice)
   words: 750

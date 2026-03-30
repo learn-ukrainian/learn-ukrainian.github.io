@@ -18,6 +18,13 @@ objectives:
   (Заболотний Grade 7 p.51)'
 - Learner can correctly pronounce -шся as [с':а] and -ться as [ц':а] and understands the spelling-pronunciation mismatch
 - 'Learner can use зворотні дієслова naturally in daily communication: одягатися, збиратися, хвилюватися, знайомитися'
+dialogue_situations:
+- setting: 'Morning routine chaos in a студентський гуртожиток (m, student dormitory)
+    in Київ — everyone getting ready at once: Я вмиваюся! Він голиться (shaves). Ми
+    збираємося (getting ready). Вони сміються (laughing). Двері не зачиняються!'
+  speakers:
+  - Сусіди по кімнаті (roommates)
+  motivation: 'Reflexive verbs: вмиватися, голитися, збиратися, сміятися, зачинятися'
 content_outline:
 - section: Що таке зворотні дієслова? (What are reflexive verbs?)
   words: 650

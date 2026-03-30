@@ -22,6 +22,15 @@ objectives:
   and produce their plural forms where -ин drops"
 - "Learner can use кличний відмінок correctly for -ар/-яр/-ин nouns,
   applying consonant alternation rules from M09 where needed"
+dialogue_situations:
+- setting: 'Visit to a село (n, village) in Полтавщина — meeting local craftspeople:
+    Ось наш столяр (m, carpenter). А де бондар (m, cooper)? Цей киянин (m, Kyiv resident)
+    приїхав учитися. А полтавчанин (m) — наш майстер.'
+  speakers:
+  - Сільський голова (village head)
+  - Гість
+  motivation: 'Masculine noun subclasses: столяр, бондар (-ар), киянин, полтавчанин
+    (-ин)'
 content_outline:
 - section: "Суфікси -ар, -яр: хто що робить (Suffixes -ar, -iar)"
   words: 650

@@ -21,6 +21,14 @@ objectives:
   using портретна лексика and appropriate register"
 - "Learner can identify and correct errors in Ukrainian texts involving
   metalanguage terms, verb forms, and descriptive vocabulary"
+dialogue_situations:
+- setting: 'Oral exam at a Ukrainian language course — the examiner asks about your
+    background, daily life, and plans using all tenses and basic grammar terminology:
+    Розкажіть про себе. Що ви робили минулого тижня? Які ваші плани?'
+  speakers:
+  - Екзаменатор
+  - Студент
+  motivation: 'Consolidation: past/present/future, aspect, adjective agreement, metalanguage'
 content_outline:
 - section: "Вступ: як працювати з контрольною (Introduction: how to approach this test)"
   words: 350

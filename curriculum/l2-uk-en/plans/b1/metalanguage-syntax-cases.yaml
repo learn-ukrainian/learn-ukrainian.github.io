@@ -21,6 +21,15 @@ objectives:
   and залежне слово and the type of зв'язок between them"
 - "Learner can read Ukrainian grammar reference materials (dictionary entries,
   textbook rules) that use syntactic and case terminology"
+dialogue_situations:
+- setting: Ukrainian grammar tutoring session — the tutor explains sentence structure
+    using підмет (m, subject), присудок (m, predicate), додаток (m, object), означення
+    (n, attribute), обставина (f, adverbial). They parse a newspaper sentence together.
+  speakers:
+  - Репетитор (tutor)
+  - Студент-іноземець
+  motivation: 'Syntax terminology: підмет, присудок, додаток; case names: називний,
+    родовий, давальний'
 content_outline:
 - section: "Що вивчають синтаксис і пунктуація? (What do syntax and punctuation study?)"
   words: 500

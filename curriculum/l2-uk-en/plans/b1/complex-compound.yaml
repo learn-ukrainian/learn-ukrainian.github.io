@@ -20,6 +20,14 @@ objectives:
   сполучник, exceptions (спільний другорядний член), крапка з комою, тире"
 - "Learner can construct складносурядні речення to express connected,
   contrasted, and alternating ideas"
+dialogue_situations:
+- setting: 'Two friends at a Львівська кав''ярня discussing weekend plans — compound
+    sentences: Я хочу в кіно, а ти — в театр (m). Або ми підемо на виставку (f, exhibition),
+    або залишимося вдома. Погода гарна, і ми могли б погуляти.'
+  speakers:
+  - Софія
+  - Андрій
+  motivation: 'Compound sentences: і, а, але, або, проте with кіно(n), театр(m), виставка(f)'
 content_outline:
 - section: "Що таке складносурядне речення? (What is a compound sentence?)"
   words: 600

@@ -17,6 +17,16 @@ objectives:
 - "Learner can identify наголос in words and explain its role in Ukrainian phonetics"
 - "Learner can classify consonants by three criteria: дзвінкість/глухість,
   твердість/м'якість, and місце творення (губні, свистячі, шиплячі)"
+dialogue_situations:
+- setting: 'University linguistics lecture hall in Kyiv — a student asks the professor
+    about Ukrainian phonetics terminology: голосний (m, vowel), приголосний (m, consonant),
+    наголос (m, stress), склад (m, syllable), звук (m, sound), буква (f, letter).
+    They compare Ukrainian and English sound systems on the дошка (f, board).'
+  speakers:
+  - Професор
+  - Студент-першокурсник (first-year student)
+  motivation: 'Phonetics terminology: голосний, приголосний, наголос, склад in academic
+    register'
 content_outline:
 - section: "Що вивчає фонетика? (What does phonetics study?)"
   words: 600

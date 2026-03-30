@@ -20,6 +20,16 @@ objectives:
   formation: носити → ношений, водити → воджений, просити → прошений"
 - "Learner can distinguish passive participles from regular adjectives
   and use them naturally in written Ukrainian"
+dialogue_situations:
+- setting: 'Visiting a renovated Маріїнський палац (m, Mariinskyi Palace) in Київ
+    — the guide describes what was restored: Відреставрований (restored) фасад (m,
+    facade). Написана (painted) у XIX столітті картина (f). Збережене (preserved)
+    оздоблення (n, decoration).'
+  speakers:
+  - Екскурсовод
+  - Група туристів
+  motivation: 'Passive participles: відреставрований(m), написана(f), збережене(n)
+    — gender agreement'
 content_outline:
 - section: "Пасивні дієприкметники: значення (Passive participles: meaning)"
   words: 550

@@ -21,6 +21,14 @@ objectives:
   and relative positions using spatial prepositions"
 - "Learner can distinguish preposition-adverb pairs (навпроти хати vs
   сидіти навпроти) and use each correctly"
+dialogue_situations:
+- setting: 'Moving into a new офіс (m, office) in a Київський бізнес-центр (m) — arranging
+    furniture: Поставте шафу (f, cabinet) біля стіни (f, wall). Комп''ютер (m) — на
+    столі. Принтер (m) — під столом. Квітка (f, flower) — між вікнами (pl, windows).'
+  speakers:
+  - Офіс-менеджер
+  - Вантажники (movers)
+  motivation: 'Spatial prepositions: біля + gen, на + loc, під + inst, між + inst'
 content_outline:
 - section: "Простір навколо нас: нащо потрібні просторові прийменники? (Space around us: why spatial prepositions matter)"
   words: 500

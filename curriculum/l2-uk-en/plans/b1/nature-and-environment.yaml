@@ -20,6 +20,16 @@ objectives:
   стилі, identifying образні засоби (епітети, порівняння, метафори)"
 - "Learner can express opinions about environmental protection using
   аргументація structures and вставні слова from previous modules"
+dialogue_situations:
+- setting: 'Ecology lesson in a Карпатський біосферний заповідник (m, Carpathian biosphere
+    reserve) — field trip: На жаль, забруднення (n, pollution) зростає. Хоча ліси
+    (pl, forests) захищені, є загрози (pl, threats). Щоб зберегти природу (f, nature),
+    треба діяти. Безумовно, це наш обов''язок (m, duty).'
+  speakers:
+  - Еколог (ecologist)
+  - Студенти-біологи
+  motivation: 'Environment topic: забруднення(n), ліс(m), природа(f) + all B1 syntax
+    structures'
 content_outline:
 - section: "Погода та пори року (Weather and seasons)"
   words: 650

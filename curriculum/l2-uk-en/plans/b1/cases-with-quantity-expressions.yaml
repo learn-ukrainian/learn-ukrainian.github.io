@@ -20,6 +20,15 @@ objectives:
   двоє дітей, четверо хлопців, троє дверей"
 - "Learner can use quantity expressions in real contexts: prices, statistics,
   recipes, and descriptions of groups"
+dialogue_situations:
+- setting: 'Census worker visiting a village household — counting everything: Скільки
+    людей? П''ятеро. Двоє дітей (n, children). Кілька кімнат (f, rooms). Багато землі
+    (f, land). Мало худоби (f, livestock).'
+  speakers:
+  - Переписувач (census worker)
+  - Господар
+  motivation: 'Quantity expressions: п''ятеро людей, двоє дітей, кілька кімнат, багато
+    землі'
 content_outline:
 - section: "Узгодження кількісних числівників з іменниками (Agreement rules)"
   words: 800

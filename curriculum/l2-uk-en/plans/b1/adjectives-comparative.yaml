@@ -21,6 +21,15 @@ objectives:
 - "Learner can use comparative forms in natural Ukrainian sentences with
   constructions за + Зн.в. (вищий за мене) and від + Р.в. (вищий від мене),
   ніж (вищий, ніж я)"
+dialogue_situations:
+- setting: 'Two friends comparing apartments for rent in Київ — one on Хрещатик, one
+    in Оболонь: Ця квартира (f) більша, але дорожча. Та — тихіша і ближча до метро
+    (n). Кімнати (pl) ширші, але стелі (pl, ceilings) нижчі.'
+  speakers:
+  - Орендар (renter)
+  - Друг
+  motivation: 'Comparative adjectives: більший, дорожчий, тихіший, ближчий, ширший,
+    нижчий'
 content_outline:
 - section: "Що таке ступені порівняння? (What are degrees of comparison?)"
   words: 500

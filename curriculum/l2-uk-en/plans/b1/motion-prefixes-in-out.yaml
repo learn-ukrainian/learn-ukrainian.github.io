@@ -17,6 +17,14 @@ objectives:
 - Learner can use за-/ви- motion verbs with correct prepositions and cases (зайти в/до + Р.в./Зн.в., вийти з/із + Р.в.)
 - 'Learner can distinguish за- in motion verbs (entering/dropping by) from за- in non-motion verbs (beginning an action: заспівати,
   засміятися)'
+dialogue_situations:
+- setting: 'First day at a Львівський офіс (m, Lviv office) — navigating the building:
+    Зайдіть (enter) у кабінет (m, office room) директора. Вийдіть (exit) через бічний
+    вхід (m, side entrance). Вона заїхала (drove into) на парковку (f, parking lot).'
+  speakers:
+  - Секретар
+  - Новий працівник
+  motivation: 'In/out prefixes: зайти (за-), вийти (ви-), заїхати (за-), виїхати (ви-)'
 content_outline:
 - section: 'Входити i виходити: за- та ви- (Entering and exiting)'
   words: 550

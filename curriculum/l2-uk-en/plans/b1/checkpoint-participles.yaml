@@ -19,6 +19,15 @@ objectives:
 - "Learner can form and use both imperfective and perfective gerunds,
   choosing correctly based on temporal logic (одночасність vs різночасність)"
 - "Learner can apply all Phase 7 grammar in academic and literary contexts"
+dialogue_situations:
+- setting: 'Literary analysis seminar — students discuss a Шевченко poem using participles
+    and gerunds: Написаний Шевченком вірш (m, poem)... Читаючи ці рядки (pl, lines),
+    розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим.'
+  speakers:
+  - Викладач літератури
+  - Студенти
+  motivation: 'Consolidation: active/passive participles, imperfective/perfective
+    gerunds in literary analysis'
 content_outline:
 - section: "Вступ: як працювати з контрольною (Introduction)"
   words: 350

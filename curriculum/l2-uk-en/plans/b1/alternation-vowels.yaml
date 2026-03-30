@@ -22,6 +22,14 @@ objectives:
 - "Learner can apply these rules to spell unfamiliar words correctly,
   recognizing that the alternation is a defining feature of Ukrainian
   phonology that distinguishes it from other Slavic languages"
+dialogue_situations:
+- setting: 'A Ukrainian teacher explaining to students why certain words change their
+    vowels — using examples from a grocery list: Я купив коня (m, horse), але: коні
+    (pl). Вона живе в селі (n), але: село. Він поставив стіл (m), але: на столі.'
+  speakers:
+  - Вчитель
+  - Студенти
+  motivation: 'Vowel alternation о/е→і: кінь→коня, село→селі, стіл→столі'
 content_outline:
 - section: "Що таке чергування голосних? (What is vowel alternation?)"
   words: 550

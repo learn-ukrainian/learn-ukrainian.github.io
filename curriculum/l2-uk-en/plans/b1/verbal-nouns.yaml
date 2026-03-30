@@ -20,6 +20,16 @@ objectives:
   instead of verbose verb constructions (здійснювати перевірку → перевірка)"
 - "Learner can identify the register difference: віддієслівні іменники
   on -ння/-ття are bookish/formal, while безафіксні are neutral"
+dialogue_situations:
+- setting: 'At a Ukrainian IT company — discussing project processes: Тестування (n,
+    testing) триватиме два дні. Після написання (n, writing) коду — перевірка. Навчання
+    (n, training) нових працівників — наш пріоритет. Читання (n, reading) документації
+    обов''язкове.'
+  speakers:
+  - Менеджер проєкту
+  - Розробник (developer)
+  motivation: 'Verbal nouns: тестування, написання, навчання, читання — -ння/-ття
+    formations'
 content_outline:
 - section: "Що таке віддієслівні іменники? (What are verbal nouns?)"
   words: 550

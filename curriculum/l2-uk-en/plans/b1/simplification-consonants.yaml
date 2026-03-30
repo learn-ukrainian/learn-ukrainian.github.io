@@ -20,6 +20,14 @@ objectives:
   but NOT in writing: шістнадцять, зап'ястний, контрастний"
 - "Learner can distinguish simplification from чергування (alternation):
   simplification = consonant DROPS; alternation = consonant CHANGES"
+dialogue_situations:
+- setting: 'Dictation exercise in a Дніпро classroom — the teacher reads words aloud
+    and students discuss which letters disappear: серце (not серДце), тижневий (not
+    тижДневий), чесний (not чесТний), щасливий (not щасТливий).'
+  speakers:
+  - Вчитель
+  - Студенти
+  motivation: 'Consonant simplification: серДце→серце, чесТний→чесний, щасТливий→щасливий'
 content_outline:
 - section: "Що таке спрощення? (What is consonant simplification?)"
   words: 600

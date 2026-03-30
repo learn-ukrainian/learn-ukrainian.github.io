@@ -20,6 +20,15 @@ objectives:
   III відміна nouns (ніччю, радістю), and pluralia tantum nouns (грошей, воріт)"
 - "Learner can use medical vocabulary with correct case government and
   morphophonemic awareness (скаржитися на біль, лікуватися від застуди)"
+dialogue_situations:
+- setting: 'Grammar quiz show on Ukrainian television — contestants answer questions
+    about alternations and noun declensions: Як буде ''стіл'' у місцевому? На столі!
+    Утворіть множину від ''око''. Очі! А ''сіль'' — якого роду?'
+  speakers:
+  - Ведучий вікторини (quiz host)
+  - Учасники
+  motivation: 'Consolidation: vowel/consonant alternation, noun subclasses, pluralia
+    tantum'
 content_outline:
 - section: "Огляд чергувань (Alternations review)"
   words: 650

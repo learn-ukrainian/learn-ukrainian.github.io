@@ -20,6 +20,14 @@ objectives:
   after приголосний → би) and understands it can follow any повнозначне слово"
 - "Learner can use real conditionals in practical communication: making plans,
   expressing conditions for future actions, polite suggestions"
+dialogue_situations:
+- setting: 'Friends planning a hiking trip to Карпати (pl, Carpathians) — weighing
+    options: Якщо погода буде гарна, піднімемося на Говерлу (f). Якщо підемо рано,
+    встигнемо до обіду. Якщо дощитиме, залишимося в колибі (f, mountain hut).'
+  speakers:
+  - Олег
+  - Наталя
+  motivation: 'Real conditionals: якщо + future with Говерла(f), колиба(f), Карпати(pl)'
 content_outline:
 - section: "Що таке спосіб дієслова? (What is verb mood?)"
   words: 550

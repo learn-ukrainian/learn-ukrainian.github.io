@@ -20,6 +20,13 @@ objectives:
   (гарніший vs кращий — both exist but differ in nuance)"
 - "Learner can recognize and use suppletive adverb comparatives
   (добре-краще, погано-гірше) that parallel the adjective forms"
+dialogue_situations:
+- setting: 'Family debate about where to celebrate Новий рік (m, New Year) — comparing
+    options emotionally: Карпати — кращі (better) за Одесу взимку! Ні, Одеса — найкраще
+    (best) місце! Цей готель гірший (worse) за той. Минулий рік був найгіршим.'
+  speakers:
+  - Родина (сперечається)
+  motivation: 'Suppletive forms: гарний→кращий→найкращий, поганий→гірший→найгірший'
 content_outline:
 - section: "Що таке суплетивні форми? (What are suppletive forms?)"
   words: 500

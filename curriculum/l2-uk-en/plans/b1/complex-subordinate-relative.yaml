@@ -19,6 +19,15 @@ objectives:
 - "Learner can connect означальні речення to дієприкметниковий зворот (M59):
   both express attributes, but the clause is more natural in speech"
 - "Learner can correctly punctuate означальні речення (always commas)"
+dialogue_situations:
+- setting: 'Walking through Київський ботанічний сад (m, botanical garden) — pointing
+    out plants: Дерево (n, tree), яке росте тут уже сто років. Квітка (f), яку подарували
+    з Японії. Місце (n), де можна відпочити.'
+  speakers:
+  - Ботанік (botanist)
+  - Студент
+  motivation: 'Relative clauses: який/яка/яке, що, де, куди with дерево(n), квітка(f),
+    місце(n)'
 content_outline:
 - section: "Означальні підрядні речення (Attributive subordinate clauses)"
   words: 650

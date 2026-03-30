@@ -20,6 +20,13 @@ objectives:
   по-друге, отже) and express varying degrees of certainty"
 - "Learner can write a short есе-міркування (200+ words) on a given topic,
   presenting a thesis, supporting arguments, and a conclusion"
+dialogue_situations:
+- setting: 'Student council debate at a Харківський ліцей — arguing about school uniform:
+    По-перше, форма обмежує свободу (f, freedom). На мою думку, це застаріло. Навпаки,
+    форма виховує дисципліну (f, discipline). Хоча аргументи (pl) сильні, я не погоджуюся.'
+  speakers:
+  - Учасники дебатів (за і проти)
+  motivation: 'Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся'
 content_outline:
 - section: "Що таке аргументація? (What is argumentation?)"
   words: 600

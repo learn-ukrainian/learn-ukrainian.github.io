@@ -21,6 +21,14 @@ objectives:
   протікає кран, не працює опалення, зламалася пральна машина"
 - "Learner can use Phase 6 grammar naturally in housing contexts:
   genitive for addresses, dative for tenants, instrumental for features"
+dialogue_situations:
+- setting: 'Renting a квартира (f, apartment) in Львів — viewing and negotiating:
+    Оренда (f, rent) — вісім тисяч на місяць. Комунальні (pl, utilities) включені?
+    Меблі (pl, furniture) є? Коли можна заїхати? Договір (m, contract) — на рік.'
+  speakers:
+  - Орендар (tenant)
+  - Власник (landlord)
+  motivation: 'Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)'
 content_outline:
 - section: "Опис житла (Describing housing)"
   words: 700

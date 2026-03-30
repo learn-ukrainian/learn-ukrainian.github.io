@@ -21,6 +21,15 @@ objectives:
   здоров'я-здоровий (word formation)"
 - "Learner can use correct case government with medical verbs:
   скаржитися на (+ Зн.), хворіти на (+ Зн.), лікуватися від (+ Р.)"
+dialogue_situations:
+- setting: 'At a поліклініка (f, polyclinic) in Київ — detailed medical consultation:
+    У мене болить голова (f) вже тиждень. Температура тіла (n, body) — 37.5. Виписую
+    вам рецепт (m, prescription) на ліки (pl, medicine). Зверніться до хірурга (m,
+    surgeon).'
+  speakers:
+  - Пацієнт
+  - Терапевт (GP)
+  motivation: 'Medical vocabulary + cases: болить голова(f), рецепт на ліки, до хірурга(gen)'
 content_outline:
 - section: "Здоров'я і самопочуття (Health and well-being)"
   words: 650

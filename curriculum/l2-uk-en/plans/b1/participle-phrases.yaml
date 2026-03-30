@@ -20,6 +20,15 @@ objectives:
   Ukrainian text while avoiding overuse that sounds unnatural"
 - "Learner can correctly punctuate sentences with multiple participle
   phrases and distinguish them from other відокремлені означення"
+dialogue_situations:
+- setting: 'News report about a flood in Закарпаття — formal journalistic style: Річка
+    (f), що вийшла з берегів, затопила поля. Будинки, пошкоджені повінню (f, flood),
+    потребують ремонту (m, repair). Рятувальники, викликані вранці, прибули за годину.'
+  speakers:
+  - Журналіст (reporter)
+  - Рятувальник (rescuer)
+  motivation: 'Participle phrases: що вийшла з берегів, пошкоджені повінню, викликані
+    вранці'
 content_outline:
 - section: "Що таке дієприкметниковий зворот? (What is a participle phrase?)"
   words: 650

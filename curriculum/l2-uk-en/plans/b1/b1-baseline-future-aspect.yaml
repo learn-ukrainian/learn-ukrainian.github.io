@@ -21,6 +21,15 @@ objectives:
   including irregular patterns"
 - "Learner can use future tense and aspect together in connected speech
   to describe plans, predictions, and intentions"
+dialogue_situations:
+- setting: 'Planning committee at a Харківський університет (m, Kharkiv university)
+    — organizing a charity concert: Ми будемо збирати (impf) кошти (pl, funds). Оголосимо
+    (pf) дату завтра. Хто напише (pf) афішу (f, poster)?'
+  speakers:
+  - Голова комітету
+  - Волонтери
+  motivation: 'Future tense + aspect: analytic (будемо збирати) vs synthetic (оголосимо,
+    напише)'
 content_outline:
 - section: "Що таке вид дієслова? (What is verbal aspect?)"
   words: 650

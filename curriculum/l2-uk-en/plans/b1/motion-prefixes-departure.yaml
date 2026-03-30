@@ -16,6 +16,14 @@ objectives:
   відійти, від'їхати, відбігти, віднести, відвести, відвезти)
 - Learner can use departure verbs with correct prepositions and cases (піти з + Р.в., відійти від + Р.в.)
 - Learner can distinguish пі-/по- (starting a journey) from від- (creating distance from a point) in spoken and written Ukrainian
+dialogue_situations:
+- setting: 'Farewell scene at Київський вокзал (m, Kyiv train station) — seeing off
+    friends: Поїзд відходить (departs) о шостій. Вони вже пішли (left) на перон (m,
+    platform). Ми від''їжджаємо (driving away) завтра вранці.'
+  speakers:
+  - Проводжаючі (those seeing off)
+  - Мандрівники (travelers)
+  motivation: 'Departure prefixes: піти (пі-), від''їхати (від-), відходити (від-)'
 content_outline:
 - section: Від прибуття до відправлення (From arrival to departure)
   words: 550

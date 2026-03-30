@@ -20,6 +20,16 @@ objectives:
   choosing between gerund and subordinate clause based on register"
 - "Learner can form and correctly use reflexive perfective gerunds
   (повернувшись, дізнавшись, зустрівшись)"
+dialogue_situations:
+- setting: 'Detective recounting events at a поліцейський відділок (m, police station)
+    — sequence of completed actions: Увійшовши (having entered) в кімнату, я побачив
+    сліди (pl, traces). Оглянувши (having examined) місце, я зателефонував. Дізнавшись
+    (having learned) правду, ми діяли.'
+  speakers:
+  - Детектив
+  - Колега
+  motivation: 'Perfective gerunds: увійшовши, оглянувши, дізнавшись — completed prior
+    actions'
 content_outline:
 - section: "Різночасність: дія до основної (Temporal sequence: action before the main one)"
   words: 650

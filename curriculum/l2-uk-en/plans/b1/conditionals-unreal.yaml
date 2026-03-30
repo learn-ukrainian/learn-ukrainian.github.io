@@ -18,6 +18,14 @@ objectives:
   I didn''t help)'
 - Learner can use unreal conditionals for dreams, regrets, and hypothetical reasoning in both spoken and written Ukrainian
 - Learner can use the conjunction якби and its variants (коли б, як би) correctly, including word order and particle placement
+dialogue_situations:
+- setting: 'Late-night conversation at a Львівська кнайпа (f, Lviv pub) — dreaming
+    aloud: Якби я виграв лотерею, купив би хату (f, house) в Карпатах. Якби я знав
+    раніше, я б вивчив українську ще в школі. Якби ти був поетом, писав би вірші (pl,
+    poems)?'
+  speakers:
+  - Друзі за столом
+  motivation: 'Unreal conditionals: якби + past + би with хата(f), школа(f), вірші(pl)'
 content_outline:
 - section: 'Реальне vs нереальне: два типи умов (Real vs unreal: two condition types)'
   words: 700

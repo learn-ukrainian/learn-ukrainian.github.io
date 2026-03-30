@@ -16,6 +16,15 @@ objectives:
 - Learner can distinguish летіти/літати and пливти/плавати as односпрямовані/різноспрямовані pairs and choose correctly in
   context
 - Learner can use air and water motion verbs with appropriate vocabulary (аеропорт, літак, рейс, порт, корабель, човен, берег)
+dialogue_situations:
+- setting: 'At the Чорне море (n, Black Sea) near Одеса — a summer day at the beach:
+    Чайки (pl, seagulls) летять над морем. Діти пливуть (swimming) до буйка (m, buoy).
+    Літак (m, plane) пролетів над нами. Човен (m, boat) попливе на острів (m, island).'
+  speakers:
+  - Батьки
+  - Діти
+  motivation: 'Fly/swim verbs: летіти/літати, пливти/плавати with море(n), літак(m),
+    човен(m)'
 content_outline:
 - section: 'У повітрі та на воді: два особливі домени руху (In air and on water: two special motion domains)'
   words: 550

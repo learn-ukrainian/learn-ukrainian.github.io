@@ -20,6 +20,14 @@ objectives:
   (стороже, товаришу, слухачу) and explain the pattern"
 - "Learner can distinguish between мішана група nouns with animate vs
   inanimate знахідний відмінок (бачу сторожа vs бачу ніж)"
+dialogue_situations:
+- setting: 'At a museum of Ukrainian folk art — the guide points to objects ending
+    in hissing sounds: Подивіться на цей ніж (m, knife). А цей ключ (m, key) — старовинний.
+    Тут є товариш (m, comrade) директора. Бачите плащ (m, raincoat)?'
+  speakers:
+  - Екскурсовод (guide)
+  - Відвідувачі
+  motivation: 'Hissing consonant nouns: ніж, ключ, товариш, плащ — declension patterns'
 content_outline:
 - section: "Що таке мішана група? (What is the mixed group?)"
   words: 550

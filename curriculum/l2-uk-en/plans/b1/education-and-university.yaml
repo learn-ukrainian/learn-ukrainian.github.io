@@ -20,6 +20,16 @@ objectives:
   schedules, exams, and study plans at B1 complexity"
 - "Learner can write a short academic paragraph using formal register
   with participle phrases and gerund constructions"
+dialogue_situations:
+- setting: 'First week at Київський національний університет — navigating the system:
+    Де деканат (m, dean''s office)? Записавшись на курс, отримаєш залікову книжку
+    (f, grade book). Стипендія (f, scholarship) виплачується щомісяця. Захистивши
+    курсову (f, coursework), здаси сесію (f, exam period).'
+  speakers:
+  - Старшокурсник (senior student)
+  - Першокурсник
+  motivation: 'Education integration: gerunds + participles + passive in university
+    context'
 content_outline:
 - section: "Система освіти в Україні (Education system in Ukraine)"
   words: 700

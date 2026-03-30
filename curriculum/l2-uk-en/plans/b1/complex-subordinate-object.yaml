@@ -19,6 +19,15 @@ objectives:
 - "Learner can distinguish сполучник from сполучне слово: що (conjunction,
   no syntactic role) vs що (relative pronoun, is a member of the clause)"
 - "Learner can place commas correctly before the subordinate conjunction"
+dialogue_situations:
+- setting: 'Phone call between mother and university student in Одесі — reporting
+    news: Кажу тобі, що все добре. Знаю, що ти хвилюєшся. Думаю, що здам іспит (m).
+    Не вірю, що вже зима (f).'
+  speakers:
+  - Мама
+  - Студент
+  motivation: 'Object clauses: що + indicative in reported speech: кажу що, знаю що,
+    думаю що'
 content_outline:
 - section: "Складнопідрядне речення: вступ (Complex sentence: introduction)"
   words: 600

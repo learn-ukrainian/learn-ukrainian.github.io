@@ -20,6 +20,16 @@ objectives:
   аргументація (M86) in media-related discussions"
 - "Learner can write a short summary or response to a Ukrainian news article
   using appropriate публіцистичний стиль language"
+dialogue_situations:
+- setting: 'Newsroom at a Київська телестудія (f, Kyiv TV studio) — editing the evening
+    news: Журналіст повідомив, що рятувальники прибули вчасно. Незважаючи на складні
+    умови, евакуацію (f, evacuation) завершено. Як стало відомо, уряд (m, government)
+    виділив кошти (pl, funds).'
+  speakers:
+  - Головний редактор
+  - Журналіст
+  motivation: 'Media/journalism: reported speech, passive voice, formal register in
+    news'
 content_outline:
 - section: "Що таке медіа? (What is media?)"
   words: 550

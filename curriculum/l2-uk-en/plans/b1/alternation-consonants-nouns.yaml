@@ -20,6 +20,14 @@ objectives:
   triggers which alternation type (first vs. second palatalization)"
 - "Learner can apply consonant alternation rules to unfamiliar
   nouns and proper names, avoiding common errors in case forms"
+dialogue_situations:
+- setting: 'At a Львівська книгарня (f, Lviv bookshop) — discussing authors and book
+    titles, noticing consonant changes: книга→у книжці (г→ж), рука→у руці (к→ц), друг→друже
+    (г→ж, vocative), вухо→у вусі (х→с).'
+  speakers:
+  - Книгар (bookseller)
+  - Покупець
+  motivation: 'Consonant alternation in nouns: г→ж, к→ц, х→с in locative and vocative'
 content_outline:
 - section: "Що таке чергування приголосних? (What is consonant alternation?)"
   words: 500

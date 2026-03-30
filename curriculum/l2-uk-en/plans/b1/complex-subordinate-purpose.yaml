@@ -20,6 +20,15 @@ objectives:
 - "Learner can connect purpose clauses to прийменники мети from M51
   (для, задля, заради) for stylistic variety"
 - "Learner can use purpose clauses naturally in both spoken and written Ukrainian"
+dialogue_situations:
+- setting: 'Parent helping a teenager prepare for ЗНО (n, Ukrainian standardized test)
+    — purpose clauses: Вчи, щоб скласти іспит. Я записала тебе на курси (pl, courses),
+    аби ти підготувався. Для того щоб вступити (enroll), потрібен високий бал (m,
+    score).'
+  speakers:
+  - Мама
+  - Випускник (graduate)
+  motivation: 'Purpose clauses: щоб, аби, для того щоб — motivation and goal structures'
 content_outline:
 - section: "Підрядні обставинні мети (Purpose subordinate clauses)"
   words: 600

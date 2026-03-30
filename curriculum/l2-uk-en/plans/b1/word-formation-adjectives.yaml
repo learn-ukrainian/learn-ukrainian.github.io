@@ -21,6 +21,16 @@ objectives:
   (нога-ніжка-ніжний, козак-козацький, Париж-паризький)"
 - "Learner can distinguish якісні from відносні прикметники formed by the
   same suffix and understand how context shifts meaning"
+dialogue_situations:
+- setting: 'Art critique at a Київська галерея (f, Kyiv gallery) — describing artwork:
+    Ця картина (f) — лісова (from ліс, forest). Ось міський (from місто) пейзаж (m,
+    landscape). Синюватий (bluish) колір (m, color). Золотистий (golden) відтінок
+    (m, shade).'
+  speakers:
+  - Мистецтвознавець (art critic)
+  - Відвідувач
+  motivation: 'Adjective formation: лісовий (-ов-), міський (-ськ-), синюватий (-уват-),
+    золотистий (-ист-)'
 content_outline:
 - section: "Суфіксальне творення прикметників (Suffixal formation)"
   words: 900

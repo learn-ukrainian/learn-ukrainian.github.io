@@ -18,6 +18,15 @@ objectives:
   how вид affects which часові форми are available"
 - "Learner can narrate past events and describe present routines using
   appropriate tense and aspect choices in connected Ukrainian discourse"
+dialogue_situations:
+- setting: 'Two friends at a Київська кав''ярня (f, Kyiv café) catching up after summer
+    — one stayed in Kyiv, the other traveled: Я працював (past) у видавництві (n,
+    publishing house). А зараз що робиш (present)? Пишу статтю (f, article) для журналу
+    (m, magazine).'
+  speakers:
+  - Олексій
+  - Дарина
+  motivation: 'Present vs past tense review in natural narration: працювати/писати'
 content_outline:
 - section: "Теперішній час: дієвідміни (Present tense: conjugation classes)"
   words: 800

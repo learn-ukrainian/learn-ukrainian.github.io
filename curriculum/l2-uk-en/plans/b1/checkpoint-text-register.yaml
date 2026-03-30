@@ -20,6 +20,15 @@ objectives:
   distinguishing them from sentence members"
 - "Learner can read and analyze B1-level Ukrainian texts (literary and
   non-literary), identifying стиль, художні засоби, and key vocabulary"
+dialogue_situations:
+- setting: 'Writing workshop — students rewrite the same message in three registers:
+    Formal: ''Шановний пане директоре, прошу надати...'' Neutral: ''Добрий день, я
+    хотів би попросити...'' Informal: ''Привіт! Слухай, мені треба...'''
+  speakers:
+  - Викладач стилістики (stylistics teacher)
+  - Студенти
+  motivation: 'Consolidation: formal/informal register, abbreviations, double negation,
+    introductory words'
 content_outline:
 - section: "Вступ: як працювати з контрольною (Introduction)"
   words: 300

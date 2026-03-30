@@ -23,6 +23,14 @@ objectives:
 - "Learner can conjugate common II дієвідміна verbs correctly
   across all persons, recognizing that alternation occurs ONLY
   in the 1st person singular"
+dialogue_situations:
+- setting: 'Cooking competition on Ukrainian TV — the host narrates actions with consonant
+    changes: Я ходжу (д→дж) по кухні. Він просить (с→с), але: прошу (с→ш). Вона возить
+    (з→з), але: я вожу (з→ж).'
+  speakers:
+  - Ведучий (host)
+  - Учасники змагання
+  motivation: 'Consonant alternation in verbs: ходити→ходжу, просити→прошу, возити→вожу'
 content_outline:
 - section: "Від іменників до дієслів (From nouns to verbs)"
   words: 500

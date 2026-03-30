@@ -771,6 +771,679 @@ A2_SITUATIONS = {
 
 
 
+B1_SITUATIONS: dict[str, list[dict]] = {
+    "metalanguage-phonetics": [
+        {"setting": "University linguistics lecture hall in Kyiv — a student asks the professor "
+         "about Ukrainian phonetics terminology: голосний (m, vowel), приголосний (m, consonant), "
+         "наголос (m, stress), склад (m, syllable), звук (m, sound), буква (f, letter). "
+         "They compare Ukrainian and English sound systems on the дошка (f, board).",
+         "speakers": ["Професор", "Студент-першокурсник (first-year student)"],
+         "motivation": "Phonetics terminology: голосний, приголосний, наголос, склад in academic register"},
+    ],
+    "metalanguage-morphology": [
+        {"setting": "Study group at a Lviv university library — students quiz each other on "
+         "morphology terms: корінь (m, root), префікс (m, prefix), суфікс (m, suffix), "
+         "закінчення (n, ending), основа (f, stem). They analyze words like переказувати, написання.",
+         "speakers": ["Студентка Марина", "Студент Богдан"],
+         "motivation": "Morphology terms: корінь, префікс, суфікс, закінчення — word structure analysis"},
+    ],
+    "metalanguage-syntax-cases": [
+        {"setting": "Ukrainian grammar tutoring session — the tutor explains sentence structure "
+         "using підмет (m, subject), присудок (m, predicate), додаток (m, object), "
+         "означення (n, attribute), обставина (f, adverbial). They parse a newspaper sentence together.",
+         "speakers": ["Репетитор (tutor)", "Студент-іноземець"],
+         "motivation": "Syntax terminology: підмет, присудок, додаток; case names: називний, родовий, давальний"},
+    ],
+    "b1-baseline-past-present": [
+        {"setting": "Two friends at a Київська кав'ярня (f, Kyiv café) catching up after summer — "
+         "one stayed in Kyiv, the other traveled: Я працював (past) у видавництві (n, publishing house). "
+         "А зараз що робиш (present)? Пишу статтю (f, article) для журналу (m, magazine).",
+         "speakers": ["Олексій", "Дарина"],
+         "motivation": "Present vs past tense review in natural narration: працювати/писати"},
+    ],
+    "b1-baseline-future-aspect": [
+        {"setting": "Planning committee at a Харківський університет (m, Kharkiv university) — "
+         "organizing a charity concert: Ми будемо збирати (impf) кошти (pl, funds). "
+         "Оголосимо (pf) дату завтра. Хто напише (pf) афішу (f, poster)?",
+         "speakers": ["Голова комітету", "Волонтери"],
+         "motivation": "Future tense + aspect: analytic (будемо збирати) vs synthetic (оголосимо, напише)"},
+    ],
+    "people-and-relationships": [
+        {"setting": "Wedding reception in Вінниця — introducing relatives to the partner's family: "
+         "Це мій старший брат (m) — розумний і надійний. А це моя молодша сестра (f) — "
+         "веселіша за всіх! Познайомтеся з нашою бабусею (f) — найдобрішою жінкою.",
+         "speakers": ["Наречена", "Наречений", "Родичі"],
+         "motivation": "Adjective agreement: старший брат(m), молодша сестра(f), найдобріша жінка(f)"},
+    ],
+    "checkpoint-b1-foundation": [
+        {"setting": "Oral exam at a Ukrainian language course — the examiner asks about "
+         "your background, daily life, and plans using all tenses and basic grammar terminology: "
+         "Розкажіть про себе. Що ви робили минулого тижня? Які ваші плани?",
+         "speakers": ["Екзаменатор", "Студент"],
+         "motivation": "Consolidation: past/present/future, aspect, adjective agreement, metalanguage"},
+    ],
+    "alternation-vowels": [
+        {"setting": "A Ukrainian teacher explaining to students why certain words change their vowels — "
+         "using examples from a grocery list: Я купив коня (m, horse), але: коні (pl). "
+         "Вона живе в селі (n), але: село. Він поставив стіл (m), але: на столі.",
+         "speakers": ["Вчитель", "Студенти"],
+         "motivation": "Vowel alternation о/е→і: кінь→коня, село→селі, стіл→столі"},
+    ],
+    "alternation-consonants-nouns": [
+        {"setting": "At a Львівська книгарня (f, Lviv bookshop) — discussing authors and book titles, "
+         "noticing consonant changes: книга→у книжці (г→ж), рука→у руці (к→ц), "
+         "друг→друже (г→ж, vocative), вухо→у вусі (х→с).",
+         "speakers": ["Книгар (bookseller)", "Покупець"],
+         "motivation": "Consonant alternation in nouns: г→ж, к→ц, х→с in locative and vocative"},
+    ],
+    "alternation-consonants-verbs": [
+        {"setting": "Cooking competition on Ukrainian TV — the host narrates actions with "
+         "consonant changes: Я ходжу (д→дж) по кухні. Він просить (с→с), але: прошу (с→ш). "
+         "Вона возить (з→з), але: я вожу (з→ж).",
+         "speakers": ["Ведучий (host)", "Учасники змагання"],
+         "motivation": "Consonant alternation in verbs: ходити→ходжу, просити→прошу, возити→вожу"},
+    ],
+    "simplification-consonants": [
+        {"setting": "Dictation exercise in a Дніпро classroom — the teacher reads words aloud "
+         "and students discuss which letters disappear: серце (not серДце), тижневий (not тижДневий), "
+         "чесний (not чесТний), щасливий (not щасТливий).",
+         "speakers": ["Вчитель", "Студенти"],
+         "motivation": "Consonant simplification: серДце→серце, чесТний→чесний, щасТливий→щасливий"},
+    ],
+    "noun-subclasses-masculine": [
+        {"setting": "Visit to a село (n, village) in Полтавщина — meeting local craftspeople: "
+         "Ось наш столяр (m, carpenter). А де бондар (m, cooper)? "
+         "Цей киянин (m, Kyiv resident) приїхав учитися. А полтавчанин (m) — наш майстер.",
+         "speakers": ["Сільський голова (village head)", "Гість"],
+         "motivation": "Masculine noun subclasses: столяр, бондар (-ар), киянин, полтавчанин (-ин)"},
+    ],
+    "noun-subclasses-hissing": [
+        {"setting": "At a museum of Ukrainian folk art — the guide points to objects ending in hissing sounds: "
+         "Подивіться на цей ніж (m, knife). А цей ключ (m, key) — старовинний. "
+         "Тут є товариш (m, comrade) директора. Бачите плащ (m, raincoat)?",
+         "speakers": ["Екскурсовод (guide)", "Відвідувачі"],
+         "motivation": "Hissing consonant nouns: ніж, ключ, товариш, плащ — declension patterns"},
+    ],
+    "noun-subclasses-feminine": [
+        {"setting": "At a нічна зміна (f, night shift) in a Харківська лікарня (f, Kharkiv hospital) — "
+         "discussing equipment and conditions: Де сіль (f, salt)? Принеси піч (f, oven) "
+         "для стерилізації. Ця подорож (f, journey) до лікарні була довгою. Яка тиша (f, silence)!",
+         "speakers": ["Медсестра", "Лікар"],
+         "motivation": "III declension feminine: сіль, піч, подорож, тиша — zero ending nouns"},
+    ],
+    "pluralia-tantum": [
+        {"setting": "Packing for a move from Одеса to Київ — labeling boxes with plural-only items: "
+         "Де мої окуляри (pl, glasses)? Ножиці (pl, scissors) у тій коробці. "
+         "Гроші (pl, money) в конверті. Двері (pl, door) зачинені.",
+         "speakers": ["Сусід, що допомагає", "Мешканець"],
+         "motivation": "Pluralia tantum: окуляри, ножиці, гроші, двері — no singular form"},
+    ],
+    "health-at-the-doctor": [
+        {"setting": "At a поліклініка (f, polyclinic) in Київ — detailed medical consultation: "
+         "У мене болить голова (f) вже тиждень. Температура тіла (n, body) — 37.5. "
+         "Виписую вам рецепт (m, prescription) на ліки (pl, medicine). "
+         "Зверніться до хірурга (m, surgeon).",
+         "speakers": ["Пацієнт", "Терапевт (GP)"],
+         "motivation": "Medical vocabulary + cases: болить голова(f), рецепт на ліки, до хірурга(gen)"},
+    ],
+    "checkpoint-morphophonemics": [
+        {"setting": "Grammar quiz show on Ukrainian television — contestants answer questions about "
+         "alternations and noun declensions: Як буде 'стіл' у місцевому? На столі! "
+         "Утворіть множину від 'око'. Очі! А 'сіль' — якого роду?",
+         "speakers": ["Ведучий вікторини (quiz host)", "Учасники"],
+         "motivation": "Consolidation: vowel/consonant alternation, noun subclasses, pluralia tantum"},
+    ],
+    "conditionals-real": [
+        {"setting": "Friends planning a hiking trip to Карпати (pl, Carpathians) — weighing options: "
+         "Якщо погода буде гарна, піднімемося на Говерлу (f). "
+         "Якщо підемо рано, встигнемо до обіду. Якщо дощитиме, залишимося в колибі (f, mountain hut).",
+         "speakers": ["Олег", "Наталя"],
+         "motivation": "Real conditionals: якщо + future with Говерла(f), колиба(f), Карпати(pl)"},
+    ],
+    "conditionals-unreal": [
+        {"setting": "Late-night conversation at a Львівська кнайпа (f, Lviv pub) — dreaming aloud: "
+         "Якби я виграв лотерею, купив би хату (f, house) в Карпатах. "
+         "Якби я знав раніше, я б вивчив українську ще в школі. "
+         "Якби ти був поетом, писав би вірші (pl, poems)?",
+         "speakers": ["Друзі за столом"],
+         "motivation": "Unreal conditionals: якби + past + би with хата(f), школа(f), вірші(pl)"},
+    ],
+    "imperative-nuances": [
+        {"setting": "Rehearsal for an amateur theatre play in Чернівці — the director gives commands "
+         "to actors of various groups: Іване, вийди на сцену (f, stage)! "
+         "Ходімо далі! Нехай публіка (f, audience) зачекає! Будьте уважні!",
+         "speakers": ["Режисер (director)", "Актори"],
+         "motivation": "Full imperative: вийди (2sg), ходімо (1pl), нехай зачекає (3sg), будьте (2pl)"},
+    ],
+    "verbal-nouns": [
+        {"setting": "At a Ukrainian IT company — discussing project processes: "
+         "Тестування (n, testing) триватиме два дні. Після написання (n, writing) коду — "
+         "перевірка. Навчання (n, training) нових працівників — наш пріоритет. "
+         "Читання (n, reading) документації обов'язкове.",
+         "speakers": ["Менеджер проєкту", "Розробник (developer)"],
+         "motivation": "Verbal nouns: тестування, написання, навчання, читання — -ння/-ття formations"},
+    ],
+    "reflexive-verbs-nuances": [
+        {"setting": "Morning routine chaos in a студентський гуртожиток (m, student dormitory) in Київ — "
+         "everyone getting ready at once: Я вмиваюся! Він голиться (shaves). "
+         "Ми збираємося (getting ready). Вони сміються (laughing). Двері не зачиняються!",
+         "speakers": ["Сусіди по кімнаті (roommates)"],
+         "motivation": "Reflexive verbs: вмиватися, голитися, збиратися, сміятися, зачинятися"},
+    ],
+    "passive-voice-intro": [
+        {"setting": "Guided tour of a newly renovated Палац культури (m, Palace of Culture) in Дніпро — "
+         "describing what was done: Цей зал (m, hall) був побудований у 1960-х. "
+         "Стіни (pl, walls) були пофарбовані минулого місяця. "
+         "Вхід (m, entrance) буде відкрито для публіки завтра.",
+         "speakers": ["Архітектор", "Журналіст"],
+         "motivation": "Passive voice: був побудований, були пофарбовані, буде відкрито"},
+    ],
+    "verb-formation-suffixes": [
+        {"setting": "Ukrainian language course in Одеса — the teacher shows how verbs are formed "
+         "from other parts of speech: білий→біліти (to become white), "
+         "робота→робітничати, крик→кричати, зима→зимувати. "
+         "Students create new verbs from given words.",
+         "speakers": ["Викладач", "Слухачі курсу (course attendees)"],
+         "motivation": "Verb formation: біліти (-іти), кричати (-ати), зимувати (-увати) from nouns/adjectives"},
+    ],
+    "daily-life-and-routines": [
+        {"setting": "Ukrainian vlog — a Kyiv resident films a 'day in my life' video: "
+         "Прокидаюся о сьомій. Снідаю кашу (f, porridge) з ягодами (pl). "
+         "Їду на роботу трамваєм (m, tram). Обідаю в їдальні (f, canteen). "
+         "Ввечері гуляю набережною (f, embankment) Дніпра.",
+         "speakers": ["Влогер (vlogger, narrating)", "Колеги / перехожі"],
+         "motivation": "Daily life integration: reflexives, instrumental, temporal expressions"},
+    ],
+    "checkpoint-verbs": [
+        {"setting": "Job interview at a Київська IT-компанія — demonstrating full verb mastery: "
+         "Якби я мав більше часу, вивчив би Python. Тестування проводиться щодня. "
+         "Напишіть тестове завдання (n, test task). Програма була розроблена нашою командою.",
+         "speakers": ["HR-менеджер", "Кандидат"],
+         "motivation": "Consolidation: conditionals, imperatives, verbal nouns, reflexives, passive"},
+    ],
+    "prepositions-spatial-review": [
+        {"setting": "Moving into a new офіс (m, office) in a Київський бізнес-центр (m) — "
+         "arranging furniture: Поставте шафу (f, cabinet) біля стіни (f, wall). "
+         "Комп'ютер (m) — на столі. Принтер (m) — під столом. "
+         "Квітка (f, flower) — між вікнами (pl, windows).",
+         "speakers": ["Офіс-менеджер", "Вантажники (movers)"],
+         "motivation": "Spatial prepositions: біля + gen, на + loc, під + inst, між + inst"},
+    ],
+    "motion-base-review": [
+        {"setting": "Weekend morning in Київ — a couple decides how to get around: "
+         "Я йду (on foot) до ринку (m, market). Ти їдеш (by transport) на Поділ? "
+         "Діти біжать (running) у парк (m). А бабуся їде трамваєм.",
+         "speakers": ["Чоловік", "Дружина"],
+         "motivation": "Motion verb pairs: іти/ходити, їхати/їздити, бігти/бігати"},
+    ],
+    "motion-prefixes-arrival": [
+        {"setting": "Visitors arriving at a сільська садиба (f, rural estate) in Закарпаття — "
+         "everyone arrives differently: Ми прийшли (arrived on foot) з вокзалу. "
+         "Тато доїхав (reached by car) за дві години. "
+         "Поїзд прибув (arrived, formal) о десятій.",
+         "speakers": ["Господарі садиби", "Гості"],
+         "motivation": "Arrival prefixes: прийти (при-), доїхати (до-), прибути (при-)"},
+    ],
+    "motion-prefixes-departure": [
+        {"setting": "Farewell scene at Київський вокзал (m, Kyiv train station) — seeing off friends: "
+         "Поїзд відходить (departs) о шостій. Вони вже пішли (left) на перон (m, platform). "
+         "Ми від'їжджаємо (driving away) завтра вранці.",
+         "speakers": ["Проводжаючі (those seeing off)", "Мандрівники (travelers)"],
+         "motivation": "Departure prefixes: піти (пі-), від'їхати (від-), відходити (від-)"},
+    ],
+    "motion-prefixes-in-out": [
+        {"setting": "First day at a Львівський офіс (m, Lviv office) — navigating the building: "
+         "Зайдіть (enter) у кабінет (m, office room) директора. "
+         "Вийдіть (exit) через бічний вхід (m, side entrance). "
+         "Вона заїхала (drove into) на парковку (f, parking lot).",
+         "speakers": ["Секретар", "Новий працівник"],
+         "motivation": "In/out prefixes: зайти (за-), вийти (ви-), заїхати (за-), виїхати (ви-)"},
+    ],
+    "motion-prefixes-transit": [
+        {"setting": "Driving lesson in Харків — instructor teaches route navigation: "
+         "Перейдіть (cross) дорогу (f, road) на зеленому. "
+         "Проїдьте (pass through) два перехрестя (n, intersection). "
+         "Переїдьте (cross) міст (m, bridge) і зверніть ліворуч.",
+         "speakers": ["Інструктор з водіння", "Учень"],
+         "motivation": "Transit prefixes: перейти (пере-), проїхати (про-), переїхати (пере-)"},
+    ],
+    "motion-prefixes-around": [
+        {"setting": "Tourist bus tour around Одеса — the guide describes the route: "
+         "Ми об'їдемо (go around) Привоз (m, famous market). "
+         "Підійдіть (approach) до пам'ятника (m, monument) Дюку. "
+         "Обійдемо (walk around) Оперний театр (m, Opera House).",
+         "speakers": ["Гід", "Туристи"],
+         "motivation": "Around prefixes: об'їхати (об'-), підійти (під-), обійти (об-)"},
+    ],
+    "motion-flight-swim": [
+        {"setting": "At the Чорне море (n, Black Sea) near Одеса — a summer day at the beach: "
+         "Чайки (pl, seagulls) летять над морем. Діти пливуть (swimming) до буйка (m, buoy). "
+         "Літак (m, plane) пролетів над нами. Човен (m, boat) попливе на острів (m, island).",
+         "speakers": ["Батьки", "Діти"],
+         "motivation": "Fly/swim verbs: летіти/літати, пливти/плавати with море(n), літак(m), човен(m)"},
+    ],
+    "figurative-motion": [
+        {"setting": "Philosophical conversation at a Київський парк (m, Kyiv park) on a rainy day — "
+         "discussing life metaphors: Час іде (time passes). Дощ іде (it's raining). "
+         "Справи йдуть (things are going) добре. Мова йде (we're talking about) про майбутнє.",
+         "speakers": ["Подруги на прогулянці"],
+         "motivation": "Figurative motion: час іде, дощ іде, справи йдуть, мова йде"},
+    ],
+    "traveling-ukraine": [
+        {"setting": "Planning a two-week road trip across Ukraine — from Львів through Карпати to Одеса, "
+         "then Київ and Харків: Спочатку поїдемо до Львова. Потім заїдемо в Карпати. "
+         "Доїдемо до Одеси за два дні. Перелетимо до Харкова.",
+         "speakers": ["Пара мандрівників (traveling couple)"],
+         "motivation": "Travel synthesis: all motion prefixes with real Ukrainian cities and routes"},
+    ],
+    "checkpoint-motion": [
+        {"setting": "Oral exam — the student describes a journey using all motion verbs and prefixes: "
+         "Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, "
+         "приїхав до Львова, обійшов центр, зайшов у кав'ярню.",
+         "speakers": ["Екзаменатор", "Студент"],
+         "motivation": "Consolidation: all motion verb pairs and prefix combinations in narration"},
+    ],
+    "adjectives-comparative": [
+        {"setting": "Two friends comparing apartments for rent in Київ — "
+         "one on Хрещатик, one in Оболонь: Ця квартира (f) більша, але дорожча. "
+         "Та — тихіша і ближча до метро (n). Кімнати (pl) ширші, але стелі (pl, ceilings) нижчі.",
+         "speakers": ["Орендар (renter)", "Друг"],
+         "motivation": "Comparative adjectives: більший, дорожчий, тихіший, ближчий, ширший, нижчий"},
+    ],
+    "adjectives-superlative": [
+        {"setting": "Ukrainian geography lesson — discussing extremes: "
+         "Говерла — найвища (f) гора (f) в Україні. Дніпро — найдовша (f) річка (f). "
+         "Київ — найбільше (n) місто (n). Одеса — найвеселіше місто на узбережжі.",
+         "speakers": ["Вчитель географії", "Учні"],
+         "motivation": "Superlative: найвищий, найдовший, найбільший with гора(f), річка(f), місто(n)"},
+    ],
+    "adjectives-suppletive": [
+        {"setting": "Family debate about where to celebrate Новий рік (m, New Year) — "
+         "comparing options emotionally: Карпати — кращі (better) за Одесу взимку! "
+         "Ні, Одеса — найкраще (best) місце! Цей готель гірший (worse) за той. "
+         "Минулий рік був найгіршим.",
+         "speakers": ["Родина (сперечається)"],
+         "motivation": "Suppletive forms: гарний→кращий→найкращий, поганий→гірший→найгірший"},
+    ],
+    "adverbs-comparison-formation": [
+        {"setting": "Running club in Київському парку Шевченка — comparing performance: "
+         "Ти бігаєш швидше (faster) за мене! Він тренується найчастіше (most often). "
+         "Вона стрибає вище (higher). Ми прийшли раніше (earlier) за всіх.",
+         "speakers": ["Тренер", "Бігуни (runners)"],
+         "motivation": "Adverb comparison: швидше, найчастіше, вище, раніше — formation and usage"},
+    ],
+    "word-formation-adjectives": [
+        {"setting": "Art critique at a Київська галерея (f, Kyiv gallery) — describing artwork: "
+         "Ця картина (f) — лісова (from ліс, forest). Ось міський (from місто) пейзаж (m, landscape). "
+         "Синюватий (bluish) колір (m, color). Золотистий (golden) відтінок (m, shade).",
+         "speakers": ["Мистецтвознавець (art critic)", "Відвідувач"],
+         "motivation": "Adjective formation: лісовий (-ов-), міський (-ськ-), синюватий (-уват-), золотистий (-ист-)"},
+    ],
+    "word-formation-nouns": [
+        {"setting": "Career fair at a Одеський університет (m) — reading job title badges: "
+         "Учитель (m, teacher), учителька (f). Письменник (m, writer), письменниця (f). "
+         "Бібліотека→бібліотекар (m). Їдальня (f, canteen) — від 'їсти'.",
+         "speakers": ["Студенти на ярмарку вакансій"],
+         "motivation": "Noun formation: -тель/-тельк-, -ник/-ниц-, -ар; place names: їдальня, пекарня"},
+    ],
+    "shopping-and-services": [
+        {"setting": "Shopping at a Львівський ТРЦ (m, Lviv shopping center) — comparing products: "
+         "Ця сукня (f, dress) гарніша, але дорожча. Чи є дешевша? "
+         "Найкращий варіант (m, option) — зі знижкою (f, discount). "
+         "Ця крамниця (f, shop) більша за ту.",
+         "speakers": ["Покупець", "Продавець-консультант"],
+         "motivation": "Shopping with comparisons: гарніший, дорожчий, найкращий, дешевший"},
+    ],
+    "checkpoint-comparison": [
+        {"setting": "Panel discussion at a Київській конференції (f, Kyiv conference) — comparing "
+         "Ukrainian cities for investment: Львів — найпривабливіший для туризму. "
+         "Харків розвивається швидше. Одеса — веселіша. Дніпро — наймолодше ІТ-місто.",
+         "speakers": ["Модератор", "Експерти"],
+         "motivation": "Consolidation: comparative/superlative adjectives and adverbs, word formation"},
+    ],
+    "genitive-nuances": [
+        {"setting": "At a Одеський ринок Привоз (m, Privoz market) — haggling: "
+         "Дайте склянку (f) меду (partitive gen). Трохи сиру (partitive gen). "
+         "Немає свіжого молока (n, milk)? Шматок хліба (m), будь ласка.",
+         "speakers": ["Покупець", "Продавець"],
+         "motivation": "Partitive genitive: меду, сиру, молока, хліба — quantity expressions"},
+    ],
+    "dative-nuances": [
+        {"setting": "A cold winter day in Київ — everyone experiencing different states: "
+         "Мені холодно (I'm cold). Дитині (f, child) нудно (bored). "
+         "Бабусі (f) важко ходити. Студентам (pl) цікаво на лекції (f).",
+         "speakers": ["Родина на прогулянці"],
+         "motivation": "Experiencer dative: мені холодно, дитині нудно, бабусі важко, студентам цікаво"},
+    ],
+    "instrumental-nuances": [
+        {"setting": "Describing colleagues at a Харківська фірма (f, Kharkiv company) — "
+         "characterization: Вона стала директоркою (f, director) молодою. "
+         "Він працює перекладачем (m, translator). Вона славиться красою (f, beauty). "
+         "Ходить з розумним виглядом (m, expression).",
+         "speakers": ["Нова співробітниця", "Колега"],
+         "motivation": "Instrumental of characterization: стати + inst, працювати + inst, славитися + inst"},
+    ],
+    "vocative-formal": [
+        {"setting": "Official ceremony at Верховна Рада (f, parliament) — formal addresses: "
+         "Шановний пане Президенте! Вельмишановна пані Міністре! "
+         "Панове депутати! Пане Голово!",
+         "speakers": ["Спікер (speaker)", "Депутати"],
+         "motivation": "Formal vocative: пане Президенте, пані Міністре, панове депутати"},
+    ],
+    "prepositions-temporal": [
+        {"setting": "Planning a week of events at a Київський культурний центр (m) — "
+         "scheduling: У понеділок — лекція (f). О третій годині — репетиція (f, rehearsal). "
+         "На вихідних — екскурсія. До п'ятниці треба все підготувати.",
+         "speakers": ["Організатор", "Помічник"],
+         "motivation": "Temporal prepositions: у + acc (day), о + loc (time), на + loc, до + gen"},
+    ],
+    "prepositions-cause-purpose": [
+        {"setting": "Student explaining absences to the dean at a Одеський університет — "
+         "giving reasons: Через хворобу (f, illness) пропустив лекції. "
+         "Для отримання стипендії (f, scholarship) треба здати іспити. "
+         "Завдяки допомозі (f, help) друзів встиг.",
+         "speakers": ["Декан", "Студент"],
+         "motivation": "Cause/purpose: через + acc, для + gen, завдяки + dat, заради + gen"},
+    ],
+    "cases-with-ordinal-numerals": [
+        {"setting": "Buying train tickets at Київський вокзал — specifying dates and platforms: "
+         "Квиток (m, ticket) на п'яте березня. З першого вагона (m, car). "
+         "Третій перон (m, platform). На другому поверсі (m, floor) — каса (f, ticket office).",
+         "speakers": ["Пасажир", "Касир (cashier)"],
+         "motivation": "Ordinal numerals in cases: п'яте березня(acc), першого вагона(gen), третій перон(nom)"},
+    ],
+    "cases-with-quantity-expressions": [
+        {"setting": "Census worker visiting a village household — counting everything: "
+         "Скільки людей? П'ятеро. Двоє дітей (n, children). "
+         "Кілька кімнат (f, rooms). Багато землі (f, land). Мало худоби (f, livestock).",
+         "speakers": ["Переписувач (census worker)", "Господар"],
+         "motivation": "Quantity expressions: п'ятеро людей, двоє дітей, кілька кімнат, багато землі"},
+    ],
+    "advanced-pronouns": [
+        {"setting": "Philosophy seminar at Київський університет імені Шевченка — discussing identity: "
+         "Кожен має право. Ніхто не заперечує. Дехто з нас вірить. "
+         "Будь-яка відповідь (f, answer) правильна. Ті, хто думає інакше, нехай скажуть.",
+         "speakers": ["Професор", "Студенти"],
+         "motivation": "Advanced pronouns: кожен, ніхто, дехто, будь-який, ті хто — in abstract discourse"},
+    ],
+    "housing-and-renting": [
+        {"setting": "Renting a квартира (f, apartment) in Львів — viewing and negotiating: "
+         "Оренда (f, rent) — вісім тисяч на місяць. Комунальні (pl, utilities) включені? "
+         "Меблі (pl, furniture) є? Коли можна заїхати? Договір (m, contract) — на рік.",
+         "speakers": ["Орендар (tenant)", "Власник (landlord)"],
+         "motivation": "Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)"},
+    ],
+    "checkpoint-cases": [
+        {"setting": "University seminar presentation — student presents on Ukrainian cities "
+         "using all case nuances: Для мешканців Києва (gen). Завдяки інвестиціям (dat). "
+         "Славиться архітектурою (inst). У центрі міста (loc). Пане професоре! (voc)",
+         "speakers": ["Студент (presenting)", "Професор (questioning)"],
+         "motivation": "Consolidation: partitive gen, experiencer dat, instrumental characterization, formal voc"},
+    ],
+    "participles-active": [
+        {"setting": "Nature documentary narration about Карпати — describing animals and scenery: "
+         "Олень (m, deer), що біжить через поляну (f, meadow). "
+         "Водоспад (m, waterfall), що падає зі скелі (f, cliff). "
+         "Квітучі (blooming) луки (pl, meadows). Мандруючі (wandering) хмари (pl, clouds).",
+         "speakers": ["Оповідач (narrator)"],
+         "motivation": "Active participles: біжучий, падаючий, квітучий, мандруючий"},
+    ],
+    "participles-passive": [
+        {"setting": "Visiting a renovated Маріїнський палац (m, Mariinskyi Palace) in Київ — "
+         "the guide describes what was restored: Відреставрований (restored) фасад (m, facade). "
+         "Написана (painted) у XIX столітті картина (f). "
+         "Збережене (preserved) оздоблення (n, decoration).",
+         "speakers": ["Екскурсовод", "Група туристів"],
+         "motivation": "Passive participles: відреставрований(m), написана(f), збережене(n) — gender agreement"},
+    ],
+    "participle-phrases": [
+        {"setting": "News report about a flood in Закарпаття — formal journalistic style: "
+         "Річка (f), що вийшла з берегів, затопила поля. "
+         "Будинки, пошкоджені повінню (f, flood), потребують ремонту (m, repair). "
+         "Рятувальники, викликані вранці, прибули за годину.",
+         "speakers": ["Журналіст (reporter)", "Рятувальник (rescuer)"],
+         "motivation": "Participle phrases: що вийшла з берегів, пошкоджені повінню, викликані вранці"},
+    ],
+    "short-form-adjectives": [
+        {"setting": "Reading a classic Ukrainian poem aloud at a літературний вечір (m, literary evening) "
+         "in Чернігові — discussing archaic and elevated forms: "
+         "Рад (glad) бачити вас! Годен (capable) працювати. Певен (certain) у собі. "
+         "Ладен (willing) допомогти.",
+         "speakers": ["Ведучий вечора", "Слухачі"],
+         "motivation": "Short-form adjectives: рад, годен, певен, ладен — elevated/literary usage"},
+    ],
+    "gerunds-imperfective": [
+        {"setting": "Morning jog along the Дніпро (m) embankment — describing simultaneous actions: "
+         "Біжучи (while running), слухаю музику. Переходячи (while crossing) міст (m, bridge), "
+         "бачу схід сонця (m, sunrise). Дихаючи (breathing) свіжим повітрям (n, air), почуваюся живим.",
+         "speakers": ["Бігун (runner, narrating)", "Друг (слухає)"],
+         "motivation": "Imperfective gerunds: біжучи, переходячи, дихаючи — simultaneous actions"},
+    ],
+    "gerunds-perfective": [
+        {"setting": "Detective recounting events at a поліцейський відділок (m, police station) — "
+         "sequence of completed actions: Увійшовши (having entered) в кімнату, я побачив сліди (pl, traces). "
+         "Оглянувши (having examined) місце, я зателефонував. Дізнавшись (having learned) правду, ми діяли.",
+         "speakers": ["Детектив", "Колега"],
+         "motivation": "Perfective gerunds: увійшовши, оглянувши, дізнавшись — completed prior actions"},
+    ],
+    "gerund-phrases": [
+        {"setting": "Life coach podcast recorded in a Київська студія (f, Kyiv studio) — "
+         "giving advice with gerund phrases: Працюючи над собою щодня, ви змінитесь. "
+         "Прочитавши цю книгу (f), ви зрозумієте. Не зробивши першого кроку (m, step), нічого не досягнете.",
+         "speakers": ["Коуч (coach)", "Ведучий подкасту"],
+         "motivation": "Gerund phrases: працюючи над собою, прочитавши книгу, не зробивши кроку"},
+    ],
+    "education-and-university": [
+        {"setting": "First week at Київський національний університет — navigating the system: "
+         "Де деканат (m, dean's office)? Записавшись на курс, отримаєш залікову книжку (f, grade book). "
+         "Стипендія (f, scholarship) виплачується щомісяця. Захистивши курсову (f, coursework), здаси сесію (f, exam period).",
+         "speakers": ["Старшокурсник (senior student)", "Першокурсник"],
+         "motivation": "Education integration: gerunds + participles + passive in university context"},
+    ],
+    "checkpoint-participles": [
+        {"setting": "Literary analysis seminar — students discuss a Шевченко poem using participles "
+         "and gerunds: Написаний Шевченком вірш (m, poem)... Читаючи ці рядки (pl, lines), розумієш... "
+         "Прочитавши 'Кобзар', неможливо залишитися байдужим.",
+         "speakers": ["Викладач літератури", "Студенти"],
+         "motivation": "Consolidation: active/passive participles, imperfective/perfective gerunds in literary analysis"},
+    ],
+    "complex-compound": [
+        {"setting": "Two friends at a Львівська кав'ярня discussing weekend plans — "
+         "compound sentences: Я хочу в кіно, а ти — в театр (m). "
+         "Або ми підемо на виставку (f, exhibition), або залишимося вдома. "
+         "Погода гарна, і ми могли б погуляти.",
+         "speakers": ["Софія", "Андрій"],
+         "motivation": "Compound sentences: і, а, але, або, проте with кіно(n), театр(m), виставка(f)"},
+    ],
+    "complex-subordinate-object": [
+        {"setting": "Phone call between mother and university student in Одесі — "
+         "reporting news: Кажу тобі, що все добре. Знаю, що ти хвилюєшся. "
+         "Думаю, що здам іспит (m). Не вірю, що вже зима (f).",
+         "speakers": ["Мама", "Студент"],
+         "motivation": "Object clauses: що + indicative in reported speech: кажу що, знаю що, думаю що"},
+    ],
+    "complex-subordinate-relative": [
+        {"setting": "Walking through Київський ботанічний сад (m, botanical garden) — "
+         "pointing out plants: Дерево (n, tree), яке росте тут уже сто років. "
+         "Квітка (f), яку подарували з Японії. Місце (n), де можна відпочити.",
+         "speakers": ["Ботанік (botanist)", "Студент"],
+         "motivation": "Relative clauses: який/яка/яке, що, де, куди with дерево(n), квітка(f), місце(n)"},
+    ],
+    "complex-subordinate-time": [
+        {"setting": "Grandfather telling his life story at a сімейна вечеря (f, family dinner) — "
+         "time clauses: Коли я був молодим, жив у Полтаві. Після того як закінчив інститут (m), "
+         "переїхав до Києва. Поки працював, побудував хату (f, house).",
+         "speakers": ["Дідусь", "Онуки"],
+         "motivation": "Time clauses: коли, після того як, поки, щойно in life narration"},
+    ],
+    "complex-subordinate-reason": [
+        {"setting": "Student explaining to the professor why the essay is late — reason clauses: "
+         "Я запізнився, бо хворів (was ill). Оскільки бібліотека (f, library) була зачинена, "
+         "не зміг знайти джерела (pl, sources). Через те що інтернет (m) не працював, "
+         "не надіслав вчасно.",
+         "speakers": ["Студент", "Професор"],
+         "motivation": "Reason clauses: бо, оскільки, через те що, тому що — formal + informal registers"},
+    ],
+    "complex-subordinate-condition": [
+        {"setting": "Business negotiation at a Дніпровська фабрика (f, Dnipro factory) — "
+         "conditional clauses: Якщо ви підпишете контракт (m), ми почнемо виробництво (n, production). "
+         "За умови що якість (f, quality) буде відповідною, продовжимо. "
+         "Якби ціна (f, price) була нижчою, ми б замовили більше.",
+         "speakers": ["Директор фабрики", "Закордонний партнер"],
+         "motivation": "Conditional clauses: якщо, за умови що, якби — real and unreal in business"},
+    ],
+    "complex-subordinate-purpose": [
+        {"setting": "Parent helping a teenager prepare for ЗНО (n, Ukrainian standardized test) — "
+         "purpose clauses: Вчи, щоб скласти іспит. Я записала тебе на курси (pl, courses), "
+         "аби ти підготувався. Для того щоб вступити (enroll), потрібен високий бал (m, score).",
+         "speakers": ["Мама", "Випускник (graduate)"],
+         "motivation": "Purpose clauses: щоб, аби, для того щоб — motivation and goal structures"},
+    ],
+    "complex-subordinate-concess": [
+        {"setting": "Debate club at a Харківський ліцей (m, Kharkiv lyceum) — concessive clauses: "
+         "Хоча це складно, варто спробувати. Незважаючи на те що час (m) обмежений, "
+         "ми встигнемо. Дарма що вона молодша, вона розумніша.",
+         "speakers": ["Учасники дебатного клубу"],
+         "motivation": "Concessive clauses: хоча, незважаючи на те що, дарма що — argumentation"},
+    ],
+    "reported-speech": [
+        {"setting": "Journalist interviewing a Київський мер (m, Kyiv mayor) — transforming "
+         "direct to indirect speech: Мер сказав: 'Ми побудуємо метро (n).' → "
+         "Мер сказав, що вони побудують метро. 'Чи буде парковка (f)?' → "
+         "Мене запитали, чи буде парковка.",
+         "speakers": ["Журналіст", "Мер"],
+         "motivation": "Direct → indirect speech: сказав що, запитав чи, попросив щоб"},
+    ],
+    "leisure-culture-festivals": [
+        {"setting": "Великдень (m, Easter) in a Ukrainian village — full celebration: "
+         "Ми святкуємо Великдень, хоча погода холодна. "
+         "Мама сказала, що паска (f, Easter bread) готова. "
+         "Якщо встанемо рано, встигнемо на службу (f, church service). "
+         "Коли повернемося, будемо бити писанки (pl, Easter eggs).",
+         "speakers": ["Родина"],
+         "motivation": "Culture integration: all subordinate clause types in Великдень celebration"},
+    ],
+    "checkpoint-syntax": [
+        {"setting": "Mock ЗНО Ukrainian language test — complex sentence analysis: "
+         "Визначте тип речення: 'Хоча було холодно, ми пішли на прогулянку.' "
+         "Переробіть пряму мову на непряму. Складіть речення з підрядним мети.",
+         "speakers": ["Екзаменатор", "Учень"],
+         "motivation": "Consolidation: compound, all subordinate types, reported speech in exam format"},
+    ],
+    "text-register-formal": [
+        {"setting": "Writing a formal заява (f, application) to a university rector — "
+         "official style: Шановний пане Ректоре! Прошу надати мені академічну відпустку (f, leave). "
+         "У зв'язку з сімейними обставинами (pl, circumstances). З повагою...",
+         "speakers": ["Студент (пише)", "Секретар (допомагає)"],
+         "motivation": "Formal register: шановний, прошу, у зв'язку з, з повагою — official documents"},
+    ],
+    "text-register-informal": [
+        {"setting": "Group chat between friends planning a вечірка (f, party) — casual Ukrainian: "
+         "Йо! Будеш сьогодні? Та ясно! Треба взяти щось попоїсти. "
+         "Лан, я захоплю піцу (f, pizza). Норм, давай!",
+         "speakers": ["Компанія друзів (group chat)"],
+         "motivation": "Informal register: скорочення, сленг, розмовні форми — йо, лан, норм"},
+    ],
+    "text-compression": [
+        {"setting": "Reading Ukrainian news headlines and official documents — "
+         "decoding abbreviations: ЗНО, КНУ ім. Шевченка, МОЗ (Ministry of Health), "
+         "ЗСУ (Armed Forces of Ukraine), м. Київ, вул. Хрещатик.",
+         "speakers": ["Студент (reads aloud)", "Викладач (explains)"],
+         "motivation": "Abbreviations: ЗНО, КНУ, МОЗ, ЗСУ, м., вул. — decoding Ukrainian compressed text"},
+    ],
+    "double-negation": [
+        {"setting": "Mystery novel reading club in Тернополі — discussing plot with double negatives: "
+         "Ніхто нічого не бачив. Ніде немає слідів (pl, traces). "
+         "Ніколи не знайдуть відповіді (f, answer). Ніяких доказів (pl, evidence) немає.",
+         "speakers": ["Члени книжкового клубу"],
+         "motivation": "Double negation: ніхто не, ніде немає, ніколи не, ніяких немає"},
+    ],
+    "introductory-words": [
+        {"setting": "Academic presentation at a Київська конференція (f) — using parenthetical words: "
+         "По-перше, це важливо. По-друге, дослідження (n, research) підтверджує. "
+         "На жаль, даних (pl, data) замало. Очевидно, потрібен новий підхід (m, approach). "
+         "Безумовно, це крок уперед.",
+         "speakers": ["Доповідач (presenter)", "Аудиторія"],
+         "motivation": "Parenthetical words: по-перше, по-друге, на жаль, очевидно, безумовно"},
+    ],
+    "nature-and-environment": [
+        {"setting": "Ecology lesson in a Карпатський біосферний заповідник (m, Carpathian biosphere reserve) — "
+         "field trip: На жаль, забруднення (n, pollution) зростає. "
+         "Хоча ліси (pl, forests) захищені, є загрози (pl, threats). "
+         "Щоб зберегти природу (f, nature), треба діяти. Безумовно, це наш обов'язок (m, duty).",
+         "speakers": ["Еколог (ecologist)", "Студенти-біологи"],
+         "motivation": "Environment topic: забруднення(n), ліс(m), природа(f) + all B1 syntax structures"},
+    ],
+    "reading-literature": [
+        {"setting": "Ukrainian literature class — reading an excerpt from Франко's 'Захар Беркут': "
+         "Оповідач каже, що Захар був мудрим. Хоча він старий, "
+         "його слухають. Коли загроза наближається, він збирає громаду (f, community).",
+         "speakers": ["Вчитель літератури", "Учні (обговорюють)"],
+         "motivation": "Literary style: analyzing prose with subordinate clauses, reported speech, characterization"},
+    ],
+    "checkpoint-text-register": [
+        {"setting": "Writing workshop — students rewrite the same message in three registers: "
+         "Formal: 'Шановний пане директоре, прошу надати...' "
+         "Neutral: 'Добрий день, я хотів би попросити...' "
+         "Informal: 'Привіт! Слухай, мені треба...'",
+         "speakers": ["Викладач стилістики (stylistics teacher)", "Студенти"],
+         "motivation": "Consolidation: formal/informal register, abbreviations, double negation, introductory words"},
+    ],
+    "narrative-mastery": [
+        {"setting": "Creative writing competition in Чернівцях — students read their short stories aloud: "
+         "Він, увійшовши в кімнату, зупинився. 'Хто тут?' — запитав він. "
+         "Ніхто не відповів. Хоча серце калатало, він пішов далі.",
+         "speakers": ["Автор (reading)", "Журі (commenting)"],
+         "motivation": "Narrative techniques: gerunds, reported speech, double negation, concessive in storytelling"},
+    ],
+    "debate-and-opinion": [
+        {"setting": "Student council debate at a Харківський ліцей — arguing about school uniform: "
+         "По-перше, форма обмежує свободу (f, freedom). На мою думку, це застаріло. "
+         "Навпаки, форма виховує дисципліну (f, discipline). "
+         "Хоча аргументи (pl) сильні, я не погоджуюся.",
+         "speakers": ["Учасники дебатів (за і проти)"],
+         "motivation": "Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся"},
+    ],
+    "society-and-media": [
+        {"setting": "Newsroom at a Київська телестудія (f, Kyiv TV studio) — editing the evening news: "
+         "Журналіст повідомив, що рятувальники прибули вчасно. "
+         "Незважаючи на складні умови, евакуацію (f, evacuation) завершено. "
+         "Як стало відомо, уряд (m, government) виділив кошти (pl, funds).",
+         "speakers": ["Головний редактор", "Журналіст"],
+         "motivation": "Media/journalism: reported speech, passive voice, formal register in news"},
+    ],
+    "comprehensive-b1-review": [
+        {"setting": "End-of-year oral presentation at a Київський університет — "
+         "student summarizes everything learned in B1: describes their journey through Ukraine, "
+         "using all tenses, moods, subordinate clauses, participles, gerunds, registers.",
+         "speakers": ["Студент (presenting)", "Комісія (examination board)"],
+         "motivation": "Full B1 review: all grammar structures in a coherent autobiographical presentation"},
+    ],
+    "practice-exam-reading": [
+        {"setting": "Mock ЗНО reading section — reading a newspaper article about "
+         "Софійський собор (m, St. Sophia Cathedral) and answering comprehension questions: "
+         "Визначте головну думку. Що означає вираз 'культурна спадщина (f, heritage)'?",
+         "speakers": ["Екзаменатор (reads instructions)", "Кандидат (відповідає)"],
+         "motivation": "Reading exam: comprehension, vocabulary in context, text analysis"},
+    ],
+    "practice-exam-writing": [
+        {"setting": "Mock ЗНО writing section — writing a formal лист (m, letter) to a newspaper "
+         "about забруднення (n, pollution) in your місто (n, city): "
+         "Use formal register. Include argumentation. Minimum 150 words.",
+         "speakers": ["Кандидат (пише)", "Екзаменатор (оцінює)"],
+         "motivation": "Writing exam: formal letter with argumentation, register control, complex syntax"},
+    ],
+    "b1-finale": [
+        {"setting": "Graduation ceremony at a Ukrainian language school — "
+         "the student gives a speech about their journey from A1 to B1: "
+         "reflecting on what they learned, people they met, places they visited in Ukraine. "
+         "All tenses, moods, clause types, registers — a celebration of progress.",
+         "speakers": ["Випускник B1 (graduating student)", "Викладачі та одногрупники"],
+         "motivation": "Full B1 capstone: every grammar structure in an emotional personal speech"},
+    ],
+}
+
+
 def add_situations_to_plan(plan_path: Path, situations: list[dict], dry_run: bool = True) -> bool:
     """Add dialogue_situations to a plan file."""
     text = plan_path.read_text("utf-8")
@@ -828,7 +1501,7 @@ def main():
     parser.add_argument("--apply", action="store_true", help="Actually write to files (default: dry-run)")
     args = parser.parse_args()
 
-    situations_map = {"a1": A1_SITUATIONS, "a2": A2_SITUATIONS}
+    situations_map = {"a1": A1_SITUATIONS, "a2": A2_SITUATIONS, "b1": B1_SITUATIONS}
     sits = situations_map.get(args.track)
     if not sits:
         print(f"No situations defined for {args.track} yet")

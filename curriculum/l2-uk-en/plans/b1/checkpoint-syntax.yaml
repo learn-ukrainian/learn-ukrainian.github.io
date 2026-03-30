@@ -18,6 +18,15 @@ objectives:
 - "Learner can classify складні речення by type and identify сполучники"
 - "Learner can use complex syntax naturally in communicative contexts
   about leisure, culture, and holidays"
+dialogue_situations:
+- setting: 'Mock ЗНО Ukrainian language test — complex sentence analysis: Визначте
+    тип речення: ''Хоча було холодно, ми пішли на прогулянку.'' Переробіть пряму мову
+    на непряму. Складіть речення з підрядним мети.'
+  speakers:
+  - Екзаменатор
+  - Учень
+  motivation: 'Consolidation: compound, all subordinate types, reported speech in
+    exam format'
 content_outline:
 - section: "Вступ: як працювати з контрольною (Introduction)"
   words: 350

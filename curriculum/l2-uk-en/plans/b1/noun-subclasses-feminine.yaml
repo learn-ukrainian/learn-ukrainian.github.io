@@ -21,6 +21,15 @@ objectives:
   on -ть after a consonant (радості/радости) and for кров, любов, осінь, сіль"
 - "Learner can distinguish III відміна nouns from similar-looking II відміна
   masculine nouns (путь is archaic, гість is II відміна masculine)"
+dialogue_situations:
+- setting: 'At a нічна зміна (f, night shift) in a Харківська лікарня (f, Kharkiv
+    hospital) — discussing equipment and conditions: Де сіль (f, salt)? Принеси піч
+    (f, oven) для стерилізації. Ця подорож (f, journey) до лікарні була довгою. Яка
+    тиша (f, silence)!'
+  speakers:
+  - Медсестра
+  - Лікар
+  motivation: 'III declension feminine: сіль, піч, подорож, тиша — zero ending nouns'
 content_outline:
 - section: "Що таке III відміна? (What is the 3rd declension?)"
   words: 550

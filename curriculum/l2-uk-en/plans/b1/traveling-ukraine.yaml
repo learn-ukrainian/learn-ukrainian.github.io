@@ -14,6 +14,14 @@ objectives:
 - 'Learner can navigate real travel situations: buying tickets, asking directions, checking schedules, crossing borders'
 - Learner can narrate a travel experience in connected discourse using a variety of motion verbs with all 10 prefixes
 - Learner can use the instrumental case with country/region names for travel routes (Подорож Україною, їхати Закарпаттям)
+dialogue_situations:
+- setting: 'Planning a two-week road trip across Ukraine — from Львів through Карпати
+    to Одеса, then Київ and Харків: Спочатку поїдемо до Львова. Потім заїдемо в Карпати.
+    Доїдемо до Одеси за два дні. Перелетимо до Харкова.'
+  speakers:
+  - Пара мандрівників (traveling couple)
+  motivation: 'Travel synthesis: all motion prefixes with real Ukrainian cities and
+    routes'
 content_outline:
 - section: 'Подорож починається: планування та транспорт (The journey begins: planning and transport)'
   words: 750

@@ -20,6 +20,14 @@ objectives:
   дієприслівниковий зворот: means vs attribute, different comma rules"
 - "Learner can avoid the dangling gerund error and use gerund phrases
   to create varied, expressive Ukrainian prose"
+dialogue_situations:
+- setting: 'Life coach podcast recorded in a Київська студія (f, Kyiv studio) — giving
+    advice with gerund phrases: Працюючи над собою щодня, ви змінитесь. Прочитавши
+    цю книгу (f), ви зрозумієте. Не зробивши першого кроку (m, step), нічого не досягнете.'
+  speakers:
+  - Коуч (coach)
+  - Ведучий подкасту
+  motivation: 'Gerund phrases: працюючи над собою, прочитавши книгу, не зробивши кроку'
 content_outline:
 - section: "Дієприслівниковий зворот: будова (Structure of the gerund phrase)"
   words: 600

@@ -20,6 +20,14 @@ objectives:
   and from singularia tantum (nouns with однина only)"
 - "Learner can correctly use pluralia tantum nouns with adjectives and
   verbs (двері відчинені, ножиці гострі — plural agreement)"
+dialogue_situations:
+- setting: 'Packing for a move from Одеса to Київ — labeling boxes with plural-only
+    items: Де мої окуляри (pl, glasses)? Ножиці (pl, scissors) у тій коробці. Гроші
+    (pl, money) в конверті. Двері (pl, door) зачинені.'
+  speakers:
+  - Сусід, що допомагає
+  - Мешканець
+  motivation: 'Pluralia tantum: окуляри, ножиці, гроші, двері — no singular form'
 content_outline:
 - section: "Що таке іменники, які вживаються тільки у множині?"
   words: 600

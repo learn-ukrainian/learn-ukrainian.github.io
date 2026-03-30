@@ -20,6 +20,15 @@ objectives:
   and the main verb must share the same subject"
 - "Learner can use imperfective gerunds to express simultaneous actions
   in both spoken and written Ukrainian"
+dialogue_situations:
+- setting: 'Morning jog along the Дніпро (m) embankment — describing simultaneous
+    actions: Біжучи (while running), слухаю музику. Переходячи (while crossing) міст
+    (m, bridge), бачу схід сонця (m, sunrise). Дихаючи (breathing) свіжим повітрям
+    (n, air), почуваюся живим.'
+  speakers:
+  - Бігун (runner, narrating)
+  - Друг (слухає)
+  motivation: 'Imperfective gerunds: біжучи, переходячи, дихаючи — simultaneous actions'
 content_outline:
 - section: "Що таке дієприслівник? (What is a gerund/adverbial participle?)"
   words: 700

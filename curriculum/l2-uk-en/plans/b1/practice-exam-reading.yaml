@@ -20,6 +20,14 @@ objectives:
   лексика, художні засоби, using Ukrainian metalanguage"
 - "Learner can complete exam-format tasks (multiple choice, true/false,
   fill-in, matching) within time constraints"
+dialogue_situations:
+- setting: 'Mock ЗНО reading section — reading a newspaper article about Софійський
+    собор (m, St. Sophia Cathedral) and answering comprehension questions: Визначте
+    головну думку. Що означає вираз ''культурна спадщина (f, heritage)''?'
+  speakers:
+  - Екзаменатор (reads instructions)
+  - Кандидат (відповідає)
+  motivation: 'Reading exam: comprehension, vocabulary in context, text analysis'
 content_outline:
 - section: "Вступ: формат екзамену (Introduction: exam format)"
   words: 300

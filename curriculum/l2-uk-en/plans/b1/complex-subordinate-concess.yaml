@@ -17,6 +17,13 @@ objectives:
 - "Learner can use concessive clauses naturally in argumentation and
   opinion expression at B1 level"
 - "Learner can correctly punctuate допустові речення"
+dialogue_situations:
+- setting: 'Debate club at a Харківський ліцей (m, Kharkiv lyceum) — concessive clauses:
+    Хоча це складно, варто спробувати. Незважаючи на те що час (m) обмежений, ми встигнемо.
+    Дарма що вона молодша, вона розумніша.'
+  speakers:
+  - Учасники дебатного клубу
+  motivation: 'Concessive clauses: хоча, незважаючи на те що, дарма що — argumentation'
 content_outline:
 - section: "Підрядні обставинні допусту (Concessive subordinate clauses)"
   words: 600

@@ -18,6 +18,15 @@ objectives:
 - 'Learner can describe habits and routines using aspectual contrast: недоконаний for regular habits vs доконаний for specific
   completed actions'
 - Learner can participate in everyday conversations about scheduling, errands, and time management at B1 complexity
+dialogue_situations:
+- setting: 'Ukrainian vlog — a Kyiv resident films a ''day in my life'' video: Прокидаюся
+    о сьомій. Снідаю кашу (f, porridge) з ягодами (pl). Їду на роботу трамваєм (m,
+    tram). Обідаю в їдальні (f, canteen). Ввечері гуляю набережною (f, embankment)
+    Дніпра.'
+  speakers:
+  - Влогер (vlogger, narrating)
+  - Колеги / перехожі
+  motivation: 'Daily life integration: reflexives, instrumental, temporal expressions'
 content_outline:
 - section: 'Мій день: ранок (My day: morning)'
   words: 750

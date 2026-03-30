@@ -20,6 +20,15 @@ objectives:
   all 10 phases: narratives, descriptions, arguments, formal documents"
 - "Learner can self-diagnose areas of weakness and plan targeted review
   before the B1 practice exams"
+dialogue_situations:
+- setting: 'End-of-year oral presentation at a Київський університет — student summarizes
+    everything learned in B1: describes their journey through Ukraine, using all tenses,
+    moods, subordinate clauses, participles, gerunds, registers.'
+  speakers:
+  - Студент (presenting)
+  - Комісія (examination board)
+  motivation: 'Full B1 review: all grammar structures in a coherent autobiographical
+    presentation'
 content_outline:
 - section: "Фонетика та морфологія (Phonetics and morphology — Phases 1-2)"
   words: 600

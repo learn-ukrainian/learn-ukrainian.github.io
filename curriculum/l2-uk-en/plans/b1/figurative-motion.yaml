@@ -16,6 +16,13 @@ objectives:
 - Learner can distinguish literal from figurative uses of motion verbs in Ukrainian text and choose the correct one in production
 - 'Learner can use Ukrainian figurative motion expressions instead of calquing from English (Ukrainian: дощ іде, not *дощ
   падає as a calque)'
+dialogue_situations:
+- setting: 'Philosophical conversation at a Київський парк (m, Kyiv park) on a rainy
+    day — discussing life metaphors: Час іде (time passes). Дощ іде (it''s raining).
+    Справи йдуть (things are going) добре. Мова йде (we''re talking about) про майбутнє.'
+  speakers:
+  - Подруги на прогулянці
+  motivation: 'Figurative motion: час іде, дощ іде, справи йдуть, мова йде'
 content_outline:
 - section: Дієслова руху в переносному значенні (Motion verbs in figurative meaning)
   words: 600

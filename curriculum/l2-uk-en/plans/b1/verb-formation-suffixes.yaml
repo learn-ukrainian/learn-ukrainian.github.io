@@ -18,6 +18,15 @@ objectives:
   малювати), -нути (штовхнути — single quick action)'
 - Learner can use prefix knowledge to decode unfamiliar verbs by decomposing them into prefix + root + suffix
 - 'Learner understands how prefixation creates видові пари (aspectual pairs): писати (impf) → написати (pf)'
+dialogue_situations:
+- setting: 'Ukrainian language course in Одеса — the teacher shows how verbs are formed
+    from other parts of speech: білий→біліти (to become white), робота→робітничати,
+    крик→кричати, зима→зимувати. Students create new verbs from given words.'
+  speakers:
+  - Викладач
+  - Слухачі курсу (course attendees)
+  motivation: 'Verb formation: біліти (-іти), кричати (-ати), зимувати (-увати) from
+    nouns/adjectives'
 content_outline:
 - section: Способи творення дієслів (Ways of forming verbs)
   words: 700

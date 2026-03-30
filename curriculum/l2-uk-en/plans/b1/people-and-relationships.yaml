@@ -21,6 +21,16 @@ objectives:
   відрекомендувати, представити)"
 - "Learner can write a structured опис зовнішності людини following
   the Ukrainian school composition model (зачин — основна частина — кінцівка)"
+dialogue_situations:
+- setting: 'Wedding reception in Вінниця — introducing relatives to the partner''s
+    family: Це мій старший брат (m) — розумний і надійний. А це моя молодша сестра
+    (f) — веселіша за всіх! Познайомтеся з нашою бабусею (f) — найдобрішою жінкою.'
+  speakers:
+  - Наречена
+  - Наречений
+  - Родичі
+  motivation: 'Adjective agreement: старший брат(m), молодша сестра(f), найдобріша
+    жінка(f)'
 content_outline:
 - section: "Зовнішність людини: портретна лексика (Appearance: portrait vocabulary)"
   words: 700

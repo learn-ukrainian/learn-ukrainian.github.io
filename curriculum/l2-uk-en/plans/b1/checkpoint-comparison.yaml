@@ -20,6 +20,15 @@ objectives:
   in transactional contexts (shopping, services, reviews)"
 - "Learner can identify and correct common errors: *більш кращий,
   *самий великий, incorrect -н-/-нн- spelling, wrong suffix choice"
+dialogue_situations:
+- setting: 'Panel discussion at a Київській конференції (f, Kyiv conference) — comparing
+    Ukrainian cities for investment: Львів — найпривабливіший для туризму. Харків
+    розвивається швидше. Одеса — веселіша. Дніпро — наймолодше ІТ-місто.'
+  speakers:
+  - Модератор
+  - Експерти
+  motivation: 'Consolidation: comparative/superlative adjectives and adverbs, word
+    formation'
 content_outline:
 - section: "Повторення: ступені порівняння (Review: degrees of comparison)"
   words: 800

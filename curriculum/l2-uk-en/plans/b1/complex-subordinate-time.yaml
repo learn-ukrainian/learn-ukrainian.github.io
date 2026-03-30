@@ -19,6 +19,14 @@ objectives:
 - "Learner can connect часові речення to дієприслівники (M61-62) as
   alternative means of expressing temporal relations"
 - "Learner can correctly punctuate часові речення in all positions"
+dialogue_situations:
+- setting: 'Grandfather telling his life story at a сімейна вечеря (f, family dinner)
+    — time clauses: Коли я був молодим, жив у Полтаві. Після того як закінчив інститут
+    (m), переїхав до Києва. Поки працював, побудував хату (f, house).'
+  speakers:
+  - Дідусь
+  - Онуки
+  motivation: 'Time clauses: коли, після того як, поки, щойно in life narration'
 content_outline:
 - section: "Підрядні обставинні часу (Temporal subordinate clauses)"
   words: 650

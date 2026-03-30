@@ -18,6 +18,15 @@ objectives:
 - Learner can identify and use all semantic categories of зворотні дієслова with correct -ся/-сь euphony and pronunciation
 - Learner can form and choose between passive constructions (-ся vs -но/-то) and prefers active voice when appropriate
 - Learner can decompose prefixed verbs and identify formation methods
+dialogue_situations:
+- setting: 'Job interview at a Київська IT-компанія — demonstrating full verb mastery:
+    Якби я мав більше часу, вивчив би Python. Тестування проводиться щодня. Напишіть
+    тестове завдання (n, test task). Програма була розроблена нашою командою.'
+  speakers:
+  - HR-менеджер
+  - Кандидат
+  motivation: 'Consolidation: conditionals, imperatives, verbal nouns, reflexives,
+    passive'
 content_outline:
 - section: Огляд умовного способу (Conditional mood review)
   words: 800

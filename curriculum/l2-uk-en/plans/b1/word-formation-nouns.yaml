@@ -21,6 +21,14 @@ objectives:
   -ння/-ття/-ство and the безафіксний method (підпис ← підписати)"
 - "Learner can identify the word formation method (суфіксальний, префіксальний,
   префіксально-суфіксальний, безафіксний) for any given derived noun"
+dialogue_situations:
+- setting: 'Career fair at a Одеський університет (m) — reading job title badges:
+    Учитель (m, teacher), учителька (f). Письменник (m, writer), письменниця (f).
+    Бібліотека→бібліотекар (m). Їдальня (f, canteen) — від ''їсти''.'
+  speakers:
+  - Студенти на ярмарку вакансій
+  motivation: 'Noun formation: -тель/-тельк-, -ник/-ниц-, -ар; place names: їдальня,
+    пекарня'
 content_outline:
 - section: "Назви осіб за діяльністю (Agent nouns)"
   words: 900

@@ -20,6 +20,15 @@ objectives:
   to produce well-organized Ukrainian розповіді of 150-200 words"
 - "Learner can use appropriate register shifts within a narrative (dialogue
   in розмовний стиль, narration in нейтральний or художній стиль)"
+dialogue_situations:
+- setting: 'Creative writing competition in Чернівцях — students read their short
+    stories aloud: Він, увійшовши в кімнату, зупинився. ''Хто тут?'' — запитав він.
+    Ніхто не відповів. Хоча серце калатало, він пішов далі.'
+  speakers:
+  - Автор (reading)
+  - Журі (commenting)
+  motivation: 'Narrative techniques: gerunds, reported speech, double negation, concessive
+    in storytelling'
 content_outline:
 - section: "Будова розповіді (Structure of a narrative)"
   words: 600

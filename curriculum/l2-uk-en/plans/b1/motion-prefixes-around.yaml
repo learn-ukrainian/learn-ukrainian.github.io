@@ -17,6 +17,14 @@ objectives:
 - Learner can use об-/під- motion verbs with correct prepositions and cases (обійти навколо + Р.в., підійти до + Р.в.)
 - Learner can synthesize all 10 prefix groups (при-, до-, пі-/по-, від-, за-, ви-, пере-, про-, об-, під-) to describe complex
   spatial movements
+dialogue_situations:
+- setting: 'Tourist bus tour around Одеса — the guide describes the route: Ми об''їдемо
+    (go around) Привоз (m, famous market). Підійдіть (approach) до пам''ятника (m,
+    monument) Дюку. Обійдемо (walk around) Оперний театр (m, Opera House).'
+  speakers:
+  - Гід
+  - Туристи
+  motivation: 'Around prefixes: об''їхати (об''-), підійти (під-), обійти (об-)'
 content_outline:
 - section: 'Останні два префікси: об- та під- (The last two prefixes: об- and під-)'
   words: 550

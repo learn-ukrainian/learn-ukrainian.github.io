@@ -22,6 +22,16 @@ objectives:
   and choose appropriate register for different communicative contexts"
 - "Learner can set concrete language learning goals for B2 based on
   self-assessment of current strengths and weaknesses"
+dialogue_situations:
+- setting: 'Graduation ceremony at a Ukrainian language school — the student gives
+    a speech about their journey from A1 to B1: reflecting on what they learned, people
+    they met, places they visited in Ukraine. All tenses, moods, clause types, registers
+    — a celebration of progress.'
+  speakers:
+  - Випускник B1 (graduating student)
+  - Викладачі та одногрупники
+  motivation: 'Full B1 capstone: every grammar structure in an emotional personal
+    speech'
 content_outline:
 - section: "Підсумковий проєкт: вступ (Capstone project: introduction)"
   words: 400

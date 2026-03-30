@@ -20,6 +20,14 @@ objectives:
   and which are calques from Russian (головуючий, діючий → голова, чинний)"
 - "Learner can decline active participles like adjectives, agreeing
   in рід, число, and відмінок with the noun they modify"
+dialogue_situations:
+- setting: 'Nature documentary narration about Карпати — describing animals and scenery:
+    Олень (m, deer), що біжить через поляну (f, meadow). Водоспад (m, waterfall),
+    що падає зі скелі (f, cliff). Квітучі (blooming) луки (pl, meadows). Мандруючі
+    (wandering) хмари (pl, clouds).'
+  speakers:
+  - Оповідач (narrator)
+  motivation: 'Active participles: біжучий, падаючий, квітучий, мандруючий'
 content_outline:
 - section: "Що таке дієприкметник? (What is a participle?)"
   words: 600

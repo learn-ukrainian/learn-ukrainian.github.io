@@ -18,6 +18,15 @@ objectives:
 - "Learner can use correlative words in the main clause: то, тоді
   (Якщо прийдеш, то зателефонуй)"
 - "Learner can construct both реальні and нереальні умови in complex syntax"
+dialogue_situations:
+- setting: 'Business negotiation at a Дніпровська фабрика (f, Dnipro factory) — conditional
+    clauses: Якщо ви підпишете контракт (m), ми почнемо виробництво (n, production).
+    За умови що якість (f, quality) буде відповідною, продовжимо. Якби ціна (f, price)
+    була нижчою, ми б замовили більше.'
+  speakers:
+  - Директор фабрики
+  - Закордонний партнер
+  motivation: 'Conditional clauses: якщо, за умови що, якби — real and unreal in business'
 content_outline:
 - section: "Підрядні обставинні умови (Conditional subordinate clauses)"
   words: 650

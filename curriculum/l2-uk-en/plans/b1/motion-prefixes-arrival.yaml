@@ -17,6 +17,14 @@ objectives:
 - Learner can use при-/до- motion verbs with correct prepositions and cases (прийти до + Р.в., приїхати в/на + Зн.в., дійти
   до + Р.в.)
 - Learner can distinguish при- (focus on arriving) from до- (focus on reaching/completing the journey) in context
+dialogue_situations:
+- setting: 'Visitors arriving at a сільська садиба (f, rural estate) in Закарпаття
+    — everyone arrives differently: Ми прийшли (arrived on foot) з вокзалу. Тато доїхав
+    (reached by car) за дві години. Поїзд прибув (arrived, formal) о десятій.'
+  speakers:
+  - Господарі садиби
+  - Гості
+  motivation: 'Arrival prefixes: прийти (при-), доїхати (до-), прибути (при-)'
 content_outline:
 - section: Як префікси змінюють дієслова руху (How prefixes transform motion verbs)
   words: 600

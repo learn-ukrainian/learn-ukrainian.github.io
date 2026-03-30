@@ -20,6 +20,14 @@ objectives:
   connected discourse about travel and daily life"
 - "Learner can identify and correct errors involving motion verbs,
   prefixes, prepositions, and Russicisms in Ukrainian text"
+dialogue_situations:
+- setting: 'Oral exam — the student describes a journey using all motion verbs and
+    prefixes: Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова,
+    обійшов центр, зайшов у кав''ярню.'
+  speakers:
+  - Екзаменатор
+  - Студент
+  motivation: 'Consolidation: all motion verb pairs and prefix combinations in narration'
 content_outline:
 - section: "Вступ: як працювати з контрольною (Introduction: how to approach this test)"
   words: 350

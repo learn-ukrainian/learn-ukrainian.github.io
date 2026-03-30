@@ -19,6 +19,16 @@ objectives:
 - "Learner can combine причинні речення with other clause types for complex
   multi-clause sentences"
 - "Learner can express causation naturally in both spoken and written Ukrainian"
+dialogue_situations:
+- setting: 'Student explaining to the professor why the essay is late — reason clauses:
+    Я запізнився, бо хворів (was ill). Оскільки бібліотека (f, library) була зачинена,
+    не зміг знайти джерела (pl, sources). Через те що інтернет (m) не працював, не
+    надіслав вчасно.'
+  speakers:
+  - Студент
+  - Професор
+  motivation: 'Reason clauses: бо, оскільки, через те що, тому що — formal + informal
+    registers'
 content_outline:
 - section: "Підрядні обставинні причини (Causal subordinate clauses)"
   words: 600

@@ -20,6 +20,14 @@ objectives:
   готівка, картка, повернення, гарантія, розмір, примірка"
 - "Learner can write a simple complaint or review using comparison structures
   and formal register where appropriate"
+dialogue_situations:
+- setting: 'Shopping at a Львівський ТРЦ (m, Lviv shopping center) — comparing products:
+    Ця сукня (f, dress) гарніша, але дорожча. Чи є дешевша? Найкращий варіант (m,
+    option) — зі знижкою (f, discount). Ця крамниця (f, shop) більша за ту.'
+  speakers:
+  - Покупець
+  - Продавець-консультант
+  motivation: 'Shopping with comparisons: гарніший, дорожчий, найкращий, дешевший'
 content_outline:
 - section: "На ринку (At the market)"
   words: 700

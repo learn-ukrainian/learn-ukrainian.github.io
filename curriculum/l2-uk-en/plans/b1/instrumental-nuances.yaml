@@ -20,6 +20,15 @@ objectives:
   разом з другом, бути задоволеним результатом, захоплюватися мистецтвом"
 - "Learner can use the instrumental in passive constructions:
   книжка написана автором, рішення прийняте урядом"
+dialogue_situations:
+- setting: 'Describing colleagues at a Харківська фірма (f, Kharkiv company) — characterization:
+    Вона стала директоркою (f, director) молодою. Він працює перекладачем (m, translator).
+    Вона славиться красою (f, beauty). Ходить з розумним виглядом (m, expression).'
+  speakers:
+  - Нова співробітниця
+  - Колега
+  motivation: 'Instrumental of characterization: стати + inst, працювати + inst, славитися
+    + inst'
 content_outline:
 - section: "Орудний характеристики (Instrumental of characterisation)"
   words: 800

@@ -20,6 +20,15 @@ objectives:
   and офіційно-діловий стилі through concrete textual markers"
 - "Learner can express personal reactions to literary texts using opinion
   vocabulary and вставні слова in structured responses"
+dialogue_situations:
+- setting: 'Ukrainian literature class — reading an excerpt from Франко''s ''Захар
+    Беркут'': Оповідач каже, що Захар був мудрим. Хоча він старий, його слухають.
+    Коли загроза наближається, він збирає громаду (f, community).'
+  speakers:
+  - Вчитель літератури
+  - Учні (обговорюють)
+  motivation: 'Literary style: analyzing prose with subordinate clauses, reported
+    speech, characterization'
 content_outline:
 - section: "Художній стиль мовлення (The literary/artistic style)"
   words: 600

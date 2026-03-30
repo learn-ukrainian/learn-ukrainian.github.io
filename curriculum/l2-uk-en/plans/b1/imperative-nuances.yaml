@@ -18,6 +18,15 @@ objectives:
   action'
 - 'Learner can form polite requests using imperative softeners: будь ласка, прошу, чи не могли б ви + інфінітив'
 - Learner can correctly write м'який знак in imperative forms after д, т, з, с, ц, л, н (будь, лізь, глянь, занось)
+dialogue_situations:
+- setting: 'Rehearsal for an amateur theatre play in Чернівці — the director gives
+    commands to actors of various groups: Іване, вийди на сцену (f, stage)! Ходімо
+    далі! Нехай публіка (f, audience) зачекає! Будьте уважні!'
+  speakers:
+  - Режисер (director)
+  - Актори
+  motivation: 'Full imperative: вийди (2sg), ходімо (1pl), нехай зачекає (3sg), будьте
+    (2pl)'
 content_outline:
 - section: Повна парадигма наказового способу (Full imperative paradigm)
   words: 800

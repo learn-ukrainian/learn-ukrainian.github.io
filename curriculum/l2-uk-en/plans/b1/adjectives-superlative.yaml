@@ -20,6 +20,15 @@ objectives:
   (*самий кращий, *найбільш найкращий)"
 - "Learner can use superlatives naturally in descriptive and argumentative
   contexts (reviews, recommendations, debates)"
+dialogue_situations:
+- setting: 'Ukrainian geography lesson — discussing extremes: Говерла — найвища (f)
+    гора (f) в Україні. Дніпро — найдовша (f) річка (f). Київ — найбільше (n) місто
+    (n). Одеса — найвеселіше місто на узбережжі.'
+  speakers:
+  - Вчитель географії
+  - Учні
+  motivation: 'Superlative: найвищий, найдовший, найбільший with гора(f), річка(f),
+    місто(n)'
 content_outline:
 - section: "Проста форма найвищого ступеня (Simple superlative)"
   words: 800

@@ -21,6 +21,15 @@ objectives:
   and words that NEVER are (адже, навіть, принаймні, нібито)"
 - "Learner can use вставні слова naturally in both written and spoken Ukrainian
   to express attitude, organize discourse, and engage the listener"
+dialogue_situations:
+- setting: 'Academic presentation at a Київська конференція (f) — using parenthetical
+    words: По-перше, це важливо. По-друге, дослідження (n, research) підтверджує.
+    На жаль, даних (pl, data) замало. Очевидно, потрібен новий підхід (m, approach).
+    Безумовно, це крок уперед.'
+  speakers:
+  - Доповідач (presenter)
+  - Аудиторія
+  motivation: 'Parenthetical words: по-перше, по-друге, на жаль, очевидно, безумовно'
 content_outline:
 - section: "Що таке вставні слова? (What are parenthetical words?)"
   words: 600

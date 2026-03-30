@@ -22,6 +22,15 @@ objectives:
   register markers"
 - "Learner can identify and avoid common register errors: using розмовна лексика
   in formal contexts and канцеляризми in informal speech"
+dialogue_situations:
+- setting: 'Writing a formal заява (f, application) to a university rector — official
+    style: Шановний пане Ректоре! Прошу надати мені академічну відпустку (f, leave).
+    У зв''язку з сімейними обставинами (pl, circumstances). З повагою...'
+  speakers:
+  - Студент (пише)
+  - Секретар (допомагає)
+  motivation: 'Formal register: шановний, прошу, у зв''язку з, з повагою — official
+    documents'
 content_outline:
 - section: "Що таке офіційно-діловий стиль? (What is the official-business style?)"
   words: 600

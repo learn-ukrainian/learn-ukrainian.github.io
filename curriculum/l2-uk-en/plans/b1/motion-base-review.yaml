@@ -18,6 +18,14 @@ objectives:
   біжу)
 - Learner can use base motion verbs with correct prepositions and cases (іти до + Р.в., їхати в/на + Зн.в., бігти через +
   Зн.в.)
+dialogue_situations:
+- setting: 'Weekend morning in Київ — a couple decides how to get around: Я йду (on
+    foot) до ринку (m, market). Ти їдеш (by transport) на Поділ? Діти біжать (running)
+    у парк (m). А бабуся їде трамваєм.'
+  speakers:
+  - Чоловік
+  - Дружина
+  motivation: 'Motion verb pairs: іти/ходити, їхати/їздити, бігти/бігати'
 content_outline:
 - section: 'Світ руху: чому дієслова руху — особлива група? (The world of motion: why motion verbs are special)'
   words: 500

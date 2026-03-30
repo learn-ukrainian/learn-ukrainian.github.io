@@ -20,6 +20,15 @@ objectives:
   how prefixes and suffixes create new words and meaning shifts"
 - "Learner can use part-of-speech-specific suffixes to identify whether
   a word is an іменник, прикметник, or дієслово"
+dialogue_situations:
+- setting: 'Study group at a Lviv university library — students quiz each other on
+    morphology terms: корінь (m, root), префікс (m, prefix), суфікс (m, suffix), закінчення
+    (n, ending), основа (f, stem). They analyze words like переказувати, написання.'
+  speakers:
+  - Студентка Марина
+  - Студент Богдан
+  motivation: 'Morphology terms: корінь, префікс, суфікс, закінчення — word structure
+    analysis'
 content_outline:
 - section: "Що вивчає морфологія? (What does morphology study?)"
   words: 550

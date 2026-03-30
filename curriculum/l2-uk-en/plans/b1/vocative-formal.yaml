@@ -21,6 +21,13 @@ objectives:
   business letters, official emails, invitations"
 - "Learner can distinguish vocative usage levels: informal (Оксано!),
   neutral (пані Оксано), formal (шановна Оксано Петрівно)"
+dialogue_situations:
+- setting: 'Official ceremony at Верховна Рада (f, parliament) — formal addresses:
+    Шановний пане Президенте! Вельмишановна пані Міністре! Панове депутати! Пане Голово!'
+  speakers:
+  - Спікер (speaker)
+  - Депутати
+  motivation: 'Formal vocative: пане Президенте, пані Міністре, панове депутати'
 content_outline:
 - section: "Повторення: кличний відмінок (Vocative review)"
   words: 500

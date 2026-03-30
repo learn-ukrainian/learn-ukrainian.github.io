@@ -20,6 +20,15 @@ objectives:
   including their behaviour with prepositions (ні з ким, ні в чому)"
 - "Learner can distinguish stress-dependent meanings in negative pronouns:
   нікого (nobody around) vs нікого (nobody to turn to)"
+dialogue_situations:
+- setting: 'Philosophy seminar at Київський університет імені Шевченка — discussing
+    identity: Кожен має право. Ніхто не заперечує. Дехто з нас вірить. Будь-яка відповідь
+    (f, answer) правильна. Ті, хто думає інакше, нехай скажуть.'
+  speakers:
+  - Професор
+  - Студенти
+  motivation: 'Advanced pronouns: кожен, ніхто, дехто, будь-який, ті хто — in abstract
+    discourse'
 content_outline:
 - section: "Питально-відносні займенники (Interrogative-relative pronouns)"
   words: 700

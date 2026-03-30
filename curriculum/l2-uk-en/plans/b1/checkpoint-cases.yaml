@@ -20,6 +20,15 @@ objectives:
   expressions with nouns, and use collective numerals appropriately"
 - "Learner can use interrogative, indefinite, negative, and reflexive
   pronouns with correct spelling, case forms, and preposition splitting"
+dialogue_situations:
+- setting: 'University seminar presentation — student presents on Ukrainian cities
+    using all case nuances: Для мешканців Києва (gen). Завдяки інвестиціям (dat).
+    Славиться архітектурою (inst). У центрі міста (loc). Пане професоре! (voc)'
+  speakers:
+  - Студент (presenting)
+  - Професор (questioning)
+  motivation: 'Consolidation: partitive gen, experiencer dat, instrumental characterization,
+    formal voc'
 content_outline:
 - section: "Повторення: відмінки (Review: advanced case usages)"
   words: 800
