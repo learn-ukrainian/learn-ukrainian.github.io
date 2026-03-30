@@ -44,6 +44,9 @@
       },
       {
         "$ref": "#/definitions/translate-a1"
+      },
+      {
+        "$ref": "#/definitions/error-correction-a1"
       }
     ]
   },
@@ -330,25 +333,54 @@
           "minItems": 2,
           "items": {
             "type": "object",
-            "required": [
-              "words",
-              "answer"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "words": {
-                "type": "array",
-                "minItems": 3,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
+            "oneOf": [
+              {
+                "required": [
+                  "words",
+                  "answer"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "words": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "answer": {
+                    "type": "string",
+                    "minLength": 1
+                  }
                 }
               },
-              "answer": {
-                "type": "string",
-                "minLength": 1
+              {
+                "required": [
+                  "words",
+                  "correct_order"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "words": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "correct_order": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
               }
-            }
+            ]
           }
         },
         "instruction": {
@@ -788,6 +820,66 @@
         },
         "notes": {
           "type": "string"
+        }
+      }
+    },
+    "error-correction-a1": {
+      "type": "object",
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "error-correction"
+        },
+        "title": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "error",
+              "correction"
+            ],
+            "properties": {
+              "sentence": {
+                "type": "string"
+              },
+              "error": {
+                "type": "string"
+              },
+              "correction": {
+                "type": "string"
+              },
+              "error_type": {
+                "type": "string"
+              },
+              "explanation": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     }

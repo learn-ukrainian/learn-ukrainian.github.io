@@ -277,25 +277,54 @@
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": [
-              "words",
-              "answer"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "words": {
-                "type": "array",
-                "minItems": 3,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
+            "oneOf": [
+              {
+                "required": [
+                  "words",
+                  "answer"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "words": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "answer": {
+                    "type": "string",
+                    "minLength": 1
+                  }
                 }
               },
-              "answer": {
-                "type": "string",
-                "minLength": 1
+              {
+                "required": [
+                  "words",
+                  "correct_order"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "words": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "correct_order": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
               }
-            }
+            ]
           }
         },
         "instruction": {
@@ -458,7 +487,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
