@@ -4162,7 +4162,7 @@ def main():
 
     if use_skeleton and skeleton_text:
         _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
-    elif use_skeleton and not skeleton_text and "skeleton" not in completed_phases:
+    elif use_skeleton and not skeleton_text and "skeleton" not in completed_phases and steps == "all":
         _log("\n  ⚠️  Skeleton was requested but generation failed — writing without skeleton")
 
     # Try to load existing skeleton from disk if running single step
