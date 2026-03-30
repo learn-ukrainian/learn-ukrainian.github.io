@@ -28,10 +28,10 @@ dialogue_situations:
   - Мер
   motivation: 'Direct → indirect speech: сказав що, запитав чи, попросив щоб'
 content_outline:
-- section: "Пряма мова: будова і розділові знаки (Direct speech: structure and punctuation)"
+- section: "Пряма мова: будова і розділові знаки"
   words: 800
   points:
-  - "Definition from Заболотний Grade 9 p.31: пряма мова — це точно
+  - "Definition from Заболотний Grade 8 p.31: пряма мова — це точно
     відтворене чуже мовлення. It consists of two parts:
     слова автора (author's words) and пряма мова (the quote).
     Four punctuation patterns:
@@ -44,10 +44,10 @@ content_outline:
     The слова автора contain a verb of speech: сказав, запитав,
     відповів, крикнув, прошепотів, подумав."
   - "Practice: punctuate 8 sentences with пряма мова in all four patterns."
-- section: "Непряма мова: перетворення (Indirect speech: transformation)"
+- section: "Непряма мова: перетворення"
   words: 800
   points:
-  - "Definition from Заболотний Grade 9 p.31: непряма мова — це чуже
+  - "Definition from Заболотний Grade 8 p.31: непряма мова — це чуже
     мовлення, яке передають не дослівно, а лише зі збереженням змісту.
     Непряма мова uses складнопідрядне речення structure:
     Тарас сказав, що він приїде завтра.
@@ -64,7 +64,7 @@ content_outline:
     вчора → напередодні, завтра → наступного дня.
     These shifts are systematic, not random."
   - "Practice: transform 10 sentences from пряма to непряма мова."
-- section: "Складні випадки перетворення (Complex transformation cases)"
+- section: "Складні випадки перетворення"
   words: 550
   points:
   - "Imperative → щоб + past tense:
@@ -78,7 +78,7 @@ content_outline:
     Він крикнув: «Яка краса!» → Він сказав, що це дуже красиво.
     Вигуки, звертання, частки — disappear in непряма мова.
     This is why пряма мова is more expressive."
-- section: "Діалог: оформлення (Dialogue: formatting)"
+- section: "Діалог: оформлення"
   words: 450
   points:
   - "Ukrainian dialogue formatting with тире:
@@ -89,7 +89,7 @@ content_outline:
     Each new speaker starts with тире on a new line."
   - "Dialogue in narrative text: combining авторські ремарки with speech.
     Practice: format a short dialogue (6-8 exchanges) with correct punctuation."
-- section: "Практика: пряма і непряма мова у тексті (Practice in text)"
+- section: "Практика: пряма і непряма мова у тексті"
   words: 700
   points:
   - "Reading passage: a narrative containing both пряма and непряма мова.
@@ -100,7 +100,7 @@ content_outline:
   - "Production: write a short narrative (8-10 sentences) about a
     conversation you had. Use at least 3 instances of пряма мова
     and 3 of непряма мова, with correct punctuation throughout."
-- section: "Підсумок та перехід до M75 (Summary and transition)"
+- section: "Підсумок та перехід до M75"
   words: 300
   points:
   - "Summary: пряма мова = дослівна передача + лапки + автор.
@@ -156,12 +156,9 @@ grammar:
 - "Діалог formatting with тире"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 9, p.31-43"
-  notes: "Пряма й непряма мова: definition, punctuation patterns,
-    transformation rules, dialogue formatting, exercises."
-- title: "Ворон Grade 11, p.222"
-  notes: "Невласне пряма мова: intermediate type combining features
-    of direct and indirect speech (художній стиль)."
-- title: "Глазова Grade 11, p.146"
-  notes: "Пунктуаційна норма: пряма мова punctuation rules,
-    distinction from непряма мова."
+- title: "Заболотний Grade 5, §50"
+  notes: "Речення з прямою мовою. Пряма мова та слова автора. Пунктуація: А: «П», «П», — а."
+- title: "Авраменко Grade 5, §79-80"
+  notes: "Пряма мова. Діалог. Розділові знаки для оформлення прямої мови та діалогу."
+- title: "Заболотний Grade 5, §50"
+  notes: "Заміна прямої мови непрямою. Складнопідрядні речення з непрямою мовою. Exercises and transformation rules."

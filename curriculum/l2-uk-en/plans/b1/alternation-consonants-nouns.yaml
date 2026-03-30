@@ -29,7 +29,7 @@ dialogue_situations:
   - Покупець
   motivation: 'Consonant alternation in nouns: г→ж, к→ц, х→с in locative and vocative'
 content_outline:
-- section: "Що таке чергування приголосних? (What is consonant alternation?)"
+- section: "Що таке чергування приголосних?"
   words: 500
   points:
   - "Bridge from M08 (alternation-vowels): learners now understand
@@ -137,7 +137,7 @@ content_outline:
     Common mistakes by L2 speakers: *Олего! (wrong — should be Олеже)."
   - "Practice: learners write short dialogues using кличний відмінок
     with proper names, applying the correct alternation."
-- section: "Підсумок: таблиця чергувань (Summary: alternation table)"
+- section: "Підсумок: таблиця чергувань"
   words: 450
   points:
   - "Complete reference table:

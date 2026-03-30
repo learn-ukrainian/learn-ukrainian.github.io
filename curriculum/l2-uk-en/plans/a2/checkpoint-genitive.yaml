@@ -76,15 +76,15 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Identify the Genitive preposition and its function in context sentences
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences requiring Genitive singular and plural with correct agreement
-  items: 6
+  items: 8
 - type: match-up
   focus: Match situations (market, doctor, directions) to correct Genitive expressions
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 5-7
+- title: Заболотний Grade 5-6
   notes: Comprehensive review of Genitive case across prepositions, agreement, and plural
 - title: 'ULP: 10 Uses of Genitive Case'
   url: https://www.ukrainianlessons.com/genitive-case/

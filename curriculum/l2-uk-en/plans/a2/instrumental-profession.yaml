@@ -95,17 +95,17 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Put profession nouns into Instrumental after бути/стати/працювати
-  items: 6
+  items: 8
 - type: match-up
   focus: Match verbs (захоплюватися, цікавитися, пишатися) to correct Instrumental
     complements
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose Nominative or Instrumental for the profession noun based on tense
-  items: 6
+  items: 8
 - type: fill-in
   focus: Answer questions about professions using full Instrumental sentences
-  items: 6
+  items: 8
 references:
 - title: Кравцова Grade 4, с. 58
   notes: 'Exercise 159 — "Ким ти мрієш стати?" with profession nouns in Instrumental:

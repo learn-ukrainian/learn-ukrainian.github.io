@@ -29,7 +29,7 @@ dialogue_situations:
   - Ведучий подкасту
   motivation: 'Gerund phrases: працюючи над собою, прочитавши книгу, не зробивши кроку'
 content_outline:
-- section: "Дієприслівниковий зворот: будова (Structure of the gerund phrase)"
+- section: "Дієприслівниковий зворот: будова"
   words: 600
   points:
   - "Definition from Заболотний Grade 7 p.127: дієприслівниковий зворот —
@@ -44,7 +44,7 @@ content_outline:
   - "Comparison with одиничний дієприслівник (single gerund without
     dependent words): Усміхаючись, вона підійшла. Both the phrase
     and the single gerund follow the same comma rule."
-- section: "Правила відокремлення (Comma rules)"
+- section: "Правила відокремлення"
   words: 800
   points:
   - "Main rule from Литвінова Grade 7 p.114 and Заболотний Grade 8 p.205:
@@ -60,7 +60,7 @@ content_outline:
     Відчинивши двері i ввімкнувши світло, він оглянув кімнату.
     (single comma pair, not between the two phrases joined by i)"
   - "EXCEPTIONS — NO commas (from Заболотний Grade 8 p.205
-    and Ворон Grade 11 p.152):
+    and Авраменко Grade 7 p.152):
     1. Фразеологічні звороти: працює не покладаючи рук,
     слухали затамувавши подих, бігли не чуючи ніг.
     2. Дієприслівник приєднано сполучником i як однорідний до
@@ -72,7 +72,7 @@ content_outline:
     after the verb: стояв похилившись, сидів задумавшись."
   - "Practice: 12 sentences — learners place commas correctly,
     including exception cases."
-- section: "Порівняння зворотів: дієприкметниковий vs дієприслівниковий (Comparison)"
+- section: "Порівняння зворотів: дієприкметниковий vs дієприслівниковий"
   words: 550
   points:
   - "Key differences:
@@ -88,7 +88,7 @@ content_outline:
     WHICH book was on the table."
   - "Practice: classify phrases in sentences as дієприкметникові or
     дієприслівникові звороти and apply correct punctuation."
-- section: "Помилки та стилістика (Errors and stylistics)"
+- section: "Помилки та стилістика"
   words: 550
   points:
   - "Dangling gerund (рeview from M61-62, now with full phrases):
@@ -105,7 +105,7 @@ content_outline:
   - "Register awareness: gerund phrases are more common in
     художній, науковий, and публіцистичний styles. In розмовний
     style, Ukrainians prefer clauses or simple sentences."
-- section: "Iнтегрована практика (Integrated practice)"
+- section: "Iнтегрована практика"
   words: 600
   points:
   - "Reading passage: a literary excerpt or news article using both
@@ -118,7 +118,7 @@ content_outline:
     about a journey or event, using at least 3 дієприслівникові звороти
     (mix of imperfective and perfective) and 2 дієприкметникові звороти.
     Correct punctuation throughout."
-- section: "Підсумок та перехід до M64 (Summary and transition)"
+- section: "Підсумок та перехід до M64"
   words: 300
   points:
   - "Summary: дієприслівниковий зворот = дієприслівник + залежні слова.
@@ -159,7 +159,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: "Write a narrative using both дієприкметникові and дієприслівникові звороти with correct punctuation"
-  items: 1
+  items: 6
 connects_to:
 - "b1-061 (Дієприслівники недоконаного виду)"
 - "b1-062 (Дієприслівники доконаного виду)"
@@ -181,7 +181,7 @@ references:
 - title: "Заболотний Grade 8, p.205"
   notes: "Відокремлення обставин: full exception list for when gerund
     phrases are NOT set off by commas."
-- title: "Ворон Grade 11, p.152"
+- title: "Авраменко Grade 7, p.152"
   notes: "Не відокремлюються комами обставини: фразеологічні звороти,
     підсилювальна частка i, manner-adverb single gerunds."
 - title: "Литвінова Grade 7, p.114-117"

@@ -98,15 +98,15 @@ activity_hints:
 - type: fill-in
   focus: Complete gaps in a dialogue with the correct case form — all 7 cases
     represented, both singular and plural
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify which case a highlighted noun is in and explain why (verb or
     preposition trigger)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match sentence halves so that the case form in the first half agrees with
     the preposition/verb in the second half
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §§59-70
   notes: Full case paradigm with exercises combining all cases

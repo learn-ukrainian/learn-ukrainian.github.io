@@ -26,7 +26,7 @@ dialogue_situations:
   - Гості
   motivation: 'Arrival prefixes: прийти (при-), доїхати (до-), прибути (при-)'
 content_outline:
-- section: Як префікси змінюють дієслова руху (How prefixes transform motion verbs)
+- section: Як префікси змінюють дієслова руху
   words: 600
   points:
   - 'Bridge from M28: learners now know 8 base motion verb pairs. This module begins the prefix system — the most productive
@@ -37,7 +37,7 @@ content_outline:
     imperfective: ходити → приходити (impf.), їздити → приїздити (impf.).'
   - 'This module focuses on при- and до- — the ''arrival'' prefixes. Reading passage: a family reunion scene where relatives
     прийшли, приїхали, прилетіли from different cities.'
-- section: 'Префікс при-: прибуття (Prefix при-: arrival)'
+- section: 'Префікс при-: прибуття'
   words: 850
   points:
   - 'При- means arriving at a destination, showing up, appearing: прийти (to come/arrive on foot): Друзі прийшли о шостій.
@@ -51,7 +51,7 @@ content_outline:
     їжу. приносити (to bring regularly): Листоноша приносить пошту щоранку.'
   - 'Prepositions with при-: прийти до + Р.в. (прийти до лікаря), прийти в/у + Зн.в. (прийти в магазин), прийти на + Зн.в.
     (прийти на роботу). 8-10 example sentences in realistic contexts.'
-- section: 'Префікс до-: досягнення мети (Prefix до-: reaching the destination)'
+- section: 'Префікс до-: досягнення мети'
   words: 850
   points:
   - 'До- means reaching a point, getting all the way to the destination, often emphasizing the effort or distance of reaching:
@@ -66,7 +66,7 @@ content_outline:
     imperfective pair in everyday speech.'
   - 'Do- always requires до + Р.в. (direction toward): дійти до школи, доїхати до міста, добігти до фінішу. The preposition
     до echoes the prefix до-, reinforcing the meaning. 8-10 example sentences.'
-- section: При- чи до-? Різниця у значенні (При- or до-? Semantic difference)
+- section: При- чи до-? Різниця у значенні
   words: 700
   points:
   - 'Core distinction: при- focuses on ARRIVAL (appearing at the destination): Ми приїхали до Києва = We arrived in Kyiv (focus:
@@ -80,7 +80,7 @@ content_outline:
     all the way to you — emphasis on journey). Він приїхав до Львова (He arrived in Lviv — he is now there). Він доїхав до
     Львова (He made it to Lviv — covering the distance).'
   - '6-8 practice scenarios: learners choose при- or до- based on context.'
-- section: 'Практика: прибуття та досягнення (Practice: arrival and reaching)'
+- section: 'Практика: прибуття та досягнення'
   words: 700
   points:
   - 'Dialogue: two friends discuss travel plans and arrivals — incorporating при- and до- verbs naturally in conversation.
@@ -89,7 +89,7 @@ content_outline:
     Model text (150-200 words) followed by comprehension questions.'
   - 'Production exercise: learners describe their own journey (real or imagined), using at least 5 different при-/до- motion
     verbs with correct prepositions and cases.'
-- section: 'Підсумок: при- i до- (Summary)'
+- section: 'Підсумок: при- i до-'
   words: 300
   points:
   - 'Complete table: при- and до- with all 8 base verbs. при-: прийти, приїхати, прибігти, принести, привести, привезти, прилетіти,
@@ -119,7 +119,7 @@ vocabulary_hints:
   - доплисти (to swim all the way to — perfective)
   - довести (to lead all the way to — perfective)
   - довезти (to transport all the way to — perfective)
-  - курієр (courier)
+  - кур'єр (courier)
   - посилка (package/parcel)
   - листоноша (mail carrier)
   - вершина (summit/peak)
@@ -141,7 +141,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Write a short travel narrative using at least 4 при- and 3 до- verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-028 (motion-base-review — unprefixed motion verbs that these are built on)
 - b1-030 (motion-prefixes-departure — пі-/по- and від- departure prefixes)

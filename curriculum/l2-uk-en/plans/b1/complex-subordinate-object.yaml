@@ -29,10 +29,10 @@ dialogue_situations:
   motivation: 'Object clauses: що + indicative in reported speech: кажу що, знаю що,
     думаю що'
 content_outline:
-- section: "Складнопідрядне речення: вступ (Complex sentence: introduction)"
+- section: "Складнопідрядне речення: вступ"
   words: 600
   points:
-  - "Definition from Заболотний Grade 9 p.84: складнопідрядне речення
+  - "Definition from Заболотний Grade 8 p.84: складнопідрядне речення
     складається з головної частини і однієї або кількох підрядних частин.
     Підрядна частина залежить від головної і відповідає на питання.
     The key difference from складносурядне (M66): parts are NOT equal."
@@ -44,10 +44,10 @@ content_outline:
   - "Three main types from Ворон Grade 9 p.57:
     означальні (M68), з'ясувальні (this module), обставинні (M69-73).
     This module focuses on з'ясувальні — the most common in speech."
-- section: "З'ясувальні підрядні частини (Object/explanatory clauses)"
+- section: "З'ясувальні підрядні частини"
   words: 750
   points:
-  - "From Заболотний Grade 9 p.94: з'ясувальна підрядна частина
+  - "From Заболотний Grade 8 p.94: з'ясувальна підрядна частина
     відповідає на питання непрямих відмінків (кого? чого? кому? чому?
     кого? що? ким? чим?) and is joined by:
     Сполучники: що, щоб, аби, мов, як, чи, ніби, наче, неначе.
@@ -64,10 +64,10 @@ content_outline:
     Я хочу, щоб ти допоміг. (щоб — purpose/desire)
     Ніхто не знає, де він живе. (де — relative word)
     Розкажи, хто тобі це сказав. (хто — relative word)"
-- section: "Сполучник vs сполучне слово (Conjunction vs relative word)"
+- section: "Сполучник vs сполучне слово"
   words: 600
   points:
-  - "Critical distinction from Заболотний Grade 9 p.84:
+  - "Critical distinction from Заболотний Grade 8 p.84:
     Сполучник що: has NO syntactic role in the subordinate clause.
     Я знаю, що він прийде. (що just connects; він — subject, прийде — predicate)
     Сполучне слово що: IS a member of the subordinate clause.
@@ -82,7 +82,7 @@ content_outline:
     скільки: Вона не знає, скільки це коштує. (скільки = quantity)"
   - "Practice: in 8 sentences, determine whether що/як/хто is
     a conjunction or relative word."
-- section: "Пунктуація та побудова (Punctuation and construction)"
+- section: "Пунктуація та побудова"
   words: 550
   points:
   - "Main rule: comma before the conjunction/relative word:
@@ -97,7 +97,7 @@ content_outline:
   - "Practice: construct 8 з'ясувальні речення from prompts.
     Given: main clause + information to express.
     Learner adds correct conjunction and subordinate clause."
-- section: "З'ясувальні речення у мовленні (Object clauses in speech)"
+- section: "З'ясувальні речення у мовленні"
   words: 650
   points:
   - "High-frequency patterns in daily speech:
@@ -113,7 +113,7 @@ content_outline:
     — Знайдіть усі з'ясувальні підрядні частини.
     — Визначте пояснюване слово для кожної.
     — Визначте: сполучник чи сполучне слово?"
-- section: "Підсумок та перехід до M68 (Summary and transition)"
+- section: "Підсумок та перехід до M68"
   words: 350
   points:
   - "Summary: з'ясувальні = підрядні, що відповідають на питання
@@ -171,12 +171,12 @@ grammar:
 - "Punctuation: comma before subordinate conjunction"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 9, p.84-94"
+- title: "Заболотний Grade 8, p.84-94"
   notes: "Складнопідрядне речення overview, з'ясувальні підрядні:
     пояснювані слова, сполучники, сполучні слова, exercises."
 - title: "Ворон Grade 9, p.57-69"
   notes: "Types of складнопідрядні речення: означальні, з'ясувальні,
     обставинні classification table."
-- title: "Авраменко Grade 9, p.73"
+- title: "Авраменко Grade 8, p.73"
   notes: "Складнопідрядне речення overview: types, formation,
     punctuation patterns."

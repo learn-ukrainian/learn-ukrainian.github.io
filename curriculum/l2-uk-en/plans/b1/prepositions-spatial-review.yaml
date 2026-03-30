@@ -30,7 +30,7 @@ dialogue_situations:
   - Вантажники (movers)
   motivation: 'Spatial prepositions: біля + gen, на + loc, під + inst, між + inst'
 content_outline:
-- section: "Простір навколо нас: нащо потрібні просторові прийменники? (Space around us: why spatial prepositions matter)"
+- section: "Простір навколо нас: нащо потрібні просторові прийменники?"
   words: 500
   points:
   - "Bridge from A2 knowledge: learners already know basic prepositions
@@ -46,7 +46,7 @@ content_outline:
   - "Reading passage: a description of a Ukrainian city square (площа)
     using all target prepositions. Learners encounter the prepositions
     in natural context before analyzing them."
-- section: "Прості просторові прийменники: біля, серед, навпроти (Simple spatial prepositions)"
+- section: "Прості просторові прийменники: біля, серед, навпроти"
   words: 700
   points:
   - "Біля + родовий відмінок: near/beside.
@@ -69,7 +69,7 @@ content_outline:
   - "Practice: learners describe the layout of their neighborhood using
     біля, серед, навпроти with correct case endings. 8-10 example
     sentences modeling natural Ukrainian spatial descriptions."
-- section: "Між, над, під, за, перед (Between, above, below, behind, in front of)"
+- section: "Між, над, під, за, перед"
   words: 700
   points:
   - "Між + орудний відмінок: between/among.
@@ -91,7 +91,7 @@ content_outline:
     Compound: з-за (= from behind): Визирнув з-за рогу."
   - "10-12 example sentences with mixed prepositions in realistic
     scenarios: describing a park, a classroom, a city intersection."
-- section: "Складні та складені просторові прийменники (Complex spatial prepositions)"
+- section: "Складні та складені просторові прийменники"
   words: 600
   points:
   - "From Авраменко Grade 7 p.163, Литвінова Grade 7 p.167:
@@ -109,7 +109,7 @@ content_outline:
     Позаду колони йшли музиканти. Попереду нас бігла собака.
     Обабіч + родовий: Обабіч дороги — поля.
     Неподалік + родовий/від: Неподалік вокзалу є готель."
-- section: "Прийменник чи прислівник? (Preposition or adverb?)"
+- section: "Прийменник чи прислівник?"
   words: 500
   points:
   - "From Заболотний Grade 7 p.184: 'Поблизу села було джерело (prep.)
@@ -123,7 +123,7 @@ content_outline:
     попереду: Попереду загону йшов командир (prep.) / Біжи попереду (adv.)."
   - "Error correction exercise: learners identify whether highlighted words
     are prepositions or adverbs and check case agreement."
-- section: "Просторовий опис: кімната, вулиця, місто (Spatial descriptions: room, street, city)"
+- section: "Просторовий опис: кімната, вулиця, місто"
   words: 600
   points:
   - "Model description of a Ukrainian apartment (квартира):
@@ -135,7 +135,7 @@ content_outline:
   - "Self-check in Ukrainian: Опишіть свою кімнату, вживаючи щонайменше
     8 різних просторових прийменників. For each preposition, verify the
     case of the following noun."
-- section: "Підсумок: ваш просторовий словник (Summary: your spatial vocabulary)"
+- section: "Підсумок: ваш просторовий словник"
   words: 400
   points:
   - "Complete preposition table organized by case requirement:
@@ -196,7 +196,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: "Describe a room or street scene using at least 8 different spatial prepositions"
-  items: 1
+  items: 6
 connects_to:
 - "b1-028 (motion-base-review — base motion verbs that combine with these prepositions)"
 - "b1-036 (traveling-ukraine — spatial prepositions in travel narratives)"

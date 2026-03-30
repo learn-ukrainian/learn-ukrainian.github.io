@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Media/journalism: reported speech, passive voice, formal register in
     news'
 content_outline:
-- section: "Що таке медіа? (What is media?)"
+- section: "Що таке медіа?"
   words: 550
   points:
   - "Definition from Авраменко Grade 7 p.28:
@@ -52,7 +52,7 @@ content_outline:
   - "Cultural note: Ukrainian media landscape — key outlets.
     Українська правда, Новинарня, Суспільне, ТСН.
     The importance of Ukrainian-language media for diaspora and learners."
-- section: "Читання новин (Reading news)"
+- section: "Читання новин"
   words: 700
   points:
   - "Structure of a news article:
@@ -73,7 +73,7 @@ content_outline:
     The вставні слова signal opinions: 'на думку,' 'мабуть,' 'можливо.'"
   - "Practice: learners read two short Ukrainian news articles (100-150 words
     each) on accessible topics and answer comprehension questions in Ukrainian."
-- section: "Медіаманіпулювання (Media manipulation)"
+- section: "Медіаманіпулювання"
   words: 600
   points:
   - "Definition from Авраменко Grade 7 p.184:
@@ -93,7 +93,7 @@ content_outline:
   - "The decolonization connection: Russian media manipulation about Ukraine
     uses all these techniques. Learning to read critically in Ukrainian
     is not just a language skill — it is cultural self-defense."
-- section: "Суспільне життя (Social life)"
+- section: "Суспільне життя"
   words: 600
   points:
   - "Суспільно-політична лексика for B1:
@@ -114,7 +114,7 @@ content_outline:
     Practice: learners discuss social topics using full B1 toolkit."
   - "Reading practice: a B1-adapted article about волонтерство в Україні,
     with comprehension and vocabulary exercises."
-- section: "Медіатекст: аналіз i створення (Media text: analysis and creation)"
+- section: "Медіатекст: аналіз i створення"
   words: 600
   points:
   - "Analyzing a Ukrainian media text:
@@ -134,7 +134,7 @@ content_outline:
     основна частина. Include at least 2 абревіатури."
   - "Oral practice: learners present their new report to the class,
     then answer questions — applying all B1 skills in an integrated task."
-- section: "Підсумок: медіаграмотність (Summary: media literacy)"
+- section: "Підсумок: медіаграмотність"
   words: 350
   points:
   - "Complete reference: media vocabulary, news text structure,
@@ -176,27 +176,27 @@ activity_hints:
 - type: quiz
   focus: "Distinguish facts from opinions in text excerpts. Identify
     manipulation techniques. Match media terms to definitions."
-  items: 10
+  items: 12
 - type: fill-in
   focus: "Complete news article templates with correct vocabulary, стиль
     markers, and абревіатури. Write a лід paragraph."
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match суспільно-політична лексика to definitions, media types
     to categories, manipulation techniques to examples."
-  items: 10
+  items: 12
 - type: error-correction
   focus: "Identify стиль violations in media texts (розмовна лексика in
     news articles, missing facts, unsubstantiated claims)."
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write a response to a news article (100-150 words) using
     аргументація structure and публіцистичний стиль language."
-  items: 1
+  items: 12
 - type: group-sort
   focus: "Sort statements into факти vs думки, and sort vocabulary into
     публіцистичний vs розмовний register."
-  items: 10
+  items: 12
 connects_to:
 - "b1-086 (Аргументація — argumentation skills applied to media)"
 - "b1-079 (Абревіатури — abbreviations in news texts)"

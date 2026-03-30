@@ -8,7 +8,7 @@ subtitle: Повторення всієї граматики рівня A2
 focus: review
 pedagogy: Review
 phase: A2.8 [Refinement and Graduation]
-word_target: 1500
+word_target: 2000
 objectives:
 - Learner can correctly use all seven cases in singular and plural with
   nouns, adjectives, and pronouns in mixed exercises.
@@ -81,13 +81,13 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Mixed case drill — all seven cases in one exercise
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose perfective or imperfective aspect for the context
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort grammar concepts by category (case, aspect, comparison, conjunction)
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Повторення вивченого
   notes: End-of-year review format for all grammar topics

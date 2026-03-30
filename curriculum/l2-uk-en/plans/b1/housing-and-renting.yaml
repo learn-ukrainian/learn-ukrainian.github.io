@@ -30,7 +30,7 @@ dialogue_situations:
   - Власник (landlord)
   motivation: 'Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)'
 content_outline:
-- section: "Опис житла (Describing housing)"
+- section: "Опис житла"
   words: 700
   points:
   - "Types of housing: квартира, будинок, приватний будинок, гуртожиток,
@@ -45,7 +45,7 @@ content_outline:
   - "Furniture and appliances: меблі (pl.), шафа, ліжко, стіл, крісло,
     диван, плита, холодильник, пральна машина, посудомийка.
     Practice: describe your ideal apartment using 10+ case constructions."
-- section: "Оголошення про оренду (Rental advertisements)"
+- section: "Оголошення про оренду"
   words: 600
   points:
   - "Reading real-format Ukrainian rental ads:
@@ -58,7 +58,7 @@ content_outline:
     Скільки коштує оренда? Чи входять комунальні у вартість?"
   - "Practice: read 3 rental ads, extract key information, write
     a response message for the one you prefer."
-- section: "Переговори про оренду (Negotiating rental terms)"
+- section: "Переговори про оренду"
   words: 700
   points:
   - "Key rental vocabulary:
@@ -76,7 +76,7 @@ content_outline:
   - "Rights and rules: Хто оплачує ремонт? Чи можна з тваринами?
     Чи можна замінити меблі? Як повідомити про виїзд?
     Practice: role-play a lease negotiation using formal register."
-- section: "Проблеми з житлом (Housing problems)"
+- section: "Проблеми з житлом"
   words: 600
   points:
   - "Common problems and complaints:
@@ -91,7 +91,7 @@ content_outline:
     and purpose constructions (для ремонту, щоб полагодити)."
   - "Practice: write a complaint message about a housing problem,
     using formal register, vocative, and purpose/cause prepositions."
-- section: "Практика: пошук квартири (Practice: apartment hunting)"
+- section: "Практика: пошук квартири"
   words: 600
   points:
   - "Extended role play: the full process from ad to lease.
@@ -107,7 +107,7 @@ content_outline:
     Кл.в. (Шановний пане)?
     порівняння (ця квартира більша, але дорожча)?
     числівники (на третьому поверсі, двадцять п'ять тисяч)?"
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Key housing vocabulary organized by category: types, rooms,
@@ -141,22 +141,22 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: "Choose correct case and preposition for housing descriptions"
-  items: 8
+  items: 12
 - type: fill-in
   focus: "Complete rental ad and negotiation dialogue with correct forms"
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match housing problem to correct complaint phrase"
-  items: 8
+  items: 12
 - type: dialogue-completion
   focus: "Complete apartment viewing and negotiation dialogue"
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write a rental ad for your apartment or a complaint about a problem"
-  items: 2
+  items: 12
 - type: sentence-builder
   focus: "Describe apartments using spatial cases and comparisons"
-  items: 6
+  items: 12
 connects_to:
 - "b1-046 through b1-054 (Phase 6 grammar modules applied in context)"
 - "b1-044 (Покупки і послуги — transactional language)"

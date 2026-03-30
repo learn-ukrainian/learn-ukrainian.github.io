@@ -79,13 +79,13 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Identify the dative form among case options (recognition — Part 1 material)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with correct dative noun/adjective/pronoun endings (Part 2 material)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match dative-governing verbs to correct case forms and sentence completions
-  items: 6
+  items: 8
 references:
 - title: "Заболотний Grade 10, §157"
   notes: "Complete dative case reference — noun endings, parallel forms, style rules"

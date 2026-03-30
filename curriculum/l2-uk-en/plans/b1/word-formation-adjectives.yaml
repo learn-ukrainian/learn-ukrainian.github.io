@@ -32,7 +32,7 @@ dialogue_situations:
   motivation: 'Adjective formation: лісовий (-ов-), міський (-ськ-), синюватий (-уват-),
     золотистий (-ист-)'
 content_outline:
-- section: "Суфіксальне творення прикметників (Suffixal formation)"
+- section: "Суфіксальне творення прикметників"
   words: 900
   points:
   - "Most productive method from Литвінова Grade 6 p.208:
@@ -41,18 +41,18 @@ content_outline:
     -н-: зима → зимний, телефон → телефонний
     -ськ-/-зьк-/-цьк-: Київ → київський, Париж → паризький,
     козак → козацький, Бахмач → бахмацький
-    (Караман Grade 10 p.132)"
+    (Заболотний Grade 7 p.132)"
   - "Suffixes for якісні прикметники (Авраменко Grade 6 p.136):
     -еньк-/-есеньк-: чистенький, малесенький (diminutive quality)
     -юч-/-ющ-: смачнюча, здоровенюча (augmentative quality)
     -уват-/-юват-: білуватий, синюватий (approximate quality — 'somewhat')
     -ив-/-лив-: вигадливий, кмітливий (characteristic quality)"
-  - "The -ськ-/-зьк-/-цьк- alternation rule (Караман Grade 10 p.132):
+  - "The -ськ-/-зьк-/-цьк- alternation rule (Заболотний Grade 7 p.132):
     Base ending in [к] → -цьк-: козак-козацький
     Base ending in [ж], [з], [с] → -зьк-: Париж-паризький, француз-французький
     Base ending in other consonants → -ськ-: Київ-київський, студент-студентський
     Practice: form adjectives from 12 geographic and social nouns."
-- section: "Написання -Н- і -НН- у прикметниках (Single vs double -н-)"
+- section: "Написання -Н- і -НН- у прикметниках"
   words: 700
   points:
   - "From Литвінова Grade 6 p.208 and Заболотний Grade 6 p.155:
@@ -66,7 +66,7 @@ content_outline:
     скляний, дерев'яний, піщаний, гречаний."
   - "Practice: complete a table of noun → adjective pairs, marking -н- or -нн-,
     and explain why. Include tricky cases: туманний (туман+н), глиняний (глина+ян)."
-- section: "Префіксальне та префіксально-суфіксальне творення (Prefix formation)"
+- section: "Префіксальне та префіксально-суфіксальне творення"
   words: 600
   points:
   - "Prefix formation (Авраменко Grade 6 p.136):
@@ -80,7 +80,7 @@ content_outline:
     без- + -н-: безхмарний (без хмар), безсонний (без сну)
     під- + -н-: підземний (під землею), підводний (під водою)
     Practice: deduce the base noun from the adjective, identify the method."
-- section: "Чергування при творенні (Alternations in formation)"
+- section: "Чергування при творенні"
   words: 500
   points:
   - "Consonant alternations when adding suffixes:
@@ -91,7 +91,7 @@ content_outline:
   - "Vowel alternations: [о/е] → [і] in closed syllables:
     осінь-осінній (already known), ніч-нічний, сіль-сільський.
     Practice: predict alternations before forming adjectives."
-- section: "Складне творення прикметників (Compound adjective formation)"
+- section: "Складне творення прикметників"
   words: 500
   points:
   - "Compound adjectives formed by joining two stems:
@@ -102,7 +102,7 @@ content_outline:
   - "Practice: form compound adjectives from word pairs and determine
     whether they need a hyphen. Include geographic compounds:
     західноукраїнський (but: Західна Україна with capital)."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Formation method summary table:
@@ -167,7 +167,7 @@ references:
   notes: "Adjective formation overview: suffix as the most productive method."
 - title: "Авраменко Grade 6, p.136"
   notes: "Prefix and suffix formation of adjectives with examples."
-- title: "Караман Grade 10, p.132"
+- title: "Заболотний Grade 7, p.132"
   notes: "Geographic adjective formation: -ськ-/-зьк-/-цьк- distribution rule."
 - title: "Заболотний Grade 6, p.155"
   notes: "Practice with -н-/-нн- in adjectives, exercises with suffixes."

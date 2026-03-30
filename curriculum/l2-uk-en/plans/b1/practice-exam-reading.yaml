@@ -29,7 +29,7 @@ dialogue_situations:
   - Кандидат (відповідає)
   motivation: 'Reading exam: comprehension, vocabulary in context, text analysis'
 content_outline:
-- section: "Вступ: формат екзамену (Introduction: exam format)"
+- section: "Вступ: формат екзамену"
   words: 300
   points:
   - "Overview of the B1 practice exam structure:
@@ -42,7 +42,7 @@ content_outline:
     Don't panic over unknown words — use context."
   - "Self-assessment: after each section, rate difficulty and identify
     areas needing more practice before the real exam."
-- section: "Читання 1: Публіцистичний текст (Reading 1: Media text)"
+- section: "Читання 1: Публіцистичний текст"
   words: 650
   points:
   - "A B1-level Ukrainian news article or magazine excerpt (250-300 words)
@@ -58,7 +58,7 @@ content_outline:
     are wrong. This teaches exam logic, not just content knowledge."
   - "Grammar in context: identify вставні слова, складнопідрядні речення,
     and абревіатури in the text. This integrates reading with grammar review."
-- section: "Читання 2: Художній текст (Reading 2: Literary text)"
+- section: "Читання 2: Художній текст"
   words: 650
   points:
   - "A B1-level adapted literary excerpt (200-250 words) — prose passage
@@ -73,7 +73,7 @@ content_outline:
     Focus on words that can be guessed from context."
   - "Grammar identification: find дієприкметниковий зворот,
     дієприслівниковий зворот, подвійне заперечення in the text."
-- section: "Читання 3: Офіційний текст (Reading 3: Formal text)"
+- section: "Читання 3: Офіційний текст"
   words: 550
   points:
   - "A B1-level formal Ukrainian text (150-200 words): оголошення,
@@ -86,7 +86,7 @@ content_outline:
     4. Register transformation: rewrite 2 sentences in розмовний стиль."
   - "Practice: learners compare their answers with model answers
     and identify areas of difficulty."
-- section: "Слухання 1: Діалог (Listening 1: Dialogue)"
+- section: "Слухання 1: Діалог"
   words: 550
   points:
   - "A B1-level Ukrainian dialogue (150-200 words, presented as text
@@ -102,7 +102,7 @@ content_outline:
     correct інтонація and pronunciation."
   - "Grammar in context: identify розмовні конструкції, вставні слова
     used as discourse markers, and any відмінкові форми."
-- section: "Слухання 2: Монолог (Listening 2: Monologue)"
+- section: "Слухання 2: Монолог"
   words: 550
   points:
   - "A B1-level Ukrainian monologue (200-250 words, presented as text):
@@ -116,7 +116,7 @@ content_outline:
   - "Post-task reflection: what made this task difficult?
     Vocabulary gaps? Speed? Grammar complexity?
     Learners note areas for targeted review."
-- section: "Підсумок i аналіз результатів (Summary and results analysis)"
+- section: "Підсумок i аналіз результатів"
   words: 350
   points:
   - "Self-scoring guide: how many correct answers in each section.
@@ -164,7 +164,7 @@ activity_hints:
 - type: free-write
   focus: "Write a brief personal response (5-7 sentences) to one of the
     reading texts, demonstrating comprehension and opinion."
-  items: 1
+  items: 6
 connects_to:
 - "b1-088 (comprehensive-b1-review — preparation for this exam)"
 - "b1-090 (practice-exam-writing — productive skills exam)"

@@ -28,7 +28,7 @@ dialogue_situations:
   - Родина
   motivation: 'Culture integration: all subordinate clause types in Великдень celebration'
 content_outline:
-- section: "Дозвілля і захоплення (Leisure and hobbies)"
+- section: "Дозвілля і захоплення"
   words: 700
   points:
   - "Leisure vocabulary cluster:
@@ -47,7 +47,7 @@ content_outline:
   - "Sports vocabulary: футбол, баскетбол, плавання, біг, йога,
     тренування (training), змагання (competition), перемога (victory).
     Using reported speech: Тренер сказав, що завтра буде тренування."
-- section: "Культура і мистецтво (Culture and art)"
+- section: "Культура і мистецтво"
   words: 650
   points:
   - "Cultural vocabulary:
@@ -65,7 +65,7 @@ content_outline:
     Uses пряма і непряма мова (M74):
     Критик написав, що ця виставка — «найважливіша подія року».
     Подруга сказала: «Тобі обов'язково треба це побачити!»"
-- section: "Українські свята і традиції (Ukrainian holidays and traditions)"
+- section: "Українські свята і традиції"
   words: 700
   points:
   - "Major Ukrainian holidays:
@@ -84,7 +84,7 @@ content_outline:
     complex syntax. Comprehension questions test LANGUAGE:
     — Знайдіть усі складнопідрядні речення і визначте їх тип.
     — Перетворіть пряму мову в тексті на непряму."
-- section: "Вираження думок і аргументація (Expressing opinions and argumentation)"
+- section: "Вираження думок і аргументація"
   words: 600
   points:
   - "Opinion patterns using Phase 8 syntax:
@@ -97,7 +97,7 @@ content_outline:
   - "Production: write an opinion paragraph (6-8 sentences) about
     a cultural event or holiday, using at least 4 different types
     of складні речення."
-- section: "Підсумок фази 8 та перехід до M76 (Phase 8 summary and transition)"
+- section: "Підсумок фази 8 та перехід до M76"
   words: 350
   points:
   - "Summary of Phase 8 grammar applied in communicative contexts:
@@ -138,22 +138,22 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: "Complete texts about holidays and culture using correct складні речення"
-  items: 10
+  items: 12
 - type: quiz
   focus: "Match Ukrainian holidays to their traditions and dates"
-  items: 8
+  items: 12
 - type: sentence-builder
   focus: "Express opinions about cultural events using Phase 8 syntax patterns"
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match leisure/cultural vocabulary to descriptions"
-  items: 8
+  items: 12
 - type: error-correction
   focus: "Fix syntax and conjunction errors in texts about culture"
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write about a holiday or cultural event using all Phase 8 syntax types"
-  items: 1
+  items: 12
 connects_to:
 - "b1-066 to b1-074 (all Phase 8 grammar modules)"
 - "b1-076 (Контрольна робота 8 — Phase 8 review)"
@@ -168,5 +168,5 @@ grammar:
 register: розмовний
 references:
 - title: "Phase 8 module references (M66-M74)"
-  notes: "All textbook sources from Заболотний Grade 9, Ворон Grade 9/11,
-    Авраменко Grade 9, Глазова Grade 11."
+  notes: "All textbook sources from Заболотний Grade 8, Ворон Grade 9/11,
+    Авраменко Grade 8, Заболотний Grade 8."

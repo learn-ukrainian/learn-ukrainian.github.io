@@ -117,17 +117,17 @@ activity_hints:
 - type: fill-in
   focus: Form the correct imperative — 3rd person with хай/нехай or 1st plural
     with -мо — from given infinitives
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct aspect (imperfective or perfective) for imperatives
     in various situations (general advice vs. specific command)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Vocative + imperative + Instrumental combinations to create
     correct wishes (Оленко + будь + щасливою)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §50-51
+- title: Заболотний Grade 6, §50-51
   notes: Наказовий спосіб дієслів — formation for all persons
-- title: Авраменко Grade 7
+- title: Заболотний Grade 6
   notes: Кличний відмінок у поєднанні з наказовим способом

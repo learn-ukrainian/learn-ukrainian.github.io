@@ -105,16 +105,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match Ukrainian grammar terms to their English equivalents
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify the part of speech of underlined words in Ukrainian sentences
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort words into parts of speech (іменник, прикметник, дієслово, etc.)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete case questions (Родовий — ___? ___?)
-  items: 6
+  items: 8
 references:
 - title: Вашуленко Grade 3, Частини мови
   notes: How Ukrainian primary school introduces parts of speech terminology

@@ -91,16 +91,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Put the noun in Instrumental singular to express the tool of an action
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose between з + Instrumental (companion) and bare Instrumental (tool)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match transport nouns to their Instrumental forms
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort sentences into Tool/Means vs. Accompaniment categories
-  items: 6
+  items: 8
 references:
 - title: Кравцова Grade 4, с. 56-57
   notes: Discovery exercises for masculine Instrumental endings (-ом, -ем, -єм) with

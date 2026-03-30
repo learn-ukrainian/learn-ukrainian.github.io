@@ -28,7 +28,7 @@ dialogue_situations:
   motivation: 'Full imperative: вийди (2sg), ходімо (1pl), нехай зачекає (3sg), будьте
     (2pl)'
 content_outline:
-- section: Повна парадигма наказового способу (Full imperative paradigm)
+- section: Повна парадигма наказового способу
   words: 800
   points:
   - 'Review from Заболотний Grade 7 p.72-74: Наказовий спосіб виражає прохання, наказ, пораду, спонукання до дії. Full paradigm
@@ -40,7 +40,7 @@ content_outline:
   - 'М''який знак rules (Авраменко Grade 7 p.82, Литвінова Grade 7 p.58): Пишемо ь у кінці слова та складу після д, т, з,
     с, ц, л, н: лізь, лізьте, будь, будьте, глянь, гляньте, занось, заносьте. Після ж, ч, ш, р, в, п ь НЕ пишемо: поставмо,
     сипмо, їжмо, кличмо, облишмо, вірмо (Литвінова Grade 7 p.58).'
-- section: 'Хай/нехай: третя особа (Хай/нехай: 3rd person)'
+- section: 'Хай/нехай: третя особа'
   words: 750
   points:
   - 'Formation: хай/нехай + дієслово 3-ї особи (теперішній або майбутній час). Хай він зателефонує. Нехай вони вирішують.
@@ -51,7 +51,7 @@ content_outline:
     he wants.) Хай and нехай are interchangeable, but нехай is slightly more formal.'
   - 'Contrast with direct imperative: Зателефонуй мені! (direct, 2sg) vs Хай він мені зателефонує (indirect, 3sg). Iдіть!
     (direct, 2pl) vs Нехай вони ідуть (indirect, 3pl). The хай/нехай forms are the ONLY way to command in 3rd person.'
-- section: Вид дієслова в наказовому способі (Aspect in imperatives)
+- section: Вид дієслова в наказовому способі
   words: 650
   points:
   - 'Доконаний вид — single, specific action, often a request: Відчини вікно, будь ласка. Запиши адресу. Подзвони мені ввечері.
@@ -63,7 +63,7 @@ content_outline:
     → недоконаний вид.'
   - 'Practice: pairs showing aspect contrast in imperatives: Розкажи мені про поїздку (pf — one story) vs Розповідай про подорожі
     (impf — tell about trips in general). Закрий двері (pf — close now) vs Закривай двері, коли входиш (impf — always).'
-- section: Ввічливий наказ (Polite imperative)
+- section: Ввічливий наказ
   words: 600
   points:
   - 'Softening strategies: 1. Будь ласка / прошу: Передайте, будь ласка, сіль. 2. Чи не + умовний: Чи не могли б ви відчинити
@@ -75,7 +75,7 @@ content_outline:
   - 'Register scale from direct to most polite: Відчини вікно! (direct command) Відчиніть, будь ласка, вікно. (polite request)
     Чи не могли б ви відчинити вікно? (very polite, conditional) Прошу відчинити вікно. (formal/official) Learners practice
     reformulating at each level.'
-- section: Наказовий спосіб у тексті (Imperative in context)
+- section: Наказовий спосіб у тексті
   words: 800
   points:
   - 'Dialogue 1 — at home: Parent giving instructions to a child using imperatives with aspect: Вимий руки (pf), потім сідай
@@ -87,7 +87,7 @@ content_outline:
     was chosen.'
   - 'Ukrainian folk sayings and songs with imperatives: Шануймося, єднаймося та будьмо! (I. Франко). Бережімо рідну мову!
     Не зрадь! Тримаймося! Cultural context: imperatives as calls to national solidarity.'
-- section: Підсумок та перехід до M21 (Summary and transition)
+- section: Підсумок та перехід до M21
   words: 500
   points:
   - 'Summary: повна парадигма наказового способу (2sg, 1pl, 2pl, 3sg/3pl via хай/нехай), вид дієслова (доконаний vs недоконаний,
@@ -167,5 +167,5 @@ references:
   notes: М'який знак restrictions after в, п, ж, ч, ш, р; хай малий малому скаже (folk скоромовка); формотворчі частки.
 - title: Авраменко Grade 11, p.54-57
   notes: Наказовий спосіб морфологічна норма; давай as error pattern; *пішли в кіно → ходімо в кіно; parallel endings -іть/-іте.
-- title: Глазова Grade 11, p.46
+- title: Заболотний Grade 8, p.46
   notes: 'Паралельні форми наказового способу I та II особи множини; I. Франко imperatives: Лиш борися, не мирися.'

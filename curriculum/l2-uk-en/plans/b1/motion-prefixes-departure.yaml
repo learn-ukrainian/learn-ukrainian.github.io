@@ -25,16 +25,16 @@ dialogue_situations:
   - Мандрівники (travelers)
   motivation: 'Departure prefixes: піти (пі-), від''їхати (від-), відходити (від-)'
 content_outline:
-- section: Від прибуття до відправлення (From arrival to departure)
+- section: Від прибуття до відправлення
   words: 550
   points:
   - 'Bridge from M29: при-/до- brought us TO a destination. Now we learn the opposite — leaving and moving away. Two prefix
     groups serve this function: пі-/по- (setting off on a journey, departing) and від- (moving away from a specific point).'
   - 'Reading passage: a farewell scene at a train station — relatives пішли, поїхали, відійшли, від''їхали. Learners identify
     departure verbs and their spatial meanings.'
-  - 'Important decolonization note from Караман Grade 10 p.188: Ukrainian uses відбувати/виїжджати, not the Russicism *відправлятися
+  - 'Important decolonization note from Заболотний Grade 7 p.188: Ukrainian uses відбувати/виїжджати, not the Russicism *відправлятися
     for departures of vehicles. Автобус відбуває/виїжджає о восьмій.'
-- section: 'Префікси пі-/по-: вирушання в дорогу (Prefixes пі-/по-: setting off)'
+- section: 'Префікси пі-/по-: вирушання в дорогу'
   words: 900
   points:
   - 'Пі- (exclusively with іти → піти) — setting off on foot: Він пішов на роботу (He left for work/set off for work). Пішли
@@ -48,7 +48,7 @@ content_outline:
     or від''їжджати for repeated departures). Note: піти and поїхати are purely perfective departure events.'
   - 'Prepositions: піти з/із + Р.в. (Пішов з дому), піти до + Р.в. (Пішов до друга), поїхати в/на + Зн.в. (Поїхав у Львів).
     8-10 example sentences.'
-- section: 'Префікс від-: віддалення (Prefix від-: moving away)'
+- section: 'Префікс від-: віддалення'
   words: 900
   points:
   - 'Від- means moving away from a specific point, creating distance: відійти (to step away): Відійди від дверей, будь ласка.
@@ -62,7 +62,7 @@ content_outline:
     that some imperfective forms are rare in natural speech.'
   - 'Prepositions: від- verbs require від + Р.в.: відійти від вікна, від''їхати від станції, відбігти від небезпеки. The preposition
     від echoes the prefix від-, reinforcing the meaning. 8-10 example sentences.'
-- section: Пі-/по- чи від-? Різниця у значенні (Пі-/по- or від-? Semantic difference)
+- section: Пі-/по- чи від-? Різниця у значенні
   words: 800
   points:
   - 'Core distinction: пі-/по- focuses on STARTING A JOURNEY (departing for a destination): Він пішов на роботу = He left
@@ -75,7 +75,7 @@ content_outline:
     away from the platform). Вона пішла додому (She left for home — destination focus). Вона відійшла від нас (She walked
     away from us — distance focus).'
   - '6-8 practice scenarios: learners choose пі-/по- or від-.'
-- section: При- та до- проти пі-/по- та від- (Arrival vs departure — full contrast)
+- section: При- та до- проти пі-/по- та від-
   words: 550
   points:
   - 'Four-prefix comparison table: при- = arriving (Друзі прийшли — friends came/arrived). до- = reaching (Дійшли до вершини
@@ -84,7 +84,7 @@ content_outline:
     приїхав (arrived).'
   - 'Dialogue: phone conversation tracking someone''s journey with all four prefix groups. ''Вже від''їхали?'' ''Так, доїхали
     до Білої Церкви.'' ''Коли приїдете?'' — a natural context for all prefixes.'
-- section: 'Підсумок: префікси від''їзду (Summary: departure prefixes)'
+- section: 'Підсумок: префікси від''їзду'
   words: 350
   points:
   - 'Complete table: пі-/по- and від- with all base verbs. пі-/по-: піти, поїхати, побігти, понести, повести, повезти, полетіти,
@@ -133,7 +133,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Write a farewell scene at a station using 5+ departure verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-029 (motion-prefixes-arrival — при-/до- arrival prefixes, direct contrast)
 - b1-031 (motion-prefixes-in-out — за-/ви- entering and exiting)
@@ -153,7 +153,7 @@ register: науково-навчальний
 references:
 - title: Заболотний Grade 5, p.55
   notes: Prefix diagram with бігти — по- among the prefix options.
-- title: Караман Grade 10, p.188
+- title: Заболотний Grade 7, p.188
   notes: 'Decolonization: відправлятися is a Russicism; use відбувати, виїжджати.'
 - title: Авраменко Grade 5, p.63
   notes: 'Prefix semantics: при- = наближення, по- = початок руху.'

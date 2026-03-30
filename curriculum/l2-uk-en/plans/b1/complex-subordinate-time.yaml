@@ -28,7 +28,7 @@ dialogue_situations:
   - Онуки
   motivation: 'Time clauses: коли, після того як, поки, щойно in life narration'
 content_outline:
-- section: "Підрядні обставинні часу (Temporal subordinate clauses)"
+- section: "Підрядні обставинні часу"
   words: 650
   points:
   - "Definition: підрядні обставинні часу відповідають на питання коли?
@@ -36,14 +36,14 @@ content_outline:
     (not to a specific word, unlike означальні and з'ясувальні).
     Коли ми прийшли додому, почався дощ.
     Поки я готував вечерю, діти робили уроки."
-  - "Key conjunctions from Заболотний Grade 9 p.112:
+  - "Key conjunctions from Заболотний Grade 8 p.112:
     коли (when), поки/доки (while/until), щойно/як тільки (as soon as),
     перш ніж/перед тим як (before), після того як (after),
     з тих пір як (since), доти...доки (until)."
   - "Position flexibility: часові підрядні can come before or after main:
     Коли пішов дощ, ми сховалися. (before — temporal frame set first)
     Ми сховалися, коли пішов дощ. (after — result then explanation)"
-- section: "Одночасність: коли, поки (Simultaneity)"
+- section: "Одночасність: коли, поки"
   words: 650
   points:
   - "Коли for simultaneity (imperfective verbs in both clauses):
@@ -58,7 +58,7 @@ content_outline:
     = Ідучи парком, ми розмовляли. (gerund — more concise)
     The clause is clearer when subjects differ:
     Коли мама готувала, тато прибирав. (different subjects — clause needed)"
-- section: "Різночасність: коли, щойно, після того як, перш ніж (Sequence)"
+- section: "Різночасність: коли, щойно, після того як, перш ніж"
   words: 700
   points:
   - "Коли for sequence (perfective verb in підрядне):
@@ -77,7 +77,7 @@ content_outline:
     Після того як прочитав книгу, я віддав її. = Прочитавши книгу, я віддав її.
     Practice: 8 sentences — express the same temporal relation using
     both a часове речення and a дієприслівник."
-- section: "Дієвидові та часові кореляції (Aspect and tense correlations)"
+- section: "Дієвидові та часові кореляції"
   words: 550
   points:
   - "Aspect determines the temporal relationship:
@@ -90,7 +90,7 @@ content_outline:
     Теперішній (habitual): Коли я приходжу додому, завжди п'ю чай.
     Майбутній: Коли приїдеш, зателефонуй. (imperative in main)"
   - "Practice: choose correct aspect and tense in 8 temporal constructions."
-- section: "Практика: часові речення в контексті (Practice in context)"
+- section: "Практика: часові речення в контексті"
   words: 600
   points:
   - "Reading passage: a narrative with dense temporal structure.
@@ -100,7 +100,7 @@ content_outline:
     when events happened. Natural usage of коли, поки, щойно."
   - "Production: write 6-8 sentences about your day using different
     temporal conjunctions. At least 2 одночасність, 2 різночасність."
-- section: "Підсумок та перехід до M70 (Summary and transition)"
+- section: "Підсумок та перехід до M70"
   words: 350
   points:
   - "Summary: часові = коли? відколи? доки? Одночасність (поки, коли + недок.)
@@ -156,12 +156,12 @@ grammar:
 - "Comparison with дієприслівники for temporal relations"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 9, p.106-112"
+- title: "Заболотний Grade 8, p.106-112"
   notes: "Складнопідрядні речення з підрядними обставинними часу:
     conjunctions, examples, exercises."
 - title: "Ворон Grade 9, p.80"
   notes: "Підрядні обставинні: classification including часові,
     dependency from entire main clause."
-- title: "Авраменко Grade 9, p.86"
+- title: "Авраменко Grade 8, p.86"
   notes: "Складнопідрядні речення з підрядними причини, мети, умови:
     context for temporal comparison."

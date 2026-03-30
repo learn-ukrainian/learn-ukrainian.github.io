@@ -97,17 +97,17 @@ activity_hints:
 - type: quiz
   focus: Given a sentence, identify whether the verb is imperfective or perfective
     and explain why
-  items: 6
+  items: 8
 - type: fill-in
   focus: Choose the correct aspect form (imperfective or perfective past) to
     complete sentences based on context
-  items: 6
+  items: 8
 - type: match-up
   focus: Match signal words (довго, раптом, щодня, нарешті) with the correct
     aspect and example sentence
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §42-44
+- title: Заболотний Grade 6, §52-54
   notes: Вид дієслова в минулому часі — process vs. result contrast
 - title: 'ULP: Past Tense and Aspect'
   url: https://www.ukrainianlessons.com/grammar-hub/

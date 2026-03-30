@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Participle phrases: що вийшла з берегів, пошкоджені повінню, викликані
     вранці'
 content_outline:
-- section: "Що таке дієприкметниковий зворот? (What is a participle phrase?)"
+- section: "Що таке дієприкметниковий зворот?"
   words: 650
   points:
   - "Definition from Литвінова Grade 7 p.82: дієприкметник із залежними
@@ -47,7 +47,7 @@ content_outline:
   - "Syntactic role: the entire зворот is an означення (attribute).
     It answers the question який? яка? яке? які? about the noun.
     Книга (яка?), прочитана всіма учнями, лежала на столі."
-- section: "Правила відокремлення (Comma rules for participle phrases)"
+- section: "Правила відокремлення"
   words: 800
   points:
   - "Core rule from Авраменко Grade 7 p.104-108:
@@ -70,7 +70,7 @@ content_outline:
     (The phrase explains WHY the father called — causal shade.)"
   - "Practice: 10-12 sentences where learners place commas correctly
     based on position of the зворот relative to the noun."
-- section: "Трансформація: зворот ↔ підрядне речення (Transformation: phrase ↔ clause)"
+- section: "Трансформація: зворот ↔ підрядне речення"
   words: 650
   points:
   - "Every дієприкметниковий зворот can be restated as a subordinate
@@ -87,7 +87,7 @@ content_outline:
     written/literary Ukrainian."
   - "Practice: transform 8 sentences both ways (зворот → clause and
     clause → зворот). Learners note which version sounds more natural."
-- section: "Складні випадки та помилки (Complex cases and errors)"
+- section: "Складні випадки та помилки"
   words: 600
   points:
   - "Multiple participle phrases in one sentence:
@@ -104,7 +104,7 @@ content_outline:
   - "Overuse warning: stacking participle phrases creates heavy,
     bureaucratic prose. Prefer variety: mix звороти with який-clauses
     and simple sentences."
-- section: "Читання та практика (Reading and practice)"
+- section: "Читання та практика"
   words: 700
   points:
   - "Reading passage: a news report or article using participle phrases
@@ -116,7 +116,7 @@ content_outline:
     phrases to make them more concise:
     Міст, який збудували минулого року, з'єднує два береги.
     → Збудований минулого року міст з'єднує два береги."
-- section: "Підсумок та перехід до M60 (Summary and transition)"
+- section: "Підсумок та перехід до M60"
   words: 400
   points:
   - "Summary: дієприкметниковий зворот = дієприкметник + залежні слова.

@@ -88,20 +88,20 @@ activity_hints:
 - type: fill-in
   focus: Complete sentences about education and work using тому що, щоб, який,
     якщо
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct complex sentence type for work/education scenarios
-  items: 6
+  items: 8
 - type: match-up
   focus: Match education/career situations to appropriate responses using complex
     sentences
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether statements about Ukrainian education and work culture use
     correct complex sentence structures
-  items: 6
+  items: 8
 references:
-- title: Авраменко Grade 9, §24
+- title: Заболотний Grade 5, §28
   notes: Complex sentences of cause, purpose, condition — applied in thematic
     context
 - title: 'ULP: How to Talk About Your Job in Ukrainian'

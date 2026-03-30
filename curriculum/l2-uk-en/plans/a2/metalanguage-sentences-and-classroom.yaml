@@ -108,16 +108,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match sentence member terms to their question words
-  items: 6
+  items: 8
 - type: fill-in
   focus: Break words into morphemes (корінь, префікс, суфікс, закінчення)
-  items: 6
+  items: 8
 - type: quiz
   focus: Read a classroom instruction in Ukrainian and choose what to do
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort words into groups by shared корінь (root families)
-  items: 6
+  items: 8
 references:
 - title: Вашуленко Grade 3, Будова слова
   notes: Root, prefix, suffix as taught to Ukrainian 3rd graders

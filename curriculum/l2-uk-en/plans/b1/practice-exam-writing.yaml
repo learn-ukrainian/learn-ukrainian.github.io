@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Writing exam: formal letter with argumentation, register control, complex
     syntax'
 content_outline:
-- section: "Вступ: формат екзамену (Introduction: exam format)"
+- section: "Вступ: формат екзамену"
   words: 300
   points:
   - "Overview of the B1 practice exam — productive skills:
@@ -45,7 +45,7 @@ content_outline:
     For speaking: вимова та інтонація (pronunciation and intonation)."
   - "Tips: plan before writing (2-3 min for plan). For speaking,
     organize thoughts before starting. Quality over speed."
-- section: "Письмо 1: Творчий текст (Writing 1: Creative text)"
+- section: "Письмо 1: Творчий текст"
   words: 700
   points:
   - "Task: choose one of three topics and write 200+ words:
@@ -71,7 +71,7 @@ content_outline:
     Чи є зачин/теза? Чи є основна частина? Чи є кінцівка/висновок?
     Чи використано складні речення? Чи є вставні слова?
     Чи є різноманітна лексика? Чи немає граматичних помилок?"
-- section: "Письмо 2: Діловий текст (Writing 2: Formal text)"
+- section: "Письмо 2: Діловий текст"
   words: 600
   points:
   - "Task: write one of the following (100-150 words):
@@ -91,7 +91,7 @@ content_outline:
     Wrong case after згідно з / відповідно до.
     Missing реквізити (date, signature, addressee).
     Practice: learners write and self-evaluate."
-- section: "Говоріння 1: Монолог (Speaking 1: Monologue)"
+- section: "Говоріння 1: Монолог"
   words: 600
   points:
   - "Task: speak for 2-3 minutes on one of three topics:
@@ -113,7 +113,7 @@ content_outline:
   - "Self-evaluation criteria:
     Чи говорив/говорила я зв'язно? Чи використав/використала різні
     граматичні конструкції? Чи правильний наголос? Чи був план?"
-- section: "Говоріння 2: Діалог (Speaking 2: Dialogue)"
+- section: "Говоріння 2: Діалог"
   words: 600
   points:
   - "Task: participate in a guided dialogue (3-4 minutes) on one topic:
@@ -131,7 +131,7 @@ content_outline:
     Learners practice with a partner or record both sides."
   - "Register awareness: in shopping — semi-formal. Among friends — розмовний.
     About news — публіцистичний елементи. Register flexibility is a B1 skill."
-- section: "Підсумок i оцінювання (Summary and evaluation)"
+- section: "Підсумок i оцінювання"
   words: 400
   points:
   - "Scoring guidance:
@@ -168,11 +168,11 @@ activity_hints:
 - type: free-write
   focus: "Complete both writing tasks: creative text (200+ words) and
     formal document (100-150 words) under timed conditions."
-  items: 2
+  items: 6
 - type: role-play
   focus: "Complete both speaking tasks: monologue (2-3 minutes) and
     dialogue (3-4 minutes) on given topics."
-  items: 4
+  items: 6
 - type: quiz
   focus: "Self-evaluation quiz: assess own writing and speaking against
     B1 criteria, identify strengths and weaknesses."

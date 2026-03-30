@@ -30,10 +30,10 @@ dialogue_situations:
   - Компанія друзів (group chat)
   motivation: 'Informal register: скорочення, сленг, розмовні форми — йо, лан, норм'
 content_outline:
-- section: "Що таке розмовний стиль? (What is the colloquial style?)"
+- section: "Що таке розмовний стиль?"
   words: 600
   points:
-  - "Definition from Караман Grade 10 p.234:
+  - "Definition from Заболотний Grade 7 p.234:
     Розмовне мовлення є найдавнішим стилем будь-якої мови.
     Ним користуються здебільшого в побуті, але часто i в навчальній,
     науковій, виробничій, культурній та інших сферах життя.
@@ -53,7 +53,7 @@ content_outline:
     This is where Ukrainian creativity, humor, and warmth live.
     Прислів'я, приказки, фразеологізми — the richest layer of
     Ukrainian is in its colloquial register."
-- section: "Лексика розмовного стилю (Colloquial vocabulary)"
+- section: "Лексика розмовного стилю"
   words: 700
   points:
   - "Емоційно забарвлена лексика — words carrying emotional charge:
@@ -77,7 +77,7 @@ content_outline:
     Частки: ж, бо, хіба, невже, та, ну.
     These words carry enormous communicative weight in Ukrainian
     and have no direct English equivalents."
-- section: "Граматика розмовного мовлення (Grammar of colloquial speech)"
+- section: "Граматика розмовного мовлення"
   words: 650
   points:
   - "Неповні речення (elliptical sentences):
@@ -98,11 +98,11 @@ content_outline:
     'А що як...' (what if...), 'Хіба що...' (unless/except...),
     'Та ну його!' (forget about it!), 'Отакої!' (well I never!).
     Practice: learners complete dialogues using natural constructions."
-- section: "Суржик vs справжня розмовна мова (Surzhyk vs genuine colloquial Ukrainian)"
+- section: "Суржик vs справжня розмовна мова"
   words: 600
   points:
   - "Defining суржик: несвідоме змішування слів різних мов
-    i властивих різним мовам мовних форм (from Глазова Grade 11 p.217).
+    i властивих різним мовам мовних форм (from Заболотний Grade 8 p.217).
     Суржик is NOT розмовний стиль — it is language contamination.
     Розмовна українська has its own rich, authentic colloquial forms."
   - "Common суржик markers and their Ukrainian replacements:
@@ -120,7 +120,7 @@ content_outline:
   - "Reading practice: two versions of the same dialogue — one with
     суржик, one with genuine розмовна українська. Learners analyze
     the differences and understand why authentic розмовна мова matters."
-- section: "Діалоги на побутові теми (Everyday dialogues)"
+- section: "Діалоги на побутові теми"
   words: 550
   points:
   - "Dialogue 1 — На кухні (In the kitchen):
@@ -138,7 +138,7 @@ content_outline:
     informal questions (Ну що, йдемо?), casual farewells (Давай! Бувай!)."
   - "Practice: learners transform formal dialogues from M77 into
     розмовний стиль, making conscious lexical and grammatical choices."
-- section: "Підсумок: живе мовлення (Summary: living speech)"
+- section: "Підсумок: живе мовлення"
   words: 350
   points:
   - "Complete vocabulary reference — colloquial Ukrainian organized by:
@@ -201,7 +201,7 @@ activity_hints:
 - type: free-write
   focus: "Write an informal dialogue between friends planning an outing,
     using at least 3 фразеологізми and appropriate розмовні конструкції."
-  items: 1
+  items: 6
 connects_to:
 - "b1-077 (Офіційний стиль — contrasting register, formal communication)"
 - "b1-081 (Вставні слова — discourse markers used heavily in розмовний стиль)"
@@ -219,10 +219,10 @@ grammar:
 - "Суржик identification and Ukrainian replacements"
 register: академічний
 references:
-- title: "Караман Grade 10, p.234"
+- title: "Заболотний Grade 7, p.234"
   notes: "Розмовний стиль: definition, сфера використання, основні ознаки.
     Найдавніший стиль будь-якої мови."
-- title: "Глазова Grade 11, p.217"
+- title: "Заболотний Grade 8, p.217"
   notes: "Definition of суржик: несвідоме змішування слів різних мов.
     Distinction between розмовний стиль and суржик."
 - title: "Заболотний Grade 7, p.232"

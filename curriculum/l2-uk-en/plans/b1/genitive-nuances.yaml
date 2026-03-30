@@ -29,7 +29,7 @@ dialogue_situations:
   - Продавець
   motivation: 'Partitive genitive: меду, сиру, молока, хліба — quantity expressions'
 content_outline:
-- section: "Частковий родовий (Partitive genitive)"
+- section: "Частковий родовий"
   words: 700
   points:
   - "Core concept: when you take PART of something, the whole appears
@@ -43,7 +43,7 @@ content_outline:
   - "Practice: 10-12 sentences with partitive constructions,
     learners form the correct Р.в. form. Include tricky cases:
     сік (соку, not *сіку — vowel alternation)."
-- section: "Родовий бажання, пошуку, досягнення (Genitive of desire)"
+- section: "Родовий бажання, пошуку, досягнення"
   words: 600
   points:
   - "Verbs that take Р.в. instead of Зн.в. for their object:
@@ -58,7 +58,7 @@ content_outline:
   - "Practice: complete sentences choosing between Р.в. and Зн.в.
     depending on the verb. Contrast: шукати книжку (Зн.в., specific)
     vs шукати правди (Р.в., abstract)."
-- section: "Родовий при запереченні (Genitive in negation)"
+- section: "Родовий при запереченні"
   words: 600
   points:
   - "Key rule: with немає/нема, the subject takes Р.в.:
@@ -72,7 +72,7 @@ content_outline:
   - "не було / не буде + Р.в.:
     Вчора не було дощу. Завтра не буде заняття.
     Practice: transform positive sentences to negative, changing cases."
-- section: "Родовий у датах і часових виразах (Genitive in dates)"
+- section: "Родовий у датах і часових виразах"
   words: 600
   points:
   - "Dates use ordinal numerals + noun in Р.в.:
@@ -85,7 +85,7 @@ content_outline:
     These demonstrative + Р.в. time expressions are extremely common."
   - "Practice: answer 'Коли це сталося?' using dates in Р.в.,
     and form temporal expressions with цей/минулий/наступний."
-- section: "Закінчення -а/-я чи -у/-ю? (Genitive endings for masculine nouns)"
+- section: "Закінчення -а/-я чи -у/-ю?"
   words: 700
   points:
   - "The -а/-я vs -у/-ю distinction for ІІ відміна masculine nouns in Р.в.
@@ -102,7 +102,7 @@ content_outline:
   - "The tricky cases: some nouns allow BOTH, with meaning difference:
     листа (a specific letter) vs листу (foliage, collective).
     Practice: 15 nouns, choose correct Р.в. ending and explain the category."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Reference: five semantic roles of Р.в.:

@@ -83,16 +83,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: What's the Date? (Drill)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Counting Objects (1, 2-4, 5+ Rule)
-  items: 6
+  items: 8
 - type: match-up
   focus: Accusative to Genitive Negation
-  items: 6
+  items: 8
 - type: match-up
   focus: Q&A about quantities and dates
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §20-22
   notes: Родовий відмінок іменників

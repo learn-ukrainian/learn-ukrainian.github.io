@@ -89,13 +89,13 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Simulated exam — mixed grammar questions (cases, aspect, comparison)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Reading comprehension — answer questions about a Ukrainian text
-  items: 6
+  items: 8
 - type: true-false
   focus: Grammar accuracy check — identify correct vs incorrect sentences
-  items: 6
+  items: 8
 references:
 - title: CEFR A2 Descriptor — Can-do statements
   notes: Aligned to CEFR A2 reading, writing, and grammar competencies

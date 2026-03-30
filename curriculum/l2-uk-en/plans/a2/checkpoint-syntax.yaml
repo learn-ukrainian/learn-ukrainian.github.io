@@ -71,16 +71,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Identify conjunction types in mixed complex sentences from M42-M46
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete complex sentences choosing from all five conjunction types
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort example sentences by type — причина, допуст, мета, означення, умова
-  items: 6
+  items: 8
 references:
-- title: Авраменко Grade 9, §17-24
+- title: Заболотний Grade 5, §28-30
   notes: Full coverage of складнопідрядні речення — all types reviewed in this
     checkpoint
-- title: Заболотний Grade 9, §17-21
+- title: Заболотний Grade 6, складне речення
   notes: Comprehensive review of subordinate clause types with exercises

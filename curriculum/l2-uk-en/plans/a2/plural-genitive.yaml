@@ -85,18 +85,18 @@ activity_hints:
 - type: fill-in
   focus: Form the Genitive plural from given nouns (mixed відміни), inserting fleeting
     vowels where needed
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct Gen.Pl. form in quantity expressions (багато ___,
     п'ять ___)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match singular nouns with their correct Genitive plural forms
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether a given Gen.Pl. form is correct or incorrect (common errors
     like книгів instead of книг)
-  items: 6
+  items: 8
 references:
 - title: Літвінова Grade 6, с. 160
   notes: Gen.Pl. endings for II відміна with full table and exercises

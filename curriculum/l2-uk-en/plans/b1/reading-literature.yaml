@@ -30,10 +30,10 @@ dialogue_situations:
   motivation: 'Literary style: analyzing prose with subordinate clauses, reported
     speech, characterization'
 content_outline:
-- section: "Художній стиль мовлення (The literary/artistic style)"
+- section: "Художній стиль мовлення"
   words: 600
   points:
-  - "Definition from Ворон Grade 9 p.169 and Глазова Grade 11 p.115:
+  - "Definition from Ворон Grade 9 p.169 and Заболотний Grade 8 p.115:
     Художній стиль — образне відтворення дійсності, емоційний вплив
     на читача або слухача. Сфера вживання: художня література.
     Основні види: оповідання, новела, казка, легенда, вірш, поема,
@@ -54,7 +54,7 @@ content_outline:
   - "Cultural note: Ukrainian художня література is one of the richest
     in Europe. Reading Ukrainian literature in the original — even adapted
     excerpts at B1 — connects the learner to the culture directly."
-- section: "Художні засоби (Literary devices)"
+- section: "Художні засоби"
   words: 700
   points:
   - "Епітет — an expressive adjective revealing a quality:
@@ -78,7 +78,7 @@ content_outline:
     Алітерація — repetition of sounds: 'Тихо тече вода.'
     Practice: learners identify all художні засоби in a passage
     and explain their effect on the reader."
-- section: "Читання уривків: проза (Reading excerpts: prose)"
+- section: "Читання уривків: проза"
   words: 700
   points:
   - "Adapted literary excerpt 1 (150-200 words) — a nature description
@@ -100,7 +100,7 @@ content_outline:
   - "Vocabulary from context: learners practice guessing word meanings
     from literary context, then verify with словник. This skill is
     essential for moving toward independent Ukrainian reading."
-- section: "Читання уривків: поезія (Reading excerpts: poetry)"
+- section: "Читання уривків: поезія"
   words: 550
   points:
   - "Introduction to Ukrainian poetry at B1 — adapted or short poems:
@@ -118,7 +118,7 @@ content_outline:
   - "Poetry vs prose — key differences:
     Ущільненість мови (density), ритм, рима, інверсія (unusual word order).
     Practice: learners rewrite a short poem as prose, noting what changes."
-- section: "Реакція на текст: висловлювання власної думки (Responding to text: expressing opinions)"
+- section: "Реакція на текст: висловлювання власної думки"
   words: 550
   points:
   - "Structured response framework:
@@ -138,7 +138,7 @@ content_outline:
     'Можливо, ліричний герой...' 'Зрештою, головна ідея — ...'
     Practice: learners discuss a literary excerpt using structured
     opinion language with вставні слова."
-- section: "Підсумок: дорога до літератури (Summary: the road to literature)"
+- section: "Підсумок: дорога до літератури"
   words: 300
   points:
   - "Complete reference: художні засоби glossary with examples,
@@ -179,27 +179,27 @@ activity_hints:
 - type: quiz
   focus: "Identify художні засоби in literary excerpts: name the device
     and explain its function in the text."
-  items: 10
+  items: 12
 - type: match-up
   focus: "Match художні засоби terms to their definitions and to
     concrete examples from Ukrainian literature."
-  items: 8
+  items: 12
 - type: fill-in
   focus: "Complete literary analysis sentences: identify the художній засіб
     and its effect in given excerpts."
-  items: 6
+  items: 12
 - type: mark-the-words
   focus: "In a literary passage, mark all instances of a specific
     художній засіб (e.g., mark all епітети, or all порівняння)."
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write a structured response (відгук) to a literary excerpt:
     враження, аналіз засобів, особисте ставлення (10-12 sentences)."
-  items: 1
+  items: 12
 - type: group-sort
   focus: "Sort text excerpts by стиль мовлення: художній, науковий,
     публіцистичний, офіційно-діловий."
-  items: 8
+  items: 12
 connects_to:
 - "b1-077 (Офіційний стиль — contrast with художній стиль)"
 - "b1-078 (Розмовний стиль — dialogue in художніх текстах)"
@@ -220,7 +220,7 @@ references:
 - title: "Ворон Grade 9, p.169"
   notes: "Переказ тексту художнього стилю: загальні ознаки, лексичні
     особливості, table of features. Primary source for style definition."
-- title: "Глазова Grade 11, p.115"
+- title: "Заболотний Grade 8, p.115"
   notes: "Художній стиль мовлення: головна функція, сфера вживання,
     основні види висловлювань, загальні ознаки."
 - title: "Авраменко Grade 6, p.44"

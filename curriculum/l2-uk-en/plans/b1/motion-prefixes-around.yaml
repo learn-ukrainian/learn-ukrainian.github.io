@@ -26,7 +26,7 @@ dialogue_situations:
   - Туристи
   motivation: 'Around prefixes: об''їхати (об''-), підійти (під-), обійти (об-)'
 content_outline:
-- section: 'Останні два префікси: об- та під- (The last two prefixes: об- and під-)'
+- section: 'Останні два префікси: об- та під-'
   words: 550
   points:
   - 'Bridge from M29-M32: learners have mastered 8 prefix meanings. This module completes the motion verb prefix system with
@@ -35,7 +35,7 @@ content_outline:
     під''їжджають до входу. Learners identify both prefixes in action.'
   - 'Note on apostrophe: об''їхати, під''їхати — the apostrophe appears because the prefix ends in a consonant before a йотований
     letter.'
-- section: 'Префікс об-: рух навколо (Prefix об-: going around)'
+- section: 'Префікс об-: рух навколо'
   words: 800
   points:
   - 'Об- means going around something, circling, bypassing: обійти (to walk around): Обійшли озеро за дві години. об''їхати
@@ -48,7 +48,7 @@ content_outline:
     через ремонт дороги. обігнати (to outpace): Україна обігнала сусідів у реформах.'
   - 'Imperfective counterparts: обходити (to walk around — habitual): Обходимо цей будинок щодня. об''їжджати (to drive around
     — habitual): Об''їжджаємо затори. обганяти (to overtake — habitual): Не обганяйте на повороті! 8-10 example sentences.'
-- section: 'Префікс під-: наближення (Prefix під-: approaching)'
+- section: 'Префікс під-: наближення'
   words: 800
   points:
   - 'Під- means approaching, coming closer to: підійти (to approach on foot): Підійдіть ближче, будь ласка. під''їхати (to
@@ -62,7 +62,7 @@ content_outline:
   - 'Imperfective counterparts: підходити (to approach — process): Поїзд підходить до станції. під''їжджати (to drive up —
     habitual): Автобус під''їжджає кожні 10 хвилин. підбігати (to run up — habitual): Собака підбігає до кожного. 8-10 example
     sentences.'
-- section: Об- чи під-? Різниця у значенні (Об- or під-? Semantic difference)
+- section: Об- чи під-? Різниця у значенні
   words: 600
   points:
   - 'Core distinction: об- = going AROUND (circling, bypassing, not toward the center): Обійшов будинок (walked around the
@@ -71,7 +71,7 @@ content_outline:
   - 'Contrastive examples: Об''їхали місто (drove around the city — bypassed it). Під''їхали до міста (drove up to the city
     — approached it). Обійшов дерево (walked around the tree). Підійшов до дерева (walked up to the tree).'
   - '6-8 practice scenarios: learners choose об- or під- based on context.'
-- section: 'Повна система: 10 префіксів руху (Complete system: 10 motion prefixes)'
+- section: 'Повна система: 10 префіксів руху'
   words: 950
   points:
   - 'Grand summary table — all 10 prefix groups with іти as example: при- (прийти — arrive), до- (дійти — reach), пі- (піти
@@ -84,7 +84,7 @@ content_outline:
     came closer but maybe didn''t arrive. Confusing за- (entering) with при- (arriving): зайшов = popped in; прийшов = came
     to stay. Confusing про- (passing) with пере- (crossing): пройшов міст = walked along the bridge; перейшов міст = crossed
     the bridge.'
-- section: 'Підсумок: об- i під- (Summary)'
+- section: 'Підсумок: об- i під-'
   words: 300
   points:
   - 'Complete table: об- and під- with base verbs. об-: обійти, об''їхати, обігнати, обнести, обвести, облетіти, обплисти.
@@ -133,7 +133,7 @@ activity_hints:
   items: 8
 - type: free-write
   focus: Describe a complete journey using at least 8 different prefixed motion verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-032 (motion-prefixes-transit — пере-/про- crossing and passing)
 - b1-034 (motion-flight-swim — applying all prefixes to air/water motion)
@@ -154,5 +154,5 @@ references:
   notes: 'Prefix diagram: бігти + об/під among all prefix options.'
 - title: Авраменко Grade 5, p.63
   notes: Prefix semantics overview.
-- title: Караман Grade 10, p.130
+- title: Заболотний Grade 7, p.130
   notes: 'Визначення твірної основи: прибігти←бігти — prefix as word-formation tool.'

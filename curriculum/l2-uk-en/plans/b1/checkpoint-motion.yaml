@@ -29,7 +29,7 @@ dialogue_situations:
   - Студент
   motivation: 'Consolidation: all motion verb pairs and prefix combinations in narration'
 content_outline:
-- section: "Вступ: як працювати з контрольною (Introduction: how to approach this test)"
+- section: "Вступ: як працювати з контрольною"
   words: 350
   points:
   - "Overview: this checkpoint tests everything from M27-M36 (Phase 4:
@@ -43,7 +43,7 @@ content_outline:
     системи, а не механічне запам'ятовування.'"
   - "Self-assessment framework: after each block, rate your confidence
     (впевнено / потребую повторення / не розумію)."
-- section: "Блок 1: Просторові прийменники (Block 1: Spatial prepositions — M27)"
+- section: "Блок 1: Просторові прийменники"
   words: 550
   points:
   - "Case agreement exercise: given 8 sentences with spatial prepositions,
@@ -56,7 +56,7 @@ content_outline:
   - "Preposition vs adverb: 4 sentence pairs where learners identify
     whether the word is a preposition or adverb (навпроти школи vs
     сидів навпроти)."
-- section: "Блок 2: Базові пари дієслів руху (Block 2: Base motion verb pairs — M28)"
+- section: "Блок 2: Базові пари дієслів руху"
   words: 550
   points:
   - "Verb choice: 8 sentences where learners choose between
@@ -67,7 +67,7 @@ content_outline:
     (full paradigm), including irregular forms (біжу, їжджу, ходжу)."
   - "Prepositions with base motion verbs: complete 4 sentences choosing
     correct direction preposition (до + Р.в., в/на + Зн.в., з + Р.в.)."
-- section: "Блок 3: Префікси при-/до- та пі-/по-/від- (Block 3: Arrival and departure prefixes — M29-M30)"
+- section: "Блок 3: Префікси при-/до- та пі-/по-/від-"
   words: 550
   points:
   - "Prefix selection: 8 sentences where learners choose the correct
@@ -78,7 +78,7 @@ content_outline:
     від'їхати→від'їжджати)."
   - "Journey stage ordering: arrange 6 sentences in logical journey order
     (відійшов → поїхав → проїхав → доїхав → приїхав)."
-- section: "Блок 4: Префікси за-/ви-, пере-/про-, об-/під- (Block 4: Remaining prefixes — M31-M33)"
+- section: "Блок 4: Префікси за-/ви-, пере-/про-, об-/під-"
   words: 600
   points:
   - "Prefix selection: 10 sentences testing all remaining prefix groups.
@@ -89,7 +89,7 @@ content_outline:
   - "Preposition + case: complete 6 sentences with correct preposition
     after prefixed motion verbs (зайти в/до, вийти з, перейти через,
     проїхати повз, підійти до)."
-- section: "Блок 5: Повітряний i водний рух та переносне значення (Block 5: Air/water motion and figurative — M34-M35)"
+- section: "Блок 5: Повітряний i водний рух та переносне значення"
   words: 500
   points:
   - "Air/water motion: 6 sentences testing prefixed forms of летіти
@@ -101,7 +101,7 @@ content_outline:
     Літак летить (literal). Час летить (figurative)."
   - "Figurative expression completion: fill in 4 expressions
     (дощ ___, справи ___ добре, нести ___, вести ___)."
-- section: "Блок 6: Подорожні розповіді (Block 6: Travel narratives — M36)"
+- section: "Блок 6: Подорожні розповіді"
   words: 500
   points:
   - "Reading comprehension: a travel passage (200-250 words) about a
@@ -112,7 +112,7 @@ content_outline:
   - "Production: write a short travel plan for a weekend trip in Ukraine,
     using at least 8 different prefixed motion verbs, 4 spatial
     prepositions, and 5 transport vocabulary items."
-- section: "Підсумок та самооцінка (Summary and self-assessment)"
+- section: "Підсумок та самооцінка"
   words: 400
   points:
   - "Integrated exercise: a passage (200 words) with 10 blanks where
@@ -162,7 +162,7 @@ activity_hints:
   items: 20
 - type: free-write
   focus: "Write a complete travel story across Ukraine using all prefix groups, figurative expressions, and travel vocabulary"
-  items: 1
+  items: 6
 connects_to:
 - "b1-027 to b1-036 (all Phase 4 modules — this checkpoint tests them)"
 - "b1-039 (adjectives-comparative — first module of Phase 5)"
@@ -190,4 +190,4 @@ references:
 - title: "All Phase 4 module references"
   notes: "This checkpoint draws on textbook sources cited in M27-M36:
     Заболотний Grade 5/7, Авраменко Grade 5/7/10, Литвінова Grade 6/7,
-    Караман Grade 10, Кравцова Grade 3, Вашуленко Grade 2."
+    Заболотний Grade 7, Кравцова Grade 3, Вашуленко Grade 2."

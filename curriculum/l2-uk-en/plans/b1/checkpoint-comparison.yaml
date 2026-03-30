@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Consolidation: comparative/superlative adjectives and adverbs, word
     formation'
 content_outline:
-- section: "Повторення: ступені порівняння (Review: degrees of comparison)"
+- section: "Повторення: ступені порівняння"
   words: 800
   points:
   - "Systematic review of all comparison forms:
@@ -50,7 +50,7 @@ content_outline:
     великий-більший-найбільший (багато-більше-найбільше)
     малий-менший-найменший (мало-менше-найменше)
     Drill: sentences requiring correct form selection."
-- section: "Повторення: словотвір (Review: word formation)"
+- section: "Повторення: словотвір"
   words: 700
   points:
   - "Adjective formation methods review:
@@ -63,7 +63,7 @@ content_outline:
     Place nouns: -ня, -ниця; prefix-suffix: при-...-я, за-...-я
     Verbal nouns: -ння, -ття; безафіксний: підписати → підпис
     Словотвірний ланцюжок: вода → водний → водник → підводник."
-- section: "Повторення: покупки і послуги (Review: shopping and services)"
+- section: "Повторення: покупки і послуги"
   words: 500
   points:
   - "Key transactional vocabulary and phrases from M44:
@@ -73,7 +73,7 @@ content_outline:
     У банку: рахунок, переказ, обмін валют, курс."
   - "Review of comparison in transactional contexts:
     product comparison, service reviews, complaint register."
-- section: "Комплексні завдання (Integrated exercises)"
+- section: "Комплексні завдання"
   words: 1000
   points:
   - "Text analysis: a Ukrainian consumer magazine article comparing products.
@@ -88,7 +88,7 @@ content_outline:
   - "Dialogue reconstruction: arrange jumbled dialogue lines from a
     shopping scenario into correct conversational order, filling in
     missing comparative forms and transactional vocabulary."
-- section: "Самооцінка і підготовка до Фази 6 (Self-assessment)"
+- section: "Самооцінка і підготовка до Фази 6"
   words: 500
   points:
   - "Self-check grid: can I form comparatives? superlatives? suppletive forms?
@@ -99,7 +99,7 @@ content_outline:
     The shift: from FORMING words to USING cases precisely."
   - "Diagnostic: 10 quick-check questions covering all Phase 5 topics,
     with answer key and explanations."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 200
   points:
   - "Phase 5 achievement summary: comparison forms, word formation methods,
@@ -129,7 +129,7 @@ activity_hints:
   items: 10
 - type: free-write
   focus: "Write a product comparison review (10+ sentences)"
-  items: 1
+  items: 6
 - type: dialogue-completion
   focus: "Complete shopping dialogues using Phase 5 grammar and vocabulary"
   items: 6

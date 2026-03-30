@@ -107,17 +107,17 @@ activity_hints:
 - type: fill-in
   focus: Complete a travel narrative by choosing the correct verb form (aspect
     and motion verb type) for each blank
-  items: 6
+  items: 8
 - type: quiz
   focus: Read a past trip description and answer comprehension questions about
     what happened, in what order, and how the person traveled
-  items: 6
+  items: 8
 - type: match-up
   focus: Match travel situations with the correct motion verb and preposition
     combination (їхати до + Gen., летіти на + Acc.)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §42-44, §39-41
+- title: Заболотний Grade 6, §42-44, §39-41
   notes: Вид дієслова + дієслова руху — combined in communicative context
 - title: 'ULP: Ukrainian Travel Vocabulary'
   url: https://www.ukrainianlessons.com/travel/

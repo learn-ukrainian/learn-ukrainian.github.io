@@ -78,18 +78,18 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Choose the correct variant з/із/зі based on the following word
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with від or з + correct Genitive noun form
-  items: 6
+  items: 8
 - type: match-up
   focus: Match preposition phrases to their English meanings (origin, material, time)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort phrases into з (place/material) vs. від (person/protection) vs. після (time)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §31
+- title: Заболотний Grade 5, §31
   notes: Прийменники з родовим відмінком
 - title: 'ULP: 10 Uses of Genitive Case'
   url: https://www.ukrainianlessons.com/genitive-case/

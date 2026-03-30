@@ -32,7 +32,7 @@ dialogue_situations:
   motivation: 'Masculine noun subclasses: столяр, бондар (-ар), киянин, полтавчанин
     (-ин)'
 content_outline:
-- section: "Суфікси -ар, -яр: хто що робить (Suffixes -ar, -iar)"
+- section: "Суфікси -ар, -яр: хто що робить"
   words: 650
   points:
   - "Word formation: суфікси -ар, -яр create nouns denoting people
@@ -54,7 +54,7 @@ content_outline:
     -тель (вчитель, письменник — rare productive suffix).
     Why distinguish them? Different suffixes -> different declension
     patterns and кличний forms."
-- section: "Відмінювання іменників на -ар (Declining -ar nouns)"
+- section: "Відмінювання іменників на -ар"
   words: 750
   points:
   - "Iменники на -ар belong to II відміна, and may be тверда or
@@ -75,7 +75,7 @@ content_outline:
     No consonant alternation occurs (the stem ends in [р],
     which is not subject to the [г/к/х] alternations from M09).
     Мішана група (stem on шиплячий) takes -е: пісняре!"
-- section: "Відмінювання іменників на -яр (Declining -iar nouns)"
+- section: "Відмінювання іменників на -яр"
   words: 600
   points:
   - "Iменники на -яр belong to II відміна, м'яка група.
@@ -92,7 +92,7 @@ content_outline:
   - "Practice: learners decline 4-5 nouns on -ар/-яр in all cases,
     then use them in sentences: 'Я хочу стати лікарем.'
     'Тарас Шевченко — найвідоміший кобзар України.'"
-- section: "Суфікс -ин/-янин: люди за походженням (Suffix -in/-ianyn)"
+- section: "Суфікс -ин/-янин: люди за походженням"
   words: 750
   points:
   - "Word formation: суфікс -ин/-їн/-янин creates nouns denoting
@@ -150,7 +150,7 @@ content_outline:
   - "Modern usage: школяр (student), лікар (doctor), пекар (baker)
     are everyday words. Recognizing the -ар/-яр suffix helps
     learners decode unfamiliar profession words instantly."
-- section: "Підсумок i практика (Summary and practice)"
+- section: "Підсумок i практика"
   words: 300
   points:
   - "Quick reference table:

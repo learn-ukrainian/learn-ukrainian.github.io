@@ -70,13 +70,13 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Mixed Grammar Quiz
-  items: 6
+  items: 8
 - type: fill-in
   focus: Sentence Transformation Drill
-  items: 6
+  items: 8
 - type: match-up
   focus: Short written response
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 5-7
+- title: Заболотний Grade 5-6
   notes: Повторення вивченого

@@ -32,14 +32,14 @@ dialogue_situations:
   - Учасники змагання
   motivation: 'Consonant alternation in verbs: ходити→ходжу, просити→прошу, возити→вожу'
 content_outline:
-- section: "Від іменників до дієслів (From nouns to verbs)"
+- section: "Від іменників до дієслів"
   words: 500
   points:
   - "Bridge from M09 (alternation-consonants-nouns): the same
     consonants [г/к/х] that alternate in nouns also alternate in verbs,
     but the triggers are different. In nouns: case endings.
     In verbs: conjugation (especially 1st person singular).
-    Караман Grade 10 p.52: 'Закономірними для української мови
+    Заболотний Grade 7 p.52: 'Закономірними для української мови
     стали чергування приголосних звуків, що відбулися перед
     давнім суфіксом j.'"
   - "Why the 1st person singular? Historically, the -у/-ю ending
@@ -95,7 +95,7 @@ content_outline:
 - section: "Чергування губних + [л]: робити — роблю"
   words: 600
   points:
-  - "From Караман Grade 10 p.52:
+  - "From Заболотний Grade 7 p.52:
     [б] -> [бл']: робити — роблю, любити — люблю, губити — гублю.
     [п] -> [пл']: ліпити — ліплю, купити — куплю, сипати — сиплю.
     [в] -> [вл']: ловити — ловлю, ставити — ставлю, правити — правлю.
@@ -234,7 +234,7 @@ references:
 - title: "Глазова Grade 10, p.107"
   notes: "Complete table of verb consonant alternations: зубні,
     задньоязикові, compound groups with examples."
-- title: "Караман Grade 10, p.52"
+- title: "Заболотний Grade 7, p.52"
   notes: "Historical explanation: alternations before давній суфікс j,
     full list including губні + [л'] insertion."
 - title: "Авраменко Grade 5, p.114-115"

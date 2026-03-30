@@ -89,16 +89,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Form the comparative from the base adjective
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct suppletive form (більший, кращий, гірший)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match adjective to its superlative form
-  items: 6
+  items: 8
 - type: true-false
   focus: Identify correct and incorrect comparative constructions
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Ступені порівняння прикметників
   notes: Full presentation of comparative and superlative formation with exercises

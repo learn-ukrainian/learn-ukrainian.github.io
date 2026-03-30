@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Syntax terminology: підмет, присудок, додаток; case names: називний,
     родовий, давальний'
 content_outline:
-- section: "Що вивчають синтаксис і пунктуація? (What do syntax and punctuation study?)"
+- section: "Що вивчають синтаксис і пунктуація?"
   words: 500
   points:
   - "Bridge introduction: learners already BUILD Ukrainian sentences from A1-A2.
@@ -49,7 +49,7 @@ content_outline:
     is explained using syntactic terms. 'Додаток у родовому відмінку'
     requires knowing both додаток and родовий відмінок.
     Dictionary literacy also depends on case terminology."
-- section: "Словосполучення (Word combinations)"
+- section: "Словосполучення"
   words: 550
   points:
   - "From Заболотний Grade 5 p.151:
@@ -67,7 +67,7 @@ content_outline:
     This distinction matters for sentence analysis at B1+."
   - "Practice: learners extract словосполучення from sentences,
     mark головне/залежне слова, and write the question between them."
-- section: "Граматична основа: підмет і присудок (Grammatical core: subject and predicate)"
+- section: "Граматична основа: підмет і присудок"
   words: 650
   points:
   - "From Заболотний Grade 5 p.160:
@@ -89,7 +89,7 @@ content_outline:
     Вітер хилить клени. (Хто хилить? — Вітер = підмет.)
     Клени хиляються від вітру. (Що хиляється? — Клени = підмет.)
     The same word can be підмет or додаток depending on its role."
-- section: "Другорядні члени речення (Secondary sentence members)"
+- section: "Другорядні члени речення"
   words: 700
   points:
   - "From Заболотний Grade 5 p.168:
@@ -113,7 +113,7 @@ content_outline:
     typical parts of speech, and underlining patterns.
     Practice: learners perform повний розбір речення — find граматична основа,
     then identify кожен другорядний член and its type."
-- section: "Складне речення (Complex sentences)"
+- section: "Складне речення"
   words: 550
   points:
   - "From Литвінова Grade 5 p.232:
@@ -135,7 +135,7 @@ content_outline:
     teach their systematic classification."
   - "Punctuation rule preview: кома between parts of складне речення.
     This is the most common punctuation challenge for B1 learners."
-- section: "Відмінки: система і питання (Cases: the system and its questions)"
+- section: "Відмінки: система і питання"
   words: 650
   points:
   - "The seven Ukrainian відмінки — the learner's toolkit for dictionary literacy:
@@ -156,7 +156,7 @@ content_outline:
     Я цікавлюся (ким? чим?) книжкою — О.в.
     Я розповідаю (кому? чому?) другові — Д.в.
     Practice: learners determine the відмінок of highlighted words in sentences."
-- section: "Підсумок: ваш синтаксичний словник (Summary: your syntax vocabulary)"
+- section: "Підсумок: ваш синтаксичний словник"
   words: 400
   points:
   - "Complete metalanguage glossary — all terms from this module collected:

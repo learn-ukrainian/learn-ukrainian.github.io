@@ -92,14 +92,14 @@ activity_hints:
 - type: fill-in
   focus: Put the noun into the correct plural case (Dat., Instr., or Loc.) based
     on the preposition or verb in the sentence
-  items: 6
+  items: 8
 - type: match-up
   focus: Match plural noun forms with the correct case label (Dat., Instr., Loc.)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct preposition + plural case combination to complete
     a sentence
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §§63-65
   notes: Dat., Instr., Loc. plural endings with exercises

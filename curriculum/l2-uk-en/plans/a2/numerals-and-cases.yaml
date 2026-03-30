@@ -88,16 +88,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Decline ordinal numerals in context (dates, addresses)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match numeral expressions to their correct Ukrainian form
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Числівник
   notes: Full chapter on numeral declension and agreement rules

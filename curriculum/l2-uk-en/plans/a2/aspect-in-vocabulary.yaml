@@ -80,18 +80,18 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Find the Partner (Verb Matching)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Categorize by Formation Type
-  items: 6
+  items: 8
 - type: match-up
   focus: Fill in the Blanks with the Correct Pair
-  items: 6
+  items: 8
 - type: match-up
   focus: Sentence Translation (Aspect Focus)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §42-44
+- title: Заболотний Grade 6, §52-54
   notes: 'Вид дієслова: доконаний і недоконаний'
 - title: 'ULP: Ukrainian Verb Aspect'
   url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/

@@ -101,21 +101,21 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match imperfective verbs with their perfective partners from the 30 pairs
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences by choosing the correct aspect based on context
     (sequence, interruption, habit, single event)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort aspect pairs by formation pattern (prefix, suffix, stem change,
     suppletive)
-  items: 6
+  items: 8
 - type: quiz
   focus: Read a mini-situation and choose the correct aspect form with
     justification
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §42-44
+- title: Заболотний Grade 6, §52-54
   notes: Видові пари дієслів — formation patterns and usage
 - title: 'Ohoiko, 500+ Ukrainian Verbs (2024)'
   notes: Comprehensive aspect pair reference with conjugation tables

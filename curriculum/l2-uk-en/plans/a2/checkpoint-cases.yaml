@@ -82,13 +82,13 @@ activity_hints:
 - type: fill-in
   focus: Mixed case drill — complete sentences requiring all 7 cases, singular
     and plural
-  items: 6
+  items: 8
 - type: quiz
   focus: Error correction — identify and fix case errors in sentences
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.)
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Повторення вивченого
   notes: End-of-chapter review exercises covering all cases

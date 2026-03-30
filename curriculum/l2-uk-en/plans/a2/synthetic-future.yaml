@@ -99,17 +99,17 @@ activity_hints:
 - type: fill-in
   focus: Complete sentences with the correct future form (synthetic perfective or
     analytical imperfective) based on context
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify whether a future sentence uses synthetic or analytical future
     and explain the aspect choice
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort verb forms into two groups — synthetic future (perfective) and
     analytical future (imperfective)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §47-48
+- title: Заболотний Grade 6, §47-48
   notes: Майбутній час дієслів доконаного і недоконаного виду
 - title: 'ULP: Ukrainian Future Tense'
   url: https://www.ukrainianlessons.com/grammar-hub/

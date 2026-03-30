@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Adverb comparison: швидше, найчастіше, вище, раніше — formation and
     usage'
 content_outline:
-- section: "Як утворюються прислівники? (How are adverbs formed?)"
+- section: "Як утворюються прислівники?"
   words: 700
   points:
   - "Main formation patterns from Литвінова Grade 7 p.143:
@@ -47,7 +47,7 @@ content_outline:
   - "Practice: form adverbs from 15 adjectives and identify the formation
     method. Some adjectives have multiple adverb forms:
     добрий → добре (sufix.) / по-доброму (pref.-suf.)."
-- section: "Ступені порівняння прислівників (Degrees of comparison)"
+- section: "Ступені порівняння прислівників"
   words: 800
   points:
   - "Only adverbs formed from якісні прикметники with -о, -е can form
@@ -66,7 +66,7 @@ content_outline:
     Comparative: більш/менш + adverb (більш весело, менш часто).
     Superlative: найбільш/найменш + adverb (найбільш весело).
     Error: *більш веселіше — NEVER combine."
-- section: "Прислівник vs прикметник: паралельні форми (Adverb vs adjective)"
+- section: "Прислівник vs прикметник: паралельні форми"
   words: 600
   points:
   - "Critical distinction: adjective comparatives end in -ший (-ша, -ше, -ші),
@@ -80,7 +80,7 @@ content_outline:
     мало → менше → найменше"
   - "Practice: sentences where learners must choose adjective or adverb
     comparative/superlative. Distinguish modifying a noun vs modifying a verb."
-- section: "Прислівники без ступенів порівняння (Adverbs without comparison)"
+- section: "Прислівники без ступенів порівняння"
   words: 400
   points:
   - "From Заболотний Grade 7 p.151:
@@ -90,7 +90,7 @@ content_outline:
     Adverbs formed with по-...-ськи (по-українськи)."
   - "Practice: sort a list of 15 adverbs into 'can form comparison'
     and 'cannot form comparison,' explaining why."
-- section: "Прислівники в контексті (Adverbs in real usage)"
+- section: "Прислівники в контексті"
   words: 700
   points:
   - "Reading practice: a sports commentary or competition report using
@@ -102,7 +102,7 @@ content_outline:
     Using чим...тим with adverbs: Чим більше читаєш, тим краще пишеш."
   - "Self-check: form all comparison forms for 8 adverbs, including
     at least 2 suppletive and 2 with consonant alternations."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Reference table: adjective comparison vs adverb comparison side by side
@@ -173,5 +173,5 @@ references:
   notes: "Adverb comparison exercises, formation from adjectives."
 - title: "Заболотний Grade 8, p.28"
   notes: "Side-by-side adjective/adverb comparison table."
-- title: "Глазова Grade 11, p.23"
+- title: "Заболотний Grade 8, p.23"
   notes: "Adverb comparison in context, stylistic alternatives."

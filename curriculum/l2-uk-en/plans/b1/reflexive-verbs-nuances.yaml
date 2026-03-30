@@ -26,10 +26,10 @@ dialogue_situations:
   - Сусіди по кімнаті (roommates)
   motivation: 'Reflexive verbs: вмиватися, голитися, збиратися, сміятися, зачинятися'
 content_outline:
-- section: Що таке зворотні дієслова? (What are reflexive verbs?)
+- section: Що таке зворотні дієслова?
   words: 650
   points:
-  - 'Definition from Караман Grade 10 p.176: Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними:
+  - 'Definition from Заболотний Grade 7 p.176: Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними:
     навчатися, закохатися. Сучасний дієслівний суфікс -ся(-сь) — це давня коротка форма зворотного займенника себе в Зн. в.
     однини: Я не боюся = Я ся не бою (діал.).'
   - 'How -ся transforms verbs: мити (to wash something) → митися (to wash oneself) бачити (to see) → бачитися (to see each
@@ -37,14 +37,14 @@ content_outline:
     боятися, сподіватися — exist only with -ся.'
   - 'Position of -ся: always after the verb ending or infinitive suffix. Вмивати → вмиватися, взувати → взуватися. In conjugated
     forms: вмиваюся, вмиваєшся, вмивається. In infinitive: вмиватися. In past: вмивалася, вмивався.'
-- section: Семантичні групи зворотних дієслів (Semantic categories)
+- section: Семантичні групи зворотних дієслів
   words: 850
   points:
   - '1. Власне зворотні — дія спрямована на самого виконавця: митися (to wash oneself), одягатися (to dress oneself), голитися
     (to shave oneself), зачісуватися (to comb one''s hair). Test: can you add ''сам/сама себе''? If yes, it''s власне зворотне.
     From Кравцова Grade 4 p.111: ''Дієслова на -ся, -сь виражають дію, спрямовану на самого виконавця.'''
   - '2. Взаємні — дія між двома або більше особами: зустрічатися (to meet each other), листуватися (to correspond), обніматися
-    (to hug each other), цілуватися (to kiss each other). From Глазова Grade 11 p.96: зворотні дієслова на позначення дії
+    (to hug each other), цілуватися (to kiss each other). From Заболотний Grade 8 p.96: зворотні дієслова на позначення дії
     ''здійснюваної двома й більше особами та взаємно спрямованої: знайомі листуються (між собою).'''
   - '3. Стану та емоцій — суб''єкт переживає стан: сердитися (to be angry), хвилюватися (to worry), радіти → радітися (to
     rejoice), дивуватися (to be amazed). Не всі мають пари: боятися, сподіватися — лише зворотні.'
@@ -52,7 +52,7 @@ content_outline:
     хочеться (feels like wanting), здається (it seems). These take the давальний відмінок: Мені не спиться. Йому здається.'
   - '5. Пасивноподібні — preview for M23: Дім будується. (The house is being built.) Книга читається легко. (The book reads
     easily.) These overlap with passive voice — detailed in next module.'
-- section: 'Милозвучність: -ся чи -сь? (Euphony: -ся or -сь?)'
+- section: 'Милозвучність: -ся чи -сь?'
   words: 600
   points:
   - 'Rule from Заболотний Grade 7 p.51: -сь вживаємо, якщо наступне слово починається голосним звуком. -ся вживаємо, якщо
@@ -63,7 +63,7 @@ content_outline:
   - 'Pronunciation rules (Кравцова Grade 4 p.111): -шся вимовляємо як [с'':а]: спиняєшся [спиняйес'':а]. -ться вимовляємо
     як [ц'':а]: прокидається [прокидайец'':а]. This is a consistent Ukrainian phonetic pattern learners should practice for
     natural-sounding speech.'
-- section: Зворотні дієслова у повсякденному мовленні (Reflexives in daily speech)
+- section: Зворотні дієслова у повсякденному мовленні
   words: 750
   points:
   - 'Morning routine — all зворотні: прокидатися (to wake up), підводитися (to get up), вмиватися (to wash face), чистити
@@ -77,7 +77,7 @@ content_outline:
     плакати — no -ся. Contrast: хвилювати (to worry someone) vs хвилюватися (to worry oneself).'
   - 'Dialogue: friends planning a weekend, naturally using зворотні for routines (збираюся), emotions (хвилююся), reciprocal
     actions (зустрінемося), and impersonal states (мені не хочеться).'
-- section: Типові помилки та контрастні пари (Common errors and contrastive pairs)
+- section: Типові помилки та контрастні пари
   words: 700
   points:
   - 'Error 1: Adding -ся where not needed (Russicism influence): *Я дякуюся вам → Я дякую вам (дякувати is not reflexive).
@@ -88,7 +88,7 @@ content_outline:
   - 'Contrastive pairs showing meaning shift: вчити (to teach) vs вчитися (to study/learn) збирати (to collect) vs збиратися
     (to get ready / to intend) дивити (archaic) vs дивитися (to look at, watch) повертати (to turn something) vs повертатися
     (to return) These pairs reveal how -ся systematically shifts meaning.'
-- section: Підсумок та перехід до M23 (Summary and transition)
+- section: Підсумок та перехід до M23
   words: 500
   points:
   - 'Summary: зворотні дієслова = дієслова з суфіксом -ся/-сь. 5 семантичних груп: власне зворотні, взаємні, стану, безособові,
@@ -156,11 +156,11 @@ grammar:
 - 'Contrastive pairs: вчити/вчитися, збирати/збиратися, повертати/повертатися'
 register: академічний
 references:
-- title: Караман Grade 10, p.176
+- title: Заболотний Grade 7, p.176
   notes: Definition of зворотні дієслова; etymological origin from займенник себе; -ся(-сь) after інфінітивний суфікс or закінчення.
 - title: Заболотний Grade 7, p.51
   notes: 'Euphony rule for -ся/-сь; practice exercises with word pairs: милуватись озером vs милуватися горами.'
-- title: Глазова Grade 11, p.96
+- title: Заболотний Grade 8, p.96
   notes: 'Semantic categories: дія спрямована на самого її носія, в інтересах носія дії, взаємно спрямована. Distinguishing
     зворотні from пасивні дієслова.'
 - title: Кравцова Grade 4, p.111

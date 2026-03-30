@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Temporal prepositions: у + acc (day), о + loc (time), на + loc, до
     + gen'
 content_outline:
-- section: "Через + Зн.в. та за + Зн.в. (In/after a period)"
+- section: "Через + Зн.в. та за + Зн.в."
   words: 800
   points:
   - "через + Зн.в. — 'after a time period from now':
@@ -49,7 +49,7 @@ content_outline:
     Через годину я піду (in an hour I will go).
     За годину я все зробив (within an hour I finished everything).
     Practice: 10 sentences requiring через or за."
-- section: "Перед, після, до, під час (Before, after, until, during)"
+- section: "Перед, після, до, під час"
   words: 700
   points:
   - "перед + Ор.в. — 'before':
@@ -67,7 +67,7 @@ content_outline:
     Practice: describe a typical day using перед/після/до/під час:
     'Перед сніданком я роблю зарядку. Під час обіду читаю.
     Після роботи гуляю. До вечері все зроблю.'"
-- section: "Тривалість: протягом, впродовж, на (Duration)"
+- section: "Тривалість: протягом, впродовж, на"
   words: 600
   points:
   - "протягом/упродовж + Р.в. — 'throughout/for the duration of':
@@ -83,7 +83,7 @@ content_outline:
     NOT *на протязі (calque from Russian на протяжении) — use протягом.
     NOT *після п'яти (calque) — after 5 o'clock: після п'ятої.
     Practice: 8 sentences using duration prepositions correctly."
-- section: "Позначення часу доби і пір року (Time of day and seasons)"
+- section: "Позначення часу доби і пір року"
   words: 500
   points:
   - "Seasons: взимку, навесні, влітку, восени (adverbs, no preposition).
@@ -97,7 +97,7 @@ content_outline:
   - "Days and dates: у понеділок (Зн.в.), у середу, в п'ятницю.
     Цього понеділка (Р.в., this Monday).
     Practice: schedule a week using temporal expressions."
-- section: "По + М.в. та інші нюанси (Post-temporal по and other nuances)"
+- section: "По + М.в. та інші нюанси"
   words: 500
   points:
   - "по + М.в. — 'after' (temporal, formal):
@@ -111,7 +111,7 @@ content_outline:
     Context determines meaning."
   - "Practice: mixed temporal preposition exercise — choose the correct
     preposition and case for 12 time-related sentences."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 400
   points:
   - "Reference table:
@@ -182,5 +182,5 @@ references:
   notes: "Впродовж/протягом usage examples."
 - title: "Авраменко Grade 11, p.72"
   notes: "Preposition по: temporal, purposive, distributive meanings."
-- title: "Глазова Grade 11, p.84"
+- title: "Заболотний Grade 8, p.84"
   notes: "Preposition по with various cases and meanings."

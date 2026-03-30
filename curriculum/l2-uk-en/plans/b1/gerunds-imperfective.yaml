@@ -30,7 +30,7 @@ dialogue_situations:
   - Друг (слухає)
   motivation: 'Imperfective gerunds: біжучи, переходячи, дихаючи — simultaneous actions'
 content_outline:
-- section: "Що таке дієприслівник? (What is a gerund/adverbial participle?)"
+- section: "Що таке дієприслівник?"
   words: 700
   points:
   - "Definition from Литвінова Grade 7 p.114: дієприслівник — це
@@ -51,7 +51,7 @@ content_outline:
     Читаючи книгу, Марія усміхалася. (Марія reads AND smiles — correct)
     *Читаючи книгу, мені стало цікаво. (nobody reads — WRONG,
     the logical subject of 'читаючи' is unclear)."
-- section: "Творення дієприслівників недоконаного виду (Formation)"
+- section: "Творення дієприслівників недоконаного виду"
   words: 750
   points:
   - "Formation from Литвінова Grade 7 p.118 and Заболотний Grade 7 p.131:
@@ -75,7 +75,7 @@ content_outline:
   - "Reflexive gerunds: -ся remains after the suffix:
     усміхатися → усміхаючись, дивитися → дивлячись,
     навчатися → навчаючись. Note: -сь (not -ся) after vowel."
-- section: "Дієприслівник як обставина (Gerund as adverbial modifier)"
+- section: "Дієприслівник як обставина"
   words: 600
   points:
   - "Syntactic role: дієприслівник is ALWAYS an обставина in the sentence.
@@ -91,7 +91,7 @@ content_outline:
     All three are grammatically correct."
   - "Practice: determine the type of обставина for given дієприслівники
     in sentences, and experiment with repositioning them."
-- section: "Поширені помилки та практика (Common errors and practice)"
+- section: "Поширені помилки та практика"
   words: 600
   points:
   - "Dangling gerund (найпоширеніша помилка):
@@ -108,7 +108,7 @@ content_outline:
     daily routine using дієприслівники to show simultaneous actions.
     Learners identify all gerunds, check logical subject alignment,
     and transform selected gerunds into subordinate clauses."
-- section: "Підсумок та перехід до M62 (Summary and transition)"
+- section: "Підсумок та перехід до M62"
   words: 350
   points:
   - "Summary: дієприслівник недоконаного виду = додаткова дія,

@@ -31,7 +31,7 @@ dialogue_situations:
   - Студент
   motivation: 'Cause/purpose: через + acc, для + gen, завдяки + dat, заради + gen'
 content_outline:
-- section: "Причина: через та завдяки (Cause: through and thanks to)"
+- section: "Причина: через та завдяки"
   words: 800
   points:
   - "через + Зн.в. — negative or neutral cause (Заболотний Grade 7 p.193):
@@ -50,7 +50,7 @@ content_outline:
     based on whether the cause is positive or negative.
     'Я запізнився _____ затор на дорозі.' (через)
     'Ми перемогли _____ вашій підтримці.' (завдяки)"
-- section: "Причина: від та з (Inner and physical causes)"
+- section: "Причина: від та з"
   words: 600
   points:
   - "від + Р.в. — physical or emotional cause (external stimulus):
@@ -66,7 +66,7 @@ content_outline:
     but з emphasises MOTIVATION while від emphasises REACTION."
   - "Practice: choose від or з in 8 sentences, discussing the nuance
     of external reaction vs internal motivation."
-- section: "Мета: для, заради, за, щоб (Purpose constructions)"
+- section: "Мета: для, заради, за, щоб"
   words: 700
   points:
   - "для + Р.в. — 'for (the purpose/benefit of)':
@@ -86,7 +86,7 @@ content_outline:
     Я прийшов, щоб допомогти. Вона вивчає українську, щоб розуміти бабусю.
     Він працює, щоб заробити гроші.
     Preview: щоб-clauses with subjunctive in Phase 8 complex syntax."
-- section: "Складні конструкції причини і мети (Complex causal/purpose phrases)"
+- section: "Складні конструкції причини і мети"
   words: 500
   points:
   - "Compound prepositions for cause:
@@ -100,7 +100,7 @@ content_outline:
   - "Practice: combine simple sentences into complex ones using compound
     cause/purpose constructions. 'Він не прийшов. Він захворів.' →
     'Він не прийшов через те, що захворів.'"
-- section: "Причина vs мета: розрізнення (Cause vs purpose distinction)"
+- section: "Причина vs мета: розрізнення"
   words: 500
   points:
   - "Cause answers ЧОМУ? (why did it happen?): Він запізнився через затор.
@@ -113,7 +113,7 @@ content_outline:
     Then rewrite each using an alternative construction:
     'Завдяки вашій допомозі ми перемогли' →
     'Ми перемогли, бо ви допомогли' (subordinate clause alternative)."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 400
   points:
   - "Reference table:
@@ -176,9 +176,9 @@ register: науково-навчальний
 references:
 - title: "Заболотний Grade 7, p.193"
   notes: "завдяки vs через distinction, за + Ор.в. for purpose."
-- title: "Авраменко Grade 9, p.86"
+- title: "Авраменко Grade 8, p.86"
   notes: "Складнопідрядні речення з підрядними причини, мети, умови."
 - title: "Авраменко Grade 11, p.72"
   notes: "Preposition по for purpose: піти по гриби."
-- title: "Глазова Grade 11, p.84"
+- title: "Заболотний Grade 8, p.84"
   notes: "Prepositional constructions for cause and purpose."

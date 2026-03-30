@@ -97,17 +97,17 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete location sentences with correct preposition + Instrumental noun form
-  items: 6
+  items: 8
 - type: match-up
   focus: Match prepositions (над, під, перед, за, між) to pictures showing spatial
     relationships
-  items: 6
+  items: 8
 - type: quiz
   focus: Distinguish spatial vs. temporal meaning of перед and за
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether location descriptions match a room diagram
-  items: 6
+  items: 8
 references:
 - title: Захарійчук Grade 4, с. 63
   notes: 'Instrumental case nouns with prepositions з, за, із, над, під, між, перед

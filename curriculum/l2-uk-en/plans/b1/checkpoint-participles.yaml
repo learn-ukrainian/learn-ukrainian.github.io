@@ -29,7 +29,7 @@ dialogue_situations:
   motivation: 'Consolidation: active/passive participles, imperfective/perfective
     gerunds in literary analysis'
 content_outline:
-- section: "Вступ: як працювати з контрольною (Introduction)"
+- section: "Вступ: як працювати з контрольною"
   words: 350
   points:
   - "Overview: this checkpoint tests everything from M57-M64 (Phase 7):
@@ -39,7 +39,7 @@ content_outline:
     виду (M62), дієприслівниковий зворот (M63), освіта (M64)."
   - "Self-assessment framework: after each block, rate confidence:
     впевнено / потребую повторення / не розумію."
-- section: "Блок 1: Дієприкметники (Block 1: Participles — M57-M58)"
+- section: "Блок 1: Дієприкметники"
   words: 600
   points:
   - "Formation exercise: form active and passive participles from 12 verbs.
@@ -52,7 +52,7 @@ content_outline:
   - "Russian calque editing: rewrite 6 phrases replacing unnatural
     participles with natural Ukrainian equivalents (descriptions,
     adjectives, descriptive clauses)."
-- section: "Блок 2: Звороти і пунктуація (Block 2: Phrases and punctuation — M59, M63)"
+- section: "Блок 2: Звороти і пунктуація"
   words: 600
   points:
   - "Punctuation exercise: 10 sentences with дієприкметникові and
@@ -64,7 +64,7 @@ content_outline:
     that determines comma placement."
   - "Transformation: convert 6 participle/gerund phrases to subordinate
     clauses with який/коли/після того як, and vice versa."
-- section: "Блок 3: Дієприслівники (Block 3: Gerunds — M61-M62)"
+- section: "Блок 3: Дієприслівники"
   words: 550
   points:
   - "Formation: form imperfective and perfective gerunds from 10 verbs.
@@ -73,14 +73,14 @@ content_outline:
   - "Temporal logic: given 8 sentence contexts, learners choose
     imperfective (одночасність) or perfective (різночасність) gerund."
   - "Logical subject check: identify and fix 4 dangling gerund errors."
-- section: "Блок 4: Короткі прикметники (Block 4: Short-form adjectives — M60)"
+- section: "Блок 4: Короткі прикметники"
   words: 400
   points:
   - "Identification: find short-form adjectives in 5 literary/folk excerpts
     and give their full forms."
   - "Modern usage: complete 6 sentences with correct short-form adjective
     (потрібен/певен/годен/ладен/варт/рад) in predicative position."
-- section: "Блок 5: Освіта та академічний стиль (Block 5: Education and academic register — M64)"
+- section: "Блок 5: Освіта та академічний стиль"
   words: 550
   points:
   - "Academic vocabulary: match 10 academic terms to definitions."
@@ -89,7 +89,7 @@ content_outline:
     and gerund constructions."
   - "Reading comprehension: a short academic passage using Phase 7 grammar.
     Questions test language: identify all дієприкметники, звороти, стиль."
-- section: "Блок 6: Інтегроване завдання (Block 6: Integrated task)"
+- section: "Блок 6: Інтегроване завдання"
   words: 550
   points:
   - "Cloze passage: an academic text with 10 blanks. Learners fill in
@@ -98,7 +98,7 @@ content_outline:
   - "Production: write a short paragraph (5-7 sentences) describing
     a research project or study experience, using at least 2 participle
     phrases, 2 gerund phrases, and 1 short-form adjective."
-- section: "Підсумок та самооцінка (Summary and self-assessment)"
+- section: "Підсумок та самооцінка"
   words: 400
   points:
   - "Self-assessment checklist:
@@ -143,7 +143,7 @@ activity_hints:
   items: 8
 - type: free-write
   focus: "Write an academic paragraph using Phase 7 grammar: participle phrases, gerund phrases, short adjectives"
-  items: 1
+  items: 6
 connects_to:
 - "b1-057 to b1-064 (all Phase 7 modules)"
 - "b1-066 (complex-compound — first module of Phase 8)"

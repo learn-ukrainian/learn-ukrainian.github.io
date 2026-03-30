@@ -32,7 +32,7 @@ dialogue_situations:
   motivation: 'Adjective agreement: старший брат(m), молодша сестра(f), найдобріша
     жінка(f)'
 content_outline:
-- section: "Зовнішність людини: портретна лексика (Appearance: portrait vocabulary)"
+- section: "Зовнішність людини: портретна лексика"
   words: 700
   points:
   - "Introduction grounded in Авраменко Grade 7 p.100:
@@ -55,7 +55,7 @@ content_outline:
     світ through зовнішність. Заболотний Grade 7 p.248: 'У художньому
     тексті через елементи зовнішньої характеристики письменник показує
     внутрішній світ персонажа, його характер, життя.'"
-- section: "Характер людини: риси i оцінка (Character: traits and evaluation)"
+- section: "Характер людини: риси i оцінка"
   words: 700
   points:
   - "Positive character traits (with VESUM-verified adjectives):
@@ -79,7 +79,7 @@ content_outline:
     щирий vs чесний (sincere vs honest — overlap but different emphasis).
     лагідний vs ніжний vs м'який (gentle vs tender vs soft — register).
     Learners choose the most appropriate adjective in context."
-- section: "Родина i родичі (Family and relatives)"
+- section: "Родина i родичі"
   words: 600
   points:
   - "Core family vocabulary (B1 expansion beyond A1-A2 basics):
@@ -101,7 +101,7 @@ content_outline:
   - "Practice: learners draw and label a family tree using Ukrainian terms,
     then describe relationships using genitive constructions:
     'Оксана — дочка мого дядька' (Оксана is my uncle's daughter)."
-- section: "Стосунки між людьми (Relationships between people)"
+- section: "Стосунки між людьми"
   words: 500
   points:
   - "Types of relationships — precise Ukrainian vocabulary
@@ -121,7 +121,7 @@ content_outline:
     підтримувати, сваритися, миритися."
   - "Practice dialogue: two friends discussing their relationships
     with family and colleagues, using the vocabulary above."
-- section: "Знайомство i представлення (Meeting and introducing people)"
+- section: "Знайомство i представлення"
   words: 550
   points:
   - "Formulas of introduction from Литвінова Grade 7 p.205:
@@ -143,7 +143,7 @@ content_outline:
     settings."
   - "Practice dialogue: introducing a Ukrainian friend to your family,
     switching between formal and informal register as appropriate."
-- section: "Опис людини: як писати портрет (Writing a character portrait)"
+- section: "Опис людини: як писати портрет"
   words: 600
   points:
   - "Composition structure from Заболотний Grade 7 p.251 — план
@@ -165,7 +165,7 @@ content_outline:
   - "Model portrait in Ukrainian (adapted literary excerpt) with
     analysis of structure and artistic devices. Learners then write
     their own 8-10 sentence portrait of someone they know."
-- section: "Підсумок: людина у словах (Summary: describing people)"
+- section: "Підсумок: людина у словах"
   words: 350
   points:
   - "Complete vocabulary reference — all terms organized by category:
@@ -214,27 +214,27 @@ activity_hints:
 - type: match-up
   focus: "Match портретна лексика to body categories: зріст, постава,
     волосся, обличчя, характер."
-  items: 10
+  items: 12
 - type: quiz
   focus: "Identify character traits as позитивні чи негативні, and choose
     the correct adjective for a given description."
-  items: 8
+  items: 12
 - type: fill-in
   focus: "Complete a portrait description: fill in missing adjectives
     and relationship terms in a Ukrainian text about a family."
-  items: 8
+  items: 12
 - type: free-write
   focus: "Write a structured portrait (зачин — основна частина — кінцівка)
     of a real or fictional person, 8-10 sentences."
-  items: 1
+  items: 12
 - type: role-play
   focus: "Introduce a friend to a colleague using formal register, then
     introduce the same person informally to another friend."
-  items: 4
+  items: 12
 - type: group-sort
   focus: "Sort relationship vocabulary into categories: родина, дружба,
     формальні стосунки."
-  items: 10
+  items: 12
 connects_to:
 - "b1-005 (Майбутнє i вид дієслова — future tense used in plans about people)"
 - "b1-007 (Контрольна робота 1 — checkpoint testing descriptions and vocabulary)"
@@ -263,5 +263,5 @@ references:
   notes: "Правила знайомства: формули представлення, етикет, кличний відмінок."
 - title: "Ворон Grade 9, p.22"
   notes: "Semantic distinctions: відношення, взаємини, стосунки, ставлення."
-- title: "Глазова Grade 11, p.177"
+- title: "Заболотний Grade 8, p.177"
   notes: "Оцінювальні жанри: характеристика — зовнішня i внутрішня."

@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Environment topic: забруднення(n), ліс(m), природа(f) + all B1 syntax
     structures'
 content_outline:
-- section: "Погода та пори року (Weather and seasons)"
+- section: "Погода та пори року"
   words: 650
   points:
   - "Weather vocabulary — precise Ukrainian terms:
@@ -55,7 +55,7 @@ content_outline:
     'Ластівки низько літають — на дощ.'
     'Соняшники опускають голівки — до негоди.'
     These connect nature vocabulary to Ukrainian folk wisdom."
-- section: "Рослинний світ (The plant world)"
+- section: "Рослинний світ"
   words: 600
   points:
   - "Дерева: дуб (oak), береза (birch), верба (willow), тополя (poplar),
@@ -76,7 +76,7 @@ content_outline:
     Learners read a poetic passage about Ukrainian nature
     (Шевченко, Коцюбинський, or adapted excerpt) and identify
     образні засоби: епітети, порівняння, персоніфікації."
-- section: "Тваринний світ (The animal world)"
+- section: "Тваринний світ"
   words: 600
   points:
   - "Свійські тварини: кіт, собака, кінь, корова, свиня, вівця,
@@ -95,7 +95,7 @@ content_outline:
     жук (beetle), коник (grasshopper), павук (spider).
     Practice: learners describe the ecosystem of a Ukrainian ліс or поле,
     using the vocabulary from all three categories."
-- section: "Екологія та довкілля (Ecology and environment)"
+- section: "Екологія та довкілля"
   words: 650
   points:
   - "Environmental vocabulary:
@@ -118,7 +118,7 @@ content_outline:
     using складнопідрядні речення (M65-72), вставні слова (M81),
     and подвійне заперечення (M80) in natural context.
     Practice: learners participate in a guided discussion."
-- section: "Природа в літературі (Nature in literature)"
+- section: "Природа в літературі"
   words: 550
   points:
   - "Ukrainian nature descriptions as an artistic tradition:
@@ -138,7 +138,7 @@ content_outline:
   - "Writing practice: learners compose a short опис природи (8-10 sentences)
     about a place they know, using weather, plant, and animal vocabulary
     with at least two образні засоби."
-- section: "Підсумок: природа — це Україна (Summary: nature is Ukraine)"
+- section: "Підсумок: природа — це Україна"
   words: 350
   points:
   - "Complete vocabulary reference organized by category:
@@ -182,15 +182,15 @@ activity_hints:
 - type: quiz
   focus: "Identify погода vocabulary from descriptions, match тварини/рослини
     to their Ukrainian names, and classify environmental terms."
-  items: 10
+  items: 12
 - type: match-up
   focus: "Match Ukrainian рослини/тварини to their descriptions or images,
     match weather terms to weather phenomena."
-  items: 10
+  items: 12
 - type: fill-in
   focus: "Complete a weather forecast and nature description with appropriate
     vocabulary, using correct gender agreement and cases."
-  items: 8
+  items: 12
 - type: group-sort
   focus: "Sort vocabulary into categories: погода, дерева, квіти, дикі тварини,
     свійські тварини, екологія."
@@ -199,12 +199,12 @@ activity_hints:
   focus: "Write a description of your favorite season or place in nature
     (10-12 sentences) using weather, plant, and animal vocabulary
     with образні засоби."
-  items: 1
+  items: 12
 - type: role-play
   focus: "Discuss environmental protection: one person argues for сортування
     відходів, the other questions whether individual actions matter.
     Use вставні слова and аргументація."
-  items: 4
+  items: 12
 connects_to:
 - "b1-081 (Вставні слова — expressing opinions about nature and ecology)"
 - "b1-083 (Читання художніх текстів — literary nature descriptions)"
@@ -231,6 +231,6 @@ references:
 - title: "Болшакова Grade 2, p.63"
   notes: "Опис природи — basic Ukrainian nature vocabulary from early grades,
     foundation for B1 expansion."
-- title: "Ворон Grade 11, p.137"
+- title: "Авраменко Grade 7, p.137"
   notes: "Nature description text: autumn passage with literary devices,
     model for B1 literary reading."

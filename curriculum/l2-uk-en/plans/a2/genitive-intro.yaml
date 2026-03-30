@@ -76,19 +76,19 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Possession vs. Absence Drill (`Є` vs. `Немає`)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Genitive Singular Formation
-  items: 6
+  items: 8
 - type: match-up
   focus: Genitive Plural Formation with Quantity Words
-  items: 6
+  items: 8
 - type: match-up
   focus: Translate sentences with 'a lot of...' / 'I don't have...'
-  items: 6
+  items: 8
 references:
 - title: "ULP: 10 Uses of Genitive Case"
   url: "https://www.ukrainianlessons.com/genitive-case/"
   notes: "All genitive functions explained"
-- title: "Заболотний Grade 7, §81"
+- title: "Заболотний Grade 6, §81"
   notes: "немає vs не має — key distinction with examples"

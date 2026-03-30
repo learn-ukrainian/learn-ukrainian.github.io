@@ -27,22 +27,22 @@ dialogue_situations:
   - Журналіст
   motivation: 'Passive voice: був побудований, були пофарбовані, буде відкрито'
 content_outline:
-- section: Активний i пасивний стан (Active and passive voice)
+- section: Активний i пасивний стан
   words: 750
   points:
   - 'Core concept: стан дієслова describes the relationship between the subject and the action. Активний стан: підмет виконує
     дію. Студенти читають книгу. Пасивний стан: підмет зазнає дії. Книга читається студентами. The meaning is the same, but
     the focus shifts.'
-  - 'Ukrainian strongly prefers active voice (Глазова Grade 11 p.95): ''Українська мова уникає пасивних конструкцій. Тому
+  - 'Ukrainian strongly prefers active voice (Заболотний Grade 8 p.95): ''Українська мова уникає пасивних конструкцій. Тому
     перевагу, де це можливо, слід надавати дієсловам активного стану.'' This is NOT like English, where passive is common
     in academic writing. In Ukrainian, excessive passive = канцелярит (bureaucratese).'
   - 'When passive IS appropriate in Ukrainian: 1. The agent is unknown: Місто було засновано у X столітті. 2. The result matters
     more than the agent: Завдання виконано. 3. Scientific/technical descriptions: Елемент було відкрито у 1898 році. 4. Official
     documents: Закон ухвалено Верховною Радою.'
-- section: Пасив через зворотні дієслова (Passive via reflexive verbs)
+- section: Пасив через зворотні дієслова
   words: 700
   points:
-  - 'Formation from Глазова Grade 11 p.95: ''Засобом вираження пасивного стану є формотворчий афікс -ся, що додається до перехідних
+  - 'Formation from Заболотний Grade 8 p.95: ''Засобом вираження пасивного стану є формотворчий афікс -ся, що додається до перехідних
     дієслів: будується, передається, продовжується.'' The subject receives the action: Добре слово дім будує. (active) → Поганим
     словом все руйнується. (passive with -ся)'
   - 'Agent expression with орудний відмінок: Книга читається учнями уважно. Рецепт готується нами вправно. But note: Авраменко
@@ -54,7 +54,7 @@ content_outline:
   - 'Common passive -ся verbs: будуватися (to be built), використовуватися (to be used), вважатися (to be considered), називатися
     (to be called), вироблятися (to be produced), знаходитися (to be located). Note: знаходитися is so common that its passive
     origin is forgotten.'
-- section: 'Форми на -но/-то: українська спеціальність (Forms with -но/-то: Ukrainian specialty)'
+- section: 'Форми на -но/-то: українська спеціальність'
   words: 850
   points:
   - 'From Авраменко Grade 11 p.81: ''Синтаксичні конструкції з формами на -но, -то.'' Усі інгредієнти придбано. (All ingredients
@@ -63,13 +63,13 @@ content_outline:
   - 'Formation: пасивний дієприкметник stem + -о: зроблений → зроблено, прочитаний → прочитано, відкритий → відкрито, забутий
     → забуто. These are IMPERSONAL — there is no nominative subject. The object stays in знахідний відмінок: Зроблено роботу
     (not *робота).'
-  - 'Why this is uniquely Ukrainian (Глазова Grade 11 p.97): ''Пасивні конструкції з дієслівними формами на -но, -то в українській
+  - 'Why this is uniquely Ukrainian (Заболотний Grade 8 p.97): ''Пасивні конструкції з дієслівними формами на -но, -то в українській
     мові використовують обмежено'' — but they are MORE NATURAL than -ся passives. This is Ukrainian''s preferred passive:
     Засідання проведено. (natural) vs *Засідання проводиться. (awkward bureaucratese) vs Провели засідання. (active — also
     natural)'
   - 'Practice: transform active sentences to -но/-то passives: Учні написали диктант. → Диктант написано. Архітектор спроєктував
     будівлю. → Будівлю спроєктовано. Note how the agent disappears — this is the point.'
-- section: Порівняння трьох конструкцій (Comparing three constructions)
+- section: Порівняння трьох конструкцій
   words: 600
   points:
   - 'Three ways to say the same thing: ACTIVE: Робітники збудували дім. (Workers built the house.) PASSIVE -ся: Дім збудований
@@ -80,7 +80,7 @@ content_outline:
     agent (орудний) — sounds unnatural.'
   - 'Contrastive exercise: given 8-10 sentences, choose the most natural Ukrainian version. Most should be active or -но/-то.
     One or two may legitimately use -ся (знаходиться, називається).'
-- section: 'Практика: пасив у контексті (Practice: passive in context)'
+- section: 'Практика: пасив у контексті'
   words: 750
   points:
   - 'Reading passage: a Ukrainian news report about a cultural event or construction project. Contains natural passive usage:
@@ -90,7 +90,7 @@ content_outline:
     козаками. → Козаки заснували місто. -но/-то → active: Листа надіслано. → Хтось надіслав листа.'
   - 'Production: learners write a short report (5-6 sentences) about an accomplishment using -но/-то forms: Проєкт завершено.
     Результати опубліковано. Звіт подано вчасно. Усі завдання виконано.'
-- section: Підсумок та перехід до M24 (Summary and transition)
+- section: Підсумок та перехід до M24
   words: 450
   points:
   - 'Summary: пасивний стан — підмет зазнає дії. Два способи: -ся (будується) i -но/-то (збудовано). Українська мова надає
@@ -155,11 +155,9 @@ grammar:
 - Distinguishing passive -ся from reflexive -ся (context and animacy)
 register: академічний
 references:
-- title: Глазова Grade 11, p.94-97
-  notes: 'Пасивні конструкції з дієсловами на -ся: будується, передається. ''Українська мова уникає пасивних конструкцій.''
-    Конструкції з формами на -но, -то: використовують обмежено.'
-- title: Авраменко Grade 11, p.81
-  notes: '§25 Пасивні конструкції. Side-by-side comparison: Усі інгредієнти придбані vs Усі інгредієнти придбано. ''Речення
-    якої колонки звучать більш природно?'''
-- title: Караман Grade 10, p.176
-  notes: Зворотні дієслова definition; historical origin of -ся from зворотний займенник себе. Context for passive -ся development.
+- title: Заболотний Grade 7, §30
+  notes: 'Дієслівні форми на -но, -то: творення від пасивних дієприкметників (створений -> створено), значення результату дії.'
+- title: Авраменко Grade 7, §51
+  notes: 'Безособові форми на -но, -то. "В українській мові з орудним відмінком виконавця ці форми не вживаємо".'
+- title: Заболотний Grade 7, §30
+  notes: 'Пасивні конструкції з дієсловами на -ся. Stylistic preference: Active > -но/-то > -ся passive.'

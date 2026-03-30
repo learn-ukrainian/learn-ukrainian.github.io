@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Future tense + aspect: analytic (будемо збирати) vs synthetic (оголосимо,
     напише)'
 content_outline:
-- section: "Що таке вид дієслова? (What is verbal aspect?)"
+- section: "Що таке вид дієслова?"
   words: 650
   points:
   - "Core concept from Литвінова Grade 7 p.30:
@@ -55,7 +55,7 @@ content_outline:
     only недоконаний (сподіватися, потріскувати)."
   - "Reading practice: short Ukrainian text about weekend plans using both
     aspects. Learners identify кожне дієслово and its вид."
-- section: "Проста форма майбутнього часу (Simple future — perfective)"
+- section: "Проста форма майбутнього часу"
   words: 600
   points:
   - "From Литвінова Grade 7 p.48:
@@ -76,7 +76,7 @@ content_outline:
     побачити (побачу, побачиш...), сказати (скажу, скажеш...),
     приїхати (приїду, приїдеш...), відповісти (відповім, відповіси...).
     Learners conjugate and use in sentences about future events."
-- section: "Складна (синтетична) форма майбутнього часу (Synthetic future)"
+- section: "Складна (синтетична) форма майбутнього часу"
   words: 600
   points:
   - "From Литвінова Grade 7 p.49:
@@ -95,7 +95,7 @@ content_outline:
     Я писатиму листа (ongoing writing) vs Я напишу листа (will complete).
     Ми працюватимемо (we will be working) vs Ми зробимо (we will do/finish).
     Learners choose the correct form based on context clues in sentences."
-- section: "Складена (аналітична) форма майбутнього часу (Analytic future)"
+- section: "Складена (аналітична) форма майбутнього часу"
   words: 550
   points:
   - "From Кравцова Grade 4 p.108 and Литвінова Grade 7 p.49:
@@ -114,7 +114,7 @@ content_outline:
     future. Learners should recognize and produce both."
   - "Reading practice: dialogue between two friends planning a trip, using
     all three future forms. Learners identify which form is used and why."
-- section: "Вид i час — як вони працюють разом (Aspect and tense interaction)"
+- section: "Вид i час — як вони працюють разом"
   words: 650
   points:
   - "The aspect-tense matrix from Авраменко Grade 7 p.54:
@@ -134,7 +134,7 @@ content_outline:
   - "Extended practice: learners retell a Ukrainian folk tale using correct
     aspect-tense combinations. Model text provided with aspect annotations.
     Focus on narrative flow: background (недок.) vs completed events (док.)."
-- section: "Дієвідмінювання у майбутньому часі (Conjugation patterns)"
+- section: "Дієвідмінювання у майбутньому часі"
   words: 550
   points:
   - "From Заболотний Grade 7 p.65:
@@ -152,7 +152,7 @@ content_outline:
   - "Contextual practice: learners complete a letter to a friend about
     summer plans, choosing between all three future forms based on
     whether actions are completed goals or ongoing activities."
-- section: "Підсумок: вид i майбутнє у дії (Summary: aspect and future in action)"
+- section: "Підсумок: вид i майбутнє у дії"
   words: 400
   points:
   - "Decision tree for choosing the right future form:
@@ -221,7 +221,7 @@ activity_hints:
 - type: free-write
   focus: "Write 5-7 sentences about your plans for next week using all
     three future forms and both aspects."
-  items: 1
+  items: 6
 connects_to:
 - "b1-004 (Минуле i теперішнє — past/present review, complements future)"
 - "b1-007 (Контрольна робота 1 — checkpoint testing all Phase 1 material)"
@@ -252,6 +252,6 @@ references:
 - title: "Кравцова Grade 4, p.108"
   notes: "Змінювання дієслів у майбутньому часі: early introduction of
     one-word vs two-word future forms."
-- title: "Караман Grade 10, p.181-183"
+- title: "Заболотний Grade 7, p.181-183"
   notes: "Часи дієслів, їх творення: systematic review at senior level,
     двовидові дієслова examples."

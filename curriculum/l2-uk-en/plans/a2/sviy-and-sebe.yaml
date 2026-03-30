@@ -94,21 +94,21 @@ vocabulary_hints:
   recommended:
   - власний (own, one's own)
   - самостійно (independently)
-  - привичка (habit)
+  - звичка (habit)
   - щоденний (daily)
 activity_hints:
 - type: quiz
   focus: Choose свій or мій/його/її based on sentence context
-  items: 6
+  items: 8
 - type: fill-in
   focus: Insert the correct case form of себе (себе, собі, собою)
-  items: 6
+  items: 8
 - type: true-false
   focus: Identify whether свій is used correctly in each sentence
-  items: 6
+  items: 8
 - type: match-up
   focus: Match expressions with себе to their meanings
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Займенник
   notes: Section on possessive and reflexive pronouns with exercises

@@ -28,7 +28,7 @@ dialogue_situations:
   motivation: 'Consolidation: compound, all subordinate types, reported speech in
     exam format'
 content_outline:
-- section: "Вступ: як працювати з контрольною (Introduction)"
+- section: "Вступ: як працювати з контрольною"
   words: 350
   points:
   - "Overview: this checkpoint tests everything from M66-M75 (Phase 8):
@@ -36,7 +36,7 @@ content_outline:
     часове (M69), причини (M70), умови (M71), мети (M72),
     допусту (M73), пряма/непряма мова (M74), дозвілля (M75)."
   - "Self-assessment framework: after each block, rate confidence."
-- section: "Блок 1: Складносурядне речення (Block 1: Compound sentences — M66)"
+- section: "Блок 1: Складносурядне речення"
   words: 500
   points:
   - "Conjunction classification: given 8 складносурядних речень,
@@ -45,7 +45,7 @@ content_outline:
     sentences, including shared-member exceptions."
   - "Construction: combine 4 pairs of simple sentences using appropriate
     сурядні сполучники."
-- section: "Блок 2: Складнопідрядні речення (Block 2: Subordinate clauses — M67-M73)"
+- section: "Блок 2: Складнопідрядні речення"
   words: 700
   points:
   - "Classification: given 10 складнопідрядних речень, determine the type
@@ -56,7 +56,7 @@ content_outline:
     (agreeing in gender/number with antecedent, case from clause role)."
   - "Construction: build 4 складнопідрядні речення of specified types
     from given information."
-- section: "Блок 3: Пряма і непряма мова (Block 3: Reported speech — M74)"
+- section: "Блок 3: Пряма і непряма мова"
   words: 550
   points:
   - "Punctuation: correctly punctuate 6 sentences with пряма мова
@@ -64,7 +64,7 @@ content_outline:
   - "Transformation: convert 6 sentences from пряма to непряма мова,
     applying correct conjunction choice and pronoun/tense shifts."
   - "Reverse: convert 4 sentences from непряма to пряма мова."
-- section: "Блок 4: Дозвілля, культура і свята (Block 4: Communication — M75)"
+- section: "Блок 4: Дозвілля, культура і свята"
   words: 500
   points:
   - "Vocabulary: match 10 cultural/holiday terms to their descriptions."
@@ -73,7 +73,7 @@ content_outline:
     classify each складне речення in the text."
   - "Production: write 4-6 sentences about a cultural event or holiday
     using at least 3 types of складні речення."
-- section: "Блок 5: Інтегроване завдання (Block 5: Integrated task)"
+- section: "Блок 5: Інтегроване завдання"
   words: 600
   points:
   - "Cloze passage: a narrative text with 12 blanks where learners
@@ -85,7 +85,7 @@ content_outline:
   - "Production: write an opinion paragraph (6-8 sentences) about
     whether traditional celebrations are important, using at least
     складносурядне, з'ясувальне, означальне, причинне, and допустове."
-- section: "Підсумок та самооцінка (Summary and self-assessment)"
+- section: "Підсумок та самооцінка"
   words: 400
   points:
   - "Self-assessment checklist:
@@ -129,7 +129,7 @@ activity_hints:
   items: 10
 - type: free-write
   focus: "Write an opinion paragraph using all Phase 8 syntax types about Ukrainian culture"
-  items: 1
+  items: 6
 connects_to:
 - "b1-066 to b1-075 (all Phase 8 modules)"
 - "b1-077 (Лексична стилістика — first module of Phase 9)"
@@ -144,4 +144,4 @@ register: науково-навчальний
 references:
 - title: "All Phase 8 module references"
   notes: "This checkpoint draws on textbook sources cited in M66-M75:
-    Заболотний Grade 9, Ворон Grade 9/11, Авраменко Grade 9, Глазова Grade 11."
+    Заболотний Grade 8, Ворон Grade 9/11, Авраменко Grade 8, Заболотний Grade 8."

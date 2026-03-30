@@ -26,7 +26,7 @@ dialogue_situations:
   motivation: 'Fly/swim verbs: летіти/літати, пливти/плавати with море(n), літак(m),
     човен(m)'
 content_outline:
-- section: 'У повітрі та на воді: два особливі домени руху (In air and on water: two special motion domains)'
+- section: 'У повітрі та на воді: два особливі домени руху'
   words: 550
   points:
   - 'Bridge from M28: learners were introduced to летіти/літати and пливти/плавати as the last two pairs. Now, after mastering
@@ -35,7 +35,7 @@ content_outline:
     палуба, каюта) and some irregular prefixed forms (переплисти, not *переплисти).'
   - 'Reading passage: a journey by plane and ferry — from аеропорт Боріспіль to Стамбул, then a ferry across the Босфор. Learners
     encounter all prefixed air/water verbs in context.'
-- section: 'Летіти / літати: рух у повітрі (Flying: air motion)'
+- section: 'Летіти / літати: рух у повітрі'
   words: 900
   points:
   - 'Base pair: летіти (односпрямований — flying right now, one direction): Літак летить до Відня (The plane is flying to
@@ -51,7 +51,7 @@ content_outline:
     (fly up to): Пташка підлетіла до годівниці.'
   - 'Imperfective forms: прилітати, долітати, відлітати, залітати, вилітати, перелітати, пролітати, облітати, підлітати. 6-8
     contextual examples.'
-- section: 'Пливти / плавати: рух на воді (Swimming/sailing: water motion)'
+- section: 'Пливти / плавати: рух на воді'
   words: 900
   points:
   - 'Base pair: пливти (односпрямований — swimming/sailing right now, one direction): Човен пливе по Дніпру (The boat is sailing
@@ -67,7 +67,7 @@ content_outline:
     (swim up to): Підплив до човна.'
   - 'Note on irregular forms: переплисти (not *переплисти), доплисти, обплисти — the stem changes from плив- to плис- in some
     prefixed forms. 6-8 contextual examples.'
-- section: Авіаційна та морська лексика (Aviation and maritime vocabulary)
+- section: Авіаційна та морська лексика
   words: 800
   points:
   - 'Airport vocabulary: аеропорт, термінал, рейс, посадковий талон, реєстрація на рейс, зал очікування, злітна смуга, посадка,
@@ -77,7 +77,7 @@ content_outline:
     затока. Example: Пором відплив від причалу i поплив до острова.'
   - 'Practical dialogues: At the airport: check-in, boarding, announcements. At a port: buying a ferry ticket, asking about
     departures. 6-8 example exchanges in natural Ukrainian.'
-- section: 'Переносні значення: час летить, думки пливуть (Figurative meanings preview)'
+- section: 'Переносні значення: час летить, думки пливуть'
   words: 550
   points:
   - 'Brief preview of M35 (figurative-motion): летіти figuratively = moving very fast: Час летить! Дні летять! пливти figuratively
@@ -85,7 +85,7 @@ content_outline:
     them constantly. M35 covers this in depth.'
   - 'Quick contrastive examples: Літак летить (literal — the plane is flying). Час летить (figurative — time flies). Корабель
     пливе (literal — the ship is sailing). Думки пливуть (figurative — thoughts drift).'
-- section: 'Підсумок: повітряний та водний рух (Summary)'
+- section: 'Підсумок: повітряний та водний рух'
   words: 300
   points:
   - 'Complete table: летіти/літати and пливти/плавати with all 10 prefixes. All base pairs now mastered: іти/ходити, їхати/їздити,
@@ -140,7 +140,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Write a travel story involving both air and water transport using 6+ prefixed verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-033 (motion-prefixes-around — final land-motion prefixes)
 - b1-035 (figurative-motion — figurative uses of all motion verbs)

@@ -95,16 +95,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match seasonal vocabulary and activities to the correct season
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify which holiday a tradition belongs to
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences about weather and seasons with correct grammar forms
-  items: 6
+  items: 8
 - type: true-false
   focus: Verify facts about Ukrainian holiday traditions
-  items: 6
+  items: 8
 references:
 - title: "ULP: Ukrainian Holidays and Traditions"
   url: "https://www.ukrainianlessons.com/ukrainian-holidays/"

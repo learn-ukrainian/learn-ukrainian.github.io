@@ -86,16 +86,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Form the Genitive plural of given nouns (all three genders)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Nominative singular nouns to their Genitive plural forms
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей)
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §34-36
   notes: Родовий відмінок множини іменників усіх родів

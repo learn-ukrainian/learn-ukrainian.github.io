@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Ordinal numerals in cases: п''яте березня(acc), першого вагона(gen),
     третій перон(nom)'
 content_outline:
-- section: "Відмінювання порядкових числівників (Declension of ordinals)"
+- section: "Відмінювання порядкових числівників"
   words: 700
   points:
   - "From Литвінова Grade 6 p.237:
@@ -46,7 +46,7 @@ content_outline:
     ONLY the last word declines:
     двадцять третій день → двадцять третього дня → двадцять третьому дню.
     Practice: decline 'сто п'ятнадцята сторінка' through all cases."
-- section: "Дати (Dates)"
+- section: "Дати"
   words: 700
   points:
   - "Saying 'today is': Сьогодні + ordinal in Н.в. + month in Р.в.:
@@ -60,7 +60,7 @@ content_outline:
     With ordinal ending: 15-го березня, 1-ша сторінка, 5-й клас.
     But dates in calendar format: 15.03.2024 (no ending).
     Practice: read and write 10 dates in full Ukrainian word form."
-- section: "Час (Clock time with ordinals)"
+- section: "Час"
   words: 600
   points:
   - "From Авраменко Grade 11 p.42:
@@ -74,7 +74,7 @@ content_outline:
   - "Practice: express these times in Ukrainian:
     3:15, 7:30, 11:45, 1:20, 9:55, 12:00, 6:05.
     Then: answer 'Котра година?' for each."
-- section: "Поверхи, номери, порядок (Floors, numbers, order)"
+- section: "Поверхи, номери, порядок"
   words: 500
   points:
   - "Floors: на першому поверсі (М.в.), з другого поверху (Р.в.),
@@ -86,7 +86,7 @@ content_outline:
     двадцяте століття (Н.в.)."
   - "Practice: describe your building (which floor), give directions
     (take bus number X), discuss historical periods (in the Y century)."
-- section: "Порядкові числівники в контексті (Ordinals in real usage)"
+- section: "Порядкові числівники в контексті"
   words: 700
   points:
   - "Reading passage: a schedule/invitation containing multiple dates,
@@ -100,7 +100,7 @@ content_outline:
   - "Self-check: dates of major Ukrainian historical events:
     24 серпня 1991 (День Незалежності), 28 червня 1996 (Конституція).
     Write in full word form with correct cases."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Key patterns: ordinals decline like adjectives; compound ordinals —

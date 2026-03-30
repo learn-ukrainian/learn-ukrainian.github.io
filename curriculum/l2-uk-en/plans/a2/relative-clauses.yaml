@@ -85,21 +85,21 @@ activity_hints:
 - type: fill-in
   focus: Insert the correct form of який (яка, яке, які) into relative clauses,
     matching gender and number
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose де, куди, or звідки to complete sentences about places
-  items: 6
+  items: 8
 - type: match-up
   focus: Combine two simple sentences into one using a relative clause
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether relative clauses have correct agreement and comma placement
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 9, §17-18
+- title: Заболотний Grade 5, §28
   notes: Означальні підрядні речення — який, котрий, де, куди, звідки as relative
     words, with agreement rules and examples
-- title: Авраменко Grade 9, означальні підрядні
+- title: Заболотний Grade 6
   notes: Relative clauses with який — exercises and literary examples
 - title: 'ULP: Relative Clauses in Ukrainian'
   url: https://www.ukrainianlessons.com/який/

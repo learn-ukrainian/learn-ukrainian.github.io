@@ -28,7 +28,7 @@ dialogue_situations:
   - Родина (сперечається)
   motivation: 'Suppletive forms: гарний→кращий→найкращий, поганий→гірший→найгірший'
 content_outline:
-- section: "Що таке суплетивні форми? (What are suppletive forms?)"
+- section: "Що таке суплетивні форми?"
   words: 500
   points:
   - "Definition: суплетивізм (suppletion) is when a grammatical form is built
@@ -43,7 +43,7 @@ content_outline:
     Regular: сильний → сильніший (same root сильн-).
     Suppletive: гарний → кращий (different root крат-/красн-).
     The learner needs to memorize these — no rule predicts them."
-- section: "Чотири основні суплетивні пари (The four core suppletive pairs)"
+- section: "Чотири основні суплетивні пари"
   words: 900
   points:
   - "гарний (good/beautiful) → кращий → найкращий
@@ -64,7 +64,7 @@ content_outline:
     ступенів порівняння відбувається зміна основи слова
     (малий → менший, великий → більший, гарний → кращий).'
     Drill: 12-15 sentences using all four pairs in context."
-- section: "Напівсуплетивні форми (Near-suppletive alternation forms)"
+- section: "Напівсуплетивні форми"
   words: 700
   points:
   - "Some adjectives undergo such heavy consonant changes that they feel
@@ -83,7 +83,7 @@ content_outline:
   - "Practice passage: a market scene where a buyer compares products,
     using both suppletive and near-suppletive forms naturally.
     'Ці яблука більші, але ті дешевші. А які найкращі?'"
-- section: "Суплетивні прислівники (Suppletive adverb comparatives)"
+- section: "Суплетивні прислівники"
   words: 550
   points:
   - "Parallel adverb forms follow the same suppletive roots:
@@ -97,7 +97,7 @@ content_outline:
   - "Common expressions with suppletive adverbs:
     Краще пізно, ніж ніколи. Чим менше знаєш, тим краще спиш.
     Practice: sentences where learners choose adjective or adverb form."
-- section: "Типові помилки та розмовна практика (Common errors and practice)"
+- section: "Типові помилки та розмовна практика"
   words: 650
   points:
   - "Error 1: using regular forms instead of suppletive
@@ -112,7 +112,7 @@ content_outline:
     Яке найкраще рішення? Може, краще поїхати в наймолодше місто?'"
   - "Self-assessment: translate 10 comparison sentences from English
     to Ukrainian, requiring suppletive forms. Then peer-check."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Complete reference table:
@@ -179,5 +179,5 @@ references:
   notes: "Adverb comparison: suppletive forms добре-краще, погано-гірше."
 - title: "Заболотний Grade 8, p.28"
   notes: "Parallel table of adjective and adverb comparison forms."
-- title: "Глазова Grade 11, p.18"
+- title: "Заболотний Grade 8, p.18"
   notes: "Complete formation table including suppletive pairs."

@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Passive participles: відреставрований(m), написана(f), збережене(n)
     — gender agreement'
 content_outline:
-- section: "Пасивні дієприкметники: значення (Passive participles: meaning)"
+- section: "Пасивні дієприкметники: значення"
   words: 550
   points:
   - "Definition from Литвінова Grade 7 p.88: пасивні дієприкметники
@@ -49,10 +49,10 @@ content_outline:
     foundation of -но/-то forms: прочитаний → прочитано,
     збудований → збудовано. The participle is the attributive form,
     -но/-то is the predicate form."
-- section: "Творення пасивних дієприкметників (Formation of passive participles)"
+- section: "Творення пасивних дієприкметників"
   words: 900
   points:
-  - "Three suffix groups from Караман Grade 10 p.189 and Литвінова Grade 7 p.88:
+  - "Three suffix groups from Заболотний Grade 7 p.189 and Литвінова Grade 7 p.88:
     1. Суфікс -н-: основа інфінітива на -а-:
     прочитати → прочитаний, написати → написаний, зробити → зроблений.
     2. Суфікс -ен-/-єн-: основа на приголосний та -и-/-i-/-ї-:
@@ -74,7 +74,7 @@ content_outline:
     4. Перевірте, чи є чергування приголосних.
     5. Додайте закінчення прикметника (-ий/-а/-е/-i).
     Practice: 12-15 verbs for formation, including those with alternations."
-- section: "Відмінювання пасивних дієприкметників (Declension)"
+- section: "Відмінювання пасивних дієприкметників"
   words: 600
   points:
   - "Passive participles decline like прикметники of hard group:
@@ -91,7 +91,7 @@ content_outline:
     Attributive: Прочитана книга лежить на столі.
     Predicate: Книга прочитана. (short form, not declined)
     Connection to -но/-то: Книгу прочитано. (impersonal, M23)"
-- section: "Дієприкметник чи прикметник? (Participle or adjective?)"
+- section: "Дієприкметник чи прикметник?"
   words: 550
   points:
   - "Some passive participles have become adjectives (втратили дієслівність):
@@ -105,7 +105,7 @@ content_outline:
     Варений (прикметник, недок.) vs зварений (дієприкметник, док. — результат дії)."
   - "Practice: classify forms as дієприкметник or прикметник based on context.
     Learners add agents or direct objects to prove the form is a participle."
-- section: "Практика: пасивні дієприкметники у тексті (Practice in context)"
+- section: "Практика: пасивні дієприкметники у тексті"
   words: 700
   points:
   - "Reading passage: a description of a Ukrainian вишиванка or cultural
@@ -123,7 +123,7 @@ content_outline:
     or object using passive participles: 'У кімнаті стоїть пофарбований
     стіл. На стіні висить намальована картина. На підлозі лежить
     вишитий килимок.'"
-- section: "Підсумок та перехід до M59 (Summary and transition)"
+- section: "Підсумок та перехід до M59"
   words: 300
   points:
   - "Summary: пасивні дієприкметники = ознака за дією іншого виконавця.
@@ -194,7 +194,7 @@ references:
 - title: "Литвінова Grade 7, p.87-92"
   notes: "§17 Активні й пасивні дієприкметники: formation table with
     suffixes -н-, -ен-, -т-, exercises on formation from given verbs."
-- title: "Караман Grade 10, p.189"
+- title: "Заболотний Grade 7, p.189"
   notes: "Творення дієприкметників: complete formation table for
     active and passive, with suffix conditions clearly laid out."
 - title: "Авраменко Grade 7, p.98-101"

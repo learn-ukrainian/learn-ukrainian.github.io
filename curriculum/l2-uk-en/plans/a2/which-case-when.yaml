@@ -102,24 +102,24 @@ vocabulary_hints:
   - алгоритм (algorithm)
   - контекст (context)
   - керувати (to manage, drive)
-  - майбутне (future)
+  - майбутнє (future)
 activity_hints:
 - type: quiz
   focus: Given a sentence with a blank, choose the correct case form based on the
     governing verb or preposition
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort prepositions by which case(s) they govern (Acc., Gen., Instr., Loc.)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with the correct noun form — mixed cases triggered by
     different prepositions and verbs, including time expressions (у четвер),
     characteristics (у червоному светрі), and path (по кімнаті)
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether the case used in a sentence is correct or incorrect,
     including tricky pairs like на роботу (Acc.) vs. на роботі (Loc.)
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §§59-67
   notes: Complete case system overview — when each case is used, with preposition

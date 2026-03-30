@@ -91,16 +91,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete post office dialogue lines with correct dative forms (Надішліть цю посилку ___)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match service requests to appropriate responses (Допоможіть мені → Звичайно, що вам потрібно?)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct dative address form (дорогому/дорогій/дорогим + name)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort phrases into categories — requesting (прохання), thanking (подяка), giving (давання)
-  items: 6
+  items: 8
 references:
 - title: "Заболотний Grade 10, §157"
   notes: "Dative case in formal address and letter-writing conventions"

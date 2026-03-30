@@ -24,7 +24,7 @@ dialogue_situations:
   - Подруги на прогулянці
   motivation: 'Figurative motion: час іде, дощ іде, справи йдуть, мова йде'
 content_outline:
-- section: Дієслова руху в переносному значенні (Motion verbs in figurative meaning)
+- section: Дієслова руху в переносному значенні
   words: 600
   points:
   - 'Bridge from M28-M34: learners have mastered the literal motion verb system. But Ukrainians use motion verbs figuratively
@@ -34,7 +34,7 @@ content_outline:
     or переносне.'
   - 'From Авраменко Grade 10 p.19: летіти is багатозначне — пташка летить (literal) vs час летить (figurative, = fast). Understanding
     polysemy is essential for natural Ukrainian.'
-- section: 'Iти / ходити: найширший спектр (Iти/ходити: the broadest range)'
+- section: 'Iти / ходити: найширший спектр'
   words: 900
   points:
   - 'Weather: дощ іде (it''s raining), сніг іде (it''s snowing). NOT *дощ падає (English calque ''rain falls''). In Ukrainian,
@@ -52,7 +52,7 @@ content_outline:
     не підходить (This doesn''t suit me). дійти (to reach understanding): Дійшов до висновку (reached a conclusion). прийти
     (to come to mind): Мені прийшла ідея. Прийшов час діяти. зайти (to go too far): Зайшов надто далеко (went too far). обійтися
     (to get by): Обійдемося без цього (we''ll manage without it).'
-- section: 'Летіти: швидкість (Летіти: speed)'
+- section: 'Летіти: швидкість'
   words: 500
   points:
   - 'Летіти figuratively = moving very fast, passing quickly: Час летить! (Time flies!). Дні летять (Days fly by). Новина
@@ -60,7 +60,7 @@ content_outline:
   - 'Prefixed figurative forms: злетіти (to soar): Ціни злетіли вгору. вилетіти (to get fired/expelled, colloquial): Вилетів
     з роботи. пролетіти (to fly by): Канікули пролетіли непомітно. налетіти (to swoop in/rush at): Раптом налетів вітер.'
   - 'Practice: 6-8 sentences where learners identify literal vs figurative uses of летіти and its prefixed forms.'
-- section: 'Пливти: плавність i повільність (Пливти: smoothness and slowness)'
+- section: 'Пливти: плавність i повільність'
   words: 400
   points:
   - 'Пливти figuratively = moving smoothly, drifting, flowing: Хмари пливуть (Clouds drift). Мелодія пливе (The melody flows).
@@ -69,7 +69,7 @@ content_outline:
   - 'Contrast with летіти: Час летить (fast) vs Час пливе (slow/smooth). Both describe time passing, but with opposite speed
     connotations.'
   - 'Practice: 4-6 sentences using пливти figuratively.'
-- section: Бігти, їхати, нести та інші (Running, riding, carrying — other figurative uses)
+- section: Бігти, їхати, нести та інші
   words: 600
   points:
   - 'Бігти figuratively = hurrying, being busy: Час біжить (Time runs — faster than іде, slower than летить). Вода біжить
@@ -81,7 +81,7 @@ content_outline:
     poetic).'
   - 'Вести/водити figuratively: вести переговори (to conduct negotiations). вести себе (to behave): Ведіть себе пристойно!
     вести блог/щоденник (to keep a blog/diary). водити за ніс (to deceive — literally ''lead by the nose'').'
-- section: Українські вирази vs англійські кальки (Ukrainian expressions vs English calques)
+- section: Українські вирази vs англійські кальки
   words: 600
   points:
   - 'Decolonized usage — genuine Ukrainian expressions: дощ іде (NOT *дощ падає — English calque ''rain falls''). час іде/летить/біжить
@@ -92,7 +92,7 @@ content_outline:
     does this expression exist in Ukrainian, or am I translating from Russian/English?'
   - 'Practice: learners rephrase English sentences using natural Ukrainian figurative motion verbs. 6-8 translation-avoidance
     exercises.'
-- section: 'Підсумок: буквальне i переносне (Summary: literal and figurative)'
+- section: 'Підсумок: буквальне i переносне'
   words: 400
   points:
   - 'Summary table of key figurative uses: іти: weather, time, processes, events. летіти: speed, rapid change. пливти: smoothness,
@@ -126,22 +126,22 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Identify whether a motion verb is used literally or figuratively in a sentence
-  items: 8
+  items: 12
 - type: fill-in
   focus: Complete Ukrainian figurative expressions with the correct motion verb
-  items: 8
+  items: 12
 - type: match-up
   focus: Match figurative motion expressions with their meanings
-  items: 8
+  items: 12
 - type: group-sort
   focus: 'Sort motion verb uses: literal / figurative — time / weather / abstract'
   items: 12
 - type: error-correction
   focus: Fix English calques and Russicisms in figurative motion expressions
-  items: 6
+  items: 12
 - type: free-write
   focus: Write a paragraph about your week using at least 5 figurative motion expressions
-  items: 1
+  items: 12
 connects_to:
 - b1-034 (motion-flight-swim — literal uses of летіти/пливти that become figurative here)
 - b1-036 (traveling-ukraine — combining literal and figurative motion in narratives)

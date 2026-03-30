@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Consolidation: vowel/consonant alternation, noun subclasses, pluralia
     tantum'
 content_outline:
-- section: "Огляд чергувань (Alternations review)"
+- section: "Огляд чергувань"
   words: 650
   points:
   - "Review of vowel alternations from M08:
@@ -51,7 +51,7 @@ content_outline:
     честь — чесний (ст→с), серце — сердечний (рц→рд).
     Mnemonic: the 'extra' consonant drops when a suffix is added.
     Diagnostic: which consonant drops and why?"
-- section: "Огляд підкласів іменників (Noun subclass review)"
+- section: "Огляд підкласів іменників"
   words: 650
   points:
   - "Мішана група (M13):
@@ -72,7 +72,7 @@ content_outline:
     Родовий: -ів (окулярів), -ей (грошей), нульове (воріт).
     Special -ми in орудний: грішми, ворітьми (Ukrainian-specific).
     Agreement: always plural (великі двері, ліки закінчилися)."
-- section: "Медична лексика та морфонеміка (Medical vocabulary and morphophonemics)"
+- section: "Медична лексика та морфонеміка"
   words: 550
   points:
   - "Integration exercise: medical vocabulary as a testbed for all
@@ -93,7 +93,7 @@ content_outline:
     vocabulary. Learners answer questions that test grammar, not content
     recall (per rule 10a): 'У якому відмінку вжито слово ліків?',
     'Яке чергування відбувається у слові болить?'"
-- section: "Комплексні вправи: чергування (Complex exercises: alternations)"
+- section: "Комплексні вправи: чергування"
   words: 550
   points:
   - "Exercise block 1 — Vowel alternation identification:
@@ -112,7 +112,7 @@ content_outline:
     серце → сердечний (рц→рд? Actually рц→рд is NOT спрощення,
     it is historical alternation — this is a trap question).
     Learners must distinguish спрощення from other changes."
-- section: "Комплексні вправи: відмінювання (Complex exercises: declension)"
+- section: "Комплексні вправи: відмінювання"
   words: 600
   points:
   - "Exercise block 4 — Мішана група declension:
@@ -131,7 +131,7 @@ content_outline:
     'Ми поїхали на (канікули) до (Карпати).'
     → на канікули до Карпат.
     Tests родовий, знахідний, and preposition usage."
-- section: "Діалог-синтез (Synthesis dialogue)"
+- section: "Діалог-синтез"
   words: 600
   points:
   - "Extended dialogue in Ukrainian combining all Phase 2 grammar:
@@ -154,7 +154,7 @@ content_outline:
     утворити орудний III відміни (подвоєння/без) ✓/✗,
     визначити pluralia tantum і вжити їх у правильній формі ✓/✗,
     вести діалог у лікаря з правильним керуванням ✓/✗."
-- section: "Підсумок та перехід до Фази 3 (Summary and transition)"
+- section: "Підсумок та перехід до Фази 3"
   words: 400
   points:
   - "Phase 2 summary — what the learner has mastered:

@@ -27,7 +27,7 @@ dialogue_situations:
   - Учень
   motivation: 'Transit prefixes: перейти (пере-), проїхати (про-), переїхати (пере-)'
 content_outline:
-- section: 'Перетинати i проходити: рух наскрізь (Crossing and passing: through-motion)'
+- section: 'Перетинати i проходити: рух наскрізь'
   words: 550
   points:
   - 'Bridge from M29-M31: learners can describe arriving, departing, entering, and exiting. Now: what about crossing a street,
@@ -36,7 +36,7 @@ content_outline:
   - 'Reading passage: a road trip narrative — crossing rivers (перетнули річку), passing towns (проїхали Житомир), driving
     through forests (проїхали через ліс). Learners identify transit verbs.'
   - 'From Голуб Grade 6 p.31: prefix пере- illustrated with example list showing its meaning of ''from one side to the other.'''
-- section: 'Префікс пере-: перетинання (Prefix пере-: crossing)'
+- section: 'Префікс пере-: перетинання'
   words: 900
   points:
   - 'Пере- means crossing from one side to the other, over a boundary: перейти (to cross on foot): Перейдіть вулицю на зелене
@@ -50,7 +50,7 @@ content_outline:
     meaning of ''across.'''
   - 'Imperfective counterparts: переходити (to cross — process/habitual): Переходьте обережно! переїжджати (to drive across
     — habitual): Щодня переїжджаємо міст. перебігати (to run across — habitual): Не перебігайте дорогу! 8-10 example sentences.'
-- section: 'Префікс про-: проходження повз або наскрізь (Prefix про-: passing by or through)'
+- section: 'Префікс про-: проходження повз або наскрізь'
   words: 900
   points:
   - 'Про- meaning ''passing by'' (without stopping): пройти (to walk past): Пройшли повз музей, але не зайшли. проїхати (to
@@ -65,7 +65,7 @@ content_outline:
   - 'Extended meanings of про-: пройти (to pass — about time): Рік пройшов швидко. проїхати свою зупинку (to miss your stop
     — went past it). пробігти очима (to skim/scan with eyes — figurative). Imperfective: проходити, проїжджати, пробігати.
     8-10 example sentences.'
-- section: Пере- чи про-? Різниця у значенні (Пере- or про-? Semantic difference)
+- section: Пере- чи про-? Різниця у значенні
   words: 800
   points:
   - 'Core distinction: пере- = crossing a boundary from one side to the other: Перейшов дорогу (crossed the road — was on
@@ -78,7 +78,7 @@ content_outline:
     of the street). Переїхав міст (crossed the bridge — from one bank to the other). Проїхав міст (drove past the bridge/drove
     through the bridge area).'
   - '6-8 practice scenarios: learners choose пере- or про-.'
-- section: 'Шість префіксів разом: подорож етапами (Six prefixes together: a journey in stages)'
+- section: 'Шість префіксів разом: подорож етапами'
   words: 550
   points:
   - 'Combining all prefixes learned so far (M29-M32) in one journey: Вийшов з дому (ви-). Перейшов вулицю (пере-). Зайшов
@@ -86,7 +86,7 @@ content_outline:
     центру (до-). Приїхав на роботу (при-).'
   - 'Dialogue: giving directions using transit verbs — ''Пройдіть по Хрещатику, перейдіть через Майдан, зайдіть у метро.''
     Learners practice the natural combination of prefixes in navigation contexts.'
-- section: 'Підсумок: пере- i про- (Summary)'
+- section: 'Підсумок: пере- i про-'
   words: 350
   points:
   - 'Complete table: пере- and про- with all base verbs. пере-: перейти, переїхати, перебігти, перенести, перевести, перевезти,
@@ -135,7 +135,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Write travel directions from one Kyiv landmark to another using пере- and про- verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-031 (motion-prefixes-in-out — за-/ви- entering and exiting)
 - b1-033 (motion-prefixes-around — об-/під- going around and approaching)

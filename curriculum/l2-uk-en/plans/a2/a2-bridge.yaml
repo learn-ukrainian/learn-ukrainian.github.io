@@ -78,13 +78,13 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Case Identification Drill
-  items: 6
+  items: 8
 - type: fill-in
   focus: Phonological Alternation Pairs
-  items: 6
+  items: 8
 - type: match-up
   focus: Euphony Choice Exercise
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §1-10
   notes: Повторення вивченого в початкових класах

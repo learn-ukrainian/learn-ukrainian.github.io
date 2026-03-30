@@ -86,16 +86,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with the correct dative pronoun based on context
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose dative or accusative pronoun form in context (тобі vs. тебе)
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether impersonal dative sentences (мені холодно, мені бачу) are correct
-  items: 6
+  items: 8
 references:
 - title: "Захарійчук Grade 4, §281"
   notes: "Full declension table of personal pronouns 1st/2nd person with dative forms"

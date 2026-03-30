@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Abbreviations: ЗНО, КНУ, МОЗ, ЗСУ, м., вул. — decoding Ukrainian compressed
     text'
 content_outline:
-- section: "Складноскорочені слова та абревіатури (Abbreviated words and acronyms)"
+- section: "Складноскорочені слова та абревіатури"
   words: 700
   points:
   - "Definition from Заболотний Grade 6 p.71:
@@ -59,7 +59,7 @@ content_outline:
     заробітна плата → зарплата, технічне завдання → техзавдання.
     And абревіатури: Українська повстанська армія → УПА,
     Мала академія наук → МАН."
-- section: "Граматичні особливості абревіатур (Grammatical features of abbreviations)"
+- section: "Граматичні особливості абревіатур"
   words: 600
   points:
   - "Рід абревіатур — how to determine grammatical gender:
@@ -85,7 +85,7 @@ content_outline:
     ООН, МВФ, ЗСУ (not О.О.Н. or М.В.Ф.).
     Складноскорочені слова from початкових частин: з малої літери
     (спецвипуск, лісгосп) unless they are власні назви (Кабмін)."
-- section: "Графічні скорочення (Graphic abbreviations)"
+- section: "Графічні скорочення"
   words: 600
   points:
   - "Rules from Глазова Grade 10 p.143:
@@ -110,7 +110,7 @@ content_outline:
   - "Reading practice: a formal Ukrainian document (оголошення or довідка)
     containing абревіатури and графічні скорочення. Learners decode
     all abbreviated forms and rewrite the document in full."
-- section: "Числа, дати та вимірювання (Numbers, dates, and measurements)"
+- section: "Числа, дати та вимірювання"
   words: 600
   points:
   - "Dates in Ukrainian:
@@ -132,7 +132,7 @@ content_outline:
     Відстань: 450 км (чотириста п'ятдесят кілометрів).
     Practice: learners describe objects and distances using
     числівники with correct узгодження."
-- section: "Абревіатури в повсякденному житті (Abbreviations in everyday life)"
+- section: "Абревіатури в повсякденному житті"
   words: 550
   points:
   - "Абревіатури в новинах та ЗМI:
@@ -149,7 +149,7 @@ content_outline:
     Modern usage: гуглити, чатити, лайкати (adapted verbs).
     Important: Ukrainian internet language should remain Ukrainian,
     not default to Russian or English abbreviations."
-- section: "Підсумок: мова скорочень (Summary: the language of abbreviations)"
+- section: "Підсумок: мова скорочень"
   words: 350
   points:
   - "Complete reference table: types of скорочення, правопис rules,
@@ -208,7 +208,7 @@ activity_hints:
 - type: free-write
   focus: "Write a short news summary (8-10 sentences) using at least
     5 абревіатури with correct agreement and скорочення."
-  items: 1
+  items: 6
 connects_to:
 - "b1-077 (Офіційний стиль — абревіатури are essential in formal documents)"
 - "b1-080 (Подвійне заперечення — continues grammar of B1.9 phase)"

@@ -26,7 +26,7 @@ dialogue_situations:
   - Новий працівник
   motivation: 'In/out prefixes: зайти (за-), вийти (ви-), заїхати (за-), виїхати (ви-)'
 content_outline:
-- section: 'Входити i виходити: за- та ви- (Entering and exiting)'
+- section: 'Входити i виходити: за- та ви-'
   words: 550
   points:
   - 'Bridge from M29-M30: learners know arrival (при-/до-) and departure (пі-/по-, від-). Now we zoom in: what happens when
@@ -35,7 +35,7 @@ content_outline:
     Learners encounter both prefixes in natural sequence.'
   - 'Important: за- with motion verbs is not the same as за- meaning ''beginning'' (заспівати = start singing, засміятися
     = start laughing). With motion verbs, за- means entering or briefly dropping by.'
-- section: 'Префікс за-: увійти, забігти, заскочити (Prefix за-: entering, dropping by)'
+- section: 'Префікс за-: увійти, забігти, заскочити'
   words: 900
   points:
   - 'За- meaning ''entering'' or ''going into'': зайти (to go in, enter): Зайди в хату, холодно надворі. заїхати (to drive
@@ -50,7 +50,7 @@ content_outline:
   - 'Imperfective counterparts: заходити (to enter/come in — repeated): Заходьте, будь ласка! заїжджати (to drive in — habitual):
     Вона заїжджає щодня. забігати (to run in — habitual): Сусід забігає ввечері. заносити (to carry in — habitual): Заносьте
     речі в кімнату. 8-10 example sentences.'
-- section: 'Префікс ви-: вийти, виїхати, вибігти (Prefix ви-: exiting)'
+- section: 'Префікс ви-: вийти, виїхати, вибігти'
   words: 900
   points:
   - 'Ви- means going out of, exiting, emerging: вийти (to go out, exit): Вийшла з будинку на вулицю. виїхати (to drive out):
@@ -64,7 +64,7 @@ content_outline:
   - 'Imperfective counterparts: виходити (to go out — repeated/process): Виходьте по одному! виїжджати (to drive out — habitual):
     Щоранку виїжджаємо о сьомій. вибігати (to run out — habitual): Діти вибігають після дзвінка. виносити (to carry out —
     habitual): Виносьте сміття щодня. 8-10 example sentences.'
-- section: За- чи ви-? Пари протилежностей (За- or ви-? Opposite pairs)
+- section: За- чи ви-? Пари протилежностей
   words: 800
   points:
   - 'За- and ви- are spatial opposites: зайти в кімнату (enter) ↔ вийти з кімнати (exit). заїхати у двір (drive in) ↔ виїхати
@@ -77,14 +77,14 @@ content_outline:
     away) → за- (entering) → ви- (exiting). Learners can now describe complete journey segments: Вийшов з дому → зайшов до
     магазину → вийшов з магазину → пішов до зупинки → поїхав на роботу → приїхав на роботу.'
   - '6-8 practice scenarios: learners choose за- or ви- and supply the correct preposition with case.'
-- section: 'Практика: за- i ви- в повсякденному житті (Practice: за- and ви- in daily life)'
+- section: 'Практика: за- i ви- в повсякденному житті'
   words: 550
   points:
   - 'Dialogue: a phone conversation about errands — ''Де ти?'' ''Зайшов до аптеки.'' ''А потім?'' ''Вийду i зайду ще до пошти.''
     Learners see natural chains of за-/ви- in daily speech.'
   - 'Narrative: describe a sequence of errands using за-/ви- verbs. Model: Вийшла з офісу о п''ятій. Зайшла до супермаркету.
     Вийшла, забігла до хімчистки. Вийшла i пішла додому.'
-- section: 'Підсумок: за- i ви- (Summary)'
+- section: 'Підсумок: за- i ви-'
   words: 350
   points:
   - 'Complete table: за- and ви- with all base verbs. за-: зайти, заїхати, забігти, занести, завести, завезти, залетіти, заплисти.
@@ -133,7 +133,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Describe a morning routine with at least 4 за- and 4 ви- verbs
-  items: 1
+  items: 6
 connects_to:
 - b1-030 (motion-prefixes-departure — пі-/по- and від- departure prefixes)
 - b1-032 (motion-prefixes-transit — пере-/про- crossing and passing through)

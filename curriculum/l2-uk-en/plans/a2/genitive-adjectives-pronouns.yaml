@@ -83,16 +83,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Put the adjective and noun into the correct Genitive form
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct possessive pronoun form (мого vs. моєї etc.)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Nominative noun phrases to their Genitive equivalents
-  items: 6
+  items: 8
 - type: fill-in
   focus: Build complete Genitive phrases with demonstrative + adjective + noun
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §48-49
   notes: Відмінювання прикметників, присвійних та вказівних займенників

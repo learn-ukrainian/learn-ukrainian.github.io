@@ -29,7 +29,7 @@ dialogue_situations:
   - Відвідувачі
   motivation: 'Hissing consonant nouns: ніж, ключ, товариш, плащ — declension patterns'
 content_outline:
-- section: "Що таке мішана група? (What is the mixed group?)"
+- section: "Що таке мішана група?"
   words: 550
   points:
   - "Review from Phase 1: II відміна has three groups based on the final
@@ -48,7 +48,7 @@ content_outline:
     м'яка patterns. Getting this wrong creates errors that sound
     distinctly non-native. Comparison: завод-ом (тверда) vs вчител-ем
     (м'яка) vs сторож-ем (мішана — follows м'яка here)."
-- section: "Відмінювання в однині (Singular declension)"
+- section: "Відмінювання в однині"
   words: 750
   points:
   - "Full paradigm from Литвінова Grade 6 p.153 and Заболотний Grade 6 p.102:
@@ -73,7 +73,7 @@ content_outline:
     Nouns with suffixes -ач, -ар take -у: слухач — слухачу, товариш — товаришу.
     From Литвінова Grade 6 p.159: 'Мішана група: закінчення -е для
     більшості іменників: стороже, Довбуше, пісняре.'"
-- section: "Відмінювання у множині (Plural declension)"
+- section: "Відмінювання у множині"
   words: 600
   points:
   - "Full plural paradigm:
@@ -92,7 +92,7 @@ content_outline:
   - "Reading practice: a Ukrainian text featuring мішана група nouns in
     various відмінки. Learners identify the case and explain the ending.
     Example passage about a нічний сторож who meets a товариш."
-- section: "Середній рід мішаної групи (Neuter nouns in мішана група)"
+- section: "Середній рід мішаної групи"
   words: 550
   points:
   - "Neuter nouns ending in шиплячий + -е also belong to мішана група:
@@ -106,7 +106,7 @@ content_outline:
   - "Common neuter мішана група nouns in daily use: плече, прізвище,
     видовище (spectacle), кладовище (cemetery), вогнище (bonfire).
     Practice: decline these nouns in context-rich sentences."
-- section: "Чергування в мішаній групі (Alternations in мішана група)"
+- section: "Чергування в мішаній групі"
   words: 600
   points:
   - "Connection to M09-M11: hissing consonants are themselves the RESULT
@@ -123,7 +123,7 @@ content_outline:
     here, unlike учень — учня). But: хлопець — хлопця shows the pattern
     in свистячі. Learners practice identifying which мішана група nouns
     have stable stems and which have alternations."
-- section: "Типові помилки та практика (Common errors and practice)"
+- section: "Типові помилки та практика"
   words: 600
   points:
   - "Error 1 — Russicism in орудний: *сторожом, *ножом instead of
@@ -137,7 +137,7 @@ content_outline:
   - "Reading comprehension passage in Ukrainian: a story about товариші
     на війні featuring мішана група nouns in all відмінки. Learners
     extract and classify the noun forms."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 350
   points:
   - "Key rule summary:

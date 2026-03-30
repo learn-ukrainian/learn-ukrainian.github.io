@@ -23,7 +23,7 @@ dialogue_situations:
   motivation: 'Travel synthesis: all motion prefixes with real Ukrainian cities and
     routes'
 content_outline:
-- section: 'Подорож починається: планування та транспорт (The journey begins: planning and transport)'
+- section: 'Подорож починається: планування та транспорт'
   words: 750
   points:
   - 'Bridge from M27-M35: this module is the communicative capstone of the Motion Verb Universe. Learners apply ALL motion
@@ -35,7 +35,7 @@ content_outline:
     (traveling through Zakarpattia), мандрувати Карпатами (hiking the Carpathians). This is a distinctive Ukrainian construction:
     the instrumental expresses the route/area of travel. From Кравцова Grade 3 p.83: dialogue at the bus station about buying
     tickets — natural model for travel communication.'
-- section: На вокзалі та в аеропорту (At the station and airport)
+- section: На вокзалі та в аеропорту
   words: 800
   points:
   - 'Train station dialogue: Buying a ticket: ''Скільки коштує квиток до Львова?'' ''Один квиток у купейний вагон, будь ласка.''
@@ -46,7 +46,7 @@ content_outline:
     (arrival), вилетіти, прилетіти, пересісти (transfer).'
   - 'Decolonization note: use відходити/відправлятися for trains carefully — native Ukrainian prefers відходити or виїжджати.
     Автобус виїжджає (NOT *відправляється).'
-- section: 'Маршрут: від Києва до Карпат (Route: from Kyiv to the Carpathians)'
+- section: 'Маршрут: від Києва до Карпат'
   words: 900
   points:
   - 'Model travel narrative (250-300 words): a journey from Kyiv to the Carpathians by train and bus, using all prefix groups:
@@ -58,7 +58,7 @@ content_outline:
     Ужгород.'
   - Learners see how motion verbs + spatial prepositions + landmarks create vivid Ukrainian travel narratives. 8-10 sentences
     modeling different routes.
-- section: 'Орієнтування в місті: як дістатися? (City navigation: how to get there?)'
+- section: 'Орієнтування в місті: як дістатися?'
   words: 750
   points:
   - 'Asking for directions: ''Як дістатися до центру?'' ''Як доїхати до вокзалу?'' ''Де найближча зупинка метро?'' ''Скільки
@@ -67,7 +67,7 @@ content_outline:
     the intersection), повернути (to turn), зупинка (stop), станція (station), квартал (block), провулок (lane/alley).'
   - 'Practice: learners give directions from one landmark to another using motion verbs and spatial prepositions from M27.
     6-8 direction-giving exchanges.'
-- section: 'Подорожні історії: розповідь про поїздку (Travel stories: narrating a trip)'
+- section: 'Подорожні історії: розповідь про поїздку'
   words: 800
   points:
   - 'Connected discourse model: a complete travel story (200-250 words) using past tense, motion verbs with prefixes, spatial
@@ -108,22 +108,22 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Choose correct motion verbs and prepositions in travel contexts
-  items: 8
+  items: 12
 - type: fill-in
   focus: Complete travel dialogues with transport vocabulary and motion verbs
-  items: 8
+  items: 12
 - type: match-up
   focus: Match Ukrainian landmarks with their cities/regions
-  items: 8
+  items: 12
 - type: group-sort
   focus: 'Sort transport vocabulary: залізничний / автомобільний / повітряний / водний'
   items: 12
 - type: error-correction
   focus: Fix Russicisms and calques in travel sentences (відправлятися → виїжджати)
-  items: 6
+  items: 12
 - type: free-write
   focus: Write a travel narrative about a trip to a Ukrainian city using 10+ motion verbs
-  items: 1
+  items: 12
 connects_to:
 - b1-027 (prepositions-spatial-review — spatial prepositions in navigation)
 - b1-035 (figurative-motion — figurative motion in travel contexts)
@@ -142,7 +142,7 @@ register: науково-навчальний
 references:
 - title: Кравцова Grade 3, p.83
   notes: 'Dialogue at the bus station: buying tickets, asking about routes and schedules.'
-- title: Караман Grade 10, p.188
+- title: Заболотний Grade 7, p.188
   notes: 'Decolonization: відправлятися → відбувати/виїжджати for transport departures.'
 - title: Авраменко Grade 8, p.182
   notes: 'Tourism vocabulary: туристський, узвіз, and travel-related definitions.'

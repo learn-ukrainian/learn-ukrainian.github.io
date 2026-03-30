@@ -28,7 +28,7 @@ dialogue_situations:
   - Колеги / перехожі
   motivation: 'Daily life integration: reflexives, instrumental, temporal expressions'
 content_outline:
-- section: 'Мій день: ранок (My day: morning)'
+- section: 'Мій день: ранок'
   words: 750
   points:
   - 'Extended morning routine description using зворотні дієслова from M22: Я прокидаюся о пів на сьому. Встаю, вмиваюся холодною
@@ -39,7 +39,7 @@ content_outline:
     встаю (habitual, impf) vs встану завтра раніше (planned, pf).'
   - 'Vocabulary cluster: ранок, будильник, прокидатися, підводитися, вмиватися, чистити зуби, снідати, сніданок, каша, кава,
     бутерброд, збиратися, виходити з дому, поспішати.'
-- section: Робочий день та навчання (Work day and studies)
+- section: Робочий день та навчання
   words: 750
   points:
   - 'Describing a work/study day using prefixed verbs from M24: Приїжджаю на роботу о дев''ятій. Перевіряю електронну пошту.
@@ -51,7 +51,7 @@ content_outline:
   - 'Dialogue 2 — colleagues at work: Чи не могли б ви допомогти з цим звітом? (polite conditional) Якщо закінчу раніше, допоможу.
     (real conditional) Давайте обговоримо це після обіду. (inclusive imperative) Integrates M18 (conditionals) and M20 (polite
     forms).'
-- section: Хатні справи та побут (Household chores and daily life)
+- section: Хатні справи та побут
   words: 700
   points:
   - 'Household vocabulary with verb forms from Phase 3: прибирати (to clean up) — impf habitual: Я прибираю щосуботи. помити
@@ -64,7 +64,7 @@ content_outline:
     for reporting done tasks. Contrast: Я помив посуд (active) vs Посуд помито (passive).'
   - 'Cultural note: Ukrainian household vocabulary differences from English. Пилосос (vacuum cleaner — not *пилесос), прати
     (to wash clothes, not *стирати which is a Russicism). Decolonization point: Avoid Russianisms in daily vocabulary.'
-- section: Вільний час та вихідні (Free time and weekends)
+- section: Вільний час та вихідні
   words: 750
   points:
   - 'Talking about leisure using all Phase 3 grammar: Conditionals: Якщо погода буде гарна, підемо на прогулянку. Якби я мав
@@ -75,7 +75,7 @@ content_outline:
     будь ласка. Natural mix of real/unreal conditionals and polite forms.'
   - 'Hobby vocabulary: читати книжки, дивитися серіали, гуляти парком, кататися на велосипеді, малювати, грати на гітарі,
     вирощувати квіти, мандрувати. Verbal nouns for hobbies: читання, малювання, мандрування.'
-- section: 'Розпорядок дня: планування та поради (Daily schedule: planning and advice)'
+- section: 'Розпорядок дня: планування та поради'
   words: 650
   points:
   - 'Time management vocabulary and structures: розклад (schedule), план на день (day plan), встигати (to manage in time),
@@ -86,7 +86,7 @@ content_outline:
     свій розклад. (хай imperative)'
   - 'Reading passage: an article about time management for students. Uses all Phase 3 grammar naturally. Comprehension questions
     test LANGUAGE: find all conditionals, identify reflexive verbs, mark imperative forms and determine their aspect.'
-- section: Підсумок фази 3 та перехід до M26 (Phase 3 summary and transition)
+- section: Підсумок фази 3 та перехід до M26
   words: 400
   points:
   - 'Summary of Phase 3 grammar applied in this module: M18-19: умовний спосіб (якщо/якби) — for plans and hypotheticals.
@@ -130,19 +130,19 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete a daily routine text with correct verb forms (reflexive, prefixed, aspect)
-  items: 10
+  items: 12
 - type: quiz
   focus: Choose the correct Phase 3 grammar structure for daily life situations (conditional, imperative, passive)
-  items: 8
+  items: 12
 - type: match-up
   focus: Match household chores to their descriptions using correct verb forms
-  items: 8
+  items: 12
 - type: sentence-builder
   focus: Write plans/schedules using якщо-conditionals and temporal expressions
-  items: 6
+  items: 12
 - type: error-correction
   focus: 'Fix daily-life vocabulary errors: *стирати (→ прати), *пилесос (→ пилосос), wrong aspect'
-  items: 6
+  items: 12
 connects_to:
 - b1-022 (Зворотні дієслова — reflexive verbs for routines)
 - b1-018 (Умовний спосіб реальний — conditionals for planning)

@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Quantity expressions: п''ятеро людей, двоє дітей, кілька кімнат, багато
     землі'
 content_outline:
-- section: "Узгодження кількісних числівників з іменниками (Agreement rules)"
+- section: "Узгодження кількісних числівників з іменниками"
   words: 800
   points:
   - "From Литвінова Grade 6 p.240-241:
@@ -48,10 +48,10 @@ content_outline:
     двадцять два студенти (два → Н.в. мн.)
     двадцять п'ять студентів (п'ять → Р.в. мн.)
     Practice: 15 number + noun pairs for correct agreement."
-- section: "Відмінювання кількісних числівників (Declension of cardinals)"
+- section: "Відмінювання кількісних числівників"
   words: 700
   points:
-  - "From Авраменко Grade 11 p.37 and Караман Grade 10 p.171:
+  - "From Авраменко Grade 11 p.37 and Заболотний Grade 7 p.171:
     один: like an adjective (одного, одному, одним, одному).
     два/дві: двох, двом, двох/два, двома, двох.
     три: трьох, трьом, трьох/три, трьома, трьох.
@@ -65,7 +65,7 @@ content_outline:
     However, in practice many speakers simplify this, especially
     in speech. Written standard requires full declension.
     Practice: decline двадцять три книжки through all cases."
-- section: "Збірні числівники (Collective numerals)"
+- section: "Збірні числівники"
   words: 600
   points:
   - "Formation: двоє, троє, четверо, п'ятеро, шестеро, семеро...
@@ -81,7 +81,7 @@ content_outline:
     двох, двом, двох, двома, двох."
   - "Practice: choose cardinal or collective numeral for 10 noun groups,
     explaining why."
-- section: "Неозначено-кількісні слова (Indefinite quantity words)"
+- section: "Неозначено-кількісні слова"
   words: 500
   points:
   - "Words expressing indefinite quantity + Р.в.:
@@ -92,7 +92,7 @@ content_outline:
     понад + Зн.в. (more than), до + Р.в. (up to).
     'Близько ста людей прийшло.' 'Понад тисячу гривень.'
     Practice: describe quantities using approximate expressions."
-- section: "Кількісні вирази в контексті (Quantity in real usage)"
+- section: "Кількісні вирази в контексті"
   words: 700
   points:
   - "Recipes: Візьміть двісті грамів масла, три яйця, п'ятсот грамів борошна.
@@ -105,7 +105,7 @@ content_outline:
     півкіло помідорів і триста грамів сиру.
     Скільки коштують п'ять яблук?
     Self-check: 10 quantity expressions to form correctly."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 200
   points:
   - "Agreement rules summary table:
@@ -173,5 +173,5 @@ references:
   notes: "Collective numerals, fraction declension, agreement table."
 - title: "Авраменко Grade 11, p.37"
   notes: "Cardinal numeral declension tables."
-- title: "Караман Grade 10, p.167-171"
+- title: "Заболотний Grade 7, p.167-171"
   notes: "Numeral classification, declension types, parallel usage."

@@ -30,7 +30,7 @@ dialogue_situations:
   - Студент
   motivation: 'Consolidation: past/present/future, aspect, adjective agreement, metalanguage'
 content_outline:
-- section: "Вступ: як працювати з контрольною (Introduction: how to approach this test)"
+- section: "Вступ: як працювати з контрольною"
   words: 350
   points:
   - "Overview of the checkpoint structure: this module tests everything
@@ -45,7 +45,7 @@ content_outline:
   - "Self-assessment framework: after each section, learners rate their
     confidence (впевнено / потребую повторення / не розумію) to identify
     areas for review before moving to Phase 2."
-- section: "Блок 1: Фонетика та графіка (Block 1: Phonetics and graphics — M01)"
+- section: "Блок 1: Фонетика та графіка"
   words: 650
   points:
   - "Passage-based assessment: a Ukrainian text (150-200 words) about
@@ -62,7 +62,7 @@ content_outline:
   - "Metalanguage definitions: match Ukrainian terms to their meanings:
     фонетика, графіка, орфоепія, фонема, наголос, транскрипція.
     Short-answer: explain the difference between звук and літера."
-- section: "Блок 2: Морфологія та будова слова (Block 2: Morphology and word structure — M02)"
+- section: "Блок 2: Морфологія та будова слова"
   words: 600
   points:
   - "Word structure analysis: learners break down 6-8 words into
@@ -77,7 +77,7 @@ content_outline:
     сполучник, частка."
   - "Practical application: learners analyze a short Ukrainian sentence,
     identifying the частина мови and морфемна будова of each word."
-- section: "Блок 3: Синтаксис та відмінки (Block 3: Syntax and cases — M03)"
+- section: "Блок 3: Синтаксис та відмінки"
   words: 600
   points:
   - "Sentence analysis: learners identify члени речення (підмет, присудок,
@@ -91,7 +91,7 @@ content_outline:
   - "Simple vs compound sentence recognition: learners classify 6 sentences
     as просте or складне речення and identify conjunctions/connectors.
     Practice distinguishing складносурядне from складнопідрядне речення."
-- section: "Блок 4: Часи дієслова — минулий, теперішній, майбутній (Block 4: Verb tenses — M04-M05)"
+- section: "Блок 4: Часи дієслова — минулий, теперішній, майбутній"
   words: 700
   points:
   - "Tense identification: learners sort 15-20 verb forms into three
@@ -110,7 +110,7 @@ content_outline:
   - "Conjugation exercise: full conjugation of one perfective verb
     (написати) and one imperfective verb (читати) across all persons
     and numbers in the future tense."
-- section: "Блок 5: Людина i стосунки (Block 5: People and relationships — M06)"
+- section: "Блок 5: Людина i стосунки"
   words: 650
   points:
   - "Portrait vocabulary: given a literary portrait excerpt (100-150 words),
@@ -127,7 +127,7 @@ content_outline:
   - "Introduction role-play: learners write a short dialogue (8-10 lines)
     where they introduce a friend to a colleague using formal register,
     applying кличний відмінок and appropriate formulas."
-- section: "Підсумок та самооцінка (Summary and self-assessment)"
+- section: "Підсумок та самооцінка"
   words: 450
   points:
   - "Integrated reading comprehension: a Ukrainian text (200-250 words)
@@ -198,7 +198,7 @@ activity_hints:
   focus: "Integrated writing task: describe a person you will meet next
     week, combining portrait vocabulary, character description, and future
     tense forms in a connected paragraph (10-12 sentences)."
-  items: 1
+  items: 6
 connects_to:
 - "b1-001 to b1-006 (all Phase 1 modules — this checkpoint tests them)"
 - "b1-008 (Чергування голосних — first module of Phase 2, builds on Phase 1)"
@@ -222,7 +222,7 @@ references:
 - title: "All Phase 1 module references"
   notes: "This checkpoint draws on textbook sources cited in M01-M06:
     Заболотний Grade 5/7, Авраменко Grade 5/7, Литвінова Grade 5/7,
-    Караман Grade 10, Кравцова Grade 4, Ворон Grade 9."
+    Заболотний Grade 7, Кравцова Grade 4, Ворон Grade 9."
 - title: "Заболотний Grade 7, p.54-65"
   notes: "Часи дієслова, вид дієслова — primary source for Block 4 exercises."
 - title: "Авраменко Grade 7, p.100-101"

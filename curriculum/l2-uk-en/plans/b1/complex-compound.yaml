@@ -29,10 +29,10 @@ dialogue_situations:
   - Андрій
   motivation: 'Compound sentences: і, а, але, або, проте with кіно(n), театр(m), виставка(f)'
 content_outline:
-- section: "Що таке складносурядне речення? (What is a compound sentence?)"
+- section: "Що таке складносурядне речення?"
   words: 600
   points:
-  - "Definition from Заболотний Grade 9 p.54: складносурядним називають
+  - "Definition from Заболотний Grade 8 p.54: складносурядним називають
     складне речення, частини якого рівноправні за змістом і поєднані за
     допомогою сполучників сурядності. Key concept: рівноправність —
     neither part depends on the other grammatically.
@@ -45,10 +45,10 @@ content_outline:
     Вітер дув, і дерева хилилися. (two subjects, two predicates — compound)"
   - "Building on A2: learners already use і, але, або in speech.
     This module systematizes what they know and adds complexity."
-- section: "Єднальні сполучники (Copulative conjunctions)"
+- section: "Єднальні сполучники"
   words: 650
   points:
-  - "From Заболотний Grade 9 p.54:
+  - "From Заболотний Grade 8 p.54:
     Єднальні сполучники: і (й), та (= і), ні...ні, як...так і, не тільки...але й.
     Смислові зв'язки: одночасність, послідовність.
     Одночасність: Сонце світить, і вітер віє. (both happen at once)
@@ -61,15 +61,15 @@ content_outline:
   - "Practice: combine pairs of прості речення into складносурядні
     using єднальні сполучники. Learners choose between і/й/та based
     on euphony and context."
-- section: "Протиставні та розділові сполучники (Adversative and disjunctive)"
+- section: "Протиставні та розділові сполучники"
   words: 700
   points:
-  - "Протиставні from Заболотний Grade 9 p.55:
+  - "Протиставні from Заболотний Grade 8 p.55:
     але, а (= але), та (= але), зате, проте, однак, а втім.
     Смислові зв'язки: протиставлення, зіставлення.
     Протиставлення: Усе іде, але не все минає (Л. Костенко).
     Зіставлення: Людина створила культуру, а культура — людину (О. Довженко)."
-  - "Розділові from Заболотний Grade 9 p.55:
+  - "Розділові from Заболотний Grade 8 p.55:
     або, чи, або...або, чи...чи, то...то, хоч...хоч.
     Смислові зв'язки: чергування, взаємовиключення.
     Чергування: То сонце усміхнеться нам крізь хмари, то дощик рясно
@@ -79,10 +79,10 @@ content_outline:
     а = зіставлення (comparison): Сестра читає, а брат малює. (different activities)
     але = протиставлення (contradiction): Я хотів прийти, але не зміг.
     Practice: choose between а and але in 6 contexts."
-- section: "Розділові знаки (Punctuation)"
+- section: "Розділові знаки"
   words: 650
   points:
-  - "Main rule from Заболотний Grade 9 p.60:
+  - "Main rule from Заболотний Grade 8 p.60:
     Між частинами складносурядного речення ставимо КОМУ:
     Джмелями літаки собі гудуть, і джміль до них гуде собі спросоння (І. Драч).
     Або рибку з'їсти, або на дно сісти."
@@ -96,7 +96,7 @@ content_outline:
     or спільна вставна конструкція:
     Уночі вітер стих і дощ перестав. (спільне обставинне — уночі)
     Practice: 10 sentences — place correct punctuation, including exceptions."
-- section: "Побудова складносурядних речень (Constructing compound sentences)"
+- section: "Побудова складносурядних речень"
   words: 600
   points:
   - "Sentence building from simple to complex:
@@ -111,7 +111,7 @@ content_outline:
   - "Production: learners write 6-8 compound sentences about a recent
     event, using at least 2 єднальні, 2 протиставні, and 2 розділові
     сполучники with correct punctuation."
-- section: "Підсумок та перехід до M67 (Summary and transition)"
+- section: "Підсумок та перехід до M67"
   words: 400
   points:
   - "Summary: складносурядне = рівноправні частини + сурядні сполучники.
@@ -171,15 +171,15 @@ grammar:
 - "Punctuation: comma, semicolon, dash, shared-member exception"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 9, p.54-60"
+- title: "Заболотний Grade 8, p.54-60"
   notes: "Складносурядне речення: definition, сполучники classification
     table, смислові зв'язки, punctuation rules with examples."
 - title: "Ворон Grade 9, p.38-44"
   notes: "Складносурядні речення: intonation patterns, punctuation
     with протиставні, тире for unexpected result."
-- title: "Авраменко Grade 9, p.52"
+- title: "Авраменко Grade 8, p.52"
   notes: "Повторення: types of складні речення overview,
     сурядне vs підрядне vs безсполучникове."
-- title: "Ворон Grade 11, p.161"
+- title: "Авраменко Grade 7, p.161"
   notes: "§29 Складносурядні речення: review with additional punctuation
     nuances and stylistic considerations."

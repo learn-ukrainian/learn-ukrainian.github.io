@@ -86,24 +86,24 @@ activity_hints:
 - type: quiz
   focus: Choose the correct conjunction (тому що, бо, хоча, але) to complete
     sentences
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete compound sentences by adding the missing clause after the
     conjunction
-  items: 6
+  items: 8
 - type: match-up
   focus: Match two halves of sentences — причина with наслідок, допуст with
     результат
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs.
     протиставлення (але, проте, однак)
-  items: 6
+  items: 8
 references:
-- title: Авраменко Grade 9, §24
+- title: Заболотний Grade 5, §28
   notes: Складнопідрядні речення з підрядними причини, мети, умови — primary
     grammar source
-- title: Заболотний Grade 7, причинові сполучники
+- title: Заболотний Grade 6, сполучники
   notes: 'Cause conjunctions: бо, тому що, через те що, оскільки — with examples
     from Ukrainian proverbs'
 - title: 'ULP: Ukrainian Conjunctions'

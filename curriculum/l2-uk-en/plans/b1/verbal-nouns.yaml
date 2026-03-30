@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Verbal nouns: тестування, написання, навчання, читання — -ння/-ття
     formations'
 content_outline:
-- section: "Що таке віддієслівні іменники? (What are verbal nouns?)"
+- section: "Що таке віддієслівні іменники?"
   words: 550
   points:
   - "Definition from Вашуленко Grade 3 p.107:
@@ -48,13 +48,13 @@ content_outline:
     навчання = process of learning AND the education itself.
     відкриття = process of opening AND the discovery made.
     Context determines which meaning applies."
-- section: "Суфікс -ння (-ання, -яння) — найпродуктивніший (Suffix -ння — most productive)"
+- section: "Суфікс -ння (-ання, -яння) — найпродуктивніший"
   words: 700
   points:
   - "Formation rule: основа інфінітива + -ння.
     читати → читання, писати → писання, малювати → малювання,
     вивчати → вивчання (process) vs вивчення (result — see below).
-    From Караман Grade 10 p.136: віддієслівні іменники на -ння, -ття
+    From Заболотний Grade 7 p.136: віддієслівні іменники на -ння, -ття
     є продуктивними в офіційно-діловому, науковому та
     публіцистичному стилях."
   - "Spelling rule: подвоєння н → -нн-:
@@ -70,13 +70,13 @@ content_outline:
     Some verbs have parallel forms: вивчання / вивчення (process / result)."
   - "Practice: form -ння nouns from 10-12 common verbs, noting which
     дієвідміна determines the vowel. Check against VESUM for edge cases."
-- section: "Суфікс -ття та безафіксний спосіб (Suffix -ття and zero-derivation)"
+- section: "Суфікс -ття та безафіксний спосіб"
   words: 650
   points:
   - "Formation with -ття: from verbs with stems ending in consonant clusters:
     відкрити → відкриття, забути → забуття, життя ← жити.
     пізнати → пізнання, but здобути → здобуття.
-    Караман Grade 10 p.136: становлення, забуття — книжне забарвлення."
+    Заболотний Grade 7 p.136: становлення, забуття — книжне забарвлення."
   - "Безафіксний спосіб (zero derivation) from Литвінова Grade 6 p.83:
     пошукати → пошук, підписати → підпис, раній → рань.
     'Нові слова можна утворити також усіканням частин слова
@@ -89,7 +89,7 @@ content_outline:
     Безафіксні forms are neutral/colloquial: біг, хід, крик, спів.
     Compare: вивчення цього питання (formal) vs пошук відповіді (neutral).
     Learners practise choosing the right register for context."
-- section: "Віддієслівні іменники у реченні (Verbal nouns in sentences)"
+- section: "Віддієслівні іменники у реченні"
   words: 600
   points:
   - "Syntactic roles: віддієслівні іменники function as regular nouns —
@@ -109,7 +109,7 @@ content_outline:
     *Здійснення забезпечення виконання... — мовний канцелярит.
     Better: Забезпечити виконання... (use verb when possible).
     Антоненко-Давидович principle: use nouns for concepts, verbs for actions."
-- section: "Практика: від дієслова до іменника (Practice: from verb to noun)"
+- section: "Практика: від дієслова до іменника"
   words: 550
   points:
   - "Exercise block 1 — Formation:
@@ -126,7 +126,7 @@ content_outline:
     Given pairs (читання / крик, дослідження / пошук, спілкування / розмова),
     label each as formal or neutral. Place them in appropriate sentences:
     наукове _____ (дослідження) vs щоденний _____ (пошук)."
-- section: "Читання: віддієслівні іменники у новинах (Reading: verbal nouns in news)"
+- section: "Читання: віддієслівні іменники у новинах"
   words: 600
   points:
   - "A short Ukrainian news article (adapted B1 level) using multiple
@@ -143,7 +143,7 @@ content_outline:
     Будівництво нових шкіл — це важливе завдання.
     Навчання української мови потребує практики.
     Відкриття нового музею відбудеться наступного місяця."
-- section: "Підсумок та перехід до M22 (Summary and transition)"
+- section: "Підсумок та перехід до M22"
   words: 350
   points:
   - "Summary: віддієслівні іменники — іменники, утворені від дієслів,
@@ -223,6 +223,6 @@ references:
 - title: "Литвінова Grade 6, p.83"
   notes: "Безафіксний спосіб словотворення: пошук ← пошукати, підпис ← підписати.
     Definition and examples of zero derivation."
-- title: "Караман Grade 10, p.136"
+- title: "Заболотний Grade 7, p.136"
   notes: "Віддієслівні іменники на -ння, -ття: становлення, забуття.
     Книжне забарвлення; продуктивні в офіційно-діловому i науковому стилях."

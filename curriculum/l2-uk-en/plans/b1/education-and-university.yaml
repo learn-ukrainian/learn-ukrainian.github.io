@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Education integration: gerunds + participles + passive in university
     context'
 content_outline:
-- section: "Система освіти в Україні (Education system in Ukraine)"
+- section: "Система освіти в Україні"
   words: 700
   points:
   - "Overview of Ukrainian education levels:
@@ -49,7 +49,7 @@ content_outline:
     Western models. ЗНО/НМТ (standardized testing for university
     admission). The concept of державне замовлення (state-funded places)
     vs контрактна форма (self-funded)."
-- section: "Навчальні дисципліни та спеціальності (Academic disciplines)"
+- section: "Навчальні дисципліни та спеціальності"
   words: 650
   points:
   - "Subject vocabulary using дієприкметники and дієприслівники:
@@ -65,7 +65,7 @@ content_outline:
     Uses gerunds for simultaneous/sequential actions:
     Готуючись до іспиту, я прочитав три підручники.
     Закінчивши бакалаврат, планую вступити до магістратури."
-- section: "Академічне середовище (Academic environment)"
+- section: "Академічне середовище"
   words: 650
   points:
   - "University life vocabulary:
@@ -83,7 +83,7 @@ content_outline:
     Uses participle phrases: Дослідження, проведене нашою групою,
     показало цікаві результати. Прочитавши вашу роботу, я маю
     кілька зауважень."
-- section: "Навчальний процес: дієприкметники і дієприслівники (Study process)"
+- section: "Навчальний процес: дієприкметники і дієприслівники"
   words: 650
   points:
   - "Describing academic activities with Phase 7 grammar:
@@ -97,7 +97,7 @@ content_outline:
     Проаналізувавши результати, автор дійшов висновку."
   - "Practice: rewrite 6 informal sentences about studies into formal
     academic register using participle phrases and gerund constructions."
-- section: "Порівняння систем освіти (Comparing education systems)"
+- section: "Порівняння систем освіти"
   words: 500
   points:
   - "Reading passage: a comparison of Ukrainian and international
@@ -108,7 +108,7 @@ content_outline:
     — Яку роль виконують дієприслівники в другому абзаці?"
   - "Discussion prompts: learners describe their own education
     experience using Phase 7 grammar structures."
-- section: "Підсумок фази 7 та перехід до M65 (Phase 7 summary and transition)"
+- section: "Підсумок фази 7 та перехід до M65"
   words: 400
   points:
   - "Summary of Phase 7 grammar applied in academic context:
@@ -151,19 +151,19 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: "Complete academic sentences using participle phrases and gerund constructions"
-  items: 10
+  items: 12
 - type: quiz
   focus: "Choose the correct Phase 7 form for academic contexts (participle vs gerund vs clause)"
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match academic vocabulary to definitions and contexts"
-  items: 10
+  items: 12
 - type: sentence-builder
   focus: "Transform informal study descriptions into formal academic register using Phase 7 grammar"
-  items: 6
+  items: 12
 - type: error-correction
   focus: "Fix Russian calque participles and register mismatches in academic texts"
-  items: 6
+  items: 12
 connects_to:
 - "b1-057 to b1-063 (all Phase 7 grammar modules)"
 - "b1-065 (Контрольна робота 7 — Phase 7 review)"
@@ -178,8 +178,6 @@ grammar:
 register: науково-навчальний
 references:
 - title: "Phase 7 module references (M57-M63)"
-  notes: "All textbook sources from Литвінова Grade 7, Заболотний Grade 7,
-    Авраменко Grade 7/11, Глазова Grade 11, Караман Grade 10."
-- title: "Авраменко Grade 11, p.58-59"
-  notes: "Academic register usage of participles: natural vs calque forms
-    in scientific and academic Ukrainian."
+  notes: "All textbook sources from Grade 7 priority textbooks."
+- title: "Заболотний Grade 8, §54-56"
+  notes: "Науковий стиль мовлення. Лексичні та граматичні особливості (participles, verbal nouns in academic register)."

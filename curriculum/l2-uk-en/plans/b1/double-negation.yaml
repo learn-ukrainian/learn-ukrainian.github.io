@@ -29,7 +29,7 @@ dialogue_situations:
   - Члени книжкового клубу
   motivation: 'Double negation: ніхто не, ніде немає, ніколи не, ніяких немає'
 content_outline:
-- section: "Заперечення в українській мові: принцип подвійності (Negation in Ukrainian: the principle of doubling)"
+- section: "Заперечення в українській мові: принцип подвійності"
   words: 650
   points:
   - "The fundamental difference from English: Ukrainian negation is cumulative.
@@ -48,7 +48,7 @@ content_outline:
   - "Practice: learners transform English negative sentences into Ukrainian,
     applying подвійне заперечення. Common error: *Ніхто прийшов
     (English pattern) → correct: Ніхто не прийшов."
-- section: "Заперечні займенники (Negative pronouns)"
+- section: "Заперечні займенники"
   words: 700
   points:
   - "Formation and meaning from Авраменко Grade 10 p.148:
@@ -71,7 +71,7 @@ content_outline:
   - "Writing practice: sentences using заперечні займенники in all cases,
     with and without прийменники: нікого не бачу, ні до кого не йду,
     ні з ким не розмовляю, ні про що не думаю."
-- section: "Заперечні прислівники (Negative adverbs)"
+- section: "Заперечні прислівники"
   words: 600
   points:
   - "Formation and meaning:
@@ -91,7 +91,7 @@ content_outline:
     ніде (nowhere) vs десь (somewhere) vs будь-де (anywhere).
     ніколи (never) vs колись (sometime) vs будь-коли (anytime).
     This system of correlations helps learners see the logic."
-- section: "Написання не i ні: правила та винятки (Writing не and ні: rules and exceptions)"
+- section: "Написання не i ні: правила та винятки"
   words: 600
   points:
   - "Ні — РАЗОМ with заперечними займенниками та прислівниками:
@@ -111,7 +111,7 @@ content_outline:
     Practice: learners apply правопис rules in context."
   - "Reading practice: a Ukrainian text with blanks where learners decide
     разом чи окремо for не/ні constructions."
-- section: "Заперечення в діалогах та текстах (Negation in dialogues and texts)"
+- section: "Заперечення в діалогах та текстах"
   words: 550
   points:
   - "Dialogue practice — natural Ukrainian negative responses:
@@ -135,7 +135,7 @@ content_outline:
     *'Я не бачив нікого' (awkward word order) → 'Я нікого не бачив.'
     *'Ніхто знає' (missing не) → 'Ніхто не знає.'
     Practice: error identification and correction exercises."
-- section: "Підсумок: заперечення — це сила (Summary: negation is power)"
+- section: "Підсумок: заперечення — це сила"
   words: 300
   points:
   - "Complete reference: заперечні займенники, прислівники, правопис не/ні,
@@ -194,7 +194,7 @@ activity_hints:
 - type: free-write
   focus: "Write a short narrative (8-10 sentences) about a day when
     everything went wrong, using multiple подвійні заперечення."
-  items: 1
+  items: 6
 connects_to:
 - "b1-054 (advanced-pronouns — заперечні as a pronoun category)"
 - "b1-081 (Вставні слова — both modify sentence meaning without being core members)"

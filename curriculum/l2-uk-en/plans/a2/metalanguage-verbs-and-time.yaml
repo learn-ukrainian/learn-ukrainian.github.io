@@ -90,16 +90,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match verb category terms to their definitions
-  items: 6
+  items: 8
 - type: quiz
   focus: Read a dictionary entry and answer questions about its grammatical info
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort verb forms by час (минулий, теперішній, майбутній)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences about verbs using Ukrainian metalanguage terms
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, Дієслово як частина мови
   notes: Verb categories as introduced in Ukrainian school curriculum

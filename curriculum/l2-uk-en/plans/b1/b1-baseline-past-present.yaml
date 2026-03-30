@@ -28,7 +28,7 @@ dialogue_situations:
   - Дарина
   motivation: 'Present vs past tense review in natural narration: працювати/писати'
 content_outline:
-- section: "Теперішній час: дієвідміни (Present tense: conjugation classes)"
+- section: "Теперішній час: дієвідміни"
   words: 800
   points:
   - "Огляд теперішнього часу (Литвінова Grade 7 p.44):
@@ -39,7 +39,7 @@ content_outline:
     1-ша ос. — пишу/робл-ю, пишемо/робимо.
     2-га ос. — пишеш/робиш, пишете/робите.
     3-тя ос. — пише/робить, пишуть/роблять."
-  - "Дві дієвідміни (Караман Grade 10 p.179):
+  - "Дві дієвідміни (Заболотний Grade 7 p.179):
     I дієвідміна: закінчення -у(-ю), -еш(-єш), -е(-є), -емо(-ємо),
     -ете(-єте), -уть(-ють). Приклади: писати — пишу, пишеш, пише...
     II дієвідміна: закінчення -у(-ю), -иш(-їш), -ить(-їть), -имо(-їмо),
@@ -56,7 +56,7 @@ content_outline:
     Щоранку я встаю о сьомій. Снідаю, п'ю каву, йду на роботу.
     Увечері читаю книжку або дивлюся фільм.
     Learners produce similar texts using both дієвідміни."
-- section: "Минулий час: утворення і вживання (Past tense: formation and usage)"
+- section: "Минулий час: утворення і вживання"
   words: 800
   points:
   - "Утворення минулого часу (Литвінова Grade 7 p.40):
@@ -85,7 +85,7 @@ content_outline:
     Минулого літа ми їздили до Львова. Ходили по Старому місту,
     пили каву на Площі Ринок, слухали вуличних музикантів.
     Learners narrate their own past experiences."
-- section: "Вид дієслова: доконаний і недоконаний (Verbal aspect: perfective and imperfective)"
+- section: "Вид дієслова: доконаний і недоконаний"
   words: 700
   points:
   - "Два види дієслова (Литвінова Grade 7 p.30):
@@ -114,7 +114,7 @@ content_outline:
     Вона писала лист дві години. (тривала дія, недок.)
     Вона написала лист і пішла на пошту. (завершена, док.)
     The choice between вид is about MEANING, not grammar rules."
-- section: "Вид у розповіді: послідовність і тло (Aspect in narration: sequence and background)"
+- section: "Вид у розповіді: послідовність і тло"
   words: 650
   points:
   - "Аспектуальна стратегія в розповіді:
@@ -137,7 +137,7 @@ content_outline:
     to see how it transforms the narrative —
     the same story as a sequence of events (доконаний)
     vs a description of an ongoing scene (недоконаний)."
-- section: "Дієслова на -ся: зворотні дієслова в повторенні (Reflexive verbs in review)"
+- section: "Дієслова на -ся: зворотні дієслова в повторенні"
   words: 600
   points:
   - "Повторення зворотних дієслів:
@@ -158,7 +158,7 @@ content_outline:
     Минулий: я вчився/вчилася, ми вчилися.
     Практика: діалог із зворотними дієсловами —
     Як ти почуваєшся? — Добре. А ти? — Я трохи хвилююся."
-- section: "Підсумок: від знання до вживання (Summary: from knowledge to usage)"
+- section: "Підсумок: від знання до вживання"
   words: 450
   points:
   - "Узагальнення часових форм у таблиці:
@@ -218,7 +218,7 @@ activity_hints:
   items: 6
 - type: open-writing
   focus: "Напишіть короткий текст: 'Мій вчорашній день' — чергуйте доконаний і недоконаний вид"
-  items: 1
+  items: 6
 connects_to:
 - "b1-003 (Синтаксис і відмінки — metalanguage prerequisite)"
 - "b1-005 (Майбутнє і вид дієслова — future tense and aspect, direct continuation)"
@@ -246,7 +246,7 @@ references:
 - title: "Авраменко Grade 7, p.63-74"
   notes: "Минулий час: утворення, рід і число, нерегулярні форми,
     тестові завдання на вид і час."
-- title: "Караман Grade 10, p.179"
+- title: "Заболотний Grade 7, p.179"
   notes: "Дві основи дієслова, поділ на дієвідміни — систематизований огляд."
 - title: "Захарійчук Grade 4, p.108-113"
   notes: "Змінювання дієслів за особами і числами — базові таблиці

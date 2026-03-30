@@ -31,7 +31,7 @@ dialogue_situations:
   - Аудиторія
   motivation: 'Parenthetical words: по-перше, по-друге, на жаль, очевидно, безумовно'
 content_outline:
-- section: "Що таке вставні слова? (What are parenthetical words?)"
+- section: "Що таке вставні слова?"
   words: 600
   points:
   - "Definition from Заболотний Grade 8 p.178:
@@ -54,7 +54,7 @@ content_outline:
     beginning, middle, or end: 'Мабуть, дощ уже йде.'
     'Дощ, мабуть, уже йде.' 'Дощ уже йде, мабуть.'
     Position affects emphasis and rhythm."
-- section: "Групи вставних слів за значенням (Semantic groups of parenthetical words)"
+- section: "Групи вставних слів за значенням"
   words: 800
   points:
   - "1. Впевненість (certainty):
@@ -85,14 +85,14 @@ content_outline:
     Example: 'Уяви собі, він таки прийшов!'"
   - "Practice: learners read a Ukrainian text and classify all вставні слова
     by semantic group. Then compose sentences using one word from each group."
-- section: "Завжди вставні vs ніколи не вставні (Always parenthetical vs never parenthetical)"
+- section: "Завжди вставні vs ніколи не вставні"
   words: 550
   points:
-  - "Words that are ALWAYS вставні from Авраменко Grade 9 p.13:
+  - "Words that are ALWAYS вставні from Авраменко Grade 8 p.13:
     отже (therefore), мабуть (probably), по-перше (firstly),
     по-друге (secondly), щоправда (to be fair), а втім (however).
     These ALWAYS require commas."
-  - "Words that are NEVER вставні from Авраменко Grade 9 p.13:
+  - "Words that are NEVER вставні from Авраменко Grade 8 p.13:
     адже (because/after all), навіть (even), принаймні (at least),
     усе-таки (nevertheless), начебто (as if), нібито (allegedly —
     some sources allow it as вставне, but Авраменко lists it here).
@@ -106,7 +106,7 @@ content_outline:
   - "Common error: treating навіть, адже, принаймні as вставні
     and adding unnecessary commas. Practice: learners remove
     incorrect commas from sentences."
-- section: "Пунктуація вставних слів (Punctuation of parenthetical words)"
+- section: "Пунктуація вставних слів"
   words: 600
   points:
   - "Basic rule: вставні слова are set off by commas:
@@ -129,7 +129,7 @@ content_outline:
   - "Reading practice: a Ukrainian newspaper excerpt with вставні слова.
     Learners identify all вставні конструкції, classify them by group,
     and verify the punctuation."
-- section: "Вставні слова у мовленні та на письмі (Parenthetical words in speech and writing)"
+- section: "Вставні слова у мовленні та на письмі"
   words: 550
   points:
   - "Вставні слова in розмовному стилі — discourse markers:
@@ -151,7 +151,7 @@ content_outline:
     Compare: 'Мабуть, можливо, здається, це, на мою думку, правильно'
     (overloaded) vs 'Мабуть, це правильно' (natural).
     Practice: learners edit texts to reduce вставне-word overuse."
-- section: "Підсумок: слова-компаси (Summary: compass words)"
+- section: "Підсумок: слова-компаси"
   words: 300
   points:
   - "Complete reference: all semantic groups with examples,
@@ -214,7 +214,7 @@ activity_hints:
 - type: free-write
   focus: "Write an opinion paragraph (10-12 sentences) on a given topic
     using at least 5 different вставні слова from different semantic groups."
-  items: 1
+  items: 6
 connects_to:
 - "b1-078 (Розмовний стиль — вставні слова as discourse markers)"
 - "b1-080 (Подвійне заперечення — both modify sentence meaning)"
@@ -238,7 +238,7 @@ references:
 - title: "Авраменко Grade 11, p.109-112"
   notes: "Вставні конструкції: definition, groups, punctuation,
     ZNO-format exercises for practice."
-- title: "Авраменко Grade 9, p.12-13"
+- title: "Авраменко Grade 8, p.12-13"
   notes: "Lists of words that are always вставні and never вставні.
     Повторення вставних конструкцій."
 - title: "Заболотний Grade 5, p.192"

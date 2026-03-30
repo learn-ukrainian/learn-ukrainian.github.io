@@ -83,15 +83,15 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: 'Aspect Sorting: Process vs. Result'
-  items: 6
+  items: 8
 - type: fill-in
   focus: Identify the Aspect in Sentences
-  items: 6
+  items: 8
 - type: match-up
   focus: Choose the Correct Aspect (Context-based)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §42-44
+- title: Заболотний Grade 6, §52-54
   notes: 'Вид дієслова: доконаний і недоконаний'
 - title: 'ULP: Ukrainian Verb Aspect'
   url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/

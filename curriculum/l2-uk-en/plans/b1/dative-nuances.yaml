@@ -29,7 +29,7 @@ dialogue_situations:
   motivation: 'Experiencer dative: мені холодно, дитині нудно, бабусі важко, студентам
     цікаво'
 content_outline:
-- section: "Давальний суб'єкта стану (Dative of experiencer)"
+- section: "Давальний суб'єкта стану"
   words: 800
   points:
   - "Core concept: in Ukrainian, physical and emotional states are expressed
@@ -48,7 +48,7 @@ content_outline:
   - "Reading passage: a character describing their day using dative states.
     'Зранку мені було холодно. Потім стало веселіше. Увечері мені
     не спалося, і я читав книжку.' Learners identify all dative constructions."
-- section: "Давальний у виразах віку (Dative for age)"
+- section: "Давальний у виразах віку"
   words: 500
   points:
   - "Pattern: [person in Д.в.] + [number] + рік/роки/років:
@@ -60,7 +60,7 @@ content_outline:
     Йому за сорок (he is over forty). Їй під п'ятдесят (she is close to fifty)."
   - "Practice: a class introduction scenario where people share ages
     using dative constructions. Include past tense: Коли мені було десять..."
-- section: "Давальний з безособовими конструкціями (Dative with impersonal constructions)"
+- section: "Давальний з безособовими конструкціями"
   words: 700
   points:
   - "Impersonal predicatives + Д.в.:
@@ -79,7 +79,7 @@ content_outline:
     'Я повинен працювати' → 'Мені потрібно працювати.'
     'Вона змогла приїхати' → 'Їй вдалося приїхати.'
     10-12 transformation exercises."
-- section: "Давальний адресата і зацікавленої особи (Dative of recipient)"
+- section: "Давальний адресата і зацікавленої особи"
   words: 600
   points:
   - "Expanded recipient verbs beyond давати/говорити (known from A2):
@@ -96,7 +96,7 @@ content_outline:
   - "Practice dialogue: giving advice to friends using dative constructions.
     'Тобі варто відпочити. Тобі потрібно більше спати.
     Тобі краще зателефонувати лікарю.'"
-- section: "Давальний vs інші відмінки (Dative vs other cases)"
+- section: "Давальний vs інші відмінки"
   words: 500
   points:
   - "Common confusion points:
@@ -111,7 +111,7 @@ content_outline:
     радити комусь (advise someone — Д.в.)"
   - "Practice: choose the correct case for 12 sentences,
     each requiring careful analysis of the verb's governance."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 400
   points:
   - "Four semantic roles of Д.в.:
@@ -177,5 +177,5 @@ references:
   notes: "Безособові дієслова: state, nature, impersonal use of personal verbs."
 - title: "Заболотний Grade 6, p.93"
   notes: "Case meanings table: Д.в. = 'особу чи предмет, для яких відбувається дія.'"
-- title: "Глазова Grade 11, p.84"
+- title: "Заболотний Grade 8, p.84"
   notes: "Pronominal prepositional constructions including dative governance."

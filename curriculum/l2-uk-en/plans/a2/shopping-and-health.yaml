@@ -86,16 +86,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete market dialogue lines with correct quantity + Genitive forms
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct Genitive phrase for health complaints and remedies
-  items: 6
+  items: 8
 - type: match-up
   focus: Match health problems to their remedies (ліки від..., краплі від...)
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether shopping and health phrases use the Genitive correctly
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §20-22
   notes: Родовий відмінок іменників у повсякденних контекстах

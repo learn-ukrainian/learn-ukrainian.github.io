@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Instrumental of characterization: стати + inst, працювати + inst, славитися
     + inst'
 content_outline:
-- section: "Орудний характеристики (Instrumental of characterisation)"
+- section: "Орудний характеристики"
   words: 800
   points:
   - "When naming someone's profession, role, or characteristic, Ukrainian
@@ -47,7 +47,7 @@ content_outline:
     Це місто є столицею України. Ця подія стала поворотним моментом.
     Цей фільм вважається шедевром. Його вважають генієм.
     Practice: 12 sentences describing people's roles and qualities using Ор.в."
-- section: "Орудний засобу та знаряддя (Instrumental of means)"
+- section: "Орудний засобу та знаряддя"
   words: 600
   points:
   - "The original function of the instrumental — naming the TOOL or MEANS:
@@ -60,7 +60,7 @@ content_outline:
   - "Practice: describe daily routines using instrumental of means.
     'Я їду на роботу автобусом. Потім пишу звіти ручкою.
     Розмовляю з колегами українською.'"
-- section: "Орудний шляху та простору (Instrumental of path)"
+- section: "Орудний шляху та простору"
   words: 500
   points:
   - "Ukrainian uses Ор.в. without preposition to express the PATH of movement:
@@ -74,7 +74,7 @@ content_outline:
   - "Reading passage: a travel narrative describing a journey through Ukraine,
     using instrumental of path. 'Ми їхали степом, потім лісом, і нарешті
     побачили гори.'"
-- section: "Орудний сумісності та керування дієслів (Instrumental with verbs)"
+- section: "Орудний сумісності та керування дієслів"
   words: 600
   points:
   - "Verbs governing Ор.в. in Ukrainian:
@@ -94,7 +94,7 @@ content_outline:
   - "Practice: describe interests, skills, and social activities
     using instrumental-governing verbs. 'Я захоплююся музикою.
     Цікавлюся історією. Пишаюся своєю країною.'"
-- section: "Орудний у пасивних конструкціях (Instrumental in passive)"
+- section: "Орудний у пасивних конструкціях"
   words: 500
   points:
   - "In passive constructions, the AGENT takes Ор.в.:
@@ -106,7 +106,7 @@ content_outline:
     Practice: transform active sentences to passive, marking the agent with Ор.в.
     'Тарас Шевченко написав Кобзар' → 'Кобзар написаний Тарасом Шевченком.'"
   - "Preview: passive constructions will be expanded in Phase 7 (participles)."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 500
   points:
   - "Five semantic roles of Ор.в.:
@@ -154,7 +154,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: "Describe your interests and daily routine using Ор.в. constructions (5-7 sentences)"
-  items: 1
+  items: 6
 connects_to:
 - "b1-046 (Родовий відмінок деталі — genitive nuances)"
 - "b1-047 (Давальний відмінок деталі — dative nuances)"

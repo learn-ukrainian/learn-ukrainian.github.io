@@ -29,7 +29,7 @@ dialogue_situations:
   - Оповідач (narrator)
   motivation: 'Active participles: біжучий, падаючий, квітучий, мандруючий'
 content_outline:
-- section: "Що таке дієприкметник? (What is a participle?)"
+- section: "Що таке дієприкметник?"
   words: 600
   points:
   - "Definition from Литвінова Grade 7 p.82: дієприкметник — це особлива
@@ -41,7 +41,7 @@ content_outline:
     красивий (прикметник — permanent quality)
     квітучий (дієприкметник — quality arising from action: квітнути)
     квітне (дієслово — action itself).
-    From Глазова Grade 11 p.51: 'Дієприкметник виражає ознаку предмета
+    From Заболотний Grade 8 p.51: 'Дієприкметник виражає ознаку предмета
     за дією або станом: сяючий, в'янучий, розквітлий, вишитий.'"
   - "The two main categories: активні (subject performs the action:
     палаючий вогонь — вогонь сам палає) vs пасивні (subject receives
@@ -94,7 +94,7 @@ content_outline:
     them in sentences. Emphasize natural usage:
     опасти → опале листя, змарніти → змарнілий хлопець,
     зрости → зрослий попит, збанкрутіти → збанкрутіле підприємство."
-- section: "Чого уникати: русизми у дієприкметниках (What to avoid: Russian calques)"
+- section: "Чого уникати: русизми у дієприкметниках"
   words: 600
   points:
   - "From Авраменко Grade 7 p.95 (editorial exercise):
@@ -114,7 +114,7 @@ content_outline:
     (but потонулий exists for the result)."
   - "Reading practice: a short text containing both natural and
     unnatural active participles. Learners identify and correct the calques."
-- section: "Дієприкметник у тексті (Participles in context)"
+- section: "Дієприкметник у тексті"
   words: 700
   points:
   - "Reading passage: a literary description of nature using participles
@@ -129,7 +129,7 @@ content_outline:
     художній and науковий styles. In розмовний style, Ukrainians
     prefer описові звороти: не 'квітучий сад' but 'сад, що квітне'
     in everyday speech."
-- section: "Підсумок та перехід до M58 (Summary and transition)"
+- section: "Підсумок та перехід до M58"
   words: 400
   points:
   - "Summary: дієприкметник = ознака за дією. Активні = суб'єкт
@@ -210,5 +210,5 @@ references:
 - title: "Авраменко Grade 11, p.58-59"
   notes: "§18 Морфологічна норма: active participle restrictions in Ukrainian,
     replacement strategies for Russian calques."
-- title: "Глазова Grade 11, p.51"
+- title: "Заболотний Grade 8, p.51"
   notes: "Definition of дієприкметник, classification into active/passive."

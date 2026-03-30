@@ -28,7 +28,7 @@ dialogue_situations:
   motivation: 'Consolidation: conditionals, imperatives, verbal nouns, reflexives,
     passive'
 content_outline:
-- section: Огляд умовного способу (Conditional mood review)
+- section: Огляд умовного способу
   words: 800
   points:
   - 'Review of M18 — real conditions: Formation: минулий час + би/б. Placement rules. Якщо-sentences: якщо + дійсний спосіб
@@ -40,7 +40,7 @@ content_outline:
   - 'Integrated exercise: dialogue with mixed real/unreal conditionals. Learners identify each conditional type and explain
     their choice. — Якщо завтра буде сонце, поїдемо на пляж. — Якби я мав відпустку, поїхав би на тиждень! — Ну, якщо візьмеш
     вихідні, може встигнемо.'
-- section: Огляд наказового способу (Imperative review)
+- section: Огляд наказового способу
   words: 650
   points:
   - 'Review of M20 — full paradigm: 2sg: неси, читай, будь, сядь. 1pl: несімо, читаймо, ходімо (inclusive ''let''s''). 2pl:
@@ -51,7 +51,7 @@ content_outline:
     6-8 imperative situations.'
   - 'Polite register review: Передайте, будь ласка. Давайте обговоримо. Чи не могли б ви допомогти? Прошу не палити. Decolonization
     check: Ходімо! (not *Пішли!)'
-- section: Огляд віддієслівних іменників та творення дієслів (Verbal nouns and verb formation review)
+- section: Огляд віддієслівних іменників та творення дієслів
   words: 600
   points:
   - 'Review of M21 — віддієслівні іменники: Суфіксальне: -ння (читання), -ття (відкриття), -іння (ходіння). Безафіксне: пошук,
@@ -62,7 +62,7 @@ content_outline:
     into morphemes.'
   - 'Integration exercise: given a root, build a word family: писати → написати (pf), переписати (rewrite), писання (writing),
     підпис (signature), записати (to write down), записка (note). Learners see how one root generates a whole vocabulary cluster.'
-- section: Огляд зворотних дієслів та пасивного стану (Reflexive verbs and passive voice review)
+- section: Огляд зворотних дієслів та пасивного стану
   words: 600
   points:
   - 'Review of M22 — зворотні дієслова: 5 categories: власне зворотні (митися), взаємні (зустрічатися), стану (хвилюватися),
@@ -72,7 +72,7 @@ content_outline:
     Active preference: Робітники збудували дім (most natural). Practice: rank 3 versions of the same sentence by naturalness.'
   - 'Error correction: fix mixed errors across M22-M23. *Вибачаюся (→ Вибачте), *стирати білизну (→ прати), *Книга читалася
     мною (→ Я прочитав книгу or Книгу прочитано), *Мені не спитися (→ Мені не спиться).'
-- section: 'Комплексні вправи: дієслівна фаза (Complex exercises: verb phase)'
+- section: 'Комплексні вправи: дієслівна фаза'
   words: 650
   points:
   - 'Exercise block 1 — Grammar identification: A Ukrainian text (8-10 sentences) about daily life and planning. Learners
@@ -84,7 +84,7 @@ content_outline:
   - 'Exercise block 3 — Production: Write a paragraph (6-8 sentences) describing your ideal day, using at least: one якщо-sentence,
     one якби-sentence, three reflexive verbs, one -но/-то passive, two imperatives. This tests integrated use of all Phase
     3 grammar.'
-- section: Діалог-синтез та перехід до Фази 4 (Synthesis dialogue and transition)
+- section: Діалог-синтез та перехід до Фази 4
   words: 700
   points:
   - 'Extended dialogue combining all Phase 3 grammar: Two friends discussing their day, making plans, distributing tasks.
@@ -115,7 +115,7 @@ vocabulary_hints:
   - будь ласка (please)
   - ходімо (let's go — inclusive imperative)
   recommended:
-  - контрфактичний (counterfactual)
+  - нереальний (unreal)
   - безафіксний (zero-derivation)
   - канцелярит (bureaucratese)
   - перехідне дієслово (transitive verb)
@@ -165,4 +165,4 @@ register: розмовний
 references:
 - title: All references from M18-M25
   notes: 'This checkpoint synthesizes content from all Phase 3 modules. Primary textbook sources: Литвінова Grade 7, Заболотний
-    Grade 7, Авраменко Grade 7 and Grade 11, Глазова Grade 11, Караман Grade 10, Голуб Grade 6, Вашуленко Grade 3.'
+    Grade 7, Авраменко Grade 7 and Grade 11, Заболотний Grade 8, Заболотний Grade 7, Голуб Grade 6, Вашуленко Grade 3.'

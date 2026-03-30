@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Short-form adjectives: рад, годен, певен, ладен — elevated/literary
     usage'
 content_outline:
-- section: "Повні та короткі форми прикметників (Full and short forms)"
+- section: "Повні та короткі форми прикметників"
   words: 700
   points:
   - "Definition from Авраменко Grade 6 p.130:
@@ -48,12 +48,12 @@ content_outline:
   - "The key insight: short forms are not 'errors' or 'lazy speech' —
     they are a distinct grammatical form with specific expressive value.
     They make speech more vivid, poetic, emotionally charged."
-- section: "Які прикметники мають короткі форми? (Which adjectives have short forms?)"
+- section: "Які прикметники мають короткі форми?"
   words: 700
   points:
   - "Only якісні прикметники can form short versions. Відносні and
     присвійні cannot: *дерев'ян, *мамин (already possessive form).
-    Common short-form adjectives from Караман Grade 10 p.157:
+    Common short-form adjectives from Заболотний Grade 7 p.157:
     зелен, ясен, повен, дрібен, красній (= красний), білен, чорен."
   - "Functionally active short forms (used in modern standard Ukrainian):
     потрібен/потрібна/потрібне (needed — predicative: Мені потрібна допомога)
@@ -68,10 +68,10 @@ content_outline:
     emotionally heightened or predicative:
     Зелений луг (neutral description) vs Як ішли ми зелен лугом (poetic).
     Дрібний дощик (neutral) vs Шумить i гуде, дрібен дощик іде (folk song)."
-- section: "Короткі прикметники у фольклорі та літературі (In folklore and literature)"
+- section: "Короткі прикметники у фольклорі та літературі"
   words: 700
   points:
-  - "Folk songs from Караман Grade 10 p.157:
+  - "Folk songs from Заболотний Grade 7 p.157:
     'Як ішли ми зелен лугом к зелен гаю, солов'ї нам ткали пісню
     диво-дивну' (Б. Олійник).
     'I шумить, i гуде, дрібен дощик іде' (Нар. творчість).
@@ -85,7 +85,7 @@ content_outline:
   - "Comprehension exercise: read 5-6 folk song excerpts and literary
     passages. Identify all short-form adjectives, give their full forms,
     explain why the author chose the short form (rhythm, emotion, tradition)."
-- section: "Короткі форми у сучасній мові (Short forms in modern language)"
+- section: "Короткі форми у сучасній мові"
   words: 600
   points:
   - "Predicative short forms in everyday modern Ukrainian:
@@ -103,7 +103,7 @@ content_outline:
   - "Practice: complete 8-10 sentences using short-form adjectives
     in predicative position. Distinguish when short form is mandatory
     (потрібен) vs optional but stylistically preferred (певен vs певний)."
-- section: "Усічені прикметники — інше явище (Truncated adjectives — different phenomenon)"
+- section: "Усічені прикметники — інше явище"
   words: 350
   points:
   - "Усічені (truncated) adjectives are different from короткі:
@@ -113,7 +113,7 @@ content_outline:
     grammatical category. Do not confuse them."
   - "Practice: classify forms as короткі прикметники, повні прикметники,
     or усічені прикметники in literary excerpts."
-- section: "Підсумок та перехід до M61 (Summary and transition)"
+- section: "Підсумок та перехід до M61"
   words: 350
   points:
   - "Summary: короткі прикметники = тільки називний відмінок,
@@ -181,7 +181,7 @@ references:
 - title: "Литвінова Grade 6, p.191"
   notes: "Короткі форми прикметників: повний/повен, зелений/зелен,
     register restriction to folk songs and literature."
-- title: "Караман Grade 10, p.157"
+- title: "Заболотний Grade 7, p.157"
   notes: "§62 Повні i короткі форми прикметників: literary examples
     from Олійник, Леся Українка, народна творчість."
 - title: "Голуб Grade 6, p.127"

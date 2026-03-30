@@ -31,7 +31,7 @@ dialogue_situations:
   - Лікар
   motivation: 'III declension feminine: сіль, піч, подорож, тиша — zero ending nouns'
 content_outline:
-- section: "Що таке III відміна? (What is the 3rd declension?)"
+- section: "Що таке III відміна?"
   words: 550
   points:
   - "Definition from Литвінова Grade 6 p.144: 'III відміна — іменники
@@ -51,7 +51,7 @@ content_outline:
     — Journeys: подорож.
     From Авраменко Grade 6 p.102: sorting exercise with олень (II відміна,
     masculine!) vs осінь (III відміна, feminine)."
-- section: "Відмінювання III відміни в однині (Singular declension)"
+- section: "Відмінювання III відміни в однині"
   words: 700
   points:
   - "Full singular paradigm from Авраменко Grade 6 p.102:
@@ -73,7 +73,7 @@ content_outline:
     This connects directly to M08 (alternation-vowels): the same
     [о/е] → [і] pattern in закритий склад, reversed when the syllable
     opens: ніч [закритий] → но-чі [відкритий]."
-- section: "Подвоєння в орудному відмінку (Doubling in instrumental case)"
+- section: "Подвоєння в орудному відмінку"
   words: 700
   points:
   - "The signature feature of III відміна — подвоєння in орудний однини.
@@ -93,7 +93,7 @@ content_outline:
     мідь → міддю (подвоєння), тінь → тінню (подвоєння),
     кров → кров'ю (губний, апостроф), осінь → осінню (подвоєння),
     подорож → подорожжю (подвоєння), радість → радістю (cluster)."
-- section: "Відмінювання у множині (Plural declension)"
+- section: "Відмінювання у множині"
   words: 550
   points:
   - "Full plural paradigm from Авраменко Grade 6 p.102:
@@ -113,7 +113,7 @@ content_outline:
     матір'ю → на матері. Stem expands with -ер-/-ір-.
     From Заболотний Grade 6 p.109: full paradigm table for мати
     in both однина and множина."
-- section: "III відміна vs інші відміни (Distinguishing III відміна)"
+- section: "III відміна vs інші відміни"
   words: 500
   points:
   - "Trap 1 — masculine nouns that look like III відміна:
@@ -130,7 +130,7 @@ content_outline:
     3. Is it мати? → III відміна (special paradigm).
     4. Yes to both 1 and 2 → III відміна.
     Practice: classify піч, ніч, тінь, день, кість, гість, міць, путь."
-- section: "Словотворення іменників III відміни (Word formation)"
+- section: "Словотворення іменників III відміни"
   words: 600
   points:
   - "Productive suffix -ість/-ність for abstract nouns from adjectives:
@@ -146,7 +146,7 @@ content_outline:
   - "Reading practice passage in Ukrainian about autumn (осінь) featuring
     III відміна nouns: ніч, тінь, подорож, радість, мудрість. Learners
     identify the відмінок of each III відміна noun in the passage."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 400
   points:
   - "Key rules:

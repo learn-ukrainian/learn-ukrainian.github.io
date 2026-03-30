@@ -79,18 +79,18 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Choose the correct meaning of до in context (direction, time, purpose)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with до + correct Genitive noun form
-  items: 6
+  items: 8
 - type: match-up
   focus: Match до-phrases with their functions (direction, time limit, purpose)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort до-phrases by meaning category (direction vs. time vs. purpose)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §31
+- title: Заболотний Grade 5, §31
   notes: Прийменник до з родовим відмінком
 - title: 'ULP: 10 Uses of Genitive Case'
   url: https://www.ukrainianlessons.com/genitive-case/

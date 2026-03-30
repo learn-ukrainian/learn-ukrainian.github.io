@@ -29,10 +29,10 @@ dialogue_situations:
   motivation: 'Relative clauses: який/яка/яке, що, де, куди with дерево(n), квітка(f),
     місце(n)'
 content_outline:
-- section: "Означальні підрядні речення (Attributive subordinate clauses)"
+- section: "Означальні підрядні речення"
   words: 650
   points:
-  - "Definition from Заболотний Grade 9 p.84: означальна підрядна частина
+  - "Definition from Заболотний Grade 8 p.84: означальна підрядна частина
     характеризує іменник (або займенник) у головній частині і відповідає
     на питання який? яка? яке? які? чий?
     Місто, яке я відвідав, мене вразило.
@@ -45,7 +45,7 @@ content_outline:
     Книга, прочитана мною, лежить на столі. (participle phrase)
     = Книга, яку я прочитав, лежить на столі. (означальне речення)
     The clause is MORE NATURAL in spoken Ukrainian."
-- section: "Який у різних відмінках (Який in different cases)"
+- section: "Який у різних відмінках"
   words: 800
   points:
   - "The relative pronoun який declines like an adjective and must agree
@@ -65,7 +65,7 @@ content_outline:
     (людину is in Зн. because of знаю, яка is in Н. because it's the subject)"
   - "Practice: complete 12 sentences choosing correct form of який
     (right gender from antecedent, right case from clause function)."
-- section: "Інші сполучні слова в означальних (Other connectors)"
+- section: "Інші сполучні слова в означальних"
   words: 550
   points:
   - "Що as alternative to який (colloquial/neutral):
@@ -81,7 +81,7 @@ content_outline:
   - "Чий for possession:
     Людина, чию книгу я читаю... (= якої книгу я читаю)
     Practice: choose between який, що, де, куди, коли in 8 sentences."
-- section: "Пунктуація та позиція (Punctuation and position)"
+- section: "Пунктуація та позиція"
   words: 500
   points:
   - "Rule: означальна підрядна ALWAYS requires commas:
@@ -92,7 +92,7 @@ content_outline:
     Студент, який вивчає мову, яку я викладаю, отримав стипендію.
     (nested — який refers to студент, яку refers to мову)"
   - "Practice: punctuate 8 sentences with означальними реченнями."
-- section: "Практика: означальні у мовленні (Practice: relative clauses in speech)"
+- section: "Практика: означальні у мовленні"
   words: 600
   points:
   - "High-frequency speech patterns:
@@ -103,7 +103,7 @@ content_outline:
     означальні речення. Each must use який in a different відмінок."
   - "Comparison exercise: rewrite 5 означальних речень as
     дієприкметникові звороти (where possible) and note which is more natural."
-- section: "Підсумок та перехід до M69 (Summary and transition)"
+- section: "Підсумок та перехід до M69"
   words: 300
   points:
   - "Summary: означальні = який?/яка?/яке?/які? Який declines by
@@ -154,12 +154,12 @@ grammar:
 - "Comparison with дієприкметниковий зворот"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 9, p.84-94"
+- title: "Заболотний Grade 8, p.84-94"
   notes: "Означальні підрядні: definition, який declension,
     position relative to означуване слово."
 - title: "Ворон Grade 9, p.57-69"
   notes: "Означальні речення: що as alternative, де/куди/коли,
     nested означальні."
-- title: "Ворон Grade 11, p.176"
+- title: "Авраменко Grade 7, p.176"
   notes: "Підрядні означальне, з'ясувальне: review classification,
     dependency from specific words in the main clause."

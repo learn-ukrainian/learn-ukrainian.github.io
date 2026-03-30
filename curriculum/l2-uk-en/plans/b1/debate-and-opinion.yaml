@@ -28,7 +28,7 @@ dialogue_situations:
   - Учасники дебатів (за і проти)
   motivation: 'Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся'
 content_outline:
-- section: "Що таке аргументація? (What is argumentation?)"
+- section: "Що таке аргументація?"
   words: 600
   points:
   - "Definition from Авраменко Grade 8 p.8-9:
@@ -52,7 +52,7 @@ content_outline:
     не переходити на особистості, поважати іншу точку зору."
   - "Practice: learners read a short дискусійний текст and identify
     the thesis, arguments, and examples."
-- section: "Мовні засоби аргументації (Language tools for argumentation)"
+- section: "Мовні засоби аргументації"
   words: 700
   points:
   - "Складнопідрядні речення for reasoning (applying Phase 8):
@@ -77,7 +77,7 @@ content_outline:
     'Дозвольте не погодитися,' 'Навпаки, я вважаю...'
     Підсумок: 'Отже,...', 'Підсумовуючи,...', 'Таким чином,...'"
   - "Practice: learners complete a dialogue using формули для дискусії."
-- section: "Помилки в аргументації (Logical fallacies)"
+- section: "Помилки в аргументації"
   words: 550
   points:
   - "Common logical errors from Заболотний Grade 10 p.177:
@@ -96,7 +96,7 @@ content_outline:
   - "Ukrainian-specific note: in Ukrainian дискусія culture, quoting
     proverbs and folk wisdom is considered legitimate argumentation.
     'Як кажуть у народі,...' — this is not fallacy but cultural authority."
-- section: "Есе-міркування (Argumentative essay)"
+- section: "Есе-міркування"
   words: 650
   points:
   - "Essay structure from Заболотний Grade 10 p.97 and Авраменко Grade 8 p.28:
@@ -118,7 +118,7 @@ content_outline:
   - "Revision checklist: learners review their own essay for:
     чі є чітка теза? чи є аргументи? чи є висновок?
     чи правильно вжито вставні слова? чи є різні типи речень?"
-- section: "Дискусія на практиці (Discussion in practice)"
+- section: "Дискусія на практиці"
   words: 550
   points:
   - "Guided discussion format:
@@ -140,7 +140,7 @@ content_outline:
   - "Cultural note: Ukrainian дискусійна культура values прямота
     (directness) but also ввічливість (politeness). Balancing these
     is a skill — being honest without being rude."
-- section: "Підсумок: мистецтво переконання (Summary: the art of persuasion)"
+- section: "Підсумок: мистецтво переконання"
   words: 300
   points:
   - "Complete reference: argument structure, мовні засоби,
@@ -180,27 +180,27 @@ activity_hints:
 - type: quiz
   focus: "Identify теза, аргумент, приклад in text excerpts. Recognize
     logical fallacies. Choose correct формули дискусії."
-  items: 10
+  items: 12
 - type: fill-in
   focus: "Complete argumentative sentences with correct складнопідрядні
     сполучники (тому що, щоб, якщо, хоча) and вставні слова."
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match аргументація terms to definitions, формули дискусії to
     their functions (agreeing, disagreeing, summarizing)."
-  items: 8
+  items: 12
 - type: error-correction
   focus: "Identify and fix logical fallacies and argument structure errors
     in sample Ukrainian argumentative texts."
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write an есе-міркування (150-200 words) on a given topic:
     теза, 2-3 аргументи з прикладами, висновок."
-  items: 1
+  items: 12
 - type: role-play
   focus: "Conduct a structured дискусія in pairs: one defends a position,
     the other opposes. Use формули дискусії and вставні слова."
-  items: 4
+  items: 12
 connects_to:
 - "b1-085 (narrative-mastery — structured writing, different purpose)"
 - "b1-087 (society-and-media — argumentation about social topics)"

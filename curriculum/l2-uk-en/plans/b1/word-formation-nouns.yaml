@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Noun formation: -тель/-тельк-, -ник/-ниц-, -ар; place names: їдальня,
     пекарня'
 content_outline:
-- section: "Назви осіб за діяльністю (Agent nouns)"
+- section: "Назви осіб за діяльністю"
   words: 900
   points:
   - "Core suffixes for agent nouns from Заболотний Grade 6 p.57:
@@ -54,7 +54,7 @@ content_outline:
     -ин: киянин, львів'янин, селянин (with plural -и truncated: кияни)
     -ак/-як: поляк, словак
     Feminine: -ка: українка, полька; -иня: киянка (not *киянинка)"
-- section: "Творення назв місць і приміщень (Place nouns)"
+- section: "Творення назв місць і приміщень"
   words: 700
   points:
   - "Suffixes for назви приміщень:
@@ -71,7 +71,7 @@ content_outline:
     -ство: козацтво, студентство, людство (collective/abstract)
     -ота: краса → красота, висота, доброта
     Practice: form place and abstract nouns from 12 base words."
-- section: "Віддієслівні іменники (Nouns from verbs)"
+- section: "Віддієслівні іменники"
   words: 600
   points:
   - "Suffixes -ння/-ття from Литвінова Grade 6 p.83:
@@ -86,7 +86,7 @@ content_outline:
     -інн(я): кипіння, горіння (from verbs on -іти)
     -енн(я): здійснення, вивчення (from verbs on -ити with е)
     Practice: form verbal nouns from 10 verbs and determine the correct suffix."
-- section: "Словотвірний ланцюжок (Word formation chains)"
+- section: "Словотвірний ланцюжок"
   words: 500
   points:
   - "From Заболотний Grade 6 p.57: words form derivational chains:
@@ -98,7 +98,7 @@ content_outline:
   - "Practice: build derivational chains of 4-5 links from base words:
     море, писати, вчити, друг, місто.
     Then reverse: given a derived word, trace back to the base."
-- section: "Практика в контексті (Practice in context)"
+- section: "Практика в контексті"
   words: 600
   points:
   - "Reading passage: a newspaper article about a new community centre,
@@ -110,7 +110,7 @@ content_outline:
     А де працює викладач? В університеті.' Learners extend the pattern."
   - "Self-check: form agent nouns (m. and f.) for 8 activities,
     form place nouns for 6 locations, build 3 word formation chains."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 200
   points:
   - "Reference tables: agent noun suffixes (m. → f.), place noun suffixes,

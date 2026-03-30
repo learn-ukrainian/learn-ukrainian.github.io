@@ -92,18 +92,18 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete sentences with the correct dative form after dative-governing verbs
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose dative vs. accusative for the underlined noun/pronoun (допомагати мам_ vs. бачити мам_)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match подобатися sentences to their English equivalents (reversed subject mapping)
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether age expressions use correct dative forms and number agreement
-  items: 6
+  items: 8
 references:
-- title: "Заболотний Grade 10, §157"
+- title: "Заболотний Grade 5, §31"
   notes: "Dative case with verbs — indirect object function and parallel noun endings"
 - title: "ULP: How to Say Your Age in Ukrainian"
   url: "https://www.ukrainianlessons.com/age-in-ukrainian/"

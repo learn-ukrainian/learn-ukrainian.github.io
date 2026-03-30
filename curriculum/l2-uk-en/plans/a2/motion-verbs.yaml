@@ -98,27 +98,27 @@ vocabulary_hints:
   - рух (movement, motion)
   recommended:
   - чергування (alternation)
-  - однонапрямний (unidirectional)
-  - різнонапрямний (multidirectional)
+  - односпрямований (unidirectional)
+  - різноспрямований (multidirectional)
   - звідки (from where)
 activity_hints:
 - type: group-sort
   focus: Sort motion verb forms into unidirectional vs. multidirectional categories
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with the correct motion verb form based on whether
     the action is one-way/now or habitual/round-trip
-  items: 6
+  items: 8
 - type: quiz
   focus: Conjugate казати, пити, and боротися — choose the correct form for the
     given person and number
-  items: 6
+  items: 8
 - type: match-up
   focus: Match motion verbs with the correct preposition and case for direction
     (до + Gen., на + Acc., з + Gen.)
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §39-41
+- title: Заболотний Grade 6, §39-41
   notes: Дієвідміни дієслів, чергування приголосних при дієвідмінюванні
 - title: 'Ohoiko, Verbs of Motion with Prefixes (2024)'
   notes: Chart of іти/ходити, їхати/їздити, летіти/літати + prefix system

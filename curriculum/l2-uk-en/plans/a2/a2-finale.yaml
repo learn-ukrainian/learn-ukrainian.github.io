@@ -95,13 +95,13 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete dialogues in real-world Ukrainian city situations
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct grammar form in integrated context (mixed cases, aspect)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match situations to appropriate Ukrainian phrases and expressions
-  items: 6
+  items: 8
 references:
 - title: "ULP: Travelling in Ukraine"
   url: "https://www.ukrainianlessons.com/travel-ukraine/"

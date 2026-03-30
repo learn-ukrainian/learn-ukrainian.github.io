@@ -31,7 +31,7 @@ dialogue_situations:
   motivation: 'Comparative adjectives: більший, дорожчий, тихіший, ближчий, ширший,
     нижчий'
 content_outline:
-- section: "Що таке ступені порівняння? (What are degrees of comparison?)"
+- section: "Що таке ступені порівняння?"
   words: 500
   points:
   - "Introduction: learners already use basic adjectives from A1-A2.
@@ -47,7 +47,7 @@ content_outline:
     прикметники — those expressing qualities that can vary in degree.
     From Заболотний Grade 6 p.137: adjectives expressing absolute qualities
     (сліпий, лисий, босий, голий, живий, порожній) cannot."
-- section: "Проста форма вищого ступеня (Simple comparative)"
+- section: "Проста форма вищого ступеня"
   words: 900
   points:
   - "Formation rule from Литвінова Grade 6 p.198:
@@ -69,7 +69,7 @@ content_outline:
     Full paradigm with practice using declined forms in sentences."
   - "Reading practice: a dialogue comparing two cities, using простa форма
     extensively. Learners identify all comparatives and their base forms."
-- section: "Складена форма вищого ступеня (Compound comparative)"
+- section: "Складена форма вищого ступеня"
   words: 700
   points:
   - "Formation from Литвінова Grade 6 p.198:
@@ -77,7 +77,7 @@ content_outline:
     більш цікавий, менш складний, більш яскравий, менш відомий.
     The adjective after більш/менш declines normally;
     більш/менш itself is invariable."
-  - "When to use складена vs проста (Глазова Grade 11 p.18):
+  - "When to use складена vs проста (Заболотний Grade 8 p.18):
     Складена form is preferred in formal/scientific register,
     when the проста form sounds awkward (більш синій, not *синіший),
     and for emphasis/contrast. Проста form is default in conversation."
@@ -85,7 +85,7 @@ content_outline:
     Either сильніший OR більш сильний, never both.
     From Авраменко Grade 11 p.29: 'самий кращий' is a Russicism —
     correct: найкращий."
-- section: "Порівняльні конструкції (Comparison constructions)"
+- section: "Порівняльні конструкції"
   words: 550
   points:
   - "Three ways to express 'than' in Ukrainian:
@@ -99,7 +99,7 @@ content_outline:
     трохи/дещо/значно + comparative: трохи молодший, значно кращий."
   - "Practice passage: a product review comparing items at a market,
     using all three comparison constructions and various degree modifiers."
-- section: "Які прикметники не мають ступенів порівняння? (Exceptions)"
+- section: "Які прикметники не мають ступенів порівняння?"
   words: 500
   points:
   - "Full list of categories from Заболотний Grade 6 p.137 and
@@ -114,7 +114,7 @@ content_outline:
     In advertising and informal speech, relative adjectives sometimes
     form humorous comparatives: 'найкрабовіші палички.'
     This is a deliberate stylistic device, not standard grammar."
-- section: "Підсумок і практика (Summary and practice)"
+- section: "Підсумок і практика"
   words: 350
   points:
   - "Summary table: проста (-іш-/-ш-) vs складена (більш/менш),
@@ -183,7 +183,7 @@ references:
 - title: "Заболотний Grade 6, p.137"
   notes: "Найвищий ступінь definition, full list of adjectives without
     degrees of comparison."
-- title: "Глазова Grade 11, p.18-21"
+- title: "Заболотний Grade 8, p.18-21"
   notes: "Complete formation table for both degrees, synonymic constructions
     (дуже, вельми, занадто as alternatives to formal comparison)."
 - title: "Авраменко Grade 11, p.29"

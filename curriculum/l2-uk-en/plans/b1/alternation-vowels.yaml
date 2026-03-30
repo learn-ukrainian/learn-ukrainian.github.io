@@ -31,7 +31,7 @@ dialogue_situations:
   - Студенти
   motivation: 'Vowel alternation о/е→і: кінь→коня, село→селі, стіл→столі'
 content_outline:
-- section: "Що таке чергування голосних? (What is vowel alternation?)"
+- section: "Що таке чергування голосних?"
   words: 550
   points:
   - "Bridge from M01 (metalanguage-phonetics): learners already know
@@ -52,7 +52,7 @@ content_outline:
     2. [о], [е] чергуються з нулем звука (fleeting vowels)
     3. [о] чергується з [е] after шиплячі та [й]
     Each type has its own logic; this section previews all three."
-- section: "Чергування [о], [е] з [i] (The [o]/[e] to [i] alternation)"
+- section: "Чергування [о], [е] з [i]"
   words: 900
   points:
   - "The core rule from Заболотний Grade 5 p.113-114:
@@ -78,7 +78,7 @@ content_outline:
     alternation in natural context (e.g., describing a Ukrainian village:
     двір, стіл, піч, вікна, ріг, etc.). Learners identify all
     alternating pairs in the text."
-- section: "Чергування [о], [е] з нулем звука (Fleeting vowels)"
+- section: "Чергування [о], [е] з нулем звука"
   words: 650
   points:
   - "Definition from Заболотний Grade 5 p.114:
@@ -101,7 +101,7 @@ content_outline:
 - section: "Чергування [о] з [е] після шиплячих та [й]"
   words: 550
   points:
-  - "Rule from Караман Grade 10 p.56:
+  - "Rule from Заболотний Grade 7 p.56:
     After [ж], [ч], [ш], [дж], [й]:
     — write е before м'який приголосний or before syllables with [е], [и]:
     вечеря, вишень, джерело, женити.
@@ -109,7 +109,7 @@ content_outline:
     бджола, будиночок, пшоно, знайомий."
   - "Exceptions to memorize: чепурний, шепіт, жебоніти, щедрий,
     черствий, чекати (е despite the rule), and чоло, бджола (о despite
-    the rule). These are listed explicitly in Караман Grade 10 p.56."
+    the rule). These are listed explicitly in Заболотний Grade 7 p.56."
   - "Practice: learners apply the rule to fill in missing letters
     in words after шиплячі. Contrast with Russian where this distinction
     does not exist — Ukrainian learners must develop sensitivity to
@@ -148,7 +148,7 @@ content_outline:
     осінь).'"
   - "Summary table: all three alternation types with examples,
     triggers, and exceptions — a reference card learners can use."
-- section: "Підсумок: правила i практика (Summary and practice)"
+- section: "Підсумок: правила i практика"
   words: 300
   points:
   - "Complete alternation summary with decision flowchart:
@@ -240,6 +240,6 @@ references:
 - title: "Глазова Grade 10, p.103"
   notes: "Mature presentation: [о],[е]~[i] as a defining feature of
     Ukrainian, systematic examples шко-ла — шкіл, дво-ри — двір."
-- title: "Караман Grade 10, p.55-56"
+- title: "Заболотний Grade 7, p.55-56"
   notes: "Чергування [о] з [е] після шиплячих: rule formulation,
     exceptions, practice exercises."

@@ -29,7 +29,7 @@ dialogue_situations:
   - Наталя
   motivation: 'Real conditionals: якщо + future with Говерла(f), колиба(f), Карпати(pl)'
 content_outline:
-- section: "Що таке спосіб дієслова? (What is verb mood?)"
+- section: "Що таке спосіб дієслова?"
   words: 550
   points:
   - "Review from Литвінова Grade 7 p.36 — three-way system:
@@ -47,7 +47,7 @@ content_outline:
     exclusively. Now they add a new dimension — the ability to express
     conditions, wishes, and uncertainty. This is a major communicative
     upgrade."
-- section: "Утворення умовного способу (Formation of the conditional mood)"
+- section: "Утворення умовного способу"
   words: 700
   points:
   - "Formation rule from Литвінова Grade 7 p.61, Заболотний Grade 7 p.72:
@@ -70,13 +70,13 @@ content_outline:
     ми читали б, ви читали б, вони читали б.
     Note: умовний спосіб preserves рід and число from минулий час
     but has NO часові форми of its own."
-- section: "Реальна умова з якщо (Real conditions with якщо)"
+- section: "Реальна умова з якщо"
   words: 700
   points:
   - "Structure of real conditional sentences:
     Якщо + дійсний спосіб (present/future), (то) + дійсний спосіб (future).
     Якщо пошукаєш у книгах мудрості, то знайдеш велику користь
-    для душі своєї (Нестор) — from Заболотний Grade 9 p.114.
+    для душі своєї (Нестор) — from Заболотний Grade 8 p.114.
     The condition is REAL — it can actually happen."
   - "Сполучник якщо and its variants:
     якщо, коли (in conditional meaning), як (colloquial).
@@ -95,7 +95,7 @@ content_outline:
     Якщо не заперечуєш, я... (polite suggestion)
     Якщо все буде гаразд, ми... (future plans)
     Якщо матиму нагоду, обов'язково... (expressing intention)"
-- section: "Умовний спосіб для ввічливості (Conditional for politeness)"
+- section: "Умовний спосіб для ввічливості"
   words: 600
   points:
   - "Polite requests using умовний спосіб:
@@ -114,7 +114,7 @@ content_outline:
     На вашому місці я б подзвонив/подзвонила заздалегідь.
     Варто було б перевірити.
     Я б порадив/порадила вам..."
-- section: "Практика: якщо-речення у спілкуванні (Practice: якщо-sentences in communication)"
+- section: "Практика: якщо-речення у спілкуванні"
   words: 700
   points:
   - "Dialogue 1 — planning a trip:
@@ -134,7 +134,7 @@ content_outline:
   - "Production exercise: learners write 5-6 sentences about their
     own plans using якщо: Якщо вивчу цей розділ, зможу читати
     українські книжки. Якщо поїду до Києва, відвідаю Лавру."
-- section: "Типові помилки (Common errors)"
+- section: "Типові помилки"
   words: 400
   points:
   - "Error 1: Using present tense instead of умовний for wishes.
@@ -146,7 +146,7 @@ content_outline:
     Correct: Якщо я зроблю це вчасно... (real condition → дійсний спосіб).
     Rule: якщо + дійсний спосіб = real condition.
     якби + умовний спосіб = unreal condition (next module)."
-- section: "Підсумок та перехід до M19 (Summary and transition)"
+- section: "Підсумок та перехід до M19"
   words: 350
   points:
   - "Summary: три способи дієслова, утворення умовного способу
@@ -227,9 +227,9 @@ references:
 - title: "Авраменко Grade 7, p.77, 83"
   notes: "Умовний and наказовий have no часові форми; частка б/би spelling
     rules and placement examples including literary quotes."
-- title: "Заболотний Grade 9, p.114"
+- title: "Заболотний Grade 8, p.114"
   notes: "Складнопідрядне речення умови: сполучники якщо, коли, як, якби, аби;
     співвідносне слово то in main clause."
-- title: "Караман Grade 10, p.185"
+- title: "Заболотний Grade 7, p.185"
   notes: "Способи дієслів: дійсний = реальна дія, умовний = можлива за умов,
     наказовий = наказ/прохання."

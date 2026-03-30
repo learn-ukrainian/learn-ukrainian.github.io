@@ -83,16 +83,16 @@ activity_hints:
 - type: fill-in
   focus: Mixed drill — complete sentences requiring aspect choice, motion verb
     selection, and imperative formation across all M35-40 topics
-  items: 6
+  items: 8
 - type: quiz
   focus: Error correction — identify and fix verb errors (wrong aspect, motion
     type, imperative form, or future formation)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort verb forms into categories — imperfective past, perfective past,
     synthetic future, analytical future, imperative
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §39-51
+- title: Заболотний Grade 6, §45-55
   notes: Comprehensive verb chapter covering aspect, tenses, motion, and
     imperative mood

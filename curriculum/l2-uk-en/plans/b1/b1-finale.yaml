@@ -33,7 +33,7 @@ dialogue_situations:
   motivation: 'Full B1 capstone: every grammar structure in an emotional personal
     speech'
 content_outline:
-- section: "Підсумковий проєкт: вступ (Capstone project: introduction)"
+- section: "Підсумковий проєкт: вступ"
   words: 400
   points:
   - "The B1 Фінал is a capstone project combining all skills learned:
@@ -49,7 +49,7 @@ content_outline:
   - "Timeline: планування (1 session), чернетка (1 session),
     редагування (1 session), презентація (1 session).
     Quality matters more than speed."
-- section: "Розгорнуте есе (Extended essay)"
+- section: "Розгорнуте есе"
   words: 800
   points:
   - "Essay requirements — demonstrating B1 range:
@@ -74,7 +74,7 @@ content_outline:
     Target: 35+/50 = strong B1. Below 25 = review needed."
   - "Model essay annotations: a model essay (300 words) with highlighted
     grammar features. Learners compare their essay to the model."
-- section: "Усна презентація (Oral presentation)"
+- section: "Усна презентація"
   words: 700
   points:
   - "Presentation requirements — demonstrating B1 speaking range:
@@ -99,7 +99,7 @@ content_outline:
     Чи говорив/говорила я зв'язно?
     Чи правильний наголос у ключових словах?
     Чи реагував/реагувала я на запитання?"
-- section: "Рефлексія: мій B1 шлях (Reflection: my B1 journey)"
+- section: "Рефлексія: мій B1 шлях"
   words: 600
   points:
   - "Learning reflection in Ukrainian (150-200 words):
@@ -126,7 +126,7 @@ content_outline:
     1. Граматична ціль (what grammar to master).
     2. Лексична ціль (what vocabulary to expand).
     3. Комунікативна ціль (what situations to handle)."
-- section: "Вітання та сертифікація (Congratulations and certification)"
+- section: "Вітання та сертифікація"
   words: 400
   points:
   - "Congratulations text in Ukrainian:
@@ -172,15 +172,15 @@ activity_hints:
 - type: free-write
   focus: "Write the extended essay (300+ words) on chosen topic,
     demonstrating full B1 grammatical range."
-  items: 1
+  items: 6
 - type: role-play
   focus: "Deliver oral presentation (3-5 minutes) on chosen topic.
     Self-record and evaluate."
-  items: 1
+  items: 6
 - type: free-write
   focus: "Write personal reflection (150-200 words) on B1 journey:
     achievements, challenges, goals for B2."
-  items: 1
+  items: 6
 - type: quiz
   focus: "Final self-assessment quiz covering all B1 grammar areas:
     identify own confidence level per topic."

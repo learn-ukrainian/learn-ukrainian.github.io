@@ -99,15 +99,15 @@ activity_hints:
 - type: fill-in
   focus: Complete a description of a home with the correct case forms for room
     and furniture nouns
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct case form in daily routine sentences (time expressions,
     prepositions, verbs)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match daily activities with the correct time of day and appropriate case
     construction
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §§25-28
   notes: Describing places and daily activities — case usage in context

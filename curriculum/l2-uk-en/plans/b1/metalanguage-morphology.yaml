@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Morphology terms: корінь, префікс, суфікс, закінчення — word structure
     analysis'
 content_outline:
-- section: "Що вивчає морфологія? (What does morphology study?)"
+- section: "Що вивчає морфологія?"
   words: 550
   points:
   - "Bridge introduction: learners already USE Ukrainian word forms from A1-A2.
@@ -47,7 +47,7 @@ content_outline:
     word formation, and case nuances all use morphological terminology.
     A Ukrainian grammar explanation like 'у суфіксі -ськ- відбувається
     чергування' is incomprehensible without knowing what суфікс means."
-- section: "Основа і закінчення (Stem and ending)"
+- section: "Основа і закінчення"
   words: 650
   points:
   - "From Авраменко Grade 5 p.58:
@@ -70,7 +70,7 @@ content_outline:
   - "Practice: learners identify основа and закінчення in word sets,
     distinguishing звукове from нульове закінчення.
     Example words: вулиця/вулиць, перехід/перейду, Київ/Києва."
-- section: "Корінь і спільнокореневі слова (Root and cognate words)"
+- section: "Корінь і спільнокореневі слова"
   words: 600
   points:
   - "From Авраменко Grade 5 p.60:
@@ -90,7 +90,7 @@ content_outline:
     These are still спільнокореневі despite the sound change."
   - "Reading practice: a short passage where learners circle
     спільнокореневі groups and mark корені in each word."
-- section: "Префікс і суфікс (Prefix and suffix)"
+- section: "Префікс і суфікс"
   words: 650
   points:
   - "From Авраменко Grade 5 p.62:
@@ -115,7 +115,7 @@ content_outline:
     пре-за-довгий (two prefixes), висот-ин-а (two suffixes).
     Розбір слова за будовою — breaking a word into all its морфеми:
     пере-хід-н-ий = префікс + корінь + суфікс + закінчення."
-- section: "Самостійні частини мови (Content words)"
+- section: "Самостійні частини мови"
   words: 650
   points:
   - "From Авраменко Grade 5 p.144 and Заболотний Grade 5 p.245:
@@ -139,7 +139,7 @@ content_outline:
     іменник книга vs прикметник книжковий — same root, different part of speech.
     дієслово зеленіти vs прислівник зелено vs іменник зелень —
     suffix determines the part of speech."
-- section: "Службові частини мови (Function words)"
+- section: "Службові частини мови"
   words: 500
   points:
   - "From Заболотний Grade 5 p.245:
@@ -158,7 +158,7 @@ content_outline:
     вигук is neither самостійна nor службова — it stands apart.
     Some textbooks list it separately; others group it with службові.
     At B1 level, the key is recognizing it exists as a category."
-- section: "Підсумок: ваш морфологічний словник (Summary: your morphology vocabulary)"
+- section: "Підсумок: ваш морфологічний словник"
   words: 400
   points:
   - "Complete metalanguage glossary — all terms from this module collected:

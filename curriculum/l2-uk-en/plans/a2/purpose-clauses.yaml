@@ -84,19 +84,19 @@ activity_hints:
 - type: fill-in
   focus: Complete purpose clauses with the correct form after щоб (infinitive vs.
     past tense form depending on subject)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose тому що or щоб to complete sentences — distinguish cause from purpose
-  items: 6
+  items: 8
 - type: match-up
   focus: Transform direct speech into reported speech — match the original quote to
     its indirect version
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 9, §21
+- title: Заболотний Grade 5, §28
   notes: Складнопідрядні речення з підрядними частинами мети, умови, допусту — with
     examples from Ukrainian literature
-- title: Авраменко Grade 9, §24
+- title: Заболотний Grade 6
   notes: Purpose clauses with щоб — examples and exercises
 - title: 'ULP: How to Say "In Order To" in Ukrainian'
   url: https://www.ukrainianlessons.com/щоб/

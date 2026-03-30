@@ -32,7 +32,7 @@ dialogue_situations:
   motivation: 'Formal register: шановний, прошу, у зв''язку з, з повагою — official
     documents'
 content_outline:
-- section: "Що таке офіційно-діловий стиль? (What is the official-business style?)"
+- section: "Що таке офіційно-діловий стиль?"
   words: 600
   points:
   - "Definition grounded in Заболотний Grade 8 p.260:
@@ -56,7 +56,7 @@ content_outline:
     public life. Government, military (ЗСУ), education, and civil society
     all operate through formal documents. Competence in this register is
     essential for integration into Ukrainian-speaking professional environments."
-- section: "Лексика офіційно-ділового стилю (Vocabulary of the official style)"
+- section: "Лексика офіційно-ділового стилю"
   words: 650
   points:
   - "Characteristic vocabulary categories:
@@ -78,7 +78,7 @@ content_outline:
   - "Reading practice: an authentic-style Ukrainian заява with analysis
     of all style markers. Learners annotate the text, identifying
     канцеляризми, штампи, and стандартні формулювання."
-- section: "Ділові папери: заява та автобіографія (Business documents: application and autobiography)"
+- section: "Ділові папери: заява та автобіографія"
   words: 700
   points:
   - "Заява — structure and formatting from Заболотний Grade 6 p.230:
@@ -98,7 +98,7 @@ content_outline:
     Practice: compose an оголошення for a school event or community gathering."
   - "Common formatting rules: дата (число, місяць, рік), підпис placement,
     відступи (indentation), use of великі літери for посади та назви."
-- section: "Усний діалог в офіційно-діловому стилі (Oral dialogue in the official style)"
+- section: "Усний діалог в офіційно-діловому стилі"
   words: 650
   points:
   - "Formal telephone conversation from Авраменко Grade 8 p.80:
@@ -119,7 +119,7 @@ content_outline:
     Example: 'Скажіть, будь ласка, коли прийом?' (розмовний) vs
     'Перепрошую, чи не могли б ви повідомити про години прийому?'
     (офіційно-діловий)."
-- section: "Писемне повідомлення та ділове листування (Written communication and business correspondence)"
+- section: "Писемне повідомлення та ділове листування"
   words: 700
   points:
   - "Повідомлення — written message in official style from Авраменко
@@ -137,7 +137,7 @@ content_outline:
   - "Контрольний текст: a formal Ukrainian document (витяг з протоколу
     or наказ) for comprehensive analysis — learners identify all
     характерні ознаки офіційно-ділового стилю."
-- section: "Підсумок: офіційна мова в житті (Summary: formal language in life)"
+- section: "Підсумок: офіційна мова в житті"
   words: 350
   points:
   - "Complete vocabulary reference — key terms organized by function:
@@ -199,11 +199,11 @@ activity_hints:
 - type: free-write
   focus: "Write a formal заява or діловий лист requesting information,
     following all офіційно-діловий стиль conventions."
-  items: 1
+  items: 6
 - type: role-play
   focus: "Conduct a formal telephone dialogue with an institution
     (making an appointment, requesting information)."
-  items: 4
+  items: 6
 connects_to:
 - "b1-078 (Розмовний стиль — contrasting register, informal communication)"
 - "b1-079 (Абревіатури та скорочення — abbreviations common in official texts)"

@@ -78,15 +78,15 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Mixed Instrumental case quiz covering all functions from M21-M26
-  items: 6
+  items: 8
 - type: fill-in
   focus: Sentence transformation — put noun phrases into Instrumental with correct
     agreement
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort Instrumental sentences by function (tool, companion, profession,
     spatial, temporal)
-  items: 6
+  items: 8
 references:
 - title: Захарійчук Grade 4, с. 62-69
   notes: Full Instrumental case unit — endings, prepositions, exercises for all genders

@@ -106,16 +106,16 @@ vocabulary_hints:
 activity_hints:
 - type: match-up
   focus: Match synonyms and antonyms in pairs
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify the literary device (epithet, metaphor, ellipsis, repetition)
-  items: 6
+  items: 8
 - type: fill-in
   focus: Form diminutives from base words using correct suffixes
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort examples into syntactic stylistic categories (еліпсис vs повтор)
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, Лексикологія
   notes: Synonyms, antonyms, and enriching vocabulary

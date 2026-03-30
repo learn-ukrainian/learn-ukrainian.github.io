@@ -28,7 +28,7 @@ dialogue_situations:
   motivation: 'Verb formation: біліти (-іти), кричати (-ати), зимувати (-увати) from
     nouns/adjectives'
 content_outline:
-- section: Способи творення дієслів (Ways of forming verbs)
+- section: Способи творення дієслів
   words: 700
   points:
   - 'Overview from Ворон Grade 9 p.174, Литвінова Grade 6 p.80: Три основні способи словотворення для дієслів: 1. Префіксальний:
@@ -40,7 +40,7 @@ content_outline:
   - 'Connection to aspect (вид): adding a prefix to an imperfective verb often creates a perfective: писати (impf) → написати
     (pf). But adding a prefix can also change the lexical meaning: писати → переписати (to rewrite) — different action, not
     just aspect.'
-- section: 'Префікси: системний огляд (Prefixes: systematic overview)'
+- section: 'Префікси: системний огляд'
   words: 850
   points:
   - 'Group 1 — Spatial prefixes (largely covered in M29-33 for motion verbs, reviewed here for ALL verbs): в-/у- (into): вписати
@@ -56,7 +56,7 @@ content_outline:
     обговорити (to discuss), обдумати (to think over)'
   - 'Practice: given a root verb, generate 4-5 prefixed forms and explain the meaning shift. Example: бити → вибити, забити,
     добити, перебити, розбити. Learners see the system: prefix = predictable meaning modification.'
-- section: Суфіксальне творення дієслів (Suffix-based verb formation)
+- section: Суфіксальне творення дієслів
   words: 700
   points:
   - 'From adjectives with -ити/-іти: білий → білити (to whiten/whitewash), синій → синіти (to turn blue), червоний → червоніти
@@ -68,10 +68,10 @@ content_outline:
   - 'Suffix -нути for single instantaneous action: штовхати (impf, repeated pushing) → штовхнути (pf, one push), стукати →
     стукнути, кричати → крикнути, свистіти → свиснути. This suffix is aspectually significant: it always creates доконаний
     вид with the meaning of a single brief action.'
-  - 'From Караман Grade 10 p.179: дієвідміна clues from infinitive suffixes. I дієвідміна: infinitive stems with -а-, -i-
+  - 'From Заболотний Grade 7 p.179: дієвідміна clues from infinitive suffixes. I дієвідміна: infinitive stems with -а-, -i-
     (non-dropping), -ува-, -ну-. II дієвідміна: stems with -и-, -i- (dropping in conjugation). This helps learners predict
     conjugation from the infinitive suffix.'
-- section: Префіксально-суфіксальний спосіб (Prefix-suffix combination)
+- section: Префіксально-суфіксальний спосіб
   words: 650
   points:
   - 'Simultaneous addition of prefix AND suffix: земля → за-земл-ити (to ground/earth), зброя → о-зброї-ти (to arm), зброя
@@ -82,7 +82,7 @@ content_outline:
     pattern for removal/negation.'
   - 'Practice: identify the formation method for given verbs. спекти (prefix з- + пекти → с-пекти = prefixal) заземлити (за-
     + земл- + -ити = prefix-suffix) будувати (буд- + -увати = suffixal) Learners classify 8-10 verbs.'
-- section: Розкладання незнайомих дієслів (Decomposing unfamiliar verbs)
+- section: Розкладання незнайомих дієслів
   words: 700
   points:
   - 'Strategy: when encountering an unknown verb, decompose it: перевстановити = пере- (re-) + в- (in) + становити (to place)
@@ -93,7 +93,7 @@ content_outline:
   - 'Reading passage: a short text with several prefixed verbs. Learners decompose each one, explain the prefix meaning, and
     determine the aspect (most prefixed verbs are доконаний). Then they form the imperfective pair where it exists: переписати
     → переписувати, розповісти → розповідати.'
-- section: Підсумок та перехід до M25 (Summary and transition)
+- section: Підсумок та перехід до M25
   words: 450
   points:
   - 'Summary: три способи творення дієслів, системний огляд префіксів (просторові, результативні, модифікаційні), суфікси
@@ -167,5 +167,5 @@ references:
   notes: '§15 Основні способи словотворення: prefix, suffix, prefix-suffix. Безафіксний спосіб: пошук ← пошукати.'
 - title: Заболотний Grade 6, p.57-58
   notes: Способи словотворення with exercises; словотвірний ланцюжок; identifying formation method for given words.
-- title: Караман Grade 10, p.179
+- title: Заболотний Grade 7, p.179
   notes: 'Дієвідміна determination from infinitive suffixes: -а-, -ува-, -ну- (I дієвідміна) vs -и- (II дієвідміна).'

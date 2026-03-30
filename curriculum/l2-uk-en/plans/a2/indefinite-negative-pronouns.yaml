@@ -99,16 +99,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Choose the correct indefinite or negative pronoun for the context
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete sentences with the appropriate -сь, -небудь, де-, будь-, or ні- form
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort pronouns by series (-сь, -небудь, де-, будь-, ні-)
-  items: 6
+  items: 8
 - type: true-false
   focus: Identify correct double negation usage in sentences
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, Неозначені та заперечні займенники
   notes: Formation patterns with де-, будь-, аби-, ні- and their declension

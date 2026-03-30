@@ -27,7 +27,7 @@ dialogue_situations:
   - Дружина
   motivation: 'Motion verb pairs: іти/ходити, їхати/їздити, бігти/бігати'
 content_outline:
-- section: 'Світ руху: чому дієслова руху — особлива група? (The world of motion: why motion verbs are special)'
+- section: 'Світ руху: чому дієслова руху — особлива група?'
   words: 500
   points:
   - 'Introduction: Ukrainian has a rich system of paired motion verbs that does not exist in English. Where English uses ''go''
@@ -37,7 +37,7 @@ content_outline:
     meanings. But before prefixes, learners must master the unprefixed base pairs.'
   - 'Reading passage: a day in the life of a Kyivite — using 6+ different motion verbs in natural context. Learners identify
     which verbs describe one-time journeys vs habitual actions.'
-- section: 'Односпрямовані дієслова: іти, їхати, бігти (Unidirectional verbs)'
+- section: 'Односпрямовані дієслова: іти, їхати, бігти'
   words: 800
   points:
   - 'Iти — going on foot, one direction, right now or specific occasion: Я іду до школи (I am walking to school right now).
@@ -51,7 +51,7 @@ content_outline:
     бігла, бігло, бігли.'
   - 'Key pattern: односпрямовані verbs describe motion happening RIGHT NOW in ONE direction, or a specific single journey.
     They answer: ''Where are you going right now?'' — Куди ти зараз ідеш?'
-- section: 'Різноспрямовані дієслова: ходити, їздити, бігати (Multidirectional verbs)'
+- section: 'Різноспрямовані дієслова: ходити, їздити, бігати'
   words: 800
   points:
   - 'Ходити — going on foot, habitual/round-trip/multiple directions: Я ходжу до школи щодня (I go to school every day — habitual).
@@ -66,7 +66,7 @@ content_outline:
     бігаєте, бігають.'
   - 'Key pattern: різноспрямовані verbs describe repeated, habitual, round-trip, or multidirectional motion. They answer:
     ''Do you regularly go there?'' — Ти часто туди ходиш?'
-- section: 'Повний набір: нести/носити, вести/водити, везти/возити (Complete set: carrying, leading, transporting)'
+- section: 'Повний набір: нести/носити, вести/водити, везти/возити'
   words: 700
   points:
   - 'Нести (one-way) vs носити (habitual) — carrying on foot: Він несе валізу до вокзалу (He is carrying a suitcase to the
@@ -78,7 +78,7 @@ content_outline:
   - 'Везти (one-way) vs возити (habitual) — transporting by vehicle: Таксі везе нас до аеропорту (The taxi is taking us to
     the airport). Він возить товари по всій країні (He transports goods across the country). Везти: везу, везеш, везе, веземо,
     везете, везуть. Возити: вожу, возиш, возить, возимо, возите, возять.'
-- section: Прийменники з дієсловами руху (Prepositions with motion verbs)
+- section: Прийменники з дієсловами руху
   words: 600
   points:
   - 'Direction TO: іти/їхати до + Р.в. (Iду до школи), в/у + Зн.в. (Їду в місто), на + Зн.в. (Біжу на стадіон). Choice: до
@@ -89,7 +89,7 @@ content_outline:
     TO/FROM. під столом (location, Ор.в.) → під стіл (direction, Зн.в.). за будинком (location, Ор.в.) → за будинок (direction,
     Зн.в.).'
   - 8-10 practice sentences combining motion verbs with prepositions in realistic scenarios (commuting, traveling, daily errands).
-- section: 'Практика: односпрямований чи різноспрямований? (Practice: unidirectional or multidirectional?)'
+- section: 'Практика: односпрямований чи різноспрямований?'
   words: 350
   points:
   - 'Decision tree for choosing the correct verb: Is the motion happening right now, in one direction? → Односпрямований.
@@ -97,7 +97,7 @@ content_outline:
   - 'Common mistakes to avoid: *Я ходжу до школи зараз (wrong — if you are on your way RIGHT NOW, use іду). Я ходжу до школи
     щодня (correct — habitual). *Вчора ми їхали до Львова i залишилися там (wrong — if you stayed, you went one way, use поїхали;
     їздили implies return).'
-- section: 'Підсумок: система дієслів руху (Summary: motion verb system)'
+- section: 'Підсумок: система дієслів руху'
   words: 250
   points:
   - 'Complete table of 8 base pairs: односпрямовані: іти, їхати, бігти, нести, вести, везти, летіти, пливти. різноспрямовані:
@@ -147,7 +147,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: Describe your typical day's movements using at least 4 different motion verb pairs
-  items: 1
+  items: 6
 connects_to:
 - b1-027 (prepositions-spatial-review — spatial prepositions that combine with motion verbs)
 - b1-029 (motion-prefixes-arrival — adding при-, до- to these base verbs)
@@ -167,7 +167,7 @@ references:
   notes: Prefix diagram with бігти — all prefixes radiating from base verb. Foundation for prefix modules.
 - title: Вашуленко Grade 2, p.80
   notes: Iде катер, іде поїзд, іде зима, іде час — early motion verb polysemy.
-- title: Караман Grade 10, p.188
+- title: Заболотний Grade 7, p.188
   notes: 'Russicism alert: відправлятися vs відбувати/виїжджати — decolonized motion vocabulary.'
 - title: Авраменко Grade 7, p.74
   notes: 'Дієвідміна determination for motion verbs: літаєш (I) vs полетять (II).'

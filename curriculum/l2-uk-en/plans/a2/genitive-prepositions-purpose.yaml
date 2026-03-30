@@ -80,18 +80,18 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Complete location descriptions with біля/навпроти/коло + correct Genitive form
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose для, без, or біля to complete everyday sentences
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Ukrainian prepositional phrases to their English equivalents
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether preposition + noun form combinations are grammatically correct
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 7, §31
+- title: Заболотний Grade 5, §31
   notes: Прийменники з родовим відмінком — для, без, біля
 - title: 'ULP: Ukrainian prepositions'
   url: https://www.ukrainianlessons.com/prepositions/

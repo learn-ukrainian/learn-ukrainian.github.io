@@ -85,16 +85,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Put the noun in brackets into the dative case (e.g., подарувати [брат] → братові)
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort dative nouns by gender (masculine -ові/-у, feminine -і, neuter -у/-ю)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct dative ending for nouns with consonant alternation (подруга→подрузі vs. *подругі)
-  items: 6
+  items: 8
 - type: match-up
   focus: Match verb + dative noun phrases to their English meanings
-  items: 6
+  items: 8
 references:
 - title: "Заболотний Grade 10, §157"
   notes: "Dative endings for II declension masculine nouns with parallel -ові/-еві/-єві and -у/-ю, style rule for alternating"

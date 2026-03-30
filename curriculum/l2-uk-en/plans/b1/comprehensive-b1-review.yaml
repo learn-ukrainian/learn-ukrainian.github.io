@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Full B1 review: all grammar structures in a coherent autobiographical
     presentation'
 content_outline:
-- section: "Фонетика та морфологія (Phonetics and morphology — Phases 1-2)"
+- section: "Фонетика та морфологія"
   words: 600
   points:
   - "Quick review of metalanguage: звук/літера, голосний/приголосний,
@@ -50,7 +50,7 @@ content_outline:
     Practice: decline іменники from each subclass."
   - "Diagnostic: learners complete exercises covering all Phase 1-2 topics,
     rating their confidence per area."
-- section: "Дієслова та рух (Verbs and motion — Phases 3-4)"
+- section: "Дієслова та рух"
   words: 650
   points:
   - "Умовний та наказовий способи (Phase 3):
@@ -69,7 +69,7 @@ content_outline:
     Practice: form verbal nouns and identify prefix meanings."
   - "Diagnostic: learners produce verb forms in conditional, imperative,
     reflexive, and motion contexts."
-- section: "Порівняння та словотвір (Comparison and word formation — Phase 5)"
+- section: "Порівняння та словотвір"
   words: 550
   points:
   - "Ступені порівняння прикметників:
@@ -82,7 +82,7 @@ content_outline:
     Назви осіб: співак, читальня.
     Practice: form adjectives and nouns from given base words."
   - "Diagnostic: comparison exercises and word formation tasks."
-- section: "Відмінки, числівники, займенники (Cases, numerals, pronouns — Phase 6)"
+- section: "Відмінки, числівники, займенники"
   words: 650
   points:
   - "Нюанси відмінків:
@@ -98,7 +98,7 @@ content_outline:
     Займенники: питально-відносні, зворотний (себе), неозначені.
     Practice: decline числівники, use advanced pronouns."
   - "Diagnostic: mixed case/numeral/pronoun exercises."
-- section: "Дієприкметники, синтаксис, стилі (Participles, syntax, register — Phases 7-9)"
+- section: "Дієприкметники, синтаксис, стилі"
   words: 650
   points:
   - "Дієприкметники та дієприслівники (Phase 7):
@@ -116,7 +116,7 @@ content_outline:
     Practice: register identification and transformation."
   - "Diagnostic: integrated exercises combining syntax, register, and
     grammar from Phases 7-9."
-- section: "Iнтегроване завдання та самодіагностика (Integrated task and self-diagnosis)"
+- section: "Iнтегроване завдання та самодіагностика"
   words: 500
   points:
   - "Comprehensive text analysis: a Ukrainian text (250-300 words)
@@ -167,7 +167,7 @@ activity_hints:
 - type: free-write
   focus: "Write an integrated text (200+ words) combining narrative,
     description, and argument, demonstrating B1 grammar range."
-  items: 1
+  items: 6
 connects_to:
 - "All B1 modules (comprehensive review)"
 - "b1-089 (practice-exam-reading — exam simulation)"

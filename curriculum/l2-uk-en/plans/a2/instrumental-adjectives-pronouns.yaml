@@ -94,18 +94,18 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Add correct Instrumental adjective endings to complete noun phrases
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Nominative phrases (мій новий друг) to Instrumental forms (моїм новим
     другом)
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct pronoun form (моїм vs. моєю) based on noun gender
-  items: 6
+  items: 8
 - type: fill-in
   focus: Build full sentences using preposition + pronoun + adjective + noun in
     Instrumental
-  items: 6
+  items: 8
 references:
 - title: Захарійчук Grade 4, с. 85-92
   notes: Full adjective declension tables for hard and soft groups, including Instrumental

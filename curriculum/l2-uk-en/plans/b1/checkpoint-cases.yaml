@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Consolidation: partitive gen, experiencer dat, instrumental characterization,
     formal voc'
 content_outline:
-- section: "Повторення: відмінки (Review: advanced case usages)"
+- section: "Повторення: відмінки"
   words: 800
   points:
   - "Genitive review — five semantic roles:
@@ -53,7 +53,7 @@ content_outline:
     4. Керування: захоплюватися, цікавитися, пишатися.
     5. Агент пасиву: написано автором.
     Drill: 10 sentences requiring correct Ор.в. usage."
-- section: "Повторення: прийменники (Review: prepositions)"
+- section: "Повторення: прийменники"
   words: 600
   points:
   - "Temporal prepositions reference:
@@ -66,7 +66,7 @@ content_outline:
     Purpose: для, заради, за + Ор.в. (fetch), щоб + inf.
     Golden rule: завдяки = GOOD, через = BAD.
     Drill: 12 mixed sentences choosing correct preposition + case."
-- section: "Повторення: кличний, числівники, займенники (Review: vocative, numerals, pronouns)"
+- section: "Повторення: кличний, числівники, займенники"
   words: 600
   points:
   - "Vocative in formal contexts:
@@ -82,7 +82,7 @@ content_outline:
     reflexive (себе/собі/собою), indefinite (хтось, будь-хто, -небудь),
     negative (ніхто, ніщо — preposition splits: ні з ким).
     Drill: 10 pronoun exercises with spelling and case."
-- section: "Комплексні завдання (Integrated exercises)"
+- section: "Комплексні завдання"
   words: 1000
   points:
   - "Text analysis: a Ukrainian newspaper article about housing in a city.
@@ -99,7 +99,7 @@ content_outline:
     Self-assessment rubric provided."
   - "Dialogue reconstruction: rearrange lines of a housing negotiation,
     filling in missing case forms, prepositions, and numeral agreements."
-- section: "Самооцінка та підготовка до Фази 7 (Self-assessment)"
+- section: "Самооцінка та підготовка до Фази 7"
   words: 500
   points:
   - "Self-check grid for all Phase 6 topics:
@@ -115,7 +115,7 @@ content_outline:
     The shift from USING cases precisely to BUILDING complex modifiers."
   - "Diagnostic: 15 quick-check questions covering all Phase 6 topics,
     with answer key and explanations."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 200
   points:
   - "Phase 6 achievement summary: advanced case usage, prepositions for time
@@ -147,7 +147,7 @@ activity_hints:
   items: 10
 - type: free-write
   focus: "Write a formal email about housing using all Phase 6 grammar"
-  items: 1
+  items: 6
 - type: dialogue-completion
   focus: "Complete housing negotiation dialogue with Phase 6 constructions"
   items: 6

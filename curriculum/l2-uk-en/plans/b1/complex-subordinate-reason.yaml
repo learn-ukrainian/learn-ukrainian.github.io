@@ -30,10 +30,10 @@ dialogue_situations:
   motivation: 'Reason clauses: бо, оскільки, через те що, тому що — formal + informal
     registers'
 content_outline:
-- section: "Підрядні обставинні причини (Causal subordinate clauses)"
+- section: "Підрядні обставинні причини"
   words: 600
   points:
-  - "Definition from Авраменко Grade 9 p.86: складнопідрядне речення
+  - "Definition from Авраменко Grade 8 p.86: складнопідрядне речення
     з підрядним причини — таке, в якому підрядна частина вказує на
     причину дії, про яку йдеться в головній частині.
     Одягай пальто, бо буде холодно. (Чому одягай? — бо буде холодно.)"
@@ -44,7 +44,7 @@ content_outline:
   - "Position: typically AFTER main clause (natural order),
     but can precede for emphasis: Оскільки погода погіршилася,
     ми вирішили залишитися вдома."
-- section: "Сполучники причини (Causal conjunctions)"
+- section: "Сполучники причини"
   words: 750
   points:
   - "Бо — the most common, neutral/slightly colloquial:
@@ -67,17 +67,17 @@ content_outline:
     Завдяки тому що він допоміг, ми встигли. (thanks to the fact that...)"
   - "Register guide and practice: 8 sentences — choose the most
     appropriate conjunction based on register and context."
-- section: "Причина vs умова (Cause vs condition)"
+- section: "Причина vs умова"
   words: 500
   points:
   - "Contrast with conditional (M71):
     Причина: Одягай пальто, бо буде холодно. (it WILL be cold — fact)
     Умова: Одягай пальто, якщо буде холодно. (IF it is cold — hypothetical)
-    From Авраменко Grade 9 p.86: 'Чи однакові за змістом речення?'
+    From Авраменко Grade 8 p.86: 'Чи однакові за змістом речення?'
     Students must distinguish the real difference: причина = known fact,
     умова = possibility."
   - "Practice: classify 6 sentence pairs as причинні or умовні."
-- section: "Пунктуація причинних речень (Punctuation of causal clauses)"
+- section: "Пунктуація причинних речень"
   words: 550
   points:
   - "Rules:
@@ -91,7 +91,7 @@ content_outline:
     Split (emphatic): Я не прийшов тому, що захворів.
     The split version puts тому in the main clause as a correlative word."
   - "Practice: punctuate 10 sentences with причинними реченнями."
-- section: "Причинні речення у мовленні (Causal clauses in speech)"
+- section: "Причинні речення у мовленні"
   words: 700
   points:
   - "Reading passage: a text explaining reasons for events using
@@ -104,7 +104,7 @@ content_outline:
     Then rewrite 2 of them using дієприслівникові звороти:
     Бо він запізнився, ми почали без нього.
     → Запізнившись, він пропустив початок."
-- section: "Підсумок та перехід до M71 (Summary and transition)"
+- section: "Підсумок та перехід до M71"
   words: 300
   points:
   - "Summary: причинні = чому? через що? Сполучники: бо (розмовний),
@@ -155,10 +155,10 @@ grammar:
 - "Contrast with conditional clauses (причина vs умова)"
 register: науково-навчальний
 references:
-- title: "Авраменко Grade 9, p.86"
+- title: "Авраменко Grade 8, p.86"
   notes: "Складнопідрядні речення з підрядними причини: definition,
     contrast with conditional, exercises."
-- title: "Заболотний Grade 9, p.112"
+- title: "Заболотний Grade 8, p.112"
   notes: "§21 Підрядні частини мети, умови, допусту: context for
     causal clause comparison."
 - title: "Ворон Grade 9, p.80"

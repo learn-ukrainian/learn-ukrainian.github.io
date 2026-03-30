@@ -98,17 +98,17 @@ activity_hints:
 - type: fill-in
   focus: Complete a recipe description with correct Instrumental forms for tools and
     ingredients
-  items: 6
+  items: 8
 - type: match-up
   focus: Match profession questions to appropriate Instrumental answers
-  items: 6
+  items: 8
 - type: quiz
   focus: Identify which Instrumental function (tool, companion, profession, spatial)
     is used in each sentence
-  items: 6
+  items: 8
 - type: true-false
   focus: Judge whether sentences about a workday use correct Instrumental forms
-  items: 6
+  items: 8
 references:
 - title: Кравцова Grade 4, с. 54
   notes: 'Tool Instrumental exercises — "Пишу ручкою, зафарбовую фарбою, вишиваю

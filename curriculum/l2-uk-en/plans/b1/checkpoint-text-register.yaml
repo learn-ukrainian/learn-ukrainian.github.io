@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Consolidation: formal/informal register, abbreviations, double negation,
     introductory words'
 content_outline:
-- section: "Вступ: як працювати з контрольною (Introduction)"
+- section: "Вступ: як працювати з контрольною"
   words: 300
   points:
   - "Overview: this checkpoint tests M77-M83 (Phase 9: Text and Register).
@@ -40,7 +40,7 @@ content_outline:
   - "Instructions: 'Виконайте всі завдання по черзі. Якщо завдання
     здається складним, поверніться до відповідного модуля для повторення.'"
   - "Self-assessment framework: впевнено / потребую повторення / не розумію."
-- section: "Блок 1: Стилі мовлення (Block 1: Speech styles — M77-M78)"
+- section: "Блок 1: Стилі мовлення"
   words: 650
   points:
   - "Style identification: four text excerpts (100-120 words each) —
@@ -54,7 +54,7 @@ content_outline:
     Evaluation criteria: correct formatting, канцеляризми, case government."
   - "Суржик identification: learners find and correct суржик elements
     in a dialogue, replacing with genuine розмовна українська."
-- section: "Блок 2: Абревіатури та скорочення (Block 2: Abbreviations — M79)"
+- section: "Блок 2: Абревіатури та скорочення"
   words: 500
   points:
   - "Decoding: learners expand 10 абревіатури (ЗСУ, ООН, ЗМI, ЄС, etc.)
@@ -63,7 +63,7 @@ content_outline:
     verb/adjective agreement (ООН ухвалила, ЗСУ звільнили)."
   - "Графічні скорочення: write a Ukrainian address using standard
     скорочення, write a date прописом, correct errors in скорочення usage."
-- section: "Блок 3: Подвійне заперечення (Block 3: Double negation — M80)"
+- section: "Блок 3: Подвійне заперечення"
   words: 550
   points:
   - "Translation exercises: English negative sentences → Ukrainian with
@@ -74,7 +74,7 @@ content_outline:
   - "Error correction: find and fix negation errors in 6-8 sentences
     (missing не, wrong написання, English-pattern single negation)."
   - "Наголос: distinguish нікого немає vs нікого й спитати in context."
-- section: "Блок 4: Вставні слова (Block 4: Parenthetical words — M81)"
+- section: "Блок 4: Вставні слова"
   words: 550
   points:
   - "Classification: identify вставні слова in a text and sort them by
@@ -86,7 +86,7 @@ content_outline:
     sentence members by testing if the sentence works without them."
   - "Production: insert appropriate вставні слова to express specified
     attitudes in given sentences."
-- section: "Блок 5: Природа i читання (Block 5: Nature and reading — M82-M83)"
+- section: "Блок 5: Природа i читання"
   words: 700
   points:
   - "Nature vocabulary: classify given words into погода, рослини, тварини,
@@ -98,7 +98,7 @@ content_outline:
     порівняння, персоніфікації in the passage."
   - "Opinion writing: structured response to the literary text using
     вставні слова and opinion vocabulary (8-10 sentences)."
-- section: "Підсумок та самооцінка (Summary and self-assessment)"
+- section: "Підсумок та самооцінка"
   words: 400
   points:
   - "Integrated exercise: a multi-register text (news article containing
@@ -152,7 +152,7 @@ activity_hints:
 - type: free-write
   focus: "Integrated writing: describe a nature scene using художні засоби,
     then write a formal oголошення about an environmental event."
-  items: 1
+  items: 6
 connects_to:
 - "b1-077 to b1-083 (all Phase 9 modules — this checkpoint tests them)"
 - "b1-085 (narrative-mastery — first module of Phase 10)"
@@ -175,5 +175,5 @@ register: розмовний
 references:
 - title: "All Phase 9 module references"
   notes: "This checkpoint draws on textbook sources cited in M77-M83:
-    Заболотний Grade 6/8, Авраменко Grade 8-11, Караман Grade 10,
+    Заболотний Grade 6/8, Авраменко Grade 8-11, Заболотний Grade 7,
     Глазова Grade 10-11, Голуб Grade 6, Ворон Grade 9/11."

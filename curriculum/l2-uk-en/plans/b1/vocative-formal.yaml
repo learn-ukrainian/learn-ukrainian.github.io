@@ -29,7 +29,7 @@ dialogue_situations:
   - Депутати
   motivation: 'Formal vocative: пане Президенте, пані Міністре, панове депутати'
 content_outline:
-- section: "Повторення: кличний відмінок (Vocative review)"
+- section: "Повторення: кличний відмінок"
   words: 500
   points:
   - "Quick review of vocative formation from A2 (Авраменко Grade 6 p.106):
@@ -42,7 +42,7 @@ content_outline:
     -ко ending: Тарасику, братику (diminutive)
     Nouns in -ець: -цю (хлопцю, молодцю)
     Names ending in -ій: -ію (Василію, Дмитрію) or -іє (Василіє — archaic)"
-- section: "Офіційні звертання (Formal address patterns)"
+- section: "Офіційні звертання"
   words: 800
   points:
   - "From Литвінова Grade 6 p.141:
@@ -62,7 +62,7 @@ content_outline:
   - "шановний/шановна: шановний Іване Петровичу,
     шановна Маріє Степанівно. In letters: Шановний пане Директоре!
     Note: шановний takes Н.в. form (not *шановному)."
-- section: "Кличний відмінок у діловому листуванні (Vocative in business writing)"
+- section: "Кличний відмінок у діловому листуванні"
   words: 700
   points:
   - "Business letter opening:
@@ -78,7 +78,7 @@ content_outline:
   - "Practice: write three email openings for different scenarios:
     to a teacher, to a business partner, to a government official.
     Each must use correct vocative forms."
-- section: "Звертання до груп і титулів (Addressing groups and titles)"
+- section: "Звертання до груп і титулів"
   words: 500
   points:
   - "Plural address: Шановні депутати! Дорогі друзі! Панове!
@@ -92,7 +92,7 @@ content_outline:
     unlike many European languages. Using it correctly signals
     respect and cultural competence. NOT using it (substituting Н.в.)
     sounds foreign or rude in formal contexts."
-- section: "Практика в контексті (Practice in context)"
+- section: "Практика в контексті"
   words: 700
   points:
   - "Role play: formal meeting. Learners address each other using
@@ -106,7 +106,7 @@ content_outline:
     *Шановний Іван Петрович! (should be Іване Петровичу)
     *Пані Оксано Петрівно! (correct — both in vocative)
     *Докторе Ковальчуку! (should be Ковальчук — прізвище stays Н.в.)"
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 300
   points:
   - "Vocative decision tree:
@@ -147,7 +147,7 @@ activity_hints:
   items: 6
 - type: free-write
   focus: "Write a formal letter opening with correct vocative address"
-  items: 2
+  items: 6
 - type: sentence-builder
   focus: "Build formal greetings and introductions using vocative"
   items: 6

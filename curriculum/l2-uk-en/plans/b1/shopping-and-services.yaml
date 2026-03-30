@@ -29,7 +29,7 @@ dialogue_situations:
   - Продавець-консультант
   motivation: 'Shopping with comparisons: гарніший, дорожчий, найкращий, дешевший'
 content_outline:
-- section: "На ринку (At the market)"
+- section: "На ринку"
   words: 700
   points:
   - "Cultural context: Ukrainian markets (базар/ринок) as a living
@@ -44,7 +44,7 @@ content_outline:
   - "Vocabulary in context: продавець/продавчиня, покупець/покупчиня,
     ваги, кілограм, ціна, знижка, здача, готівка, пакет.
     Reading passage: a narrative about a market visit using Phase 5 grammar."
-- section: "У магазині (In a shop)"
+- section: "У магазині"
   words: 700
   points:
   - "Types of shops using word formation:
@@ -59,7 +59,7 @@ content_outline:
   - "Paying: Ви розраховуєтесь готівкою чи карткою?
     Дайте, будь ласка, чек. Чи є гарантія?
     Я хочу повернути цю річ. Вона бракована."
-- section: "На пошті і в банку (At the post office and bank)"
+- section: "На пошті і в банку"
   words: 600
   points:
   - "Post office vocabulary and dialogues:
@@ -70,7 +70,7 @@ content_outline:
   - "Bank vocabulary: рахунок, переказ, обмін валют, курс.
     Який сьогодні курс долара? Де найвигідніший обмін?
     Practice dialogue: exchanging currency and comparing rates."
-- section: "Послуги (Services)"
+- section: "Послуги"
   words: 600
   points:
   - "Service situations using agent nouns:
@@ -81,7 +81,7 @@ content_outline:
     У тій майстерні ремонт дешевший, але довший.
     Який найкращий сервіс у місті?
     Practice: writing a review comparing two service providers."
-- section: "Скарга і відгук (Complaints and reviews)"
+- section: "Скарга і відгук"
   words: 550
   points:
   - "Polite complaint template:
@@ -94,7 +94,7 @@ content_outline:
     'Ця кав'ярня — найкраща в місті. Кава тут смачніша, ніж у ...
     Обслуговування найшвидше. Ціни трохи вищі, але якість набагато краща.'
     Practice: write a 5-7 sentence review of a real or imagined place."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 350
   points:
   - "Key transactional phrases organized by situation:
@@ -130,22 +130,22 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: "Choose correct transactional phrase for given shopping situations"
-  items: 8
+  items: 12
 - type: fill-in
   focus: "Complete shopping dialogues with comparatives, superlatives, vocabulary"
-  items: 8
+  items: 12
 - type: match-up
   focus: "Match agent noun to workplace/service location"
-  items: 8
+  items: 12
 - type: dialogue-completion
   focus: "Complete a market bargaining or shop complaint dialogue"
-  items: 6
+  items: 12
 - type: sentence-builder
   focus: "Build comparison sentences about products and services"
-  items: 6
+  items: 12
 - type: free-write
   focus: "Write a review of a shop or service using comparisons"
-  items: 1
+  items: 12
 connects_to:
 - "b1-038 (Вищий ступінь — comparatives used in product comparison)"
 - "b1-039 (Найвищий ступінь — superlatives in reviews)"

@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Advanced pronouns: кожен, ніхто, дехто, будь-який, ті хто — in abstract
     discourse'
 content_outline:
-- section: "Питально-відносні займенники (Interrogative-relative pronouns)"
+- section: "Питально-відносні займенники"
   words: 700
   points:
   - "Core pronouns: хто, що, який (яка, яке, які), чий (чия, чиє, чиї), котрий.
@@ -46,7 +46,7 @@ content_outline:
     котрий is a synonym for який in relative clauses, more literary.
     чий declines: чийого, чийому, чиїм, etc.
     Practice: complete 10 sentences with correct form of який/чий."
-- section: "Зворотний займенник себе (Reflexive pronoun)"
+- section: "Зворотний займенник себе"
   words: 600
   points:
   - "себе has NO nominative form and no gender/number distinction.
@@ -62,7 +62,7 @@ content_outline:
   - "Distinction: себе (pronoun, declines) vs свій (possessive, declines
     like an adjective): Я бачу себе (I see myself) vs Я бачу свою книжку
     (I see my own book). Both are reflexive but function differently."
-- section: "Неозначені займенники (Indefinite pronouns)"
+- section: "Неозначені займенники"
   words: 700
   points:
   - "Formation from Заболотний Grade 6 p.203:
@@ -84,7 +84,7 @@ content_outline:
     будь-хто = anyone at all (no specificity): Будь-хто може це зробити.
     хто-небудь = anyone (in questions/hypotheticals): Чи є тут хто-небудь?
     Practice: choose correct indefinite pronoun for 10 contexts."
-- section: "Заперечні займенники (Negative pronouns)"
+- section: "Заперечні займенники"
   words: 700
   points:
   - "Formation from Заболотний Grade 6 p.203:
@@ -103,7 +103,7 @@ content_outline:
     нічого (stressed on root) = nothing visible: Нічого не видно.
     нічого (stressed on prefix) = nothing to eat: Нічого їсти.
     Practice: distinguish meanings in 8 sentences."
-- section: "Займенники в контексті (Pronouns in context)"
+- section: "Займенники в контексті"
   words: 600
   points:
   - "Reading passage: a detective story excerpt using all pronoun types.
@@ -117,7 +117,7 @@ content_outline:
     'Може, хто-небудь із сусідів?' 'Ні, ні з ким я не розмовляв.'"
   - "Self-check: classify 15 pronouns by type (interrogative, indefinite,
     negative, reflexive), form correct case for each in context."
-- section: "Підсумок (Summary)"
+- section: "Підсумок"
   words: 200
   points:
   - "Pronoun type summary: питально-відносні (хто, який), зворотний (себе),
@@ -181,7 +181,7 @@ references:
   notes: "Negative and indefinite pronoun formation, spelling, declension."
 - title: "Литвінова Grade 6, p.269"
   notes: "Stress-dependent meaning in negative pronouns нікого/нічого."
-- title: "Глазова Grade 11, p.84"
+- title: "Заболотний Grade 8, p.84"
   notes: "Relative pronoun usage in complex sentences."
 - title: "Авраменко Grade 6, p.106"
   notes: "Pronoun classification and examples in context."

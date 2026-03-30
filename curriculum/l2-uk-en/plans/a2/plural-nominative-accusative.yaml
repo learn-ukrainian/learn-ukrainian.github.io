@@ -84,15 +84,15 @@ activity_hints:
 - type: fill-in
   focus: Form the Nominative plural from given singular nouns across all declension
     classes
-  items: 6
+  items: 8
 - type: group-sort
   focus: Sort plural nouns into animate vs. inanimate, then predict their Accusative
     form
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose the correct Accusative plural form (animate = Gen.Pl., inanimate =
     Nom.Pl.) in sentences
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 6, §§59-61
   notes: Nominative and Accusative plural formation, animate/inanimate distinction

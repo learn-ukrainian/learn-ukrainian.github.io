@@ -30,7 +30,7 @@ dialogue_situations:
   motivation: 'Narrative techniques: gerunds, reported speech, double negation, concessive
     in storytelling'
 content_outline:
-- section: "Будова розповіді (Structure of a narrative)"
+- section: "Будова розповіді"
   words: 600
   points:
   - "Text structure from Варзацька Grade 4 p.14 (scaled to B1):
@@ -50,7 +50,7 @@ content_outline:
     кінцівка, мікротеми, connecting words, and tense/aspect choices."
   - "Planning a narrative: learners create a план for their own розповідь
     before writing, following the textbook structure."
-- section: "Часи та вид у розповіді (Tenses and aspect in narrative)"
+- section: "Часи та вид у розповіді"
   words: 700
   points:
   - "Tense switching in Ukrainian narratives — when and why:
@@ -74,7 +74,7 @@ content_outline:
   - "The 'раптом effect': how a single доконаний дієслово after a series
     of недоконаних creates narrative surprise. Ukrainian storytelling
     technique paralleled in folk казки."
-- section: "Рухові дієслова у розповіді (Motion verbs in narrative)"
+- section: "Рухові дієслова у розповіді"
   words: 600
   points:
   - "Review of prefixed motion verbs (from Phase 4) in narrative context:
@@ -92,7 +92,7 @@ content_outline:
   - "Practice: learners transform a flat narrative ('Ми поїхали до Києва.
     Ми бачили Хрещатик.') into a rich one using prefixed motion verbs,
     aspect, and connecting words."
-- section: "Дієприкметники та дієприслівники у розповіді (Participles and gerunds in narrative)"
+- section: "Дієприкметники та дієприслівники у розповіді"
   words: 600
   points:
   - "Дієприкметникові звороти for description within narrative:
@@ -111,7 +111,7 @@ content_outline:
   - "Register note: дієприкметникові/дієприслівникові звороти raise
     the register. Appropriate for written narratives, less common in
     casual spoken storytelling."
-- section: "Від плану до тексту: практика (From plan to text: practice)"
+- section: "Від плану до тексту: практика"
   words: 600
   points:
   - "Step-by-step narrative writing:
@@ -132,7 +132,7 @@ content_outline:
     4. Чи є художні засоби?"
   - "Model analysis: learners compare their narrative to a model and
     identify areas for improvement."
-- section: "Підсумок: розповідь — це мистецтво (Summary)"
+- section: "Підсумок: розповідь — це мистецтво"
   words: 300
   points:
   - "Complete narrative toolkit reference: structure, tense/aspect,
@@ -171,28 +171,28 @@ activity_hints:
 - type: quiz
   focus: "Identify narrative structure elements (зачин, кульмінація, розв'язка)
     and tense/aspect choices in text excerpts."
-  items: 8
+  items: 12
 - type: fill-in
   focus: "Complete a narrative with correct tense, aspect, and motion verb
     forms. Insert connecting words in appropriate positions."
-  items: 8
+  items: 12
 - type: error-correction
   focus: "Fix tense inconsistencies, incorrect aspect choices, and
     missing connecting words in a draft narrative."
-  items: 6
+  items: 12
 - type: match-up
   focus: "Match narrative structure terms to their definitions and
     connecting words to their functions."
-  items: 8
+  items: 12
 - type: free-write
   focus: "Write a complete narrative (150-200 words) with зачин, основна
     частина, кінцівка, using motion verbs, aspect alternation, and
     at least one dialogue fragment."
-  items: 1
+  items: 12
 - type: group-sort
   focus: "Sort дієслова by вид (ДВ/НДВ) and sort connecting words by
     function (послідовність, одночасність, несподіваність)."
-  items: 10
+  items: 12
 connects_to:
 - "b1-086 (Аргументація — structured writing, different purpose)"
 - "b1-073 (reported-speech — embedding speech in narrative)"

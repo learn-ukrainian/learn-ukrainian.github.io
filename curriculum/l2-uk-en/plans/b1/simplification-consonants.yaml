@@ -29,7 +29,7 @@ dialogue_situations:
   - Студенти
   motivation: 'Consonant simplification: серДце→серце, чесТний→чесний, щасТливий→щасливий'
 content_outline:
-- section: "Що таке спрощення? (What is consonant simplification?)"
+- section: "Що таке спрощення?"
   words: 600
   points:
   - "Bridge from M08-M10: learners now understand чергування —
@@ -48,7 +48,7 @@ content_outline:
     processes, but they work differently.
     чергування: друг -> друже ([г] -> [ж])
     спрощення: щастя -> щасливий ([т] drops)"
-- section: "Спрощення, закріплене на письмі (Simplification in writing)"
+- section: "Спрощення, закріплене на письмі"
   words: 850
   points:
   - "Complete table from Заболотний Grade 5 p.110:
@@ -126,7 +126,7 @@ content_outline:
     morphophonemic tools: чергування голосних (M08),
     чергування приголосних (M09-10), and спрощення (this module).
     Together, they explain most of Ukrainian's spelling 'irregularities.'"
-- section: "Спрощення vs. чергування: порівняння (Comparison)"
+- section: "Спрощення vs. чергування: порівняння"
   words: 400
   points:
   - "Side-by-side comparison:
@@ -139,7 +139,7 @@ content_outline:
   - "Practice: mixed exercises where learners identify WHETHER
     a given change is чергування or спрощення, and WHICH specific
     type it is. This integrates learning from M08-M11."
-- section: "Підсумок i практика (Summary and practice)"
+- section: "Підсумок i практика"
   words: 300
   points:
   - "Quick reference: all спрощення patterns with one example each.

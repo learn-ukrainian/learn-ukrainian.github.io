@@ -94,16 +94,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: Choose the appropriate opinion phrase for formal vs informal contexts
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete opinion sentences with correct connectors and comparatives
-  items: 6
+  items: 8
 - type: match-up
   focus: Match agreement/disagreement phrases to situations
-  items: 6
+  items: 8
 references:
 - title: "ULP: How to Express Opinions in Ukrainian"
   url: "https://www.ukrainianlessons.com/opinion/"
   notes: Opinion and preference vocabulary with dialogues
-- title: Заболотний Grade 7, Складне речення
+- title: Заболотний Grade 5, §28
   notes: Complex sentence structures for expressing cause and opinion

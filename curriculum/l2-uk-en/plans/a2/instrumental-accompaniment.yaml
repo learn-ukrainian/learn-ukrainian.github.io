@@ -92,16 +92,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: Form the correct Instrumental ending for nouns after з/із/зі
-  items: 6
+  items: 8
 - type: match-up
   focus: Match Nominative nouns to their Instrumental forms
-  items: 6
+  items: 8
 - type: quiz
   focus: Choose з/із/зі based on the following word
-  items: 6
+  items: 8
 - type: fill-in
   focus: Complete cafe dialogue sentences with correct Instrumental forms
-  items: 6
+  items: 8
 references:
 - title: Захарійчук Grade 4, с. 62-63
   notes: Instrumental endings for masculine nouns (-ом, -ем, -єм) with prepositions

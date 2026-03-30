@@ -77,16 +77,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: 'Role-play: Planning a Trip'
-  items: 6
+  items: 8
 - type: fill-in
   focus: 'Role-play: Shopping for Groceries'
-  items: 6
+  items: 8
 - type: match-up
   focus: 'Story Completion: Choose the Right Aspect'
-  items: 6
+  items: 8
 - type: match-up
   focus: Answering questions about a short narrative
-  items: 6
+  items: 8
 references:
-- title: Заболотний Grade 5-7
+- title: Заболотний Grade 5-6
   notes: Повторення вивченого
