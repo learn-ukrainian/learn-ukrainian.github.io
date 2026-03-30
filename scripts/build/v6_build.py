@@ -3613,8 +3613,9 @@ def _strip_dsl_blocks(text: str) -> tuple[str, int]:
     Returns (stripped_text, count_stripped).
     """
     # Match :::type ... ::: blocks (DSL exercise format)
+    # Match both V6 bare types (:::quiz) and legacy format (:::exercise[type])
     dsl_pattern = re.compile(
-        r"^:::(quiz|fill-in|match-up|group-sort|true-false)\b.*?^:::$",
+        r"^:::(?:quiz|fill-in|match-up|group-sort|true-false|exercise\[.*?\])\b.*?^:::$",
         re.MULTILINE | re.DOTALL,
     )
     stripped, count = dsl_pattern.subn("", text)
