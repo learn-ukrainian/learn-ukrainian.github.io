@@ -3132,25 +3132,43 @@ def step_review(content_path: Path, level: str, module_num: int,
 
     if reviewer == "gemini":
         import time
+
+        # Probe Gemini with a cheap call to measure current latency
+        _log("  🏓 Probing Gemini latency...")
+        probe_t0 = time.monotonic()
+        probe_ok, _ = _dispatch(
+            "Reply with exactly: OK",
+            agent="gemini", phase="review", orch_dir=orch_dir,
+            timeout=120,
+        )
+        probe_latency = time.monotonic() - probe_t0
+        if probe_ok:
+            # Scale timeout: probe took X seconds for a trivial call,
+            # review prompt is ~30K chars — give it 10x probe time (min 600s, max 1800s)
+            review_timeout = max(600, min(int(probe_latency * 10), 1800))
+            _log(f"  🏓 Gemini responded in {int(probe_latency)}s — review timeout set to {review_timeout}s")
+        else:
+            review_timeout = 900
+            _log(f"  🏓 Gemini probe failed ({int(probe_latency)}s) — using default timeout {review_timeout}s")
+
         ok, raw = None, None
         _GEMINI_REVIEW_MAX_RETRIES = 5
         for attempt in range(1, _GEMINI_REVIEW_MAX_RETRIES + 1):
             t0 = time.monotonic()
             ok, raw = _dispatch(
                 prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-                timeout=900, mcp_tools=True,
+                timeout=review_timeout, mcp_tools=True,
             )
             elapsed = time.monotonic() - t0
             if ok and raw:
                 break
             if attempt < _GEMINI_REVIEW_MAX_RETRIES:
-                # Adaptive backoff: wait at least as long as the failed attempt took
-                # (Gemini is overloaded — give it time to recover)
+                # Adaptive backoff: wait proportional to how long the attempt took
                 wait = max(60, min(int(elapsed * 0.5), 300))
                 _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_MAX_RETRIES}, {int(elapsed)}s) — retrying in {wait}s...")
                 time.sleep(wait)
             else:
-                _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_RETRIES} attempts")
+                _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_MAX_RETRIES} attempts")
     else:
         ok, raw = _dispatch(
             prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
