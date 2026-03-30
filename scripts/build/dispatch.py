@@ -185,7 +185,7 @@ def dispatch_agent(
 
     # Build command
     if is_gemini:
-        cmd = ["gemini", "-m", model, "-y"]
+        cmd = ["gemini", "-m", model, "-y", "--approval-mode", "yolo"]
         if mcp_tools:
             cmd.extend(["--allowed-mcp-server-names", "rag"])
     else:

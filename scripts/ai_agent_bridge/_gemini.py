@@ -276,7 +276,7 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
         prompt_preview = prompt[:200].replace('\n', ' ')
         print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
               f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
-        gemini_cmd = [GEMINI_CLI, "-m", model, "-y"]
+        gemini_cmd = [GEMINI_CLI, "-m", model, "-y", "--approval-mode", "yolo"]
 
         pre_snapshot = None
         if output_path:
