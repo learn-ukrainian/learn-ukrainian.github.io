@@ -607,7 +607,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         Tuple of (enriched content, list of enrichment actions taken).
     """
     actions: list[str] = []
-    original_content = content  # Preserve for safety check
+    original_content = content  # Preserve for safety check + diagnostics
 
     # 1. Revert any previously converted dialogues back to blockquote format,
     # then re-format. This ensures idempotent dialogue processing.
@@ -632,6 +632,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
 
     # 2. Strip existing enrichment (idempotent — safe to re-run)
     # Remove existing tab markers and everything after the first non-Урок tab
+    _pre_strip_words = len(content.split())
     if "<!-- TAB:Словник -->" in content:
         # Content was already enriched — strip everything from Словник tab onward
         slovnyk_pos = content.index("<!-- TAB:Словник -->")
@@ -641,27 +642,57 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         content = content.replace("<!-- TAB:Урок -->", "").strip()
 
     # Also remove old V5-era section headings
+    _before = len(content.split())
     content = re.sub(
         r"\n## (?:Video Resources|Відео — Video|Словник — Vocabulary|Resources|Ресурси — Resources)\n.*?(?=\n## |\Z)",
         "",
         content,
         flags=re.DOTALL,
     )
+    _after = len(content.split())
+    if _after < _before * 0.5:
+        import logging
+        logging.error(f"enrich: V5 heading strip ate {_before - _after} words ({_before}→{_after})")
+
     # Remove inline video sections from previous enrichment
     # Note: match with optional stress marks (Ві́део or Відео)
+    _before = len(content.split())
     content = re.sub(
         r"\n### В[іi]\u0301?део — Video\n.*?(?=\n## |\n### |\n<!-- TAB:|\Z)",
         "",
         content,
         flags=re.DOTALL,
     )
+    _after = len(content.split())
+    if _after < _before * 0.5:
+        import logging
+        logging.error(f"enrich: video strip ate {_before - _after} words ({_before}→{_after})")
+
     # Remove any writer-generated vocabulary tables (the ENRICH step generates proper ones)
+    _before = len(content.split())
     content = re.sub(
         r"\n### (?:Додаткові слова|Additional words|Вирази|Словник|Vocabulary).*?(?=\n## |\n<!-- TAB:|\Z)",
         "",
         content,
         flags=re.DOTALL,
     )
+    _after = len(content.split())
+    if _after < _before * 0.5:
+        import logging
+        logging.error(f"enrich: vocab strip ate {_before - _after} words ({_before}→{_after})")
+
+    _post_strip_words = len(content.split())
+    if _post_strip_words < _pre_strip_words * 0.3:
+        import logging
+        logging.error(
+            f"enrich: stripping removed {_pre_strip_words - _post_strip_words} of "
+            f"{_pre_strip_words} words! Restoring original content."
+        )
+        content = original_content
+        # Re-strip only tab markers (safe)
+        if "<!-- TAB:Словник -->" in content:
+            content = content[:content.index("<!-- TAB:Словник -->")].strip()
+        content = content.replace("<!-- TAB:Урок -->", "").strip()
 
     # 3. Build tab content
     slovnyk = _build_slovnyk(plan, content, slug=slug)
