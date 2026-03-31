@@ -3242,8 +3242,10 @@ def step_review(content_path: Path, level: str, module_num: int,
             review_timeout = max(600, min(int(probe_latency * 10), 1800))
             _log(f"  🏓 Gemini responded in {int(probe_latency)}s — review timeout set to {review_timeout}s")
         else:
-            review_timeout = 900
-            _log(f"  🏓 Gemini probe failed ({int(probe_latency)}s) — using default timeout {review_timeout}s")
+            # Gemini Pro is down — fall back to Claude to keep the batch moving
+            _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — falling back to Claude reviewer")
+            reviewer = "claude"
+            reviewer_agent = "claude-tools"
 
         ok, raw = None, None
         _GEMINI_REVIEW_MAX_RETRIES = 5
