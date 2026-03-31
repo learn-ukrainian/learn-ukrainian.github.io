@@ -1,0 +1,289 @@
+---
+title: "Health"
+sidebar:
+  order: 53
+  label: "53. Health"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Dialogues
+
+Оле́нка wakes up feeling terrible — her head is pounding and her throat is on fire. Time to visit the **лі́кар** (doctor).
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> До́брий день! Що у вас боли́ть? *(Good day! What hurts?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Паціє́нтка:</span> У мене́ болить голова́ і го́рло. *(My head and throat hurt.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Давно́? *(For long?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Пацієнтка:</span> З учо́ра. І в мене температу́ра. *(Since yesterday. And I have a fever.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Ви ка́шляєте? *(Are you coughing?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Пацієнтка:</span> Так, тро́хи. І в мене не́жить. *(Yes, a little. And I have a runny nose.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Зрозумі́ло. Це засту́да. *(Understood. It's a cold.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Пацієнтка:</span> Що мені́ роби́ти? *(What should I do?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Я ви́пишу лі́ки. Відпочива́йте! *(I'll prescribe medicine. Rest!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Пацієнтка:</span> Дякую, лі́карю! *(Thank you, doctor!)*</div>
+
+
+</div>
+
+With her prescription in hand, Оленка walks to the **апте́ка** (pharmacy) next door.
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Добрий день! У мене болить голова. Да́йте, будь ла́ска, табле́тки. *(Good day! My head hurts. Give me pills, please.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Фармаце́вт:</span> Про́ти головно́го бо́лю? *(For a headache?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Так. І проти ка́шлю, будь ласка. *(Yes. And for a cough, please.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Фармацевт:</span> Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> А є щось проти не́житю? *(Do you have something for a runny nose?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Фармацевт:</span> Так, ось кра́плі. *(Yes, here are drops.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Дякую! Скі́льки це ко́шту́є? *(Thanks! How much does this cost?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Фармацевт:</span> Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Будь ласка. *(Here you go.)*</div>
+
+
+</div>
+
+Notice three key chunks from these dialogues. First: **У мене болить...** (I have a pain in...) — the essential phrase for telling anyone what hurts. Second: **Дайте, будь ласка...** (Give me... please) — the polite request form you already know from shopping modules. Third: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose) — these are how you ask for specific medicine. You don't need to analyse the grammar behind these yet — that comes at A2. For now, treat them as ready-made chunks.
+
+## Ті́ло (The Body)
+
+Here are the ten body parts you need at A1. Each one has a grammatical gender — this matters for adjective agreement, but right now your main job is simply learning the words:
+
+- **голова** (head, f)
+- **горло** (throat, n)
+- **спи́на** (back, f)
+- **живі́т** (stomach, m)
+- **рука́** (hand/arm, f)
+- **нога́** (leg/foot, f)
+- **о́ко** (eye, n)
+- **ву́хо** (ear, n)
+- **зуб** (tooth, m)
+- **ніс** (nose, m)
+
+Two important notes: **рука** covers the entire arm including the hand — Ukrainian doesn't split them at A1. The same goes for **нога**, which means the whole leg including the foot. If you stub your toe or twist your ankle, it's still **нога**.
+
+Why do genders matter here? Because adjectives must agree: **вели́ке око** (big eye — neuter), **вели́кий ніс** (big nose — masculine), **вели́ка рука** (big hand — feminine). But at this stage, you'll mostly use these words in the chunk **У мене болить...**, where gender doesn't change anything. Memorise the words first — full adjective agreement practice comes at A2.
+
+<MatchUp client:only="react" pairs={[{"left": "голова", "right": "head"}, {"left": "живіт", "right": "stomach"}, {"left": "горло", "right": "throat"}, {"left": "спина", "right": "back"}, {"left": "рука", "right": "hand/arm"}, {"left": "нога", "right": "leg/foot"}, {"left": "зуб", "right": "tooth"}, {"left": "око", "right": "eye"}, {"left": "вухо", "right": "ear"}, {"left": "ніс", "right": "nose"}]} instruction={"З'єднайте слова з перекладом (Match the body parts to their English translations)"} />
+
+Imagine Миха́йлик is drawing a person and labelling the parts: «Ось **голова**!» *(Here's the head!)* He draws two arms: «А це **рука** і **рука**.» *(And this is an arm and an arm.)* Then the legs: «Це **нога**.» *(This is a leg.)* He adds a face: «Ось **ніс**, **око** і **вухо**.» *(Here's the nose, eye, and ear.)* He points to the middle: «А тут **живіт**!» *(And here's the stomach!)* Finally he writes across the back: «І **спина**!» *(And the back!)* Simple labelling like this — pointing and naming — is exactly how Ukrainian Grade 1 textbooks introduce body parts.
+
+A few pronunciation tips for tricky words. **Горло** — the «г» is a voiced sound, softer than English "g." Think of a gentle vibration in the throat, not a hard stop. **Живіт** — the «ж» sounds like the "s" in English "measure" or "pleasure." **Вухо** starts with two distinct sounds: «в» then «у» — don't blend them into an English "w." When in doubt about stress or exact pronunciation, check the словни́к tab where every word has audio.
+
+## У мене болить... (It Hurts...)
+
+The single most useful health phrase in Ukrainian is **У мене болить** + a body part. Learn it as one chunk — a ready-made sentence starter. Here are the five core combinations:
+
+1. **У мене болить голова.** (My head hurts.)
+2. **У мене болить живіт.** (My stomach hurts.)
+3. **У мене болить горло.** (My throat hurts.)
+4. **У мене болить спина.** (My back hurts.)
+5. **У мене болить зуб.** (My tooth hurts.)
+
+The literal structure is "at me hurts head" — the grammar behind this pattern is something you'll study properly at A2. For now, just memorise the pattern: **У мене болить** + whatever hurts.
+
+When more than one thing hurts — or when the body part is naturally plural — **болить** changes to **боля́ть**:
+
+- **У мене болять зу́би.** (My teeth hurt.)
+- **У мене болять но́ги.** (My legs hurt.)
+- **У мене болять о́чі.** (My eyes hurt.)
+
+You don't need to produce these forms yet. Just recognise them when you hear a doctor or friend say **болять** — it means multiple things hurt.
+
+<FillIn client:only="react" items={[{"sentence": "У мене болить ____. Я хочу спати.", "answer": "голова", "options": ["голова", "рука", "нога"]}, {"sentence": "У мене болить ____. Я не хочу їсти.", "answer": "живіт", "options": ["живіт", "вухо", "око"]}, {"sentence": "У мене болить ____ і є температура. Я не можу говорити.", "answer": "горло", "options": ["горло", "спина", "ніс"]}, {"sentence": "У мене ____, я постійно кашляю.", "answer": "кашель", "options": ["кашель", "нежить", "зуб"]}, {"sentence": "У мене болить ____, мені потрібен стоматолог.", "answer": "зуб", "options": ["зуб", "голова", "нога"]}, {"sentence": "Я ____. У мене болить голова і спина.", "answer": "хворий", "options": ["хворий", "лікар", "аптека"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+Beyond **болить**, there are several common symptom chunks. Each one is a complete statement you can use as-is:
+
+- **У мене температура.** (I have a fever. — literally "I have temperature")
+- **У мене ка́шель.** (I have a cough.)
+- **У мене нежить.** (I have a runny nose.)
+- **Мені хо́лодно.** (I'm cold.)
+- **Мені пога́но.** (I feel unwell.)
+- **Я хво́рий.** (I'm sick. — if you're male)
+- **Я хво́ра.** (I'm sick. — if you're female)
+
+Notice that **У мене температура** doesn't use **болить** — the fever doesn't "hurt," it "is with you." And **Мені погано** uses a different grammatical form (**мені**) — again, just learn it as a chunk for now.
+
+At the doctor or pharmacy, combine these chunks naturally. A sick person might say: **У мене болить горло і є температура.** (My throat hurts and I have a fever.) Or: **Я хвора. У мене кашель і нежить.** (I'm sick. I have a cough and a runny nose.) You already have enough vocabulary to describe a full set of symptoms — real Ukrainian you'd use on day one in Kyiv.
+
+<FillIn client:only="react" items={[{"sentence": "Добрий день! У мене болить ____. Дайте таблетки.", "answer": "голова", "options": ["голова", "аптека", "лікар"]}, {"sentence": "Дайте, будь ласка, щось проти ____.", "answer": "кашлю", "options": ["кашлю", "нежитю", "болю"]}, {"sentence": "А є щось проти ____?", "answer": "нежитю", "options": ["нежитю", "кашлю", "болю"]}, {"sentence": "Дайте ____ від кашлю, будь ласка.", "answer": "сироп", "options": ["сироп", "лікар", "нога"]}, {"sentence": "Дайте таблетки від головного ____.", "answer": "болю", "options": ["болю", "кашлю", "нежитю"]}, {"sentence": "Так, ось ____. Ще щось?", "answer": "краплі", "options": ["краплі", "лікар", "горло"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+## Summary
+
+Here is your complete health toolkit from this module.
+
+**Body parts:**
+**голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс**
+
+**Symptom chunks:**
+- **У мене болить** [body part].
+- **У мене температура / кашель / нежить.**
+- **Мені погано.**
+- **Я хворий / хвора.**
+
+Two real situations where you'll use all of this:
+
+**At the doctor (у лі́каря):**
+- Doctor asks: **Що у вас болить?** → You answer: **У мене болить...**
+
+**At the pharmacy (в апте́ці):**
+- **Дайте, будь ласка, таблетки проти головного болю.** (Give me pills for a headache, please.)
+- **Дайте краплі проти нежитю.** (Give me drops for a runny nose.)
+- **Дайте сиро́п проти кашлю.** (Give me syrup for a cough.)
+
+<Quiz client:only="react" questions={[{"question": "У мене болить голова.", "options": [{"text": "Ось таблетки від головного болю.", "correct": true}, {"text": "Ось краплі від нежиті.", "correct": false}, {"text": "Випийте сироп від кашлю.", "correct": false}]}, {"question": "У мене сильний кашель.", "options": [{"text": "Вам потрібні таблетки від кашлю.", "correct": true}, {"text": "Ось краплі для носа.", "correct": false}, {"text": "У мене болить зуб.", "correct": false}]}, {"question": "Що у вас болить?", "options": [{"text": "У мене болить горло.", "correct": true}, {"text": "Я лікар.", "correct": false}, {"text": "Де аптека?", "correct": false}]}, {"question": "Добрий день. Дайте, будь ласка, щось від нежиті.", "options": [{"text": "Ось краплі, будь ласка.", "correct": true}, {"text": "У мене болить спина.", "correct": false}, {"text": "Це таблетки від головного болю.", "correct": false}]}, {"question": "Мені погано. Що мені робити?", "options": [{"text": "Зверніться до лікаря!", "correct": true}, {"text": "Ось таблетки від кашлю.", "correct": false}, {"text": "Де аптека?", "correct": false}]}, {"question": "У мене є нежить і температура.", "options": [{"text": "Вам потрібні краплі і ліки від температури.", "correct": true}, {"text": "Дайте, будь ласка, сироп.", "correct": false}, {"text": "У мене болить зуб.", "correct": false}]}]} instruction={"Оберіть правильну відповідь (Choose the correct response)"} />
+
+Test yourself with these three questions:
+
+- How do you say "My throat hurts and I have a fever"? → **У мене болить горло і є температура.**
+- You're at the pharmacy. You need something for a cough. What do you say? → **Дайте, будь ласка, щось проти кашлю.**
+- How do you say "I feel unwell"? → **Мені погано.**
+
+If you got all three, you're ready for real-world health situations.
+
+Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'll learn phrases like **ви́клик швидко́ї** (calling an ambulance), describe urgent situations, and use past-tense forms from module 52. The chunk **У мене болить...** will reappear constantly across future modules — it's one of those patterns that, once learned, never stops being useful.
+
+<FillIn client:only="react" items={[{"sentence": "Дайте, ____, таблетки від головного болю.", "answer": "будь ласка", "options": ["будь ласка", "добрий день", "дякую"]}, {"sentence": "Що у вас ____?", "answer": "болить", "options": ["болить", "хворий", "лікар"]}, {"sentence": "У мене ____ і болить горло.", "answer": "температура", "options": ["температура", "аптека", "лікар"]}, {"sentence": "Мені ____. Викличте лікаря!", "answer": "погано", "options": ["погано", "хворий", "добре"]}, {"sentence": "Де тут найближча ____? Мені потрібні ліки.", "answer": "аптека", "options": ["аптека", "голова", "спина"]}, {"sentence": "У мене ____. Дайте, будь ласка, сироп.", "answer": "кашель", "options": ["кашель", "нога", "лікар"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **лі́кар** | doctor | ім. | ч. |
+| **апте́ка** | pharmacy | ім. | ж. |
+| **голова́** | head | ім. | ч. |
+| **го́рло** | throat | ім. | с. |
+| **спи́на** | back | ім. | ж. |
+| **живі́т** | stomach | ім. | ч. |
+| **рука́** | hand/arm | ім. | ж. |
+| **нога́** | leg/foot | ім. | ж. |
+| **о́ко** | eye | ім. | с. |
+| **ву́хо** | ear | ім. | с. |
+| **зуб** | tooth | ім. | ч. |
+| **температу́ра** | fever/temperature | ім. | ж. |
+| **ка́шель** | cough | ім. | ч. |
+| **не́жить** | runny nose | ім. | ч. |
+| **табле́тка** | pill/tablet | ім. | ж. |
+| **хво́рий** | sick (male) | прикм. |  |
+| **хво́ра** | sick (female) | ім. | ж. |
+| **боли́ть** | hurts (singular) | дієсл. |  |
+| **боля́ть** | hurt (plural) | дієсл. |  |
+| **засту́да** | a cold (illness) | ім. | ж. |
+| **кра́плі** | drops (medicine) | ім. | ж. |
+| **сиро́п** | syrup | ім. | ч. |
+| **лі́ки** | medicine/medications | ім. |  |
+| **паціє́нтка** | patient (female) | ім. | ж. |
+| **фармаце́вт** | pharmacist | ім. | ч. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **У мене болить...** | My ... hurts / I have pain in... |
+| **Що у вас болить?** | What hurts? / What's the matter? |
+| **У мене температура.** | I have a fever. |
+| **У мене кашель.** | I have a cough. |
+| **У мене нежить.** | I have a runny nose. |
+| **Мені погано.** | I feel unwell. |
+| **Мені холодно.** | I'm cold. |
+| **проти головного болю** | for a headache (medicine) |
+| **проти кашлю** | for a cough (medicine) |
+| **проти нежитю** | for a runny nose (medicine) |
+| **Я випишу ліки.** | I'll prescribe medicine. |
+| **у лікаря** | at the doctor's |
+| **в аптеці** | at the pharmacy |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "лі́кар", back: "doctor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голова́", back: "head", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "го́рло", back: "throat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "спи́на", back: "back", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "живі́т", back: "stomach", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рука́", back: "hand/arm", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нога́", back: "leg/foot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́ко", back: "eye", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́хо", back: "ear", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зуб", back: "tooth", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "температу́ра", back: "fever/temperature", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́шель", back: "cough", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "не́жить", back: "runny nose", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "табле́тка", back: "pill/tablet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хво́рий", back: "sick (male)", subtitle: "прикм." }, { front: "хво́ра", back: "sick (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "боли́ть", back: "hurts (singular)", subtitle: "дієсл." }, { front: "боля́ть", back: "hurt (plural)", subtitle: "дієсл." }, { front: "засту́да", back: "a cold (illness)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кра́плі", back: "drops (medicine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сиро́п", back: "syrup", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́ки", back: "medicine/medications", subtitle: "ім." }, { front: "паціє́нтка", back: "patient (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фармаце́вт", back: "pharmacist", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<TrueFalse client:only="react" items={[{"statement": "Рука — це частина тіла.", "isTrue": true, "explanation": "Так, рука — це частина тіла (hand/arm)."}, {"statement": "Аптека — це те саме, що лікар.", "isTrue": false, "explanation": "Ні. Аптека — це pharmacy (де купують ліки). Лікар — це doctor (хто лікує)."}, {"statement": "«У мене болить голова» означає «My head hurts».", "isTrue": true, "explanation": "Так. У мене болить + частина тіла = that part hurts."}, {"statement": "Кашель і нежить — це симптоми застуди.", "isTrue": true, "explanation": "Так, кашель (cough) і нежить (runny nose) — типові симптоми застуди."}, {"statement": "«Мені погано» означає «I am a doctor».", "isTrue": false, "explanation": "Ні. Мені погано = I feel unwell. Я лікар = I am a doctor."}, {"statement": "Зуб — це те саме, що вухо.", "isTrue": false, "explanation": "Ні. Зуб — це tooth. Вухо — це ear."}, {"statement": "«Дайте, будь ласка» — це ввічливе прохання.", "isTrue": true, "explanation": "Так. «Дайте, будь ласка» = «Give me, please» — ввічлива форма прохання."}, {"statement": "«У мене температура» і «У мене болить голова» означають те саме.", "isTrue": false, "explanation": "Ні. Температура = fever. У мене болить голова = my head hurts. Це різні симптоми."}]} instruction={"Правда чи ні? (True or false?)"} />
+
+<MatchUp client:only="react" pairs={[{"left": "У мене болить голова.", "right": "таблетки від головного болю"}, {"left": "У мене кашель.", "right": "сироп від кашлю"}, {"left": "У мене нежить.", "right": "краплі від нежиті"}, {"left": "У мене болить горло.", "right": "таблетки від болю"}, {"left": "Мені потрібні ліки.", "right": "Ось, будь ласка."}, {"left": "Що у вас болить?", "right": "У мене болить спина."}]} instruction={"З'єднайте симптом з відповідними ліками (Match the symptom to the right medicine)"} />
+
+<GroupSort client:only="react" groups={{"Частини тіла (Body parts)": ["голова", "горло", "спина", "живіт", "рука", "нога", "зуб", "ніс", "вухо", "око"], "Симптоми та стан (Symptoms and condition)": ["температура", "кашель", "нежить", "хворий", "хвора", "погано"]}} instruction={"Розподіліть слова за категоріями (Sort the words into categories)"} />
+
+<Quiz client:only="react" questions={[{"question": "Як сказати «My stomach hurts»?", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "У мене болить спина.", "correct": false}, {"text": "У мене болить рука.", "correct": false}, {"text": "У мене температура.", "correct": false}]}, {"question": "Як сказати «I have a runny nose»?", "options": [{"text": "У мене нежить.", "correct": true}, {"text": "У мене кашель.", "correct": false}, {"text": "У мене температура.", "correct": false}, {"text": "Мені погано.", "correct": false}]}, {"question": "Як ввічливо попросити ліки в аптеці?", "options": [{"text": "Дайте, будь ласка, таблетки.", "correct": true}, {"text": "Хочу таблетки!", "correct": false}, {"text": "Таблетки!", "correct": false}, {"text": "У мене болить голова.", "correct": false}]}, {"question": "Яке слово означає «pharmacy»?", "options": [{"text": "аптека", "correct": true}, {"text": "лікар", "correct": false}, {"text": "таблетка", "correct": false}, {"text": "кашель", "correct": false}]}, {"question": "Як сказати «I feel unwell»?", "options": [{"text": "Мені погано.", "correct": true}, {"text": "Я хворий.", "correct": false}, {"text": "У мене температура.", "correct": false}, {"text": "У мене кашель.", "correct": false}]}, {"question": "Що означає «нежить»?", "options": [{"text": "runny nose", "correct": true}, {"text": "cough", "correct": false}, {"text": "fever", "correct": false}, {"text": "headache", "correct": false}]}, {"question": "Як сказати «My eyes hurt» (множина)?", "options": [{"text": "У мене болять очі.", "correct": true}, {"text": "У мене болить очі.", "correct": false}, {"text": "У мене болить вухо.", "correct": false}, {"text": "У мене болять нога.", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+
+<Translate client:only="react" questions={[{"source": "My throat hurts and I have a fever.", "options": [{"text": "У мене болить горло і є температура.", "correct": true}, {"text": "У мене болить голова і є нежить.", "correct": false}, {"text": "У мене болить спина і є кашель.", "correct": false}]}, {"source": "I have a cough.", "options": [{"text": "У мене кашель.", "correct": true}, {"text": "У мене нежить.", "correct": false}, {"text": "Мені погано.", "correct": false}]}, {"source": "Give me pills for a headache, please.", "options": [{"text": "Дайте, будь ласка, таблетки від головного болю.", "correct": true}, {"text": "Дайте, будь ласка, краплі від нежиті.", "correct": false}, {"text": "У мене болить голова.", "correct": false}]}, {"source": "Where is the pharmacy?", "options": [{"text": "Де аптека?", "correct": true}, {"text": "Де лікар?", "correct": false}, {"text": "Де ліки?", "correct": false}]}, {"source": "I'm sick. (female speaker)", "options": [{"text": "Я хвора.", "correct": true}, {"text": "Я хворий.", "correct": false}, {"text": "Мені погано.", "correct": false}]}, {"source": "My back hurts.", "options": [{"text": "У мене болить спина.", "correct": true}, {"text": "У мене болить нога.", "correct": false}, {"text": "У мене болить рука.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "У мене болить аптека.", "errorWord": "аптека", "correctForm": "голова", "options": ["голова", "температура", "кашель"], "explanation": "Аптека — це pharmacy (місце), а не частина тіла. Правильно: У мене болить голова."}, {"sentence": "Дайте, лікар, таблетки від кашлю.", "errorWord": "лікар", "correctForm": "будь ласка", "options": ["будь ласка", "дякую", "добре"], "explanation": "У проханні треба «будь ласка» (please). Лікар — це doctor, а не ввічлива частка."}, {"sentence": "У мене нога і болить горло.", "errorWord": "нога", "correctForm": "температура", "options": ["температура", "кашель", "нежить"], "explanation": "Нога — це leg (частина тіла), а не симптом. Правильно: У мене температура і болить горло."}, {"sentence": "Я хворий. У мене спина.", "errorWord": "спина", "correctForm": "кашель", "options": ["кашель", "нежить", "температура"], "explanation": "Спина — це back (частина тіла), а не симптом. Симптоми: кашель, нежить, температура."}, {"sentence": "Де тут найближчий лікар? Мені потрібні таблетки.", "errorWord": "лікар", "correctForm": "аптека", "options": ["аптека", "сироп", "краплі"], "explanation": "Таблетки купують в аптеці (pharmacy), а до лікаря (doctor) йдуть за рецептом."}, {"sentence": "У мене болять голова.", "errorWord": "болять", "correctForm": "болить", "options": ["болить", "болять", "болів"], "explanation": "Голова — це одна річ, тому: У мене болить голова. Болять — для множини: болять зуби, болять ноги."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- State Standard 2024, §3
+  _Thematic area: health (здоров'я) — body parts, symptoms, doctor visits._
+- Grade 1-2 textbook: Частини тіла
+  _Body parts vocabulary with pictures._
+
+**Граматика — Grammar (МійКлас)**
+
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Прикметник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/prikmetnik-iak-chastina-movi-46716) (miyklas.com.ua)
+- [МійКлас: Групи прикметників за значенням](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/grupi-prikmetnikiv-za-znachenniam-46717) (miyklas.com.ua)
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
+- [Small Talk in Ukrainian](https://www.ukrainianlessons.com/small-talk-in-ukrainian/)
+- [Useful Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/)
+
+</TabItem>
+</Tabs>

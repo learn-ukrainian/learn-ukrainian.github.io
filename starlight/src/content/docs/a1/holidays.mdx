@@ -1,0 +1,293 @@
+---
+title: "Holidays"
+sidebar:
+  order: 46
+  label: "46. Holidays"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діало́ги (Dialogues)
+
+Ukrainians love their holidays — and they have special greetings for each one. Here are two conversations: one about **Різдво** (Christmas), one about **День Незале́жності** (Independence Day).
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Ко́ли в тебе́ Різдво? *(When is your Christmas?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Том:</span> Два́дцять п'я́того гру́дня. А в тебе? *(December 25th. And yours?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> У нас — теж! *(Ours too!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Том:</span> Теж? Рані́ше було́ сьо́мого сі́чня, так? *(Also? It used to be January 7th, right?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Так, але́ тепе́р — двадцять п'ятого. *(Yes, but now it's the 25th.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Том:</span> Що ви ро́бите на Різдво? *(What do you do on Christmas?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Ми співа́ємо коля́дки і їмо́ кутю́. *(We sing carols and eat kutia.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Том:</span> Що таке́ кутя́? *(What is kutia?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Це пшени́ця з ме́дом і ма́ком. Ду́же сма́чно! *(It's wheat with honey and poppy seeds. Very tasty!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Том:</span> Як га́рно! З Різдво́м! *(How lovely! Merry Christmas!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> З Різдвом Христо́вим! *(Merry Christmas! [lit. "with Christ's Christmas"])*</div>
+
+
+</div>
+
+Both **З Різдвом!** and **З Різдвом Христовим!** are correct greetings. The longer form with **Христовим** is the fuller, more traditional way to say it.
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Двадцять четверте се́рпня — День Незалежності! *(August 24th — Independence Day!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, це головне́ держа́вне свя́то Украї́ни. *(Yes, it's the main national holiday of Ukraine.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Що ви робите? *(What do you do?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Вдень ми ди́вимося пара́д і хо́димо на конце́рт. *(During the day we watch the parade and go to a concert.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> А вве́чері? *(And in the evening?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Ввечері — салю́т і святко́вий ве́чір з дру́зями. *(In the evening — fireworks and a festive evening with friends.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Усі у виши́ва́нках? *(Everyone in vyshyvankas?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Так! З Днем Незалежності! *(Yes! Happy Independence Day!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Сла́ва Украї́ні! *(Glory to Ukraine!)*</div>
+
+
+</div>
+
+Now check yourself — can you answer these from the dialogues? In Ukrainian, the verb **вітати** means "to greet" or "to congratulate" — and you've just seen how Ukrainians віта́ють one another on holidays.
+
+- Що їдя́ть на Різдво? *(What do people eat on Christmas?)*
+- Де лю́ди бува́ють на День Незалежності? *(Where do people go on Independence Day?)*
+
+<Quiz client:only="react" questions={[{"question": "Коли Різдво в Україні?", "options": [{"text": "25 грудня", "correct": true}, {"text": "7 січня", "correct": false}, {"text": "24 серпня", "correct": false}]}, {"question": "Коли День Незалежності?", "options": [{"text": "24 серпня", "correct": true}, {"text": "25 грудня", "correct": false}, {"text": "1 січня", "correct": false}]}, {"question": "Коли Новий рік?", "options": [{"text": "1 січня", "correct": true}, {"text": "28 червня", "correct": false}, {"text": "24 серпня", "correct": false}]}, {"question": "Великдень — це яка пора року?", "options": [{"text": "весна", "correct": true}, {"text": "зима", "correct": false}, {"text": "літо", "correct": false}]}, {"question": "Коли Вишиванковий день?", "options": [{"text": "травень", "correct": true}, {"text": "грудень", "correct": false}, {"text": "серпень", "correct": false}]}, {"question": "Коли День Конституції?", "options": [{"text": "28 червня", "correct": true}, {"text": "1 жовтня", "correct": false}, {"text": "25 грудня", "correct": false}]}, {"question": "Коли День захисників і захисниць?", "options": [{"text": "1 жовтня", "correct": true}, {"text": "28 червня", "correct": false}, {"text": "1 січня", "correct": false}]}, {"question": "Скільки страв подають на Святвечір?", "options": [{"text": "Дванадцять", "correct": true}, {"text": "Сім", "correct": false}, {"text": "П'ять", "correct": false}]}]} instruction={"Коли це свято? (When is this holiday?)"} />
+
+## Украї́нські свя́та́ (Ukrainian Holidays)
+
+### Різдво (Christmas) — December 25
+
+Ukraine celebrates **Різдво** on **двадцять п'я́те грудня** (December 25). Until 2023, the official date was January 7 — the Russian Orthodox calendar date. Ukraine moved Christmas to December 25, aligning with most of Europe and Ukraine's own pre-Soviet tradition. This was part of a broader break from Russian cultural influence. The word **Різдво** is neuter — so in the instrumental case it becomes **різдвом**: **З Різдвом!**
+
+The heart of Ukrainian Christmas is **Свята вечеря** (Holy Supper) on December 24 — **Святвечір** (Christmas Eve). The table has **дванадцять страв** (twelve dishes), one for each apostle. All dishes are **пісні** (fasting) — no meat. The first dish is always **кутя** — wheat porridge with **мед** (honey), **мак** (poppy seeds), and **горіхи** (nuts). After кутя come **борщ**, **вареники**, **риба** (fish), and **узвар** (dried fruit compote). As Ukrainian textbooks describe it: on Святвечір, кутя is a sacred dish that connects the family to their ancestors.
+
+After dinner, **колядники** (carolers) go door to door singing **колядки** (Christmas carols). These songs wish the family health and happiness — **здоров'я і щастя**. A traditional folk carol from the textbook begins: «Ой пе́рший же пра́зник — то Різдво Христо́ве». The verb **колядувати** means "to go caroling" — a living tradition across Ukraine to this day.
+
+### Вели́кдень (Easter)
+
+**Великдень** is the biggest religious holiday in Ukraine. The date changes each year — it falls in **весна** (spring). When you meet someone on Easter, the greeting is a call-and-response:
+
+- **Христос воскре́с!** *(Christ is risen!)*
+- **Воістину воскрес!** *(Indeed risen!)*
+
+If someone says the first line, you answer with the second. The word **воістину** means "truly" or "indeed."
+
+Three traditions define Великдень: **Пи́санка** — a decorated egg, not just dyed but covered in intricate wax-resist patterns. This is uniquely Ukrainian folk art. **Паска** — tall, sweet Easter bread, blessed at church. And **святити кошик** — blessing the Easter basket at church on Saturday night. The basket holds паска, писанки́, meat, and other food for the Sunday meal.
+
+<Quiz client:only="react" questions={[{"question": "Кутя, колядки, Свята вечеря — це традиції якого свята?", "options": [{"text": "Різдво", "correct": true}, {"text": "Великдень", "correct": false}, {"text": "День Незалежності", "correct": false}]}, {"question": "Писанка і паска — це символи якого свята?", "options": [{"text": "Великдень", "correct": true}, {"text": "Різдво", "correct": false}, {"text": "Новий рік", "correct": false}]}, {"question": "Парад, салют і прапор — це символи якого свята?", "options": [{"text": "День Незалежності", "correct": true}, {"text": "Різдво", "correct": false}, {"text": "Великдень", "correct": false}]}, {"question": "«Христос воскрес!» — це привітання якого свята?", "options": [{"text": "Великдень", "correct": true}, {"text": "Різдво", "correct": false}, {"text": "Новий рік", "correct": false}]}, {"question": "Вишиванка і синьо-жовтий прапор — символи якого свята?", "options": [{"text": "День Незалежності", "correct": true}, {"text": "Великдень", "correct": false}, {"text": "Різдво", "correct": false}]}, {"question": "Дванадцять пісних страв — традиція якого свята?", "options": [{"text": "Різдво", "correct": true}, {"text": "Великдень", "correct": false}, {"text": "Новий рік", "correct": false}]}, {"question": "«Слава Україні! Героям слава!» — привітання якого свята?", "options": [{"text": "День Незалежності", "correct": true}, {"text": "Різдво", "correct": false}, {"text": "Великдень", "correct": false}]}, {"question": "Освячений кошик із паскою несуть до церкви на якому святі?", "options": [{"text": "Великдень", "correct": true}, {"text": "Різдво", "correct": false}, {"text": "Новий рік", "correct": false}]}]} instruction={"Яке свято? (Which holiday?)"} />
+
+## Держа́вні свята (National Holidays)
+
+### День Незалежності — August 24
+
+On **двадцять четверте серпня 1991 року**, Ukraine declared independence from the Soviet Union. This is the most important **державне свято** (national holiday). The word **незалежність** (independence) breaks down clearly: **не** (not) + **залежати** (to depend) — not depending on another state. **Незалежний** means "independent," and **держава** means "state" — so **державне свято** is literally a "state holiday."
+
+How do Ukrainians celebrate? During the day — **парад** (parade) in the city center, **концерти** (concerts) on the main squares, and people carry **синьо-жо́вті прапори** (blue-and-yellow flags) through the streets. In the evening — **салют** (fireworks) over the city. Many people wear **вишиванка** (embroidered shirt) as a symbol of Ukrainian identity.
+
+The standard greeting is **З Днем Незалежності!** (Happy Independence Day!). And the national call-and-response:
+
+- **Слава Україні!** *(Glory to Ukraine!)*
+- **Героям слава!** *(Glory to the heroes!)*
+
+This is not just a holiday phrase — it is used year-round. It gained widespread use during the Revolution of Dignity in 2014 and became a symbol of Ukrainian resilience. In 2018, it was adopted as the official military greeting of the Armed Forces of Ukraine.
+
+### Other Holidays to Know
+
+Four more holidays every learner should recognize:
+
+- **Новий рік** (New Year) — January 1. The biggest secular celebration. Greeting: **З Новим ро́ком!**
+- **Вишиванковий день** (Vyshyvanka Day) — the third Thursday of May. Everyone wears a **вишиванка** — a symbol of Ukrainian identity and cultural resistance.
+- **День Конституції** (Constitution Day) — June 28.
+- **День захи́сникі́в і захи́сни́ць України** (Defenders' Day) — October 1. The official name includes both masculine (**захисник**) and feminine (**захисниця**) forms.
+
+<GroupSort client:only="react" groups={{"Різдво": ["кутя", "колядки", "святвечір", "Свята вечеря", "колядники", "дванадцять страв"], "Великдень": ["писанка", "паска", "кошик", "Христос воскрес!", "воістину воскрес!", "весна"], "День Незалежності": ["парад", "салют", "вишиванка", "прапор", "Слава Україні!", "концерт"]}} instruction={"Розподіліть за святами (Sort by holiday)"} />
+
+## Підсумок — Summary
+
+### The З + Instrumental Greeting Pattern
+
+Every Ukrainian holiday greeting follows one pattern: **З** + the holiday noun in the **instrumental case** + exclamation mark.
+
+- **З Різдвом!** (Merry Christmas!) — різдво → різдвом
+- **З Вели́коднем!** (Happy Easter!) — великдень → великоднем
+- **З Новим роком!** (Happy New Year!) — новий рік → новим роком
+- **З Днем Незалежності!** (Happy Independence Day!)
+- **З днем наро́дження!** (Happy birthday!)
+- **Зі свя́том!** (Happy holiday!) — свято → святом
+
+The instrumental endings: **-ом** for masculine and neuter nouns (різдвом, роком, святом), **-ою/-ею** for feminine (перемо́гою, весно́ю).
+
+### Connection to What You Already Know
+
+You already know the instrumental case from **з** + noun: **кава з молоком** (coffee with milk), **борщ з хлібом** (borshch with bread), **вареники з сиром** (varenyky with cheese). Holiday greetings use the same preposition and the same case — just with a different meaning. **З молоком** = "with milk." **З Різдвом** = "with Christmas" → wishing you a happy Christmas. Same grammar, new context.
+
+### Holiday Calendar
+
+| Date | Holiday | Greeting |
+|------|---------|----------|
+| гру́день 25 | Різдво | З Різдвом Христовим! |
+| сі́чень 1 | Новий рік | З Новим роком! |
+| весна | Великдень | Христос воскрес! |
+| тра́вень (тре́тій четве́р) | Вишиванковий день | — |
+| се́рпень 24 | День Незалежності | З Днем Незалежності! / Слава Україні! |
+| жо́втень 1 | День захисників і захисниць | — |
+
+### Self-Check
+
+- Як привіта́ти з Різдвом? → **З Різдвом Христовим!**
+- Що відповіда́ють на «Христос воскрес!»? → **Воістину воскрес!**
+- Коли День Незалежності? → **Двадцять четверте серпня.**
+- Що таке кутя? → **Пшениця з медом, маком і горі́хами.**
+- Як привітати з Новим роком? → **З Новим роком!**
+
+<FillIn client:only="react" items={[{"sentence": "З ___ Христовим!", "answer": "Різдвом", "options": ["Різдвом", "Різдво", "Різдва"]}, {"sentence": "З Новим ___!", "answer": "роком", "options": ["роком", "рік", "році"]}, {"sentence": "З Днем ___!", "answer": "Незалежності", "options": ["Незалежності", "Незалежність", "Незалежному"]}, {"sentence": "З ___ ! (Happy Easter)", "answer": "Великоднем", "options": ["Великоднем", "Великдень", "Великодня"]}, {"sentence": "Зі ___ ! (Happy holiday!)", "answer": "святом", "options": ["святом", "свято", "свята"]}, {"sentence": "З ___ народження!", "answer": "днем", "options": ["днем", "день", "дня"]}, {"sentence": "Христос ___!", "answer": "воскрес", "options": ["воскрес", "воскресає", "воскресив"]}, {"sentence": "Слава Україні! — ___ слава!", "answer": "Героям", "options": ["Героям", "Героїв", "Герої"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **свя́то** | holiday | присл. |  |
+| **святкува́ти** | to celebrate | дієсл. |  |
+| **Різдво́** | Christmas | ім. | с. |
+| **Вели́кдень** | Easter | ім. | ч. |
+| **віта́ти** | to greet / to congratulate | дієсл. |  |
+| **кутя́** | kutia (wheat porridge with honey and poppy seeds, traditional Christmas dish) | ім. | ж. |
+| **коля́дка** | Christmas carol | ім. | ж. |
+| **пи́санка** | decorated Easter egg (wax-resist patterned) | ім. | ж. |
+| **па́ска** | Easter bread (tall, sweet, blessed at church) | ім. | ж. |
+| **пара́д** | parade | ім. | ч. |
+| **пра́пор** | flag | ім. | ч. |
+| **виши́ва́нка** | embroidered shirt (symbol of Ukrainian identity) | ім. | ж. |
+| **незале́жність** | independence | ім. | ж. |
+| **салю́т** | fireworks | ім. | ч. |
+| **колядува́ти** | to go caroling | дієсл. |  |
+| **коля́дники** | carolers | ім. |  |
+| **Святве́чір** | Christmas Eve | ім. | ч. |
+| **стра́ва** | dish (food course) | ім. | ж. |
+| **пісни́й** | fasting (no meat; used of Holy Supper dishes) | прикм. |  |
+| **мед** | honey | ім. | ч. |
+| **мак** | poppy seeds | ім. | ч. |
+| **горі́хи** | nuts | ім. |  |
+| **пшени́ця** | wheat | ім. | ж. |
+| **узва́р** | uzvar (dried fruit compote) | ім. | ч. |
+| **ри́ба** | fish | ім. | ж. |
+| **здоро́в'я** | health | ім. | с. |
+| **ща́стя** | happiness | ім. | с. |
+| **весна́** | spring | ім. | ж. |
+| **де́ржа́ва** | state (country) | ім. | ж. |
+| **держа́вний** | national / state (adjective) | прикм. |  |
+| **незале́жний** | independent | прикм. |  |
+| **зале́жати** | to depend | дієсл. |  |
+| **конце́рт** | concert | ім. | ч. |
+| **си́ньо-жо́втий** | blue-and-yellow | прикм. |  |
+| **захи́сни́к** | defender (masculine) | ім. | ч. |
+| **захи́сни́ця** | defender (feminine) | ім. | ж. |
+| **воі́стину** | truly / indeed | присл. |  |
+| **вве́чері** | in the evening | присл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **Новий рік** | New Year |
+| **Свята вечеря** | Holy Supper (Christmas Eve meal) |
+| **дванадцять страв** | twelve dishes (traditional Holy Supper) |
+| **святити кошик** | to bless the Easter basket |
+| **З Різдвом!** | Merry Christmas! |
+| **З Різдвом Христовим!** | Merry Christmas! (traditional fuller form) |
+| **Христос воскрес!** | Christ is risen! (Easter greeting) |
+| **Воістину воскрес!** | Indeed risen! (Easter response) |
+| **З Великоднем!** | Happy Easter! |
+| **З Новим роком!** | Happy New Year! |
+| **З Днем Незалежності!** | Happy Independence Day! |
+| **З днем народження!** | Happy birthday! |
+| **Слава Україні!** | Glory to Ukraine! |
+| **Героям слава!** | Glory to the heroes! (response to Слава Україні) |
+| **Що таке...?** | What is...? |
+| **Вишиванковий день** | Vyshyvanka Day (third Thursday of May) |
+| **День Конституції** | Constitution Day (June 28) |
+| **День захисників і захисниць України** | Defenders' Day (October 1) |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "свя́то", back: "holiday", subtitle: "присл." }, { front: "святкува́ти", back: "to celebrate", subtitle: "дієсл." }, { front: "Різдво́", back: "Christmas", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "Вели́кдень", back: "Easter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "віта́ти", back: "to greet / to congratulate", subtitle: "дієсл." }, { front: "кутя́", back: "kutia (wheat porridge with honey and poppy seeds, traditional Christmas dish)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коля́дка", back: "Christmas carol", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пи́санка", back: "decorated Easter egg (wax-resist patterned)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "па́ска", back: "Easter bread (tall, sweet, blessed at church)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пара́д", back: "parade", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пра́пор", back: "flag", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виши́ва́нка", back: "embroidered shirt (symbol of Ukrainian identity)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "незале́жність", back: "independence", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "салю́т", back: "fireworks", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "колядува́ти", back: "to go caroling", subtitle: "дієсл." }, { front: "коля́дники", back: "carolers", subtitle: "ім." }, { front: "Святве́чір", back: "Christmas Eve", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стра́ва", back: "dish (food course)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пісни́й", back: "fasting (no meat; used of Holy Supper dishes)", subtitle: "прикм." }, { front: "мед", back: "honey", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мак", back: "poppy seeds", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "горі́хи", back: "nuts", subtitle: "ім." }, { front: "пшени́ця", back: "wheat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "узва́р", back: "uzvar (dried fruit compote)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "здоро́в'я", back: "health", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ща́стя", back: "happiness", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "весна́", back: "spring", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "де́ржа́ва", back: "state (country)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "держа́вний", back: "national / state (adjective)", subtitle: "прикм." }, { front: "незале́жний", back: "independent", subtitle: "прикм." }, { front: "зале́жати", back: "to depend", subtitle: "дієсл." }, { front: "конце́рт", back: "concert", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "си́ньо-жо́втий", back: "blue-and-yellow", subtitle: "прикм." }, { front: "захи́сни́к", back: "defender (masculine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "захи́сни́ця", back: "defender (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воі́стину", back: "truly / indeed", subtitle: "присл." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<MatchUp client:only="react" pairs={[{"left": "Різдво", "right": "25 грудня"}, {"left": "Новий рік", "right": "1 січня"}, {"left": "День Незалежності", "right": "24 серпня"}, {"left": "День Конституції", "right": "28 червня"}, {"left": "День захисників і захисниць", "right": "1 жовтня"}, {"left": "Вишиванковий день", "right": "третій четвер травня"}, {"left": "Великдень", "right": "весна"}]} instruction={"З'єднайте свято з датою (Match the holiday with its date)"} />
+
+<TrueFalse client:only="react" items={[{"statement": "Різдво в Україні святкують 25 грудня.", "isTrue": true, "explanation": "Так, з 2023 року офіційна дата Різдва — 25 грудня."}, {"statement": "Кутя — це м'ясна страва на Святвечір.", "isTrue": false, "explanation": "Ні, кутя — пісна страва: пшениця з медом, маком і горіхами."}, {"statement": "На Великдень говорять «З Великоднем Христовим!»", "isTrue": false, "explanation": "Ні, на Великдень говорять «Христос воскрес!» — «Воістину воскрес!»"}, {"statement": "Писанка — це розписане великоднє яйце.", "isTrue": true, "explanation": "Так, писанка — унікальне українське народне мистецтво."}, {"statement": "День Незалежності — 24 серпня.", "isTrue": true, "explanation": "Так, 24 серпня 1991 року Україна проголосила незалежність."}, {"statement": "На Вишиванковий день українці носять вишиванку.", "isTrue": true, "explanation": "Так, вишиванка — символ української ідентичності та культури."}, {"statement": "«Слава Україні!» — це тільки святкова фраза.", "isTrue": false, "explanation": "Ні, «Слава Україні!» використовують цілий рік — це офіційне військове привітання."}, {"statement": "На Святвечір традиційно подають тридцять страв.", "isTrue": false, "explanation": "Ні, на Святвечір подають дванадцять страв — по одній за кожного апостола."}]} instruction={"Правда чи ні? (True or false?)"} />
+
+<Quiz client:only="react" questions={[{"question": "Як Олена і Том вітають одне одного в діалозі на Різдво?", "options": [{"text": "З Різдвом Христовим!", "correct": true}, {"text": "Христос воскрес!", "correct": false}, {"text": "З Новим роком!", "correct": false}]}, {"question": "Що Оксана і Марко роблять ввечері на День Незалежності?", "options": [{"text": "Дивляться салют", "correct": true}, {"text": "Їдять кутю", "correct": false}, {"text": "Співають колядки", "correct": false}]}, {"question": "Що означає слово «незалежність»?", "options": [{"text": "Не залежати від іншої держави", "correct": true}, {"text": "Державне свято", "correct": false}, {"text": "Синьо-жовтий прапор", "correct": false}]}, {"question": "Яка страва завжди перша на Свята вечеря?", "options": [{"text": "Кутя", "correct": true}, {"text": "Паска", "correct": false}, {"text": "Борщ", "correct": false}]}, {"question": "Що відповідають на «Христос воскрес!»?", "options": [{"text": "Воістину воскрес!", "correct": true}, {"text": "Слава Україні!", "correct": false}, {"text": "З Різдвом!", "correct": false}]}, {"question": "Де святкують День Незалежності вдень, згідно з діалогом?", "options": [{"text": "На параді та концерті", "correct": true}, {"text": "Вдома з родиною", "correct": false}, {"text": "У церкві", "correct": false}]}, {"question": "Хто такі «колядники»?", "options": [{"text": "Люди, які ходять і співають колядки", "correct": true}, {"text": "Традиційна різдвяна страва", "correct": false}, {"text": "Різдвяний символ", "correct": false}]}, {"question": "Що таке паска?", "options": [{"text": "Великодній хліб", "correct": true}, {"text": "Різдвяна страва", "correct": false}, {"text": "Новорічна прикраса", "correct": false}]}]} instruction={"Дайте відповідь на запитання (Answer the question)"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "З Різдво Христовим!", "errorWord": "Різдво", "correctForm": "Різдвом", "options": ["Різдвом", "Різдва", "Різдві"], "explanation": "Після «З» — орудний відмінок: Різдво → Різдвом."}, {"sentence": "З Новий роком!", "errorWord": "Новий", "correctForm": "Новим", "options": ["Новим", "Нового", "Нові"], "explanation": "Прикметник теж в орудному відмінку: новий → новим."}, {"sentence": "З День Незалежності!", "errorWord": "День", "correctForm": "Днем", "options": ["Днем", "Дня", "Дні"], "explanation": "Після «З» — орудний відмінок: день → днем."}, {"sentence": "З Великдень!", "errorWord": "Великдень", "correctForm": "Великоднем", "options": ["Великоднем", "Великодня", "Великодні"], "explanation": "Після «З» — орудний відмінок: Великдень → Великоднем."}, {"sentence": "Зі свято!", "errorWord": "свято", "correctForm": "святом", "options": ["святом", "свята", "святі"], "explanation": "Після «Зі» — орудний відмінок: свято → святом."}, {"sentence": "З день народження!", "errorWord": "день", "correctForm": "днем", "options": ["днем", "дня", "дні"], "explanation": "Після «З» — орудний відмінок: день → днем."}]} instruction={"Виправте привітання — неправильний відмінок (Correct the greeting — wrong case)"} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- [ULP Season 1, Episode 23](https://www.ukrainianlessons.com/episode23/)
+  _Ukrainian holidays and celebrations._
+- State Standard 2024, §3 (традиції)
+  _Thematic area: traditions, holidays, cultural practices._
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
+- [Small Talk in Ukrainian](https://www.ukrainianlessons.com/small-talk-in-ukrainian/)
+
+</TabItem>
+</Tabs>
