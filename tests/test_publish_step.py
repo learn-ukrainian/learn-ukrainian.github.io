@@ -16,6 +16,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build.v6_build import (
     _build_resources_tab,
+    _build_resources_tab_full,
+    _build_slovnyk_tab,
     _build_workbook_tab,
     _inject_inline_activities,
     _load_activities,
@@ -205,3 +207,94 @@ class TestBackwardCompat:
         with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
             result = _load_activities("a1", "missing-module")
             assert result is None
+
+
+# ---------------------------------------------------------------------------
+# _build_slovnyk_tab (#1124)
+# ---------------------------------------------------------------------------
+
+
+class TestBuildSlovnykTab:
+    def test_from_vocabulary_yaml(self, tmp_path):
+        """Словник tab built from vocabulary/{slug}.yaml when available."""
+        vocab_dir = tmp_path / "a1" / "vocabulary"
+        vocab_dir.mkdir(parents=True)
+        vocab_data = {
+            "vocabulary": [
+                {"word": "мама", "translation": "mother", "pos": "ім.", "gender": "ж."},
+                {"word": "тато", "translation": "father", "pos": "ім.", "gender": "ч."},
+            ]
+        }
+        (vocab_dir / "test-mod.yaml").write_text(
+            yaml.dump(vocab_data, allow_unicode=True), "utf-8"
+        )
+
+        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
+            result = _build_slovnyk_tab("a1", "test-mod")
+            # build_slovnyk_markdown adds stress marks (ма́ма), so strip for comparison
+            result_stripped = result.replace("\u0301", "")
+            assert "мама" in result_stripped
+            assert "тато" in result_stripped
+            assert "mother" in result
+
+    def test_fallback_to_plan(self, tmp_path):
+        """Falls back to plan vocabulary_hints when no vocabulary YAML exists."""
+        plans_dir = tmp_path / "plans" / "a1"
+        plans_dir.mkdir(parents=True)
+        plan = {
+            "title": "Test",
+            "level": "a1",
+            "vocabulary_hints": {
+                "required": ["привіт (hello)", "так (yes)"],
+            },
+        }
+        (plans_dir / "test-mod.yaml").write_text(
+            yaml.dump(plan, allow_unicode=True), "utf-8"
+        )
+
+        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
+             patch("build.enrich._CURRICULUM_ROOT", tmp_path):
+            result = _build_slovnyk_tab("a1", "test-mod")
+            assert "привіт" in result
+            assert "hello" in result
+
+    def test_no_vocab_returns_empty(self, tmp_path):
+        """Returns empty string when no vocabulary source exists."""
+        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
+            result = _build_slovnyk_tab("a1", "nonexistent-mod")
+            assert result == ""
+
+
+# ---------------------------------------------------------------------------
+# _build_resources_tab_full (#1124)
+# ---------------------------------------------------------------------------
+
+
+class TestBuildResourcesTabFull:
+    def test_with_plan_references(self, tmp_path):
+        """Full resources tab includes plan references."""
+        plans_dir = tmp_path / "plans" / "a1"
+        plans_dir.mkdir(parents=True)
+        plan = {
+            "title": "Test",
+            "references": [
+                {"title": "ULP Episode 1", "url": "https://example.com"},
+            ],
+        }
+        (plans_dir / "test-mod.yaml").write_text(
+            yaml.dump(plan, allow_unicode=True), "utf-8"
+        )
+
+        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
+             patch("build.v6_build.PROJECT_ROOT", tmp_path), \
+             patch("build.enrich._PROJECT_ROOT", tmp_path):
+            result = _build_resources_tab_full("a1", "test-mod")
+            assert "ULP Episode 1" in result
+            assert "https://example.com" in result
+
+    def test_no_plan_falls_back(self, tmp_path):
+        """Falls back to simple _build_resources_tab when no plan exists."""
+        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
+             patch("build.v6_build.PROJECT_ROOT", tmp_path):
+            result = _build_resources_tab_full("a1", "nonexistent-mod")
+            assert "References" in result

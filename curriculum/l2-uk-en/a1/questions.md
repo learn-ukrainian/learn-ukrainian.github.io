@@ -1,5 +1,3 @@
-<!-- TAB:Урок -->
-
 ## Діало́ги (Dialogues)
 Ukrainian uses special question words — **пита́льні слова́** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
 ### Dialogue 1 — Getting to know someone
@@ -108,72 +106,3 @@ Here is everything from this module in one place:
 2. Make two negative sentences: **Я нічого не знаю. Ніхто не розумі́є.**
 3. Turn a statement into a yes/no question: Він говорить українською. → Він говорить українською? ↑
 :::
-
-
-<!-- TAB:Словник -->
-
-### Обов'язко́ві та рекомендо́вані слова
-
-| Сло́во | Переклад | Части́на мо́ви | Рід |
-|-------|----------|-------------|-----|
-| **куди́** | where to (direction) | присл. |  |
-| **коли́** | when | ім. |  |
-| **чому́** | why | присл. |  |
-| **як** | how | присл. |  |
-| **ні** | no | част. |  |
-| **ніхто́** | nobody | ім. | ч. |
-| **ні́чого** | nothing | ім. | с. |
-| **ніколи** | never | присл. |  |
-| **ніде** | nowhere | присл. |  |
-| **нікуди** | to nowhere, not anywhere | присл. |  |
-| **жи́ти** | to live | дієсл. |  |
-| **розумі́ти** | to understand | дієсл. |  |
-| **зна́ти** | to know | дієсл. |  |
-| **вивча́ти** | to study, to learn | дієсл. |  |
-| **працюва́ти** | to work | дієсл. |  |
-| **відповіда́ти** | to answer | дієсл. |  |
-| **чу́ти** | to hear | дієсл. |  |
-| **іти́** | to go (on foot) | дієсл. |  |
-| **ї́хати** | to go (by vehicle), to drive | дієсл. |  |
-| **запере́чення** | negation | ім. | с. |
-| **запі́знюватися** | to be late | дієсл. |  |
-| **вра́нці** | in the morning | присл. |  |
-| **уве́чері** | in the evening | присл. |  |
-
-### Ви́рази
-
-| Ви́раз | Переклад |
-|-------|----------|
-| **питальні слова** | question words |
-| **тому що** | because |
-| **подвійне заперечення** | double negation |
-| **Я не знаю.** | I don't know. |
-
-### Картки́ — Flashcards
-
-<FlashcardDeck client:only="react" cards={[{ front: "куди́", back: "where to (direction)", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "чому́", back: "why", subtitle: "присл." }, { front: "як", back: "how", subtitle: "присл." }, { front: "ні", back: "no", subtitle: "част." }, { front: "ніхто́", back: "nobody", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ні́чого", back: "nothing", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ніколи", back: "never", subtitle: "присл." }, { front: "ніде", back: "nowhere", subtitle: "присл." }, { front: "нікуди", back: "to nowhere, not anywhere", subtitle: "присл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "розумі́ти", back: "to understand", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "відповіда́ти", back: "to answer", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "іти́", back: "to go (on foot)", subtitle: "дієсл." }, { front: "ї́хати", back: "to go (by vehicle), to drive", subtitle: "дієсл." }, { front: "запере́чення", back: "negation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "запі́знюватися", back: "to be late", subtitle: "дієсл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }]} />
-
-
-<!-- TAB:Зошит -->
-
-:::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
-
-Advanced exercises for this module are in development. Check back soon!
-:::
-
-
-<!-- TAB:Ресурси -->
-
-**Дже́рела — References**
-
-- Варзацька Grade 4, p.41
-  _Question words in case system context (хто? що? кого? чого́?)._
-- [ULP Season 1, Episode 35](https://www.ukrainianlessons.com/episode35/)
-  _Questions in Ukrainian — word order and intonation._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
-- [Small Talk in Ukrainian](https://www.ukrainianlessons.com/small-talk-in-ukrainian/)

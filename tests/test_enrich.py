@@ -1,6 +1,5 @@
 """Tests for V6 Step 7b: ENRICH — tabs, словник, videos, resources, dialogues."""
 
-import re
 import sys
 import typing
 from pathlib import Path
@@ -86,8 +85,12 @@ class TestSlovnyk:
         assert "Вирази" in result
 
 
-class TestM01EnrichedContent:
-    """Integration test: M01 enriched content has словник, video embeds, references (#1009 AC8)."""
+class TestM01ProseOnly:
+    """Integration test: M01 .md file contains only prose (no TAB markers).
+
+    #1124 moved enrichment to publish step. The .md now contains only the Урок prose.
+    Словник, Зошит, Ресурси tabs are assembled at publish time from sources.
+    """
 
     def _load_m01(self):
         content_path = CURRICULUM_ROOT / "a1" / "sounds-letters-and-hello.md"
@@ -98,48 +101,50 @@ class TestM01EnrichedContent:
         plan = yaml.safe_load(plan_path.read_text("utf-8"))
         return content, plan
 
-    def test_slovnyk_has_at_least_10_words(self):
+    def test_no_tab_markers_in_md(self):
         content, _plan = self._load_m01()
         if content is None:
             import pytest
             pytest.skip("M01 content/plan not available")
 
-        # Check the enriched content file directly for словник entries
-        slovnyk_pos = content.find("<!-- TAB:Словник -->")
-        assert slovnyk_pos != -1, "M01 content must have a Словник tab"
-
-        # Count vocabulary table rows (| **word** | ...)
-        slovnyk_section = content[slovnyk_pos:]
-        word_rows = re.findall(r"\| \*\*[^*]+\*\* \|", slovnyk_section)
-        assert len(word_rows) >= 10, (
-            f"M01 словник must have at least 10 words, found {len(word_rows)}"
+        assert "<!-- TAB:" not in content, (
+            "M01 .md should not have TAB markers (enrichment moved to publish)"
         )
 
-    def test_video_embeds_if_plan_has_them(self):
-        content, plan = self._load_m01()
+    def test_prose_has_content(self):
+        content, _plan = self._load_m01()
         if content is None:
             import pytest
             pytest.skip("M01 content/plan not available")
 
-        # Videos are handled by watch-and-repeat activity injection in the workbook,
-        # NOT by enrich into the lesson tab. Verify they are NOT in the lesson content.
-        pv = plan.get("pronunciation_videos", {})
-        if pv.get("overview") or any(pv.get(k) for k in ("vowels", "consonants", "special", "letters")):
-            assert "YouTubeVideo" not in content.split("<!-- TAB:Словник -->")[0], (
-                "Videos should not be in lesson tab — they belong in workbook activities"
-            )
+        word_count = len(content.split())
+        assert word_count >= 500, (
+            f"M01 prose should have substantial content, found {word_count} words"
+        )
 
-    def test_references_present(self):
-        content, plan = self._load_m01()
+    def test_no_videos_in_prose(self):
+        content, _plan = self._load_m01()
         if content is None:
             import pytest
             pytest.skip("M01 content/plan not available")
 
-        refs = plan.get("references", [])
-        if refs:
-            assert "<!-- TAB:Ресурси -->" in content, (
-                "M01 plan has references but content has no Ресурси tab"
-            )
+        assert "YouTubeVideo" not in content, (
+            "Videos should not be in .md prose — they belong in workbook activities at publish"
+        )
+
+    def test_vocabulary_yaml_exists(self):
+        """Словник is built from vocabulary YAML at publish time."""
+        vocab_path = CURRICULUM_ROOT / "a1" / "vocabulary" / "sounds-letters-and-hello.yaml"
+        if not vocab_path.exists():
+            import pytest
+            pytest.skip("M01 vocabulary YAML not available")
+
+        vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
+        assert isinstance(vocab_data, dict)
+        entries = vocab_data.get("vocabulary", [])
+        assert len(entries) >= 10, (
+            f"M01 vocabulary YAML must have at least 10 entries, found {len(entries)}"
+        )
 
 
 class TestVideoEmbeds:

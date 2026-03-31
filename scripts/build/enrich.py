@@ -215,8 +215,7 @@ def _load_external_resources(slug: str, plan: dict) -> list[dict]:
         return _flatten_resources(resources[prefixed])
 
     # No fuzzy matching — only exact slug matches.
-    # external_resources.yaml uses old V2 slugs that don't map to V3.
-    # TODO: remap external_resources.yaml to V3 slugs (#1022)
+    # V2→V3 slug remapping applied in #1047 (2026-03-31).
 
     return []
 

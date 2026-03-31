@@ -9,10 +9,9 @@ Orchestrates the V6 pipeline:
 5b. EXERCISES: Fill placeholders with DSL
 5d. VERIFY EXERCISES: Check exercise items grounded in prose (#1016)
 6. ANNOTATE: Stress marks + deterministic fixes
-7b. ENRICH: Словник, videos, resources, dialogue formatting
 7. VERIFY: VESUM + grammar scope
 8. REVIEW: Cross-agent adversarial review
-9. PUBLISH: DSL→MDX conversion
+9. PUBLISH: Assemble 4-tab MDX from prose (.md) + vocabulary YAML + activities YAML + resources
 
 The Skeleton->Flesh architecture (#998) splits content generation into two calls
 for all modules (use --no-skeleton to skip):
@@ -302,7 +301,11 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
             return "15-30% Ukrainian"
         return "20-35% Ukrainian"
     elif base == "a2":
-        if module_num <= 20:
+        if module_num <= 3:
+            return "20-40% Ukrainian — bridge from A1, reviewing A1 grammar + introducing A2 metalanguage."
+        elif module_num <= 7:
+            return "30-50% Ukrainian — ramp up. Mix theory with applied Ukrainian (dialogues, pattern boxes)."
+        elif module_num <= 20:
             return "45-65% Ukrainian — nearly half in Ukrainian. English for grammar theory only."
         elif module_num <= 50:
             return "55-75% Ukrainian — Ukrainian dominates. English for abstract grammar only."
@@ -1901,7 +1904,7 @@ def _post_process_content(content_path: Path) -> int:
         _log(f"  🔧 Stripped {stress_count} manual stress marks")
 
     # 5. Strip writer-generated tab markers and vocab tables
-    # The ENRICH step generates these properly — writer copies are garbage
+    # .md files should contain only prose — no TAB markers (#1124)
     if "<!-- TAB:" in text:
         tab_pos = text.index("<!-- TAB:")
         text = text[:tab_pos].rstrip() + "\n"
@@ -1909,7 +1912,7 @@ def _post_process_content(content_path: Path) -> int:
         _log("  🔧 Stripped writer-generated tab markers")
 
     # 6. Strip writer-generated YouTube video embeds ONLY when plan has pronunciation_videos
-    # (ENRICH will add them properly). Seminar modules without pronunciation_videos
+    # (publish step will add them properly). Seminar modules without pronunciation_videos
     # may legitimately embed inline videos — don't strip those. (Gemini review #9)
     slug = content_path.stem
     level_dir = content_path.parent.name
@@ -1969,9 +1972,9 @@ def _post_process_content(content_path: Path) -> int:
 def step_annotate(content_path: Path) -> bool:
     """Step 8b: Add stress marks (after review, before publish).
 
-    NOTE: Does NOT call _post_process_content — that runs earlier (step 6),
-    before ENRICH. Running it again here would strip the tab markers and
-    enriched content that ENRICH added.
+    NOTE: Does NOT call _post_process_content — that runs earlier (step 6).
+    Stress marks are added to the prose-only .md; publish uses the annotated
+    prose when building the final MDX.
     """
     _log(f"\n{'='*60}")
     _log("  Step 8b: ANNOTATE — Stress marks")
@@ -3113,52 +3116,13 @@ def step_review(content_path: Path, level: str, module_num: int,
     plan_content = plan_path.read_text("utf-8") if plan_path.exists() else ""
     plan = yaml.safe_load(plan_content) if plan_content else {}
     raw_content = content_path.read_text("utf-8")
-    raw_word_count = len(raw_content.split())
 
-    # Strip enrichment (tabs, словník, workbook, resources, videos) before review.
-    # The reviewer should evaluate the WRITER's prose, not ENRICH-generated content.
+    # .md files now contain ONLY prose (no TAB markers, no enrichment artifacts).
+    # Strip any legacy TAB markers if still present (backward compat during migration).
     generated_content = raw_content
-    tab_marker = generated_content.find("<!-- TAB:Словник -->")
-    if tab_marker != -1:
-        generated_content = generated_content[:tab_marker].strip()
+    if "<!-- TAB:Словник -->" in generated_content:
+        generated_content = generated_content[:generated_content.index("<!-- TAB:Словник -->")].strip()
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
-
-    # Safety check: if the body is empty but the raw file had content, enrich
-    # ate the prose. Re-read and try without tab stripping.
-    if len(generated_content.split()) < 50 and raw_word_count > 200:
-        _log(f"  ⚠️  Body extraction yielded {len(generated_content.split())} words "
-             f"but raw file has {raw_word_count} — possible enrich corruption. "
-             f"Falling back to raw content (stripping словнік table).")
-        # Fall back: use raw content, just strip the markdown table and tab markers
-        generated_content = raw_content
-        # Remove the Словник table (starts with | Сло́во | or similar)
-        generated_content = re.sub(
-            r'\n### Обов.*?(?=\n<!-- TAB:|\n## |\Z)', '', generated_content, flags=re.DOTALL,
-        )
-        for marker in ("<!-- TAB:Урок -->", "<!-- TAB:Словник -->",
-                        "<!-- TAB:Зошит -->", "<!-- TAB:Ресурси -->"):
-            generated_content = generated_content.replace(marker, "")
-        # Strip workbook placeholder
-        generated_content = re.sub(r':::note\n.*?:::', '', generated_content, flags=re.DOTALL)
-        generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
-
-    # Strip video embeds injected by ENRICH — reviewer must not see/score these
-    # Covers: <YouTubeVideo ... />, ### Відео — Video sections, video sub-headers
-    generated_content = re.sub(
-        r'<YouTubeVideo[^/]*/>\s*', '', generated_content,
-    )
-    generated_content = re.sub(
-        r'\[Повний плейлист / Full playlist\]\([^)]*\)\s*', '', generated_content,
-    )
-    # Strip the entire "### Відео — Video" section if present (header + content until next ##)
-    generated_content = re.sub(
-        r'###\s*Відео\s*—\s*Video.*?(?=\n##\s|\Z)', '', generated_content, flags=re.DOTALL,
-    )
-    # Strip leftover video sub-headers (#### Голосні — Vowels, etc.)
-    generated_content = re.sub(
-        r'####\s*(Голосні|Приголосні|Спеціальні)\s*—\s*\w+\s*\n?', '', generated_content,
-    )
-    # Clean up multiple blank lines left by stripping
     generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
     # Inject deterministic word count so reviewer doesn't guess
@@ -3474,12 +3438,12 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     Targeted fixes are better than section rewrites — they change
     only what the reviewer flagged, preserving everything else.
 
-    The reviewer sees content with enrichment stripped and no stress marks.
-    The actual file has enrichment (TAB markers) and may have stress marks.
-    We extract the body, strip stress marks for matching, and apply fixes.
+    The .md file now contains only prose (no TAB markers, no enrichment).
+    The reviewer sees the same content. Stress marks may be present.
 
     Reviewed by Gemini (2026-03-28) — fixed: stress offset calculation,
-    dangling combining chars, TAB:Урок duplication, find_str stress stripping.
+    dangling combining chars, find_str stress stripping.
+    Issue: #1124 — simplified after enrichment moved to publish.
     """
     STRESS_MARK = "\u0301"
 
@@ -3487,12 +3451,7 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     if not fixes:
         return False, 0
 
-    raw_content = content_path.read_text("utf-8")
-
-    # The reviewer sees content with enrichment stripped (no TAB markers, no Словник tab).
-    # Extract just the body (prose) for matching, then write back the modified body + tail.
-    body, tail = _extract_body(raw_content)
-    content = body  # Apply fixes to body only
+    content = content_path.read_text("utf-8")
     applied = 0
 
     for fix in fixes:
@@ -3531,7 +3490,6 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         content_unstressed = content.replace(STRESS_MARK, "")
         if find_unstressed in content_unstressed:
             # Map from unstressed position to stressed position
-            # Build a mapping: unstressed_idx → stressed_idx
             pos_unstressed = content_unstressed.index(find_unstressed)
 
             # Walk through stressed content to find the real start position
@@ -3562,9 +3520,7 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         _log(f"  ⚠️  Fix not matched: '{find_unstressed[:60]}...'")
 
     if applied > 0:
-        # Reassemble: body (TAB:Урок stripped by _extract_body) + tail (enrichment)
-        full_content = ("<!-- TAB:Урок -->\n\n" + content.strip() + "\n\n" + tail) if tail else content
-        content_path.write_text(full_content, "utf-8")
+        content_path.write_text(content, "utf-8")
         _log(f"  📝 {applied}/{len(fixes)} fixes applied to content")
 
     return applied > 0, applied
@@ -3606,9 +3562,11 @@ def _rewrite_weak_sections(
     findings_section = re.search(r"## Findings\s*\n(.*?)(?=\n## |\Z)", review_text, re.DOTALL)
     findings_text = findings_section.group(1).strip() if findings_section else ""
 
-    # Read content — extract body (prose) and tail (Словник/Ресурси)
+    # Read content — .md files now contain only prose (no TAB markers)
     content = content_path.read_text("utf-8")
-    body, tail = _extract_body(content)
+    body = content.replace("<!-- TAB:Урок -->", "").strip()  # Legacy compat
+    if "<!-- TAB:Словник -->" in body:
+        body = body[:body.index("<!-- TAB:Словник -->")].strip()
 
     if len(body) < 200:
         _log(f"  ❌ Body too short for rewrite ({len(body)} chars)")
@@ -3740,9 +3698,8 @@ claims, grammar rules, or cultural facts that aren't here.
         content_path.write_text(backup_content, "utf-8")
         return False
 
-    # Write the rewritten content + preserved tail (Словник, Ресурси tabs)
-    new_content = "<!-- TAB:Урок -->\n\n" + raw.strip() + "\n\n" + tail
-    content_path.write_text(new_content, "utf-8")
+    # Write the rewritten prose-only content (no TAB markers — #1124)
+    content_path.write_text(raw.strip() + "\n", "utf-8")
 
     _log(f"  ✅ Section rewrite complete ({len(raw.split())} words, {len(rewrite_h2s)} sections)")
     return True
@@ -3916,16 +3873,81 @@ def _build_resources_tab(level: str, slug: str) -> str:
     return "\n".join(parts)
 
 
+def _build_slovnyk_tab(level: str, slug: str) -> str:
+    """Build Словник tab content from vocabulary/{slug}.yaml or plan fallback.
+
+    Priority:
+    1. vocabulary/{slug}.yaml (writer-driven, has contextual translations)
+    2. Fallback: plan vocabulary_hints (no prose translations)
+
+    Issue: #1124 — moved from enrich.py to publish step.
+    """
+    # 1. Try writer-generated vocabulary YAML
+    vocab_path = CURRICULUM_ROOT / level / "vocabulary" / f"{slug}.yaml"
+    if vocab_path.exists():
+        try:
+            vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
+            if isinstance(vocab_data, dict) and vocab_data.get("vocabulary"):
+                from build.vocab_gen import build_slovnyk_markdown
+                entries = vocab_data["vocabulary"]
+                expressions = [e for e in entries if e.get("expression")]
+                additional = [e for e in entries if e.get("additional") and not e.get("expression")]
+                plan_entries = [e for e in entries if not e.get("expression") and not e.get("additional")]
+                result = build_slovnyk_markdown(plan_entries, additional, expressions)
+                if result.strip():
+                    return result
+        except Exception as e:
+            _log(f"  ⚠️  Vocabulary YAML parse error: {e}")
+
+    # 2. Fallback: plan vocabulary_hints
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        return ""
+    try:
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    except Exception:
+        return ""
+
+    from build.enrich import _build_slovnyk
+    return _build_slovnyk(plan, slug=slug)
+
+
+def _build_resources_tab_full(level: str, slug: str) -> str:
+    """Build Ресурси tab from plan + external_resources.yaml + ULP + МійКлас.
+
+    This is the full version that uses enrich._build_resources() for rich output,
+    falling back to the simpler _build_resources_tab() if enrich is unavailable.
+
+    Issue: #1124 — moved from enrich.py to publish step.
+    """
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        return _build_resources_tab(level, slug)
+    try:
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    except Exception:
+        return _build_resources_tab(level, slug)
+
+    from build.enrich import _build_resources
+    result = _build_resources(plan, slug=slug)
+    if result.strip():
+        return result
+
+    # Fallback to simpler version
+    return _build_resources_tab(level, slug)
+
+
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
     """Step 9: Convert DSL→MDX + inject activities + build 4-tab structure.
 
-    The 4 tabs are:
-    1. Урок (prose + inline activities from YAML)
-    2. Словник (vocabulary — from ENRICH step)
-    3. Зошит (workbook activities from YAML)
-    4. Ресурси (plan references + external resources)
+    The 4 tabs are assembled from multiple sources:
+    1. Урок: .md prose + inline activities from YAML
+    2. Словник: vocabulary/{slug}.yaml or plan vocabulary_hints
+    3. Зошит: activities/{slug}.yaml workbook section
+    4. Ресурси: plan references + external_resources.yaml + ULP + МійКлас
 
-    If no activities/{slug}.yaml exists, falls back to legacy DSL→MDX conversion.
+    The .md file contains ONLY prose — no TAB markers, no enrichment artifacts.
+    Issue: #1124
     """
     _log(f"\n{'='*60}")
     _log("  Step 9: PUBLISH — DSL→MDX + Activities")
@@ -3939,6 +3961,11 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     from generate_mdx.dsl_to_mdx import convert_dsl_to_mdx
 
     text = content_path.read_text("utf-8")
+
+    # Strip any legacy TAB markers if still present (backward compat during migration)
+    if "<!-- TAB:Словник -->" in text:
+        text = text[:text.index("<!-- TAB:Словник -->")].strip()
+    text = text.replace("<!-- TAB:Урок -->", "").strip()
 
     # --- Activity V2: load YAML if it exists ---
     activities_data = _load_activities(level, slug)
@@ -3984,64 +4011,54 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
         _log(f"  ⚠️  Stripped {len(leftover_markers)} unmatched INJECT_ACTIVITY marker(s)")
         mdx_content = re.sub(r"\n{3,}", "\n\n", mdx_content)
 
-    # --- Build 4-tab structure ---
-    # Split content at TAB markers (from ENRICH step)
-    tab_marker_pattern = re.compile(r"<!-- TAB:(.+?) -->")
-    tabs_present = list(tab_marker_pattern.finditer(mdx_content))
+    # --- Build 4-tab structure from sources (#1124) ---
+    # The .md is prose-only — assemble all tabs here.
+    urok_content = mdx_content.strip()
 
-    if tabs_present:
-        # Content already has tab markers from ENRICH — parse existing tabs
-        # and replace/add Зошит and Ресурси content
-        tab_sections: dict[str, str] = {}
-        for i, match in enumerate(tabs_present):
-            tab_name = match.group(1)
-            start = match.end()
-            end = tabs_present[i + 1].start() if i + 1 < len(tabs_present) else len(mdx_content)
-            tab_sections[tab_name] = mdx_content[start:end].strip()
+    # Tab 2: Словник (from vocabulary YAML or plan fallback)
+    slovnyk_content = _build_slovnyk_tab(level, slug)
 
-        # Rebuild with 4 tabs
-        tab_parts = []
-        tab_parts.append('<Tabs syncKey="module-tab">')
+    # Tab 3: Зошит (from activities YAML or placeholder)
+    workbook_content = _build_workbook_tab(workbook_activities)
 
-        # Tab 1: Урок
-        urok_content = tab_sections.get("Урок", mdx_content)
-        tab_parts.append('<TabItem label="Урок">')
+    # Tab 4: Ресурси (from plan + external resources)
+    resources_content = _build_resources_tab_full(level, slug)
+
+    tab_parts = []
+    tab_parts.append('<Tabs syncKey="module-tab">')
+
+    # Tab 1: Урок
+    tab_parts.append('<TabItem label="Урок">')
+    tab_parts.append("")
+    tab_parts.append(urok_content)
+    tab_parts.append("")
+    tab_parts.append("</TabItem>")
+
+    # Tab 2: Словник
+    if slovnyk_content.strip():
+        tab_parts.append('<TabItem label="Словник">')
         tab_parts.append("")
-        tab_parts.append(urok_content)
-        tab_parts.append("")
-        tab_parts.append("</TabItem>")
-
-        # Tab 2: Словник (preserve existing)
-        slovnyk_content = tab_sections.get("Словник", "")
-        if slovnyk_content:
-            tab_parts.append('<TabItem label="Словник">')
-            tab_parts.append("")
-            tab_parts.append(slovnyk_content)
-            tab_parts.append("")
-            tab_parts.append("</TabItem>")
-
-        # Tab 3: Зошит (from activities YAML or placeholder)
-        workbook_content = _build_workbook_tab(workbook_activities)
-        tab_parts.append('<TabItem label="Зошит">')
-        tab_parts.append("")
-        tab_parts.append(workbook_content)
+        tab_parts.append(slovnyk_content.strip())
         tab_parts.append("")
         tab_parts.append("</TabItem>")
 
-        # Tab 4: Ресурси (use existing from ENRICH if available)
-        existing_resources = tab_sections.get("Ресурси", "")
-        resources_content = existing_resources if existing_resources else _build_resources_tab(level, slug)
+    # Tab 3: Зошит
+    tab_parts.append('<TabItem label="Зошит">')
+    tab_parts.append("")
+    tab_parts.append(workbook_content)
+    tab_parts.append("")
+    tab_parts.append("</TabItem>")
+
+    # Tab 4: Ресурси
+    if resources_content.strip():
         tab_parts.append('<TabItem label="Ресурси">')
         tab_parts.append("")
-        tab_parts.append(resources_content)
+        tab_parts.append(resources_content.strip())
         tab_parts.append("")
         tab_parts.append("</TabItem>")
 
-        tab_parts.append("</Tabs>")
-        mdx_content = "\n".join(tab_parts)
-    else:
-        # No tab markers — just convert as before
-        mdx_content = _convert_tab_markers(mdx_content)
+    tab_parts.append("</Tabs>")
+    mdx_content = "\n".join(tab_parts)
 
     # --- Write MDX ---
     mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level
@@ -4404,9 +4421,6 @@ def main():
     # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
     # Stress annotation moves to AFTER review to avoid wrong stress marks
     # causing review rejection.
-    # ONLY runs during full build — NOT when --step annotate is used standalone,
-    # because standalone annotate runs on already-enriched content and post-process
-    # would strip TAB markers added by ENRICH.
     if steps == "all" and "annotate" not in completed_phases:
         if not content_path or not content_path.exists():
             _log("\n❌ Build FAILED — no content file exists (write step failed)")
@@ -4423,9 +4437,12 @@ def main():
         if vocab_path:
             _save_v6_state(args.level, slug, "vocab")
 
-    # Step 7b: ENRICH
+    # Step 7b: ENRICH — SKIPPED (#1124: enrichment moved to publish step)
+    # Kept for backward compat: mark as completed so pipeline doesn't stall
     if steps in ("all", "enrich") and "enrich" not in completed_phases:
-        step_enrich(content_path, args.level, slug)
+        _log(f"\n{'='*60}")
+        _log("  Step 7b: ENRICH — Skipped (enrichment moved to publish step, #1124)")
+        _log(f"{'='*60}")
         _save_v6_state(args.level, slug, "enrich")
 
     # Step 7: VERIFY
@@ -4436,7 +4453,7 @@ def main():
     # Step 8: REVIEW + deterministic fix
     # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
     # We apply them deterministically — no LLM regeneration, no rewriting.
-    # Then re-enrich and re-review to verify.
+    # Then re-review to verify. No re-enrich needed (#1124).
     if steps in ("all", "review") and "review" not in completed_phases:
         passed, score, review_text = step_review(
             content_path, args.level, args.module, slug,
@@ -4455,8 +4472,7 @@ def main():
             # Step 1: Try applying reviewer's <fixes> (deterministic find/replace)
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
             if fixes_applied:
-                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-enriching + re-reviewing")
-                step_enrich(content_path, args.level, slug)
+                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-reviewing")
                 step_verify(content_path, args.level, args.module)
 
                 passed, score, review_text = step_review(
@@ -4479,7 +4495,6 @@ def main():
                 )
 
                 if rewritten:
-                    step_enrich(content_path, args.level, slug)
                     step_verify(content_path, args.level, args.module)
 
                     passed, score, review_text = step_review(
@@ -4530,8 +4545,6 @@ def main():
                         _log(f"    ❌ '{u}...'")
                 else:
                     _log(f"\n✅ FIX VERIFICATION: all {len(applied_ok)} fix(es) confirmed in content")
-
-                step_enrich(content_path, args.level, slug)
             else:
                 _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
 

@@ -1,5 +1,3 @@
-<!-- TAB:Урок -->
-
 ## Dialogues
 Olya, Taras, and Mariia are planning their weekend in a group chat. The weekend is a time to rest, but it often involves running errands. Pay attention to how they talk about their plans using the word **бу́ду** (I will).
 > — **Оля:** Що ти бу́деш роби́ти у субо́ту? *(What will you do on Saturday?)*
@@ -107,73 +105,3 @@ Your days of the week review:
 *   **субота** (Saturday)
 *   **неділя** (Sunday)
 Remember the euphony rule when attaching prepositions: we say **у суботу** but **в неділю** depending on the preceding sounds. The Ukrainian language naturally avoids awkward clusters of consonants or vowels. This makes your sentences flow beautifully.
-
-
-<!-- TAB:Словник -->
-
-### Обов'язко́ві та рекомендо́вані слова́
-
-| Сло́во | Переклад | Части́на мо́ви | Рід |
-|-------|----------|-------------|-----|
-| **бу́ду** | I will (future auxiliary verb) | ім. | ж. |
-| **прибира́ти** | to clean | дієсл. |  |
-| **кварти́ра** | apartment | ім. | ж. |
-| **відпочива́ти** | to rest | дієсл. |  |
-| **кафе́** | cafe | ім. | с. |
-| **план** | plan | ім. | ч. |
-| **ти́ждень** | week | ім. | ч. |
-| **ві́льний** | free (available) | прикм. |  |
-| **зу́стріч** | meeting | ім. | ж. |
-| **вечі́рка** | party | ім. | ж. |
-| **допі́зна** | until late | присл. |  |
-| **звича́йно** | of course | присл. |  |
-| **кіно́** | cinema | ім. | с. |
-| **вчи́ти** | to study/learn | дієсл. |  |
-| **зустрі́немося** | let's meet | дієсл. |  |
-| **понеді́лок** | Monday | ім. | ч. |
-| **вівто́рок** | Tuesday | ім. | ч. |
-| **середа́** | Wednesday | ім. | ж. |
-| **четве́р** | Thursday | ім. | ч. |
-| **п'я́тниця** | Friday | ім. | ж. |
-| **мо́же** | maybe | дієсл. |  |
-| **задово́лення** | pleasure, satisfaction | ім. | с. |
-| **спа́ти** | to sleep | дієсл. |  |
-| **вдо́ма** | at home | присл. |  |
-| **сам / сама** | alone (m/f) |  |  |
-
-### Ви́рази
-
-| Ви́раз | Переклад |
-|-------|----------|
-| **з задоволенням** | with pleasure |
-| **на жаль** | unfortunately |
-| **Може, підемо?** | Maybe we'll go? |
-| **Давай зустрінемося!** | Let's meet! |
-| **На жаль, не можу.** | Unfortunately, I cannot. |
-
-### Картки́ — Flashcards
-
-<FlashcardDeck client:only="react" cards={[{ front: "бу́ду", back: "I will (future auxiliary verb)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "прибира́ти", back: "to clean", subtitle: "дієсл." }, { front: "кварти́ра", back: "apartment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочива́ти", back: "to rest", subtitle: "дієсл." }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "план", back: "plan", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ти́ждень", back: "week", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́льний", back: "free (available)", subtitle: "прикм." }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вечі́рка", back: "party", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "допі́зна", back: "until late", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "кіно́", back: "cinema", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вчи́ти", back: "to study/learn", subtitle: "дієсл." }, { front: "зустрі́немося", back: "let's meet", subtitle: "дієсл." }, { front: "понеді́лок", back: "Monday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вівто́рок", back: "Tuesday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "середа́", back: "Wednesday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "четве́р", back: "Thursday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "п'я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мо́же", back: "maybe", subtitle: "дієсл." }, { front: "задово́лення", back: "pleasure, satisfaction", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "сам / сама", back: "alone (m/f)" }]} />
-
-
-<!-- TAB:Зошит -->
-
-:::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
-
-Advanced exercises for this module are in development. Check back soon!
-:::
-
-
-<!-- TAB:Ресурси -->
-
-**Дже́рела — References**
-
-- State Standard 2024, §4.2.4.1
-  _Future tense applied in planning and scheduling context._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/)
-- [Verb Tenses in Ukrainian (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)
-- [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/)
