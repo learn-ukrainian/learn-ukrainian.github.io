@@ -995,7 +995,10 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
 
 ## Output
 
