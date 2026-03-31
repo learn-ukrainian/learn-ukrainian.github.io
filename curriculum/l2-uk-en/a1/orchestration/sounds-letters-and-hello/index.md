@@ -1,6 +1,6 @@
 # Build Summary: sounds-letters-and-hello (A1)
 
-Generated: 2026-03-29 21:28
+Generated: 2026-03-31 11:40
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-29 21:28
 | enrich | complete | 2026-03-29 19:22:59 |
 | verify | complete | 2026-03-29 19:22:59 |
 | review | complete | 2026-03-29 19:28:03 |
-| stress | complete | 2026-03-29 19:28:13 |
-| publish | complete | 2026-03-29 19:28:14 |
+| stress | complete | 2026-03-31 09:40:35 |
+| publish | complete | 2026-03-31 09:40:35 |
 
 ## Reviews
 
@@ -45,6 +45,7 @@ Generated: 2026-03-29 21:28
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

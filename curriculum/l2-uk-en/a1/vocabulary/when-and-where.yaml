@@ -1,0 +1,229 @@
+vocabulary:
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ду́мати
+  translation: to think
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say, to tell
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сказа́ти
+  translation: to say (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чу́ти
+  translation: to hear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розумі́ти
+  translation: to understand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when (conjunction)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: складне речення
+  translation: complex sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: складнопідрядне речення
+  translation: complex sentence with a subordinate clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сполу́чник
+  translation: conjunction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сполу́чники
+  translation: conjunctions
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: головне́
+  translation: main (as in main clause)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: підря́дне
+  translation: subordinate (as in subordinate clause)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: головне речення
+  translation: main clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підрядне речення
+  translation: subordinate clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: скажи́
+  translation: tell! (imperative of казати)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: скажу́
+  translation: I will tell (future of казати)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ві́льна
+  translation: free, available (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ві́льний
+  translation: free, available (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ко́ма
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: завжди кома перед сполучником
+  translation: always a comma before the conjunction
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я знаю, що...
+  translation: I know that...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не знаю, що...
+  translation: I don't know what...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я думаю, що...
+  translation: I think that...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Він каже, що...
+  translation: He says that...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я знаю, де...
+  translation: I know where...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не знаю, де...
+  translation: I don't know where...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скажи, коли...
+  translation: Tell me when...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не знаю, коли...
+  translation: I don't know when...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зустрі́тися
+  translation: to meet (each other)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: закі́нчи́ти
+  translation: to finish (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поба́чити
+  translation: to see (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прийти́
+  translation: to come, to arrive (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поговори́ти
+  translation: to talk, to have a conversation (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зателефонува́ти
+  translation: to call (by phone, perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: са́ме
+  translation: exactly, precisely
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бі́ля
+  translation: near, by
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true

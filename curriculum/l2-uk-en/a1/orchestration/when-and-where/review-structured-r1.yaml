@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Both dialogues
+    from plan reproduced faithfully with correct speakers and conjunctions. Складне
+    речення section covers M44 connection, main
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two critical errors: (1) Gender agreement — Наталя says "я не знав" instead
+    of "я не знала." This is a basic gender agreement error that will teach learners
+    wrong Ukrainian. (2) "скажи is the imperati'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues present the pattern in context → grammar
+    section extracts the rule → "Two Faces" deepens understanding → Summary consolidates.
+    3+ examples per grammar point consistently '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required vocab used naturally: що/де/коли as conjunctions throughout,
+    знати (знаєш, знаю, не знаю, знає — 10+ occurrences), думати (думаю — 4 occurrences),
+    казати (каже — 2 occurrences). Recommend'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching plan's 4 activity_hints in type (fill-in ×2, quiz ×2)
+    and focus (conjunction choice, question-vs-conjunction, clause completion, comma
+    placement). Each placed after relevant teachin
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no "magic of," no meta-commentary. Tone is direct
+    and teacher-like: "Count the conjunctions," "You can verify this yourself now,"
+    "Keep these dialogues in mind." The cross-ref'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 headings from plan present in correct order. Clean markdown throughout.
+    No duplicate summaries, no stray tags, no meta-commentary sections. Word count
+    (1530) well within range (target 1200, +
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms. The comma rule is explicitly contrasted
+    with English ("This differs from English, where ''I know that he''s here'' has
+    no comma") without subordinating Ukrainian to '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two natural multi-turn dialogues with named speakers. Dialogue 1 (planning
+    to meet at a café) is natural and purposeful. Dialogue 2 (sharing news about a
+    mutual friend arriving in Kyiv) is culturally '
+findings: []

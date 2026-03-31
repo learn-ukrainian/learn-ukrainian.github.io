@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-my-world (A1)
 
-Generated: 2026-03-30 21:48
+Generated: 2026-03-31 11:43
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:48
 | enrich | complete | 2026-03-30 13:27:13 |
 | verify | complete | 2026-03-30 13:27:13 |
 | review | complete | 2026-03-30 13:30:56 |
-| stress | complete | 2026-03-30 19:48:17 |
-| publish | complete | 2026-03-30 19:48:17 |
+| stress | complete | 2026-03-31 09:43:56 |
+| publish | complete | 2026-03-31 09:43:57 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-30 21:48
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

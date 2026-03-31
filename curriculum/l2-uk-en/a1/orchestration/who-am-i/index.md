@@ -1,6 +1,6 @@
 # Build Summary: who-am-i (A1)
 
-Generated: 2026-03-29 23:30
+Generated: 2026-03-31 11:41
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-29 23:30
 | enrich | complete | 2026-03-29 21:14:12 |
 | verify | complete | 2026-03-29 21:14:12 |
 | review | complete | 2026-03-29 21:30:06 |
-| stress | complete | 2026-03-29 21:30:21 |
-| publish | complete | 2026-03-29 21:30:21 |
+| stress | complete | 2026-03-31 09:41:44 |
+| publish | complete | 2026-03-31 09:41:45 |
 
 ## Reviews
 
@@ -44,6 +44,7 @@ Generated: 2026-03-29 23:30
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

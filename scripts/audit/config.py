@@ -340,8 +340,38 @@ ACTIVITY_COMPLEXITY = {
         'A1': {'min_len': 4, 'max_len': 8, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         # Not allowed A2+
     },
+    # Ukrainian pedagogy types (складоподіл, phonetics)
+    'divide-words': {
+        'A1': {'min_items': 6},
+        'A2': {'min_items': 6},
+    },
+    'count-syllables': {
+        'A1': {'min_items': 6},
+        'A2': {'min_items': 6},
+    },
+    'pick-syllables': {
+        'A1': {'min_items': 4},  # Fewer items OK — selecting from a grid
+        'A2': {'min_items': 4},
+    },
+    'odd-one-out': {
+        'A1': {'min_items': 6},
+        'A2': {'min_items': 6},
+        'B1': {'min_items': 6},
+        'B2': {'min_items': 6},
+    },
+    'order': {
+        'A1': {'min_items': 3},  # Dialogue ordering — 3+ lines minimum
+        'A2': {'min_items': 4},
+        'B1': {'min_items': 5},
+    },
+    'observe': {
+        'A1': {'min_items': 2},  # Pattern discovery — at least 2 examples
+        'A2': {'min_items': 3},
+        'B1': {'min_items': 4},
+    },
     'error-correction': {
-        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},  # CEFR: smooth +2 from A1 (not available A1)
+        'A1': {'errors': 1, 'min_len': 3, 'max_len': 8, 'min_items': 6},  # Simple single-error sentences for A1
+        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},
         'B1': {'errors': 2, 'min_len': 8, 'max_len': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
         'B1-vocab': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
         'B1-culture': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
@@ -381,7 +411,8 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'min_len': 13, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 12)
     },
     'translate': {
-        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},  # CEFR: smooth +1 from A1 (not available A1)
+        'A1': {'min_len': 1, 'max_len': 6, 'options': 3, 'min_items': 6},  # Single words or short phrases at A1
+        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},
         'B1': {'min_len': 6, 'max_len': 14, 'options': 4, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 8, meets existing content)
         'B1-vocab': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
         'B1-culture': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
@@ -519,6 +550,16 @@ VALID_ACTIVITY_TYPES = [
     "watch-and-repeat",   # Watch pronunciation video, repeat aloud
     "classify",           # Sort items into categories (e.g., vowels vs consonants)
     "image-to-letter",    # See image/emoji, identify starting letter
+    # Ukrainian pedagogy types (складоподіл, phonetics — A1.1+)
+    "divide-words",       # Interactive syllable division (поділи слова на склади)
+    "count-syllables",    # Count syllables in a word (порахуй склади)
+    "pick-syllables",     # Select syllables matching criteria (закриті/відкриті)
+    "odd-one-out",        # Pick the word that doesn't belong (четверте зайве)
+    "order",              # Put sentences/dialogue lines in correct order
+    "observe",            # Pattern discovery — see examples, identify the rule
+    "letter-grid",        # Letter reference grid (upper, lower, name, sound)
+    "phrase-table",       # Phrase groups for communication patterns
+    "highlight-morphemes",  # Identify word parts (prefix, root, suffix, ending)
 ]
 
 # Activity keywords for detection
@@ -536,6 +577,9 @@ ACTIVITY_KEYWORDS = [
     "register-identify", "loanword-trace", "comparative-style",
     # Pre-literacy / bukvar types (A1 alphabet modules)
     "watch-and-repeat", "classify", "image-to-letter",
+    # Ukrainian pedagogy types (складоподіл, phonetics — A1.1+)
+    "divide-words", "count-syllables", "pick-syllables", "odd-one-out",
+    "order", "observe", "letter-grid", "phrase-table", "highlight-morphemes",
 ]
 
 # Core section keywords (not activities)
@@ -1318,7 +1362,7 @@ LEVEL_CONFIG = {
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
     'A1': {
-        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': ['cloze', 'mark-the-words', 'select', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
         'anagram_limit': 10
     },
     'A2': {

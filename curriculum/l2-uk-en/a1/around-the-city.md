@@ -2,12 +2,12 @@
 
 ## Діало́ги (Dialogues)
 
-Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
+Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
 
 ### Діало́г 1 — Asking for Directions
 
-> — **Турист:** Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how do I get to the library?)*
-> — **Перехожий:** Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then right. The library is at the corner.)*
+> — **Тури́ст:** Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how do I get to the library?)*
+> — **Перехо́жий:** Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then right. The library is at the corner.)*
 > — **Турист:** А музе́й? *(And the museum?)*
 > — **Перехожий:** Музей дале́ко. Ї́дьте на метро́ до це́нтру. *(The museum is far. Take the metro to the center.)*
 > — **Турист:** Дякую! *(Thank you!)*
@@ -19,8 +19,8 @@ Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go 
 
 ### Діалог 2 — Describing Your Route
 
-> — **Олена:** Як ти дістає́шся на робо́ту? *(How do you get to work?)*
-> — **Тарас:** Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*
+> — **Оле́на:** Як ти дістає́шся на робо́ту? *(How do you get to work?)*
+> — **Тара́с:** Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*
 > — **Олена:** А потім? *(And then?)*
 > — **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*
 
@@ -50,12 +50,12 @@ Here is the full navigation toolkit in one table:
 | Distance | Далеко? | далеко / бли́зько / хвилин пішки | П'ять хвилин пішки. |
 
 :::tip
-Streets, avenues, and squares always use **на**: **на вулиці Франка**, **на площі**, **на проспекті**. Buildings you enter use **в/у**: **в магазині**, **в офісі**, **у театрі**. Metro always stays with **на**: **на метро** — both for location and transport.
+Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro always stays with **на**: **на метро** — both for location and transport.
 :::
 
-Now see how all four rows work together in connected speech. **Марія** lives in Lviv and is heading to the theater:
+Now see how all four rows work together in connected speech. **Марі́я** lives in Lviv and is heading to the theater:
 
-**Марія живе́ у Львові** (де? — locative). **Сьогодні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде пішки** три хвили́ни. The question type shifts six times in this short passage — and that is completely natural.
+**Марія живе́ у Льво́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts six times in this short passage — and that is completely natural.
 
 <!-- INJECT_ACTIVITY: quiz-de-kudy -->
 
@@ -63,17 +63,17 @@ Now see how all four rows work together in connected speech. **Марія** live
 
 Every learner needs to describe where they live. Here is a model paragraph you can adapt with your own details:
 
-**Я живу́ на вулиці Франка.** **Біля мого до́му є парк і мале́нький магазин.** **Школа далеко** — тре́ба ї́хати автобусом де́сять хвилин. **Аптека близько**, мо́жна піти **пішки**. **У моє́му райо́ні є кафе́, два рестора́ни і бібліотека.**
+**Я живу́ на вулиці Франка.** **Бі́ля мого до́му є парк і мале́нький магазин.** **Шко́ла далеко** — тре́ба ї́хати автобусом де́сять хвилин. **Апте́ка близько**, мо́жна піти **пішки**. **У моє́му райо́ні є кафе́, два рестора́ни і бібліотека.**
 
 Key structures to notice: **біля мого дому** (near my house) is a genitive chunk — learn it as a fixed unit. The construction **є** + noun list means "there is / there are." Two modal chunks appear: **треба їхати** (must go by vehicle) and **можна піти** (can go on foot).
 
 Now put the required vocabulary into full sentences:
 
 - **пішки** (on foot) → Аптека близько — іду **пішки**.
-- **хвилина** (minute) → П'ять **хвилин** пішки від зупи́нки.
+- **хвили́на** (minute) → П'ять **хвилин** пішки від зупи́нки.
 - **далеко від** / **близько від** (far from / near) → Школа **далеко від** дому. Парк **близько від** робо́ти.
-- **у це́нтрі міста** (in the city center) → Готе́ль **у центрі міста**.
-- **на околиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
+- **у це́нтрі мі́ста** (in the city center) → Готе́ль **у центрі міста**.
+- **на око́лиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
 
 :::note
 The chunks **далеко від** and **близько від** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько від роботи, далеко від зупинки.
@@ -99,18 +99,18 @@ The sentence frames stay identical — only the details change.
 
 Here is your urban communication toolkit — a reference card for navigating any Ukrainian city:
 
-**Запитати дорогу** (asking for directions):
-- Вибачте, як дістатися до [місця]?
+**Запита́ти доро́гу** (asking for directions):
+- Вибачте, як дістатися до [місця́]?
 - Де є [місце]?
 
-**Напрямок** (direction):
-- **прямо** (straight) → **направо** (right) → **наліво** (left) → **на розі** (at the corner)
+**На́прямок** (direction):
+- **прямо** (straight) → **направо** (right) → **налі́во** (left) → **на розі** (at the corner)
 
 **Де?** (locative — static):
 - в/на + locative: **у парку**, **в театрі**, **на вулиці**, **на площі**
 
 **Куди?** (accusative — motion):
-- в/на + accusative: **у парк**, **в театр**, **на вулицю**, **на пло́щу**
+- в/на + accusative: **у парк**, **в театр**, **на ву́лицю**, **на пло́щу**
 
 **Транспорт** (transport):
 - **автобусом** / **на метро** / **пішки** — П'ять **хвилин** пішки.
@@ -134,9 +134,9 @@ Answer these five prompts mentally or aloud, then check your answers:
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **ви́бачте** | excuse me (formal) | дієсл. |  |
 | **пі́шки** | on foot | присл. |  |
@@ -176,9 +176,9 @@ Answer these five prompts mentally or aloud, then check your answers:
 | **споча́тку** | first, at first | присл. |  |
 | **по́тім** | then, afterwards | присл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **на розі** | at the corner |
 | **на метро** | by metro, on the metro |
@@ -190,10 +190,10 @@ Answer these five prompts mentally or aloud, then check your answers:
 | **на околиці** | on the outskirts |
 | **треба їхати** | must go (by vehicle), need to take transport |
 | **можна піти пішки** | can go on foot, it's possible to walk |
-| **де знаходиться...?** | where is...? (formal) |
+| **де знахо́диться...?** | where is...? (formal) |
 | **п'ять хвилин пішки** | five minutes on foot |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ви́бачте", back: "excuse me (formal)", subtitle: "дієсл." }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "хвили́на", back: "minute", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "райо́н", back: "neighborhood, district", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "діста́тися", back: "to get to, to reach", subtitle: "дієсл." }, { front: "іді́ть", back: "go! (on foot, formal imperative)", subtitle: "дієсл." }, { front: "ї́дьте", back: "go! (by vehicle, formal imperative)", subtitle: "дієсл." }, { front: "по́руч", back: "nearby, next to", subtitle: "присл." }, { front: "пря́мо", back: "straight ahead", subtitle: "присл." }, { front: "напра́во", back: "to the right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "to the left", subtitle: "присл." }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "near, close", subtitle: "присл." }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "авто́бусом", back: "by bus (instrumental)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "stop (bus/tram stop)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пло́ща", back: "square (city square)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "store, shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "проспе́кт", back: "avenue, boulevard", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "перехо́жий", back: "passer-by, pedestrian", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тури́ст", back: "tourist", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "робо́та", back: "work, job", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сто", back: "city, town", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "де?", back: "where? (static location)", subtitle: "присл." }, { front: "куди́", back: "where to? (motion toward)", subtitle: "присл." }, { front: "споча́тку", back: "first, at first", subtitle: "присл." }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }]} />
 
@@ -201,7 +201,7 @@ Answer these five prompts mentally or aloud, then check your answers:
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -209,24 +209,24 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Synthesis of M28-M32 skills
   _Applied communication — no new grammar, just integration._
 
-**Статті — Articles**
+**Статті́ — Articles**
 
 - [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) (City map with vocabulary)
 - [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) (Navigation vocabulary with audio)
 - [ULP 1-18 | Directions](https://www.ukrainianlessons.com/episode18/) (Ask for and understand directions)
 - [Ukrainian Phrasebook: Places](https://www.ukrainianlessons.com/ph-places/) (ukrainianlessons.com)
 
-**Відео — Videos**
+**Ві́део — Videos**
 
 - [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) (Let's Learn Ukrainian)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
-- [Locative Case (Місцевий відмінок)](https://www.ukrainianlessons.com/locative-case/)
+- [Accusative Case (Знахі́дний відмі́нок)](https://www.ukrainianlessons.com/accusativecase/)
+- [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/)

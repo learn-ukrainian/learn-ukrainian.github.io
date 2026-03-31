@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 5 content_outline sections present with correct headings. Dialogue
+    uses the school fair scenario from `dialogue_situations` with плакати, квитки,
+    напої, стільці. All 5 objectives covered (vocative
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms verified against VESUM. Vocative forms correct (Олено,
+    Тарасе, Андрію, друже, мамо). Imperative forms correct (читай/читайте, пиши/пишіть,
+    дай/дайте, принеси/принесіть). Conjunctio
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Good PPP flow: self-check → reading → grammar summary → connected dialogue
+    → summary. Grammar tables with 6 vocative examples and 4 imperative verb pairs.
+    Each conjunction has an example sentence. Sub'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Plan has no required/recommended vocabulary. All plan-mentioned words
+    appear naturally in prose: кутя, колядки, свічки, плакати, квитки, напої, стільці.
+    Holiday vocabulary integrated (Різдво, Великден'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers correctly placed after teaching sections. Each tests language
+    skills, not content recall. Reading comprehension questions ("Що просить Олена?",
+    "Що має Тарас?") require understanding Ukraini
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'No motivational openers or "magic of" language. Dialogue scenario is
+    concrete and realistic (school fair). Reading practice is a natural phone call
+    scenario. However: "З ярмарком!" at the end of the d'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All H2 headings present and correctly ordered. Word count 1190 vs. 1000
+    target — well within range. Clean markdown. Minor: the forward reference is a
+    structural error (section 1 references section 2 a'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. Holiday traditions (кутя, колядки
+    for Різдво) are authentic. No "like Russian but..." comparisons. Decolonized throughout.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'School fair dialogue has named speakers (Організатор, Олена, Тарас, Волонтери)
+    with distinct voices. Natural task distribution scenario. However, "З ярмарком!"
+    is an invented, unnatural greeting that '
+findings: []

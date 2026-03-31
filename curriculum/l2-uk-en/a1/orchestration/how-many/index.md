@@ -1,6 +1,6 @@
 # Build Summary: how-many (A1)
 
-Generated: 2026-03-30 21:49
+Generated: 2026-03-31 11:43
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:49
 | enrich | complete | 2026-03-30 12:36:10 |
 | verify | complete | 2026-03-30 12:36:10 |
 | review | complete | 2026-03-30 12:45:43 |
-| stress | complete | 2026-03-30 19:49:23 |
-| publish | complete | 2026-03-30 19:49:23 |
+| stress | complete | 2026-03-31 09:43:22 |
+| publish | complete | 2026-03-31 09:43:23 |
 
 ## Reviews
 
@@ -44,6 +44,7 @@ Generated: 2026-03-30 21:49
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

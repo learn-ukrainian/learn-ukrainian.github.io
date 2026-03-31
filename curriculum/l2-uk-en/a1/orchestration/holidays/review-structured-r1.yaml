@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Dialogue
+    1 covers Різдво with кутя, колядки, date change per plan. Dialogue 2 covers День
+    Незалежності with парад, концерт, салют per plan
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All Ukrainian forms verified against VESUM. Instrumental case forms correct
+    (різдвом, великоднем, святом, роком). Gender assignments correct. No Russianisms,
+    surzhyk, or calques detected. Carol quote '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues introduce greetings in context → prose explains
+    traditions and vocabulary → summary extracts the grammar pattern → self-check
+    reinforces. The connection between "кава з моло'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocab present in context: свято ✓, святкувати ✓, Різдво ✓, Великдень
+    ✓, Новий рік ✓. Missing: "вітати" — only "привітати" appears. Recommended vocab
+    all present: кутя ✓, колядка ✓, писанка ✓,'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 activity_hints represented with correctly placed markers. quiz-holiday-dates
+    placed after dialogues (tests what was taught). quiz-holiday-traditions after
+    the traditions section. group-sort-trad
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Specific cultural details: 12 dishes on Святвечір, кутя as sacred dish
+    connecting family to ancestors, wax-resist patterns on писанки. Natural dialogues
+    with personality ("Як гарно!", "Що таке кутя?",'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present and correctly ordered per plan. Clean markdown
+    with proper dialogue formatting. Word count 1274 (target 1200) — within range
+    ✓. No duplicate sections, no stray tags, no meta-
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: 'Decolonized framing of Christmas date change is good in intent but factually
+    imprecise: "Ukraine''s own pre-Soviet tradition" is misleading (Ukraine used Julian
+    calendar pre-Soviet, where Dec 25 Julian'
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: Named speakers (Олена, Том, Марко, Оксана) with distinct voices. Dialogue
+    1 is warm and curious — Том asks genuine questions ("Що таке кутя?"), Олена explains
+    naturally. Dialogue 2 is celebratory with
+findings: []

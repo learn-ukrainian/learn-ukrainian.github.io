@@ -1,0 +1,27 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "буде",
+      "будемо",
+      "будете",
+      "будеш",
+      "буду",
+      "будуть",
+      "відпочивати",
+      "завтра",
+      "зараз",
+      "звучати",
+      "наступний",
+      "план",
+      "робити",
+      "тиждень",
+      "футбол"
+    ]
+  },
+  "all_grounded": true
+}

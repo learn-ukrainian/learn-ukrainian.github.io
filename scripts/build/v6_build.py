@@ -2209,7 +2209,14 @@ def step_verify_exercises(content_path: Path, level: str, slug: str) -> bool:
     if plan_path.exists():
         plan = yaml.safe_load(plan_path.read_text("utf-8"))
 
-    result = verify_exercises(content, plan)
+    # Load V6 activities YAML (separate from markdown content)
+    activities_path = CURRICULUM_ROOT / level / "activities" / f"{slug}.yaml"
+    activities = None
+    if activities_path.exists():
+        activities = yaml.safe_load(activities_path.read_text("utf-8"))
+        _log(f"  Loaded activities from {activities_path}")
+
+    result = verify_exercises(content, plan, activities=activities)
     _log(format_verify_result(result))
 
     # Save results to orchestration
@@ -2282,9 +2289,16 @@ def _build_activity_level_context(level: str, module_num: int, plan: dict) -> st
             "- match-up: letter ↔ sound, letter ↔ word\n"
             "- quiz: in ENGLISH about Ukrainian sounds ('What sound does В make?')\n"
             "- observe: show patterns in Ukrainian with English prompts\n"
-            "- group-sort: sort letters into vowels/consonants\n\n"
-            "**DO NOT use:** fill-in with Ukrainian sentences, error-correction, "
-            "translate (learner can't write Ukrainian yet), cloze, unjumble.\n"
+            "- group-sort: sort letters into vowels/consonants\n"
+            "- divide-words: split words into syllables (складоподіл)\n"
+            "- count-syllables: count syllables by counting vowels\n"
+            "- pick-syllables: select open/closed syllables\n"
+            "- odd-one-out: find the word that doesn't belong\n"
+            "- watch-and-repeat: pronunciation video practice\n"
+            "- translate: single words/short phrases English→Ukrainian (multiple choice)\n"
+            "- error-correction: find simple errors (gender agreement, missing ь)\n\n"
+            "**DO NOT use:** cloze, mark-the-words, select, essay-response, unjumble "
+            "(learner can't construct Ukrainian sentences yet).\n"
             f"{video_text}"
         )
     if level == "a1" and module_num <= 21:
@@ -2297,7 +2311,8 @@ def _build_activity_level_context(level: str, module_num: int, plan: dict) -> st
             "**Instructions in simple English with Ukrainian key terms in bold.**\n"
             "Example: 'Choose the correct form of **мій/моя/моє**'\n\n"
             "**Good activity types:** quiz, fill-in (simple sentences), match-up, "
-            "group-sort, true-false, observe, anagram, translate (English→Ukrainian).\n"
+            "group-sort, true-false, observe, anagram, translate (English→Ukrainian), "
+            "error-correction (simple), divide-words, count-syllables, odd-one-out, order.\n"
             f"{video_text}"
         )
     if level == "a1":
@@ -2397,17 +2412,41 @@ def _build_pedagogy_patterns(plan: dict, level: str) -> str:
     # Format matched patterns
     lines = []
     for pattern_id, pattern in matched:
-        lines.append(f"### Pattern: {pattern_id}")
+        # Header with State Standard reference and bilingual name
+        std_ref = pattern.get("standard_ref", "")
+        назва = pattern.get("назва", "")
+        name = pattern.get("name", "")
+        header = f"### Pattern: {pattern_id}"
+        if std_ref:
+            header += f" [{std_ref}]"
+        lines.append(header)
+        if назва or name:
+            lines.append(f"**{назва}** ({name})" if назва and name else f"**{назва or name}**")
+
+        # Exercises
         for ex in pattern.get("exercises", []):
             ex_type = ex.get("type", "?")
-            name_uk = ex.get("name_uk", "")
+            # Support both old (name_uk) and new (назва) format
+            ex_name = ex.get("назва", "") or ex.get("name_uk", "")
             focus = ex.get("focus", "")
-            lines.append(f"- **{ex_type}** — {name_uk}: {focus}")
+            focus_uk = ex.get("focus_uk", "")
+            focus_text = f"{focus_uk} / {focus}" if focus_uk and focus else (focus_uk or focus)
+            lines.append(f"- **{ex_type}** — {ex_name}: {focus_text}")
             example = ex.get("example")
             if example:
-                instr = example.get("instruction", "")
+                instr = example.get("instruction_uk", "") or example.get("instruction", "")
                 if instr:
                     lines.append(f"  - Instruction: *{instr}*")
+
+        # Anti-patterns
+        anti_patterns = pattern.get("anti_patterns", [])
+        if anti_patterns:
+            lines.append("**Anti-patterns (DO NOT generate):**")
+            for ap in anti_patterns:
+                ap_type = ap.get("type", "?")
+                reason = ap.get("reason_uk", "") or ap.get("reason", "")
+                lines.append(f"- ❌ {ap_type}: {reason}")
+
         lines.append("")
 
     return "\n".join(lines)

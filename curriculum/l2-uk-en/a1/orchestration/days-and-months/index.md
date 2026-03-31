@@ -1,6 +1,6 @@
 # Build Summary: days-and-months (A1)
 
-Generated: 2026-03-30 07:18
+Generated: 2026-03-31 11:56
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 07:18
 | enrich | complete | 2026-03-30 05:12:35 |
 | verify | complete | 2026-03-30 05:12:35 |
 | review | complete | 2026-03-30 05:18:01 |
-| stress | complete | 2026-03-30 05:18:11 |
-| publish | complete | 2026-03-30 05:18:11 |
+| stress | complete | 2026-03-31 09:56:47 |
+| publish | complete | 2026-03-31 09:56:48 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 07:18
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

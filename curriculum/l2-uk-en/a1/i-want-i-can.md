@@ -2,12 +2,12 @@
 
 ## Діало́ги (Dialogues)
 
-Before any grammar tables, hear all three modal verbs in action. Watch for **хочу** (I want), **можу** (I can), and **мушу** (I must) in every exchange below.
+Before any grammar tables, hear all three modal verbs in action. Watch for **хо́чу** (I want), **мо́жу** (I can), and **му́шу** (I must) in every exchange below.
 
 ### Dialogue 1 — Planning the weekend
 
 > — **Оля:** Дени́се, що ти хо́чеш роби́ти у вихідні́? *(Denys, what do you want to do on the weekend?)*
-> — **Денис:** Я хочу гуля́ти в парку. А ти? *(I want to walk in the park. And you?)*
+> — **Дени́с:** Я хочу гуля́ти в парку. А ти? *(I want to walk in the park. And you?)*
 > — **Оля:** Я теж хочу гуляти, але́ не можу — мушу працюва́ти. *(I also want to walk, but I can't — I have to work.)*
 > — **Денис:** Шкода! А в неді́лю ти мо́жеш? *(Pity! And on Sunday, can you?)*
 > — **Оля:** Так, у неділю я можу! *(Yes, on Sunday I can!)*
@@ -24,7 +24,7 @@ Every modal verb here follows the same pattern: **modal + infinitive**. Оля s
 
 ### Dialogue 2 — At a café
 
-> — **Офіціант:** До́брого дня! Що ви хо́чете? *(Good day! What would you like?)*
+> — **Офіціа́нт:** До́брого дня! Що ви хо́чете? *(Good day! What would you like?)*
 > — **Денис:** Я хочу ка́ву, будь ла́ска. *(I want coffee, please.)*
 > — **Офіціант:** Велику чи мале́ньку? *(Large or small?)*
 > — **Денис:** Велику. І ще я хочу ї́сти. *(Large. And I also want to eat.)*
@@ -33,13 +33,13 @@ Every modal verb here follows the same pattern: **modal + infinitive**. Оля s
 > — **Денис:** Чудо́во! Я хочу борщ. *(Wonderful! I want borscht.)*
 
 
-Something different happened here. **Я хочу каву** — Denys wants a *thing*, not an *action*. When you want a thing, **хотіти** takes a noun directly (accusative case): **хочу каву** (coffee), **хочу борщ** (borscht). No infinitive needed. But when he says **я хочу їсти** — that's wanting an action, so the infinitive returns.
+Something different happened here. **Я хочу каву** — Denys wants a *thing*, not an *action*. When you want a thing, **хоті́ти** takes a noun directly (accusative case): **хочу каву** (coffee), **хочу борщ** (borscht). No infinitive needed. But when he says **я хочу їсти** — that's wanting an action, so the infinitive returns.
 
 You used **хочу**, **можу**, and **мушу** intuitively through both dialogues. Now let's see exactly how each one works — starting with the most irregular: **хотіти**.
 
 ## Хотіти (To Want)
 
-**Хотіти** (to want) is a Group I verb — but its infinitive ends in **-іти**, which normally signals Group II (like **робити**, **мусити**). Ukrainian grammarians list **хотіти** as an explicit exception. The key giveaway: its third person plural form ends in **-уть** (**хочуть**), not **-ять**. That **-уть** ending is the signature of Group I.
+**Хотіти** (to want) is a Group I verb — but its infinitive ends in **-іти́**, which normally signals Group II (like **робити**, **му́сити**). Ukrainian grammarians list **хотіти** as an explicit exception. The key giveaway: its third person plural form ends in **-уть** (**хо́чуть**), not **-ять**. That **-уть** ending is the signature of Group I.
 
 Every present-tense form of **хотіти** uses a changed stem. The infinitive stem is **хот-**, but in all present-tense forms it becomes **хоч-** — a **т→ч** consonant alternation. This change is absolute: there is no present-tense form that keeps the original **т**.
 
@@ -47,9 +47,9 @@ Every present-tense form of **хотіти** uses a changed stem. The infinitive
 |---|---|---|
 | **я** | хочу | **ми** хо́чемо |
 | **ти** | хочеш | **ви** хочете |
-| **він/вона** | хо́че | **вони** хочуть |
+| **він/вона́** | хо́че | **вони́** хочуть |
 
-Compare the two stems side by side: **хот-іти** (infinitive, dictionary form) versus **хоч-у** (present, conjugated). The mutation **хот- → хоч-** is fixed across all six forms. Once you know **хоч-**, just add the regular Group I endings: **-у, -еш, -е, -емо, -ете, -уть**.
+Compare the two stems side by side: **хот-іти** (infinitive, dictionary form) versus **хоч-у** (present, conjugated). The mutation **хот- → хоч-** is fixed across all six forms. Once you know **хоч-**, just add the regular Group I endings: **-у, -еш, -е, -е́мо, -ете, -уть**.
 
 **Хотіти** has two syntactic patterns. The first: **хотіти + infinitive** — when you want to *do* something.
 
@@ -67,13 +67,13 @@ Rule of thumb: wanting to DO something → infinitive. Wanting a THING → noun.
 
 <!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
-Negation is straightforward. Place **не** directly before the verb: **Я не хочу.** **Ти не хочеш спа́ти?** (Don't you want to sleep?) **Він не хоче їсти.** (He doesn't want to eat.) A polite alternative — **хотів би** / **хотіла б** (I would like) — uses the conditional mood, which comes in B1. For now, **Я хочу...** is your direct, natural option.
+Negation is straightforward. Place **не** directly before the verb: **Я не хочу.** **Ти не хочеш спа́ти?** (Don't you want to sleep?) **Він не хоче їсти.** (He doesn't want to eat.) A polite alternative — **хоті́в би** / **хоті́ла б** (I would like) — uses the conditional mood, which comes in B1. For now, **Я хочу...** is your direct, natural option.
 
 A Ukrainian Grade 3 poem (Vashulenko textbook) shows how **хотіти** expresses deep, persistent desire — not just mild preference: *«Я страше́нно хочу ма́ти годівни́цю на вікні́»* (I desperately want to have a bird feeder on my window). The child wanted so intensely that he *«хотів, хотів, хотів»* — wanted and wanted and wanted. Eventually he realized wanting alone wasn't enough: *«Кра́ще я змайстру́ю сам»* (Better I'll build it myself). **Хотіти** carries real emotional weight — genuine desire, not just "I'd prefer."
 
 ## Могти́ і мусити (Can and Must)
 
-**Могти** (to be able to, can) is the second irregular verb in this module. Like **хотіти**, it belongs to Group I — its third person plural ends in **-уть** (**можуть**). The stem mutation here: **мог- → мож-**, a **г→ж** alternation. This г→ж pattern is common in Ukrainian: **допомогти → допоможу**, **берегти → бережу**. Whenever you see **г** in an infinitive stem, expect **ж** in conjugated forms.
+**Могти** (to be able to, can) is the second irregular verb in this module. Like **хотіти**, it belongs to Group I — its third person plural ends in **-уть** (**мо́жуть**). The stem mutation here: **мог- → мож-**, a **г→ж** alternation. This г→ж pattern is common in Ukrainian: **допомогти́ → допоможу́**, **берегти́ → бережу́**. Whenever you see **г** in an infinitive stem, expect **ж** in conjugated forms.
 
 | | Singular | Plural |
 |---|---|---|
@@ -88,7 +88,7 @@ A Ukrainian Grade 3 poem (Vashulenko textbook) shows how **хотіти** expres
 - **Він може читати.** — He can read.
 - **Ми можемо зустрі́тися.** — We can meet.
 
-Note: **могти** is about *ability*. For *permission* ("May I?"), Ukrainian uses **можна** — an impersonal word coming in a later module.
+Note: **могти** is about *ability*. For *permission* ("May I?"), Ukrainian uses **мо́жна** — an impersonal word coming in a later module.
 
 Now the contrast: **мусити** (to must, to have to). Unlike the other two, **мусити** is a regular Group II verb — with one small twist. The **я**-form has a **с→ш** alternation: **мушу**. All other forms keep the regular **с**:
 
@@ -98,7 +98,7 @@ Now the contrast: **мусити** (to must, to have to). Unlike the other two, 
 | **ти** | му́сиш | **ви** му́сите |
 | **він/вона** | му́сить | **вони** му́сять |
 
-**Мусити** means obligation — strong, unavoidable obligation. Антоне́нко-Давидо́вич, the great Ukrainian stylist, warns that **мусити** should be reserved for genuine compulsion — situations where you truly have no choice. For ordinary, everyday obligation, Ukrainian speakers often prefer **маю** (from **мати** — to have): **Я маю працювати** (I need to work — ordinary duty) versus **Я мушу працювати** (I'm forced to work — no escape). At A1, focus on **мушу** for strong obligation. You'll meet **маю** and **треба** (one needs to) in later modules.
+**Мусити** means obligation — strong, unavoidable obligation. Антоне́нко-Давидо́вич, the great Ukrainian stylist, warns that **мусити** should be reserved for genuine compulsion — situations where you truly have no choice. For ordinary, everyday obligation, Ukrainian speakers often prefer **маю** (from **мати** — to have): **Я маю працювати** (I need to work — ordinary duty) versus **Я мушу працювати** (I'm forced to work — no escape). At A1, focus on **мушу** for strong obligation. You'll meet **маю** and **тре́ба** (one needs to) in later modules.
 
 Now picture the three modals as a triangle — desire, ability, obligation — joined in one sentence: **«Я хочу гуляти, але не можу — мушу працювати.»** (I want to walk, but I can't — I must work.) **Хочу** = internal desire. **Можу** = ability or possibility. **Мушу** = external compulsion, no choice.
 
@@ -141,14 +141,14 @@ Test yourself — answer each prompt out loud before checking:
 
 <!-- INJECT_ACTIVITY: quiz-regular-irregular -->
 
-In the next modules, you'll meet **можна** (one may / it's allowed) — an impersonal construction for permission. Later, at A2, **мав би** / **мала б** (should) will build on the modal foundation you've just learned. For now, **хочу**, **можу**, **мушу** — these three verbs unlock a huge range of everyday Ukrainian expression: from ordering **каву** at a café to explaining why you can't come to a party.
+In the next modules, you'll meet **можна** (one may / it's allowed) — an impersonal construction for permission. Later, at A2, **мав би** / **ма́ла б** (should) will build on the modal foundation you've just learned. For now, **хочу**, **можу**, **мушу** — these three verbs unlock a huge range of everyday Ukrainian expression: from ordering **каву** at a café to explaining why you can't come to a party.
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **хоті́ти** | to want (irregular) | дієсл. |  |
 | **могти́** | to be able to, can (irregular) | дієсл. |  |
@@ -181,9 +181,9 @@ In the next modules, you'll meet **можна** (one may / it's allowed) — an 
 | **ма́ти** | to have (also used as modal: маю = I need to) | ім. |  |
 | **мо́жна** | one may, it is allowed (impersonal) |  |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Домовилися!** | Deal! It's agreed! |
 | **Що ти хочеш робити?** | What do you want to do? |
@@ -192,7 +192,7 @@ In the next modules, you'll meet **можна** (one may / it's allowed) — an 
 | **Мушу йти.** | I have to go. |
 | **Ти можеш допомогти?** | Can you help? |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "хоті́ти", back: "to want (irregular)", subtitle: "дієсл." }, { front: "могти́", back: "to be able to, can (irregular)", subtitle: "дієсл." }, { front: "му́сити", back: "to must, to have to", subtitle: "дієсл." }, { front: "ка́ва", back: "coffee (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "шко́да́", back: "pity, unfortunately" }, { front: "допомогти́", back: "to help (perfective)", subtitle: "дієсл." }, { front: "пора́дити", back: "to recommend, to advise (perfective)", subtitle: "дієсл." }, { front: "тре́ба", back: "one needs to, it is necessary (impersonal)" }, { front: "вихідні́", back: "weekend (pl)", subtitle: "прикм." }, { front: "гуля́ти", back: "to walk, to stroll", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "неді́ля", back: "Sunday (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кіно́", back: "cinema, movies (n, indeclinable)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зві́сно", back: "of course", subtitle: "присл." }, { front: "офіціа́нт", back: "waiter (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вели́кий", back: "large, big", subtitle: "прикм." }, { front: "мале́нький", back: "small, little", subtitle: "прикм." }, { front: "чудо́во", back: "wonderful, great", subtitle: "присл." }, { front: "пі́ца", back: "pizza (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "вчи́тися", back: "to study, to learn (reflexive)", subtitle: "дієсл." }, { front: "зустрі́тися", back: "to meet (perfective, reflexive)", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak, to talk", subtitle: "дієсл." }, { front: "піти", back: "to go (perfective)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "йти", back: "to go (imperfective, on foot)", subtitle: "дієсл." }, { front: "вчи́ти", back: "to study, to learn (transitive)", subtitle: "дієсл." }, { front: "ма́ти", back: "to have (also used as modal: маю = I need to)", subtitle: "ім." }, { front: "мо́жна", back: "one may, it is allowed (impersonal)" }]} />
 
@@ -200,7 +200,7 @@ In the next modules, you'll meet **можна** (one may / it's allowed) — an 
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -208,21 +208,21 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
-- Караман Grade 10, p.179
+- Карама́н Grade 10, p.179
   _Хотіти listed as Group I exception (despite -іти infinitive)._
 - Літвінова Grade 7, p.55
-  _Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти._
+  _Exceptions: хотіти, гуді́ти, реві́ти, іржа́ти — Group I despite -іти._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
+- [Verb Tenses in Ukrainian (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)
 - [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)

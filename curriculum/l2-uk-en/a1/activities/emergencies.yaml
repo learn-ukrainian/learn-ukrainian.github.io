@@ -1,0 +1,311 @@
+version: '1.0'
+module: emergencies
+level: a1
+inline:
+- id: quiz-emergency-phrases
+  type: quiz
+  instruction: Оберіть правильну фразу для ситуації (Choose the correct phrase for
+    the situation)
+  items:
+  - question: You see a car crash.
+    options:
+    - Тут аварія! Викличте швидку!
+    - Тут пожежа! Допоможіть!
+    - Я загубив паспорт.
+    correct: 0
+  - question: You see a building on fire.
+    options:
+    - Тут аварія!
+    - Тут пожежа! Допоможіть!
+    - Мені потрібен лікар.
+    correct: 1
+  - question: Someone is feeling very ill on the street.
+    options:
+    - Людині погано! Викличте швидку!
+    - Викличте поліцію!
+    - Я загубив паспорт.
+    correct: 0
+  - question: You cannot find your passport at the airport.
+    options:
+    - Тут аварія!
+    - Мені потрібна швидка.
+    - Я загубив паспорт.
+    correct: 2
+  - question: Someone stole your wallet.
+    options:
+    - Тут пожежа!
+    - Викличте поліцію! Допоможіть!
+    - Мені потрібен лікар.
+    correct: 1
+  - question: Your arm is hurting at the hospital.
+    options:
+    - Тут аварія!
+    - Я загубив паспорт.
+    - Мені потрібен лікар.
+    correct: 2
+- id: fill-in-emergency-call
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Алло! ____! Тут аварія!
+    answer: Допоможіть
+    options:
+    - Допоможіть
+    - Дякую
+    - Вибачте
+  - sentence: ____ швидку допомогу!
+    answer: Викличте
+    options:
+    - Викличте
+    - Загубив
+    - Потрібен
+  - sentence: Я на ____ Хрещатик, біля метро.
+    answer: вулиці
+    options:
+    - вулиці
+    - лікарні
+    - поліції
+  - sentence: Мене ____ Адам.
+    answer: звати
+    options:
+    - звати
+    - прізвище
+    - адреса
+  - sentence: Мій номер ____ — нуль дев'яносто три...
+    answer: телефону
+    options:
+    - телефону
+    - паспорта
+    - будинку
+  - sentence: Мені потрібна ____!
+    answer: допомога
+    options:
+    - допомога
+    - пожежа
+    - аварія
+- id: order-112-dialogue
+  type: order
+  instruction: Розставте репліки в правильному порядку (Put the dialogue lines in
+    the correct order)
+  items:
+  - — Служба порятунку, слухаю вас.
+  - — Допоможіть! Тут пожежа!
+  - — Де ви?
+  - — На вулиці Шевченка, будинок п'ять.
+  - — Зрозуміло. Швидка і пожежники вже їдуть. Як вас звати?
+  - — Мене звати Анна. Дякую!
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+- id: fill-in-police-hospital
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Добрий день. Я ____ паспорт.
+    answer: загубив
+    options:
+    - загубив
+    - викличте
+    - допоможіть
+  - sentence: Моє ____ — Сміт.
+    answer: прізвище
+    options:
+    - прізвище
+    - ім'я
+    - номер
+  - sentence: Мені ____ лікар.
+    answer: потрібен
+    options:
+    - потрібен
+    - погана
+    - хворий
+  - sentence: У мене ____ на ці таблетки.
+    answer: алергія
+    options:
+    - алергія
+    - пожежа
+    - аварія
+  - sentence: Я не розумію. ____, будь ласка.
+    answer: Повторіть
+    options:
+    - Повторіть
+    - Допоможіть
+    - Викличте
+  - sentence: Моя ____ — вулиця Хрещатик, будинок десять.
+    answer: адреса
+    options:
+    - адреса
+    - форма
+    - лікарня
+workbook:
+- type: match-up
+  instruction: З'єднайте фразу з ситуацією (Match the phrase to the situation)
+  pairs:
+  - left: Тут аварія!
+    right: car crash
+  - left: Тут пожежа!
+    right: fire
+  - left: Мені потрібен лікар.
+    right: at the hospital
+  - left: Викличте поліцію!
+    right: call the police
+  - left: Я загубив паспорт.
+    right: lost document
+  - left: Людині погано!
+    right: someone feels ill
+- type: group-sort
+  instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
+  groups:
+  - label: Екстрені фрази (Emergency phrases)
+    items:
+    - Допоможіть!
+    - Тут аварія!
+    - Тут пожежа!
+    - Викличте швидку!
+    - Людині погано!
+    - Викличте поліцію!
+  - label: Особиста інформація (Personal info)
+    items:
+    - Мене звати...
+    - Моє прізвище...
+    - Мій номер телефону...
+    - Я загубив паспорт.
+    - Моя адреса...
+    - Я з Канади.
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: В Україні є один номер для всіх служб порятунку — 112.
+    correct: true
+    explanation: 112 (один один два) is Ukraine's universal emergency number connecting
+      you to ambulance, police, and fire services.
+  - statement: Адам бачить аварію і телефонує до поліції.
+    correct: false
+    explanation: Адам calls служба порятунку (emergency rescue service) — the 112
+      operator dispatches the ambulance, not the police.
+  - statement: Оператор спочатку запитує «Де ви?», а потім ім'я.
+    correct: true
+    explanation: Location comes first — the operator must know where to send help
+      before asking for personal details.
+  - statement: Адам загубив паспорт у готелі.
+    correct: false
+    explanation: Адам says 'Може, в метро' — maybe in the metro. He does not know
+      exactly where he lost it.
+  - statement: У лікарні треба сказати «У мене алергія на...», якщо є алергія.
+    correct: true
+    explanation: Always tell medical staff about allergies. Use 'У мене алергія на...'
+      followed by the allergen (e.g., ці таблетки, горіхи).
+  - statement: Адам загубив телефон, а не паспорт.
+    correct: false
+    explanation: Адам lost his passport (паспорт). He reports this at the поліція
+      (police station).
+- type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - Допоможіть!
+    - Викличте
+    - швидку!
+    correct_order:
+    - Допоможіть!
+    - Викличте
+    - швидку!
+    hint: Two urgent commands together
+  - words:
+    - потрібен
+    - Мені
+    - лікар.
+    correct_order:
+    - Мені
+    - потрібен
+    - лікар.
+    hint: Dative + потрібен + noun
+  - words:
+    - аварія!
+    - Тут
+    correct_order:
+    - Тут
+    - аварія!
+    hint: Location word first
+  - words:
+    - паспорт.
+    - загубив
+    - Я
+    correct_order:
+    - Я
+    - загубив
+    - паспорт.
+    hint: Subject + verb + object
+  - words:
+    - ласка.
+    - Повторіть,
+    - будь
+    correct_order:
+    - Повторіть,
+    - будь
+    - ласка.
+    hint: Imperative + будь ласка
+  - words:
+    - телефону
+    - Мій
+    - номер
+    correct_order:
+    - Мій
+    - номер
+    - телефону
+    hint: Possessive + noun + genitive
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: Help!
+    options:
+    - text: Допоможіть!
+      correct: true
+    - text: Дякую!
+      correct: false
+    - text: Вибачте!
+      correct: false
+  - source: Call an ambulance!
+    options:
+    - text: Викличте поліцію!
+      correct: false
+    - text: Викличте швидку!
+      correct: true
+    - text: Тут аварія!
+      correct: false
+  - source: I lost my passport.
+    options:
+    - text: Я загубив паспорт.
+      correct: true
+    - text: Я загубила форму.
+      correct: false
+    - text: Я не розумію.
+      correct: false
+  - source: There's a fire here!
+    options:
+    - text: Тут аварія!
+      correct: false
+    - text: Людині погано!
+      correct: false
+    - text: Тут пожежа!
+      correct: true
+  - source: I need a doctor.
+    options:
+    - text: Мені потрібна допомога.
+      correct: false
+    - text: Мені потрібен лікар.
+      correct: true
+    - text: Повторіть, будь ласка.
+      correct: false
+  - source: Please repeat.
+    options:
+    - text: Повторіть, будь ласка.
+      correct: true
+    - text: Говоріть повільніше, будь ласка.
+      correct: false
+    - text: Я не розумію.
+      correct: false

@@ -1,0 +1,1019 @@
+# ULP Blog Article Mappings to A1 Modules
+#
+# Maps verified ukrainianlessons.com articles/episodes to A1 curriculum modules.
+# Only URLs that return HTTP 200 are included.
+#
+# Source: sitemap crawl + web search (2026-03-31)
+# Issue: #1056
+# License: COMMERCIAL — link only, never copy content
+#
+# NOTE: The existing ulp-articles-index.yaml contains 10 broken URLs (403/404):
+#   /nominativecase/, /dative-case/, /instrumental-case/, /locative-case/,
+#   /present-tense/, /past-tense/, /future-tense/, /imperative-mood/,
+#   /conditional-mood/, /participles/
+# These are likely behind Anna's paywall or restructured. Do NOT use them.
+
+version: "1.0"
+generated: "2026-03-31"
+base_url: "https://www.ukrainianlessons.com"
+
+# =============================================================================
+# A1.1: Sounds, Letters, and First Contact
+# =============================================================================
+
+sounds-letters-and-hello:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      title: "Ukrainian Cyrillic Alphabet — Letters and Sounds"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+      title: "Ukrainian Alphabet: Full Guide with Examples and Pronunciation"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/greetings/
+      title: "Greetings in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/
+      title: "14 Basic Ukrainian Phrases for Your Trip to Ukraine"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-alphabet/
+      title: "Phrasebook: Alphabet"
+      type: phrasebook
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-essential/
+      title: "Phrasebook: Essential Phrases"
+      type: phrasebook
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode1/
+      title: "ULP 1-01 | Informal Greetings in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode2/
+      title: "ULP 1-02 | Formal Greetings and Saying Goodbye"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu50/
+      title: "FMU 1-50 | Greetings in Ukrainian: Informal, Formal, and Fun!"
+      type: podcast
+      relevance: medium
+      verified: true
+
+reading-ukrainian:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      title: "Ukrainian Cyrillic Alphabet — Letters and Sounds"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+      title: "Ukrainian Alphabet: Full Guide with Examples and Pronunciation"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/transliteration/
+      title: "Ukrainian Transliteration"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/tonguetwisters/
+      title: "Ukrainian Tongue Twisters (Скоромовки)"
+      type: article
+      relevance: medium
+      verified: true
+
+special-signs:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      title: "Ukrainian Cyrillic Alphabet — Letters and Sounds"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/h-g/
+      title: "Ukrainian Г vs Ґ"
+      type: article
+      relevance: high
+      verified: true
+
+stress-and-melody:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      title: "Ukrainian Cyrillic Alphabet — Letters and Sounds"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/tonguetwisters/
+      title: "Ukrainian Tongue Twisters (Скоромовки)"
+      type: article
+      relevance: medium
+      verified: true
+
+who-am-i:
+  articles:
+    - url: https://www.ukrainianlessons.com/personal-pronouns/
+      title: "Займенники — Pronouns in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
+      title: "Ukrainian Personal Pronouns Declension Table"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/
+      title: "14 Basic Ukrainian Phrases for Your Trip to Ukraine"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode3/
+      title: "ULP 1-03 | How to Introduce Yourself"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu2/
+      title: "FMU 1-02 | Useful Phrases for Learning Ukrainian"
+      type: podcast
+      relevance: medium
+      verified: true
+
+my-family:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-family/
+      title: "Сім'я — Family Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/grammar-possessive-pronouns/
+      title: "Присвійні займенники — Possessive Pronouns in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/possessive-pronouns-declension/
+      title: "Possessive Pronouns Declension Table"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode4/
+      title: "ULP 1-04 | Family Members in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+checkpoint-first-contact:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+      title: "Ukrainian Alphabet: Full Guide with Examples and Pronunciation"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/100words/
+      title: "100 Most Common Words in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+# =============================================================================
+# A1.2: My World
+# =============================================================================
+
+things-have-gender:
+  articles:
+    - url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+      title: "Noun Genders in Ukrainian (Infographic)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/video-noun-gender/
+      title: "How to Know Noun Gender (Video)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/basic-terms/
+      title: "Table of Grammar Terms Used in Learning Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+what-is-it-like:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-adjectives/
+      title: "Типові прикметники — Common Ukrainian Adjectives (Table and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/adjectives-and-adverbs/
+      title: "Прикметники і прислівники — Adjectives and Adverbs in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/adjectives-adverbs-chart/
+      title: "Adjectives & Adverbs Chart"
+      type: article
+      relevance: medium
+      verified: true
+
+colors:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-colors/
+      title: "Кольори — Colors in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode25/
+      title: "ULP 1-25 | Colors in Ukrainian + Pronunciation Trainer"
+      type: podcast
+      relevance: high
+      verified: true
+
+how-many:
+  articles:
+    - url: https://www.ukrainianlessons.com/nouns-after-numbers/
+      title: "Nouns After Numbers in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-numbers/
+      title: "Phrasebook: Numbers"
+      type: phrasebook
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu7/
+      title: "FMU 1-07 | Grammar Point: Numeral / Noun Agreement"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode5/
+      title: "ULP 1-05 | Numbers in Ukrainian + Pronunciation Trainer"
+      type: podcast
+      relevance: high
+      verified: true
+
+this-and-that:
+  articles:
+    - url: https://www.ukrainianlessons.com/pronouns-this-that/
+      title: "Ukrainian Pronouns ЦЕЙ and ТОЙ: Declension Table"
+      type: article
+      relevance: high
+      verified: true
+
+many-things:
+  articles:
+    - url: https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/
+      title: "Plural of Ukrainian Nouns — Special Forms"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu46/
+      title: "FMU 1-46 | Grammar Point: Plural of Nouns in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode42/
+      title: "ULP 2-42 | Plural Nouns in Ukrainian"
+      type: podcast
+      relevance: medium
+      verified: true
+
+checkpoint-my-world:
+  articles:
+    - url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+      title: "Noun Genders in Ukrainian (Infographic)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/100words/
+      title: "100 Most Common Words in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+# =============================================================================
+# A1.3: Actions
+# =============================================================================
+
+what-i-like:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-praise-words/
+      title: "Praise Words (Vocabulary)"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/emotions-in-ukrainian/
+      title: "Emotions in Ukrainian (with Emojis and Audio)"
+      type: article
+      relevance: medium
+      verified: true
+
+verbs-group-one:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu57/
+      title: "FMU 1-57 | Grammar Point: Verb Conjugations in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode22/
+      title: "ULP 1-22 | First Verb Conjugation in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+verbs-group-two:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode24/
+      title: "ULP 1-24 | Second Conjugation"
+      type: podcast
+      relevance: high
+      verified: true
+
+i-want-i-can:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-needs/
+      title: "Phrasebook: Needs"
+      type: phrasebook
+      relevance: medium
+      verified: true
+
+questions:
+  articles:
+    - url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+      title: "Useful Ukrainian Questions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/small-talk-in-ukrainian/
+      title: "Small Talk in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+my-morning:
+  articles:
+    - url: https://www.ukrainianlessons.com/reflexive-verbs/
+      title: "Reflexive Verbs in Ukrainian (Ending with -СЯ, -СЬ)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/adverbs-frequency/
+      title: "Adverbs of Frequency"
+      type: article
+      relevance: medium
+      verified: true
+
+checkpoint-actions:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: high
+      verified: true
+
+# =============================================================================
+# A1.4: Time and Nature
+# =============================================================================
+
+what-time:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-time/
+      title: "Котра година? — Time Vocabulary in Ukrainian (Infographic)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+      title: "Prepositions of Time in Ukrainian: Table with Cases"
+      type: article
+      relevance: high
+      verified: true
+
+days-and-months:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-days/
+      title: "Дні тижня — Days of the Week in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-months/
+      title: "Місяці — Months in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/dates-in-ukrainian/
+      title: "How to Write Dates in Ukrainian + Useful Time Expressions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode15/
+      title: "ULP 1-15 | Days of the Week and Months in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+weather:
+  articles:
+    - url: https://www.ukrainianlessons.com/weather-vocabulary/
+      title: "Яка погода? Weather Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/winter-vocabulary/
+      title: "Зима — Winter Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: medium
+      verified: true
+
+my-day:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-time/
+      title: "Котра година? — Time Vocabulary in Ukrainian (Infographic)"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/adverbs-frequency/
+      title: "Adverbs of Frequency"
+      type: article
+      relevance: medium
+      verified: true
+
+free-time:
+  articles:
+    - url: https://www.ukrainianlessons.com/hiking-vocabulary/
+      title: "Hiking Vocabulary in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu25/
+      title: "FMU 1-25 | Vocabulary Booster! Sports in Ukrainian"
+      type: podcast
+      relevance: medium
+      verified: true
+
+checkpoint-time-nature:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-days/
+      title: "Дні тижня — Days of the Week in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/weather-vocabulary/
+      title: "Яка погода? Weather Vocabulary in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+
+# =============================================================================
+# A1.5: Places
+# =============================================================================
+
+euphony:
+  articles:
+    - url: https://www.ukrainianlessons.com/prepositions-u-na/
+      title: "Difference between Ukrainian Prepositions У (В) and На"
+      type: article
+      relevance: high
+      verified: true
+
+where-is-it:
+  articles:
+    - url: https://www.ukrainianlessons.com/prepositions-of-place/
+      title: "Прийменники місця — Prepositions of Place in Ukrainian (Infographic)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/prepositions-u-na/
+      title: "Difference between Ukrainian Prepositions У (В) and На"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/location-destination-prepositions/
+      title: "В Україні vs В Україну: Location and Destination Prepositions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/adverbs-location/
+      title: "Adverbs of Location"
+      type: article
+      relevance: medium
+      verified: true
+
+my-city:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-town/
+      title: "У місті — Around Town Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-places/
+      title: "Phrasebook: Places"
+      type: phrasebook
+      relevance: high
+      verified: true
+
+where-to:
+  articles:
+    - url: https://www.ukrainianlessons.com/location-destination-prepositions/
+      title: "В Україні vs В Україну: Location and Destination Prepositions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-directions/
+      title: "Напрямки — Directions in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu15/
+      title: "FMU 1-15 | Grammar Point: Accusative Case / Direct Object"
+      type: podcast
+      relevance: medium
+      verified: true
+
+transport:
+  articles:
+    - url: https://www.ukrainianlessons.com/motion/
+      title: "Verbs of Motion in Ukrainian: So Easy with These Pictures!"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/fmu56/
+      title: "FMU 1-56 | Conversation on the Road / Driving in Ukrainian"
+      type: podcast
+      relevance: medium
+      verified: true
+
+around-the-city:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-town/
+      title: "У місті — Around Town Vocabulary in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-directions/
+      title: "Напрямки — Directions in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode18/
+      title: "ULP 1-18 | Directions in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+where-from:
+  articles:
+    - url: https://www.ukrainianlessons.com/location-destination-prepositions/
+      title: "В Україні vs В Україну: Location and Destination Prepositions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/prepositions-cases/
+      title: "Ukrainian Prepositions with Cases That Follow"
+      type: article
+      relevance: high
+      verified: true
+
+checkpoint-places:
+  articles:
+    - url: https://www.ukrainianlessons.com/prepositions-cases/
+      title: "Ukrainian Prepositions with Cases That Follow"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-town/
+      title: "У місті — Around Town Vocabulary in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+
+# =============================================================================
+# A1.6: Food and Shopping
+# =============================================================================
+
+food-and-drink:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-food/
+      title: "The Ultimate Guide to Ukrainian Food: 40+ Ukrainian Dishes with Photos"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-fruits-and-vegetables/
+      title: "Фрукти і овочі — Fruits and Vegetables in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-drinks/
+      title: "Напої — Drinks in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/video-fruits-vegetables/
+      title: "Video: Fruits and Vegetables in Ukrainian (Flashcards & Exercises)"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-food/
+      title: "Phrasebook: Food"
+      type: phrasebook
+      relevance: high
+      verified: true
+
+i-eat-i-drink:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-food/
+      title: "The Ultimate Guide to Ukrainian Food: 40+ Ukrainian Dishes"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-drinks/
+      title: "Напої — Drinks in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode12/
+      title: "ULP 1-12 | Ordering Food in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+at-the-cafe:
+  articles:
+    - url: https://www.ukrainianlessons.com/fmu16/
+      title: "FMU 1-16 | How to ORDER at the Restaurant in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode12/
+      title: "ULP 1-12 | Ordering Food in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-food/
+      title: "Phrasebook: Food"
+      type: phrasebook
+      relevance: medium
+      verified: true
+
+shopping:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-clothes/
+      title: "Одяг — Clothes Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-clothing/
+      title: "Phrasebook: Clothing"
+      type: phrasebook
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-money/
+      title: "Phrasebook: Money"
+      type: phrasebook
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-currency/
+      title: "Ukrainian Currency"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode32/
+      title: "ULP 1-32 | Shopping for Clothes — Accusative Case"
+      type: podcast
+      relevance: high
+      verified: true
+
+people-around-me:
+  articles:
+    - url: https://www.ukrainianlessons.com/vocabulary-family/
+      title: "Сім'я — Family Vocabulary in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-praise-words/
+      title: "Praise Words (Vocabulary)"
+      type: article
+      relevance: medium
+      verified: true
+
+checkpoint-food-shopping:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-food/
+      title: "The Ultimate Guide to Ukrainian Food"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-food/
+      title: "Phrasebook: Food"
+      type: phrasebook
+      relevance: high
+      verified: true
+
+# =============================================================================
+# A1.7: Communication
+# =============================================================================
+
+hey-friend:
+  articles:
+    - url: https://www.ukrainianlessons.com/greetings/
+      title: "Greetings in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/small-talk-in-ukrainian/
+      title: "Small Talk in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/exclamations/
+      title: "Ukrainian Exclamations (Вигуки)"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/love-in-ukrainian/
+      title: "Love in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+please-do-this:
+  articles:
+    - url: https://www.ukrainianlessons.com/episode114/
+      title: "ULP 3-114 | Imperative Mood (Let's...) in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+
+linking-ideas:
+  articles:
+    - url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
+      title: "Ukrainian Conjunctions"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
+      title: "Ukrainian Conjunctions — Complete Guide"
+      type: article
+      relevance: high
+      verified: true
+
+when-and-where:
+  articles:
+    - url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+      title: "Prepositions of Time in Ukrainian: Table with Cases"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/prepositions-of-place/
+      title: "Прийменники місця — Prepositions of Place in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+
+holidays:
+  articles:
+    - url: https://www.ukrainianlessons.com/christmas-new-year-in-ukraine/
+      title: "Christmas & New Year in Ukraine"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/merry-christmas-in-ukrainian/
+      title: "How to Say Merry Christmas and Happy New Year in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/easter-greetings/
+      title: "Easter Greetings in Ukrainian: Authentic Phrases with Audio"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/birthday-wishes/
+      title: "Birthday Wishes in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode23/
+      title: "ULP 1-23 | Happy New Year and Merry Christmas in Ukrainian"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/episode63/
+      title: "ULP 2-63 | Ukrainian Holiday Greetings"
+      type: podcast
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-national-symbols/
+      title: "Ukrainian National Symbols"
+      type: article
+      relevance: medium
+      verified: true
+
+checkpoint-communication:
+  articles:
+    - url: https://www.ukrainianlessons.com/small-talk-in-ukrainian/
+      title: "Small Talk in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+      title: "Useful Ukrainian Questions"
+      type: article
+      relevance: high
+      verified: true
+
+# =============================================================================
+# A1.8: Past, Future, Graduation
+# =============================================================================
+
+what-happened:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-past-tense/
+      title: "Минулий час — Past Tense in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: medium
+      verified: true
+
+yesterday:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-past-tense/
+      title: "Минулий час — Past Tense in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+      title: "Verb Aspect in Ukrainian: Imperfective vs Perfective"
+      type: article
+      relevance: medium
+      verified: true
+
+what-will-happen:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-future/
+      title: "Майбутній час — Future Tense in Ukrainian (Grammar Tables)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: medium
+      verified: true
+
+my-plans:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-future/
+      title: "Майбутній час — Future Tense in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+      title: "Verb Aspect in Ukrainian: Imperfective vs Perfective"
+      type: article
+      relevance: medium
+      verified: true
+
+my-story:
+  articles:
+    - url: https://www.ukrainianlessons.com/grammar-past-tense/
+      title: "Минулий час — Past Tense in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/small-talk-in-ukrainian/
+      title: "Small Talk in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+health:
+  articles:
+    - url: https://www.ukrainianlessons.com/something-hurts/
+      title: "Something Hurts — Describing Pain in Ukrainian"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/vocabulary-body/
+      title: "Тіло — Body Vocabulary in Ukrainian (with Illustrations and Audio)"
+      type: article
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-health/
+      title: "Phrasebook: Health"
+      type: phrasebook
+      relevance: high
+      verified: true
+
+emergencies:
+  articles:
+    - url: https://www.ukrainianlessons.com/ph-help/
+      title: "Phrasebook: Help"
+      type: phrasebook
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/ph-needs/
+      title: "Phrasebook: Needs"
+      type: phrasebook
+      relevance: high
+      verified: true
+    - url: https://www.ukrainianlessons.com/something-hurts/
+      title: "Something Hurts — Describing Pain in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+
+a1-finale:
+  articles:
+    - url: https://www.ukrainianlessons.com/100words/
+      title: "100 Most Common Words in Ukrainian"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/intro-cases/
+      title: "Introduction to Ukrainian Cases: Quick Overview"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-cases-chart/
+      title: "All Ukrainian Cases Chart: Full Table of Functions and Examples"
+      type: article
+      relevance: medium
+      verified: true
+    - url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      title: "Verb Tenses in Ukrainian: Comprehensive Overview Chart"
+      type: article
+      relevance: medium
+      verified: true
+
+# =============================================================================
+# Cross-module reference articles (useful across many A1 modules)
+# =============================================================================
+# These don't map to a single module but are useful general references:
+#
+# - https://www.ukrainianlessons.com/100words/
+#   "100 Most Common Words in Ukrainian" — general vocabulary
+#
+# - https://www.ukrainianlessons.com/basic-terms/
+#   "Table of Grammar Terms" — metalanguage for any grammar module
+#
+# - https://www.ukrainianlessons.com/begin-learning-ukrainian/
+#   "Begin Learning Ukrainian" — orientation for new learners
+#
+# - https://www.ukrainianlessons.com/ukrainian-language-resources/
+#   "100 Links for Learning Ukrainian" — supplementary resources
+#
+# - https://www.ukrainianlessons.com/12-ukrainian-words-without-translation/
+#   "12 Ukrainian Words Without Translation" — cultural enrichment
+#
+# - https://www.ukrainianlessons.com/20-ukrainian-idioms-proverbs-and-expressions/
+#   "20 Ukrainian Idioms, Proverbs, and Expressions" — A1.7+ cultural enrichment
+#
+# - https://www.ukrainianlessons.com/powerful-ukrainian-words/
+#   "15 Powerful Ukrainian Words That Define Ukraine" — cultural + 3rd declension
+#
+# =============================================================================
+# Broken URLs in ulp-articles-index.yaml (403/404 as of 2026-03-31)
+# =============================================================================
+# These appear to be behind Anna's paywall or restructured:
+#   /nominativecase/  -> 404
+#   /dative-case/     -> 403
+#   /instrumental-case/ -> 403
+#   /locative-case/   -> 403
+#   /present-tense/   -> 403
+#   /past-tense/      -> 403
+#   /future-tense/    -> 403
+#   /imperative-mood/  -> 403
+#   /conditional-mood/ -> 403
+#   /participles/     -> 403
+#
+# Working alternatives for tense/case content:
+#   Past tense:  /grammar-past-tense/ (200)
+#   Future tense: /grammar-future/ (200)
+#   Cases overview: /intro-cases/ and /ukrainian-cases-chart/ (200)
+#   Accusative: /accusativecase/ (200)
+#   Genitive: /genitive-case/ (200)
+#   Verb tenses: /ukrainian-tenses/ (200)

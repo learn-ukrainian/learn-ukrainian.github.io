@@ -2,12 +2,12 @@
 
 ## Діало́ги (Dialogues)
 
-Ukrainian splits time into two questions. **Котра годи́на?** (what time is it?) asks about *right now*. **О котрі́й?** (at what time?) asks about *when something happens*. Both questions appear in the dialogues below — spot them as you read.
+Ukrainian splits time into two questions. **Котра́ годи́на?** (what time is it?) asks about *right now*. **О котрі́й?** (at what time?) asks about *when something happens*. Both questions appear in the dialogues below — spot them as you read.
 
 ### Діало́г 1 — Зу́стріч (A Meeting)
 
-> — **Марина:** А́лло, Олексі́ю! Котра година? *(Hello, Oleksiy! What time is it?)*
-> — **Олексій:** Деся́та. *(Ten o'clock.)*
+> — **Мари́на:** А́лло, Олексі́ю! Котра година? *(Hello, Oleksiy! What time is it?)*
+> — **Олексі́й:** Деся́та. *(Ten o'clock.)*
 > — **Марина:** О котрій ти зазвича́й працю́єш? *(What time do you usually work?)*
 > — **Олексій:** О дев'я́тій. А ти? *(At nine. And you?)*
 > — **Марина:** Я працю́ю о деся́тій. *(I work at ten.)*
@@ -17,7 +17,7 @@ Ukrainian splits time into two questions. **Котра годи́на?** (what t
 > — **Марина:** До́бре, тоді́ о першій! *(Good, then at one!)*
 
 
-Марина needs to find a gap in both schedules. She uses **Котра година?** to check the current time, then **О котрій ти працюєш?** to ask about Олексій's schedule. The final agreement — **тоді о першій** — is a chunk you'll use constantly: *тоді* (then) + the meeting time.
+Марина needs to find a gap in both schedules. She uses **Котра година?** to check the current time, then **О котрій ти працюєш?** to ask about Олексі́й's schedule. The final agreement — **тоді о першій** — is a chunk you'll use constantly: *тоді* (then) + the meeting time.
 
 ### Діалог 2 — Ро́зклад дня (Daily Schedule)
 
@@ -30,7 +30,7 @@ Ukrainian splits time into two questions. **Котра годи́на?** (what t
 > — **Олексій:** Я вече́ряю о восьмій ве́чора. *(I eat dinner at eight in the evening.)*
 
 
-Here the verbs **снідати** (to eat breakfast), **обідати** (to eat lunch), and **вечеряти** (to eat dinner) connect directly with time expressions. These verbs appeared in A1.3 — now you're combining them with specific hours. Notice the time-of-day words after each hour: **ранку** (morning), **дня** (afternoon), **вечора** (evening). These remove ambiguity, just like "AM" and "PM" in English.
+Here the verbs **сні́дати** (to eat breakfast), **обі́дати** (to eat lunch), and **вече́ряти** (to eat dinner) connect directly with time expressions. These verbs appeared in A1.3 — now you're combining them with specific hours. Notice the time-of-day words after each hour: **ранку** (morning), **дня** (afternoon), **вечора** (evening). These remove ambiguity, just like "AM" and "PM" in English.
 
 Two patterns emerged from both dialogues. First: **Котра година?** gets a bare ordinal answer — **Десята.** Second: **О котрій?** gets **о** plus a shifted form — **О десятій.** The same hour appears in two shapes: *десята* vs. *о десятій*. The ending flips from **-а** to **-ій**. The next sections break down exactly how each form works.
 
@@ -44,10 +44,10 @@ Here are all twelve hours as feminine ordinals. Learn them the way you learn mon
 
 | | | |
 |---|---|---|
-| **перша** (1:00) | **друга** (2:00) | **третя** (3:00) |
-| **четверта** (4:00) | **п'ята** (5:00) | **шоста** (6:00) |
-| **сьома** (7:00) | **восьма** (8:00) | **дев'ята** (9:00) |
-| **десята** (10:00) | **одинадцята** (11:00) | **дванадцята** (12:00) |
+| **пе́рша** (1:00) | **дру́га** (2:00) | **тре́тя** (3:00) |
+| **четве́рта** (4:00) | **п'ята́** (5:00) | **шо́ста** (6:00) |
+| **сьома** (7:00) | **во́сьма** (8:00) | **дев'ята** (9:00) |
+| **десята** (10:00) | **одина́дцята** (11:00) | **двана́дцята** (12:00) |
 
 You are not learning the cardinal number "ten" here — you are learning the word **десята**, which means "10 o'clock." Think of each as a label for a point on the clock. A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it.
 
@@ -57,9 +57,9 @@ You are not learning the cardinal number "ten" here — you are learning the wor
 
 The half-hour pattern is **пів на** + the *next* hour. The logic: you are halfway *toward* the next hour.
 
-- **Пів на другу** = 1:30 (halfway to the second hour)
-- **Пів на восьму** = 7:30 (halfway to the eighth hour)
-- **Пів на дев'яту** = 8:30 — from Захарійчук Grade 4: *О пів на дев'яту продзвені́в дзвінок* (At 8:30 the bell rang)
+- **Пів на дру́гу** = 1:30 (halfway to the second hour)
+- **Пів на во́сьму** = 7:30 (halfway to the eighth hour)
+- **Пів на дев'я́ту** = 8:30 — from Захарійчук Grade 4: *О пів на дев'яту продзвені́в дзвіно́к* (At 8:30 the bell rang)
 
 At A1, full hours and **пів на** are the core skill. Practice:
 
@@ -83,11 +83,11 @@ Two questions, two forms of the same hour. Here is the complete set of **о** + 
 | | |
 |---|---|
 | **о першій** (at 1:00) | **о сьомій** (at 7:00) |
-| **о другій** (at 2:00) | **о восьмій** (at 8:00) |
-| **о третій** (at 3:00) | **о дев'ятій** (at 9:00) |
-| **о четвертій** (at 4:00) | **о десятій** (at 10:00) |
-| **о п'ятій** (at 5:00) | **об одина́дцятій** (at 11:00) |
-| **о шостій** (at 6:00) | **о двана́дцятій** (at 12:00) |
+| **о дру́гій** (at 2:00) | **о восьмій** (at 8:00) |
+| **о тре́тій** (at 3:00) | **о дев'ятій** (at 9:00) |
+| **о четве́ртій** (at 4:00) | **о десятій** (at 10:00) |
+| **о п'я́тій** (at 5:00) | **об одина́дцятій** (at 11:00) |
+| **о шо́стій** (at 6:00) | **о двана́дцятій** (at 12:00) |
 
 One detail: **об одинадцятій** uses **об** instead of **о** because *одинадцятій* starts with a vowel. From Захарійчук Grade 4: *Чека́тиму об одинадцятій годині.* All other hours use **о**. The pattern shortcut: if the answer to **Котра?** is *десята*, the answer to **О котрій?** is *о десятій* — the ending **-а** flips to **-ій**. Spot the pattern, don't memorize a rule.
 
@@ -102,14 +102,14 @@ After the hour, add a time-of-day word to remove ambiguity — just like "AM" an
 - **вечора** — in the evening
 - **ночі** — at night
 
-From Захарійчук Grade 4: *Прокинувся о сьомій годині ранку.* (He woke up at seven in the morning.) Here is the full picture:
+From Захарійчук Grade 4: *Проки́нувся о сьомій годині ранку.* (He woke up at seven in the morning.) Here is the full picture:
 
 - **О сьомій ранку** — 7 AM
 - **О третій дня** — 3 PM
 - **О десятій вечора** — 10 PM
 - **О другій ночі** — 2 AM
 
-Two special words stand alone without **о**: **опівдні** (at noon) and **опівночі** (at midnight). You simply say *Зустрінемося опівдні* — no preposition needed.
+Two special words stand alone without **о**: **опі́вдні** (at noon) and **опі́вночі** (at midnight). You simply say *Зустрінемося опівдні* — no preposition needed.
 
 The words **ранку**, **дня**, **вечора**, **ночі** are fixed phrases here. You don't need to know why they look the way they do — just attach them after the hour. This is how Ukrainian children learn time: phrase first, grammar later. Think of each combination as a single unit: *о восьмій ранку* is one chunk, not three separate words.
 
@@ -135,7 +135,7 @@ The shift at a glance:
 
 One anchor: whenever you see **о котрій**, the answer ends in **-ій**.
 
-Here is your complete time vocabulary from this module, grouped by type. Hours: **перша**, **друга**, **третя**, **четверта**, **п'ята**, **шоста**, **сьома**, **восьма**, **дев'ята**, **десята**, **одинадцята**, **дванадцята**. Half hour: **пів на** + the next hour. Time of day: **ранку** (morning), **дня** (afternoon), **вечора** (evening), **ночі** (night). The four nouns behind them: **ранок** (morning), **день** (day), **вечір** (evening), **ніч** (night). Special: **опівдні** (at noon), **опівночі** (at midnight). Questions: **Котра година?** and **О котрій годині?** — your scheduling toolkit.
+Here is your complete time vocabulary from this module, grouped by type. Hours: **перша**, **друга**, **третя**, **четверта**, **п'ята**, **шоста**, **сьома**, **восьма**, **дев'ята**, **десята**, **одинадцята**, **дванадцята**. Half hour: **пів на** + the next hour. Time of day: **ранку** (morning), **дня** (afternoon), **вечора** (evening), **ночі** (night). The four nouns behind them: **ра́нок** (morning), **день** (day), **ве́чір** (evening), **ніч** (night). Special: **опівдні** (at noon), **опівночі** (at midnight). Questions: **Котра година?** and **О котрій годині?** — your scheduling toolkit.
 
 Test yourself — answer each question out loud in Ukrainian before reading the model answer:
 
@@ -152,9 +152,9 @@ You can now say *what time* something happens. The next step is *what day* and *
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **годи́на** | hour | ім. | ж. |
 | **котра́** | which (feminine, used in time questions) | прикм. |  |
@@ -190,16 +190,16 @@ You can now say *what time* something happens. The next step is *what day* and *
 | **зу́стріч** | meeting | ім. | ж. |
 | **зустрі́немося** | let's meet; we'll meet | дієсл. |  |
 | **зачека́й** | wait (informal imperative) | дієсл. |  |
-| **хвили́нка** | a moment (diminutive of хвилина) | ім. | ж. |
+| **хвили́нка** | a moment (diminutive of хвили́на) | ім. | ж. |
 | **підхо́дить** | that works; that suits | дієсл. |  |
 | **сні́дати** | to eat breakfast | дієсл. |  |
 | **обі́дати** | to eat lunch | дієсл. |  |
 | **вече́ряти** | to eat dinner | дієсл. |  |
 | **алло́** | hello (answering the phone) | виг. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Котра година?** | What time is it? |
 | **О котрій?** | At what time? |
@@ -211,7 +211,7 @@ You can now say *what time* something happens. The next step is *what day* and *
 | **розклад дня** | daily schedule |
 | **тоді о першій** | then at one (used to confirm a meeting time) |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "годи́на", back: "hour", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "котра́", back: "which (feminine, used in time questions)", subtitle: "прикм." }, { front: "пе́рша", back: "one o'clock; 1st (feminine ordinal)", subtitle: "прикм." }, { front: "дру́га", back: "two o'clock; 2nd (feminine ordinal)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тре́тя", back: "three o'clock; 3rd (feminine ordinal)", subtitle: "прикм." }, { front: "четве́рта", back: "four o'clock; 4th (feminine ordinal)", subtitle: "прикм." }, { front: "п'ята́", back: "five o'clock; 5th (feminine ordinal)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шо́ста", back: "six o'clock; 6th (feminine ordinal)", subtitle: "прикм." }, { front: "сьома", back: "seven o'clock; 7th (feminine ordinal)", subtitle: "числ." }, { front: "во́сьма", back: "eight o'clock; 8th (feminine ordinal)", subtitle: "прикм." }, { front: "дев'я́та", back: "nine o'clock; 9th (feminine ordinal)", subtitle: "прикм." }, { front: "деся́та", back: "ten o'clock; 10th (feminine ordinal)", subtitle: "прикм." }, { front: "одина́дцята", back: "eleven o'clock; 11th (feminine ordinal)", subtitle: "прикм." }, { front: "двана́дцята", back: "twelve o'clock; 12th (feminine ordinal)", subtitle: "прикм." }, { front: "пів", back: "half", subtitle: "числ." }, { front: "чверть", back: "quarter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "опі́вдні", back: "at noon", subtitle: "присл." }, { front: "опі́вночі", back: "at midnight", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "ве́чір", back: "evening", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ніч", back: "night", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́нку", back: "in the morning (time-of-day qualifier)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дня", back: "in the afternoon (time-of-day qualifier)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ве́чора", back: "in the evening (time-of-day qualifier)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "но́чі", back: "at night (time-of-day qualifier)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "тоді́", back: "then", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "зрозумі́ло", back: "got it; understood", subtitle: "присл." }, { front: "мо́же", back: "maybe", subtitle: "дієсл." }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зустрі́немося", back: "let's meet; we'll meet", subtitle: "дієсл." }, { front: "зачека́й", back: "wait (informal imperative)", subtitle: "дієсл." }, { front: "хвили́нка", back: "a moment (diminutive of хвилина)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "підхо́дить", back: "that works; that suits", subtitle: "дієсл." }, { front: "сні́дати", back: "to eat breakfast", subtitle: "дієсл." }, { front: "обі́дати", back: "to eat lunch", subtitle: "дієсл." }, { front: "вече́ряти", back: "to eat dinner", subtitle: "дієсл." }, { front: "алло́", back: "hello (answering the phone)", subtitle: "виг." }]} />
 
@@ -219,7 +219,7 @@ You can now say *what time* something happens. The next step is *what day* and *
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -227,14 +227,14 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Захарійчук Grade 4, p.117
   _О котрій годині? Котра година? — time expressions with ordinals._
 - Літвінова Grade 6, p.245-246
   _Full time expression system: на, по, до, пів на._
-- Авраменко Grade 6, p.172
-  _Прийменники на позначення часу: о, за, на, по, до._
+- Авра́менко Grade 6, p.172
+  _Прийме́нники на позна́чення ча́су: о, за, на, по, до._
 
 **Anna Ohoiko — Ukrainian Lessons**
 

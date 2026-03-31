@@ -1,0 +1,81 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 5 `content_outline` sections present and well-covered. Що ми знаємо
+    covers all 5 can-do checks (M36–M40). Читання follows the Anna scenario exactly
+    (market → café → meets friend → introduces broth
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All case forms verified correct via VESUM. Accusative examples: кашу,
+    каву, воду, піцу, борщ, хліб, Олену, брата, Дмитра — all correct. Vocatives: Олено,
+    Дмитре — confirmed. Instrumental: карткою, сме'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Checkpoint structure follows a natural review flow: self-assessment →
+    reading comprehension → grammar reference → connected dialogue → summary. Every
+    grammar point has 3+ Ukrainian examples (Pattern 2'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All A1.6 vocabulary used naturally in context: їжа/напої (борщ, вареники,
+    салат, хліб, сир, піца, каша, яєчня, суп, котлета, кава, чай, вода, сік, молоко),
+    meals (сніданок, обід, вечеря), café phrases'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 exercises matching all 4 plan `activity_hints` exactly. Good variety:
+    2 quizzes (different focus — grammar vs situational), 1 fill-in (dialogue completion),
+    1 group-sort (categorization). Quiz 1 ans'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Deductions for: "Welcome to the checkpoint module for phase A1.6. This
+    is where we pause to review and consolidate your knowledge." (meta-commentary),
+    "Let''s see what you can do!" (motivational opener'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 5 H2 sections present and correctly ordered. Word count 1386 vs target
+    1000 — well above. Clean markdown. No duplicate sections, no stray tags, no meta-commentary
+    sections. Dialogue divs properly '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms — no "like Russian" comparisons.
+    Ринок and кафе scenarios are culturally authentic. Currency forms гривня/гривні/гривень
+    correctly contextualized. "Все було дуже с
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Named speakers throughout (Наталя, Дмитро, Продавець, Офіціант, Олена).
+    Multi-turn exchanges in 3 settings (breakfast, market, café). Natural flow: Наталя
+    haggles ("Дорого!"), casual meeting with Олен'
+findings:
+- dimension: LINGUISTIC ACCURACY
+  severity: MAJOR
+  location: Читання section — "Анна купує **хліб** (bread), **сир** (cheese), **яблука**
+    (apples), і **салат** (salad)."
+  issue: Comma before "і" in a simple enumeration is an English punctuation calque.
+    Ukrainian does not use a comma before the final conjunction in simple homogeneous
+    lists (Правопис 2019, §158).
+  fix: Remove the comma before "і".
+- dimension: ENGAGEMENT & TONE
+  severity: MINOR
+  location: Що ми знаємо section — "Welcome to the checkpoint module for phase A1.6.
+    This is where we pause to review and consolidate your knowledge. A1.6 covered
+    five essential topics. Let's see what you can do!"
+  issue: Generic meta-commentary opener. Could be replaced with a more direct, content-specific
+    lead-in.
+  fix: Rephrase to be less meta and more direct.
+- dimension: ENGAGEMENT & TONE
+  severity: MINOR
+  location: Підсумок section — "You have successfully completed phase A1.6 — Food
+    and Shopping. You have expanded your vocabulary and grammar significantly."
+  issue: '"Successfully completed" and "expanded...significantly" are telling-not-showing
+    patterns. The checklist that follows is good — this framing sentence is the weak
+    link.'
+  fix: Tighten the framing to be less congratulatory.

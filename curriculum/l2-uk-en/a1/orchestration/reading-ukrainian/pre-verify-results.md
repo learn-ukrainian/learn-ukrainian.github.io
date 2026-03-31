@@ -1,6 +1,6 @@
 ## VESUM Verification
 
-**11/11 words confirmed in VESUM:**
+**All 11 words confirmed — 11/11 found:**
 
 - ✅ яблуко (noun)
 - ✅ молоко (noun)
@@ -14,7 +14,7 @@
 - ✅ фотографія (noun)
 - ✅ шоколад (noun)
 
-**Not found:** none — all 11 plan vocabulary words are safe to use.
+**Not found: none.** All plan vocabulary is safe to use.
 
 ---
 
@@ -22,97 +22,88 @@
 
 ### Section: Склади (Syllables)
 
-> «У слові стільки складів, скільки в ньому голосних звуків. НАПРИКЛАД: у слові Юлія 3 голосних: [у], [і], [а]. Отже, у цьому слові 3 склади: Ю-лі-я.»
-> Source: Заболотний, Grade 5, tier 1 (p.90) — **exact match to plan's Большакова rule**
+> "У слові стільки складів, скільки голосних звуків."
+> Source: Большакова, Grade 1 (Буквар), p.25 — **primary authority, confirmed**
 
-> «Склад – це частина слова, яку вимовляють одним поштовхом видихуваного повітря.»
-> Source: Заболотний, Grade 5, tier 1
+> "Склад – це частина слова, яку вимовляють одним поштовхом видихуваного повітря. У слові стільки складів, скільки в ньому голосних звуків. НАПРИКЛАД: у слові Юлія 3 голосних: [у], [і], [а]. Отже, у цьому слові 3 склади: Ю-лі-я."
+> Source: Заболотний, Grade 5, p.87 — **corroborates the rule at Grade 5 level**
 
-> «Залежно від кількості складів слова поділяються на односкладові, двоскладові, трискладові та багатоскладові, наприклад: матч, Хар-ків, ма-ту-ся, у-ні-вер-си-тет.»
-> Source: Литвинова, Grade 5, tier 1 (p.170) — **directly confirms у-ні-вер-си-тет syllable split from plan**
+> "У кожному складі обов'язково є голосний звук. Він утворює склад."
+> Source: Вашуленко, Grade 2, p.18 — **strong corroboration**
 
-> «Якщо збігаються підряд два або більше приголосних, то їх розділяємо так, щоб до попереднього складу відходив звук, у якому є більше голосу, ніж у наступному: книж-ка, сон-це, вер-ба.»
-> Source: Карaman, Grade 10, tier 2 — confirms open-syllable preference for consonant clusters
+> "Пригадай! Підстав долоньку під підборіддя і вимов слово. Скільки разів підборіддя торкнеться долоньки, стільки й складів у слові."
+> Source: Кравцова, Grade 2, p.13 — **chin-test confirmed exactly as stated in the plan**
 
-> «У кожному складі обов'язково є голосний звук. Він утворює склад.»
-> Source: Вашуленко, Grade 2, tier 2 (p.18)
+> "Слова поділяються на склади... Залежно від кількості складів слова поділяються на односкладові, двоскладові, трискладові та багатоскладові, наприклад: матч, Хар-ків, ма-ту-ся, у-ні-вер-си-тет."
+> Source: Літвінова, Grade 5, p.170 — **confirms the progression односкладові → багатоскладові and uses університет as the exact example**
 
-### Section: Голосні літери (Vowel Letters)
+### Section: Звуковий аналіз слова (Sound Analysis)
 
-> «Літери я, ю, є позначають два звуки в таких позиціях: на початку слова — яблуко [йаблуко]; після голосного — мию [ми·йу]; після апострофа та м'якого знака — п'ять [пйатʹ]. Літери ї та щ завжди позначають два звуки [йі] та [шч] відповідно: їжак [йіжак].»
-> Source: Литвинова, Grade 5, tier 1 (p.137) — **exact pedagogical structure for plan's iotated vowel section**
+> "ЯК ЗРОБИТИ ЗВУКОВИЙ АНАЛІЗ СЛОВА: 1. Визначаю в слові голосні звуки. 2. Ділю слово на склади. 3. Ставлю наголос. 4. Позначаю приголосні звуки."
+> Source: Большакова, Grade 1, p.29 — **exact 4-step method confirmed, matches plan perfectly**
 
-> «Букви я, ю, є на початку складу позначають два звуки: [йа], [йу], [йе]. Буква ї завжди позначає два звуки — [йі]. / Після приголосних букви я, ю, є позначають один звук: [а], [у], [е].»
-> Source: Кравцова, Grade 2, tier 2 (p.10) — **confirms both rules in plan**
+### Section: Голосні літери (Vowel Letters — iotated)
 
-> «В українській мові є шість голосних звуків. Ти можеш позначити їх на письмі десятьма буквами. Голосні звуки: [а], [о], [у], [е], [и], [і]. Букви, що позначають голосні звуки: а, о, у, е, и, і, я, ю, є, ї.»
-> Source: Большакова, Grade 2, tier 2 (p.34) — **directly supports "6 sounds, 10 letters" rule in plan**
+> "Пригадайте! Літери я, ю, є позначають два звуки в таких позиціях: на початку слова — яблуко [йаблуко]; після голосного — мию [миYу]; після апострофа та м'якого знака — п'ять [пйатʹ]. Літери ї та щ завжди позначають два звуки [йі] та [шч] відповідно: їжак [йіжак], щука [шчука]."
+> Source: Літвінова, Grade 5, p.137 — **explicit table of all iotated vowel positions, matches plan exactly**
 
-### Section: Читання слів (Reading Words)
+> "Букви я, ю, є, що стоять після апострофа, не позначають м'якість попереднього приголосного, адже в цій позиції вони позначають два звуки [йа], [йу], [йе]: дев'ятка [деивйатка]."
+> Source: Авраменко, Grade 5, p.124 — **confirms apostrophe rule for iotated letters**
 
-> «Слова поділяються на склади — частини слова, що утворюються з одного чи кількох звуків і вимовляються одним поштовхом видихуваного повітря. У складі обов'язково має бути один голосний звук, саме він утворює склад. Коли переносимо слова з рядка в рядок, ділимо їх за складами: мо-ло-ко, ком-п'ю-тер.»
-> Source: Литвинова, Grade 5, tier 1 (p.170) — **confirms мо-ло-ко split from plan's Level 1 examples**
+> "На письмі м'які приголосні позначають буквами і, я, ю, є та знаком м'якшення ь."
+> Source: Большакова, Grade 2, p.43 — **confirms softening function for Grade 2 level**
 
-> «Визначте кількість складів у словах, не поділяючи їх на склади: бібліотека, книгосховище, грамота, наука, мудрість.»
-> Source: Вашуленко, Grade 2, tier 2 (p.19) — **бібліотека appears as a canonical multi-syllable practice word**
+> "У середині складу буква ю позначає один звук [у] і пом'якшення попереднього приголосного. ЛЮК → [у] (+ softening vs. ЛУК → [у] no softening)"
+> Source: Большакова, Grade 1, p.69 — **confirms пом'якшення mechanism with minimal pair ЛЮК/ЛУК**
 
-### Section: Підсумок — Summary
+### Section: Читання слів (Reading Words — syllable types)
 
-> «Запитання для самоперевірки: Чим звук відрізняється від букви? Які особливості вимови українських звуків? ...»
-> Source: Литвинова, Grade 5, tier 1 (p.187) — **validates self-check format used in plan's summary section**
+> "Слова поділяються на односкладові, двоскладові, трискладові та багатоскладові, наприклад: матч, Хар-ків, ма-ту-ся, у-ні-вер-си-тет."
+> Source: Літвінова, Grade 5, p.170 — **exact four-category progression confirmed**
+
+> "Відкриті склади — закінчуються голосним звуком: мо-ре. Закриті — закінчуються приголосним звуком: дав-ній."
+> Source: Заболотний, Grade 5, p.87 — **confirms відкриті/закриті distinction (can be introduced as enrichment)**
 
 ---
 
 ## Grammar Rules
 
-- **6 голосних звуків / 10 голосних букв**: Confirmed in textbooks (Большакова Grade 2, Вашуленко Grade 2). The rule "В українській мові шість голосних звуків" is universally attested Grade 1-10.
+- **Syllable formation rule** ("У слові стільки складів, скільки голосних звуків"): Textbook doctrine confirmed in Большакова Grade 1 p.25, Заболотний Grade 5 p.87, Вашуленко Grade 2 p.18. No dedicated Правопис §, but universally confirmed across grades — safe to state as absolute rule.
 
-- **Iotated vowels (я, ю, є, ї)**: Правопис §7 — Апостроф. The apostrophe rule confirms that я/ю/є/ї signal iotation after hard consonants (б, п, в, м, ф; р; prefixes). Textbook rule: *two sounds at word start / after vowel / after apostrophe or ь; one sound (softening) after consonant*.
+- **Iotated vowels (я, ю, є = two sounds OR softening)**: Confirmed by Літвінова Grade 5 p.137 with full positional table. Note from Авраменко Grade 5 p.124: after apostrophe, я/ю/є always = TWO sounds, never softening. This distinction should be in the module.
 
-- **М'який знак**: Правопис §26 — Ь. "Буквою ь позначаємо на письмі м'якість приголосних звуків." Applies after д, т, з, с, дз, ц, л, н at word/syllable end. Confirmed: пісня — Н is softened by Я (not by Ь, but by iotated vowel in post-consonant position).
+- **Apostrophe**: Правопис §7 — written before я, ю, є, ї after б, п, в, м, ф (б'ю, п'ять, м'ясо, солов'ї), after р (бур'ян, пір'я), after prefixes ending in a hard consonant (від'їзд, з'єднаний). Note: NOT written when a consonant cluster precedes the labial (свято, духмяний, різдвяний).
 
-- **Syllable rule**: No specific Правопис §, but unanimously confirmed in every grade: «У слові стільки складів, скільки в ньому голосних звуків» — Заболотний Grade 5, Вашуленко Grade 2, Литвинова Grade 5, Karaman Grade 10.
+- **Ї = always [йі]**: Confirmed by Літвінова p.137 — "Літери ї та щ завжди позначають два звуки [йі] та [шч] відповідно." No exceptions — safe to present as absolute at A1.
+
+- **М'який знак (ь)**: Confirmed by Авраменко Grade 5 p.124 — "М'який знак пишемо після букв д, т, з, с, ц, л, н та р, коли вони передають м'які приголосні звуки: дядько, лють, мазь..." Mnemonic: "де ти з'їси ці лини." Правопис formal section not retrieved by keyword search — use textbook authority.
 
 ---
 
 ## Calque Warnings
 
-- **«читати по складах»**: Searched Антоненко-Давидович — no calque warning found. Phrase is standard Ukrainian pedagogical language (attested in textbooks). ✅ OK
-- **«столиця»**: Confirmed as natural Ukrainian by Антоненко-Давидович (uses it himself: «столиця України — Києві»). ✅ OK
-- **«брати душ»**: ⚠️ CALQUE — not in plan vocabulary but worth noting if it appears in module content. Correct Ukrainian: *митися під душем*. The plan does not use this phrase, so no action needed.
+- **"по складах" / "по складам"**: Style guide (Антоненко-Давидович) flags *"читає по складам"* as Russian-influenced. ⚠️ **CRITICAL WARNING for module writers:** use "по складах" (not "по складам") if this phrase appears. E.g., "читає по складах" ✅ vs. "по складам" ❌.
 
-**No calques found in plan content.**
+- **"рахувати склади"**: No calque found. Standard Ukrainian. ✅
+
+- **"звуковий аналіз слова"**: No calque found. Standard pedagogical term confirmed in Большакова Grade 1. ✅
+
+- **"позначати звуки"**: No calque found. ✅
 
 ---
 
 ## CEFR Check
 
-All vocabulary confirmed at A1 level via PULS database:
-
 | Word | PULS Level | Status |
 |------|-----------|--------|
-| яблуко | A1 | ✅ Appropriate |
-| молоко | A1 | ✅ Appropriate |
-| людина | A1 | ✅ Appropriate |
-| вулиця | A1 | ✅ Appropriate |
-| університет | A1 | ✅ Appropriate |
-| бібліотека | A1 | ✅ Appropriate |
-| фотографія | A1 | ✅ Appropriate |
-| шоколад | A1 | ✅ Appropriate |
-| столиця | not in PULS | ⚠️ Not rated — but common civic vocabulary, attested A1 in Ukrainian school Grade 1 (Буквар) |
-| каша | not in PULS | ⚠️ Not rated — basic food word, clearly A1 register |
-| пісня | not in PULS | ⚠️ Not rated — basic cultural word, clearly A1 register |
-
-**No vocabulary is above A1 level.** The three PULS-unrated words (столиця, каша, пісня) are all basic words that appear in Grade 1-2 textbooks.
-
----
-
-## Summary: CLEAR TO BUILD
-
-- ✅ All 11 vocabulary words verified in VESUM
-- ✅ All core grammar rules (склади, голосні, iotation, м'який знак) confirmed in multiple textbooks
-- ✅ Syllable division of план examples (мо-ло-ко, у-ні-вер-си-тет, бі-блі-о-те-ка) confirmed in Литвинова Grade 5
-- ✅ Textbook authority confirmed: Большакова, Вашуленко, Заболотний, Литвинова all teach the same rules as the plan
-- ✅ No calques in plan content
-- ✅ All PULS-rated vocabulary is A1
-- ⚠️ One note: plan states «яблуко [йа]» — confirmed by Литвинова Grade 5 as яблуко [йаблуко]. The notation in the plan should write the full word phonetics, not just the initial vowel sound, when giving the example.
+| яблуко | A1 | ✅ On target |
+| молоко | A1 | ✅ On target |
+| людина | A1 | ✅ On target |
+| університет | A1 | ✅ On target |
+| бібліотека | A1 | ✅ On target |
+| вулиця | A1 | ✅ On target |
+| шоколад | A1 | ✅ On target |
+| столиця | A1 | ✅ On target |
+| фотографія | A1 | ✅ On target |
+| каша | **A2** | ⚠️ Above A1 — use as reading-practice word only, not core vocab |
+| пісня | not in PULS | ⚠️ PULS has no entry — confirm via goroh.pp.ua. Appropriate as A1 culturally; use with care |

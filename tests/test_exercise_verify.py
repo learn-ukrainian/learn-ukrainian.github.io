@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from build.exercise_verify import (
     extract_exercise_items,
+    extract_exercise_items_from_yaml,
     extract_plan_vocab,
     extract_prose_words,
     format_verify_result,
@@ -373,4 +374,232 @@ def test_real_module_things_have_gender():
     grounded_ratio = result.grounded_items / result.total_items if result.total_items else 0
     assert grounded_ratio > 0.5, (
         f"Only {grounded_ratio:.0%} of exercise items grounded — expected > 50%"
+    )
+
+
+# --- extract_exercise_items_from_yaml (V6 YAML activities) ---
+
+
+def test_yaml_fill_in():
+    activities = {
+        "inline": [
+            {
+                "type": "fill-in",
+                "items": [
+                    {"sentence": "Друже, ___ цей текст!", "answer": "читай", "options": ["читай", "читайте", "читати"]},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "читай" in words
+    assert "друже" in words
+    assert "читайте" in words
+    assert "читати" in words
+
+
+def test_yaml_quiz():
+    activities = {
+        "inline": [
+            {
+                "type": "quiz",
+                "items": [
+                    {"question": "Оленко, ___ мені підручник!", "options": ["дайте", "дати", "дай"], "correct": 2},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "оленко" in words
+    assert "підручник" in words
+    assert "дай" in words
+    assert "дайте" in words
+
+
+def test_yaml_match_up():
+    activities = {
+        "workbook": [
+            {
+                "type": "match-up",
+                "pairs": [
+                    {"left": "читати", "right": "читай"},
+                    {"left": "писати", "right": "пиши"},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "читати" in words
+    assert "читай" in words
+    assert "писати" in words
+    assert "пиши" in words
+
+
+def test_yaml_group_sort():
+    activities = {
+        "inline": [
+            {
+                "type": "group-sort",
+                "groups": [
+                    {"label": "Ти-форма", "items": ["читай", "пиши"]},
+                    {"label": "Ви-форма", "items": ["читайте", "пишіть"]},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "читай" in words
+    assert "пиши" in words
+    assert "читайте" in words
+    assert "пишіть" in words
+
+
+def test_yaml_true_false():
+    activities = {
+        "workbook": [
+            {
+                "type": "true-false",
+                "items": [
+                    {"statement": "Вчителька використовує ви-форми.", "correct": True},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "вчителька" in words
+    assert "використовує" in words
+
+
+def test_yaml_error_correction():
+    activities = {
+        "workbook": [
+            {
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "Вчителю, читай текст!",
+                        "error": "читай",
+                        "correction": "читайте",
+                        "options": ["читайте", "читати"],
+                    },
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "читайте" in words  # correction
+    assert "вчителю" in words  # sentence
+
+
+def test_yaml_order():
+    activities = {
+        "inline": [
+            {
+                "type": "order",
+                "items": [
+                    {"segments": ["Добрий", "ранок", "пане", "Іване"]},
+                ],
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "добрий" in words
+    assert "ранок" in words
+    assert "пане" in words
+
+
+def test_yaml_empty_activities():
+    assert extract_exercise_items_from_yaml({}) == []
+    assert extract_exercise_items_from_yaml({"inline": None, "workbook": None}) == []
+    assert extract_exercise_items_from_yaml({"inline": [], "workbook": []}) == []
+
+
+def test_yaml_no_exercises_in_markdown_but_yaml_provided():
+    """Bug #1121: verify_exercises should use YAML activities when provided."""
+    content = "## Lesson\n\nЧитай книжку. Пиши речення."
+    activities = {
+        "inline": [
+            {
+                "type": "fill-in",
+                "items": [
+                    {"sentence": "Друже, ___ книжку!", "answer": "читай", "options": ["читай", "читати"]},
+                ],
+            }
+        ]
+    }
+    plan = {
+        "vocabulary_hints": {
+            "required": ["читати (to read)", "писати (to write)"],
+        }
+    }
+    result = verify_exercises(content, plan, activities=activities)
+    # Must find exercise items from YAML
+    assert result.total_items > 0
+    # "читати" from plan vocab should be found in exercise words
+    assert result.vocab_coverage["tested_in_exercises"] > 0
+
+
+def test_yaml_vocab_coverage():
+    """Plan vocabulary tested_in_exercises should count words present in YAML activities."""
+    content = "## Lesson\n\nЧитай, слухай, говори."
+    activities = {
+        "inline": [
+            {
+                "type": "fill-in",
+                "items": [
+                    {"sentence": "Учні, ___!", "answer": "читайте", "options": ["читайте", "читай"]},
+                    {"sentence": "Друже, ___!", "answer": "слухай", "options": ["слухай", "слухайте"]},
+                ],
+            }
+        ]
+    }
+    plan = {
+        "vocabulary_hints": {
+            "required": [
+                "читати (to read)",
+                "слухати (to listen)",
+                "говорити (to speak)",
+            ],
+        }
+    }
+    result = verify_exercises(content, plan, activities=activities)
+    vc = result.vocab_coverage
+    assert vc["plan_vocab_total"] == 3
+    # "читати" won't match "читайте" (different forms) but "слухай" contains "слухай"
+    # The plan has lemmas, exercises have inflected forms — coverage checks exact match
+    # Only "говорити" is not tested (no exercise uses it)
+    assert "говорити" in vc["not_tested"]
+
+
+def test_real_module_please_do_this_yaml():
+    """Integration test: verify please-do-this with real YAML activities. Issue #1121."""
+    import yaml as _yaml
+
+    base = Path(__file__).resolve().parents[1] / "curriculum" / "l2-uk-en"
+    content_path = base / "a1" / "please-do-this.md"
+    activities_path = base / "a1" / "activities" / "please-do-this.yaml"
+    plan_path = base / "plans" / "a1" / "please-do-this.yaml"
+
+    if not all(p.exists() for p in (content_path, activities_path, plan_path)):
+        return  # skip if files not available
+
+    content = content_path.read_text("utf-8")
+    activities = _yaml.safe_load(activities_path.read_text("utf-8"))
+    plan = _yaml.safe_load(plan_path.read_text("utf-8"))
+
+    result = verify_exercises(content, plan, activities=activities)
+
+    # With YAML activities, we must find exercise items
+    assert result.total_items > 0, "Should find exercise items from YAML"
+    # Plan has 15 vocab words; with 4 exercises covering imperatives,
+    # many should be tested
+    assert result.vocab_coverage["tested_in_exercises"] > 0, (
+        "tested_in_exercises must be > 0 with YAML activities (was the bug in #1121)"
     )

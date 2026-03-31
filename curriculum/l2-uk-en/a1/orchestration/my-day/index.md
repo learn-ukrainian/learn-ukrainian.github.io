@@ -1,6 +1,6 @@
 # Build Summary: my-day (A1)
 
-Generated: 2026-03-30 21:50
+Generated: 2026-03-31 11:58
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:50
 | enrich | complete | 2026-03-30 05:43:43 |
 | verify | complete | 2026-03-30 05:43:43 |
 | review | complete | 2026-03-30 05:47:05 |
-| stress | complete | 2026-03-30 19:50:22 |
-| publish | complete | 2026-03-30 19:50:23 |
+| stress | complete | 2026-03-31 09:58:00 |
+| publish | complete | 2026-03-31 09:58:01 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-30 21:50
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

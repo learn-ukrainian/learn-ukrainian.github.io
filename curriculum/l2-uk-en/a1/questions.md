@@ -1,10 +1,10 @@
 <!-- TAB:Урок -->
 
 ## Діало́ги (Dialogues)
-Ukrainian uses special question words — **питальні слова** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
+Ukrainian uses special question words — **пита́льні слова́** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
 ### Dialogue 1 — Getting to know someone
-> — **Андрій:** Приві́т! Хто ти? *(Hi! Who are you?)*
-> — **Олег:** Я студе́нт. А ти? *(I'm a student. And you?)*
+> — **Андрі́й:** Приві́т! Хто ти? *(Hi! Who are you?)*
+> — **Оле́г:** Я студе́нт. А ти? *(I'm a student. And you?)*
 > — **Андрій:** Я теж студент. Що ти вивча́єш? *(I'm also a student. What do you study?)*
 > — **Олег:** Я вивча́ю украї́нську мо́ву. *(I study the Ukrainian language.)*
 > — **Андрій:** Де ти живе́ш? *(Where do you live?)*
@@ -17,7 +17,7 @@ Ukrainian uses special question words — **питальні слова** (quest
 Every question here starts with a different question word: **Хто** (who) asks about a person, **Що** (what) asks about a thing or activity, **Де** (where) asks about location, **Коли** (when) asks about time, and **Як** (how) asks about manner. Notice how the answer always matches what the question word asks about — **Хто ти?** gets a person (**студент**), **Де ти живеш?** gets a place (**у Львові**).
 ### Dialogue 2 — At home
 > — **Оля:** Де моя́ кни́га? *(Where is my book?)*
-> — **Тарас:** Я не зна́ю. *(I don't know.)*
+> — **Тара́с:** Я не зна́ю. *(I don't know.)*
 > — **Оля:** А хто зна́є? *(And who knows?)*
 > — **Тарас:** Ма́ма знає. *(Mom knows.)*
 > — **Оля:** Чо́му мама? *(Why mom?)*
@@ -26,13 +26,13 @@ Every question here starts with a different question word: **Хто** (who) asks
 This dialogue combines question words with simple negation (**не**). Notice three things the dialogues just showed you:
 1. **Question words come at the start** of the sentence: **Де** моя книга? **Хто** знає? **Чому** мама?
 2. **Word order after the question word stays natural** — you don't need to rearrange anything. Just put the question word first and the sentence works.
-3. **Не** goes before the verb: **Я не знаю**. We will also study double negation (**нічого не...**) in detail below.
+3. **Не** goes before the verb: **Я не знаю**. We will also study double negation (**ні́чого не...**) in detail below.
 ## Питальні слова (Question Words)
 Seven question words cover almost everything you need to ask at A1. Here they are as a set, each with the anchor example you already saw in the dialogues:
 - **Хто?** (who) — Хто ти?
 - **Що?** (what) — Що ти вивчаєш?
 - **Де?** (where) — Де ти живеш?
-- **Куди?** (where to) — Куди ти йдеш?
+- **Куди́?** (where to) — Куди ти йдеш?
 - **Коли?** (when) — Коли ти працюєш?
 - **Чому?** (why) — Чому ти не відповіда́єш?
 - **Як?** (how) — Як тебе звати?
@@ -43,7 +43,7 @@ Ukrainian textbooks introduce **Хто?** and **Що?** from the very first grad
 - **Куди** ти йдеш? — Where are you going? (you are moving there)
 - **Де** книга? — Where is the book? (it is somewhere)
 - **Куди** вони́ ї́дуть? — Where are they driving? (they are heading somewhere)
-The rule: use **де** with verbs of being or staying (**жити**, **бути**, **стояти**). Use **куди** with verbs of movement (**іти**, **їхати**, **ходити**).
+The rule: use **де** with verbs of being or staying (**жи́ти**, **бу́ти**, **стоя́ти**). Use **куди** with verbs of movement (**іти́**, **ї́хати**, **ходи́ти**).
 <!-- INJECT_ACTIVITY: quiz-question-words -->
 ### Word order in questions
 As noted in Ukrainian Lessons Podcast (Episode 35), the typical pattern is question word + verb + subject, but Ukrainian is flexible. All of these are acceptable:
@@ -73,7 +73,7 @@ As a standalone word, **ні** (no) answers a question directly:
 But **ні** also forms a family of negative words by attaching to question-word pronouns and adverbs:
 | Ukrainian | English | Example |
 |-----------|---------|---------|
-| **ніхто** | nobody | Ніхто не знає. |
+| **ніхто́** | nobody | Ніхто не знає. |
 | **нічого** | nothing | Я нічого не ба́чу. |
 | **ніколи** | never | Він ніколи не працює. |
 | **ніде** | nowhere | Я ніде не працю́ю. |
@@ -102,7 +102,7 @@ Here is everything from this module in one place:
 - **Де vs. Куди:** **Де** = location (Де книга?); **Куди** = direction (Куди ти йдеш?).
 - **Так/ні пита́ння:** rising intonation only — Ти знаєш? ↑ No special word needed. In formal writing, **чи** may appear at the start.
 - **Не:** directly before the verb, never separated — Я **не** знаю. Він **не** прихо́дить.
-- **Подвійне заперечення:** **ніхто/нічого/ніколи/ніде** + **не** + verb — both parts required. **Ніхто не знає.** **Я нічого не бачу.**
+- **Подві́йне заперечення:** **ніхто/нічого/ніколи/ніде** + **не** + verb — both parts required. **Ніхто не знає.** **Я нічого не бачу.**
 :::tip Self-check — try this now
 1. Ask three questions about a friend: **Де вона живе? Що він вивча́є? Коли вони прихо́дять?**
 2. Make two negative sentences: **Я нічого не знаю. Ніхто не розумі́є.**
@@ -112,9 +112,9 @@ Here is everything from this module in one place:
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **куди́** | where to (direction) | присл. |  |
 | **коли́** | when | ім. |  |
@@ -140,16 +140,16 @@ Here is everything from this module in one place:
 | **вра́нці** | in the morning | присл. |  |
 | **уве́чері** | in the evening | присл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **питальні слова** | question words |
 | **тому що** | because |
 | **подвійне заперечення** | double negation |
 | **Я не знаю.** | I don't know. |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "куди́", back: "where to (direction)", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "чому́", back: "why", subtitle: "присл." }, { front: "як", back: "how", subtitle: "присл." }, { front: "ні", back: "no", subtitle: "част." }, { front: "ніхто́", back: "nobody", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ні́чого", back: "nothing", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ніколи", back: "never", subtitle: "присл." }, { front: "ніде", back: "nowhere", subtitle: "присл." }, { front: "нікуди", back: "to nowhere, not anywhere", subtitle: "присл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "розумі́ти", back: "to understand", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "відповіда́ти", back: "to answer", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "іти́", back: "to go (on foot)", subtitle: "дієсл." }, { front: "ї́хати", back: "to go (by vehicle), to drive", subtitle: "дієсл." }, { front: "запере́чення", back: "negation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "запі́знюватися", back: "to be late", subtitle: "дієсл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }]} />
 
@@ -157,7 +157,7 @@ Here is everything from this module in one place:
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -165,10 +165,10 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Варзацька Grade 4, p.41
-  _Question words in case system context (хто? що? кого? чого?)._
+  _Question words in case system context (хто? що? кого? чого́?)._
 - [ULP Season 1, Episode 35](https://www.ukrainianlessons.com/episode35/)
   _Questions in Ukrainian — word order and intonation._
 

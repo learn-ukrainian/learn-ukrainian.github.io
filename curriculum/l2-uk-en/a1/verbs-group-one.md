@@ -20,8 +20,8 @@
 
 Here's a second situation — two people meet after work.
 
-> — **Андрій:** Де ти працю́єш? *(Where do you work?)*
-> — **Марина:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
+> — **Андрі́й:** Де ти працю́єш? *(Where do you work?)*
+> — **Мари́на:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
 > — **Андрій:** Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*
 > — **Марина:** Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*
 > — **Андрій:** Так, я вивча́ю! *(Yes, I'm studying it!)*
@@ -30,19 +30,19 @@ Here's a second situation — two people meet after work.
 > — **Марина:** Так, я гуля́ю в парку. *(Yes, I walk in the park.)*
 
 
-Count the verbs that appeared across both dialogues: **готувати** (to cook), **читати** (to read), **слухати** (to listen), **знати** (to know), **працювати** (to work), **вивчати** (to study), **гуляти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **робити** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
+Count the verbs that appeared across both dialogues: **готува́ти** (to cook), **чита́ти** (to read), **слу́хати** (to listen), **зна́ти** (to know), **працюва́ти** (to work), **вивча́ти** (to study), **гуля́ти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **роби́ти** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
 
 ## Пе́рша дієвідмі́на (Group I Verbs)
 
-All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-ати** (**читати**, **слухати**, **гуляти**, **знати**, **вивчати**) or **-увати/-ювати** (**готувати**, **працювати**, **малювати** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
+All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-а́ти** (**читати**, **слухати**, **гуляти**, **знати**, **вивчати**) or **-увати/-ювати** (**готувати**, **працювати**, **малюва́ти** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
 
-Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита-**, and add endings:
+Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита́-**, and add endings:
 
 | Осо́ба (Person) | Однина́ (Singular) | Множина́ (Plural) |
 |---|---|---|
-| 1-ша (я / ми) | я **читаю** | ми **читаємо** |
-| 2-га (ти / ви) | ти **читаєш** | ви **читаєте** |
-| 3-тя (він, вона / вони́) | він/вона **читає** | вони **читають** |
+| 1-ша (я / ми) | я **читаю** | ми **чита́ємо** |
+| 2-га (ти / ви) | ти **читаєш** | ви **чита́єте** |
+| 3-тя (він, вона / вони́) | він/вона **чита́є** | вони **чита́ють** |
 
 This table comes from Варзацька, Grade 4 (p. 129) — the standard Ukrainian school approach. Notice the vowel **є** running through the forms from **ти** to **ви**: -**є**ш, -**є**, -**є**мо, -**є**те (with -**ють** for **вони**). That consistent **є** is the signature of Group I.
 
@@ -57,11 +57,11 @@ Now apply the same pattern to all six essential verbs. Here are the three singul
 | **гуляти** (to walk) | гуляю | гуляєш | гуля́є |
 | **готувати** (to cook) | готую | готу́єш | готу́є |
 
-One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **готу-** (not *готува-*), **працювати** → **працю-** (not *працюва-*). The endings stay the same — only the stem changes.
+One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **го́ту-** (not *готува-*), **працювати** → **пра́цю-** (not *працюва-*). The endings stay the same — only the stem changes.
 
 <!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
-A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **робить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
+A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **ро́бить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
 
 ## Я, ти, він/вона (Persons)
 
@@ -80,7 +80,7 @@ Each sentence follows the same structure: **person + verb form + object**. The v
 
 <!-- INJECT_ACTIVITY: quiz-verb-forms -->
 
-You may have noticed something: **книга** became **книгу**, **пісня** became **пісню**, **музика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
+You may have noticed something: **кни́га** became **книгу**, **пі́сня** became **пісню**, **му́зика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
 
 <!-- INJECT_ACTIVITY: match-person-to-form -->
 
@@ -114,14 +114,14 @@ Test yourself before moving on:
 - Ask "What are you doing?" → **Що ти робиш?** ✓
 - Say two things you do every day: **Я читаю...** **Я слухаю...** (open production — use any Group I verb)
 
-**Coming next:** M17 — Group II verbs (**говорити**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
+**Coming next:** M17 — Group II verbs (**говори́ти**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **чита́ти** | to read | дієсл. |  |
 | **зна́ти** | to know | дієсл. |  |
@@ -147,13 +147,13 @@ Test yourself before moving on:
 | **смачни́й** | tasty, delicious | прикм. |  |
 | **уве́чері** | in the evening | присл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Що ти робиш?** | What are you doing? |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "му́зика", back: "music", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "гра́ти", back: "to play", subtitle: "дієсл." }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "парк", back: "park", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "студе́нт", back: "student (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "навча́тися", back: "to study (be enrolled as a student)", subtitle: "дієсл." }, { front: "за́вжди́", back: "always", subtitle: "присл." }, { front: "бага́то", back: "many, a lot", subtitle: "присл." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "смачни́й", back: "tasty, delicious", subtitle: "прикм." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }]} />
 
@@ -161,7 +161,7 @@ Test yourself before moving on:
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -169,23 +169,23 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Варзацька Grade 4, p.129
-  _Conjugation table: теперішній час, persons and endings._
+  _Conjugation table: тепе́рішній час, persons and endings._
 - Захарійчук Grade 4, p.110
-  _Verb conjugation table: однина та множина за особами._
+  _Verb conjugation table: однина та множина за осо́бами._
 - [ULP Season 1, Episode 22](https://www.ukrainianlessons.com/episode22/)
   _Present tense verbs in daily life._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: І і ІІ дієвідміни. Дієвідмінювання дієслів](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/i-i-ii-diyevidmini-diyevidminiuvannia-diyesliv-39539) (miyklas.com.ua)
-- [МійКлас: Часи дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
-- [МійКлас: Дієслово, дієслівні форми. Дієвідміни. Наказовий спосіб](https://miyklas.com.ua/p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008) (miyklas.com.ua)
+- [МійКлас: І і ІІ дієвідмі́ни. Дієвідмі́нювання дієслі́в](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/i-i-ii-diyevidmini-diyevidminiuvannia-diyesliv-39539) (miyklas.com.ua)
+- [МійКлас: Часи́ дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
+- [МійКлас: Дієсло́во, дієслі́вні фо́рми. Дієвідміни. Наказо́вий спо́сіб](https://miyklas.com.ua/p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Ukrainian Personal Pronouns](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/)
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
+- [Verb Tenses in Ukrainian (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)

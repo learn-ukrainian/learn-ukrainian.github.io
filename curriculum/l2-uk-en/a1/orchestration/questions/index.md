@@ -1,6 +1,6 @@
 # Build Summary: questions (A1)
 
-Generated: 2026-03-30 21:50
+Generated: 2026-03-31 11:56
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:50
 | enrich | complete | 2026-03-30 03:38:27 |
 | verify | complete | 2026-03-30 03:38:27 |
 | review | complete | 2026-03-30 03:57:16 |
-| stress | complete | 2026-03-30 19:50:46 |
-| publish | complete | 2026-03-30 19:50:46 |
+| stress | complete | 2026-03-31 09:56:44 |
+| publish | complete | 2026-03-31 09:56:45 |
 
 ## Reviews
 
@@ -45,6 +45,7 @@ Generated: 2026-03-30 21:50
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

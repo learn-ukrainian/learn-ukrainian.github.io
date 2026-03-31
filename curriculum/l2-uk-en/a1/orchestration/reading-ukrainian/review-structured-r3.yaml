@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: '**Three plan points completely missing:** (1) Chin-test for syllable
+    counting (Кравцова Grade 2, p.13) — not mentioned anywhere. (2) Ukrainian sound
+    notation system [●] голосний, [—] твердий приголосн'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two critical errors: (1) "six vowels" for університет when only 5 are
+    listed. (2) Большакова''s звуковий аналіз method steps 3-4 are misattributed —
+    наголос and позначення приголосних replaced with "so'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The PPP flow works well — concepts build logically from syllable rule
+    → vowels → reading. Ukrainian examples are abundant (15+ words with syllable breakdowns).
+    However, the module **talks about** скла
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required vocabulary present in prose: яблуко ✅, молоко ✅, людина
+    ✅, вулиця ✅, столиця ✅, каша ✅, пісня ✅. Recommended vocabulary also present:
+    університет ✅, бібліотека ✅, фотографія ✅, шоколад ✅.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 5 plan activity_hints have matching markers. Types are varied (count-syllables,
+    match-up, divide-words, quiz, odd-one-out). Placement is mostly logical — each
+    follows relevant teaching. Minor: div'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: No motivational openers, no meta-commentary, no "Let us now explore."
+    Direct and instructional throughout. The short dialogue (Аня/Марко) is natural
+    and demonstrates the syllable method in action. Ded
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All H2 sections present and match plan: Склади, Голосні літери, Читання
+    слів, Підсумок. Word count 1386 > 1200 target ✅. Clean markdown. No stray tags
+    or artifacts. No duplicate sections.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented fully on its own terms. "Ї is distinctly Ukrainian
+    — Russian has no equivalent letter" — correct and decolonized framing. City names
+    (Київ, Одеса, Харків, Дніпро, Полтава) are cult
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The Аня/Марко dialogue is natural and demonstrates syllable reading, which
+    fits the module topic. However, it is extremely short (4 lines), essentially a
+    reading drill rather than a conversation. Name
+findings: []

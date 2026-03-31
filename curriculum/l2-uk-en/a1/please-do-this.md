@@ -236,5 +236,4 @@ Advanced exercises for this module are in development. Check back soon!
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Imperative Mood (Наказовий спосіб)](https://www.ukrainianlessons.com/imperative-mood/)
-- [Conditional Mood (Умовний спосіб)](https://www.ukrainianlessons.com/conditional-mood/)
+- [ULP 3-114 | Imperative Mood in Ukrainian](https://www.ukrainianlessons.com/episode114/)

@@ -7,7 +7,7 @@
 ### Dialogue 1 — Shopping for a bag
 
 > — **Ірина:** Скі́льки ко́шту́є ця су́мка? *(How much is this bag?)*
-> — **Консультант:** Яка? Ця черво́на? *(Which one? This red one?)*
+> — **Консульта́нт:** Яка? Ця черво́на? *(Which one? This red one?)*
 > — **Ірина:** Ні, та си́ня. *(No, that blue one.)*
 > — **Консультант:** Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*
 > — **Ірина:** А цей рюкза́к? *(And this backpack?)*
@@ -33,22 +33,22 @@ Two patterns emerge here. First, **Це мій стіл** uses **це** to intro
 
 ## Цей, ця, це (This)
 
-Ukrainian has three forms of "this" because every noun has a grammatical gender. You already know this pattern from **мій/моя́/моє** (my) in Module 6 and **який/яка/яке** (which) in Module 9. Demonstrative pronouns follow exactly the same logic:
+Ukrainian has three forms of "this" because every noun has a grammatical gender. You already know this pattern from **мій/моя́/моє́** (my) in Module 6 and **яки́й/яка/яке́** (which) in Module 9. Demonstrative pronouns follow exactly the same logic:
 
 - **Цей стіл** (m) — this table
-- **Ця книга** (f) — this book
+- **Ця кни́га** (f) — this book
 - **Це вікно́** (n) — this window
 
 The feminine and neuter endings match what you have already seen: **-а** for feminine, **-е** for neuter — just like моя/моє and яка/яке. The masculine forms vary (цей, мій, який, той), but feminine and neuter are always consistent. As Заболо́тний (Grade 6, p. 210) puts it: вказівні́ займе́нники цей, той змі́нюються за родами — demonstrative pronouns change by gender. At A1, we only use the nominative forms listed above. Other case forms come later.
 
 How do you know which form to use? Match it to the noun's gender — the gender you already learned in Module 8. Here are more examples across all three genders:
 
-- **Цей телефон** (m) — this phone
+- **Цей телефо́н** (m) — this phone
 - **Цей оліве́ць** (m) — this pencil
-- **Ця камера** (f) — this camera
+- **Ця ка́мера** (f) — this camera
 - **Ця ру́чка** (f) — this pen
 - **Це ра́діо** (n) — this radio
-- **Це місто** (n) — this city
+- **Це мі́сто** (n) — this city
 
 **Цей/ця/це** always refers to something near the speaker — the thing you can reach, hold, or are standing next to. If it is close enough to touch, use **цей/ця/це**.
 
@@ -79,10 +79,10 @@ Contrast pairs make the near/far distinction vivid:
 - **Це крісло зру́чне, а те — ні.** — This armchair is comfortable, and that one — no.
 
 :::caution
-The word **та** has two meanings. As a demonstrative pronoun, **та** means "that" (feminine) and always appears directly before a noun: **та книга** (that book). As a conjunction, **та** means "and" (like **і** or **й**) and connects two words: **мама та тато** (mom and dad). A quick test: is **та** followed directly by a noun it describes? Then it means "that." Does **та** link two separate words? Then it means "and."
+The word **та** has two meanings. As a demonstrative pronoun, **та** means "that" (feminine) and always appears directly before a noun: **та книга** (that book). As a conjunction, **та** means "and" (like **і** or **й**) and connects two words: **ма́ма та та́то** (mom and dad). A quick test: is **та** followed directly by a noun it describes? Then it means "that." Does **та** link two separate words? Then it means "and."
 
 - **Та книга ціка́ва.** — That book is interesting. (demonstrative — **та** + noun)
-- **Ірина та Максим** — Iryna and Maksym (conjunction — **та** links two names)
+- **Ірина та Макси́м** — Iryna and Maksym (conjunction — **та** links two names)
 :::
 
 Demonstratives pair naturally with question words to help you choose between objects. The question particle **чи** (or) connects the options:
@@ -131,9 +131,9 @@ If you can point at objects around you and name them with the right demonstrativ
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **цей** | this (masculine) | прикм. |  |
 | **ця** | this (feminine) | прикм. |  |
@@ -164,14 +164,14 @@ If you can point at objects around you and name them with the right demonstrativ
 | **нови́й** | new | прикм. |  |
 | **стари́й** | old | прикм. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **вказівні займенники** | demonstrative pronouns |
 | **Беру цей.** | I'll take this one. |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "цей", back: "this (masculine)", subtitle: "прикм." }, { front: "ця", back: "this (feminine)", subtitle: "прикм." }, { front: "той", back: "that (masculine)", subtitle: "прикм." }, { front: "та", back: "that (feminine); and (conjunction)", subtitle: "спол." }, { front: "те", back: "that (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ось", back: "here is, look (pointing word)", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "консульта́нт", back: "shop assistant, consultant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ноутбу́к", back: "laptop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́мера", back: "camera", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́діо", back: "radio", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }]} />
 
@@ -179,7 +179,7 @@ If you can point at objects around you and name them with the right demonstrativ
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -187,18 +187,18 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Заболотний Grade 6, p.210
-  _Вказівні займенники цей, той змінюються за родами, числами, відмінками._
+  _Вказівні займенники цей, той змінюються за родами, чи́слами, відмі́нками._
 - Літвінова Grade 6, p.273
   _Full declension table for той — we use nominative only at A1._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

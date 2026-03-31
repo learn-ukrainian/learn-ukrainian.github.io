@@ -14,6 +14,54 @@
     "skeleton": {
       "status": "complete",
       "ts": "2026-03-30T20:22:53.619413+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T20:25:33.319995+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T20:26:48.333697+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T20:26:48.333857+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:14.512284+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:14.521557+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:14.530063+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:37.127399+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:38.387067+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T20:30:38.500070+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-30T20:34:21.664151+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-31T09:58:44.194226+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-31T09:58:44.600844+00:00"
     }
   }
 }

@@ -1,0 +1,57 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct ordering. Syllable
+    rule (Большакова p.25), звуковий аналіз (p.29), складові ланцюжки (Захарійчук
+    p.46 referenced), sound notation, chin test (Кравцо
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All Ukrainian forms verified against VESUM (91/91 real words confirmed).
+    Phonetic descriptions match textbook sources: iotated vowel two-role system confirmed
+    in Большакова pp.66-69, syllable rule ver'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent textbook grounding: Большакова''s звуковий аналіз, складові
+    ланцюжки, Захарійчук''s sound notation — all authentic Grade 1 methods. PPP flow
+    clear: present the rule → demonstrate with examples'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required words appear naturally in context: яблуко (iotated vowel
+    example), молоко (syllable counting), людина (Ю softening), вулиця (3-syllable
+    reading), столиця (with "Київ — столиця України")'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 activity types from plan present as markers. Each marker follows
+    the relevant teaching section (count-syllables after syllable rule, match-up after
+    iotated vowels, etc.). Activity IDs match plan
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers, no "Let us explore," no "You have unlocked."
+    Direct, teacher-like voice throughout. Concrete examples dominate over theory.
+    The chin-test (Кравцова) is a genuinely engaging ph
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections from plan present in correct order: Склади → Голосні
+    літери → Читання слів → Підсумок. Clean markdown with no stray tags, no duplicate
+    summaries. Word count 1675, well above 1200 tar'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized throughout. Ї described as "distinctly Ukrainian — Russian
+    has no equivalent letter" — a factual statement, not comparative framing. Ukrainian
+    city names used (Київ, Одеса, Харків, Дніпро,
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Two dialogues with named speakers (Марко, Аня). First dialogue: Марко
+    quizzes Аня on syllable counting — natural teacher-student dynamic, not interrogation
+    (Аня demonstrates the method, not just answe'
+findings: []

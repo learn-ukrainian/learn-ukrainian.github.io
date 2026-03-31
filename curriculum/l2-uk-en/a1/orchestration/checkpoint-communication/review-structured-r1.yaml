@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: '**Підсумок is severely truncated.** Plan specifies 5 achievement points
+    (vocative, imperative, conjunctions, complex sentences, holidays). The module
+    only includes 2 (complex sentences + holidays). Vo'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 127 non-proper-noun words verified in VESUM. No Russianisms, Surzhyk,
+    calques, or paronyms found. Grammar tables are correct: vocative endings (-а→-о,
+    hard→-е, soft/й→-ю), imperative forms (читай/'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: Що ми знаємо reviews patterns, Читання shows them in context,
+    Граматика systematizes, Діалог practices. Multiple examples per grammar point
+    (6 vocative pairs, 4 imperative pairs, 4 conj'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All plan vocabulary present: плакат, квиток, напій, стілець (from dialogue_situations),
+    кутя, колядки, свічки (from content_outline). Holiday vocabulary: Різдво, Великдень,
+    Новий рік, день народження.'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 4 markers matching 4 plan hints, well-placed after teaching. However,
+    inline comprehension question 2 ("Коли Тарас вільний?") is unanswerable from the
+    text — Taras never states when he's free (Olena s
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'Several engagement anti-patterns: "you now possess the complete A1.7
+    communication toolkit" (gamified), "tick each box" (corporate), "rather than someone
+    just reading words from a phrasebook" (dismiss'
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: 'Incomplete sentence in Підсумок: "Let''s review the concrete communication
+    skills" trails off before the bullet list — missing a colon. Section is truncated
+    (only 2 of 5 planned bullets). All H2 headin'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. Holiday traditions (кутя, колядки
+    for Різдво) are culturally accurate. No "like Russian but..." framing. School
+    fair scenario is culturally grounded. Greeting for
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both dialogues have named speakers, natural multi-turn exchanges, and
+    clear motivation. The Різдво phone call is warm and realistic. The school fair
+    dialogue effectively demonstrates all 5 communicati
+findings: []

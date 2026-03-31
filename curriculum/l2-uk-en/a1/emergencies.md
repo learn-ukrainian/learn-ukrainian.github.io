@@ -208,7 +208,7 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Статті — Articles**
 
-- [Medical and Health Vocabulary](https://www.ukrainianlessons.com/health/) (Phrases for doctor visits and emergencies with audio)
+- [Something Hurts — Describing Pain in Ukrainian](https://www.ukrainianlessons.com/something-hurts/) (Phrases for doctor visits and emergencies)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

@@ -134,9 +134,9 @@ Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'l
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **лі́кар** | doctor | ім. | ч. |
 | **апте́ка** | pharmacy | ім. | ж. |
@@ -164,9 +164,9 @@ Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'l
 | **паціє́нтка** | patient (female) | ім. | ж. |
 | **фармаце́вт** | pharmacist | ім. | ч. |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **У мене болить...** | My ... hurts / I have pain in... |
 | **Що у вас болить?** | What hurts? / What's the matter? |
@@ -182,7 +182,7 @@ Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'l
 | **у лікаря** | at the doctor's |
 | **в аптеці** | at the pharmacy |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "лі́кар", back: "doctor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голова́", back: "head", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "го́рло", back: "throat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "спи́на", back: "back", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "живі́т", back: "stomach", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рука́", back: "hand/arm", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нога́", back: "leg/foot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́ко", back: "eye", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́хо", back: "ear", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зуб", back: "tooth", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "температу́ра", back: "fever/temperature", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́шель", back: "cough", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "не́жить", back: "runny nose", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "табле́тка", back: "pill/tablet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хво́рий", back: "sick (male)", subtitle: "прикм." }, { front: "хво́ра", back: "sick (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "боли́ть", back: "hurts (singular)", subtitle: "дієсл." }, { front: "боля́ть", back: "hurt (plural)", subtitle: "дієсл." }, { front: "засту́да", back: "a cold (illness)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кра́плі", back: "drops (medicine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сиро́п", back: "syrup", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́ки", back: "medicine/medications", subtitle: "ім." }, { front: "паціє́нтка", back: "patient (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фармаце́вт", back: "pharmacist", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
@@ -190,7 +190,7 @@ Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'l
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -198,18 +198,18 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - State Standard 2024, §3
-  _Thematic area: health (здоров'я) — body parts, symptoms, doctor visits._
-- Grade 1-2 textbook: Частини тіла
+  _Thematic area: health (здоро́в'я) — body parts, symptoms, doctor visits._
+- Grade 1-2 textbook: Части́ни ті́ла
   _Body parts vocabulary with pictures._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Прикметник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/prikmetnik-iak-chastina-movi-46716) (miyklas.com.ua)
-- [МійКлас: Групи прикметників за значенням](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/grupi-prikmetnikiv-za-znachenniam-46717) (miyklas.com.ua)
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Прикме́тник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/prikmetnik-iak-chastina-movi-46716) (miyklas.com.ua)
+- [МійКлас: Гру́пи прикме́тників за зна́ченням](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/grupi-prikmetnikiv-za-znachenniam-46717) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

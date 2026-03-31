@@ -2,10 +2,10 @@
 
 ## Діало́ги (Dialogues)
 
-**Аліна** has just moved to a new part of Kyiv. She stops a stranger on the street.
+**А́ліна** has just moved to a new part of Kyiv. She stops a stranger on the street.
 
 > — **Аліна:** Ви́бачте, де тут апте́ка? *(Excuse me, where is the pharmacy here?)*
-> — **Перехожий:** Аптека на ву́лиці Шевче́нка, бі́ля парку. *(The pharmacy is on Shevchenko Street, near the park.)*
+> — **Перехо́жий:** Аптека на ву́лиці Шевче́нка, бі́ля парку. *(The pharmacy is on Shevchenko Street, near the park.)*
 > — **Аліна:** А бібліоте́ка? *(And the library?)*
 > — **Перехожий:** Бібліотека в це́нтрі мі́ста. *(The library is in the city center.)*
 > — **Аліна:** Це дале́ко? *(Is it far?)*
@@ -16,7 +16,7 @@
 
 Notice the polite register here. **Вибачте** (excuse me) is how you address a stranger on the street — this matches the textbook pattern from Заболо́тний Grade 6: *Вибачте, ви не ска́жете, де...* The stranger answers with specific locations: **на вулиці Шевченка** (on Shevchenko Street) uses **на** + locative for streets, and **біля парку** (near the park) pins the pharmacy to a landmark. The reply **в центрі міста** (in the city center) uses **в** + locative. Two location adverbs close the exchange: **далеко** (far) and **близько** (near/close).
 
-Now Аліна is chatting with her friend **Ігор** about their neighborhoods.
+Now Аліна is chatting with her friend **І́гор** about their neighborhoods.
 
 > — **Ігор:** Що є біля твого́ до́му? *(What's near your house?)*
 > — **Аліна:** Біля дому є магази́н і кафе́. *(Near the house there's a shop and a café.)*
@@ -28,17 +28,17 @@ Now Аліна is chatting with her friend **Ігор** about their neighborhood
 
 This dialogue recycles **є** (there is/are) from earlier modules — now it works with city places. **Біля дому** (near the house) is a fixed chunk with **біля** + genitive. Notice **магазин** (shop) and **кафе** (café) — two essential neighborhood words. The phrase **далеко від центру** (far from the center) pairs the adverb **далеко** with a genitive chunk.
 
-Every Ukrainian **місто** (city) has its landmarks: a **ринок** (market), a **площа** (square), a **вокзал** (train station), a **пошта** (post office). Kyiv's most famous street is **Хрещатик** — the main **вулиця** (street) that runs through the heart of the capital. Close by sits **Майда́н Незалежності** (Independence Square), the central square that every Ukrainian knows — **центральна площа**. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
+Every Ukrainian **мі́сто** (city) has its landmarks: a **ри́нок** (market), a **пло́ща** (square), a **вокза́л** (train station), a **по́шта** (post office). Kyiv's most famous street is **Хреща́тик** — the main **ву́лиця** (street) that runs through the heart of the capital. Close by sits **Майда́н Незале́жності** (Independence Square), the central square that every Ukrainian knows — **центра́льна площа**. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
 
 ## Місця́ в мі́сті (City Places)
 
 Here are 17 essential city places. Gender matters because locative endings differ — feminine, masculine, and neuter nouns each have their own pattern from M29.
 
 **Feminine (f):**
-- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **церква** (church) · **зупинка** (bus stop)
+- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **це́рква** (church) · **зупи́нка** (bus stop)
 
 **Masculine (m):**
-- **магазин** (shop) · **супермаркет** (supermarket) · **ресторан** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готель** (hotel) · **музей** (museum) · **театр** (theatre) · **кінотеатр** (cinema) · **стадіон** (stadium) · **університет** (university)
+- **магазин** (shop) · **суперма́ркет** (supermarket) · **рестора́н** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готе́ль** (hotel) · **музе́й** (museum) · **теа́тр** (theatre) · **кінотеа́тр** (cinema) · **стадіон** (stadium) · **університе́т** (university)
 
 **Neuter (n):**
 - **кафе** (café)
@@ -46,12 +46,12 @@ Here are 17 essential city places. Gender matters because locative endings diffe
 Two prepositions control where you are. Most places take **в/у** + locative. A small group — transit and service infrastructure — takes **на** + locative. Here are the locative forms:
 
 **В/у + locative:**
-- аптека → **в аптеці** · бібліотека → **у бібліотеці** · магазин → **в магазині** · банк → **у банку** · готель → **у готелі** · ресторан → **у ресторані** · музей → **в музеї** · університет → **в університеті** · лікарня → **у лікарні** · кінотеатр → **у кінотеатрі** · театр → **у театрі** · церква → **у це́ркві**
+- аптека → **в апте́ці** · бібліотека → **у бібліоте́ці** · магазин → **в магази́ні** · банк → **у ба́нку** · готель → **у готе́лі** · ресторан → **у рестора́ні** · музей → **в музе́ї** · університет → **в університе́ті** · лікарня → **у ліка́рні** · кінотеатр → **у кінотеа́трі** · театр → **у теа́трі** · церква → **у це́ркві**
 
 **На + locative:**
-- пошта → **на пошті** · вокзал → **на вокзалі** · стадіон → **на стадіоні** · зупинка → **на зупинці** · площа → **на пло́щі**
+- пошта → **на по́шті** · вокзал → **на вокза́лі** · стадіон → **на стадіо́ні** · зупинка → **на зупи́нці** · площа → **на пло́щі**
 
-The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**. This is confirmed by Ukrainian grammar textbooks (Avramenko Grade 11): *прийменник «на» вжива́ють з на́звами устано́в ти́пу пошта, вокзал.*
+The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**. This is confirmed by Ukrainian grammar textbooks (Avramenko Grade 11): *прийме́нник «на» вжива́ють з на́звами устано́в ти́пу пошта, вокзал.*
 
 <!-- INJECT_ACTIVITY: quiz-prepositions -->
 
@@ -84,14 +84,14 @@ Four core adverbs let you describe where anything is. They come in natural pairs
 - **Стадіон далеко.** — The stadium is far.
 - **Бібліотека близько від парку.** — The library is near the park.
 
-A useful synonym: **недалеко** means the same as **близько** (confirmed by Заболотний Grade 5 synonyms appendix: *близько, недалеко, поблизу́*).
+A useful synonym: **недале́ко** means the same as **близько** (confirmed by Заболотний Grade 5 synonyms appendix: *близько, недалеко, поблизу́*).
 
 The preposition **біля** always takes the genitive case — but at A1, learn these as memorized chunks, not grammar rules. Just remember: **біля** + a fixed word form.
 
 - **біля парку** — near the park
 - **біля дому** — near the house
-- **біля університету** — near the university
-- **біля вокзалу** — near the station
+- **біля університе́ту** — near the university
+- **біля вокза́лу** — near the station
 - **біля кафе** — near the café (кафе never changes!)
 
 Six example sentences:
@@ -103,22 +103,22 @@ Six example sentences:
 - **Готель біля кафе.** — The hotel is near the café.
 
 :::tip
-**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for all borrowed words ending in **-е** or **-о**: **метро**, **кіно**, **кафе**.
+**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for all borrowed words ending in **-е** or **-о**: **метро́**, **кіно́**, **кафе**.
 :::
 
 Three more location phrases for describing your neighborhood:
 
 - **у центрі міста** (in the city center) — **Театр у центрі міста.** The theatre is in the city center.
 - **на ро́зі вулиці** (on the corner of the street) — **Аптека на розі вулиці Шевченка.** The pharmacy is on the corner of Shevchenko Street.
-- **у на́шому районі** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
+- **у на́шому райо́ні** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
 
 Now describe your whole city using **є** (there is/are). The construction is simple: **У** + place + **є** + what's there.
 
 - **У Ки́єві є метро.** — Kyiv has a metro.
 - **У нашому місті є вели́кий парк.** — Our city has a big park.
-- **У цьому районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
+- **У цьому́ районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
 
-For the negative, use **немає** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
+For the negative, use **нема́є** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
 
 <!-- INJECT_ACTIVITY: quiz-where-would-you-go -->
 
@@ -142,7 +142,7 @@ Location words at a glance:
 - **біля** + gen — next to: **Аптека біля дому.**
 - **у центрі** — in the center: **Театр у центрі.**
 - **на розі** — on the corner: **Банк на розі.**
-- **у районі** — in the neighborhood: **Школа у районі.**
+- **у районі** — in the neighborhood: **Шко́ла у районі.**
 
 Self-check — answer these questions about your own city:
 
@@ -155,16 +155,16 @@ Self-check — answer these questions about your own city:
 
 <!-- INJECT_ACTIVITY: fill-in-your-city -->
 
-The next module (M31 — Where To?) introduces **куди** — movement *toward* places using the accusative case: **Я іду́ до бібліоте́ки. Я ї́ду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
+The next module (M31 — Where To?) introduces **куди́** — movement *toward* places using the accusative case: **Я іду́ до бібліоте́ки. Я ї́ду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
 
 <!-- INJECT_ACTIVITY: quiz-mixed-review -->
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **апте́ка** | pharmacy | ім. | ж. |
 | **бібліоте́ка** | library | ім. | ж. |
@@ -205,9 +205,9 @@ The next module (M31 — Where To?) introduces **куди** — movement *toward
 | **чека́ю** | I wait | дієсл. |  |
 | **ви́бачте** | excuse me (polite, to a stranger) | дієсл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Будь ласка!** | You're welcome! |
 | **Де тут…?** | Where is… here? / Where can I find…? |
@@ -220,7 +220,7 @@ The next module (M31 — Where To?) introduces **куди** — movement *toward
 | **чекаю на потяг** | I wait for a train |
 | **Що є біля твого дому?** | What is near your house? |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "суперма́ркет", back: "supermarket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "це́рква", back: "church", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "near, close", subtitle: "присл." }, { front: "бі́ля", back: "near, next to (+ genitive)", subtitle: "прийм." }, { front: "зупи́нка", back: "bus stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "теа́тр", back: "theatre", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кінотеа́тр", back: "cinema", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стадіо́н", back: "stadium", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "райо́н", back: "neighborhood, district", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "центр", back: "center", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "недале́ко", back: "not far, nearby", subtitle: "присл." }, { front: "перехо́жий", back: "passerby, stranger (on the street)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́ки", back: "medicine (plural)", subtitle: "ім." }, { front: "по́тяг", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "є", back: "there is, there are", subtitle: "дієсл." }, { front: "нема́є", back: "there is no, there are no (+ genitive)" }, { front: "надсила́ю", back: "I send", subtitle: "дієсл." }, { front: "дивлю́ся", back: "I watch", subtitle: "дієсл." }, { front: "відпочива́ю", back: "I relax, I rest", subtitle: "дієсл." }, { front: "чека́ю", back: "I wait", subtitle: "дієсл." }, { front: "ви́бачте", back: "excuse me (polite, to a stranger)", subtitle: "дієсл." }]} />
 
@@ -228,7 +228,7 @@ The next module (M31 — Where To?) introduces **куди** — movement *toward
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -236,7 +236,7 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Anna-led module — city vocabulary through practical situations
   _No single textbook source — vocabulary compiled from multiple textbook city themes._

@@ -2,32 +2,32 @@
 
 ## Діало́ги (Dialogues)
 
-Ростик and Іва́нка walk into a cozy **кафе** (café) on a quiet Lviv street. A waiter approaches their table with two leather-bound menus.
+Ростик and Іва́нка walk into a cozy **кафе́** (café) on a quiet Lviv street. A waiter approaches their table with two leather-bound menus.
 
-> — **Офіціант:** До́брий день! Ось **меню**. *(Good day! Here's the menu.)*
+> — **Офіціа́нт:** До́брий день! Ось **меню́**. *(Good day! Here's the menu.)*
 > — **Ростик:** Дякую. Що ви рекоменду́єте? *(Thank you. What do you recommend?)*
-> — **Офіціант:** **Борщ** ду́же **смачний**. *(The borshch is very tasty.)*
-> — **Ростик:** До́бре, **мені борщ і хліб, будь ласка**. *(Good, borshch and bread for me, please.)*
+> — **Офіціант:** **Борщ** ду́же **смачни́й**. *(The borshch is very tasty.)*
+> — **Ростик:** До́бре, **мені́ борщ і хліб, будь ла́ска**. *(Good, borshch and bread for me, please.)*
 > — **Офіціант:** А що бу́дете пи́ти? *(And what will you drink?)*
-> — **Ростик:** **Каву з молоком**. *(Coffee with milk.)*
+> — **Ростик:** **Ка́ву з молоко́м**. *(Coffee with milk.)*
 > — **Іванка:** **Мені чай і ті́стечко, будь ласка**. *(Tea and a pastry for me, please.)*
-> — **Офіціант:** Добре, одну́ **хвилинку**. *(Good, one moment.)*
+> — **Офіціант:** Добре, одну́ **хвили́нку**. *(Good, one moment.)*
 
 
 Notice the pattern: every order uses **мені** + the accusative form of the food or drink word. You practised accusative endings in M37 — now they're doing real work in a real café.
 
 After the meal, Ростик signals the waiter.
 
-> — **Ростик:** **Рахунок, будь ласка**. *(The bill, please.)*
+> — **Ростик:** **Раху́нок, будь ласка**. *(The bill, please.)*
 > — **Офіціант:** Ось, **будь ласка**. Сто два́дцять гри́вень. *(Here you go. One hundred twenty hryvnias.)*
-> — **Іванка:** **Можна ка́рткою?** *(Can we pay by card?)*
+> — **Іванка:** **Мо́жна ка́рткою?** *(Can we pay by card?)*
 > — **Офіціант:** Так, звича́йно. *(Yes, of course.)*
-> — **Ростик:** Все було́ дуже **смачно**! *(Everything was very delicious!)*
+> — **Ростик:** Все було́ дуже **сма́чно**! *(Everything was very delicious!)*
 > — **Ростик & Іванка:** **Дякуємо!** *(Thank you!)*
-> — **Офіціант:** Дякуємо, **приходьте** ще! *(Thank you, come again!)*
+> — **Офіціант:** Дякуємо, **прихо́дьте** ще! *(Thank you, come again!)*
 
 
-A **рахунок** (bill) in Ukraine doesn't come to your table automatically — you always ask for it. And **чайові** (tips)? About 10% is standard, but never obligatory.
+A **рахунок** (bill) in Ukraine doesn't come to your table automatically — you always ask for it. And **чайові́** (tips)? About 10% is standard, but never obligatory.
 
 Now test yourself — can you answer these questions from the dialogues?
 
@@ -57,7 +57,7 @@ There are four polite ways to order at a Ukrainian **кафе**. Each one uses t
 
 All four are polite. **Я буду** is slightly more casual — something you'd say to a friend working behind the counter. **Дайте, будь ласка** is the most formal.
 
-Quick accusative reminder: masculine inanimate and neuter nouns keep their nominative form (**борщ** → **борщ**, **меню** → **меню**). Feminine nouns ending in **-а** change to **-у** (**кава** → **каву**, **вода** → **воду**, **піца** → **піцу**).
+Quick accusative reminder: masculine inanimate and neuter nouns keep their nominative form (**борщ** → **борщ**, **меню** → **меню**). Feminine nouns ending in **-а** change to **-у** (**ка́ва** → **каву**, **вода́** → **воду**, **пі́ца** → **піцу**).
 
 <!-- INJECT_ACTIVITY: fill-in-order -->
 
@@ -67,7 +67,7 @@ Once you've ordered, you might want to ask about the **меню**. Here are six 
 - **Це го́стре?** — Is it spicy?
 - **Це з м'я́сом?** — Is it with meat?
 - **А що це?** — What is this?
-- **Скільки ко́шту́є?** — How much does it cost?
+- **Скі́льки ко́шту́є?** — How much does it cost?
 - **Є вегетаріа́нське меню?** — Is there a vegetarian menu?
 
 Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
@@ -80,24 +80,24 @@ Try building questions from this mini-menu: **борщ** 80 грн, **піца**
 
 Not every place with food is the same. Ukrainian has three distinct words for three distinct experiences:
 
-| | **Кафе** | **Ресторан** | **Кав'ярня** |
+| | **Кафе** | **Рестора́н** | **Кав'я́рня** |
 |---|---|---|---|
 | Style | Casual, drop-in | Formal, reservations | Coffee-focused |
 | Menu | On a board or paper | Leather-bound, multi-page | Drinks + pastries |
 | Price | Budget-friendly | Higher | Mid-range |
 
-A **кафе** (café) is where you grab a quick **борщ** and **хліб** for lunch. A **ресторан** (restaurant) is where you celebrate a birthday with a white tablecloth. A **кав'ярня** (coffee shop) is where you spend two hours with a **кава** and a laptop. After Euromaidan in 2014, independent **кав'ярні** exploded across Ukrainian cities, becoming community hubs — places to meet, work, and organize.
+A **кафе** (café) is where you grab a quick **борщ** and **хліб** for lunch. A **ресторан** (restaurant) is where you celebrate a birthday with a white tablecloth. A **кав'ярня** (coffee shop) is where you spend two hours with a **кава** and a laptop. After Euromaidan in 2014, independent **кав'я́рні** exploded across Ukrainian cities, becoming community hubs — places to meet, work, and organize.
 
-When it's time to pay, remember: the **рахунок** (bill) does not come automatically in Ukraine. You say **Рахунок, будь ласка** when you're ready. **Чайові** (tips) are around 10% — common but never obligatory. Most people leave tips in cash even when paying by **картка** (card). Here are the key payment phrases:
+When it's time to pay, remember: the **рахунок** (bill) does not come automatically in Ukraine. You say **Рахунок, будь ласка** when you're ready. **Чайові** (tips) are around 10% — common but never obligatory. Most people leave tips in cash even when paying by **ка́ртка** (card). Here are the key payment phrases:
 
 - **Можна карткою?** — Can I pay by card?
-- **Готівкою.** — In cash.
-- **Залиште ре́шту.** — Keep the change.
+- **Готі́вкою.** — In cash.
+- **Зали́ште ре́шту.** — Keep the change.
 - **Дякуємо, все було смачно!** — Thank you, everything was delicious!
 
 And here are six phrases for everyday café moments — from arriving to leaving:
 
-- **Вільно?** / **Тут вільно?** — Is this seat free?
+- **Ві́льно?** / **Тут вільно?** — Is this seat free?
 - **Можна меню?** — May I have the menu?
 - **Ще одну каву, будь ласка.** — One more coffee, please.
 - **Без цу́кру.** — Without sugar.
@@ -132,14 +132,14 @@ Now put it all together. Imagine you walk into a Lviv **кав'ярня** with a
 
 Ukrainian café culture carries a deeper meaning since 2022. Many Kyiv and Lviv **кав'ярні** stayed open through air-raid alerts, operating as volunteer coordination hubs. Ordering a **кава** in Ukraine today is a small act of normalcy in extraordinary times. As one Kyiv barista put it in 2023: **«Ми ва́римо каву — значить, ми живемо́.»** (We brew coffee — that means we're alive.)
 
-In the next module, you'll take your accusative skills from the **кафе** to the **ринок** (market). Same patterns, new vocabulary: **картопля** (potatoes), **яблука** (apples), **молоко** (milk). **Ходімо!** (Let's go!)
+In the next module, you'll take your accusative skills from the **кафе** to the **ри́нок** (market). Same patterns, new vocabulary: **карто́пля** (potatoes), **я́блука** (apples), **молоко́** (milk). **Ході́мо!** (Let's go!)
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **кафе́** | café | ім. | с. |
 | **меню́** | menu | ім. | с. |
@@ -158,7 +158,7 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 | **ка́ва** | coffee | ім. | ж. |
 | **молоко́** | milk | ім. | с. |
 | **ті́стечко** | pastry, small cake | ім. | с. |
-| **хвили́нка** | moment (diminutive of хвилина) | ім. | ж. |
+| **хвили́нка** | moment (diminutive of хвили́на) | ім. | ж. |
 | **гри́вня** | hryvnia (Ukrainian currency) | ім. | ж. |
 | **звича́йно** | of course | присл. |  |
 | **вода́** | water | ім. | ж. |
@@ -175,9 +175,9 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 | **карто́пля** | potatoes | ім. | ж. |
 | **я́блука** | apples | ім. | с. |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **Що ви рекомендуєте?** | What do you recommend? |
 | **Мені [acc], будь ласка.** | [food/drink] for me, please. |
@@ -200,7 +200,7 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 | **Все було дуже смачно!** | Everything was very delicious! |
 | **Приходьте ще!** | Come again! |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "меню́", back: "menu", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "раху́нок", back: "bill", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замовля́ти", back: "to order", subtitle: "дієсл." }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "delicious (adverb)", subtitle: "присл." }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рекомендува́ти", back: "to recommend", subtitle: "дієсл." }, { front: "чайові́", back: "tip, gratuity", subtitle: "ім." }, { front: "готі́вка", back: "cash", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ртка", back: "card", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "го́стре", back: "spicy (neuter adjective)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вегетаріа́нський", back: "vegetarian (adjective)", subtitle: "прикм." }, { front: "смачни́й", back: "tasty, delicious (adjective)", subtitle: "прикм." }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ті́стечко", back: "pastry, small cake", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "хвили́нка", back: "moment (diminutive of хвилина)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кав'я́рня", back: "coffee shop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ко́штува́ти", back: "to cost", subtitle: "дієсл." }, { front: "ре́шта", back: "change (money)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́льно", back: "free, available (of a seat)", subtitle: "присл." }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "карто́пля", back: "potatoes", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "я́блука", back: "apples", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
@@ -208,7 +208,7 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -216,18 +216,18 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - [ULP Season 1, Episodes 11-12](https://www.ukrainianlessons.com/episode11/)
   _Ordering at a cafe, restaurant vocabulary._
 - State Standard 2024, Topic 3 (ресторан)
   _Communicative situation: ordering food and drinks._
 
-**Статті — Articles**
+**Статті́ — Articles**
 
 - [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) (Restaurant ordering + culture tips)
 
-**Відео — Videos**
+**Ві́део — Videos**
 
 - [Menu in the coffee shop in the Ukrainian language](https://www.youtube.com/watch?v=wUH7sf5ccP8) (Speak Ukrainian)
 - [Ordering in a Ukrainian Cafe](https://www.youtube.com/watch?v=FjI1V3I-9_w) (Ukrainian Lessons)
@@ -235,5 +235,5 @@ Advanced exercises for this module are in development. Check back soon!
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
+- [Accusative Case (Знахі́дний відмі́нок)](https://www.ukrainianlessons.com/accusativecase/)
 - [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)

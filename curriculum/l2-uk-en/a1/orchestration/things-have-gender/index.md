@@ -1,6 +1,6 @@
 # Build Summary: things-have-gender (A1)
 
-Generated: 2026-03-30 21:51
+Generated: 2026-03-31 11:42
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:51
 | enrich | complete | 2026-03-30 09:38:02 |
 | verify | complete | 2026-03-30 09:38:02 |
 | review | complete | 2026-03-30 10:42:58 |
-| stress | complete | 2026-03-30 19:51:21 |
-| publish | complete | 2026-03-30 19:51:21 |
+| stress | complete | 2026-03-31 09:42:20 |
+| publish | complete | 2026-03-31 09:42:20 |
 
 ## Reviews
 
@@ -50,6 +50,7 @@ Generated: 2026-03-30 21:51
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

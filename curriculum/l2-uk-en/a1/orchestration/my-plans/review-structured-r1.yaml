@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 plan sections present with correct headings. Both dialogues follow
+    plan content_outline closely. All required vocabulary used in context (план, тиждень,
+    вільний, зустріч, відпочивати, прибирати,
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: All Ukrainian word forms verified against VESUM (93/93 ✓, 5 not-found
+    are proper nouns). No Russianisms, Surzhyk, or calques. However, the у/в euphony
+    explanation is factually wrong — teaches an incor
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: dialogues present situations → Планування extracts patterns
+    → Мій тиждень practices application. Multiple examples per grammar point (7 days
+    × буду + infinitive in Taras''s week). The "e'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required words used naturally in prose (not as bare lists): план
+    in Планування intro, тиждень in dialogue 2 and Мій тиждень, вільний/вільна in
+    invitation section, зустріч in dialogue 2, відпочив'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '3 markers matching 3 plan activity_hints. Types match (fill-in, matching,
+    fill-in). Placement follows teaching sequence. Focus areas align with plan: hint
+    1 = days+time+future, hint 2 = invitation→res'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers, no "Let us explore," no gamified language. Tone
+    is direct and instructional. Named speakers with distinct voices in dialogues
+    (Olya is social, Taras is practical, Anna is busy
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 4 H2 sections present and correctly ordered (Dialogues, Планування,
+    Мій тиждень, Summary). Clean markdown, no stray tags. 1852 words vs 1200 target.
+    No duplicate summaries. One issue: the кіно ref'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms. No "like Russian but..." comparisons.
+    The euphony concept introduced as a Ukrainian-specific phenomenon. Weekend activities
+    are culturally appropriate (прибирати '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Dialogue 1 is natural and multi-turn with a real situation (planning a
+    weekend meetup). Named speakers with distinct voices. However, Dialogue 2 has
+    a **critical speaker attribution error** — the intr
+findings: []

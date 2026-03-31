@@ -1,6 +1,6 @@
 # Build Summary: my-family (A1)
 
-Generated: 2026-03-29 23:32
+Generated: 2026-03-31 11:56
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-29 23:32
 | enrich | complete | 2026-03-29 21:28:37 |
 | verify | complete | 2026-03-29 21:28:37 |
 | review | complete | 2026-03-29 21:32:17 |
-| stress | complete | 2026-03-29 21:32:33 |
-| publish | complete | 2026-03-29 21:32:33 |
+| stress | complete | 2026-03-31 09:56:29 |
+| publish | complete | 2026-03-31 09:56:29 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-29 23:32
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

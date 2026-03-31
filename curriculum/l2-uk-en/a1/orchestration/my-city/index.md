@@ -1,6 +1,6 @@
 # Build Summary: my-city (A1)
 
-Generated: 2026-03-30 21:50
+Generated: 2026-03-31 11:47
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:50
 | enrich | complete | 2026-03-30 12:26:36 |
 | verify | complete | 2026-03-30 12:26:36 |
 | review | complete | 2026-03-30 12:33:21 |
-| stress | complete | 2026-03-30 19:50:11 |
-| publish | complete | 2026-03-30 19:50:11 |
+| stress | complete | 2026-03-31 09:47:05 |
+| publish | complete | 2026-03-31 09:47:05 |
 
 ## Reviews
 
@@ -44,6 +44,7 @@ Generated: 2026-03-30 21:50
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

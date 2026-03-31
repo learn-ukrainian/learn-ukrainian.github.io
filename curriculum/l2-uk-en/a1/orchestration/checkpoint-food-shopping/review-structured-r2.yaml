@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 5 content_outline sections covered. Word count 1441 vs 1000 target
+    (above — good). However: (a) heading claims "Шість ключових шаблонів" but only
+    4 patterns numbered — plan specifies 6 distinct po'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms verified against VESUM. Accusative paradigm correctly
+    presented for all genders and animacy categories. No Russianisms, surzhyk, or
+    calques found. Vocative forms (Олено, Дмитре) co
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: warm-up self-check → reading with guided observation →
+    grammar summary → connected dialogue → review. Multiple examples per grammar point
+    (3+ for each pattern). However: (a) "Always use'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Core A1.6 vocabulary well-represented: 10 foods and 5 drinks listed and
+    used in context. Accusative forms demonstrated for both animate and inanimate.
+    Key phrases (Мені..., Скільки коштує?, Рахунок, М'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'All 4 plan activity_hints have corresponding markers correctly placed
+    after teaching content. Exercise logic verified: correct answers are correct,
+    distractors are plausible, answer positions vary acr'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Generally good tone — encouraging without being over-the-top. Dialogue
+    is natural with named speakers and realistic situations. However: (a) "Ukrainian
+    is becoming your language, step by step!" in Під'
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: '(a) **Duplicate Підсумок section** — there are two summary sections:
+    "Підсумок — Summary" (matching the plan) and a separate "## Підсумок" below it.
+    The second is redundant filler that doesn''t corresp'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
+    Food vocabulary is authentically Ukrainian (борщ, вареники, каша). Market and
+    café scenarios reflect real Ukrainian daily li
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Named speakers (Наталя, Дмитро, Продавець, Офіціант, Олена) with distinct
+    roles. Natural multi-turn flow across three settings (breakfast, market, café).
+    Culturally appropriate interactions — haggling
+findings: []

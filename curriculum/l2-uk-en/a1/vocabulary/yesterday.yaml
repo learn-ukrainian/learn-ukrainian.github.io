@@ -1,0 +1,295 @@
+vocabulary:
+- word: учо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вночі́
+  translation: at night
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first, at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: проки́нутися
+  translation: to wake up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: посні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверну́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лягти́
+  translation: to lie down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лягти спати
+  translation: to go to bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: звича́йний
+  translation: ordinary
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: проду́кти
+  translation: groceries
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: серіа́л
+  translation: TV series
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коли́
+  translation: when?
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: незмі́нні
+  translation: invariable (does not change form)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: робо́та
+  translation: work
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: фру́кти
+  translation: fruit (plural)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ша
+  translation: porridge, hot cereal
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: замо́вити
+  translation: to order (food or drink)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магази́н
+  translation: store, shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гуля́ти
+  translation: to walk, to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go (on foot, repeated/habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по́друга
+  translation: friend (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чудо́вий
+  translation: wonderful, great
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: учора́шній
+  translation: yesterday's (adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: поліце́йський
+  translation: police officer
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: сві́док
+  translation: witness
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: велосипе́д
+  translation: bicycle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: припаркува́ти
+  translation: to park
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зайти́
+  translation: to go into, to enter
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́йти
+  translation: to come out, to exit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зни́кнути
+  translation: to disappear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ку́ртка
+  translation: jacket
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ке́пка
+  translation: cap, baseball cap
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пів на сьому
+  translation: half past six (6:30)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Розкажи!
+  translation: Tell me!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як файно!
+  translation: How nice!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

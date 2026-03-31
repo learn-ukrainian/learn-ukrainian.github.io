@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-03-31T01:22:02.642559",
+  "phase": "vocab",
+  "agent": "claude (claude-sonnet-4-6)",
+  "ok": true,
+  "returncode": 0,
+  "prompt_chars": 8690,
+  "response_chars": 3863,
+  "duration_s": 23.2
+}

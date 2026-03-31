@@ -1,0 +1,26 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вітаю",
+      "готель",
+      "готовий",
+      "зустріти",
+      "карта",
+      "квиток",
+      "круасан",
+      "лавра",
+      "лінія",
+      "подорожувати",
+      "познайомитися",
+      "початок",
+      "сувенір",
+      "фільм"
+    ]
+  },
+  "all_grounded": true
+}

@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/6 required vocab: зустріти (to meet)"
+    }
+  ],
+  "timestamp": "2026-03-30T22:49:57.516893+00:00"
+}

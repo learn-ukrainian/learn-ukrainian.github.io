@@ -1,6 +1,6 @@
 # Build Summary: colors (A1)
 
-Generated: 2026-03-30 21:48
+Generated: 2026-03-31 11:43
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:48
 | enrich | complete | 2026-03-30 12:17:08 |
 | verify | complete | 2026-03-30 12:17:08 |
 | review | complete | 2026-03-30 12:20:22 |
-| stress | complete | 2026-03-30 19:48:33 |
-| publish | complete | 2026-03-30 19:48:34 |
+| stress | complete | 2026-03-31 09:43:03 |
+| publish | complete | 2026-03-31 09:43:03 |
 
 ## Reviews
 
@@ -42,6 +42,7 @@ Generated: 2026-03-30 21:48
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

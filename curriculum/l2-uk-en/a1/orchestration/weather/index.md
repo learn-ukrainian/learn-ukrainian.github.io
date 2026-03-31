@@ -1,6 +1,6 @@
 # Build Summary: weather (A1)
 
-Generated: 2026-03-30 07:32
+Generated: 2026-03-31 11:46
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 07:32
 | enrich | complete | 2026-03-30 05:29:57 |
 | verify | complete | 2026-03-30 05:29:57 |
 | review | complete | 2026-03-30 05:32:42 |
-| stress | complete | 2026-03-30 05:32:51 |
-| publish | complete | 2026-03-30 05:32:51 |
+| stress | complete | 2026-03-31 09:46:00 |
+| publish | complete | 2026-03-31 09:46:01 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-30 07:32
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

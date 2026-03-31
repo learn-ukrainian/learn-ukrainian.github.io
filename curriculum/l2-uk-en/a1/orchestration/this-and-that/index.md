@@ -1,6 +1,6 @@
 # Build Summary: this-and-that (A1)
 
-Generated: 2026-03-30 21:51
+Generated: 2026-03-31 11:43
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:51
 | enrich | complete | 2026-03-30 12:57:13 |
 | verify | complete | 2026-03-30 12:57:13 |
 | review | complete | 2026-03-30 13:03:45 |
-| stress | complete | 2026-03-30 19:51:36 |
-| publish | complete | 2026-03-30 19:51:37 |
+| stress | complete | 2026-03-31 09:43:36 |
+| publish | complete | 2026-03-31 09:43:36 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 21:51
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

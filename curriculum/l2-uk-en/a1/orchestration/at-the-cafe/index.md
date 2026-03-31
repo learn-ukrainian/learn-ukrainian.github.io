@@ -1,6 +1,6 @@
 # Build Summary: at-the-cafe (A1)
 
-Generated: 2026-03-30 21:47
+Generated: 2026-03-31 11:48
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:47
 | enrich | complete | 2026-03-30 14:18:43 |
 | verify | complete | 2026-03-30 14:18:43 |
 | review | complete | 2026-03-30 14:21:11 |
-| stress | complete | 2026-03-30 19:47:59 |
-| publish | complete | 2026-03-30 19:47:59 |
+| stress | complete | 2026-03-31 09:48:10 |
+| publish | complete | 2026-03-31 09:48:10 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 21:47
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

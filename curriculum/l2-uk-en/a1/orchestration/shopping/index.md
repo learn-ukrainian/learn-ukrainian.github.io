@@ -1,6 +1,6 @@
 # Build Summary: shopping (A1)
 
-Generated: 2026-03-30 21:51
+Generated: 2026-03-31 11:48
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:51
 | enrich | complete | 2026-03-30 14:40:11 |
 | verify | complete | 2026-03-30 14:40:11 |
 | review | complete | 2026-03-30 14:42:37 |
-| stress | complete | 2026-03-30 19:51:07 |
-| publish | complete | 2026-03-30 19:51:07 |
+| stress | complete | 2026-03-31 09:48:32 |
+| publish | complete | 2026-03-31 09:48:32 |
 
 ## Reviews
 
@@ -42,6 +42,7 @@ Generated: 2026-03-30 21:51
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

@@ -1,6 +1,6 @@
 # Build Summary: where-from (A1)
 
-Generated: 2026-03-30 21:52
+Generated: 2026-03-31 11:47
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:52
 | enrich | complete | 2026-03-30 13:26:51 |
 | verify | complete | 2026-03-30 13:26:51 |
 | review | complete | 2026-03-30 13:29:40 |
-| stress | complete | 2026-03-30 19:52:54 |
-| publish | complete | 2026-03-30 19:52:54 |
+| stress | complete | 2026-03-31 09:47:37 |
+| publish | complete | 2026-03-31 09:47:37 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-30 21:52
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

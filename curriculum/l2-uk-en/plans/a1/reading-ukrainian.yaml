@@ -2,7 +2,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: '1.1'
+version: '1.2'
 title: Reading Ukrainian
 subtitle: From letters to words to sentences
 focus: phonetics
@@ -21,13 +21,16 @@ content_outline:
   - 'Большакова Grade 1 p.25: ''У слові стільки складів, скільки голосних звуків.''
     Count the vowels, count the syllables. This rule never breaks. ма-ма (2 vowels
     = 2 syllables), мо-ло-ко (3 vowels = 3 syllables), банк (1 vowel = 1 syllable).'
-  - 'How to read a new word: 1. Find the vowels (they''re the syllable cores) 2. Split
-    at syllable boundaries (consonants prefer starting new syllables) 3. Sound out
-    each syllable 4. Blend into the full word at natural speed Practice: а-пте-ка,
-    у-ні-вер-си-тет, шо-ко-лад. Note: Ukrainian phonetic syllable division (складоподіл)
-    follows the open-syllable principle — consonants prefer starting new syllables.'
-  - 'Following Большакова p.29 звуковий аналіз method: identify vowels, divide into
-    syllables, then read. This is how Ukrainian children learn.'
+  - 'How Ukrainian children learn to read — складові ланцюжки (syllable chains):
+    Start with a consonant + vowel pair: М → ма, мо, му, ми. Then reverse: ам, ом, ум.
+    Then build words: ма-ма, мо-ло-ко. This is bottom-up: sound → syllable → word.
+    (Захарійчук Grade 1, p.46; Большакова Grade 1, p.25)'
+  - 'Звуковий аналіз слова (Большакова p.29): 1) Визначаю голосні звуки 2) Ділю
+    слово на склади 3) Ставлю наголос 4) Позначаю приголосні звуки.
+    Chin-test for syllable counting (Кравцова Grade 2, p.13): put your palm under
+    your chin, say the word — each chin touch = one syllable.'
+  - 'Ukrainian sound notation system (Захарійчук p.15): [●] голосний, [—] твердий
+    приголосний, [=] м''який приголосний. Every Ukrainian child learns this in Grade 1.'
 - section: Голосні літери (Vowel Letters)
   words: 300
   points:
@@ -44,16 +47,16 @@ content_outline:
 - section: Читання слів (Reading Words)
   words: 500
   points:
-  - 'Apply M01 letter knowledge to read real words fluently. Strategy: don''t read
-    letter-by-letter. Read syllable-by-syllable. Start with the vowels (find them
-    first), then build outward. Example: книга — find vowels И, А → кни-га → read.'
-  - 'Common word patterns for reading practice: CVCV: мама, тато, каша, вода, рука,
-    хата, коза, нога CVCCV: школа, книга, банда, парта CVC: дім, сон, ліс, дуб, хліб,
-    банк. The more patterns you see, the faster you read.'
-  - 'Progressive difficulty — start simple, build up: Level 1 (2 syllables):
-    мама, тато, вода, рука, хата, каша. Level 2 (3 syllables): аптека, молоко, людина,
-    вулиця. Level 3 (4+ syllables): університет, бібліотека, фотографія.
-    Ukrainian city names: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва.'
+  - 'Apply складові ланцюжки to real words. Don''t read letter-by-letter — read
+    syllable-by-syllable. Use звуковий аналіз: find vowels first, split into склади,
+    then blend. Example: книга — find vowels И, А → кни-га → read.'
+  - 'Progressive difficulty using Ukrainian classification (односкладові → багатоскладові):
+    односкладові (1 syllable): дім, сон, ліс, дуб, хліб.
+    двоскладові (2 syllables): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша.
+    трискладові (3 syllables): ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця.
+    багатоскладові (4+ syllables): у-ні-вер-си-тет, біб-лі-о-те-ка, фо-то-гра-фі-я.'
+  - 'Ukrainian city names as reading practice: Ки-їв, Льві-в, О-де-са, Хар-ків,
+    Дні-про, Пол-та-ва. Note the different syllable counts and structures.'
   - 'Special letter combinations to watch for (preview for M03): Щ is always [шч] — що, ще.
     Ь has no sound — it softens: день, сіль, кінь. Apostrophe separates: сім''я,
     м''ясо, п''ять. These will be explored fully in M03.'
@@ -78,28 +81,34 @@ vocabulary_hints:
   - фотографія (photography) — long word with Ф
   - шоколад (chocolate) — Ш + О + К combination
 activity_hints:
-- type: fill-in
-  focus: 'Divide words into syllables: мо-ло-ко, ап-те-ка'
+- type: divide-words
+  focus: 'Поділи слова на склади: мо-ло-ко, ап-те-ка, у-ні-вер-си-тет'
   items: 8
-- type: quiz
-  focus: How many syllables? Count the vowels.
+- type: count-syllables
+  focus: 'Порахуй склади — скільки голосних, стільки й складів'
   items: 8
 - type: match-up
   focus: 'Match iotated vowels to their sound components: Я=[й]+[а]'
-  items: 4
+  items: 6
 - type: quiz
   focus: Read the word and choose its meaning
+  items: 6
+- type: odd-one-out
+  focus: 'Яке слово зайве? — by syllable count (односкладове серед двоскладових)'
   items: 6
 connects_to:
 - a1-003 (Special Signs)
 prerequisites:
 - a1-001 (Sounds, Letters, and Hello)
 grammar:
-- 'Syllable rule: count vowels = count syllables (складоподіл)'
+- 'Правило складоподілу: у слові стільки складів, скільки голосних звуків'
+- 'Звуковий аналіз слова: визначити голосні → поділити на склади → наголос → приголосні'
+- 'Складові ланцюжки: приголосний + голосний = склад (ма, мо, му)'
+- 'Ukrainian sound notation: [●] голосний, [—] твердий приголосний, [=] м''який приголосний'
 - 10 vowel letters → 6 vowel sounds mapping
 - Iotated vowels (Я, Ю, Є as two sounds or softening; Ї always [йі])
-- 'Reading fluency: syllable-by-syllable word reading'
-- Ь, apostrophe, voiced/voiceless (preview — detailed in M03)
+- 'Word classification: односкладові, двоскладові, трискладові, багатоскладові'
+- Ь, apostrophe (preview — detailed in M03)
 register: розмовний
 references:
 - title: Большакова Grade 1 буквар, p.25

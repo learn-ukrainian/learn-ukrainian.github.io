@@ -7,12 +7,12 @@ pipeline: v6
 build_status: draft
 ---
 
-import Anagram from '@site/src/components/Anagram';
-import FillIn from '@site/src/components/FillIn';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -23,196 +23,240 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Склади (Syllables)
 
-Every Ukrainian first-grader learns a golden rule from their very first буква́р (reading primer). The rule is simple, and it never breaks: **У сло́ві сті́льки складів, скі́льки голосни́х зву́ків** — a word has as many syllables as it has vowel sounds. Before you read any new Ukrainian word, count the vowels. They are the key. Look at the word **мама** (mother). Two vowels — **А** and **А** — so two syllables: **ма-ма**. Now try **молоко** (milk). Three vowels — **О**, **О**, **О** — three syllables: **мо-ло-ко**. What about **банк** (bank)? One vowel — **А** — one syllable. Done.
+Every Ukrainian first-grader learns one golden rule before reading a single word. The textbook states it plainly: **«У сло́ві сті́льки складів, скі́льки голосни́х зву́ків»** — a word has as many syllables as it has vowel sounds. This rule never breaks. Look at **ма́ма** (mother): two vowels, А and А, so two syllables — **ма-ма**. Now **молоко́** (milk): three vowels, О, О, О — three syllables, **мо-ло-ко**. And **банк** (bank): one vowel, А — one syllable, just **банк**. Count the vowels, count the syllables. Every time.
+<div class="dialogue">
 
-With that rule in hand, here is your four-step method for reading any Ukrainian word, following the same звукови́й ана́ліз (sound analysis) approach used in Ukrainian schools. Step one: scan the word and spot all the vowels. Step two: split the word into syllables — in Ukrainian, consonants prefer to start a new syllable rather than end one. This is called **складоподіл** (syllable division), and it follows the open-syllable principle. Step three: sound out each syllable separately. Step four: blend them together at natural speed. Walk through it with **аптека** (pharmacy): spot the vowels **А**, **Е**, **А** — that gives three syllables. Split: **а-пте-ка**. Sound out each piece, then blend: **аптека**.
+<div class="dialogue-line"><span class="speaker">Марко́:</span> Скільки складів у слові "молоко"? *(How many syllables in the word "moloko"?)*</div>
 
-Now apply the method to longer words. Take **шоколад** (chocolate): three vowels (**О**, **О**, **А**), three syllables — **шо-ко-лад**. Try **університет** (university): five vowels (**У**, **І**, **Е**, **И**, **Е**), five syllables: **у-ні-вер-си-тет**. And **бібліотека** (library)? Five vowels (**І**, **І**, **О**, **Е**, **А**), five syllables: **бі-блі-о-те-ка**. Even a word that looks long and intimidating falls apart once you count the vowels. The rule never breaks.
 
-<Quiz client:only="react" questions={[{"question": "мама", "options": [{"text": "1", "correct": false}, {"text": "2", "correct": true}, {"text": "3", "correct": false}]}, {"question": "банк", "options": [{"text": "1", "correct": true}, {"text": "2", "correct": false}, {"text": "3", "correct": false}]}, {"question": "молоко", "options": [{"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "4", "correct": false}]}, {"question": "яблуко", "options": [{"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "4", "correct": false}]}, {"question": "пісня", "options": [{"text": "1", "correct": false}, {"text": "2", "correct": true}, {"text": "3", "correct": false}]}, {"question": "шоколад", "options": [{"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "4", "correct": false}]}, {"question": "університет", "options": [{"text": "3", "correct": false}, {"text": "4", "correct": false}, {"text": "5", "correct": true}]}, {"question": "бібліотека", "options": [{"text": "3", "correct": false}, {"text": "4", "correct": false}, {"text": "5", "correct": true}]}]} instruction={"How many syllables does each word have? Count the vowels — each vowel sound equals one syllable!"} />
+<div class="dialogue-line"><span class="speaker">Аня:</span> Три голосні́ — О, О, О. О́тже, три склади: мо-ло-ко! *(Three vowels — O, O, O. So, three syllables: mo-lo-ko!)*</div>
 
-## Голосні́ лі́тери (Vowel Letters)
 
-From M01 you already know that Ukrainian has 6 vowel sounds but writes them with 10 vowel letters. The first six are straightforward — each letter makes exactly one consistent sound, every time, no exceptions:
+<div class="dialogue-line"><span class="speaker">Марко:</span> Пра́вильно! А "банк"? *(Correct! And "bank"?)*</div>
 
-- **А** — as in **аптека** (pharmacy)
-- **О** — as in **молоко** (milk)
-- **У** — as in **рука** (hand)
-- **Е** — as in **вечір** (evening)
-- **И** — as in **кит** (whale)
-- **І** — as in **кіт** (cat)
 
-These six are completely reliable. What you see is what you say.
+<div class="dialogue-line"><span class="speaker">Аня:</span> Ті́льки оди́н! *(Only one!)*</div>
 
-The remaining four vowel letters — **Я**, **Ю**, **Є**, **Ї** — are called iotated vowels, and they have a dual nature. When **Я** appears at the start of a word or after another vowel, it produces two sounds: [й] + [а]. The word **яблуко** (apple) starts with **Я**, so you hear [йа]-блу-ко. In **моя** (my, feminine), the **Я** comes after the vowel **О** — again two sounds: мо-[йа]. But after a consonant, **Я** does something different: it softens that consonant and adds only [а]. In **пісня** (song), the **Н** before **Я** becomes soft — no [й] sound appears. The same dual pattern applies to **Ю** (either [йу] or softening + [у]) and **Є** (either [йе] or softening + [е]). Look at **людина** (person): the **Л** is softened by **Ю**, so you hear soft Л + [у], not [й]. And in **вечірнє** (evening, neuter adjective), the **Н** is softened by **Є**.
 
-<MatchUp client:only="react" pairs={[{"left": "Я — at the start of a word", "right": "[й] + [а]"}, {"left": "Я — after a consonant", "right": "softens consonant + [а]"}, {"left": "Ю — at the start of a word", "right": "[й] + [у]"}, {"left": "Ю — after a consonant", "right": "softens consonant + [у]"}, {"left": "Є — at the start of a word", "right": "[й] + [е]"}, {"left": "Ї — in any position", "right": "always [й] + [і]"}]} instruction={"Match each iotated vowel (in its position) to the sounds it produces."} />
+</div>
 
-**Ї** stands apart from the other three. It always produces two sounds — [йі] — with no exceptions and no other behavior. It never softens a consonant before it, because it simply never appears directly after a consonant. You find **Ї** only at the start of a word like **їжак** (hedgehog), after a vowel as in **країна** (country), or after an apostrophe as in **з'їсти** (to eat up). **Ї** is a distinctly Ukrainian letter — Russian has no equivalent.
+With that rule in hand, Ukrainian textbooks teach a four-step method called **звукови́й ана́ліз слова́** (sound analysis of a word). Большако́ва's Grade 1 textbook (p.29) lays it out: (1) **Визнача́ю голосні зву́ки** — find all the vowels in the word. (2) **Ділю́ сло́во на склади** — split the word into syllables, one vowel per syllable. Ukrainian syllables tend to be open (ending in a vowel) — this process is called **складопо́діл** (syllable division). (3) **Ста́влю на́голос** — mark which syllable carries the stress. (4) **Познача́ю при́голосні звуки** — identify consonants as hard or soft. Walk through it with **мама** (mother): vowels А, А → two syllables **ма-ма** → stress on the first syllable → both М sounds are hard. Now **апте́ка** (pharmacy): vowels А, Е, А → three syllables **а-пте-ка** → stress on the second syllable → consonants П, Т, К are hard.
 
-One more critical distinction: **И** versus **І**. These are two separate phonemes that change meaning. Compare **кит** (whale) with **кіт** (cat), or **дим** (smoke) with **дім** (house). The sound [и] sits further back in the mouth; [і] is a high front vowel, closer to the English "ee." Mixing them up changes one word into a completely different one. Listen to Anna's pronunciation videos for each before practising — this difference is subtle but essential.
+For reading, apply звуковий аналіз as a practical strategy: (1) spot the vowels, (2) split into syllables, (3) read each syllable aloud slowly, (4) blend the syllables together at natural speed. Try it: **а-пте-ка** → а... пте... ка → **аптека**. Done.
+
+Here is a physical trick from Кравцо́ва's Grade 2 textbook (p.13): place your palm under your chin and say the word aloud. Each time your chin touches your hand, that is one syllable. Try it with **мо-ло-ко** — you should feel three touches.
+
+Ukrainian Grade 1 textbooks (Захарійчук, p.15) use a simple notation for sound analysis: **[●]** marks a vowel sound, **[—]** marks a hard consonant, and **[=]** marks a soft consonant. For **мама**: [— ● | — ●] — two hard consonants, two vowels, two syllables. For **пі́сня**: [— ● | — = ●] — the Н before Я is soft. Every Ukrainian child learns these symbols in first grade.
+
+Ukrainian children build reading skill through **складові ланцюжки́** (syllable chains). Start with one consonant and cycle through vowels: **М → ма, мо, му, ми, мі, ме**. Then reverse: **ам, ом, ум**. Then build words from the chains: **ма-ма**, **мо-ло-ко**. Add a second consonant: **Т → та, то, ту, ти, ті, те**. Now combine: **та-то**, **мо-ло-то**. This is bottom-up reading: sound → syllable → word.
+
+This method conquers even intimidating long words. Take **шокола́д** (chocolate): three vowels О, О, А give **шо-ко-лад** — three syllables. **Університе́т** (university): five vowels У, І, Е, И, Е give **у-ні-вер-си-тет** — five syllables. **Бібліоте́ка** (library): five vowels І, І, О, Е, А give **бі-блі-о-те-ка** — five syllables. A word that looked impossible becomes five manageable pieces. The rule never fails: count the vowels, and the word opens up.
+
+<CountSyllables client:only="react" items={[{"word": "банк", "correct": 1, "translation": "bank"}, {"word": "мама", "correct": 2, "translation": "mother"}, {"word": "каша", "correct": 2, "translation": "porridge"}, {"word": "молоко", "correct": 3, "translation": "milk"}, {"word": "аптека", "correct": 3, "translation": "pharmacy"}, {"word": "яблуко", "correct": 3, "translation": "apple"}, {"word": "університет", "correct": 5, "translation": "university"}, {"word": "бібліотека", "correct": 5, "translation": "library"}]} instruction={"How many syllables? Count the vowels — each vowel = one syllable."} />
+
+## Голосні лі́тери (Vowel Letters)
+
+You already know from M01 that Ukrainian has six vowel sounds but ten vowel letters. The first six are the simple vowels — each letter makes exactly one sound, every time, no surprises:
+
+**А, О, У, Е, И, І**
+
+Text cannot teach you pronunciation — you need to hear real Ukrainian speakers. Watch Anna Ohoiko's [Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) and the [Speak Ukrainian Alphabet video](https://www.youtube.com/watch?v=Gt7O4FLGxjI) to hear each vowel. Then practise with these words:
+
+- **А** — **а́птека** (pharmacy), **ма́ма** (mother)
+- **О** — **моло́ко** (milk), **око́** (eye)
+- **У** — **ру́ка** (hand), **ву́лиця** (street)
+- **Е** — **ве́чір** (evening), **мед** (honey)
+- **И** — **кит** (whale), **дим** (smoke)
+- **І** — **кіт** (cat), **дім** (house)
+
+The critical pair is **И** vs **І** — they change word meanings: **кит** (whale) vs **кіт** (cat), **дим** (smoke) vs **дім** (house). Listen to these pairs in the videos, then say them aloud yourself. These six are completely reliable: what you see is what you say.
+
+The remaining four vowel letters are called iotated vowels: **Я**, **Ю**, **Є**, **Ї**. They follow a two-sound rule. When **Я** appears at the start of a word or after another vowel, it produces two sounds — [й] + [а]. Say **я́блуко** (apple): the Я at the beginning gives [йа], so you hear [йа]-блу-ко. The same happens in **моя́** (my, feminine): мо-[йа]. But when **Я** comes after a consonant, it does something different — it softens that consonant and adds only [а]. In **пісня** (song), the Н before Я becomes soft. The same pattern applies to **Ю** ([йу] at word start, softening + [у] after consonant) and **Є** ([йе] at word start, softening + [е] after consonant). Look at **люди́на** (person): Л is softened by Ю. In **вечі́рнє** (evening, neuter adjective), Н is softened by Є.
+
+<MatchUp client:only="react" pairs={[{"left": "Я (at the start of a word)", "right": "[й] + [а]"}, {"left": "Ю (at the start of a word)", "right": "[й] + [у]"}, {"left": "Є (at the start of a word)", "right": "[й] + [е]"}, {"left": "Ї (always — no exceptions)", "right": "[й] + [і]"}, {"left": "Я (after a consonant)", "right": "softens the consonant + [а]"}, {"left": "Ю (after a consonant)", "right": "softens the consonant + [у]"}]} instruction={"Match each iotated vowel to its correct sound breakdown."} />
+
+**Ї** stands apart. It always produces two sounds — [й] + [і] — with zero exceptions. **Ї** never appears directly after a consonant, so it never softens anything. You find it at the start of a word (**їжа́к** — hedgehog), after a vowel (**краї́на** — country), or after an apostrophe. **Ї** is distinctly Ukrainian — Russian has no equivalent letter.
+
+Now, the critical minimal pairs: **И** vs **І**. These two sounds distinguish meaning. **Кит** (whale) vs **кіт** (cat). **Дим** (smoke) vs **дім** (house). The difference between [и] (more central, deeper) and [і] (high, front) changes the word entirely. They are two separate phonemes — never interchangeable. Listen carefully to model pronunciations and practice hearing the contrast before you drill.
+
+<DivideWords client:only="react" items={[{"word": "молоко", "answer": "мо-ло-ко", "hint": "3 vowels = 3 syllables"}, {"word": "аптека", "answer": "ап-те-ка", "hint": "3 vowels = 3 syllables"}, {"word": "яблуко", "answer": "яб-лу-ко", "hint": "3 vowels = 3 syllables"}, {"word": "людина", "answer": "лю-ди-на", "hint": "3 vowels = 3 syllables"}, {"word": "вулиця", "answer": "ву-ли-ця", "hint": "3 vowels = 3 syllables"}, {"word": "шоколад", "answer": "шо-ко-лад", "hint": "3 vowels = 3 syllables"}, {"word": "університет", "answer": "у-ні-вер-си-тет", "hint": "5 vowels = 5 syllables"}, {"word": "бібліотека", "answer": "бі-блі-о-те-ка", "hint": "5 vowels = 5 syllables"}]} instruction={"Divide each word into syllables. Click between letters to insert a hyphen."} />
 
 ## Чита́ння слів (Reading Words)
 
-Counting vowels and splitting syllables is the scaffold. The goal is fluency — reading whole words without pausing at each letter. Here is the reading strategy one more time, applied to real words: (1) spot the vowels first, because they are the syllable cores; (2) build the consonant clusters around them; (3) read syllable by syllable; (4) repeat until the word flows as a single unit. Try it with **книга** (book): two vowels, **И** and **А**, so two syllables — **кни-га**. Now read it again faster: **книга**. That is the rhythm.
+The syllable method is a scaffold, not a permanent crutch. The goal is to internalize the rhythm so you stop reading letter-by-letter and start reading syllable-by-syllable, then word-by-word. Here is the reading strategy in order: (1) spot the vowels — they are the cores of each syllable. (2) Build the consonant clusters around them. (3) Read syllable-by-syllable. (4) Repeat until the word flows at natural speed. Try it with **кни́га** (book): vowels И and А give two syllables — **кни-га**. Read each piece, then blend: **книга**.
 
-Ukrainian words tend to follow a few common patterns. The easiest are words where consonants and vowels alternate evenly: **мама** (mother), **тато** (father), **каша** (porridge), **вода** (water), **рука** (hand), **хата** (house), **коза** (goat), **нога** (leg). Each syllable is open — it ends on a vowel — so blending is smooth. Next come words with a consonant cluster before a vowel, which are slightly harder: **школа** (school), **книга** (book), **банда** (gang), **парта** (school desk). Your mouth has to handle two consonants in a row before reaching the vowel. Finally, closed-syllable words end on a consonant: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank). These are short — usually one syllable — but they build confidence because you hear the whole word instantly.
+Ukrainian words follow recognizable patterns. The easiest pattern alternates consonant-vowel: **мама** (mother), **та́то** (father), **ка́ша** (porridge), **вода́** (water), **рука** (hand), **ха́та** (house), **коза́** (goat). These words practically read themselves — each syllable is open, ending on a vowel. Slightly harder are words with consonant clusters before a vowel: **шко́ла** (school), **книга** (book). And then closed-syllable words, where a syllable ends on a consonant: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank). Practice each group separately before mixing them. Most Ukrainian syllables are open — ending in a vowel — which makes blending easier than you might expect.
 
-<Quiz client:only="react" questions={[{"question": "молоко", "options": [{"text": "milk", "correct": true}, {"text": "water", "correct": false}, {"text": "bread", "correct": false}]}, {"question": "яблуко", "options": [{"text": "cherry", "correct": false}, {"text": "apple", "correct": true}, {"text": "orange", "correct": false}]}, {"question": "аптека", "options": [{"text": "pharmacy", "correct": true}, {"text": "bakery", "correct": false}, {"text": "library", "correct": false}]}, {"question": "шоколад", "options": [{"text": "cheese", "correct": false}, {"text": "vanilla", "correct": false}, {"text": "chocolate", "correct": true}]}, {"question": "людина", "options": [{"text": "city", "correct": false}, {"text": "animal", "correct": false}, {"text": "person", "correct": true}]}, {"question": "вулиця", "options": [{"text": "park", "correct": false}, {"text": "street", "correct": true}, {"text": "house", "correct": false}]}, {"question": "каша", "options": [{"text": "soup", "correct": false}, {"text": "salad", "correct": false}, {"text": "porridge", "correct": true}]}, {"question": "бібліотека", "options": [{"text": "hospital", "correct": false}, {"text": "bookshop", "correct": false}, {"text": "library", "correct": true}]}]} instruction={"Read the Ukrainian word and choose its English meaning."} />
+<Quiz client:only="react" questions={[{"question": "мама", "options": [{"text": "mother", "correct": true}, {"text": "father", "correct": false}, {"text": "water", "correct": false}, {"text": "school", "correct": false}]}, {"question": "тато", "options": [{"text": "book", "correct": false}, {"text": "father", "correct": true}, {"text": "milk", "correct": false}, {"text": "hand", "correct": false}]}, {"question": "молоко", "options": [{"text": "apple", "correct": false}, {"text": "bread", "correct": false}, {"text": "milk", "correct": true}, {"text": "street", "correct": false}]}, {"question": "каша", "options": [{"text": "song", "correct": false}, {"text": "school", "correct": false}, {"text": "library", "correct": false}, {"text": "porridge", "correct": true}]}, {"question": "книга", "options": [{"text": "book", "correct": true}, {"text": "country", "correct": false}, {"text": "family", "correct": false}, {"text": "pharmacy", "correct": false}]}, {"question": "вода", "options": [{"text": "forest", "correct": false}, {"text": "water", "correct": true}, {"text": "evening", "correct": false}, {"text": "bread", "correct": false}]}, {"question": "столиця", "options": [{"text": "country", "correct": false}, {"text": "street", "correct": false}, {"text": "capital", "correct": true}, {"text": "university", "correct": false}]}, {"question": "хліб", "options": [{"text": "oak", "correct": false}, {"text": "house", "correct": false}, {"text": "forest", "correct": false}, {"text": "bread", "correct": true}]}]} instruction={"Read the Ukrainian word and choose its English meaning."} />
 
-Here is a reading drill across three difficulty levels.
+Time to read. Ukrainian classifies words by syllable count — use the proper terms from the start:
 
-**Level 1 — two-syllable words:** Read each word first split, then blended.
-**Ма-ма** → **мама**. **Та-то** → **тато**. **Во-да** → **вода**. **Ру-ка** → **рука**. **Ха-та** → **хата**. **Ка-ша** → **каша**.
+**Двоскладові́ сло́ва** (two-syllable words). Read each one twice — first split, then blended:
 
-**Level 2 — three-syllable words:** Split, then blend.
-**А-пте-ка** → **аптека** (pharmacy). **Мо-ло-ко** → **молоко** (milk). **Лю-ди-на** → **людина** (person). **Ву-ли-ця** → **вулиця** (street).
+**ма-ма** → **мама** (mother). **та-то** → **тато** (father). **во-да** → **вода** (water). **ру-ка** → **рука** (hand). **ха-та** → **хата** (house). **ка-ша** → **каша** (porridge).
 
-**Level 3 — four or more syllables:** Use the vowel-counting method to read these:
-**У-ні-вер-си-тет** → **університет** (university) — 5 syllables. **Бі-блі-о-те-ка** → **бібліотека** (library) — 5 syllables. **Фо-то-гра-фі-я** → **фотографія** (photography) — 5 syllables.
+**Трискладові́ сло́ва** (three-syllable words). Split first, then blend:
 
-<FillIn client:only="react" items={[{"sentence": "мама → ___", "answer": "ма-ма", "options": ["ма-ма", "мам-а", "м-ама"]}, {"sentence": "аптека → ___", "answer": "ап-те-ка", "options": ["а-пте-ка", "ап-те-ка", "апт-е-ка"]}, {"sentence": "яблуко → ___", "answer": "яб-лу-ко", "options": ["яб-лу-ко", "я-блу-ко", "ябл-у-ко"]}, {"sentence": "людина → ___", "answer": "лю-ди-на", "options": ["люд-и-на", "лю-ди-на", "л-юди-на"]}, {"sentence": "вулиця → ___", "answer": "ву-ли-ця", "options": ["вул-и-ця", "ву-ли-ця", "в-ули-ця"]}, {"sentence": "шоколад → ___", "answer": "шо-ко-лад", "options": ["шо-ко-лад", "шок-о-лад", "ш-окол-ад"]}, {"sentence": "бібліотека → ___", "answer": "біб-лі-о-те-ка", "options": ["біб-лі-о-те-ка", "бі-бліо-те-ка", "біб-ліо-тек-а"]}, {"sentence": "молоко → ___", "answer": "мо-ло-ко", "options": ["мол-о-ко", "мо-ло-ко", "м-оло-ко"]}]} instruction={"Choose the correct syllable division for each word."} />
+**а-пте-ка** → **аптека** (pharmacy). **мо-ло-ко** → **молоко** (milk). **лю-ди-на** → **людина** (person). **ву-ли-ця** → **ву́лиця** (street). **сто-ли-ця** → **столи́ця** (capital) — **Ки́їв** (Kyiv) is **столиця** Украї́ни.
 
-Now read these Ukrainian city names: **Ки-їв** (Kyiv — notice the **Ї**), **Львів** (Lviv — one syllable), **О-де-са** (Odesa), **Хар-ків** (Kharkiv), **Дні-про** (Dnipro), **Пол-та-ва** (Poltava). Kyiv is the capital: **Київ — столиця України**.
+**Багатоскладові́ сло́ва** (many-syllable words). Count the vowels, split, and conquer:
 
-Before moving on, here is a preview of three special features you will meet in M03 — not the focus today, but worth recognizing when they appear. First: **Щ** always reads as [шч] — one letter, two sounds. In **що** (what) and **ще** (still, yet), do not read it as [ш] alone. Second: **Ь** (м'яки́й знак, the soft sign) has no sound of its own. It only softens the consonant before it. In **день** (day), the **Н** is soft. In **сіль** (salt), the **Л** is soft. In **кінь** (horse), the **Н** is soft. Think of **Ь** as a silent softener. Third: the apostrophe (**'**) does the opposite — it separates a consonant from a following iotated vowel, preventing softening. In **сім'я** (family), the **М** stays hard and then **Я** produces its full [йа]. Same in **м'ясо** (meat) and **п'ять** (five). These three features will be drilled thoroughly in M03; for now, just recognize them when you see them.
+**у-ні-вер-си-тет** → **університет** (university) — five syllables. **бі-блі-о-те-ка** → **бібліотека** (library) — five syllables. **фо-то-гра-фі-я** → **фотогра́фія** (photography) — five syllables. These look intimidating, but the vowel-counting method handles them completely. Finish with Ukrainian city names as a confidence-builder: **Ки-їв** (Kyiv — note the Ї), **О-де-са** (Odesa), **Хар-ків** (Kharkiv), **Дні-про** (Dnipro), **Пол-та-ва** (Poltava).
+
+Three special combinations appear in Ukrainian words that you should recognize now. They will be drilled thoroughly in M03 — today, just notice them when they appear.
+
+First: **Щ** always reads as [шч] — one letter, two sounds. **Що** means "what," **ще** means "still" or "more." Never read Щ as [ш] alone.
+
+Second: **Ь** (the soft sign, **м'яки́й знак**) has no sound of its own. It only softens the consonant before it. **День** (day) — the Н is soft. **Сіль** (salt) — the Л is soft. **Кінь** (horse) — the Н is soft. Think of Ь as a silent softener.
+
+Third: the apostrophe (**'**) separates — it prevents the iotated vowel from softening the preceding consonant. **Сім'я́** (family) — the М stays hard, then Я gives [йа]. **М'я́со** (meat) — same pattern. **П'ять** (five) — П stays hard. These three features will be explored fully in M03; for now, recognize them when you see them.
 <div class="dialogue">
 
 <div class="dialogue-line"><span class="speaker">Аня:</span> Бі-блі-о-те-ка... **бібліотека**! *(Library!)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Так! А це? *(Yes! And this one?)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> Так! А це? *(Yes! And this?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Аня:</span> Я-блу-ко... **яблуко**! *(Apple!)*</div>
+<div class="dialogue-line"><span class="speaker">Аня:</span> Яб-лу-ко... **яблуко**! *(Apple!)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> А це? *(And this?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Аня:</span> Шо-ко-лад... **шоколад**! *(Chocolate!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> **Шоколад** — сма́чно! *(Chocolate — delicious!)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> А це — **шоколад**! *(And this is chocolate!)*</div>
 
 
 </div>
 
-Аня uses the syllable method — split, then blend — and reads three words she has never seen before. Марко confirms each one. Notice how even a five-syllable word like **бібліотека** becomes manageable once you count the vowels and take it piece by piece.
+Аня uses the syllable method — splitting each word, then blending. Марко confirms and adds a new word. This is exactly how the method works in practice: slow and careful at first, then faster with each repetition.
+
+<OddOneOut client:only="react" items={[{"words": ["банк", "дим", "молоко", "ліс"], "correct": 2, "explanation": "молоко has 3 syllables (мо-ло-ко). банк, дим, and ліс each have only 1 syllable."}, {"words": ["каша", "мама", "тато", "молоко"], "correct": 3, "explanation": "молоко has 3 syllables (мо-ло-ко). каша, мама, and тато each have 2 syllables."}, {"words": ["молоко", "аптека", "яблуко", "банк"], "correct": 3, "explanation": "банк has 1 syllable. молоко, аптека, and яблуко each have 3 syllables."}, {"words": ["каша", "хата", "університет", "книга"], "correct": 2, "explanation": "університет has 5 syllables (у-ні-вер-си-тет). каша, хата, and книга each have 2 syllables."}, {"words": ["університет", "бібліотека", "фотографія", "школа"], "correct": 3, "explanation": "школа has 2 syllables (шко-ла). університет, бібліотека, and фотографія each have 5 syllables."}, {"words": ["банк", "дуб", "хліб", "каша"], "correct": 3, "explanation": "каша has 2 syllables (ка-ша). банк, дуб, and хліб each have 1 syllable."}]} instruction={"Which word has a DIFFERENT number of syllables? Find the odd one out."} />
 
 ## Підсумок — Summary
 
-Self-check — test yourself on the key concepts from this module:
+Self-check — answer each question before reading the answer:
 
-- **How do you count syllables in a Ukrainian word?** → Count the vowels. Each vowel = one syllable.
+- **How do you count syllables in a Ukrainian word?** → Count the vowels. Each vowel = one syllable. The rule never breaks.
 - **What are the 6 vowel sounds?** → [а], [о], [у], [е], [и], [і].
 - **Name the 4 iotated vowel letters.** → **Я**, **Ю**, **Є**, **Ї**.
-- **What do Я, Ю, Є do at the start of a word?** → They produce two sounds: **Я** = [й] + [а], **Ю** = [й] + [у], **Є** = [й] + [е].
-- **What does Ї always produce?** → Always [йі] — two sounds, no exceptions.
+- **What do Я, Ю, Є do at the start of a word?** → They produce two sounds: Я = [й] + [а], Ю = [й] + [у], Є = [й] + [е].
+- **What does Ї always produce?** → Always [й] + [і] — two sounds, no exceptions.
 - **What does Ь do?** → It softens the consonant before it but has no sound of its own.
-- **What does the apostrophe do?** → It separates the consonant from a following iotated vowel, so no softening occurs.
-- **Read this word and count syllables: бібліотека.** → **Бі-блі-о-те-ка**. Five syllables (five vowels: **І**, **І**, **О**, **Е**, **А**).
+- **What does the apostrophe do?** → It separates the consonant from a following iotated vowel, preventing softening.
+- **Read this word and count syllables: бібліотека.** → **Бі-блі-о-те-ка**. Five syllables — five vowels: І, І, О, Е, А.
 
 </TabItem>
 <TabItem label="Словник">
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова
 
-| Слово | Переклад | Частина мови | Рід |
+| Слово | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
-| **буква́р** | reading primer (first-grade alphabet book) | ім. | ч. |
-| **склад** | syllable | ім. | ч. |
-| **складопо́діл** | syllable division | ім. | ч. |
-| **ма́ма** | mother | ім. | ж. |
-| **молоко́** | milk | ім. | с. |
-| **банк** | bank | ім. | ч. |
-| **апте́ка** | pharmacy | ім. | ж. |
-| **шокола́д** | chocolate | ім. | ч. |
 | **університе́т** | university | ім. | ч. |
 | **бібліоте́ка** | library | ім. | ж. |
+| **фотогра́фія** | photography | ім. | ж. |
+| **шокола́д** | chocolate | ім. | ч. |
 | **я́блуко** | apple | ім. | с. |
+| **молоко́** | milk | ім. | с. |
+| **люди́на** | person | ім. | ж. |
+| **ву́лиця** | street | ім. | ж. |
+| **столи́ця** | capital (city) | ім. | ж. |
+| **ка́ша** | porridge | ім. | ж. |
+| **пі́сня** | song | ім. | ж. |
+| **ма́ма** | mother | ім. | ж. |
+| **та́то** | father | ім. | ч. |
+| **банк** | bank | ім. | ч. |
+| **апте́ка** | pharmacy | ім. | ж. |
 | **рука́** | hand | ім. | ж. |
 | **ве́чір** | evening | ім. | ч. |
 | **кит** | whale | ім. | ч. |
 | **кіт** | cat | ім. | ч. |
-| **моя́** | my (feminine) | прикм. |  |
-| **пі́сня** | song | ім. | ж. |
-| **люди́на** | person | ім. | ж. |
-| **вечі́рнє** | evening (neuter adjective) | прикм. |  |
 | **їжа́к** | hedgehog | ім. | ч. |
 | **краї́на** | country | ім. | ж. |
-| **з'ї́сти** | to eat up | дієсл. |  |
 | **дим** | smoke | ім. | ч. |
 | **кни́га** | book | ім. | ж. |
-| **та́то** | father | ім. | ч. |
-| **ка́ша** | porridge | ім. | ж. |
 | **вода́** | water | ім. | ж. |
-| **ха́та** | house (traditional Ukrainian house) | ім. | ж. |
+| **ха́та** | house, cottage | ім. | ж. |
 | **коза́** | goat | ім. | ж. |
-| **нога́** | leg | ім. | ж. |
 | **шко́ла** | school | ім. | ж. |
-| **па́рта** | school desk | ім. | ж. |
 | **ліс** | forest | ім. | ч. |
 | **дуб** | oak | ім. | ч. |
 | **хліб** | bread | ім. | ч. |
 | **що** | what | спол. |  |
-| **ще** | still, yet | присл. |  |
+| **ще** | still, more, yet | присл. |  |
 | **день** | day | ім. | ч. |
 | **кінь** | horse | ім. | ч. |
 | **сім'я́** | family | ім. | ж. |
 | **м'я́со** | meat | ім. | с. |
 | **п'ять** | five | числ. |  |
-| **сма́чно** | delicious | присл. |  |
-| **фотогра́фія** | photography | ім. | ж. |
-| **ву́лиця** | street | ім. | ж. |
-| **столи́ця** | capital city | ім. | ж. |
+| **моя́** | my (feminine) | прикм. |  |
+| **так** | yes | присл. |  |
+| **Ки́їв** | Kyiv | ім. |  |
+| **Оде́са** | Odesa |  |  |
+| **Харків** | Kharkiv |  |  |
+| **Дніпро́** | Dnipro |  |  |
+| **Полта́ва** | Poltava |  |  |
+| **склади** | syllables | ім. |  |
+| **голосні́** | vowels | прикм. |  |
+| **складопо́діл** | syllable division | ім. | ч. |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
-| **голосний звук** | vowel sound |
 | **м'який знак** | soft sign (the letter Ь) |
+| **звуковий аналіз слова** | sound analysis of a word |
+| **столиця України** | capital of Ukraine |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "буква́р", back: "reading primer (first-grade alphabet book)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "склад", back: "syllable", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "складопо́діл", back: "syllable division", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "банк", back: "bank", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шокола́д", back: "chocolate", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "рука́", back: "hand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ве́чір", back: "evening", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кит", back: "whale", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіт", back: "cat", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "люди́на", back: "person", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вечі́рнє", back: "evening (neuter adjective)", subtitle: "прикм." }, { front: "їжа́к", back: "hedgehog", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "краї́на", back: "country", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "з'ї́сти", back: "to eat up", subtitle: "дієсл." }, { front: "дим", back: "smoke", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ха́та", back: "house (traditional Ukrainian house)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коза́", back: "goat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нога́", back: "leg", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "па́рта", back: "school desk", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ліс", back: "forest", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дуб", back: "oak", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "хліб", back: "bread", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "що", back: "what", subtitle: "спол." }, { front: "ще", back: "still, yet", subtitle: "присл." }, { front: "день", back: "day", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кінь", back: "horse", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "п'ять", back: "five", subtitle: "числ." }, { front: "сма́чно", back: "delicious", subtitle: "присл." }, { front: "фотогра́фія", back: "photography", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital city", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фотогра́фія", back: "photography", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шокола́д", back: "chocolate", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "люди́на", back: "person", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital (city)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "банк", back: "bank", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рука́", back: "hand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ве́чір", back: "evening", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кит", back: "whale", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіт", back: "cat", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "їжа́к", back: "hedgehog", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "краї́на", back: "country", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дим", back: "smoke", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ха́та", back: "house, cottage", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коза́", back: "goat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ліс", back: "forest", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дуб", back: "oak", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "хліб", back: "bread", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "що", back: "what", subtitle: "спол." }, { front: "ще", back: "still, more, yet", subtitle: "присл." }, { front: "день", back: "day", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кінь", back: "horse", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "п'ять", back: "five", subtitle: "числ." }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "так", back: "yes", subtitle: "присл." }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "Оде́са", back: "Odesa" }, { front: "Харків", back: "Kharkiv" }, { front: "Дніпро́", back: "Dnipro" }, { front: "Полта́ва", back: "Poltava" }, { front: "склади", back: "syllables", subtitle: "ім." }, { front: "голосні́", back: "vowels", subtitle: "прикм." }, { front: "складопо́діл", back: "syllable division", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "яб-лу-ко → ___", "answer": "яблуко", "options": ["яблуко", "яблако", "яблику"]}, {"sentence": "мо-ло-ко → ___", "answer": "молоко", "options": ["малоко", "молоко", "молака"]}, {"sentence": "шо-ко-лад → ___", "answer": "шоколад", "options": ["шоколад", "шокалад", "шикалад"]}, {"sentence": "у-ні-вер-си-тет → ___", "answer": "університет", "options": ["унівирситет", "університет", "університат"]}, {"sentence": "біб-лі-о-те-ка → ___", "answer": "бібліотека", "options": ["бібліотека", "бібліатека", "библіотека"]}, {"sentence": "фо-то-гра-фі-я → ___", "answer": "фотографія", "options": ["фотаграфія", "фатографія", "фотографія"]}]} instruction={"The word is shown split into syllables. Choose the correctly assembled word."} />
+<CountSyllables client:only="react" items={[{"word": "кіт", "correct": 1, "translation": "cat"}, {"word": "дуб", "correct": 1, "translation": "oak"}, {"word": "день", "correct": 1, "translation": "day"}, {"word": "кінь", "correct": 1, "translation": "horse"}, {"word": "хата", "correct": 2, "translation": "house, cottage"}, {"word": "вечір", "correct": 2, "translation": "evening"}, {"word": "школа", "correct": 2, "translation": "school"}, {"word": "їжак", "correct": 2, "translation": "hedgehog"}, {"word": "столиця", "correct": 3, "translation": "capital"}, {"word": "людина", "correct": 3, "translation": "person"}, {"word": "країна", "correct": 3, "translation": "country"}, {"word": "фотографія", "correct": 5, "translation": "photography"}]} instruction={"Count the syllables in each word. Remember: one vowel = one syllable."} />
 
-<GroupSort client:only="react" groups={{"1 syllable": ["банк", "дім", "ліс", "сон", "дуб", "хліб"], "2 syllables": ["мама", "тато", "каша", "хата", "книга", "пісня"], "3 or more syllables": ["молоко", "аптека", "яблуко", "людина", "вулиця", "бібліотека"]}} instruction={"Sort each word into the correct group by its number of syllables. Count the vowels first!"} />
+<DivideWords client:only="react" items={[{"word": "мама", "answer": "ма-ма", "hint": "2 vowels = 2 syllables"}, {"word": "тато", "answer": "та-то", "hint": "2 vowels = 2 syllables"}, {"word": "хата", "answer": "ха-та", "hint": "2 vowels = 2 syllables"}, {"word": "школа", "answer": "шко-ла", "hint": "2 vowels = 2 syllables"}, {"word": "вулиця", "answer": "ву-ли-ця", "hint": "3 vowels = 3 syllables"}, {"word": "столиця", "answer": "сто-ли-ця", "hint": "3 vowels = 3 syllables"}, {"word": "країна", "answer": "кра-ї-на", "hint": "3 vowels = 3 syllables"}, {"word": "Одеса", "answer": "О-де-са", "hint": "3 vowels = 3 syllables"}, {"word": "Полтава", "answer": "Пол-та-ва", "hint": "3 vowels = 3 syllables"}, {"word": "фотографія", "answer": "фо-то-гра-фі-я", "hint": "5 vowels = 5 syllables"}]} instruction={"Divide these words into syllables using hyphens."} />
 
-<MatchUp client:only="react" pairs={[{"left": "яблуко", "right": "apple"}, {"left": "молоко", "right": "milk"}, {"left": "столиця", "right": "capital city"}, {"left": "бібліотека", "right": "library"}, {"left": "університет", "right": "university"}, {"left": "вулиця", "right": "street"}, {"left": "людина", "right": "person"}, {"left": "фотографія", "right": "photography"}]} instruction={"Match each Ukrainian word to its English meaning."} />
+<MatchUp client:only="react" pairs={[{"left": "яблуко", "right": "apple"}, {"left": "молоко", "right": "milk"}, {"left": "книга", "right": "book"}, {"left": "вулиця", "right": "street"}, {"left": "їжак", "right": "hedgehog"}, {"left": "каша", "right": "porridge"}, {"left": "людина", "right": "person"}, {"left": "країна", "right": "country"}]} instruction={"Match each Ukrainian word to its English translation."} />
 
-<TrueFalse client:only="react" items={[{"statement": "In Ukrainian, the number of syllables in a word equals the number of vowels.", "isTrue": true, "explanation": "This is the golden rule: У слові стільки складів, скільки голосних звуків. Every vowel sound is a syllable core."}, {"statement": "The letter Ь (м'який знак) makes its own audible sound.", "isTrue": false, "explanation": "Ь has no sound of its own — it only softens the consonant before it. In день the Н is soft, but Ь itself is silent."}, {"statement": "The letter Ї can appear directly after a consonant.", "isTrue": false, "explanation": "Ї never follows a consonant directly. It appears at word start (їжак), after a vowel (країна), or after an apostrophe (з'їсти)."}, {"statement": "The words кит and кіт mean the same thing.", "isTrue": false, "explanation": "кит means 'whale' and кіт means 'cat'. Ukrainian И and І are separate phonemes — swapping them changes the word entirely."}, {"statement": "Банк has one syllable.", "isTrue": true, "explanation": "Банк has only one vowel — А — so it has exactly one syllable."}, {"statement": "Університет has 5 syllables.", "isTrue": true, "explanation": "У-ні-вер-си-тет has five vowels (У, І, Е, И, Е), giving five syllables."}, {"statement": "The apostrophe (') softens the consonant that comes before it.", "isTrue": false, "explanation": "The apostrophe does the opposite — it keeps the consonant hard by separating it from the following iotated vowel. In сім'я the М stays hard."}, {"statement": "The letter Щ represents two sounds: [шч].", "isTrue": true, "explanation": "Щ is always read as [шч] — one letter, two sounds. In що and ще, never read it as [ш] alone."}]} instruction={"Are these statements about Ukrainian phonetics true or false?"} />
+<GroupSort client:only="react" groups={{"1 syllable": ["банк", "кіт", "дим", "хліб", "кінь", "ліс"], "2 syllables": ["мама", "каша", "книга", "школа", "хата", "рука"], "3 syllables": ["молоко", "аптека", "яблуко", "людина", "вулиця", "шоколад"]}} instruction={"Sort these words into groups by their syllable count."} />
 
-<Observe client:only="react" examples={["кит — means 'whale' (И is a back vowel [и])", "кіт — means 'cat' (І is a front vowel [і])", "дим — means 'smoke' (И sounds further back in the mouth)", "дім — means 'house' (І sounds higher and further forward)", "лис — means 'fox' (И after Л)", "ліс — means 'forest' (І after Л)"]} prompt={"Look at these pairs — each pair differs by only one vowel, yet the meaning is completely different. What does this tell you about И and І in Ukrainian? Are they the same sound or different phonemes?"} />
+<TrueFalse client:only="react" items={[{"statement": "The word 'банк' has 1 syllable because it contains 1 vowel (А).", "isTrue": true, "explanation": "Correct! банк has one vowel А, so it has exactly one syllable."}, {"statement": "The word 'мама' has 3 syllables because it has 2 М sounds.", "isTrue": false, "explanation": "Wrong! Syllables are counted by vowels, not consonants. мама has 2 vowels (А, А) = 2 syllables: ма-ма."}, {"statement": "Ї always produces two sounds: [й] + [і], with zero exceptions.", "isTrue": true, "explanation": "Correct! Ї is unique — it always produces two sounds, [й] + [і], in every position. It is also distinctly Ukrainian — Russian has no equivalent letter."}, {"statement": "Я makes the same sounds whether it appears at the start of a word or after a consonant.", "isTrue": false, "explanation": "Wrong! At the start of a word, Я = [й] + [а] (two sounds). After a consonant, Я softens that consonant and contributes only [а]."}, {"statement": "університет has 5 syllables.", "isTrue": true, "explanation": "Correct! у-ні-вер-си-тет has 5 vowels (У, І, Е, И, Е) = 5 syllables."}, {"statement": "The soft sign (Ь) creates its own syllable, so 'день' has 2 syllables.", "isTrue": false, "explanation": "Wrong! Ь is not a vowel and has no sound of its own. It only softens the consonant before it. день has 1 vowel (Е) = 1 syllable."}, {"statement": "яблуко has 3 syllables.", "isTrue": true, "explanation": "Correct! яб-лу-ко has 3 vowels (Я, У, О) = 3 syllables."}, {"statement": "Russian has a letter that is equivalent to Ukrainian Ї.", "isTrue": false, "explanation": "Wrong! Ї is distinctly Ukrainian — Russian has no equivalent letter."}]} instruction={"True or false? Think carefully before you answer."} />
 
-<Quiz client:only="react" questions={[{"question": "How many sounds does Я produce when it appears at the start of a word?", "options": [{"text": "One sound: [а]", "correct": false}, {"text": "Two sounds: [й]+[а]", "correct": true}, {"text": "Three sounds: [й]+[а]+[й]", "correct": false}]}, {"question": "In the word яблуко, the letter Я produces:", "options": [{"text": "two sounds [й]+[а]", "correct": true}, {"text": "one sound [а]", "correct": false}, {"text": "no sound at all", "correct": false}]}, {"question": "In the word пісня, what does Я do to the consonant before it?", "options": [{"text": "softens the Н and adds the sound [а]", "correct": true}, {"text": "produces [й]+[а] after Н", "correct": false}, {"text": "has no effect on Н", "correct": false}]}, {"question": "Which statement about the letter Ї is correct?", "options": [{"text": "Ї always produces two sounds: [й]+[і]", "correct": true}, {"text": "Ї produces one sound when after a vowel", "correct": false}, {"text": "Ї softens the consonant before it", "correct": false}]}, {"question": "In the word людина, what does Ю do?", "options": [{"text": "softens the Л before it and adds the sound [у]", "correct": true}, {"text": "produces [й]+[у] after Л", "correct": false}, {"text": "produces only the sound [у]", "correct": false}]}, {"question": "Which of these letters is uniquely Ukrainian and has no equivalent in Russian?", "options": [{"text": "Я", "correct": false}, {"text": "Ї", "correct": true}, {"text": "Ю", "correct": false}]}]} instruction={"Test your understanding of Ukrainian iotated vowels. Choose the correct answer."} />
-
-<Anagram client:only="react" items={[{"scrambled": "к н и г а", "answer": "книга", "hint": "book"}, {"scrambled": "в о д а", "answer": "вода", "hint": "water"}, {"scrambled": "р у к а", "answer": "рука", "hint": "hand"}, {"scrambled": "к о з а", "answer": "коза", "hint": "goat"}, {"scrambled": "н о г а", "answer": "нога", "hint": "leg"}, {"scrambled": "х а т а", "answer": "хата", "hint": "traditional house"}, {"scrambled": "к а ш а", "answer": "каша", "hint": "porridge"}, {"scrambled": "п а р т а", "answer": "парта", "hint": "school desk"}]} instruction={"Rearrange the letters to form a Ukrainian word. Use the English hint!"} />
+<Quiz client:only="react" questions={[{"question": "What does Я sound like at the START of a word, as in 'яблуко'?", "options": [{"text": "[а] only", "correct": false}, {"text": "[й] + [а]", "correct": true}, {"text": "[й] + [у]", "correct": false}, {"text": "[й] + [е]", "correct": false}]}, {"question": "What does Ї ALWAYS produce?", "options": [{"text": "[і] only", "correct": false}, {"text": "[й] + [у]", "correct": false}, {"text": "[й] + [і]", "correct": true}, {"text": "[й] + [а]", "correct": false}]}, {"question": "How many syllables does 'бібліотека' have?", "options": [{"text": "3", "correct": false}, {"text": "4", "correct": false}, {"text": "5", "correct": true}, {"text": "6", "correct": false}]}, {"question": "What is the Ukrainian term for 'syllable division'?", "options": [{"text": "звуковий аналіз", "correct": false}, {"text": "складоподіл", "correct": true}, {"text": "голосний звук", "correct": false}, {"text": "м'який знак", "correct": false}]}, {"question": "What does the soft sign (Ь) do in a word like 'день'?", "options": [{"text": "adds a vowel sound", "correct": false}, {"text": "creates a new syllable", "correct": false}, {"text": "softens the consonant before it", "correct": true}, {"text": "hardens the consonant before it", "correct": false}]}, {"question": "In 'людина', Ю comes after the consonant Л. What does Ю do here?", "options": [{"text": "produces [й] + [у] as two separate sounds", "correct": false}, {"text": "softens Л and adds the sound [у]", "correct": true}, {"text": "has no effect on Л", "correct": false}, {"text": "hardens Л", "correct": false}]}]} instruction={"Choose the correct answer about Ukrainian vowels and syllables."} />
 
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+**Дже́рела — References**
 
-- Большакова Grade 1 буквар, p.25
+- Большако́ва Grade 1 буква́р, p.25
   _Syllable rule: 'У слові стільки складів, скільки голосних звуків.'_
 - Большакова Grade 1 буквар, p.29
   _Звуковий аналіз слова method — how to analyze word sounds._
 - Захарійчук Grade 1 (NUS 2025), p.13-15
   _Sound notation: [•] for vowels, [–] for consonants, [=] for soft._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
 - [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Співвідношення звуків і букв](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281) (miyklas.com.ua)
-- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
+- [МійКлас: Співвідно́шення звуків і букв](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281) (miyklas.com.ua)
+- [МійКлас: Алфа́ві́т (абе́тка, а́збука)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41217) (miyklas.com.ua)
+
+**Статті́ — Articles**
+
+- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
+- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
+- [Talk Ukrainian: Ukrainian alphabet with pronunciation](https://talkukrainian.com/ukrainian-alphabet/) (talkukrainian)
+- [How to talk about transport in Ukrainian](https://www.ukrainianlessons.com/fmu5/) (ukrainianlessons.com)
+- [How to ORDER at the restaurant in Ukrainian](https://www.ukrainianlessons.com/fmu16/) (ukrainianlessons.com)
+- [Grammar point: Plural of nouns in Ukrainian](https://www.ukrainianlessons.com/fmu46/) (ukrainianlessons.com)
+- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) (ukrainianlessons.com)
+
+**Ві́део — Videos**
+
+- [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) (Red Purple Ukrainian)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

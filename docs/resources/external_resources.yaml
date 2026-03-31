@@ -1,8 +1,8 @@
-version: '3.1'
+version: '4.0'
 generated_at: '2026-03-03'
 cleaned_at: '2026-03-13'
 resources:
-  a1-the-ukrainian-alphabet:
+  a1-sounds-letters-and-hello:
     articles:
     - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
       url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
@@ -16,33 +16,16 @@ resources:
       url: https://talkukrainian.com/ukrainian-alphabet/
       relevance: high
       source: talkukrainian
-  a1-vowel-sounds:
-    articles:
-    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
-      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+    youtube:
+    - title: How to read the Ukrainian Alphabet. Cyrillic Letters. Part I
+      url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
       relevance: high
-      source: ukrainianlessons.com
-  a1-consonant-sounds:
-    articles:
-    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
-      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      channel: Speak Ukrainian
+    - title: 'UKRAINIAN: handwritten cyrillic alphabet'
+      url: https://www.youtube.com/watch?v=2tEPOopp7-I
       relevance: high
-      source: ukrainianlessons.com
-  a1-the-cyrillic-code-iii:
-    articles:
-    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
-      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
-      url: https://www.ukrainianlessons.com/ukrainian-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
-      url: https://talkukrainian.com/ukrainian-alphabet/
-      relevance: high
-      source: talkukrainian
-  a1-the-cyrillic-code-iv:
+      channel: Red Purple Ukrainian
+  a1-reading-ukrainian:
     articles:
     - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
       url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
@@ -56,7 +39,42 @@ resources:
       url: https://talkukrainian.com/ukrainian-alphabet/
       relevance: high
       source: talkukrainian
-  a1-the-gender-code:
+    - title: How to talk about transport in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu5/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: How to ORDER at the restaurant in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu16/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Grammar point: Plural of nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu46/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Grammar Point: Verb conjugations in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu57/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'UKRAINIAN: handwritten cyrillic alphabet'
+      url: https://www.youtube.com/watch?v=2tEPOopp7-I
+      relevance: high
+      channel: Red Purple Ukrainian
+  a1-special-signs:
+    articles:
+    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
+      url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
+      url: https://talkukrainian.com/ukrainian-alphabet/
+      relevance: high
+      source: talkukrainian
+  a1-things-have-gender:
     youtube:
     - title: Gender of Ukrainian Nouns
       url: https://www.youtube.com/watch?v=Vl5MAW3AYoU
@@ -79,7 +97,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/1-2/
       relevance: high
       source: dobraforma
-  a1-greetings-and-politeness:
+  a1-who-am-i:
     youtube:
     - title: 'Start learning UKRAINIAN: Greetings! How are you? What is your name? Personal pronouns in Ukrainian'
       url: https://www.youtube.com/watch?v=3zZWCCS7igw
@@ -93,6 +111,10 @@ resources:
     - title: ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings
       url: https://www.youtube.com/watch?v=cQQB8GX3zxM
       source: Ukrainian Lessons
+    - title: 'Basic Ukrainian grammar: Personal pronouns'
+      url: https://www.youtube.com/watch?v=WtpQU-oQ8A0
+      relevance: high
+      channel: Speak Ukrainian
     articles:
     - title: Polite Phrases in Ukrainian
       url: https://www.verba.school/post/polite-phrases-in-ukrainian
@@ -114,13 +136,6 @@ resources:
       url: https://talkukrainian.com/greetings/
       relevance: high
       source: talkukrainian
-  a1-this-is-i-am:
-    youtube:
-    - title: 'Basic Ukrainian grammar: Personal pronouns'
-      url: https://www.youtube.com/watch?v=WtpQU-oQ8A0
-      relevance: high
-      channel: Speak Ukrainian
-    articles:
     - title: Personal Pronouns in Ukrainian
       url: https://www.ukrainianlessons.com/personal-pronouns/
       relevance: high
@@ -141,7 +156,7 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
       relevance: high
       source: ukrainianlessons.com
-  a1-my-world-objects:
+  a1-this-and-that:
     youtube:
     - title: Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN
       url: https://www.youtube.com/watch?v=2IlH4OxyFJ8
@@ -160,7 +175,15 @@ resources:
       url: https://www.ukrainianlessons.com/fmu57/
       relevance: high
       source: ukrainianlessons.com
-  a1-describing-things-adjectives:
+    - title: Ukrainian Personal Pronouns
+      url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: At the grocery store + Genitive case
+      url: https://www.ukrainianlessons.com/episode46/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-what-is-it-like:
     articles:
     - title: Common Adjectives
       url: https://www.ukrainianlessons.com/vocabulary-adjectives/
@@ -178,7 +201,7 @@ resources:
       url: https://talkukrainian.com/adjectives/
       relevance: high
       source: talkukrainian
-  a1-colors-and-clothing:
+  a1-colors:
     articles:
     - title: Colors in Ukrainian + Pronunciation Trainer
       url: https://www.ukrainianlessons.com/episode25/
@@ -202,7 +225,7 @@ resources:
       url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
       relevance: high
       source: Gender rules
-  a1-the-living-verb-i:
+  a1-verbs-group-one:
     youtube:
     - title: Ukrainian Present Tense. The First Conjugation Group.
       url: https://www.youtube.com/watch?v=gSmbSuSs-Ps
@@ -229,7 +252,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu57/
       relevance: high
       source: ukrainianlessons.com
-  a1-the-living-verb-ii:
+  a1-verbs-group-two:
     youtube:
     - title: Ukrainian Present Tense. The First Conjugation Group.
       url: https://www.youtube.com/watch?v=gSmbSuSs-Ps
@@ -248,7 +271,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode24/
       relevance: high
       source: Learn Class II verbs in context
-  a1-reflexive-verbs:
+  a1-my-morning:
     articles:
     - title: On a date in Ukrainian + Reflexive verbs
       url: https://www.ukrainianlessons.com/episode109/
@@ -270,7 +293,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/24-2/
       relevance: medium
       source: dobraforma
-  a1-questions-and-negation:
+  a1-questions:
     youtube:
     - title: 'Ukrainian listening practice: What do you like to eat? Що ви любите їсти? 🥐 Slow vs. Fast input'
       url: https://www.youtube.com/watch?v=QE9JOcQfLE0
@@ -288,7 +311,7 @@ resources:
       url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
       relevance: high
       source: Practical phrases for travelers
-  a1-mine-and-yours:
+  a1-my-family:
     youtube:
     - title: Ukrainian Possessive Pronouns + Family Vocabulary
       url: https://www.youtube.com/watch?v=LARvKb7D38M
@@ -307,13 +330,27 @@ resources:
       url: https://www.ukrainianlessons.com/reflexive-possessive-pronoun/
       relevance: high
       source: When to use свій
-  a1-demonstratives-this-that:
-    articles:
-    - title: This and That in Ukrainian — Demonstrative Pronouns
-      url: https://www.ukrainianlessons.com/pronouns-this-that/
+    - title: Family Vocabulary
+      url: https://www.ukrainianlessons.com/vocabulary-family/
+      relevance: high
+      source: Сім'я
+    - title: ULP 1-04 | Family Members in Ukrainian
+      url: https://www.ukrainianlessons.com/episode4/
       relevance: high
       source: ukrainianlessons.com
-  a1-numbers-and-money:
+    - title: Talking about your family in Ukrainian + I have, you have
+      url: https://www.ukrainianlessons.com/episode6/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: More about your family in Ukrainian + Possessive Pronouns
+      url: https://www.ukrainianlessons.com/episode7/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Family – Родина'
+      url: https://talkukrainian.com/family/
+      relevance: high
+      source: talkukrainian
+  a1-how-many:
     youtube:
     - title: COUNTING UKRAINIAN CARDINAL NUMBERS - 0 - 100
       url: https://www.youtube.com/watch?v=7XrQddM5llE
@@ -340,7 +377,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode5/
       relevance: high
       source: ukrainianlessons.com
-  a1-the-accusative-i-things:
+  a1-i-eat-i-drink:
     youtube:
     - title: The Accusative case in the Ukrainian language
       url: https://www.youtube.com/watch?v=D_-Y5kfanl0
@@ -367,7 +404,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode57/
       relevance: high
       source: ukrainianlessons.com
-  a1-the-accusative-ii-people:
+  a1-people-around-me:
     youtube:
     - title: 'Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)'
       url: https://www.youtube.com/watch?v=BYBWx6ds8Fk
@@ -390,7 +427,7 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/33/
       relevance: high
       source: ukrainianlessons.com
-  a1-accusative-prepositions:
+  a1-where-to:
     articles:
     - title: Your schedule in Ukrainian + Accusative case with prepositions
       url: https://www.ukrainianlessons.com/episode57/
@@ -408,7 +445,11 @@ resources:
       url: https://www.ukrainianlessons.com/episode33/
       relevance: medium
       source: ukrainianlessons.com
-  a1-the-locative-where-things-are:
+    - title: Location vs Destination
+      url: https://www.ukrainianlessons.com/location-destination-prepositions/
+      relevance: high
+      source: Preposition guide
+  a1-where-is-it:
     youtube:
     - title: The Locative Case in the Ukrainian language
       url: https://www.youtube.com/watch?v=kQof_vYOdm8
@@ -431,6 +472,18 @@ resources:
       url: https://www.ukrainianlessons.com/fmu57/
       relevance: medium
       source: ukrainianlessons.com
+    - title: Prepositions У and НА in Ukrainian
+      url: https://www.ukrainianlessons.com/prepositions-u-na/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Dobra Forma: Locative Case (Use of в and у)'
+      url: https://opentext.ku.edu/dobraforma/chapter/4-1/
+      relevance: high
+      source: dobraforma
+    - title: 'Dobra Forma: Locative Case (в, у and на)'
+      url: https://opentext.ku.edu/dobraforma/chapter/4-2/
+      relevance: high
+      source: dobraforma
   a1-around-the-city:
     youtube:
     - title: 'Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian'
@@ -454,17 +507,7 @@ resources:
       url: https://www.ukrainianlessons.com/ph-places/
       relevance: high
       source: ukrainianlessons.com
-  a1-pronoun-declension:
-    articles:
-    - title: Ukrainian Personal Pronouns
-      url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: medium
-      source: ukrainianlessons.com
-  a1-the-genitive-i-absence:
+  a1-where-from:
     youtube:
     - title: Genitive case in the Ukrainian language
       url: https://www.youtube.com/watch?v=FafVwRIxhpg
@@ -491,21 +534,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode49/
       relevance: high
       source: ukrainianlessons.com
-  a1-prepositions-of-place:
-    articles:
-    - title: Prepositions У and НА in Ukrainian
-      url: https://www.ukrainianlessons.com/prepositions-u-na/
+    - title: Location and Destination Prepositions in Ukrainian
+      url: https://www.ukrainianlessons.com/location-destination-prepositions/
       relevance: high
       source: ukrainianlessons.com
-    - title: 'Dobra Forma: Locative Case (Use of в and у)'
-      url: https://opentext.ku.edu/dobraforma/chapter/4-1/
+    - title: 'Dobra Forma: Genitive Case after Prepositions з, до, and в/у'
+      url: https://opentext.ku.edu/dobraforma/chapter/7-1/
       relevance: high
       source: dobraforma
-    - title: 'Dobra Forma: Locative Case (в, у and на)'
-      url: https://opentext.ku.edu/dobraforma/chapter/4-2/
+    - title: 'Dobra Forma: Genitive Case after Prepositions біля, після, для and без'
+      url: https://opentext.ku.edu/dobraforma/chapter/7-2/
       relevance: high
       source: dobraforma
-  a1-checkpoint-cases:
+  a1-checkpoint-places:
     articles:
     - title: Ukrainian Cases Overview
       url: https://www.ukrainianlessons.com/intro-cases/
@@ -523,7 +564,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode33/
       relevance: high
       source: ukrainianlessons.com
-  a1-yesterday-past-tense:
+    - title: Ukrainian Cases Chart
+      url: https://www.ukrainianlessons.com/ukrainian-cases-chart/
+      relevance: high
+      source: All 7 cases in one table
+    - title: Prepositions with Cases
+      url: https://www.ukrainianlessons.com/prepositions-cases/
+      relevance: high
+      source: Which preposition uses which case
+    - title: 'Vocabulary: Around Town'
+      url: https://www.ukrainianlessons.com/vocabulary-town/
+      relevance: high
+      source: Navigation words
+  a1-what-happened:
     youtube:
     - title: The Past Tense in Ukrainian
       url: https://www.youtube.com/watch?v=SUx5xUfABIc
@@ -550,15 +603,15 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/28/
       relevance: high
       source: ukrainianlessons.com
-  a1-tomorrow-future-tense:
+  a1-what-will-happen:
     youtube:
     - title: Future Tense in Ukrainian
       url: https://www.youtube.com/watch?v=kY67m6y6Oyc
       relevance: high
       channel: Speak Ukrainian
     articles:
-    - title: Ukrainian Future Tense Guide
-      url: https://www.ukrainianlessons.com/future-tense/
+    - title: Future Tense in Ukrainian (Grammar Tables)
+      url: https://www.ukrainianlessons.com/grammar-future/
       relevance: high
       source: Ukrainian Lessons
     - title: ULP Episode 27 | Future Tense
@@ -577,7 +630,7 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/26/
       relevance: high
       source: ukrainianlessons.com
-  a1-my-daily-routine:
+  a1-my-day:
     youtube:
     - title: Daily Routine in Ukrainian
       url: https://www.youtube.com/watch?v=kY67m6y6Oyc
@@ -592,7 +645,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu58/
       relevance: high
       source: ukrainianlessons.com
-  a1-food-vocabulary:
+  a1-food-and-drink:
     articles:
     - title: Ordering food in Ukrainian
       url: https://www.ukrainianlessons.com/episode12/
@@ -614,7 +667,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode47/
       relevance: high
       source: ukrainianlessons.com
-  a1-shopping-and-market:
+  a1-shopping:
     articles:
     - title: 'Ukrainian Phrasebook: Clothing'
       url: https://www.ukrainianlessons.com/ph-clothing/
@@ -628,6 +681,52 @@ resources:
       url: https://www.ukrainianlessons.com/fmu18/
       relevance: high
       source: ukrainianlessons.com
+    - title: Shopping for clothes — Accusative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode32/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 40+ Ukrainian Dishes
+      url: https://www.ukrainianlessons.com/ukrainian-food/
+      relevance: high
+      source: Complete guide with photos
+    - title: ULP 1-12 | Ordering Food
+      url: https://www.ukrainianlessons.com/episode12/
+      relevance: high
+      source: Where and how to order in Ukrainian
+    - title: Ukrainian Lessons — How much does it cost? At the market in Ukraine
+      url: https://www.ukrainianlessons.com/episode9/
+      relevance: high
+      source: Shopping vocabulary practice (ULP S1 Ep9)
+    - title: How to shop at the market in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu49/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 1-09 How much does it cost? At the market in Ukraine
+      url: https://www.ukrainianlessons.com/lesson/9/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: Shopping in Ukrainian - Supermarket Vocabulary
+      url: https://www.youtube.com/watch?v=q6P8vA_G938
+      relevance: high
+      channel: Ukrainian Lessons
+    - title: 20 Ukrainian Food Words You Need To Know
+      url: https://www.youtube.com/watch?v=fN0BIF-iejo
+      relevance: high
+      channel: QUICK and EASY food vocabulary|Mariya 💙💛
+    - title: Shopping in Ukraine
+      url: https://www.youtube.com/watch?v=2tEPOopp7-I
+      relevance: high
+      channel: Real Ukrainian shopping situations
+    - title: Fruits and Vegetables in Ukrainian
+      url: https://www.youtube.com/watch?v=F0O5y9D1kGg
+      relevance: high
+      channel: Ukrainian Lessons
+    websites:
+    - title: Supermarket Vocabulary Guide
+      url: https://www.ukrainianlessons.com/supermarket/
+      relevance: high
+      source: Detailed list of grocery items and checkout phrases
   a1-at-the-cafe:
     youtube:
     - title: Menu in the coffee shop in the Ukrainian language
@@ -643,13 +742,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode12/
       relevance: high
       source: Restaurant ordering + culture tips
-  a1-description-adverbs:
-    articles:
-    - title: Adjectives and Adverbs
-      url: https://www.ukrainianlessons.com/adjectives-and-adverbs/
+    - title: 'Ukrainian Phrasebook: Food and Restaurants'
+      url: https://www.ukrainianlessons.com/ph-food/
       relevance: high
-      source: Comprehensive guide
-  a1-weather-and-nature:
+      source: ukrainianlessons.com
+    - title: How to PAY at the restaurant in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu17/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: How to ORDER at the restaurant in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu16/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-weather:
     articles:
     - title: Talking about weather in Ukrainian
       url: https://www.ukrainianlessons.com/episode16/
@@ -667,7 +772,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode43/
       relevance: high
       source: ukrainianlessons.com
-  a1-imperative-and-requests:
+  a1-please-do-this:
     articles:
     - title: Birthday presents + Imperative mood in Ukrainian
       url: https://www.ukrainianlessons.com/episode111/
@@ -689,7 +794,7 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/111/
       relevance: high
       source: ukrainianlessons.com
-  a1-body-and-health:
+  a1-health:
     articles:
     - title: Body Parts Vocabulary
       url: https://www.ukrainianlessons.com/vocabulary-body/
@@ -711,29 +816,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode170/
       relevance: high
       source: ukrainianlessons.com
-  a1-my-family:
-    articles:
-    - title: Family Vocabulary
-      url: https://www.ukrainianlessons.com/vocabulary-family/
-      relevance: high
-      source: Сім'я
-    - title: ULP 1-06 Talking about your family in Ukrainian + I have, you have
-      url: https://www.ukrainianlessons.com/lesson/6/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Talking about your family in Ukrainian + I have, you have
-      url: https://www.ukrainianlessons.com/episode6/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: More about your family in Ukrainian + Possessive Pronouns
-      url: https://www.ukrainianlessons.com/episode7/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Talk Ukrainian: Family – Родина'
-      url: https://talkukrainian.com/family/
-      relevance: high
-      source: talkukrainian
-  a1-holidays-and-traditions:
+  a1-holidays:
     youtube:
     - title: Дуже гарне вітання з днем ВЕСІЛЛЯ!Християнське привітання з днем одруження!Найкраще вітання!
       url: https://www.youtube.com/watch?v=JAbvOkre18o
@@ -759,7 +842,7 @@ resources:
       url: https://www.verba.school/post/ukrainian_easter_en
       relevance: high
       source: verba.school
-  a1-travel-and-transport:
+  a1-transport:
     articles:
     - title: How to talk about transport in Ukrainian
       url: https://www.ukrainianlessons.com/fmu5/
@@ -781,25 +864,23 @@ resources:
       url: https://www.ukrainianlessons.com/episode99/
       relevance: high
       source: ukrainianlessons.com
-  a1-at-the-restaurant:
-    youtube:
-    - title: Ordering in a Ukrainian Cafe/Restaurant
-      url: https://www.youtube.com/watch?v=FjI1V3I-9_w
+    - title: Transportation in Ukrainian
+      url: https://www.ukrainianlessons.com/transport/
       relevance: high
-      channel: Ukrainian Lessons
-    articles:
-    - title: 'Ukrainian Phrasebook: Food and Restaurants'
-      url: https://www.ukrainianlessons.com/ph-food/
+      source: Vocabulary and phrases for trains, buses, and planes
+    - title: Vocabulary booster! Transport in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu4/
       relevance: high
       source: ukrainianlessons.com
-    - title: How to PAY at the restaurant in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu17/
+    - title: Location and Destination Prepositions in Ukrainian
+      url: https://www.ukrainianlessons.com/location-destination-prepositions/
       relevance: high
       source: ukrainianlessons.com
-    - title: How to ORDER at the restaurant in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu16/
+    websites:
+    - title: How to Ride a Marshrutka
+      url: https://www.ukrainianlessons.com/marshrutka/
       relevance: high
-      source: ukrainianlessons.com
+      source: Guide to the etiquette and phrases for Ukrainian minibuses
   a1-checkpoint-communication:
     articles:
     - title: Useful Ukrainian Questions
@@ -818,62 +899,23 @@ resources:
       url: https://www.ukrainianlessons.com/fmu2/
       relevance: high
       source: ukrainianlessons.com
-  a1-buying-tickets:
-    articles:
-    - title: Transportation in Ukrainian
-      url: https://www.ukrainianlessons.com/transport/
-      relevance: high
-      source: Vocabulary and phrases for trains, buses, and planes
-  a1-taking-transport:
-    articles:
-    - title: Vocabulary booster! Transport in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu4/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Location and Destination Prepositions in Ukrainian
-      url: https://www.ukrainianlessons.com/location-destination-prepositions/
-      relevance: high
-      source: ukrainianlessons.com
-    websites:
-    - title: How to Ride a Marshrutka
-      url: https://www.ukrainianlessons.com/marshrutka/
-      relevance: high
-      source: Guide to the etiquette and phrases for Ukrainian minibuses
-  a1-phone-basics:
+  a1-emergencies:
     articles:
     - title: Ukrainian Telephone Phrases
       url: https://www.ukrainianlessons.com/phone/
       relevance: high
       source: Cheat sheet for phone conversations with audio
-  a1-writing-skills:
+    - title: Something Hurts — Describing Pain in Ukrainian
+      url: https://www.ukrainianlessons.com/something-hurts/
+      relevance: high
+      source: Phrases for doctor visits and emergencies
+  a1-my-story:
     articles:
     - title: Transliteration of Ukrainian — How to Write Ukrainian in Latin Letters
       url: https://www.ukrainianlessons.com/transliteration/
       relevance: high
       source: ukrainianlessons.com
-  a1-at-the-store:
-    youtube:
-    - title: Shopping in Ukrainian - Supermarket Vocabulary
-      url: https://www.youtube.com/watch?v=q6P8vA_G938
-      relevance: high
-      channel: Ukrainian Lessons
-    articles:
-    - title: Shopping for clothes — Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode32/
-      relevance: high
-      source: ukrainianlessons.com
-    websites:
-    - title: Supermarket Vocabulary Guide
-      url: https://www.ukrainianlessons.com/supermarket/
-      relevance: high
-      source: Detailed list of grocery items and checkout phrases
-  a1-emergencies:
-    articles:
-    - title: Medical and Health Vocabulary
-      url: https://www.ukrainianlessons.com/health/
-      relevance: high
-      source: Phrases for doctor visits and emergencies with audio
-  a2-plural-noun-declension:
+  a2-plural-nominative-accusative:
     articles:
     - title: My Room – Plural nouns in Ukrainian
       url: https://www.ukrainianlessons.com/episode42/
@@ -946,7 +988,7 @@ resources:
       url: https://talkukrainian.com/grammatical-cases/
       relevance: high
       source: Practice exercises
-  a2-aspect-introduction:
+  a2-aspect-concept:
     youtube:
     - title: Perfective vs Imperfective
       url: https://www.youtube.com/watch?v=YnWlncQJg8o
@@ -962,7 +1004,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
       relevance: high
       source: University of Kansas
-  a2-the-completed-past:
+  a2-aspect-in-past:
     youtube:
     - title: How did Yevgeny Klopotenko propose to Kateryna?
       url: https://www.youtube.com/watch?v=4vtNZjrsqEg
@@ -984,7 +1026,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-2/
       relevance: high
       source: University of Kansas
-  a2-future-plans-and-promises:
+  a2-synthetic-future:
     articles:
     - title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
@@ -999,7 +1041,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-4/
       relevance: high
       source: University of Kansas
-  a2-aspect-morphology:
+  a2-aspect-in-vocabulary:
     youtube:
     - title: 50 Verb Pairs
       url: https://www.youtube.com/watch?v=iK4uNlozmFE
@@ -1015,7 +1057,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-3/
       relevance: high
       source: University of Kansas
-  a2-aspect-mastery-pairs:
+  a2-aspect-mastery:
     articles:
     - title: 'Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs)'
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
@@ -1026,13 +1068,13 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-3/
       relevance: high
       source: University of Kansas
-  a2-possessive-sviy:
+  a2-sviy-and-sebe:
     websites:
     - title: 'Dobra Forma 12-1: Possessive Pronouns (мій, твій, чий)'
       url: https://opentext.ku.edu/dobraforma/chapter/12-1/
       relevance: high
       source: University of Kansas
-  a2-bigger-better-stronger:
+  a2-comparison:
     articles:
     - title: 'Dobra Forma 20-1: Comparative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-1/
@@ -1046,16 +1088,30 @@ resources:
       url: https://www.talkukrainian.com/adjectives-degrees-comparison/
       relevance: high
       source: Unknown
-  a2-the-best-the-worst:
-    articles:
     - title: 'Dobra Forma 20-3: Superlative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-3/
       relevance: high
       source: University of Kansas
-    - title: Degrees of Comparison
-      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
       relevance: high
-      source: Unknown
+      source: University of Kansas
+    - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-3/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-4: Verbal Aspect (Future Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-4/
+      relevance: high
+      source: University of Kansas
+    - title: Healthy lifestyle + Degrees of comparison in Ukrainian
+      url: https://www.ukrainianlessons.com/episode104/
+      relevance: high
+      source: ukrainianlessons.com
   a2-preferences-and-choices:
     articles:
     - title: Electronics and technology + Dative Case
@@ -1066,12 +1122,23 @@ resources:
       url: https://www.ukrainianlessons.com/episode52/
       relevance: high
       source: ukrainianlessons.com
+    - title: Vocabulary booster! Hobbies in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu23/
+      relevance: high
+      source: ukrainianlessons.com
     websites:
     - title: 'Dobra Forma 20-1: Comparative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-1/
       relevance: high
       source: University of Kansas
-  a2-numerals-and-nouns:
+    youtube:
+    - title: 'Listen on repeat! Ukrainian intonation and rhythm🎵 Ukrainian mini-podcast: My Hobbies - Мої Хобі'
+      url: https://www.youtube.com/watch?v=NCuY2KIg0lc
+      source: Ukrainian with Olha
+    - title: How to cook oatmeal 🥣 Which oatmeal is the healthiest | Ievgen Klopotenko
+      url: https://www.youtube.com/watch?v=ZP9kslSh7k0
+      source: Klopotenko
+  a2-numerals-and-cases:
     youtube:
     - title: How to use numbers 1,2,3,4,5, etc. with the nouns...
       url: https://www.youtube.com/watch?v=SJPr-ilnIV0
@@ -1086,6 +1153,10 @@ resources:
       url: https://www.ukrainianlessons.com/fmu7/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma: Ordinal Numerals (Gender and Number in Nominative)'
+      url: https://opentext.ku.edu/dobraforma/chapter/16-3/
+      relevance: high
+      source: dobraforma
     websites:
     - title: 'Dobra Forma 6-1: Genitive with Quantity (Masculine Plural)'
       url: https://opentext.ku.edu/dobraforma/chapter/6-1/
@@ -1099,13 +1170,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/6-3/
       relevance: high
       source: University of Kansas
-  a2-numeral-case-agreement:
-    articles:
-    - title: 'Dobra Forma: Ordinal Numerals (Gender and Number in Nominative)'
-      url: https://opentext.ku.edu/dobraforma/chapter/16-3/
-      relevance: high
-      source: dobraforma
-  a2-complete-imperative:
+  a2-imperative-complete:
     articles:
     - title: Birthday presents + Imperative mood in Ukrainian
       url: https://www.ukrainianlessons.com/episode111/
@@ -1128,7 +1193,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/29-3/
       relevance: high
       source: University of Kansas
-  a2-checkpoint-aspect-comparison:
+  a2-checkpoint-verbs:
     youtube:
     - title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in...
       url: https://www.youtube.com/watch?v=zVdb0g7KDC0
@@ -1150,19 +1215,22 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/27-4/
       relevance: high
       source: University of Kansas
-  a2-telling-stories:
+  a2-telling-stories-and-travel:
     websites:
     - title: 'Dobra Forma 24-1: Past Tense'
       url: https://opentext.ku.edu/dobraforma/chapter/24-1/
       relevance: high
       source: University of Kansas
-  a2-i-feel-like:
     articles:
     - title: How to express emotions in Ukrainian
       url: https://www.ukrainianlessons.com/emotions/
       relevance: high
       source: Ukrainian Lessons
-  a2-which-one:
+    youtube:
+    - title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
+      url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
+      source: Ukrainian Lessons
+  a2-relative-clauses:
     articles:
     - title: ULP 2-51 Electronics and technology + Dative case
       url: https://www.ukrainianlessons.com/lesson/51/
@@ -1184,7 +1252,7 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/57/
       relevance: high
       source: ukrainianlessons.com
-  a2-health-and-body:
+  a2-shopping-and-health:
     articles:
     - title: Something Hurts — Health Vocabulary in Ukrainian
       url: https://www.ukrainianlessons.com/something-hurts/
@@ -1202,7 +1270,31 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       source: ukrainianlessons.com
-  a2-checkpoint:
+    - title: 'Grammar point: Plural of nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu46/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar Point: Verb conjugations in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu57/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Shopping for clothes — Accusative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode32/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...
+      url: https://www.youtube.com/watch?v=OnO697z9iPM
+      relevance: high
+      channel: Ukrainian grammar
+    - title: 'Departments in the store🛒 #learnukrainian #onlineschool #ukrainianlanguage #українськамова #ukraine'
+      url: https://www.youtube.com/watch?v=e4Vc4n-pLVE
+      source: Bright Kids Ukrainian
+    - title: 'UKRAINIAN VOCABULARY: body parts and organs'
+      url: https://www.youtube.com/watch?v=JZGl3Qo25Yc
+      relevance: high
+      channel: Red Purple Ukrainian
+  a2-checkpoint-syntax:
     youtube:
     - title: FMU 1-53 | How to describe what hurts in Ukrainian | 5 Minute Ukrainian
       url: https://www.youtube.com/watch?v=DdZjJ4H24a4
@@ -1219,7 +1311,7 @@ resources:
       url: https://www.talkukrainian.com/relative-pronouns-ukrainian/
       relevance: high
       source: Unknown
-  a2-basic-motion-prefixes:
+  a2-motion-verbs:
     articles:
     - title: Prefixes of Motion Guide
       url: https://www.ukrainianlessons.com/prefixes-of-motion/
@@ -1233,36 +1325,21 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/28-3/
       relevance: high
       source: University of Kansas
-  a2-advanced-motion-prefixes:
+    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+      relevance: high
+      source: University of Kansas
     youtube:
     - title: My Elevator Stopped at a Floor That Doesn’t Exist | Horror Podcast
       url: https://www.youtube.com/watch?v=dcKCbXuAUjQ
       source: Bright Kids Ukrainian
-    articles:
-    - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
-      url: https://opentext.ku.edu/dobraforma/chapter/28-3/
-      relevance: high
-      source: University of Kansas
-  a2-action-verb-prefixes:
-    youtube:
     - title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in...
       url: https://www.youtube.com/watch?v=zVdb0g7KDC0
       source: Ukrainian Lessons
     - title: Cooking verbs in Ukrainian. Дієслова для готування.
       url: https://www.youtube.com/watch?v=_lvdp6hRm1U
       source: Bright Kids Ukrainian
-    articles:
-    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
-      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
-      relevance: high
-      source: University of Kansas
-  a2-adjective-suffixes-qualities:
-    articles:
-    - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
-      url: https://opentext.ku.edu/dobraforma/chapter/16-1/
-      relevance: high
-      source: University of Kansas
-  a2-adjective-suffixes-types:
+  a2-synonyms-antonyms-style:
     articles:
     - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/
@@ -1272,7 +1349,30 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/16-2/
       relevance: high
       source: University of Kansas
-  a2-food-and-cooking:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode211/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode212/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode214/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode218/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'ULP 4-123 | Похід у Карпати: як підготуватися | Ukrainian Lessons Podcast Season 4'
+      url: https://www.youtube.com/watch?v=y24LrH5HCLE
+      source: Ukrainian Lessons
+    - title: 'ULP 6-217 | Про Крим. Частина 1: Географія та корінні народи | Ukrainian Lessons Podcast Season 6'
+      url: https://www.youtube.com/watch?v=YwXG4KKyfwI
+      source: Ukrainian Lessons
+  a2-work-and-food:
     youtube:
     - title: How to cook pork and beef tongue
       url: https://www.youtube.com/watch?v=hMoX0D7BTvk
@@ -1301,7 +1401,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu48/
       relevance: high
       source: ukrainianlessons.com
-  a2-home-and-furniture:
+  a2-home-and-daily-life:
     youtube:
     - title: Furniture in Ukrainian - Lesson about Furniture in Ukrainian...
       url: https://www.youtube.com/watch?v=pVknviJ4OOg
@@ -1312,13 +1412,16 @@ resources:
       url: https://www.ukrainianlessons.com/ph-house/
       relevance: high
       source: ukrainianlessons.com
-  a2-nature-and-weather:
+  a2-nature-and-traditions:
     youtube:
     - title: ULP 1-16 | Talking about weather in Ukrainian
       url: https://www.youtube.com/watch?v=ycCrSrHCezQ
       source: Ukrainian Lessons
     - title: FMU 1-28 | How to talk about the weather in Ukrainian | 5 Minute Ukrainian
       url: https://www.youtube.com/watch?v=6MRrGpcGEp4
+      source: Ukrainian Lessons
+    - title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
+      url: https://www.youtube.com/watch?v=TBYyOdHOCCk
       source: Ukrainian Lessons
     articles:
     - title: How to talk about the weather in Ukrainian
@@ -1333,21 +1436,28 @@ resources:
       url: https://www.ukrainianlessons.com/episode66/
       relevance: medium
       source: ukrainianlessons.com
-  a2-emotions-personality:
-    youtube:
-    - title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
-      url: https://www.youtube.com/watch?v=TBYyOdHOCCk
-      source: Ukrainian Lessons
-    articles:
     - title: Emotions and Feelings in Ukrainian
       url: https://www.ukrainianlessons.com/emotions-in-ukrainian/
       relevance: high
       source: ukrainianlessons.com
-  a2-work-professions:
+  a2-education-and-work:
     youtube:
     - title: FMU 1-31 | How to talk about your job / occupation in Ukrainian | 5 Minute Ukrainian
       url: https://www.youtube.com/watch?v=JF5p3gRiZp0
       source: Ukrainian Lessons
+    - title: '100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...'
+      url: https://www.youtube.com/watch?v=BAuSNnrkCKM
+      relevance: high
+      channel: Red Purple Ukrainian
+    - title: ULP 5-188 | Шкільна освіта в Україні | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=PFdyKX3TlHY
+      source: Ukrainian Lessons
+    - title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefix...
+      url: https://www.youtube.com/watch?v=eSyqv7R6Qec
+      source: Ukrainian Lessons
+    - title: Вся правда про реформу ШКІЛЬНОГО ХАРЧУВАННЯ від Клопотенка
+      url: https://www.youtube.com/watch?v=zG-e8ZDPWcY
+      source: Klopotenko
     articles:
     - title: Professions in Ukrainian (male and female forms)
       url: https://www.ukrainianlessons.com/fmu34/
@@ -1369,13 +1479,6 @@ resources:
       url: https://www.ukrainianlessons.com/episode8/
       relevance: high
       source: ukrainianlessons.com
-  a2-technology-media:
-    youtube:
-    - title: '100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...'
-      url: https://www.youtube.com/watch?v=BAuSNnrkCKM
-      relevance: high
-      channel: Red Purple Ukrainian
-    articles:
     - title: Electronics and technology + Dative Case
       url: https://www.ukrainianlessons.com/episode51/
       relevance: high
@@ -1384,28 +1487,6 @@ resources:
       url: https://www.ukrainianlessons.com/episode53/
       relevance: high
       source: ukrainianlessons.com
-  a2-hobbies-leisure:
-    youtube:
-    - title: 'Listen on repeat! Ukrainian intonation and rhythm🎵 Ukrainian mini-podcast: My Hobbies - Мої Хобі'
-      url: https://www.youtube.com/watch?v=NCuY2KIg0lc
-      source: Ukrainian with Olha
-    articles:
-    - title: Vocabulary booster! Hobbies in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu23/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-education-learning:
-    youtube:
-    - title: ULP 5-188 | Шкільна освіта в Україні | Ukrainian Lessons Podcast Season 5
-      url: https://www.youtube.com/watch?v=PFdyKX3TlHY
-      source: Ukrainian Lessons
-    - title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefix...
-      url: https://www.youtube.com/watch?v=eSyqv7R6Qec
-      source: Ukrainian Lessons
-    - title: Вся правда про реформу ШКІЛЬНОГО ХАРЧУВАННЯ від Клопотенка
-      url: https://www.youtube.com/watch?v=zG-e8ZDPWcY
-      source: Klopotenko
-    articles:
     - title: 'Ukrainian Phrasebook: Education'
       url: https://www.ukrainianlessons.com/ph-education/
       relevance: high
@@ -1414,7 +1495,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode57/
       relevance: high
       source: ukrainianlessons.com
-  a2-checkpoint-full-grammar:
+  a2-a2-comprehensive-review:
     articles:
     - title: At the grocery store + Genitive case
       url: https://www.ukrainianlessons.com/episode46/
@@ -1428,24 +1509,60 @@ resources:
       url: https://www.ukrainianlessons.com/fmu57/
       relevance: medium
       source: ukrainianlessons.com
-  a2-asking-for-directions:
+    youtube:
+    - title: Ukrainian Cases Explained
+      url: https://www.youtube.com/watch?v=xVD1GRxnvNw
+      relevance: high
+      channel: Ukrainian Lessons
+  a2-services-and-communication:
     youtube:
     - title: ULP 1-22 | Are you going to the party?  – First verb conjugation in Ukrainian
       url: https://www.youtube.com/watch?v=kx6zR2UOaBU
       source: Ukrainian Lessons
-  a2-social-media-ukrainian:
+    - title: FMU 1-41 | How to look for a place to rent in Ukraine | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=a8zn70qzgfg
+      source: Ukrainian Lessons
+    - title: ULP 2-43 | Шукаю квартиру – Особливі форми множини |  Looking for an apartment + Special plural f...
+      url: https://www.youtube.com/watch?v=YKSKb5u4h48
+      source: Ukrainian Lessons
+    - title: FMU 1-54 | How to book an appointment with a doctor in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=Qi1zY8JmWzs
+      source: Ukrainian Lessons
+    - title: КРАЩЕ, НІЖ ПІЦА 😍 Улюблений пиріг Клопотенків || неСам Удома з мамою №22
+      url: https://www.youtube.com/watch?v=aY4J3Fzvhvw
+      source: Klopotenko
+    - title: ULP 3-120 Голосове повідомлення для… – Voice message to…
+      url: https://www.youtube.com/watch?v=zShCzFtjXR0
+      source: Ukrainian Lessons
+    - title: Епізод №100! Повідомлення від слухачів подкасту – Messages from the podcast listeners
+      url: https://www.youtube.com/watch?v=fJBdHZT0eHY
+      source: Ukrainian Lessons
     articles:
     - title: Social Media in Ukrainian + Dative Case
       url: https://www.ukrainianlessons.com/episode53/
       relevance: high
       source: ukrainianlessons.com
-  a2-impersonal-passive:
+    - title: Your schedule in Ukrainian + Accusative case with prepositions
+      url: https://www.ukrainianlessons.com/episode57/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
+      url: https://www.ukrainianlessons.com/episode67/
+      relevance: high
+      source: ukrainianlessons.com
+  a2-because-and-although:
     youtube:
     - title: Як приготувати МОЦАРЕЛУ вдома за 1 годину? Євген КЛОПОТЕНКО & Тетяна ДЯДЕЧКО
       url: https://www.youtube.com/watch?v=mgO2DGfyXfI
       source: Klopotenko
     - title: Only THREE ingredients 👌 How to cook sour-milk cheese at home | Ievgen Klopotenko's life hacks
       url: https://www.youtube.com/watch?v=ZO6nk7_9DZI
+      source: Klopotenko
+    - title: Готуємо найпухкіші ВАРЕНИКИ з ПОЛУНИЦЕЮ і розмовляємо з Т. Левчуком про рівність прав
+      url: https://www.youtube.com/watch?v=3XfUu2XcJlA
+      source: Klopotenko
+    - title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
+      url: https://www.youtube.com/watch?v=Dv69jKuc-XA
       source: Klopotenko
     articles:
     - title: Asking for advice + Accusative case in Ukrainian
@@ -1460,48 +1577,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode58/
       relevance: high
       source: ukrainianlessons.com
-  a1-food-and-shopping:
-    youtube:
-    - title: 20 Ukrainian Food Words You Need To Know
-      url: https://www.youtube.com/watch?v=fN0BIF-iejo
+    - title: Ukrainian Conjunctions — Basic Overview
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
       relevance: high
-      channel: QUICK and EASY food vocabulary|Mariya 💙💛
-    - title: Shopping in Ukraine
-      url: https://www.youtube.com/watch?v=2tEPOopp7-I
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Ukrainian conjunctions'
+      url: https://talkukrainian.com/conjunctions/
       relevance: high
-      channel: Real Ukrainian shopping situations
-    articles:
-    - title: 40+ Ukrainian Dishes
-      url: https://www.ukrainianlessons.com/ukrainian-food/
+      source: talkukrainian
+    - title: Ukrainian Conjunctions Guide — Advanced
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
       relevance: high
-      source: Complete guide with photos
-    - title: ULP 1-12 | Ordering Food
-      url: https://www.ukrainianlessons.com/episode12/
-      relevance: high
-      source: Where and how to order in Ukrainian
-    - title: Ukrainian Lessons — How much does it cost? At the market in Ukraine
-      url: https://www.ukrainianlessons.com/episode9/
-      relevance: high
-      source: Shopping vocabulary practice (ULP S1 Ep9)
-  a1-checkpoint-navigation:
-    articles:
-    - title: Ukrainian Cases Chart
-      url: https://www.ukrainianlessons.com/ukrainian-cases-chart/
-      relevance: high
-      source: All 7 cases in one table
-    - title: Introduction to Cases
-      url: https://www.ukrainianlessons.com/intro-cases/
-      relevance: high
-      source: Quick strategies
-    - title: Prepositions with Cases
-      url: https://www.ukrainianlessons.com/prepositions-cases/
-      relevance: high
-      source: Which preposition uses which case
-    - title: 'Vocabulary: Around Town'
-      url: https://www.ukrainianlessons.com/vocabulary-town/
-      relevance: high
-      source: Navigation words
-  a1-can-must-want-modals:
+      source: ukrainianlessons.com
+  a1-i-want-i-can:
     youtube:
     - title: Modal Verbs in Ukrainian
       url: https://www.youtube.com/watch?v=kY67m6y6Oyc
@@ -1512,156 +1600,23 @@ resources:
       url: https://www.ukrainianlessons.com/modal-verbs/
       relevance: high
       source: Ukrainian Lessons
-  a1-prepositions-direction-origin:
-    articles:
-    - title: Location vs Destination
-      url: https://www.ukrainianlessons.com/location-destination-prepositions/
-      relevance: high
-      source: Preposition guide
-  a1-checkpoint-final-review:
+  a1-a1-finale:
     articles:
     - title: Alphabet Guide
       url: https://www.ukrainianlessons.com/ukrainian-alphabet/
       relevance: high
       source: Master Cyrillic
-  a1-at-the-market:
-    youtube:
-    - title: Fruits and Vegetables in Ukrainian
-      url: https://www.youtube.com/watch?v=F0O5y9D1kGg
-      relevance: high
-      channel: Ukrainian Lessons
-    articles:
-    - title: How much does it cost? At the market in Ukraine
-      url: https://www.ukrainianlessons.com/episode9/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: How to shop at the market in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu49/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 1-09 How much does it cost? At the market in Ukraine
-      url: https://www.ukrainianlessons.com/lesson/9/
-      relevance: high
-      source: ukrainianlessons.com
-  a1-combined-practice:
-    articles:
     - title: Ukrainian Daily Routine Vocabulary
       url: https://www.ukrainianlessons.com/daily-routine/
       relevance: high
       source: Review common verbs and nouns for daily activities
-  a2-health-basics:
-    youtube:
-    - title: Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...
-      url: https://www.youtube.com/watch?v=OnO697z9iPM
-      relevance: high
-      channel: Ukrainian grammar
-    articles:
-    - title: Something Hurts
-      url: https://www.ukrainianlessons.com/something-hurts/
-      relevance: high
-      source: Ukrainian Lessons
-  a2-root-families-i:
-    youtube:
-    - title: 'ULP 4-123 | Похід у Карпати: як підготуватися | Ukrainian Lessons Podcast Season 4'
-      url: https://www.youtube.com/watch?v=y24LrH5HCLE
-      source: Ukrainian Lessons
-    articles:
-    - title: Ukrainian Lessons Podcast Season 6
-      url: https://www.ukrainianlessons.com/episode211/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Lessons Podcast Season 6
-      url: https://www.ukrainianlessons.com/episode212/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Lessons Podcast Season 6
-      url: https://www.ukrainianlessons.com/episode214/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Lessons Podcast Season 6
-      url: https://www.ukrainianlessons.com/episode218/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-shopping-services:
-    youtube:
-    - title: 'Departments in the store🛒 #learnukrainian #onlineschool #ukrainianlanguage #українськамова #ukraine'
-      url: https://www.youtube.com/watch?v=e4Vc4n-pLVE
-      source: Bright Kids Ukrainian
-    articles:
-    - title: 'Grammar point: Plural of nouns in Ukrainian'
-      url: https://www.ukrainianlessons.com/fmu46/
-      relevance: medium
-      source: ukrainianlessons.com
-    - title: 'Grammar Point: Verb conjugations in Ukrainian'
-      url: https://www.ukrainianlessons.com/fmu57/
-      relevance: medium
-      source: ukrainianlessons.com
-  a2-health-wellness:
-    youtube:
-    - title: 'UKRAINIAN VOCABULARY: body parts and organs'
-      url: https://www.youtube.com/watch?v=JZGl3Qo25Yc
-      relevance: high
-      channel: Red Purple Ukrainian
-    articles:
-    - title: Ukrainian Health Vocabulary
-      url: https://www.ukrainianlessons.com/something-hurts/
-      relevance: high
-      source: Common health expressions
-  a2-grammar-review:
-    youtube:
-    - title: Ukrainian Cases Explained
-      url: https://www.youtube.com/watch?v=xVD1GRxnvNw
-      relevance: high
-      channel: Ukrainian Lessons
-  a2-final-review:
+  a2-a2-finale:
     youtube:
     - title: Essential Ukrainian Phrases for Beginners
       url: https://www.youtube.com/watch?v=aJ2Ldu2TaKA
       relevance: high
       channel: Speak Ukrainian
-  a1-the-cyrillic-code-i:
-    youtube:
-    - title: How to read the Ukrainian Alphabet. Cyrillic Letters. Part I
-      url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
-      relevance: high
-      channel: Speak Ukrainian
-    - title: 'UKRAINIAN: handwritten cyrillic alphabet'
-      url: https://www.youtube.com/watch?v=2tEPOopp7-I
-      relevance: high
-      channel: Red Purple Ukrainian
-    articles:
-    - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
-      url: https://www.ukrainianlessons.com/ukrainian-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
-      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Talk Ukrainian - Alphabet with Audio
-      url: https://talkukrainian.com/ukrainian-alphabet/
-      relevance: high
-      source: All 33 letters with IPA and native audio
-  a1-the-cyrillic-code-ii:
-    youtube:
-    - title: 'UKRAINIAN: handwritten cyrillic alphabet'
-      url: https://www.youtube.com/watch?v=2tEPOopp7-I
-      relevance: high
-      channel: Red Purple Ukrainian
-    articles:
-    - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
-      url: https://www.ukrainianlessons.com/ukrainian-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
-      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
-      url: https://talkukrainian.com/ukrainian-alphabet/
-      relevance: high
-      source: talkukrainian
-  a1-what-time-is-it:
+  a1-what-time:
     youtube:
     - title: Telling Time in Ukrainian
       url: https://www.youtube.com/watch?v=FieIdat4u_0
@@ -1676,7 +1631,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode67/
       relevance: high
       source: ukrainianlessons.com
-  a2-the-dative-i-pronouns:
+  a2-dative-pronouns:
     youtube:
     - title: The Dative Case in Ukrainian ...
       url: https://www.youtube.com/watch?v=ATeU7iwuyLU
@@ -1703,7 +1658,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode51/
       relevance: high
       source: ukrainianlessons.com
-  a2-the-dative-ii-nouns:
+  a2-dative-nouns:
     youtube:
     - title: Dative Case Practice
       url: https://www.youtube.com/watch?v=Cm0Ay7NEOlw
@@ -1752,7 +1707,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode53/
       relevance: medium
       source: ukrainianlessons.com
-  a2-the-instrumental-i-accompaniment:
+  a2-instrumental-accompaniment:
     youtube:
     - title: Instrumental Case Explained
       url: https://www.youtube.com/watch?v=lmPHpt2DGos
@@ -1780,7 +1735,7 @@ resources:
       url: https://www.talkukrainian.com/instrumental-case/
       relevance: high
       source: Unknown
-  a2-the-instrumental-ii-means-and-tools:
+  a2-instrumental-means:
     articles:
     - title: Review + My American (road) trip
       url: https://www.ukrainianlessons.com/episode65/
@@ -1791,7 +1746,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/9-2/
       relevance: high
       source: University of Kansas
-  a2-being-and-becoming:
+  a2-instrumental-profession:
     articles:
     - title: New Year’s Eve in Ukraine + Instrumental case of Pronouns
       url: https://www.ukrainianlessons.com/episode62/
@@ -1805,7 +1760,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/10-3/
       relevance: high
       source: University of Kansas
-  a2-spatial-prepositions:
+  a2-instrumental-prepositions:
     articles:
     - title: Prepositions with Cases
       url: https://www.ukrainianlessons.com/prepositions-cases/
@@ -1824,7 +1779,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/4-2/
       relevance: high
       source: University of Kansas
-  a2-logical-prepositions:
+  a2-purpose-clauses:
     youtube:
     - title: Ukrainian prepositions У, В and НА and the differe...
       url: https://www.youtube.com/watch?v=aqKdvKXPCMo
@@ -1843,6 +1798,15 @@ resources:
       url: https://talkukrainian.com/grammatical-cases/
       relevance: high
       source: Practice exercises
+    articles:
+    - title: Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
+      url: https://www.ukrainianlessons.com/episode118/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: How to book an appointment with a doctor in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu54/
+      relevance: high
+      source: ukrainianlessons.com
   b1-how-to-talk-about-grammar:
     youtube:
     - title: ULP 1-21 | What languages do you speak?
@@ -1994,10 +1958,10 @@ resources:
       url: https://www.youtube.com/watch?v=zG-e8ZDPWcY
       source: Klopotenko
     articles:
-    - title: 'Ukrainian Lessons: Future Tense'
-      url: https://www.ukrainianlessons.com/future-tense/
+    - title: 'Ukrainian Lessons: Future Tense (Grammar Tables)'
+      url: https://www.ukrainianlessons.com/grammar-future/
       relevance: high
-      source: Unknown
+      source: Ukrainian Lessons
   b1-aspect-negation:
     articles:
     - title: 'Ukrainian Lessons: Negation'
@@ -2436,10 +2400,10 @@ resources:
       source: Детальний огляд усіх пасивних форм
   b2-participles-vs-relative-clauses:
     articles:
-    - title: 'Ukrainian Lessons: Participles in Ukrainian'
-      url: https://ukrainianlessons.com/participles
-      relevance: high
-      source: детальний огляд системи дієприкметників
+    - title: 'Ukrainian Lessons: Verb Tenses Overview'
+      url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      relevance: medium
+      source: загальний огляд дієслівних часів (participles article behind paywall)
     - title: 'YouTube: Українська з Анною'
       url: https://youtube.com/ukrainewithlove
       relevance: high
@@ -2667,19 +2631,13 @@ resources:
       url: https://www.ukrainianlessons.com/galicia-history
       relevance: high
       source: історія](https://www.ukrainianlessons.com/galicia-history) — подкаст про історію регіону
-  a1-checkpoint-sentences:
+  a1-checkpoint-actions:
     articles:
     - title: Accusative Case in Ukrainian
       url: https://www.ukrainianlessons.com/accusativecase/
       relevance: high
       source: ukrainianlessons.com
-  a1-direction-and-origin:
-    articles:
-    - title: Location and Destination Prepositions in Ukrainian
-      url: https://www.ukrainianlessons.com/location-destination-prepositions/
-      relevance: high
-      source: ukrainianlessons.com
-  a1-checkpoint-daily-life:
+  a1-checkpoint-time-nature:
     articles:
     - title: Shopping for clothes — Accusative case in Ukrainian
       url: https://www.ukrainianlessons.com/episode32/
@@ -2697,7 +2655,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode56/
       relevance: high
       source: ukrainianlessons.com
-  a1-leisure-and-hobbies:
+  a1-free-time:
     youtube:
     - title: р.Дністер р.Мукша. с.Велика Слобода рибалка з криги!❄️🎣👍
       url: https://www.youtube.com/watch?v=xdtaSfAsTB8
@@ -2727,50 +2685,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode106/
       relevance: high
       source: ukrainianlessons.com
-  a2-smart-shopping:
-    articles:
-    - title: Shopping for clothes — Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode32/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-sports-fitness:
-    youtube:
-    - title: How to cook oatmeal 🥣 Which oatmeal is the healthiest | Ievgen Klopotenko
-      url: https://www.youtube.com/watch?v=ZP9kslSh7k0
-      source: Klopotenko
-  a2-rental-accommodation:
-    youtube:
-    - title: FMU 1-41 | How to look for a place to rent in Ukraine | 5 Minute Ukrainian
-      url: https://www.youtube.com/watch?v=a8zn70qzgfg
-      source: Ukrainian Lessons
-    - title: ULP 2-43 | Шукаю квартиру – Особливі форми множини |  Looking for an apartment + Special plural f...
-      url: https://www.youtube.com/watch?v=YKSKb5u4h48
-      source: Ukrainian Lessons
-  a2-scheduling-appointments:
-    youtube:
-    - title: FMU 1-54 | How to book an appointment with a doctor in Ukrainian | 5 Minute Ukrainian
-      url: https://www.youtube.com/watch?v=Qi1zY8JmWzs
-      source: Ukrainian Lessons
-    articles:
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-giving-directions:
-    youtube:
-    - title: ULP 1-22 | Are you going to the party?  – First verb conjugation in Ukrainian
-      url: https://www.youtube.com/watch?v=kx6zR2UOaBU
-      source: Ukrainian Lessons
-  a2-online-services:
-    youtube:
-    - title: КРАЩЕ, НІЖ ПІЦА 😍 Улюблений пиріг Клопотенків || неСам Удома з мамою №22
-      url: https://www.youtube.com/watch?v=aY4J3Fzvhvw
-      source: Klopotenko
-  a2-a2-final-exam:
+  a2-a2-practice-exam:
     articles:
     - title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/episode91/
@@ -3261,56 +3176,7 @@ resources:
       url: https://www.ukrainianlessons.com/episode69/
       relevance: high
       source: ukrainianlessons.com
-  a1-syllables-and-word-division:
-    articles:
-    - title: How to talk about transport in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu5/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: How to ORDER at the restaurant in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu16/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Grammar point: Plural of nouns in Ukrainian'
-      url: https://www.ukrainianlessons.com/fmu46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Grammar Point: Verb conjugations in Ukrainian'
-      url: https://www.ukrainianlessons.com/fmu57/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-because-and-although:
-    youtube:
-    - title: Готуємо найпухкіші ВАРЕНИКИ з ПОЛУНИЦЕЮ і розмовляємо з Т. Левчуком про рівність прав
-      url: https://www.youtube.com/watch?v=3XfUu2XcJlA
-      source: Klopotenko
-    - title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
-      url: https://www.youtube.com/watch?v=Dv69jKuc-XA
-      source: Klopotenko
-    articles:
-    - title: Ukrainian Conjunctions — Basic Overview
-      url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Talk Ukrainian: Ukrainian conjunctions'
-      url: https://talkukrainian.com/conjunctions/
-      relevance: high
-      source: talkukrainian
-    - title: Ukrainian Conjunctions Guide — Advanced
-      url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-in-order-to:
-    articles:
-    - title: Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
-      url: https://www.ukrainianlessons.com/episode118/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: How to book an appointment with a doctor in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu54/
-      relevance: high
-      source: ukrainianlessons.com
-  a1-stress-and-intonation:
+  a1-stress-and-melody:
     articles:
     - title: How to explain that you don’t speak Ukrainian very well (yet)
       url: https://www.ukrainianlessons.com/fmu1/
@@ -3392,12 +3258,7 @@ resources:
     - title: 'Підрядний зв’язок у словосполученнях: узгодження, керування та прилягання #3'
       url: https://www.youtube.com/watch?v=EB106mClitk
       source: Ukrainian Lessons
-  a2-checkpoint-word-formation:
-    youtube:
-    - title: 'ULP 6-217 | Про Крим. Частина 1: Географія та корінні народи | Ukrainian Lessons Podcast Season 6'
-      url: https://www.youtube.com/watch?v=YwXG4KKyfwI
-      source: Ukrainian Lessons
-  a2-practical-intro:
+  a2-a2-bridge:
     youtube:
     - title: 'Ukrainian for beginners: Hobbies | Ukrainian music | Palatalization, Verb + infinitive, Noun cases'
       url: https://www.youtube.com/watch?v=A49aZdwMz6k
@@ -3405,8 +3266,6 @@ resources:
     - title: What is this? - Ukrainian Grammar
       url: https://www.youtube.com/watch?v=Sr7Jv9TVOgk
       source: Bright Kids Ukrainian
-  a2-practical-warm-up:
-    youtube:
     - title: ULP 2-70 | Електронний лист | Writing an email in Ukrainian – Review 66-69
       url: https://www.youtube.com/watch?v=YXrsGXJeZ-k
       source: Ukrainian Lessons
@@ -3424,14 +3283,6 @@ resources:
     - title: '«Лебедине озеро» на руїнах: як рускій балет відбілює Кремль? | ВЕЛИКА РОСІЙСЬКА БРЕХНЯ'
       url: https://www.youtube.com/watch?v=leX7aAZJKlM
       source: Суспільне Док
-  a2-texting-messaging:
-    youtube:
-    - title: ULP 3-120 Голосове повідомлення для… – Voice message to…
-      url: https://www.youtube.com/watch?v=zShCzFtjXR0
-      source: Ukrainian Lessons
-    - title: Епізод №100! Повідомлення від слухачів подкасту – Messages from the podcast listeners
-      url: https://www.youtube.com/watch?v=fJBdHZT0eHY
-      source: Ukrainian Lessons
   b1-regions-west:
     youtube:
     - title: 'ULP 5-168 | Етнографічні регіони України. Частина 1: Захід і Північ України | Ukrainian Lessons P...'
@@ -3441,11 +3292,6 @@ resources:
     youtube:
     - title: 'ULP 5-169 | Етнографічні регіони України. Частина 2: Південь і Схід України | Ukrainian Lessons P...'
       url: https://www.youtube.com/watch?v=HvJg9EJv6Cg
-      source: Ukrainian Lessons
-  a2-gerunds-intro:
-    youtube:
-    - title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
-      url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
       source: Ukrainian Lessons
   bio-ivan-sirko:
     youtube:
@@ -7568,33 +7414,11 @@ resources:
     - title: Павло Вишебаба – Тільки не пиши мені про війну | День, якого не повинно бути
       url: https://www.youtube.com/watch?v=qFKRtDiGk5U
       source: Суспільне Культура
-  a1-the-vocative:
+  a1-hey-friend:
     articles:
     - title: Ukrainian Children’s Poem + Vocative case in Ukrainian
       url: https://www.ukrainianlessons.com/episode69/
       relevance: high
-      source: ukrainianlessons.com
-  a1-genitive-prepositions:
-    articles:
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Dobra Forma: Genitive Case after Prepositions з, до, and в/у'
-      url: https://opentext.ku.edu/dobraforma/chapter/7-1/
-      relevance: high
-      source: dobraforma
-    - title: 'Dobra Forma: Genitive Case after Prepositions біля, після, для and без'
-      url: https://opentext.ku.edu/dobraforma/chapter/7-2/
-      relevance: high
-      source: dobraforma
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: medium
       source: ukrainianlessons.com
   b1-adjective-comparison:
     articles:
@@ -7618,25 +7442,4 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       source: ukrainianlessons.com
-  a2-comparison:
-    articles:
-    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
-      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
-      relevance: high
-      source: University of Kansas
-    - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
-      url: https://opentext.ku.edu/dobraforma/chapter/27-2/
-      relevance: high
-      source: University of Kansas
-    - title: 'Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)'
-      url: https://opentext.ku.edu/dobraforma/chapter/27-3/
-      relevance: high
-      source: University of Kansas
-    - title: 'Dobra Forma 27-4: Verbal Aspect (Future Tense)'
-      url: https://opentext.ku.edu/dobraforma/chapter/27-4/
-      relevance: high
-      source: University of Kansas
-    - title: Healthy lifestyle + Degrees of comparison in Ukrainian
-      url: https://www.ukrainianlessons.com/episode104/
-      relevance: high
-      source: ukrainianlessons.com
+notes: V2→V3 slug remapping applied 2026-03-31 (#1047)

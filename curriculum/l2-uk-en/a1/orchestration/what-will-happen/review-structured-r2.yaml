@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'All 4 content_outline sections present (Dialogues, Майбутній час, Практика,
+    Summary). Fortune-teller dialogue from plan''s `dialogue_situations` implemented
+    faithfully. Dialogue 1 (plans for tomorrow) '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian verified against VESUM (85/85 content words confirmed).
+    бути conjugation matches VESUM exactly (буду/будеш/буде/будемо/будете/будуть —
+    all tagged `verb:imperf:futr`). No Russianisms, Sur
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Follows PPP flow as specified. Presentation: fortune-teller dialogue
+    introduces pattern naturally (будеш + infinitive repeated), then Dialogue 1 exposes
+    all 6 forms in context. Pattern: grammar sectio'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required vocabulary from plan present in prose: завтра (multiple
+    uses), буду/будеш/буде/будемо/будете/будуть (all in dialogues + table + practice),
+    робити (in "Що ти будеш робити?"). Recommended v'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Three exercises match plan's activity_hints exactly in type and focus.
+    Matching exercise covers all 6 бути forms. Fill-in exercises have plausible distractors
+    (other person forms of бути). Tense-disti
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Strong opening with fortune-teller scene — creative, culturally plausible,
+    immediately demonstrates the pattern. No motivational openers, no meta-commentary,
+    no "Let us explore..." Dialogues are natur
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All H2 headings match plan sections: Dialogues, Майбутній час, Практика,
+    Summary. No duplicate sections, no meta-commentary blocks, no stray tags. Clean
+    markdown with proper table formatting. Word cou'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms. The grammar explanation uses Ukrainian
+    terminology (майбутній час, складений майбутній, минулий/теперішній/майбутній).
+    No "like Russian but..." framing. The note '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Three distinct dialogues with named speakers (Ворожка/Клієнт, Андрій/Марина,
+    Оксана/Тарас). Fortune-teller scene is creative and memorable. Андрій/Марина dialogue
+    is natural multi-turn conversation ab
+findings: []

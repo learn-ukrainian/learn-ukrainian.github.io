@@ -1,6 +1,6 @@
 # Build Summary: people-around-me (A1)
 
-Generated: 2026-03-30 21:54
+Generated: 2026-03-31 11:58
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:54
 | enrich | complete | 2026-03-30 19:50:59 |
 | verify | complete | 2026-03-30 19:50:59 |
 | review | complete | 2026-03-30 19:54:26 |
-| stress | complete | 2026-03-30 19:54:34 |
-| publish | complete | 2026-03-30 19:54:34 |
+| stress | complete | 2026-03-31 09:58:43 |
+| publish | complete | 2026-03-31 09:58:43 |
 
 ## Reviews
 
@@ -42,6 +42,7 @@ Generated: 2026-03-30 21:54
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

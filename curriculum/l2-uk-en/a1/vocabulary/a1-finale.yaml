@@ -1,0 +1,211 @@
+vocabulary:
+- word: готе́ль
+  translation: hotel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проки́нувся / проки́нулася
+  translation: woke up (masc. / fem.)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: надво́рі
+  translation: outside
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: круаса́н
+  translation: croissant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́нія
+  translation: line (e.g. metro line)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ліво́руч
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to stroll / to walk around
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виши́ва́нка
+  translation: Ukrainian embroidered shirt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́рого
+  translation: expensive
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сувені́р
+  translation: souvenir
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Чудовий вибір!
+  translation: Wonderful choice!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: розмо́вний
+  translation: colloquial / conversational
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: познайо́митися
+  translation: to get acquainted / to meet someone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Із задоволенням!
+  translation: With pleasure!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: замовля́ти
+  translation: to order (food or services)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зустрі́ти
+  translation: to meet / to encounter
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кінотеа́тр
+  translation: cinema / movie theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: відкрива́ти
+  translation: to discover / to open up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прові́в / провела́
+  translation: spent (time) (masc. / fem.)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Ла́вра
+  translation: Lavra — the famous Kyiv Monastery of the Caves
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поча́ток
+  translation: beginning
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гото́вий / гото́ва
+  translation: ready (masc. / fem.)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: віта́ю
+  translation: congratulations / I greet you
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Зверни увагу
+  translation: Pay attention / Note
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Перевір себе
+  translation: Check yourself / Test yourself
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Святкуй!
+  translation: Celebrate!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вперед!
+  translation: Forward! / Onwards!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До зустрічі на А2!
+  translation: See you at A2!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Гарного дня!
+  translation: Have a good day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

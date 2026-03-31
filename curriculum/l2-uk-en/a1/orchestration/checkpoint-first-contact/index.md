@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-first-contact (A1)
 
-Generated: 2026-03-30 00:47
+Generated: 2026-03-31 11:42
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 00:47
 | enrich | complete | 2026-03-29 22:41:51 |
 | verify | complete | 2026-03-29 22:41:51 |
 | review | complete | 2026-03-29 22:46:49 |
-| stress | complete | 2026-03-29 22:47:02 |
-| publish | complete | 2026-03-29 22:47:02 |
+| stress | complete | 2026-03-31 09:42:05 |
+| publish | complete | 2026-03-31 09:42:06 |
 
 ## Reviews
 
@@ -44,10 +44,11 @@ Generated: 2026-03-30 00:47
 
 ## Friction
 
-- `friction.yaml` (134 bytes)
+- `friction.yaml` (229 bytes)
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `friction.yaml`
 - `pre-verify-results.md`

@@ -1,0 +1,341 @@
+version: '1.0'
+module: yesterday
+level: a1
+inline:
+- id: ordering-daily-routine
+  type: quiz
+  instruction: Що йде першим? (What comes first?)
+  items:
+  - question: Що Оксана робила раніше?
+    options:
+    - Обідала з колегою
+    - Поснідала і пішла на роботу
+    - Дивилася серіал
+    - Лягла спати
+    correct: 1
+  - question: Яке слово означає 'first / at first'?
+    options:
+    - Нарешті
+    - Потім
+    - Спочатку
+    - Ввечері
+    correct: 2
+  - question: Яке слово означає 'finally'?
+    options:
+    - Спочатку
+    - Зранку
+    - Потім
+    - Нарешті
+    correct: 3
+  - question: Яке слово означає 'then / next'?
+    options:
+    - Нарешті
+    - Потім
+    - Спочатку
+    - Вдень
+    correct: 1
+  - question: Що Оксана робила ввечері?
+    options:
+    - Обідала з колегою
+    - Поснідала
+    - Дивилася серіал і лягла спати
+    - Пішла на роботу
+    correct: 2
+  - question: Правильна послідовність (correct order)?
+    options:
+    - Ввечері → Вдень → Зранку
+    - Зранку → Вдень → Ввечері
+    - Вдень → Зранку → Ввечері
+    - Нарешті → Спочатку → Потім
+    correct: 1
+- id: fill-in-time-markers
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: _____ я прокинулася о сьомій.
+    answer: Зранку
+    options:
+    - Зранку
+    - Вдень
+    - Ввечері
+    - Вночі
+  - sentence: _____ я поснідала.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Нарешті
+    - Вночі
+    - Ввечері
+  - sentence: _____ я пішла на роботу.
+    answer: Потім
+    options:
+    - Потім
+    - Зранку
+    - Ввечері
+    - Нарешті
+  - sentence: _____ я обідала в кафе.
+    answer: Вдень
+    options:
+    - Вдень
+    - Зранку
+    - Вночі
+    - Потім
+  - sentence: _____ я готувала вечерю.
+    answer: Ввечері
+    options:
+    - Ввечері
+    - Вдень
+    - Зранку
+    - Спочатку
+  - sentence: О одинадцятій я _____ спати.
+    answer: лягла
+    options:
+    - лягла
+    - ліг
+    - лягли
+    - лягти
+- id: fill-in-gender-consistency
+  type: fill-in
+  instruction: Оберіть правильну форму — Анна говорить (Choose the correct form —
+    Anna is speaking)
+  items:
+  - sentence: Я мала звичайний день. Я _____ рано.
+    answer: прокинулася
+    options:
+    - прокинулася
+    - прокинувся
+    - прокинулись
+  - sentence: Потім я _____.
+    answer: поснідала
+    options:
+    - поснідала
+    - поснідав
+    - поснідали
+  - sentence: Після цього я _____ у магазин.
+    answer: пішла
+    options:
+    - пішла
+    - пішов
+    - пішли
+  - sentence: Там я _____ продукти.
+    answer: купила
+    options:
+    - купила
+    - купив
+    - купили
+  - sentence: Ввечері я _____ серіал.
+    answer: дивилася
+    options:
+    - дивилася
+    - дивився
+    - дивилися
+  - sentence: Нарешті я _____ спати.
+    answer: лягла
+    options:
+    - лягла
+    - ліг
+    - лягли
+workbook:
+- type: match-up
+  instruction: З'єднайте слово з перекладом (Match the Ukrainian word with its English
+    meaning)
+  pairs:
+  - left: зранку
+    right: in the morning
+  - left: вдень
+    right: in the afternoon
+  - left: ввечері
+    right: in the evening
+  - left: спочатку
+    right: first / at first
+  - left: потім
+    right: then / next
+  - left: нарешті
+    right: finally
+  - left: учора
+    right: yesterday
+  - left: звичайний
+    right: ordinary
+- type: group-sort
+  instruction: Розподіліть дієслова за родом (Sort the verbs by gender)
+  groups:
+  - label: Він (male)
+    items:
+    - прокинувся
+    - поснідав
+    - пішов
+    - обідав
+    - повернувся
+    - ліг спати
+  - label: Вона (female)
+    items:
+    - прокинулася
+    - поснідала
+    - пішла
+    - обідала
+    - повернулася
+    - лягла спати
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Оксана прокинулася о сьомій зранку.
+    correct: true
+    explanation: 'Так. Вона сказала: ''Зранку я прокинулася о сьомій.'''
+  - statement: Оксана обідала сама (alone).
+    correct: false
+    explanation: 'Ні. Вона обідала з колегою: ''обідала з колегою.'''
+  - statement: Іван ходив на ринок вдень.
+    correct: false
+    explanation: 'Ні. Іван ходив на ринок зранку: ''Зранку я ходив на ринок.'''
+  - statement: Оксана дивилася серіал ввечері.
+    correct: true
+    explanation: 'Так. Вона сказала: ''Ввечері я дивилася серіал.'''
+  - statement: Анна купила продукти після роботи.
+    correct: true
+    explanation: 'Так. Вона написала: ''Після роботи я ходила в магазин і купила продукти.'''
+  - statement: Анна лягла спати о дванадцятій.
+    correct: false
+    explanation: 'Ні. Анна лягла спати о одинадцятій: ''О одинадцятій я лягла спати.'''
+- type: fill-in
+  instruction: Складіть розповідь — вставте слова у правильному порядку (Build the
+    story — fill in the blanks in the correct sequence)
+  items:
+  - sentence: Учора я _____. Це був звичайний день.
+    answer: прокинулася зранку
+    options:
+    - прокинулася зранку
+    - зранку лягла
+    - ввечері прокинулася
+  - sentence: Спочатку я _____.
+    answer: поснідала
+    options:
+    - поснідала
+    - обідала
+    - дивилася серіал
+  - sentence: Потім я _____ на роботу.
+    answer: пішла
+    options:
+    - пішла
+    - пішов
+    - повернулася
+  - sentence: Вдень я _____ з колегою.
+    answer: обідала
+    options:
+    - обідала
+    - поснідала
+    - дивилася
+  - sentence: Ввечері я _____ серіал.
+    answer: дивилася
+    options:
+    - дивилася
+    - обідала
+    - купила
+  - sentence: Нарешті я _____ спати.
+    answer: лягла
+    options:
+    - лягла
+    - ліг
+    - пішла
+- type: error-correction
+  instruction: Виправте помилку у роді (Find and correct the gender error)
+  items:
+  - sentence: Анна прокинулася зранку. Потім вона поснідав.
+    error: поснідав
+    correction: поснідала
+    error_type: word
+    options:
+    - поснідала
+    - поснідав
+    - поснідали
+    explanation: 'Анна — жіночий рід. Правильна форма: поснідала (not поснідав).'
+  - sentence: Оксана пішов на роботу вранці.
+    error: пішов
+    correction: пішла
+    error_type: word
+    options:
+    - пішла
+    - пішов
+    - пішли
+    explanation: 'Оксана — жіночий рід. Правильна форма: пішла (not пішов).'
+  - sentence: Вдень вона обідав з колегою.
+    error: обідав
+    correction: обідала
+    error_type: word
+    options:
+    - обідала
+    - обідав
+    - обідали
+    explanation: 'Вона — жіночий рід. Правильна форма: обідала (not обідав).'
+  - sentence: Ввечері Анна дивився серіал.
+    error: дивився
+    correction: дивилася
+    error_type: word
+    options:
+    - дивилася
+    - дивився
+    - дивилися
+    explanation: 'Анна — жіночий рід. Правильна форма: дивилася (not дивився).'
+  - sentence: Нарешті вона ліг спати о одинадцятій.
+    error: ліг
+    correction: лягла
+    error_type: word
+    options:
+    - лягла
+    - ліг
+    - лягли
+    explanation: 'Вона — жіночий рід. Правильна форма: лягла спати (not ліг спати).'
+  - sentence: Потім я пішла у магазин і купив продукти.
+    error: купив
+    correction: купила
+    error_type: word
+    options:
+    - купила
+    - купив
+    - купили
+    explanation: 'Якщо ти — жіночий рід, то: купила (not купив). Рід не змінюється
+      всередині розповіді.'
+- type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Як сказати 'I woke up' (female speaker)?
+    options:
+    - прокинувся
+    - прокинулася
+    - прокинулись
+    - прокинути
+    correct: 1
+  - question: Як сказати 'I went' (male speaker)?
+    options:
+    - пішла
+    - пішли
+    - пішов
+    - піти
+    correct: 2
+  - question: Як сказати 'I went to bed' (female speaker)?
+    options:
+    - ліг спати
+    - лягти спати
+    - лягла спати
+    - лягли спати
+    correct: 2
+  - question: Яке слово означає 'groceries'?
+    options:
+    - серіал
+    - колега
+    - продукти
+    - звичайний
+    correct: 2
+  - question: Яке слово означає 'TV series'?
+    options:
+    - продукти
+    - серіал
+    - колега
+    - повернутися
+    correct: 1
+  - question: '''Він повернувся'' — яка жіноча форма?'
+    options:
+    - повернула
+    - повернулась
+    - повернулася
+    - поверталася
+    correct: 2

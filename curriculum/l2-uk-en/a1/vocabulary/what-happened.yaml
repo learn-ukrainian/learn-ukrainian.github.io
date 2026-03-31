@@ -1,0 +1,175 @@
+vocabulary:
+- word: учо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мину́лий
+  translation: past (adj.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вихідні́
+  translation: weekend
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: субо́та
+  translation: Saturday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неді́ля
+  translation: Sunday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: провести́
+  translation: to spend (time)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: минулого тижня
+  translation: last week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кни́жка
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: детекти́в
+  translation: detective novel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: серіа́л
+  translation: TV series
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вдо́ма
+  translation: at home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then, afterwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: весь день
+  translation: all day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти робив учора?
+  translation: What did you do yesterday? (asking a male)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти робила учора?
+  translation: What did you do yesterday? (asking a female)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як ти провів вихідні?
+  translation: How did you spend the weekend? (asking a male)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як ти провела вихідні?
+  translation: How did you spend the weekend? (asking a female)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як приємно!
+  translation: How nice!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ми гуляли разом.
+  translation: We walked together.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

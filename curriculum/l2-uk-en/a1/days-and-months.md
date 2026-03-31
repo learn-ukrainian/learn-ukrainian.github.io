@@ -6,8 +6,8 @@
 
 **(Планува́ння ти́жня / Planning the week)**
 
-> — **Тарас:** Що ти робиш у понеділок? *(What are you doing on Monday?)*
-> — **Оленка:** Я працю́ю. А у вівто́рок? *(I'm working. And on Tuesday?)*
+> — **Тара́с:** Що ти робиш у понеділок? *(What are you doing on Monday?)*
+> — **Оле́нка:** Я працю́ю. А у вівто́рок? *(I'm working. And on Tuesday?)*
 > — **Тарас:** У вівторок я вивча́ю украї́нську. *(On Tuesday I study Ukrainian.)*
 > — **Оленка:** А у субо́ту? *(And on Saturday?)*
 > — **Тарас:** У суботу гуля́ю з дру́зями. *(On Saturday I hang out with friends.)*
@@ -15,19 +15,19 @@
 > — **Тарас:** Неді́ля — ві́льний день! *(Sunday is a free day!)*
 
 
-Taras uses **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у суботу** (on Saturday), and **в неділю** (on Sunday) to talk about his schedule. Each day pairs with **у** or **в** — a small word that means "on" when paired with a day. The endings of the days change slightly in these chunks: **субота** becomes **суботу**, **неділя** becomes **неділю**. For now, treat each "у/в + day" combination as a fixed phrase to memorize whole.
+Taras uses **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у суботу** (on Saturday), and **в неділю** (on Sunday) to talk about his schedule. Each day pairs with **у** or **в** — a small word that means "on" when paired with a day. The endings of the days change slightly in these chunks: **субо́та** becomes **суботу**, **неділя** becomes **неділю**. For now, treat each "у/в + day" combination as a fixed phrase to memorize whole.
 
 **(Ко́ли у тебе́ день наро́дження? / When is your birthday?)**
 
-> — **Марія:** Коли у тебе день народження? *(When is your birthday?)*
-> — **Андрій:** У бе́резні. *(In March.)*
+> — **Марі́я:** Коли у тебе день народження? *(When is your birthday?)*
+> — **Андрі́й:** У бе́резні. *(In March.)*
 > — **Марія:** Яко́го чи́сла? *(What date?)*
 > — **Андрій:** П'ятна́дцятого бе́резня. А у тебе? *(The fifteenth of March. And yours?)*
 > — **Марія:** У мене́ в се́рпні. *(Mine is in August.)*
 > — **Андрій:** О, це лі́то! Тепло́ і со́нячно. *(Oh, that's summer! Warm and sunny.)*
 
 
-Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. Андрій also connects the month to a season: **серпень** (August) belongs to **літо** (summer).
+Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. Андрій also connects the month to a season: **се́рпень** (August) belongs to **літо** (summer).
 
 Notice how **у** or **в** keeps appearing before time words — **у понеділок**, **у вівторок**, **у березні**, **в серпні**. This is the core pattern of this module. Ukrainian uses **у/в** before days, months, and some seasons. You will see it again and again as we go deeper.
 
@@ -39,15 +39,15 @@ Here are all seven, starting from the beginning of the Ukrainian week:
 
 - **понеділок** (Monday)
 - **вівторок** (Tuesday)
-- **середа** (Wednesday)
-- **четвер** (Thursday)
-- **п'ятниця** (Friday)
+- **середа́** (Wednesday)
+- **четве́р** (Thursday)
+- **п'я́тниця** (Friday)
 - **субота** (Saturday)
 - **неділя** (Sunday)
 
-Ukrainian calendars start the week on **понеділок**, not on Sunday as in some English-speaking countries. One important note: **неділя** means "Sunday," but the word for "week" is **тиждень**. In some dialects and older texts, **неділя** can mean "week," but in standard modern Ukrainian, a week is always a **тиждень**.
+Ukrainian calendars start the week on **понеділок**, not on Sunday as in some English-speaking countries. One important note: **неділя** means "Sunday," but the word for "week" is **ти́ждень**. In some dialects and older texts, **неділя** can mean "week," but in standard modern Ukrainian, a week is always a **тиждень**.
 
-These names are not random sounds — they tell a story. **Четвер** comes from **четвертий** (fourth) — it is the fourth day. **П'ятниця** comes from **п'ять** (five) — the fifth day. **Середа** means "middle" — it sits in the middle of the working week. **Субота** has ancient roots shared with the word "Sabbath," borrowed long ago through Greek. Knowing these connections makes the days easier to remember: four, five, middle — **четвер, п'ятниця, середа**.
+These names are not random sounds — they tell a story. **Четвер** comes from **четве́ртий** (fourth) — it is the fourth day. **П'ятниця** comes from **п'ять** (five) — the fifth day. **Середа** means "middle" — it sits in the middle of the working week. **Субота** has ancient roots shared with the word "Sabbath," borrowed long ago through Greek. Knowing these connections makes the days easier to remember: four, five, middle — **четвер, п'ятниця, середа**.
 
 <!-- INJECT_ACTIVITY: fill-in-days-order -->
 
@@ -57,9 +57,9 @@ To say "on" a specific day, Ukrainian uses **у** or **в** followed by a specia
 |-----|---------------|
 | понеділок | **у понеділок** |
 | вівторок | **у вівторок** |
-| середа | **у середу** |
+| середа | **у се́реду** |
 | четвер | **у четвер** |
-| п'ятниця | **у п'ятницю** |
+| п'ятниця | **у п'я́тницю** |
 | субота | **в суботу** |
 | неділя | **в неділю** |
 
@@ -68,7 +68,7 @@ Some endings change: **середа** becomes **середу**, **п'ятниц�
 Here are four sentences showing these chunks in action:
 
 - **Я навча́юся у вівторок і в четвер.** — I study on Tuesday and Thursday.
-- **Тато працю́є у понеділок.** — Dad works on Monday.
+- **Та́то працю́є у понеділок.** — Dad works on Monday.
 - **У п'ятницю ми ди́вимося фільм.** — On Friday we watch a movie.
 - **В суботу я сплю до́вго.** — On Saturday I sleep late.
 
@@ -76,38 +76,38 @@ Here are four sentences showing these chunks in action:
 
 Ukrainian organizes the year into four seasons, and each season holds three months. The seasons are:
 
-- **Зима** (winter) — сніг і хо́лод (snow and cold)
-- **Весна** (spring) — кві́ти і тепло (flowers and warmth)
+- **Зима́** (winter) — сніг і хо́лод (snow and cold)
+- **Весна́** (spring) — кві́ти і тепло (flowers and warmth)
 - **Літо** (summer) — со́нце і мо́ре (sun and sea)
-- **Осінь** (autumn) — ли́стя і дощ (leaves and rain)
+- **О́сінь** (autumn) — ли́стя і дощ (leaves and rain)
 
 Now the twelve months, grouped by season — all **lowercase**, just like days:
 
 | Зима (winter) | Весна (spring) | Літо (summer) | Осінь (autumn) |
 |---|---|---|---|
-| **грудень** (Dec) | **березень** (Mar) | **червень** (Jun) | **вересень** (Sep) |
-| **січень** (Jan) | **квітень** (Apr) | **липень** (Jul) | **жовтень** (Oct) |
-| **лютий** (Feb) | **травень** (May) | **серпень** (Aug) | **листопад** (Nov) |
+| **гру́день** (Dec) | **бе́резень** (Mar) | **че́рвень** (Jun) | **ве́ресень** (Sep) |
+| **сі́чень** (Jan) | **кві́тень** (Apr) | **ли́пень** (Jul) | **жо́втень** (Oct) |
+| **лю́тий** (Feb) | **тра́вень** (May) | **серпень** (Aug) | **листопа́д** (Nov) |
 
-Ukrainian month names come from nature — not from Roman gods like "January" or "March" in English. **Березень** (March) comes from **береза** (birch tree) — birch sap flows in early spring. **Липень** (July) comes from **липа** (linden tree) — linden blossoms fill the air in July. **Листопад** (November) literally means "leaves fall" — **листя** (leaves) + **падати** (to fall). This is a Ukrainian linguistic fingerprint: the calendar is a nature calendar. All twelve months are masculine gender.
+Ukrainian month names come from nature — not from Roman gods like "January" or "March" in English. **Березень** (March) comes from **бере́за** (birch tree) — birch sap flows in early spring. **Липень** (July) comes from **ли́па** (linden tree) — linden blossoms fill the air in July. **Листопад** (November) literally means "leaves fall" — **листя** (leaves) + **па́дати** (to fall). This is a Ukrainian linguistic fingerprint: the calendar is a nature calendar. All twelve months are masculine gender.
 
 <!-- INJECT_ACTIVITY: match-months-seasons -->
 
 To say "in" a specific month, Ukrainian uses **у/в** with a changed form of the month name. Here are all twelve:
 
-- **у січні** (in January), **у лютому** (in February), **в березні** (in March)
-- **у квітні** (in April), **у травні** (in May), **в червні** (in June)
-- **в липні** (in July), **в серпні** (in August), **у вересні** (in September)
-- **в жовтні** (in October), **в листопаді** (in November), **в грудні** (in December)
+- **у січні** (in January), **у лю́тому** (in February), **в березні** (in March)
+- **у квітні** (in April), **у травні** (in May), **в че́рвні** (in June)
+- **в ли́пні** (in July), **в серпні** (in August), **у ве́ресні** (in September)
+- **в жо́втні** (in October), **в листопа́ді** (in November), **в грудні** (in December)
 
 Notice that **лютий** becomes **у лютому** — it follows a different pattern from the other months because **лютий** is originally an adjective (meaning "fierce" — fierce frosts!), not a noun like the rest.
 
 For seasons, Ukrainian uses special frozen forms that cannot be broken apart. Memorize these four chunks:
 
-- **взимку** (in winter)
-- **навесні** (in spring)
-- **влітку** (in summer)
-- **восени** (in autumn)
+- **взи́мку** (in winter)
+- **навесні́** (in spring)
+- **влі́тку** (in summer)
+- **восени́** (in autumn)
 
 These are adverbs — single words, not "у + season." They look different from the season names, so just learn each one by heart.
 
@@ -146,7 +146,7 @@ Here is everything organized for quick reference and self-testing.
 
 Test yourself — answer these questions in Ukrainian:
 
-- **Який сього́дні день?** — What day is today?
+- **Яки́й сього́дні день?** — What day is today?
 - **Який за́раз мі́сяць?** — What month is it now?
 - **Яка зараз пора року?** — What season is it now?
 - **Коли у тебе день народження?** — When is your birthday?
@@ -157,9 +157,9 @@ Try answering out loud. Use the chunks you learned: **У мене день на�
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **понеді́лок** | Monday | ім. | ч. |
 | **вівто́рок** | Tuesday | ім. | ч. |
@@ -205,9 +205,9 @@ Try answering out loud. Use the chunks you learned: **У мене день на�
 | **вивча́ти** | to study, to learn | дієсл. |  |
 | **четве́ртий** | fourth | прикм. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **день народження** | birthday |
 | **у понеділок** | on Monday |
@@ -236,7 +236,7 @@ Try answering out loud. Use the chunks you learned: **У мене день на�
 | **Яка зараз пора року?** | What season is it now? |
 | **пора року** | season (of the year) |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "понеді́лок", back: "Monday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вівто́рок", back: "Tuesday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "середа́", back: "Wednesday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "четве́р", back: "Thursday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "п'я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ти́ждень", back: "week", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "весна́", back: "spring", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́то", back: "summer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́сінь", back: "autumn", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сі́чень", back: "January", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лю́тий", back: "February", subtitle: "прикм." }, { front: "бе́резень", back: "March", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кві́тень", back: "April", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тра́вень", back: "May", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "че́рвень", back: "June", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ли́пень", back: "July", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "се́рпень", back: "August", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ве́ресень", back: "September", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "жо́втень", back: "October", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "листопа́д", back: "November", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гру́день", back: "December", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "взи́мку", back: "in winter", subtitle: "присл." }, { front: "навесні́", back: "in spring", subtitle: "присл." }, { front: "влі́тку", back: "in summer", subtitle: "присл." }, { front: "восени́", back: "in autumn", subtitle: "присл." }, { front: "бере́за", back: "birch tree", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ли́па", back: "linden tree", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ли́стя", back: "leaves", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "па́дати", back: "to fall", subtitle: "дієсл." }, { front: "сніг", back: "snow", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "хо́лод", back: "cold (noun)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кві́ти", back: "flowers", subtitle: "ім." }, { front: "тепло́", back: "warmth; it is warm", subtitle: "присл." }, { front: "со́нце", back: "sun", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мо́ре", back: "sea", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дощ", back: "rain", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "со́нячно", back: "it is sunny", subtitle: "присл." }, { front: "гуля́ти", back: "to hang out, to go for a walk", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "четве́ртий", back: "fourth", subtitle: "прикм." }]} />
 
@@ -244,7 +244,7 @@ Try answering out loud. Use the chunks you learned: **У мене день на�
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -252,7 +252,7 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - Вашуленко Grade 2, p.83
   _Planning your week — days of the week activity._

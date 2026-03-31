@@ -1,6 +1,6 @@
 # Build Summary: where-is-it (A1)
 
-Generated: 2026-03-30 21:25
+Generated: 2026-03-31 11:58
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:25
 | enrich | complete | 2026-03-30 19:22:57 |
 | verify | complete | 2026-03-30 19:22:58 |
 | review | complete | 2026-03-30 19:25:42 |
-| stress | complete | 2026-03-30 19:25:51 |
-| publish | complete | 2026-03-30 19:25:51 |
+| stress | complete | 2026-03-31 09:58:15 |
+| publish | complete | 2026-03-31 09:58:15 |
 
 ## Reviews
 
@@ -43,10 +43,11 @@ Generated: 2026-03-30 21:25
 
 ## Friction
 
-- `friction.yaml` (134 bytes)
+- `friction.yaml` (314 bytes)
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `correction-attempt-2.md`
 - `exercise-verification.json`

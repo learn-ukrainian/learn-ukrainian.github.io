@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -145,6 +145,33 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
@@ -157,12 +184,23 @@ workbook:
 - **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
+- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
 - **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
 - **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
+- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
 - **observe**: Pattern discovery. Required: examples[], prompt
 - **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
 - **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
@@ -182,15 +220,19 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 {PEDAGOGY_PATTERNS}
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
 - **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
 
 **Instructions match learner level:**

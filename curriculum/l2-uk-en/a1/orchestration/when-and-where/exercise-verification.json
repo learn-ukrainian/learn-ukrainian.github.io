@@ -1,0 +1,24 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "бачити",
+      "головне",
+      "де",
+      "думати",
+      "знати",
+      "казати",
+      "коли",
+      "речення",
+      "розуміти",
+      "сказати",
+      "чути",
+      "що"
+    ]
+  },
+  "all_grounded": true
+}

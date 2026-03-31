@@ -52,7 +52,8 @@ def extract_exercise_items(content: str) -> list[ExerciseItem]:
     """Extract Ukrainian words being tested in all exercise blocks.
 
     Parses each exercise type's DSL to find the words the learner must
-    produce or recognize.
+    produce or recognize.  Only works with the legacy inline DSL (:::quiz).
+    For V6 YAML activities, use extract_exercise_items_from_yaml().
     """
     items: list[ExerciseItem] = []
 
@@ -70,6 +71,105 @@ def extract_exercise_items(content: str) -> list[ExerciseItem]:
             items.extend(_parse_group_sort(block))
         elif ex_type == "true-false":
             items.extend(_parse_true_false(block))
+
+    return items
+
+
+def extract_exercise_items_from_yaml(activities: dict) -> list[ExerciseItem]:
+    """Extract Ukrainian words from a V6 activities YAML structure.
+
+    The YAML has top-level keys 'inline' and 'workbook', each containing
+    a list of activity dicts with 'type' and type-specific fields.
+    """
+    items: list[ExerciseItem] = []
+
+    for section_key in ("inline", "workbook"):
+        for activity in activities.get(section_key, []) or []:
+            if not isinstance(activity, dict):
+                continue
+            ex_type = activity.get("type", "")
+            items.extend(_extract_words_from_activity(activity, ex_type))
+
+    return items
+
+
+def _words_from_text(text: str, ex_type: str) -> list[ExerciseItem]:
+    """Extract Ukrainian words from a text string into ExerciseItems."""
+    return [
+        ExerciseItem(word=w.lower(), exercise_type=ex_type, context=text[:60])
+        for w in _UK_WORD_RE.findall(text)
+    ]
+
+
+def _words_from_options(
+    options: list | None, ex_type: str
+) -> list[ExerciseItem]:
+    """Extract Ukrainian words from an options list."""
+    items: list[ExerciseItem] = []
+    for opt in options or []:
+        items.extend(_words_from_text(str(opt), ex_type))
+    return items
+
+
+def _extract_words_from_activity(
+    activity: dict, ex_type: str
+) -> list[ExerciseItem]:
+    """Extract Ukrainian words from a single activity dict."""
+    items: list[ExerciseItem] = []
+
+    activity_items = activity.get("items", [])
+    if not isinstance(activity_items, list):
+        activity_items = []
+
+    if ex_type in ("fill-in", "error-correction"):
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            answer = str(item.get("answer", "") or item.get("correction", ""))
+            items.extend(_words_from_text(answer, ex_type))
+            items.extend(_words_from_text(str(item.get("sentence", "")), ex_type))
+            items.extend(_words_from_options(item.get("options"), ex_type))
+
+    elif ex_type == "quiz":
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            items.extend(_words_from_text(str(item.get("question", "")), ex_type))
+            items.extend(_words_from_options(item.get("options"), ex_type))
+
+    elif ex_type == "match-up":
+        pairs = activity.get("pairs", [])
+        if not isinstance(pairs, list):
+            pairs = []
+        for pair in pairs:
+            if not isinstance(pair, dict):
+                continue
+            for side in ("left", "right"):
+                items.extend(_words_from_text(str(pair.get(side, "")), ex_type))
+
+    elif ex_type == "group-sort":
+        groups = activity.get("groups", [])
+        if not isinstance(groups, list):
+            groups = []
+        for group in groups:
+            if not isinstance(group, dict):
+                continue
+            items.extend(_words_from_text(str(group.get("label", "")), ex_type))
+            for gi in group.get("items", []) or []:
+                items.extend(_words_from_text(str(gi), ex_type))
+
+    elif ex_type == "true-false":
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            items.extend(_words_from_text(str(item.get("statement", "")), ex_type))
+
+    elif ex_type == "order":
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            for seg in item.get("segments", []) or []:
+                items.extend(_words_from_text(str(seg), ex_type))
 
     return items
 
@@ -179,14 +279,29 @@ def extract_plan_vocab(plan: dict) -> set[str]:
     return words
 
 
-def verify_exercises(content: str, plan: dict | None = None) -> VerifyResult:
+def verify_exercises(
+    content: str,
+    plan: dict | None = None,
+    activities: dict | None = None,
+) -> VerifyResult:
     """Main verification: check exercise items against prose and plan vocab.
+
+    Args:
+        content: module markdown content (prose + optional inline DSL exercises)
+        plan: plan dict with vocabulary_hints
+        activities: V6 activities YAML dict (inline + workbook sections).
+            If provided, exercise items are extracted from this instead of
+            parsing DSL blocks in the markdown.
 
     Returns a VerifyResult with grounded/ungrounded counts and details.
     """
     result = VerifyResult()
 
-    exercise_items = extract_exercise_items(content)
+    exercise_items = (
+        extract_exercise_items_from_yaml(activities)
+        if activities
+        else extract_exercise_items(content)
+    )
     prose_words = extract_prose_words(content)
     plan_vocab = extract_plan_vocab(plan) if plan else set()
 

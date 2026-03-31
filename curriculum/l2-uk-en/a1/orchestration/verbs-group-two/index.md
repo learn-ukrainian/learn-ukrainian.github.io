@@ -1,6 +1,6 @@
 # Build Summary: verbs-group-two (A1)
 
-Generated: 2026-03-30 21:52
+Generated: 2026-03-31 11:57
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:52
 | enrich | complete | 2026-03-30 02:43:23 |
 | verify | complete | 2026-03-30 02:43:23 |
 | review | complete | 2026-03-30 02:51:23 |
-| stress | complete | 2026-03-30 19:52:01 |
-| publish | complete | 2026-03-30 19:52:01 |
+| stress | complete | 2026-03-31 09:57:58 |
+| publish | complete | 2026-03-31 09:57:58 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 21:52
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

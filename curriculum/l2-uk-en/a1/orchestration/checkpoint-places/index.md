@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-places (A1)
 
-Generated: 2026-03-30 21:48
+Generated: 2026-03-31 11:57
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:48
 | enrich | complete | 2026-03-30 19:34:27 |
 | verify | complete | 2026-03-30 19:34:28 |
 | review | complete | 2026-03-30 19:38:25 |
-| stress | complete | 2026-03-30 19:48:17 |
-| publish | complete | 2026-03-30 19:48:18 |
+| stress | complete | 2026-03-31 09:57:07 |
+| publish | complete | 2026-03-31 09:57:08 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 21:48
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

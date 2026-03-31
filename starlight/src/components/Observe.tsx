@@ -40,19 +40,26 @@ export function ObserveActivity({ examples, prompt = "What pattern do you notice
 }
 
 interface ObserveBlockProps {
-  children: React.ReactNode;
+  examples?: string[];
+  prompt?: string;
+  children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Observe({ children }: ObserveBlockProps) {
+export default function Observe({ examples, prompt, children, isUkrainian }: ObserveBlockProps) {
+  const headerLabel = isUkrainian ? 'Спостережіть' : 'Observe First';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔎</span>
-        <span>Observe First</span>
-        <ActivityHelp activityType="observe" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="observe" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {examples ? (
+          <ObserveActivity examples={examples} prompt={prompt || (isUkrainian ? 'Який шаблон ви помітили?' : 'What pattern do you notice?')} />
+        ) : children}
       </div>
     </div>
   );

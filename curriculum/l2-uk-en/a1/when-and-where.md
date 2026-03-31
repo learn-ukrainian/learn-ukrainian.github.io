@@ -2,23 +2,23 @@
 
 ## Діало́ги (Dialogues)
 
-You already know **що** (what), **де** (where), and **коли** (when) as question words. Today's dialogues show them doing a completely different job — connecting two clauses inside one sentence instead of asking a question.
+You already know **що** (what), **де** (where), and **коли́** (when) as question words. Today's dialogues show them doing a completely different job — connecting two clauses inside one sentence instead of asking a question.
 
-> — **Олексій:** Ти зна́єш, де нове́ кафе́? *(Do you know where the new café is?)*
-> — **Марія:** Так, я зна́ю, де воно́. *(Yes, I know where it is.)*
+> — **Олексі́й:** Ти зна́єш, де нове́ кафе́? *(Do you know where the new café is?)*
+> — **Марі́я:** Так, я зна́ю, де воно́. *(Yes, I know where it is.)*
 > — **Олексій:** Скажи́, коли ти ві́льна. *(Tell me when you're free.)*
 > — **Марія:** Я вільна, коли закі́нчу́ робо́ту. *(I'm free when I finish work.)*
 > — **Олексій:** До́бре. Я ду́маю, що о шо́стій бу́де добре. *(Good. I think that six o'clock will be good.)*
 > — **Марія:** Так, я теж думаю, що це га́рний час. *(Yes, I also think that it's a good time.)*
 
 
-Notice the verbs here. **Знати** (to know) appears twice — Олексій asks what Марія knows, and she confirms. **Думати** (to think) appears twice — both speakers share their opinion using **я думаю, що...** (I think that...). The word **скажи** is the imperative of **сказати** (to say/tell — the perfective partner of **казати**) — Олексій literally says "tell me when."
+Notice the verbs here. **Зна́ти** (to know) appears twice — Олексій asks what Марія knows, and she confirms. **Ду́мати** (to think) appears twice — both speakers share their opinion using **я думаю, що...** (I think that...). The word **скажи** is the imperative of **сказа́ти** (to say/tell — the perfective partner of **каза́ти**) — Олексій literally says "tell me when."
 
 A second situation — talking about a mutual friend who has arrived in the city.
 
 > — **Богдан:** Ти знаєш, що Оле́на вже в Ки́єві? *(Do you know that Olena is already in Kyiv?)*
-> — **Наталя:** Ні, я не зна́ла! А де вона́ живе́? *(No, I didn't know! And where does she live?)*
-> — **Богдан:** Я не знаю, де саме. Але́ я знаю, що бі́ля це́нтру. *(I don't know where exactly. But I know that near the centre.)*
+> — **Ната́ля:** Ні, я не зна́ла! А де вона́ живе́? *(No, I didn't know! And where does she live?)*
+> — **Богдан:** Я не знаю, де са́ме. Але́ я знаю, що бі́ля це́нтру. *(I don't know where exactly. But I know that near the centre.)*
 > — **Наталя:** Скажи їй, коли поба́чиш, що я хо́чу зустрі́тися. *(Tell her, when you see her, that I want to meet.)*
 > — **Богдан:** Добре, скажу́, коли поба́чу. *(OK, I'll tell her when I see her.)*
 
@@ -29,7 +29,7 @@ Count the conjunctions. Dialogue 1 uses **що** twice, **де** twice, **кол
 
 ## Складне речення (Complex Sentences)
 
-In M44 you joined EQUAL ideas with coordinating conjunctions: **Я чита́ю, і він пи́ше.** (I read, and he writes.) **Він прийшо́в, але вона пішла́.** (He came, but she left.) Those conjunctions — **і** (and), **але** (but), **бо** (because) — link two clauses that could each stand alone as complete sentences. Today's pattern is different: a MAIN clause plus a DEPENDENT clause. The dependent clause cannot stand alone. **Що він тут** doesn't mean anything by itself — it needs a main clause in front of it: **Я знаю, що він тут.** (I know that he is here.) The dependent clause adds detail to the main idea. Ukrainian grammarians call this a **складнопідрядне речення** (a complex sentence with a subordinate clause — Grade 5, Заболо́тний).
+In M44 you joined EQUAL ideas with coordinating conjunctions: **Я чита́ю, і він пи́ше.** (I read, and he writes.) **Він прийшо́в, але вона пішла́.** (He came, but she left.) Those conjunctions — **і** (and), **але** (but), **бо** (because) — link two clauses that could each stand alone as complete sentences. Today's pattern is different: a MAIN clause plus a DEPENDENT clause. The dependent clause cannot stand alone. **Що він тут** doesn't mean anything by itself — it needs a main clause in front of it: **Я знаю, що він тут.** (I know that he is here.) The dependent clause adds detail to the main idea. Ukrainian grammarians call this a **складнопідря́дне речення** (a complex sentence with a subordinate clause — Grade 5, Заболо́тний).
 
 Three structures, each built from the same formula — main clause + comma + conjunction + subordinate clause:
 
@@ -43,7 +43,7 @@ Now the comma rule. Ukrainian ALWAYS places a comma before **що**, **де**, o
 
 - **Я думаю, що це пра́вильно.** (I think that this is correct.)
 - **Він не зна́є, де магази́н.** (He doesn't know where the shop is.)
-- **Зателефонуй, коли прийдеш.** (Call when you arrive.)
+- **Зателефону́й, коли прийдеш.** (Call when you arrive.)
 
 Look back at Dialogue 1 — every line with **що**, **де**, or **коли** in the middle has a comma immediately before it. You can verify this yourself now. The verb **думати** (to think) naturally pairs with **що**: **Я думаю, що...** The verb **знати** (to know) pairs with all three: **Я знаю, що...** / **Я знаю, де...** / **Я знаю, коли...**
 
@@ -53,7 +53,7 @@ One more detail. When **коли** opens the WHOLE sentence (the time-clause com
 
 ## Що, де, коли — дво́є обли́ч (Two Faces)
 
-These three words already appeared in M20 as question words — you have been using them since then. Now they have a second job. The key insight: same word, two completely different positions and functions inside a sentence. Don't treat them as new vocabulary — treat them as familiar words that learned a new trick. Ukrainian children learn this same distinction in Grade 5, when they study **сполучники** (conjunctions) for the first time (Заболотний). The textbook diagnostic is simple: if you can't ask a question with the word, it's a conjunction.
+These three words already appeared in M20 as question words — you have been using them since then. Now they have a second job. The key insight: same word, two completely different positions and functions inside a sentence. Don't treat them as new vocabulary — treat them as familiar words that learned a new trick. Ukrainian children learn this same distinction in Grade 5, when they study **сполу́чники** (conjunctions) for the first time (Заболотний). The textbook diagnostic is simple: if you can't ask a question with the word, it's a conjunction.
 
 **Job 1 — Question words.** They sit at the START of a sentence. The sentence ends with a question mark. The speaker expects an answer. Examples you already know from M20:
 
@@ -94,7 +94,7 @@ The core insight of this module: **що**, **де**, and **коли** are conjun
 | **де** | where | **Я не знаю, де кафе.** |
 | **коли** | when | **Скажи, коли прийдеш.** |
 
-Remember: always a comma before the conjunction — **завжди ко́ма пе́ред сполу́чником**.
+Remember: always a comma before the conjunction — **за́вжди́ ко́ма пе́ред сполу́чником**.
 
 Now combine what you learned in M44 with today's conjunctions. Two sentences that use BOTH types:
 
@@ -108,9 +108,9 @@ These sentences feel sophisticated, but they use only words and structures you h
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **зна́ти** | to know | дієсл. |  |
 | **ду́мати** | to think | дієсл. |  |
@@ -138,9 +138,9 @@ These sentences feel sophisticated, but they use only words and structures you h
 | **са́ме** | exactly, precisely | прикм. |  |
 | **бі́ля** | near, by | прийм. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **складне речення** | complex sentence |
 | **складнопідрядне речення** | complex sentence with a subordinate clause |
@@ -156,7 +156,7 @@ These sentences feel sophisticated, but they use only words and structures you h
 | **Скажи, коли...** | Tell me when... |
 | **Я не знаю, коли...** | I don't know when... |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "ду́мати", back: "to think", subtitle: "дієсл." }, { front: "каза́ти", back: "to say, to tell", subtitle: "дієсл." }, { front: "сказа́ти", back: "to say (perfective)", subtitle: "дієсл." }, { front: "ба́чити", back: "to see", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "розумі́ти", back: "to understand", subtitle: "дієсл." }, { front: "коли́", back: "when (conjunction)", subtitle: "ім." }, { front: "сполу́чник", back: "conjunction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сполу́чники", back: "conjunctions", subtitle: "ім." }, { front: "головне́", back: "main (as in main clause)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "підря́дне", back: "subordinate (as in subordinate clause)", subtitle: "прикм." }, { front: "скажи́", back: "tell! (imperative of казати)", subtitle: "дієсл." }, { front: "скажу́", back: "I will tell (future of казати)", subtitle: "дієсл." }, { front: "ві́льна", back: "free, available (feminine)", subtitle: "прикм." }, { front: "ві́льний", back: "free, available (masculine)", subtitle: "прикм." }, { front: "ко́ма", back: "comma", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зустрі́тися", back: "to meet (each other)", subtitle: "дієсл." }, { front: "закі́нчи́ти", back: "to finish (perfective)", subtitle: "дієсл." }, { front: "поба́чити", back: "to see (perfective)", subtitle: "дієсл." }, { front: "прийти́", back: "to come, to arrive (perfective)", subtitle: "дієсл." }, { front: "поговори́ти", back: "to talk, to have a conversation (perfective)", subtitle: "дієсл." }, { front: "зателефонува́ти", back: "to call (by phone, perfective)", subtitle: "дієсл." }, { front: "са́ме", back: "exactly, precisely", subtitle: "прикм." }, { front: "бі́ля", back: "near, by", subtitle: "прийм." }]} />
 
@@ -164,7 +164,7 @@ These sentences feel sophisticated, but they use only words and structures you h
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -172,18 +172,18 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - State Standard 2024, §4.3.2
   _Basic complex sentences — що, де, коли as subordinating conjunctions._
 - Grade 5 textbook: Складнопідрядне речення (Заболотний)
   _Introduction to subordinate clauses with що, де, коли._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Речення, його граматична основа (підмет і присудок)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372) (miyklas.com.ua)
-- [МійКлас: Речення з однорідними членами](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-z-odnoridnimi-chlenami-koma-mizh-odnoridnimi-chlenami-rechennia-39061) (miyklas.com.ua)
-- [МійКлас: Складні речення з безсполучниковим і сполучниковим зв'язком](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/skladni-rechennia-z-bezspoluchnikovim-i-spoluchnikovim-zv-iazkom-38302) (miyklas.com.ua)
+- [МійКлас: Речення, йо́го грамати́чна осно́ва (підмет і при́судок)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372) (miyklas.com.ua)
+- [МійКлас: Речення з однорі́дними чле́нами](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-z-odnoridnimi-chlenami-koma-mizh-odnoridnimi-chlenami-rechennia-39061) (miyklas.com.ua)
+- [МійКлас: Складні речення з безсполучнико́вим і сполучнико́вим зв'язком](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/skladni-rechennia-z-bezspoluchnikovim-i-spoluchnikovim-zv-iazkom-38302) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

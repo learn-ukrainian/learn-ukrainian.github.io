@@ -2,5 +2,6 @@
   date: '2026-03-30'
   error_types:
   - VOCABULARY
-  status: active
+  status: resolved
   note: V6 build failed after 3 attempts
+  resolution: Module rebuilt successfully 2026-03-30. All 6 locative vocab present in final content. quick-verify.json was stale (from pre-verify attempt 3, before write phase).

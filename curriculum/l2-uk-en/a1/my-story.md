@@ -237,6 +237,6 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Anna Ohoiko — Ukrainian Lessons**
 
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
-- [Past Tense](https://www.ukrainianlessons.com/past-tense/)
-- [Future Tense](https://www.ukrainianlessons.com/future-tense/)
+- [Verb Tenses in Ukrainian (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)
+- [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/)
+- [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future/)

@@ -214,4 +214,4 @@ Advanced exercises for this module are in development. Check back soon!
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
+- [Verb Tenses in Ukrainian (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)

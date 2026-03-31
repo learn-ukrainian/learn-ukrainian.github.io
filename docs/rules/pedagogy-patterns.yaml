@@ -1,289 +1,762 @@
-# Pedagogy Pattern Library — exercise patterns by grammar topic
+# Pedagogy Pattern Library — Ukrainian State Standard 2024 Backbone
 #
-# Maps grammar topics to recommended exercise types and patterns,
-# sourced from МійКлас (Grade 5-11) and Ukrainian textbook analysis.
+# Structure: Each pattern is grounded in the Ukrainian State Standard 2024
+# (docs/l2-uk-en/state-standard-2024-mapping.yaml) with §-references.
+#
+# Format:
+#   standard_ref  — §-reference to State Standard 2024
+#   level         — CEFR level where this pattern first appears
+#   назва / name  — Ukrainian primary, English secondary
+#   topics        — combined uk+en keywords for pipeline matching (_build_pedagogy_patterns)
+#   exercises     — recommended exercise types with bilingual names and examples
+#   anti_patterns — what NOT to generate (common LLM mistakes)
 #
 # The activities prompt injects topic-matching patterns so the LLM
 # generates the RIGHT kind of exercises for each concept.
 #
 # Issue: #1051
-# Format: topic → exercise patterns with Ukrainian instructions + examples
+# State Standard: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
 
 patterns:
 
   # =========================================================================
   # PHONETICS (A1.1 — M01-M04)
+  # State Standard §4.1 — Фонетика і графіка
   # =========================================================================
 
   phonetics-sounds-letters:
-    topics: ["sounds", "letters", "alphabet", "звуки", "літери", "алфавіт", "абетка"]
-    level: "A1.1"
+    standard_ref: "§4.1.1, §4.1.4"
+    level: "A1"
+    назва: "Звуки і літери"
+    name: "Sounds and letters"
+    topics:
+      - "sounds"
+      - "letters"
+      - "alphabet"
+      - "звуки"
+      - "літери"
+      - "алфавіт"
+      - "абетка"
+      - "голосні"
+      - "приголосні"
+      - "vowels"
+      - "consonants"
     exercises:
       - type: quiz
-        name_uk: "Звук чи літера?"
+        назва: "Звук чи літера?"
+        name: "Sound or letter?"
+        focus_uk: "Розрізнити звук і літеру — основа української фонетики"
         focus: "Distinguish звук from літера — fundamental Ukrainian phonetics distinction"
         example:
+          instruction_uk: "Оберіть правильну відповідь"
           instruction: "Choose the correct answer"
           question: "How many sounds does the word «яблуко» have?"
           options: ["6 sounds", "5 sounds", "7 sounds"]
           correct: 0
       - type: match-up
-        name_uk: "Літера → Звук"
+        назва: "Літера → Звук"
+        name: "Letter → Sound"
+        focus_uk: "Зіставити літери зі звуковими значеннями, особливо багатозвучні (я, ю, є, ї)"
         focus: "Match letters to their sound values, especially multi-sound letters (я, ю, є, ї)"
         example:
+          instruction_uk: "З'єднайте літеру зі звуком"
           instruction: "Match each letter to the sound(s) it represents"
           pairs: [["я (at word start)", "[йа]"], ["я (after consonant)", "[а]"]]
       - type: group-sort
-        name_uk: "Голосні й приголосні"
+        назва: "Голосні й приголосні"
+        name: "Vowels and consonants"
+        focus_uk: "Розподілити звуки на голосні та приголосні"
         focus: "Sort letters/sounds into голосні (vowel) vs приголосні (consonant)"
         example:
-          instruction: "Розподіліть звуки"
+          instruction_uk: "Розподіліть звуки"
+          instruction: "Sort the sounds"
           groups: [["Голосні", ["а", "о", "у"]], ["Приголосні", ["б", "в", "г"]]]
       - type: image-to-letter
-        name_uk: "Знайди літеру"
+        назва: "Знайди літеру"
+        name: "Find the letter"
+        focus_uk: "Побачити зображення, визначити українську літеру"
         focus: "See image, identify the Ukrainian letter it starts with"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Переклад не тестує фонетичні знання"
+        reason: "Translation doesn't test phonetic knowledge"
+      - type: fill-in-no-options
+        reason_uk: "Занадто складно для A1 — початківці потребують варіантів відповідей"
+        reason: "Too hard for A1 — beginners need answer options"
 
   phonetics-syllables:
-    topics: ["syllables", "складоподіл", "склад", "syllable division", "переніс"]
-    level: "A1.1"
+    standard_ref: "§4.1.1, §4.1.4"
+    level: "A1"
+    назва: "Склад і складоподіл"
+    name: "Syllables and syllable division"
+    topics:
+      - "syllables"
+      - "складоподіл"
+      - "склад"
+      - "syllable division"
+      - "переніс"
     exercises:
       - type: divide-words
-        name_uk: "Поділи слова на склади"
+        назва: "Поділи слова на склади"
+        name: "Divide words into syllables"
+        focus_uk: "Інтерактивний поділ на склади — натиснути між літерами для вставки дефіса"
         focus: "Interactive syllable division — tap between letters to insert hyphens"
         example:
-          instruction: "Поділіть слово на склади"
+          instruction_uk: "Поділіть слово на склади"
+          instruction: "Divide the word into syllables"
           word: "молоко"
           answer: "мо-ло-ко"
       - type: count-syllables
-        name_uk: "Порахуй склади"
+        назва: "Порахуй склади"
+        name: "Count syllables"
+        focus_uk: "Порахувати склади — кожен голосний = один склад (складотворчі голосні)"
         focus: "Count syllables — each vowel = one syllable (складотворчі голосні)"
         example:
+          instruction_uk: "Скільки складів?"
           instruction: "How many syllables?"
           word: "коридор"
           answer: 3
       - type: pick-syllables
-        name_uk: "Вибери закриті/відкриті склади"
+        назва: "Вибери закриті/відкриті склади"
+        name: "Select closed/open syllables"
+        focus_uk: "Визначити тип складу: відкритий (закінчується голосним) чи закритий (приголосним)"
         focus: "Classify syllables as відкритий (ends vowel) or закритий (ends consonant)"
         example:
+          instruction_uk: "Оберіть усі закриті склади"
           instruction: "Select all closed syllables (закриті склади)"
           options: ["ка", "ша", "май", "стер", "ре"]
           correct: ["май", "стер"]
       - type: odd-one-out
-        name_uk: "Четверте зайве"
+        назва: "Четверте зайве"
+        name: "Odd one out"
+        focus_uk: "Обрати слово, що не пасує — за кількістю або типом складів"
         focus: "Pick the word that doesn't belong — by syllable count, type, or pattern"
         example:
-          instruction: "Яке слово зайве?"
+          instruction_uk: "Яке слово зайве?"
+          instruction: "Which word doesn't belong?"
           options: ["кіт", "пес", "сік", "молоко"]
           correct: "молоко"
           explanation: "молоко — багатоскладове, решта — односкладові"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Переклад не тестує фонетичні навички поділу"
+        reason: "Translation doesn't test syllable division skills"
 
   phonetics-soft-hard:
-    topics: ["soft sign", "м'який знак", "apostrophe", "апостроф", "м'які приголосні", "тверді приголосні"]
-    level: "A1.1"
+    standard_ref: "§4.1.2, §4.1.3"
+    level: "A1"
+    назва: "М'який знак і апостроф"
+    name: "Soft sign and apostrophe"
+    topics:
+      - "soft sign"
+      - "м'який знак"
+      - "apostrophe"
+      - "апостроф"
+      - "м'які приголосні"
+      - "тверді приголосні"
+      - "soft consonants"
+      - "hard consonants"
     exercises:
       - type: group-sort
-        name_uk: "М'який чи твердий?"
+        назва: "М'який чи твердий?"
+        name: "Soft or hard?"
+        focus_uk: "Розподілити приголосні/слова за м'якістю чи твердістю вимови"
         focus: "Sort consonants/words by soft vs hard pronunciation"
         example:
-          instruction: "Розподіліть"
+          instruction_uk: "Розподіліть"
+          instruction: "Sort"
           groups: [["М'які", ["день", "сіль"]], ["Тверді", ["дом", "сон"]]]
       - type: quiz
-        name_uk: "Де потрібен ь?"
+        назва: "Де потрібен ь?"
+        name: "Where is ь needed?"
+        focus_uk: "Обрати слово, де потрібен м'який знак"
         focus: "Choose which word needs м'який знак"
       - type: error-correction
-        name_uk: "Виправ помилку"
+        назва: "Виправ помилку"
+        name: "Fix the mistake"
+        focus_uk: "Знайти, де м'який знак або апостроф пропущено або вжито неправильно"
         focus: "Find where м'який знак or апостроф is missing/wrong"
+    anti_patterns:
+      - type: fill-in-no-options
+        reason_uk: "Занадто складно для A1 без варіантів"
+        reason: "Too hard at A1 without answer options"
 
   phonetics-stress:
-    topics: ["stress", "наголос", "accent", "melody", "інтонація"]
-    level: "A1.1"
+    standard_ref: "§4.1.5"
+    level: "A1"
+    назва: "Наголос"
+    name: "Word stress"
+    topics:
+      - "stress"
+      - "наголос"
+      - "accent"
+      - "melody"
+      - "інтонація"
+      - "intonation"
     exercises:
       - type: quiz
-        name_uk: "Де наголос?"
+        назва: "Де наголос?"
+        name: "Where is the stress?"
+        focus_uk: "Обрати правильне місце наголосу — критично для української вимови"
         focus: "Choose the correct stress position — critical for Ukrainian pronunciation"
         example:
-          instruction: "Оберіть слово з правильним наголосом"
+          instruction_uk: "Оберіть слово з правильним наголосом"
+          instruction: "Choose the word with correct stress"
           options: ["за́мок (castle)", "замо́к (lock)"]
       - type: odd-one-out
-        name_uk: "Четверте зайве за наголосом"
+        назва: "Четверте зайве за наголосом"
+        name: "Odd one out by stress"
+        focus_uk: "Обрати слово з іншою моделлю наголосу"
         focus: "Pick the word with different stress pattern"
+    anti_patterns:
+      - type: fill-in
+        reason_uk: "Наголос — це вимова, не написання. Тестувати через вибір, не вписування"
+        reason: "Stress is pronunciation, not writing. Test via selection, not fill-in"
 
   # =========================================================================
   # NOUNS & GENDER (A1.2 — M08-M14)
+  # State Standard §4.2.1.1, §4.2.2
   # =========================================================================
 
   grammar-gender:
-    topics: ["gender", "рід", "masculine", "feminine", "neuter", "чоловічий", "жіночий", "середній"]
-    level: "A1.2"
+    standard_ref: "§4.2.1.1, §4.2.2"
+    level: "A1"
+    назва: "Рід іменників"
+    name: "Noun gender"
+    topics:
+      - "gender"
+      - "рід"
+      - "masculine"
+      - "feminine"
+      - "neuter"
+      - "чоловічий"
+      - "жіночий"
+      - "середній"
     exercises:
       - type: group-sort
-        name_uk: "Він, вона чи воно?"
+        назва: "Він, вона чи воно?"
+        name: "Він, вона or воно?"
+        focus_uk: "Розподілити іменники за граматичним родом за закінченням"
         focus: "Sort nouns by grammatical gender using ending rules"
         example:
-          instruction: "Розподіліть слова за родами"
+          instruction_uk: "Розподіліть слова за родами"
+          instruction: "Sort words by gender"
           groups: [["Він (чоловічий)", ["стіл", "брат"]], ["Вона (жіночий)", ["книга", "сестра"]], ["Воно (середнє)", ["вікно", "море"]]]
       - type: quiz
-        name_uk: "Який рід?"
+        назва: "Який рід?"
+        name: "What gender?"
+        focus_uk: "Визначити рід за закінченням: приголосний=чол., -а/-я=жін., -о/-е=серед."
         focus: "Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut"
       - type: fill-in
-        name_uk: "Мій, моя чи моє?"
+        назва: "Мій, моя чи моє?"
+        name: "Мій, моя or моє?"
+        focus_uk: "Обрати присвійний займенник, що узгоджується з родом іменника"
         focus: "Choose possessive that matches noun gender"
         example:
-          instruction: "Вставте правильне слово"
+          instruction_uk: "Вставте правильне слово"
+          instruction: "Fill in the correct word"
           sentence: "Це ____ кімната."
           answer: "моя"
           options: ["мій", "моя", "моє"]
       - type: match-up
-        name_uk: "Іменник + займенник"
+        назва: "Іменник + займенник"
+        name: "Noun + pronoun"
+        focus_uk: "Зіставити іменники з він/вона/воно"
         focus: "Match nouns to він/вона/воно"
+    anti_patterns:
+      - type: fill-in-no-options
+        reason_uk: "На рівні A1 завжди давати варіанти для вибору"
+        reason: "At A1 always provide options for selection"
 
   grammar-adjectives:
-    topics: ["adjectives", "прикметники", "який", "яка", "яке", "які", "agreement"]
-    level: "A1.2"
+    standard_ref: "§4.2.1.2"
+    level: "A1"
+    назва: "Прикметники та узгодження"
+    name: "Adjectives and agreement"
+    topics:
+      - "adjectives"
+      - "прикметники"
+      - "який"
+      - "яка"
+      - "яке"
+      - "які"
+      - "agreement"
+      - "узгодження"
     exercises:
       - type: fill-in
-        name_uk: "Який? Яка? Яке?"
+        назва: "Який? Яка? Яке?"
+        name: "Який? Яка? Яке?"
+        focus_uk: "Обрати правильне закінчення прикметника за родом іменника"
         focus: "Choose adjective ending to match noun gender"
         example:
-          instruction: "Вставте правильну форму"
+          instruction_uk: "Вставте правильну форму"
+          instruction: "Fill in the correct form"
           sentence: "Це велик___ місто."
           answer: "е"
       - type: error-correction
-        name_uk: "Знайди помилку в узгодженні"
+        назва: "Знайди помилку в узгодженні"
+        name: "Find the agreement error"
+        focus_uk: "Знайти помилку в узгодженні прикметника й іменника за родом/числом"
         focus: "Find gender/number agreement errors between adjective and noun"
       - type: match-up
-        name_uk: "Іменник + прикметник"
+        назва: "Іменник + прикметник"
+        name: "Noun + adjective"
+        focus_uk: "Зіставити іменники з правильними формами прикметників"
         focus: "Match nouns to correct adjective forms"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Узгодження — це граматика, а не лексика. Переклад не тестує закінчення"
+        reason: "Agreement is grammar, not vocabulary. Translation doesn't test endings"
 
   grammar-numbers:
-    topics: ["numbers", "числівники", "counting", "лічба", "скільки"]
-    level: "A1.2"
+    standard_ref: "§4.2.1.3"
+    level: "A1"
+    назва: "Числівники"
+    name: "Numerals"
+    topics:
+      - "numbers"
+      - "числівники"
+      - "counting"
+      - "лічба"
+      - "скільки"
     exercises:
       - type: quiz
-        name_uk: "Яке число?"
+        назва: "Яке число?"
+        name: "What number?"
+        focus_uk: "Розпізнати числівники, записані словами"
         focus: "Recognize written number words"
       - type: fill-in
-        name_uk: "Напиши цифру словом"
+        назва: "Напиши цифру словом"
+        name: "Write the digit as a word"
+        focus_uk: "Записати числівник словом по-українськи"
         focus: "Write the number as a Ukrainian word"
       - type: match-up
-        name_uk: "Цифра → слово"
+        назва: "Цифра → слово"
+        name: "Digit → word"
+        focus_uk: "Зіставити цифри з їхніми українськими назвами"
         focus: "Match digits to their Ukrainian word forms"
+    anti_patterns:
+      - type: fill-in-no-options
+        reason_uk: "Числівники складні для написання — давати варіанти на A1"
+        reason: "Numerals are hard to spell — provide options at A1"
 
   # =========================================================================
   # VERBS (A1.3 — M15-M21)
+  # State Standard §4.2.4.1
   # =========================================================================
 
   grammar-verbs-present:
-    topics: ["verbs", "дієслова", "conjugation", "відмінювання", "present tense", "теперішній час"]
-    level: "A1.3"
+    standard_ref: "§4.2.4.1"
+    level: "A1"
+    назва: "Дієвідмінювання в теперішньому часі"
+    name: "Present tense conjugation"
+    topics:
+      - "verbs"
+      - "дієслова"
+      - "conjugation"
+      - "відмінювання"
+      - "present tense"
+      - "теперішній час"
     exercises:
       - type: fill-in
-        name_uk: "Відмінюй дієслово"
+        назва: "Відмінюй дієслово"
+        name: "Conjugate the verb"
+        focus_uk: "Вставити правильну форму дієслова за особою та числом"
         focus: "Fill in correct verb conjugation for given person/number"
         example:
-          instruction: "Вставте правильну форму дієслова"
+          instruction_uk: "Вставте правильну форму дієслова"
+          instruction: "Fill in the correct verb form"
           sentence: "Ми _____ (читати) книгу."
           answer: "читаємо"
       - type: group-sort
-        name_uk: "І чи ІІ дієвідміна?"
+        назва: "І чи ІІ дієвідміна?"
+        name: "Conjugation I or II?"
+        focus_uk: "Розподілити дієслова за типом дієвідміни"
         focus: "Sort verbs by conjugation class (I vs II)"
       - type: match-up
-        name_uk: "Особа → форма"
+        назва: "Особа → форма"
+        name: "Person → form"
+        focus_uk: "Зіставити особові займенники з формами дієслова"
         focus: "Match personal pronouns to verb conjugation forms"
         example:
-          instruction: "З'єднайте"
+          instruction_uk: "З'єднайте"
+          instruction: "Match"
           pairs: [["я", "читаю"], ["ти", "читаєш"], ["він/вона", "читає"]]
       - type: error-correction
-        name_uk: "Виправ дієслово"
+        назва: "Виправ дієслово"
+        name: "Fix the verb"
+        focus_uk: "Знайти неправильно відмінене дієслово та виправити"
         focus: "Find incorrectly conjugated verb and fix it"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами"
+        reason: "Translation doesn't test conjugation. English verbs don't conjugate by person"
 
   # =========================================================================
   # CASES (A1.4-A1.5 — M22-M35)
+  # State Standard §4.2.3.1, §4.2.3.2, §4.2.3.3
   # =========================================================================
 
   grammar-cases:
-    topics: ["cases", "відмінки", "declension", "відмінювання іменників", "accusative", "genitive", "dative", "locative"]
-    level: "A1.4"
+    standard_ref: "§4.2.3.1, §4.2.3.2, §4.2.3.3"
+    level: "A1"
+    назва: "Відмінки іменників"
+    name: "Noun cases"
+    topics:
+      - "cases"
+      - "відмінки"
+      - "declension"
+      - "відмінювання іменників"
+      - "accusative"
+      - "genitive"
+      - "dative"
+      - "locative"
+      - "знахідний"
+      - "родовий"
+      - "давальний"
+      - "місцевий"
     exercises:
       - type: fill-in
-        name_uk: "Який відмінок?"
+        назва: "Який відмінок?"
+        name: "Which case?"
+        focus_uk: "Вставити іменник у правильній відмінковій формі"
         focus: "Fill in the correct case ending for a noun in context"
         example:
-          instruction: "Вставте іменник у правильній формі"
+          instruction_uk: "Вставте іменник у правильній формі"
+          instruction: "Fill in the noun in the correct form"
           sentence: "Я бачу _____ (сестра)."
           answer: "сестру"
       - type: quiz
-        name_uk: "Визнач відмінок"
+        назва: "Визнач відмінок"
+        name: "Identify the case"
+        focus_uk: "Визначити, у якому відмінку стоїть виділений іменник"
         focus: "Identify which case a highlighted noun is in"
       - type: group-sort
-        name_uk: "Розподіли за відмінками"
+        назва: "Розподіли за відмінками"
+        name: "Sort by case"
+        focus_uk: "Розподілити форми іменників за відмінками"
         focus: "Sort noun forms by their case"
       - type: error-correction
-        name_uk: "Знайди помилку у відмінку"
+        назва: "Знайди помилку у відмінку"
+        name: "Find the case error"
+        focus_uk: "Знайти неправильне відмінкове закінчення та виправити"
         focus: "Find wrong case ending and correct it"
+    anti_patterns:
+      - type: quiz-only
+        reason_uk: "Учні мають ПРОДУКУВАТИ форми, а не тільки розпізнавати. Обов'язково fill-in"
+        reason: "Learners must PRODUCE forms, not just recognize them. fill-in is mandatory"
+      - type: translate
+        reason_uk: "Англійська не має відмінків — переклад не тестує відмінювання"
+        reason: "English has no cases — translation doesn't test declension"
+
+  # =========================================================================
+  # NEW: PRONOUNS (A1.2-A1.3)
+  # State Standard §4.2.1.4, §4.2.2
+  # =========================================================================
+
+  grammar-pronouns:
+    standard_ref: "§4.2.1.4, §4.2.2"
+    level: "A1"
+    назва: "Особові займенники"
+    name: "Personal pronouns"
+    topics:
+      - "pronouns"
+      - "займенники"
+      - "особові займенники"
+      - "personal pronouns"
+      - "я"
+      - "ти"
+      - "він"
+      - "вона"
+      - "воно"
+      - "ми"
+      - "ви"
+      - "вони"
+    exercises:
+      - type: match-up
+        назва: "Займенник → дієслово"
+        name: "Pronoun → verb"
+        focus_uk: "Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням"
+        focus: "Match personal pronoun with correct verb form — linking pronouns to conjugation"
+        example:
+          instruction_uk: "З'єднайте займенник із дієсловом"
+          instruction: "Match the pronoun with the verb"
+          pairs: [["я", "говорю"], ["ти", "говориш"], ["ми", "говоримо"]]
+      - type: fill-in
+        назва: "Вставте займенник"
+        name: "Fill in the pronoun"
+        focus_uk: "Обрати правильний займенник за контекстом речення"
+        focus: "Choose the correct pronoun based on sentence context"
+        example:
+          instruction_uk: "Вставте правильний займенник"
+          instruction: "Fill in the correct pronoun"
+          sentence: "_____ читаємо книгу."
+          answer: "Ми"
+          options: ["Я", "Ми", "Вони"]
+      - type: group-sort
+        назва: "Однина чи множина?"
+        name: "Singular or plural?"
+        focus_uk: "Розподілити займенники на однину та множину"
+        focus: "Sort pronouns into singular and plural"
+        example:
+          instruction_uk: "Розподіліть"
+          instruction: "Sort"
+          groups: [["Однина", ["я", "ти", "він", "вона"]], ["Множина", ["ми", "ви", "вони"]]]
+      - type: quiz
+        назва: "Ти чи Ви?"
+        name: "Ти or Ви?"
+        focus_uk: "Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви)"
+        focus: "Choose correct address form — informal (ти) vs polite (Ви)"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Займенники — про зв'язок з дієсловом, а не переклад"
+        reason: "Pronouns are about verb agreement, not translation"
+
+  # =========================================================================
+  # NEW: PLURALIZATION (A1.2)
+  # State Standard §4.2.1.1
+  # =========================================================================
+
+  grammar-pluralization:
+    standard_ref: "§4.2.1.1"
+    level: "A1"
+    назва: "Множина іменників"
+    name: "Noun plurals"
+    topics:
+      - "plural"
+      - "plurals"
+      - "множина"
+      - "singular"
+      - "однина"
+      - "іменники"
+      - "nouns"
+    exercises:
+      - type: fill-in
+        назва: "Утвори множину"
+        name: "Form the plural"
+        focus_uk: "Утворити множину іменника — закінчення -и vs -і залежно від приголосного"
+        focus: "Form noun plural — -и vs -і endings depending on consonant"
+        example:
+          instruction_uk: "Напишіть множину"
+          instruction: "Write the plural form"
+          sentence: "книга → _____"
+          answer: "книги"
+          options: ["книги", "книгі"]
+      - type: group-sort
+        назва: "Закінчення -и чи -і?"
+        name: "Ending -и or -і?"
+        focus_uk: "Розподілити іменники за типом закінчення множини"
+        focus: "Sort nouns by plural ending type"
+        example:
+          instruction_uk: "Розподіліть"
+          instruction: "Sort"
+          groups: [["Множина на -и", ["книги", "руки"]], ["Множина на -і", ["ночі", "речі"]]]
+      - type: match-up
+        назва: "Однина → множина"
+        name: "Singular → plural"
+        focus_uk: "Зіставити форму однини з формою множини"
+        focus: "Match singular form to plural form"
+        example:
+          instruction_uk: "З'єднайте"
+          instruction: "Match"
+          pairs: [["стіл", "столи"], ["ніч", "ночі"], ["вікно", "вікна"]]
+      - type: error-correction
+        назва: "Виправ множину"
+        name: "Fix the plural"
+        focus_uk: "Знайти неправильну форму множини та виправити"
+        focus: "Find incorrect plural form and fix it"
+    anti_patterns:
+      - type: quiz-only
+        reason_uk: "Множина — це словотворення. Учні мають продукувати форми, а не тільки вибирати"
+        reason: "Plurals are morphology. Learners must produce forms, not just select"
+      - type: fill-in-no-options
+        reason_uk: "На A1 завжди давати варіанти — учень ще не знає всіх закінчень"
+        reason: "At A1 always provide options — learner doesn't know all endings yet"
+
+  # =========================================================================
+  # NEW: POSSESSION (A1.2-A1.3)
+  # State Standard §4.2.1.4, §4.2.2
+  # =========================================================================
+
+  grammar-possession:
+    standard_ref: "§4.2.1.4, §4.2.2"
+    level: "A1"
+    назва: "Присвійність"
+    name: "Possession"
+    topics:
+      - "possession"
+      - "присвійність"
+      - "possessive"
+      - "присвійні займенники"
+      - "мій"
+      - "твій"
+      - "наш"
+      - "ваш"
+      - "його"
+      - "її"
+    exercises:
+      - type: fill-in
+        назва: "У мене є..."
+        name: "I have..."
+        focus_uk: "Структура «У мене/тебе/нього є...» — як українська виражає володіння"
+        focus: "Structure «У мене/тебе/нього є...» — how Ukrainian expresses possession"
+        example:
+          instruction_uk: "Вставте правильне слово"
+          instruction: "Fill in the correct word"
+          sentence: "У _____ є кішка."
+          answer: "мене"
+          options: ["мене", "мій", "я"]
+      - type: fill-in
+        назва: "Мій, твій, наш..."
+        name: "Мій, твій, наш..."
+        focus_uk: "Обрати присвійний займенник, що узгоджується з родом та числом іменника"
+        focus: "Choose possessive pronoun matching noun gender and number"
+        example:
+          instruction_uk: "Вставте правильну форму"
+          instruction: "Fill in the correct form"
+          sentence: "Це _____ сестра."
+          answer: "моя"
+          options: ["мій", "моя", "моє", "мої"]
+      - type: match-up
+        назва: "Чий? Чия? Чиє?"
+        name: "Whose? (masc/fem/neut)"
+        focus_uk: "Зіставити присвійний займенник з іменником за родом"
+        focus: "Match possessive pronoun to noun by gender"
+        example:
+          instruction_uk: "З'єднайте"
+          instruction: "Match"
+          pairs: [["мій", "брат"], ["моя", "сестра"], ["моє", "місто"]]
+      - type: quiz
+        назва: "У кого є?"
+        name: "Who has?"
+        focus_uk: "Визначити, хто має щось, за контекстом речення"
+        focus: "Determine who has something based on sentence context"
+    anti_patterns:
+      - type: translate
+        reason_uk: "«У мене є» — унікальна українська структура. Переклад з англ. «I have» маскує різницю"
+        reason: "«У мене є» is a unique Ukrainian structure. Translation from English «I have» masks the difference"
 
   # =========================================================================
   # ASPECT (B1)
+  # State Standard A2 §4.2.3.1, B1 §4.2.3.1
   # =========================================================================
 
   grammar-verb-aspect:
-    topics: ["aspect", "вид", "доконаний", "недоконаний", "perfective", "imperfective"]
+    standard_ref: "A2 §4.2.3.1, B1 §4.2.3.1"
     level: "B1"
+    назва: "Вид дієслова"
+    name: "Verb aspect"
+    topics:
+      - "aspect"
+      - "вид"
+      - "доконаний"
+      - "недоконаний"
+      - "perfective"
+      - "imperfective"
     exercises:
       - type: group-sort
-        name_uk: "Доконаний чи недоконаний?"
+        назва: "Доконаний чи недоконаний?"
+        name: "Perfective or imperfective?"
+        focus_uk: "Розподілити дієслова за видом — розпізнати видові пари"
         focus: "Sort verbs by aspect — recognize aspect pairs"
         example:
-          instruction: "Розподіліть дієслова за видами"
+          instruction_uk: "Розподіліть дієслова за видами"
+          instruction: "Sort verbs by aspect"
           groups: [["Недоконаний", ["читати", "писати"]], ["Доконаний", ["прочитати", "написати"]]]
       - type: match-up
-        name_uk: "Утвори видові пари"
+        назва: "Утвори видові пари"
+        name: "Form aspect pairs"
+        focus_uk: "Зіставити недоконане з доконаним дієсловом"
         focus: "Match imperfective ↔ perfective aspect pairs"
         example:
-          instruction: "З'єднайте видові пари"
+          instruction_uk: "З'єднайте видові пари"
+          instruction: "Match aspect pairs"
           pairs: [["читати", "прочитати"], ["писати", "написати"]]
       - type: fill-in
-        name_uk: "Який вид доречний?"
+        назва: "Який вид доречний?"
+        name: "Which aspect fits?"
+        focus_uk: "Обрати правильний вид для контексту (тривалість vs завершеність)"
         focus: "Choose correct aspect for context (duration vs completion)"
         example:
-          instruction: "Оберіть правильну форму"
+          instruction_uk: "Оберіть правильну форму"
+          instruction: "Choose the correct form"
           sentence: "Вчора він _____ (читати/прочитати) всю книгу."
           answer: "прочитав"
       - type: quiz
-        name_uk: "Визнач вид дієслова"
+        назва: "Визнач вид дієслова"
+        name: "Identify verb aspect"
+        focus_uk: "Визначити вид поданого дієслова"
         focus: "Identify aspect of a given verb"
+    anti_patterns:
+      - type: translate
+        reason_uk: "Англійський минулий час НЕ відповідає 1:1 українському виду. «I read» = і «читав», і «прочитав»"
+        reason: "English past tense does NOT map 1:1 to Ukrainian aspect. «I read» = both «читав» and «прочитав»"
+      - type: quiz-only
+        reason_uk: "Вид — це вибір мовця. Учні мають практикувати вибір виду в контексті, а не тільки розпізнавати"
+        reason: "Aspect is a speaker's choice. Learners must practice choosing aspect in context, not just recognize"
 
   # =========================================================================
   # GENERAL PATTERNS (any level)
   # =========================================================================
 
   general-vocabulary:
-    topics: ["vocabulary", "лексика", "words", "thematic vocabulary"]
+    standard_ref: "§3 (Thematic catalogue)"
     level: "any"
+    назва: "Тематична лексика"
+    name: "Thematic vocabulary"
+    topics:
+      - "vocabulary"
+      - "лексика"
+      - "words"
+      - "thematic vocabulary"
+      - "слова"
     exercises:
       - type: match-up
-        name_uk: "Слово → переклад"
+        назва: "Слово → переклад"
+        name: "Word → translation"
+        focus_uk: "Зіставити українські слова з англійськими перекладами"
         focus: "Match Ukrainian words to English translations"
       - type: fill-in
-        name_uk: "Вставте слово"
+        назва: "Вставте слово"
+        name: "Fill in the word"
+        focus_uk: "Вставити пропущене слово за контекстом"
         focus: "Fill in the missing word from context"
       - type: anagram
-        name_uk: "Склади слово"
+        назва: "Склади слово"
+        name: "Build a word"
+        focus_uk: "Переставити літери, щоб утворити правильне слово"
         focus: "Rearrange letters to form the target word"
       - type: odd-one-out
-        name_uk: "Четверте зайве"
+        назва: "Четверте зайве"
+        name: "Odd one out"
+        focus_uk: "Обрати слово, що не належить до семантичної групи"
         focus: "Pick the word that doesn't belong to the semantic group"
       - type: translate
-        name_uk: "Оберіть переклад"
+        назва: "Оберіть переклад"
+        name: "Choose the translation"
+        focus_uk: "Обрати правильний переклад із варіантів"
         focus: "Choose correct translation from options"
 
   general-reading:
-    topics: ["reading", "comprehension", "розуміння тексту", "dialogue"]
+    standard_ref: "§1 (Speech activities — reading)"
     level: "any"
+    назва: "Розуміння тексту"
+    name: "Reading comprehension"
+    topics:
+      - "reading"
+      - "comprehension"
+      - "розуміння тексту"
+      - "dialogue"
+      - "діалог"
+      - "читання"
     exercises:
       - type: true-false
-        name_uk: "Правда чи ні?"
+        назва: "Правда чи ні?"
+        name: "True or false?"
+        focus_uk: "Перевірити розуміння тексту або діалогу"
         focus: "Check comprehension of a passage or dialogue"
       - type: quiz
-        name_uk: "Відповідь на запитання"
+        назва: "Відповідь на запитання"
+        name: "Answer the question"
+        focus_uk: "Відповісти на запитання за текстом"
         focus: "Answer questions about a text passage"

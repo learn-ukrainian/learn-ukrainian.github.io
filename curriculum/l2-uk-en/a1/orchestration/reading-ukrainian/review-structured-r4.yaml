@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct ordering. Syllable
+    rule quoted from Большакова p.25 ("У слові стільки складів, скільки голосних звуків").
+    Звуковий аналіз 4-step method from p.29 co
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: All Ukrainian vocabulary VESUM-verified. No Russianisms, Surzhyk, or calques.
+    Phonetic claims about iotated vowels confirmed against Большакова Grade 1 (p.66,
+    70, 73). Ї description matches textbook e
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: concept (syllable rule) → pattern (звуковий аналіз
+    method) → practice (progressive reading). Большакова''s складові ланцюжки method
+    faithfully reproduced. Chin-test from Кравцова ad'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: '**Required vocabulary (all present in context):** яблуко ("Say яблуко:
+    the Я at the beginning gives [йа]"), молоко ("молоко (milk): three vowels"), людина
+    ("людина (person) — Л + Ю combination"), вули'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 activity markers match plan's activity_hints in type and focus.
+    Markers placed after relevant teaching (count-syllables after syllable rule, match-up
+    after iotated vowels, etc.). Good distributi
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: No motivational openers ("Numbers unlock..."), no meta-commentary ("Let
+    us explore..."), no gamified language. Tone is direct and instructional — appropriate
+    for a phonetics skills module. Cultural sp
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All four H2 sections present and correctly ordered (Склади → Голосні літери
+    → Читання слів → Підсумок). Clean markdown throughout. No duplicate summaries,
+    no meta-commentary sections, no stray tags. W
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian presented on its own terms throughout. Ї
+    described as "distinctly Ukrainian — Russian has no equivalent letter" (accurate).
+    No "like Russian but..." comparisons. Ukrainia
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Named speakers (Аня, Марко) with distinct roles — Аня practices the syllable
+    method, Марко confirms and extends. Natural situation (two people practicing reading
+    together). Shows the method in action:'
+findings: []

@@ -1,6 +1,6 @@
 # Build Summary: what-time (A1)
 
-Generated: 2026-03-30 21:52
+Generated: 2026-03-31 11:56
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:52
 | enrich | complete | 2026-03-30 04:54:19 |
 | verify | complete | 2026-03-30 04:54:19 |
 | review | complete | 2026-03-30 04:55:38 |
-| stress | complete | 2026-03-30 19:52:40 |
-| publish | complete | 2026-03-30 19:52:40 |
+| stress | complete | 2026-03-31 09:56:46 |
+| publish | complete | 2026-03-31 09:56:47 |
 
 ## Reviews
 
@@ -43,6 +43,7 @@ Generated: 2026-03-30 21:52
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

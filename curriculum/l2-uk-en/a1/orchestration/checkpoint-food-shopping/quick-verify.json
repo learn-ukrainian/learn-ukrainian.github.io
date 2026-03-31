@@ -1,13 +1,7 @@
 {
-  "attempt": 2,
-  "passed": false,
-  "errors": [
-    {
-      "check": "STRUCTURE",
-      "severity": "ERROR",
-      "message": "Missing section heading: 'Підсумок — Summary'"
-    }
-  ],
+  "attempt": 3,
+  "passed": true,
+  "errors": [],
   "warnings": [],
-  "timestamp": "2026-03-30T20:00:33.271868+00:00"
+  "timestamp": "2026-03-30T23:27:44.976824+00:00"
 }

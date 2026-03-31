@@ -1,6 +1,6 @@
 # Build Summary: special-signs (A1)
 
-Generated: 2026-03-29 18:14
+Generated: 2026-03-31 13:13
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-29 18:14
 | enrich | complete | 2026-03-29 15:54:59 |
 | verify | complete | 2026-03-29 15:54:59 |
 | review | complete | 2026-03-29 16:14:16 |
-| stress | complete | 2026-03-29 16:14:26 |
-| publish | complete | 2026-03-29 16:14:26 |
+| stress | complete | 2026-03-31 11:13:23 |
+| publish | complete | 2026-03-31 11:13:24 |
 
 ## Reviews
 
@@ -45,6 +45,7 @@ Generated: 2026-03-29 18:14
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

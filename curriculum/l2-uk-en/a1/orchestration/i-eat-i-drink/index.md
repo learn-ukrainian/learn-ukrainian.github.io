@@ -1,6 +1,6 @@
 # Build Summary: i-eat-i-drink (A1)
 
-Generated: 2026-03-30 21:49
+Generated: 2026-03-31 11:58
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:49
 | enrich | complete | 2026-03-30 14:01:41 |
 | verify | complete | 2026-03-30 14:01:42 |
 | review | complete | 2026-03-30 14:04:30 |
-| stress | complete | 2026-03-30 19:49:39 |
-| publish | complete | 2026-03-30 19:49:40 |
+| stress | complete | 2026-03-31 09:58:42 |
+| publish | complete | 2026-03-31 09:58:42 |
 
 ## Reviews
 
@@ -42,6 +42,7 @@ Generated: 2026-03-30 21:49
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

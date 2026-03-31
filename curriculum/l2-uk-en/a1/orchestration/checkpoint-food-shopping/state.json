@@ -17,7 +17,51 @@
     },
     "pre-verify": {
       "status": "complete",
-      "ts": "2026-03-30T19:58:16.355183+00:00"
+      "ts": "2026-03-30T23:21:56.005091+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T23:27:44.977484+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T23:15:38.503298+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T23:35:56.753608+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T23:21:39.420469+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T23:21:39.426690+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T23:28:09.694819+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T23:22:09.671877+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T23:22:09.869313+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-30T23:41:45.485708+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-03-31T09:48:33.734295+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-03-31T09:48:34.229626+00:00"
     }
   }
 }

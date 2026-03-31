@@ -227,8 +227,8 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
                      allow_write: bool, skip_github: bool):
     """Run Gemini synchronously with streaming output and retry logic."""
     task_key = msg.get('task_id') or str(message_id)
-    timeout_val = None if no_timeout else 900
-    mode_label = "no-timeout" if no_timeout else "sync, 15 min timeout"
+    timeout_val = None if no_timeout else 1800
+    mode_label = "no-timeout" if no_timeout else "sync, 30 min timeout"
 
     if _is_task_locked("gemini", task_key):
         print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")

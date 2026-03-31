@@ -1,0 +1,89 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present (Dialogues, Планування, Мій тиждень,
+    Summary). Both dialogues follow plan scripts closely. All required vocab used
+    naturally: план ("плани на тиждень"), тиждень,'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All 97 common Ukrainian words VESUM-verified. Grammar explanation of analytic
+    future (буду + infinitive) is correct. Gender marking of вільний/вільна correctly
+    shown. Days-of-week forms correct. Minor
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: dialogues present situation → Planning section extracts
+    patterns → My Week provides model + practice template. Multiple examples per grammar
+    point (8+ sentences with буду + infinitive).'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required vocabulary items used in context (not as lists): план
+    in "плани на тиждень" and "У тебе є плани"; тиждень in "Мій тиждень" heading and
+    Taras''s schedule; вільний in "Ти будеш вільний/віл'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '3 activity markers matching 3 plan activity_hints exactly. Each marker
+    placed after the relevant teaching section. Fill-in #1 tests day+time+future combinations
+    (plan hint focus matches). Matching #2 '
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: '**Deductions:** "These adverbs are incredibly useful because they do
+    not require any extra prepositions" — generic enthusiasm ("incredibly useful"
+    could apply to any language). "This makes the future '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections present and ordered per plan: Dialogues → Планування
+    → Мій тиждень → Summary. Clean markdown throughout. No stray tags, no duplicate
+    sections. Word count 1920/1200 = well within rang'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. Милозвучність explained as a Ukrainian
+    phonological concept. No "like Russian" comparisons. Weekend planning and social
+    activities reflect authentic Ukrainian dai
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Named speakers throughout (Оля, Тарас, Марія in D1; Дмитро, Анна in D2).
+    Natural multi-turn exchanges — not interrogation. D1: three friends coordinating
+    Saturday plans with negotiation (time, place).'
+findings:
+- dimension: PEDAGOGICAL QUALITY
+  severity: MAJOR
+  location: 'Планування section, euphony paragraph — "Let''s practice: **я буду працювати
+    у понеділок** (и + у + п — vowel, then у before consonant? After a vowel we use
+    в: **я буду працювати в понеділок**)."'
+  issue: 'Shows incorrect form first, then self-corrects through stream-of-consciousness
+    reasoning. A1 learners may encode the initial wrong form ("у понеділок" after
+    a vowel). Pedagogical best practice at A1: present correct forms directly, never
+    show wrong forms as primary examples.'
+  fix: Replace the confusing think-aloud paragraph with clear contrastive correct
+    examples.
+- dimension: ENGAGEMENT & TONE
+  severity: MINOR
+  location: Планування section — "These adverbs are incredibly useful because they
+    do not require any extra prepositions."
+  issue: '"incredibly useful" is generic enthusiasm that could apply to any language
+    course. Per rubric: deduct for generic enthusiasm.'
+  fix: Replace with specific pedagogical reason.
+- dimension: ENGAGEMENT & TONE
+  severity: MINOR
+  location: Dialogues section, after first dialogue — "This makes the future tense
+    very approachable once you know your basic verbs."
+  issue: Motivational filler — tells the learner how to feel instead of demonstrating
+    value through examples.
+  fix: Remove the sentence; the preceding explanation already shows why it's approachable.
+- dimension: LINGUISTIC ACCURACY
+  severity: MINOR
+  location: Мій тиждень — "**В неділю я буду спати довго!**"
+  issue: Module teaches "At the start of a sentence, use **у** before a consonant"
+    but then uses "В неділю" at sentence start. Self-contradictory. (Euphony alternation
+    = minor per review guidelines.)
+  fix: Change to "У неділю" for consistency with stated rule.

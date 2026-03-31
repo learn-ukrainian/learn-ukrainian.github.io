@@ -1,6 +1,6 @@
 # Build Summary: euphony (A1)
 
-Generated: 2026-03-30 21:48
+Generated: 2026-03-31 11:57
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:48
 | enrich | complete | 2026-03-30 11:52:44 |
 | verify | complete | 2026-03-30 11:52:44 |
 | review | complete | 2026-03-30 12:01:49 |
-| stress | complete | 2026-03-30 19:48:49 |
-| publish | complete | 2026-03-30 19:48:49 |
+| stress | complete | 2026-03-31 09:57:04 |
+| publish | complete | 2026-03-31 09:57:05 |
 
 ## Reviews
 
@@ -44,6 +44,7 @@ Generated: 2026-03-30 21:48
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

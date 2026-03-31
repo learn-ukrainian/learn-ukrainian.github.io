@@ -178,9 +178,9 @@ Each question comes in a pair — one masculine form, one feminine form. Choose 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **учо́ра** | yesterday | присл. |  |
 | **роби́ти** | to do | дієсл. |  |
@@ -204,9 +204,9 @@ Each question comes in a pair — one masculine form, one feminine form. Choose 
 | **вдо́ма** | at home | присл. |  |
 | **по́тім** | then, afterwards | присл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **минулого тижня** | last week |
 | **весь день** | all day |
@@ -217,7 +217,7 @@ Each question comes in a pair — one masculine form, one feminine form. Choose 
 | **Як приємно!** | How nice! |
 | **Ми гуляли разом.** | We walked together. |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "учо́ра", back: "yesterday", subtitle: "присл." }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak", subtitle: "дієсл." }, { front: "мину́лий", back: "past (adj.)", subtitle: "прикм." }, { front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́зом", back: "together", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "провести́", back: "to spend (time)", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́жка", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "детекти́в", back: "detective novel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "серіа́л", back: "TV series", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }]} />
 
@@ -225,7 +225,7 @@ Each question comes in a pair — one masculine form, one feminine form. Choose 
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -233,7 +233,7 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - State Standard 2024, §4.2.4.1
   _Past tense — gender agreement in verb forms._
@@ -242,14 +242,14 @@ Advanced exercises for this module are in development. Check back soon!
 - [ULP Season 1, Episodes 26-27](https://www.ukrainianlessons.com/episode26/)
   _Past tense verbs and narrating events._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Основа слова і закінчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Часи дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
+- [МійКлас: Осно́ва слова і закі́нчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Часи́ дієслі́в. Тепе́рішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
-- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
+- [Ukrainian Tongue Twisters (Скоромо́вки)](https://www.ukrainianlessons.com/tonguetwisters/)
 - [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
 - [Ukrainian Personal Pronouns](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/)

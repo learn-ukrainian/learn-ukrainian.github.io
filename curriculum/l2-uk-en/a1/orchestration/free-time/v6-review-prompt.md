@@ -32,7 +32,7 @@ dialogue_situations:
 - setting: At a community center bulletin board — discussing activity sign-ups
   speakers:
   - Вітя
-  - Лєна
+  - Оленка
   motivation: 'Frequency adverbs: Часто ходиш? Іноді. Ходімо разом!'
 content_outline:
 - section: Діалоги (Dialogues)
@@ -137,27 +137,27 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 Вітя and Лєна are standing by a bulletin board at the community center, scanning sign-up sheets for weekend activities. Their conversation covers everything this module teaches — invitations, hobbies, and how often they do things.
 
-### Діалог 1 — Weekend Plans
+### Діало́г 1 — Weekend Plans
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Привіт, Вітю! Що ти робиш у вихідні? *(Hi, Vitya! What are you doing on the weekend?)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> Приві́т, Вітю! Що ти ро́биш у вихідні́? *(Hi, Vitya! What are you doing on the weekend?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Привіт! Зазвичай я гуляю і читаю. *(Hi! Usually I walk and read.)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Привіт! Зазвича́й я гуля́ю і чита́ю. *(Hi! Usually I walk and read.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> А в суботу? Ходімо в кіно! *(And on Saturday? Let's go to the cinema!)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> А в субо́ту? Ході́мо в кіно́! *(And on Saturday? Let's go to the cinema!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> О, добре! О котрій? *(Oh, great! At what time?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> О, до́бре! О котрі́й? *(Oh, great! At what time?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> О п'ятій. *(At five.)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> О п'я́тій. *(At five.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Чудово! А потім — гуляємо? *(Wonderful! And then — we walk?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Чудо́во! А по́тім — гуля́ємо? *(Wonderful! And then — we walk?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Так, звичайно! *(Yes, of course!)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> Так, звича́йно! *(Yes, of course!)*</div>
 
 </div>
 
@@ -167,21 +167,21 @@ Notice how Лєна uses **Ходімо!** (Let's go!) to invite Вітя. This 
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Ти любиш спорт? *(Do you like sports?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Ти лю́биш спорт? *(Do you like sports?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Так, я граю у футбол. *(Yes, I play football.)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> Так, я гра́ю у футбо́л. *(Yes, I play football.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Справді? Як часто? *(Really? How often?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Спра́вді? Як ча́сто? *(Really? How often?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> Дві́чі на ти́ждень, у вівто́рок і четве́р. *(Twice a week, on Tuesday and Thursday.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Вітя:</span> А ще? Що ти робиш? *(And what else? What do you do?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Іноді слухаю музику і малюю. *(Sometimes I listen to music and draw.)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> І́ноді слу́хаю му́зику і малю́ю. *(Sometimes I listen to music and draw.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Я теж малюю! А в музей ходиш? *(I draw too! Do you go to the museum?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Я теж малюю! А в музе́й хо́диш? *(I draw too! Do you go to the museum?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лєна:</span> Рідко. Раз на місяць. *(Rarely. Once a month.)*</div>
+<div class="dialogue-line"><span class="speaker">Лєна:</span> Рі́дко. Раз на мі́сяць. *(Rarely. Once a month.)*</div>
 
 </div>
 
@@ -191,15 +191,15 @@ The key question here is **Як часто?** (How often?) — it opens the door
 Two communicative tools from these dialogues: **Ходімо!** (Let's go!) for invitations, and **Як часто?** (How often?) for asking about frequency. Both appear naturally in conversation before any formal explanation — you already understand them from context.
 :::
 
-## Хобі і спорт (Hobbies and Sports)
+## Хо́бі і спорт (Hobbies and Sports)
 
 In M15, you learned the pattern **Я люблю** + infinitive (I like to...). Now we expand that with specific hobby verbs. Each verb naturally pairs with a noun — learn them as chunks, not separate words:
 
 - **малювати** (to draw) — Я люблю малювати.
-- **фотографувати** (to take photos) — Вона любить фотографувати.
-- **слухати музику** (to listen to music) — Він слухає музику.
-- **дивитися фільми** (to watch films) — Ми дивимося фільми.
-- **дивитися серіали** (to watch series) — Вони дивляться серіали.
+- **фотографувати** (to take photos) — Вона́ лю́бить фотографувати.
+- **слухати музику** (to listen to music) — Він слу́хає музику.
+- **дивитися фільми** (to watch films) — Ми ди́вимося фільми.
+- **дивитися серіали** (to watch series) — Вони́ ди́вляться серіали.
 
 These verbs and their objects belong together. When you say **слухати**, the next word is almost always **музику**. When you say **дивитися**, you expect **фільми** or **серіали**. Think of them as a single unit.
 
@@ -221,18 +221,18 @@ Don't choose the preposition — learn the whole phrase. Sport → **у**, instr
 
 Going out for entertainment also follows a chunk pattern: **ходити** + **в** or **на** + destination. Memorize these as fixed phrases:
 
-- **ходити в кіно** (to go to the cinema) — Я ходжу в кіно.
-- **ходити в театр** (to go to the theater) — Він ходить в театр.
+- **ходити в кіно** (to go to the cinema) — Я ходжу́ в кіно.
+- **ходити в театр** (to go to the theater) — Він хо́дить в театр.
 - **ходити на концерт** (to go to a concert) — Вона ходить на концерт.
-- **ходити в музей** (to go to a museum) — Ми ходимо в музей.
+- **ходити в музей** (to go to a museum) — Ми хо́димо в музей.
 
 The case grammar behind **в** and **на** comes later in A1.5 — for now, memorize these as full phrases. You already know the destinations; just attach **ходити** to the front.
 
 Now combine several chunks to describe a range of hobbies. Try reading these aloud:
 
 - Я граю у баскетбол і слухаю музику.
-- Вона грає на гітарі і малює.
-- Вони ходять в театр і дивляться фільми.
+- Вона гра́є на гітарі і малю́є.
+- Вони хо́дять в театр і дивляться фільми.
 
 Your turn: pick two or three of your own hobbies and describe them using the same structures. Use **Я люблю** + infinitive, or just the verb + object.
 
@@ -246,18 +246,18 @@ Ukrainian has six core frequency adverbs. Think of them on a scale from "always"
 
 Each one in a sentence:
 
-- Я **завжди** снідаю. *(I always eat breakfast.)*
-- Вона **зазвичай** читає ввечері. *(She usually reads in the evening.)*
+- Я **завжди** сні́даю. *(I always eat breakfast.)*
+- Вона **зазвичай** чита́є вве́чері. *(She usually reads in the evening.)*
 - Він **часто** грає у теніс. *(He often plays tennis.)*
 - Ми **іноді** ходимо в кіно. *(We sometimes go to the cinema.)*
-- Вона **рідко** дивиться серіали. *(She rarely watches series.)*
+- Вона **рідко** ди́виться серіали. *(She rarely watches series.)*
 - Він **ніколи не** грає у футбол. *(He never plays football.)*
 
 A note on **іноді**: you may also hear **інколи**, which means the same thing. Use **іноді** as your main word — it's more common at this level.
 
 Word order is straightforward: the frequency adverb goes **before the verb** in a neutral statement. **Я часто гуляю.** **Він іноді малює.** One special rule: **ніколи** always requires **не** directly before the verb. This is Ukrainian double negation — you saw it in M19. The two words are inseparable:
 
-- Я **ніколи не** працюю у неділю. *(I never work on Sunday.)*
+- Я **ніколи не** працю́ю у неді́лю. *(I never work on Sunday.)*
 - Він **ніколи не** ходить у театр. *(He never goes to the theater.)*
 
 :::note
@@ -279,11 +279,11 @@ In full sentences:
 - Я граю у футбол **двічі на тиждень**. *(I play football twice a week.)*
 - Вона ходить у кіно **раз на місяць**. *(She goes to the cinema once a month.)*
 - Він малює **кожен день**. *(He draws every day.)*
-- Ми граємо у волейбол **тричі на тиждень**. *(We play volleyball three times a week.)*
+- Ми гра́ємо у волейбол **тричі на тиждень**. *(We play volleyball three times a week.)*
 
 You can even combine both types — an adverb before the verb and a numeric expression after it:
 
-- Я **часто** граю у теніс — **двічі або тричі на тиждень**. *(I often play tennis — two or three times a week.)*
+- Я **часто** граю у теніс — **двічі або́ тричі на тиждень**. *(I often play tennis — two or three times a week.)*
 - Вона **рідко** ходить у театр — **раз на місяць**. *(She rarely goes to the theater — once a month.)*
 
 Try it yourself: pick two of your hobbies and add a frequency to each — one single-word adverb and one numeric expression. This combination is exactly what you'll need for the A1.4 checkpoint.
@@ -303,7 +303,7 @@ Test yourself — answer each question aloud in Ukrainian:
 - How do you say "let's go to the cinema"? → **Ходімо в кіно!**
 - What is your hobby? → **Я граю у футбол.** / **Я люблю малювати.** / **Я слухаю музику.**
 - How often do you play tennis? → **Двічі на тиждень.** / **Іноді.** / **Рідко.**
-- Do you always watch series? → **Так, я завжди дивлюся.** / **Ні, я ніколи не дивлюся.**
+- Do you always watch series? → **Так, я завжди дивлю́ся.** / **Ні, я ніколи не дивлюся.**
 - What do you do on the weekend? → **Я зазвичай гуляю і читаю.**
 - Does he play piano or football? → **Він грає на піаніно.**
 
@@ -311,7 +311,7 @@ If you answered four or more, you're ready for M27.
 
 All four A1.4 skills now come together: time expressions from M25, days of the week from M24, weather from M23, and now free-time activities with frequency. At the checkpoint (M27), you'll describe a full day from **ранок** (morning) to **вечір** (evening) — including the weather, your plans, and how often you do your activities. The invitation and frequency patterns from this module are essential building blocks for that final A1.4 task.
 
-**Ти вже вмієш говорити про хобі, запрошувати друзів і пояснювати, як часто ти щось робиш. Це — справжня розмова!** *(You can already talk about hobbies, invite friends, and explain how often you do things. That's real conversation!)*
+**Ти вже вмі́єш говори́ти про хобі, запро́шувати дру́зів і поя́снювати, як часто ти щось робиш. Це — спра́вжня розмо́ва!** *(You can already talk about hobbies, invite friends, and explain how often you do things. That's real conversation!)*
 
 **Deterministic word count: 1482 words** (calculated by pipeline, do NOT estimate manually)
 
@@ -491,14 +491,53 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 105 words | Not found: 3 words
+Verified: 97 words | Not found: 42 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Вітю — NOT IN VESUM
   ✗ Вітя — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Зазвича — NOT IN VESUM
   ✗ Лєна — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Спра — NOT IN VESUM
+  ✗ биш — NOT IN VESUM
+  ✗ вве — NOT IN VESUM
+  ✗ вді — NOT IN VESUM
+  ✗ вжня — NOT IN VESUM
+  ✗ вимося — NOT IN VESUM
+  ✗ вляться — NOT IN VESUM
+  ✗ вмі — NOT IN VESUM
+  ✗ вівто — NOT IN VESUM
+  ✗ гуля — NOT IN VESUM
+  ✗ димо — NOT IN VESUM
+  ✗ дить — NOT IN VESUM
+  ✗ дко — NOT IN VESUM
+  ✗ дру — NOT IN VESUM
+  ✗ дять — NOT IN VESUM
+  ✗ ждень — NOT IN VESUM
+  ✗ запро — NOT IN VESUM
+  ✗ звича — NOT IN VESUM
+  ✗ малю — NOT IN VESUM
+  ✗ музе — NOT IN VESUM
+  ✗ неді — NOT IN VESUM
+  ✗ ноді — NOT IN VESUM
+  ✗ п'я — NOT IN VESUM
+  ✗ поя — NOT IN VESUM
+  ✗ розмо — NOT IN VESUM
+  ✗ слу — NOT IN VESUM
+  ✗ снювати — NOT IN VESUM
+  ✗ спра — NOT IN VESUM
+  ✗ субо — NOT IN VESUM
+  ✗ сяць — NOT IN VESUM
+  ✗ футбо — NOT IN VESUM
+  ✗ хаю — NOT IN VESUM
+  ✗ хає — NOT IN VESUM
+  ✗ четве — NOT IN VESUM
+  ✗ шувати — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
 
-All 105 other words are confirmed to exist in VESUM.
+All 97 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -507,23 +546,23 @@ All 105 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
+- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp__rag__search_literary` — verify literary references against primary sources
+- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

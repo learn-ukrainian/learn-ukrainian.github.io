@@ -201,13 +201,22 @@ export function ErrorCorrectionItem({
   );
 }
 
+interface ErrorCorrectionItemData {
+  sentence: string;
+  errorWord: string | null;
+  correctForm: string;
+  options: string[];
+  explanation: string;
+}
+
 interface ErrorCorrectionProps {
-  children: React.ReactNode;
+  items?: ErrorCorrectionItemData[];
+  children?: React.ReactNode;
   instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function ErrorCorrection({ children, instruction, isUkrainian }: ErrorCorrectionProps) {
+export default function ErrorCorrection({ items, children, instruction, isUkrainian }: ErrorCorrectionProps) {
   const headerLabel = isUkrainian ? 'Знайдіть і виправте помилку' : 'Find and Fix';
 
   return (
@@ -221,7 +230,17 @@ export default function ErrorCorrection({ children, instruction, isUkrainian }: 
         <p className={styles.instruction}><strong>{instruction}</strong></p>
       )}
       <div className={styles.activityContent}>
-        {React.Children.map(children, (child) => {
+        {items ? items.map((item, index) => (
+          <ErrorCorrectionItem
+            key={index}
+            sentence={item.sentence}
+            errorWord={item.errorWord}
+            correctForm={item.correctForm}
+            options={item.options}
+            explanation={item.explanation}
+            isUkrainian={isUkrainian}
+          />
+        )) : React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child as React.ReactElement<any>, { isUkrainian });
           }

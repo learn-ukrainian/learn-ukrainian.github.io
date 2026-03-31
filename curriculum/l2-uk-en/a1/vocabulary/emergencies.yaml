@@ -1,0 +1,325 @@
+vocabulary:
+- word: допомо́га
+  translation: help
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Допоможіть!
+  translation: Help!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: швидка́
+  translation: ambulance (short for швидка допомога)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: полі́ція
+  translation: police
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ава́рія
+  translation: accident
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: загуби́ти
+  translation: to lose (something)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: викликати
+  translation: to call, to summon
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поже́жа
+  translation: fire
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поряту́нок
+  translation: rescue
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́спорт
+  translation: passport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: адре́са
+  translation: address
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: но́мер
+  translation: number
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: алергі́я
+  translation: allergy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фо́рма
+  translation: form, document
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: буди́нок
+  translation: building
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: служба порятунку
+  translation: emergency rescue service
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Слухаю вас.
+  translation: I'm listening. (formal phone greeting)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Викличте швидку!
+  translation: Call an ambulance!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Викличте поліцію!
+  translation: Call the police!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут аварія!
+  translation: There's an accident here!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут пожежа!
+  translation: There's a fire here!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Людині погано!
+  translation: Someone is feeling unwell!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені потрібна допомога!
+  translation: I need help!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Залишайтеся на місці.
+  translation: Stay where you are.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: опера́тор
+  translation: operator (emergency services)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́хатися
+  translation: to move
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перехо́жий
+  translation: passerby
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пря́мо
+  translation: straight ahead
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: налі́во
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: офіце́р
+  translation: officer (police)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прі́звище
+  translation: surname, family name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: запо́внити
+  translation: to fill out (a form)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Мені потрібен лікар.
+  translation: I need a doctor.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: голова́
+  translation: head
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: спи́на
+  translation: back
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рука́
+  translation: arm, hand
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нога́
+  translation: leg, foot
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: табле́тки
+  translation: pills, tablets
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: горі́хи
+  translation: nuts
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: У мене алергія на...
+  translation: I'm allergic to...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не розумію.
+  translation: I don't understand.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Повторіть, будь ласка.
+  translation: Please repeat.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Говоріть повільніше, будь ласка.
+  translation: Please speak more slowly.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ви говорите англійською?
+  translation: Do you speak English?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пові́льніше
+  translation: more slowly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ім'я́
+  translation: first name
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Я загубив паспорт.
+  translation: I lost my passport. (male speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я загубила паспорт.
+  translation: I lost my passport. (female speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: understood, got it
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: мі́сце
+  translation: place, spot
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мо́же
+  translation: maybe, perhaps
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: один один два
+  translation: one-one-two (112 — universal emergency number)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

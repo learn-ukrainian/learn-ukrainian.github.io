@@ -114,3 +114,33 @@
 {"slug": "checkpoint-food-shopping", "error_type": "STRUCTURE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T20:00:33.272101+00:00"}
 {"slug": "checkpoint-food-shopping", "error_type": "WRITE_FAILED", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-30T20:04:27.684494+00:00"}
 {"slug": "hey-friend", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T20:09:37.106030+00:00"}
+{"slug": "please-do-this", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T20:26:48.333124+00:00"}
+{"slug": "linking-ideas", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T20:40:08.197256+00:00"}
+{"slug": "when-and-where", "error_type": "VOCABULARY", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T20:54:38.423766+00:00"}
+{"slug": "when-and-where", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T20:55:59.783487+00:00"}
+{"slug": "holidays", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T21:11:38.983063+00:00"}
+{"slug": "what-will-happen", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T21:12:54.170290+00:00"}
+{"slug": "my-plans", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:26:42.731691+00:00"}
+{"slug": "my-plans", "error_type": "STRUCTURE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:27:32.290811+00:00"}
+{"slug": "checkpoint-communication", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:27:40.699445+00:00"}
+{"slug": "checkpoint-communication", "error_type": "STRUCTURE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:29:04.500215+00:00"}
+{"slug": "my-plans", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-30T21:29:31.082751+00:00"}
+{"slug": "checkpoint-communication", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-30T21:30:52.903668+00:00"}
+{"slug": "what-happened", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T21:46:13.942538+00:00"}
+{"slug": "my-story", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:48:39.284201+00:00"}
+{"slug": "my-story", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T21:51:04.892903+00:00"}
+{"slug": "yesterday", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T21:59:14.347106+00:00"}
+{"slug": "yesterday", "error_type": "STRUCTURE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T22:00:17.278379+00:00"}
+{"slug": "yesterday", "error_type": "WRITE_FAILED", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-30T22:03:41.484502+00:00"}
+{"slug": "health", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T22:07:49.549134+00:00"}
+{"slug": "health", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T22:08:15.108934+00:00"}
+{"slug": "yesterday", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T22:25:42.303639+00:00"}
+{"slug": "emergencies", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T22:29:37.853363+00:00"}
+{"slug": "a1-finale", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T22:49:57.524375+00:00"}
+{"slug": "checkpoint-food-shopping", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T23:14:25.573816+00:00"}
+{"slug": "checkpoint-food-shopping", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-03-30T23:15:38.502479+00:00"}
+{"slug": "checkpoint-food-shopping", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T23:22:57.643106+00:00"}
+{"slug": "checkpoint-food-shopping", "error_type": "STRUCTURE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-30T23:23:45.553994+00:00"}
+{"slug": "checkpoint-food-shopping", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-30T23:27:44.976994+00:00"}
+{"slug": "reading-ukrainian", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T11:00:29.419655+00:00"}
+{"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-03-31T11:01:51.801616+00:00"}

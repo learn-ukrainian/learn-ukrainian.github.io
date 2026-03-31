@@ -1,6 +1,6 @@
 # Build Summary: around-the-city (A1)
 
-Generated: 2026-03-30 21:47
+Generated: 2026-03-31 11:57
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:47
 | enrich | complete | 2026-03-30 13:12:12 |
 | verify | complete | 2026-03-30 13:12:12 |
 | review | complete | 2026-03-30 13:14:04 |
-| stress | complete | 2026-03-30 19:47:43 |
-| publish | complete | 2026-03-30 19:47:43 |
+| stress | complete | 2026-03-31 09:57:07 |
+| publish | complete | 2026-03-31 09:57:07 |
 
 ## Reviews
 
@@ -41,6 +41,7 @@ Generated: 2026-03-30 21:47
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

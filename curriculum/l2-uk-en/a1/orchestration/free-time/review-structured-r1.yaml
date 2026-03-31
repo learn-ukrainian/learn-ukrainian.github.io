@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 content_outline sections present and well-covered. All 8 required
+    vocab words used naturally in prose. All 7 recommended vocab words present (завжди,
+    зазвичай, ніколи, театр, концерт, музей, дав
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian verified against VESUM (97/97 real words confirmed). грати
+    у + sport / грати на + instrument patterns correct. Frequency adverbs all verified.
+    Double negation (ніколи не) correctly expla
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present patterns in context → explicit teaching
+    sections extract rules → practice markers follow each section. Chunks approach
+    (learn verb+object together, not separately) i'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All 8 required words used naturally in prose. All 7 recommended words
+    present. Additional vocabulary beyond plan (волейбол, скрипка, серіали, фотографувати)
+    enriches the module appropriately. Words in
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 3 markers matching 3 plan activity hints exactly. Placement after relevant
+    teaching sections is correct. Match-up covers verb-noun pairings (грати↔у футбол,
+    слухати↔музику). Fill-in exercises cover bo
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no "let us explore" meta-commentary, no generic
+    enthusiasm. Tone is direct and teacher-like: "Notice how Лєна uses Ходімо! to
+    invite Вітя." Practical tips ("Don''t choose the p'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections from plan present in correct order. Clean markdown with
+    proper div classes for dialogues. No duplicate summaries, no meta-commentary sections,
+    no stray tags. Word count 1482 is withi
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No comparisons to Russian. The chunk-learning
+    approach (ходити в кіно as a unit) respects how Ukrainian actually works rather
+    than imposing English grammar catego
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two named speakers (Вітя, Лєна) with distinct voices. Dialogue 1 flows
+    naturally: greeting → question → invitation → time negotiation → agreement. Dialogue
+    2 builds naturally from sports → frequency →'
+findings: []

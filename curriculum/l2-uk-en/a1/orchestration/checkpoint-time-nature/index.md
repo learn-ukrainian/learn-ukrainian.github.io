@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-time-nature (A1)
 
-Generated: 2026-03-30 21:48
+Generated: 2026-03-31 11:46
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-30 21:48
 | enrich | complete | 2026-03-30 06:44:13 |
 | verify | complete | 2026-03-30 06:44:13 |
 | review | complete | 2026-03-30 11:40:55 |
-| stress | complete | 2026-03-30 19:48:18 |
-| publish | complete | 2026-03-30 19:48:18 |
+| stress | complete | 2026-03-31 09:46:15 |
+| publish | complete | 2026-03-31 09:46:15 |
 
 ## Reviews
 
@@ -42,6 +42,7 @@ Generated: 2026-03-30 21:48
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

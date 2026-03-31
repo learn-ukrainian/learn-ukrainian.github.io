@@ -30,7 +30,7 @@ When you want to say you enjoy *doing* something, Ukrainian uses a simple formul
 - **Я люблю гуляти.** — I like to walk.
 - **Я люблю готувати.** — I like to cook.
 - **Я люблю слухати музику.** — I like to listen to music.
-The structure never changes: subject + **люблю** + infinitive. The infinitive is the raw building block — you will use it with other verbs too (like **хотіти** — to want), but **люблю** is your first chance to put it to work.
+The structure never changes: subject + **люблю** + infinitive. The infinitive is the raw building block — you will use it with other verbs too (like **хоті́ти** — to want), but **люблю** is your first chance to put it to work.
 Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable patterns in the language — when you see **-ти** at the end of a word, you are looking at a verb in its base form. Here are the core hobby verbs for this module:
 | Ukrainian | English |
 |-----------|---------|
@@ -38,8 +38,8 @@ Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable p
 | **гуляти** | to walk, to hang out |
 | **готувати** | to cook |
 | **слухати** | to listen |
-| **дивитися** | to watch |
-| **грати** | to play (a game, an instrument) |
+| **диви́тися** | to watch |
+| **гра́ти** | to play (a game, an instrument) |
 One thing to be aware of: stress varies from verb to verb. There is no single rule — you learn each one as a whole unit. You will pick up the natural stress as you encounter each verb in context.
 <!-- INJECT_ACTIVITY: match-infinitives-meanings -->
 Now let's add more hobby verbs to your toolkit, each one inside the **Я люблю...** frame so you can use them right away:
@@ -48,8 +48,8 @@ Now let's add more hobby verbs to your toolkit, each one inside the **Я люб�
 - **Я люблю співа́ти.** — I like to sing.
 - **Я люблю грати в і́гри.** — I like to play games.
 - **Я люблю дивитися фі́льми.** — I like to watch films.
-Notice that **грати** (to play) needs context: **грати в шахи** (to play chess), **грати на гітарі** (to play guitar), **грати в ігри** (to play games). It is not a one-size-fits-all "play" — Ukrainian is more specific about *what* you play. At this stage, just learn the chunks: **грати в** + a game, **грати на** + an instrument.
-You can also talk about other people. The verb **любити** changes its ending depending on who is doing the liking. For now, just two forms: **Я люблю** (I like) and **моя по́друга любить** (my friend likes) or **мій брат любить** (my brother likes). Try building your own sentence: **Я люблю** + one infinitive from the list above.
+Notice that **грати** (to play) needs context: **грати в ша́хи** (to play chess), **грати на гіта́рі** (to play guitar), **грати в ігри** (to play games). It is not a one-size-fits-all "play" — Ukrainian is more specific about *what* you play. At this stage, just learn the chunks: **грати в** + a game, **грати на** + an instrument.
+You can also talk about other people. The verb **люби́ти** changes its ending depending on who is doing the liking. For now, just two forms: **Я люблю** (I like) and **моя́ по́друга лю́бить** (my friend likes) or **мій брат любить** (my brother likes). Try building your own sentence: **Я люблю** + one infinitive from the list above.
 ## Мені подобається... (I Like...)
 Ukrainian has two ways to say "I like," and each one works with different things. Here is the key distinction:
 - **Я люблю + infinitive** = I like *doing* something (an activity).
@@ -71,8 +71,8 @@ To say you *don't* like something, place **не** directly before the verb in bo
 - **Я не люблю готувати.** — I don't like to cook.
 - **Мені не подобається цей фільм.** — I don't like this film.
 Here are a few more examples of what negation looks like with both structures:
-> — **Інна:** Я не люблю ми́ти по́суд. *(I don't like to wash dishes.)*
-> — **Зоя:** А мені не подобається ця стра́ва. *(And I don't like this dish.)*
+> — **І́нна:** Я не люблю ми́ти по́суд. *(I don't like to wash dishes.)*
+> — **Зо́я:** А мені не подобається ця стра́ва. *(And I don't like this dish.)*
 
 See the pattern? Інна uses **не люблю** + infinitive (an activity she doesn't enjoy), and Зоя uses **мені не подобається** + noun (a thing she doesn't like). The word **не** always goes right before the verb.
 To ask questions, simply use a rising intonation — no word-order change needed. **Ти любиш читати?** (Do you like to read?) **Тобі подобається?** (Do you like it?) You may have noticed that **люблю** changes to **любиш** for **ти** (you). Full conjugation of this verb group comes in M17 — for now, memorize just two forms: **я люблю**, **ти любиш**.
@@ -86,14 +86,14 @@ Test yourself with these questions:
 - **Чи тобі подобається цей фільм?** *(Do you like this film?)* → **Так, мені подобається.** / **Ні, мені не подобається.**
 - **Як сказа́ти "I like jazz"?** → **Мені подобається джаз.** (It's a thing, not an activity — so **подобається**, not **люблю**.)
 - **Як сказати "I like to sing"?** → **Я люблю співати.** (It's an activity — so **люблю** + infinitive.)
-In M16, you will learn Group I verb conjugation — verbs like **читати** and **слухати** will gain personal endings so you can say **Я читаю** (I read) and **Ти слухаєш** (you listen), not just **Я люблю читати**. The infinitives you learned today are the raw material for everything that comes next. Ukrainian schoolchildren learn this exact same pattern in first grade — «Я люблю малювати. Я не люблю грати в хоке́й. Я люблю грати в шахи.» The structure never changes, from age six to adulthood. You are ready.
+In M16, you will learn Group I verb conjugation — verbs like **читати** and **слухати** will gain personal endings so you can say **Я чита́ю** (I read) and **Ти слу́хаєш** (you listen), not just **Я люблю читати**. The infinitives you learned today are the raw material for everything that comes next. Ukrainian schoolchildren learn this exact same pattern in first grade — «Я люблю малювати. Я не люблю грати в хоке́й. Я люблю грати в шахи.» The structure never changes, from age six to adulthood. You are ready.
 
 
 <!-- TAB:Словник -->
 
-### Обов'язкові та рекомендовані слова
+### Обов'язко́ві та рекомендо́вані слова́
 
-| Слово | Переклад | Частина мови | Рід |
+| Сло́во | Переклад | Части́на мо́ви | Рід |
 |-------|----------|-------------|-----|
 | **люби́ти** | to love/like | дієсл. |  |
 | **люблю́** | I like/love (1st person singular of любити) | дієсл. |  |
@@ -124,9 +124,9 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 | **пра́вда** | really? is that true? (as a question); truth | ім. | ж. |
 | **роби́ти** | to do | дієсл. |  |
 
-### Вирази
+### Ви́рази
 
-| Вираз | Переклад |
+| Ви́раз | Переклад |
 |-------|----------|
 | **мити посуд** | to wash dishes |
 | **Я люблю...** | I like... (used with infinitive for activities) |
@@ -143,7 +143,7 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 | **класична музика** | classical music |
 | **мені теж** | me too, I also |
 
-### Картки — Flashcards
+### Картки́ — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "люби́ти", back: "to love/like", subtitle: "дієсл." }, { front: "люблю́", back: "I like/love (1st person singular of любити)", subtitle: "дієсл." }, { front: "лю́биш", back: "you like/love (2nd person singular of любити)", subtitle: "дієсл." }, { front: "подо́батися", back: "to be pleasing (used as 'to like')", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk, to hang out", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "гра́ти", back: "to play (a game, an instrument)", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "співа́ти", back: "to sing", subtitle: "дієсл." }, { front: "му́зика", back: "music", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фільм", back: "film", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "борщ", back: "borshch (traditional Ukrainian beet soup)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "варе́ники", back: "varenyky (stuffed dumplings)", subtitle: "ім." }, { front: "джаз", back: "jazz", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́суд", back: "dishes, kitchenware", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гла́дити", back: "to iron", subtitle: "дієсл." }, { front: "інфініти́в", back: "infinitive (base form of a verb)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "delicious, yummy", subtitle: "присл." }, { front: "чудо́во", back: "wonderful, great", subtitle: "присл." }, { front: "ціка́во", back: "interesting", subtitle: "присл." }, { front: "пра́вда", back: "really? is that true? (as a question); truth", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }]} />
 
@@ -151,7 +151,7 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 <!-- TAB:Зошит -->
 
 :::note
-Розширені вправи для цього уроку ще в розробці.
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -159,18 +159,18 @@ Advanced exercises for this module are in development. Check back soon!
 
 <!-- TAB:Ресурси -->
 
-**Джерела — References**
+**Дже́рела — References**
 
 - [ULP Season 1, Episode 14](https://www.ukrainianlessons.com/episode14/)
   _Hobbies and interests — люблю + infinitive pattern._
 - Літвінова Grade 7, p.26-27
-  _Infinitive definition: форма, що закінчується суфіксом -ти._
+  _Infinitive definition: фо́рма, що закі́нчується су́фіксом -ти._
 
-**Граматика — Grammar (МійКлас)**
+**Грама́тика — Grammar (МійКлас)**
 
-- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
