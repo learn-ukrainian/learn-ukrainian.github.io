@@ -68,63 +68,25 @@ The point is immediate confirmation: Ukrainian text → understanding, with no E
 
 Іва́нко is visiting a Ukrainian **ярмарок** (outdoor street market) — a lively fair selling handmade crafts. His friend Катя́ is helping him choose souvenirs. The table in front of them is covered with **вишиванки** (embroidered shirts), **глечики** (jugs), **намисто** (necklaces), and **писанки** (decorated eggs). Іванко wants to buy something, but he needs to ask about colors, sizes, and prices — everything from A1.2.
 
-<div class="dialogue">
+> — **Іванко:** Катю, диви́сь! Що це? *(Katia, look! What is this?)*
+> — **Катя:** Це вишиванка. Вона ду́же га́рна. *(This is a vyshyvanka. It is very beautiful.)*
+> — **Іванко:** Яка ця вишиванка — біла чи жовта? *(What is this vyshyvanka like — white or yellow?)*
+> — **Катя:** Ця біла, а та жовта. *(This one is white, and that one is yellow.)*
+> — **Іванко:** Скільки вона ко́шту́є? *(How much does it cost?)*
+> — **Катя:** Три́ста гривень. *(Three hundred hryvnias.)*
+> — **Іванко:** А цей глечик? Він великий? *(And this jug? Is it big?)*
+> — **Катя:** Цей великий, а той мале́нький. *(This one is big, and that one is small.)*
+> — **Іванко:** Скільки коштує маленький? *(How much does the small one cost?)*
+> — **Катя:** Сто гривень. *(One hundred hryvnias.)*
+> — **Іванко:** До́бре. А це що? Це намисто? *(Good. And what is this? Is this a necklace?)*
+> — **Катя:** Так, це намисто. Воно си́нє й бі́ле. *(Yes, this is a necklace. It is blue and white.)*
+> — **Іванко:** Га́рне! А ці писанки? *(Beautiful! And these pysanky?)*
+> — **Катя:** Одна́ пи́санка — двадцять п'ять гривень. *(One pysanka — twenty-five hryvnias.)*
+> — **Іванко:** Я хо́чу три писанки. *(I want three pysanky.)*
+> — **Катя:** Це сімдеся́т п'ять гривень. *(That is seventy-five hryvnias.)*
+> — **Іванко:** Пра́вильно! Дякую, Катю. *(Correct! Thank you, Katia.)*
+> — **Катя:** Авже́ж! Це украї́нська тради́ція. *(Of course! This is a Ukrainian tradition.)*
 
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Катю, диви́сь! Що це? *(Katia, look! What is this?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Це вишиванка. Вона ду́же га́рна. *(This is a vyshyvanka. It is very beautiful.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Яка ця вишиванка — біла чи жовта? *(What is this vyshyvanka like — white or yellow?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Ця біла, а та жовта. *(This one is white, and that one is yellow.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Скільки вона ко́шту́є? *(How much does it cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Три́ста гривень. *(Three hundred hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> А цей глечик? Він великий? *(And this jug? Is it big?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Цей великий, а той мале́нький. *(This one is big, and that one is small.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Скільки коштує маленький? *(How much does the small one cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Сто гривень. *(One hundred hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> До́бре. А це що? Це намисто? *(Good. And what is this? Is this a necklace?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Так, це намисто. Воно си́нє й бі́ле. *(Yes, this is a necklace. It is blue and white.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Га́рне! А ці писанки? *(Beautiful! And these pysanky?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Одна́ пи́санка — двадцять п'ять гривень. *(One pysanka — twenty-five hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Я хо́чу три писанки. *(I want three pysanky.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Це сімдеся́т п'ять гривень. *(That is seventy-five hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Пра́вильно! Дякую, Катю. *(Correct! Thank you, Katia.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Авже́ж! Це украї́нська тради́ція. *(Of course! This is a Ukrainian tradition.)*</div>
-
-
-</div>
 
 Notice how gender drives every choice in this conversation. **Вона** refers to **вишиванка** (feminine) — so the adjectives are **біла**, **гарна**. **Він** refers to **глечик** (masculine) — so the adjectives are **великий**, **маленький**. **Воно** refers to **намисто** (neuter) — so the adjective is **синє й біле**. The demonstratives **цей/ця/це** appear throughout, always matching the noun's gender. Every price uses the number vocabulary from M11. This single dialogue puts all of A1.2 into action.
 
@@ -145,9 +107,9 @@ Ukrainian is not built in one day. It is built in six modules at a time, then si
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **кни́га** | book | ім. | ж. |
 | **вікно́** | window | ім. | с. |
@@ -192,9 +154,9 @@ Ukrainian is not built in one day. It is built in six modules at a time, then si
 | **ду́же** | very | присл. |  |
 | **пра́вильно** | correct, right | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **двадцять п'ять** | twenty-five |
 | **сімдесят п'ять** | seventy-five |
@@ -204,7 +166,7 @@ Ukrainian is not built in one day. It is built in six modules at a time, then si
 | **Авжеж!** | Of course! Certainly! |
 | **Добре.** | Good. / Okay. |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ла́мпа", back: "lamp", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіна́", back: "wall", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "парк", back: "park", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́ле", back: "field", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гле́чик", back: "jug", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виши́ва́нка", back: "embroidered shirt, vyshyvanka", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нами́сто", back: "necklace", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пи́санка", back: "decorated Easter egg, pysanka", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "я́рмарок", back: "outdoor street market, fair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тради́ція", back: "tradition", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вона́", back: "she; it (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it (neuter noun)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вели́кий", back: "big, large", subtitle: "прикм." }, { front: "мале́нький", back: "small, little", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "ціка́вий", back: "interesting", subtitle: "прикм." }, { front: "бі́лий", back: "white", subtitle: "прикм." }, { front: "жо́втий", back: "yellow", subtitle: "прикм." }, { front: "си́ній", back: "navy blue, dark blue", subtitle: "прикм." }, { front: "блаки́тний", back: "sky blue, light blue", subtitle: "прикм." }, { front: "черво́ний", back: "red", subtitle: "прикм." }, { front: "кори́чневий", back: "brown", subtitle: "прикм." }, { front: "га́рний", back: "nice, beautiful", subtitle: "прикм." }, { front: "оста́нній", back: "last", subtitle: "прикм." }, { front: "оди́н", back: "one", subtitle: "числ." }, { front: "чоти́ри", back: "four", subtitle: "числ." }, { front: "два́дцять", back: "twenty", subtitle: "числ." }, { front: "сімдеся́т", back: "seventy", subtitle: "числ." }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "три́ста", back: "three hundred", subtitle: "числ." }, { front: "ко́штува́ти", back: "to cost", subtitle: "дієсл." }, { front: "хоті́ти", back: "to want", subtitle: "дієсл." }, { front: "диви́тися", back: "to look, to watch", subtitle: "дієсл." }, { front: "ду́же", back: "very", subtitle: "присл." }, { front: "пра́вильно", back: "correct, right", subtitle: "присл." }]} />
 
@@ -212,7 +174,7 @@ Ukrainian is not built in one day. It is built in six modules at a time, then si
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -227,12 +189,12 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: При́голосні м'які́ й тверді́, дзвінкі́ й глухі́](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
-- [МійКлас: Осно́ва слова і закі́нчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
+- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
+- [МійКлас: Основа слова і закінчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
 - [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромо́вки)](https://www.ukrainianlessons.com/tonguetwisters/)
+- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
 - [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)

@@ -2,25 +2,25 @@
 
 ## Діало́ги (Dialogues)
 А́нна walks into a cozy language café in Kyiv for her very first tandem session. Her partner Ві́ктор is already waiting at the table, two cups of tea steaming between them.
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> Приві́т, А́нно! Що ти лю́биш роби́ти? *(Hi, Anna! What do you like to do?)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Я люблю́ чита́ти і слу́хати му́зику. *(I like to read and listen to music.)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> Ціка́во! А ще? *(Interesting! And what else?)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Люблю гуля́ти в парку. А ти? *(I like to walk in the park. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> Я люблю готува́ти. *(I like to cook.)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Пра́вда? Що ти готу́єш? *(Really? What do you cook?)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> Борщ і варе́ники. *(Borshch and varenyky.)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Сма́чно! *(Delicious!)*</div>
+> — **Віктор:** Приві́т, А́нно! Що ти лю́биш роби́ти? *(Hi, Anna! What do you like to do?)*
+> — **Анна:** Я люблю́ чита́ти і слу́хати му́зику. *(I like to read and listen to music.)*
+> — **Віктор:** Ціка́во! А ще? *(Interesting! And what else?)*
+> — **Анна:** Люблю гуля́ти в парку. А ти? *(I like to walk in the park. And you?)*
+> — **Віктор:** Я люблю готува́ти. *(I like to cook.)*
+> — **Анна:** Пра́вда? Що ти готу́єш? *(Really? What do you cook?)*
+> — **Віктор:** Борщ і варе́ники. *(Borshch and varenyky.)*
+> — **Анна:** Сма́чно! *(Delicious!)*
 
 Did you spot the pattern? Every time Анна and Віктор talk about what they enjoy, the verb after **люблю** (I like) ends in **-ти**: **читати** (to read), **слухати** (to listen), **гуляти** (to walk), **готувати** (to cook). That **-ти** ending is your clue — it marks the infinitive, the base form of any Ukrainian verb.
 Now Віктор changes the subject:
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> То́бі подо́бається ця кни́га? *(Do you like this book?)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Так, мені́ подобається. Ду́же ціка́ва. *(Yes, I like it. Very interesting.)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> А цей фільм? *(And this film?)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Ні, мені не подобається. *(No, I don't like it.)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> А му́зика? *(And music?)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> О, так! Мені подобається джаз. *(Oh, yes! I like jazz.)*</div>
-> <div class="dialogue-line"><span class="speaker">Віктор:</span> Мені теж подобається музика! *(I also like music!)*</div>
-> <div class="dialogue-line"><span class="speaker">Анна:</span> Чудо́во! *(Wonderful!)*</div>
+> — **Віктор:** То́бі подо́бається ця кни́га? *(Do you like this book?)*
+> — **Анна:** Так, мені́ подобається. Ду́же ціка́ва. *(Yes, I like it. Very interesting.)*
+> — **Віктор:** А цей фільм? *(And this film?)*
+> — **Анна:** Ні, мені не подобається. *(No, I don't like it.)*
+> — **Віктор:** А му́зика? *(And music?)*
+> — **Анна:** О, так! Мені подобається джаз. *(Oh, yes! I like jazz.)*
+> — **Віктор:** Мені теж подобається музика! *(I also like music!)*
+> — **Анна:** Чудо́во! *(Wonderful!)*
 
 You just met two different phrases for "I like" — **люблю** followed by a verb, and **мені подобається** (I like) followed by a thing. The next two sections show you exactly how each one works.
 <!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->
@@ -71,8 +71,8 @@ To say you *don't* like something, place **не** directly before the verb in bo
 - **Я не люблю готувати.** — I don't like to cook.
 - **Мені не подобається цей фільм.** — I don't like this film.
 Here are a few more examples of what negation looks like with both structures:
-> <div class="dialogue-line"><span class="speaker">Інна:</span> Я не люблю ми́ти по́суд. *(I don't like to wash dishes.)*</div>
-> <div class="dialogue-line"><span class="speaker">Зоя:</span> А мені не подобається ця стра́ва. *(And I don't like this dish.)*</div>
+> — **Інна:** Я не люблю ми́ти по́суд. *(I don't like to wash dishes.)*
+> — **Зоя:** А мені не подобається ця стра́ва. *(And I don't like this dish.)*
 
 See the pattern? Інна uses **не люблю** + infinitive (an activity she doesn't enjoy), and Зоя uses **мені не подобається** + noun (a thing she doesn't like). The word **не** always goes right before the verb.
 To ask questions, simply use a rising intonation — no word-order change needed. **Ти любиш читати?** (Do you like to read?) **Тобі подобається?** (Do you like it?) You may have noticed that **люблю** changes to **любиш** for **ти** (you). Full conjugation of this verb group comes in M17 — for now, memorize just two forms: **я люблю**, **ти любиш**.
@@ -91,9 +91,9 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **люби́ти** | to love/like | дієсл. |  |
 | **люблю́** | I like/love (1st person singular of любити) | дієсл. |  |
@@ -124,9 +124,9 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 | **пра́вда** | really? is that true? (as a question); truth | ім. | ж. |
 | **роби́ти** | to do | дієсл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **мити посуд** | to wash dishes |
 | **Я люблю...** | I like... (used with infinitive for activities) |
@@ -143,7 +143,7 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 | **класична музика** | classical music |
 | **мені теж** | me too, I also |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "люби́ти", back: "to love/like", subtitle: "дієсл." }, { front: "люблю́", back: "I like/love (1st person singular of любити)", subtitle: "дієсл." }, { front: "лю́биш", back: "you like/love (2nd person singular of любити)", subtitle: "дієсл." }, { front: "подо́батися", back: "to be pleasing (used as 'to like')", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk, to hang out", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "гра́ти", back: "to play (a game, an instrument)", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "співа́ти", back: "to sing", subtitle: "дієсл." }, { front: "му́зика", back: "music", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фільм", back: "film", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "борщ", back: "borshch (traditional Ukrainian beet soup)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "варе́ники", back: "varenyky (stuffed dumplings)", subtitle: "ім." }, { front: "джаз", back: "jazz", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́суд", back: "dishes, kitchenware", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гла́дити", back: "to iron", subtitle: "дієсл." }, { front: "інфініти́в", back: "infinitive (base form of a verb)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "delicious, yummy", subtitle: "присл." }, { front: "чудо́во", back: "wonderful, great", subtitle: "присл." }, { front: "ціка́во", back: "interesting", subtitle: "присл." }, { front: "пра́вда", back: "really? is that true? (as a question); truth", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }]} />
 
@@ -151,7 +151,7 @@ In M16, you will learn Group I verb conjugation — verbs like **читати** 
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -164,13 +164,13 @@ Advanced exercises for this module are in development. Check back soon!
 - [ULP Season 1, Episode 14](https://www.ukrainianlessons.com/episode14/)
   _Hobbies and interests — люблю + infinitive pattern._
 - Літвінова Grade 7, p.26-27
-  _Infinitive definition: фо́рма, що закі́нчується су́фіксом -ти._
+  _Infinitive definition: форма, що закінчується суфіксом -ти._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

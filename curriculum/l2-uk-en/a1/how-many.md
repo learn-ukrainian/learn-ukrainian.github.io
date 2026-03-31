@@ -1,23 +1,23 @@
 <!-- TAB:Урок -->
 
 ## Діало́ги (Dialogues)
-> <div class="dialogue-line"><span class="speaker">Покупець:</span> До́брий день! Скі́льки ко́шту́є торт? *(Good day! How much does the cake cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Пекар:</span> Дві́сті гри́вень. *(Two hundred hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Покупець:</span> А хліб? *(And the bread?)*</div>
-> <div class="dialogue-line"><span class="speaker">Пекар:</span> П'ятна́дцять гривень. *(Fifteen hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Покупець:</span> А три бу́лочки? *(And three buns?)*</div>
-> <div class="dialogue-line"><span class="speaker">Пекар:</span> Соро́к п'ять гривень. *(Forty-five hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Покупець:</span> А одне́ ті́стечко? *(And one pastry?)*</div>
-> <div class="dialogue-line"><span class="speaker">Пекар:</span> Два́дцять гривень. *(Twenty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Покупець:</span> До́бре. Дякую, до поба́чення! *(Okay. Thank you, goodbye!)*</div>
+> — **Покупець:** До́брий день! Скі́льки ко́шту́є торт? *(Good day! How much does the cake cost?)*
+> — **Пекар:** Дві́сті гри́вень. *(Two hundred hryvnias.)*
+> — **Покупець:** А хліб? *(And the bread?)*
+> — **Пекар:** П'ятна́дцять гривень. *(Fifteen hryvnias.)*
+> — **Покупець:** А три бу́лочки? *(And three buns?)*
+> — **Пекар:** Соро́к п'ять гривень. *(Forty-five hryvnias.)*
+> — **Покупець:** А одне́ ті́стечко? *(And one pastry?)*
+> — **Пекар:** Два́дцять гривень. *(Twenty hryvnias.)*
+> — **Покупець:** До́бре. Дякую, до поба́чення! *(Okay. Thank you, goodbye!)*
 
 Notice the question **Скільки коштує?** (How much does it cost?) — this is the single most useful phrase for shopping in Ukraine. The three nouns in this dialogue are recycled vocabulary from earlier modules: **торт** (cake) is masculine, **булочка** (bun) is feminine, and **тістечко** (pastry) is neuter. You might see that the noun endings change after different numbers — **одне тістечко** but **три булочки**, **п'ятнадцять гривень** but **двісті гривень**. These changes follow a pattern you will memorize as chunks now. The grammar behind them arrives in A2.
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Приві́т, Тара́се! Скільки тобі́ ро́кі́в? *(Hi, Taras! How old are you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Ме́ні двадцять п'ять. А тобі? *(I'm twenty-five. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Мені три́дцять два. А твоя́ сестра́ моло́дша? *(I'm thirty-two. Is your sister younger?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Так, їй вісімна́дцять. *(Yes, she's eighteen.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> А твій брат? *(And your brother?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Йому одина́дцять. *(He's eleven.)*</div>
+> — **Оленка:** Приві́т, Тара́се! Скільки тобі́ ро́кі́в? *(Hi, Taras! How old are you?)*
+> — **Тарас:** Ме́ні двадцять п'ять. А тобі? *(I'm twenty-five. And you?)*
+> — **Оленка:** Мені три́дцять два. А твоя́ сестра́ моло́дша? *(I'm thirty-two. Is your sister younger?)*
+> — **Тарас:** Так, їй вісімна́дцять. *(Yes, she's eighteen.)*
+> — **Оленка:** А твій брат? *(And your brother?)*
+> — **Тарас:** Йому одина́дцять. *(He's eleven.)*
 
 The age formula in Ukrainian works like a fixed chunk: **Мені** (I am), **тобі** (you are), **йому** (he is), **їй** (she is) + a number + **років**. Ukrainian uses three different words for "year(s)" depending on the number: **рік** (year) after 1, **роки** (years) after 2–4, and **років** (years) after 5 and above. At A1, memorize these as a pattern — one **рік**, twenty-two **роки**, five **років**. Notice in the dialogue: **двадцять п'ять** (25) and **тридцять два** (32) — these combined numbers are just the tens word plus the unit, with no connector. No case analysis needed.
 <!-- INJECT_ACTIVITY: quiz-age -->
@@ -48,9 +48,9 @@ Self-check — answer these in Ukrainian:
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **оди́н** | one (1) | числ. |  |
 | **три** | three (3) | дієсл. |  |
@@ -89,7 +89,7 @@ Self-check — answer these in Ukrainian:
 | **ти́сяча** | one thousand (1,000) | ім. | ж. |
 | **нуль** | zero (0) | ім. | ч. |
 | **скі́льки** | how many / how much | присл. |  |
-| **ко́шту́є** | costs (3rd person singular of ко́штува́ти) | дієсл. |  |
+| **ко́шту́є** | costs (3rd person singular of коштувати) | дієсл. |  |
 | **гри́вня** | hryvnia (Ukrainian currency unit, after 1) | ім. | ж. |
 | **гри́вні** | hryvnias (currency form after 2–4) | ім. | ж. |
 | **гри́вень** | hryvnias (currency form after 5+) | ім. |  |
@@ -110,9 +110,9 @@ Self-check — answer these in Ukrainian:
 | **ті́стечко** | pastry / small cake | ім. | с. |
 | **до́бре** | okay / good / alright | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Скільки коштує?** | How much does it cost? |
 | **Скільки тобі років?** | How old are you? |
@@ -122,7 +122,7 @@ Self-check — answer these in Ukrainian:
 | **Мій номер телефону** | My phone number |
 | **До побачення!** | Goodbye! |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "оди́н", back: "one (1)", subtitle: "числ." }, { front: "три", back: "three (3)", subtitle: "дієсл." }, { front: "чоти́ри", back: "four (4)", subtitle: "числ." }, { front: "шість", back: "six (6)", subtitle: "числ." }, { front: "сім", back: "seven (7)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ві́сім", back: "eight (8)", subtitle: "числ." }, { front: "де́в'ять", back: "nine (9)", subtitle: "числ." }, { front: "де́сять", back: "ten (10)", subtitle: "числ." }, { front: "одина́дцять", back: "eleven (11)", subtitle: "числ." }, { front: "двана́дцять", back: "twelve (12)", subtitle: "числ." }, { front: "трина́дцять", back: "thirteen (13)", subtitle: "числ." }, { front: "чотирна́дцять", back: "fourteen (14)", subtitle: "числ." }, { front: "п'ятна́дцять", back: "fifteen (15)", subtitle: "числ." }, { front: "шістна́дцять", back: "sixteen (16)", subtitle: "числ." }, { front: "сімна́дцять", back: "seventeen (17)", subtitle: "числ." }, { front: "вісімна́дцять", back: "eighteen (18)", subtitle: "числ." }, { front: "дев'ятна́дцять", back: "nineteen (19)", subtitle: "числ." }, { front: "два́дцять", back: "twenty (20)", subtitle: "числ." }, { front: "три́дцять", back: "thirty (30)", subtitle: "числ." }, { front: "со́рок", back: "forty (40) — irregular, not *чотиридесят", subtitle: "числ." }, { front: "п'ятдеся́т", back: "fifty (50)", subtitle: "числ." }, { front: "шістдеся́т", back: "sixty (60)", subtitle: "числ." }, { front: "сімдеся́т", back: "seventy (70)", subtitle: "числ." }, { front: "вісімдеся́т", back: "eighty (80)", subtitle: "числ." }, { front: "дев'яно́сто", back: "ninety (90) — irregular, not *дев'ятдесят", subtitle: "числ." }, { front: "сто", back: "one hundred (100)", subtitle: "числ." }, { front: "дві́сті", back: "two hundred (200)", subtitle: "числ." }, { front: "три́ста", back: "three hundred (300)", subtitle: "числ." }, { front: "чоти́риста", back: "four hundred (400)", subtitle: "числ." }, { front: "п'ятсо́т", back: "five hundred (500)", subtitle: "числ." }, { front: "шістсо́т", back: "six hundred (600)", subtitle: "числ." }, { front: "сімсо́т", back: "seven hundred (700)", subtitle: "числ." }, { front: "вісімсо́т", back: "eight hundred (800)", subtitle: "числ." }, { front: "дев'ятсо́т", back: "nine hundred (900)", subtitle: "числ." }, { front: "ти́сяча", back: "one thousand (1,000)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нуль", back: "zero (0)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "скі́льки", back: "how many / how much", subtitle: "присл." }, { front: "ко́шту́є", back: "costs (3rd person singular of коштувати)", subtitle: "дієсл." }, { front: "гри́вня", back: "hryvnia (Ukrainian currency unit, after 1)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вні", back: "hryvnias (currency form after 2–4)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вень", back: "hryvnias (currency form after 5+)", subtitle: "ім." }, { front: "копі́йка", back: "kopek (1/100 of a hryvnia)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рік", back: "year (after 1)", subtitle: "дієсл." }, { front: "ро́ки́", back: "years (after 2–4)", subtitle: "ім." }, { front: "ро́кі́в", back: "years (after 5+)", subtitle: "ім." }, { front: "но́мер", back: "number (phone number / room number)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мені́", back: "I am / to me (age formula: Мені … років)", subtitle: "ім." }, { front: "тобі́", back: "you are / to you (age formula: Тобі … років)", subtitle: "ім." }, { front: "йому", back: "he is / to him (age formula: Йому … років)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "їй", back: "she is / to her (age formula: Їй … років)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "старша", back: "older (feminine)", subtitle: "прикм." }, { front: "покупе́ць", back: "buyer / customer (masculine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пе́кар", back: "baker", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "торт", back: "cake", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бу́лочка", back: "bun / small roll", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ті́стечко", back: "pastry / small cake", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "до́бре", back: "okay / good / alright", subtitle: "присл." }]} />
 
@@ -130,7 +130,7 @@ Self-check — answer these in Ukrainian:
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -144,12 +144,12 @@ Advanced exercises for this module are in development. Check back soon!
   _Numbers 1-10 pronunciation._
 - [ULP Season 1, Episode 9](https://www.ukrainianlessons.com/episode9/)
   _Numbers 11-100 and prices._
-- Авра́менко Grade 6, p.152
-  _Числі́вники кі́лькісні vs порядко́ві — basic classification._
+- Авраменко Grade 6, p.152
+  _Числівники кількісні vs порядкові — basic classification._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Число́ іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Подкасти — Podcasts**
 

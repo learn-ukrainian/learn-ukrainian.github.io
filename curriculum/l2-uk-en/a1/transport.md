@@ -2,30 +2,30 @@
 
 ## Діало́ги (Dialogues)
 Оля meets her friend Марко́ at Бори́спіль airport. He has just arrived in Kyiv for the first time and needs to get to his hotel in the city centre.
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Приві́т, Олю! Як діста́тися до це́нтру? *(Hi, Olya! How do I get to the centre?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Привіт! Є три варіа́нти. *(Hi! There are three options.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Мо́жна ї́хати авто́бусом — но́мер сімдеся́т оди́н. *(You can go by bus — number seventy-one.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Можна по́тягом — «Експре́с». *(Or by train — the "Express".)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> А́бо на таксі́. *(Or by taxi.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> А метро́ є? *(Is there a metro?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Метро нема́ в аеропорту́. *(There's no metro at the airport.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Але́ в це́нтрі є. *(But there is one in the centre.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Їдь потягом, а по́тім на метро. *(Take the train, then the metro.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> До́бре. А де купи́ти квито́к? *(OK. And where do I buy a ticket?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Ось там, у ка́сі. *(Over there, at the ticket window.)*</div>
+> — **Марко:** Приві́т, Олю! Як діста́тися до це́нтру? *(Hi, Olya! How do I get to the centre?)*
+> — **Оля:** Привіт! Є три варіа́нти. *(Hi! There are three options.)*
+> — **Оля:** Мо́жна ї́хати авто́бусом — но́мер сімдеся́т оди́н. *(You can go by bus — number seventy-one.)*
+> — **Оля:** Можна по́тягом — «Експре́с». *(Or by train — the "Express".)*
+> — **Оля:** А́бо на таксі́. *(Or by taxi.)*
+> — **Марко:** А метро́ є? *(Is there a metro?)*
+> — **Оля:** Метро нема́ в аеропорту́. *(There's no metro at the airport.)*
+> — **Оля:** Але́ в це́нтрі є. *(But there is one in the centre.)*
+> — **Оля:** Їдь потягом, а по́тім на метро. *(Take the train, then the metro.)*
+> — **Марко:** До́бре. А де купи́ти квито́к? *(OK. And where do I buy a ticket?)*
+> — **Оля:** Ось там, у ка́сі. *(Over there, at the ticket window.)*
 
 Two patterns appear in this dialogue. Оля says **їхати автобусом** and **їхати потягом** — transport with a special word ending. But she says **на таксі** and **на метро** — transport with **на**. Both mean "by (transport)." You will study both patterns below.
 Марко walks to the ticket window.
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Один квиток до центру, будь ла́ска. *(One ticket to the centre, please.)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> В один бік чи туди́ й наза́д? *(One way or round trip?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Туди й назад. *(Round trip.)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> На авто́бус чи на по́тяг? *(For the bus or the train?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> На потяг. *(For the train.)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> Гара́зд. Дві́сті со́рок гри́вень. *(OK. Two hundred forty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> О котрі́й відпра́влення? *(What time is the departure?)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> О дев'я́тій два́дцять. *(At nine twenty.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Дякую! *(Thanks!)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> Будь ласка. Приє́мної пої́здки! *(You're welcome. Have a good trip!)*</div>
+> — **Марко:** Один квиток до центру, будь ла́ска. *(One ticket to the centre, please.)*
+> — **Каса:** В один бік чи туди́ й наза́д? *(One way or round trip?)*
+> — **Марко:** Туди й назад. *(Round trip.)*
+> — **Каса:** На авто́бус чи на по́тяг? *(For the bus or the train?)*
+> — **Марко:** На потяг. *(For the train.)*
+> — **Каса:** Гара́зд. Дві́сті со́рок гри́вень. *(OK. Two hundred forty hryvnias.)*
+> — **Марко:** О котрі́й відпра́влення? *(What time is the departure?)*
+> — **Каса:** О дев'я́тій два́дцять. *(At nine twenty.)*
+> — **Марко:** Дякую! *(Thanks!)*
+> — **Каса:** Будь ласка. Приє́мної пої́здки! *(You're welcome. Have a good trip!)*
 
 Three new phrases worth remembering: **В один бік чи туди й назад?** (One way or round trip?) — you will hear this at every ticket window in Ukraine. **О котрій відправлення?** (What time is the departure?) — this is the standard way to ask about departure time at any Ukrainian station. And **Приємної поїздки!** (Have a good trip!) — a fixed well-wishing phrase you can use as-is.
 The dialogue introduced four transport words: **автобус** (bus, masculine), **потяг** (train, masculine), **метро** (metro, neuter), and **таксі** (taxi, neuter). Their genders matter — they determine which of the two travel patterns each word uses.
@@ -56,8 +56,8 @@ Which pattern does a word use? Learn it *with* the word: **потяг → пот
 <!-- INJECT_ACTIVITY: quiz-pattern-choice -->
 ## Ко́ри́сні фра́зи (Useful Phrases)
 Марко is now in the city and needs to find a bus stop. He approaches a passer-by.
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Ви́бачте, де зупи́нка авто́буса? *(Excuse me, where is the bus stop?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Ось там, навпро́ти. *(Over there, across the street.)*</div>
+> — **Марко:** Ви́бачте, де зупи́нка авто́буса? *(Excuse me, where is the bus stop?)*
+> — **Перехожий:** Ось там, навпро́ти. *(Over there, across the street.)*
 
 At the stop and at the station, these phrases cover the essentials:
 - **Де зупинка автобуса?** — Where is the bus stop?
@@ -76,16 +76,16 @@ Once you are on a vehicle or navigating on foot, five more phrases help you get 
 On the Kyiv metro, stop names are announced aloud — listen for **«Насту́пна ста́нція — Хреща́тик»**. Three direction words to remember: **прямо** (straight), **направо** (right), **наліво** (left). And **дістатися** (to get to) is used in questions as a fixed phrase: **Як дістатися до...?**
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 Марко arrives at Ки́їв-Пасажи́рський station. He steps off the train and asks a passer-by:
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Вибачте, як дістатися до метро? *(Excuse me, how do I get to the metro?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Прямо, потім направо. П'ять хвили́н. *(Straight, then right. Five minutes.)*</div>
+> — **Марко:** Вибачте, як дістатися до метро? *(Excuse me, how do I get to the metro?)*
+> — **Перехожий:** Прямо, потім направо. П'ять хвили́н. *(Straight, then right. Five minutes.)*
 
 He buys a metro token at the window:
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Один жето́н, будь ласка. Скільки коштує? *(One token, please. How much?)*</div>
-> <div class="dialogue-line"><span class="speaker">Каса:</span> Вісімна́дцять гривень. *(Eighteen hryvnias.)*</div>
+> — **Марко:** Один жето́н, будь ласка. Скільки коштує? *(One token, please. How much?)*
+> — **Каса:** Вісімна́дцять гривень. *(Eighteen hryvnias.)*
 
 He enters the metro and checks the display.
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Яка це станція? *(What station is this?)*</div>
-> <div class="dialogue-line"><span class="speaker">Пасажир:</span> Вокза́льна. *(Vokzalna.)*</div>
+> — **Марко:** Яка це станція? *(What station is this?)*
+> — **Пасажир:** Вокза́льна. *(Vokzalna.)*
 
 New vocabulary: **жетон** (metro token, m), **станція** (station, f). Марко did it — he got from the airport to the metro using only Ukrainian.
 ## Підсумок — Summary
@@ -114,9 +114,9 @@ A helpful guide: if the word takes endings (автобус → автобусо�
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **авто́бус** | bus | ім. | ч. |
 | **метро́** | metro | ім. | с. |
@@ -147,9 +147,9 @@ A helpful guide: if the word takes endings (автобус → автобусо�
 | **маршру́ткою** | by minibus (travel form) | ім. | ж. |
 | **по́тягом** | by train (travel form) | ім. | ч. |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Як дістатися до...?** | How do I get to...? |
 | **Де зупинка автобуса?** | Where is the bus stop? |
@@ -168,7 +168,7 @@ A helpful guide: if the word takes endings (автобус → автобусо�
 | **їхати на таксі** | to go by taxi |
 | **їхати на машині** | to go by car |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "метро́", back: "metro", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "таксі́", back: "taxi", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́тяг", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "квито́к", back: "ticket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "stop (bus/tram stop)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "трамва́й", back: "tram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маршру́тка", back: "minibus", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "літа́к", back: "plane", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "напра́во", back: "right (direction)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "left (direction)", subtitle: "присл." }, { front: "пря́мо", back: "straight (direction)", subtitle: "присл." }, { front: "діста́тися", back: "to get to (a destination)", subtitle: "дієсл." }, { front: "троле́йбус", back: "trolleybus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́са", back: "ticket window", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпра́влення", back: "departure", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "жето́н", back: "metro token", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ста́нція", back: "station (metro)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "railway station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "перехо́жий", back: "passer-by", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "навпро́ти", back: "across the street, opposite", subtitle: "присл." }, { front: "насту́пний", back: "next", subtitle: "прикм." }, { front: "варіа́нт", back: "option", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "авто́бусом", back: "by bus (travel form)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "троле́йбусом", back: "by trolleybus (travel form)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "трамва́єм", back: "by tram (travel form)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маршру́ткою", back: "by minibus (travel form)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́тягом", back: "by train (travel form)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
@@ -176,7 +176,7 @@ A helpful guide: if the word takes endings (автобус → автобусо�
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::

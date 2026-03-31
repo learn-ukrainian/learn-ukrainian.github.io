@@ -6,13 +6,13 @@
 
 ### Dialogue 1 — Shopping for a bag
 
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> Скі́льки ко́шту́є ця су́мка? *(How much is this bag?)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Яка? Ця черво́на? *(Which one? This red one?)*</div>
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> Ні, та си́ня. *(No, that blue one.)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> А цей рюкза́к? *(And this backpack?)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> До́бре, беру́ цей рюкзак. *(Okay, I'll take this backpack.)*</div>
+> — **Ірина:** Скі́льки ко́шту́є ця су́мка? *(How much is this bag?)*
+> — **Консультант:** Яка? Ця черво́на? *(Which one? This red one?)*
+> — **Ірина:** Ні, та си́ня. *(No, that blue one.)*
+> — **Консультант:** Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*
+> — **Ірина:** А цей рюкза́к? *(And this backpack?)*
+> — **Консультант:** Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*
+> — **Ірина:** До́бре, беру́ цей рюкзак. *(Okay, I'll take this backpack.)*
 
 
 Notice how Ірина and the Консультант use **ця** and **та** to avoid confusion. When Ірина says **ця сумка** (this bag), she means the one right in front of her — she could touch it. When she says **та синя** (that blue one), she points to the bag farther away on the display. The shop assistant immediately understands which item she means. **Цей рюкзак** (this backpack) works the same way — it is close to Ірина, within reach.
@@ -21,12 +21,12 @@ Notice how Ірина and the Консультант use **ця** and **та** t
 
 Ірина walks through to the office behind the counter, where the Консультант works.
 
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> Що це? *(What is this?)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Це мій стіл. *(This is my desk.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> А те? *(And that?)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Те — крі́сло. *(That is an armchair.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ірина:</span> Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*</div>
-> <div class="dialogue-line"><span class="speaker">Консультант:</span> Так, цей зру́чний, а той — ні. *(Yes, this one is comfortable, and that one — no.)*</div>
+> — **Ірина:** Що це? *(What is this?)*
+> — **Консультант:** Це мій стіл. *(This is my desk.)*
+> — **Ірина:** А те? *(And that?)*
+> — **Консультант:** Те — крі́сло. *(That is an armchair.)*
+> — **Ірина:** Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*
+> — **Консультант:** Так, цей зру́чний, а той — ні. *(Yes, this one is comfortable, and that one — no.)*
 
 
 Two patterns emerge here. First, **Це мій стіл** uses **це** to introduce something — "This is my desk." Second, **цей стілець** uses **цей** to point at a specific chair — "this chair." Both are natural, and context always makes the meaning clear. When the Консультант says **Те — крісло**, the dash replaces the verb "is" — standard written Ukrainian for equative sentences like "That is an armchair."
@@ -131,9 +131,9 @@ If you can point at objects around you and name them with the right demonstrativ
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **цей** | this (masculine) | прикм. |  |
 | **ця** | this (feminine) | прикм. |  |
@@ -164,14 +164,14 @@ If you can point at objects around you and name them with the right demonstrativ
 | **нови́й** | new | прикм. |  |
 | **стари́й** | old | прикм. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **вказівні займенники** | demonstrative pronouns |
 | **Беру цей.** | I'll take this one. |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "цей", back: "this (masculine)", subtitle: "прикм." }, { front: "ця", back: "this (feminine)", subtitle: "прикм." }, { front: "той", back: "that (masculine)", subtitle: "прикм." }, { front: "та", back: "that (feminine); and (conjunction)", subtitle: "спол." }, { front: "те", back: "that (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ось", back: "here is, look (pointing word)", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "консульта́нт", back: "shop assistant, consultant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ноутбу́к", back: "laptop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́мера", back: "camera", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́діо", back: "radio", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }]} />
 
@@ -179,7 +179,7 @@ If you can point at objects around you and name them with the right demonstrativ
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -190,15 +190,15 @@ Advanced exercises for this module are in development. Check back soon!
 **Джерела — References**
 
 - Заболотний Grade 6, p.210
-  _Вказівні займенники цей, той змінюються за родами, чи́слами, відмі́нками._
+  _Вказівні займенники цей, той змінюються за родами, числами, відмінками._
 - Літвінова Grade 6, p.273
   _Full declension table for той — we use nominative only at A1._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

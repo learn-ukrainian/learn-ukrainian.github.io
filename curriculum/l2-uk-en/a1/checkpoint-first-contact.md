@@ -59,22 +59,22 @@ One key insight ties these patterns together: Ukrainian does not use a verb "to 
 
 Imagine you are at a university gathering in Lviv. You meet someone you have never spoken to before. Here is how that first conversation might go. Both speakers are students — the setting is natural, not a classroom drill.
 
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Привіт! Я — Богдан. Як тебе звати? *(Hi! I'm Bohdan. What's your name?)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Привіт, Богдане! Мене звати Соломія. *(Hi, Bohdane! My name is Solomiia.)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Дуже приє́мно! Звідки ти, Соломі́є? *(Nice to meet you! Where are you from, Solomiia?)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Я з Терно́поля. А ти? *(I'm from Ternopil. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Я з Дніпра́. *(I'm from Dnipro.)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Ти студент? *(Are you a student?)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Так, я — студент. А ти? *(Yes, I'm a student. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Я теж студентка. *(I'm a student too.)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Ціка́во! Моя мама — лікарка. *(Interesting! My mom is a doctor.)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Спра́вді? А твій тато? *(Really? And your dad?)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Мій тато — вчи́тель. А у тебе? *(My dad is a teacher. And yours?)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Мій тато — інженер. *(My dad is an engineer.)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> У тебе є брати́ чи сестри? *(Do you have brothers or sisters?)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> Так, у мене є моло́дша сестра. Ось її фо́то. Її звати Га́нна. *(Yes, I have a younger sister. Here is her photo. Her name is Hanna.)*</div>
-> <div class="dialogue-line"><span class="speaker">Богдан:</span> Га́рне фото! Приємно познайо́митись, Соломіє! *(Nice photo! Nice to meet you, Solomiia!)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломія:</span> І мені́ приємно. До зу́стрічі! *(Nice to meet you too. See you!)*</div>
+> — **Богдан:** Привіт! Я — Богдан. Як тебе звати? *(Hi! I'm Bohdan. What's your name?)*
+> — **Соломія:** Привіт, Богдане! Мене звати Соломія. *(Hi, Bohdane! My name is Solomiia.)*
+> — **Богдан:** Дуже приє́мно! Звідки ти, Соломі́є? *(Nice to meet you! Where are you from, Solomiia?)*
+> — **Соломія:** Я з Терно́поля. А ти? *(I'm from Ternopil. And you?)*
+> — **Богдан:** Я з Дніпра́. *(I'm from Dnipro.)*
+> — **Соломія:** Ти студент? *(Are you a student?)*
+> — **Богдан:** Так, я — студент. А ти? *(Yes, I'm a student. And you?)*
+> — **Соломія:** Я теж студентка. *(I'm a student too.)*
+> — **Богдан:** Ціка́во! Моя мама — лікарка. *(Interesting! My mom is a doctor.)*
+> — **Соломія:** Спра́вді? А твій тато? *(Really? And your dad?)*
+> — **Богдан:** Мій тато — вчи́тель. А у тебе? *(My dad is a teacher. And yours?)*
+> — **Соломія:** Мій тато — інженер. *(My dad is an engineer.)*
+> — **Богдан:** У тебе є брати́ чи сестри? *(Do you have brothers or sisters?)*
+> — **Соломія:** Так, у мене є моло́дша сестра. Ось її фо́то. Її звати Га́нна. *(Yes, I have a younger sister. Here is her photo. Her name is Hanna.)*
+> — **Богдан:** Га́рне фото! Приємно познайо́митись, Соломіє! *(Nice photo! Nice to meet you, Solomiia!)*
+> — **Соломія:** І мені́ приємно. До зу́стрічі! *(Nice to meet you too. See you!)*
 
 
 Without rereading the dialogue, answer these questions:
@@ -115,9 +115,9 @@ If every answer came easily, you are ready for A1.2 — where Ukrainian sentence
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ім'я́** | first name | ім. | с. |
 | **прі́звище** | surname, last name | ім. | с. |
@@ -143,9 +143,9 @@ If every answer came easily, you are ready for A1.2 — where Ukrainian sentence
 | **теж** | also, too | присл. |  |
 | **село́** | village | ім. | с. |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Добрий день!** | Good day! (formal greeting) |
 | **Мене звати ___.** | My name is ___. |
@@ -162,7 +162,7 @@ If every answer came easily, you are ready for A1.2 — where Ukrainian sentence
 | **Це — ___.** | This is ___. |
 | **Я — ___.** | I am ___. (with identifying dash) |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ім'я́", back: "first name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прі́звище", back: "surname, last name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зупи́нка", back: "stop (bus/tram stop)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сім'я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "роди́на", back: "family (extended family)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́ки", back: "hands", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "студе́нт", back: "student (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "студе́нтка", back: "student (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́кар", back: "doctor (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́карка", back: "doctor (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інжене́р", back: "engineer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "програмі́ст", back: "programmer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́телька", back: "teacher (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "діду́сь", back: "grandfather", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "старший", back: "older, elder", subtitle: "прикм." }, { front: "моло́дша", back: "younger (female)", subtitle: "прикм." }, { front: "теж", back: "also, too", subtitle: "присл." }, { front: "село́", back: "village", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
@@ -170,7 +170,7 @@ If every answer came easily, you are ready for A1.2 — where Ukrainian sentence
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -185,9 +185,9 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Речення, його грамати́чна осно́ва (підмет і при́судок)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372) (miyklas.com.ua)
+- [МійКлас: Речення, його граматична основа (підмет і присудок)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372) (miyklas.com.ua)
 - [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
-- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
 
 **Статті — Articles**
 
@@ -198,4 +198,4 @@ Advanced exercises for this module are in development. Check back soon!
 
 - [Ukrainian Cyrillic Alphabet](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/)
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромо́вки)](https://www.ukrainianlessons.com/tonguetwisters/)
+- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)

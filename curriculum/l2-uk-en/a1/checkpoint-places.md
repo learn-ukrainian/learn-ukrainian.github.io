@@ -14,20 +14,11 @@ If those answers came quickly, you're ready for this checkpoint. If some felt tr
 ## Чита́ння (Reading Practice)
 Read this short text about a tourist in Kyiv. Every sentence uses patterns from M28–M34. See how many you can spot — euphony choices, locative for location, accusative for direction, genitive for origin, transport, and directions.
 > **Мене зва́ти То́мас.** *(My name is Tomas.)* **Я з Канади.** *(I'm from Canada.)* **Зараз я у Києві.** *(Right now I'm in Kyiv.)*
->
 > **Сьогодні я гуля́ю по мі́сту.** *(Today I'm walking around the city.)* **Вранці я ї́ду на метро́ до ста́нції Хреща́тик.** *(In the morning I take the metro to Khreshchatyk station.)* **Метро у Києві ду́же зру́чне.** *(The metro in Kyiv is very convenient.)*
->
 > **Я виходжу зі станції.** *(I exit the station.)* **Іду напра́во.** *(I go right.)* **Попереду — Хрещатик, головна́ ву́лиця мі́ста.** *(Ahead is Khreshchatyk, the main street of the city.)* **Я йду пря́мо.** *(I walk straight.)* **Бачу краси́вий парк.** *(I see a beautiful park.)* **У парку є фонта́ни й лавки́.** *(In the park there are fountains and benches.)*
->
-<div class="dialogue">
+> — **Потім я пита́ю перехо́жого:** *(Then I ask a passerby:)* **«Ви́бачте, де Націона́льний музей?»** *(«Excuse me, where is the National Museum?»)* **Він відповіда́є:** *(He answers:)* **«Музей на пло́щі. Іді́ть прямо, потім налі́во.»** *(«The museum is on the square. Go straight, then left.»)*
 
-<div class="dialogue-line"><span class="speaker">Потім я пита́ю перехо́жого:</span> *(Then I ask a passerby:)* **«Ви́бачте, де Націона́льний музей?»** *(«Excuse me, where is the National Museum?»)* **Він відповіда́є:** *(He answers:)* **«Музей на пло́щі. Іді́ть прямо, потім налі́во.»** *(«The museum is on the square. Go straight, then left.»)*</div>
-
-
-</div>
->
 > **Я іду до музе́ю.** *(I go to the museum.)* **Потім хо́чу ї́хати до Лаври.** *(Then I want to go to the Lavra.)* **Сідаю в авто́бус.** *(I get on a bus.)* **Їду до зупи́нки Арсена́льна.** *(I ride to Arsenalna stop.)* **Від зупинки до Лаври пі́шки — п'ять хвили́н.** *(From the stop to the Lavra on foot — five minutes.)*
->
 > **Увечері я у готе́лі.** *(In the evening I'm at the hotel.)* **Телефоную в Кана́ду:** *(I call Canada:)* **«Я зараз у Києві! Хочу їхати у Львів!»** *(«I'm in Kyiv now! I want to go to Lviv!»)*
 Now check your understanding:
 1. **Звідки Томас?** (Where is Tomas from?) — **З Канади.** (From Canada.)
@@ -61,20 +52,20 @@ Transport hubs (**станція**, **вокзал**, **зупинка**) always
 <!-- INJECT_ACTIVITY: group-sort-cases -->
 ## Діало́г (Connected Dialogue)
 Марко́ is visiting Kyiv for the first time. He stops a local, Окса́на, near a metro entrance to ask for help. Watch how all seven A1.5 patterns appear in one real conversation.
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Вибачте! Ви місце́ва? *(Excuse me! Are you local?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Так, я з Ки́єва. Що шука́єте? *(Yes, I'm from Kyiv. What are you looking for?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Я з Канади. Я тут упе́рше. Де Національний музей? *(I'm from Canada. This is my first time here. Where is the National Museum?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Музей у центрі, на ву́лиці Груше́вського. Ї́дьте на метро до станції Арсенальна. Потім пішки. *(The museum is in the centre, on Hrushevskyi Street. Take the metro to Arsenalna station. Then walk.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> А де станція метро? *(And where is the metro station?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Ось тут, за ро́гом. Ідіть прямо, потім направо. Там — вхід. *(Right here, around the corner. Go straight, then right. The entrance is there.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> До́бре! А пі́сля музею я хочу їхати у Львів. Де вокзал? *(OK! After the museum I want to go to Lviv. Where is the train station?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Центра́льний вокзал дале́ко. Їдьте на метро до станції Вокза́льна. *(The central station is far. Take the metro to Vokzalna station.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Скі́льки їхати? *(How long is the ride?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Хвилин два́дцять. Вокзал бі́ля станції. *(About twenty minutes. The station is right by the stop.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> А де тут кафе́? *(Where is a café around here?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Кафе на площі Незале́жності. Це одна́ зупинка на метро. *(There's a café at Independence Square. It's one metro stop.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Дякую! *(Thanks!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оксана:</span> Будь ла́ска! Га́рної по́дорожі! *(You're welcome! Have a good trip!)*</div>
+> — **Марко:** Вибачте! Ви місце́ва? *(Excuse me! Are you local?)*
+> — **Оксана:** Так, я з Ки́єва. Що шука́єте? *(Yes, I'm from Kyiv. What are you looking for?)*
+> — **Марко:** Я з Канади. Я тут упе́рше. Де Національний музей? *(I'm from Canada. This is my first time here. Where is the National Museum?)*
+> — **Оксана:** Музей у центрі, на ву́лиці Груше́вського. Ї́дьте на метро до станції Арсенальна. Потім пішки. *(The museum is in the centre, on Hrushevskyi Street. Take the metro to Arsenalna station. Then walk.)*
+> — **Марко:** А де станція метро? *(And where is the metro station?)*
+> — **Оксана:** Ось тут, за ро́гом. Ідіть прямо, потім направо. Там — вхід. *(Right here, around the corner. Go straight, then right. The entrance is there.)*
+> — **Марко:** До́бре! А пі́сля музею я хочу їхати у Львів. Де вокзал? *(OK! After the museum I want to go to Lviv. Where is the train station?)*
+> — **Оксана:** Центра́льний вокзал дале́ко. Їдьте на метро до станції Вокза́льна. *(The central station is far. Take the metro to Vokzalna station.)*
+> — **Марко:** Скі́льки їхати? *(How long is the ride?)*
+> — **Оксана:** Хвилин два́дцять. Вокзал бі́ля станції. *(About twenty minutes. The station is right by the stop.)*
+> — **Марко:** А де тут кафе́? *(Where is a café around here?)*
+> — **Оксана:** Кафе на площі Незале́жності. Це одна́ зупинка на метро. *(There's a café at Independence Square. It's one metro stop.)*
+> — **Марко:** Дякую! *(Thanks!)*
+> — **Оксана:** Будь ла́ска! Га́рної по́дорожі! *(You're welcome! Have a good trip!)*
 
 Every A1.5 pattern appeared naturally. **Де музей?** — locative: **у центрі**. Where to? — **у Львів** (accusative). Where from? — **з Канади**, **з Києва** (genitive). Transport — **на метро до станції**. Directions — **прямо**, **направо**. City places — **на площі**, **біля станції**, **за рогом**. Seven patterns, one conversation.
 Now try it yourself. Imagine you're video-calling a friend while walking through **Одеса** (Odesa). Describe what you see:
@@ -98,9 +89,9 @@ In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a m
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **гуля́ти** | to walk around, to stroll | дієсл. |  |
 | **вра́нці** | in the morning | присл. |  |
@@ -143,9 +134,9 @@ In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a m
 | **пляж** | beach | ім. | ч. |
 | **кафе́** | café | ім. | с. |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **гуляти по місту** | to walk around the city |
 | **за рогом** | around the corner |
@@ -156,7 +147,7 @@ In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a m
 | **Ось тут.** | Right here. |
 | **Їдьте на метро до станції...** | Take the metro to ... station. |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "гуля́ти", back: "to walk around, to stroll", subtitle: "дієсл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }, { front: "зру́чний", back: "convenient, comfortable", subtitle: "прикм." }, { front: "виходити", back: "to exit, to go out", subtitle: "дієсл." }, { front: "попе́реду", back: "ahead", subtitle: "присл." }, { front: "пря́мо", back: "straight (ahead)", subtitle: "присл." }, { front: "напра́во", back: "to the right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "to the left", subtitle: "присл." }, { front: "фонта́н", back: "fountain", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ла́вка", back: "bench", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "перехо́жий", back: "passerby", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пита́ти", back: "to ask", subtitle: "дієсл." }, { front: "відповіда́ти", back: "to answer", subtitle: "дієсл." }, { front: "пло́ща", back: "square (public)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ла́вра", back: "Lavra (monastery complex)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сіда́ти", back: "to sit down, to get on (transport)", subtitle: "дієсл." }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "хвили́на", back: "minute", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "телефонува́ти", back: "to call (by phone)", subtitle: "дієсл." }, { front: "місце́вий", back: "local", subtitle: "прикм." }, { front: "шука́ти", back: "to look for, to search", subtitle: "дієсл." }, { front: "упе́рше", back: "for the first time", subtitle: "присл." }, { front: "вхід", back: "entrance", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "центра́льний", back: "central, main", subtitle: "прикм." }, { front: "головни́й", back: "main, principal", subtitle: "прикм." }, { front: "пі́сля", back: "after", subtitle: "присл." }, { front: "бі́ля", back: "near, by, next to", subtitle: "прийм." }, { front: "ви́йдіть", back: "exit (imperative, formal)", subtitle: "дієсл." }, { front: "ста́нція", back: "station", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зупи́нка", back: "stop (bus/tram)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "порт", back: "port, harbour", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пляж", back: "beach", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
@@ -164,7 +155,7 @@ In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a m
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -179,11 +170,11 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Чергува́ння у–в, і–й, з–із–зі (правила милозву́чності)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) (miyklas.com.ua)
+- [МійКлас: Чергування у–в, і–й, з–із–зі (правила милозвучності)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) (miyklas.com.ua)
 - [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромо́вки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Genitive Case (Родо́ви́й відмі́нок)](https://www.ukrainianlessons.com/genitive-case/)
+- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
+- [Genitive Case (Родовий відмінок)](https://www.ukrainianlessons.com/genitive-case/)

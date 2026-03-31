@@ -51,11 +51,11 @@ Three special consonant facts to note now. First, **Ґ** — a letter unique to 
 
 Time for your first real Ukrainian conversation. **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як спра́ви?** (How are you?). Three answers you will hear every day: **Добре** (fine, good), **Чудово** (great, wonderful), **Нормально** (okay, so-so). To return the question: **А в тебе́?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
 
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Привіт, Олю! *(Hi, Olya!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Привіт, Тара́се! Як справи? *(Hi, Taras! How are you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Добре, дякую. А в тебе? *(Good, thanks. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Чудово! Ра́да тебе ба́чити. *(Great! Glad to see you.)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> І я ра́дий тебе бачити! *(And I'm glad to see you!)*</div>
+> — **Тарас:** Привіт, Олю! *(Hi, Olya!)*
+> — **Оля:** Привіт, Тара́се! Як справи? *(Hi, Taras! How are you?)*
+> — **Тарас:** Добре, дякую. А в тебе? *(Good, thanks. And you?)*
+> — **Оля:** Чудово! Ра́да тебе ба́чити. *(Great! Glad to see you.)*
+> — **Тарас:** І я ра́дий тебе бачити! *(And I'm glad to see you!)*
 
 
 Notice something: Оля says **рада** while Тарас says **радий**. Both mean "glad," but **рада** is the feminine form and **радий** is the masculine form. Ukrainian adjectives agree with the speaker's gender — confirmed in Заболотний (Grade 5, p. 218). This is your very first glimpse of grammatical gender, a major topic from M08 onward. For now, just notice the difference and use the form that matches you.
@@ -89,9 +89,9 @@ Test yourself with these questions — every answer comes from what you learned 
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **звук** | sound | ім. | ч. |
 | **лі́тера** | letter | ім. | ж. |
@@ -121,9 +121,9 @@ Test yourself with these questions — every answer comes from what you learned 
 | **сіль** | salt | ім. | ж. |
 | **підсумок** | summary | ім. | ч. |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Як справи?** | How are you? |
 | **А у тебе?** | And you? |
@@ -131,7 +131,7 @@ Test yourself with these questions — every answer comes from what you learned 
 | **радий тебе бачити** | Glad to see you (masculine speaker) |
 | **звуковий аналіз** | sound analysis |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "звук", back: "sound", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́тера", back: "letter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голосни́й", back: "vowel sound", subtitle: "прикм." }, { front: "при́голосний", back: "consonant sound", subtitle: "прикм." }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́ко", back: "eye", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дім", back: "house", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ніс", back: "nose", subtitle: "дієсл." }, { front: "приві́т", back: "hi (informal greeting)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "до́бре", back: "fine, good", subtitle: "присл." }, { front: "чудо́во", back: "great, wonderful", subtitle: "присл." }, { front: "норма́льно", back: "okay, so-so", subtitle: "присл." }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сон", back: "dream", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "абе́тка", back: "Ukrainian alphabet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "алфа́ві́т", back: "alphabet", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'яки́й знак", back: "soft sign (the letter Ь)" }, { front: "тверді", back: "hard (consonants)", subtitle: "прикм." }, { front: "м'які́", back: "soft (consonants)", subtitle: "прикм." }, { front: "дякую", back: "thank you", subtitle: "дієсл." }, { front: "ра́да", back: "glad (feminine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́дий", back: "glad (masculine)", subtitle: "прикм." }, { front: "ґа́нок", back: "porch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "щу́ка", back: "pike (the fish)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сіль", back: "salt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "підсумок", back: "summary", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
@@ -139,7 +139,7 @@ Test yourself with these questions — every answer comes from what you learned 
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -149,22 +149,22 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Джерела — References**
 
-- Большакова Grade 1 буква́р, p.24
-  _Голосні/приголосні taught through poems. 'Голосні́ почуєш в пісні.' 'При́голосні деренчать.'_
+- Большакова Grade 1 буквар, p.24
+  _Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.' 'Приголосні деренчать.'_
 - Захарійчук Grade 1 буквар (NUS 2025), p.13
   _Sound notation: [•] for vowels, [–] for consonants, [=] for soft consonants._
 - Заболотний Grade 5, p.83
   _'Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.' 33 букви, 38 звуків._
 - Litvinova Grade 5, p.130
-  _'Чи можна говорити «голосна літера»? Чо́му?' — pedagogical question about sounds vs letters._
+  _'Чи можна говорити «голосна літера»? Чому?' — pedagogical question about sounds vs letters._
 - [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
   _Привіт, Як справи?, response patterns._
 
 **Граматика — Grammar (МійКлас)**
 
 - [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Приголосні м'які й тверді, дзвінкі́ й глухі́](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
-- [МійКлас: Алфавіт (абетка, а́збука)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41217) (miyklas.com.ua)
+- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
+- [МійКлас: Алфавіт (абетка, азбука)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41217) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

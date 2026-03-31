@@ -4,24 +4,24 @@
 
 What do people eat and drink during the day? In the first dialogue, Марі́я and Оле́г chat about breakfast — what they eat, what their family eats. In the second, two colleagues unpack their lunch at work. Listen for the verbs **їсти** and **пити** — they change with every speaker.
 
-> <div class="dialogue-line"><span class="speaker">Марія:</span> Що ти їси́ на сніда́нок? *(What do you eat for breakfast?)*</div>
-> <div class="dialogue-line"><span class="speaker">Олег:</span> Я їм ка́шу і п'ю ка́ву. *(I eat porridge and drink coffee.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марія:</span> А Оле́на? *(And Olena?)*</div>
-> <div class="dialogue-line"><span class="speaker">Олег:</span> Вона́ їсть хліб з ма́слом і п'є чай. *(She eats bread with butter and drinks tea.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марія:</span> А ді́ти? *(And the kids?)*</div>
-> <div class="dialogue-line"><span class="speaker">Олег:</span> Вони́ їдя́ть я́йця і п'ють молоко́. *(They eat eggs and drink milk.)*</div>
+> — **Марія:** Що ти їси́ на сніда́нок? *(What do you eat for breakfast?)*
+> — **Олег:** Я їм ка́шу і п'ю ка́ву. *(I eat porridge and drink coffee.)*
+> — **Марія:** А Оле́на? *(And Olena?)*
+> — **Олег:** Вона́ їсть хліб з ма́слом і п'є чай. *(She eats bread with butter and drinks tea.)*
+> — **Марія:** А ді́ти? *(And the kids?)*
+> — **Олег:** Вони́ їдя́ть я́йця і п'ють молоко́. *(They eat eggs and drink milk.)*
 
 
 Notice how the verb **їсти** (to eat) changes with every person: **я їм**, **вона їсть**, **вони їдять**. The verb **пити** (to drink) does the same: **п'ю**, **п'є**, **п'ють**. These two verbs will look different for every subject — but by the end of this module, you will know all six forms of each.
 
 Now the same verbs appear at lunch, with plural subjects.
 
-> <div class="dialogue-line"><span class="speaker">Колега 1:</span> Що ви їсте́ на обід? *(What are you eating for lunch?)*</div>
-> <div class="dialogue-line"><span class="speaker">Колега 2:</span> Ми їмо́ суп і сала́т. *(We're eating soup and salad.)*</div>
-> <div class="dialogue-line"><span class="speaker">Колега 1:</span> А що п'єте́? *(And what are you drinking?)*</div>
-> <div class="dialogue-line"><span class="speaker">Колега 2:</span> Ми п'ємо́ воду́ або́ сік. *(We're drinking water or juice.)*</div>
-> <div class="dialogue-line"><span class="speaker">Колега 1:</span> Я теж хо́чу суп. *(I want soup too.)*</div>
-> <div class="dialogue-line"><span class="speaker">Колега 2:</span> До́бре, замовля́й! *(Okay, go ahead and order!)*</div>
+> — **Колега 1:** Що ви їсте́ на обід? *(What are you eating for lunch?)*
+> — **Колега 2:** Ми їмо́ суп і сала́т. *(We're eating soup and salad.)*
+> — **Колега 1:** А що п'єте́? *(And what are you drinking?)*
+> — **Колега 2:** Ми п'ємо́ воду́ або́ сік. *(We're drinking water or juice.)*
+> — **Колега 1:** Я теж хо́чу суп. *(I want soup too.)*
+> — **Колега 2:** До́бре, замовля́й! *(Okay, go ahead and order!)*
 
 
 Look back at both dialogues and answer these questions aloud: **Що їсть Олена?** (What does Olena eat?) **Що п'ють діти?** (What do the children drink?) **Що ми їмо на обід?** (What do we eat for lunch?) Each answer uses a noun right after the verb — **хліб**, **молоко**, **суп**. Some nouns change their ending, some do not. That pattern is the core of this module.
@@ -148,9 +148,9 @@ Now try this on your own: say three things you eat today and three things you dr
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ї́сти** | to eat (irregular verb) | дієсл. |  |
 | **пи́ти** | to drink | дієсл. |  |
@@ -190,7 +190,7 @@ Now try this on your own: say three things you eat today and three things you dr
 | **або́** | or | спол. |  |
 | **до́бре** | okay, good | присл. |  |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ї́сти", back: "to eat (irregular verb)", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "їм", back: "I eat", subtitle: "ім." }, { front: "їси́", back: "you eat (singular)", subtitle: "дієсл." }, { front: "їсть", back: "he/she eats", subtitle: "дієсл." }, { front: "їмо́", back: "we eat", subtitle: "дієсл." }, { front: "їсте́", back: "you eat (plural/formal)", subtitle: "дієсл." }, { front: "їдя́ть", back: "they eat", subtitle: "дієсл." }, { front: "п'ю", back: "I drink", subtitle: "дієсл." }, { front: "п'єш", back: "you drink (singular)", subtitle: "дієсл." }, { front: "п'є", back: "he/she drinks", subtitle: "дієсл." }, { front: "п'ємо́", back: "we drink", subtitle: "дієсл." }, { front: "п'єте́", back: "you drink (plural/formal)", subtitle: "дієсл." }, { front: "п'ють", back: "they drink", subtitle: "дієсл." }, { front: "ка́ву", back: "coffee (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воду́", back: "water (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́бу", back: "fish (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́шу", back: "porridge (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "карто́плю", back: "potatoes (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "смета́ну", back: "sour cream (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "карто́пля", back: "potatoes", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "я́йця", back: "eggs (plural)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "бана́н", back: "banana", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "що?", back: "what? (accusative question word)", subtitle: "спол." }, { front: "замовля́й", back: "go ahead and order (informal imperative)", subtitle: "дієсл." }, { front: "або́", back: "or", subtitle: "спол." }, { front: "до́бре", back: "okay, good", subtitle: "присл." }]} />
 
@@ -198,7 +198,7 @@ Now try this on your own: say three things you eat today and three things you dr
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -215,12 +215,12 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Відмі́нки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Кли́чний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
+- [МійКлас: Кличний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Ukrainian Cases Chart (Overview)](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
-- [Nominative Case (Називни́й відмінок)](https://www.ukrainianlessons.com/nominativecase/)
+- [Nominative Case (Називний відмінок)](https://www.ukrainianlessons.com/nominativecase/)

@@ -4,26 +4,26 @@
 
 Дари́на and Олексі́й are sitting at a kitchen table, papers spread out. Олексій wrote a short Ukrainian essay about his **город** (garden), and Дарина — who has sharper ears for how Ukrainian flows — is helping him proofread. Their goal: find spots where the sentences stumble.
 
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Слу́хай. «Я живу́ в Льво́ві.» *(Listen. "I live in Lviv.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Стоп! «В Львові» — ні. «У Львові!» *(Stop! "V Lvovi" — no. "U Lvovi!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Чо́му? *(Why?)*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> «Львів» — Л, В... Ва́жко! «У Львові» — ле́гко. *(Lviv — L, V... Hard! "U Lvovi" — easy.)*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> До́бре. А «Тара́с живе́ у Ки́єві?» *(OK. And "Taras lives in Kyiv?")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Зачека́й... «Живе» — голосни́й Е. «У Києві»... Ні, «в Києві!» *(Wait... "Zhyve" — vowel E. "U Kyievi"... No, "v Kyievi!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Зрозумі́в! А да́лі: «Вона́ працю́є у о́фісі.» *(Got it! And next: "She works in the office.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> «Працює» — голосний Є. «Офісі» — голосний О. «В офісі!» *(Pracyuye — vowel YE. Ofisi — vowel O. "V ofisi!")*</div>
+> — **Олексій:** Слу́хай. «Я живу́ в Льво́ві.» *(Listen. "I live in Lviv.")*
+> — **Дарина:** Стоп! «В Львові» — ні. «У Львові!» *(Stop! "V Lvovi" — no. "U Lvovi!")*
+> — **Олексій:** Чо́му? *(Why?)*
+> — **Дарина:** «Львів» — Л, В... Ва́жко! «У Львові» — ле́гко. *(Lviv — L, V... Hard! "U Lvovi" — easy.)*
+> — **Олексій:** До́бре. А «Тара́с живе́ у Ки́єві?» *(OK. And "Taras lives in Kyiv?")*
+> — **Дарина:** Зачека́й... «Живе» — голосни́й Е. «У Києві»... Ні, «в Києві!» *(Wait... "Zhyve" — vowel E. "U Kyievi"... No, "v Kyievi!")*
+> — **Олексій:** Зрозумі́в! А да́лі: «Вона́ працю́є у о́фісі.» *(Got it! And next: "She works in the office.")*
+> — **Дарина:** «Працює» — голосний Є. «Офісі» — голосний О. «В офісі!» *(Pracyuye — vowel YE. Ofisi — vowel O. "V ofisi!")*
 
 
 Notice what Дарина is doing: she listens to the **sounds** around the preposition. When consonants pile up — like Л and В in **Львові** — she switches to **у**. When vowels surround it — like the Е in **живе** before К in **Києві** — she uses **в**.
 
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Далі. «Ти й Оле́на йдете́ в парк?» *(Next. "You and Olena go to the park?")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Тут пра́вильно? *(Is this correct?)*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Так! «Ти» — голосний И, «Олена» — голосний О. «Й» — добре. *(Yes! "Ty" — vowel Y, "Olena" — vowel O. "Y" — good.)*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> А «ма́ма й та́то»? *(And "mama y tato?")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Теж добре — голосний А, голосний А. «Й!» *(Also good — vowel A, vowel A. "Y!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Ось тут: «Макси́м й Семе́н.» *(Here: "Maksym y Semen.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Ні! «Максим» — при́голосний М. «Семен» — приголосний С. «Максим і Семен!» *(No! "Maksym" — consonant M. "Semen" — consonant S. "Maksym i Semen!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно! *(Now my essay sounds truly good!)*</div>
+> — **Дарина:** Далі. «Ти й Оле́на йдете́ в парк?» *(Next. "You and Olena go to the park?")*
+> — **Олексій:** Тут пра́вильно? *(Is this correct?)*
+> — **Дарина:** Так! «Ти» — голосний И, «Олена» — голосний О. «Й» — добре. *(Yes! "Ty" — vowel Y, "Olena" — vowel O. "Y" — good.)*
+> — **Олексій:** А «ма́ма й та́то»? *(And "mama y tato?")*
+> — **Дарина:** Теж добре — голосний А, голосний А. «Й!» *(Also good — vowel A, vowel A. "Y!")*
+> — **Олексій:** Ось тут: «Макси́м й Семе́н.» *(Here: "Maksym y Semen.")*
+> — **Дарина:** Ні! «Максим» — при́голосний М. «Семен» — приголосний С. «Максим і Семен!» *(No! "Maksym" — consonant M. "Semen" — consonant S. "Maksym i Semen!")*
+> — **Олексій:** Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно! *(Now my essay sounds truly good!)*
 
 
 Both dialogues show the same logic: Ukrainian chooses between sound variants to avoid awkward clusters. When consonants meet consonants, the language inserts a "softer" form. When vowels meet vowels, it picks a "shorter" one. Three pairs work this way: **у/в** (in, at), **і/й** (and), and **з/із/зі** (with, from). The next sections explain exactly when to use each form.
@@ -128,9 +128,9 @@ Next module: **Де? (Where Is It?)** — the same prepositions **у/в** and **
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **у/в** | in, at (alternating preposition — у before/after consonant clusters, в near vowels) |  |  |
 | **і/й** | and (alternating conjunction — і between consonants, й near vowels) |  |  |
@@ -175,15 +175,15 @@ Next module: **Де? (Where Is It?)** — the same prepositions **у/в** and **
 | **зрозумі́в** | understood, got it (past tense, m) | дієсл. |  |
 | **по-спра́вжньому** | truly, genuinely, really | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Зі святом!** | Happy holiday! Congratulations on the holiday! |
 | **Слухай!** | Listen! Hey, listen! (informal imperative) |
 | **солов'їна мова** | nightingale language (poetic name for Ukrainian) |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "у/в", back: "in, at (alternating preposition — у before/after consonant clusters, в near vowels)" }, { front: "і/й", back: "and (alternating conjunction — і between consonants, й near vowels)" }, { front: "із", back: "with, from (variant between two consonant sounds)", subtitle: "прийм." }, { front: "Ки́їв", back: "Kyiv (capital of Ukraine)", subtitle: "ім." }, { front: "Оде́са", back: "Odesa (city in southern Ukraine)" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ваго́н", back: "train car, wagon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "свя́то", back: "holiday, celebration", subtitle: "присл." }, { front: "сад", back: "garden", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "город", back: "vegetable garden", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кві́тка", back: "flower", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кві́ти", back: "flowers", subtitle: "ім." }, { front: "есе́й", back: "essay", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "секре́т", back: "secret", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мо́ва", back: "language", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́ма", back: "mom, mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "dad, father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голосни́й", back: "vowel (also: loud — contextual meaning here is vowel)", subtitle: "прикм." }, { front: "при́голосний", back: "consonant", subtitle: "прикм." }, { front: "чергува́ння", back: "alternation (of sound variants)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "милозву́чність", back: "euphony, melodiousness (the principle behind Ukrainian sound alternation)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пра́вильно", back: "correct, correctly", subtitle: "присл." }, { front: "ва́жко", back: "hard, difficult", subtitle: "присл." }, { front: "ле́гко", back: "easy, easily", subtitle: "присл." }, { front: "ти́хо", back: "quietly, silently", subtitle: "присл." }, { front: "га́рно", back: "nicely, beautifully", subtitle: "присл." }, { front: "тепло́", back: "warm, warmly", subtitle: "присл." }, { front: "да́лі", back: "next, further on, continue", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "чому́", back: "why", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "звуча́ти", back: "to sound", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "поверну́тися", back: "to return", subtitle: "дієсл." }, { front: "зрозумі́в", back: "understood, got it (past tense, m)", subtitle: "дієсл." }, { front: "по-спра́вжньому", back: "truly, genuinely, really", subtitle: "присл." }]} />
 
@@ -191,7 +191,7 @@ Next module: **Де? (Where Is It?)** — the same prepositions **у/в** and **
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -201,19 +201,19 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Джерела — References**
 
-- Авра́менко Grade 5, p.117-118
-  _Чергування у–в та і–й. Ужива́ння прийме́нника з._
+- Авраменко Grade 5, p.117-118
+  _Чергування у–в та і–й. Уживання прийменника з._
 - Літвінова Grade 5, p.174-177
   _Милозвучність: правила чергування у—в, і—й, з—із—зі._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Голосні́ й при́голосні зву́ки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Чергування голосни́х у ко́ренях слів](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/cherguvannia-golosnikh-u-koreniakh-sliv-43524) (miyklas.com.ua)
-- [МійКлас: Чергування у–в, і–й, з–із–зі (правила милозву́чності)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) (miyklas.com.ua)
+- [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
+- [МійКлас: Чергування голосних у коренях слів](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/cherguvannia-golosnikh-u-koreniakh-sliv-43524) (miyklas.com.ua)
+- [МійКлас: Чергування у–в, і–й, з–із–зі (правила милозвучності)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Participles (Дієприкме́тник)](https://www.ukrainianlessons.com/participles/)
+- [Participles (Дієприкметник)](https://www.ukrainianlessons.com/participles/)
 - [Adjectival Participle](https://www.ukrainianlessons.com/adjectival-participle/)

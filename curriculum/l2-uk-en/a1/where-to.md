@@ -4,33 +4,15 @@
 
 It's Saturday morning. Окса́на and Степа́н stand outside their apartment building, planning the day. They have a long list of errands — and not enough time to do them together. The obvious question: **Куди ти йдеш?** (Where are you going?)
 
-<div class="dialogue">
+> — **Оксана:** Куди ти йдеш? *(Where are you going?)*
+> — **Степан:** Я йду в банк. А ти? *(I'm going to the bank. And you?)*
+> — **Оксана:** Я йду на по́шту. А по́тім? *(I'm going to the post office. And then?)*
+> — **Степан:** Потім іду́ в апте́ку. А ти? *(Then I'm going to the pharmacy. And you?)*
+> — **Оксана:** Я йду у бібліоте́ку. *(I'm going to the library.)*
+> — **Степан:** До́бре. *(Good.)*
+> — **Оксана:** А потім ході́мо в кафе́! *(And then let's go to a café!)*
+> — **Степан:** Добре! Зустрі́немося в кафе о тре́тій. *(Good! Let's meet at the café at three.)*
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Куди ти йдеш? *(Where are you going?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> Я йду в банк. А ти? *(I'm going to the bank. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я йду на по́шту. А по́тім? *(I'm going to the post office. And then?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> Потім іду́ в апте́ку. А ти? *(Then I'm going to the pharmacy. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я йду у бібліоте́ку. *(I'm going to the library.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> До́бре. *(Good.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А потім ході́мо в кафе́! *(And then let's go to a café!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> Добре! Зустрі́немося в кафе о тре́тій. *(Good! Let's meet at the café at three.)*</div>
-
-
-</div>
 
 Look at every destination in that conversation. Each one follows the same pattern: a verb of motion + **в** or **на** + the place name. **Я йду в банк** — I'm going TO the bank. **Я йду на пошту** — I'm going TO the post office. But notice Степан's last line: **зустрінемося в кафе** (we'll meet AT the café) — he's already talking about being THERE, not going there.
 
@@ -40,27 +22,13 @@ Look at every destination in that conversation. Each one follows the same patter
 
 Later that evening, the two friends talk about weekend travel plans.
 
-<div class="dialogue">
+> — **Степан:** Куди ти ї́деш у субо́ту? *(Where are you going on Saturday?)*
+> — **Оксана:** Я ї́ду у Львів. *(I'm going to Lviv.)*
+> — **Степан:** А Оле́на? *(And Olena?)*
+> — **Оксана:** Вона́ ї́де в Оде́су. *(She's going to Odesa.)*
+> — **Степан:** А Мико́ла? *(And Mykola?)*
+> — **Оксана:** Він залиша́ється вдо́ма. А ти? *(He's staying home. And you?)*
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> Куди ти ї́деш у субо́ту? *(Where are you going on Saturday?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я ї́ду у Львів. *(I'm going to Lviv.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> А Оле́на? *(And Olena?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Вона́ ї́де в Оде́су. *(She's going to Odesa.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> А Мико́ла? *(And Mykola?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Він залиша́ється вдо́ма. А ти? *(He's staying home. And you?)*</div>
-
-
-</div>
 
 Two verbs appeared in these dialogues: **йти** (to go on foot) — for local errands like **в банк** and **на пошту** — and **їхати** (to go by transport) — for cities like **у Львів** and **в Одесу**. Both take the same pattern: **в/на** + the place you're heading to, answering the question **Куди?** (Where to?).
 
@@ -149,9 +117,9 @@ Two motion verbs carry you to your destination. **Йти** (on foot): **я йд�
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **куди́** | where to (direction) | присл. |  |
 | **ї́хати** | to go by vehicle/transport | дієсл. |  |
@@ -173,9 +141,9 @@ Two motion verbs carry you to your destination. **Йти** (on foot): **я йд�
 | **зустрі́немося** | let's meet, we will meet | дієсл. |  |
 | **ході́мо** | let's go (on foot) | дієсл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **знахідний відмінок** | accusative case |
 | **Куди ти йдеш?** | Where are you going? (on foot) |
@@ -183,7 +151,7 @@ Two motion verbs carry you to your destination. **Йти** (on foot): **я йд�
 | **Я йду в/у...** | I'm going to... (on foot) |
 | **Я їду в/у...** | I'm going to... (by transport) |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "куди́", back: "where to (direction)", subtitle: "присл." }, { front: "ї́хати", back: "to go by vehicle/transport", subtitle: "дієсл." }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work, job", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "store, shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city, town", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "bus stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Оде́са", back: "Odesa (city in southern Ukraine)" }, { front: "залиша́тися", back: "to stay, to remain", subtitle: "дієсл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }, { front: "зустрі́немося", back: "let's meet, we will meet", subtitle: "дієсл." }, { front: "ході́мо", back: "let's go (on foot)", subtitle: "дієсл." }]} />
 
@@ -191,7 +159,7 @@ Two motion verbs carry you to your destination. **Йти** (on foot): **я йд�
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -208,11 +176,11 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Відмі́нки іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Кли́чний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
+- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
+- [МійКлас: Кличний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
-- [Locative Case (Місце́вий відмінок)](https://www.ukrainianlessons.com/locative-case/)
+- [Locative Case (Місцевий відмінок)](https://www.ukrainianlessons.com/locative-case/)

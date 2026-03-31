@@ -611,46 +611,8 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     actions: list[str] = []
     original_content = content  # Preserve for safety check + diagnostics
 
-    # 1. Revert any previously converted dialogue HTML back to blockquote markdown.
-    # The .md source should contain clean markdown, not HTML divs.
-    # Dialogue → HTML conversion happens in PUBLISH (step_publish), not here.
-    if '<div class="dialogue' in content:
-        def _restore_blockquote(m: re.Match) -> str:
-            inner = m.group(1).strip()
-            raw_lines = re.findall(
-                r'<div class="dialogue-line">(?:<span class="speaker">([^<]+)</span>\s*)?(.*?)</div>',
-                inner,
-            )
-            restored = []
-            for speaker, text in raw_lines:
-                if speaker:
-                    restored.append(f"> — **{speaker}** {text}")
-                elif text.strip():
-                    restored.append(f"> {text.strip()}")
-            return "\n".join(restored) + "\n" if restored else ""
-        content = re.sub(
-            r'<div class="dialogue">\s*\n(.*?)\n</div>',
-            _restore_blockquote,
-            content,
-            flags=re.DOTALL,
-        )
-        # Clean stray > lines left between dialogue blocks
-        content = re.sub(r'\n>\s*\n', '\n', content)
-        # Also clean dialogue-line divs inside blockquotes (> <div ...>)
-        def _clean_blockquoted_divs(m: re.Match) -> str:
-            line = m.group(1)
-            match = re.search(
-                r'<div class="dialogue-line">(?:<span class="speaker">([^<]+)</span>\s*)?(.*?)</div>',
-                line,
-            )
-            if match:
-                speaker, text = match.group(1), match.group(2)
-                if speaker:
-                    return f"> — **{speaker}** {text}"
-                return f"> {text.strip()}" if text.strip() else ""
-            return m.group(0)
-        content = re.sub(r'^> (.+)$', _clean_blockquoted_divs, content, flags=re.MULTILINE)
-        actions.append("dialogue-cleanup")
+    # Dialogue formatting is handled by PUBLISH (step_publish), not enrich.
+    # The .md source contains clean blockquote markdown; publish converts to HTML.
 
     # 2. Strip existing enrichment (idempotent — safe to re-run)
     # Remove existing tab markers and everything after the first non-Урок tab

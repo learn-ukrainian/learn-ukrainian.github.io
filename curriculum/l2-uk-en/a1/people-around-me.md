@@ -4,25 +4,25 @@
 
 A bride is showing wedding photos to a friend, pointing out family members and guests in the pictures.
 
-> <div class="dialogue-line"><span class="speaker">Наречена:</span> Диви́сь, це на́ше весі́лля! Ба́чиш ма́му? *(Look, this is our wedding! Do you see Mom?)*</div>
-> <div class="dialogue-line"><span class="speaker">Друг:</span> Так, ба́чу маму. А хто це по́руч? *(Yes, I see Mom. And who is this next to her?)*</div>
-> <div class="dialogue-line"><span class="speaker">Наречена:</span> Це та́то. Бачиш та́та? *(That's Dad. Do you see Dad?)*</div>
-> <div class="dialogue-line"><span class="speaker">Друг:</span> Так, бачу тата! А хто це? *(Yes, I see Dad! And who is this?)*</div>
-> <div class="dialogue-line"><span class="speaker">Наречена:</span> Це мій брат. Ти зна́єш мого бра́та? *(This is my brother. Do you know my brother?)*</div>
-> <div class="dialogue-line"><span class="speaker">Друг:</span> Ні, я не зна́ю твого́ брата. *(No, I don't know your brother.)*</div>
-> <div class="dialogue-line"><span class="speaker">Наречена:</span> Ході́мо, я тебе́ познайо́млю! *(Come on, I'll introduce you!)*</div>
+> — **Наречена:** Диви́сь, це на́ше весі́лля! Ба́чиш ма́му? *(Look, this is our wedding! Do you see Mom?)*
+> — **Друг:** Так, ба́чу маму. А хто це по́руч? *(Yes, I see Mom. And who is this next to her?)*
+> — **Наречена:** Це та́то. Бачиш та́та? *(That's Dad. Do you see Dad?)*
+> — **Друг:** Так, бачу тата! А хто це? *(Yes, I see Dad! And who is this?)*
+> — **Наречена:** Це мій брат. Ти зна́єш мого бра́та? *(This is my brother. Do you know my brother?)*
+> — **Друг:** Ні, я не зна́ю твого́ брата. *(No, I don't know your brother.)*
+> — **Наречена:** Ході́мо, я тебе́ познайо́млю! *(Come on, I'll introduce you!)*
 
 
 Notice the forms: **маму** (not ма́ма), **тата** (not тато), **брата** (not брат). Every time the bride says "do you see" or "do you know" someone, the person's name changes its ending.
 
 Here is a second conversation — two colleagues at work:
 
-> <div class="dialogue-line"><span class="speaker">Марія:</span> Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Так, я знаю Оле́ну Петрі́вну. *(Yes, I know Olena Petrivna.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марія:</span> А ново́го лі́каря? *(And the new doctor?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Ні, я ще не знаю лікаря. *(No, I don't know the doctor yet.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марія:</span> Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He's very kind. I'm waiting for him now.)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> До́бре, я теж чекаю Олену. *(OK, I'm also waiting for Olena.)*</div>
+> — **Марія:** Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*
+> — **Андрій:** Так, я знаю Оле́ну Петрі́вну. *(Yes, I know Olena Petrivna.)*
+> — **Марія:** А ново́го лі́каря? *(And the new doctor?)*
+> — **Андрій:** Ні, я ще не знаю лікаря. *(No, I don't know the doctor yet.)*
+> — **Марія:** Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He's very kind. I'm waiting for him now.)*
+> — **Андрій:** До́бре, я теж чекаю Олену. *(OK, I'm also waiting for Olena.)*
 
 
 Again: **вчительку** (not вчи́телька), **Олену** (not Оле́на), **лікаря** (not лі́кар). What do you notice? Every time someone talks about a person using **бачити** (to see), **знати** (to know), or **чекати** (to wait for), the person's name or title changes form.
@@ -112,9 +112,9 @@ Memorize these five verbs — they are the most common contexts where animate ac
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ба́чити** | to see | дієсл. |  |
 | **зна́ти** | to know | дієсл. |  |
@@ -144,15 +144,15 @@ Memorize these five verbs — they are the most common contexts where animate ac
 | **до́брий** | kind, good | прикм. |  |
 | **познайо́мити** | to introduce | дієсл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **родовий відмінок** | genitive case |
 | **кого?** | whom? (animate accusative question) |
 | **ще не** | not yet |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ба́чити", back: "to see", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "люби́ти", back: "to love", subtitle: "дієсл." }, { front: "чека́ти", back: "to wait for", subtitle: "дієсл." }, { front: "шука́ти", back: "to look for", subtitle: "дієсл." }, { front: "по́друга", back: "friend (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́кар", back: "doctor (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сусі́д", back: "neighbor (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "та́то", back: "dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ті́тка", back: "aunt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нарече́на", back: "bride", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коле́га", back: "colleague (m/f)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виклада́ч", back: "lecturer (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "продаве́ць", back: "seller (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "покупе́ць", back: "buyer (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "весі́лля", back: "wedding", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "живі́", back: "animate (living beings)", subtitle: "прикм." }, { front: "неживі́", back: "inanimate (things)", subtitle: "прикм." }, { front: "по́руч", back: "next to, beside", subtitle: "присл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "до́брий", back: "kind, good", subtitle: "прикм." }, { front: "познайо́мити", back: "to introduce", subtitle: "дієсл." }]} />
 
@@ -160,7 +160,7 @@ Memorize these five verbs — they are the most common contexts where animate ac
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -177,12 +177,12 @@ Advanced exercises for this module are in development. Check back soon!
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Відмі́нки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Кли́чний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
+- [МійКлас: Кличний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Nominative Case (Називни́й відмінок)](https://www.ukrainianlessons.com/nominativecase/)
+- [Nominative Case (Називний відмінок)](https://www.ukrainianlessons.com/nominativecase/)
 - [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)

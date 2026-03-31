@@ -32,12 +32,12 @@ Ukrainian grammar classifies sentences by purpose into three types: **розпо
 
 Here is a short dialogue that models all three patterns. Two friends, **Кирилко** and **Соломійка**, are near a Kyiv metro station:
 
-> <div class="dialogue-line"><span class="speaker">Кирилко:</span> Приві́т, Соломійко! ↘ *(Hi, Solomiyka!)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломійка:</span> Привіт! Це метро? ↗ *(Hi! Is this the metro?)*</div>
-> <div class="dialogue-line"><span class="speaker">Кирилко:</span> Так, це метро! ↘↘ *(Yes, this is the metro!)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломійка:</span> А де ви́хід? ↘ *(And where is the exit?)*</div>
-> <div class="dialogue-line"><span class="speaker">Кирилко:</span> Ось він. ↘ *(Here it is.)*</div>
-> <div class="dialogue-line"><span class="speaker">Соломійка:</span> Дякую! ↘↘ *(Thanks!)*</div>
+> — **Кирилко:** Приві́т, Соломійко! ↘ *(Hi, Solomiyka!)*
+> — **Соломійка:** Привіт! Це метро? ↗ *(Hi! Is this the metro?)*
+> — **Кирилко:** Так, це метро! ↘↘ *(Yes, this is the metro!)*
+> — **Соломійка:** А де ви́хід? ↘ *(And where is the exit?)*
+> — **Кирилко:** Ось він. ↘ *(Here it is.)*
+> — **Соломійка:** Дякую! ↘↘ *(Thanks!)*
 
 
 Notice: **Це метро?** rises — yes/no question without a question word. **Де вихід?** falls — the question word **де** does the work. Exclamations like **Так, це метро!** and **Дякую!** drop sharply with force.
@@ -79,10 +79,10 @@ Tap the table once for each syllable as you read. The tap on the stressed syllab
 
 Now put both skills together in a dialogue. These are greetings from Module 1, but this time read them with full stress and intonation awareness:
 
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Привіт! ↘ *(Hi!)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Привіт! Як спра́ви? ↗ *(Hi! How are you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> До́бре! А у тебе́? ↗ *(Good! And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Теж добре, дякую! ↘ *(Also good, thanks!)*</div>
+> — **Оленка:** Привіт! ↘ *(Hi!)*
+> — **Тарас:** Привіт! Як спра́ви? ↗ *(Hi! How are you?)*
+> — **Оленка:** До́бре! А у тебе́? ↗ *(Good! And you?)*
+> — **Тарас:** Теж добре, дякую! ↘ *(Also good, thanks!)*
 
 
 Read this dialogue aloud twice. First time: slowly, tapping each syllable, exaggerating the stress. Second time: at natural speed, letting the melody flow. This is your first full integrated performance of Ukrainian sound, stress, and melody together.
@@ -110,9 +110,9 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **на́голос** | stress (linguistic accent) | присл. |  |
 | **замок** | castle (stress on first syllable) | ім. | ч. |
@@ -146,9 +146,9 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 | **апте́ка** | pharmacy | ім. | ж. |
 | **Так** | Yes | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **наголошений склад** | stressed syllable |
 | **розповідне речення** | declarative sentence |
@@ -168,7 +168,7 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 | **Як тебе звати?** | What is your name? (informal) |
 | **Дуже приємно!** | Very nice to meet you! |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "на́голос", back: "stress (linguistic accent)", subtitle: "присл." }, { front: "замок", back: "castle (stress on first syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замок", back: "lock (stress on second syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мука", back: "torment, suffering (stress on first syllable)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мука", back: "flour (stress on last syllable)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "атлас", back: "atlas, map collection (stress on first syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "атлас", back: "satin fabric (stress on second syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "фотогра́фія", back: "photograph", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інтона́ція", back: "intonation", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хто", back: "who", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "де", back: "where", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "ви́хід", back: "exit", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вго́лос", back: "aloud, out loud", subtitle: "присл." }, { front: "украї́нська", back: "Ukrainian (adjective)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочи́нок", back: "rest, vacation", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital city", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Так", back: "Yes", subtitle: "присл." }]} />
 
@@ -176,7 +176,7 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -187,8 +187,8 @@ Advanced exercises for this module are in development. Check back soon!
 **Джерела — References**
 
 - Заболотний Grade 5, p.73
-  _38 зву́ків, наголос. Stress as free and mobile._
-- Авра́менко Grade 5, p.19
+  _38 звуків, наголос. Stress as free and mobile._
+- Авраменко Grade 5, p.19
   _Інтонація речень — розповідні, питальні, окличні._
 - [ULP Season 1, Episode 5 — Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/)
   _Stress practice with numbers._
@@ -196,8 +196,8 @@ Advanced exercises for this module are in development. Check back soon!
 **Граматика — Grammar (МійКлас)**
 
 - [МійКлас: Наголос](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/nagolos-41958) (miyklas.com.ua)
-- [МійКлас: Голосні́ й при́голосні зву́ки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Наголос. Основні правила наголо́шування слів](https://miyklas.com.ua/p/ukrainska-mova/10-klas/orfoepichna-norma-329328/nagolos-osnovni-pravila-nagoloshuvannia-sliv-normativnii-nagolos-344850) (miyklas.com.ua)
+- [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
+- [МійКлас: Наголос. Основні правила наголошування слів](https://miyklas.com.ua/p/ukrainska-mova/10-klas/orfoepichna-norma-329328/nagolos-osnovni-pravila-nagoloshuvannia-sliv-normativnii-nagolos-344850) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

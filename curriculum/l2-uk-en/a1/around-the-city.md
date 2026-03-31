@@ -6,11 +6,11 @@ Navigating a Ukrainian city means juggling two questions at once: **де?** (whe
 
 ### Діало́г 1 — Asking for Directions
 
-> <div class="dialogue-line"><span class="speaker">Турист:</span> Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how do I get to the library?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then right. The library is at the corner.)*</div>
-> <div class="dialogue-line"><span class="speaker">Турист:</span> А музе́й? *(And the museum?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Музей дале́ко. Ї́дьте на метро́ до це́нтру. *(The museum is far. Take the metro to the center.)*</div>
-> <div class="dialogue-line"><span class="speaker">Турист:</span> Дякую! *(Thank you!)*</div>
+> — **Турист:** Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how do I get to the library?)*
+> — **Перехожий:** Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then right. The library is at the corner.)*
+> — **Турист:** А музе́й? *(And the museum?)*
+> — **Перехожий:** Музей дале́ко. Ї́дьте на метро́ до це́нтру. *(The museum is far. Take the metro to the center.)*
+> — **Турист:** Дякую! *(Thank you!)*
 
 
 The tourist opens with **вибачте** (excuse me) — the standard polite formula for addressing a stranger. The full question **як дістатися до...?** (how to get to...?) is a survival phrase — memorize it as one chunk. You will study the verb **дістатися** (to get to) properly at B1; for now, just use the whole phrase.
@@ -19,10 +19,10 @@ Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go 
 
 ### Діалог 2 — Describing Your Route
 
-> <div class="dialogue-line"><span class="speaker">Олена:</span> Як ти дістає́шся на робо́ту? *(How do you get to work?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*</div>
-> <div class="dialogue-line"><span class="speaker">Олена:</span> А потім? *(And then?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*</div>
+> — **Олена:** Як ти дістає́шся на робо́ту? *(How do you get to work?)*
+> — **Тарас:** Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*
+> — **Олена:** А потім? *(And then?)*
+> — **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*
 
 
 Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative: **на зупинку** (to the stop), **до центру** (to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
@@ -134,9 +134,9 @@ Answer these five prompts mentally or aloud, then check your answers:
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ви́бачте** | excuse me (formal) | дієсл. |  |
 | **пі́шки** | on foot | присл. |  |
@@ -176,9 +176,9 @@ Answer these five prompts mentally or aloud, then check your answers:
 | **споча́тку** | first, at first | присл. |  |
 | **по́тім** | then, afterwards | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **на розі** | at the corner |
 | **на метро** | by metro, on the metro |
@@ -190,10 +190,10 @@ Answer these five prompts mentally or aloud, then check your answers:
 | **на околиці** | on the outskirts |
 | **треба їхати** | must go (by vehicle), need to take transport |
 | **можна піти пішки** | can go on foot, it's possible to walk |
-| **де знахо́диться...?** | where is...? (formal) |
+| **де знаходиться...?** | where is...? (formal) |
 | **п'ять хвилин пішки** | five minutes on foot |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ви́бачте", back: "excuse me (formal)", subtitle: "дієсл." }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "хвили́на", back: "minute", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "райо́н", back: "neighborhood, district", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "діста́тися", back: "to get to, to reach", subtitle: "дієсл." }, { front: "іді́ть", back: "go! (on foot, formal imperative)", subtitle: "дієсл." }, { front: "ї́дьте", back: "go! (by vehicle, formal imperative)", subtitle: "дієсл." }, { front: "по́руч", back: "nearby, next to", subtitle: "присл." }, { front: "пря́мо", back: "straight ahead", subtitle: "присл." }, { front: "напра́во", back: "to the right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "to the left", subtitle: "присл." }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "near, close", subtitle: "присл." }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "авто́бусом", back: "by bus (instrumental)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "stop (bus/tram stop)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пло́ща", back: "square (city square)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "store, shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "проспе́кт", back: "avenue, boulevard", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "перехо́жий", back: "passer-by, pedestrian", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тури́ст", back: "tourist", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "робо́та", back: "work, job", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сто", back: "city, town", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "де?", back: "where? (static location)", subtitle: "присл." }, { front: "куди́", back: "where to? (motion toward)", subtitle: "присл." }, { front: "споча́тку", back: "first, at first", subtitle: "присл." }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }]} />
 
@@ -201,7 +201,7 @@ Answer these five prompts mentally or aloud, then check your answers:
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -228,5 +228,5 @@ Advanced exercises for this module are in development. Check back soon!
 **Anna Ohoiko — Ukrainian Lessons**
 
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Accusative Case (Знахі́дний відмі́нок)](https://www.ukrainianlessons.com/accusativecase/)
-- [Locative Case (Місце́вий відмінок)](https://www.ukrainianlessons.com/locative-case/)
+- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
+- [Locative Case (Місцевий відмінок)](https://www.ukrainianlessons.com/locative-case/)

@@ -2,25 +2,25 @@
 
 ## Діало́ги (Dialogues)
 It is morning. Оле́нка and her **мама** (mom) are in the kitchen. What does a typical Ukrainian breakfast sound like? These two dialogues show you how Ukrainians talk about food — and you will notice a pattern that makes ordering easy.
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Що ти хо́чеш на сніда́нок, Оле́нко? *(What do you want for breakfast, Olenko?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Ка́ву з молоко́м і хліб з ма́слом, будь ла́ска. *(Coffee with milk and bread with butter, please.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Каву? Ти ж мале́нька ще! *(Coffee? You're still little!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Ма́мо, я вже доро́сла! *(Mom, I'm already grown up!)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> До́бре, добре. А я хо́чу чай з цу́кром і ка́шу. *(Okay, okay. And I want tea with sugar and porridge.)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Кашу! Я теж люблю́ кашу. *(Porridge! I also like porridge.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Смачно́го! *(Enjoy your meal!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Смачного, мамо! *(Enjoy, mom!)*</div>
+> — **Мама:** Що ти хо́чеш на сніда́нок, Оле́нко? *(What do you want for breakfast, Olenko?)*
+> — **Оленка:** Ка́ву з молоко́м і хліб з ма́слом, будь ла́ска. *(Coffee with milk and bread with butter, please.)*
+> — **Мама:** Каву? Ти ж мале́нька ще! *(Coffee? You're still little!)*
+> — **Оленка:** Ма́мо, я вже доро́сла! *(Mom, I'm already grown up!)*
+> — **Мама:** До́бре, добре. А я хо́чу чай з цу́кром і ка́шу. *(Okay, okay. And I want tea with sugar and porridge.)*
+> — **Оленка:** Кашу! Я теж люблю́ кашу. *(Porridge! I also like porridge.)*
+> — **Мама:** Смачно́го! *(Enjoy your meal!)*
+> — **Оленка:** Смачного, мамо! *(Enjoy, mom!)*
 
 Notice the key phrases: **каву з молоком** (coffee with milk), **хліб з маслом** (bread with butter), **чай з цукром** (tea with sugar). Each one follows the same pattern — a food or drink word plus **з** (with) plus another word. You do not need to understand why «молоком» ends in «-ом» yet. Just learn the whole phrase as one unit, exactly the way you would say "coffee with milk" in English without thinking about grammar.
 Now it is lunchtime. The same family, different meal — different words.
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Що ти зазвича́й їси́ на обід? *(What do you usually eat for lunch?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Суп і сала́т. А і́ноді м'я́со з карто́плею. *(Soup and salad. And sometimes meat with potatoes.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> А що на вече́рю? *(And what for dinner?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Ри́бу з ри́сом або́ варе́ники зі смета́ною. *(Fish with rice or dumplings with sour cream.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Вареники! Моя́ улю́блена стра́ва! *(Dumplings! My favourite dish!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> І моя! Зі сметаною — найкра́ще. *(And mine! With sour cream — the best.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Тоді́ сього́дні вареники на вечерю! *(Then today — dumplings for dinner!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оленка:</span> Чудо́во! *(Wonderful!)*</div>
+> — **Мама:** Що ти зазвича́й їси́ на обід? *(What do you usually eat for lunch?)*
+> — **Оленка:** Суп і сала́т. А і́ноді м'я́со з карто́плею. *(Soup and salad. And sometimes meat with potatoes.)*
+> — **Мама:** А що на вече́рю? *(And what for dinner?)*
+> — **Оленка:** Ри́бу з ри́сом або́ варе́ники зі смета́ною. *(Fish with rice or dumplings with sour cream.)*
+> — **Мама:** Вареники! Моя́ улю́блена стра́ва! *(Dumplings! My favourite dish!)*
+> — **Оленка:** І моя! Зі сметаною — найкра́ще. *(And mine! With sour cream — the best.)*
+> — **Мама:** Тоді́ сього́дні вареники на вечерю! *(Then today — dumplings for dinner!)*
+> — **Оленка:** Чудо́во! *(Wonderful!)*
 
 Three things to take away from these dialogues:
 - Ukrainian says **каву з молоком** as one chunk — memorize the whole phrase, not the pieces.
@@ -91,9 +91,9 @@ One last thought. **Борщ, вареники, кава з молоком** —
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова
+### Обов'язкові та рекомендовані слова
 
-| Слово | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ї́жа** | food | ім. | ж. |
 | **напі́й** | drink | ім. | ч. |
@@ -150,9 +150,9 @@ One last thought. **Борщ, вареники, кава з молоком** —
 | **люби́ти** | to like, to love | дієсл. |  |
 | **хоті́ти** | to want | дієсл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Смачного!** | Enjoy your meal! (bon appétit) |
 | **Чудово!** | Wonderful! |
@@ -166,7 +166,7 @@ One last thought. **Борщ, вареники, кава з молоком** —
 | **вареники зі сметаною** | dumplings with sour cream |
 | **улюблена страва** | favourite dish |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ї́жа", back: "food", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "напі́й", back: "drink", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сік", back: "juice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "обід", back: "lunch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "варе́ник", back: "filled dumpling", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сир", back: "cheese", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "карто́пля", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "компо́т", back: "compote (homemade stewed fruit drink)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ку́рка", back: "chicken", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "помідо́р", back: "tomato", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "огіро́к", back: "cucumber", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "бана́н", back: "banana", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "макаро́ни", back: "pasta", subtitle: "ім." }, { front: "мо́рква", back: "carrot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цибу́ля", back: "onion", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апельси́н", back: "orange", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "йо́гурт", back: "yoghurt", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "олі́я", back: "oil", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "буря́к", back: "beetroot", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "капу́ста", back: "cabbage", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ви́шня", back: "cherry", subtitle: "прикм." }, { front: "сли́ва", back: "plum", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "часни́к", back: "garlic", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "са́ло", back: "cured pork fat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "галушки́", back: "boiled dumplings", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "деруни́", back: "potato pancakes", subtitle: "ім." }, { front: "лимона́д", back: "lemonade", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кефі́р", back: "kefir (fermented milk drink)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пи́во", back: "beer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вино́", back: "wine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "стра́ва", back: "dish, meal", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бабу́ся", back: "grandma", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́ма", back: "mom, mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дома́шнє", back: "homemade", subtitle: "прикм." }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "люби́ти", back: "to like, to love", subtitle: "дієсл." }, { front: "хоті́ти", back: "to want", subtitle: "дієсл." }]} />
 
@@ -174,7 +174,7 @@ One last thought. **Борщ, вареники, кава з молоком** —
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -186,14 +186,14 @@ Advanced exercises for this module are in development. Check back soon!
 
 - [ULP Season 1, Episodes 11-13](https://www.ukrainianlessons.com/episode11/)
   _Anna introduces food and drink vocabulary, cafe ordering._
-- State Standard 2024, Topic 3 (рестора́н)
+- State Standard 2024, Topic 3 (ресторан)
   _Communicative situation: restaurant, food, ordering._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Іме́нник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Число́ іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
+- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
+- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

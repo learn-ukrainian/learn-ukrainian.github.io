@@ -4,35 +4,35 @@
 
 Taras is at a busy outdoor **ринок** (market) in Kyiv. He needs **яблука** (apples) and **помідори** (tomatoes). Listen to how he asks the price, hears the total, and places his order.
 
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> До́брий день! *(Good day!)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Добрий день! *(Good day!)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Скі́льки ко́шту́є кілогра́м я́блук? *(How much does a kilogram of apples cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Соро́к гри́вень. *(Forty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> А помідори? *(And tomatoes?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Три́дцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Да́йте, будь ла́ска, два кілогра́ми помідо́рів і кілограм яблук. *(Please give me two kilograms of tomatoes and a kilogram of apples.)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Сімдеся́т п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Ось, будь ласка. *(Here you go.)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Дякую! До поба́чення! *(Thank you! Goodbye!)*</div>
+> — **Тарас:** До́брий день! *(Good day!)*
+> — **Продавець:** Добрий день! *(Good day!)*
+> — **Тарас:** Скі́льки ко́шту́є кілогра́м я́блук? *(How much does a kilogram of apples cost?)*
+> — **Продавець:** Соро́к гри́вень. *(Forty hryvnias.)*
+> — **Тарас:** А помідори? *(And tomatoes?)*
+> — **Продавець:** Три́дцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*
+> — **Тарас:** Да́йте, будь ла́ска, два кілогра́ми помідо́рів і кілограм яблук. *(Please give me two kilograms of tomatoes and a kilogram of apples.)*
+> — **Продавець:** Сімдеся́т п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*
+> — **Тарас:** Ось, будь ласка. *(Here you go.)*
+> — **Продавець:** Дякую! До поба́чення! *(Thank you! Goodbye!)*
 
 
 Two key phrases to notice here. First, **за кілограм** means "per kilogram" — the vendor states the unit price. Second, **Дайте, будь ласка** followed by a quantity and an item is the standard buying request at any Ukrainian market or shop.
 
 Now a different setting. **Мама** (Mom) and **Дочка** (Daughter) are in a **супермаркет** (supermarket). They need to find bread, compare cheese prices, and pay.
 
-> <div class="dialogue-line"><span class="speaker">Дочка:</span> Ма́мо, де тут хліб? *(Mom, where is the bread here?)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Хліб у тре́тьому ря́ді. *(Bread is in the third aisle.)*</div>
-> <div class="dialogue-line"><span class="speaker">Дочка:</span> А молоко́? *(And milk?)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Молоко в холоди́льнику, там. *(Milk is in the fridge, over there.)*</div>
-> <div class="dialogue-line"><span class="speaker">Дочка:</span> Скільки коштує цей сир? *(How much does this cheese cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Сто два́дцять гривень. *(One hundred twenty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Дочка:</span> До́рого! А є деше́вший? *(Expensive! Is there a cheaper one?)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Так, ось цей — вісімдеся́т. *(Yes, this one — eighty.)*</div>
-> <div class="dialogue-line"><span class="speaker">Дочка:</span> До́бре, беру́. *(OK, I'll take it.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Скільки за все? *(How much is everything?)*</div>
-> <div class="dialogue-line"><span class="speaker">Касир:</span> Сто сорок сім гривень. *(One hundred forty-seven hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Мама:</span> Мо́жна ка́рткою? *(Can I pay by card?)*</div>
-> <div class="dialogue-line"><span class="speaker">Касир:</span> Так, звича́йно. Дякуємо за поку́пку! *(Yes, of course. Thanks for the purchase!)*</div>
+> — **Дочка:** Ма́мо, де тут хліб? *(Mom, where is the bread here?)*
+> — **Мама:** Хліб у тре́тьому ря́ді. *(Bread is in the third aisle.)*
+> — **Дочка:** А молоко́? *(And milk?)*
+> — **Мама:** Молоко в холоди́льнику, там. *(Milk is in the fridge, over there.)*
+> — **Дочка:** Скільки коштує цей сир? *(How much does this cheese cost?)*
+> — **Мама:** Сто два́дцять гривень. *(One hundred twenty hryvnias.)*
+> — **Дочка:** До́рого! А є деше́вший? *(Expensive! Is there a cheaper one?)*
+> — **Мама:** Так, ось цей — вісімдеся́т. *(Yes, this one — eighty.)*
+> — **Дочка:** До́бре, беру́. *(OK, I'll take it.)*
+> — **Мама:** Скільки за все? *(How much is everything?)*
+> — **Касир:** Сто сорок сім гривень. *(One hundred forty-seven hryvnias.)*
+> — **Мама:** Мо́жна ка́рткою? *(Can I pay by card?)*
+> — **Касир:** Так, звича́йно. Дякуємо за поку́пку! *(Yes, of course. Thanks for the purchase!)*
 
 
 :::tip
@@ -155,16 +155,16 @@ Here is your complete shopping toolkit, organized by what you need to do:
 
 Test yourself. You are at a Kyiv market and need three things: 2 kg of tomatoes (**помідори**, 50 грн/кг), 1 bottle of juice (**сік**, 30 грн), and 1 loaf of bread (**хліб**, 20 грн). Walk through the full exchange:
 
-> <div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштують помідори? *(How much do the tomatoes cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> П'ятдесят гривень за кілограм. *(Fifty hryvnias per kilogram.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштує сік? *(How much does the juice cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Тридцять гривень. *(Thirty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштує хліб? *(How much does the bread cost?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Двадцять гривень. *(Twenty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ви:</span> Дайте, будь ласка, два кілограми помідорів, пляшку соку і буханку хліба. *(Please give me two kilograms of tomatoes, a bottle of juice, and a loaf of bread.)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ви:</span> Можна карткою? *(Can I pay by card?)*</div>
-> <div class="dialogue-line"><span class="speaker">Продавець:</span> Так, звичайно. *(Yes, of course.)*</div>
+> — **Ви:** Скільки коштують помідори? *(How much do the tomatoes cost?)*
+> — **Продавець:** П'ятдесят гривень за кілограм. *(Fifty hryvnias per kilogram.)*
+> — **Ви:** Скільки коштує сік? *(How much does the juice cost?)*
+> — **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
+> — **Ви:** Скільки коштує хліб? *(How much does the bread cost?)*
+> — **Продавець:** Двадцять гривень. *(Twenty hryvnias.)*
+> — **Ви:** Дайте, будь ласка, два кілограми помідорів, пляшку соку і буханку хліба. *(Please give me two kilograms of tomatoes, a bottle of juice, and a loaf of bread.)*
+> — **Продавець:** Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*
+> — **Ви:** Можна карткою? *(Can I pay by card?)*
+> — **Продавець:** Так, звичайно. *(Yes, of course.)*
 
 
 Can you do this without looking at the toolkit above? That is your goal.
@@ -172,9 +172,9 @@ Can you do this without looking at the toolkit above? That is your goal.
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ри́нок** | market (open-air) | ім. |  |
 | **суперма́ркет** | supermarket | ім. | ч. |
@@ -218,9 +218,9 @@ Can you do this without looking at the toolkit above? That is your goal.
 | **право́руч** | to the right | присл. |  |
 | **ліво́руч** | to the left | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **молочний відділ** | dairy section |
 | **хлібний відділ** | bread section |
@@ -240,7 +240,7 @@ Can you do this without looking at the toolkit above? That is your goal.
 | **Добре, беру.** | OK, I'll take it. |
 | **Дякуємо за покупку!** | Thanks for the purchase! |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "ри́нок", back: "market (open-air)", subtitle: "ім." }, { front: "суперма́ркет", back: "supermarket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "магази́н", back: "shop, store", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крамни́ця", back: "store (distinctly Ukrainian word, common in western Ukraine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "продаве́ць", back: "vendor, seller", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "каси́р", back: "cashier", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ціна́", back: "price", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зни́жка", back: "discount", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "копі́йка", back: "kopeck (1/100 of a hryvnia)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "готі́вка", back: "cash", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ртка", back: "card (payment card)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гроші", back: "money", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кілогра́м", back: "kilogram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "літр", back: "liter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́чка", back: "pack, packet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пля́шка", back: "bottle", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "буха́нка", back: "loaf (used only for bread)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відділ", back: "section, department (in a store)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ряд", back: "aisle, row", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ви́бір", back: "selection, choice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "поку́пка", back: "purchase", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ковбаса́", back: "sausage", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "я́блука", back: "apples", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "помідо́ри", back: "tomatoes", subtitle: "ім." }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́ки", back: "medicine, medication", subtitle: "ім." }, { front: "холоди́льник", back: "refrigerator, fridge", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ко́штува́ти", back: "to cost", subtitle: "дієсл." }, { front: "купува́ти", back: "to buy", subtitle: "дієсл." }, { front: "бра́ти", back: "to take (in shopping context: to buy)", subtitle: "ім." }, { front: "до́рого", back: "expensive (adverb)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "де́шево", back: "cheap (adverb)", subtitle: "присл." }, { front: "деше́вший", back: "cheaper (comparative adjective)", subtitle: "прикм." }, { front: "скі́льки", back: "how much, how many", subtitle: "присл." }, { front: "право́руч", back: "to the right", subtitle: "присл." }, { front: "ліво́руч", back: "to the left", subtitle: "присл." }]} />
 
@@ -248,7 +248,7 @@ Can you do this without looking at the toolkit above? That is your goal.
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -260,12 +260,12 @@ Advanced exercises for this module are in development. Check back soon!
 
 - [ULP Season 1, Episode 31](https://www.ukrainianlessons.com/episode31/)
   _Shopping vocabulary, prices, quantities._
-- State Standard 2024, Topic 3 (купі́вля)
+- State Standard 2024, Topic 3 (купівля)
   _Communicative situation: shopping, prices, paying._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: Число́ іме́нників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

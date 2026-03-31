@@ -4,12 +4,12 @@
 
 Іва́нко and Га́ля stand at a window on a grey morning. They want to go hiking — but the sky looks terrible. Should they go today, or wait until tomorrow?
 
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Яка сього́дні пого́да? *(What's the weather like today?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Сьогодні хо́лодно і йде дощ. *(It's cold today and it's raining.)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Ой... А за́втра? *(Oh... And tomorrow?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Завтра бу́де те́пло і со́нячно. *(Tomorrow it will be warm and sunny.)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> До́бре! Тоді́ завтра гуля́ємо! *(Great! Then tomorrow we walk!)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Так! Завтра буде га́рний день. *(Yes! Tomorrow will be a nice day.)*</div>
+> — **Іванко:** Яка сього́дні пого́да? *(What's the weather like today?)*
+> — **Галя:** Сьогодні хо́лодно і йде дощ. *(It's cold today and it's raining.)*
+> — **Іванко:** Ой... А за́втра? *(Oh... And tomorrow?)*
+> — **Галя:** Завтра бу́де те́пло і со́нячно. *(Tomorrow it will be warm and sunny.)*
+> — **Іванко:** До́бре! Тоді́ завтра гуля́ємо! *(Great! Then tomorrow we walk!)*
+> — **Галя:** Так! Завтра буде га́рний день. *(Yes! Tomorrow will be a nice day.)*
 
 
 Three phrases to notice here. **Яка погода** (what weather) — this is how you ask about the weather. **Холодно** (cold) — no subject, no "it is," just the state. And **буде тепло** (will be warm) — **буде** works as a simple future marker. Treat it as a chunk for now, not a full grammar lesson.
@@ -18,14 +18,14 @@ There's something interesting about Ukrainian weather sentences: the weather jus
 
 Now Іванко and Галя talk about their favourite seasons:
 
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Яка пора ро́ку тобі́ подо́бається? *(What season do you like?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Ме́ні подобається лі́то. *(I like summer.)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Чо́му? *(Why?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Тому́ що влі́тку тепло і сонячно. А тобі? *(Because in summer it's warm and sunny. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Мені подобається о́сінь. *(I like autumn.)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Восени́ краси́во? *(Is it beautiful in autumn?)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Так! А взи́мку? *(Yes! And in winter?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Взимку холодно, але́ красиво. Йде сніг! *(In winter it's cold, but beautiful. It snows!)*</div>
+> — **Іванко:** Яка пора ро́ку тобі́ подо́бається? *(What season do you like?)*
+> — **Галя:** Ме́ні подобається лі́то. *(I like summer.)*
+> — **Іванко:** Чо́му? *(Why?)*
+> — **Галя:** Тому́ що влі́тку тепло і сонячно. А тобі? *(Because in summer it's warm and sunny. And you?)*
+> — **Іванко:** Мені подобається о́сінь. *(I like autumn.)*
+> — **Галя:** Восени́ краси́во? *(Is it beautiful in autumn?)*
+> — **Іванко:** Так! А взи́мку? *(Yes! And in winter?)*
+> — **Галя:** Взимку холодно, але́ красиво. Йде сніг! *(In winter it's cold, but beautiful. It snows!)*
 
 
 Notice the season adverbs: **взимку** (in winter), **навесні** (in spring), **влітку** (in summer), **восени** (in autumn). These are frozen adverbs you already know from M23. They don't change form. Now pair each with the weather: **взимку** — **холодно**, **влітку** — **тепло**, **восени** — **прохолодно**.
@@ -74,14 +74,14 @@ The pattern is simple: **Мені подобається** + season, then a sepa
 
 Now put everything together in one more conversation. Іванко asks Галя about her dream weather:
 
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> Яка твоя́ ідеа́льна погода? *(What's your ideal weather?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Плюс двадцять, сонячно і без ві́тру. *(Plus twenty, sunny, and no wind.)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> А взимку ти лю́биш сніг? *(And in winter, do you like snow?)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Так, але коли́ не дуже холодно! *(Yes, but when it's not too cold!)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> У Ки́єві за́раз мінус п'ять. *(In Kyiv right now it's minus five.)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> О, це дуже холодно! А у тебе́? *(Oh, that's very cold! And where you are?)*</div>
-> <div class="dialogue-line"><span class="speaker">Іванко:</span> У мене́ сьогодні тепло. Плюс п'ятна́дцять і хмарно. *(Here today it's warm. Plus fifteen and cloudy.)*</div>
-> <div class="dialogue-line"><span class="speaker">Галя:</span> Добре! Не холодно — і добре! *(Good! Not cold — and that's fine!)*</div>
+> — **Іванко:** Яка твоя́ ідеа́льна погода? *(What's your ideal weather?)*
+> — **Галя:** Плюс двадцять, сонячно і без ві́тру. *(Plus twenty, sunny, and no wind.)*
+> — **Іванко:** А взимку ти лю́биш сніг? *(And in winter, do you like snow?)*
+> — **Галя:** Так, але коли́ не дуже холодно! *(Yes, but when it's not too cold!)*
+> — **Іванко:** У Ки́єві за́раз мінус п'ять. *(In Kyiv right now it's minus five.)*
+> — **Галя:** О, це дуже холодно! А у тебе́? *(Oh, that's very cold! And where you are?)*
+> — **Іванко:** У мене́ сьогодні тепло. Плюс п'ятна́дцять і хмарно. *(Here today it's warm. Plus fifteen and cloudy.)*
+> — **Галя:** Добре! Не холодно — і добре! *(Good! Not cold — and that's fine!)*
 
 
 Notice **ідеальна** (ideal), **без вітру** (without wind — **без** means "without"), and how Галя and Іванко compare weather in different cities using **у Києві** (in Kyiv) and **у мене** (where I am).
@@ -119,9 +119,9 @@ Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weat
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **пого́да** | weather | ім. | ж. |
 | **хо́лодно** | it's cold (weather adverb) | присл. |  |
@@ -161,9 +161,9 @@ Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weat
 | **ли́стя** | leaves (collective) | ім. | с. |
 | **кві́тне** | blooms, is in bloom | прикм. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **іде дощ** | it's raining (lit. rain goes) |
 | **іде сніг** | it's snowing (lit. snow goes) |
@@ -175,7 +175,7 @@ Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weat
 | **дуже холодно** | very cold |
 | **Яка твоя ідеальна погода?** | What's your ideal weather? |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "пого́да", back: "weather", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хо́лодно", back: "it's cold (weather adverb)", subtitle: "присл." }, { front: "тепло́", back: "it's warm (weather adverb)", subtitle: "присл." }, { front: "спекотно", back: "it's hot (weather adverb)", subtitle: "присл." }, { front: "прохоло́дно", back: "it's cool (weather adverb)", subtitle: "присл." }, { front: "хма́рно", back: "it's cloudy (weather adverb)", subtitle: "присл." }, { front: "я́сно", back: "it's clear (weather adverb)", subtitle: "присл." }, { front: "со́нячно", back: "it's sunny (weather adverb)", subtitle: "присл." }, { front: "ві́тер", back: "wind", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "со́нце", back: "sun", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "гра́дус", back: "degree (temperature)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сього́дні", back: "today", subtitle: "присл." }, { front: "за́втра", back: "tomorrow", subtitle: "присл." }, { front: "вчо́ра", back: "yesterday", subtitle: "присл." }, { front: "бу́де", back: "will be (future marker)", subtitle: "дієсл." }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "весна́", back: "spring", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́то", back: "summer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́сінь", back: "autumn", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "взи́мку", back: "in winter", subtitle: "присл." }, { front: "навесні́", back: "in spring", subtitle: "присл." }, { front: "влі́тку", back: "in summer", subtitle: "присл." }, { front: "восени́", back: "in autumn", subtitle: "присл." }, { front: "плюс", back: "plus (positive temperature)" }, { front: "мі́нус", back: "minus (negative temperature)" }, { front: "без", back: "without", subtitle: "прийм." }, { front: "за́раз", back: "right now, currently", subtitle: "присл." }, { front: "тоді́", back: "then, in that case", subtitle: "присл." }, { front: "чому́", back: "why?", subtitle: "присл." }, { front: "краси́во", back: "it's beautiful", subtitle: "присл." }, { front: "ідеа́льна", back: "ideal", subtitle: "прикм." }, { front: "все", back: "everything", subtitle: "прикм." }, { front: "бі́ле", back: "white (neuter)", subtitle: "прикм." }, { front: "зеле́не", back: "green (neuter)", subtitle: "прикм." }, { front: "жо́вте", back: "yellow (neuter)", subtitle: "прикм." }, { front: "ли́стя", back: "leaves (collective)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кві́тне", back: "blooms, is in bloom", subtitle: "прикм." }]} />
 
@@ -183,7 +183,7 @@ Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weat
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -194,7 +194,7 @@ Advanced exercises for this module are in development. Check back soon!
 **Джерела — References**
 
 - Заболотний Grade 8, p.126
-  _Безособові речення: я́вища приро́ди, стан люди́ни._
+  _Безособові речення: явища природи, стан людини._
 - [ULP Season 1, Episode 16](https://www.ukrainianlessons.com/episode16/)
   _Weather vocabulary and expressions._
 

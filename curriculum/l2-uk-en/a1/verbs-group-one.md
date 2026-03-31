@@ -4,14 +4,14 @@
 
 Ю́ля is in the kitchen. Something smells amazing. Сашко́ walks in and can't resist asking questions.
 
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Що ти ро́биш, Ю́лю? *(What are you doing, Yulia?)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Я готу́ю вече́рю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Я чита́ю. *(I'm reading.)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Що чита́єш? *(What are you reading?)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Я читаю кни́гу. А де Оле́на? *(I'm reading a book. And where's Olena?)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Вона́ слу́хає му́зику. *(She's listening to music.)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Вона за́вжди́ слухає музику! *(She always listens to music!)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Так, але́ вона зна́є бага́то пісе́нь! *(Yes, but she knows many songs!)*</div>
+> — **Сашко:** Що ти ро́биш, Ю́лю? *(What are you doing, Yulia?)*
+> — **Юля:** Я готу́ю вече́рю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*
+> — **Сашко:** Я чита́ю. *(I'm reading.)*
+> — **Юля:** Що чита́єш? *(What are you reading?)*
+> — **Сашко:** Я читаю кни́гу. А де Оле́на? *(I'm reading a book. And where's Olena?)*
+> — **Юля:** Вона́ слу́хає му́зику. *(She's listening to music.)*
+> — **Сашко:** Вона за́вжди́ слухає музику! *(She always listens to music!)*
+> — **Юля:** Так, але́ вона зна́є бага́то пісе́нь! *(Yes, but she knows many songs!)*
 
 
 :::tip
@@ -20,14 +20,14 @@
 
 Here's a second situation — two people meet after work.
 
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Де ти працю́єш? *(Where do you work?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Так, я вивча́ю! *(Yes, I'm studying it!)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> До́бре! Я теж вивчаю. *(Great! I'm studying too.)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Ти гуля́єш уве́чері? *(Do you walk in the evening?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Так, я гуля́ю в парку. *(Yes, I walk in the park.)*</div>
+> — **Андрій:** Де ти працю́єш? *(Where do you work?)*
+> — **Марина:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
+> — **Андрій:** Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*
+> — **Марина:** Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*
+> — **Андрій:** Так, я вивча́ю! *(Yes, I'm studying it!)*
+> — **Марина:** До́бре! Я теж вивчаю. *(Great! I'm studying too.)*
+> — **Андрій:** Ти гуля́єш уве́чері? *(Do you walk in the evening?)*
+> — **Марина:** Так, я гуля́ю в парку. *(Yes, I walk in the park.)*
 
 
 Count the verbs that appeared across both dialogues: **готувати** (to cook), **читати** (to read), **слухати** (to listen), **знати** (to know), **працювати** (to work), **вивчати** (to study), **гуляти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **робити** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
@@ -119,9 +119,9 @@ Test yourself before moving on:
 
 <!-- TAB:Словник -->
 
-### Обов'язко́ві та рекомендо́вані слова́
+### Обов'язкові та рекомендовані слова
 
-| Сло́во | Переклад | Части́на мо́ви | Рід |
+| Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **чита́ти** | to read | дієсл. |  |
 | **зна́ти** | to know | дієсл. |  |
@@ -147,13 +147,13 @@ Test yourself before moving on:
 | **смачни́й** | tasty, delicious | прикм. |  |
 | **уве́чері** | in the evening | присл. |  |
 
-### Ви́рази
+### Вирази
 
-| Ви́раз | Переклад |
+| Вираз | Переклад |
 |-------|----------|
 | **Що ти робиш?** | What are you doing? |
 
-### Картки́ — Flashcards
+### Картки — Flashcards
 
 <FlashcardDeck client:only="react" cards={[{ front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "му́зика", back: "music", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "вивча́ти", back: "to study, to learn", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "гра́ти", back: "to play", subtitle: "дієсл." }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "парк", back: "park", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "студе́нт", back: "student (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "навча́тися", back: "to study (be enrolled as a student)", subtitle: "дієсл." }, { front: "за́вжди́", back: "always", subtitle: "присл." }, { front: "бага́то", back: "many, a lot", subtitle: "присл." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "смачни́й", back: "tasty, delicious", subtitle: "прикм." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }]} />
 
@@ -161,7 +161,7 @@ Test yourself before moving on:
 <!-- TAB:Зошит -->
 
 :::note
-Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+Розширені вправи для цього уроку ще в розробці.
 
 Advanced exercises for this module are in development. Check back soon!
 :::
@@ -172,17 +172,17 @@ Advanced exercises for this module are in development. Check back soon!
 **Джерела — References**
 
 - Варзацька Grade 4, p.129
-  _Conjugation table: тепе́рішній час, persons and endings._
+  _Conjugation table: теперішній час, persons and endings._
 - Захарійчук Grade 4, p.110
-  _Verb conjugation table: однина та множина за осо́бами._
+  _Verb conjugation table: однина та множина за особами._
 - [ULP Season 1, Episode 22](https://www.ukrainianlessons.com/episode22/)
   _Present tense verbs in daily life._
 
 **Граматика — Grammar (МійКлас)**
 
-- [МійКлас: І і ІІ дієвідмі́ни. Дієвідмі́нювання дієслі́в](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/i-i-ii-diyevidmini-diyevidminiuvannia-diyesliv-39539) (miyklas.com.ua)
-- [МійКлас: Часи́ дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
-- [МійКлас: Дієсло́во, дієслі́вні фо́рми. Дієвідміни. Наказо́вий спо́сіб](https://miyklas.com.ua/p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008) (miyklas.com.ua)
+- [МійКлас: І і ІІ дієвідміни. Дієвідмінювання дієслів](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/i-i-ii-diyevidmini-diyevidminiuvannia-diyesliv-39539) (miyklas.com.ua)
+- [МійКлас: Часи дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
+- [МійКлас: Дієслово, дієслівні форми. Дієвідміни. Наказовий спосіб](https://miyklas.com.ua/p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008) (miyklas.com.ua)
 
 **Anna Ohoiko — Ukrainian Lessons**
 

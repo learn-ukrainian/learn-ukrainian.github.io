@@ -56,12 +56,12 @@ Now read these Ukrainian city names: **Ки-їв** (Kyiv — notice the **Ї**),
 
 Before moving on, here is a preview of three special features you will meet in M03 — not the focus today, but worth recognizing when they appear. First: **Щ** always reads as [шч] — one letter, two sounds. In **що** (what) and **ще** (still, yet), do not read it as [ш] alone. Second: **Ь** (м'яки́й знак, the soft sign) has no sound of its own. It only softens the consonant before it. In **день** (day), the **Н** is soft. In **сіль** (salt), the **Л** is soft. In **кінь** (horse), the **Н** is soft. Think of **Ь** as a silent softener. Third: the apostrophe (**'**) does the opposite — it separates a consonant from a following iotated vowel, preventing softening. In **сім'я** (family), the **М** stays hard and then **Я** produces its full [йа]. Same in **м'ясо** (meat) and **п'ять** (five). These three features will be drilled thoroughly in M03; for now, just recognize them when you see them.
 
-> <div class="dialogue-line"><span class="speaker">Аня:</span> Бі-блі-о-те-ка... **бібліотека**! *(Library!)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> Так! А це? *(Yes! And this one?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аня:</span> Я-блу-ко... **яблуко**! *(Apple!)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> А це? *(And this?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аня:</span> Шо-ко-лад... **шоколад**! *(Chocolate!)*</div>
-> <div class="dialogue-line"><span class="speaker">Марко:</span> **Шоколад** — сма́чно! *(Chocolate — delicious!)*</div>
+> — **Аня:** Бі-блі-о-те-ка... **бібліотека**! *(Library!)*
+> — **Марко:** Так! А це? *(Yes! And this one?)*
+> — **Аня:** Я-блу-ко... **яблуко**! *(Apple!)*
+> — **Марко:** А це? *(And this?)*
+> — **Аня:** Шо-ко-лад... **шоколад**! *(Chocolate!)*
+> — **Марко:** **Шоколад** — сма́чно! *(Chocolate — delicious!)*
 
 
 Аня uses the syllable method — split, then blend — and reads three words she has never seen before. Марко confirms each one. Notice how even a five-syllable word like **бібліотека** becomes manageable once you count the vowels and take it piece by piece.
