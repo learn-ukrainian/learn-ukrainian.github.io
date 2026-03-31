@@ -27,6 +27,7 @@ QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 FLASH_LITE_MODEL = "gemini-3-flash-preview"          # Fast + cheap: vocab, activities, fixes
 FLASH_MODEL = "gemini-3-flash-preview"               # Same — aliased for clarity
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, review
+FALLBACK_MODEL = "auto"                              # Let gemini-cli route when Pro is unavailable
 
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.

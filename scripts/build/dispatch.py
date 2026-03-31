@@ -185,7 +185,7 @@ def dispatch_agent(
 
     # Build command
     if is_gemini:
-        cmd = ["gemini", "-m", model, "--approval-mode=yolo"]
+        cmd = ["gemini", "-m", model, "--approval-mode", "yolo"]
         if mcp_tools:
             cmd.extend(["--allowed-mcp-server-names", "rag"])
     else:
@@ -198,51 +198,65 @@ def dispatch_agent(
         if mcp_tools and allowed_tools:
             cmd.extend(["--mcp-config", mcp_config, "--allowedTools", allowed_tools])
 
-    # Execute with timing
+    # Execute with timing + Gemini fallback
     # Set LEARN_UKRAINIAN_PIPELINE to skip SessionStart/UserPromptSubmit hooks
     env = {**os.environ, "LEARN_UKRAINIAN_PIPELINE": "1"}
-    t0 = time.monotonic()
-    try:
-        result = subprocess.run(
-            cmd,
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            cwd=str(PROJECT_ROOT),
-            env=env,
-        )
-        elapsed = time.monotonic() - t0
-        ok = result.returncode == 0
-        raw = result.stdout if ok else ""
-        stderr = result.stderr or ""
 
-        if not ok:
-            _log(f"  ❌ {agent_label} returned error (rc={result.returncode}): {stderr[:200]}")
+    def _run_cmd(run_cmd, run_label, run_timeout):
+        t0 = time.monotonic()
+        try:
+            result = subprocess.run(
+                run_cmd,
+                input=prompt,
+                capture_output=True,
+                text=True,
+                timeout=run_timeout,
+                cwd=str(PROJECT_ROOT),
+                env=env,
+            )
+            elapsed = time.monotonic() - t0
+            ok = result.returncode == 0
+            raw = result.stdout if ok else ""
+            stderr = result.stderr or ""
 
-        _save_dispatch_log(
-            orch_dir, phase, agent_label,
-            prompt_chars=len(prompt),
-            response_chars=len(raw),
-            stderr=stderr,
-            returncode=result.returncode,
-            duration_s=elapsed,
-            ok=ok,
-        )
-        return ok, raw
+            if not ok:
+                _log(f"  ❌ {run_label} returned error (rc={result.returncode}): {stderr[:200]}")
 
-    except subprocess.TimeoutExpired as e:
-        elapsed = time.monotonic() - t0
-        _log(f"  ❌ {agent_label} timed out ({timeout}s)")
-        # Capture partial output for debugging (e.g., stuck tool call visible in stderr)
-        partial_stderr = e.stderr.decode("utf-8") if isinstance(e.stderr, bytes) else (e.stderr or "")
-        partial_stdout = e.stdout.decode("utf-8") if isinstance(e.stdout, bytes) else (e.stdout or "")
-        _save_dispatch_log(
-            orch_dir, phase, agent_label,
-            prompt_chars=len(prompt),
-            response_chars=len(partial_stdout),
-            stderr=partial_stderr,
-            duration_s=elapsed,
-            ok=False,
-        )
-        return False, ""
+            _save_dispatch_log(
+                orch_dir, phase, run_label,
+                prompt_chars=len(prompt),
+                response_chars=len(raw),
+                stderr=stderr,
+                returncode=result.returncode,
+                duration_s=elapsed,
+                ok=ok,
+            )
+            return ok, raw
+
+        except subprocess.TimeoutExpired as e:
+            elapsed = time.monotonic() - t0
+            _log(f"  ❌ {run_label} timed out ({run_timeout}s)")
+            partial_stderr = e.stderr.decode("utf-8") if isinstance(e.stderr, bytes) else (e.stderr or "")
+            partial_stdout = e.stdout.decode("utf-8") if isinstance(e.stdout, bytes) else (e.stdout or "")
+            _save_dispatch_log(
+                orch_dir, phase, run_label,
+                prompt_chars=len(prompt),
+                response_chars=len(partial_stdout),
+                stderr=partial_stderr,
+                duration_s=elapsed,
+                ok=False,
+            )
+            return False, ""
+
+    ok, raw = _run_cmd(cmd, agent_label, timeout)
+
+    # Gemini fallback: if Pro failed (timeout/error), retry with -m auto
+    if not ok and is_gemini:
+        from batch_gemini_config import FALLBACK_MODEL
+        if model != FALLBACK_MODEL:
+            fallback_cmd = [c if c != model else FALLBACK_MODEL for c in cmd]
+            fallback_label = f"{agent} ({FALLBACK_MODEL})"
+            _log(f"  🔄 Retrying with fallback model: {fallback_label}")
+            ok, raw = _run_cmd(fallback_cmd, fallback_label, timeout)
+
+    return ok, raw
