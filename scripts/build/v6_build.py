@@ -3247,6 +3247,8 @@ def step_review(content_path: Path, level: str, module_num: int,
             reviewer = "claude"
             reviewer_agent = "claude-tools"
 
+    # Re-check reviewer in case fallback happened above
+    if reviewer == "gemini":
         ok, raw = None, None
         _GEMINI_REVIEW_MAX_RETRIES = 5
         for attempt in range(1, _GEMINI_REVIEW_MAX_RETRIES + 1):

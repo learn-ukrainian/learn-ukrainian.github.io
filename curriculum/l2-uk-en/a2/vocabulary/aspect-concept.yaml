@@ -1,0 +1,451 @@
+vocabulary:
+- word: вид дієслова
+  translation: verb aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: недоконаний вид
+  translation: imperfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: доконаний вид
+  translation: perfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ді́я
+  translation: action
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: повто́рення
+  translation: repetition
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: заве́ршений
+  translation: completed, finished
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: трива́лий
+  translation: ongoing, lasting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: одноразо́вий
+  translation: single, one-time
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: конце́пція
+  translation: concept
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: роби́ти
+  translation: to do (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зроби́ти
+  translation: to do, get done (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: писа́ти
+  translation: to write (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: написа́ти
+  translation: to write and finish (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочита́ти
+  translation: to finish reading (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́ти
+  translation: to study, learn (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́вчити
+  translation: to master, learn completely (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вари́ти
+  translation: to cook (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: звари́ти
+  translation: to finish cooking (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дзвони́ти
+  translation: to call, phone (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: задзвони́ти
+  translation: to ring, start ringing (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́грати
+  translation: to win (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перемогти́
+  translation: to win, defeat (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переда́ти
+  translation: to pass (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заби́ти
+  translation: to score (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: атакува́ти
+  translation: to attack (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зрозумі́ти
+  translation: to understand (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпові́сти́
+  translation: to answer, reply (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверну́тися
+  translation: to come back, return (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: упа́сти
+  translation: to fall (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook, prepare (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go, walk (habitual, imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: забити гол
+  translation: to score a goal
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: варити борщ
+  translation: to cook borsch (process)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зварити борщ
+  translation: to finish cooking borsch (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зрівняти рахунок
+  translation: to equalize the score
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: виграти матч
+  translation: to win a match
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: і́ноді
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ніколи
+  translation: never
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щонеді́лі
+  translation: every Sunday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вчо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally, at last
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: одра́зу
+  translation: at once, immediately
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: right now, at this moment
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за годину
+  translation: in an hour (time to complete)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за тиждень
+  translation: in a week (time to complete)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: префікс
+  translation: prefix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гол
+  translation: goal (football)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: м'яч
+  translation: ball
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: матч
+  translation: match (sports)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: раху́нок
+  translation: score
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кома́нда
+  translation: team
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: супе́рники
+  translation: opponents, rivals
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: хвили́на
+  translation: minute
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: борщ
+  translation: borsch (Ukrainian soup)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: стаття́
+  translation: article
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: впра́ва
+  translation: exercise
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кіне́ць
+  translation: end, finish
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зада́ча
+  translation: problem, task
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: теперішній час
+  translation: present tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: минулий час
+  translation: past tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: майбутній час
+  translation: future tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: НВ
+  translation: НВ — abbreviation for недоконаний вид (imperfective)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ДВ
+  translation: ДВ — abbreviation for доконаний вид (perfective)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false

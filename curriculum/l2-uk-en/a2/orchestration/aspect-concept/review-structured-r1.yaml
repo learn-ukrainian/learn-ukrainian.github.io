@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered all outline points and followed the examples requested by the
+    plan. However, some required vocabulary terms (`дія`, `повторення`, `результат`,
+    `процес`) were discussed conceptually but not exp
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Contained an English calque: "Вони зробили це!" instead of natural Ukrainian
+    victory expressions. Used "писав лист" instead of the more idiomatic "писав листа".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional pedagogy. The abstract concept of aspect is vividly explained
+    with the "film playing vs 'The End' screen" and the "three doors" analogies.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Missing explicit inline translation introductions for `дія`, `процес`,
+    `результат`, and `повторення`, despite them being in the `vocabulary_hints.required`
+    list.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 requested activities are properly contextualized and placed immediately
+    after the relevant theory sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural and encouraging tone without being overly meta or robotic.
+    Explanations are vivid and easy to grasp.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown formatting. All H2 headings from the plan outline are perfectly
+    mapped and used.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Dialogues are culturally grounded (football, cooking borsch, calling grandma).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and serve the pedagogical purpose well, except for
+    the single calqued phrase at the end of the second dialogue.
+findings: []
