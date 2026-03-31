@@ -2,7 +2,7 @@ module: c1-032
 level: C1
 sequence: 32
 slug: surzhyk
-version: '1.0'
+version: '1.1'
 title: "Суржик: Соціолінгвістичний феномен, історія та сучасність"
 subtitle: "Surzhyk: Sociolinguistic Analysis"
 focus: cultural
@@ -104,6 +104,18 @@ vocabulary:
     - престижність
     - просторіччя
 
+activity_hints:
+  - type: error-correction
+    description: "Identify surzhyk features at phonetic, lexical, and grammatical levels in text samples — provide correct Ukrainian equivalents."
+  - type: critical-analysis
+    description: "Analyze Masenko's arguments about surzhyk as a postcolonial identity marker — evaluate sociolinguistic evidence and conclusions."
+  - type: match-up
+    description: "Match surzhyk types (фонетичний, лексичний, граматичний) with example sentences and their corrected Ukrainian versions."
+  - type: select
+    description: "Identify whether a given language sample represents dialect, surzhyk, or colloquial Ukrainian — justify the classification."
+  - type: fill-in
+    description: "Replace surzhyk forms with normative Ukrainian in sentences about everyday and professional situations."
+
 activities:
   types_required:
     - error-correction
@@ -113,6 +125,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §1-5 — Загальне мовознавство, мова і суспільство"
+  - "Авраменко, 11 клас (2019): Діалекти, суржик, мовна політика"
+  - "Масенко Л. 'Суржик: між мовою і язиком' (2011)"
 
 connects_to:
   previous: "dialects-of-ukrainian"

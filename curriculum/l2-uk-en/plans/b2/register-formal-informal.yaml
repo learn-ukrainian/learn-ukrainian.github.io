@@ -1,7 +1,7 @@
 module: register-formal-informal
 level: B2
 sequence: 29
-version: '1.1'
+version: '1.2'
 title: "Офіційний та неофіційний регістри"
 focus: grammar
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: select
+    focus: "Обрати офіційний або неофіційний варіант одного й того самого висловлювання"
+  - type: fill-in
+    focus: "Переписати неформальне повідомлення в офіційному стилі (або навпаки)"
+  - type: error-correction
+    focus: "Знайти невідповідність регістру (сленг у діловому листі / канцеляризм у дружній розмові) та виправити"
+  - type: group-sort
+    focus: "Розподілити слова та вирази на пари: офіційний / неофіційний варіант"
+
+references:
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Формальне та неформальне мовлення, культура мовлення"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "Стилістика"
+    topic: "Формальне та неформальне мовлення"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-introduction"

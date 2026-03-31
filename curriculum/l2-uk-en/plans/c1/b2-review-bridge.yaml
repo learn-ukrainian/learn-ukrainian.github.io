@@ -2,7 +2,7 @@ module: c1-001
 level: C1
 sequence: 1
 slug: b2-review-bridge
-version: '1.0'
+version: '1.1'
 title: "Повторення та перехід до рівня С1"
 subtitle: "B2 Review and C1 Bridge"
 focus: integration
@@ -98,6 +98,18 @@ vocabulary:
     - рефлексія
     - верифікація
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate the strength of arguments in a Ukrainian academic text about Розстріляне відродження — identify thesis, evidence, and logical gaps."
+  - type: error-correction
+    description: "Fix morphological and syntactic errors in sentences using complex subordinate clauses and participial phrases from B2-level grammar."
+  - type: essay-response
+    description: "Write a structured paragraph (100-150 words) arguing whether language can be a tool for decolonization, using complex syntax."
+  - type: fill-in
+    description: "Complete sentences with appropriate discourse markers and logical connectors from academic Ukrainian register."
+  - type: match-up
+    description: "Match abstract academic terms (парадигма, дискурс, контекст) with their definitions and example sentences."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення, стилістичні норми"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
+  - "Ворон, 11 клас (2019): с. 207 — Науковий стиль та наукова доповідь"
 
 connects_to:
   previous: "b2-final-exam"

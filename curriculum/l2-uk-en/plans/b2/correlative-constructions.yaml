@@ -2,7 +2,7 @@ module: b2-019
 level: B2
 sequence: 19
 slug: correlative-constructions
-version: '1.1'
+version: '1.2'
 title: "Складні речення з корелятами (вказівними словами)"
 subtitle: "Complex Sentences with Correlative Words"
 focus: grammar
@@ -120,6 +120,27 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: fill-in
+    focus: "Доповнити корелятивні пари: чим...тим, не тільки...а й, той...хто, там...де"
+  - type: match-up
+    focus: "Зіставити корелятивну пару зі значенням (означальне, обставинне, з'ясувальне)"
+  - type: select
+    focus: "Обрати правильний корелят для завершення складного речення"
+  - type: error-correction
+    focus: "Виправити помилки: зайве вживання 'те, що' (плеоназм), неправильне розчленування сполучника"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§28–33"
+    topic: "Складнопідрядне речення з вказівними словами (кореляти)"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§26–30"
+    topic: "Складнопідрядні речення з корелятивними парами"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — correlative constructions"
 
 connects_to:
   previous: "multi-clause-sentences"

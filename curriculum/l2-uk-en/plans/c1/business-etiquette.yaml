@@ -2,7 +2,7 @@ module: c1-023
 level: C1
 sequence: 23
 slug: business-etiquette
-version: '1.0'
+version: '1.1'
 title: "Діловий етикет та корпоративна культура в Україні"
 subtitle: "Business Etiquette and Corporate Culture"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - тактовність
     - конструктивність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze corporate ethics codes from Ukrainian companies — evaluate formality level, inclusivity language, and cultural sensitivity."
+  - type: error-correction
+    description: "Fix etiquette violations in business communication examples — correct forms of address, inappropriate familiarity, and protocol breaches."
+  - type: match-up
+    description: "Match business situations (знайомство, нарада, конфлікт) with appropriate Ukrainian etiquette formulas and register choices."
+  - type: select
+    description: "Choose the most appropriate etiquette formula for various business contexts — formal invitations, polite refusals, diplomatic apologies."
+  - type: essay-response
+    description: "Write a formal invitation letter to international partners for a company event — demonstrate diplomatic protocol in Ukrainian."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри, листування"
+  - "Авраменко, 11 клас (2019): с. 195 — Ділове листування"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
 
 connects_to:
   previous: "job-interview"

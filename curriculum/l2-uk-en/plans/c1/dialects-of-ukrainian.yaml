@@ -2,7 +2,7 @@ module: c1-031
 level: C1
 sequence: 31
 slug: dialects-of-ukrainian
-version: '1.0'
+version: '1.1'
 title: "Діалекти української мови: Територіальні різновиди та мовна стійкість"
 subtitle: "Dialects of Ukrainian"
 focus: cultural
@@ -104,6 +104,18 @@ vocabulary:
     - картографування
     - континіум
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze dialect features in Kotsyubynsky's 'Shadows of Forgotten Ancestors' — identify Hutsul lexical, phonetic, and morphological markers."
+  - type: match-up
+    description: "Match Ukrainian dialect groups (північне, південно-західне, південно-східне наріччя) with their characteristic features and geographic areas."
+  - type: select
+    description: "Identify the dialect origin of specific linguistic features — distinguish between Polisian archaic forms, Galician influences, and Steppe innovations."
+  - type: error-correction
+    description: "Identify dialectal forms in a text and provide their literary Ukrainian equivalents with linguistic explanation."
+  - type: reading
+    description: "Read a passage containing dialectal features and answer comprehension questions about the linguistic phenomena present."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - reading
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §1-5 — Загальне мовознавство"
+  - "Авраменко, 11 клас (2019): Діалекти, суржик, мовна політика"
+  - "State Standard 2024: C1 section on dialectology and sociolinguistics"
 
 connects_to:
   previous: "zahalne-movoznavstvo"

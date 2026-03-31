@@ -2,7 +2,7 @@ module: c1-029
 level: C1
 sequence: 29
 slug: science-technology-c1
-version: '1.0'
+version: '1.1'
 title: "Наука та технології: Від фундаментальних досліджень до ШІ"
 subtitle: "Science and Technology"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - модернізація
     - автентичність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate a Ukrainian scientific article about quantum computing — assess terminological precision, argument structure, and academic style markers."
+  - type: error-correction
+    description: "Fix anglicisms and calques in a Ukrainian technology text — propose native Ukrainian equivalents where appropriate."
+  - type: match-up
+    description: "Match scientific domains (ШІ, біомедицина, кібербезпека, екотехнології) with their Ukrainian terminology sets."
+  - type: select
+    description: "Choose the correct Ukrainian scientific term over anglicism where a native equivalent exists."
+  - type: essay-response
+    description: "Write a discursive essay (300+ words) on whether AI can replace humans in creative professions, using Thesis-Antithesis-Synthesis structure."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 207-218 — Науковий стиль"
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "State Standard 2024: C1 section on scientific discourse"
 
 connects_to:
   previous: "economics-vocabulary-c1"

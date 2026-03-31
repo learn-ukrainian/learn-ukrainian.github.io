@@ -1,8 +1,8 @@
-module: c1-068
+module: c1-069
 level: C1
-sequence: 68
+sequence: 69
 slug: istoriia-ukrainskoi-literatury
-version: '1.0'
+version: '1.1'
 title: "Панорама історії української літератури"
 subtitle: "Panorama of the History of Ukrainian Literature"
 focus: literature
@@ -115,6 +115,18 @@ vocabulary:
     - неоромантизм
     - інтертекстуальність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Compare two literary epochs (e.g., Бароко and Романтизм) — analyze how each treats the image of the individual and their relationship with society."
+  - type: match-up
+    description: "Match literary periods (давня, романтизм, реалізм, модернізм, постмодернізм) with their key authors, programmatic works, and defining features."
+  - type: essay-response
+    description: "Write a comparative analysis paragraph (150-200 words) about two literary movements, using appropriate literary history terminology."
+  - type: reading
+    description: "Read a modernist manifesto excerpt and identify ideological positions, aesthetic principles, and their historical context."
+  - type: select
+    description: "Identify the literary epoch and movement of given textual excerpts based on their style, vocabulary, and thematic concerns."
+
 activities:
   types_required:
     - critical-analysis
@@ -124,6 +136,11 @@ activities:
     - reading
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Авраменко, 11 клас (Укр. літ.): Панорама літературного процесу"
+  - "Борзенко, 11 клас (Укр. літ.): Історія української літератури XX-XXI ст."
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики — художній стиль"
 
 connects_to:
   previous: "persuasive-speech"

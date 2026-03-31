@@ -1,7 +1,7 @@
 module: secondary-sentence-members
 level: B2
 sequence: 13
-version: '1.2'
+version: '1.3'
 title: "Другорядні члени речення"
 subtitle: "Secondary Sentence Members: Attributes, Objects, and Adverbials"
 focus: grammar
@@ -128,11 +128,37 @@ activities:
   min_items_per_type: 5
   total_min_items: 25
 
+activity_hints:
+  - type: mark-the-words
+    focus: "Визначити означення, додатки та обставини в тексті (виділити та класифікувати)"
+  - type: fill-in
+    focus: "Розширити речення вказаним типом другорядного члена (означення, додаток, обставина)"
+  - type: match-up
+    focus: "Зіставити виділені другорядні члени з їхнім типом та способом вираження"
+  - type: select
+    focus: "Визначити синтаксичну роль інфінітива в реченні (присудок, додаток, означення, обставина)"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§7–9"
+    topic: "Другорядні члени речення: означення, додаток, обставина"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§7–10"
+    topic: "Другорядні члени речення, прикладки"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — secondary sentence members"
+
 connects_to:
   previous: "predicate-types"
   next: "b2-one-member-sentences"
 
 changelog:
+  - version: '1.3'
+    date: '2026-03-31'
+    changes:
+      - "Додано activity_hints (4 підказки: mark-the-words, fill-in, match-up, select)."
+      - "Додано references (Заболотний §7–9, Авраменко §7–10, State Standard 2024)."
   - version: '1.2'
     date: '2023-10-27'
     changes:

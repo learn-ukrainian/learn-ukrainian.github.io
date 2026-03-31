@@ -2,7 +2,7 @@ module: c1-022
 level: C1
 sequence: 22
 slug: job-interview
-version: '1.0'
+version: '1.1'
 title: "Стратегії професійної комунікації: Співбесіда та самопрезентація"
 subtitle: "Job Interview and Self-Presentation"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - конструктивний
     - лояльність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a job interview transcript — evaluate candidate's STAR method usage, register appropriateness, and negotiation strategies."
+  - type: error-correction
+    description: "Fix register violations in interview responses — replace colloquial expressions with professional Ukrainian formulations."
+  - type: match-up
+    description: "Match interview question types (поведінкове, ситуативне, ціннісне) with appropriate response strategies and Ukrainian formulas."
+  - type: select
+    description: "Choose the most effective polite formulation for discussing salary, declining inappropriate questions, and expressing interest."
+  - type: essay-response
+    description: "Write a follow-up email (200+ words) after a job interview — demonstrate gratitude, summarize key competencies, and express continued interest."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Заболотний, 11 клас (2019): с. 209 — Ділове листування"
 
 connects_to:
   previous: "cv-resume-writing"

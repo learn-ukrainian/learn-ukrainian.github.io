@@ -2,7 +2,7 @@ module: b2-025
 level: B2
 sequence: 25
 slug: phonetic-stylistic-devices
-version: '1.1'
+version: '1.2'
 title: "Фонетичні стилістичні засоби"
 subtitle: "Phonetic Stylistic Devices"
 focus: grammar
@@ -120,6 +120,29 @@ activities:
     - matching
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: mark-the-words
+    focus: "Знайти приклади алітерації та асонансу в поетичному тексті (Тичина, Антонич)"
+  - type: match-up
+    focus: "Зіставити фонетичний засіб (алітерація / асонанс / ономатопея) з конкретним літературним прикладом"
+  - type: select
+    focus: "Визначити тип фонетичного засобу виразності у запропонованому рядку"
+  - type: fill-in
+    focus: "Доповнити речення словом-звуконаслідуванням або створити приклад із заданим типом звукопису"
+  - type: error-correction
+    focus: "Знайти порушення милозвучності (збіг приголосних, відсутність чергування у/в, і/й) та виправити"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика — фонетичні стилістичні засоби"
+    topic: "Алітерація, асонанс, ономатопея, евфонія"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Культура мовлення: стилістичні норми, милозвучність"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "checkpoint-syntax"

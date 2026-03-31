@@ -1,8 +1,8 @@
-module: c1-047
+module: c1-048
 level: C1
-sequence: 47
+sequence: 48
 slug: skladnopidriadne-obstavynne
-version: '1.0'
+version: '1.1'
 title: "Складнопідрядні обставинні речення: види та вживання"
 subtitle: "Adverbial Complex Sentences: Types and Usage"
 focus: grammar
@@ -103,6 +103,18 @@ vocabulary:
     - відповідно до
     - аналогічно
 
+activity_hints:
+  - type: fill-in
+    description: "Complete sentences with appropriate subordinating conjunctions for different adverbial clause types (аби, якби, оскільки, незважаючи на те що)."
+  - type: error-correction
+    description: "Fix errors in adverbial clauses — incorrect conjunction choice, wrong mood in conditional clauses, punctuation with compound conjunctions."
+  - type: match-up
+    description: "Match adverbial clause types (причини, мети, умови, наслідку, допустове) with their conjunctions and example sentences."
+  - type: critical-analysis
+    description: "Analyze a legal document excerpt and identify all adverbial clauses, explaining how they construct the logical argument."
+  - type: select
+    description: "Choose between real condition (якщо) and unreal condition (якби) based on context, and identify the correct verb mood."
+
 activities:
   types_required:
     - fill-in
@@ -112,6 +124,11 @@ activities:
     - comparative-study
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §34-38 — Складнопідрядні обставинні речення"
+  - "Авраменко, 9 клас (2017): §21-25 — Обставинні підрядні речення"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
 
 connects_to:
   previous: "skladnopidriadne-oznachalne-zyasuvalne"

@@ -1,8 +1,8 @@
-module: c1-069
+module: c1-070
 level: C1
-sequence: 69
+sequence: 70
 slug: literaturoznavcha-terminolohiia
-version: '1.0'
+version: '1.1'
 title: "Теорія літератури та науковий інструментарій"
 subtitle: "Literary Terminology and Scientific Toolkit"
 focus: literature
@@ -105,6 +105,18 @@ vocabulary:
     - алюзія
     - екзегеза
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a contemporary Ukrainian novel excerpt — identify literary devices (сюжет, фабула, композиція, хронотоп, нарація) and write a structured literary analysis."
+  - type: match-up
+    description: "Match literary terms (експозиція, зав'язка, кульмінація, розв'язка, епілог) with their definitions and examples from Ukrainian literature."
+  - type: select
+    description: "Identify the narrative perspective (наратор від першої/третьої особи, фокалізація) in literary excerpts and explain its effect on reader perception."
+  - type: essay-response
+    description: "Write a literary review (150-200 words) of a Ukrainian work using at least 10 literary analysis terms correctly."
+  - type: reading
+    description: "Read a literary criticism article about Софія Андрухович's prose and identify how the critic uses literary terminology to build their argument."
+
 activities:
   types_required:
     - critical-analysis
@@ -114,6 +126,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Авраменко, 11 клас (Укр. літ.): Літературознавчі терміни, теорія літератури"
+  - "Борзенко, 11 клас (Укр. літ.): Масова vs елітарна література, літературні напрями"
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики — художній стиль"
 
 connects_to:
   previous: "istoriia-ukrainskoi-literatury"

@@ -1,7 +1,7 @@
 module: register-literary-ukrainian
 level: B2
 sequence: 33
-version: '1.1'
+version: '1.2'
 title: "Художній (літературний) стиль"
 focus: grammar
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: select
+    focus: "Визначити художній засіб (метафора, персоніфікація, інверсія тощо) у літературному уривку"
+  - type: match-up
+    focus: "Зіставити стилістичний прийом із конкретним прикладом з українського художнього тексту"
+  - type: reading
+    focus: "Проаналізувати уривок прози (Коцюбинський, Забужко) та виявити ознаки художнього стилю"
+  - type: fill-in
+    focus: "Доповнити художній опис стилістично доречним словом (епітетом, уособленням)"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика — художній стиль"
+    topic: "Художній стиль: образність, тропи, стилізація"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§11–15"
+    topic: "Стилістично забарвлена лексика у художній літературі"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-official-legal"

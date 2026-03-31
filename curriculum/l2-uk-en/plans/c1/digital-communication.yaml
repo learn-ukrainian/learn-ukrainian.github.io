@@ -2,7 +2,7 @@ module: c1-024
 level: C1
 sequence: 24
 slug: digital-communication
-version: '1.0'
+version: '1.1'
 title: "Цифрова комунікація та мережевий етикет у професійній сфері"
 subtitle: "Digital Communication and Netiquette"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - автентичність
     - копірайтинг
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a Ukrainian social media crisis case — evaluate communication failures, tone of voice issues, and propose response strategies."
+  - type: error-correction
+    description: "Fix tone and register violations in professional digital messages — adjust for appropriate platform (email vs Telegram vs LinkedIn)."
+  - type: match-up
+    description: "Match digital communication platforms (email, Slack, LinkedIn) with appropriate register, formality level, and message structure."
+  - type: select
+    description: "Choose the most effective formulation for different digital contexts — cold messages to recruiters, crisis responses, professional posts."
+  - type: essay-response
+    description: "Write a post-mortem report (250+ words) analyzing a brand's communication failure in social media — use analytical vocabulary."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри"
+  - "Авраменко, 11 клас (2019): с. 195 — Ділове листування"
+  - "Заболотний, 11 клас (2019): с. 209 — Комунікаційні жанри"
 
 connects_to:
   previous: "business-etiquette"

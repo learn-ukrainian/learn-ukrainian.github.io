@@ -1,8 +1,8 @@
-module: c1-042
+module: c1-043
 level: C1
-sequence: 42
+sequence: 43
 slug: review
-version: '1.0'
+version: '1.1'
 title: "Підсумкове повторення та узагальнення"
 subtitle: "Final Review and Synthesis"
 focus: review
@@ -103,6 +103,18 @@ vocabulary:
     - рефлексія
     - синтез
 
+activity_hints:
+  - type: error-correction
+    description: "Fix morphological, syntactic, and stylistic errors in a mixed-style text — including surzhyk forms, calques, and incorrect participial phrases."
+  - type: match-up
+    description: "Match linguistic terms from C1.1-C1.4 modules (парадигма, когерентність, предикативність) with correct definitions and example sentences."
+  - type: critical-analysis
+    description: "Analyze a student essay and provide structured feedback — identify 3 strengths and 3 areas for improvement with specific textual evidence."
+  - type: essay-response
+    description: "Write a synthesis paragraph connecting language, identity, and culture using at least 5 complex sentence types studied in C1."
+  - type: fill-in
+    description: "Complete a review exercise with correct morphological forms — numeral declension, participial phrases, and complex punctuation."
+
 activities:
   types_required:
     - error-correction
@@ -112,6 +124,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §1-25 — Загальний огляд мовних норм"
+  - "Авраменко, 11 клас (2019): Стилістична норма, культура мовлення"
+  - "Заболотний, 11 клас (2019): с. 10-14 — Мовна норма та мовна культура"
 
 connects_to:
   previous: "case-studies"

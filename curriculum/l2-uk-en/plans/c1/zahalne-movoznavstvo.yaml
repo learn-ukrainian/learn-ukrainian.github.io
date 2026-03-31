@@ -2,7 +2,7 @@ module: c1-030
 level: C1
 sequence: 30
 slug: zahalne-movoznavstvo
-version: '1.0'
+version: '1.1'
 title: "Загальне мовознавство: Теорія, історія та філософія мови"
 subtitle: "General Linguistics"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - онтологія
     - універсалія
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze Potebnia's concept of 'inner form of the word' — evaluate philosophical terminology and argumentation in Ukrainian linguistic tradition."
+  - type: match-up
+    description: "Match linguistic schools and scholars (структуралізм, когнітивістика, Потебня, Шевельов) with their key concepts and contributions."
+  - type: select
+    description: "Identify the correct sociolinguistic phenomenon (білінгвізм, диглосія, мовна стійкість) described in different Ukrainian language situations."
+  - type: error-correction
+    description: "Fix terminological imprecision in a linguistics essay — ensure correct usage of terms like семіотика, прагматика, когнітивістика."
+  - type: essay-response
+    description: "Write an essay (300+ words) on 'Language as the house of being' through the lens of the Ukrainian language struggle."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §1-5 — Загальне мовознавство, мова і суспільство"
+  - "Авраменко, 11 клас (2019): Діалекти, суржик, мовна політика"
+  - "State Standard 2024: C1 section on sociolinguistics"
 
 connects_to:
   previous: "science-technology-c1"

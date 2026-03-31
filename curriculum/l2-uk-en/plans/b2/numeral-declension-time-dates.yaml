@@ -2,7 +2,7 @@ module: b2-047
 level: B2
 sequence: 47
 slug: numeral-declension-time-dates
-version: '1.0'
+version: '1.1'
 title: "Відмінювання числівників: Час та дати"
 subtitle: "Numeral Declension: Time and Dates"
 focus: grammar
@@ -124,6 +124,22 @@ activities:
     - translate
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: fill-in
+    description: "Write out dates and times in words with correct case (e.g., 'двадцять восьмого жовтня дві тисячі двадцять четвертого року')"
+  - type: error-correction
+    description: "Fix numeral case agreement errors in date expressions"
+  - type: select
+    description: "Choose the correct declined form of a numeral in a date/time context"
+  - type: match-up
+    description: "Match numeral phrase to its correct case form (e.g., 'о котрій?'→'о п'ятій годині')"
+
+references:
+  - "Караман, 10 клас (2018): §68-70 — Числівник, займенник"
+  - "Глазова, 11 клас (2019): §1-10 — Морфологічна норма"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.1.3 (verb forms), SS 4.2 (word formation)"
 
 connects_to:
   previous: "conditional-mood-particles"

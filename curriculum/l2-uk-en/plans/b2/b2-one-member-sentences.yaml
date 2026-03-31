@@ -1,7 +1,7 @@
 module: b2-one-member-sentences
 level: B2
 sequence: 14
-version: '1.2'
+version: '1.3'
 title: "Односкладні речення"
 subtitle: "One-Member Sentences: Types and Stylistic Functions"
 focus: grammar
@@ -127,11 +127,40 @@ activities:
   min_items_per_type: 5
   total_min_items: 25
 
+activity_hints:
+  - type: group-sort
+    focus: "Розподілити речення за типами: означено-особове / неозначено-особове / узагальнено-особове / безособове / називне"
+  - type: fill-in
+    focus: "Доповнити односкладні речення відповідною формою головного члена"
+  - type: select
+    focus: "Визначити тип односкладного речення та обґрунтувати вибір"
+  - type: error-correction
+    focus: "Виправити помилки в побудові односкладних речень (неправильно розширені, зайвий підмет)"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§13–17"
+    topic: "Односкладні речення: означено-, неозначено-, узагальнено-особові, безособові, називні"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§13–16"
+    topic: "Односкладні речення"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§23, с. 99"
+    topic: "Порядок слів у реченні. Односкладні й неповні речення"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — one-member sentences"
+
 connects_to:
   previous: "secondary-sentence-members"
   next: "homogeneous-members"
 
 changelog:
+  - version: '1.3'
+    date: '2026-03-31'
+    changes:
+      - "Додано activity_hints (4 підказки: group-sort, fill-in, select, error-correction)."
+      - "Додано references (Заболотний §13–17, Авраменко §13–16, Глазова §23, State Standard 2024)."
   - version: '1.2'
     date: '2023-10-27'
     changes:

@@ -2,7 +2,7 @@ module: b2-impersonal-passive
 level: B2
 sequence: 3
 slug: b2-impersonal-passive
-version: '1.3'
+version: '1.4'
 title: "Безособові пасивні конструкції на -но, -то"
 subtitle: "Impersonal Passive Forms on -no, -to"
 focus: grammar
@@ -91,6 +91,27 @@ activities:
     - select
   min_items_per_type: 6
   total_min_items: 25
+
+activity_hints:
+  - type: cloze
+    focus: "Доповнити речення безособовими формами на -но/-то від поданих дієслів"
+  - type: error-correction
+    focus: "Вилучити неправильний орудний відмінок діяча з речень на -но/-то (закон прийнято радою→рада прийняла закон)"
+  - type: select
+    focus: "Визначити, коли доречна форма на -но/-то, а коли активна конструкція"
+  - type: fill-in
+    focus: "Трансформувати активне речення в безособове на -но/-то зі збереженням змісту"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "§77, с. 191–193"
+    topic: "Безособові форми на -но, -то"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§22, с. 97"
+    topic: "Синтаксичні конструкції з дієслівними формами на -но, -то"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "§25, с. 81–82"
+    topic: "Безособові форми на -но/-то vs дієприкметники-присудки"
 
 connects_to:
   previous: "past-passive-participles"

@@ -2,7 +2,7 @@ module: c1-014
 level: C1
 sequence: 14
 slug: literature-review
-version: '1.0'
+version: '1.1'
 title: "Огляд літератури: синтез та аналіз"
 subtitle: "Literature Review: Synthesis and Analysis"
 focus: professional
@@ -29,6 +29,13 @@ listening_situations:
     setting: "Вебінар для аспірантів: 'Як написати якісний Literature Review'."
     focus_points: ["вимоги до джерельної бази", "техніки синтезу інформації", "виокремлення недосліджених аспектів"]
     motivation: "Розвиток навичок аудіювання фахових рекомендацій щодо академічного письма."
+
+writing_tasks:
+  - task_type: "відгук"
+    prompt: "Напишіть фрагмент огляду літератури (200-250 слів), у якому зіставте погляди двох-трьох українських науковців на певну проблему. Виявіть розбіжності та спільні позиції."
+    requirements: ["використання конструкцій порівняння", "критична оцінка", "виокремлення 'research gap'"]
+    motivation: "Практика синтезу наукових джерел як найвищого рівня аналітичної роботи."
+    model_answer: "Текст має демонструвати вміння групувати авторів за підходами, використовуючи конструкції 'на противагу позиції X, Y вважає...', 'якщо X наголошує на..., то Y зосереджується на...'."
 
 discussion_topics:
   - context: "Яка роль національної традиції в огляді світової літератури з певної проблеми?"
@@ -94,6 +101,18 @@ vocabulary:
     - розбіжність
     - трансформація
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a Ukrainian historiographical literature review about Kozak origins — evaluate source grouping, critical analysis quality, and research gap identification."
+  - type: match-up
+    description: "Match literature review organizational strategies (хронологічний, тематичний, методологічний) with example text structures."
+  - type: error-correction
+    description: "Fix 'patchwriting' and excessive citation in a literature review draft — improve synthesis and critical voice."
+  - type: essay-response
+    description: "Write a synthesis paragraph (150-200 words) comparing views of different Ukrainian scholars on a linguistic topic."
+  - type: fill-in
+    description: "Complete comparison sentences with appropriate phrases for agreement, disagreement, and alternative viewpoints."
+
 activities:
   types_required:
     - critical-analysis
@@ -103,6 +122,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 218 — Науковий стиль мовлення"
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "Авраменко, 11 клас (2019): с. 164 — Стилістична норма"
 
 connects_to:
   previous: "abstract-writing"

@@ -2,7 +2,7 @@ module: c1-012
 level: C1
 sequence: 12
 slug: research-article
-version: '1.0'
+version: '1.1'
 title: "Наукова стаття: структура та мова"
 subtitle: "Research Article: Structure and Language"
 focus: professional
@@ -29,6 +29,13 @@ listening_situations:
     setting: "Відкрита лекція професора про академічне письмо та етику публікацій в Україні."
     focus_points: ["структура статті", "критерії якості наукового тексту", "процес рецензування"]
     motivation: "Сприйняття на слух складних інструкцій щодо підготовки наукових матеріалів."
+
+writing_tasks:
+  - task_type: "есе"
+    prompt: "Напишіть вступну частину наукової статті (200-250 слів) на тему збереження української діалектної спадщини. Окресліть актуальність, мету та завдання дослідження."
+    requirements: ["структура IMRAD для вступу", "використання безособових конструкцій", "термінологічна точність"]
+    motivation: "Практичне відпрацювання написання вступної частини наукової статті за академічними стандартами."
+    model_answer: "Текст повинен починатися з обґрунтування актуальності, містити огляд літератури та завершуватися чітким формулюванням мети."
 
 discussion_topics:
   - context: "Чи повинна українська наука повністю перейти на англійську мову для публікацій, щоб стати частиною глобального дискурсу?"
@@ -94,6 +101,18 @@ vocabulary:
     - імплементація
     - парадигма
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate IMRAD structure of a Ukrainian scientific article — assess methodology description, results presentation, and conclusion quality."
+  - type: fill-in
+    description: "Complete research article sections with appropriate academic clichés and discourse markers for each IMRAD component."
+  - type: error-correction
+    description: "Fix stylistic and structural errors in a draft research article — ensure impersonality, terminological precision, and logical transitions."
+  - type: match-up
+    description: "Match research article sections (вступ, методи, результати, обговорення) with their characteristic language markers."
+  - type: cloze
+    description: "Fill in missing methodological verbs and transitional phrases in a research article about Ukrainian dialectal heritage."
+
 activities:
   types_required:
     - critical-analysis
@@ -103,6 +122,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 207 — Наукова доповідь; с. 218 — Науковий стиль"
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
 
 connects_to:
   previous: "summary-paraphrase"

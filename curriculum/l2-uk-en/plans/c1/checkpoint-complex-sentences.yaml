@@ -1,8 +1,8 @@
-module: c1-052
+module: c1-053
 level: C1
-sequence: 52
+sequence: 53
 slug: checkpoint-complex-sentences
-version: '1.0'
+version: '1.1'
 title: "Контроль знань: Складне речення в академічному дискурсі"
 subtitle: "Checkpoint: Complex Sentences in Academic Discourse"
 focus: checkpoint
@@ -100,6 +100,18 @@ vocabulary:
     - концептуальність
     - стратегія
 
+activity_hints:
+  - type: error-correction
+    description: "Fix all syntactic and punctuation errors in a complex academic text containing compound, complex, asyndetic, and mixed sentences."
+  - type: critical-analysis
+    description: "Analyze a legal or philosophical text — identify each sentence type, draw structural diagrams, and evaluate syntactic appropriateness for academic register."
+  - type: select
+    description: "Choose the correct punctuation and conjunction in sentences where multiple clause types intersect."
+  - type: fill-in
+    description: "Complete a passage from a scientific article with missing conjunctions, relative pronouns, and punctuation marks."
+  - type: match-up
+    description: "Match sentence analysis tasks — given structural diagrams, identify the corresponding written sentences and their semantic relationships."
+
 activities:
   types_required:
     - error-correction
@@ -109,6 +121,11 @@ activities:
     - match-up
   min_items_per_type: 10
   total_min_items: 50
+
+references:
+  - "Заболотний, 9 клас (2017): §25-40 — Складне речення (повний курс)"
+  - "Авраменко, 9 клас (2017): §14-28 — Складне речення (повний курс)"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
 
 connects_to:
   previous: "one-member-sentences-c1"

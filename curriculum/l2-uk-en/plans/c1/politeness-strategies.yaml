@@ -1,8 +1,8 @@
-module: c1-063
+module: c1-064
 level: C1
-sequence: 63
+sequence: 64
 slug: politeness-strategies
-version: '1.0'
+version: '1.1'
 title: "Стратегії ввічливості в українському дискурсі"
 subtitle: "Politeness Strategies in Ukrainian Discourse"
 focus: professional
@@ -33,6 +33,13 @@ listening_situations:
     setting: "Психолог та лінгвіст обговорюють феномен 'токсичної ввічливості' та пасивної агресії в мові."
     focus_points: ["підтекст", "іронія", "мовленнєві маркери маніпуляції"]
     motivation: "Розвиток критичного сприйняття мовленнєвих стратегій у міжособистісному спілкуванні."
+
+writing_tasks:
+  - task_type: "офіційний лист"
+    prompt: "Напишіть лист-відмову від участі в конференції, адресований організатору, з яким ви раніше мали позитивний досвід співпраці. Збалансуйте щирість відмови зі збереженням добрих стосунків."
+    requirements: ["мінімум 200 слів", "використання засобів пом'якшення та хеджингу", "дотримання формул ввічливості"]
+    motivation: "Відпрацювання навичок коректної відмови зі збереженням позитивного обличчя."
+    model_answer: "Текст повинен містити подяку за запрошення, обґрунтовану причину відмови (без надмірних виправдань), пропозицію альтернативної форми участі та вираження надії на подальшу співпрацю."
 
 discussion_topics:
   - context: "Суперечка навколо звертання 'Пан/Пані' vs 'Товариш' vs відсутність звертання в пострадянському просторі."
@@ -107,6 +114,18 @@ vocabulary:
     - галантність
     - коректність
 
+activity_hints:
+  - type: select
+    description: "Choose the appropriate politeness strategy (позитивна/негативна ввічливість, хеджування, евфемізація) for given professional and personal scenarios."
+  - type: error-correction
+    description: "Fix politeness violations in professional texts — inappropriate Ти/Ви usage, missing courtesy formulas, passive-aggressive phrasing."
+  - type: critical-analysis
+    description: "Analyze a TV interview where a diplomat navigates uncomfortable questions — identify all face-saving strategies and evasion techniques."
+  - type: essay-response
+    description: "Write a polite disagreement (100-150 words) in a professional meeting context, using appropriate hedging and face-saving formulas."
+  - type: group-sort
+    description: "Classify Ukrainian address forms (Вельмишановний, Пане, Друже, колего, хлопці) by formality level and appropriate usage context."
+
 activities:
   types_required:
     - reading
@@ -116,6 +135,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (книжна/розмовна)"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка, ділове спілкування"
+  - "Караман, 10 клас (2018): §53-55 — Офіційно-діловий стиль, мовний етикет"
 
 connects_to:
   previous: "degrees-of-certainty"

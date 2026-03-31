@@ -2,7 +2,7 @@ module: c1-025
 level: C1
 sequence: 25
 slug: political-system
-version: '1.0'
+version: '1.1'
 title: "Політична система України: Інституції, виклики та державотворення"
 subtitle: "Political System and State Institutions"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - самоврядування
     - ініціатива
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze constitutional provisions about presidential and parliamentary powers — evaluate legal terminology and argumentation structure."
+  - type: error-correction
+    description: "Fix imprecise political terminology and register violations in a political analysis text."
+  - type: match-up
+    description: "Match Ukrainian state institutions (Верховна Рада, Кабінет Міністрів, Конституційний Суд) with their constitutional functions and terminology."
+  - type: select
+    description: "Choose correct legal and political terms in context — distinguish between similar concepts (суверенітет vs незалежність, легітимність vs законність)."
+  - type: essay-response
+    description: "Write an analytical essay (300+ words) about the role of electronic democracy (Дія, e-petitions) in Ukrainian political life."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
+  - "State Standard 2024: C1 section on sociolinguistics and civic discourse"
 
 connects_to:
   previous: "digital-communication"

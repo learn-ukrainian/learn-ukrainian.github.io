@@ -1,7 +1,7 @@
 module: participles-vs-relative-clauses
 level: B2
 sequence: 9
-version: '1.2'
+version: '1.3'
 title: "Дієприкметники vs підрядні означальні речення"
 subtitle: "Participles vs. Relative Clauses: Stylistic Choice and Syntactic Transformation"
 focus: grammar
@@ -127,6 +127,27 @@ activities:
     - comparative-study
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: select
+    focus: "Обрати природнішу конструкцію: дієприкметниковий зворот чи підрядне означальне речення"
+  - type: error-correction
+    focus: "Виправити речення, де дієприкметник вжито неприродно, замінивши підрядною конструкцією"
+  - type: fill-in
+    focus: "Трансформувати підрядне речення у дієприкметниковий зворот і навпаки"
+  - type: essay-response
+    focus: "Переписати абзац, свідомо чергуючи дієприкметникові звороти та підрядні речення для кращого ритму тексту"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "§76–77, с. 189–193"
+    topic: "Дієприкметниковий зворот та його синтаксична синоніміка з підрядними реченнями"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "§25, с. 81–82"
+    topic: "Вибір між дієприкметником та підрядним означальним реченням"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§21–22, с. 95–97"
+    topic: "Стилістичні особливості синтаксичних конструкцій"
 
 connects_to:
   previous: "active-participles-past"

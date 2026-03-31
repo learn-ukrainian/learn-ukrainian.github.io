@@ -1,8 +1,8 @@
-module: c1-055
+module: c1-056
 level: C1
-sequence: 55
+sequence: 56
 slug: hyperbole-litotes
-version: '1.0'
+version: '1.1'
 title: "Гіпербола та літота: мистецтво кількісної трансформації образу"
 subtitle: "Hyperbole and Litotes: The Art of Quantitative Image Transformation"
 focus: integration
@@ -104,6 +104,18 @@ vocabulary:
     - радикалізація
     - акцентування
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a Cossack chronicle excerpt — identify all hyperboles, explain their function in heroic narrative, and compare with modern media hyperbole."
+  - type: select
+    description: "Identify whether excerpts use гіпербола, літота, мейозис, or градація — and classify their pragmatic function (persuasion, humor, politeness)."
+  - type: match-up
+    description: "Match examples of hyperbole and litotes from different registers (folklore, academic, diplomatic, media) with their stylistic function."
+  - type: essay-response
+    description: "Rewrite a neutral news report using hyperbole for dramatic effect, then rewrite the same report using litotes for diplomatic understatement."
+  - type: mark-the-words
+    description: "Identify all instances of quantitative tropes (гіпербола, літота, градація) in a literary and a journalistic text."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики"
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики"
+  - "Авраменко, 11 клас (2019): Стилістична норма — тропи"
 
 connects_to:
   previous: "irony-sarcasm"

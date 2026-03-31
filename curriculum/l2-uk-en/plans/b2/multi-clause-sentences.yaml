@@ -2,7 +2,7 @@ module: b2-018
 level: B2
 sequence: 18
 slug: multi-clause-sentences
-version: '1.1'
+version: '1.2'
 title: "Складні речення з різними видами зв'язку"
 subtitle: "Multi-clause Sentences with Different Types of Connection"
 focus: grammar
@@ -120,6 +120,30 @@ activities:
     - comparative-study
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: match-up
+    focus: "Зіставити підрядну частину з її типом: означальне / з'ясувальне / обставинне"
+  - type: fill-in
+    focus: "Доповнити складне речення правильним сполучником або сполучним словом"
+  - type: group-sort
+    focus: "Класифікувати речення за типом зв'язку: сурядне / підрядне / безсполучникове"
+  - type: error-correction
+    focus: "Виправити помилки в побудові багатокомпонентних речень (збіг сполучників, пунктуація)"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§25–35"
+    topic: "Складне речення: сурядне, підрядне, безсполучникове, з різними видами зв'язку"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§25–32"
+    topic: "Складне речення з різними видами зв'язку"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§25, с. 109"
+    topic: "Правила будови складних речень"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — complex sentences"
 
 connects_to:
   previous: "detached-members"

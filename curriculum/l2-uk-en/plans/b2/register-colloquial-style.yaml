@@ -2,7 +2,7 @@ module: b2-035
 level: B2
 sequence: 35
 slug: register-colloquial-style
-version: '1.1'
+version: '1.2'
 title: "Розмовний (побутовий) стиль"
 subtitle: "Colloquial (Everyday) Style"
 focus: natural informal communication
@@ -128,6 +128,27 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: group-sort
+    focus: "Розподілити слова за стилістичним забарвленням: розмовне / нейтральне / книжне"
+  - type: select
+    focus: "Обрати доречний розмовний вираз для конкретної побутової ситуації"
+  - type: error-correction
+    focus: "Знайти зайвий канцелярит або надмірну офіційність у розмовному тексті та спростити"
+  - type: fill-in
+    focus: "Перетворити офіційне формулювання на природне розмовне висловлювання"
+
+references:
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Розмовний стиль мовлення"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "Стилістика"
+    topic: "Розмовний стиль, культура мовлення"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-media-journalistic"

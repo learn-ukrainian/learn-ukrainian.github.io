@@ -1,8 +1,8 @@
-module: c1-054
+module: c1-055
 level: C1
-sequence: 54
+sequence: 55
 slug: irony-sarcasm
-version: '1.0'
+version: '1.1'
 title: "Іронія та сарказм як інструменти інтелектуальної комунікації"
 subtitle: "Irony and Sarcasm as Tools of Intellectual Communication"
 focus: integration
@@ -104,6 +104,18 @@ vocabulary:
     - нігілізм
     - рефлексія
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze an ironic newspaper column — identify all markers of irony (antiphrase, context mismatch, hyperbole in service of irony) and explain their effect."
+  - type: essay-response
+    description: "Write a short ironic commentary (100-150 words) on a given absurd situation, using subtle linguistic irony without direct insults."
+  - type: select
+    description: "Identify whether excerpts use гумор, іронія, сарказм, or самоіронія — and explain the linguistic markers that distinguish them."
+  - type: error-correction
+    description: "Rewrite sentences where intended irony fails — fix cases where the ironic meaning is unclear or the tone shifts to unintended aggression."
+  - type: match-up
+    description: "Match literary examples of irony (from Котляревський, Шевченко, Бу-Ба-Бу) with the type of comic effect and the social target."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики"
+  - "Глазова, 11 клас (2019): §40-42 — Стилістичне забарвлення лексики, фразеологізмів"
+  - "Авраменко, 11 клас (Укр. літ.): Літературознавчі терміни — іронія, сатира, гротеск"
 
 connects_to:
   previous: "metaphor-simile"

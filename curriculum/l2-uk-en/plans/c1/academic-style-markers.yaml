@@ -2,7 +2,7 @@ module: c1-002
 level: C1
 sequence: 2
 slug: academic-style-markers
-version: '1.0'
+version: '1.1'
 title: "Маркери академічного стилю та науковий дискурс"
 subtitle: "Academic Style Markers and Scientific Discourse"
 focus: professional
@@ -98,6 +98,18 @@ vocabulary:
     - концептуалізація
     - адекватність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a fragment of a Ukrainian dissertation — identify nominalization patterns, impersonal constructions, and evaluate objectivity markers."
+  - type: error-correction
+    description: "Rewrite colloquial/journalistic sentences into proper academic register, fixing non-academic vocabulary and emotional markers."
+  - type: match-up
+    description: "Match academic style markers (номіналізація, безособовість, термін) with examples from scientific Ukrainian texts."
+  - type: select
+    description: "Choose the most appropriate academic formulation from multiple options for expressing the same idea."
+  - type: fill-in
+    description: "Complete academic sentences with nominalized verb forms and appropriate terminological collocations."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 218 — Науковий стиль мовлення"
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
 
 connects_to:
   previous: "b2-review-bridge"

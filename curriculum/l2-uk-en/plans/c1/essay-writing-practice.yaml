@@ -2,7 +2,7 @@ module: c1-018
 level: C1
 sequence: 18
 slug: essay-writing-practice
-version: '1.0'
+version: '1.1'
 title: "Практикум: написання академічного есе"
 subtitle: "Workshop: Academic Essay Writing"
 focus: professional
@@ -96,6 +96,18 @@ vocabulary:
     - перспектива
     - інтелектуальний
 
+activity_hints:
+  - type: essay-response
+    description: "Write a complete academic essay (400-500 words) on digital humanities and Ukrainian history, with thesis, arguments, counterarguments, and citations."
+  - type: critical-analysis
+    description: "Evaluate a model essay by Yuriy Shevelov — analyze thesis clarity, argument structure, source integration, and academic voice."
+  - type: error-correction
+    description: "Edit a draft essay for logical coherence, academic style violations, and citation format errors."
+  - type: match-up
+    description: "Match essay evaluation criteria (логічність, когерентність, стилістика, аргументація) with specific strengths/weaknesses in sample texts."
+  - type: fill-in
+    description: "Complete essay framework sentences with appropriate hedging, citation introductions, and concluding formulas."
+
 activities:
   types_required:
     - essay-response
@@ -105,6 +117,11 @@ activities:
     - unjumble
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
+  - "Ворон, 11 клас (2019): с. 218 — Науковий стиль"
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
 
 connects_to:
   previous: "irregular-verbs-complete"

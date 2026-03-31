@@ -1,8 +1,8 @@
-module: c1-059
+module: c1-060
 level: C1
-sequence: 59
+sequence: 60
 slug: morfolohichni-stylistychni-zasoby
-version: '1.0'
+version: '1.1'
 title: "Стилістичні ресурси морфології"
 subtitle: "Stylistic Resources of Morphology"
 focus: integration
@@ -104,6 +104,18 @@ vocabulary:
     - контекстуальність
     - інтенція
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a literary passage — identify the morphological dominant (noun-heavy = static, verb-heavy = dynamic) and explain its stylistic effect."
+  - type: match-up
+    description: "Match morphological stylistic devices (субстантивація, теперішній історичний, експресивні суфікси) with their functions and example sentences."
+  - type: error-correction
+    description: "Fix morphological style errors — inappropriate diminutives in official text, nominalization where verbs would be clearer, wrong variant case endings."
+  - type: select
+    description: "Choose the stylistically appropriate variant form for a given register (e.g., -у/-а in genitive singular, -ові/-у in dative, -ію/-ею in instrumental)."
+  - type: essay-response
+    description: "Write two versions of a winter evening description — one noun-dominated (static) and one verb-dominated (dynamic) — then analyze the difference."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §53 — Стилістичне використання словотвору"
+  - "Глазова, 11 клас (2019): §42 — Стилістичне забарвлення морфологічних форм"
+  - "Авраменко, 11 клас (2019): Стилістична норма — морфологічні засоби"
 
 connects_to:
   previous: "fonetychni-stylistychni-zasoby"

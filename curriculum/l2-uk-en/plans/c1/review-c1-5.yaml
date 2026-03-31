@@ -1,8 +1,8 @@
-module: c1-071
+module: c1-072
 level: C1
-sequence: 71
+sequence: 72
 slug: review-c1-5
-version: '1.0'
+version: '1.1'
 title: "Підсумкове повторення: Стилістична норма та складний синтаксис"
 subtitle: "Review C1.5: Stylistic Norms and Complex Syntax"
 focus: review
@@ -96,6 +96,18 @@ vocabulary:
     - верифікація
     - синтез
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a literary criticism article about Розстріляне відродження — identify stylistic devices, register markers, and evaluate the text's argumentative structure."
+  - type: error-correction
+    description: "Fix lexical calques, surzhyk forms, and stylistic errors in a professional text — apply knowledge from all C1.5 modules."
+  - type: match-up
+    description: "Match C1.5 key concepts (хеджинг, когерентність, експресивний синтаксис, стилістична норма) with definitions and textual examples."
+  - type: essay-response
+    description: "Write a structured paragraph (150-200 words) on the role of language policy in national identity, using complex syntax and appropriate hedging."
+  - type: fill-in
+    description: "Complete sentences with appropriate discourse markers, connectors, and hedging expressions from academic Ukrainian register."
+
 activities:
   types_required:
     - critical-analysis
@@ -105,6 +117,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40-45 — Стилістичне забарвлення лексики, фразеологізмів, синтаксичних одиниць"
+  - "Авраменко, 11 клас (2019): Стилістична норма — підсумкове повторення"
+  - "Караман, 10 клас (2018): §38-55 — Стилістика (повний огляд)"
 
 connects_to:
   previous: "case-studies"

@@ -1,8 +1,8 @@
-module: c1-038
+module: c1-039
 level: C1
-sequence: 38
+sequence: 39
 slug: numeral-mastery-c1
-version: '1.0'
+version: '1.1'
 title: "Майстерність числівників: Складні випадки в діловому та науковому мовленні"
 subtitle: "Numeral Mastery C1"
 focus: grammar
@@ -104,6 +104,18 @@ vocabulary:
     - керування
     - варіантність
 
+activity_hints:
+  - type: fill-in
+    description: "Complete financial/statistical sentences with correctly declined compound numerals (e.g., 'семисот п'ятдесяти чотирьох гривень')."
+  - type: error-correction
+    description: "Fix incorrect numeral declension in official documents and media excerpts (e.g., 'п'ятидесяти' → 'п'ятдесяти')."
+  - type: select
+    description: "Choose the correct case form of numerals in context — instrumental, genitive, or dative in date/time expressions."
+  - type: match-up
+    description: "Match numeral types (збірний, дробовий, порядковий, кількісний) with their usage rules and example sentences."
+  - type: critical-analysis
+    description: "Analyze a financial report excerpt and identify all numeral agreement patterns, explaining why each case form is used."
+
 activities:
   types_required:
     - error-correction
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 6 клас (2014): §36-38 — Числівник як частина мови, відмінювання числівників"
+  - "Глазова, 11 клас (2019): §18 — Числівник у діловому мовленні"
+  - "Авраменко, 6 клас (2023): §30-32 — Числівник, узгодження з іменниками"
 
 connects_to:
   previous: "imperative-mastery"

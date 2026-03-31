@@ -1,8 +1,8 @@
-module: c1-045
+module: c1-046
 level: C1
-sequence: 45
+sequence: 46
 slug: skladnosuriadne-rechennia
-version: '1.0'
+version: '1.1'
 title: "Складносурядне речення: смислові зв'язки та пунктуація"
 subtitle: "Compound Sentences: Semantic Relations and Punctuation"
 focus: grammar
@@ -103,6 +103,18 @@ vocabulary:
     - сегментація
     - конструкція
 
+activity_hints:
+  - type: fill-in
+    description: "Complete compound sentences with appropriate coordinating conjunctions (єднальні, протиставні, розділові) based on semantic context."
+  - type: error-correction
+    description: "Fix punctuation errors in compound sentences — missing commas, incorrect semicolons, wrong dash placement."
+  - type: match-up
+    description: "Match types of semantic relations in compound sentences (одночасність, послідовність, протиставлення) with example sentences."
+  - type: critical-analysis
+    description: "Analyze a literary passage by Коцюбинський and identify all compound sentences, classifying their semantic and stylistic functions."
+  - type: select
+    description: "Identify cases where commas are NOT required between parts of compound sentences (shared secondary member, common adverbial clause)."
+
 activities:
   types_required:
     - error-correction
@@ -112,6 +124,11 @@ activities:
     - critical-analysis
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §25-28 — Складносурядне речення, сполучники сурядності"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
+  - "Авраменко, 9 клас (2017): §14-16 — Складносурядне речення"
 
 connects_to:
   previous: "checkpoint-movoznavstvo"

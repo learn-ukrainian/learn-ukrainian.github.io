@@ -2,7 +2,7 @@ module: c1-026
 level: C1
 sequence: 26
 slug: media-landscape
-version: '1.0'
+version: '1.1'
 title: "Медіаландшафт України: Інформаційна гігієна та критичний аналіз"
 subtitle: "Media Landscape and Information Hygiene"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - транспарентність
     - акредитація
 
+activity_hints:
+  - type: critical-analysis
+    description: "Compare coverage of the same event across different Ukrainian media (state, oligarchic, independent) — identify framing, bias, and manipulation techniques."
+  - type: error-correction
+    description: "Identify and correct manipulative language techniques in news headlines — replace clickbait and emotional markers with neutral formulations."
+  - type: match-up
+    description: "Match media manipulation techniques (фреймінг, клікбейт, дискредитація) with real-world examples and countermeasures."
+  - type: select
+    description: "Choose the correct fact-checking approach for different types of misinformation (фейк, маніпуляція, ІПСО)."
+  - type: essay-response
+    description: "Write an analytical note (250+ words) about freedom of speech during martial law — balance security concerns with democratic principles."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Авраменко, 11 клас (2019): Діалекти, суржик, мовна політика"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "State Standard 2024: C1 section on media literacy and critical analysis"
 
 connects_to:
   previous: "political-system"

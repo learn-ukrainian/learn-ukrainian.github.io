@@ -2,7 +2,7 @@ module: c1-016
 level: C1
 sequence: 16
 slug: advanced-punctuation
-version: '1.0'
+version: '1.1'
 title: "Складна пунктуація в академічному письмі"
 subtitle: "Advanced Punctuation in Academic Writing"
 focus: grammar
@@ -96,6 +96,18 @@ vocabulary:
     - синтаксис
     - пунктограма
 
+activity_hints:
+  - type: error-correction
+    description: "Fix punctuation errors in complex Ukrainian sentences — commas at conjunction boundaries, dashes in asyndetic constructions, parenthetical expressions."
+  - type: critical-analysis
+    description: "Analyze authorial punctuation in Vinhranovsky's poetry — evaluate how punctuation marks affect rhythm and meaning."
+  - type: fill-in
+    description: "Insert correct punctuation marks in complex academic sentences with embedded clauses, citations, and parenthetical constructions."
+  - type: match-up
+    description: "Match punctuation rules (відокремлення, вставність, парантеза) with sentence examples requiring specific punctuation."
+  - type: select
+    description: "Choose the correct punctuation variant for ambiguous cases (тире vs двокрапка, кома vs крапка з комою)."
+
 activities:
   types_required:
     - error-correction
@@ -105,6 +117,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §17-20 — Пунктуація"
+  - "Правопис 2019: Розділові знаки у складному реченні"
+  - "Заболотний, 11 клас (2019): Стилістичні норми"
 
 connects_to:
   previous: "oral-presentations"

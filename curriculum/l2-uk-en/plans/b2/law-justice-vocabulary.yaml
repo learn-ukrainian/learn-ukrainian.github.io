@@ -2,7 +2,7 @@ module: b2-040
 level: B2
 sequence: 40
 slug: law-justice-vocabulary
-version: '1.1'
+version: '1.2'
 title: "Право та правосуддя: Лексика"
 subtitle: "Law and Justice: Vocabulary"
 focus: vocabulary
@@ -131,6 +131,22 @@ activities:
     - error-correction
   min_items_per_type: 8
   total_min_items: 32
+
+activity_hints:
+  - type: match-up
+    description: "Match legal term to its definition (e.g., презумпція невинуватості↔особа вважається невинною, доки її вину не доведено)"
+  - type: cloze
+    description: "Fill in a legal document template with correct terms (позовна заява, клопотання, вердикт)"
+  - type: fill-in
+    description: "Complete legal formulas and standard phrases (e.g., 'Суд ухвалив ___ про ___')"
+  - type: error-correction
+    description: "Fix non-standard or Russianized legal terms (e.g., 'слідчий комітет'→'слідчий відділ', 'заключення'→'висновок')"
+
+references:
+  - "Глазова, 11 клас (2019): §11-15 — Лексична норма, термінологія, професійна лексика"
+  - "Заболотний, 11 клас (2019): Стилістичні норми — офіційно-діловий стиль, термінологія"
+  - "Авраменко, 11 клас (2019): Лексикологія — терміни, професіоналізми, запозичення"
+  - "State Standard 2024: B2 SS 3 (Thematic areas: суспільство, право, економіка)"
 
 connects_to:
   previous: "politics-government-vocabulary"

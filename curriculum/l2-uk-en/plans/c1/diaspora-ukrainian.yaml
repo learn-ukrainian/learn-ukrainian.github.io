@@ -2,7 +2,7 @@ module: c1-034
 level: C1
 sequence: 34
 slug: diaspora-ukrainian
-version: '1.0'
+version: '1.1'
 title: "Українська мова в діаспорі: Збереження, трансформація та архаїзми"
 subtitle: "Diaspora Ukrainian"
 focus: cultural
@@ -104,6 +104,18 @@ vocabulary:
     - осередок
     - рееміграція
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze language features of Canadian Ukrainian — identify anglicisms, archaic forms preserved from Skrypnykivka, and assess language vitality."
+  - type: match-up
+    description: "Match diaspora waves (перша, друга, третя, сучасна) with their sociolinguistic characteristics and institutions."
+  - type: select
+    description: "Identify whether a given language feature is an archaism, anglicism, or dialectal preservation in diaspora speech."
+  - type: fill-in
+    description: "Replace diaspora-specific forms (anglicisms, archaic spellings) with contemporary standard Ukrainian equivalents."
+  - type: essay-response
+    description: "Write a journalistic report (350+ words) about a conference on Ukrainian language worldwide — cover perspectives from Canada, Europe, and Australia."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §1-5 — Загальне мовознавство, мова і суспільство"
+  - "Авраменко, 11 клас (2019): Діалекти, суржик, мовна політика"
+  - "State Standard 2024: C1 section on sociolinguistics"
 
 connects_to:
   previous: "history-of-language"

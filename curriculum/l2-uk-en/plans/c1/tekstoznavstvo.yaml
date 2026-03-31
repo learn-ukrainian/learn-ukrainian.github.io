@@ -1,8 +1,8 @@
-module: c1-039
+module: c1-040
 level: C1
-sequence: 39
+sequence: 40
 slug: tekstoznavstvo
-version: '1.0'
+version: '1.1'
 title: "Текстознавство: Структура, зв'язність та стилістична цілісність"
 subtitle: "Textual Studies"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - підтекст
     - прецедентність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze the cohesion mechanisms in a Ukrainian academic paragraph — identify all referential chains, lexical repetitions, and logical connectors."
+  - type: reading
+    description: "Read a complex Ukrainian essay and map its theme-rheme progression across paragraphs, identifying breaks in coherence."
+  - type: error-correction
+    description: "Fix coherence and cohesion errors in a poorly structured text — misplaced paragraphs, broken referential chains, missing connectors."
+  - type: match-up
+    description: "Match text-linguistics terms (когезія, когерентність, архітектоніка, актуальне членування) with definitions and textual examples."
+  - type: essay-response
+    description: "Rewrite a given text excerpt to improve its thematic unity and logical flow, using at least 5 different cohesion devices."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - true-false
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §5-8 — Текст, його ознаки, будова тексту"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень, текстова когерентність"
+  - "Авраменко, 11 клас (2019): Текстознавство, с. 180-190"
 
 connects_to:
   previous: "numeral-mastery-c1"

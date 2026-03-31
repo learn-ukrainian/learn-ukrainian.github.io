@@ -1,8 +1,8 @@
-module: c1-043
+module: c1-044
 level: C1
-sequence: 43
+sequence: 44
 slug: speaking-practice
-version: '1.0'
+version: '1.1'
 title: "Практикум з усного мовлення: дискусії та дебати"
 subtitle: "Oral Communication Workshop: Discussions and Debates"
 focus: integration
@@ -103,6 +103,18 @@ vocabulary:
     - регламент
     - лаконічність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a recorded debate — identify the strongest and weakest arguments, rhetorical techniques used, and moments of logical fallacy."
+  - type: error-correction
+    description: "Fix register and style errors in a debate preparation script — inappropriate colloquialisms, weak argumentation phrases, missing hedging."
+  - type: match-up
+    description: "Match rhetorical figures (анафора, антитеза, градація) with their definitions and examples from Ukrainian political speeches."
+  - type: essay-response
+    description: "Write an opening statement (100-150 words) for a debate on a given topic, using at least 3 different rhetorical devices."
+  - type: select
+    description: "Choose the most effective counter-argument strategy for given debate scenarios — refutation, reframing, or concession."
+
 activities:
   types_required:
     - critical-analysis
@@ -112,6 +124,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Заболотний, 11 клас (2019): с. 10-14 — Риторичні фігури, культура дискусії"
+  - "Авраменко, 11 клас (2019): Стилістична норма — риторичні засоби"
 
 connects_to:
   previous: "review"

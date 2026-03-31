@@ -2,7 +2,7 @@ module: b2-037
 level: B2
 sequence: 37
 slug: register-practice-cross-register-rewriting
-version: '1.1'
+version: '1.2'
 title: "Практикум: Стилістична трансформація та перекодування"
 subtitle: "Practice: Cross-Register Rewriting"
 focus: synthesis and style-switching
@@ -126,6 +126,33 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: essay-response
+    focus: "Переписати один текст у трьох різних регістрах (науковий → публіцистичний → розмовний)"
+  - type: error-correction
+    focus: "Знайти змішування стилів у тексті (канцеляризми в розмові, сленг у науковому тексті) та виправити"
+  - type: group-sort
+    focus: "Розподілити уривки текстів за функціональним стилем"
+  - type: critical-analysis
+    focus: "Порівняти дві стилістичні трансформації одного тексту та оцінити їхню доречність"
+
+references:
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–15"
+    topic: "Функціональні стилі, культура мовлення, стилістичні норми"
+  - source: "Заболотний, 11 клас (2019)"
+    pages: "§47–50"
+    topic: "Стилістичні норми, функціональні стилі"
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика"
+    topic: "Стилістична трансформація, всі функціональні стилі"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "Стилістика"
+    topic: "Культура мовлення, стилістичне перекодування"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-religious-ukrainian"

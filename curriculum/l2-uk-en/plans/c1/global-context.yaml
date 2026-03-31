@@ -2,7 +2,7 @@ module: c1-027
 level: C1
 sequence: 27
 slug: global-context
-version: '1.0'
+version: '1.1'
 title: "Україна в глобальному контексті: Дипломатія та геополітика"
 subtitle: "Global Context and International Diplomacy"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - солідарність
     - пріоритет
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze the Budapest Memorandum and its implications — evaluate legal terminology, argument structure, and precedent formation."
+  - type: error-correction
+    description: "Fix diplomatic protocol violations and terminology errors in a draft diplomatic note."
+  - type: match-up
+    description: "Match international organizations (ООН, Рада Європи, ОБСЄ, НАТО) with their functions, Ukrainian terminology, and Ukraine's role."
+  - type: select
+    description: "Choose appropriate diplomatic formulations for different contexts — official requests, declarations of support, expressions of concern."
+  - type: essay-response
+    description: "Write a diplomatic note (250+ words) requesting international support for cultural heritage restoration in Ukraine."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри, листування"
+  - "Заболотний, 11 клас (2019): с. 209 — Офіційне листування"
 
 connects_to:
   previous: "media-landscape"

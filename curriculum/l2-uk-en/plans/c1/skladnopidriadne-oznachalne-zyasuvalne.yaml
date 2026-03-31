@@ -1,8 +1,8 @@
-module: c1-046
+module: c1-047
 level: C1
-sequence: 46
+sequence: 47
 slug: skladnopidriadne-oznachalne-zyasuvalne
-version: '1.0'
+version: '1.1'
 title: "Складнопідрядні означальні та з'ясувальні речення"
 subtitle: "Attributive and Object Complex Sentences"
 focus: grammar
@@ -103,6 +103,18 @@ vocabulary:
     - сумнів
     - гіпотеза
 
+activity_hints:
+  - type: fill-in
+    description: "Complete complex sentences with appropriate relative pronouns (який, що, чий, котрий) and conjunctions (що, як, щоб, чи)."
+  - type: error-correction
+    description: "Fix errors in attributive and object clauses — wrong conjunction/relative pronoun choice, misplaced subordinate clause, punctuation."
+  - type: match-up
+    description: "Match the function of 'що' in different sentences — as a conjunction (сполучник) vs. as a relative pronoun (сполучне слово)."
+  - type: critical-analysis
+    description: "Transform a passage of direct speech into indirect speech using object clauses, then analyze how meaning shifts."
+  - type: select
+    description: "Identify the type of subordinate clause (означальне vs з'ясувальне) in complex sentences from academic and literary texts."
+
 activities:
   types_required:
     - translate
@@ -112,6 +124,11 @@ activities:
     - critical-analysis
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §29-33 — Складнопідрядне речення, означальне, з'ясувальне"
+  - "Авраменко, 9 клас (2017): §17-20 — Складнопідрядні означальні та з'ясувальні речення"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
 
 connects_to:
   previous: "skladnosuriadne-rechennia"

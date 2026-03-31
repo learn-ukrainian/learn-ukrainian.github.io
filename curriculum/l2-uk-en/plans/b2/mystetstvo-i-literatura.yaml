@@ -1,8 +1,8 @@
-module: b2-083
+module: b2-084
 level: B2
-sequence: 83
+sequence: 84
 slug: mystetstvo-i-literatura
-version: '1.0'
+version: '1.1'
 title: "Мистецтво і література: Дзеркало душі"
 subtitle: "Art and Literature: Mirror of the Soul"
 focus: literature
@@ -109,6 +109,21 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: match-up
+    focus: "Зіставити мистецький або літературознавчий термін із його визначенням."
+  - type: fill-in
+    focus: "Описати твір мистецтва, використовуючи відповідну критичну лексику."
+  - type: reading
+    focus: "Прочитати та проаналізувати уривок мистецького огляду (рецензії)."
+  - type: select
+    focus: "Обрати відповідну критичну лексику для опису конкретного мистецького явища."
+
+references:
+  - "Авраменко О. М. Українська мова. 11 клас (2019) — Тематичні тексти: мистецтво, суспільство"
+  - "Глазова О. П. Українська мова. 11 клас (2019) — Тематична лексика"
+  - "State Standard 2024: B2 SS 3 — Thematic areas: мистецтво, культура"
 
 connects_to:
   previous: "nauka-i-doslidzhennia"

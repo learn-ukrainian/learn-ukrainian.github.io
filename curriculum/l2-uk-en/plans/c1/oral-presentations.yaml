@@ -2,7 +2,7 @@ module: c1-015
 level: C1
 sequence: 15
 slug: oral-presentations
-version: '1.0'
+version: '1.1'
 title: "Мистецтво наукової та професійної презентації"
 subtitle: "The Art of Scientific and Professional Presentation"
 focus: professional
@@ -13,6 +13,12 @@ objectives:
   - "Вивчити фрази-маркери для переходу між слайдами та частинами презентації."
   - "Навчитися відповідати на складні запитання аудиторії в академічному стилі."
   - "Розвинути навички візуалізації даних та їх коментування українською мовою."
+
+reading_situations:
+  - source_type: "тези доповіді"
+    topic: "Аналіз структури та мови тез наукової доповіді на конференції з кібербезпеки."
+    key_elements: ["логічна архітектоніка", "маркери переходу", "академічна лаконічність"]
+    motivation: "Вивчення письмової підготовки до публічного виступу як основи для усної презентації."
 
 listening_situations:
   - media_type: "відео"
@@ -91,6 +97,18 @@ vocabulary:
     - дискусійний
     - маніпуляція
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate a Ukrainian academic presentation transcript — assess structure, audience engagement techniques, and Q&A handling."
+  - type: fill-in
+    description: "Complete presentation scripts with appropriate transition phrases (Перейдемо до..., Як ілюструє цей графік..., Підбиваючи підсумки...)."
+  - type: match-up
+    description: "Match presentation sections (вступ, основна частина, висновки, Q&A) with their characteristic discourse markers."
+  - type: error-correction
+    description: "Fix register errors in a presentation script — replace informal language with appropriate professional Ukrainian."
+  - type: select
+    description: "Choose the most effective rhetorical technique for different presentation situations (opening hook, data commentary, audience question)."
+
 activities:
   types_required:
     - critical-analysis
@@ -100,6 +118,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри"
+  - "Заболотний, 11 клас (2019): Мовленнєві жанри"
 
 connects_to:
   previous: "literature-review"

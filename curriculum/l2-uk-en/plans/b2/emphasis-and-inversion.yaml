@@ -2,7 +2,7 @@ module: b2-020
 level: B2
 sequence: 20
 slug: emphasis-and-inversion
-version: '1.1'
+version: '1.2'
 title: "Логічне наголошування та інверсія"
 subtitle: "Logical Emphasis and Inversion"
 focus: grammar
@@ -120,6 +120,27 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: select
+    focus: "Визначити речення з емфатичним порядком слів (інверсія) серед нейтральних"
+  - type: fill-in
+    focus: "Переставити слова в реченні для виділення реми (нової інформації)"
+  - type: error-correction
+    focus: "Виправити невдалу інверсію, що спричиняє двозначність або комічний ефект"
+  - type: essay-response
+    focus: "Переписати абзац із нейтральним порядком слів, використовуючи інверсію для іншого акценту"
+
+references:
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§23, с. 99–102"
+    topic: "Порядок слів у реченні: актуальне членування, інверсія"
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§4"
+    topic: "Порядок слів у реченні"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — word order and emphasis"
 
 connects_to:
   previous: "correlative-constructions"

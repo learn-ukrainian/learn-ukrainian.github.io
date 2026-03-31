@@ -2,7 +2,7 @@ module: c1-036
 level: C1
 sequence: 36
 slug: morfolohichna-norma-c1
-version: '1.0'
+version: '1.1'
 title: "Морфологічна норма C1: Складні випадки відмінювання та узгодження"
 subtitle: "Morphological Norm C1"
 focus: grammar
@@ -104,6 +104,18 @@ vocabulary:
     - аналітизм
     - морфема
 
+activity_hints:
+  - type: error-correction
+    description: "Fix morphological norm violations — incorrect genitive endings (-а/-я vs -у/-ю), degree of comparison errors (найбільш кращий), participle calques."
+  - type: fill-in
+    description: "Complete official document sentences with correct vocative case forms, abbreviation agreements, and indeclinable noun genders."
+  - type: select
+    description: "Choose the normative morphological form from variants — parallel endings, compound adjective spellings, pronoun usage."
+  - type: match-up
+    description: "Match morphological categories (рід, відмінок, ступінь порівняння) with their problematic cases and correct resolution rules."
+  - type: group-sort
+    description: "Categorize masculine genitive nouns by ending pattern (-а/-я for concrete/countable vs -у/-ю for abstract/collective/mass)."
+
 activities:
   types_required:
     - error-correction
@@ -114,6 +126,11 @@ activities:
   min_items_per_type: 5
   total_min_items: 25
 
+references:
+  - "Караман, 10 клас (2018): §68 — Числівник; §71-74 — Дієслово"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+
 connects_to:
   previous: "leksykolohiia-c1"
-  next: "imperative-mastery"
+  next: "aspect-pairs-mastery-c1"

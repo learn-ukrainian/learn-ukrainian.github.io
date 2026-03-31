@@ -1,7 +1,7 @@
 module: register-official-legal
 level: B2
 sequence: 32
-version: '1.1'
+version: '1.2'
 title: "Офіційно-діловий (юридичний) стиль"
 focus: grammar
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: cloze
+    focus: "Заповнити пропуски в шаблоні юридичного документа (заява, претензія, договір) правильними формулами"
+  - type: error-correction
+    focus: "Знайти розмовну лексику або емоційне забарвлення в юридичному тексті та замінити на офіційні відповідники"
+  - type: fill-in
+    focus: "Вписати правильну юридичну формулу (згідно з, відповідно до, на підставі, у разі)"
+  - type: match-up
+    focus: "Зіставити юридичний термін із його тлумаченням"
+
+references:
+  - source: "Заболотний, 11 клас (2019)"
+    pages: "§49–50"
+    topic: "Офіційно-діловий стиль: юридичний підстиль"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Офіційно-діловий стиль мовлення"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-academic-technical"

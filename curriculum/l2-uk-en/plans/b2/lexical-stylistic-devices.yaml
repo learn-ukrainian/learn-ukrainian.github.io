@@ -1,7 +1,7 @@
 module: lexical-stylistic-devices
 level: B2
 sequence: 26
-version: '1.1'
+version: '1.2'
 title: "Лексичні стилістичні засоби"
 focus: grammar
 pedagogy: PPP
@@ -117,6 +117,29 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: match-up
+    focus: "Зіставити троп (метафора / метонімія / синекдоха / епітет) з конкретним прикладом із тексту"
+  - type: select
+    focus: "Визначити тип тропу у запропонованому реченні"
+  - type: error-correction
+    focus: "Знайти змішану метафору або стилістично невдалий троп і виправити"
+  - type: fill-in
+    focus: "Доповнити речення доречним епітетом або метафоричним виразом"
+  - type: group-sort
+    focus: "Розподілити лексичні засоби за типами: тропи кількості (гіпербола, літота) / тропи якості (метафора, метонімія) / комічні (іронія, оксюморон)"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика — лексичні стилістичні засоби"
+    topic: "Метафора, метонімія, синекдоха, епітет, гіпербола, літота"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§11–15"
+    topic: "Лексична норма, стилістично забарвлена лексика"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "phonetic-stylistic-devices"

@@ -2,7 +2,7 @@ module: past-passive-participles
 level: B2
 sequence: 2
 slug: past-passive-participles
-version: '1.3'
+version: '1.4'
 title: "Пасивні дієприкметники минулого часу"
 subtitle: "Past Passive Participles"
 focus: grammar
@@ -91,6 +91,27 @@ activities:
     - highlight-morphemes
   min_items_per_type: 6
   total_min_items: 25
+
+activity_hints:
+  - type: fill-in
+    focus: "Утворити пасивний дієприкметник від дієслова з правильним суфіксом (-н-/-ен-/-т-)"
+  - type: match-up
+    focus: "Зіставити дієслово з його пасивним дієприкметником (писати→написаний, м'яти→зім'ятий)"
+  - type: error-correction
+    focus: "Виправити помилковий суфікс дієприкметника (роблений→зроблений, косений→кошений)"
+  - type: select
+    focus: "Визначити синтаксичну роль дієприкметника: означення чи іменна частина присудка"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "§76, с. 189"
+    topic: "Дієприкметник: творення пасивних форм (-н-, -ен-/-єн-, -т-)"
+  - source: "Караман, 10 клас (2018)"
+    pages: "§77, с. 191–193"
+    topic: "Дієприкметниковий зворот, відокремлення комами"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "§25, с. 81–82"
+    topic: "Пасивні дієприкметники в системі пасивного стану"
 
 connects_to:
   previous: "passive-voice-system"

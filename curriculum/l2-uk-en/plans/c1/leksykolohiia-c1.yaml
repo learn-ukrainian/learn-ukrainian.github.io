@@ -2,7 +2,7 @@ module: c1-035
 level: C1
 sequence: 35
 slug: leksykolohiia-c1
-version: '1.0'
+version: '1.1'
 title: "Лексикологія C1: Синонімічне багатство та точність слововживання"
 subtitle: "Lexicology C1"
 focus: vocabulary
@@ -104,6 +104,18 @@ vocabulary:
     - прагматика
     - пуризм
 
+activity_hints:
+  - type: error-correction
+    description: "Fix paronym confusion (дільниця↔ділянка, ефектний↔ефективний) and tautology in academic and professional Ukrainian texts."
+  - type: match-up
+    description: "Match synonymic rows with their dominant word and differentiate by connotation, register, and context."
+  - type: critical-analysis
+    description: "Analyze anglicisms in Ukrainian IT terminology — evaluate necessity of borrowings vs potential for native word formation (деривація)."
+  - type: select
+    description: "Choose the contextually appropriate synonym from a synonymic row for academic, journalistic, and colloquial registers."
+  - type: fill-in
+    description: "Complete sentences with correct paronyms, avoiding common confusion in scientific and official texts."
+
 activities:
   types_required:
     - error-correction
@@ -113,6 +125,11 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §17-20 — Лексична стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Лексична норма"
+  - "Караман, 10 клас (2018): §1-5 — Загальне мовознавство"
 
 connects_to:
   previous: "diaspora-ukrainian"

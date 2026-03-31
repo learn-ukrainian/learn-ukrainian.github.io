@@ -1,8 +1,8 @@
-module: c1-065
+module: c1-066
 level: C1
-sequence: 65
+sequence: 66
 slug: intimate-register
-version: '1.0'
+version: '1.1'
 title: "Інтимний регістр та мова приватних стосунків"
 subtitle: "Intimate Register and the Language of Private Relationships"
 focus: cultural
@@ -100,6 +100,18 @@ vocabulary:
     - сокровенний
     - інтимність
 
+activity_hints:
+  - type: select
+    description: "Identify the register level (офіційний, розмовний, інтимний) of given text excerpts and explain the linguistic markers that signal each level."
+  - type: match-up
+    description: "Match types of diminutive suffixes (-очк-, -ечк-, -еньк-, -ісіньк-) with their emotional coloring and usage contexts (ніжність, іронія, зменшення)."
+  - type: critical-analysis
+    description: "Analyze an excerpt from Леся Українка's personal letters — identify intimate register markers (пестливі форми, неповні речення, сімейний лексикон)."
+  - type: essay-response
+    description: "Write a personal letter (100-150 words) to a close friend about a life change, using the full range of Ukrainian diminutive forms and intimate vocabulary."
+  - type: error-correction
+    description: "Fix inappropriate register mixing — identify where intimate language intrudes into professional contexts and vice versa."
+
 activities:
   types_required:
     - authorial-intent
@@ -109,6 +121,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (книжна/розмовна)"
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики, емоційна лексика"
+  - "Авраменко, 11 клас (2019): Стилістична норма — розмовний стиль, емоційність"
 
 connects_to:
   previous: "high-formal-register"

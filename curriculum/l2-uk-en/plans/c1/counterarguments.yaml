@@ -2,7 +2,7 @@ module: c1-010
 level: C1
 sequence: 10
 slug: counterarguments
-version: '1.0'
+version: '1.1'
 title: "Робота з контраргументами та спростування"
 subtitle: "Counterarguments and Refutation"
 focus: professional
@@ -96,6 +96,18 @@ vocabulary:
     - визнавати
     - правомірний
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a real Ukrainian intellectual debate (e.g., Latin script transition) — identify counterarguments, concessions, and refutation strategies."
+  - type: error-correction
+    description: "Fix overly aggressive or logically fallacious counterarguments — rewrite using academic etiquette and proper concession formulas."
+  - type: match-up
+    description: "Match polemic strategies (концесія, пряме спростування, доведення до абсурду) with example sentences and contexts."
+  - type: essay-response
+    description: "Write a response to a critical article (200-250 words) using concession strategy — acknowledge opponent's valid points before refuting."
+  - type: fill-in
+    description: "Complete polemic sentences with appropriate concession and refutation formulas (хоча не можна не погодитися з..., водночас варто зауважити...)."
+
 activities:
   types_required:
     - critical-analysis
@@ -105,6 +117,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка"
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "Заболотний, 11 клас (2019): Мовленнєві жанри"
 
 connects_to:
   previous: "thesis-development"

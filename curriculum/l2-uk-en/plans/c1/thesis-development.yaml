@@ -2,7 +2,7 @@ module: c1-009
 level: C1
 sequence: 9
 slug: thesis-development
-version: '1.0'
+version: '1.1'
 title: "Формулювання тези та розвиток думки"
 subtitle: "Thesis Development and Argument Expansion"
 focus: professional
@@ -98,6 +98,18 @@ vocabulary:
     - фундаментальний
     - переконливий
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate thesis statements from Ukrainian academic texts — assess specificity, arguability, and depth of analysis."
+  - type: essay-response
+    description: "Formulate a complex thesis about the role of Ukrainian language in national identity and develop it with two types of argumentation (250-300 words)."
+  - type: fill-in
+    description: "Complete thesis development sentences with appropriate expansion markers (ба більше, варто також зазначити, це зумовлює)."
+  - type: match-up
+    description: "Match thesis types (описова, аналітична, аргументаційна) with examples and characteristics."
+  - type: error-correction
+    description: "Transform weak descriptive theses into strong analytical ones with clear argumentation potential."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - unjumble
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 207 — Наукова доповідь"
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
 
 connects_to:
   previous: "essay-structure"

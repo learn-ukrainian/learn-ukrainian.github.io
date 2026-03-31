@@ -2,7 +2,7 @@ module: b2-056
 level: B2
 sequence: 56
 slug: checkpoint-morphology
-version: '1.0'
+version: '1.1'
 title: "Контрольна точка: Морфологія"
 subtitle: "Checkpoint: Morphology"
 focus: checkpoint
@@ -30,6 +30,13 @@ writing_tasks:
       - "відсутність активних дієприкметників на -уч-, -юч-"
     motivation: "Комплексна перевірка морфологічної вправності студента та його здатності до аргументації на метамовному рівні."
     model_answer: "Текст має бути структурованим та логічним. Очікується правильне відмінювання слів на зразок 'міста', 'статті', 'грошей'. Числівники мають бути узгоджені (наприклад, 'семисот п'ятдесяти шести учасників'). Замість активних дієприкметників очікуються конструкції 'ті, що працюють' або прикметники."
+
+discussion_topics:
+  - context: "Морфологічна норма: між правилом і живим мовленням"
+    questions:
+      - "Які морфологічні помилки ви найчастіше помічаєте у власному мовленні?"
+      - "Чому числівники та дієприкметники є найскладнішими для вивчення частинами мови?"
+    motivation: "Усвідомлення типових морфологічних труднощів та розробка індивідуальної стратегії їх подолання."
 
 content_outline:
   - section: "Іменні частини мови: Систематизація винятків"
@@ -103,6 +110,25 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: cloze
+    description: "Complete a mixed morphology text testing aspect, conditionals, numerals, and word formation"
+  - type: group-sort
+    description: "Classify word forms by morphological category (вид дієслова / відмінок числівника / спосіб словотвору)"
+  - type: error-correction
+    description: "Find and fix all morphological errors in a paragraph (aspect, case, suffix, particle placement)"
+  - type: essay-response
+    description: "Write a text using specified morphological forms (давноминулий час, умовний спосіб, складені числівники)"
+  - type: fill-in
+    description: "Comprehensive morphology exercise covering all topics from M43-M55"
+
+references:
+  - "Караман, 10 клас (2018): §55-60 (словотвір), §68-70 (числівник), §71-74 (дієслово)"
+  - "Глазова, 11 клас (2019): §1-10 (морфологічна норма), §17-20 (морфологічна стилістика)"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "Заболотний, 9 клас (2017): §25-40 — Сполучники у складних реченнях"
+  - "State Standard 2024: B2 SS 4.1.3 (verb forms), SS 4.2 (word formation)"
 
 connects_to:
   previous: "advanced-conjunctions-ii"

@@ -2,7 +2,7 @@ module: c1-013
 level: C1
 sequence: 13
 slug: abstract-writing
-version: '1.0'
+version: '1.1'
 title: "Написання анотацій та тез"
 subtitle: "Abstract and Thesis Writing"
 focus: professional
@@ -96,6 +96,18 @@ vocabulary:
     - специфіка
     - лаконізм
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate a Ukrainian conference abstract — assess completeness of structural elements (мета, методи, новизна, практичне значення)."
+  - type: select
+    description: "Choose the most appropriate academic cliché for describing research purpose, novelty, and results in an abstract."
+  - type: fill-in
+    description: "Complete abstract sentences with standardized Ukrainian academic formulas (У статті розкрито..., встановлено що..., обґрунтовано доцільність...)."
+  - type: match-up
+    description: "Match abstract components (мета, об'єкт, предмет, новизна) with example formulations."
+  - type: error-correction
+    description: "Fix wordiness, tautology, and non-standard formulations in a draft Ukrainian abstract."
+
 activities:
   types_required:
     - critical-analysis
@@ -105,6 +117,11 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 207 — Наукова доповідь"
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "Заболотний, 11 клас (2019): Мовленнєві жанри наукового стилю"
 
 connects_to:
   previous: "research-article"

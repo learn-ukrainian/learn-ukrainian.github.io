@@ -2,7 +2,7 @@ module: c1-008
 level: C1
 sequence: 8
 slug: essay-structure
-version: '1.0'
+version: '1.1'
 title: "Структура академічного есе та аргументація"
 subtitle: "Academic Essay Structure and Argumentation"
 focus: professional
@@ -96,6 +96,18 @@ vocabulary:
     - цілісність
     - концептуальний
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze the structure of a model Ukrainian academic essay about Шістдесятництво — evaluate thesis, argument hierarchy, and transitions."
+  - type: essay-response
+    description: "Write a detailed essay outline (100-150 words) with thesis, three key arguments, and conclusion on a Ukrainian cultural topic."
+  - type: fill-in
+    description: "Complete transition sentences between essay paragraphs with appropriate cohesion devices."
+  - type: match-up
+    description: "Match essay components (вступ, теза, аргумент, висновок) with their functions and example sentences."
+  - type: cloze
+    description: "Fill in missing structural elements and transition phrases in a partially written essay about urban decolonization."
+
 activities:
   types_required:
     - critical-analysis
@@ -105,6 +117,11 @@ activities:
     - unjumble
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §45 — Синтаксичні одиниці в різних стилях"
+  - "Авраменко, 11 клас (2019): с. 164 — Стилістична норма"
+  - "Заболотний, 11 клас (2019): Стилістичні норми, мовленнєві жанри"
 
 connects_to:
   previous: "citation-reference"

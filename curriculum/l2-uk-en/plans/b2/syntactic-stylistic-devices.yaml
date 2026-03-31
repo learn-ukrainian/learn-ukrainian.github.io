@@ -1,7 +1,7 @@
 module: syntactic-stylistic-devices
 level: B2
 sequence: 27
-version: '1.1'
+version: '1.2'
 title: "Синтаксичні стилістичні засоби"
 focus: grammar
 pedagogy: PPP
@@ -117,6 +117,29 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: mark-the-words
+    focus: "Знайти анафору, епіфору, паралелізм та еліпсис у політичній промові або поетичному тексті"
+  - type: group-sort
+    focus: "Розподілити приклади за типом синтаксичної фігури: повтори / протиставлення / еліптичні конструкції"
+  - type: select
+    focus: "Визначити тип синтаксичної фігури у запропонованому реченні"
+  - type: error-correction
+    focus: "Знайти порушений паралелізм або невдалу інверсію та виправити"
+  - type: fill-in
+    focus: "Доповнити текст, створивши градацію або антитезу за зразком"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика — синтаксичні стилістичні засоби"
+    topic: "Анафора, паралелізм, антитеза, градація, еліпсис, інверсія"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Стилістичні норми: синтаксичні фігури"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "lexical-stylistic-devices"

@@ -2,7 +2,7 @@ module: b2-036
 level: B2
 sequence: 36
 slug: register-religious-ukrainian
-version: '1.1'
+version: '1.2'
 title: "Конфесійний (релігійний) стиль"
 subtitle: "Religious (Confessional) Style"
 focus: religious texts and traditions
@@ -127,6 +127,27 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: match-up
+    focus: "Зіставити конфесійну лексику (благодать, сповідь, причастя) з тлумаченням"
+  - type: select
+    focus: "Визначити маркери конфесійного стилю у запропонованому тексті"
+  - type: fill-in
+    focus: "Доповнити церковну формулу або релігійне привітання правильним словом"
+  - type: reading
+    focus: "Проаналізувати текст проповіді або молитви: виявити архаїзми, інверсію, урочистий тон"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "Стилістика"
+    topic: "Конфесійний стиль мовлення"
+  - source: "Ворон, 11 клас (2019)"
+    pages: "Стилістика мовлення"
+    topic: "Конфесійний стиль як окремий функціональний різновид"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-colloquial-style"

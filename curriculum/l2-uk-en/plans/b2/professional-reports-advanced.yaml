@@ -1,8 +1,8 @@
-module: b2-072
+module: b2-073
 level: B2
-sequence: 72
+sequence: 73
 slug: professional-reports-advanced
-version: '1.0'
+version: '1.1'
 title: "Аналітичні та стратегічні звіти: Поглиблений рівень"
 subtitle: "Analytical and Strategic Reports: Advanced Level"
 focus: professional
@@ -31,6 +31,12 @@ writing_tasks:
     motivation: "Тренування навичок стратегічного мислення та професійного письма."
     model_answer: "Звіт повинен містити детальний аналіз сильних та слабких сторін, можливостей та загроз, а також конкретну стратегічну рекомендацію."
 
+listening_situations:
+  - media_type: "відео"
+    setting: "Презентація стратегічного звіту перед радою директорів українського підприємства."
+    focus_points: ["структура усної презентації звіту", "адаптація мови для керівної аудиторії"]
+    motivation: "Розвиток навичок сприйняття професійної презентації на основі аналітичного звіту."
+
 content_outline:
   - section: "Стратегічне моделювання у звітності"
     words: 1000
@@ -43,7 +49,7 @@ content_outline:
       - "конкурентна перевага"
       - "зовнішнє середовище"
       - "мінімізація ризиків"
-  - section: "Адаптація звіту під аудиторію (Stakeholder Management)"
+  - section: "Адаптація звіту під цільову аудиторію"
     words: 1000
     subsections:
       - "Звітування для ради директорів: лаконічність, фокус на прибутку та стратегії"
@@ -102,6 +108,21 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: cloze
+    focus: "Доповнити аналітичний звіт стратегічною термінологією та висновками на основі даних."
+  - type: error-correction
+    focus: "Виправити двозначність та нечіткість у представленні даних аналітичного звіту."
+  - type: fill-in
+    focus: "Сформулювати висновки та рекомендації на основі наданих числових показників."
+  - type: essay-response
+    focus: "Написати Executive Summary (резюме для керівника) за наданим аналітичним звітом."
+
+references:
+  - "Глазова О. П. Українська мова. 11 клас (2019), §21-25 — Синтаксична норма"
+  - "Авраменко О. М. Українська мова. 11 клас (2019) — Офіційно-діловий стиль"
+  - "State Standard 2024: B2 SS 3 — Professional communication themes"
 
 connects_to:
   previous: "professional-reports-basics"

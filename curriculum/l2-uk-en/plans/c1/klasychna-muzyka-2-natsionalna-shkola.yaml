@@ -1,8 +1,8 @@
-module: klasychna-muzyka-2-natsionalna-shkola
+module: c1-099
 level: C1
-sequence: 98
+sequence: 99
 slug: klasychna-muzyka-2-natsionalna-shkola
-version: '1.1'
+version: '1.2'
 title: "Класична музика II: Українська національна композиторська школа"
 subtitle: "Classical Music II: Ukrainian National Composer School"
 focus: history
@@ -102,6 +102,23 @@ activities:
     - true-false
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: reading
+    focus: "Прочитайте мистецтвознавчий нарис про оперну спадщину Лисенка. Визначте ключову музичну термінологію та поясніть її."
+  - type: critical-analysis
+    focus: "Проаналізуйте текст про 'Щедрик' Леонтовича. Визначте, як автор аргументує перетворення народної мелодії на шедевр світової класики."
+  - type: match-up
+    focus: "Зіставте музичні терміни (лейтмотив, увертюра, арія, лібрето, речитатив, варіація) з їхніми визначеннями."
+  - type: fill-in
+    focus: "Доповніть текст про національну оперу відповідними термінами (драматургія, лібрето, етнографізм, цензура, меценатство)."
+  - type: essay-response
+    focus: "Напишіть критичний відгук на оперу Лисенка. Оцініть поєднання народних джерел із класичними оперними формами."
+
+references:
+  - "Державний стандарт 2024: C1 — тематична область 'Мистецтво та культура'"
+  - "Авраменко, 11 клас (Укр. літ.) — Лисенко, Леонтович, музична культура"
+  - "Глазова, 11 клас (2019), §40 — Стилістичне забарвлення"
 
 connects_to:
   previous: "klasychna-muzyka-1-vytoky"

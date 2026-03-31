@@ -2,7 +2,7 @@ module: b2-049
 level: B2
 sequence: 49
 slug: word-formation-person-suffixes
-version: '1.0'
+version: '1.1'
 title: "Словотвір: Суфікси на позначення осіб"
 subtitle: "Word Formation: Person Suffixes"
 focus: vocabulary
@@ -124,6 +124,22 @@ activities:
     - fill-in
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: match-up
+    description: "Match suffix to its meaning (e.g., -тель→agent of action, -ник→occupation/role, -ець→person with quality)"
+  - type: fill-in
+    description: "Form agent nouns from verbs using correct suffix (e.g., вчити→вчитель, водити→водій)"
+  - type: group-sort
+    description: "Sort suffixes by category: професія / характеристика / мешканець / фемінітив"
+  - type: select
+    description: "Choose the natural Ukrainian form vs calque (e.g., 'дослідник' vs 'ресерчер')"
+
+references:
+  - "Караман, 10 клас (2018): §55-60 — Словотвір"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.2 (word formation)"
 
 connects_to:
   previous: "numeral-declension-compound-numbers"

@@ -1,8 +1,8 @@
-module: c1-064
+module: c1-065
 level: C1
-sequence: 64
+sequence: 65
 slug: high-formal-register
-version: '1.0'
+version: '1.1'
 title: "Високий офіційний регістр та протокольне мовлення"
 subtitle: "High Formal Register and Protocol Speech"
 focus: professional
@@ -103,6 +103,18 @@ vocabulary:
     - преференція
     - юрисдикція
 
+activity_hints:
+  - type: error-correction
+    description: "Fix register violations in official documents — replace colloquial language with formal equivalents, fix канцелярит where it obscures meaning."
+  - type: critical-analysis
+    description: "Analyze a Presidential Decree and a diplomatic note — compare their syntactic structures, courtesy formulas, and degree of formality."
+  - type: match-up
+    description: "Match official document types (указ, комюніке, конвенція, резолюція, нота) with their structural features and characteristic language."
+  - type: essay-response
+    description: "Write a formal letter (150-200 words) from an institutional head proposing international cooperation, using appropriate protocol language."
+  - type: select
+    description: "Choose the appropriate formality level for given professional situations — distinguish high official (дипломатичний протокол) from standard business (ділове листування)."
+
 activities:
   types_required:
     - error-correction
@@ -112,6 +124,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (книжна/розмовна)"
+  - "Караман, 10 клас (2018): §53-55 — Офіційно-діловий стиль, мовний етикет"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка, ділове листування"
 
 connects_to:
   previous: "politeness-strategies"

@@ -2,7 +2,7 @@ module: b2-017
 level: B2
 sequence: 17
 slug: detached-members
-version: '1.1'
+version: '1.2'
 title: "Відокремлені члени речення"
 subtitle: "Detached Sentence Members"
 focus: grammar
@@ -120,6 +120,30 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: error-correction
+    focus: "Виправити пунктуацію при відокремлених означеннях, прикладках та обставинах"
+  - type: fill-in
+    focus: "Доповнити речення відокремленим означенням або обставиною (дієприкметниковий/дієприслівниковий зворот)"
+  - type: cloze
+    focus: "Розставити розділові знаки в тексті з різними типами відокремлених членів"
+  - type: select
+    focus: "Визначити, що саме відокремлено (означення, обставина, додаток, уточнення)"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§22–24"
+    topic: "Відокремлені означення, обставини, додатки, уточнювальні члени"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§21–24"
+    topic: "Відокремлені члени речення"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§24, с. 103–108"
+    topic: "Прості ускладнені речення (відокремлення)"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — detached members"
 
 connects_to:
   previous: "parenthetical-expressions"

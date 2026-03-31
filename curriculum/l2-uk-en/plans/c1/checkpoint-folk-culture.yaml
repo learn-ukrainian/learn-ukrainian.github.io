@@ -1,8 +1,8 @@
-module: checkpoint-folk-culture
+module: c1-096
 level: C1
-sequence: 95
+sequence: 96
 slug: checkpoint-folk-culture
-version: '1.1'
+version: '1.2'
 title: "Контрольна точка: Традиційна українська культура та побут"
 subtitle: "Checkpoint: Traditional Ukrainian Culture and Life"
 focus: checkpoint
@@ -93,6 +93,18 @@ vocabulary:
     - парадигма
     - репрезентація
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a complex ethnographic text — evaluate arguments about the role of traditional culture in modern nation-building, identifying strengths and weaknesses."
+  - type: error-correction
+    description: "Fix factual and stylistic errors in a text about Ukrainian folk traditions — mixed regional traditions, anachronisms, incorrect terminology."
+  - type: match-up
+    description: "Match traditional Ukrainian cultural elements (вишиванка, писанка, хата, колядка) with their regional variants, symbolic meanings, and historical contexts."
+  - type: true-false
+    description: "Evaluate statements about Ukrainian folk culture — distinguish accurate ethnographic facts from common misconceptions and stereotypes."
+  - type: select
+    description: "Identify the ethnographic region (Галичина, Полісся, Подоляни, Гуцульщина) based on descriptions of traditional customs, architecture, or costume elements."
+
 activities:
   types_required:
     - critical-analysis
@@ -102,6 +114,11 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (культурна тематика)"
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики — народна мудрість"
+  - "Авраменко, 11 клас (2019): Стилістична норма — етнографічна лексика"
 
 connects_to:
   previous: "praktyka-1-narodna-kultura"

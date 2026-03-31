@@ -1,8 +1,8 @@
-module: c1-061
+module: c1-062
 level: C1
-sequence: 61
+sequence: 62
 slug: frazeolohichni-stylistychni-zasoby
-version: '1.0'
+version: '1.1'
 title: "Фразеологічні стилістичні засоби"
 subtitle: "Phraseological Stylistic Means"
 focus: vocabulary
@@ -98,6 +98,18 @@ vocabulary:
     - евфемізм
     - дисфемізм
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a newspaper article — identify all phraseological units, classify their stylistic register (книжна, розмовна, нейтральна), and evaluate their effectiveness."
+  - type: select
+    description: "Identify whether a given phraseological unit is authentic Ukrainian or a calque from Russian — choose the correct Ukrainian equivalent."
+  - type: match-up
+    description: "Match phraseological units with their sources (біблеїзми, античні ремінісценції, козацький фольклор, крилаті вислови класиків)."
+  - type: error-correction
+    description: "Fix phraseological errors in texts — contaminated idioms, pleonastic combinations, calqued expressions from Russian."
+  - type: essay-response
+    description: "Write a critical review paragraph (100-150 words) integrating at least 5 Ukrainian book-style phraseological units naturally."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики, фразеологізми"
+  - "Глазова, 11 клас (2019): §42 — Стилістичне забарвлення фразеологізмів"
+  - "Авраменко, 11 клас (2019): Стилістична норма — фразеологічні засоби"
 
 connects_to:
   previous: "zahalne-movoznavstvo"

@@ -1,7 +1,7 @@
 module: register-media-journalistic
 level: B2
 sequence: 34
-version: '1.1'
+version: '1.2'
 title: "Публіцистичний (газетно-журнальний) стиль"
 focus: grammar
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: error-correction
+    focus: "Знайти журналістські кліше / штампи та замінити на точніші формулювання"
+  - type: select
+    focus: "Обрати стилістично доречний заголовок для новини з-поміж варіантів"
+  - type: fill-in
+    focus: "Доповнити інформаційний текст оцінною лексикою або конекторами публіцистичного стилю"
+  - type: reading
+    focus: "Проаналізувати медійний текст: виявити засоби переконування, відокремити факти від суджень"
+
+references:
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "Стилістика"
+    topic: "Публіцистичний стиль мовлення"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Публіцистичний стиль: засоби впливу"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-literary-ukrainian"

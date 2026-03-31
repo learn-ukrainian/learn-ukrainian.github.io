@@ -1,7 +1,7 @@
 module: register-academic-technical
 level: B2
 sequence: 31
-version: '1.1'
+version: '1.2'
 title: "Науково-технічний стиль"
 focus: grammar
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: fill-in
+    focus: "Доповнити науковий текст правильною термінологією та логічними конекторами"
+  - type: error-correction
+    focus: "Знайти ненаукову лексику (розмовні слова, емоційні епітети) в академічному тексті та замінити"
+  - type: select
+    focus: "Обрати науковий варіант висловлювання з-поміж стилістично різних формулювань"
+  - type: cloze
+    focus: "Заповнити пропуски в анотації (abstract) науковою лексикою та конекторами"
+
+references:
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Науковий стиль мовлення"
+  - source: "Заболотний, 11 клас (2019)"
+    pages: "§47–48"
+    topic: "Науковий стиль та його підстилі"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-business-ukrainian"

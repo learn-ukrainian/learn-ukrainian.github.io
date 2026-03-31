@@ -2,7 +2,7 @@ module: b2-016
 level: B2
 sequence: 16
 slug: parenthetical-expressions
-version: '1.1'
+version: '1.2'
 title: "Вставні слова та конструкції"
 subtitle: "Parenthetical Words and Constructions"
 focus: grammar
@@ -120,6 +120,27 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: mark-the-words
+    focus: "Визначити вставні слова та конструкції в тексті, виділити їх"
+  - type: group-sort
+    focus: "Класифікувати вставні одиниці за семантикою: впевненість / невпевненість / джерело / порядок викладу"
+  - type: error-correction
+    focus: "Виправити пунктуацію при вставних словах (зайві або пропущені коми)"
+  - type: select
+    focus: "Розрізнити вставне слово та омонімічний член речення (правда, здається, видно, кажуть)"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§20–21"
+    topic: "Вставні слова, словосполучення та речення"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§19–20"
+    topic: "Вставні та вставлені конструкції"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — parenthetical constructions"
 
 connects_to:
   previous: "homogeneous-members"

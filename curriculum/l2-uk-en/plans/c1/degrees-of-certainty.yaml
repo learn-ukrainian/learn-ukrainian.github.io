@@ -1,8 +1,8 @@
-module: c1-062
+module: c1-063
 level: C1
-sequence: 62
+sequence: 63
 slug: degrees-of-certainty
-version: '1.0'
+version: '1.1'
 title: "Ступені впевненості та епістемічна модальність"
 subtitle: "Degrees of Certainty and Epistemic Modality"
 focus: grammar
@@ -100,6 +100,18 @@ vocabulary:
     - експліцитно
     - дедукція
 
+activity_hints:
+  - type: select
+    description: "Choose the appropriate epistemic modal marker (безперечно, імовірно, навряд чи, можливо) for given academic and professional contexts."
+  - type: critical-analysis
+    description: "Analyze a scientific article and classify all hedging devices on a certainty scale from categorical assertion to complete doubt."
+  - type: fill-in
+    description: "Complete academic sentences with appropriate hedging expressions — вставні слова, модальні дієслова, частки — matching the required certainty level."
+  - type: error-correction
+    description: "Fix texts with inappropriate certainty levels — remove excessive hedging in assertive contexts, add hedging where categorical statements need softening."
+  - type: match-up
+    description: "Match Ukrainian epistemic markers with their English equivalents and certainty levels (high: безумовно; medium: ймовірно; low: навряд чи)."
+
 activities:
   types_required:
     - select
@@ -109,6 +121,11 @@ activities:
     - critical-analysis
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (книжна/розмовна)"
+  - "Караман, 10 клас (2018): §53 — Офіційно-діловий стиль, модальність"
+  - "Авраменко, 11 клас (2019): Стилістична норма — модальні засоби"
 
 connects_to:
   previous: "frazeolohichni-stylistychni-zasoby"

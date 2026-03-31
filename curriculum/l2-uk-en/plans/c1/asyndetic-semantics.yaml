@@ -1,8 +1,8 @@
-module: c1-048
+module: c1-049
 level: C1
-sequence: 48
+sequence: 49
 slug: asyndetic-semantics
-version: '1.0'
+version: '1.1'
 title: "Безсполучникове складне речення: семантика та розділові знаки"
 subtitle: "Asyndetic Complex Sentences: Semantics and Punctuation"
 focus: grammar
@@ -103,6 +103,18 @@ vocabulary:
     - пауза
     - редукція
 
+activity_hints:
+  - type: fill-in
+    description: "Insert the correct punctuation mark (comma, semicolon, colon, or dash) in asyndetic complex sentences based on semantic relations."
+  - type: error-correction
+    description: "Fix punctuation errors in asyndetic sentences — wrong choice between colon and dash, missing semicolons in extended constructions."
+  - type: match-up
+    description: "Match punctuation marks in asyndetic sentences with the semantic relations they signal (пояснення → двокрапка, наслідок → тире)."
+  - type: critical-analysis
+    description: "Analyze proverbs and aphorisms as examples of asyndetic sentences — identify the semantic relation and explain the stylistic effect."
+  - type: select
+    description: "Choose the correct interpretation of ambiguous asyndetic sentences where the semantic relation could be causal, conditional, or contrastive."
+
 activities:
   types_required:
     - error-correction
@@ -112,6 +124,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §39-40 — Безсполучникове складне речення"
+  - "Авраменко, 9 клас (2017): §26-28 — Безсполучникове складне речення, розділові знаки"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень, пунктуація"
 
 connects_to:
   previous: "skladnopidriadne-obstavynne"

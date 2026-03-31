@@ -2,7 +2,7 @@ module: c1-020
 level: C1
 sequence: 20
 slug: c1-1-checkpoint
-version: '1.0'
+version: '1.1'
 title: "Підсумковий контроль: рівень C1.1"
 subtitle: "Assessment: Level C1.1"
 focus: checkpoint
@@ -97,6 +97,18 @@ vocabulary:
     - трансформація
     - досконалість
 
+activity_hints:
+  - type: essay-response
+    description: "Write a comprehensive academic essay (500-600 words) demonstrating all C1.1 skills — complex punctuation, passive constructions, hedging, and rich terminology."
+  - type: critical-analysis
+    description: "Analyze a complex Ukrainian text on globalization and culture — evaluate argument structure, academic register, and author position."
+  - type: error-correction
+    description: "Fix syntactic, morphological, and stylistic errors in a mixed-register text — enforce academic norms consistently."
+  - type: fill-in
+    description: "Complete a comprehensive academic text with appropriate terminology, discourse markers, and citation formulas from the entire C1.1 program."
+  - type: select
+    description: "Choose correct forms across all C1.1 grammar topics — complex sentences, punctuation, verb paradigms, academic clichés."
+
 activities:
   types_required:
     - essay-response
@@ -106,6 +118,12 @@ activities:
     - true-false
   min_items_per_type: 10
   total_min_items: 50
+
+references:
+  - "Глазова, 11 клас (2019): §1-10, §45 — Повний курс"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
+  - "Ворон, 11 клас (2019): с. 207-218 — Науковий стиль, наукова доповідь"
+  - "State Standard 2024: C1 competencies — academic writing and discourse"
 
 connects_to:
   previous: "practice-ii-article-critique"

@@ -1,7 +1,7 @@
 module: checkpoint-passive-voice
 level: B2
 sequence: 10
-version: '1.2'
+version: '1.3'
 title: "Контрольна точка: Пасивний стан та дієприкметники"
 subtitle: "Checkpoint: Passive Voice and Participles Consolidation"
 focus: checkpoint
@@ -124,6 +124,32 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 30
+
+activity_hints:
+  - type: cloze
+    focus: "Доповнити змішаний текст усіма типами пасивних конструкцій (-но/-то, -ся, неозначено-особові)"
+  - type: error-correction
+    focus: "Знайти та виправити всі пасивні помилки в абзаці (кальки, орудний діяча, штучні дієприкметники)"
+  - type: group-sort
+    focus: "Класифікувати всі пасивні конструкції в тексті за типом (безособова, зворотна, неозначено-особова, дієприкметникова)"
+  - type: essay-response
+    focus: "Написати офіційний лист з доречним використанням різних пасивних конструкцій"
+  - type: critical-analysis
+    focus: "Проаналізувати вживання пасиву в газетній статті: виявити функції, оцінити доречність, запропонувати покращення"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "§75–77, с. 187–193"
+    topic: "Стан дієслова, дієприкметник, безособові форми на -но, -то"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§21–22, с. 95–97"
+    topic: "Пасивні конструкції з -ся та формами на -но, -то"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "§25, с. 81–82"
+    topic: "Система пасивних конструкцій в українській мові"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.1.3.1, SS 4.2.3"
+    topic: "Пасивний стан з дієприкметниками, видові пари в пасиві"
 
 connects_to:
   previous: "participles-vs-relative-clauses"

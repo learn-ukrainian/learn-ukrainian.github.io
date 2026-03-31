@@ -1,8 +1,8 @@
-module: c1-066
+module: c1-067
 level: C1
-sequence: 66
+sequence: 67
 slug: slang-youth
-version: '1.0'
+version: '1.1'
 title: "Молодіжний сленг та соціолекти"
 subtitle: "Youth Slang and Sociolects"
 focus: vocabulary
@@ -13,6 +13,16 @@ objectives:
   - "Аналізувати вплив англіцизмів, геймінгу та соціальних мереж на лексичний склад мови молоді."
   - "Розуміти соціолінгвістичну роль сленгу як маркера приналежності до певної групи (інсайдери vs аутсайдери)."
   - "Диференціювати сленг, жаргон та арго в системі українських соціолектів."
+
+reading_situations:
+  - source_type: "журнальна стаття"
+    topic: "Аналіз лексичних інновацій у сучасних українських блогах та онлайн-ЗМІ: як молодіжний сленг проникає в публіцистику."
+    key_elements: ["неологізм", "метафоризація", "стилістична адаптація"]
+    motivation: "Вивчення механізмів проникнення сленгу в літературну мову."
+  - source_type: "наукова стаття"
+    topic: "Соціолінгвістичне дослідження мовних практик українських підлітків у соціальних мережах."
+    key_elements: ["кодове перемикання", "англіцизми", "мовна ідентичність"]
+    motivation: "Розуміння наукового підходу до вивчення молодіжного мовлення."
 
 listening_situations:
   - media_type: "подкаст"
@@ -103,6 +113,18 @@ vocabulary:
     - абревіація
     - мейнстрим
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a TikTok/YouTube comment section — classify the slang terms by source (англіцизми, комп'ютерний жаргон, метафоризація) and assess their integration into Ukrainian."
+  - type: match-up
+    description: "Match sociolect types (жаргон, арго, сленг) with their defining features, social functions, and examples from Ukrainian youth culture."
+  - type: select
+    description: "Determine whether a given slang term has been adapted to Ukrainian morphology (кринжити, хайпанути) or remains a raw borrowing, and assess its longevity."
+  - type: essay-response
+    description: "Write a youth magazine article (100-150 words) about a cultural event, naturally integrating appropriate slang without overdoing it."
+  - type: error-correction
+    description: "Identify and fix texts where slang is used in inappropriate registers — academic papers with colloquialisms, or formal letters with youth slang."
+
 activities:
   types_required:
     - critical-analysis
@@ -112,6 +134,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики (книжна/розмовна)"
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики, стилістична диференціація"
+  - "Авраменко, 11 клас (2019): Стилістична норма — просторіччя та сленг"
 
 connects_to:
   previous: "intimate-register"

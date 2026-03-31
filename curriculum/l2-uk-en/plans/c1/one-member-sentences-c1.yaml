@@ -1,8 +1,8 @@
-module: c1-051
+module: c1-052
 level: C1
-sequence: 51
+sequence: 52
 slug: one-member-sentences-c1
-version: '1.0'
+version: '1.1'
 title: "Стилістичний потенціал односкладних речень"
 subtitle: "Stylistic Potential of One-Member Sentences"
 focus: grammar
@@ -98,6 +98,18 @@ vocabulary:
     - детермінація
     - контекстуалізація
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a scientific text and a literary passage — compare how безособові речення function differently in each (objectivity vs. emotional state)."
+  - type: error-correction
+    description: "Fix stylistic errors where one-member sentence types are used inappropriately — e.g., називне речення in a legal document, безособове in informal speech."
+  - type: select
+    description: "Identify the type of one-member sentence (означено-особове, неозначено-особове, узагальнено-особове, безособове, називне) in excerpts from different registers."
+  - type: essay-response
+    description: "Rewrite a text passage first using only називні речення for a static, contemplative effect, then using дієслівні односкладні for dynamic impact."
+  - type: fill-in
+    description: "Complete text passages with appropriate one-member sentence constructions matching the required register and stylistic effect."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §14-18 — Односкладні речення, типи"
+  - "Глазова, 11 клас (2019): §25 — Стилістичне використання синтаксичних конструкцій"
+  - "Авраменко, 9 клас (2017): §8-12 — Односкладні речення"
 
 connects_to:
   previous: "zahalne-movoznavstvo"

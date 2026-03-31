@@ -1,8 +1,8 @@
-module: c1-037
+module: c1-038
 level: C1
-sequence: 37
+sequence: 38
 slug: imperative-mastery
-version: '1.0'
+version: '1.1'
 title: "Майстерність імператива: Тонкощі спонукання та етикет"
 subtitle: "Imperative Mastery"
 focus: grammar
@@ -104,6 +104,18 @@ vocabulary:
     - парадигма
     - дискурс
 
+activity_hints:
+  - type: error-correction
+    description: "Fix incorrect imperative forms — wrong stem alternations, misplaced particles (би/б), inappropriate register for the social context."
+  - type: critical-analysis
+    description: "Analyze imperative usage in political speeches and literary dialogues — evaluate pragmatic effects of different command strategies."
+  - type: select
+    description: "Choose the most appropriate form of encouragement for different social contexts — direct command, polite request, inclusive invitation (-мо)."
+  - type: match-up
+    description: "Match imperative alternatives (наказовий спосіб, інфінітив, перформатив, майбутній час) with their pragmatic functions and register."
+  - type: fill-in
+    description: "Complete sentences with correct imperative forms of irregular verbs and appropriate politeness particles."
+
 activities:
   types_required:
     - error-correction
@@ -114,6 +126,11 @@ activities:
   min_items_per_type: 5
   total_min_items: 25
 
+references:
+  - "Караман, 10 клас (2018): §71-74 — Дієслово"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+
 connects_to:
-  previous: "morfolohichna-norma-c1"
+  previous: "aspect-pairs-mastery-c1"
   next: "numeral-mastery-c1"

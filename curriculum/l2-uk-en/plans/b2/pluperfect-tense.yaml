@@ -2,7 +2,7 @@ module: b2-045
 level: B2
 sequence: 45
 slug: pluperfect-tense
-version: '1.0'
+version: '1.1'
 title: "Давньоминулий час"
 subtitle: "Pluperfect Tense"
 focus: grammar
@@ -118,6 +118,22 @@ activities:
     - translate
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: fill-in
+    description: "Form давноминулий час (e.g., він ___ ___ = він ходив був, вона ___ ___ = вона читала була)"
+  - type: select
+    description: "Choose when to use pluperfect vs simple past in context"
+  - type: cloze
+    description: "Complete a narrative passage with correct tense forms (минулий vs давноминулий)"
+  - type: error-correction
+    description: "Fix unnecessary or incorrect pluperfect usage in sentences"
+
+references:
+  - "Караман, 10 клас (2018): §71-74 — Дієслово: вид, час, спосіб"
+  - "Глазова, 11 клас (2019): §1-10 — Морфологічна норма"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.1.3 (verb forms)"
 
 connects_to:
   previous: "aspect-nuances-imperative-infinitive"

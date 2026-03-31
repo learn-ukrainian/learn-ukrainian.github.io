@@ -1,8 +1,8 @@
-module: c1-072
+module: c1-073
 level: C1
-sequence: 72
+sequence: 73
 slug: checkpoint-c1-5
-version: '1.0'
+version: '1.1'
 title: "Підсумковий контроль: рівень C1.5"
 subtitle: "Assessment: Level C1.5"
 focus: checkpoint
@@ -97,6 +97,18 @@ vocabulary:
     - концептуальний
     - системність
 
+activity_hints:
+  - type: essay-response
+    description: "Write an academic essay (200-250 words) synthesizing knowledge from C1.5 modules — stylistics, syntax, register — on a given topic about language and technology."
+  - type: critical-analysis
+    description: "Analyze a complex text and perform full linguistic evaluation — identify register, stylistic devices, syntactic patterns, and evaluate argumentation quality."
+  - type: error-correction
+    description: "Fix all types of errors in a deliberately flawed academic text — lexical calques, register mixing, syntactic errors, punctuation mistakes."
+  - type: fill-in
+    description: "Complete a cloze passage from a scientific article with missing modal markers, connectors, and complex syntactic constructions."
+  - type: select
+    description: "Choose the most appropriate stylistic variant for given communicative situations — from high formal to intimate register."
+
 activities:
   types_required:
     - essay-response
@@ -106,6 +118,11 @@ activities:
     - cloze
   min_items_per_type: 10
   total_min_items: 50
+
+references:
+  - "Глазова, 11 клас (2019): §1-45 — Загальний огляд мовних та стилістичних норм"
+  - "Авраменко, 11 клас (2019): Стилістична норма — підсумковий огляд"
+  - "Заболотний, 11 клас (2019): Культура мовлення, мовна норма"
 
 connects_to:
   previous: "review-c1-5"

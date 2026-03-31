@@ -1,8 +1,8 @@
-module: c1-041
+module: c1-042
 level: C1
-sequence: 41
+sequence: 42
 slug: case-studies
-version: '1.0'
+version: '1.1'
 title: "Аналіз практичних ситуацій (Case Studies)"
 subtitle: "Practical Case Analysis"
 focus: professional
@@ -103,6 +103,18 @@ vocabulary:
     - ресурс
     - дедлайн
 
+activity_hints:
+  - type: critical-analysis
+    description: "Read a historical case study (e.g., Просвіта movement) and evaluate the strategic decisions using cause-effect analysis in Ukrainian."
+  - type: essay-response
+    description: "Write a structured case analysis (150-200 words) of a modern Ukrainian business success story using the 'проблема-рішення-результат' framework."
+  - type: error-correction
+    description: "Fix logical and stylistic errors in a draft analytical report — broken cause-effect chains, mixed registers, imprecise terminology."
+  - type: match-up
+    description: "Match strategic planning terms (SWOT-аналіз, місія, візія, стейкголдери) with their Ukrainian definitions and usage examples."
+  - type: fill-in
+    description: "Complete sentences in a case study with appropriate causal connectors and analytical vocabulary (внаслідок, з огляду на, відповідно до)."
+
 activities:
   types_required:
     - critical-analysis
@@ -112,6 +124,11 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення лексики"
+  - "Караман, 10 клас (2018): §53 — Офіційно-діловий стиль"
+  - "Ворон, 11 клас (2019): с. 207 — Науковий стиль та наукова доповідь"
 
 connects_to:
   previous: "professional-scenarios"

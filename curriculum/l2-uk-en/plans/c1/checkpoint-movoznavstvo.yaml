@@ -1,8 +1,8 @@
-module: c1-044
+module: c1-045
 level: C1
-sequence: 44
+sequence: 45
 slug: checkpoint-movoznavstvo
-version: '1.0'
+version: '1.1'
 title: "Контрольна точка: загальне мовознавство та норми"
 subtitle: "Checkpoint: General Linguistics and Norms"
 focus: checkpoint
@@ -103,6 +103,18 @@ vocabulary:
     - канонізація
     - мовленнєвий акт
 
+activity_hints:
+  - type: quiz
+    description: "Test knowledge of key linguistics concepts — language as a sign system, levels of language structure, Ukrainian language family classification."
+  - type: error-correction
+    description: "Fix orthographic and punctuation errors based on Правопис 2019 rules — варіантність, фемінітиви, compound words."
+  - type: critical-analysis
+    description: "Analyze a media text for violations of lexical and grammatical norms — identify surzhyk, calques, and unjustified borrowings."
+  - type: fill-in
+    description: "Complete sentences about the history of Ukrainian literary language with correct dates, names, and terminology."
+  - type: match-up
+    description: "Match linguistic branches (фонетика, морфологія, синтаксис, лексикологія) with their objects of study and key terminology."
+
 activities:
   types_required:
     - quiz
@@ -112,6 +124,11 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §1-5 — Загальне мовознавство, мовна система"
+  - "Авраменко, 11 клас (2019): Мовознавство як наука, с. 4-12"
+  - "Караман, 10 клас (2018): §1-3 — Мова як суспільне явище, мовна норма"
 
 connects_to:
   previous: "speaking-practice"

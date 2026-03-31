@@ -1,8 +1,8 @@
-module: b2-082
+module: b2-083
 level: B2
-sequence: 82
+sequence: 83
 slug: nauka-i-doslidzhennia
-version: '1.0'
+version: '1.1'
 title: "Наука і дослідження: Шлях до знань"
 subtitle: "Science and Research: The Path to Knowledge"
 focus: professional
@@ -115,6 +115,21 @@ activities:
     - error-correction
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: cloze
+    focus: "Заповнити пропуски у науковому тексті правильними термінами та кліше."
+  - type: fill-in
+    focus: "Доповнити академічні формулювання: 'У статті розглянуто...', 'Автор доводить...', 'Перспективним є...'."
+  - type: match-up
+    focus: "Зіставити наукову дисципліну з її специфічною термінологією."
+  - type: select
+    focus: "Обрати правильний регістр наукового стилю для конкретного контексту."
+
+references:
+  - "Авраменко О. М. Українська мова. 11 клас (2019) — Науковий стиль, тематичні тексти"
+  - "Глазова О. П. Українська мова. 11 клас (2019) — Тематична лексика для ЗНО"
+  - "State Standard 2024: B2 SS 3 — Thematic areas: наука, дослідження"
 
 connects_to:
   previous: "tekhnolohii-ta-shi"

@@ -2,7 +2,7 @@ module: c1-021
 level: C1
 sequence: 21
 slug: cv-resume-writing
-version: '1.0'
+version: '1.1'
 title: "Мистецтво самопрезентації: Складання резюме та супровідних листів"
 subtitle: "CV and Resume Writing"
 focus: professional
@@ -98,6 +98,18 @@ vocabulary:
     - багатозадачність
     - клієнтоорієнтованість
 
+activity_hints:
+  - type: critical-analysis
+    description: "Evaluate a Ukrainian CV and cover letter — assess professional vocabulary, action verbs usage, and compliance with business register norms."
+  - type: error-correction
+    description: "Fix канцелярит, passive voice overuse, and non-professional formulations in CV descriptions and cover letters."
+  - type: match-up
+    description: "Match professional competency descriptions with appropriate action verbs in perfective aspect."
+  - type: select
+    description: "Choose the most effective formulation for describing professional achievements with metrics and results."
+  - type: essay-response
+    description: "Write a cover letter (250+ words) for a humanitarian mission position — demonstrate professional Ukrainian with cultural sensitivity."
+
 activities:
   types_required:
     - critical-analysis
@@ -107,6 +119,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): с. 172-173 — Діалогічні жанри, листування"
+  - "Авраменко, 11 клас (2019): с. 195 — Ділове листування"
+  - "Заболотний, 11 клас (2019): с. 209 — Види офіційних листів"
 
 connects_to:
   previous: "c1-1-checkpoint"

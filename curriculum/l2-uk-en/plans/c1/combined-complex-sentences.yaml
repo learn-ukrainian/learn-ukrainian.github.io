@@ -1,8 +1,8 @@
-module: c1-049
+module: c1-050
 level: C1
-sequence: 49
+sequence: 50
 slug: combined-complex-sentences
-version: '1.0'
+version: '1.1'
 title: "Складні речення з різними видами зв'язку"
 subtitle: "Complex Sentences with Mixed Types of Connection"
 focus: grammar
@@ -103,6 +103,18 @@ vocabulary:
     - інтегрований
     - системність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Build a structural diagram of a multi-clause sentence from a philosophical text, identifying all types of connections (сурядний, підрядний, безсполучниковий)."
+  - type: error-correction
+    description: "Fix punctuation and structural errors in multi-clause sentences — missing commas at conjunction boundaries, dangling subordinate clauses."
+  - type: fill-in
+    description: "Complete multi-clause sentences with appropriate conjunctions at the boundaries between different connection types."
+  - type: match-up
+    description: "Match structural diagrams of complex sentences with their written forms and identify the type of connection in each block."
+  - type: select
+    description: "Identify the hierarchical structure of multi-clause sentences — which clauses are at the same level and which are subordinated."
+
 activities:
   types_required:
     - critical-analysis
@@ -112,6 +124,11 @@ activities:
     - match-up
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Заболотний, 9 клас (2017): §40 — Складне речення з різними видами зв'язку"
+  - "Авраменко, 9 клас (2017): §28 — Складні синтаксичні конструкції"
+  - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
 
 connects_to:
   previous: "asyndetic-semantics"

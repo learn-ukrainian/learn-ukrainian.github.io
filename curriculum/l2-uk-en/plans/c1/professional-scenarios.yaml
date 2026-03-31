@@ -1,8 +1,8 @@
-module: c1-040
+module: c1-041
 level: C1
-sequence: 40
+sequence: 41
 slug: professional-scenarios
-version: '1.0'
+version: '1.1'
 title: "Професійні сценарії: Мистецтво високої комунікації в бізнесі та медіа"
 subtitle: "Professional Scenarios"
 focus: professional
@@ -104,6 +104,18 @@ vocabulary:
     - елокуція
     - консенсус
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a political talk-show transcript — identify rhetorical manipulation techniques, logical fallacies, and evasion strategies."
+  - type: select
+    description: "Choose the most appropriate communication strategy for different professional crisis scenarios (press conference, investor meeting, media interview)."
+  - type: match-up
+    description: "Match negotiation strategies (Win-Win, жорсткий стиль, компроміс) with their linguistic markers and example phrases."
+  - type: error-correction
+    description: "Fix diplomatic protocol errors in a business letter — wrong register, inappropriate directness, missing courtesy formulas."
+  - type: essay-response
+    description: "Write a crisis communication press release (150-200 words) responding to a reputational challenge, using appropriate hedging and factual language."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - essay-response
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40-42 — Стилістичне забарвлення лексики, ділове мовлення"
+  - "Ворон, 11 клас (2019): с. 58-60 — Дискусія, полеміка, ділові перемовини"
+  - "Караман, 10 клас (2018): §53-55 — Офіційно-діловий стиль, мовний етикет"
 
 connects_to:
   previous: "tekstoznavstvo"

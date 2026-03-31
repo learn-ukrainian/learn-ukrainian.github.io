@@ -2,7 +2,7 @@ module: c1-003
 level: C1
 sequence: 3
 slug: research-verbs
-version: '1.0'
+version: '1.1'
 title: "Дієслова наукового дослідження та верифікації"
 subtitle: "Research and Verification Verbs"
 focus: vocabulary
@@ -96,6 +96,18 @@ vocabulary:
     - апробувати
     - деконструювати
 
+activity_hints:
+  - type: error-correction
+    description: "Fix incorrect verb government (керування) in academic sentences — e.g., опанувати (що?) vs володіти (чим?)."
+  - type: fill-in
+    description: "Complete methodology descriptions with appropriate research verbs (обґрунтовувати, з'ясовувати, систематизувати) in correct forms."
+  - type: match-up
+    description: "Match research process stages (ініціація, аналіз, верифікація) with their corresponding verb sets."
+  - type: select
+    description: "Choose the correct research verb and its grammatical form for describing specific academic activities."
+  - type: cloze
+    description: "Fill in missing research verbs in a methodology section of a Ukrainian scientific article."
+
 activities:
   types_required:
     - error-correction
@@ -105,6 +117,11 @@ activities:
     - unjumble
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Ворон, 11 клас (2019): с. 207 — Наукова доповідь"
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "Заболотний, 11 клас (2019): Мовленнєві жанри наукового стилю"
 
 connects_to:
   previous: "academic-style-markers"

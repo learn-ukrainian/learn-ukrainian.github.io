@@ -2,7 +2,7 @@ module: b2-039
 level: B2
 sequence: 39
 slug: politics-government-vocabulary
-version: '1.1'
+version: '1.2'
 title: "Політика та державне управління: Лексика"
 subtitle: "Politics and Government: Vocabulary"
 focus: vocabulary
@@ -131,6 +131,22 @@ activities:
     - select
   min_items_per_type: 8
   total_min_items: 32
+
+activity_hints:
+  - type: match-up
+    description: "Ukrainian political term matched to its definition (e.g., суверенітет↔повна незалежність держави)"
+  - type: fill-in
+    description: "Complete a political news text with correct terms (e.g., Верховна Рада ухвалила ___)"
+  - type: group-sort
+    description: "Sort vocabulary into суспільно-політична vs побутова лексика"
+  - type: error-correction
+    description: "Fix Russianisms in political language (e.g., 'вибори пройшли'→'вибори відбулися', 'рішаючий голос'→'вирішальний голос')"
+
+references:
+  - "Глазова, 11 клас (2019): §11-15 — Лексична норма, термінологія, професійна лексика"
+  - "Заболотний, 11 клас (2019): Стилістичні норми — офіційно-діловий стиль, термінологія"
+  - "Авраменко, 11 клас (2019): Лексикологія — терміни, професіоналізми, запозичення"
+  - "State Standard 2024: B2 SS 3 (Thematic areas: суспільство, право, економіка)"
 
 connects_to:
   previous: "checkpoint-register"

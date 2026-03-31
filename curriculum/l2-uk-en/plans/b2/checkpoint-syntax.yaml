@@ -2,7 +2,7 @@ module: b2-024
 level: B2
 sequence: 24
 slug: checkpoint-syntax
-version: '1.1'
+version: '1.2'
 title: "Підсумковий модуль: Синтаксис та пунктуація"
 subtitle: "Checkpoint: Syntax and Punctuation"
 focus: checkpoint
@@ -120,6 +120,32 @@ activities:
     - comparative-study
   min_items_per_type: 5
   total_min_items: 30
+
+activity_hints:
+  - type: cloze
+    focus: "Розставити всі розділові знаки в складному тексті з різними синтаксичними конструкціями"
+  - type: error-correction
+    focus: "Знайти та виправити всі синтаксичні й пунктуаційні помилки в абзаці"
+  - type: group-sort
+    focus: "Класифікувати речення за типами: просте ускладнене / складносурядне / складнопідрядне / безсполучникове / з різними видами зв'язку"
+  - type: essay-response
+    focus: "Написати формальний текст із використанням щонайменше 10 вивчених синтаксичних конструкцій"
+  - type: critical-analysis
+    focus: "Проаналізувати синтаксичну будову уривку з художнього тексту: типи речень, засоби емфази, когезія"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§1–40"
+    topic: "Повний курс синтаксису 9 класу (словосполучення, просте речення, складне речення, пряма мова)"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§1–32"
+    topic: "Синтаксис та пунктуація — комплексне повторення"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§23–25, с. 99–115"
+    topic: "Синтаксична норма: порядок слів, ускладнені та складні речення"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — comprehensive checkpoint"
 
 connects_to:
   previous: "direct-indirect-speech"

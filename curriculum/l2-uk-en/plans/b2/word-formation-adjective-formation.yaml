@@ -2,7 +2,7 @@ module: b2-052
 level: B2
 sequence: 52
 slug: word-formation-adjective-formation
-version: '1.0'
+version: '1.1'
 title: "Словотвір: Творення прикметників"
 subtitle: "Word Formation: Adjective Formation"
 focus: vocabulary
@@ -24,7 +24,7 @@ reading_situations:
 listening_situations:
   - media_type: "подкаст"
     setting: "Розповідь про характер людини або опис культурних особливостей різних народів."
-    focus_points: ["Виявлення прикметників на -лив- та -ист-.", "Сприйняття правильної вимови суфіксів -ськ-, -цьк-.", "Розуміння ступеня вираження ознаки."],
+    focus_points: ["Виявлення прикметників на -лив- та -ист-.", "Сприйняття правильної вимови суфіксів -ськ-, -цьк-.", "Розуміння ступеня вираження ознаки."]
     motivation: "Тренування розпізнавання відтінків значень прикметників у розмовному потоці."
 
 writing_tasks:
@@ -124,6 +124,22 @@ activities:
     - select
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: fill-in
+    description: "Form adjectives from nouns (e.g., місто→міський, козак→козацький)"
+  - type: error-correction
+    description: "Fix wrong suffix alternation in adjectives (e.g., -ський/-зький/-цький rules)"
+  - type: match-up
+    description: "Match noun (especially geographic names) to correctly formed adjective"
+  - type: group-sort
+    description: "Sort adjectives by suffix alternation pattern (-ськ-/-цьк-/-зьк-)"
+
+references:
+  - "Караман, 10 клас (2018): §55-60 — Словотвір"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.2 (word formation)"
 
 connects_to:
   previous: "word-formation-place-object-names"

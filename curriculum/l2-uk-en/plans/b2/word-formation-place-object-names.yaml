@@ -2,7 +2,7 @@ module: b2-051
 level: B2
 sequence: 51
 slug: word-formation-place-object-names
-version: '1.0'
+version: '1.1'
 title: "Словотвір: Назви місць та предметів"
 subtitle: "Word Formation: Place and Object Names"
 focus: vocabulary
@@ -24,7 +24,7 @@ reading_situations:
 listening_situations:
   - media_type: "аудіо"
     setting: "Інструкція з користування побутовою технікою або екскурсія на виробництво, де згадуються різні пристрої та цехи."
-    focus_points: ["Розпізнавання назв інструментів на -ач.", "Виокремлення назв цехів на -арня.", "Зрозуміння функції предмета за його назвою."],
+    focus_points: ["Розпізнавання назв інструментів на -ач.", "Виокремлення назв цехів на -арня.", "Зрозуміння функції предмета за його назвою."]
     motivation: "Розвиток здатності ідентифікувати об'єкти за їхніми морфологічними ознаками."
 
 writing_tasks:
@@ -124,6 +124,22 @@ activities:
     - unjumble
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: fill-in
+    description: "Form place/object names from verbs (e.g., пекти→пекарня, читати→читальня)"
+  - type: match-up
+    description: "Match verb/noun to the derived place name"
+  - type: group-sort
+    description: "Sort words by suffix: -ня / -ище / -арня / -ач / -ник"
+  - type: select
+    description: "Choose the correct derivation for a given meaning"
+
+references:
+  - "Караман, 10 клас (2018): §55-60 — Словотвір"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.2 (word formation)"
 
 connects_to:
   previous: "word-formation-abstract-nouns"

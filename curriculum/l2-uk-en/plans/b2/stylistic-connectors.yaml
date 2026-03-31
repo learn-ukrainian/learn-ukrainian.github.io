@@ -2,7 +2,7 @@ module: b2-021
 level: B2
 sequence: 21
 slug: stylistic-connectors
-version: '1.1'
+version: '1.2'
 title: "Стилістичні засоби зв'язку в тексті"
 subtitle: "Stylistic Connectors and Text Cohesion"
 focus: grammar
@@ -121,6 +121,27 @@ activities:
     - select
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: fill-in
+    focus: "Вставити правильний конектор у текст: однак / проте / натомість / тим не менш / ба більше"
+  - type: group-sort
+    focus: "Класифікувати конектори за функцією: додавання / протиставлення / причина / наслідок / висновок"
+  - type: match-up
+    focus: "Зіставити конектори-синоніми (отже = таким чином, проте = однак, зокрема = у тому числі)"
+  - type: cloze
+    focus: "Заповнити пропуски конекторами в аналітичному тексті для забезпечення логічної зв'язності"
+
+references:
+  - source: "Заболотний, 9 клас (2017)"
+    pages: "§25–40"
+    topic: "Сполучники та сполучні засоби у складних реченнях"
+  - source: "Авраменко, 9 клас (2017)"
+    pages: "§25–32"
+    topic: "Засоби зв'язку у складних реченнях"
+  - source: "State Standard 2024"
+    pages: "B2, SS 4.3"
+    topic: "Syntax — text cohesion and connectors"
 
 connects_to:
   previous: "emphasis-and-inversion"

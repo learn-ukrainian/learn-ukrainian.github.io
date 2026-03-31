@@ -1,7 +1,7 @@
 module: active-participles-past
 level: B2
 sequence: 8
-version: '1.2'
+version: '1.3'
 title: "Активні дієприкметники минулого часу"
 subtitle: "Past Active Participles: Formation, Usage, and Lexicalization"
 focus: grammar
@@ -126,6 +126,27 @@ activities:
     - highlight-morphemes
   min_items_per_type: 5
   total_min_items: 25
+
+activity_hints:
+  - type: fill-in
+    focus: "Утворити активний дієприкметник минулого часу з суфіксом -л- від основи інфінітива"
+  - type: error-correction
+    focus: "Виправити ненормативні форми на -вший/-ший (посинівший→посинілий, прочитавший→який прочитав)"
+  - type: select
+    focus: "Визначити, коли дієприкметник на -л- є нормативним, а коли потрібне підрядне речення"
+  - type: group-sort
+    focus: "Розмежувати прикметники дієслівного походження (сталий, стиглий) та активні дієприкметники (пожовклий, зблідлий)"
+
+references:
+  - source: "Караман, 10 клас (2018)"
+    pages: "§76, с. 189"
+    topic: "Дієприкметник: активні форми з суфіксом -л-"
+  - source: "Караман, 10 клас (2018)"
+    pages: "§77, с. 191–193"
+    topic: "Дієприкметниковий зворот та обмеження форм на -вш-"
+  - source: "Авраменко, 11 клас (2019)"
+    pages: "§25, с. 81–82"
+    topic: "Нормативність дієприкметникових форм"
 
 connects_to:
   previous: "active-participles-present"

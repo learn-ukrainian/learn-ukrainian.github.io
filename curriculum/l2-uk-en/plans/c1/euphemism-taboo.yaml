@@ -1,8 +1,8 @@
-module: c1-056
+module: c1-057
 level: C1
-sequence: 56
+sequence: 57
 slug: euphemism-taboo
-version: '1.0'
+version: '1.1'
 title: "Евфемізми та табу: мовна етика та стратегії ввічливості"
 subtitle: "Euphemisms and Taboos: Language Ethics and Politeness Strategies"
 focus: vocabulary
@@ -104,6 +104,18 @@ vocabulary:
     - нейтралізація
     - контекстуальність
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze a diplomatic communique and identify all euphemisms — explain what each replaces and evaluate whether it serves transparency or concealment."
+  - type: select
+    description: "Choose the appropriate euphemism for professional contexts — identify which euphemisms are constructive (ввічливість) and which are manipulative (вуалювання правди)."
+  - type: error-correction
+    description: "Fix register violations in a professional text — replace inappropriate direct language with euphemisms, and remove manipulative euphemisms that obscure facts."
+  - type: match-up
+    description: "Match euphemistic expressions with their direct equivalents and classify by sphere (дипломатія, медицина, військова справа, бізнес)."
+  - type: essay-response
+    description: "Write a professional rejection letter (100-150 words) using appropriate euphemisms, then analyze how the euphemisms soften the negative message."
+
 activities:
   types_required:
     - critical-analysis
@@ -113,6 +125,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики"
+  - "Глазова, 11 клас (2019): §40-42 — Стилістичне забарвлення лексики"
+  - "Авраменко, 11 клас (2019): Стилістична норма — евфемізми, синоніміка"
 
 connects_to:
   previous: "hyperbole-litotes"

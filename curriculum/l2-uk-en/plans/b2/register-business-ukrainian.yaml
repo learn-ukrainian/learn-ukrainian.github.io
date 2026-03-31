@@ -1,7 +1,7 @@
 module: register-business-ukrainian
 level: B2
 sequence: 30
-version: '1.1'
+version: '1.2'
 title: "Ділова українська мова"
 focus: professional
 pedagogy: PPP
@@ -116,6 +116,27 @@ activities:
     - fill-in
   min_items_per_type: 5
   total_min_items: 20
+
+activity_hints:
+  - type: fill-in
+    focus: "Доповнити діловий лист правильними формулами (звернення, прощання, обґрунтування)"
+  - type: error-correction
+    focus: "Знайти стилістичні помилки в діловому тексті (розмовна лексика, тавтологія, канцеляризми) та виправити"
+  - type: cloze
+    focus: "Заповнити пропуски в бізнес-листі стандартними кліше та формулами"
+  - type: select
+    focus: "Обрати правильну ділову формулу з-поміж варіантів для конкретної комунікативної ситуації"
+
+references:
+  - source: "Заболотний, 11 клас (2019)"
+    pages: "§48–49"
+    topic: "Офіційно-діловий стиль мовлення"
+  - source: "Глазова, 11 клас (2019)"
+    pages: "§1–10"
+    topic: "Культура ділового мовлення"
+  - source: "Державний стандарт 2024"
+    pages: "SS 4.4"
+    topic: "Стилістика (B2)"
 
 connects_to:
   previous: "register-formal-informal"

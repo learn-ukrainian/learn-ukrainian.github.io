@@ -2,7 +2,7 @@ module: b2-053
 level: B2
 sequence: 53
 slug: word-formation-adverbs-integration
-version: '1.0'
+version: '1.1'
 title: "Словотвір: Прислівники та їхня інтеграція"
 subtitle: "Word Formation: Adverbs and Integration"
 focus: vocabulary
@@ -24,7 +24,7 @@ reading_situations:
 listening_situations:
   - media_type: "інтерв'ю"
     setting: "Розмова з експертом про розвиток міської інфраструктури, де вживаються прислівники часу та міри."
-    focus_points: ["Виявлення прислівників на по-..-ому.", "Розрізнення 'вдень' (прислівник) та 'в день' (іменник).", "Сприйняття логічних наголосів."],
+    focus_points: ["Виявлення прислівників на по-..-ому.", "Розрізнення 'вдень' (прислівник) та 'в день' (іменник).", "Сприйняття логічних наголосів."]
     motivation: "Розвиток здатності сприймати точні часові та якісні характеристики на слух."
 
 writing_tasks:
@@ -124,6 +124,22 @@ activities:
     - select
   min_items_per_type: 10
   total_min_items: 40
+
+activity_hints:
+  - type: fill-in
+    description: "Form adverbs from adjectives (e.g., тихий→тихо, гарячий→гаряче)"
+  - type: select
+    description: "Choose the correct adverb form (правильна форма прислівника)"
+  - type: error-correction
+    description: "Fix adverb formation and spelling errors (разом/окремо/через дефіс)"
+  - type: group-sort
+    description: "Sort adverbs by formation type: суфіксальний / префіксально-суфіксальний / адвербіалізація"
+
+references:
+  - "Караман, 10 клас (2018): §55-60 — Словотвір"
+  - "Глазова, 11 клас (2019): §17-20 — Морфологічна стилістика"
+  - "Авраменко, 11 клас (2019): §15-20 — Морфологічна норма"
+  - "State Standard 2024: B2 SS 4.2 (word formation)"
 
 connects_to:
   previous: "word-formation-adjective-formation"

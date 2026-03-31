@@ -2,9 +2,9 @@ module: c1-006
 level: C1
 sequence: 6
 slug: hedging-modality
-version: '1.0'
-title: "Хеджування та модальність у науковому мовленні"
-subtitle: "Hedging and Modality in Scientific Speech"
+version: '1.2'
+title: "Хеджування, модальність та умовний спосіб у науковому мовленні"
+subtitle: "Hedging, Modality, and Conditional Constructions in Academic Discourse"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
@@ -13,6 +13,8 @@ objectives:
   - "Навчитися використовувати модальні дієслова, прислівники та вставні конструкції для пом'якшення категоричності."
   - "Розвинути вміння розрізняти епістемічну та деонтичну модальність у професійному дискурсі."
   - "Проаналізувати роль модальності в українській науковій етиці та культурі дискусії."
+  - "Опанувати умовний спосіб (якби...то б) для вираження контрфактичних та гіпотетичних тверджень в академічному дискурсі."
+  - "Розрізняти реальну умову (якщо...то) та ірреальну (якби...то б) у науковій аргументації та літературному аналізі."
 
 reading_situations:
   - source_type: "фрагмент наукової дискусії"
@@ -48,16 +50,19 @@ content_outline:
       - "хеджування"
       - "мітигація"
       - "наукова обережність"
-  - section: "Граматичні засоби вираження модальності"
+  - section: "Граматичні засоби модальності та умовний спосіб"
     words: 1000
     subsections:
       - "Модальні дієслова та їх роль у формулюванні гіпотез (могти, мусити, мати)"
       - "Безособові предикативи як засіб дистанціювання (видається, вбачається, вважається)"
-      - "Майбутній час та умовний спосіб у наукових прогнозах"
+      - "Умовний спосіб в академічному дискурсі: контрфактичні твердження (якби дослідження підтвердило...то б можна було стверджувати)"
+      - "Реальна умова (якщо...то) vs ірреальна (якби...то б): стилістична різниця в науковому тексті"
+      - "Гіпотетичні конструкції в літературному аналізі (якби автор обрав інший прийом...)"
     key_concepts:
       - "епістемічна модальність"
-      - "предикативність"
-      - "дистанціювання"
+      - "умовний спосіб"
+      - "контрфактичність"
+      - "ірреаліс"
   - section: "Лексичні маркери ступеня впевненості"
     words: 1000
     subsections:
@@ -96,6 +101,18 @@ vocabulary:
     - суперечливий
     - безсумнівно
 
+activity_hints:
+  - type: critical-analysis
+    description: "Analyze hedging strategies in a Ukrainian scientific debate about Proto-Slavic origins — identify epistemic modality markers."
+  - type: error-correction
+    description: "Transform overly categorical academic statements into appropriately hedged formulations using modal verbs and adverbs."
+  - type: select
+    description: "Choose the most appropriate hedging expression for different levels of certainty in scientific claims."
+  - type: essay-response
+    description: "Write a critical review (200-250 words) using hedging strategies — express doubt and alternative interpretations without direct criticism."
+  - type: fill-in
+    description: "Complete scientific sentences with appropriate modal markers of probability (імовірно, видається, можна припустити)."
+
 activities:
   types_required:
     - critical-analysis
@@ -105,6 +122,11 @@ activities:
     - translate
   min_items_per_type: 5
   total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §1-10 — Культура мовлення"
+  - "Авраменко, 11 клас (2019): Стилістична норма, с. 164"
+  - "Ворон, 11 клас (2019): с. 207 — Наукова доповідь"
 
 connects_to:
   previous: "logical-connectors"
