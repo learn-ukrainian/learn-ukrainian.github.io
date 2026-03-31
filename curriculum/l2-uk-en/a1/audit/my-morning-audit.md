@@ -1,7 +1,7 @@
 # Audit Report: M20 — my-morning.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:56
+**Generated:** 2026-03-31 17:26:32
 
 ## Configuration
 **Type:** A1-grammar
@@ -24,12 +24,13 @@
 | 4 | fill-in |  | 6 | 6 | ✅ |
 | 5 | match-up |  | 6 | 6 | ✅ |
 | 6 | group-sort |  | 12 | 6 | ✅ |
-| 7 | quiz |  | 6 | 6 | ✅ |
-| 8 | true-false |  | 7 | 6 | ✅ |
+| 7 | error-correction |  | 6 | 6 | ✅ |
+| 8 | quiz |  | 6 | 6 | ✅ |
+| 9 | true-false |  | 7 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 6 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
@@ -57,10 +58,10 @@
 - 8 violations (significant)
 
 ## Gates
-- **Words:** ✅ 1622/1200 (raw: 2107)
-- **Activities:** ✅ 8/0
+- **Words:** ✅ 1611/1200 (raw: 2096)
+- **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/1
 - **Audio:** ℹ️ No audio
@@ -69,7 +70,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 25.6% (target 15-25%, within tolerance (M20))
+- **Immersion:** ⚠️ 27.8% (target 15-25%, within tolerance (M20))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -78,7 +79,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 375 | Included in Core |
+| **Діало́ги (Dialogues)** | ✅ | 361 | Included in Core |
 | **Дієслова́ на -ся (Reflexive Verbs)** | ✅ | 272 | Included in Core |
 | **Мій ранок (My Morning)** | ✅ | 371 | Included in Core |
-| **Підсумок — Summary** | ✅ | 604 | Included in Core |
+| **Підсумок — Summary** | ✅ | 607 | Included in Core |

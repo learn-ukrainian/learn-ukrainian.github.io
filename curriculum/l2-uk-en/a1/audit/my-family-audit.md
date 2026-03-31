@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:43
+**Generated:** 2026-03-31 17:26:29
 
 ## Configuration
 **Type:** A1-vocab
@@ -34,9 +34,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INFO]** Dative case used at A1: 'Чолові' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
+- **[INFO]** Dative case used at A1: 'Переві' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
@@ -46,10 +50,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 4 violations (moderate)
+- 6 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 2275/1200 (raw: 2867)
+- **Words:** ✅ 2241/1200 (raw: 2833)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -61,7 +65,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 22.3% (target 8-25% (M06))
+- **Immersion:** ⚠️ 25.3% (target 8-25%, within tolerance (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -70,8 +74,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 563 | Included in Core |
+| **Діало́ги (Dialogues)** | ✅ | 540 | Included in Core |
 | **Сім'я (Family Vocabulary)** | ➖ | 261 | Excluded Type |
 | **У мене є (I Have)** | ✅ | 356 | Included in Core |
 | **Мій, моя, моє́ (Possessive Pronouns)** | ✅ | 255 | Included in Core |
-| **Підсумок — Summary** | ✅ | 840 | Included in Core |
+| **Підсумок — Summary** | ✅ | 829 | Included in Core |

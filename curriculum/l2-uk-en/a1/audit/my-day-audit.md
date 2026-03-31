@@ -1,7 +1,7 @@
 # Audit Report: M25 — my-day.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:26:00
+**Generated:** 2026-03-31 17:26:31
 
 ## Configuration
 **Type:** A1
@@ -24,10 +24,11 @@
 | 4 | true-false |  | 6 | 6 | ✅ |
 | 5 | quiz |  | 6 | 6 | ✅ |
 | 6 | group-sort |  | 12 | 6 | ✅ |
+| 7 | error-correction |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
+- Total activities: 7 (target: 0-4) ❌
+- Unique types: 6 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
@@ -43,10 +44,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1805/1200 (raw: 2150)
-- **Activities:** ✅ 6/0
+- **Words:** ✅ 1795/1200 (raw: 2140)
+- **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/1
 - **Audio:** ℹ️ No audio
@@ -55,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.9% (target 15-30% (M25))
+- **Immersion:** ⚠️ 31.9% (target 15-30%, within tolerance (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -64,7 +65,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 414 | Included in Core |
+| **Діало́ги (Dialogues)** | ✅ | 401 | Included in Core |
 | **Мій типовий день (My Typical Day)** | ✅ | 311 | Included in Core |
 | **Від ра́нку до ве́чора (From Morning to Evening)** | ✅ | 417 | Included in Core |
-| **Підсумок — Summary** | ✅ | 663 | Included in Core |
+| **Підсумок — Summary** | ✅ | 666 | Included in Core |

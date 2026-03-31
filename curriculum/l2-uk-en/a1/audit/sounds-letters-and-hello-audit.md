@@ -1,7 +1,7 @@
 # Audit Report: M01 — sounds-letters-and-hello.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 23:40:02
+**Generated:** 2026-03-31 17:26:28
 
 ## Configuration
 **Type:** A1
@@ -54,7 +54,7 @@
 - 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 2079/1200 (raw: 2584)
+- **Words:** ✅ 2074/1200 (raw: 2579)
 - **Activities:** ✅ 13/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -66,7 +66,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 19.9% (target 5-25% (M01))
+- **Immersion:** 🇺🇦 20.4% (target 5-25% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -78,5 +78,5 @@
 | **Зву́ки і лі́тери (Sounds and Letters)** | ✅ | 479 | Included in Core |
 | **Голосні звуки (Vowel Sounds)** | ✅ | 336 | Included in Core |
 | **Приголосні звуки (Consonant Sounds)** | ✅ | 312 | Included in Core |
-| **Приві́т! (Hello!)** | ✅ | 294 | Included in Core |
+| **Приві́т! (Hello!)** | ✅ | 289 | Included in Core |
 | **Підсумок (Summary)** | ✅ | 658 | Included in Core |

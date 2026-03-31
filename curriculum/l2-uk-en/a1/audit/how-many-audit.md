@@ -1,7 +1,7 @@
 # Audit Report: M11 — how-many.md
 **Level:** A1 | **Module:** M11 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:48
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-03-31 17:26:30
 
 ## Configuration
 **Type:** A1-vocab
@@ -26,11 +26,12 @@
 | 6 | group-sort |  | 18 | 6 | ✅ |
 | 7 | true-false |  | 8 | 6 | ✅ |
 | 8 | quiz |  | 6 | 6 | ✅ |
-| 9 | translate |  | 6 | 6 | ✅ |
+| 9 | error-correction |  | 6 | 6 | ✅ |
+| 10 | translate |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
+- Total activities: 10 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
@@ -51,19 +52,17 @@
   - FIX: Break into shorter sentences. First 5 words: 'нуль дев яносто сім три...'
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Мені двадцять ять років Йому...'
-- **[LEVEL_RESTRICTION]** Activity 'translate' not allowed at A1
-  - FIX: Use level-appropriate activities. 'translate' is introduced at A2+.
 
 ## Recommendation
 **📝 UPDATE** (severity 30/100)
 
-- 9 violations (significant)
+- 8 violations (significant)
 
 ## Gates
-- **Words:** ✅ 2095/1200 (raw: 2849)
-- **Activities:** ✅ 9/0
+- **Words:** ✅ 2080/1200 (raw: 2834)
+- **Activities:** ✅ 10/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
@@ -72,7 +71,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 31.4% (target 10-30%, within tolerance (M11))
+- **Immersion:** ❌ 33.7% HIGH (target 10-30% (M11))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -81,7 +80,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 349 | Included in Core |
-| **Числа 1-20 (Numbers 1-20)** | ✅ | 368 | Included in Core |
+| **Діало́ги (Dialogues)** | ✅ | 334 | Included in Core |
+| **Чи́сла 1-20 (Numbers 1-20)** | ✅ | 368 | Included in Core |
 | **Деся́тки і со́тні (Tens and Hundreds)** | ✅ | 339 | Included in Core |
 | **Підсумок — Summary** | ✅ | 1039 | Included in Core |

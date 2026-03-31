@@ -1,7 +1,7 @@
-# Audit Report: M07 — checkpoint-first-contact.md
-**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-03-31 17:32:50
+# Audit Report: M52 — my-story.md
+**Level:** A1 | **Module:** M52 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
+**Overall Status:** ✅ PASS
+**Generated:** 2026-03-31 17:26:33
 
 ## Configuration
 **Type:** A1
@@ -18,30 +18,31 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 6 | ✅ |
-| 2 | fill-in |  | 8 | 6 | ✅ |
-| 3 | match-up |  | 8 | 6 | ✅ |
-| 4 | quiz |  | 12 | 6 | ✅ |
-| 5 | match-up |  | 8 | 6 | ✅ |
-| 6 | group-sort |  | 12 | 6 | ✅ |
-| 7 | true-false |  | 8 | 6 | ✅ |
-| 8 | group-sort |  | 12 | 6 | ✅ |
+| 1 | fill-in |  | 6 | 6 | ✅ |
+| 2 | quiz |  | 6 | 6 | ✅ |
+| 3 | fill-in |  | 6 | 6 | ✅ |
+| 4 | match-up |  | 7 | 6 | ✅ |
+| 5 | group-sort |  | 18 | 6 | ✅ |
+| 6 | fill-in |  | 6 | 6 | ✅ |
+| 7 | true-false |  | 6 | 6 | ✅ |
+| 8 | error-correction |  | 6 | 6 | ✅ |
+| 9 | quiz |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
+- Total activities: 9 (target: 0-4) ❌
 - Unique types: 6 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INFO]** Dative case used at A1: 'пові' (taught formally at A2)
+- **[INFO]** Dative case used at A1: 'язкові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'Переві' (taught formally at A2)
+- **[INFO]** Dative case used at A1: 'тобі' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
+- **[INFO]** Dative case used at A1: 'тобі' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
@@ -49,19 +50,19 @@
 - 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1400/1200 (raw: 1440)
-- **Activities:** ✅ 8/0
+- **Words:** ✅ 1823/1200 (raw: 2398)
+- **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 3/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 37/1
+- **Vocab:** ✅ 58/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.8% (target 10-30% (M07))
+- **Immersion:** 🇺🇦 35.0% (target 20-35% (M52))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -69,8 +70,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 260 | Included in Core |
-| **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Грама́тика (Grammar Summary)** | ✅ | 286 | Included in Core |
-| **Діало́г (Capstone Dialogue)** | ✅ | 444 | Included in Core |
-| **Підсумок — Summary** | ✅ | 150 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Dialogues** | ✅ | 415 | Included in Core |
+| **Три часи́ ра́зом (Three Tenses Together)** | ✅ | 325 | Included in Core |
+| **Моя́ істо́рія (My Story)** | ✅ | 351 | Included in Core |
+| **Summary** | ✅ | 732 | Included in Core |

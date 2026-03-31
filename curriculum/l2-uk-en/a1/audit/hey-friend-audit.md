@@ -1,10 +1,10 @@
-# Audit Report: M03 — special-signs.md
-**Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
+# Audit Report: M42 — hey-friend.md
+**Level:** A1 | **Module:** M42 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:40
+**Generated:** 2026-03-31 17:26:29
 
 ## Configuration
-**Type:** A1
+**Type:** A1-grammar
 **Word Target:** 1200 words
 **Activities:** 0-4 required
 **Items per Activity:** ≥6 items
@@ -19,35 +19,35 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz |  | 8 | 6 | ✅ |
-| 2 | fill-in |  | 6 | 6 | ✅ |
-| 3 | match-up |  | 6 | 6 | ✅ |
-| 4 | quiz |  | 6 | 6 | ✅ |
-| 5 | group-sort |  | 18 | 6 | ✅ |
+| 2 | fill-in |  | 10 | 6 | ✅ |
+| 3 | quiz |  | 8 | 6 | ✅ |
+| 4 | group-sort |  | 18 | 6 | ✅ |
+| 5 | fill-in |  | 8 | 6 | ✅ |
 | 6 | match-up |  | 8 | 6 | ✅ |
-| 7 | true-false |  | 6 | 6 | ✅ |
-| 8 | group-sort |  | 12 | 6 | ✅ |
-| 9 | quiz |  | 6 | 6 | ✅ |
+| 7 | true-false |  | 8 | 6 | ✅ |
+| 8 | error-correction |  | 6 | 6 | ✅ |
+| 9 | quiz |  | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 9 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
+- Unique types: 6 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2401/1200 (raw: 3247)
+- **Words:** ✅ 1391/1200 (raw: 1833)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 72/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 16.9% (target 5-25% (M03))
+- **Immersion:** 🇺🇦 25.4% (target 20-35% (M42))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -56,8 +56,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **М'яки́й знак (The Soft Sign — Ь)** | ✅ | 349 | Included in Core |
-| **Апо́стро́ф (The Apostrophe)** | ✅ | 308 | Included in Core |
-| **Дзвінкі́ і глухі́ (Voiced and Voiceless)** | ✅ | 253 | Included in Core |
-| **Вимо́ва украї́нських зву́ків (Pronouncing Ukrainian Sounds)** | ✅ | 348 | Included in Core |
-| **Підсумок — Summary** | ✅ | 1143 | Included in Core |
+| **Діало́ги (Dialogues)** | ✅ | 312 | Included in Core |
+| **Кличний відмінок (The Vocative Case)** | ✅ | 327 | Included in Core |
+| **Закі́нчення кли́чного (Vocative Endings)** | ✅ | 356 | Included in Core |
+| **Підсумок — Summary** | ✅ | 396 | Included in Core |
