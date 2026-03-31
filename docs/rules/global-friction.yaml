@@ -180,3 +180,17 @@ frictions:
       penalize "у". Verified with Gemini (native speaker perspective) and GRAC corpus.
     source: "M01 review — reviewer flagged 'А у тебе' as CRITICAL (2026-03-29)"
     date_added: "2026-03-29"
+
+  - id: gf-015
+    status: active
+    type: pedagogical
+    description: >
+      NEVER abbreviate Ukrainian grammar terms. Write "недоконаний вид" in full,
+      never "НВ". Write "доконаний вид" in full, never "ДВ". Ukrainian textbooks
+      (Заболотний, Авраменко, Большакова) always use full terms — learners need
+      to read, recognize, and internalize the complete words. Abbreviations
+      short-circuit the learning process. This applies to ALL grammar terminology:
+      відмінок (never відм.), дієслово (never дієсл. in prose — only in
+      dictionary/vocabulary tables where standard abbreviations are expected).
+    source: "A2 M02 (aspect-concept) review — НВ/ДВ used 60+ times (2026-03-31)"
+    date_added: "2026-03-31"
