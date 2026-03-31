@@ -1,4 +1,58 @@
 vocabulary:
+- word: знак м'якшення
+  translation: soft sign (the letter Ь)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: м'які приголосні
+  translation: truly soft consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пом'якшені приголосні
+  translation: partially softened consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тверді приголосні
+  translation: hard consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: апо́стро́ф
+  translation: apostrophe
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дзвінкі приголосні
+  translation: voiced consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: глухі приголосні
+  translation: voiceless consonants
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: соно́рні
+  translation: sonorant consonants
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: го́лос
+  translation: voice (as in voiced sound)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: сім'я́
   translation: family
   expression: false
@@ -11,14 +65,8 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: п'ять
-  translation: five
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
 - word: га́рно
-  translation: nicely, beautifully
+  translation: beautifully, nicely
   expression: false
   pos: присл.
   gender: ''
@@ -59,68 +107,14 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: м'який знак
-  translation: soft sign (the letter Ь)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: апо́стро́ф
-  translation: apostrophe
+- word: лук
+  translation: onion
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: тверді приголосні
-  translation: hard consonants
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: м'якшені приголосні
-  translation: soft consonants
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: дзвінкі приголосні
-  translation: voiced consonants
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: глухі приголосні
-  translation: voiceless consonants
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ка́мінь
-  translation: stone
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: камі́н
-  translation: fireplace
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: тінь
-  translation: shadow
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лінь
-  translation: laziness
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кінь
-  translation: horse
+- word: люк
+  translation: hatch, manhole
   expression: false
   pos: ім.
   gender: ч.
@@ -138,7 +132,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: мить
-  translation: moment
+  translation: moment, instant
   expression: false
   pos: дієсл.
   gender: ''
@@ -149,35 +143,11 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: тин
-  translation: wattle fence
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: рись
-  translation: lynx
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: рис
-  translation: rice
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: мале́нький
   translation: small, little
   expression: false
   pos: прикм.
   gender: ''
-  verified: true
-- word: сті́льчик
-  translation: little chair
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: пі́сня
   translation: song
@@ -185,65 +155,17 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: м'яз
-  translation: muscle
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: м'яч
   translation: ball
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: під'ї́зд
-  translation: building entrance
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: в'юн
-  translation: loach (a fish)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: м'яку́ш
-  translation: soft part of bread, crumb
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бар'є́р
-  translation: barrier
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: з'їзд
-  translation: congress, assembly
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: п'я́тниця
-  translation: Friday
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: ім'я́
-  translation: first name
+  translation: name (first name)
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: об'є́кт
-  translation: object
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: здоро́в'я
   translation: health
@@ -251,44 +173,44 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: го́лос
-  translation: voice
+- word: пі́р'я
+  translation: feathers
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: моро́з
+  translation: frost
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: шум
-  translation: noise
+- word: гриб
+  translation: mushroom
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: суп
-  translation: soup
+- word: нака́з
+  translation: order, command
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: гу́ска
-  translation: goose
+- word: ле́гко
+  translation: easily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: жа́бка
+  translation: frog (diminutive)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ху́стка
-  translation: kerchief, headscarf
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ґа́ва
-  translation: jackdaw
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ка́ва
-  translation: coffee
+- word: ша́пка
+  translation: hat
   expression: false
   pos: ім.
   gender: ж.
@@ -305,26 +227,32 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: жа́бка
-  translation: little frog
+- word: ґа́ва
+  translation: crow
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ша́пка
-  translation: hat, winter cap
+- word: ка́ва
+  translation: coffee
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: моро́з
-  translation: frost
+- word: ка́зка
+  translation: fairy tale
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
+  verified: true
+- word: ка́ска
+  translation: helmet
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: ба́лка
-  translation: beam, girder
+  translation: beam, rafter
   expression: false
   pos: ім.
   gender: ж.
@@ -347,23 +275,29 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: фа́рба
-  translation: paint
+- word: зуб
+  translation: tooth
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: ка́зка
-  translation: fairy tale
+- word: суп
+  translation: soup
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: ка́ска
-  translation: helmet
+- word: жар
+  translation: heat, fever
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
+  verified: true
+- word: шар
+  translation: sphere, layer
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: бик
   translation: bull
@@ -377,8 +311,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: лис
-  translation: fox
+- word: лист
+  translation: leaf; letter
   expression: false
   pos: ім.
   gender: ч.
@@ -407,6 +341,18 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: ґра́ти
+  translation: iron bars, grating (noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гра́ти
+  translation: to play (verb)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: рука́
   translation: hand, arm
   expression: false
@@ -414,7 +360,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: робо́та
-  translation: work, job
+  translation: work
   expression: false
   pos: ім.
   gender: ч.
@@ -423,11 +369,5 @@ vocabulary:
   translation: morning
   expression: false
   pos: ім.
-  gender: ''
-  verified: true
-- word: на́голос
-  translation: stress, accent (on a syllable)
-  expression: false
-  pos: присл.
   gender: ''
   verified: true

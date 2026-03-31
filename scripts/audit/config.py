@@ -188,6 +188,9 @@ PARTICIPLE_EXCLUSIONS = {
     # Grammar terminology for aspect (these look like participles but are grammar terms)
     'недоконаний', 'недоконана', 'недоконане', 'недоконані',  # imperfective (aspect term)
     'доконаний', 'доконана', 'доконане', 'доконані',  # perfective (aspect term)
+    'завершений', 'завершена', 'завершене', 'завершені',  # completed (aspect descriptor, A2+)
+    'закритий', 'закрита', 'закрите', 'закриті',  # closed (syllable type — A2 phonology)
+    'відкритий', 'відкрита', 'відкрите', 'відкриті',  # open (syllable type — A2 phonology)
     # Emotional state adjectives (A2 Emotions vocabulary - NOT participles)
     # These describe emotional states and are taught as adjectives at A2
     'задоволений', 'задоволена', 'задоволене', 'задоволені',  # satisfied
@@ -617,10 +620,39 @@ LEVEL_CONFIG = {
         'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
-        'min_engagement': 4,
-        'immersion_graduated': True,  # Phase-based: A2.1 40-45%, A2.2 45-50%, A2.3 50-55%
+        'min_engagement': 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
+        'immersion_graduated': True,  # Phase-based: A2.1 45-65%, A2.2 55-75%, A2.3 70-90%
         'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'unjumble', 'fill-in'}
+        # Mar 2026: expanded from 3 types → 15 — was causing narrow activity generation
+        'priority_types': {
+            # Core drill types (carried from A1)
+            'quiz', 'fill-in', 'match-up', 'unjumble', 'error-correction',
+            # Categorization & identification
+            'group-sort', 'true-false', 'odd-one-out', 'select',
+            # New at A2 — text-level exercises
+            'cloze', 'mark-the-words', 'translate',
+            # Sequencing & pattern discovery
+            'order', 'observe',
+            # Reading comprehension (for immersion blocks)
+            'reading',
+        }
+    },
+    'A2-grammar': {
+        # A2 grammar modules (aspect, cases, verbs) — same targets, grammar-appropriate types
+        'target_words': 2000,
+        'min_activities': 0,
+        'min_items_per_activity': 8,
+        'min_types_unique': 0,
+        'min_vocab': 1,
+        'min_engagement': 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
+        'immersion_graduated': True,
+        'transliteration_allowed': False,
+        'priority_types': {
+            'quiz', 'fill-in', 'match-up', 'unjumble', 'error-correction',
+            'group-sort', 'true-false', 'odd-one-out', 'select',
+            'cloze', 'mark-the-words', 'translate',
+            'order', 'observe', 'reading',
+        }
     },
     'A1-checkpoint': {
         'target_words': 1000,  # Mar 2026: proportional to A1 base (1200)

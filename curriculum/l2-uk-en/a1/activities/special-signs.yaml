@@ -2,298 +2,317 @@ version: '1.0'
 module: special-signs
 level: a1
 inline:
-- id: quiz-soft-sign-apostrophe
-  type: quiz
-  instruction: Each word below has a blank where a sign might be missing. Does it
-    need a soft sign (Ь), an apostrophe ('), or neither?
+- id: odd-one-out
+  type: odd-one-out
+  instruction: 'Which letter CANNOT be followed by Ь (soft sign)? Only 8 consonants
+    take Ь: Д, Т, З, С, Ц, Л, Н, ДЗ. Find the odd one out.'
   items:
-  - question: ден_ (day)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
-    correct: 0
-  - question: сім_я (family)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
-    correct: 1
-  - question: риба (fish)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
+  - words:
+    - Д
+    - Т
+    - Ж
+    - Л
     correct: 2
-  - question: сіл_ (salt)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
-    correct: 0
-  - question: п_ять (five)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
+    explanation: Ж is a hushing consonant — Ь never follows Ж, Ш, Ч, or ДЖ. Д, Т,
+      and Л are all in the group of 8 that take Ь.
+  - words:
+    - Н
+    - Б
+    - С
+    - Ц
     correct: 1
-  - question: гарно (nicely)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
+    explanation: Б is a labial consonant — Ь never follows Б, П, В, М, or Ф. Н, С,
+      and Ц are all in the group of 8 that take Ь.
+  - words:
+    - Л
+    - М
+    - Т
+    - З
+    correct: 1
+    explanation: М is a labial consonant — Ь never follows it. Л, Т, and З are all
+      in the group of 8 that take Ь.
+  - words:
+    - Ц
+    - Х
+    - Д
+    - Н
+    correct: 1
+    explanation: Х is a back-tongue consonant — Ь never follows Х, К, Ґ, or Г. Ц,
+      Д, and Н are all in the group of 8 that take Ь.
+  - words:
+    - С
+    - Ш
+    - Л
+    - Н
+    correct: 1
+    explanation: Ш is a hushing consonant — Ь never follows it. С, Л, and Н are all
+      in the group of 8 that take Ь.
+  - words:
+    - З
+    - Т
+    - К
+    - Ц
     correct: 2
-  - question: учител_ (teacher)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
-    correct: 0
-  - question: м_ясо (meat)
-    options:
-    - Soft sign (Ь)
-    - Apostrophe (')
-    - Neither — no sign needed
-    correct: 1
-- id: fill-in-soft-sign-apostrophe
+    explanation: К is a back-tongue consonant — Ь never follows it. З, Т, and Ц are
+      all in the group of 8 that take Ь.
+- id: fill-in-soft-or-apostrophe
   type: fill-in
-  instruction: What goes in the blank? Choose Ь (soft sign), ' (apostrophe), or (nothing).
+  instruction: 'Fill in the blank: does this word need Ь (soft sign) or '' (apostrophe)?
+    Choose the correct sign.'
   items:
-  - sentence: сім_я
+  - sentence: сім___я (family)
     answer: ''''
     options:
     - Ь
     - ''''
-    - (nothing)
-  - sentence: ден_
+  - sentence: ден___ (day)
     answer: Ь
     options:
     - Ь
     - ''''
-    - (nothing)
-  - sentence: п_ять
+  - sentence: п___ять (five)
     answer: ''''
     options:
     - Ь
     - ''''
-    - (nothing)
-  - sentence: учител_
+  - sentence: учител___ (teacher)
     answer: Ь
     options:
     - Ь
     - ''''
-    - (nothing)
-  - sentence: дев_ять
+  - sentence: м___ясо (meat)
     answer: ''''
     options:
     - Ь
     - ''''
-    - (nothing)
-  - sentence: сіл_
-    answer: Ь
+  - sentence: дев___ять (nine)
+    answer: ''''
     options:
     - Ь
     - ''''
-    - (nothing)
-- id: match-voiced-voiceless
-  type: match-up
-  instruction: 'Match each voiced consonant to its voiceless partner. Tip: say both
-    aloud and place a finger on your throat — voiced = vibration, voiceless = only
-    air.'
-  pairs:
-  - left: Б (voiced)
-    right: П (voiceless)
-  - left: Д (voiced)
-    right: Т (voiceless)
-  - left: З (voiced)
-    right: С (voiceless)
-  - left: Ж (voiced)
-    right: Ш (voiceless)
-  - left: Г (voiced)
-    right: Х (voiceless)
-  - left: Ґ (voiced)
-    right: К (voiceless)
-- id: quiz-g-vs-g
-  type: quiz
-  instruction: Which letter is used in this word — Г (voiced fricative, like a throaty
-    'h') or Ґ (hard stop, like a 'g')?
-  items:
-  - question: ___арно (nicely)
-    options:
-    - Г
-    - Ґ
-    - Both Г and Ґ
-    correct: 0
-  - question: ___удзик (button)
-    options:
-    - Г
-    - Ґ
-    - Neither Г nor Ґ
-    correct: 1
-  - question: ___ора (mountain)
-    options:
-    - Г
-    - Ґ
-    - Both Г and Ґ
-    correct: 0
-  - question: ___анок (porch)
-    options:
-    - Г
-    - Ґ
-    - Neither Г nor Ґ
-    correct: 1
-  - question: ___олова (head)
-    options:
-    - Г
-    - Ґ
-    - Both Г and Ґ
-    correct: 0
-  - question: ___ава (jackdaw — the bird)
-    options:
-    - Г
-    - Ґ
-    - Neither Г nor Ґ
-    correct: 1
-workbook:
-- type: group-sort
-  instruction: 'Sort each word into the correct group: does it contain a soft sign
-    (Ь), an apostrophe (''), or neither?'
+- id: group-sort-soft-apostrophe
+  type: group-sort
+  instruction: 'Sort these 18 words into three groups: words that contain Ь (soft
+    sign), words that contain '' (apostrophe), and words that have neither.'
   groups:
-  - label: Soft sign (Ь)
+  - label: Has Ь (soft sign)
     items:
     - день
     - сіль
     - учитель
-    - батько
     - кінь
     - осінь
-  - label: Apostrophe (')
+    - батько
+  - label: Has ' (apostrophe)
     items:
     - сім'я
     - м'ясо
     - п'ять
     - дев'ять
     - комп'ютер
-    - м'який
+    - м'яч
   - label: Neither
     items:
-    - риба
     - гарно
-    - дуб
-    - суп
+    - риба
     - гора
     - кава
+    - дуб
+    - мороз
+- id: match-voiced-voiceless
+  type: match-up
+  instruction: Match each voiced consonant (left) to its voiceless partner (right).
+    There are 8 pairs in Ukrainian.
+  pairs:
+  - left: Б
+    right: П
+  - left: Д
+    right: Т
+  - left: Г
+    right: Х
+  - left: Ґ
+    right: К
+  - left: З
+    right: С
+  - left: Ж
+    right: Ш
+  - left: ДЗ
+    right: Ц
+  - left: ДЖ
+    right: Ч
+- id: true-false-voicing
+  type: true-false
+  instruction: True or false? Read each statement about Ukrainian voiced and voiceless
+    consonants.
+  items:
+  - statement: Ukrainian «дуб» (oak) sounds like [дуп] at the end — the final Б loses
+      its voice.
+    correct: false
+    explanation: FALSE — Ukrainian does NOT devoice final consonants. «дуб» is pronounced
+      [дуб], not [дуп]. This is a defining feature of Ukrainian pronunciation.
+  - statement: «Г» and «Х» are a voiced-voiceless pair.
+    correct: true
+    explanation: TRUE — Г is voiced (fricative), Х is its voiceless partner. Say Х,
+      then add voice — that is Г.
+  - statement: The consonants В, Л, М, Н, Й, Р (сонорні) each have a voiceless partner.
+    correct: false
+    explanation: FALSE — Сонорні consonants have no voiceless partners. They sit completely
+      outside the 8 voiced/voiceless pairs.
+  - statement: «Ж» is the voiced partner of «Ш».
+    correct: true
+    explanation: 'TRUE — Ж (voiced) and Ш (voiceless) are one of the 8 pairs. Compare:
+      жабка vs шапка.'
+  - statement: Ukrainian «мороз» (frost) sounds like [морос] at the word end.
+    correct: false
+    explanation: FALSE — Ukrainian keeps voiced consonants voiced at word end. «мороз»
+      is pronounced [мороз], not [морос]. Same rule as «дуб».
+  - statement: «Ґ» and «К» form a voiced-voiceless pair.
+    correct: true
+    explanation: TRUE — Ґ (voiced stop) and К (voiceless stop) are partners. Say К,
+      add voice → Ґ. Both Г and Ґ are native Ukrainian sounds.
+- id: quiz-g-vs-gx
+  type: quiz
+  instruction: Choose the correct first letter — Г or Ґ — for each Ukrainian word.
+  items:
+  - question: ___арно (beautifully, nicely)
+    options:
+    - Г — гарно
+    - Ґ — ґарно
+    correct: 0
+  - question: ___анок (porch)
+    options:
+    - Г — ганок
+    - Ґ — ґанок
+    correct: 1
+  - question: ___удзик (button)
+    options:
+    - Г — гудзик
+    - Ґ — ґудзик
+    correct: 1
+  - question: ___ора (mountain)
+    options:
+    - Г — гора
+    - Ґ — ґора
+    correct: 0
+  - question: ___олова (head)
+    options:
+    - Г — голова
+    - Ґ — ґолова
+    correct: 0
+  - question: ___ава (crow)
+    options:
+    - Г — гава
+    - Ґ — ґава
+    correct: 1
+workbook:
 - type: match-up
   instruction: Match each Ukrainian word to its English meaning.
   pairs:
+  - left: сім'я
+    right: family
   - left: день
     right: day
   - left: сіль
     right: salt
-  - left: сім'я
-    right: family
   - left: м'ясо
     right: meat
+  - left: п'ять
+    right: five
+  - left: гарно
+    right: beautifully / nicely
+  - left: риба
+    right: fish
   - left: батько
     right: father
   - left: учитель
     right: teacher
-  - left: гарно
-    right: nicely / beautifully
-  - left: риба
-    right: fish
+  - left: дев'ять
+    right: nine
 - type: true-false
-  instruction: Read each statement about Ukrainian sounds and signs. Is it TRUE or
-    FALSE?
+  instruction: True or false? Read each statement about the Ukrainian soft sign (Ь).
   items:
-  - statement: The soft sign (Ь) is a vowel — it adds a short sound after the consonant.
+  - statement: The soft sign (Ь) has its own pronunciation — it makes a short 'y'
+      sound.
     correct: false
-    explanation: Ь has NO sound of its own. It only softens the consonant before it.
-  - statement: The apostrophe (') appears after Б, П, В, М, Ф, Р when followed by
-      Я, Ю, Є, Ї.
-    correct: true
-    explanation: This is the exact rule from Захарійчук's Grade 1 textbook. The apostrophe
-      keeps the consonant hard.
-  - statement: In Ukrainian, the word дуб (oak) is pronounced [дуп] — the final Б
-      becomes voiceless.
+    explanation: FALSE — Ь has NO sound at all. Zero. Its only job is to soften the
+      consonant before it. It is silent.
+  - statement: You can write Ь after Ж in standard Ukrainian spelling.
     correct: false
-    explanation: Ukrainian keeps consonants fully voiced at the end of a word. дуб
-      is pronounced [дуб] — the Б stays voiced.
-  - statement: Г and Ґ are two different Ukrainian letters representing two different
-      sounds.
+    explanation: FALSE — Ж is a hushing consonant. Ь never follows Ж, Ш, Ч, or ДЖ
+      — ever.
+  - statement: The word «учитель» ends with a soft Л because of the Ь.
     correct: true
-    explanation: Г is a voiced fricative (гарно, гора); Ґ is a hard stop (ґудзик,
-      ґанок). They are completely distinct.
-  - statement: The word м'який has BOTH an apostrophe and a soft sign.
+    explanation: TRUE — Ь after Л at the end signals softness. The Ь has no sound,
+      but it marks that Л is pronounced soft.
+  - statement: The letter Й is inherently soft and never needs Ь.
     correct: true
-    explanation: The apostrophe keeps М hard before Я; the Ь at the end softens the
-      Й. Two different signs, two different jobs.
-  - statement: The letters И and І represent the same sound in Ukrainian.
+    explanation: TRUE — Й is always soft by nature. That is why «м'який» has an apostrophe
+      but NO soft sign — Й softens itself automatically.
+  - statement: Ь can appear after labial consonants Б, П, В, М, Ф in Ukrainian.
     correct: false
-    explanation: И and І are different letters with different sounds. Compare бик
-      (bull) vs бік (side), дим (smoke) vs дім (house).
-- type: group-sort
-  instruction: Sort these word pairs into two groups based on whether the underlined
-    consonant is voiced (vibration in your throat) or voiceless (only air).
-  groups:
-  - label: Voiced consonant
-    items:
-    - дуб (Б)
-    - злива (З)
-    - жабка (Ж)
-    - ґудзик (Ґ)
-    - голова (Г)
-    - день (Д)
-  - label: Voiceless consonant
-    items:
-    - суп (П)
-    - слива (С)
-    - шапка (Ш)
-    - кава (К)
-    - хустка (Х)
-    - тінь (Т)
+    explanation: FALSE — Labials never take Ь. They can only be partially softened
+      by following soft vowels (і, я, ю, є). Ь after a labial is always wrong.
+  - statement: The words «сіль» and «день» both contain Ь.
+    correct: true
+    explanation: TRUE — сіль has Ь after Л; день has Ь after Н. Both consonants (Л
+      and Н) are in the group of 8 that take Ь.
 - type: quiz
-  instruction: Choose the correctly spelled word.
+  instruction: И vs І — these two vowels change the meaning completely. Choose the
+    correct Ukrainian word for each English meaning.
   items:
-  - question: The word for 'family'
+  - question: Which word means 'bull'?
     options:
-    - сімя
-    - сім'я
-    - сімья
-    - сімьа
-    correct: 1
-  - question: The word for 'meat'
-    options:
-    - мясо
-    - мьясо
-    - м'ясо
-    - мьасо
-    correct: 2
-  - question: The word for 'five'
-    options:
-    - пять
-    - пьять
-    - п'ять
-    - пьать
-    correct: 2
-  - question: The word for 'day'
-    options:
-    - ден
-    - день
-    - ден'
-    - дєнь
-    correct: 1
-  - question: The word for 'nine'
-    options:
-    - девять
-    - дев'ять
-    - девьять
-    - дев'ать
-    correct: 1
-  - question: The word for 'teacher'
-    options:
-    - учитель
-    - учител'
-    - учитєль
-    - учитєл
+    - бик
+    - бік
+    - дим
     correct: 0
+  - question: Which word means 'house'?
+    options:
+    - дим
+    - дім
+    - риба
+    correct: 1
+  - question: Which word means 'cat'?
+    options:
+    - кит
+    - кіт
+    - гора
+    correct: 1
+  - question: Which word means 'whale'?
+    options:
+    - кіт
+    - кит
+    - дуб
+    correct: 1
+  - question: Which word means 'smoke'?
+    options:
+    - день
+    - дім
+    - дим
+    correct: 2
+  - question: Which word means 'side' (not 'bull')?
+    options:
+    - бик
+    - бік
+    - кіт
+    correct: 1
+- type: group-sort
+  instruction: Sort these 12 words by the voicing of their first consonant. Is the
+    first sound voiced (like Б, Д, Г, З, Ж, Ґ) or voiceless (like П, Т, Х, С, Ш, К)?
+  groups:
+  - label: Voiced first consonant
+    items:
+    - день
+    - зуб
+    - гора
+    - дуб
+    - ґудзик
+    - жар
+  - label: Voiceless first consonant
+    items:
+    - сіль
+    - п'ять
+    - кіт
+    - коса
+    - шар
+    - казка

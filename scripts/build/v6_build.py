@@ -302,7 +302,12 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
             return "15-30% Ukrainian"
         return "20-35% Ukrainian"
     elif base == "a2":
-        return "25-40% Ukrainian"
+        if module_num <= 20:
+            return "45-65% Ukrainian — nearly half in Ukrainian. English for grammar theory only."
+        elif module_num <= 50:
+            return "55-75% Ukrainian — Ukrainian dominates. English for abstract grammar only."
+        else:
+            return "70-90% Ukrainian — near-full immersion. English only in vocabulary tab."
     elif base == "b1":
         return "40-60% Ukrainian"
     else:
@@ -3275,7 +3280,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         probe_ok, _ = _dispatch(
             "Reply with exactly: OK",
             agent="gemini", phase="review", orch_dir=orch_dir,
-            timeout=120,
+            timeout=300,
         )
         probe_latency = time.monotonic() - probe_t0
         if probe_ok:

@@ -1,24 +1,104 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 54,
+  "grounded_items": 36,
+  "ungrounded": [
+    {
+      "word": "сім",
+      "exercise_type": "fill-in",
+      "context": "сім___я (family)"
+    },
+    {
+      "word": "ден",
+      "exercise_type": "fill-in",
+      "context": "ден___ (day)"
+    },
+    {
+      "word": "ять",
+      "exercise_type": "fill-in",
+      "context": "п___ять (five)"
+    },
+    {
+      "word": "учител",
+      "exercise_type": "fill-in",
+      "context": "учител___ (teacher)"
+    },
+    {
+      "word": "ясо",
+      "exercise_type": "fill-in",
+      "context": "м___ясо (meat)"
+    },
+    {
+      "word": "дев",
+      "exercise_type": "fill-in",
+      "context": "дев___ять (nine)"
+    },
+    {
+      "word": "арно",
+      "exercise_type": "quiz",
+      "context": "___арно (beautifully, nicely)"
+    },
+    {
+      "word": "ґарно",
+      "exercise_type": "quiz",
+      "context": "Ґ — ґарно"
+    },
+    {
+      "word": "анок",
+      "exercise_type": "quiz",
+      "context": "___анок (porch)"
+    },
+    {
+      "word": "ганок",
+      "exercise_type": "quiz",
+      "context": "Г — ганок"
+    },
+    {
+      "word": "удзик",
+      "exercise_type": "quiz",
+      "context": "___удзик (button)"
+    },
+    {
+      "word": "гудзик",
+      "exercise_type": "quiz",
+      "context": "Г — гудзик"
+    },
+    {
+      "word": "ора",
+      "exercise_type": "quiz",
+      "context": "___ора (mountain)"
+    },
+    {
+      "word": "ґора",
+      "exercise_type": "quiz",
+      "context": "Ґ — ґора"
+    },
+    {
+      "word": "олова",
+      "exercise_type": "quiz",
+      "context": "___олова (head)"
+    },
+    {
+      "word": "ґолова",
+      "exercise_type": "quiz",
+      "context": "Ґ — ґолова"
+    },
+    {
+      "word": "ава",
+      "exercise_type": "quiz",
+      "context": "___ава (crow)"
+    },
+    {
+      "word": "гава",
+      "exercise_type": "quiz",
+      "context": "Г — гава"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "батько",
-      "гарно",
-      "дев'ять",
-      "день",
-      "комп'ютер",
-      "м'який",
-      "м'ясо",
-      "п'ять",
-      "риба",
-      "сіль",
-      "сім'я",
-      "учитель"
+      "м'який"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

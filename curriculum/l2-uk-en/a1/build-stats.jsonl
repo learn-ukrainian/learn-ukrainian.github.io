@@ -144,3 +144,9 @@
 {"slug": "checkpoint-food-shopping", "error_type": "PASS", "attempt": 3, "model": "gemini", "success": true, "timestamp": "2026-03-30T23:27:44.976994+00:00"}
 {"slug": "reading-ukrainian", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T11:00:29.419655+00:00"}
 {"slug": "reading-ukrainian", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-03-31T11:01:51.801616+00:00"}
+{"slug": "special-signs", "error_type": "ACTIVITY_SEQUENCE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T12:38:53.339822+00:00"}
+{"slug": "special-signs", "error_type": "ACTIVITY_SEQUENCE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T12:40:36.060096+00:00"}
+{"slug": "special-signs", "error_type": "STRUCTURE, ACTIVITY_SEQUENCE", "attempt": 3, "model": "gemini", "success": false, "timestamp": "2026-03-31T12:42:14.835448+00:00"}
+{"slug": "special-signs", "error_type": "ACTIVITY_SEQUENCE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T13:56:33.485926+00:00"}
+{"slug": "special-signs", "error_type": "ACTIVITY_SEQUENCE", "attempt": 2, "model": "claude-tools", "success": false, "timestamp": "2026-03-31T13:58:45.253704+00:00"}
+{"slug": "special-signs", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-03-31T14:12:33.875387+00:00"}

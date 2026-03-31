@@ -1,6 +1,6 @@
 {
   "exists": true,
-  "words": 2495,
+  "words": 2879,
   "quality": "solid",
   "score": 8,
   "score_raw": 13,
@@ -16,12 +16,12 @@
     "vocabulary": {
       "score": 1,
       "max": 2,
-      "detail": "18 excerpts (need 20+)"
+      "detail": "19 excerpts (need 20+)"
     },
     "cultural_hooks": {
-      "score": 0,
+      "score": 1,
       "max": 2,
-      "detail": "no cultural references found"
+      "detail": "2 cultural reference(s)"
     },
     "learner_errors": {
       "score": 2,
@@ -34,19 +34,19 @@
       "detail": "4 authors"
     },
     "pedagogy_notes": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "2 pedagogy references"
+      "detail": "0 pedagogy references"
     },
     "source_verification": {
       "score": 2,
       "max": 2,
-      "detail": "18 cited sources"
+      "detail": "19 cited sources"
     },
     "claim_grounding": {
       "score": 2,
       "max": 2,
-      "detail": "959 Ukrainian terms"
+      "detail": "1264 Ukrainian terms"
     },
     "discovery_integration": {
       "score": 1,
@@ -56,12 +56,13 @@
     "specificity": {
       "score": 1,
       "max": 2,
-      "detail": "2495 words (need 3000+)"
+      "detail": "2879 words (need 3000+)"
     }
   },
   "gaps": [
-    "vocabulary: 18 excerpts (need 20+)",
-    "cultural_hooks: no cultural references found",
-    "specificity: 2495 words (need 3000+)"
+    "vocabulary: 19 excerpts (need 20+)",
+    "cultural_hooks: 2 cultural reference(s)",
+    "pedagogy_notes: 0 pedagogy references",
+    "specificity: 2879 words (need 3000+)"
   ]
 }

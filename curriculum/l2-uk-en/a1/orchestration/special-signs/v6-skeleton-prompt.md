@@ -18,7 +18,7 @@ module: a1-003
 level: A1
 sequence: 3
 slug: special-signs
-version: '1.1'
+version: '1.3'
 title: Special Signs
 subtitle: Ь, apostrophe, and the voice of consonants
 focus: phonetics
@@ -34,13 +34,14 @@ content_outline:
 - section: М'який знак (The Soft Sign — Ь)
   words: 250
   points:
-  - 'Ь has no sound. Its job: soften the consonant before it. Ukrainian distinguishes
-    hard (тверді) and soft (м''якшені) consonants. Захарійчук Grade 1 p.15 notation:
-    hard = [–], soft = [=]. Common words: день (day), сіль (salt), кінь (horse), мідь
-    (copper). The Ь appears only after consonants, never at word start.'
-  - 'Where Ь commonly appears: -нь: день, кінь, осінь -ль: сіль, біль (pain) -ть:
-    мить, путь -зь: мазь (ointment) Practice: учитель (teacher), батько (father),
-    маленький (small).'
+  - 'Ь has no sound. Its job: soften the consonant before it. Three-way distinction
+    (Авраменко Grade 5 p.75, Большакова Grade 2 p.46): м''які приголосні (truly soft,
+    9 pairs: Д/Д'', Т/Т'', З/З'', С/С'', Ц/Ц'', Л/Л'', Н/Н'', Р/Р'', ДЗ/ДЗ'' + Й),
+    пом''якшені (partially softened: губні, шиплячі, задньоязикові — Ь never after
+    these), тверді (hard). Захарійчук Grade 1 p.15 notation: hard = [–], soft = [=].'
+  - 'Літвінова Grade 5 mnemonic: «ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи» — exactly
+    the 9 consonants Ь can soften. Common patterns: -нь (день, кінь, осінь),
+    -ль (сіль, біль), -ть (мить), -зь (мазь). Practice: учитель, батько, маленький.'
 - section: Апостроф (The Apostrophe)
   words: 250
   points:
@@ -49,15 +50,18 @@ content_outline:
   - 'Without apostrophe: consonant softens (пісня — Н is soft). With apostrophe: consonant
     stays hard + vowel = two sounds. сім''я [сім-йа] (family), м''ясо [м-йасо] (meat),
     п''ять [п-йать] (five), комп''ютер [комп-йутер] (computer). Reading practice:
-    п''ять, дев''ять, м''який, м''яч, об''єкт.'
+    п''ять, дев''ять, м''який, м''яч, об''єкт. IMPORTANT: Only use apostrophe words
+    where apostrophe follows the labial rule (б,п,в,м,ф,р + я,ю,є,ї). Do NOT include
+    під''їзд or з''їзд — these follow the prefix rule (під-/з- + їзд) which is A2+.
+    Also: тварь is a RUSSIAN form — do NOT use it. Ukrainian has тварина (animal).'
 - section: Дзвінкі і глухі (Voiced and Voiceless)
   words: 250
   points:
   - 'Consonants come in voiced-voiceless pairs. Hand on throat test: vibration = voiced.
     Pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.'
   - 'Ukrainian pronounces voiced consonants clearly at word end — дуб is [дуб], мороз is
-    [мороз]. Every consonant keeps its true sound in every position. This is a defining
-    feature of Ukrainian phonetics.'
+    [мороз]. Voiced consonants переважно (mostly) keep their sound. Exception: легко
+    [лехко]. This is a defining feature of Ukrainian phonetics.'
   - 'Minimal pairs for ear training: балка (beam) vs палка (stick), коза (goat) vs
     коса (braid).'
 - section: Вимова українських звуків (Pronouncing Ukrainian Sounds)
@@ -66,9 +70,12 @@ content_outline:
   - 'И [и] — a unique Ukrainian vowel. It is NOT the same as І [і]. Minimal pairs to hear
     the difference: бик (bull) vs бік (side), дим (smoke) vs дім (house), лист (letter/leaf)
     vs ліс (forest), кит (whale) vs кіт (cat). Practice with Anna Ohoiko''s И video.'
-  - 'Г [ɦ] vs Ґ [g] — two different letters, two different sounds. Г is a soft voiced sound
-    (гарно, гора, голова). Ґ is a hard sound (ґанок, ґудзик). Ґ is uniquely
-    Ukrainian — an important part of Ukrainian phonetic identity.'
+  - 'Г [ɦ] vs Ґ [g] — two different letters, two different sounds. Г is a voiced
+    fricative (air flows through narrowed throat): гарно, гора, голова. Its voiceless
+    partner is Х — say Х then add voice to get Г. Ґ is a voiced stop (full throat
+    closure then release): ґанок, ґудзик. Its voiceless partner is К. Ґ is uniquely
+    Ukrainian — an important part of Ukrainian phonetic identity. DO NOT call Г "soft"
+    — in Ukrainian phonetics "м''який" means palatalized, which Г is not.'
   - 'Р [р] — the Ukrainian rolled/trilled Р. Practice with Anna Ohoiko''s video: рука, робота,
     ранок, риба. An imperfect Р is always understood — focus on getting comfortable, not perfect.'
 - section: Підсумок — Summary
@@ -91,30 +98,51 @@ vocabulary_hints:
   - учитель (teacher) — soft sign at end
   - дев'ять (nine) — apostrophe
   - комп'ютер (computer) — apostrophe in cognate
-  - м'який (soft) — apostrophe + soft sign
+  - м'який (soft) — apostrophe only (NO soft sign! Й is inherently soft)
 activity_hints:
-- type: quiz
-  focus: Does this word have a soft sign, apostrophe, or neither?
-  items: 8
-- type: match-up
-  focus: 'Match voiced-voiceless pairs: Б↔П, Д↔Т, etc.'
-  items: 8
+- type: odd-one-out
+  section: "М'який знак"
+  focus: 'Which consonant does NOT have a soft pair? (Ь can''t soften it)'
+  items: 6
 - type: fill-in
+  section: "Апостроф"
   focus: 'Add the missing Ь or apostrophe: сім_я, ден_, п_ять'
   items: 6
+- type: error-correction
+  section: "Апостроф"
+  focus: 'Find missing apostrophes in words like м''ясо, сім''я, п''ять'
+  items: 6
+- type: group-sort
+  section: "Апостроф"
+  focus: 'Sort words into: has Ь / has apostrophe / neither'
+  items: 18
+- type: match-up
+  section: "Дзвінкі і глухі"
+  focus: 'Match voiced-voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ґ↔К, etc.'
+  items: 8
+- type: true-false
+  section: "Дзвінкі і глухі"
+  focus: 'Statements about voiced/voiceless rules and non-devoicing'
+  items: 6
 - type: quiz
-  focus: Choose the correct pronunciation for Г vs Ґ words
-  items: 4
+  section: "Вимова українських звуків"
+  focus: 'Г vs Ґ: choose the correct letter for each word'
+  items: 6
 connects_to:
 - a1-004 (Stress and Melody)
 prerequisites:
 - a1-002 (Reading Ukrainian)
 grammar:
-- Soft sign (Ь) — softens preceding consonant, no sound
-- Apostrophe — after б,п,в,м,ф,р before я,ю,є,ї (Захарійчук rule)
-- Voiced/voiceless consonant pairs (8 pairs)
-- Ukrainian non-devoicing at word end (vs Russian)
-- Г [ɦ] vs Ґ [g] distinction
+- 'Soft sign (Ь) — softens preceding consonant, no sound. Only after 9 consonants:
+  Д, Т, З, С, Ц, Л, Н, Р, ДЗ (mnemonic: ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи)'
+- 'Three-way distinction: м''які (truly soft, 9+Й), пом''якшені (partially softened
+  губні/шиплячі/задньоязикові), тверді (hard)'
+- 'Apostrophe — after б,п,в,м,ф,р before я,ю,є,ї (Захарійчук rule). NO prefix
+  apostrophe examples (під''їзд, з''їзд) at A1.'
+- 'Voiced/voiceless pairs (8): Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.
+  Сонорні (В,Л,М,Н,Й,Р) are NEITHER voiced nor voiceless.'
+- 'Non-devoicing: voiced consonants переважно keep sound at word end. Exception: легко [лехко].'
+- 'Г [ɦ] voiced fricative (NOT "soft") vs Ґ [g] voiced stop'
 register: розмовний
 references:
 - title: Захарійчук Grade 1 (NUS 2025), p.97
@@ -141,45 +169,80 @@ Skim these for content ideas. Reference specific examples you plan to use.
 
 ## М'який знак (The Soft Sign — Ь)
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 104
+> **Source:** bolshakova, Grade 2
+> **Section:** Сторінка 43
 > **Score:** 0.50
 >
-> 102
-> ь
->  [  = •  –  ]
-> Я не шість, а-ле ра-ді-ю:
-> Зву-ки зм’як-шу-вать у-мі-ю. 
-> От, на-прик-лад: тінь і лінь,
-> Пі-вень, за-єць, сіль і кінь… 
-> Ви без ме-не сло-во «ка-мінь»
-> Про-чи-та-ли б як «ка-мін»!
->                                                                Ганна Чубач
-> т * л ь п
-> л ь о н
-> а н и
-> л * л ь к а
-> нь
-> кі
-> ті
-> лі 
-> ль
-> сі
-> мі
-> ро 
-> нь
-> де
-> пе
-> о-ле 
-> тин    [–• – ]	    син   [–• – ]	
-> рис    [–• – ]
-> тінь   [=• = ]	    синь [–• =]	
-> рись  [–• = ]
-> Бачу ь (м’який знак).
+> 43
+> Чи відповідають підписи малюнкам? Чому? Як потрібно було 
+> записати слова? Як ми позначаємо м’які приголосні звуки 
+> на письмі?
+>           
+>            
+>             
+> лук
+> рис
+> лис
+> На письмі м’які приголосні позначають 
+> буквами і, я, ю, є та знаком м’якшення ь. 
+> Запиши склади з м’яким приголосним звуком. Познач ці 
+> звуки знаком 
+> .
+> Ду, дю, да, дя, ди, ді, дє, де, до, дь, тя, сі, зу, дзю, ря, 
+> сь, нє, ці, це.
+>  
+> Запиши слова у два стовпчики. Познач м’які приголосні 
+> знаком 
+> .
+> У слові є букви 
+> і, я, ю, є, ь.
+> У слові немає букв 
+> і, я, ю, є, ь.
+> Лис, сіль, лелека, ніс, носик, калюжа, малюки, дім, дятел, 
+> дерево, синє, ряска, торт, тісто, листя, цирк, синиця, буря.
+>  
+> Випиши з вірша «Хоробрі хробаки» п’ять слів із м’якими 
+> приголосними звуками. Поясни свій вибір.
+> 3 
+> 4 
+> 5 
+> 
+> 
+> 6
+
+> **Source:** bolshakova, Grade 2
+> **Section:** Сторінка 46
+> **Score:** 0.33
+>
+> 46
+> Спиши слова, у яких є пом’якшені приголосні. Познач пом’як-
+> шені приголосні знаком 
+> .
+> Білка, місто, липа, пінгвін, фігура, жінка, чітко, словник, 
+> шість, дівчинка, гірка, хід, хлопчик, свято, пюре, буква, цвях.
+>  
+> Поділи слова для переносу. Познач м’які і пом’якшені при-
+> голосні знаком 
+> .
+> Зразок. Лі-то, … .
+> Зразок. Дитя-чий, ди-тячий … .
+> Трава, площа, клени, 
+> ключі, квіти, стілець.
+> Гарячий, лисячий, золотий, 
+> металевий, паперовий.
+>  
+> Тема і головна думка. Головні герої. Досліджуємо медіа
+> ДРАКОН
+> Зачин
+> Одного разу Оленка прийшла зі школи, а на кухні пив 
+> чай дракон. Дівчинка аж чхнула від несподіванки. 
+> А потім вони гралися в хованки і в розбійників.
+> ГоЛовна частина
+> Уранці Оленка пішла до школи.
 
 > **Source:** bolshakova, Grade 2
 > **Section:** Сторінка 48
-> **Score:** 0.33
+> **Score:** 0.25
 >
 > 48
 > ПЕрЕнос сЛІв З ь І ьо
@@ -202,47 +265,6 @@ Skim these for content ideas. Reference specific examples you plan to use.
 > Поділи слова для переносу.
 > Зразок. Кіль-це, … .
 > Зразок.
-
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 30
-> **Score:** 0.25
->
-> 30
-> 104.
-> ТВЕРДІ ТА М’ЯКІ ПРИГОЛОСНІ ЗВУКИ. 
-> ПОЗНАЧЕННЯ М’ЯКОСТІ ПРИГОЛОСНИХ БУКВАМИ
-> 105.
-> Дослідиѳ, яка роль знака м’якшення в слові.
-> Крок 1. Розглянь малюнки. 
-> Крок 2. Зроби висновок, чому змінилося 
-> значення слова.
-> Буква «знак м’якшення» (ь) разом із попередньою 
-> буквою позначає на письмі м’який приголосний звук.
-> рись
-> рис
-> 106.
-> Дослідиѳ, які букви позначають м’якість попереднього 
-> приголосного звука.
-> [л] — [л´]	 	
-> 	
-> 	
-> [н] — [н´]
-> лук — люк	
->  	
-> 	
-> ворона — вороненя
-> Пилип — Поліна	
-> 	
-> сини — синє
-> 2. Скільки дзвонів на ній було?
-> 3. Про що сповіщав дзвін?
-> 4. Що зробили ординці?
-> 5. Чому їм не вдалося зруйнувати дзвіницю?
-> 6. Що з’явилося на її місці?
-> 7. Які звуки чути біля води?
-> 3.	 Спиши два речення (на вибір).
-> 4.	 Знайди слова, у яких букв більше, ніж звуків. Запиши їх, поді-
-> ляючи для переносу.
 
 ## Апостроф (The Apostrophe)
 
@@ -366,7 +388,7 @@ Skim these for content ideas. Reference specific examples you plan to use.
 
 > **Source:** bolshakova, Grade 2
 > **Section:** Сторінка 62
-> **Score:** 0.33
+> **Score:** 0.50
 >
 > 62
 > ДЗвІнкІ та ГЛУХІ ПриГоЛоснІ ЗвУки
@@ -437,7 +459,7 @@ Skim these for content ideas. Reference specific examples you plan to use.
 
 > **Source:** zaharijchuk, Grade 1
 > **Section:** Сторінка 68
-> **Score:** 0.33
+> **Score:** 0.25
 >
 > 66
 > дз
@@ -462,6 +484,37 @@ Skim these for content ideas. Reference specific examples you plan to use.
 > Мала, хрустка бурулька
 > Додолу впала з даху.
 >                                        Лідія Компанієць
+> Pidruchnyk.com.ua
+
+> **Source:** zaharijchuk, Grade 1
+> **Section:** Сторінка 69
+> **Score:** 0.33
+>
+> 67
+> Прочитай виділені слова в тексті. Які звуки ти чуєш на 
+> початку слів? Які букви позначають звуки [дз], [дз′]? 
+> Прочитай усі слова, у яких є буквосполучення дз. 
+> Джмелик запропонував дружбу метелику, дзвіночку 
+> чи бджілці? Який джмелик: увічливий, мовчазний 
+> чи насуплений?
+> Скільки разів буквосполучення дз ужито в тексті?  
+> У якому слові — назві намальованого
+> предмета букв більше, ніж звуків? 
+> Дзінь-дзінь, дзень-дзень! — це дзві-
+> ночок запрошує до себе джмелика.
+> —	Який барвистий луг! Тут так багато 
+> квітів! — радів джмелик.
+> Бачить джмелик: ліловий дзвіночок 
+> хитає голівкою та кличе його.
+> —	Я буду з вами дружити, — 
+> сказав він дзвіночку.
+> —	Дзінь-дзінь, дзень-дзень, 
+> і я радий із тобою дружити, 
+> джмелику, 
+> — 
+> задзеленчав 
+> дзвіночок (за Оксаною Іва-
+> ненко).
 > Pidruchnyk.com.ua
 
 ## Вимова українських звуків (Pronouncing Ukrainian Sounds)
@@ -514,123 +567,7 @@ Skim these for content ideas. Reference specific examples you plan to use.
 > дим
 > сік
 > дім
-> рік
-> о
-> п
-> к
-> в
-> т
-> н
-> л
-
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 1
-> **Score:** 0.33
->
-> УКРАЇНСЬКА МОВА
-> БУКВАР 
-> ЧАСТИНА 2
-> 1 
-> КЛАС
-> ї
-> І. О. БОЛЬШАКОВА
-> М. С. ПРИСТІНСЬКА
-> о
-> о
-> м
-> н р
-> л
-> е
-> е
-> е
-> е
-> А
-> И
-> Л
-> М
-> Є
-> О
-> І
-> Ю
-> У
-> Е
-> Я
-> ам
-> ам
-> ам
-> ум
-> ум
-> ум
-> ом
-> ом
-> ом
-> кит
-> ліс
-> лис
-> кіт
-> дим
-> сік
-> дім
-> рік
-> о
-> п
-> к
-> в
-> т
-> н
-> л
-
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 41
-> **Score:** 0.25
->
-> 41
->  
-> рис – ріс 
-> дим – дім 
-> у лісі 
-> на дубі
->  
-> лис – ліс 
-> сани  – ніс 
-> у воді 
-> на сосні
-> ТВЕРДІ І М’ЯКІ ПРИГОЛОСНІ ЗВУКИ
-> Назви предмети . Як вимовляється перший звук у словах? 
-> Л И С
-> Л І С
->  
-> Театралізуємо 
-> Прочитай або послухай, що розповідають діти про свою 
-> іграшку. Де чия іграшка? 
-> 1
-> 1
-> 2
-> І і
->  би – бі 
-> ви – ві 
-> ни – ні 
-> ри – рі
->  ли – лі 
-> ти – ті 
-> ки – кі 
-> ми – мі
-> Інна
-> Ігор
-> Іванна
-> Вона пухнаста, 
-> мила. Я з нею 
-> сплю.
-> Вона схожа на мене. 
-> У неї є ніс, очі, руки. 
-> І гарні сукні.
-> Я можу 
-> будувати дім.
-> Іван
-> У ній я можу 
-> возити кубики.
-
-## Підсумо
+> 
 
 ... (truncated for context window)
 </knowledge_packet>
@@ -668,7 +605,7 @@ Grand total: ~1200 words
 1. **Every paragraph has ONE clear purpose.** If you can't describe it in one sentence, split it.
 2. **Word budgets must sum to 1200+.** Aim for ~10% overshoot (1320 words) — writers tend to undershoot.
 3. **Section budgets must match the plan's `content_outline` word allocations** (±10%).
-4. **Spread exercises evenly.** Place one after each key teaching point, matching the plan's `activity_hints`.
+4. **Place exercises in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place that exercise AFTER the teaching content of that section, never before. If no `section:` is specified, place the exercise after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section.**
 5. **Name specific Ukrainian examples** you plan to use in each paragraph. This prevents vague skeletons that produce vague content.
 6. **Dialogues count as paragraphs.** Budget 80-120 words per multi-turn dialogue.
 7. **No meta-commentary.** Output only the `<skeleton>` block, nothing else.
