@@ -519,9 +519,11 @@ def _format_dialogues(content: str) -> str:
             return f'<div class="dialogue-line">{text}</div>'
         return f'<div class="dialogue-line">{text}</div>'
 
-    # Match a block of consecutive blockquote lines containing dialogue
+    # Match a block of blockquote lines containing dialogue.
+    # Allow blank lines (^>\s*$ or empty line) between turns — writers often
+    # separate dialogue lines with blanks for readability.
     blockquote_dialogue = re.compile(
-        r"((?:^> .+\n)+)",
+        r"((?:^>[ \t]*.+\n|^>\s*\n|^\s*\n(?=^>))+)",
         re.MULTILINE,
     )
 
@@ -615,14 +617,26 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         # Strip dialogue divs, restore blockquote lines
         def _restore_blockquote(m: re.Match) -> str:
             inner = m.group(1).strip()
-            lines = [line.strip() for line in inner.split("\n") if line.strip()]
-            return "\n".join(f"> {line}" for line in lines) + "\n"
+            # Extract text from <div class="dialogue-line"> wrappers
+            raw_lines = re.findall(
+                r'<div class="dialogue-line">(?:<span class="speaker">([^<]+)</span>\s*)?(.*?)</div>',
+                inner,
+            )
+            restored = []
+            for speaker, text in raw_lines:
+                if speaker:
+                    restored.append(f"> — **{speaker}** {text}")
+                elif text.strip():
+                    restored.append(f"> {text.strip()}")
+            return "\n".join(restored) + "\n" if restored else ""
         content = re.sub(
             r'<div class="dialogue">\s*\n(.*?)\n</div>',
             _restore_blockquote,
             content,
             flags=re.DOTALL,
         )
+        # Clean stray > lines left between dialogue blocks
+        content = re.sub(r'\n>\s*\n', '\n', content)
 
     # Format dialogues in content
     new_content = _format_dialogues(content)

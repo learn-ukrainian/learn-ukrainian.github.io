@@ -1,37 +1,47 @@
-<!-- TAB:Урок -->
+---
+title: "A2 Bridge"
+sidebar:
+  order: 1
+  label: "01. A2 Bridge"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 ## Прига́дуємо відмі́нки (Reviewing Cases)
 <div class="dialogue">
 
 <div class="dialogue-line"><span class="speaker">Виклада́ч:</span> До́брий день! Ласка́во про́симо на курс А2. Як вас зва́ти?</div>
 
-
 <div class="dialogue-line"><span class="speaker">Майкл:</span> Добрий день! Ме́не звати Майкл. Я з Кана́ди.</div>
-
 
 <div class="dialogue-line"><span class="speaker">Викладач:</span> О, з Канади! Ду́же ціка́во. А скі́льки вам ро́кі́в?</div>
 
-
 <div class="dialogue-line"><span class="speaker">Майкл:</span> Ме́ні два́дцять п'ять років.</div>
-
 
 <div class="dialogue-line"><span class="speaker">Викладач:</span> Чудо́во! Що ви вивча́єте?</div>
 
-
 <div class="dialogue-line"><span class="speaker">Майкл:</span> Я вивча́ю украї́нську мо́ву. Я дуже люблю́ Украї́ну.</div>
-
 
 <div class="dialogue-line"><span class="speaker">Викладач:</span> А де ви за́раз живете́?</div>
 
-
 <div class="dialogue-line"><span class="speaker">Майкл:</span> Я живу́ в Ки́єві. У мене мале́нька кварти́ра бі́ля метро́.</div>
-
 
 <div class="dialogue-line"><span class="speaker">Викладач:</span> Прекра́сно! Дуже приє́мно, Ма́йкле! Сіда́йте, будь ла́ска.</div>
 
-
 </div>
-
 
 Did you notice? In that short conversation, Майкл and the teacher used four different case forms without thinking about it. «З Канади» — the noun changed. «Мені» — another form. «Українську мову» — the adjective and noun both changed. «В Києві» — yet another ending. And at the very end, even Майкл's own name shifted: «Майкле!»
 
@@ -96,8 +106,6 @@ Some forms are fixed: та́то → тату.
 Remember how the teacher ended the dialogue? «Дуже приємно, Майкле!» That's кличний — the teacher addressed Майкл directly, and his name changed to show it.
 
 Приві́т, Сергію! Мамо, де моя́ книга? Друже, ході́мо на каву!
-
-<!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->
 
 ### Сім відмі́нків (The Full Case Map)
 
@@ -188,8 +196,6 @@ This is a bonus payoff: if you understand the consonant alternation pattern, you
 
 When you reach verb conjugation tables in later A2 modules, these changes will feel familiar. Фоноло́гія — ваш найкра́щий друг.
 
-<!-- INJECT_ACTIVITY: fill-in, Phonological Alternation Pairs -->
-
 ## Милозву́чність мо́ви: евфоні́я (The Melody of Language: Euphony)
 
 The phonological patterns you just reviewed — vowel and consonant alternations — serve a deeper purpose. Ukrainian actively avoids dissonant sound clusters through alternating variant pairs. This is not optional style — it is the norm. The term for this quality is **милозвучність** *(euphony, melodiousness)* — literally, «милозву́чна мова» means *melodious language*. Three alternating pairs to master at A2: **у/в**, **і/й**, and **з/зі/із**. Consider this sentence from a Ukrainian textbook exercise: «В ва́ших роди́нах пану́є зла́года.» Read it aloud. The «в в» collision grates against the ear. The correct form flows naturally: «У ваших родинах панує злагода.»
@@ -236,8 +242,6 @@ The preposition **з** *(from, with)* has three forms. Use «з» before most wo
 
 The rule of thumb: whichever variant flows most smoothly when you say it aloud is almost always correct.
 
-<!-- INJECT_ACTIVITY: match-up, Euphony Choice Exercise -->
-
 Милозвучність becomes automatic with exposure. Native speakers do not consciously apply these rules — they hear what sounds natural. For learners, the best practice is simple: read Ukrainian text aloud, paying attention to transitions between words. When something sounds awkward — two consonants colliding, two vowels bumping — that is your ear signaling a euphony error. Спро́буйте чита́ти вго́лос щора́зу, коли́ вивчаєте нові те́ксти. By B1, these choices will feel natural rather than calculated.
 
 ## Що нас чека́є на рі́вні А2? (What Awaits Us in A2?)
@@ -256,8 +260,8 @@ Ukrainian also has a dedicated system for **дієслова́ ру́ху** *(ve
 
 A1 gave you simple facts. A2 is the inflection point — you begin to **explain**, **compare**, and **narrate**. Пригада́йте поча́ток уро́ку. Майкл сказа́в: «Я з Канади» і «Я живу в Києві.» By the end of A2, he will say: «Книга, яку я купи́в **у це́нтрі мі́ста**, напи́сана **відо́мим украї́нським а́втором**.» Шлях почина́ється тут.
 
-
-<!-- TAB:Словник -->
+</TabItem>
+<TabItem label="Словник">
 
 ### Обов'язкові та рекомендовані слова
 
@@ -332,17 +336,26 @@ A1 gave you simple facts. A2 is the inflection point — you begin to **explain*
 
 <FlashcardDeck client:only="react" cards={[{ front: "відмі́нок", back: "case (grammatical)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "називни́й", back: "nominative (case)", subtitle: "прикм." }, { front: "знахі́дний", back: "accusative (case)", subtitle: "прикм." }, { front: "місце́вий", back: "locative (case)", subtitle: "прикм." }, { front: "кли́чний", back: "vocative (case)", subtitle: "прикм." }, { front: "родо́ви́й", back: "genitive (case)", subtitle: "прикм." }, { front: "дава́льний", back: "dative (case)", subtitle: "прикм." }, { front: "ору́дний", back: "instrumental (case)", subtitle: "прикм." }, { front: "чергува́ння", back: "alternation (sound change)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "голосни́й", back: "vowel", subtitle: "прикм." }, { front: "при́голосний", back: "consonant", subtitle: "прикм." }, { front: "на́голос", back: "stress, accent", subtitle: "присл." }, { front: "милозву́чність", back: "euphony, melodiousness", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "евфоні́я", back: "euphony", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "систе́ма", back: "system", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "правило", back: "rule", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́гляд", back: "review, overview", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "прийме́нник", back: "preposition", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сполу́чник", back: "conjunction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зверта́ння", back: "direct address", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "склад", back: "syllable", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вид", back: "aspect (verbal)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "закономі́рність", back: "pattern, regularity, rule", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "виклада́ч", back: "teacher, instructor (university/course level)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "підру́чник", back: "textbook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіл", back: "table (illustrates о/і alternation: стіл → стола)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіт", back: "cat (illustrates о/і alternation: кіт → кота)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ніч", back: "night (illustrates о/і alternation: ніч → ночі)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "піч", back: "stove, oven (illustrates о/і alternation: піч → печі)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ко́рінь", back: "root (illustrates е/і alternation: корінь → кореня)", subtitle: "ім." }, { front: "ка́мінь", back: "stone (illustrates е/і alternation: камінь → каменя)", subtitle: "ім." }, { front: "о́сінь", back: "autumn, fall (illustrates е/і alternation: осінь → осені)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нога́", back: "leg, foot (illustrates consonant alternation: нога → ніжка / нозі)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рука́", back: "hand, arm (illustrates consonant alternation: рука → ручка / руці)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ву́хо", back: "ear (illustrates consonant alternation: вухо → вушко / у вусі)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ру́чка", back: "pen; handle (diminutive of рука)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "брасле́т", back: "bracelet", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замок", back: "castle (за́мок) / lock (замо́к) — stress-dependent meaning", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "атлас", back: "atlas, book of maps (а́тлас) / satin fabric (атла́с) — stress-dependent meaning", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зла́года", back: "harmony, accord", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "роди́на", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́кар", back: "doctor, physician", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кварти́ра", back: "apartment, flat", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
+</TabItem>
+<TabItem label="Зошит">
 
-<!-- TAB:Зошит -->
+<Quiz client:only="react" questions={[{"question": "Я живу в «Києві».", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": true}, {"text": "Кличний", "correct": false}]}, {"question": "«Студент» читає книгу.", "options": [{"text": "Називний", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "Я читаю «книгу».", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": true}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "Дуже приємно, «Майкле»!", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": true}]}, {"question": "Вона вчиться у «Харкові».", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": true}, {"text": "Кличний", "correct": false}]}, {"question": "Ми любимо «Україну».", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": true}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "«Мамо», де моя книга?", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": true}]}, {"question": "«Місто» дуже велике.", "options": [{"text": "Називний", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}]} instruction={"Визначте відмінок виділеного слова."} />
 
-:::note
-Розширені вправи для цього уроку ще в розробці.
+<FillIn client:only="react" items={[{"sentence": "Лампа стоїть на ____. (стіл)", "answer": "столі", "options": ["столі", "стола", "столом", "столу"]}, {"sentence": "Вдома немає ____. (кіт)", "answer": "кота", "options": ["кота", "кіт", "котові", "котом"]}, {"sentence": "Темної ____ було тихо. (ніч)", "answer": "ночі", "options": ["ночі", "ніч", "ніччю", "ночей"]}, {"sentence": "Хліб печуть у ____. (піч)", "answer": "печі", "options": ["печі", "піч", "піччю", "печей"]}, {"sentence": "Він показав ____ цього слова. (корінь)", "answer": "кореня", "options": ["кореня", "корінь", "коренем", "коренів"]}, {"sentence": "Поверхня ____ дуже тверда. (камінь)", "answer": "каменя", "options": ["каменя", "камінь", "каменем", "каменів"]}, {"sentence": "Браслет у мене на ____. (рука)", "answer": "руці", "options": ["руці", "рука", "рукою", "руки"]}, {"sentence": "Татуювання на ____. (нога)", "answer": "нозі", "options": ["нозі", "ноги", "ногою", "ногах"]}]} instruction={"Вставте правильну форму слова в дужках."} />
 
-Advanced exercises for this module are in development. Check back soon!
-:::
+<MatchUp client:only="react" pairs={[{"left": "Я ____ університеті.", "right": "в університеті"}, {"left": "Він ____ університеті.", "right": "у університеті"}, {"left": "Батько ____ мати.", "right": "й мати"}, {"left": "Хлопець ____ дівчина.", "right": "і дівчина"}, {"left": "Майкл приїхав ____ Канади.", "right": "з Канади"}, {"left": "Вона приїхала ____ Львова.", "right": "зі Львова"}, {"left": "Вони приїхали ____ Запоріжжя.", "right": "із Запоріжжя"}, {"left": "Діти повернулися ____ школи.", "right": "зі школи"}]} instruction={"З'єднайте речення з правильним варіантом евфонії."} />
+
+<GroupSort client:only="react" groups={{"Називний (Хто? Що?)": ["стіл", "кіт", "ніч", "студент", "місто", "мова"], "Знахідний (Кого? Що?)": ["книгу", "Україну", "каву", "студента", "ручку", "мову"], "Місцевий (Де?)": ["у Києві", "у Харкові", "у Львові", "на уроці", "в університеті", "у місті"], "Кличний (Звертання)": ["Майкле!", "Сергію!", "мамо!", "друже!", "Тарасе!", "Василю!"]}} instruction={"Розподіліть слова й словосполучення за відмінками."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "В вівторок ми зустрічаємося.", "errorWord": "В", "correctForm": "У", "options": ["У", "В", "З"], "explanation": "Вівторок починається з приголосного «в», тому потрібне «у»."}, {"sentence": "Студент в університеті.", "errorWord": "в", "correctForm": "у", "options": ["у", "в", "на"], "explanation": "Після приголосного «т» (студент) вживаємо «у»."}, {"sentence": "Олена і Іван зустрілися.", "errorWord": "і", "correctForm": "й", "options": ["й", "і", "та"], "explanation": "Олена закінчується на голосну «а», тому вживаємо «й»."}, {"sentence": "Хлопець й дівчина прийшли.", "errorWord": "й", "correctForm": "і", "options": ["і", "й", "та"], "explanation": "Хлопець закінчується на приголосний «ць», тому вживаємо «і»."}, {"sentence": "Вона приїхала з Львова.", "errorWord": "з", "correctForm": "зі", "options": ["зі", "із", "з"], "explanation": "Перед збігом приголосних «лв» вживаємо «зі»."}, {"sentence": "Ми з сестрою пішли додому.", "errorWord": "з", "correctForm": "із", "options": ["із", "зі", "з"], "explanation": "Перед «с-» на початку слова вживаємо «із»."}]} instruction={"Знайдіть і виправте помилку евфонії."} />
+
+<TrueFalse client:only="react" items={[{"statement": "Слово «стіл» у місцевому відмінку — «столі».", "isTrue": true, "explanation": "Так: стіл (закритий склад, і) → столі (відкритий склад, о)."}, {"statement": "Слово «кіт» у родовому відмінку — «кіта».", "isTrue": false, "explanation": "Неправильно. Правильна форма — «кота»: закрита «і» стає «о» у відкритому складі."}, {"statement": "Зміна г→ж з'являється у зменшувальних формах: нога → ніжка.", "isTrue": true, "explanation": "Так: г→ж — перша зміна приголосних."}, {"statement": "Зміна к→ц з'являється у місцевому відмінку: рука → руці.", "isTrue": true, "explanation": "Так: к→ц — друга зміна приголосних."}, {"statement": "Слово «корінь» у родовому відмінку — «коріня».", "isTrue": false, "explanation": "Неправильно. Правильна форма — «кореня»: е/і чергування."}, {"statement": "Слово «камінь» у родовому відмінку — «каменя».", "isTrue": true, "explanation": "Так: камінь → каменя (е/і чергування, відкритий склад)."}, {"statement": "Наголос в українській мові завжди падає на перший склад.", "isTrue": false, "explanation": "Неправильно. Наголос в українській мові вільний і рухомий — він може бути на будь-якому складі."}]} instruction={"Правда чи ні? Оцініть твердження про чергування і наголос."} />
+
+<Quiz client:only="react" questions={[{"question": "Яке значення слова «за́мок» (наголос на першому складі)?", "options": [{"text": "фортеця", "correct": true}, {"text": "засув на дверях", "correct": false}, {"text": "ліс", "correct": false}, {"text": "підручник", "correct": false}]}, {"question": "Яке значення слова «замо́к» (наголос на другому складі)?", "options": [{"text": "фортеця", "correct": false}, {"text": "засув на дверях", "correct": true}, {"text": "місто", "correct": false}, {"text": "рослина", "correct": false}]}, {"question": "Яке значення слова «а́тлас» (наголос на першому складі)?", "options": [{"text": "шовкова тканина", "correct": false}, {"text": "збірник карт", "correct": true}, {"text": "прилад", "correct": false}, {"text": "рослина", "correct": false}]}, {"question": "Яке значення слова «атла́с» (наголос на другому складі)?", "options": [{"text": "шовкова тканина", "correct": true}, {"text": "збірник карт", "correct": false}, {"text": "прилад", "correct": false}, {"text": "рослина", "correct": false}]}, {"question": "Що означає «вільний» наголос в українській мові?", "options": [{"text": "наголос не прив'язаний до певного складу", "correct": true}, {"text": "наголос завжди на першому складі", "correct": false}, {"text": "наголос завжди на останньому складі", "correct": false}, {"text": "наголос визначає рід слова", "correct": false}]}, {"question": "Що означає «рухомий» наголос в українській мові?", "options": [{"text": "наголос може переходити між складами в парадигмі одного слова", "correct": true}, {"text": "наголос завжди фіксований", "correct": false}, {"text": "наголос залежить від темпу мовлення", "correct": false}, {"text": "наголос ставиться лише в словниках", "correct": false}]}]} instruction={"Оберіть правильне значення слова залежно від наголосу."} />
 
 
-<!-- TAB:Ресурси -->
+</TabItem>
+<TabItem label="Ресурси">
 
 **Джерела — References**
 
@@ -359,3 +372,6 @@ Advanced exercises for this module are in development. Check back soon!
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Ukrainian Cases Chart (Overview)](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
 - [Nominative Case (Називний відмінок)](https://www.ukrainianlessons.com/nominativecase/)
+
+</TabItem>
+</Tabs>
