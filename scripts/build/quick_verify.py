@@ -105,8 +105,10 @@ def _check_word_count(content: str, plan: dict) -> list[QuickVerifyError]:
         flags=re.DOTALL | re.MULTILINE,
     )
     # Strip "Content notes" / meta-notes section at end (LLM self-audit artifact)
+    # The --- separator before content notes must NOT eat the whole file.
+    # Only strip --- followed by "Content notes" or similar meta-sections.
     text = re.sub(r"\*\*Content notes:\*\*.*$", "", text, flags=re.DOTALL)
-    text = re.sub(r"^---\s*$.*$", "", text, flags=re.DOTALL | re.MULTILINE)
+    text = re.sub(r"\n---\s*\n\*\*(?:Content|Note|Meta).*$", "", text, flags=re.DOTALL)
     # Strip markdown headings, links, images, tables
     text = re.sub(r"^#+\s+.*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^\|.*\|$", "", text, flags=re.MULTILINE)  # table rows
