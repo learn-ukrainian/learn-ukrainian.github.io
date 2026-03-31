@@ -14,6 +14,8 @@ export default getViteConfig({
     globals: true,
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/unit/**/*.{test,spec}.{ts,tsx}'],
+    // Disable caching to prevent stale module issues when adding components
+    cache: false,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
@@ -23,7 +25,6 @@ export default getViteConfig({
   },
   resolve: {
     alias: {
-      // Mirror the tsconfig paths alias so imports work in tests
       '@site': fileURLToPath(new URL('.', import.meta.url)),
     },
   },
