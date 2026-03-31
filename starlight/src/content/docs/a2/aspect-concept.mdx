@@ -1,4 +1,24 @@
-<!-- TAB:Урок -->
+---
+title: "Aspect Concept"
+sidebar:
+  order: 2
+  label: "02. Aspect Concept"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 ## Що таке́ вид дієсло́ва?
 
@@ -23,19 +43,21 @@ Here are four common pairs. Notice that the ДВ verb usually adds a **prefix** 
 | **вчи́ти** (to study) | **ви́вчити** (to master) |
 
 Now let's return to that football match. Listen to Андрі́й and Оле́на commenting on the game:
+<div class="dialogue">
 
-> — **Андрій:** Він біжить так шви́дко!
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Він біжить так шви́дко!</div>
 
-> — **Олена:** Він переда́в м'яч!
+<div class="dialogue-line"><span class="speaker">Олена:</span> Він переда́в м'яч!</div>
 
-> — **Андрій:** Вони́ гра́ють до́бре сього́дні.
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Вони́ гра́ють до́бре сього́дні.</div>
 
-> — **Олена:** О, вона́ заби́ла гол!
+<div class="dialogue-line"><span class="speaker">Олена:</span> О, вона́ заби́ла гол!</div>
 
-> — **Андрій:** Супе́рники атаку́ють.
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Супе́рники атаку́ють.</div>
 
-> — **Олена:** Наре́шті! Ми ви́грали матч!
+<div class="dialogue-line"><span class="speaker">Олена:</span> Наре́шті! Ми ви́грали матч!</div>
 
+</div>
 
 Did you feel the difference? Some lines describe action unfolding right now — the camera is rolling. Other lines announce a result — something just happened and the outcome is clear. Let's label each one:
 
@@ -47,8 +69,6 @@ Did you feel the difference? Some lines describe action unfolding right now — 
 - «Нарешті! Ми виграли матч!» — **ДВ**. The final whistle blew. The victory is a fact.
 
 The pattern is simple: if the action is still happening — НВ. If the result already exists — ДВ.
-
-<!-- INJECT_ACTIVITY: quiz, Aspect Sorting: Process vs. Result -->
 
 ## Недоконаний вид: Процес і повто́рення
 
@@ -136,19 +156,21 @@ Imperfective verbs are the only verbs in Ukrainian that have a true present tens
 This is important: ДВ has no present tense at all. When you conjugate a perfective verb the same way, the form looks like present tense — but it means future. «Прочита́ю» does not mean "I am finishing reading" — it means "I will finish reading." We will explore this in the next section. For now, remember: only НВ can describe what is happening at this very moment.
 
 ### Діало́г: Соломі́я дзво́нить Василю
+<div class="dialogue">
 
-> — **Соломія:** Приві́т, Василю! Що ти за́раз ро́биш?
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Приві́т, Василю! Що ти за́раз ро́биш?</div>
 
-> — **Васи́ль:** Читаю нову́ книгу. А ти?
+<div class="dialogue-line"><span class="speaker">Васи́ль:</span> Читаю нову́ книгу. А ти?</div>
 
-> — **Соломія:** Готу́ю обід. А що ти зазвичай робиш щонеді́лі?
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Готу́ю обід. А що ти зазвичай робиш щонеді́лі?</div>
 
-> — **Василь:** Зазвичай ходжу́ на ри́нок і готую обід.
+<div class="dialogue-line"><span class="speaker">Василь:</span> Зазвичай ходжу́ на ри́нок і готую обід.</div>
 
-> — **Соломія:** Ти часто готу́єш?
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Ти часто готу́єш?</div>
 
-> — **Василь:** Так, завжди готую сам.
+<div class="dialogue-line"><span class="speaker">Василь:</span> Так, завжди готую сам.</div>
 
+</div>
 
 Every verb in this dialogue is НВ. Let's label each one:
 
@@ -160,8 +182,6 @@ Every verb in this dialogue is НВ. Let's label each one:
 - «Завжди **готую** сам.» — habitual action (Door 2). Signal word: «завжди».
 
 Notice how the same verb «готую» appears in two different contexts — present action and habitual action — and both times it is НВ. The aspect stays the same because both doors lead to imperfective.
-
-<!-- INJECT_ACTIVITY: fill-in, Identify the Aspect in Sentences, 8 items -->
 
 ## Доконаний вид: Результат!
 
@@ -226,24 +246,21 @@ Notice the contrast with НВ signal words. «Щодня» (every day) points to
 ### Діалог: Пі́сля ма́тчу
 
 The football match is over. Андрій and Олена discuss what happened:
+<div class="dialogue">
 
-> — **Андрій:** Хто забив пе́рший гол?
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Хто забив пе́рший гол?</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> Олексі́єнко забив на два́дцять тре́тій хвили́ні.</div>
 
-> — **Олена:** Олексі́єнко забив на два́дцять тре́тій хвили́ні.
+<div class="dialogue-line"><span class="speaker">Андрій:</span> А по́тім?</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> Потім суперники швидко відповіли́ — Ме́льник одразу зрівня́в раху́нок.</div>
 
-> — **Андрій:** А по́тім?
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Хто ви́грав?</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> На́ша кома́нда нарешті перемогла́!</div>
 
-> — **Олена:** Потім суперники швидко відповіли́ — Ме́льник одразу зрівня́в раху́нок.
-
-
-> — **Андрій:** Хто ви́грав?
-
-
-> — **Олена:** На́ша кома́нда нарешті перемогла́!
-
+</div>
 
 Every verb in this dialogue is ДВ. The match is over, and each verb describes a single completed event with a clear result:
 
@@ -265,8 +282,6 @@ Learners often reach for ДВ when НВ is needed — or the reverse. Here are n
 **Trap 3: Completion implied but НВ used.** «Я читав усю́ книгу мину́лого ти́жня» — this is ambiguous. НВ «читав» focuses on the process, but «усю книгу» (the whole book) implies you finished it. If the result matters — and it usually does when you say "the whole book" — use ДВ: «Я прочитав усю книгу минулого тижня.»
 
 These are not failures — they are the natural growing pains of learning aspect. The key question always works: *Is the completion and result what I want to communicate?* If yes — ДВ. If no — НВ.
-
-<!-- INJECT_ACTIVITY: match-up, Choose the Correct Aspect (Context-based), 8 items -->
 
 ## Порівняння пар: Ба́чимо різни́цю (Comparing Pairs: Seeing the Difference)
 
@@ -307,10 +322,8 @@ Before moving on, test yourself with these four questions. No grade — just anc
 
 Come back to these four questions any time you are unsure which aspect to use. They work every time.
 
-<!-- INJECT_ACTIVITY: error-correction, Find and fix wrong aspect choice, 6 items -->
-
-
-<!-- TAB:Словник -->
+</TabItem>
+<TabItem label="Словник">
 
 ### Обов'язкові та рекомендовані слова
 
@@ -401,17 +414,24 @@ Come back to these four questions any time you are unsure which aspect to use. T
 
 <FlashcardDeck client:only="react" cards={[{ front: "проце́с", back: "process", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "результа́т", back: "result", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ді́я", back: "action", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "повто́рення", back: "repetition", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "заве́ршений", back: "completed, finished", subtitle: "прикм." }, { front: "трива́лий", back: "ongoing, lasting", subtitle: "прикм." }, { front: "одноразо́вий", back: "single, one-time", subtitle: "прикм." }, { front: "конце́пція", back: "concept", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "роби́ти", back: "to do (imperfective)", subtitle: "дієсл." }, { front: "зроби́ти", back: "to do, get done (perfective)", subtitle: "дієсл." }, { front: "писа́ти", back: "to write (imperfective)", subtitle: "дієсл." }, { front: "написа́ти", back: "to write and finish (perfective)", subtitle: "дієсл." }, { front: "чита́ти", back: "to read (imperfective)", subtitle: "дієсл." }, { front: "прочита́ти", back: "to finish reading (perfective)", subtitle: "дієсл." }, { front: "вчи́ти", back: "to study, learn (imperfective)", subtitle: "дієсл." }, { front: "ви́вчити", back: "to master, learn completely (perfective)", subtitle: "дієсл." }, { front: "вари́ти", back: "to cook (imperfective)", subtitle: "дієсл." }, { front: "звари́ти", back: "to finish cooking (perfective)", subtitle: "дієсл." }, { front: "дзвони́ти", back: "to call, phone (imperfective)", subtitle: "дієсл." }, { front: "задзвони́ти", back: "to ring, start ringing (perfective)", subtitle: "дієсл." }, { front: "гра́ти", back: "to play (imperfective)", subtitle: "дієсл." }, { front: "ви́грати", back: "to win (perfective)", subtitle: "дієсл." }, { front: "перемогти́", back: "to win, defeat (perfective)", subtitle: "дієсл." }, { front: "переда́ти", back: "to pass (perfective)", subtitle: "дієсл." }, { front: "заби́ти", back: "to score (perfective)", subtitle: "дієсл." }, { front: "атакува́ти", back: "to attack (imperfective)", subtitle: "дієсл." }, { front: "зрозумі́ти", back: "to understand (perfective)", subtitle: "дієсл." }, { front: "відпові́сти́", back: "to answer, reply (perfective)", subtitle: "дієсл." }, { front: "поверну́тися", back: "to come back, return (perfective)", subtitle: "дієсл." }, { front: "упа́сти", back: "to fall (perfective)", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook, prepare (imperfective)", subtitle: "дієсл." }, { front: "ходи́ти", back: "to go, walk (habitual, imperfective)", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw (imperfective)", subtitle: "дієсл." }, { front: "за́вжди́", back: "always", subtitle: "присл." }, { front: "ча́сто", back: "often", subtitle: "присл." }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "щодня́", back: "every day", subtitle: "присл." }, { front: "і́ноді", back: "sometimes", subtitle: "присл." }, { front: "ніколи", back: "never", subtitle: "присл." }, { front: "щонеді́лі", back: "every Sunday", subtitle: "присл." }, { front: "вчо́ра", back: "yesterday", subtitle: "присл." }, { front: "ра́птом", back: "suddenly", subtitle: "присл." }, { front: "наре́шті", back: "finally, at last", subtitle: "присл." }, { front: "одра́зу", back: "at once, immediately", subtitle: "присл." }, { front: "до́вго", back: "for a long time", subtitle: "присл." }, { front: "за́раз", back: "right now, at this moment", subtitle: "присл." }, { front: "префікс", back: "prefix", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гол", back: "goal (football)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'яч", back: "ball", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "матч", back: "match (sports)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "раху́нок", back: "score", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кома́нда", back: "team", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "супе́рники", back: "opponents, rivals", subtitle: "ім." }, { front: "хвили́на", back: "minute", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "борщ", back: "borsch (Ukrainian soup)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "стаття́", back: "article", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "впра́ва", back: "exercise", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кіне́ць", back: "end, finish", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зада́ча", back: "problem, task", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "НВ", back: "НВ — abbreviation for недоконаний вид (imperfective)" }, { front: "ДВ", back: "ДВ — abbreviation for доконаний вид (perfective)" }]} />
 
+</TabItem>
+<TabItem label="Зошит">
 
-<!-- TAB:Зошит -->
+<Quiz client:only="react" questions={[{"question": "Він біжить так швидко!", "options": [{"text": "НВ (недоконаний)", "correct": true}, {"text": "ДВ (доконаний)", "correct": false}]}, {"question": "Він передав м'яч!", "options": [{"text": "НВ (недоконаний)", "correct": false}, {"text": "ДВ (доконаний)", "correct": true}]}, {"question": "Вони грають добре сьогодні.", "options": [{"text": "НВ (недоконаний)", "correct": true}, {"text": "ДВ (доконаний)", "correct": false}]}, {"question": "О, вона забила гол!", "options": [{"text": "НВ (недоконаний)", "correct": false}, {"text": "ДВ (доконаний)", "correct": true}]}, {"question": "Ми щодня робили вправи.", "options": [{"text": "НВ (недоконаний)", "correct": true}, {"text": "ДВ (доконаний)", "correct": false}]}, {"question": "Він зробив домашнє завдання.", "options": [{"text": "НВ (недоконаний)", "correct": false}, {"text": "ДВ (доконаний)", "correct": true}]}, {"question": "Вона часто дзвонила бабусі.", "options": [{"text": "НВ (недоконаний)", "correct": true}, {"text": "ДВ (доконаний)", "correct": false}]}, {"question": "Нарешті! Ми виграли матч!", "options": [{"text": "НВ (недоконаний)", "correct": false}, {"text": "ДВ (доконаний)", "correct": true}]}]} instruction={"Визначте вид дієслова у реченні: НВ (недоконаний) чи ДВ (доконаний)?"} />
 
-:::note
-Розширені вправи для цього уроку ще в розробці.
+<FillIn client:only="react" items={[{"sentence": "Вона довго _____ листа.", "answer": "писала", "options": ["писала", "написала", "пише"]}, {"sentence": "Телефон раптом _____.", "answer": "задзвонив", "options": ["дзвонив", "задзвонив", "дзвонитиме"]}, {"sentence": "Щодня я _____ нові слова.", "answer": "вчив", "options": ["вчив", "вивчив", "вчитиму"]}, {"sentence": "Нарешті вона _____ задачу.", "answer": "зрозуміла", "options": ["розуміла", "зрозуміла", "розуміє"]}, {"sentence": "Коли задзвонив телефон, я _____ книгу.", "answer": "читав", "options": ["читав", "прочитав", "прочитаю"]}, {"sentence": "Він за тиждень _____ цю книгу.", "answer": "прочитав", "options": ["читав", "прочитав", "читає"]}, {"sentence": "Вона завжди _____ перед сном.", "answer": "читає", "options": ["читає", "прочитає", "прочитала"]}, {"sentence": "Вчора я _____ домашнє завдання.", "answer": "зробив", "options": ["робив", "зробив", "роблю"]}]} instruction={"Оберіть правильну форму дієслова."} />
 
-Advanced exercises for this module are in development. Check back soon!
-:::
+<MatchUp client:only="react" pairs={[{"left": "Він _____ листа три години.", "right": "писав"}, {"left": "Вона нарешті _____ листа!", "right": "написала"}, {"left": "Ми _____ книгу за тиждень.", "right": "прочитали"}, {"left": "Щодня я _____ нові слова.", "right": "вчив"}, {"left": "Вчора він _____ домашнє завдання.", "right": "зробив"}, {"left": "Вона завжди _____ перед сном.", "right": "читала"}, {"left": "Раптом телефон _____.", "right": "задзвонив"}, {"left": "Борщ готовий — мама його _____.", "right": "зварила"}]} instruction={"З'єднайте речення з правильною формою дієслова."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Він щодня зробив вправи.", "errorWord": "зробив", "correctForm": "робив", "options": ["робив", "зробить", "зробити"], "explanation": "«Щодня» вказує на повторення — потрібен НВ: «робив»."}, {"sentence": "Вона довго написала листа.", "errorWord": "написала", "correctForm": "писала", "options": ["писала", "пише", "написала"], "explanation": "«Довго» підкреслює тривалість процесу — потрібен НВ: «писала»."}, {"sentence": "Вони часто прочитали книги.", "errorWord": "прочитали", "correctForm": "читали", "options": ["читали", "прочитали", "прочитають"], "explanation": "«Часто» вказує на звичну повторювану дію — потрібен НВ: «читали»."}, {"sentence": "Вона нарешті писала листа!", "errorWord": "писала", "correctForm": "написала", "options": ["написала", "пише", "писала"], "explanation": "«Нарешті» вказує на завершення — потрібен ДВ: «написала»."}, {"sentence": "Я завжди прочитав перед сном.", "errorWord": "прочитав", "correctForm": "читав", "options": ["читав", "читаю", "прочитав"], "explanation": "«Завжди» означає звичку — потрібен НВ: «читав»."}, {"sentence": "Він за тиждень читав цю книгу.", "errorWord": "читав", "correctForm": "прочитав", "options": ["прочитав", "читає", "читав"], "explanation": "«За тиждень» вказує на завершення у конкретний термін — потрібен ДВ: «прочитав»."}]} instruction={"Знайдіть і виправте помилку у виборі виду дієслова."} />
+
+<GroupSort client:only="react" groups={{"НВ (недоконаний вид)": ["читати", "писати", "робити", "вчити", "варити", "дзвонити"], "ДВ (доконаний вид)": ["прочитати", "написати", "зробити", "вивчити", "зварити", "задзвонити"]}} instruction={"Розподіліть дієслова за видом."} />
+
+<TrueFalse client:only="react" items={[{"statement": "Недоконаний вид описує дію як процес або повторення.", "isTrue": true, "explanation": "Правда. НВ відповідає на питання: що відбувалося? як довго? як часто?"}, {"statement": "Доконаний вид має справжній теперішній час в українській мові.", "isTrue": false, "explanation": "Ні. Тільки НВ має теперішній час. ДВ у формі теперішнього часу означає майбутнє: «прочитаю» = «я прочитаю (у майбутньому)»."}, {"statement": "Слово «часто» є сигналом недоконаного виду.", "isTrue": true, "explanation": "Правда. «Часто» вказує на повторення — це завжди НВ."}, {"statement": "«Він щодня зробив вправи» — це правильне речення.", "isTrue": false, "explanation": "Ні. «Щодня» = повторення = НВ. Правильно: «Він щодня робив вправи.»"}, {"statement": "Слово «раптом» вказує на доконаний вид.", "isTrue": true, "explanation": "Правда. «Раптом» вказує на одиничну миттєву подію — це ДВ."}, {"statement": "Вид дієслова і граматичний час — це одне й те саме.", "isTrue": false, "explanation": "Ні. Час — це коли (вчора, зараз, завтра). Вид — це як: процес чи результат."}]} instruction={"Правда чи ні?"} />
 
 
-<!-- TAB:Ресурси -->
+</TabItem>
+<TabItem label="Ресурси">
 
 **Джерела — References**
 
@@ -429,3 +449,6 @@ Advanced exercises for this module are in development. Check back soon!
 - [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
 - [Present Tense](https://www.ukrainianlessons.com/present-tense/)
 - [Past Tense](https://www.ukrainianlessons.com/past-tense/)
+
+</TabItem>
+</Tabs>

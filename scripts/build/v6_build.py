@@ -3909,6 +3909,10 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
         if dsl_strip_count > 0:
             _log(f"  Stripped {dsl_strip_count} legacy DSL block(s) (replaced by activities YAML)")
 
+    # Convert blockquote dialogues to HTML divs (only at publish time, not in .md)
+    from build.enrich import _format_dialogues
+    text = _format_dialogues(text)
+
     # Always run convert_dsl_to_mdx — it handles YouTube URLs, bare links,
     # and stray quote cleanup in addition to DSL→MDX conversion.
     mdx_content, dsl_count = convert_dsl_to_mdx(text)

@@ -611,13 +611,12 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     actions: list[str] = []
     original_content = content  # Preserve for safety check + diagnostics
 
-    # 1. Revert any previously converted dialogues back to blockquote format,
-    # then re-format. This ensures idempotent dialogue processing.
-    if '<div class="dialogue">' in content:
-        # Strip dialogue divs, restore blockquote lines
+    # 1. Revert any previously converted dialogue HTML back to blockquote markdown.
+    # The .md source should contain clean markdown, not HTML divs.
+    # Dialogue → HTML conversion happens in PUBLISH (step_publish), not here.
+    if '<div class="dialogue' in content:
         def _restore_blockquote(m: re.Match) -> str:
             inner = m.group(1).strip()
-            # Extract text from <div class="dialogue-line"> wrappers
             raw_lines = re.findall(
                 r'<div class="dialogue-line">(?:<span class="speaker">([^<]+)</span>\s*)?(.*?)</div>',
                 inner,
@@ -637,12 +636,21 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         )
         # Clean stray > lines left between dialogue blocks
         content = re.sub(r'\n>\s*\n', '\n', content)
-
-    # Format dialogues in content
-    new_content = _format_dialogues(content)
-    if new_content != content:
-        actions.append("dialogue-formatting")
-        content = new_content
+        # Also clean dialogue-line divs inside blockquotes (> <div ...>)
+        def _clean_blockquoted_divs(m: re.Match) -> str:
+            line = m.group(1)
+            match = re.search(
+                r'<div class="dialogue-line">(?:<span class="speaker">([^<]+)</span>\s*)?(.*?)</div>',
+                line,
+            )
+            if match:
+                speaker, text = match.group(1), match.group(2)
+                if speaker:
+                    return f"> — **{speaker}** {text}"
+                return f"> {text.strip()}" if text.strip() else ""
+            return m.group(0)
+        content = re.sub(r'^> (.+)$', _clean_blockquoted_divs, content, flags=re.MULTILINE)
+        actions.append("dialogue-cleanup")
 
     # 2. Strip existing enrichment (idempotent — safe to re-run)
     # Remove existing tab markers and everything after the first non-Урок tab

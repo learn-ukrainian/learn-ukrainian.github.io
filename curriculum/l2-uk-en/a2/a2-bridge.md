@@ -1,36 +1,16 @@
 <!-- TAB:Урок -->
 
 ## Прига́дуємо відмі́нки (Reviewing Cases)
-<div class="dialogue">
+> — **Виклада́ч:** До́брий день! Ласка́во про́симо на курс А2. Як вас зва́ти?
+> — **Майкл:** Добрий день! Ме́не звати Майкл. Я з Кана́ди.
+> — **Викладач:** О, з Канади! Ду́же ціка́во. А скі́льки вам ро́кі́в?
+> — **Майкл:** Ме́ні два́дцять п'ять років.
+> — **Викладач:** Чудо́во! Що ви вивча́єте?
+> — **Майкл:** Я вивча́ю украї́нську мо́ву. Я дуже люблю́ Украї́ну.
+> — **Викладач:** А де ви за́раз живете́?
+> — **Майкл:** Я живу́ в Ки́єві. У мене мале́нька кварти́ра бі́ля метро́.
+> — **Викладач:** Прекра́сно! Дуже приє́мно, Ма́йкле! Сіда́йте, будь ла́ска.
 
-<div class="dialogue-line"><span class="speaker">Виклада́ч:</span> До́брий день! Ласка́во про́симо на курс А2. Як вас зва́ти?</div>
-
-
-<div class="dialogue-line"><span class="speaker">Майкл:</span> Добрий день! Ме́не звати Майкл. Я з Кана́ди.</div>
-
-
-<div class="dialogue-line"><span class="speaker">Викладач:</span> О, з Канади! Ду́же ціка́во. А скі́льки вам ро́кі́в?</div>
-
-
-<div class="dialogue-line"><span class="speaker">Майкл:</span> Ме́ні два́дцять п'ять років.</div>
-
-
-<div class="dialogue-line"><span class="speaker">Викладач:</span> Чудо́во! Що ви вивча́єте?</div>
-
-
-<div class="dialogue-line"><span class="speaker">Майкл:</span> Я вивча́ю украї́нську мо́ву. Я дуже люблю́ Украї́ну.</div>
-
-
-<div class="dialogue-line"><span class="speaker">Викладач:</span> А де ви за́раз живете́?</div>
-
-
-<div class="dialogue-line"><span class="speaker">Майкл:</span> Я живу́ в Ки́єві. У мене мале́нька кварти́ра бі́ля метро́.</div>
-
-
-<div class="dialogue-line"><span class="speaker">Викладач:</span> Прекра́сно! Дуже приє́мно, Ма́йкле! Сіда́йте, будь ла́ска.</div>
-
-
-</div>
 
 
 Did you notice? In that short conversation, Майкл and the teacher used four different case forms without thinking about it. «З Канади» — the noun changed. «Мені» — another form. «Українську мову» — the adjective and noun both changed. «В Києві» — yet another ending. And at the very end, even Майкл's own name shifted: «Майкле!»
