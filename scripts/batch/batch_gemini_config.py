@@ -26,8 +26,21 @@ QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 # Flash-Lite not yet available via gemini-cli (404). Using 3-flash as efficiency model.
 FLASH_LITE_MODEL = "gemini-3-flash-preview"          # Fast + cheap: vocab, activities, fixes
 FLASH_MODEL = "gemini-3-flash-preview"               # Same — aliased for clarity
-PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, review
+PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, content
+GEMINI_REVIEW_MODEL = FLASH_MODEL                    # Review model — switch to PRO_MODEL when Pro is stable
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when Pro is unavailable
+
+# Timeouts (seconds) — one place to tune for all pipeline steps
+TIMEOUT_SKELETON = 300
+TIMEOUT_WRITE = 900
+TIMEOUT_WRITE_NO_TOOLS = 600
+TIMEOUT_VOCAB = 600
+TIMEOUT_ACTIVITIES = 900
+TIMEOUT_REVIEW_GEMINI_PROBE = 300
+TIMEOUT_REVIEW_CLAUDE = 900
+TIMEOUT_PRE_VERIFY = 600
+TIMEOUT_ANNOTATE = 600
+TIMEOUT_PUBLISH = 600
 
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.

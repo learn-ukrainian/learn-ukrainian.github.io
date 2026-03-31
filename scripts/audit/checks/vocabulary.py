@@ -580,17 +580,24 @@ def check_metalanguage_scaffolding(
         relevant_metalang.update(METALANGUAGE_BY_LEVEL.get(level_order[i], set()))
 
     # Find metalanguage terms used in content but not in current or cumulative vocabulary
-    content_lower = content.lower()
-    vocab_lower = {w.lower() for w in vocab_words}
+    # Strip combining acute accent (U+0301) — vocab words have stress marks (називни́й)
+    # but METALANGUAGE_BY_LEVEL uses bare forms (називний)
+    import unicodedata
+    def _strip_stress(s: str) -> str:
+        return unicodedata.normalize('NFD', s).replace('\u0301', '')
+
+    content_lower = _strip_stress(content.lower())
+    vocab_lower = {_strip_stress(w.lower()) for w in vocab_words}
 
     # If cumulative_vocab is provided, merge it for the check
     known_vocab = vocab_lower.copy()
     if cumulative_vocab:
-        known_vocab.update({w.lower() for w in cumulative_vocab})
+        known_vocab.update({_strip_stress(w.lower()) for w in cumulative_vocab})
 
     used_but_not_taught = []
     for term in relevant_metalang:
-        if term in content_lower and term not in known_vocab and re.search(rf'\b{term}\b', content_lower):
+        bare_term = _strip_stress(term)
+        if bare_term in content_lower and bare_term not in known_vocab and re.search(rf'\b{bare_term}\b', content_lower):
                 used_but_not_taught.append(term)
 
     if used_but_not_taught:

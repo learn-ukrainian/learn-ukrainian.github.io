@@ -101,14 +101,52 @@ IMMERSION_RULES: dict[str, str] = {
         "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.\n"
         "Ukrainian sentences max 10 words. Mix container types."
     ),
-    "a2-m01-20": (
-        "TARGET: 45-65% Ukrainian.\n"
+    "a2-bridge": (
+        "TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).\n"
         "LANGUAGE ROLES:\n"
-        "- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.\n"
+        "- THEORY: English prose for grammar review and metalanguage introduction.\n"
+        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.\n"
+        "- HEADERS: Ukrainian with English in parentheses.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
+        "These are review/bridge modules. English theory is expected. Ukrainian content comes from "
+        "dialogues, example sentences, paradigm tables, and pattern boxes.\n"
+        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. "
+        "Ukrainian sentences max 15 words. Max 2 clauses. "
+        "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
+    ),
+    "a2-ramp": (
+        "TARGET: 30-50% Ukrainian. Transition from bridge to full A2 immersion.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY: English prose for grammar explanations — keep SHORT (2-3 sentences per concept).\n"
         "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
         "- HEADERS: Ukrainian with English in parentheses.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. "
-        "Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
+        "HOW TO REACH 30-50% UKRAINIAN:\n"
+        "1. Include 2-3 multi-turn dialogues (6+ lines each) spread through the module.\n"
+        "2. After grammar explanations, show Ukrainian pattern boxes: «стіл → стола → на столі».\n"
+        "3. Use :::tip callouts with Ukrainian mnemonic phrases.\n"
+        "4. Example lists and paradigm tables count as Ukrainian content.\n"
+        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. "
+        "Ukrainian sentences max 15 words. Max 2 clauses. "
+        "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
+    ),
+    "a2-m01-20": (
+        "TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY: English prose for grammar explanations — keep these SHORT (2-3 sentences max per concept).\n"
+        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
+        "- HEADERS: Ukrainian with English in parentheses.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence.\n"
+        "HOW TO REACH 45-65% UKRAINIAN (mandatory techniques):\n"
+        "1. After EVERY grammar explanation, add a «Читаємо українською» block: 4-6 full Ukrainian sentences "
+        "demonstrating the concept just explained. These are comprehensible input, not exercises.\n"
+        "2. Include 3-4 multi-turn dialogues (6+ lines each) spread through the module. "
+        "Dialogues are the fastest way to boost Ukrainian content.\n"
+        "3. Pattern boxes showing Ukrainian transformations: «стіл → стола → на столі».\n"
+        "4. Section introductions can be 1-2 Ukrainian sentences before the English theory.\n"
+        "5. :::tip and :::note callout boxes should contain Ukrainian mnemonic phrases.\n"
+        "If your module has long English paragraphs without Ukrainian blocks between them, "
+        "you are below target. Every English paragraph should be followed by Ukrainian content.\n"
         "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. "
         "Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
@@ -1085,7 +1123,11 @@ def get_immersion_rule(track: str, module_num: int) -> str:
         else:
             return IMMERSION_RULES["a1-m55+"]
     elif base == "a2":
-        if module_num <= 20:
+        if module_num <= 3:
+            return IMMERSION_RULES["a2-bridge"]
+        elif module_num <= 7:
+            return IMMERSION_RULES["a2-ramp"]
+        elif module_num <= 20:
             return IMMERSION_RULES["a2-m01-20"]
         elif module_num <= 50:
             return IMMERSION_RULES["a2-m21-50"]

@@ -31,7 +31,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
@@ -165,7 +165,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*

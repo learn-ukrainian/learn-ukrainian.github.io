@@ -1,0 +1,98 @@
+# Friction file for a2-bridge — issues found in R1 build (2026-03-31)
+# These constraints are injected into rebuild prompts automatically.
+
+- id: no-prekrasno
+  status: active
+  severity: high
+  description: >
+    «Прекрасно!» is a Russian conversational calque. Антоненко-Давидович recommends
+    «чудово» over the прекрасний family. Use «Чудово!», «Відмінно!», or «Дуже добре!»
+  source: Gemini adversarial review + Антоненко-Давидович style guide
+  applies_to: all Ukrainian dialogue and prose
+
+- id: euphony-iy-rewrite
+  status: active
+  severity: high
+  description: >
+    The і/й euphony explanation must be clear and simple. Do NOT write self-contradicting
+    sentences like "ends in a vowel? No — the sound is [и], classified as a vowel, so
+    this seems contradictory." State the rule simply: after a consonant sound, use «і»;
+    after a vowel sound, use «й». Then give clear examples. Handle edge cases separately.
+  source: Gemini review — "completely nonsensical, will severely confuse learners"
+
+- id: no-semantic-nonsense
+  status: active
+  severity: high
+  description: >
+    Every example sentence must be semantically meaningful. Avoid:
+    - «На столі стоїть новий стіл» (table on a table — absurd)
+    - «Де моя рука? На руці — браслет» (where is my hand? — weird)
+    - «Я пишу рукою — але я тримаю ручку» (meaningless contrast)
+    Use sentences a real person would say in a real situation.
+  source: Gemini review — "bizarre, robotic", "contextually absurd"
+
+- id: nagolos-is-noun
+  status: active
+  severity: medium
+  description: >
+    In the словнік, «наголос» (stress/accent) must be listed as іменник (ім.), род чоловічий (ч.),
+    NOT as прислівник (присл.). VESUM confirms both POS exist, but in this pedagogical context
+    наголос is clearly a noun.
+  source: VESUM verification + Gemini review
+
+- id: no-double-stress
+  status: active
+  severity: medium
+  description: >
+    Never place two stress marks on one word. Wrong: «ро́кі́в», «родо́ви́й».
+    Correct: «ро́ків», «родови́й». Each word has exactly one stressed syllable.
+  source: Gemini review
+
+- id: no-ye-instrumental-identity
+  status: active
+  severity: medium
+  description: >
+    Do NOT teach «Він є лікарем» as a core identity pattern. This is a calque of
+    English "He is a doctor." Natural Ukrainian: «Він — лікар» (nominative) or
+    «Він працює лікарем» (instrumental for profession). The є + instrumental pattern
+    is bookish/formal and misleading for A2 learners.
+  source: Gemini review — "unnatural calque"
+
+- id: kyiv-use-locative-not-genitive
+  status: active
+  severity: high
+  description: >
+    When demonstrating Київ alternations, use LOCATIVE (Києві) which learners already
+    know from A1, NOT Genitive (Києва) which hasn't been taught yet.
+    VESUM forms: Nominative «Київ», Locative «Києві»/«Києву», Genitive «Києва».
+    Do NOT claim "и turns into є" — that's wrong. The ї→є alternation in Київ/Києві
+    is a historical ě pattern, NOT the same as стіл→стола (о→і closed-syllable rule).
+    Keep Київ as a familiar Locative example: «Я живу в Києві» — don't overanalyze
+    its phonology. Use стіл→стола, кінь→коня for the о→і rule instead.
+  source: VESUM verification + pedagogical sequencing (Genitive not yet taught)
+
+- id: no-prekrasno-in-dialogue
+  status: active
+  severity: medium
+  description: >
+    R2 rebuild still has «Прекрасно!» in dialogue (line 71, Оксана says it).
+    The no-prekrasno friction was not picked up. MUST replace with «Чудово!»,
+    «Відмінно!», or «Дуже добре!» — no exceptions.
+  source: R2 build verification — friction not applied
+
+- id: must-have-summary
+  status: active
+  severity: high
+  description: >
+    Module MUST end with «## Підсумок» section. R2 build ended with «Починаймо!»
+    and no summary. The write prompt Rule #10 requires it. This is an audit gate.
+  source: R2 audit — Structure ❌ Missing '## Summary'
+
+- id: must-have-callouts
+  status: active
+  severity: high
+  description: >
+    Module MUST have at least 3 callout boxes (:::tip, :::note, :::warning).
+    R2 build had zero. Use for mnemonics, common mistakes, cultural notes.
+    Example: :::tip for "How to remember г→ж, к→ч, х→ш"
+  source: R2 audit — Engagement ❌ 0/3

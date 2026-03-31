@@ -53,6 +53,19 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+from batch_gemini_config import (
+    TIMEOUT_ACTIVITIES,
+    TIMEOUT_ANNOTATE,
+    TIMEOUT_PRE_VERIFY,
+    TIMEOUT_PUBLISH,
+    TIMEOUT_REVIEW_CLAUDE,
+    TIMEOUT_REVIEW_GEMINI_PROBE,
+    TIMEOUT_SKELETON,
+    TIMEOUT_VOCAB,
+    TIMEOUT_WRITE,
+    TIMEOUT_WRITE_NO_TOOLS,
+)
+
 logger = logging.getLogger(__name__)
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -706,7 +719,7 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
     ok, raw = _dispatch(
         prompt, agent=agent, phase="pre-verify", orch_dir=orch_dir,
-        timeout=600,
+        timeout=TIMEOUT_PRE_VERIFY,
         mcp_tools=True,
         allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
         model=family.fast,  # Fast model sufficient — structured output, not creative
@@ -714,10 +727,10 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
     # Retry once on timeout — pre-verify is critical for grounding the writer
     if not ok or not raw:
-        _log("  ⚠️  Pre-verify failed — retrying once (timeout=600s)")
+        _log("  ⚠️  Pre-verify failed — retrying once")
         ok, raw = _dispatch(
             prompt, agent=agent, phase="pre-verify-retry", orch_dir=orch_dir,
-            timeout=600,
+            timeout=TIMEOUT_PRE_VERIFY,
             mcp_tools=True,
             allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
             model=family.fast,
@@ -821,7 +834,7 @@ def step_skeleton(level: str, module_num: int, slug: str,
 
     family = get_family(writer)
     ok, raw = _dispatch(
-        prompt, agent=family.name, phase="skeleton", orch_dir=orch_dir, timeout=300,
+        prompt, agent=family.name, phase="skeleton", orch_dir=orch_dir, timeout=TIMEOUT_SKELETON,
         model=family.fast,
     )
 
@@ -1097,7 +1110,7 @@ def step_write_chunked(
         from build.dispatch import CLAUDE_WRITER_TOOLS
         ok, raw = _dispatch(
             prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
-            orch_dir=orch_dir, timeout=450 if use_tools else 300,
+            orch_dir=orch_dir, timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
             mcp_tools=use_tools,
             allowed_tools=CLAUDE_WRITER_TOOLS if (use_tools and writer.startswith("claude")) else None,
         )
@@ -1379,6 +1392,28 @@ def step_write(level: str, module_num: int, slug: str,
     if verification_text:
         _log(f"  🔍 Pre-verified facts injected ({len(verification_text)} chars)")
 
+    # Inject module friction (learnings from past builds that MUST be respected)
+    friction_path = CURRICULUM_ROOT / level / "orchestration" / slug / "friction.yaml"
+    if friction_path.exists():
+        try:
+            friction_entries = yaml.safe_load(friction_path.read_text("utf-8"))
+            if isinstance(friction_entries, list):
+                active = [f for f in friction_entries if f.get("status") == "active"]
+                if active:
+                    friction_lines = [
+                        "\n\n## Module-Specific Constraints (from past build learnings)\n\n"
+                        "**These are NON-NEGOTIABLE.** Previous builds of this module had these "
+                        "errors. You MUST avoid them:\n"
+                    ]
+                    for f in active:
+                        sev = f.get("severity", "medium").upper()
+                        desc = f.get("description", "").strip()
+                        friction_lines.append(f"\n- **[{sev}]** {desc}")
+                    prompt += "\n".join(friction_lines) + "\n"
+                    _log(f"  🔧 Friction injected: {len(active)} active constraint(s)")
+        except Exception:
+            pass  # Non-blocking
+
     # Inject skeleton section when provided (Skeleton->Flesh architecture)
     # (skipped for seminar templates — already handled via {SKELETON_SECTION} placeholder)
     if skeleton and not is_seminar:
@@ -1435,17 +1470,17 @@ def step_write(level: str, module_num: int, slug: str,
 
     if writer == "gemini":
         ok, raw = dispatch_agent(
-            prompt, agent="gemini", phase="write", orch_dir=orch_dir, timeout=600,
+            prompt, agent="gemini", phase="write", orch_dir=orch_dir, timeout=TIMEOUT_WRITE_NO_TOOLS,
         )
     elif writer == "gemini-tools":
         ok, raw = dispatch_agent(
             prompt, agent="gemini-tools", phase="write", orch_dir=orch_dir,
-            timeout=900, mcp_tools=True,
+            timeout=TIMEOUT_WRITE, mcp_tools=True,
         )
     elif writer in ("claude", "claude-tools"):
         ok, raw = dispatch_agent(
             prompt, agent=writer, phase="write", orch_dir=orch_dir,
-            timeout=900 if use_tools else 600,
+            timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
             mcp_tools=use_tools, allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
         )
     else:
@@ -2041,7 +2076,7 @@ def step_vocab(content_path: Path, level: str, module_num: int,
 
     # Vocab is structured output — use fast/cheap model
     ok, raw = _dispatch(
-        prompt, agent=family.name, phase="vocab", orch_dir=orch_dir, timeout=180,
+        prompt, agent=family.name, phase="vocab", orch_dir=orch_dir, timeout=TIMEOUT_VOCAB,
         model=family.fast,
     )
 
@@ -2585,13 +2620,13 @@ def step_activities(
         if "gemini" in base_writer:
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
-                orch_dir=orch_dir, timeout=600, mcp_tools=True,
+                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES, mcp_tools=True,
             )
         else:
             # Activities are structured YAML — use fast model, not thinking
             ok, raw = _dispatch(
                 current_prompt, agent="claude-tools", phase="activities",
-                orch_dir=orch_dir, timeout=600,
+                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES,
                 mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
                 model=CLAUDE_FAMILY.fast,
             )
@@ -3131,7 +3166,7 @@ def step_review(content_path: Path, level: str, module_num: int,
     generated_content = generated_content + word_count_note
 
     # Build review prompt
-    writer_model = "Claude Opus" if writer == "claude" else "Gemini Pro"
+    writer_model = "Claude" if "claude" in writer else "Gemini"
     prompt = template
     replacements = {
         "{MODULE_NUM}": str(module_num),
@@ -3238,13 +3273,16 @@ def step_review(content_path: Path, level: str, module_num: int,
     if reviewer == "gemini":
         import time
 
+        from batch_gemini_config import GEMINI_REVIEW_MODEL
+
         # Probe Gemini with a cheap call to measure current latency
-        _log("  🏓 Probing Gemini latency...")
+        _log(f"  🏓 Probing Gemini latency ({GEMINI_REVIEW_MODEL})...")
         probe_t0 = time.monotonic()
         probe_ok, _ = _dispatch(
             "Reply with exactly: OK",
-            agent="gemini", phase="review", orch_dir=orch_dir,
-            timeout=300,
+            agent=reviewer_agent, phase="review", orch_dir=orch_dir,
+            timeout=TIMEOUT_REVIEW_GEMINI_PROBE,
+            model=GEMINI_REVIEW_MODEL,
         )
         probe_latency = time.monotonic() - probe_t0
         if probe_ok:
@@ -3253,7 +3291,7 @@ def step_review(content_path: Path, level: str, module_num: int,
             review_timeout = max(600, min(int(probe_latency * 10), 1800))
             _log(f"  🏓 Gemini responded in {int(probe_latency)}s — review timeout set to {review_timeout}s")
         else:
-            # Gemini Pro is down — fall back to Claude to keep the batch moving
+            # Gemini is down — fall back to Claude to keep the batch moving
             _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — falling back to Claude reviewer")
             reviewer = "claude"
             reviewer_agent = "claude-tools"
@@ -3267,6 +3305,7 @@ def step_review(content_path: Path, level: str, module_num: int,
             ok, raw = _dispatch(
                 prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
                 timeout=review_timeout, mcp_tools=True,
+                model=GEMINI_REVIEW_MODEL,
             )
             elapsed = time.monotonic() - t0
             if ok and raw:
@@ -3279,10 +3318,11 @@ def step_review(content_path: Path, level: str, module_num: int,
             else:
                 _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_MAX_RETRIES} attempts")
     else:
+        from batch_gemini_config import CLAUDE_MODEL_FINAL_REVIEW
         ok, raw = _dispatch(
             prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=600, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
-            model=CLAUDE_FAMILY.thinking,
+            timeout=TIMEOUT_REVIEW_CLAUDE, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
+            model=CLAUDE_MODEL_FINAL_REVIEW,
         )
 
     if not ok or not raw:
@@ -3658,13 +3698,13 @@ claims, grammar rules, or cultural facts that aren't here.
     if "claude" in writer:
         ok, raw = _dispatch(
             prompt, agent="claude-tools", phase="section-rewrite",
-            orch_dir=orch_dir, timeout=600,
+            orch_dir=orch_dir, timeout=TIMEOUT_WRITE,
             mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
         )
     else:
         ok, raw = _dispatch(
             prompt, agent="gemini-tools", phase="section-rewrite",
-            orch_dir=orch_dir, timeout=600, mcp_tools=True,
+            orch_dir=orch_dir, timeout=TIMEOUT_WRITE, mcp_tools=True,
         )
 
     if not ok or not raw:

@@ -113,25 +113,7 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Try to update Claude
-echo "Checking for Claude updates..."
-claude install 2>/dev/null || true
-
-# Refresh command cache after potential update
-hash -r 2>/dev/null || true
-
-# Start Claude (use command -v to get actual path, avoiding stale cache)
-echo "Launching Claude Code in dontAsk mode..."
-CLAUDE_BIN="$(command -v claude)"
-if [ -z "$CLAUDE_BIN" ]; then
-    # Fallback to common install locations
-    if [ -x "$HOME/.local/bin/claude" ]; then
-        CLAUDE_BIN="$HOME/.local/bin/claude"
-    elif [ -x "/opt/homebrew/bin/claude" ]; then
-        CLAUDE_BIN="/opt/homebrew/bin/claude"
-    else
-        echo "Error: Cannot find claude binary after update"
-        exit 1
-    fi
-fi
-"$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "$@"
+# Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
+# See: https://reddit.com/r/ClaudeAI/comments/1s7mkn3/
+echo "Launching Claude Code via npx (cache-safe)..."
+npx @anthropic-ai/claude-code --chrome --permission-mode bypassPermissions "$@"

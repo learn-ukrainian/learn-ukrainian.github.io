@@ -6,6 +6,7 @@ and case government rules based on CEFR level.
 """
 
 import re
+import unicodedata
 
 from ..cleaners import extract_ukrainian_sentences
 from ..config import (
@@ -16,6 +17,11 @@ from ..config import (
     NOMINATIVE_PLURAL_EXCLUSIONS,
     PARTICIPLE_EXCLUSIONS,
 )
+
+
+def _strip_stress(s: str) -> str:
+    """Strip combining acute accent (U+0301) — stress marks break \\w regex matching."""
+    return unicodedata.normalize('NFD', s).replace('\u0301', '')
 
 
 def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
@@ -104,9 +110,11 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
                     })
 
     # Check for participles before B1
+    # Strip stress marks first — U+0301 breaks \w regex and splits words
+    text_clean = _strip_stress(text)
     if level_code in ('A1', 'A2') and not constraints.get('participles', False):
         for pattern in CASE_PATTERNS['participles']:
-            matches = re.findall(pattern, text, re.IGNORECASE)
+            matches = re.findall(pattern, text_clean, re.IGNORECASE)
             if matches:
                 for match in matches[:3]:
                     # Filter out common adjectives that match participle patterns

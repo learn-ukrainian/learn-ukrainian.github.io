@@ -1565,17 +1565,30 @@ def get_a1_immersion_range(
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for A2 based on module number.
 
-    3-band graduated immersion per #576 final decision:
-    - Band 1 (M01-20): 50-60% — Core grammar, English for theory
-    - Band 2 (M21-50): 60-75% — Applied grammar, English only for abstracts
-    - Band 3 (M51-70): 75-90% — Consolidation, near-full immersion
+    5-band graduated immersion — calibrated from A1 actual data (2026-03-31):
+    A1 ends at 20-41% (M51-M55 actual). Bridge continues from there.
+
+    - Bridge (M01-03): 20-40% — A1→A2 transition, reviewing cases + aspect metalanguage
+      A1 finale hits 41%. Bridge modules are grammar-theory-heavy review. 20-35% typical.
+    - Ramp (M04-07): 30-50% — genitive intro + foundations practice, mixing theory + application
+      First new case applied in real situations ("У мене немає..."), more dialogues possible.
+    - Band 1 (M08-20): 45-65% — genitive complete, dative — applied grammar, communicative
+      Shopping, health, services — dialogue-rich, less theory, more Ukrainian interaction.
+    - Band 2 (M21-50): 55-75% — instrumental, case synthesis, aspect, motion, complex sentences
+      Learner has all cases, can handle longer Ukrainian passages.
+    - Band 3 (M51-57): 70-90% — refinement, metalanguage prep for B1, graduation
+      Near-full immersion, preparing for B1's 85-100% target.
     """
-    if module_num <= 20:
-        return (45, 65)   # Band 1: Core grammar (was 50-60; grammar modules need English)
+    if module_num <= 3:
+        return (20, 40)   # Bridge: same range as late A1 (actual A1 end: 20-41%)
+    elif module_num <= 7:
+        return (30, 50)   # Ramp: theory+application mix, first new case
+    elif module_num <= 20:
+        return (45, 65)   # Band 1: applied grammar, communicative situations
     elif module_num <= 50:
-        return (55, 75)   # Band 2: Applied grammar (was 60-75; steep jump caused failures)
+        return (55, 75)   # Band 2: all cases, longer Ukrainian passages
     else:
-        return (70, 90)   # Band 3: Consolidation / Pre-B1 (was 75-90; 5 modules failed at 70-75%)
+        return (70, 90)   # Band 3: near-full immersion, B1 prep
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
