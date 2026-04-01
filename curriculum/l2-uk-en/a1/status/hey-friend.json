@@ -1,16 +1,16 @@
 {
-  "module": "my-day",
+  "module": "hey-friend",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:26:31.937989Z",
+  "last_audit": "2026-03-31T17:26:29.234012Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:55:11.778811Z",
+    "md": "2026-03-31T11:48:48.117885Z",
     "meta": null,
-    "activities": "2026-03-30T07:43:14.184539Z",
-    "vocabulary": "2026-03-30T07:43:42.422310Z",
+    "activities": "2026-03-30T22:12:57.335970Z",
+    "vocabulary": "2026-03-30T22:13:28.705229Z",
     "research": null,
-    "plan": "2026-03-30T22:17:20.661516Z"
+    "plan": "2026-03-30T22:17:20.658073Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1795/1200 (raw: 2140)"
+      "message": "1391/1200 (raw: 1833)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "30/1"
+      "message": "23/1"
     },
     "naturalness": {
       "status": "info",
@@ -41,7 +41,7 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+      "message": "Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes"
     },
     "review": {
       "status": "pass",

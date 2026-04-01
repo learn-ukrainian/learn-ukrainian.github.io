@@ -2,15 +2,15 @@
   "module": "how-many",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:48.772549Z",
+  "last_audit": "2026-03-31T17:26:30.620407Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T14:46:00.697024Z",
+    "md": "2026-03-31T11:43:22.878039Z",
     "meta": null,
     "activities": "2026-03-30T14:35:18.827050Z",
     "vocabulary": "2026-03-30T14:36:09.440745Z",
     "research": null,
-    "plan": "2026-03-30T11:51:34.876686Z"
+    "plan": "2026-03-30T22:17:20.658798Z"
   },
   "gates": {
     "meta": {
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2095/1200 (raw: 2849)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2080/1200 (raw: 2834) | immersion: 33.7% HIGH (target 10-30% (M11))"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/0"
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

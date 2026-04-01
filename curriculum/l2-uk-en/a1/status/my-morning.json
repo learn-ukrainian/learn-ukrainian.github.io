@@ -2,15 +2,15 @@
   "module": "my-morning",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:56.908191Z",
+  "last_audit": "2026-03-31T17:26:32.603173Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T06:16:29.768183Z",
+    "md": "2026-03-31T11:55:12.884793Z",
     "meta": null,
     "activities": "2026-03-30T06:14:57.243463Z",
     "vocabulary": "2026-03-30T06:15:11.797790Z",
     "research": null,
-    "plan": "2026-03-30T02:07:01.287472Z"
+    "plan": "2026-03-30T22:17:20.662189Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1622/1200 (raw: 2107)"
+      "message": "1611/1200 (raw: 2096)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",

@@ -2,10 +2,10 @@
   "module": "emergencies",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T01:52:06.679496Z",
+  "last_audit": "2026-03-31T17:26:34.653346Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T00:44:04.221732Z",
+    "md": "2026-03-31T11:55:16.580768Z",
     "meta": null,
     "activities": "2026-03-31T01:15:42.924959Z",
     "vocabulary": "2026-03-31T00:41:01.560739Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1796/1200 (raw: 2380)"
+      "message": "1788/1200 (raw: 2372)"
     },
     "activities": {
       "status": "pass",

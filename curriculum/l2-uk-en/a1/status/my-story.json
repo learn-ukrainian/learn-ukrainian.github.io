@@ -1,16 +1,16 @@
 {
-  "module": "special-signs",
+  "module": "my-story",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:40.739882Z",
+  "last_audit": "2026-03-31T17:26:33.965142Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T18:14:26.000190Z",
+    "md": "2026-03-31T11:55:00.152458Z",
     "meta": null,
-    "activities": "2026-03-29T17:54:14.187708Z",
-    "vocabulary": "2026-03-29T17:54:57.999369Z",
+    "activities": "2026-03-30T23:58:16.543799Z",
+    "vocabulary": "2026-03-30T23:58:42.150274Z",
     "research": null,
-    "plan": "2026-03-28T22:26:24.673137Z"
+    "plan": "2026-03-30T22:17:20.662925Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2401/1200 (raw: 3247)"
+      "message": "1823/1200 (raw: 2398)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "72/1"
+      "message": "58/1"
     },
     "naturalness": {
       "status": "info",
