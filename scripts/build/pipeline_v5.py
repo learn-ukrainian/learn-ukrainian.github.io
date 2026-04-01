@@ -195,7 +195,7 @@ from pipeline.state import (
     executor_llm,
     executor_script,
     is_complete,
-    load_state,  # noqa: F401 — re-exported for build_module_v5
+    load_state,
     mark_complete,
     mark_failed,
     save_state,

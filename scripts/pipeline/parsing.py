@@ -212,7 +212,7 @@ def _extract_fix_plan(review_text: str) -> str:
 # Re-exports from sibling modules (parsing_helpers, parsing_review)
 # pipeline_v5.py imports everything from pipeline.parsing as the public API
 # ---------------------------------------------------------------------------
-from pipeline.parsing_helpers import (  # noqa: F401
+from pipeline.parsing_helpers import (
     _compute_metrics_direct,
     _extract_audit_failures,
     _extract_gate_blockers,
@@ -223,7 +223,7 @@ from pipeline.parsing_helpers import (  # noqa: F401
     _get_russicism_table,
     _scan_llm_filler,
 )
-from pipeline.parsing_review import (  # noqa: F401
+from pipeline.parsing_review import (
     _build_d3_context,
     _get_track_calibration,
     _quick_review_quality_gate,

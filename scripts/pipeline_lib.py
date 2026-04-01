@@ -4,7 +4,7 @@
 All imports from pipeline_lib are forwarded to pipeline.core.
 New code should import from pipeline.core directly.
 """
-# ruff: noqa: F401, F403
+# ruff: noqa: F403
 from pipeline.core import *
 from pipeline.core import (
     ACTIVITY_CONFIGS,

@@ -14,7 +14,7 @@ from pathlib import Path
 from pipeline.core import ModuleContext
 
 # Re-export review/calibration/quality-gate functions for backward compat
-from pipeline.parsing_review import (  # noqa: F401
+from pipeline.parsing_review import (
     _CALIBRATION_DIR,
     _build_d3_context,
     _get_russicism_table,

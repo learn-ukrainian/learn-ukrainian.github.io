@@ -9,8 +9,9 @@ Usage:
 """
 
 import json
-import yaml
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(__file__).parent.parent
 CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"

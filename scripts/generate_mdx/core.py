@@ -38,7 +38,7 @@ from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers
 from yaml_activities import (
-    Activity,  # noqa: F401
+    Activity,
     ActivityParser,
 )
 
