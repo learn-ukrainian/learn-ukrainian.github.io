@@ -3,6 +3,7 @@ name: curriculum-maintainer
 description: Maintains the world's first comprehensive Ukrainian language curriculum
 tools: "*"
 model: inherit
+initialPrompt: "Read the task description from the parent agent. If no specific task was given, run: curl -s http://localhost:8765/api/state/summary 2>/dev/null | head -50 to get project state, then check gh issue list --state open --limit 5 for active work items."
 ---
 
 # Curriculum Maintainer Agent

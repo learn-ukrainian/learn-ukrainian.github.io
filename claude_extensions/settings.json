@@ -672,11 +672,23 @@
     "FileChanged": [
       {
         "matcher": "curriculum/l2-uk-en/**/*.md",
+        "if": "Write(curriculum/**/*.md)",
         "hooks": [
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-audit.sh",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"STOP FAILURE: API error occurred. Check rate limits or auth.\" >&2",
+            "timeout": 5
           }
         ]
       }
