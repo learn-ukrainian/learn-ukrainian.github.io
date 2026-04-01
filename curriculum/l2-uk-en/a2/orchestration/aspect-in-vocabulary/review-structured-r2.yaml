@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All four content_outline sections covered. Word count (3232) well above
+    2000 target. Section word budgets all above plan targets. Plan reference to "Заболотний's
+    Grade 6 textbook (§52)" cited in Secti
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: No Russianisms, no Surzhyk, no calques detected. All 286 Ukrainian content
+    words verified in VESUM. Case endings correct throughout (e.g., «Зліпила перший»
+    — correct accusative). **Deduction:** ловити
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: situation (varenyky dialogue) → pattern (three methods)
+    → practice (exercises). 5+ example sentences per grammar point. Chopstick metaphor
+    is effective. Textbook pedagogy referenced ('
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required vocab all present:** пара (§1 "видова пара"), префікс (§2
+    heading), суфікс (§3), корінь (§3), читати/прочитати, писати/написати, брати/взяти,
+    говорити/сказати — all appear with contextual s'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'Four markers match all four plan activity_hints. Placement after relevant
+    teaching. Quiz marker includes plausible distractors. **Deduction:** розуміти/зрозуміти
+    in Method 2 read-aloud exercise tests '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers. Chopstick and inhale/exhale metaphors are concrete
+    and original. No "Let us now explore..." meta-commentary. Teacher voice throughout
+    — demonstrating rather than lecturing. "E
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown. All four plan sections present as H2 headings plus Summary.
+    Word count (3232) comfortably above 2000 target. No stray tags or formatting artifacts.
+    **Deduction:** забувати/забути appea
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized. No "like Russian but..." comparisons. Ukrainian presented
+    on its own terms. Etymology section roots suppletion in "Old Slavic" — accurate
+    and respectful. References Ukrainian school
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Varenyky cooking dialogue is natural, matches plan's dialogue_situation
+    exactly. Named speakers (Бабуся/Онучка) with distinct voices. Multi-turn exchange
+    with realistic aspect contrasts (ліпи/зліпила,
+findings: []

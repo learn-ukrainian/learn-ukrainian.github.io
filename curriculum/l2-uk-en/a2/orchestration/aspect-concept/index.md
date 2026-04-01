@@ -1,6 +1,6 @@
 # Build Summary: aspect-concept (A2)
 
-Generated: 2026-03-31 01:31
+Generated: 2026-03-31 08:58
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-03-31 01:31
 | enrich | complete | 2026-03-30 23:27:03 |
 | verify | complete | 2026-03-30 23:27:03 |
 | review | complete | 2026-03-30 23:31:04 |
-| stress | complete | 2026-03-30 23:31:16 |
-| publish | complete | 2026-03-30 23:31:16 |
+| stress | complete | 2026-03-31 06:58:26 |
+| publish | complete | 2026-03-31 06:58:27 |
 
 ## Reviews
 
@@ -45,6 +45,7 @@ Generated: 2026-03-31 01:31
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

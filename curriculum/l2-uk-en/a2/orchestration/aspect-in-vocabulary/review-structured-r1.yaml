@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct H2 headings. All
+    plan points covered: standard notation explained ("imperfective / perfective"),
+    dictionary usage (slovnyk/e2u references, недок./до'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Three misclassification errors: (1) зрозуміти/розуміти listed under vowel
+    alternation but it''s a prefix pair (з- + розуміти), (2) ловити/зловити classified
+    as suppletion with false claim "Linguists st'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: situation (varenyky cooking) → pattern recognition
+    (three methods) → practice (read-aloud, self-check). Each grammar point has 3+
+    Ukrainian example sentences with imperfective/perf'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 8 required vocabulary items from plan present and used naturally:
+    пара ("видова пара"), префікс (multiple uses), суфікс (multiple uses), корінь
+    ("в корені"), читати/прочитати, писати/написати, бра'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'All 4 plan activity_hints matched with correct types and item counts.
+    Good placement after teaching sections. Quiz distractor design (marker specifies
+    "plausible-but-wrong prefixes e.g., записати for '
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Specific, concrete, zero filler. Opening contrasts two sentences and lands
+    immediately on the concept. "One chopstick" analogy is memorable and apt. Varenyky
+    dialogue is culturally rich and linguistic
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 H2 sections present and correctly ordered. Summary section added
+    (not in plan outline — standard practice). Clean markdown throughout. Word count
+    3213 vs 2000 target — 161% of minimum, well abov
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian" comparisons
+    anywhere. Varenyky cooking scene is authentically Ukrainian. Old Slavic etymology
+    reference ("Ukrainian брати / взяти simil
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'The varenyky dialogue is outstanding: 5 turns, named speakers with distinct
+    voices (Бабуся instructing, Онучка responding), natural cooking situation, aspect
+    pairs demonstrated organically (ліпи/зліпи'
+findings: []

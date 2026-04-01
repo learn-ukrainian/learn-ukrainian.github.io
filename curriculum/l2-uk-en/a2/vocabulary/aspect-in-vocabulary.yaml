@@ -1,0 +1,349 @@
+vocabulary:
+- word: видова пара
+  translation: aspect pair
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: що робити?
+  translation: what to do? (imperfective question marker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: що зробити?
+  translation: what to do (and finish)? (perfective question marker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: суплетиві́зм
+  translation: suppletion (forming pairs from different roots)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́рінь
+  translation: root (of a word)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: па́ра
+  translation: pair
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чита́ти / прочита́ти
+  translation: to read / to read (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: писа́ти / написа́ти
+  translation: to write / to write (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: бра́ти / взя́ти
+  translation: to take / to take (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: говори́ти / сказа́ти
+  translation: to speak / to say (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: словни́к
+  translation: dictionary
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: запам'ято́вувати
+  translation: to memorize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: утво́рювати
+  translation: to form, to create
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́зовий
+  translation: basic, fundamental
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: роби́ти / зроби́ти
+  translation: to do, to make / to do (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ба́чити / поба́чити
+  translation: to see / to see (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: готува́ти / приготува́ти
+  translation: to cook, to prepare / to cook (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вари́ти / звари́ти
+  translation: to boil / to boil (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вчи́ти / ви́вчити
+  translation: to study / to learn (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ї́сти / з'ї́сти
+  translation: to eat / to eat (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пи́ти / ви́пити
+  translation: to drink / to drink (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: малюва́ти / намалюва́ти
+  translation: to draw, to paint / to draw (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: запита́ти / запи́тувати
+  translation: to ask (once) / to ask (repeatedly)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ви́рішити / вирі́шувати
+  translation: to decide, to solve (completed) / to decide (ongoing)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відпові́сти́ / відповіда́ти
+  translation: to answer (once) / to answer (regularly)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: показа́ти / пока́зувати
+  translation: to show (once) / to show (repeatedly)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: допомогти́ / допомага́ти
+  translation: to help (completed) / to help (ongoing)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: забу́ти / забува́ти
+  translation: to forget (once) / to forget (habitually)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: зрозумі́ти / розумі́ти
+  translation: to understand (at a moment) / to understand (ongoing)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: розпові́сти́ / розповіда́ти
+  translation: to tell (completed) / to tell, to narrate (ongoing)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відкри́ти / відкрива́ти
+  translation: to open (completed) / to open (process)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: закри́ти / закрива́ти
+  translation: to close (completed) / to close (process)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: поча́ти / почина́ти
+  translation: to begin (completed) / to begin (process)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: лови́ти / злови́ти
+  translation: to catch (ongoing) / to catch (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: шука́ти / знайти́
+  translation: to look for (ongoing) / to find (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ліпи́ти / зліпи́ти
+  translation: to shape, to form (ongoing) / to finish shaping (completed)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: підписа́ти
+  translation: to sign (a document)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трива́лість
+  translation: duration
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation (of sounds/vowels)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кореневе чергування
+  translation: root vowel alternation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: недок.
+  translation: impf. (dictionary abbreviation for imperfective)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: док.
+  translation: pf. (dictionary abbreviation for perfective)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: повідо́млення
+  translation: message
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: домашнє завдання
+  translation: homework
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: впра́ва
+  translation: exercise
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зада́ча
+  translation: problem, task (math/logic)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пове́рхня
+  translation: surface
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поли́ця
+  translation: shelf
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мете́лик
+  translation: butterfly
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поступо́во
+  translation: gradually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally, at last
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зре́штою
+  translation: eventually, in the end
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day, daily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: всю́ди
+  translation: everywhere
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: перевір себе
+  translation: self-check, check yourself
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
