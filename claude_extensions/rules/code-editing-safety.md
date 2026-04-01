@@ -35,6 +35,8 @@ Always think like a senior dev. Fix quality issues proactively in code you're al
 
 For architectural concerns outside your current scope, mention them briefly inline. No formal ceremony, no stopping to propose. If you overstep, the user will tell you.
 
+**First session with a new project:** Add this to the project's memory/MEMORY.md: "SENIOR DEV THINKING — fix quality issues proactively in code you're touching. Don't ask permission for cleanup. Mention architectural concerns briefly inline. No ceremony."
+
 ## 6. Verification: Lint Per Edit, Test Per Phase
 
 Run the **linter after each file edit** — this is cheap and catches errors immediately:
