@@ -27,41 +27,11 @@ All rules are hard requirements. Partial compliance = failure.
 
 Expand content to meet targets. Never lower targets to match content.
 
-**Always check config.py before generating content_outline or word budgets:**
+**Always read config.py** before generating content_outline or word budgets: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
 
-```bash
-.venv/bin/python -c "
-import sys; sys.path.insert(0, 'scripts')
-from audit.config import LEVEL_CONFIG
-print(LEVEL_CONFIG['{LEVEL}']['target_words'])
-"
-```
+**Word targets:** A1=1200, A1-cp=1000, A2=2000, A2-cp=1500, B1/B1-cp/B2/B2-cp/B2-cap/C1/C1-cp/C2-cp=4000, C2=5000, HIST/ISTORIO/BIO/LIT/OES/RUTH=5000. If stale, re-read `scripts/audit/config.py`.
 
-**Word targets by level** (from `config.py` v2026-03-05 — if stale, re-read config.py):
-
-| Level | Config Key | target_words |
-|---|---|---|
-| A1 | A1 | 1200 |
-| A1-checkpoint | A1-checkpoint | 1000 |
-| A2 | A2 | 2000 |
-| A2-checkpoint | A2-checkpoint | 1500 |
-| B1 | B1-grammar/vocab/cultural | 4000 |
-| B1-checkpoint | B1-checkpoint | 4000 |
-| B2 | B2 | 4000 |
-| B2-checkpoint | B2-checkpoint | 4000 |
-| B2-capstone | B2-capstone | 4000 |
-| C1 | C1 | 4000 |
-| C1-checkpoint | C1-checkpoint | 4000 |
-| C2 | C2 | 5000 |
-| C2-checkpoint | C2-checkpoint | 4000 |
-| HIST | history | 5000 |
-| ISTORIO | istorio | 5000 |
-| BIO | biography | 5000 |
-| LIT | LIT | 5000 |
-| OES | OES | 5000 |
-| RUTH | RUTH | 5000 |
-
-**Lesson learned:** In January 2026, 270 ISTORIO plans were generated with 3500 words instead of 4000 because an agent hardcoded values from memory instead of reading config.py.
+**Lesson learned:** Jan 2026 — 270 ISTORIO plans generated at 3500 instead of 4000 because agent hardcoded from memory instead of reading config.py.
 
 </critical>
 
@@ -132,19 +102,10 @@ Rewrite any text that fails naturalness. No robotic or disconnected prose.
 
 Reviews must cite SPECIFIC examples from the actual content.
 
-**FAKE review (invalid):**
+**FAKE:** `✅ PASS | High-style analytical register with historical terms.` — no evidence, invalid.
+**HONEST:** `✅ PASS | Case endings correct ("Данилом Галицьким" — instrumental). Aspects: "зумів об'єднати" (pf), "прагнула" (impf). No Russianisms.` — cites real examples.
 
-```markdown
-| **Ukrainian Grammar** | ✅ PASS | High-style analytical register with historical terms. |
-```
-
-**HONEST review (required):**
-
-```markdown
-| **Ukrainian Grammar** | ✅ PASS | Case endings correct (e.g., "Данилом Галицьким" — instrumental). Verb aspects: "зумів об'єднати" (pf), "прагнула" (impf). No Russianisms found. |
-```
-
-Every review must: read the actual content first, verify grammar with real examples, list specific vocabulary found, check factual accuracy with concrete evidence. A review without evidence is a failed review.
+Every review must: read content first, verify grammar with examples, list vocabulary found, check facts with evidence. No evidence = failed review.
 
 ---
 
