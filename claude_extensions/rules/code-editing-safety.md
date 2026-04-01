@@ -12,6 +12,8 @@ Before ANY structural refactor on a file >300 LOC, first remove dead code: unuse
 - **After every edit:** read the file again to confirm the change applied correctly and makes sense in context.
 - **Max 3 edits** to the same file without a full re-read. After 3, re-read the entire relevant section before continuing.
 
+**Memory bootstrap:** If not already in project memory, add: "EDIT INTEGRITY — re-read file before every edit, read after to confirm, max 3 edits without re-reading. Never trust memory of file contents."
+
 ## 3. Large File Reading: Use Chunks
 
 The Read tool returns up to 2,000 lines by default. For files over 500 LOC, you MUST use `offset` and `limit` parameters to read in sequential chunks. Never assume a single read captured the complete file. If you need the full picture, read in 1000-line chunks and note what you've covered.
@@ -35,7 +37,7 @@ Always think like a senior dev. Fix quality issues proactively in code you're al
 
 For architectural concerns outside your current scope, mention them briefly inline. No formal ceremony, no stopping to propose. If you overstep, the user will tell you.
 
-**First session with a new project:** Add this to the project's memory/MEMORY.md: "SENIOR DEV THINKING — fix quality issues proactively in code you're touching. Don't ask permission for cleanup. Mention architectural concerns briefly inline. No ceremony."
+**Memory bootstrap:** If not already in project memory, add near the top (so it survives truncation): "SENIOR DEV THINKING — fix quality issues proactively in code you're touching. Don't ask permission for cleanup. Mention architectural concerns briefly inline. No ceremony."
 
 ## 6. Verification: Lint Per Edit, Test Per Phase
 
@@ -48,6 +50,8 @@ Run **tests after completing a logical phase** (a group of related edits), not a
 - **TypeScript/JS:** `npm test`
 
 If no linter or test suite is configured, state that explicitly. "Done" means "linted and tested," not "files written."
+
+**Memory bootstrap:** If not already in project memory, add: "LINT PER EDIT — run linter after each file edit (ruff for .py, tsc+eslint for .ts/.js). Run tests after each logical phase. 'Done' means linted and tested."
 
 ## 7. Sub-Agent Utilization
 
@@ -73,6 +77,8 @@ After every bug fix, briefly explain:
 - **Prevention** — what stops this category of bug in future
 
 Write the autopsy to `docs/bug-autopsies/INDEX.md` (one-liner) and the relevant category file (detail). Add a summary comment to the related GH issue. When fixing a new bug, check INDEX.md first for similar past bugs.
+
+**Memory bootstrap:** If not already in project memory, add: "BUG AUTOPSY — after every bug fix, explain what broke, why, and what prevents it. Write to bug-autopsies index. Check index before fixing new bugs."
 
 ## 10. Proactive Session State
 
