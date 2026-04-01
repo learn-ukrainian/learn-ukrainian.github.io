@@ -2,7 +2,7 @@ module: a2-045
 level: A2
 sequence: 45
 slug: real-conditionals
-version: '1.0'
+version: '1.1'
 title: Якщо... то...
 subtitle: Реальна умова — теперішній і майбутній час
 focus: grammar
@@ -67,6 +67,10 @@ content_outline:
     paragraphs that use multiple types.'
   - 'Self-check: can I explain why (тому що), despite what (хоча), for what purpose
     (щоб), which one (який), and under what condition (якщо)?'
+  - 'Intonation of conditional sentences: the якщо-clause carries a rising
+    tone (↗), signaling that the condition is incomplete and the result
+    is coming. The main clause (result) carries a falling tone (↘).
+    Example: Якщо буде сонце↗, ми підемо гуляти↘.'
 vocabulary_hints:
   required:
   - якщо (if — real condition)

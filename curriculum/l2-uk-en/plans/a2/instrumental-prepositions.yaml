@@ -2,7 +2,7 @@ module: a2-024
 level: A2
 sequence: 24
 slug: instrumental-prepositions
-version: '1.0'
+version: '1.1'
 title: Над, під, між
 subtitle: Просторові та часові прийменники з орудним відмінком
 focus: grammar
@@ -76,6 +76,11 @@ content_outline:
     you for help).'
   - 'Mini-dialogue: Describing a neighborhood — where the shop is, where the park
     is, what is between buildings.'
+  - 'Accusative vs. Instrumental with під, над, між: location (де?) uses
+    Instrumental — Кіт сидить під столом. Direction/motion (куди?) uses
+    Accusative — Кіт заліз під стіл. Compare: Лампа висить над столом
+    (location, Instr.) vs. Повісь лампу над стіл (direction, Acc.).
+    Між follows the same pattern but Accusative is rare in everyday speech.'
 vocabulary_hints:
   required:
   - над (above, over)

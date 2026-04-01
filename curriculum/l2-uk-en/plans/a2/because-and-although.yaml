@@ -2,7 +2,7 @@ module: a2-042
 level: A2
 sequence: 42
 slug: because-and-although
-version: '1.0'
+version: '1.1'
 title: Тому що, бо, хоча
 subtitle: Складне речення з причиною та допустом
 focus: grammar
@@ -65,6 +65,12 @@ content_outline:
     comma before і/та when joining two clauses (not two words).'
   - 'Consolidation exercise: rewrite a short paragraph using all three types
     (cause, concession, coordination) to create natural, connected prose.'
+  - 'Intonation patterns for cause and concession: in причинових реченнях,
+    the main clause carries a falling tone (↘) while the subordinate clause
+    with тому що/бо has a slight rising tone (↗) leading into it. In
+    допустових реченнях with хоча, the хоча-clause rises (↗) to signal
+    the concession, then the main clause falls (↘) to deliver the
+    contrasting result.'
 vocabulary_hints:
   required:
   - тому що (because)

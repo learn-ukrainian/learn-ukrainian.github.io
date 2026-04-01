@@ -2,7 +2,7 @@ module: a2-041
 level: A2
 sequence: 41
 slug: checkpoint-verbs
-version: '1.0'
+version: '1.1'
 title: 'Контрольна точка: Вид, час і рух'
 subtitle: 'Перевірка знань: видові пари, майбутній час, дієслова руху та наказовий спосіб'
 focus: review
@@ -20,6 +20,13 @@ objectives:
 - Learner can produce imperatives for all persons (2nd, 3rd with хай, 1st
   plural with -мо), including Vocative + imperative + Instrumental wish
   constructions.
+dialogue_situations:
+  - situation: "A teacher conducting an oral review — asking a student to retell their weekend using correct aspect, motion verbs, and imperatives"
+    functions: ["narrating past events", "choosing aspect", "using motion verbs"]
+    key_vocabulary: ["вид дієслова", "дієслова руху", "наказовий спосіб"]
+  - situation: "Two friends planning a hiking trip — one gives directions using motion verbs, the other suggests what to bring using imperatives"
+    functions: ["giving directions", "making suggestions", "planning activities"]
+    key_vocabulary: ["іти", "їхати", "візьми", "ходімо"]
 content_outline:
 - section: 'Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect
     in Past and Future)'

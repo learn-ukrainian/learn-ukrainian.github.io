@@ -2,7 +2,7 @@ module: a2-044
 level: A2
 sequence: 44
 slug: relative-clauses
-version: '1.0'
+version: '1.1'
 title: Той, який...
 subtitle: Означальні підрядні речення з який, де, куди, звідки
 focus: grammar
@@ -64,6 +64,11 @@ content_outline:
     який живе у Києві і працює програмістом.'
   - 'Practical production: describe your favorite place, a person you admire, an
     object you use daily — using relative clauses.'
+  - 'Intonation of означальні речення: the main clause begins with neutral
+    intonation, then the relative clause (який/яка/яке, де, куди) carries
+    a slightly lower pitch as a parenthetical insert, before the sentence
+    returns to normal pitch or falls at the end. The comma pause before
+    який signals the listener to expect a descriptive addition.'
 vocabulary_hints:
   required:
   - який (which, that — masc.)

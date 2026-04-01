@@ -2,7 +2,7 @@ module: a2-047
 level: A2
 sequence: 47
 slug: checkpoint-syntax
-version: '1.0'
+version: '1.1'
 title: Контрольна робота — складне речення
 subtitle: Перевірка знань з модулів M42-M46 — причина, мета, означення, умова
 focus: review
@@ -17,6 +17,13 @@ objectives:
 - Learner can transform direct speech into reported speech using він сказав, що...
 - Learner can use all complex sentence types together in connected speech about
   education, work, and daily life.
+dialogue_situations:
+  - situation: "A student presenting their weekend plans to a teacher, using all five complex sentence types — причина, допуст, мета, означення, умова"
+    functions: ["expressing cause", "expressing concession", "expressing purpose", "describing", "setting conditions"]
+    key_vocabulary: ["тому що", "хоча", "щоб", "який", "якщо"]
+  - situation: "Two classmates correcting each other's written homework — finding conjunction errors and missing commas in complex sentences"
+    functions: ["error detection", "peer correction", "explaining grammar rules"]
+    key_vocabulary: ["сполучник", "кома", "складне речення", "помилка"]
 content_outline:
 - section: 'Частина 1: Впізнай сполучник (Part 1: Identify the Conjunction)'
   words: 450

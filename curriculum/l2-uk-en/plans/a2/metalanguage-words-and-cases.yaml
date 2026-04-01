@@ -2,7 +2,7 @@ module: a2-055
 level: A2
 sequence: 55
 slug: metalanguage-words-and-cases
-version: '1.0'
+version: '1.1'
 title: Слова і відмінки
 subtitle: Частини мови, відмінки та граматичні терміни українською
 focus: bridge
@@ -19,6 +19,13 @@ objectives:
   жіночий, середній рід; однина, множина).
 - Learner can follow grammar explanations given entirely in Ukrainian
   metalanguage.
+dialogue_situations:
+  - situation: "A student asking the teacher to identify the part of speech of a tricky word — Це прислівник чи прикметник? А 'мій' — це займенник? Teacher explains with examples"
+    functions: ["classifying words", "asking about parts of speech", "distinguishing categories"]
+    key_vocabulary: ["іменник", "прикметник", "займенник", "частина мови"]
+  - situation: "A student practicing case identification with a study partner — one reads a sentence, the other names the відмінок of each noun using the question method"
+    functions: ["identifying cases", "applying question method", "peer practice"]
+    key_vocabulary: ["називний", "родовий", "давальний", "знахідний", "орудний"]
 content_outline:
 - section: 'Частини мови: що це за слово? (Parts of Speech: What Kind of
     Word Is This?)'

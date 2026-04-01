@@ -2,7 +2,7 @@ module: a2-057
 level: A2
 sequence: 57
 slug: metalanguage-sentences-and-classroom
-version: '1.0'
+version: '1.1'
 title: Речення і клас
 subtitle: Синтаксичні терміни, будова слова та мова класу
 focus: bridge
@@ -18,6 +18,13 @@ objectives:
   (Прочитайте, Запишіть, Виберіть, Підкресліть, Вставте, Дайте відповідь).
 - Learner can follow a Ukrainian-language grammar exercise format, preparing
   for B1 immersion-style instruction.
+dialogue_situations:
+  - situation: "A student asking the teacher how to analyze a sentence — Як визначити підмет? Що таке обставина? Teacher explains using simple examples"
+    functions: ["asking about grammar terms", "requesting clarification", "understanding instructions"]
+    key_vocabulary: ["підмет", "присудок", "означення", "обставина"]
+  - situation: "Two students working through a Ukrainian textbook exercise together — reading instructions in Ukrainian and helping each other with morpheme analysis"
+    functions: ["following instructions in Ukrainian", "peer collaboration", "analyzing word structure"]
+    key_vocabulary: ["корінь", "префікс", "суфікс", "прочитайте", "визначте"]
 content_outline:
 - section: 'Члени речення: хто що робить? (Sentence Members: Who Does What?)'
   words: 550
