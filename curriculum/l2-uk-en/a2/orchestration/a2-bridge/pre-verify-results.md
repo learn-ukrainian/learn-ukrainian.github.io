@@ -1,109 +1,73 @@
 ## VESUM Verification
-
-- **Confirmed (13/13):** відмінок, називний, знахідний, місцевий, кличний, чергування, голосний, приголосний, наголос, милозвучність, огляд, система, правило
-- **Not found:** *(none — all 13 plan vocabulary words exist in VESUM)*
-
-**Notes on morphology:**
-- `наголос` exists as both **noun** and **adverb** — use noun form throughout (наголос, -у, m.)
-- `голосний` / `приголосний` exist as both **adjective** and **noun** — both uses are valid (голосний звук adj. / голосний noun)
-- `чергування` has 7 VESUM matches (noun, all declension forms confirmed)
+- **Confirmed (13/13):** відмінок (noun), називний (adj), знахідний (adj), місцевий (adj), кличний (adj), чергування (noun), голосний (adj), приголосний (adj), наголос (noun), милозвучність (noun), огляд (noun), система (noun), правило (noun)
+- **Not found:** — (all 13 words confirmed)
 
 ---
 
 ## Textbook Excerpts
 
 ### Section: Пригадуємо відмінки (Reviewing Cases)
-> "Розгляньте таблицю. Зверніть увагу на назви відмінків. На які питання відповідає кожен з них? Чим відрізняється кличний відмінок від інших відмінків?"
-> — повна таблиця всіх 7 відмінків з питаннями і допоміжними словами (є, немає, даю, бачу, орудую…)
-> **Source: Grade 4, Варзацька (Tier 2)**
+> **ВІДМІНЮВАННЯ ІМЕННИКІВ** [table with all 7 cases]: Називний (хто? що?) — учень/школа; Родовий (кого? чого?) — учня/школи; Давальний (кому? чому?); Знахідний (кого? що?); Орудний (ким? чим?); Місцевий (на кому? на (у) чому?); Кличний — не відповідає на питання.
+> *Source: Варзацька, Grade 4, p. 38*
 
-> "Усі іменники — назви неістот ч. р, а також іменники с. р. в Зн. в. мають ту саму форму, що і в Н. в.: будинок, сон, стіл; життя, кошеня, море."
-> — важлива педагогічна нотатка для розрізнення Н. і Зн. відмінків
-> **Source: Grade 4, Кравцова (Tier 2)**
+> **Зверніть увагу:** Іменник у формі називного відмінка означає того, хто виконує дію, і в реченні виступає підметом. Іменник у формі знахідного відмінка означає предмет, на який спрямована дія, і в реченні виступає додатком.
+> *Source: Заболотний, Grade 6, p. 94*
 
-**Pedagogical note:** Both Grade 4 sources confirm the case system is taught as a **complete 7-case table with question words** (`хто? що?`, `кого? чого?`, etc.) + auxiliary verbs. Use this exact framework in the module.
+### Section: Магія української фонології — чергування голосних
+> **Голосні звуки [о], [е] (у відкритих складах) часто чергуються з [і] (у закритих складах):** шко-ла — шкіл; дво-ри — двір; по-со-ли — сіль. Таке чергування характерне для української мови й вирізняє її серед інших східнослов'янських мов.
+> *Source: Глазова, Grade 10, p. 103 (§25)*
 
----
+> **Чергування [о] та [е] з [і] — характерна фонетична особливість української мови, і відбувається не в кожному закритому складі, а тільки в так званому новозакритому:** столъ — стіл, конь — кінь, волъ — віл. При словозміні: Ки́їв — Ки́єва, ка́мінь — ка́меня, стій — стоя́ти.
+> *Source: Карман, Grade 10, p. 55 (§18)*
 
-### Section: Магія української фонології (Vowel & Consonant Alternations)
-> "Голосні звуки [о], [е] (у відкритих складах) часто чергуються з [і] (у закритих складах): шко-ла — шкіл; дво-ри — двір. **Таке чергування характерне для української мови й вирізняє її серед інших східнослов'янських мов.**"
-> — orfohramma: літери о–і, е–і, є–ї в коренях і суфіксах: ягода — ягідка; колесо — колісний; Києва — Київ
-> **Source: Grade 10, Глазова (Tier 2)**
+> **Зверніть увагу!** Деколи чергування [е] – [і] «приховано» на письмі буквами є – ї. НАПРИКЛАД: у Київ – до Києва.
+> *Source: Заболотний, Grade 5, p. 114 (§27)*
 
-> "Чергування [о] та [е] з [і] — характерна фонетична особливість української мови, і відбувається не в кожному закритому складі, а тільки в так званому **новозакритому**, який утворився після занепаду ъ і ь: столъ — стіл, конь — кінь, волъ — віл."
-> — detailed table of conditions: when it occurs (словотворення, словозміна) and exceptions (-ор-, -ер-, -ов- groups; повноголосся; G.pl. іменників на -ення; etc.)
-> **Source: Grade 10, Караман (Tier 2)**
+### Section: Магія фонології — чергування приголосних
+> **Найпоширенішими є такі чергування приголосних:** [г] — [з] — [ж]: нога — на нозі — ніжка; [к] — [ц] — [ч]: рука — на руці — ручка; [х] — [с] — [ш]: вухо — на вусі — вушко.
+> *Source: Авраменко, Grade 5, p. 114 (§50)*
 
-> "Приголосні [г], [к], [х] колись були твердими... Коли ж ці приголосні потрапляли в позицію перед голосними переднього ряду, то вони відповідно змінювалися на [ж'], [ч'], [ш']: дорогий — дорожити, вік — вічний, дух — душити. **Зміни [г], [к], [х] на [ж], [ч], [ш]... називають першим перехідним пом'якшенням.**"
-> — also нога/ніжка, рука/ручка confirmed as canonical examples
-> **Source: Grade 10, Караман (Tier 2)**
+> **[г] — [з′] — [ж]:** нога — на нозі — ніжка; **[к] — [ц′] — [ч]:** рука — у руці — ручка; **[х] — [с′] — [ш]:** вухо — у вусі — вушко. **Це чергування зветься другим перехідним пом'якшенням**, оскільки пов'язане з пом'якшенням приголосних перед [і].
+> *Source: Карман, Grade 10, p. 51*
 
-> (Grade 5 Zaболотний Tier 1): "Школа – шкіл [о] – [і]" — confirms the **ЗРАЗОК** (model) format used in Ukrainian schools for teaching vowel alternations
-> **Source: Grade 5, Заболотний (Tier 1)**
+### Section: Милозвучність мови: евфонія
+> **Чергування у–в та і–й забезпечує милозвучність мови.** [Full rules table]: у/і — між приголосними; у перед в, ф, кв, тв, льв, хв і под.; в/й — між голосними, між голосним і приголосним. Правила чергування стосуються не лише прийменників у–в і сполучників і–й, а й початкових букв: телефон у кишені, він узяв; брат і сестра, він іде.
+> *Source: Авраменко, Grade 6, p. 226 (tier 1)*
 
----
-
-### Section: Милозвучність мови: евфонія (Euphony)
-> "Чергування у–в та і–й забезпечує милозвучність мови. Завдяки йому уникаємо незручних для вимови збігів голосних і приголосних звуків."
-> — full rule table: **у, і** between consonants / before в, ф, кв, тв, льв, хв / at sentence start before consonant; **в, й** between vowels / between vowel + consonant
-> **Source: Grade 6, Авраменко (Tier 1) ← highest priority author**
-
-> "Милозвучність (або евфонічність) — якість усного мовлення, яка проявляється в його мелодійності, інтонаційній виразності, у відсутності звукосполучень, які були б неприємні для слуху."
-> — У–В і І–Й не чергуються: у власних назвах (Угорщина, Вдовенко), в іншомовних словах (увертюра, утопія), де зміна веде до зміни значення (вправа ≠ управа, вдача ≠ удача)
-> **Source: Grade 10, Караман (Tier 2)**
-
-> "Варіанти прийменника з–із–зі (і зо) чергуються на такій же підставі, що й в–у, і–й."
-> **Source: Grade 10, Караман (Tier 2)**
-
----
-
-### Section: Що нас чекає на рівні А2? (A2 Roadmap)
-> "Наголос в українській мові рухомий: день — дня, приказка — приказки (мн.), ходжу — ходимо. Хоча чітких правил наголошування слів немає, але є загальні принципи..."
-> — 11 principles for stress placement in nouns, adjectives, verbs, numerals
-> **Source: Grade 10, Авраменко (Tier 2)**
-
-> "Наголос — це посилення голосу на одному зі складів слова... Наголос в українській мові: **вільний** (не закріплений за певним складом) та **рухомий** (може змінювати місце в різних формах: кни́жка — книжки́)"
-> **Source: Grade 10, Глазова (Tier 2)**
+> **Милозвучність (або евфонічність) — якість усного мовлення**, яка проявляється в його мелодійності, інтонаційній виразності, у відсутності звукосполучень, які були б неприємні для слуху. У–У–У в не чергуються у власних назвах (Угорщина, Вдовенко), у словах іншомовного походження (увертюра, утопія), у словах, де зміна початкового [у] чи [в] веде до зміни значення (вправа і управа, вдача і удача).
+> *Source: Карман, Grade 10, p. 58 (§19)*
 
 ---
 
 ## Grammar Rules
 
-- **у/в alternation:** Правопис §23 — "Щоб уникнути збігу букв на позначення приголосних звуків та щоб досягти милозвучності, вживають прийменник у та префікс у- між приголосними, на початку речення перед приголосним, перед в/ф/льв/зв/св/дв/тв/гв/хв, після паузи перед приголосним."
-
-- **і/й alternation:** Правопис §24 — "Вживаємо і між приголосними, після паузи перед приголосним, на початку речення. Вживаємо й між голосними, між голосним і приголосним. Тільки і при зіставленні понять (Дні і ночі; Батьки і діти) та перед й, є, ї, ю, я."
-
-- **з/із/зі alternation:** Правопис §23 (implied) — same positional basis as в/у and і/й.
-
-- **Vowel alternation о/е → і:** No dedicated §чергування match returned from query (returned §5 Буква Г instead). Rule confirmed via textbook sources: Grade 10 Глазова §25, Grade 10 Караман §18 — "новозакритий склад" rule; o/e in open syllable → і in closed syllable.
+- **У/В alternation:** Правопис §23 — «Щоб уникнути збігу букв на позначення приголосних звуків та щоб досягти милозвучності: у між приголосними; в між голосними; у перед в, ф, льв, зв, св, дв, тв, гв, хв незалежно від кінця попереднього слова.» (Full positional grid with examples at https://2019.pravopys.net/sections/23/)
+- **Vowel alternations о/е → і:** Not in a single Правопис section — this is a phonological/morphological rule taught in school grammar (Grades 5, 10). The Правопис covers spelling of о/і in specific орфограми but the rule itself is textbook-taught. Use Заболотний Grade 5 §27 and Карман Grade 10 §18 as primary sources.
+- **Consonant alternations г/к/х → з/ц/х → ж/ч/ш:** Similarly textbook-level (Заболотний Grade 5 §28, Авраменко Grade 5 §50). The Правопис confirms letter г in §5 but the alternation system is covered in school grammar.
 
 ---
 
 ## Calque Warnings
 
-- **"як правило"** (as rule / as usual): ⚠️ **CALQUE** — borrowed from Russian *как правило*. Антоненко-Давидович explicitly flags this. Correct Ukrainian alternatives: **зазвичай**, **як водиться**, **як заведено**. Do NOT use "як правило" in module prose.
-
-- **"система правил"**: ✅ OK — both слова are natural Ukrainian; the combination is not a calque.
-
-- **"складні ідеї"**: ✅ OK — Антоненко-Давидович confirms *складний* = "not simple, of certain complexity" (not a calque). Correct word for this meaning.
-
-- **"огляд знань"** / **"пригадуємо"**: ✅ OK — standard Ukrainian pedagogical vocabulary. *Огляд* is natural. *Пригадуємо* preferred over *повторюємо* for warmup context.
+- **«приймати участь»** → ⚠️ CALQUE — Антоненко-Давидович: «треба написати взяли участь». Correct form: **брати/взяти участь**. (Applies if this phrase appears in module prose.)
+- **«як правило»** → ⚠️ NEAR-CALQUE — AD: «запозичений з інших мов і насамперед із російської». Prefer: **як звичайно / як заведено / зазвичай / здебільшого**.
+- **«що на нас чекає»** → ✅ OK — AD confirms «чекати» is native Ukrainian (both Правобережжя and Лівобережжя usage attested in literature). No calque issue.
+- **«система мови»** → ✅ OK — No calque flagged. «Система» is confirmed natural in Ukrainian context.
+- **«правило»** → ✅ OK — AD: the word «правило» is widely used in Ukrainian with ample literary attestation (Донченко, Шевченко).
 
 ---
 
 ## CEFR Check
 
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| відмінок | **A1** | ✅ Well within A2 target |
-| називний / знахідний | **A2** | ✅ On target |
-| система | **A2** | ✅ On target |
-| правило | **A1** | ✅ Well within A2 target |
-| голосний (звук) | **A2** | ✅ On target |
-| приголосний (звук) | **A2** | ✅ On target |
-| наголос | **B1** | ⚠️ Above A2 — introduce explicitly as *новий термін* in the phonology section; it is taught as metalanguage in this module |
-| чергування | **B2** | ⚠️ Above A2 — introduce explicitly as *новий термін*; learners need a clear Ukrainian definition sentence, not just "alternation = чергування" |
-| милозвучність | **Not in PULS** | ⚠️ Above B2 / specialist vocabulary — introduce with a clear definition (Глазова: "якість мовлення, яка проявляється в мелодійності") and memorable examples; do not assume learners know this word |
-| огляд | **Not directly in PULS** (related: оглядати B1, перегляд B2) | ⚠️ Treat as B1+ — fine to use in section title but gloss it in the first sentence of that section |
+- **відмінок:** A1 ✅ — at or below A2 target
+- **називний** (as «називний відмінок»): A2 ✅ — exactly at target
+- **знахідний** (as «знахідний відмінок»): A2 ✅ — exactly at target
+- **правило:** A1 ✅ — below A2 target
+- **система:** A2 ✅ — at target
+- **наголос:** B1 ⚠️ — one level above A2 target. As a metalinguistic intro term in an orientation module this is defensible, but use sparingly and gloss it explicitly.
+- **чергування:** B2 ⚠️ — TWO levels above A2 target. FLAG for writer: this is a key metalinguistic term needed for the module, but it must be introduced with a clear definition and visual aid (e.g. the table format used by Заболотний). Do not assume learners know this word.
+- **милозвучність:** Not in PULS (no direct hit) ⚠️ — likely C1+ specialist register. This is a linguist's term. The module should present the *phenomenon* (у/в and і/й alternation) primarily, and introduce «милозвучність» as a named concept with explicit gloss, not as assumed vocabulary.
+- **огляд:** Not directly in PULS (closest: «оглядати» B1, «перегляд» B2) ⚠️ — treat as B1+ metalinguistic term; gloss on first use.
 
-**Summary of above-target terms (3):** `наголос` (B1), `чергування` (B2), `милозвучність` (not in PULS). All three are **metalanguage being introduced** in this module — they must be explicitly defined on first use with a Ukrainian gloss, not assumed as known. This is pedagogically correct and expected for an A2.1 foundation module.
+### Critical note on plan terminology
+> The plan refers to *«the first palatalization (г/ж, к/ч, х/ш)»* — this is **historical linguistics / OCS terminology**, NOT how Ukrainian school textbooks teach it. Заболотний (Grade 5 §28), Авраменко (Grade 5 §50), and Карман (Grade 10) all present this simply as **«чергування приголосних звуків [г]—[з']—[ж], [к]—[ц']—[ч], [х]—[с']—[ш]»**. Karaman does mention «друге перехідне пом'якшення» at Grade 10 level, but NEVER «first palatalization». The writer must use the native pedagogical term, not the OCS historical term, in A2 module content.

@@ -12,21 +12,21 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 
 ## Пригадуємо відмінки (Reviewing Cases) (~660 words total)
 
-- Dialogue (~100 words): Opening scene — Новий студент (Майкл з Канади) arrives at a Kyiv language school on day one of A2. Natural, multi-turn exchange with Викладач that surfaces all four A1 cases organically: "Звідки ви?" → "Я **з Канади**." (genitive preview) / "Скільки вам років?" → "**Мені** 25 років." (dative preview) / "Що ви вивчаєте?" → "Я вивчаю **українську мову**." (accusative) / "Де ви живете?" → "Я живу **в Києві**." (locative) / Викладач closes: "Дуже приємно, **Майкле**!" (vocative). Do not explain cases yet — let the dialogue stand naturally.
+- Dialogue (~100 words): Перший день занять у київській мовній школі. Teacher (Оксана Іванівна) greets new student (Alex from Canada): «Звідки ви?» — «Я з Канади» (genitive preview). «Скільки вам років?» — «Мені двадцять п'ять» (dative preview). «Що ви вивчаєте?» — «Я вивчаю українську мову» (accusative). «Де ви живете?» — «Я живу в Києві» (locative). Teacher says: «Чудово! Ви вже знаєте чотири відмінки — просто не знаєте їхніх назв.» Opens the door to systematic review.
 
-- P1 (~70 words): Post-dialogue reflection — the paragraph names every case just used in the dialogue, asks the learner: "Помітили? Ви вже знаєте чотири відмінки." Frames the section as an audit of what the learner already owns, not new learning. Introduces the case-question method as the diagnostic tool: the question a word answers reveals its case.
+- P1 (~70 words): What is a відмінок? Ukrainian nouns and adjectives change their endings depending on their role in the sentence — this is відмінювання (declension). Ukrainian has 7 відмінки. In A1, learners encountered four: називний, знахідний, місцевий, кличний. Introduce the two diagnostic questions: Хто? Що? identify each case. Each case is also associated with specific prepositions or their absence.
 
-- P2 (~100 words): Nominative case (Називний — Хто? Що?) — the dictionary form; subject and predicate noun. Adjective agreement in all three genders: новий студент, нова книга, нове місто. Three example sentences: "Це цікавий підручник." / "Марія — студентка." / "Київ — велике місто." Contrast: Nominative is the form you look up in the dictionary — all other cases are *derived* from it.
+- P2 (~100 words): Називний відмінок (Nominative — Хто? Що?). This is the subject case — who is doing the action or what simply exists. Examples: новий студент читає, гарна книга лежить, велике місто живе. Adjective agreement: новий (m.) / нова (f.) / нове (n.). Note: the nominative is also the dictionary form of a noun — the form you look up in the dictionary. Gender determines the ending: студент (m., zero ending), студентка (f., -а), місто (n., -о).
 
-- P3 (~110 words): Accusative case (Знахідний — Кого? Що?) — the direct-object case. Three sub-patterns: (a) Feminine nouns: книга→книгу, кава→каву, земля→землю; (b) Masculine inanimate: підручник→підручник (unchanged, like nominative); (c) Masculine animate: студент→студента, учитель→учителя (like genitive — a key rule). Five natural verb + noun pairs: читати книгу, пити каву, знати відповідь, любити Україну, бачити студента.
+- P3 (~110 words): Знахідний відмінок (Accusative — Кого? Що?). The direct object case — what is being acted upon. For inanimate nouns: feminine nouns take -у/-ю (книгу, каву, землю, Україну); neuter and masculine inanimate nouns look like the nominative (читаю лист, п'ю молоко). For animate masculine nouns, accusative = genitive: Я бачу студента, Я знаю викладача. Key sentences from A1: Я вивчаю українську мову. Я п'ю каву. Я читаю книгу. Note: «Я люблю Україну» — feminine accusative.
 
-- P4 (~100 words): Locative case (Місцевий — Де? На чому? В чому?) — location only, always with a preposition (в/у, на, при, по). Rule: never used without a preposition. City examples showing the -і/-і ending and softening: у Києві, у Харкові, у Львові, на уроці, в університеті, при школі, по дорозі. Soft-stem note: місто→у місті, море→на морі. Two sentences from the dialogue reused as anchor examples.
+- P4 (~100 words): Місцевий відмінок (Locative — Де? На кому? На чому?). Always used with a preposition — never alone. Key prepositions: в/у (location inside: в Києві, в університеті, у школі) and на (location on/at: на уроці, на концерті, на роботі). Ending pattern for nouns: hard stems take -і (місто → у місті, університет → в університеті), soft stems take -і or -ї (земля → на землі). Adjectives: новий → у новому місті, нова → у новій школі.
 
-- P5 (~80 words): Vocative case (Кличний — звертання) — the case of direct address, unique to Ukrainian (absent in Russian). Endings: -е for hard-stem masculines (Тарасе, друже, хлопче), -є/-ю for soft-stem masculines (Сергію, Василю), -о for feminines on -а (мамо, Ганно, Маріє — note: Марія→Маріє for soft stems). Fixed forms: тату, Господи. One sentence reusing the dialogue: "Дуже приємно, Майкле!"
+- P5 (~80 words): Кличний відмінок (Vocative — звертання). Used when addressing someone directly. Formed from the nominative: Марія → Маріє!, Тарас → Тарасе!, пан вчитель → пане вчителю! Masculine nouns with hard stems: -е (Тарасе, Олексію); feminine nouns with -а/-я: -о/-є (Маріє, Надіє, Оксано). Ukrainian uses vocative where English just uses the nominative: «Оксано, де ти?» = "Oksana, where are you?" Textbook excerpt: «Сідайте, будь ласка, бабусю» (Заболотний, Grade 5).
 
-- Exercise — Quiz: Case Identification Drill (8 items). Each item = one sentence with one noun underlined; learner selects the case from four options (Н, З, М, К). Sentences drawn from the dialogue and P2–P5 examples: "Я живу **в Києві**." / "Вона читає **книгу**." / "Привіт, **Сергію**!" / "Це **цікавий підручник**." etc. Tests identification, not production.
+- P6 (~100 words): Full case system map — all seven відмінки with their questions and key roles. Present as a numbered list (not a table) to aid memorization. Називний (Хто? Що?) — суб'єкт. Знахідний (Кого? Що?) — прямий об'єкт. Місцевий (Де? На кому?) — місце, завжди з прийменником. Кличний (звертання) — адресат. Then preview the three A2 cases: Родовий (Кого? Чого?) — belongs to, absence of. Давальний (Кому? Чому?) — recipient. Орудний (Ким? Чим?) — instrument, accompaniment. Conclude: «Ви вже знаєте чотири. Три нових — це ваша ціль на рівні А2.»
 
-- P6 (~100 words): Full seven-case map — present as a two-column reference: case name + question + one-line function + one example. Four A1 cases (Н, З, М, К) marked ✅. Three A2 cases introduced by name only with their question and core function: Родовий (Кого? Чого?) — possession and negation; Давальний (Кому? Чому?) — recipient and age; Орудний (Ким? Чим?) — means and company. Close with: "Три нові відмінки — це три нові способи виражати думки. Почнемо вже в наступному модулі."
+- Exercise: Quiz — Case Identification Drill (8 items). Each item: one Ukrainian sentence with one noun underlined; learner identifies which of the 4 A1 cases it is and which question it answers. Examples draw from the dialogue and paragraphs above: «Я вивчаю *українську мову*.» / «Ми живемо *в Канаді*.» / «*Маріє*, де твій зошит?» / «*Студент* читає книгу.»
 
 ---
 
@@ -478,13 +478,14 @@ references:
 
 ## Rules
 
-TARGET: 45-65% Ukrainian.
+TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
-- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.
-- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.
+- THEORY: English prose for grammar review and metalanguage introduction.
+- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.
 - HEADERS: Ukrainian with English in parentheses.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.
-A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.
+These are review/bridge modules. English theory is expected. Ukrainian content comes from dialogues, example sentences, paradigm tables, and pattern boxes.
+A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -503,7 +504,10 @@ GRAMMAR RULES:
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
 
 ## Output
 
