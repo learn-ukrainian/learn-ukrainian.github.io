@@ -4,13 +4,13 @@ General-purpose rules for safe, reliable code editing. Reusable across projects.
 
 ## 1. Step 0: Clean Before Refactoring
 
-Before ANY structural refactor on a file >300 LOC, first remove dead code: unused imports, unused exports, dead props, orphaned functions, debug logs. Commit cleanup separately. Dead code wastes context tokens and accelerates compaction, making the actual refactor more likely to fail from context decay.
+Before ANY structural refactor on a file >300 LOC, first remove dead code: unused imports, unused exports, dead props, orphaned functions, debug logs. **Commit the cleanup separately** before starting the real refactor. This keeps the refactor diff clean and safely revertible. Dead code wastes context tokens and accelerates compaction.
 
-## 2. Context Decay: Re-read Before Editing
+## 2. Edit Integrity: Re-read, Verify, Limit
 
-After 10+ messages in a conversation, ALWAYS re-read a file before editing it. Do not trust your memory of file contents — auto-compaction may have silently summarized away the details. Editing against stale mental state produces broken output.
-
-**Rule:** If you last read a file more than 5 tool calls ago, re-read it before editing.
+- **Before every edit:** re-read the file fresh. Do not trust your memory — compaction may have destroyed your context of it.
+- **After every edit:** read the file again to confirm the change applied correctly and makes sense in context.
+- **Max 3 edits** to the same file without a full re-read. After 3, re-read the entire relevant section before continuing.
 
 ## 3. Large File Reading: Use Chunks
 
@@ -29,35 +29,49 @@ Grep is text matching, not semantic analysis. When renaming or changing any func
 
 Do not assume a single grep caught everything. After making all changes, grep once more for the OLD name to confirm zero remaining references.
 
-## 5. Senior Dev Suggestion
+## 5. Senior Dev Thinking
 
-While completing a task, if you notice architectural flaws, duplicated state, inconsistent patterns, or code that a senior engineer would reject in review — **flag it explicitly** with a brief explanation of what's wrong and what you'd propose instead. Do not silently fix it, and do not silently ignore it. Present the case, let the user decide.
+Always think like a senior dev. Fix quality issues proactively in code you're already touching — dead code, duplicate state, naming inconsistencies, obvious improvements. Don't ask permission for cleanup in your current scope.
 
-Format: `**Suggestion:** [what's wrong] → [what I'd do instead]. Want me to fix this?`
+For architectural concerns outside your current scope, mention them briefly inline. No formal ceremony, no stopping to propose. If you overstep, the user will tell you.
 
-## 6. Verification Before Declaring Done
+## 6. Verification: Lint Per Edit, Test Per Phase
 
-Never report a task as complete until you have run the project's verification tools. The specific tools depend on the project:
+Run the **linter after each file edit** — this is cheap and catches errors immediately:
+- **Python files:** `.venv/bin/ruff check {file}`
+- **TypeScript/JS files:** `npx tsc --noEmit` + `npx eslint {file} --quiet`
 
-- **Python projects:** `.venv/bin/ruff check`, `.venv/bin/pytest` (affected files)
-- **TypeScript/JS projects:** `npx tsc --noEmit`, `npx eslint . --quiet`, `npm test`
-- **Other:** Whatever the project's CI runs — find it in CI config or `Makefile`
+Run **tests after completing a logical phase** (a group of related edits), not after every single file:
+- **Python:** `.venv/bin/pytest` (affected test files)
+- **TypeScript/JS:** `npm test`
 
-If no verification tools are configured, state that explicitly instead of claiming success. "Done" means "verified," not "files written."
+If no linter or test suite is configured, state that explicitly. "Done" means "linted and tested," not "files written."
 
 ## 7. Sub-Agent Utilization
 
-For tasks touching >5 independent files or requiring parallel investigation, launch sub-agents. Each gets its own context window, preventing context decay on the main thread.
+Use your judgment — don't default to sequential processing out of convenience. When a task would benefit from parallel work, use sub-agents. Each gets its own context window, preventing decay on the main thread.
 
-**When to use sub-agents:**
-- Refactors spanning many files (batch into groups of 5-8 per agent)
-- Research tasks that would pollute main context (exploring options, reading many files)
+**Good reasons to use sub-agents:**
+- Refactors spanning many files
+- Research that would pollute main context
 - Independent parallel work (tests + implementation, multiple modules)
-- Long-running operations (use `run_in_background`)
+- Long-running operations (`run_in_background`)
 
-**When NOT to use sub-agents:**
-- Sequential work where each step depends on the previous
-- Simple changes to 1-3 files
-- Tasks requiring tight coordination with the user
+**Skip sub-agents for:** sequential dependent work, simple 1-3 file changes, tight user coordination.
 
-One task per sub-agent. Keep the main context clean for decision-making.
+## 8. Search Result Vigilance
+
+If a search returns fewer results than expected for the codebase size, suspect truncation. Re-run with narrower scope (single directory, stricter glob, or file-by-file). State when you suspect results were truncated. Never act on suspiciously small result sets without verifying.
+
+## 9. Bug Autopsy
+
+After every bug fix, briefly explain:
+- **What broke** — the symptom
+- **Why** — the root cause
+- **Prevention** — what stops this category of bug in future
+
+Write the autopsy to `docs/bug-autopsies/INDEX.md` (one-liner) and the relevant category file (detail). Add a summary comment to the related GH issue. When fixing a new bug, check INDEX.md first for similar past bugs.
+
+## 10. Proactive Session State
+
+When context is getting heavy (long session, many file reads, complex multi-step work), proactively write session state to a file before compaction hits. Include: current task, key decisions made, files being worked on, what's done and what remains. This enables clean session handoff via `--continue` or `--fork-session`.
