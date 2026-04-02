@@ -4,44 +4,58 @@ sequence: 34
 slug: diaspora-ukrainian
 version: '1.1'
 title: "Українська мова в діаспорі: Збереження, трансформація та архаїзми"
-subtitle: "Diaspora Ukrainian"
+subtitle: "Українська мова діаспори"
 focus: cultural
 pedagogy: seminar
 word_target: 4000
 objectives:
-  - "Дослідити мовні особливості різних хвиль української еміграції (від кінця ХІХ ст. до сьогодення)."
-  - "Проаналізувати вплив мовного оточення (англійської, португальської, польської) на діаспорне мовлення."
-  - "Вивчити феномен збереження архаїчних рис та правописних традицій (Харківський правопис) у діаспорі."
-  - "Зрозуміти роль діаспори у збереженні української ідентичності в періоди репресій на материковій Україні."
+  - "Дослідити мовні особливості різних хвиль української еміграції (від кінця ХІХ
+    ст. до сьогодення)."
+  - "Проаналізувати вплив мовного оточення (англійської, португальської, польської)
+    на діаспорне мовлення."
+  - "Вивчити феномен збереження архаїчних рис та правописних традицій (Харківський
+    правопис) у діаспорі."
+  - "Зрозуміти роль діаспори у збереженні української ідентичності в періоди репресій
+    на материковій Україні."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Канадський варіант української мови: лексичні запозичення та синтаксичні зміни."
+    topic: "Канадський варіант української мови: лексичні запозичення та синтаксичні
+      зміни."
     key_elements: ["англіцизм", "мовна інтерференція", "культурне збереження"]
     motivation: "Аналіз механізмів адаптації мови до іншомовного середовища."
   - source_type: "мемуари"
-    topic: "Спогади представників 'третьої хвилі' еміграції про створення українських шкіл та видавництв у США."
+    topic: "Спогади представників 'третьої хвилі' еміграції про створення українських
+      шкіл та видавництв у США."
     key_elements: ["ідентичність", "мовна стійкість", "націєтворення"]
     motivation: "Розуміння соціокультурної місії діаспори."
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Розмова з представником української громади в Бразилії або Аргентині про збереження мови в умовах ізоляції."
+    setting: "Розмова з представником української громади в Бразилії або Аргентині
+      про збереження мови в умовах ізоляції."
     focus_points: ["архаїчна лексика", "фонетичні особливості", "родинні традиції"]
     motivation: "Порівняння різних моделей мовного збереження в світі."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Напишіть репортаж про уявну конференцію 'Українська мова у світі: виклики ХХІ століття'. Висвітліть позиції представників з Канади, Європи та Австралії."
-    requirements: ["мінімум 350 слів", "використання публіцистичного стилю", "акцент на проблемах асиміляції та диглосії"]
-    motivation: "Розвиток навичок написання складних журналістських текстів з акцентом на глобальний контекст."
-    model_answer: "Текст має містити цитати (уявні) експертів, опис дискусій про роль цифрових технологій у єднанні діаспори та важливість стандартної української мови."
+    prompt: "Напишіть репортаж про уявну конференцію 'Українська мова у світі: виклики
+      ХХІ століття'. Висвітліть позиції представників з Канади, Європи та Австралії."
+    requirements: ["мінімум 350 слів", "використання публіцистичного стилю", "акцент
+          на проблемах асиміляції та диглосії"]
+    motivation: "Розвиток навичок написання складних журналістських текстів з акцентом
+      на глобальний контекст."
+    model_answer: "Текст має містити цитати (уявні) експертів, опис дискусій про роль
+      цифрових технологій у єднанні діаспори та важливість стандартної української
+      мови."
 
 discussion_topics:
-  - context: "Харківський правопис ('скрипниківка') в діаспорі: традиція vs сучасна норма."
+  - context: "Харківський правопис ('скрипниківка') в діаспорі: традиція vs сучасна
+      норма."
     questions:
       - "Чому діаспора так довго трималася за правопис 1928 року?"
-      - "Як повернення деяких норм 'скрипниківки' у правописі 2019 року вплинуло на діалог з діаспорою?"
+      - "Як повернення деяких норм 'скрипниківки' у правописі 2019 року вплинуло на
+        діалог з діаспорою?"
       - "Чи має бути єдиний мовний стандарт для українців у всьому світі?"
     motivation: "Дискусія про мовні норми та їх значення для національної єдності."
 
@@ -49,7 +63,8 @@ content_outline:
   - section: "Історія та хвилі української еміграції"
     words: 1000
     subsections:
-      - "Перша хвиля (кінець XIX – поч. XX ст.): соціально-економічні причини та збереження говірок"
+      - "Перша хвиля (кінець XIX – поч. XX ст.): соціально-економічні причини та збереження
+        говірок"
       - "Політична еміграція (після 1920-х та 1945 р.): інтелектуальний центр мовознавства"
       - "Сучасні міграційні процеси: цифрова діаспора та нові виклики"
     key_concepts:
@@ -106,15 +121,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze language features of Canadian Ukrainian — identify anglicisms, archaic forms preserved from Skrypnykivka, and assess language vitality."
+    description: "Analyze language features of Canadian Ukrainian — identify anglicisms,
+      archaic forms preserved from Skrypnykivka, and assess language vitality."
   - type: match-up
-    description: "Match diaspora waves (перша, друга, третя, сучасна) with their sociolinguistic characteristics and institutions."
+    description: "Match diaspora waves (перша, друга, третя, сучасна) with their sociolinguistic
+      characteristics and institutions."
   - type: select
-    description: "Identify whether a given language feature is an archaism, anglicism, or dialectal preservation in diaspora speech."
+    description: "Identify whether a given language feature is an archaism, anglicism,
+      or dialectal preservation in diaspora speech."
   - type: fill-in
-    description: "Replace diaspora-specific forms (anglicisms, archaic spellings) with contemporary standard Ukrainian equivalents."
+    description: "Replace diaspora-specific forms (anglicisms, archaic spellings)
+      with contemporary standard Ukrainian equivalents."
   - type: essay-response
-    description: "Write a journalistic report (350+ words) about a conference on Ukrainian language worldwide — cover perspectives from Canada, Europe, and Australia."
+    description: "Write a journalistic report (350+ words) about a conference on Ukrainian
+      language worldwide — cover perspectives from Canada, Europe, and Australia."
 
 activities:
   types_required:
@@ -134,3 +154,4 @@ references:
 connects_to:
   previous: "history-of-language"
   next: "leksykolohiia-c1"
+phase: C1.2 [Professional & Social Context]

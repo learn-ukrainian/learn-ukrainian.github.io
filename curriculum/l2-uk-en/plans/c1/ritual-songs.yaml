@@ -4,38 +4,50 @@ sequence: 75
 slug: ritual-songs
 version: '1.1'
 title: "Українська обрядова пісність: магія слова та ритму"
-subtitle: "Ukrainian Ritual Songs: Magic of Word and Rhythm"
+subtitle: "Обрядові пісні: магія слова й ритму"
 focus: cultural
 pedagogy: seminar
 word_target: 4000
 objectives:
-  - "Систематизувати знання про календарно-обрядовий цикл українців (зимовий, весняний, літній, осінній)."
-  - "Дослідити архаїчні пласти обрядової поезії та їхній зв'язок із дохристиянськими віруваннями."
-  - "Проаналізувати художню специфіку обрядових пісень (магічне спрямування, величальність, символізм)."
-  - "Вивчити регіональні особливості виконання та збереження обрядового фольклору в сучасному контексті."
+  - "Систематизувати знання про календарно-обрядовий цикл українців (зимовий, весняний,
+    літній, осінній)."
+  - "Дослідити архаїчні пласти обрядової поезії та їхній зв'язок із дохристиянськими
+    віруваннями."
+  - "Проаналізувати художню специфіку обрядових пісень (магічне спрямування, величальність,
+    символізм)."
+  - "Вивчити регіональні особливості виконання та збереження обрядового фольклору
+    в сучасному контексті."
 
 reading_situations:
   - source_type: "етнографічний нарис"
     topic: "Символіка купальського обрядодійства у записах Лесі Українки на Волині."
     key_elements: ["дерево-Купайло", "ворожіння на вінках", "очисне багаття"]
-    motivation: "Аналіз фахового етнографічного тексту та вивчення термінології обрядових дій."
+    motivation: "Аналіз фахового етнографічного тексту та вивчення термінології обрядових
+      дій."
   - source_type: "наукова стаття"
-    topic: "Магічна функція слова в українських колядках та щедрівках: від замовляння до побажання."
+    topic: "Магічна функція слова в українських колядках та щедрівках: від замовляння
+      до побажання."
     key_elements: ["персоніфікація", "гіперболізація", "рефрен"]
     motivation: "Дослідження філологічного аспекту фольклорних текстів."
 
 listening_situations:
   - media_type: "аудіо"
-    setting: "Польовий запис автентичного виконання веснянок (гаївок) на Західному Поліссі."
+    setting: "Польовий запис автентичного виконання веснянок (гаївок) на Західному
+      Поліссі."
     focus_points: ["багатоголосся", "ритмічна структура", "діалектні особливості"]
-    motivation: "Розвиток вміння розрізняти автентичне та сценічне виконання народної пісні."
+    motivation: "Розвиток вміння розрізняти автентичне та сценічне виконання народної
+      пісні."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Поміркуйте над тезою: 'Трансформація обрядових пісень у сучасному поп-дискурсі: збереження традиції чи профанація?'"
-    requirements: ["мінімум 300 слів", "використання прикладів сучасних гуртів (наприклад, Go_A, Onuka)", "аргументована власна позиція"]
+    prompt: "Поміркуйте над тезою: 'Трансформація обрядових пісень у сучасному поп-дискурсі:
+      збереження традиції чи профанація?'"
+    requirements: ["мінімум 300 слів", "використання прикладів сучасних гуртів (наприклад,
+          Go_A, Onuka)", "аргументована власна позиція"]
     motivation: "Вміння поєднувати глибокі культурні знання з аналізом сучасних медіа-явищ."
-    model_answer: "Текст повинен висвітлювати як позитивні аспекти популяризації фольклору (re-thinking), так і ризики втрати первинних смислів. Важливо вжити терміни: етно-модернізм, автентика, стилізація."
+    model_answer: "Текст повинен висвітлювати як позитивні аспекти популяризації фольклору
+      (re-thinking), так і ризики втрати первинних смислів. Важливо вжити терміни:
+      етно-модернізм, автентика, стилізація."
 
 content_outline:
   - section: "Зимовий цикл: космогонія та благопожелання"
@@ -98,15 +110,22 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a колядка or щедрівка text — identify archaic language layers, pagan vs. Christian elements, and classify the song's ritual function (величання, побажання, заклинання)."
+    description: "Analyze a колядка or щедрівка text — identify archaic language layers,
+      pagan vs. Christian elements, and classify the song's ritual function (величання,
+      побажання, заклинання)."
   - type: match-up
-    description: "Match ritual song types (колядки, щедрівки, веснянки, гаївки, жниварські, купальські) with their calendar period, function, and characteristic features."
+    description: "Match ritual song types (колядки, щедрівки, веснянки, гаївки, жниварські,
+      купальські) with their calendar period, function, and characteristic features."
   - type: fill-in
-    description: "Complete ritual song texts with traditional formulas, symbols (калина, барвінок, зозуля, сокіл), and parallelism patterns."
+    description: "Complete ritual song texts with traditional formulas, symbols (калина,
+      барвінок, зозуля, сокіл), and parallelism patterns."
   - type: select
-    description: "Identify the calendar cycle (зимовий, весняний, літній) and ritual function of given folk song excerpts based on their content and imagery."
+    description: "Identify the calendar cycle (зимовий, весняний, літній) and ritual
+      function of given folk song excerpts based on their content and imagery."
   - type: essay-response
-    description: "Write an analytical paragraph (150-200 words) evaluating whether modern ethno-music adaptations (Go_A, Onuka) preserve or profane the ritual song tradition."
+    description: "Write an analytical paragraph (150-200 words) evaluating whether
+      modern ethno-music adaptations (Go_A, Onuka) preserve or profane the ritual
+      song tradition."
 
 activities:
   types_required:
@@ -126,3 +145,4 @@ references:
 connects_to:
   previous: "kobzari-bandura"
   next: "kolyskovi-ta-dumy"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

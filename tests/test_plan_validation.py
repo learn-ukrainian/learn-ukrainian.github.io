@@ -6,16 +6,16 @@ Uses tmp_path fixtures to create test plan files.
 Run with: pytest tests/test_plan_validation.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts'))
 
 from scripts.validate_plan_config import get_config_target, validate_plan
-
 
 # =============================================================================
 # TEST: get_config_target

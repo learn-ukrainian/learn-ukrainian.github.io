@@ -1,6 +1,6 @@
 # Build Summary: linking-ideas (A1)
 
-Generated: 2026-03-31 11:48
+Generated: 2026-04-01 13:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:48
 | vocab | complete | 2026-03-30 20:46:58 |
 | enrich | complete | 2026-03-30 20:46:59 |
 | verify | complete | 2026-03-30 20:46:59 |
-| review | complete | 2026-03-30 20:48:41 |
-| stress | complete | 2026-03-31 09:48:50 |
-| publish | complete | 2026-03-31 09:48:50 |
+| review | complete | 2026-04-01 11:44:49 |
+| stress | complete | 2026-04-01 11:44:49 |
+| publish | complete | 2026-04-01 11:44:55 |
 
 ## Reviews
 
@@ -38,6 +38,9 @@ Generated: 2026-03-31 11:48
 | activities | claude-tools (claude-sonnet-4-6) | 390s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 17s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 102s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

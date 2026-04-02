@@ -4,7 +4,7 @@ sequence: 27
 slug: global-context
 version: '1.1'
 title: "Україна в глобальному контексті: Дипломатія та геополітика"
-subtitle: "Global Context and International Diplomacy"
+subtitle: "Глобальний контекст та міжнародна дипломатія"
 focus: professional
 pedagogy: seminar
 word_target: 4000
@@ -12,17 +12,20 @@ objectives:
   - "Аналізувати роль України в сучасних міжнародних відносинах та глобальних інституціях."
   - "Володіти лексикою та етикетом дипломатичного листування та переговорів."
   - "Оцінювати вплив геополітичних змін на національну безпеку та економіку України."
-  - "Досліджувати історію української дипломатії: від княжих союзів до сучасної зовнішньої політики."
+  - "Досліджувати історію української дипломатії: від княжих союзів до сучасної зовнішньої
+    політики."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Аналіз Будапештського меморандуму та викликів міжнародного права в XXI столітті."
+    topic: "Аналіз Будапештського меморандуму та викликів міжнародного права в XXI
+      столітті."
     key_elements: ["гарантії безпеки", "територіальна цілісність", "прецедент"]
     motivation: "Вивчення юридичної термінології в контексті глобальної безпеки."
   - source_type: "історичне джерело"
     topic: "Дипломатичне листування Івана Мазепи з європейськими монархами."
     key_elements: ["протокол", "союз", "протекторат"]
-    motivation: "Зв'язок історичної суб'єктності України з сучасним дипломатичним дискурсом."
+    motivation: "Зв'язок історичної суб'єктності України з сучасним дипломатичним
+      дискурсом."
 
 listening_situations:
   - media_type: "відео"
@@ -32,17 +35,23 @@ listening_situations:
 
 writing_tasks:
   - task_type: "офіційний лист"
-    prompt: "Складіть дипломатичну ноту або звернення до міжнародної організації з проханням про підтримку культурних проектів з відновлення спадщини в Україні."
-    requirements: ["мінімум 250 слів", "використання сталих дипломатичних виразів", "логічна структура"]
+    prompt: "Складіть дипломатичну ноту або звернення до міжнародної організації з
+      проханням про підтримку культурних проектів з відновлення спадщини в Україні."
+    requirements: ["мінімум 250 слів", "використання сталих дипломатичних виразів",
+      "логічна структура"]
     motivation: "Відпрацювання навичок офіційного письма на міжнародному рівні."
-    model_answer: "Текст має містити формальне звертання, опис проблеми, конкретну пропозицію та запевнення у повазі. Використання термінів 'співробітництво', 'міжнародна підтримка', 'декларація'."
+    model_answer: "Текст має містити формальне звертання, опис проблеми, конкретну
+      пропозицію та запевнення у повазі. Використання термінів 'співробітництво',
+      'міжнародна підтримка', 'декларація'."
 
 discussion_topics:
-  - context: "Глобалізація vs Національна ідентичність: як Україні зберегти унікальність у відкритому світі?"
+  - context: "Глобалізація vs Національна ідентичність: як Україні зберегти унікальність
+      у відкритому світі?"
     questions:
       - "Чи загрожує поширення англійської мови статусу української в бізнесі та науці?"
       - "Якою має бути стратегія 'м'якої сили' (soft power) України за кордоном?"
-      - "Як глобальні кліматичні зміни впливають на геополітичну вагу України як експортера продовольства?"
+      - "Як глобальні кліматичні зміни впливають на геополітичну вагу України як експортера
+        продовольства?"
     motivation: "Розвиток навичок системного аналізу глобальних процесів."
 
 content_outline:
@@ -106,15 +115,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze the Budapest Memorandum and its implications — evaluate legal terminology, argument structure, and precedent formation."
+    description: "Analyze the Budapest Memorandum and its implications — evaluate
+      legal terminology, argument structure, and precedent formation."
   - type: error-correction
-    description: "Fix diplomatic protocol violations and terminology errors in a draft diplomatic note."
+    description: "Fix diplomatic protocol violations and terminology errors in a draft
+      diplomatic note."
   - type: match-up
-    description: "Match international organizations (ООН, Рада Європи, ОБСЄ, НАТО) with their functions, Ukrainian terminology, and Ukraine's role."
+    description: "Match international organizations (ООН, Рада Європи, ОБСЄ, НАТО)
+      with their functions, Ukrainian terminology, and Ukraine's role."
   - type: select
-    description: "Choose appropriate diplomatic formulations for different contexts — official requests, declarations of support, expressions of concern."
+    description: "Choose appropriate diplomatic formulations for different contexts
+      — official requests, declarations of support, expressions of concern."
   - type: essay-response
-    description: "Write a diplomatic note (250+ words) requesting international support for cultural heritage restoration in Ukraine."
+    description: "Write a diplomatic note (250+ words) requesting international support
+      for cultural heritage restoration in Ukraine."
 
 activities:
   types_required:
@@ -134,3 +148,4 @@ references:
 connects_to:
   previous: "media-landscape"
   next: "economics-vocabulary-c1"
+phase: C1.2 [Professional & Social Context]

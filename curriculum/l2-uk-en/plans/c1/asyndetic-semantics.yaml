@@ -4,15 +4,18 @@ sequence: 49
 slug: asyndetic-semantics
 version: '1.1'
 title: "Безсполучникове складне речення: семантика та розділові знаки"
-subtitle: "Asyndetic Complex Sentences: Semantics and Punctuation"
+subtitle: "Безсполучникові складні речення: семантика та пунктуація"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Розуміти семантичні відношення між частинами безсполучникового складного речення (БСР)."
+  - "Розуміти семантичні відношення між частинами безсполучникового складного речення
+    (БСР)."
   - "Майстерно володіти пунктуацією в БСР: кома, крапка з комою, двокрапка, тире."
-  - "Вивчити стилістичні переваги БСР у художньому, розмовному та публіцистичному стилях."
-  - "Навчитися перетворювати сполучникові речення на безсполучникові для досягнення лаконічності та динамізму."
+  - "Вивчити стилістичні переваги БСР у художньому, розмовному та публіцистичному
+    стилях."
+  - "Навчитися перетворювати сполучникові речення на безсполучникові для досягнення
+    лаконічності та динамізму."
 
 reading_situations:
   - source_type: "художній уривок"
@@ -27,15 +30,20 @@ reading_situations:
 listening_situations:
   - media_type: "аудіо"
     setting: "Читання поезії Ліни Костенко професійним актором."
-    focus_points: ["інтонаційне оформлення безсполучникових зв'язків", "пауза як замінник сполучника"]
+    focus_points: ["інтонаційне оформлення безсполучникових зв'язків", "пауза як замінник
+          сполучника"]
     motivation: "Розвиток інтонаційного слуху та розуміння смислових пауз."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть міні-есе (150-200 слів) на тему 'Мить, що змінила все', використовуючи переважно безсполучникові конструкції для передачі динаміки подій."
-    requirements: ["використання двокрапки та тире в БСР", "мінімум 3 різних семантичних типи БСР", "високий рівень емоційності тексту"]
-    motivation: "Практика створення експресивного тексту за допомогою синтаксичних засобів."
-    model_answer: "Текст має демонструвати вміння використовувати БСР для вираження причини (двокрапка), наслідку чи різкої зміни подій (тире)."
+    prompt: "Напишіть міні-есе (150-200 слів) на тему 'Мить, що змінила все', використовуючи
+      переважно безсполучникові конструкції для передачі динаміки подій."
+    requirements: ["використання двокрапки та тире в БСР", "мінімум 3 різних семантичних
+          типи БСР", "високий рівень емоційності тексту"]
+    motivation: "Практика створення експресивного тексту за допомогою синтаксичних
+      засобів."
+    model_answer: "Текст має демонструвати вміння використовувати БСР для вираження
+      причини (двокрапка), наслідку чи різкої зміни подій (тире)."
 
 discussion_topics:
   - context: "Афоризми та крилаті вислови часто мають форму БСР. Чому?"
@@ -105,15 +113,20 @@ vocabulary:
 
 activity_hints:
   - type: fill-in
-    description: "Insert the correct punctuation mark (comma, semicolon, colon, or dash) in asyndetic complex sentences based on semantic relations."
+    description: "Insert the correct punctuation mark (comma, semicolon, colon, or
+      dash) in asyndetic complex sentences based on semantic relations."
   - type: error-correction
-    description: "Fix punctuation errors in asyndetic sentences — wrong choice between colon and dash, missing semicolons in extended constructions."
+    description: "Fix punctuation errors in asyndetic sentences — wrong choice between
+      colon and dash, missing semicolons in extended constructions."
   - type: match-up
-    description: "Match punctuation marks in asyndetic sentences with the semantic relations they signal (пояснення → двокрапка, наслідок → тире)."
+    description: "Match punctuation marks in asyndetic sentences with the semantic
+      relations they signal (пояснення → двокрапка, наслідок → тире)."
   - type: critical-analysis
-    description: "Analyze proverbs and aphorisms as examples of asyndetic sentences — identify the semantic relation and explain the stylistic effect."
+    description: "Analyze proverbs and aphorisms as examples of asyndetic sentences
+      — identify the semantic relation and explain the stylistic effect."
   - type: select
-    description: "Choose the correct interpretation of ambiguous asyndetic sentences where the semantic relation could be causal, conditional, or contrastive."
+    description: "Choose the correct interpretation of ambiguous asyndetic sentences
+      where the semantic relation could be causal, conditional, or contrastive."
 
 activities:
   types_required:
@@ -127,7 +140,8 @@ activities:
 
 references:
   - "Заболотний, 9 клас (2017): §39-40 — Безсполучникове складне речення"
-  - "Авраменко, 9 клас (2017): §26-28 — Безсполучникове складне речення, розділові знаки"
+  - "Авраменко, 9 клас (2017): §26-28 — Безсполучникове складне речення, розділові
+    знаки"
   - "Глазова, 11 клас (2019): §25 — Правила будови складних речень, пунктуація"
 
 connects_to:

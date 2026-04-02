@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "numerals-and-cases",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:59.751437+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:59.751777+00:00"
+    }
+  }
+}

@@ -1,64 +1,58 @@
 ---
-title: "B2-PRO"
-description: " — 40 modules"
-template: splash
+title: B2-PRO - Професійна українська
+sidebar:
+  order: 1
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="B2-PRO"
-  title="B2-PRO"
-  subtitle=" — 0/40 modules complete"
-  moduleCount={40}
-  wordTarget={4000}
-  color="#546E7A"
+  level="b2-pro"
+  levelName="B2-PRO - Професійна українська"
+  subtitle="Professional Track — 40 modules"
+  introduction="Professional — Business communication, technical domains"
+  totalPlanned={40}
   modules={[
-    {
-      unit: "B2-PRO Modules",
-      items: [
-        { num: 1, slug: "business-email-foundations", title: "Business Email Foundations", sub: "", status: "locked" },
-        { num: 2, slug: "email-requests-proposals", title: "Email Requests Proposals", sub: "", status: "locked" },
-        { num: 3, slug: "email-followups-threads", title: "Email Followups Threads", sub: "", status: "locked" },
-        { num: 4, slug: "reports-writing", title: "Reports Writing", sub: "", status: "locked" },
-        { num: 5, slug: "reports-analysis", title: "Reports Analysis", sub: "", status: "locked" },
-        { num: 6, slug: "meeting-participation", title: "Meeting Participation", sub: "", status: "locked" },
-        { num: 7, slug: "meeting-minutes", title: "Meeting Minutes", sub: "", status: "locked" },
-        { num: 8, slug: "presentations-structure", title: "Presentations Structure", sub: "", status: "locked" },
-        { num: 9, slug: "presentations-delivery", title: "Presentations Delivery", sub: "", status: "locked" },
-        { num: 10, slug: "negotiations-basics", title: "Negotiations Basics", sub: "", status: "locked" },
-        { num: 11, slug: "negotiations-tactics", title: "Negotiations Tactics", sub: "", status: "locked" },
-        { num: 12, slug: "small-talk-networking", title: "Small Talk Networking", sub: "", status: "locked" },
-        { num: 13, slug: "business-checkpoint", title: "Business Checkpoint", sub: "", status: "locked" },
-        { num: 14, slug: "business-writing-integration", title: "Business Writing Integration", sub: "", status: "locked" },
-        { num: 15, slug: "business-communication-capstone", title: "Business Communication Capstone", sub: "", status: "locked" },
-        { num: 16, slug: "it-vocabulary-1", title: "It Vocabulary 1", sub: "", status: "locked" },
-        { num: 17, slug: "it-vocabulary-2", title: "It Vocabulary 2", sub: "", status: "locked" },
-        { num: 18, slug: "technical-documentation", title: "Technical Documentation", sub: "", status: "locked" },
-        { num: 19, slug: "finance-vocabulary", title: "Finance Vocabulary", sub: "", status: "locked" },
-        { num: 20, slug: "financial-reports", title: "Financial Reports", sub: "", status: "locked" },
-        { num: 21, slug: "legal-vocabulary", title: "Legal Vocabulary", sub: "", status: "locked" },
-        { num: 22, slug: "contract-reading", title: "Contract Reading", sub: "", status: "locked" },
-        { num: 23, slug: "medical-vocabulary", title: "Medical Vocabulary", sub: "", status: "locked" },
-        { num: 24, slug: "medical-consultation", title: "Medical Consultation", sub: "", status: "locked" },
-        { num: 25, slug: "hr-vocabulary", title: "Hr Vocabulary", sub: "", status: "locked" },
-        { num: 26, slug: "job-applications", title: "Job Applications", sub: "", status: "locked" },
-        { num: 27, slug: "scientific-writing-basics", title: "Scientific Writing Basics", sub: "", status: "locked" },
-        { num: 28, slug: "technical-checkpoint", title: "Technical Checkpoint", sub: "", status: "locked" },
-        { num: 29, slug: "cross-domain-practice", title: "Cross Domain Practice", sub: "", status: "locked" },
-        { num: 30, slug: "technical-integration", title: "Technical Integration", sub: "", status: "locked" },
-        { num: 31, slug: "news-analysis-1", title: "News Analysis 1", sub: "", status: "locked" },
-        { num: 32, slug: "news-analysis-2", title: "News Analysis 2", sub: "", status: "locked" },
-        { num: 33, slug: "journalism-writing", title: "Journalism Writing", sub: "", status: "locked" },
-        { num: 34, slug: "public-speaking-1", title: "Public Speaking 1", sub: "", status: "locked" },
-        { num: 35, slug: "public-speaking-2", title: "Public Speaking 2", sub: "", status: "locked" },
-        { num: 36, slug: "debate-skills-advanced", title: "Debate Skills Advanced", sub: "", status: "locked" },
-        { num: 37, slug: "interview-skills", title: "Interview Skills", sub: "", status: "locked" },
-        { num: 38, slug: "media-checkpoint", title: "Media Checkpoint", sub: "", status: "locked" },
-        { num: 39, slug: "b2-pro-integration", title: "B2 Pro Integration", sub: "", status: "locked" },
-        { num: 40, slug: "b2-pro-capstone", title: "B2 Pro Capstone", sub: "", status: "locked" },
-      ]
-    },
+  { num: 1, title: "business-email-foundations", slug: "business-email-foundations", status: "wip" },
+  { num: 2, title: "email-requests-proposals", slug: "email-requests-proposals", status: "wip" },
+  { num: 3, title: "email-followups-threads", slug: "email-followups-threads", status: "wip" },
+  { num: 4, title: "reports-writing", slug: "reports-writing", status: "wip" },
+  { num: 5, title: "reports-analysis", slug: "reports-analysis", status: "wip" },
+  { num: 6, title: "meeting-participation", slug: "meeting-participation", status: "wip" },
+  { num: 7, title: "meeting-minutes", slug: "meeting-minutes", status: "wip" },
+  { num: 8, title: "presentations-structure", slug: "presentations-structure", status: "wip" },
+  { num: 9, title: "presentations-delivery", slug: "presentations-delivery", status: "wip" },
+  { num: 10, title: "negotiations-basics", slug: "negotiations-basics", status: "wip" },
+  { num: 11, title: "negotiations-tactics", slug: "negotiations-tactics", status: "wip" },
+  { num: 12, title: "small-talk-networking", slug: "small-talk-networking", status: "wip" },
+  { num: 13, title: "business-checkpoint", slug: "business-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 14, title: "business-writing-integration", slug: "business-writing-integration", status: "wip" },
+  { num: 15, title: "business-communication-capstone", slug: "business-communication-capstone", status: "wip" },
+  { num: 16, title: "it-vocabulary-1", slug: "it-vocabulary-1", status: "wip" },
+  { num: 17, title: "it-vocabulary-2", slug: "it-vocabulary-2", status: "wip" },
+  { num: 18, title: "technical-documentation", slug: "technical-documentation", status: "wip" },
+  { num: 19, title: "finance-vocabulary", slug: "finance-vocabulary", status: "wip" },
+  { num: 20, title: "financial-reports", slug: "financial-reports", status: "wip" },
+  { num: 21, title: "legal-vocabulary", slug: "legal-vocabulary", status: "wip" },
+  { num: 22, title: "contract-reading", slug: "contract-reading", status: "wip" },
+  { num: 23, title: "medical-vocabulary", slug: "medical-vocabulary", status: "wip" },
+  { num: 24, title: "medical-consultation", slug: "medical-consultation", status: "wip" },
+  { num: 25, title: "hr-vocabulary", slug: "hr-vocabulary", status: "wip" },
+  { num: 26, title: "job-applications", slug: "job-applications", status: "wip" },
+  { num: 27, title: "scientific-writing-basics", slug: "scientific-writing-basics", status: "wip" },
+  { num: 28, title: "technical-checkpoint", slug: "technical-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 29, title: "cross-domain-practice", slug: "cross-domain-practice", status: "wip" },
+  { num: 30, title: "technical-integration", slug: "technical-integration", status: "wip" },
+  { num: 31, title: "news-analysis-1", slug: "news-analysis-1", status: "wip" },
+  { num: 32, title: "news-analysis-2", slug: "news-analysis-2", status: "wip" },
+  { num: 33, title: "journalism-writing", slug: "journalism-writing", status: "wip" },
+  { num: 34, title: "public-speaking-1", slug: "public-speaking-1", status: "wip" },
+  { num: 35, title: "public-speaking-2", slug: "public-speaking-2", status: "wip" },
+  { num: 36, title: "debate-skills-advanced", slug: "debate-skills-advanced", status: "wip" },
+  { num: 37, title: "interview-skills", slug: "interview-skills", status: "wip" },
+  { num: 38, title: "media-checkpoint", slug: "media-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 39, title: "b2-pro-integration", slug: "b2-pro-integration", status: "wip" },
+  { num: 40, title: "b2-pro-capstone", slug: "b2-pro-capstone", status: "wip" }
   ]}
 />

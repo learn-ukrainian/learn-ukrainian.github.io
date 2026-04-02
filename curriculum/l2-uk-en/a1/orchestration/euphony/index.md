@@ -1,6 +1,6 @@
 # Build Summary: euphony (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:42
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 11:52:43 |
 | enrich | complete | 2026-03-30 11:52:44 |
 | verify | complete | 2026-03-30 11:52:44 |
-| review | complete | 2026-03-30 12:01:49 |
-| stress | complete | 2026-03-31 09:57:04 |
-| publish | complete | 2026-03-31 09:57:05 |
+| review | complete | 2026-04-01 11:41:55 |
+| stress | complete | 2026-04-01 11:42:01 |
+| publish | complete | 2026-04-01 11:42:02 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:57
 | vocab | claude (claude-sonnet-4-6) | 41s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 280s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 263s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 | section-rewrite | claude-tools (claude-opus-4-6) | 72s | ✅ |
 
 ## Files

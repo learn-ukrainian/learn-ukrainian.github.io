@@ -12,9 +12,8 @@ import hashlib
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -416,7 +415,7 @@ class TestTextIngestion:
     def test_jsonl_loading(self, text_jsonl_file):
         """Verify JSONL file loads correctly."""
         chunks = []
-        with open(text_jsonl_file, "r", encoding="utf-8") as f:
+        with open(text_jsonl_file, encoding="utf-8") as f:
             for line in f:
                 chunks.append(json.loads(line))
         assert len(chunks) == 4
@@ -472,7 +471,7 @@ class TestImageIngestion:
     def test_image_jsonl_loading(self, image_jsonl_file):
         """Verify image JSONL file loads correctly."""
         records = []
-        with open(image_jsonl_file, "r", encoding="utf-8") as f:
+        with open(image_jsonl_file, encoding="utf-8") as f:
             for line in f:
                 records.append(json.loads(line))
         assert len(records) == 2
@@ -1337,7 +1336,7 @@ def test_literary_collection(qdrant_client):
     qdrant_client.delete_collection(TEST_LITERARY_COLLECTION)
 
 
-class TestLiteraryCollection(object):
+class TestLiteraryCollection:
     """Test literary collection creation and data integrity."""
 
     def test_collection_has_correct_vector_config(self, qdrant_client, test_literary_collection):
@@ -1424,7 +1423,7 @@ class TestLiteraryCollection(object):
 
 
 @pytest.mark.slow
-class TestLiteraryProductionData(object):
+class TestLiteraryProductionData:
     """Tests against live literary_texts collection (Wave 0 data must be ingested)."""
 
     def test_collection_exists(self, qdrant_client):

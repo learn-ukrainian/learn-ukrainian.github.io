@@ -58,6 +58,12 @@ Ukrainian words follow recognizable patterns. The easiest pattern alternates con
 
 Time to read. Ukrainian classifies words by syllable count — use the proper terms from the start:
 
+**Односкладові́ сло́ва** (one-syllable words). These are words with just one vowel — one syllable, no splitting needed:
+
+**дім** (house). **сон** (dream). **ліс** (forest). **дуб** (oak). **хліб** (bread). **банк** (bank).
+
+Read them whole — there is nothing to split. Now build up:
+
 **Двоскладові́ сло́ва** (two-syllable words). Read each one twice — first split, then blended:
 
 **ма-ма** → **мама** (mother). **та-то** → **тато** (father). **во-да** → **вода** (water). **ру-ка** → **рука** (hand). **ха-та** → **хата** (house). **ка-ша** → **каша** (porridge).

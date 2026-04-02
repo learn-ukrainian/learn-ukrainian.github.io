@@ -1,6 +1,6 @@
 # Build Summary: my-morning (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 04:15:11 |
 | enrich | complete | 2026-03-30 04:15:12 |
 | verify | complete | 2026-03-30 04:15:12 |
-| review | complete | 2026-03-30 04:16:25 |
-| stress | complete | 2026-03-31 09:57:59 |
-| publish | complete | 2026-03-31 09:57:59 |
+| review | complete | 2026-04-01 11:40:31 |
+| stress | complete | 2026-04-01 11:40:31 |
+| publish | complete | 2026-04-01 11:40:37 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 238s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 12s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 73s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

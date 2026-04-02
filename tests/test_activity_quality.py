@@ -11,22 +11,22 @@ Tests deterministic quality checks for:
 Run with: pytest tests/test_activity_quality.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.activity_quality import (
-    analyze_sentence_variety,
-    estimate_vocabulary_difficulty,
     analyze_distractor_quality,
+    analyze_sentence_variety,
     check_natural_ukrainian_markers,
     estimate_cognitive_load,
+    estimate_vocabulary_difficulty,
     validate_activity_quality_deterministic,
 )
-
 
 # =============================================================================
 # TEST: Sentence Variety Analysis

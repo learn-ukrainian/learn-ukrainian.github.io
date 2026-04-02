@@ -1,12 +1,11 @@
-import re
 
 def fix_file():
     filepath = 'curriculum/l2-uk-en/b2/word-formation-adjective-formation.md'
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         text = f.read()
 
     # We will generate a fully rewritten and expanded version of the file.
-    
+
     new_text = """<!-- SCOPE
 Covers: Творення прикметників від іменників, суфікси -ський/-цький, -ний/-альний, складні прикметники (кольори, числівники), фольклорні епітети на -лиций, уникнення англійської інтерференції.
 Not covered:

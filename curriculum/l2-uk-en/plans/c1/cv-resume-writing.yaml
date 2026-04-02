@@ -4,13 +4,14 @@ sequence: 21
 slug: cv-resume-writing
 version: '1.1'
 title: "Мистецтво самопрезентації: Складання резюме та супровідних листів"
-subtitle: "CV and Resume Writing"
+subtitle: "Написання резюме та CV"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Опанувати лексико-граматичні стандарти сучасного українського резюме (CV)."
-  - "Навчитися формулювати професійні досягнення за допомогою активних дієслів та метрик."
+  - "Навчитися формулювати професійні досягнення за допомогою активних дієслів та
+    метрик."
   - "Створювати переконливі супровідні листи, дотримуючись ділового етикету."
   - "Аналізувати специфіку самопрезентації в українському бізнес-середовищі."
 
@@ -20,19 +21,25 @@ reading_situations:
     key_elements: ["професійний досвід", "ключові компетенції", "віддієслівні іменники"]
     motivation: "Вивчення лаконічного та змістовного стилю викладу інформації."
   - source_type: "художній уривок"
-    topic: "Опис кар'єрного шляху героя в сучасній українській прозі (напр., Артем Чех)."
+    topic: "Опис кар'єрного шляху героя в сучасній українській прозі (напр., Артем
+      Чех)."
     key_elements: ["професійна ідентичність", "метафори успіху", "літературний портрет"]
     motivation: "Розуміння культурного контексту ставлення до праці та кар'єри в Україні."
 
 writing_tasks:
   - task_type: "офіційний лист"
-    prompt: "Напишіть супровідний лист (Cover Letter) на вакансію керівника проекту в міжнародну гуманітарну місію в Україні."
-    requirements: ["мінімум 250 слів", "використання дієприкметникових зворотів", "акцент на соціокультурній важливості"]
+    prompt: "Напишіть супровідний лист (Cover Letter) на вакансію керівника проекту
+      в міжнародну гуманітарну місію в Україні."
+    requirements: ["мінімум 250 слів", "використання дієприкметникових зворотів",
+      "акцент на соціокультурній важливості"]
     motivation: "Відпрацювання навичок переконливої аргументації в офіційному стилі."
-    model_answer: "Текст має містити чітку структуру: вступ (мотивація), основна частина (релевантність досвіду), підсумок (заклик до дії). Використання термінів 'співпраця', 'реалізація стратегії', 'фасилітація'."
+    model_answer: "Текст має містити чітку структуру: вступ (мотивація), основна частина
+      (релевантність досвіду), підсумок (заклик до дії). Використання термінів 'співпраця',
+      'реалізація стратегії', 'фасилітація'."
 
 discussion_topics:
-  - context: "Проблема 'м'яких навичок' (soft skills) vs 'твердих навичок' (hard skills) на сучасному ринку праці."
+  - context: "Проблема 'м'яких навичок' (soft skills) vs 'твердих навичок' (hard skills)
+      на сучасному ринку праці."
     questions:
       - "Що є пріоритетним для українського роботодавця сьогодні?"
       - "Як збалансувати скромність та впевненість у самопрезентації?"
@@ -70,7 +77,7 @@ content_outline:
       - "унікальна торгова пропозиція (USP)"
       - "корпоративні цінності"
       - "лояльність"
-  - section: "Цифровий бренд та LinkedIn-комунікація"
+  - section: "Цифровий бренд та професійна комунікація"
     words: 1000
     subsections:
       - "Написання заголовка (Headline) та розділу 'Про себе' (Summary)"
@@ -100,15 +107,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate a Ukrainian CV and cover letter — assess professional vocabulary, action verbs usage, and compliance with business register norms."
+    description: "Evaluate a Ukrainian CV and cover letter — assess professional vocabulary,
+      action verbs usage, and compliance with business register norms."
   - type: error-correction
-    description: "Fix канцелярит, passive voice overuse, and non-professional formulations in CV descriptions and cover letters."
+    description: "Fix канцелярит, passive voice overuse, and non-professional formulations
+      in CV descriptions and cover letters."
   - type: match-up
-    description: "Match professional competency descriptions with appropriate action verbs in perfective aspect."
+    description: "Match professional competency descriptions with appropriate action
+      verbs in perfective aspect."
   - type: select
-    description: "Choose the most effective formulation for describing professional achievements with metrics and results."
+    description: "Choose the most effective formulation for describing professional
+      achievements with metrics and results."
   - type: essay-response
-    description: "Write a cover letter (250+ words) for a humanitarian mission position — demonstrate professional Ukrainian with cultural sensitivity."
+    description: "Write a cover letter (250+ words) for a humanitarian mission position
+      — demonstrate professional Ukrainian with cultural sensitivity."
 
 activities:
   types_required:
@@ -128,3 +140,4 @@ references:
 connects_to:
   previous: "c1-1-checkpoint"
   next: "job-interview"
+phase: C1.2 [Professional & Social Context]

@@ -4,7 +4,7 @@ sequence: 20
 slug: c1-1-checkpoint
 version: '1.1'
 title: "Підсумковий контроль: рівень C1.1"
-subtitle: "Assessment: Level C1.1"
+subtitle: "Підсумковий контроль: C1.1"
 focus: checkpoint
 pedagogy: review
 word_target: 4000
@@ -18,7 +18,8 @@ reading_situations:
   - source_type: "науково-популярний текст"
     topic: "Комплексний огляд стану сучасної української культури в умовах глобалізації."
     key_elements: ["синтез ідей", "складна пунктуація", "термінологія"]
-    motivation: "Контрольне читання для перевірки розуміння глибоких змістових зв'язків та авторської позиції."
+    motivation: "Контрольне читання для перевірки розуміння глибоких змістових зв'язків
+      та авторської позиції."
 
 listening_situations:
   - media_type: "аудіо"
@@ -28,14 +29,21 @@ listening_situations:
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть підсумкове академічне есе (500-600 слів) на одну з обраних тем: 'Мова як інструмент м'якої сили' або 'Майбутнє університетської освіти в цифрову епоху'."
-    requirements: ["використання всіх вивчених граматичних та лексичних тем", "логічна бездоганність", "стилістична єдність"]
+    prompt: "Напишіть підсумкове академічне есе (500-600 слів) на одну з обраних тем:
+      'Мова як інструмент м'якої сили' або 'Майбутнє університетської освіти в цифрову
+      епоху'."
+    requirements: ["використання всіх вивчених граматичних та лексичних тем", "логічна
+          бездоганність", "стилістична єдність"]
     motivation: "Фінальна оцінка письмової компетенції студента на рівні C1.1."
-    model_answer: "Текст має бути зразком академічного письма з використанням складної пунктуації, пасивних конструкцій, хеджування та багатої термінології."
+    model_answer: "Текст має бути зразком академічного письма з використанням складної
+      пунктуації, пасивних конструкцій, хеджування та багатої термінології."
 
 discussion_topics:
-  - context: "Презентація та захист власного проєкту (або результатів навчання) перед аудиторією."
-    questions: ["Які ваші найбільші досягнення в опануванні української мови на цьому рівні?", "З якими труднощами ви стикалися при роботі з науковими текстами?", "Як ви плануєте використовувати здобуті знання у професійній діяльності?"]
+  - context: "Презентація та захист власного проєкту (або результатів навчання) перед
+      аудиторією."
+    questions: ["Які ваші найбільші досягнення в опануванні української мови на цьому
+          рівні?", "З якими труднощами ви стикалися при роботі з науковими текстами?",
+      "Як ви плануєте використовувати здобуті знання у професійній діяльності?"]
     motivation: "Підсумкова усна перевірка навичок самопрезентації та рефлексії."
 
 content_outline:
@@ -99,15 +107,21 @@ vocabulary:
 
 activity_hints:
   - type: essay-response
-    description: "Write a comprehensive academic essay (500-600 words) demonstrating all C1.1 skills — complex punctuation, passive constructions, hedging, and rich terminology."
+    description: "Write a comprehensive academic essay (500-600 words) demonstrating
+      all C1.1 skills — complex punctuation, passive constructions, hedging, and rich
+      terminology."
   - type: critical-analysis
-    description: "Analyze a complex Ukrainian text on globalization and culture — evaluate argument structure, academic register, and author position."
+    description: "Analyze a complex Ukrainian text on globalization and culture —
+      evaluate argument structure, academic register, and author position."
   - type: error-correction
-    description: "Fix syntactic, morphological, and stylistic errors in a mixed-register text — enforce academic norms consistently."
+    description: "Fix syntactic, morphological, and stylistic errors in a mixed-register
+      text — enforce academic norms consistently."
   - type: fill-in
-    description: "Complete a comprehensive academic text with appropriate terminology, discourse markers, and citation formulas from the entire C1.1 program."
+    description: "Complete a comprehensive academic text with appropriate terminology,
+      discourse markers, and citation formulas from the entire C1.1 program."
   - type: select
-    description: "Choose correct forms across all C1.1 grammar topics — complex sentences, punctuation, verb paradigms, academic clichés."
+    description: "Choose correct forms across all C1.1 grammar topics — complex sentences,
+      punctuation, verb paradigms, academic clichés."
 
 activities:
   types_required:
@@ -128,3 +142,4 @@ references:
 connects_to:
   previous: "practice-ii-article-critique"
   next: "cv-resume-writing"
+phase: C1.1 [Academic Foundation]

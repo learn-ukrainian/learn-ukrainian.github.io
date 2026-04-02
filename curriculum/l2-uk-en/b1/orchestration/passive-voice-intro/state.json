@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "passive-voice-intro",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T07:26:36.305413+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T07:27:51.456791+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T07:28:26.308922+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T07:29:33.692444+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:37.538917+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:38.542423+00:00"
+    }
+  }
+}

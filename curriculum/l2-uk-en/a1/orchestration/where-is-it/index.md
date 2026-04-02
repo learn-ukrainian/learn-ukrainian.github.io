@@ -1,6 +1,6 @@
 # Build Summary: where-is-it (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:42
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 19:22:57 |
 | enrich | complete | 2026-03-30 19:22:57 |
 | verify | complete | 2026-03-30 19:22:58 |
-| review | complete | 2026-03-30 19:25:42 |
-| stress | complete | 2026-03-31 09:58:15 |
-| publish | complete | 2026-03-31 09:58:15 |
+| review | complete | 2026-04-01 11:42:07 |
+| stress | complete | 2026-04-01 11:42:13 |
+| publish | complete | 2026-04-01 11:42:14 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 229s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 27s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 164s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Friction
 

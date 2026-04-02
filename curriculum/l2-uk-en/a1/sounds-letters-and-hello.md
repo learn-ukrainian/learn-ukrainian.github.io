@@ -47,7 +47,7 @@ Three special consonant facts to note now. First, **Ґ** — a letter unique to 
 
 ## Приві́т! (Hello!)
 
-Time for your first real Ukrainian conversation. **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як спра́ви?** (How are you?). Three answers you will hear every day: **До́бре** (fine, good), **Чудо́во** (great, wonderful), **Норма́льно** (okay, so-so). To return the question: **А в тебе́?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
+Time for your first real Ukrainian conversation — following Anna Ohoiko's Ukrainian Lessons Podcast (Episode 1). **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як спра́ви?** (How are you?). Three answers you will hear every day: **До́бре** (fine, good), **Чудо́во** (great, wonderful), **Норма́льно** (okay, so-so). To return the question: **А в тебе́?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
 
 > — **Тара́с:** Привіт, Олю! *(Hi, Olya!)*
 > — **Оля:** Привіт, Тара́се! Як справи? *(Hi, Taras! How are you?)*

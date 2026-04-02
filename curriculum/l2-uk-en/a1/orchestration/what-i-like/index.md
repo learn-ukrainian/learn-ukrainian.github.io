@@ -1,6 +1,6 @@
 # Build Summary: what-i-like (A1)
 
-Generated: 2026-03-31 11:44
+Generated: 2026-04-01 13:39
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:44
 | vocab | complete | 2026-03-30 19:01:14 |
 | enrich | complete | 2026-03-30 19:01:15 |
 | verify | complete | 2026-03-30 19:01:15 |
-| review | complete | 2026-03-30 19:07:15 |
-| stress | complete | 2026-03-31 09:44:11 |
-| publish | complete | 2026-03-31 09:44:11 |
+| review | complete | 2026-04-01 11:39:34 |
+| stress | complete | 2026-04-01 11:39:41 |
+| publish | complete | 2026-04-01 11:39:42 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-03-31 11:44
 |-------|------|
 | 1 | what-i-like-review-r1.md |
 | 2 | what-i-like-review-r2.md |
+| 3 | what-i-like-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,6 +41,8 @@ Generated: 2026-03-31 11:44
 | vocab | claude (claude-sonnet-4-6) | 16s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 193s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 166s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 226s | ✅ |
 
 ## Files
 
@@ -50,6 +53,7 @@ Generated: 2026-03-31 11:44
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

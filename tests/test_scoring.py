@@ -8,29 +8,28 @@ All pure functions with no file I/O.
 Run with: pytest tests/test_scoring.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.scoring.metrics import (
-    count_callouts,
-    count_agency_markers,
-    analyze_toponyms,
-    count_cross_references,
-    calculate_citation_ratio,
-    count_stylistic_devices,
-    count_analysis_sections,
-    count_legacy_sections,
-)
 from scripts.scoring.caps import (
-    get_caps_for_track,
     apply_critical_caps,
     check_cap_violations,
-    CapCondition,
+    get_caps_for_track,
 )
-
+from scripts.scoring.metrics import (
+    analyze_toponyms,
+    calculate_citation_ratio,
+    count_agency_markers,
+    count_analysis_sections,
+    count_callouts,
+    count_cross_references,
+    count_legacy_sections,
+    count_stylistic_devices,
+)
 
 # =============================================================================
 # TEST: count_callouts

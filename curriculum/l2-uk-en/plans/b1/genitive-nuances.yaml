@@ -1,172 +1,163 @@
-module: b1-046
+module: b1-042
 level: B1
-sequence: 46
+sequence: 42
 slug: genitive-nuances
 version: '3.0'
 title: "Родовий відмінок (деталі)"
-subtitle: "Розширені значення родового: частина від цілого, бажання, заперечення, дати"
+subtitle: "Розширені значення родового: частина від цілого, бажання, заперечення,
+  дати"
 focus: grammar
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can use the genitive to express partitive meaning (частина від цілого):
-  склянка води, шматок хліба, трохи цукру, багато часу"
-- "Learner can use the genitive as object of desire/search/achievement:
-  бажати щастя, шукати правди, досягти мети"
-- "Learner can use the genitive in negative constructions:
-  немає часу, не бачив друга (vs не бачив друг — Зн.в.)"
-- "Learner can use the genitive for dates and temporal expressions:
-  другого лютого, минулого року, цього тижня"
-- "Learner can choose between -а/-я and -у/-ю endings in masculine genitive
-  singular (Р.в. ІІ відміни) based on semantic categories"
+  - "Learner can use the genitive to express partitive meaning (частина від цілого):
+    склянка води, шматок хліба, трохи цукру, багато часу"
+  - "Learner can use the genitive as object of desire/search/achievement: бажати щастя,
+    шукати правди, досягти мети"
+  - "Learner can use the genitive in negative constructions: немає часу, не бачив
+    друга (vs не бачив друг — Зн.в.)"
+  - "Learner can use the genitive for dates and temporal expressions: другого лютого,
+    минулого року, цього тижня"
+  - "Learner can choose between -а/-я and -у/-ю endings in masculine genitive singular
+    (Р.в. ІІ відміни) based on semantic categories"
 dialogue_situations:
-- setting: 'At a Одеський ринок Привоз (m, Privoz market) — haggling: Дайте склянку
-    (f) меду (partitive gen). Трохи сиру (partitive gen). Немає свіжого молока (n,
-    milk)? Шматок хліба (m), будь ласка.'
-  speakers:
-  - Покупець
-  - Продавець
-  motivation: 'Partitive genitive: меду, сиру, молока, хліба — quantity expressions'
+  - setting: 'At a Одеський ринок Привоз (m, Privoz market) — haggling: Дайте склянку
+      (f) меду (partitive gen). Трохи сиру (partitive gen). Немає свіжого молока (n,
+      milk)? Шматок хліба (m), будь ласка.'
+    speakers:
+      - Покупець
+      - Продавець
+    motivation: 'Partitive genitive: меду, сиру, молока, хліба — quantity expressions'
 content_outline:
-- section: "Частковий родовий"
-  words: 700
-  points:
-  - "Core concept: when you take PART of something, the whole appears
-    in Р.в.: склянка води, чашка чаю, шматок хліба, тарілка борщу,
-    пляшка молока, кілограм яблук, літр бензину.
-    The 'container' or 'measure' is in Н.в./Зн.в.; the substance is in Р.в."
-  - "Quantifiers + Р.в.: багато часу, мало грошей, трохи цукру,
-    чимало зусиль, достатньо води, забагато сонця.
-    These always govern the genitive, singular or plural depending on
-    whether the noun is countable."
-  - "Practice: 10-12 sentences with partitive constructions,
-    learners form the correct Р.в. form. Include tricky cases:
-    сік (соку, not *сіку — vowel alternation)."
-- section: "Родовий бажання, пошуку, досягнення"
-  words: 600
-  points:
-  - "Verbs that take Р.в. instead of Зн.в. for their object:
-    бажати (бажаю щастя), шукати (шукаю правди/правду — both possible),
-    досягти (досяг мети), позбутися (позбувся страху),
-    потребувати (потребую допомоги), набути (набув досвіду).
-    With abstract nouns, Р.в. is strongly preferred over Зн.в."
-  - "Expressions with Р.в.:
-    вартий уваги (worth attention), повний надії (full of hope),
-    гідний поваги (worthy of respect).
-    These adjective + Р.в. constructions are common in B1+ texts."
-  - "Practice: complete sentences choosing between Р.в. and Зн.в.
-    depending on the verb. Contrast: шукати книжку (Зн.в., specific)
-    vs шукати правди (Р.в., abstract)."
-- section: "Родовий при запереченні"
-  words: 600
-  points:
-  - "Key rule: with немає/нема, the subject takes Р.в.:
-    Є час (Н.в.) → Немає часу (Р.в.).
-    Є хліб → Немає хліба. Є друзі → Немає друзів.
-    This is systematic — EVERY немає construction uses Р.в."
-  - "Negated transitive verbs: Р.в. often replaces Зн.в.
-    Я бачив друга (Зн.в.) → Я не бачив друга (Р.в. or Зн.в. both possible).
-    With abstract nouns, Р.в. is preferred: не мав змоги, не знайшов відповіді.
-    With concrete specific nouns, Зн.в. is common: не бачив цю книжку."
-  - "не було / не буде + Р.в.:
-    Вчора не було дощу. Завтра не буде заняття.
-    Practice: transform positive sentences to negative, changing cases."
-- section: "Родовий у датах і часових виразах"
-  words: 600
-  points:
-  - "Dates use ordinal numerals + noun in Р.в.:
-    Сьогодні друге лютого (Н.в. for 'today is').
-    Це сталося другого лютого (Р.в. for 'on the date').
-    Він народився п'ятнадцятого березня тисяча дев'ятсот дев'яностого року."
-  - "Temporal expressions with Р.в.:
-    цього тижня (this week), минулого року (last year),
-    наступного місяця (next month), того дня (that day).
-    These demonstrative + Р.в. time expressions are extremely common."
-  - "Practice: answer 'Коли це сталося?' using dates in Р.в.,
-    and form temporal expressions with цей/минулий/наступний."
-- section: "Закінчення -а/-я чи -у/-ю?"
-  words: 700
-  points:
-  - "The -а/-я vs -у/-ю distinction for ІІ відміна masculine nouns in Р.в.
-    is one of the hardest rules in Ukrainian. Semantic categories:
-    -а/-я (concrete, countable, specific):
-    стола, олівця, брата, коня, вітру (specific thing or being).
-    -у/-ю (abstract, collective, material, uncountable):
-    снігу, часу, розуму, вітру (phenomenon), народу, інституту."
-  - "From Заболотний Grade 6 p.93-101:
-    -а/-я: names of persons, animals, tools, specific objects, cities
-    (Києва, Львова, but: Донбасу — region, not city).
-    -у/-ю: abstract concepts, collective nouns, materials, natural phenomena,
-    institutions, geographic regions (факультету, піску, дощу)."
-  - "The tricky cases: some nouns allow BOTH, with meaning difference:
-    листа (a specific letter) vs листу (foliage, collective).
-    Practice: 15 nouns, choose correct Р.в. ending and explain the category."
-- section: "Підсумок"
-  words: 300
-  points:
-  - "Reference: five semantic roles of Р.в.:
-    1. Частковий (склянка води). 2. Бажання/пошуку (шукати правди).
-    3. Заперечення (немає часу). 4. Дати (другого лютого).
-    5. Приналежності (review from A2: книжка брата)."
-  - "Preview: next module — давальний відмінок (деталі):
-    expressing states, age, and needs."
+  - section: "Частковий родовий"
+    words: 700
+    points:
+      - "Core concept: when you take PART of something, the whole appears in Р.в.:
+        склянка води, чашка чаю, шматок хліба, тарілка борщу, пляшка молока, кілограм
+        яблук, літр бензину. The 'container' or 'measure' is in Н.в./Зн.в.; the substance
+        is in Р.в."
+      - "Quantifiers + Р.в.: багато часу, мало грошей, трохи цукру, чимало зусиль,
+        достатньо води, забагато сонця. These always govern the genitive, singular
+        or plural depending on whether the noun is countable."
+      - "Practice: 10-12 sentences with partitive constructions, learners form the
+        correct Р.в. form. Include tricky cases: сік (соку, not *сіку — vowel alternation)."
+  - section: "Родовий бажання, пошуку, досягнення"
+    words: 600
+    points:
+      - "Verbs that take Р.в. instead of Зн.в. for their object: бажати (бажаю щастя),
+        шукати (шукаю правди/правду — both possible), досягти (досяг мети), позбутися
+        (позбувся страху), потребувати (потребую допомоги), набути (набув досвіду).
+        With abstract nouns, Р.в. is strongly preferred over Зн.в."
+      - "Expressions with Р.в.: вартий уваги (worth attention), повний надії (full
+        of hope), гідний поваги (worthy of respect). These adjective + Р.в. constructions
+        are common in B1+ texts."
+      - "Practice: complete sentences choosing between Р.в. and Зн.в. depending on
+        the verb. Contrast: шукати книжку (Зн.в., specific) vs шукати правди (Р.в.,
+        abstract)."
+  - section: "Родовий при запереченні"
+    words: 600
+    points:
+      - "Key rule: with немає/нема, the subject takes Р.в.: Є час (Н.в.) → Немає часу
+        (Р.в.). Є хліб → Немає хліба. Є друзі → Немає друзів. This is systematic —
+        EVERY немає construction uses Р.в."
+      - "Negated transitive verbs: Р.в. often replaces Зн.в. Я бачив друга (Зн.в.)
+        → Я не бачив друга (Р.в. or Зн.в. both possible). With abstract nouns, Р.в.
+        is preferred: не мав змоги, не знайшов відповіді. With concrete specific nouns,
+        Зн.в. is common: не бачив цю книжку."
+      - "не було / не буде + Р.в.: Вчора не було дощу. Завтра не буде заняття. Practice:
+        transform positive sentences to negative, changing cases."
+  - section: "Родовий у датах і часових виразах"
+    words: 600
+    points:
+      - "Dates use ordinal numerals + noun in Р.в.: Сьогодні друге лютого (Н.в. for
+        'today is'). Це сталося другого лютого (Р.в. for 'on the date'). Він народився
+        п'ятнадцятого березня тисяча дев'ятсот дев'яностого року."
+      - "Temporal expressions with Р.в.: цього тижня (this week), минулого року (last
+        year), наступного місяця (next month), того дня (that day). These demonstrative
+        + Р.в. time expressions are extremely common."
+      - "Practice: answer 'Коли це сталося?' using dates in Р.в., and form temporal
+        expressions with цей/минулий/наступний."
+  - section: "Закінчення -а/-я чи -у/-ю?"
+    words: 700
+    points:
+      - "The -а/-я vs -у/-ю distinction for ІІ відміна masculine nouns in Р.в. is
+        one of the hardest rules in Ukrainian. Semantic categories: -а/-я (concrete,
+        countable, specific): стола, олівця, брата, коня, вітру (specific thing or
+        being). -у/-ю (abstract, collective, material, uncountable): снігу, часу,
+        розуму, вітру (phenomenon), народу, інституту."
+      - "From Заболотний Grade 6 p.93-101: -а/-я: names of persons, animals, tools,
+        specific objects, cities (Києва, Львова, but: Донбасу — region, not city).
+        -у/-ю: abstract concepts, collective nouns, materials, natural phenomena,
+        institutions, geographic regions (факультету, піску, дощу)."
+      - "The tricky cases: some nouns allow BOTH, with meaning difference: листа (a
+        specific letter) vs листу (foliage, collective). Practice: 15 nouns, choose
+        correct Р.в. ending and explain the category."
+  - section: "Підсумок"
+    words: 300
+    points:
+      - "Reference: five semantic roles of Р.в.: 1. Частковий (склянка води). 2. Бажання/пошуку
+        (шукати правди). 3. Заперечення (немає часу). 4. Дати (другого лютого). 5.
+        Приналежності (review from A2: книжка брата)."
+      - "Preview: next module — давальний відмінок (деталі): expressing states, age,
+        and needs."
 vocabulary_hints:
   required:
-  - "родовий відмінок (genitive case)"
-  - "частковий (partitive — expressing part of a whole)"
-  - "заперечення (negation — немає, не)"
-  - "кількість (quantity — governed by genitive)"
-  - "дата (date — uses genitive for 'on a date')"
-  - "закінчення (ending — the grammatical suffix of a declined word)"
-  - "склянка (glass — as a measure word)"
-  - "шматок (piece — as a partitive word)"
-  - "багато (many/much — quantifier governing genitive)"
-  - "немає (there is no — triggers genitive)"
+    - "родовий відмінок (genitive case)"
+    - "частковий (partitive — expressing part of a whole)"
+    - "заперечення (negation — немає, не)"
+    - "кількість (quantity — governed by genitive)"
+    - "дата (date — uses genitive for 'on a date')"
+    - "закінчення (ending — the grammatical suffix of a declined word)"
+    - "склянка (glass — as a measure word)"
+    - "шматок (piece — as a partitive word)"
+    - "багато (many/much — quantifier governing genitive)"
+    - "немає (there is no — triggers genitive)"
   recommended:
-  - "бажати (to wish/desire — governs genitive)"
-  - "потребувати (to need — governs genitive)"
-  - "досягти (to achieve — governs genitive)"
-  - "позбутися (to get rid of — governs genitive)"
-  - "гідний (worthy of — governs genitive)"
-  - "вартий (worth — governs genitive)"
+    - "бажати (to wish/desire — governs genitive)"
+    - "потребувати (to need — governs genitive)"
+    - "досягти (to achieve — governs genitive)"
+    - "позбутися (to get rid of — governs genitive)"
+    - "гідний (worthy of — governs genitive)"
+    - "вартий (worth — governs genitive)"
 activity_hints:
-- type: quiz
-  focus: "Identify the semantic role of genitive in sentences (partitive, negation, etc.)"
-  items: 8
-- type: fill-in
-  focus: "Put nouns into correct genitive form, choosing -а/-я or -у/-ю"
-  items: 8
-- type: match-up
-  focus: "Match quantifier/container to its genitive-governed noun"
-  items: 8
-- type: error-correction
-  focus: "Fix case errors in genitive constructions (wrong ending, wrong case)"
-  items: 6
-- type: sentence-builder
-  focus: "Build sentences using genitive for dates, negation, and partitive"
-  items: 6
-- type: group-sort
-  focus: "Sort masculine nouns by genitive ending category: -а/-я vs -у/-ю"
-  items: 10
+  - type: quiz
+    focus: "Identify the semantic role of genitive in sentences (partitive, negation,
+      etc.)"
+    items: 8
+  - type: fill-in
+    focus: "Put nouns into correct genitive form, choosing -а/-я or -у/-ю"
+    items: 8
+  - type: match-up
+    focus: "Match quantifier/container to its genitive-governed noun"
+    items: 8
+  - type: error-correction
+    focus: "Fix case errors in genitive constructions (wrong ending, wrong case)"
+    items: 6
+  - type: sentence-builder
+    focus: "Build sentences using genitive for dates, negation, and partitive"
+    items: 6
+  - type: group-sort
+    focus: "Sort masculine nouns by genitive ending category: -а/-я vs -у/-ю"
+    items: 10
 connects_to:
-- "b1-047 (Давальний відмінок деталі — dative nuances)"
-- "b1-048 (Орудний відмінок деталі — instrumental nuances)"
-- "b1-052 (Порядкові числівники і відмінки — numerals use genitive in dates)"
+  - "b1-047 (Давальний відмінок деталі — dative nuances)"
+  - "b1-048 (Орудний відмінок деталі — instrumental nuances)"
+  - "b1-052 (Порядкові числівники і відмінки — numerals use genitive in dates)"
 prerequisites:
-- "A2 completion (basic case system, Р.в. basic forms)"
-- "b1-012 through b1-015 (noun subclasses and declension from Phase 2)"
+  - "A2 completion (basic case system, Р.в. basic forms)"
+  - "b1-012 through b1-015 (noun subclasses and declension from Phase 2)"
 grammar:
-- "Частковий родовий: склянка води, кілограм яблук"
-- "Родовий бажання: бажати щастя, шукати правди"
-- "Родовий заперечення: немає часу, не бачив друга"
-- "Родовий у датах: другого лютого, минулого року"
-- "Закінчення -а/-я vs -у/-ю у ІІ відміні (семантичні категорії)"
+  - "Частковий родовий: склянка води, кілограм яблук"
+  - "Родовий бажання: бажати щастя, шукати правди"
+  - "Родовий заперечення: немає часу, не бачив друга"
+  - "Родовий у датах: другого лютого, минулого року"
+  - "Закінчення -а/-я vs -у/-ю у ІІ відміні (семантичні категорії)"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 6, p.93-101"
-  notes: "Genitive case meanings, -а/-я vs -у/-ю rules, plural genitive forms."
-- title: "Литвінова Grade 6, p.141"
-  notes: "Genitive in dates and temporal expressions."
-- title: "Авраменко Grade 11, p.42"
-  notes: "Time expressions with prepositions and genitive."
+  - title: "Заболотний Grade 6, p.93-101"
+    notes: "Genitive case meanings, -а/-я vs -у/-ю rules, plural genitive forms."
+  - title: "Литвінова Grade 6, p.141"
+    notes: "Genitive in dates and temporal expressions."
+  - title: "Авраменко Grade 11, p.42"
+    notes: "Time expressions with prepositions and genitive."

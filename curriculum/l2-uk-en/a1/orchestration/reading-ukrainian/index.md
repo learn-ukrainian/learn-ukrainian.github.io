@@ -1,6 +1,6 @@
 # Build Summary: reading-ukrainian (A1)
 
-Generated: 2026-03-31 17:14
+Generated: 2026-04-01 12:33
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 17:14
 | vocab | complete | 2026-03-31 11:02:31 |
 | enrich | complete | 2026-03-29 20:14:24 |
 | verify | complete | 2026-03-29 20:14:25 |
-| review | complete | 2026-03-31 11:24:58 |
-| stress | complete | 2026-03-31 15:14:55 |
-| publish | complete | 2026-03-31 15:14:55 |
+| review | complete | 2026-04-01 10:33:37 |
+| stress | complete | 2026-04-01 10:33:44 |
+| publish | complete | 2026-04-01 10:33:45 |
 
 ## Reviews
 
@@ -31,6 +31,7 @@ Generated: 2026-03-31 17:14
 | 3 | reading-ukrainian-review-r3.md |
 | 4 | reading-ukrainian-review-r4.md |
 | 5 | reading-ukrainian-review-r5.md |
+| 6 | reading-ukrainian-review-r6.md |
 
 ## Dispatch Log
 
@@ -56,6 +57,9 @@ Generated: 2026-03-31 17:14
 | review | claude-tools (claude-opus-4-6) | 200s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 404s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 280s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 207s | ✅ |
 | section-rewrite | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
 
 ## Files
@@ -71,6 +75,7 @@ Generated: 2026-03-31 17:14
 - `review-structured-r3.yaml`
 - `review-structured-r4.yaml`
 - `review-structured-r5.yaml`
+- `review-structured-r6.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 9: What Is It Like? (A1, A1.2 [My World])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -122,61 +122,35 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-You already know Ukrainian nouns have gender — **стіл** (table) is masculine, **книга** (book) is feminine, **вікно** (window) is neuter. But how do you describe what these things are actually like? That is where adjectives come in. Adjectives tell you about a noun's qualities — big, small, new, old. Two dialogues below show adjectives at work: first in a room at home, then at a weekend book fair.
+You already know Ukrainian nouns have gender — **стіл** (table) is masculine, **кни́га** (book) is feminine, **вікно́** (window) is neuter. But how do you describe what these things are actually like? That is where adjectives come in. Adjectives tell you about a noun's qualities — big, small, new, old. Two dialogues below show adjectives at work: first in a room at home, then at a weekend book fair.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Яка твоя кімната? *(What is your room like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Моя кімната велика і світла. *(My room is big and bright.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А стіл? *(And the table?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Стіл новий. *(The table is new.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А ліжко? *(And the bed?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Воно старе. *(It is old.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Вікно? *(The window?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Вікно чисте і велике. *(The window is clean and big.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А стілець? *(And the chair?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Маленький, але зручний. *(Small, but comfortable.)*</div>
-
-</div>
+> — **Тара́с:** Яка твоя́ кімна́та? *(What is your room like?)*
+> — **Оля:** Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*
+> — **Тарас:** А стіл? *(And the table?)*
+> — **Оля:** Стіл нови́й. *(The table is new.)*
+> — **Тарас:** А лі́жко? *(And the bed?)*
+> — **Оля:** Воно́ старе́. *(It is old.)*
+> — **Тарас:** Вікно? *(The window?)*
+> — **Оля:** Вікно чи́сте і вели́ке. *(The window is clean and big.)*
+> — **Тарас:** А стіле́ць? *(And the chair?)*
+> — **Оля:** Мале́нький, але́ зру́чний. *(Small, but comfortable.)*
 
 Notice what just happened: **кімната** (room) is feminine, so Тарас asked **Яка** твоя кімната? But **стіл** (table) is masculine, and **ліжко** (bed) is neuter. The question word changed every time. All the nouns here — **кімната**, **стіл**, **ліжко**, **вікно**, **стілець** (chair) — come from M08. Now they have adjectives attached to them.
 
-Same question words — **Який?** **Яка?** **Яке?** — but a brand-new setting: a weekend book fair. Тарас and Софія browse books, maps, and posters. Watch how the question word shifts with each noun.
+Same question words — **Яки́й?** **Яка?** **Яке́?** — but a brand-new setting: a weekend book fair. Тарас and Софія browse books, maps, and posters. Watch how the question word shifts with each noun.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Який цікавий атлас! *(What an interesting atlas!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Так, але він дорогий. *(Yes, but it is expensive.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А ця книга? Яка вона? *(And this book? What is it like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Нова і дешева. *(New and cheap.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Яке гарне фото! *(What a nice photo!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Справді! А плакат? *(Indeed! And the poster?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Великий і яскравий. *(Big and bright.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Подивись — маленька листівка. *(Look — a small postcard.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Яка вона? *(What is it like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Стара, але гарна. *(Old, but nice.)*</div>
-
-</div>
+> — **Тарас:** Який ціка́вий атлас! *(What an interesting atlas!)*
+> — **Софія:** Так, але він дороги́й. *(Yes, but it is expensive.)*
+> — **Тарас:** А ця книга? Яка вона́? *(And this book? What is it like?)*
+> — **Софія:** Нова́ і деше́ва. *(New and cheap.)*
+> — **Тарас:** Яке га́рне фо́то! *(What a nice photo!)*
+> — **Софія:** Спра́вді! А плака́т? *(Indeed! And the poster?)*
+> — **Тарас:** Вели́кий і яскра́вий. *(Big and bright.)*
+> — **Софія:** Подиви́сь — мале́нька листі́вка. *(Look — a small postcard.)*
+> — **Тарас:** Яка вона? *(What is it like?)*
+> — **Софія:** Стара́, але га́рна. *(Old, but nice.)*
 
 Look at the pattern in Dialogue 2: **атлас** (atlas, m) → **Який**, **книга** (book, f) → **Яка**, **фото** (photo, n) → **Яке**. The question word matched the noun's gender each time. **Плакат** (poster) is masculine, **листівка** (postcard) is feminine — five nouns, three genders, all represented. That pattern is the entire grammar point for this module.
 
@@ -184,7 +158,7 @@ Look at the pattern in Dialogue 2: **атлас** (atlas, m) → **Який**, *
 
 ## Який? Яка? Яке? (What kind?)
 
-The question "What kind?" in Ukrainian changes its ending to match the noun's gender — the same principle as **мій/моя/моє** from M08. Here is the core pattern:
+The question "What kind?" in Ukrainian changes its ending to match the noun's gender — the same principle as **мій/моя/моє́** from M08. Here is the core pattern:
 
 - Masculine noun → **Який?** — **Який стіл?** → **Великий стіл.** *(What kind of table? → A big table.)*
 - Feminine noun → **Яка?** — **Яка книга?** → **Нова книга.** *(What kind of book? → A new book.)*
@@ -192,43 +166,43 @@ The question "What kind?" in Ukrainian changes its ending to match the noun's ge
 
 Three questions, three answers — the gender matches in each pair.
 
-Adjectives change their ending in exactly the same way as the question word. Masculine adjectives end in **-ий**: **великий** (big), **новий** (new), **чистий** (clean), **дорогий** (expensive). Feminine adjectives end in **-а**: **велика**, **нова**, **чиста**, **дорога**. Neuter adjectives end in **-е**: **велике**, **нове**, **чисте**, **дороге**. This comes directly from the Ukrainian textbook rule: «Прикметник має такий рід, як іменник, з яким він зв'язаний» (Пономарова, Grade 3, p.98) — the adjective takes the same gender as its noun. Always.
+Adjectives change their ending in exactly the same way as the question word. Masculine adjectives end in **-ий**: **великий** (big), **новий** (new), **чи́стий** (clean), **дорогий** (expensive). Feminine adjectives end in **-а**: **велика**, **нова**, **чи́ста**, **доро́га**. Neuter adjectives end in **-е**: **велике**, **нове́**, **чисте**, **дороге́**. This comes directly from the Ukrainian textbook rule: «Прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний» (Пономарова, Grade 3, p.98) — the adjective takes the same gender as its noun. Always.
 
 This is not a new concept — you already know it from M08. You learned **мій стіл** (my table, m), **моя книга** (my book, f), **моє вікно** (my window, n). Adjectives follow the exact same logic. If you can say **мій стіл**, you can say **великий стіл**. If you can say **моя книга**, you can say **нова книга**. The gender lives in the noun — the adjective just agrees with it.
 
 <!-- INJECT_ACTIVITY: fill-in-adjective-endings -->
 
-A quick note about what comes next. Some adjectives have a soft stem and end in **-ій/-я/-є** instead — for example, **синій** (blue, m), **синя** (f), **синє** (n). These follow the same gender logic, but they appear in M10 (Colors). For now, every adjective in this module ends in the hard pattern: **-ий** (m), **-а** (f), **-е** (n). One pattern, one module.
+A quick note about what comes next. Some adjectives have a soft stem and end in **-ій/-я/-є** instead — for example, **си́ній** (blue, m), **си́ня** (f), **си́нє** (n). These follow the same gender logic, but they appear in M10 (Colors). For now, every adjective in this module ends in the hard pattern: **-ий** (m), **-а** (f), **-е** (n). One pattern, one module.
 
 Here are three complete sentences combining M08 nouns with M09 adjectives. Notice the adjective can appear before or after the noun — both positions are correct in Ukrainian:
 
-- **У мене є великий стіл.** *(I have a big table.)* — masculine
+- **У мене́ є великий стіл.** *(I have a big table.)* — masculine
 - **Моя кімната маленька, але гарна.** *(My room is small, but nice.)* — feminine
 - **Вікно велике і чисте.** *(The window is big and clean.)* — neuter
 
-## Прикметники (Common Adjectives)
+## Прикме́тники (Common Adjectives)
 
 Ukrainian vocabulary sticks better when you learn words in opposite pairs — your brain stores both at once. This module's core adjectives come in six pairs. For each pair, an example sentence shows both words in action with a noun you already know from M08.
 
 1. **великий** (big) ↔ **маленький** (small)
    - **Стіл великий, а стілець маленький.** *(The table is big, and/but the chair is small.)*
 
-2. **новий** (new) ↔ **старий** (old)
+2. **новий** (new) ↔ **стари́й** (old)
    - **Книга нова, але атлас старий.** *(The book is new, but the atlas is old.)*
 
-3. **гарний** (nice, beautiful) ↔ **поганий** (bad)
+3. **га́рний** (nice, beautiful) ↔ **пога́ний** (bad)
    - **Яка гарна листівка! А цей плакат поганий.** *(What a nice postcard! And this poster is bad.)*
 
-4. **чистий** (clean) ↔ **брудний** (dirty)
-   - **Вікно чисте, а підлога брудна.** *(The window is clean, and/but the floor is dirty.)*
+4. **чистий** (clean) ↔ **брудни́й** (dirty)
+   - **Вікно чисте, а підло́га брудна́.** *(The window is clean, and/but the floor is dirty.)*
 
-5. **дорогий** (expensive) ↔ **дешевий** (cheap)
+5. **дорогий** (expensive) ↔ **деше́вий** (cheap)
    - **Атлас дорогий. Книга дешева.** *(The atlas is expensive. The book is cheap.)*
 
-6. **світлий** (light, bright) ↔ **темний** (dark)
+6. **сві́тлий** (light, bright) ↔ **те́мний** (dark)
    - **Кімната світла і велика.** *(The room is bright and big.)*
 
-Teaching adjectives in antonym pairs is exactly how Ukrainian textbooks do it from Grade 3 onward (Вашуленко, Grade 3, p.56 — «Протилежні за значенням слова — антоніми»). Notice how the adjective endings shift depending on the noun: **чисте вікно** (n, -е) but **брудна підлога** (f, -а). The gender of the noun controls everything.
+Teaching adjectives in antonym pairs is exactly how Ukrainian textbooks do it from Grade 3 onward (Вашуленко, Grade 3, p.56 — «Протиле́жні за зна́ченням слова́ — анто́німи»). Notice how the adjective endings shift depending on the noun: **чисте вікно** (n, -е) but **брудна підлога** (f, -а). The gender of the noun controls everything.
 
 <!-- INJECT_ACTIVITY: match-adjective-opposites -->
 
@@ -239,7 +213,7 @@ Now let's build full descriptions — combining several M08 nouns with M09 adjec
 - **Вікно велике і чисте.** *(The window is big and clean.)*
 - **Стілець маленький і старий, але зручний.** *(The chair is small and old, but comfortable.)*
 
-Two connectors to notice: **і** (and) links things that are both true in parallel — **велике і чисте** means the window is both big AND clean. **А** (and/but) marks a contrast between two things — **Стіл новий, а ліжко старе** highlights that one is new while the other is old. Compare: **Кімната мала і темна** (the room is small AND dark — both true, no contrast) vs. **Стіл новий, а стілець старий** (the table is new BUT the chair is old — deliberate contrast).
+Two connectors to notice: **і** (and) links things that are both true in parallel — **велике і чисте** means the window is both big AND clean. **А** (and/but) marks a contrast between two things — **Стіл новий, а ліжко старе** highlights that one is new while the other is old. Compare: **Кімната маленька і те́мна** (the room is small AND dark — both true, no contrast) vs. **Стіл новий, а стілець старий** (the table is new BUT the chair is old — deliberate contrast).
 
 <!-- INJECT_ACTIVITY: fill-in-describe-room -->
 
@@ -258,11 +232,11 @@ Test yourself with these questions:
 - What is the difference between **і** and **а**? → **і** means "and" (parallel: both true); **а** means "and/but" (contrast between two things)
 - Name three adjective opposites. → **великий/маленький**, **новий/старий**, **дорогий/дешевий**
 
-Colors in Ukrainian (M10) introduce soft-stem adjectives: **синій** (blue, m), **синя** (f), **синє** (n) — the same gender logic, but with a different ending pattern. After M10, describing objects fully unlocks: **великий синій стіл** (a big blue table), **нова червона книга** (a new red book), **чисте біле вікно** (a clean white window). The pattern you learned today carries forward into every module that follows. Gender agreement is the backbone of Ukrainian adjectives — and you already have it.
+Colors in Ukrainian (M10) introduce soft-stem adjectives: **синій** (blue, m), **синя** (f), **синє** (n) — the same gender logic, but with a different ending pattern. After M10, describing objects fully unlocks: **великий синій стіл** (a big blue table), **нова черво́на книга** (a new red book), **чисте бі́ле вікно** (a clean white window). The pattern you learned today carries forward into every module that follows. Gender agreement is the backbone of Ukrainian adjectives — and you already have it.
 
 Now it is your turn. Write three sentences describing your real room or your desk using today's adjectives. Use one masculine noun with an adjective, one feminine noun with an adjective, and one neuter noun with an adjective. Connect at least one pair with **і** or **а**. No English — think directly in Ukrainian. Ask yourself: **Який мій стіл?** → **Мій стіл ____.** **Яка моя кімната?** → **Моя кімната ____.** **Яке моє вікно?** → **Моє вікно ____.** Fill in the blanks. Describe, don't translate.
 
-**Deterministic word count: 1535 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1529 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -440,16 +414,56 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 93 words | Not found: 5 words
+Verified: 89 words | Not found: 45 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Вашуленко — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
   ✗ Пономарова — NOT IN VESUM
+  ✗ Прикме — NOT IN VESUM
+  ✗ Протиле — NOT IN VESUM
   ✗ Софія — NOT IN VESUM
+  ✗ Спра — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
+  ✗ анто — NOT IN VESUM
+  ✗ вді — NOT IN VESUM
+  ✗ вка — NOT IN VESUM
+  ✗ деше — NOT IN VESUM
+  ✗ доро — NOT IN VESUM
+  ✗ жко — NOT IN VESUM
+  ✗ жні — NOT IN VESUM
+  ✗ зв'я — NOT IN VESUM
+  ✗ зру — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ кімна — NOT IN VESUM
+  ✗ мна — NOT IN VESUM
+  ✗ мний — NOT IN VESUM
+  ✗ нник — NOT IN VESUM
+  ✗ нови — NOT IN VESUM
+  ✗ нька — NOT IN VESUM
+  ✗ нький — NOT IN VESUM
+  ✗ німи — NOT IN VESUM
+  ✗ плака — NOT IN VESUM
+  ✗ пога — NOT IN VESUM
+  ✗ рна — NOT IN VESUM
+  ✗ рне — NOT IN VESUM
+  ✗ рний — NOT IN VESUM
+  ✗ сві — NOT IN VESUM
+  ✗ стари — NOT IN VESUM
+  ✗ сте — NOT IN VESUM
+  ✗ стий — NOT IN VESUM
+  ✗ стіле — NOT IN VESUM
+  ✗ тлий — NOT IN VESUM
+  ✗ тник — NOT IN VESUM
+  ✗ тники — NOT IN VESUM
+  ✗ ціка — NOT IN VESUM
+  ✗ ченням — NOT IN VESUM
+  ✗ чний — NOT IN VESUM
+  ✗ яскра — NOT IN VESUM
+  ✗ іме — NOT IN VESUM
 
-All 93 other words are confirmed to exist in VESUM.
+All 89 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -458,23 +472,23 @@ All 93 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

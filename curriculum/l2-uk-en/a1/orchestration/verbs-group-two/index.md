@@ -1,6 +1,6 @@
 # Build Summary: verbs-group-two (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 02:43:22 |
 | enrich | complete | 2026-03-30 02:43:23 |
 | verify | complete | 2026-03-30 02:43:23 |
-| review | complete | 2026-03-30 02:51:23 |
-| stress | complete | 2026-03-31 09:57:58 |
-| publish | complete | 2026-03-31 09:57:58 |
+| review | complete | 2026-04-01 11:39:58 |
+| stress | complete | 2026-04-01 11:39:58 |
+| publish | complete | 2026-04-01 11:40:04 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:57
 | vocab | claude (claude-sonnet-4-6) | 12s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 308s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 172s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

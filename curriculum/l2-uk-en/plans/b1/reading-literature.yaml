@@ -1,231 +1,213 @@
-module: b1-083
+module: b1-079
 level: B1
-sequence: 83
+sequence: 79
 slug: reading-literature
 version: '3.0'
 title: "Читання художніх текстів"
 subtitle: "Художній стиль мовлення — від уривків до розуміння літератури"
 focus: communication
 pedagogy: PPP
-phase: "B1.9 [Text and Register]"
+phase: "B1.8 [Text and Register]"
 word_target: 4000
 objectives:
-- "Learner can identify and describe the key characteristics of художній стиль
-  (образність, емоційність, конкретність, оцінний характер мовлення)"
-- "Learner can read and comprehend B1-level Ukrainian literary excerpts
-  (partially adapted), answering comprehension questions in Ukrainian"
-- "Learner can identify художні засоби in texts: епітет, метафора,
-  порівняння, персоніфікація, гіпербола, алітерація"
-- "Learner can distinguish художній стиль from науковий, публіцистичний,
-  and офіційно-діловий стилі through concrete textual markers"
-- "Learner can express personal reactions to literary texts using opinion
-  vocabulary and вставні слова in structured responses"
+  - "Learner can identify and describe the key characteristics of художній стиль (образність,
+    емоційність, конкретність, оцінний характер мовлення)"
+  - "Learner can read and comprehend B1-level Ukrainian literary excerpts (partially
+    adapted), answering comprehension questions in Ukrainian"
+  - "Learner can identify художні засоби in texts: епітет, метафора, порівняння, персоніфікація,
+    гіпербола, алітерація"
+  - "Learner can distinguish художній стиль from науковий, публіцистичний, and офіційно-діловий
+    стилі through concrete textual markers"
+  - "Learner can express personal reactions to literary texts using opinion vocabulary
+    and вставні слова in structured responses"
 dialogue_situations:
-- setting: 'Ukrainian literature class — reading an excerpt from Франко''s ''Захар
-    Беркут'': Оповідач каже, що Захар був мудрим. Хоча він старий, його слухають.
-    Коли загроза наближається, він збирає громаду (f, community).'
-  speakers:
-  - Вчитель літератури
-  - Учні (обговорюють)
-  motivation: 'Literary style: analyzing prose with subordinate clauses, reported
-    speech, characterization'
+  - setting: 'Ukrainian literature class — reading an excerpt from Франко''s ''Захар
+      Беркут'': Оповідач каже, що Захар був мудрим. Хоча він старий, його слухають.
+      Коли загроза наближається, він збирає громаду (f, community).'
+    speakers:
+      - Вчитель літератури
+      - Учні (обговорюють)
+    motivation: 'Literary style: analyzing prose with subordinate clauses, reported
+      speech, characterization'
 content_outline:
-- section: "Художній стиль мовлення"
-  words: 600
-  points:
-  - "Definition from Ворон Grade 9 p.169 and Заболотний Grade 8 p.115:
-    Художній стиль — образне відтворення дійсності, емоційний вплив
-    на читача або слухача. Сфера вживання: художня література.
-    Основні види: оповідання, новела, казка, легенда, вірш, поема,
-    драма, повість, роман."
-  - "Загальні ознаки from Ворон Grade 9 p.169:
-    Образність — creating vivid mental images through language.
-    Конкретність — specific, detailed descriptions.
-    Емоційність — evoking feelings in the reader.
-    Оцінний характер — the author's perspective shapes the text.
-    Лексичні особливості: слова з конкретним i переносним значенням,
-    емоційно забарвлена лексика, фразеологізми, діалектизми."
-  - "Contrast with other styles — the same topic in different registers:
-    Науковий: 'Верба — рід дерев i кущів родини вербових.'
-    Офіційний: 'Відповідно до рішення, вербу включено до переліку...'
-    Публіцистичний: 'Чи збережемо ми наші верби?'
-    Художній: 'Стояла верба над водою, до ніг ій лягли лелеченята.'
-    Practice: learners identify style by linguistic markers."
-  - "Cultural note: Ukrainian художня література is one of the richest
-    in Europe. Reading Ukrainian literature in the original — even adapted
-    excerpts at B1 — connects the learner to the culture directly."
-- section: "Художні засоби"
-  words: 700
-  points:
-  - "Епітет — an expressive adjective revealing a quality:
-    'сонячний промінь,' 'лагідний вітер,' 'журливий спів.'
-    Differs from звичайний прикметник: 'великий дім' (neutral) vs
-    'привітний дім' (epithet — adds evaluation).
-    Practice: learners find epithets in literary excerpts."
-  - "Порівняння — comparison using як, мов, наче, немов, ніби:
-    'Білий, наче сніг.' 'Голос, як дзвіночок.'
-    'Очі, мов волошки.' 'Тихо, ніби все завмерло.'
-    Note the richness of Ukrainian comparison words — English mainly has
-    'like' and 'as,' but Ukrainian has як, мов, немов, наче, ніби, мовби."
-  - "Метафора — implicit comparison, transferred meaning:
-    'Вітер співає' (wind doesn't literally sing).
-    'Сонце сіло' (sun doesn't literally sit down).
-    'Золото волосся' (hair isn't literally gold).
-    Персоніфікація — a type of metaphor giving human qualities to nature:
-    'Ліс шепоче,' 'Річка сміється,' 'Зима панує.'"
-  - "Гіпербола — exaggeration for effect:
-    'Місто як море людей.' 'Чекаю сто років.'
-    Алітерація — repetition of sounds: 'Тихо тече вода.'
-    Practice: learners identify all художні засоби in a passage
-    and explain their effect on the reader."
-- section: "Читання уривків: проза"
-  words: 700
-  points:
-  - "Adapted literary excerpt 1 (150-200 words) — a nature description
-    or village scene from a classic Ukrainian author (e.g., Коцюбинський,
-    Стефаник, or Винниченко). Partially adapted for B1.
-    Pre-reading: key vocabulary with definitions in Ukrainian.
-    During reading: mark художні засоби.
-    Post-reading: comprehension questions in Ukrainian."
-  - "Adapted literary excerpt 2 (150-200 words) — a character portrait
-    or dialogue from Ukrainian prose. Connects to M06 портретна лексика.
-    Focus on how художній стиль uses розмовні елементи in dialogue
-    (connecting to M78 Розмовний стиль).
-    Practice: learners answer questions about character, setting, mood."
-  - "Reading strategies for B1 literary texts:
-    1. Не зупиняйтеся на кожному невідомому слові — use context.
-    2. Зверніть увагу на художні засоби — they carry meaning.
-    3. Запитайте себе: який настрій створює автор? (what mood?)
-    4. Перечитайте ще раз — second reading deepens understanding."
-  - "Vocabulary from context: learners practice guessing word meanings
-    from literary context, then verify with словник. This skill is
-    essential for moving toward independent Ukrainian reading."
-- section: "Читання уривків: поезія"
-  words: 550
-  points:
-  - "Introduction to Ukrainian poetry at B1 — adapted or short poems:
-    Poetry uses language most densely — every word matters.
-    Key features: ритм (rhythm), рима (rhyme), строфа (stanza),
-    образ (image), ліричний герой (lyrical persona)."
-  - "Adapted poem 1 — a classic Ukrainian poem about nature or homeland
-    (e.g., Шевченко, Лесін Українка, Симоненко — short, accessible).
-    Pre-reading: key vocabulary. During: read aloud (rhythm matters).
-    Post-reading: identify образні засоби and discuss the настрій."
-  - "Adapted poem 2 — a modern Ukrainian poem (post-2014 or wartime poetry,
-    selected for accessibility and emotional resonance at B1).
-    Discussion: what does this poem mean to Ukrainians today?
-    Practice: learners express their reaction using вставні слова."
-  - "Poetry vs prose — key differences:
-    Ущільненість мови (density), ритм, рима, інверсія (unusual word order).
-    Practice: learners rewrite a short poem as prose, noting what changes."
-- section: "Реакція на текст: висловлювання власної думки"
-  words: 550
-  points:
-  - "Structured response framework:
-    1. Загальне враження: 'Мені сподобався / не сподобався цей текст, бо...'
-    2. Аналіз: 'Автор використовує... (епітети, метафори), щоб...'
-    3. Особисте ставлення: 'Цей текст змусив мене задуматися про...'
-    4. Рекомендація: 'Я порадив/порадила б цей текст тим, хто...'
-    Practice: learners write structured responses to the excerpts read."
-  - "Opinion vocabulary (B1 level):
-    вразити (to impress), зацікавити (to interest), здивувати (to surprise),
-    хвилювати (to excite/worry), надихнути (to inspire),
-    розчарувати (to disappoint), нагадати (to remind).
-    'Цей уривок мене вразив.' 'Образ верби нагадав мені про...'
-    Practice: using emotional response verbs in context."
-  - "Connecting вставні слова to literary response:
-    'На мою думку, цей текст...' 'Безумовно, автор...'
-    'Можливо, ліричний герой...' 'Зрештою, головна ідея — ...'
-    Practice: learners discuss a literary excerpt using structured
-    opinion language with вставні слова."
-- section: "Підсумок: дорога до літератури"
-  words: 300
-  points:
-  - "Complete reference: художні засоби glossary with examples,
-    reading strategies checklist, opinion vocabulary."
-  - "Self-check in Ukrainian:
-    1. Назвіть 5 ознак художнього стилю.
-    2. Знайдіть епітет, порівняння та метафору в данному реченні.
-    3. Напишіть короткий відгук (5-7 речень) на прочитаний уривок.
-    4. Чим художній стиль відрізняється від публіцистичного?"
-  - "Preview: Контрольна робота 9 (M84) — testing register awareness,
-    negation, вставні слова, nature vocabulary, and literary reading."
+  - section: "Художній стиль мовлення"
+    words: 600
+    points:
+      - "Definition from Ворон Grade 9 p.169 and Заболотний Grade 8 p.115: Художній
+        стиль — образне відтворення дійсності, емоційний вплив на читача або слухача.
+        Сфера вживання: художня література. Основні види: оповідання, новела, казка,
+        легенда, вірш, поема, драма, повість, роман."
+      - "Загальні ознаки from Ворон Grade 9 p.169: Образність — creating vivid mental
+        images through language. Конкретність — specific, detailed descriptions. Емоційність
+        — evoking feelings in the reader. Оцінний характер — the author's perspective
+        shapes the text. Лексичні особливості: слова з конкретним i переносним значенням,
+        емоційно забарвлена лексика, фразеологізми, діалектизми."
+      - "Contrast with other styles — the same topic in different registers: Науковий:
+        'Верба — рід дерев i кущів родини вербових.' Офіційний: 'Відповідно до рішення,
+        вербу включено до переліку...' Публіцистичний: 'Чи збережемо ми наші верби?'
+        Художній: 'Стояла верба над водою, до ніг ій лягли лелеченята.' Practice:
+        learners identify style by linguistic markers."
+      - "Cultural note: Ukrainian художня література is one of the richest in Europe.
+        Reading Ukrainian literature in the original — even adapted excerpts at B1
+        — connects the learner to the culture directly."
+  - section: "Художні засоби"
+    words: 700
+    points:
+      - "Епітет — an expressive adjective revealing a quality: 'сонячний промінь,'
+        'лагідний вітер,' 'журливий спів.' Differs from звичайний прикметник: 'великий
+        дім' (neutral) vs 'привітний дім' (epithet — adds evaluation). Practice: learners
+        find epithets in literary excerpts."
+      - "Порівняння — comparison using як, мов, наче, немов, ніби: 'Білий, наче сніг.'
+        'Голос, як дзвіночок.' 'Очі, мов волошки.' 'Тихо, ніби все завмерло.' Note
+        the richness of Ukrainian comparison words — English mainly has 'like' and
+        'as,' but Ukrainian has як, мов, немов, наче, ніби, мовби."
+      - "Метафора — implicit comparison, transferred meaning: 'Вітер співає' (wind
+        doesn't literally sing). 'Сонце сіло' (sun doesn't literally sit down). 'Золото
+        волосся' (hair isn't literally gold). Персоніфікація — a type of metaphor
+        giving human qualities to nature: 'Ліс шепоче,' 'Річка сміється,' 'Зима панує.'"
+      - "Гіпербола — exaggeration for effect: 'Місто як море людей.' 'Чекаю сто років.'
+        Алітерація — repetition of sounds: 'Тихо тече вода.' Practice: learners identify
+        all художні засоби in a passage and explain their effect on the reader."
+  - section: "Читання уривків: проза"
+    words: 700
+    points:
+      - "Adapted literary excerpt 1 (150-200 words) — a nature description or village
+        scene from a classic Ukrainian author (e.g., Коцюбинський, Стефаник, or Винниченко).
+        Partially adapted for B1. Pre-reading: key vocabulary with definitions in
+        Ukrainian. During reading: mark художні засоби. Post-reading: comprehension
+        questions in Ukrainian."
+      - "Adapted literary excerpt 2 (150-200 words) — a character portrait or dialogue
+        from Ukrainian prose. Connects to M06 портретна лексика. Focus on how художній
+        стиль uses розмовні елементи in dialogue (connecting to M78 Розмовний стиль).
+        Practice: learners answer questions about character, setting, mood."
+      - "Reading strategies for B1 literary texts: 1. Не зупиняйтеся на кожному невідомому
+        слові — use context. 2. Зверніть увагу на художні засоби — they carry meaning.
+        3. Запитайте себе: який настрій створює автор? (what mood?) 4. Перечитайте
+        ще раз — second reading deepens understanding."
+      - "Vocabulary from context: learners practice guessing word meanings from literary
+        context, then verify with словник. This skill is essential for moving toward
+        independent Ukrainian reading."
+  - section: "Читання уривків: поезія"
+    words: 550
+    points:
+      - "Introduction to Ukrainian poetry at B1 — adapted or short poems: Poetry uses
+        language most densely — every word matters. Key features: ритм (rhythm), рима
+        (rhyme), строфа (stanza), образ (image), ліричний герой (lyrical persona)."
+      - "Adapted poem 1 — a classic Ukrainian poem about nature or homeland (e.g.,
+        Шевченко, Лесін Українка, Симоненко — short, accessible). Pre-reading: key
+        vocabulary. During: read aloud (rhythm matters). Post-reading: identify образні
+        засоби and discuss the настрій."
+      - "Adapted poem 2 — a modern Ukrainian poem (post-2014 or wartime poetry, selected
+        for accessibility and emotional resonance at B1). Discussion: what does this
+        poem mean to Ukrainians today? Practice: learners express their reaction using
+        вставні слова."
+      - "Poetry vs prose — key differences: Ущільненість мови (density), ритм, рима,
+        інверсія (unusual word order). Practice: learners rewrite a short poem as
+        prose, noting what changes."
+  - section: "Реакція на текст: висловлювання власної думки"
+    words: 550
+    points:
+      - "Structured response framework: 1. Загальне враження: 'Мені сподобався / не
+        сподобався цей текст, бо...' 2. Аналіз: 'Автор використовує... (епітети, метафори),
+        щоб...' 3. Особисте ставлення: 'Цей текст змусив мене задуматися про...' 4.
+        Рекомендація: 'Я порадив/порадила б цей текст тим, хто...' Practice: learners
+        write structured responses to the excerpts read."
+      - "Opinion vocabulary (B1 level): вразити (to impress), зацікавити (to interest),
+        здивувати (to surprise), хвилювати (to excite/worry), надихнути (to inspire),
+        розчарувати (to disappoint), нагадати (to remind). 'Цей уривок мене вразив.'
+        'Образ верби нагадав мені про...' Practice: using emotional response verbs
+        in context."
+      - "Connecting вставні слова to literary response: 'На мою думку, цей текст...'
+        'Безумовно, автор...' 'Можливо, ліричний герой...' 'Зрештою, головна ідея
+        — ...' Practice: learners discuss a literary excerpt using structured opinion
+        language with вставні слова."
+  - section: "Підсумок: дорога до літератури"
+    words: 300
+    points:
+      - "Complete reference: художні засоби glossary with examples, reading strategies
+        checklist, opinion vocabulary."
+      - "Self-check in Ukrainian: 1. Назвіть 5 ознак художнього стилю. 2. Знайдіть
+        епітет, порівняння та метафору в данному реченні. 3. Напишіть короткий відгук
+        (5-7 речень) на прочитаний уривок. 4. Чим художній стиль відрізняється від
+        публіцистичного?"
+      - "Preview: Контрольна робота 9 (M84) — testing register awareness, negation,
+        вставні слова, nature vocabulary, and literary reading."
 vocabulary_hints:
   required:
-  - "художній стиль (literary/artistic style — language of literature)"
-  - "образність (imagery — quality of creating vivid mental pictures)"
-  - "епітет (epithet — expressive adjective revealing a quality)"
-  - "метафора (metaphor — implicit comparison, transferred meaning)"
-  - "порівняння (comparison/simile — explicit comparison using як, мов, наче)"
-  - "персоніфікація (personification — giving human qualities to non-human things)"
-  - "гіпербола (hyperbole — exaggeration for artistic effect)"
-  - "ліричний герой (lyrical persona — speaker in a poem)"
-  - "настрій (mood — emotional atmosphere of a text)"
-  - "уривок (excerpt — fragment of a larger work)"
-  - "художній засіб (literary device — technique for artistic expression)"
-  - "образ (image/figure — artistic representation)"
+    - "художній стиль (literary/artistic style — language of literature)"
+    - "образність (imagery — quality of creating vivid mental pictures)"
+    - "епітет (epithet — expressive adjective revealing a quality)"
+    - "метафора (metaphor — implicit comparison, transferred meaning)"
+    - "порівняння (comparison/simile — explicit comparison using як, мов, наче)"
+    - "персоніфікація (personification — giving human qualities to non-human things)"
+    - "гіпербола (hyperbole — exaggeration for artistic effect)"
+    - "ліричний герой (lyrical persona — speaker in a poem)"
+    - "настрій (mood — emotional atmosphere of a text)"
+    - "уривок (excerpt — fragment of a larger work)"
+    - "художній засіб (literary device — technique for artistic expression)"
+    - "образ (image/figure — artistic representation)"
   recommended:
-  - "алітерація (alliteration — repetition of consonant sounds)"
-  - "строфа (stanza — group of lines in a poem)"
-  - "ритм (rhythm — pattern of stressed and unstressed syllables)"
-  - "рима (rhyme — matching sounds at line endings)"
-  - "інверсія (inversion — unusual word order for emphasis)"
-  - "вразити (to impress — emotional response to art)"
-  - "надихнути (to inspire — motivate through art)"
-  - "ущільненість (density — compressed meaning in poetry)"
-  - "контекст (context — surrounding text that helps meaning)"
-  - "відгук (review/response — written reaction to a text)"
+    - "алітерація (alliteration — repetition of consonant sounds)"
+    - "строфа (stanza — group of lines in a poem)"
+    - "ритм (rhythm — pattern of stressed and unstressed syllables)"
+    - "рима (rhyme — matching sounds at line endings)"
+    - "інверсія (inversion — unusual word order for emphasis)"
+    - "вразити (to impress — emotional response to art)"
+    - "надихнути (to inspire — motivate through art)"
+    - "ущільненість (density — compressed meaning in poetry)"
+    - "контекст (context — surrounding text that helps meaning)"
+    - "відгук (review/response — written reaction to a text)"
 activity_hints:
-- type: quiz
-  focus: "Identify художні засоби in literary excerpts: name the device
-    and explain its function in the text."
-  items: 12
-- type: match-up
-  focus: "Match художні засоби terms to their definitions and to
-    concrete examples from Ukrainian literature."
-  items: 12
-- type: fill-in
-  focus: "Complete literary analysis sentences: identify the художній засіб
-    and its effect in given excerpts."
-  items: 12
-- type: mark-the-words
-  focus: "In a literary passage, mark all instances of a specific
-    художній засіб (e.g., mark all епітети, or all порівняння)."
-  items: 12
-- type: free-write
-  focus: "Write a structured response (відгук) to a literary excerpt:
-    враження, аналіз засобів, особисте ставлення (10-12 sentences)."
-  items: 12
-- type: group-sort
-  focus: "Sort text excerpts by стиль мовлення: художній, науковий,
-    публіцистичний, офіційно-діловий."
-  items: 12
+  - type: quiz
+    focus: "Identify художні засоби in literary excerpts: name the device and explain
+      its function in the text."
+    items: 12
+  - type: match-up
+    focus: "Match художні засоби terms to their definitions and to concrete examples
+      from Ukrainian literature."
+    items: 12
+  - type: fill-in
+    focus: "Complete literary analysis sentences: identify the художній засіб and
+      its effect in given excerpts."
+    items: 12
+  - type: mark-the-words
+    focus: "In a literary passage, mark all instances of a specific художній засіб
+      (e.g., mark all епітети, or all порівняння)."
+    items: 12
+  - type: free-write
+    focus: "Write a structured response (відгук) to a literary excerpt: враження,
+      аналіз засобів, особисте ставлення (10-12 sentences)."
+    items: 12
+  - type: group-sort
+    focus: "Sort text excerpts by стиль мовлення: художній, науковий, публіцистичний,
+      офіційно-діловий."
+    items: 12
 connects_to:
-- "b1-077 (Офіційний стиль — contrast with художній стиль)"
-- "b1-078 (Розмовний стиль — dialogue in художніх текстах)"
-- "b1-082 (Природа i довкілля — literary nature descriptions)"
-- "b1-084 (Контрольна робота 9 — testing literary reading skills)"
+  - "b1-077 (Офіційний стиль — contrast with художній стиль)"
+  - "b1-078 (Розмовний стиль — dialogue in художніх текстах)"
+  - "b1-082 (Природа i довкілля — literary nature descriptions)"
+  - "b1-084 (Контрольна робота 9 — testing literary reading skills)"
 prerequisites:
-- "b1-077 to b1-082 (register awareness, grammar, and thematic vocabulary)"
-- "b1-006 (people-and-relationships — портретна лексика for character descriptions)"
-- "b1-081 (introductory-words — вставні слова for expressing opinions)"
+  - "b1-077 to b1-082 (register awareness, grammar, and thematic vocabulary)"
+  - "b1-006 (people-and-relationships — портретна лексика for character descriptions)"
+  - "b1-081 (introductory-words — вставні слова for expressing opinions)"
 grammar:
-- "Художній стиль: ознаки, мовні засоби, сфера використання"
-- "Художні засоби: епітет, метафора, порівняння, персоніфікація, гіпербола"
-- "Порівняння words: як, мов, немов, наче, ніби, мовби"
-- "Review: прикметники, прислівники for descriptive literary language"
-- "Opinion structures with вставні слова for literary response"
+  - "Художній стиль: ознаки, мовні засоби, сфера використання"
+  - "Художні засоби: епітет, метафора, порівняння, персоніфікація, гіпербола"
+  - "Порівняння words: як, мов, немов, наче, ніби, мовби"
+  - "Review: прикметники, прислівники for descriptive literary language"
+  - "Opinion structures with вставні слова for literary response"
 register: розмовний
 references:
-- title: "Ворон Grade 9, p.169"
-  notes: "Переказ тексту художнього стилю: загальні ознаки, лексичні
-    особливості, table of features. Primary source for style definition."
-- title: "Заболотний Grade 8, p.115"
-  notes: "Художній стиль мовлення: головна функція, сфера вживання,
-    основні види висловлювань, загальні ознаки."
-- title: "Авраменко Grade 6, p.44"
-  notes: "Ознаки художнього стилю: test-format exercises distinguishing
-    styles — useful for B1 practice activities."
-- title: "Заболотний Grade 5, p.134"
-  notes: "Композиційні та сюжетні особливості прозових творів:
-    сюжет, композиція, зав'язка, кульмінація, розв'язка."
+  - title: "Ворон Grade 9, p.169"
+    notes: "Переказ тексту художнього стилю: загальні ознаки, лексичні особливості,
+      table of features. Primary source for style definition."
+  - title: "Заболотний Grade 8, p.115"
+    notes: "Художній стиль мовлення: головна функція, сфера вживання, основні види
+      висловлювань, загальні ознаки."
+  - title: "Авраменко Grade 6, p.44"
+    notes: "Ознаки художнього стилю: test-format exercises distinguishing styles —
+      useful for B1 practice activities."
+  - title: "Заболотний Grade 5, p.134"
+    notes: "Композиційні та сюжетні особливості прозових творів: сюжет, композиція,
+      зав'язка, кульмінація, розв'язка."

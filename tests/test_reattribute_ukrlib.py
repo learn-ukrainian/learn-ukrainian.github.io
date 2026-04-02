@@ -176,7 +176,7 @@ class TestPostNoCrossContamination:
         from rag.scrape_ukrlib import audit_cross_contamination
 
         passed, errors = audit_cross_contamination(LITERARY_DIR)
-        assert passed, f"Cross-contamination detected:\n" + "\n".join(errors)
+        assert passed, "Cross-contamination detected:\n" + "\n".join(errors)
 
 
 class TestPostSearchQuality:
@@ -195,11 +195,11 @@ class TestPostSearchQuality:
         """Verify author has correct chunk count and contains expected work."""
         try:
             from qdrant_client import QdrantClient
-            from qdrant_client.models import Filter, FieldCondition, MatchValue
+            from qdrant_client.models import FieldCondition, Filter, MatchValue
         except ImportError:
             pytest.skip("qdrant_client not installed")
 
-        from rag.config import QDRANT_HOST, QDRANT_REST_PORT, LITERARY_COLLECTION
+        from rag.config import LITERARY_COLLECTION, QDRANT_HOST, QDRANT_REST_PORT
 
         try:
             client = QdrantClient(host=QDRANT_HOST, port=QDRANT_REST_PORT, timeout=5)

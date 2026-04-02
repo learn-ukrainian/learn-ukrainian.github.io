@@ -1,0 +1,343 @@
+vocabulary:
+- word: суфікс минулого часу
+  translation: past tense suffix
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тематичний голосний
+  translation: thematic vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: основа інфінітива
+  translation: infinitive stem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: основа теперішнього часу
+  translation: present tense stem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: послідовність дій
+  translation: sequence of actions
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тло розповіді
+  translation: narrative background
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: постфі́кс
+  translation: postfix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: безособо́вий
+  translation: impersonal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: узго́дження
+  translation: agreement
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: теперішній час
+  translation: present tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: минулий час
+  translation: past tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: майбутній час
+  translation: future tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дієвідмі́на
+  translation: conjugation class
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: осо́ба
+  translation: person
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: число́
+  translation: number
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: рід
+  translation: gender
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: доконаний вид
+  translation: perfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: недоконаний вид
+  translation: imperfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: інфініти́в
+  translation: infinitive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієвідмі́нювання
+  translation: conjugation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зворо́тний
+  translation: reflexive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: видова пара
+  translation: aspectual pair
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: написа́ння
+  translation: spelling
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чергування приголосних
+  translation: consonant alternation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: київська кав'ярня
+  translation: Kyiv café
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зви́чка
+  translation: habit
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: префікса́ція
+  translation: prefixation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суфікса́ція
+  translation: suffixation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суплетиві́зм
+  translation: suppletion
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відтінок значення
+  translation: nuance of meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сюже́т
+  translation: plot
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: декора́ції
+  translation: scenery
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: послідо́вність
+  translation: sequence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тло
+  translation: background
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: перервана дія
+  translation: interrupted action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: якра́з
+  translation: just / exactly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: три години
+  translation: for three hours
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: цілий день
+  translation: all day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: себе́
+  translation: oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: зворотне дієслово
+  translation: reflexive verb
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені не спиться
+  translation: I can't sleep
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їй хочеться
+  translation: she wants to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: почува́тися
+  translation: to feel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ціка́витися
+  translation: to be interested in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверта́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зведена таблиця
+  translation: comprehensive table
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: самопере́ві́рка
+  translation: self-check
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

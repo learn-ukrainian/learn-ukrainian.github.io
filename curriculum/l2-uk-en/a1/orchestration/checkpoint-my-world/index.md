@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-my-world (A1)
 
-Generated: 2026-03-31 11:43
+Generated: 2026-04-01 13:35
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-03-31 11:43
 | vocab | complete | 2026-03-30 13:27:12 |
 | enrich | complete | 2026-03-30 13:27:13 |
 | verify | complete | 2026-03-30 13:27:13 |
-| review | complete | 2026-03-30 13:30:56 |
-| stress | complete | 2026-03-31 09:43:56 |
-| publish | complete | 2026-03-31 09:43:57 |
+| review | complete | 2026-04-01 11:35:38 |
+| stress | complete | 2026-04-01 11:35:38 |
+| publish | complete | 2026-04-01 11:35:45 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | checkpoint-my-world-review-r1.md |
+| 2 | checkpoint-my-world-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,6 +39,9 @@ Generated: 2026-03-31 11:43
 | activities | claude-tools (claude-sonnet-4-6) | 217s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 33s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 223s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 254s | ✅ |
 
 ## Files
 
@@ -47,6 +51,7 @@ Generated: 2026-03-31 11:43
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

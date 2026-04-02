@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-31 17:26:29
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:30:03
 
 ## Configuration
 **Type:** A1-vocab
@@ -36,36 +36,30 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'Чолові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Переві' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 6 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2241/1200 (raw: 2833)
+- **Words:** ✅ 1588/1200 (raw: 1627)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ❌ 0/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 50/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 25.3% (target 8-25%, within tolerance (M06))
+- **Immersion:** ⚠️ 27.5% (target 8-25%, within tolerance (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -73,9 +67,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 540 | Included in Core |
+| **Intro/Narrative** | ✅ | 540 | Included in Core |
 | **Сім'я (Family Vocabulary)** | ➖ | 261 | Excluded Type |
 | **У мене є (I Have)** | ✅ | 356 | Included in Core |
 | **Мій, моя, моє́ (Possessive Pronouns)** | ✅ | 255 | Included in Core |
-| **Підсумок — Summary** | ✅ | 829 | Included in Core |
+| **Підсумок — Summary** | ✅ | 176 | Included in Core |

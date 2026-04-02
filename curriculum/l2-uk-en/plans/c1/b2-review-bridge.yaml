@@ -4,48 +4,62 @@ sequence: 1
 slug: b2-review-bridge
 version: '1.1'
 title: "Повторення та перехід до рівня С1"
-subtitle: "B2 Review and C1 Bridge"
+subtitle: "Повторення B2 та перехід до C1"
 focus: integration
 pedagogy: review
 word_target: 4000
 objectives:
-  - "Систематизувати складні граматичні конструкції рівня B2 для впевненого переходу до C1."
+  - "Систематизувати складні граматичні конструкції рівня B2 для впевненого переходу
+    до C1."
   - "Проаналізувати нюанси використання відмінків у науковому та офіційному дискурсі."
-  - "Відновити навички аналізу складних синтаксичних структур у текстах класичної літератури."
-  - "Підготувати лексичну базу для сприйняття абстрактних та професійних тем академічного спрямування."
+  - "Відновити навички аналізу складних синтаксичних структур у текстах класичної
+    літератури."
+  - "Підготувати лексичну базу для сприйняття абстрактних та професійних тем академічного
+    спрямування."
 
 reading_situations:
   - source_type: "літературно-критичний нарис"
     topic: "Спадщина Розстріляного відродження: естетичні пошуки та трагічна доля."
-    key_elements: ["модернізм", "ідеологічний тиск", "експериментальна проза", "синтаксична інверсія"]
-    motivation: "Перевірка здатності розуміти складні авторські метафори та історичний контекст через призму складного синтаксису."
+    key_elements: ["модернізм", "ідеологічний тиск", "експериментальна проза", "синтаксична
+          інверсія"]
+    motivation: "Перевірка здатності розуміти складні авторські метафори та історичний
+      контекст через призму складного синтаксису."
   - source_type: "наукова стаття з історії"
     topic: "Державотворчі процеси в Україні 1917-1921 років: виклики та уроки."
-    key_elements: ["суверенітет", "дипломатичні зусилля", "соціальна трансформація", "безособові конструкції"]
-    motivation: "Аналіз академічного викладу історичних фактів з використанням пасивних станів та термінології."
+    key_elements: ["суверенітет", "дипломатичні зусилля", "соціальна трансформація",
+      "безособові конструкції"]
+    motivation: "Аналіз академічного викладу історичних фактів з використанням пасивних
+      станів та термінології."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Напишіть роздум (250-300 слів) на тему: 'Чи може мова бути інструментом деокупації свідомості?'. Використовуйте досвід української історії та літератури."
-    requirements: ["аргументація з посиланням на культурний контекст", "використання складних підрядних речень", "точність слововживання"]
-    motivation: "Оцінка готовності студента до аргументованого викладу думок на абстрактні суспільно-політичні теми."
-    model_answer: "Текст повинен демонструвати впевнене володіння абстрактною лексикою, логічну зв'язність та вміння інтегрувати історичні паралелі в сучасний контекст."
+    prompt: "Напишіть роздум (250-300 слів) на тему: 'Чи може мова бути інструментом
+      деокупації свідомості?'. Використовуйте досвід української історії та літератури."
+    requirements: ["аргументація з посиланням на культурний контекст", "використання
+          складних підрядних речень", "точність слововживання"]
+    motivation: "Оцінка готовності студента до аргументованого викладу думок на абстрактні
+      суспільно-політичні теми."
+    model_answer: "Текст повинен демонструвати впевнене володіння абстрактною лексикою,
+      логічну зв'язність та вміння інтегрувати історичні паралелі в сучасний контекст."
 
 discussion_topics:
-  - context: "Сучасна дискусія про роль академічного стандарту в умовах глобалізації та діджиталізації української мови."
+  - context: "Сучасна дискусія про роль академічного стандарту в умовах глобалізації
+      та діджиталізації української мови."
     questions:
       - "Чи варто спрощувати граматичні норми для полегшення комунікації?"
       - "Як зберегти автентичність української мови в умовах масових запозичень?"
       - "Роль літературної норми у формуванні національної ідентичності."
-    motivation: "Розвиток навичок спонтанного монологічного та діалогічного мовлення на високому регістрі."
+    motivation: "Розвиток навичок спонтанного монологічного та діалогічного мовлення
+      на високому регістрі."
 
 content_outline:
-  - section: "Синтаксичний міст: від B2 до C1"
+  - section: "Синтаксичний міст"
     words: 1000
     subsections:
       - "Ревізія складних речень із кількома підрядними"
       - "Відокремлені члени речення як засіб стилістичного увиразнення"
-      - "Специфіка вживання дієприкметникових та дієприслівникових зворотів у високому стилі"
+      - "Специфіка вживання дієприкметникових та дієприслівникових зворотів у високому
+        стилі"
     key_concepts:
       - "ієрархія підрядності"
       - "стилістична фігура"
@@ -100,15 +114,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate the strength of arguments in a Ukrainian academic text about Розстріляне відродження — identify thesis, evidence, and logical gaps."
+    description: "Evaluate the strength of arguments in a Ukrainian academic text
+      about Розстріляне відродження — identify thesis, evidence, and logical gaps."
   - type: error-correction
-    description: "Fix morphological and syntactic errors in sentences using complex subordinate clauses and participial phrases from B2-level grammar."
+    description: "Fix morphological and syntactic errors in sentences using complex
+      subordinate clauses and participial phrases from B2-level grammar."
   - type: essay-response
-    description: "Write a structured paragraph (100-150 words) arguing whether language can be a tool for decolonization, using complex syntax."
+    description: "Write a structured paragraph (100-150 words) arguing whether language
+      can be a tool for decolonization, using complex syntax."
   - type: fill-in
-    description: "Complete sentences with appropriate discourse markers and logical connectors from academic Ukrainian register."
+    description: "Complete sentences with appropriate discourse markers and logical
+      connectors from academic Ukrainian register."
   - type: match-up
-    description: "Match abstract academic terms (парадигма, дискурс, контекст) with their definitions and example sentences."
+    description: "Match abstract academic terms (парадигма, дискурс, контекст) with
+      their definitions and example sentences."
 
 activities:
   types_required:
@@ -128,3 +147,4 @@ references:
 connects_to:
   previous: "b2-final-exam"
   next: "academic-style-markers"
+phase: C1.1 [Academic Foundation]

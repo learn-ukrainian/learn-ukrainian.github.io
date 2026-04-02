@@ -10,83 +10,83 @@ pedagogy: TBL
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can participate in a simple dialogue about planning an activity, using imperfective
-  for plans and perfective for results.
-- Learner can simulate a shopping scenario, expressing wants, needs, and absence of
-  items using the Genitive case.
-- Learner can describe past events, correctly choosing between imperfective (describing
-  the process) and perfective (stating the result).
-- Learner can understand and respond to questions involving aspect and the Genitive
-  case.
+  - Learner can participate in a simple dialogue about planning an activity, 
+    using imperfective for plans and perfective for results.
+  - Learner can simulate a shopping scenario, expressing wants, needs, and 
+    absence of items using the Genitive case.
+  - Learner can describe past events, correctly choosing between imperfective 
+    (describing the process) and perfective (stating the result).
+  - Learner can understand and respond to questions involving aspect and the 
+    Genitive case.
 dialogue_situations:
-- setting: 'Scenario 1: Planning a housewarming party — buying торт (m, cake), напої
-    (pl, drinks), серветки (pl, napkins). Скільки гостей? Десять. Scenario 2: At a
-    Kyiv farmers market — buying мед (m, honey), сир (m, cheese), ягоди (pl, berries).
-    Скільки коштує кілограм меду?'
-  speakers:
-  - Друзі (friends)
-  - Продавець (vendor)
-  motivation: 'Genitive in real life: counting, prices, absence'
+  - setting: 'Scenario 1: Planning a housewarming party — buying торт (m, cake), напої
+      (pl, drinks), серветки (pl, napkins). Скільки гостей? Десять. Scenario 2: At
+      a Kyiv farmers market — buying мед (m, honey), сир (m, cheese), ягоди (pl, berries).
+      Скільки коштує кілограм меду?'
+    speakers:
+      - Друзі (friends)
+      - Продавець (vendor)
+    motivation: 'Genitive in real life: counting, prices, absence'
 content_outline:
-- section: 'Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party)'
-  words: 600
-  points:
-  - A dialogue between friends planning a party. Focus on future tense.
-  - 'Imperfective for discussing what needs to be done: ''Ми будемо купувати напої'',
-    ''Я буду готувати салат''.'
-  - 'Use of Genitive with ''немає'': ''У нас немає музики!'' and with quantity words:
-    ''Треба купити багато фруктів''.'
-  - 'Perfective for confirming completed tasks: ''Я вже приготувала салат'', ''Ми
-    купили два торти''.'
-- section: 'Сценарій 2: На ринку (Scenario 2: At the Market)'
-  words: 600
-  points:
-  - A dialogue between a shopper and a vendor.
-  - Shopper asks 'Скільки коштує...?'
-  - 'Shopper uses the 1, 2-4, 5+ rule to ask for items: ''Дайте мені, будь ласка,
-    один кілограм яблук, дві дині і п''ять лимонів''.'
-  - 'Vendor uses ''немає'': ''Вибачте, у мене немає лимонів''.'
-  - 'Shopper uses Genitive of negation: ''Я не бачу помідорів''.'
-- section: 'Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)'
-  words: 800
-  points:
-  - A conversation about past events.
-  - 'Imperfective for setting the scene or describing an ongoing past action: ''Я
-    вчора довго читав цікаву книгу''.'
-  - 'Perfective for sequential, completed actions: ''Спочатку я поснідав, потім пішов
-    на роботу, а ввечері подивився фільм''.'
-  - 'Contrast in one sentence: ''Я писав листа, коли ти подзвонив'' (I was writing
-    a letter when you called).'
-  - Answering 'Що ти робив?' (What were you doing? -> imperfective) vs. 'Що ти зробив?'
-    (What did you get done? -> perfective).
+  - section: 'Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party)'
+    words: 600
+    points:
+      - A dialogue between friends planning a party. Focus on future tense.
+      - 'Imperfective for discussing what needs to be done: ''Ми будемо купувати напої'',
+        ''Я буду готувати салат''.'
+      - 'Use of Genitive with ''немає'': ''У нас немає музики!'' and with quantity
+        words: ''Треба купити багато фруктів''.'
+      - 'Perfective for confirming completed tasks: ''Я вже приготувала салат'', ''Ми
+        купили два торти''.'
+  - section: 'Сценарій 2: На ринку (Scenario 2: At the Market)'
+    words: 600
+    points:
+      - A dialogue between a shopper and a vendor.
+      - Shopper asks 'Скільки коштує...?'
+      - 'Shopper uses the 1, 2-4, 5+ rule to ask for items: ''Дайте мені, будь ласка,
+        один кілограм яблук, дві дині і п''ять лимонів''.'
+      - 'Vendor uses ''немає'': ''Вибачте, у мене немає лимонів''.'
+      - 'Shopper uses Genitive of negation: ''Я не бачу помідорів''.'
+  - section: 'Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)'
+    words: 800
+    points:
+      - A conversation about past events.
+      - 'Imperfective for setting the scene or describing an ongoing past action:
+        ''Я вчора довго читав цікаву книгу''.'
+      - 'Perfective for sequential, completed actions: ''Спочатку я поснідав, потім
+        пішов на роботу, а ввечері подивився фільм''.'
+      - 'Contrast in one sentence: ''Я писав листа, коли ти подзвонив'' (I was writing
+        a letter when you called).'
+      - Answering 'Що ти робив?' (What were you doing? -> imperfective) vs. 'Що 
+        ти зробив?' (What did you get done? -> perfective).
 vocabulary_hints:
   required:
-  - планувати / запланувати (to plan)
-  - купувати / купити (to buy)
-  - готувати / приготувати (to cook, prepare)
-  - ринок (market)
-  - коштувати (to cost)
-  - кілограм (kilogram)
-  - вечірка (party)
-  - день (day)
+    - планувати / запланувати (to plan)
+    - купувати / купити (to buy)
+    - готувати / приготувати (to cook, prepare)
+    - ринок (market)
+    - коштувати (to cost)
+    - кілограм (kilogram)
+    - вечірка (party)
+    - день (day)
   recommended:
-  - сценарій (scenario)
-  - діалог (dialogue)
-  - обговорювати (to discuss)
-  - замовляти / замовити (to order)
+    - сценарій (scenario)
+    - діалог (dialogue)
+    - обговорювати (to discuss)
+    - замовляти / замовити (to order)
 activity_hints:
-- type: quiz
-  focus: 'Role-play: Planning a Trip'
-  items: 8
-- type: fill-in
-  focus: 'Role-play: Shopping for Groceries'
-  items: 8
-- type: match-up
-  focus: 'Story Completion: Choose the Right Aspect'
-  items: 8
-- type: match-up
-  focus: Answering questions about a short narrative
-  items: 8
+  - type: quiz
+    focus: 'Role-play: Planning a Trip'
+    items: 8
+  - type: fill-in
+    focus: 'Role-play: Shopping for Groceries'
+    items: 8
+  - type: match-up
+    focus: 'Story Completion: Choose the Right Aspect'
+    items: 8
+  - type: match-up
+    focus: Answering questions about a short narrative
+    items: 8
 references:
-- title: Заболотний Grade 5-6
-  notes: Повторення вивченого
+  - title: Заболотний Grade 5-6
+    notes: Повторення вивченого

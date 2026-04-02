@@ -1,6 +1,6 @@
 # Build Summary: transport (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:42
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 12:58:47 |
 | enrich | complete | 2026-03-30 12:58:47 |
 | verify | complete | 2026-03-30 12:58:48 |
-| review | complete | 2026-03-30 13:02:02 |
-| stress | complete | 2026-03-31 09:57:06 |
-| publish | complete | 2026-03-31 09:57:06 |
+| review | complete | 2026-04-01 11:42:41 |
+| stress | complete | 2026-04-01 11:42:41 |
+| publish | complete | 2026-04-01 11:42:47 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 381s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 23s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 194s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

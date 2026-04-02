@@ -2,15 +2,15 @@
   "module": "verbs-group-two",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:54.480765Z",
+  "last_audit": "2026-04-02T20:30:10.105910Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T04:51:29.506178Z",
+    "md": "2026-03-31T17:27:15.882315Z",
     "meta": null,
     "activities": "2026-03-30T04:43:08.002373Z",
     "vocabulary": "2026-03-30T04:43:22.283807Z",
     "research": null,
-    "plan": "2026-03-30T02:07:01.278422Z"
+    "plan": "2026-03-30T22:17:20.668101Z"
   },
   "gates": {
     "meta": {
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1662/1200 (raw: 2132)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1235/1200 (raw: 1364) | immersion: 29.0% HIGH (target 15-25% (M17))"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

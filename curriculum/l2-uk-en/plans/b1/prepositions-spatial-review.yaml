@@ -1,223 +1,212 @@
-module: b1-027
+module: b1-023
 level: B1
-sequence: 27
+sequence: 23
 slug: prepositions-spatial-review
 version: '3.0'
 title: "Просторові прийменники"
-subtitle: "Біля, серед, навпроти, між — просторові відношення перед вивченням дієслів руху"
+subtitle: "Біля, серед, навпроти, між — просторові відношення перед вивченням дієслів
+  руху"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Motion Verb Universe]"
+phase: "B1.3 [Motion Verb Universe]"
 word_target: 4000
 objectives:
-- "Learner can use spatial prepositions біля, серед, навпроти, між, над, під,
-  поруч з, довкола, позаду, попереду with the correct case (genitive or
-  instrumental) in context"
-- "Learner can distinguish synonymous prepositions (біля/коло/поруч з,
-  серед/посеред, навколо/довкола) and choose the natural Ukrainian option"
-- "Learner can describe spatial relationships between objects and people
-  using complex and compound prepositions (з-під, з-за, з-поміж, посеред)"
-- "Learner can produce accurate descriptions of room layouts, city locations,
-  and relative positions using spatial prepositions"
-- "Learner can distinguish preposition-adverb pairs (навпроти хати vs
-  сидіти навпроти) and use each correctly"
+  - "Learner can use spatial prepositions біля, серед, навпроти, між, над, під, поруч
+    з, довкола, позаду, попереду with the correct case (genitive or instrumental)
+    in context"
+  - "Learner can distinguish synonymous prepositions (біля/коло/поруч з, серед/посеред,
+    навколо/довкола) and choose the natural Ukrainian option"
+  - "Learner can describe spatial relationships between objects and people using complex
+    and compound prepositions (з-під, з-за, з-поміж, посеред)"
+  - "Learner can produce accurate descriptions of room layouts, city locations, and
+    relative positions using spatial prepositions"
+  - "Learner can distinguish preposition-adverb pairs (навпроти хати vs сидіти навпроти)
+    and use each correctly"
 dialogue_situations:
-- setting: 'Moving into a new офіс (m, office) in a Київський бізнес-центр (m) — arranging
-    furniture: Поставте шафу (f, cabinet) біля стіни (f, wall). Комп''ютер (m) — на
-    столі. Принтер (m) — під столом. Квітка (f, flower) — між вікнами (pl, windows).'
-  speakers:
-  - Офіс-менеджер
-  - Вантажники (movers)
-  motivation: 'Spatial prepositions: біля + gen, на + loc, під + inst, між + inst'
+  - setting: 'Moving into a new офіс (m, office) in a Київський бізнес-центр (m) —
+      arranging furniture: Поставте шафу (f, cabinet) біля стіни (f, wall). Комп''ютер
+      (m) — на столі. Принтер (m) — під столом. Квітка (f, flower) — між вікнами (pl,
+      windows).'
+    speakers:
+      - Офіс-менеджер
+      - Вантажники (movers)
+    motivation: 'Spatial prepositions: біля + gen, на + loc, під + inst, між + inst'
 content_outline:
-- section: "Простір навколо нас: нащо потрібні просторові прийменники?"
-  words: 500
-  points:
-  - "Bridge from A2 knowledge: learners already know basic prepositions
-    (в, на, до, з, біля). This module expands the spatial toolkit to express
-    precise relationships: not just 'near' but 'between,' 'opposite,'
-    'among,' 'behind,' 'above,' 'below.' This precision is essential for
-    the motion verb modules that follow (M28-M36)."
-  - "Why this module comes before motion verbs: motion verbs answer WHERE
-    you go; spatial prepositions answer WHERE things are. You must know
-    the destination before you can describe the journey.
-    Analogy from Заболотний Grade 7 p.184: прийменник + іменник = a unit
-    that expresses spatial, temporal, or causal relationships."
-  - "Reading passage: a description of a Ukrainian city square (площа)
-    using all target prepositions. Learners encounter the prepositions
-    in natural context before analyzing them."
-- section: "Прості просторові прийменники: біля, серед, навпроти"
-  words: 700
-  points:
-  - "Біля + родовий відмінок: near/beside.
-    Біля вокзалу є парк. Біля школи зупинка автобуса.
-    Synonyms: коло, поблизу, поруч з (+ орудний!).
-    Usage note: біля is the most neutral and frequent choice.
-    Коло is slightly literary, поблизу emphasizes proximity."
-  - "Серед + родовий відмінок: among/in the middle of.
-    Серед людей на площі стояв музикант.
-    Серед лісу — галявина.
-    Compound variant: посеред (= right in the middle of).
-    Посеред кімнати стояв стіл.
-    From Авраменко Grade 7 p.163: прийменники виражають
-    просторові відношення між предметами."
-  - "Навпроти + родовий відмінок: opposite/across from.
-    Навпроти нашого дому — аптека.
-    Навпроти церкви — парк.
-    Preposition-adverb distinction: Він сидів навпроти (adverb, no noun).
-    Він сидів навпроти мене (preposition + Р.в.)."
-  - "Practice: learners describe the layout of their neighborhood using
-    біля, серед, навпроти with correct case endings. 8-10 example
-    sentences modeling natural Ukrainian spatial descriptions."
-- section: "Між, над, під, за, перед"
-  words: 700
-  points:
-  - "Між + орудний відмінок: between/among.
-    Між будинками — вузька вулиця. Між нами все добре.
-    Compound variants: поміж, з-поміж.
-    Note: між + Р.в. is archaic/dialectal; standard Ukrainian uses Ор.в."
-  - "Над + орудний відмінок: above/over.
-    Над містом літав лелека. Над річкою — міст.
-    Compound: понад (= just above, a little above). Понад берегом — верби."
-  - "Під + орудний (location) vs під + знахідний (direction):
-    Кіт сидить під столом (Ор.в. = location).
-    Кіт заліз під стіл (Зн.в. = direction/motion).
-    This location/direction distinction previews M28-M33.
-    Compound: з-під (= from under): Витяг книгу з-під ліжка."
-  - "За + орудний (behind, location) vs за + знахідний (behind, direction):
-    За будинком — сад (Ор.в. = location).
-    Заховався за дерево (Зн.в. = direction).
-    Перед + орудний: Перед входом стояла черга.
-    Compound: з-за (= from behind): Визирнув з-за рогу."
-  - "10-12 example sentences with mixed prepositions in realistic
-    scenarios: describing a park, a classroom, a city intersection."
-- section: "Складні та складені просторові прийменники"
-  words: 600
-  points:
-  - "From Авраменко Grade 7 p.163, Литвінова Grade 7 p.167:
-    Simple: біля, серед, над, під, між, за, перед.
-    Compound (складні): з-під, з-за, з-поміж, попід, понад, поруч.
-    Compound (складені): поруч з, обабіч, неподалік від, на відміну від."
-  - "Spelling rules from Литвінова Grade 7 p.171:
-    Складні прийменники з дефісом: з-під, з-за, з-поміж, з-понад, з-перед.
-    Складні прийменники разом: попід, понад, посеред, поміж.
-    Складені прийменники окремо: поруч з, на відміну від, згідно з."
-  - "Довкола/навколо + родовий відмінок: around.
-    Довкола озера ростуть верби. Навколо будинку — паркан.
-    Preposition-adverb pair: Навколо тихо (adverb). Навколо хати (prep.)."
-  - "Позаду + родовий, попереду + родовий:
-    Позаду колони йшли музиканти. Попереду нас бігла собака.
-    Обабіч + родовий: Обабіч дороги — поля.
-    Неподалік + родовий/від: Неподалік вокзалу є готель."
-- section: "Прийменник чи прислівник?"
-  words: 500
-  points:
-  - "From Заболотний Grade 7 p.184: 'Поблизу села було джерело (prep.)
-    vs Поблизу було джерело (adverb).' Key test: if the word has a noun
-    after it in the expected case, it is a preposition. If it stands alone,
-    it is an adverb. This is how Ukrainian textbooks teach the distinction."
-  - "Practice pairs:
-    навпроти: Навпроти школи — магазин (prep.) / Він сів навпроти (adv.).
-    поруч: Поруч з ним стояла мати (prep.) / Мати стояла поруч (adv.).
-    довкола: Довкола хати — квіти (prep.) / Довкола було тихо (adv.).
-    попереду: Попереду загону йшов командир (prep.) / Біжи попереду (adv.)."
-  - "Error correction exercise: learners identify whether highlighted words
-    are prepositions or adverbs and check case agreement."
-- section: "Просторовий опис: кімната, вулиця, місто"
-  words: 600
-  points:
-  - "Model description of a Ukrainian apartment (квартира):
-    a connected passage using 10+ spatial prepositions in natural flow.
-    Learners see how prepositions chain together for precise spatial mapping."
-  - "City directions passage: describing how to get from the train station
-    to a hotel, using навпроти, повз, за, перед, між, біля.
-    This previews the travel vocabulary of M36."
-  - "Self-check in Ukrainian: Опишіть свою кімнату, вживаючи щонайменше
-    8 різних просторових прийменників. For each preposition, verify the
-    case of the following noun."
-- section: "Підсумок: ваш просторовий словник"
-  words: 400
-  points:
-  - "Complete preposition table organized by case requirement:
-    Родовий: біля, серед, посеред, навпроти, довкола, навколо, позаду,
-    попереду, обабіч, неподалік, з-поміж, з-за, з-під.
-    Орудний: між, над, під (location), за (location), перед, поруч з, понад.
-    Знахідний: під (direction), за (direction).
-    Spelling: дефіс (з-під, з-за), разом (попід, понад, посеред),
-    окремо (поруч з, неподалік від)."
-  - "Preview of M28 (motion-base-review): now that learners know WHERE
-    things are, the next module teaches HOW to move between them.
-    Spatial prepositions combine with motion verbs:
-    підійти до (approach), відійти від (move away from),
-    перейти через (cross over), обійти навколо (go around)."
+  - section: "Простір навколо нас: нащо потрібні просторові прийменники?"
+    words: 500
+    points:
+      - "Bridge from A2 knowledge: learners already know basic prepositions (в, на,
+        до, з, біля). This module expands the spatial toolkit to express precise relationships:
+        not just 'near' but 'between,' 'opposite,' 'among,' 'behind,' 'above,' 'below.'
+        This precision is essential for the motion verb modules that follow (M28-M36)."
+      - "Why this module comes before motion verbs: motion verbs answer WHERE you
+        go; spatial prepositions answer WHERE things are. You must know the destination
+        before you can describe the journey. Analogy from Заболотний Grade 7 p.184:
+        прийменник + іменник = a unit that expresses spatial, temporal, or causal
+        relationships."
+      - "Reading passage: a description of a Ukrainian city square (площа) using all
+        target prepositions. Learners encounter the prepositions in natural context
+        before analyzing them."
+  - section: "Прості просторові прийменники: біля, серед, навпроти"
+    words: 700
+    points:
+      - "Біля + родовий відмінок: near/beside. Біля вокзалу є парк. Біля школи зупинка
+        автобуса. Synonyms: коло, поблизу, поруч з (+ орудний!). Usage note: біля
+        is the most neutral and frequent choice. Коло is slightly literary, поблизу
+        emphasizes proximity."
+      - "Серед + родовий відмінок: among/in the middle of. Серед людей на площі стояв
+        музикант. Серед лісу — галявина. Compound variant: посеред (= right in the
+        middle of). Посеред кімнати стояв стіл. From Авраменко Grade 7 p.163: прийменники
+        виражають просторові відношення між предметами."
+      - "Навпроти + родовий відмінок: opposite/across from. Навпроти нашого дому —
+        аптека. Навпроти церкви — парк. Preposition-adverb distinction: Він сидів
+        навпроти (adverb, no noun). Він сидів навпроти мене (preposition + Р.в.)."
+      - "Practice: learners describe the layout of their neighborhood using біля,
+        серед, навпроти with correct case endings. 8-10 example sentences modeling
+        natural Ukrainian spatial descriptions."
+  - section: "Між, над, під, за, перед"
+    words: 700
+    points:
+      - "Між + орудний відмінок: between/among. Між будинками — вузька вулиця. Між
+        нами все добре. Compound variants: поміж, з-поміж. Note: між + Р.в. is archaic/dialectal;
+        standard Ukrainian uses Ор.в."
+      - "Над + орудний відмінок: above/over. Над містом літав лелека. Над річкою —
+        міст. Compound: понад (= just above, a little above). Понад берегом — верби."
+      - "Під + орудний (location) vs під + знахідний (direction): Кіт сидить під столом
+        (Ор.в. = location). Кіт заліз під стіл (Зн.в. = direction/motion). This location/direction
+        distinction previews M28-M33. Compound: з-під (= from under): Витяг книгу
+        з-під ліжка."
+      - "За + орудний (behind, location) vs за + знахідний (behind, direction): За
+        будинком — сад (Ор.в. = location). Заховався за дерево (Зн.в. = direction).
+        Перед + орудний: Перед входом стояла черга. Compound: з-за (= from behind):
+        Визирнув з-за рогу."
+      - "10-12 example sentences with mixed prepositions in realistic scenarios: describing
+        a park, a classroom, a city intersection."
+  - section: "Складні та складені просторові прийменники"
+    words: 600
+    points:
+      - "From Авраменко Grade 7 p.163, Литвінова Grade 7 p.167: Simple: біля, серед,
+        над, під, між, за, перед. Compound (складні): з-під, з-за, з-поміж, попід,
+        понад, поруч. Compound (складені): поруч з, обабіч, неподалік від, на відміну
+        від."
+      - "Spelling rules from Литвінова Grade 7 p.171: Складні прийменники з дефісом:
+        з-під, з-за, з-поміж, з-понад, з-перед. Складні прийменники разом: попід,
+        понад, посеред, поміж. Складені прийменники окремо: поруч з, на відміну від,
+        згідно з."
+      - "Довкола/навколо + родовий відмінок: around. Довкола озера ростуть верби.
+        Навколо будинку — паркан. Preposition-adverb pair: Навколо тихо (adverb).
+        Навколо хати (prep.)."
+      - "Позаду + родовий, попереду + родовий: Позаду колони йшли музиканти. Попереду
+        нас бігла собака. Обабіч + родовий: Обабіч дороги — поля. Неподалік + родовий/від:
+        Неподалік вокзалу є готель."
+  - section: "Прийменник чи прислівник?"
+    words: 500
+    points:
+      - "From Заболотний Grade 7 p.184: 'Поблизу села було джерело (prep.) vs Поблизу
+        було джерело (adverb).' Key test: if the word has a noun after it in the expected
+        case, it is a preposition. If it stands alone, it is an adverb. This is how
+        Ukrainian textbooks teach the distinction."
+      - "Practice pairs: навпроти: Навпроти школи — магазин (prep.) / Він сів навпроти
+        (adv.). поруч: Поруч з ним стояла мати (prep.) / Мати стояла поруч (adv.).
+        довкола: Довкола хати — квіти (prep.) / Довкола було тихо (adv.). попереду:
+        Попереду загону йшов командир (prep.) / Біжи попереду (adv.)."
+      - "Error correction exercise: learners identify whether highlighted words are
+        prepositions or adverbs and check case agreement."
+  - section: "Просторовий опис: кімната, вулиця, місто"
+    words: 600
+    points:
+      - "Model description of a Ukrainian apartment (квартира): a connected passage
+        using 10+ spatial prepositions in natural flow. Learners see how prepositions
+        chain together for precise spatial mapping."
+      - "City directions passage: describing how to get from the train station to
+        a hotel, using навпроти, повз, за, перед, між, біля. This previews the travel
+        vocabulary of M36."
+      - "Self-check in Ukrainian: Опишіть свою кімнату, вживаючи щонайменше 8 різних
+        просторових прийменників. For each preposition, verify the case of the following
+        noun."
+  - section: "Підсумок: ваш просторовий словник"
+    words: 400
+    points:
+      - "Complete preposition table organized by case requirement: Родовий: біля,
+        серед, посеред, навпроти, довкола, навколо, позаду, попереду, обабіч, неподалік,
+        з-поміж, з-за, з-під. Орудний: між, над, під (location), за (location), перед,
+        поруч з, понад. Знахідний: під (direction), за (direction). Spelling: дефіс
+        (з-під, з-за), разом (попід, понад, посеред), окремо (поруч з, неподалік від)."
+      - "Preview of M28 (motion-base-review): now that learners know WHERE things
+        are, the next module teaches HOW to move between them. Spatial prepositions
+        combine with motion verbs: підійти до (approach), відійти від (move away from),
+        перейти через (cross over), обійти навколо (go around)."
 vocabulary_hints:
   required:
-  - "біля (near/beside — + Р.в.)"
-  - "серед (among — + Р.в.)"
-  - "навпроти (opposite — + Р.в.)"
-  - "між (between — + Ор.в.)"
-  - "над (above/over — + Ор.в.)"
-  - "під (below/under — + Ор.в. location, + Зн.в. direction)"
-  - "за (behind — + Ор.в. location, + Зн.в. direction)"
-  - "перед (in front of — + Ор.в.)"
-  - "довкола (around — + Р.в.)"
-  - "навколо (around — + Р.в.)"
-  - "поруч з (next to — + Ор.в.)"
-  - "позаду (behind — + Р.в.)"
-  - "попереду (in front of/ahead of — + Р.в.)"
-  - "з-під (from under — compound preposition)"
-  - "з-за (from behind — compound preposition)"
+    - "біля (near/beside — + Р.в.)"
+    - "серед (among — + Р.в.)"
+    - "навпроти (opposite — + Р.в.)"
+    - "між (between — + Ор.в.)"
+    - "над (above/over — + Ор.в.)"
+    - "під (below/under — + Ор.в. location, + Зн.в. direction)"
+    - "за (behind — + Ор.в. location, + Зн.в. direction)"
+    - "перед (in front of — + Ор.в.)"
+    - "довкола (around — + Р.в.)"
+    - "навколо (around — + Р.в.)"
+    - "поруч з (next to — + Ор.в.)"
+    - "позаду (behind — + Р.в.)"
+    - "попереду (in front of/ahead of — + Р.в.)"
+    - "з-під (from under — compound preposition)"
+    - "з-за (from behind — compound preposition)"
   recommended:
-  - "посеред (in the very middle of — + Р.в.)"
-  - "поміж (between/among — + Ор.в.)"
-  - "понад (just above — + Ор.в.)"
-  - "попід (along the base of — + Ор.в.)"
-  - "обабіч (on both sides of — + Р.в.)"
-  - "неподалік (not far from — + Р.в.)"
-  - "площа (square — city square)"
-  - "перехрестя (intersection/crossroads)"
-  - "квартал (city block)"
-  - "узбіччя (roadside)"
+    - "посеред (in the very middle of — + Р.в.)"
+    - "поміж (between/among — + Ор.в.)"
+    - "понад (just above — + Ор.в.)"
+    - "попід (along the base of — + Ор.в.)"
+    - "обабіч (on both sides of — + Р.в.)"
+    - "неподалік (not far from — + Р.в.)"
+    - "площа (square — city square)"
+    - "перехрестя (intersection/crossroads)"
+    - "квартал (city block)"
+    - "узбіччя (roadside)"
 activity_hints:
-- type: quiz
-  focus: "Choose the correct case after each spatial preposition (Р.в., Ор.в., or Зн.в.)"
-  items: 8
-- type: match-up
-  focus: "Match spatial prepositions to their synonyms (біля/коло/поблизу, серед/посеред)"
-  items: 8
-- type: fill-in
-  focus: "Complete sentences with the correct spatial preposition based on context"
-  items: 8
-- type: group-sort
-  focus: "Sort prepositions by required case: родовий / орудний / знахідний"
-  items: 12
-- type: error-correction
-  focus: "Find and fix case errors after spatial prepositions in sentences"
-  items: 6
-- type: free-write
-  focus: "Describe a room or street scene using at least 8 different spatial prepositions"
-  items: 6
+  - type: quiz
+    focus: "Choose the correct case after each spatial preposition (Р.в., Ор.в., or
+      Зн.в.)"
+    items: 8
+  - type: match-up
+    focus: "Match spatial prepositions to their synonyms (біля/коло/поблизу, серед/посеред)"
+    items: 8
+  - type: fill-in
+    focus: "Complete sentences with the correct spatial preposition based on context"
+    items: 8
+  - type: group-sort
+    focus: "Sort prepositions by required case: родовий / орудний / знахідний"
+    items: 12
+  - type: error-correction
+    focus: "Find and fix case errors after spatial prepositions in sentences"
+    items: 6
+  - type: free-write
+    focus: "Describe a room or street scene using at least 8 different spatial prepositions"
+    items: 6
 connects_to:
-- "b1-028 (motion-base-review — base motion verbs that combine with these prepositions)"
-- "b1-036 (traveling-ukraine — spatial prepositions in travel narratives)"
-- "b1-047 (genitive-nuances — deeper genitive case usage)"
+  - "b1-028 (motion-base-review — base motion verbs that combine with these prepositions)"
+  - "b1-036 (traveling-ukraine — spatial prepositions in travel narratives)"
+  - "b1-047 (genitive-nuances — deeper genitive case usage)"
 prerequisites:
-- "A2 completion (basic prepositions в, на, до, з, біля)"
-- "b1-003 (metalanguage-syntax-cases — case terminology)"
+  - "A2 completion (basic prepositions в, на, до, з, біля)"
+  - "b1-003 (metalanguage-syntax-cases — case terminology)"
 grammar:
-- "Прості просторові прийменники: біля, серед, навпроти + Р.в."
-- "Між, над, під, за, перед + Ор.в. (location) / Зн.в. (direction)"
-- "Складні прийменники: з-під, з-за, з-поміж, попід, понад, посеред"
-- "Складені прийменники: поруч з, неподалік від, обабіч"
-- "Прийменник vs прислівник distinction"
-- "Правопис: дефіс, разом, окремо for compound prepositions"
+  - "Прості просторові прийменники: біля, серед, навпроти + Р.в."
+  - "Між, над, під, за, перед + Ор.в. (location) / Зн.в. (direction)"
+  - "Складні прийменники: з-під, з-за, з-поміж, попід, понад, посеред"
+  - "Складені прийменники: поруч з, неподалік від, обабіч"
+  - "Прийменник vs прислівник distinction"
+  - "Правопис: дефіс, разом, окремо for compound prepositions"
 register: науково-навчальний
 references:
-- title: "Авраменко Grade 7, p.163-166"
-  notes: "Прийменник як службова частина мови, види за будовою, просторові відношення."
-- title: "Литвінова Grade 7, p.167-189"
-  notes: "Comprehensive prийменник chapter: прості/складні/складені, написання, вправи."
-- title: "Заболотний Grade 7, p.182-188"
-  notes: "Прийменник, розрізнення прийменника та прислівника, правопис складних прийменників."
-- title: "Ворон Grade 9, p.226"
-  notes: "Розбір прийменника як частини мови — prosторові відношення model."
+  - title: "Авраменко Grade 7, p.163-166"
+    notes: "Прийменник як службова частина мови, види за будовою, просторові відношення."
+  - title: "Литвінова Grade 7, p.167-189"
+    notes: "Comprehensive prийменник chapter: прості/складні/складені, написання,
+      вправи."
+  - title: "Заболотний Grade 7, p.182-188"
+    notes: "Прийменник, розрізнення прийменника та прислівника, правопис складних
+      прийменників."
+  - title: "Ворон Grade 9, p.226"
+    notes: "Розбір прийменника як частини мови — prosторові відношення model."

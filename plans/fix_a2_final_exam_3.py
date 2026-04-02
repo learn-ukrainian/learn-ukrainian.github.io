@@ -1,8 +1,6 @@
-import re
-import yaml
 
 md_path = "curriculum/l2-uk-en/a2/a2-final-exam.md"
-with open(md_path, "r", encoding="utf-8") as f:
+with open(md_path, encoding="utf-8") as f:
     text = f.read()
 
 # 1. Transliteration

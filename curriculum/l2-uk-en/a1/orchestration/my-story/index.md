@@ -1,6 +1,6 @@
 # Build Summary: my-story (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:46
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 21:58:42 |
 | enrich | complete | 2026-03-30 21:58:43 |
 | verify | complete | 2026-03-30 21:58:43 |
-| review | complete | 2026-03-30 22:01:30 |
-| stress | complete | 2026-03-31 09:58:58 |
-| publish | complete | 2026-03-31 09:58:58 |
+| review | complete | 2026-04-01 11:46:17 |
+| stress | complete | 2026-04-01 11:46:17 |
+| publish | complete | 2026-04-01 11:46:23 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 198s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 22s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 167s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

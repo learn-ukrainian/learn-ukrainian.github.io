@@ -4,38 +4,52 @@ sequence: 7
 slug: citation-reference
 version: '1.1'
 title: "Культура цитування та академічна доброчесність"
-subtitle: "Citation Culture and Academic Integrity"
+subtitle: "Культура цитування та академічна доброчесність"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Опанувати правила оформлення прямих та непрямих цитат в українському академічному просторі."
-  - "Зрозуміти принципи академічної доброчесності та навчитися уникати плагіату за допомогою парафразу."
-  - "Вивчити специфіку використання вступних фраз для введення цитат та посилань на авторитетні джерела."
-  - "Навчитися розрізняти первинні та вторинні джерела інформації та коректно на них посилатися."
+  - "Опанувати правила оформлення прямих та непрямих цитат в українському академічному
+    просторі."
+  - "Зрозуміти принципи академічної доброчесності та навчитися уникати плагіату за
+    допомогою парафразу."
+  - "Вивчити специфіку використання вступних фраз для введення цитат та посилань на
+    авторитетні джерела."
+  - "Навчитися розрізняти первинні та вторинні джерела інформації та коректно на них
+    посилатися."
 
 reading_situations:
   - source_type: "фрагмент академічної статті"
-    topic: "Аналіз методології в роботах українських істориків-державників (М. Грушевський, В. Липинський)."
-    key_elements: ["цитування класиків", "бібліографічні виноски", "критичний аналіз джерел"]
-    motivation: "Вивчення способів інтеграції ідей попередників у власний науковий текст через систему посилань."
+    topic: "Аналіз методології в роботах українських істориків-державників (М. Грушевський,
+      В. Липинський)."
+    key_elements: ["цитування класиків", "бібліографічні виноски", "критичний аналіз
+          джерел"]
+    motivation: "Вивчення способів інтеграції ідей попередників у власний науковий
+      текст через систему посилань."
   - source_type: "положення про академічну доброчесність"
     topic: "Етичні стандарти написання наукових робіт в університетах України."
     key_elements: ["самоплагіат", "коректне запозичення", "наукова етика"]
-    motivation: "Ознайомлення з офіційною термінологією та правилами академічного письма."
+    motivation: "Ознайомлення з офіційною термінологією та правилами академічного
+      письма."
 
 listening_situations:
   - media_type: "лекція"
     setting: "Вебінар на тему: 'Як уникнути плагіату: інструменти парафразу та реферирования'."
-    focus_points: ["техніки парафразу", "вступні конструкції для цитування", "алгоритм перевірки тексту"]
-    motivation: "Розвиток навичок трансформації чужої думки у власну без втрати сенсу та порушення авторських прав."
+    focus_points: ["техніки парафразу", "вступні конструкції для цитування", "алгоритм
+          перевірки тексту"]
+    motivation: "Розвиток навичок трансформації чужої думки у власну без втрати сенсу
+      та порушення авторських прав."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Виберіть уривок із класичного твору української літератури та напишіть короткий аналіз (150-200 слів), інтегруючи в нього дві прямі цитати та одну парафразу. Використовуйте різноманітні вступні конструкції."
-    requirements: ["коректність цитування", "точність парафрази", "відповідність стилістичним нормам"]
+    prompt: "Виберіть уривок із класичного твору української літератури та напишіть
+      короткий аналіз (150-200 слів), інтегруючи в нього дві прямі цитати та одну
+      парафразу. Використовуйте різноманітні вступні конструкції."
+    requirements: ["коректність цитування", "точність парафрази", "відповідність стилістичним
+          нормам"]
     motivation: "Практичне застосування правил цитування в аналітичному тексті."
-    model_answer: "Текст повинен демонструвати вміння органічно вплітати цитати в речення, використовуючи слова 'як зазначає', 'за словами', 'згідно з позицією'."
+    model_answer: "Текст повинен демонструвати вміння органічно вплітати цитати в
+      речення, використовуючи слова 'як зазначає', 'за словами', 'згідно з позицією'."
 
 content_outline:
   - section: "Феномен цитування та його функції"
@@ -52,8 +66,10 @@ content_outline:
     words: 1000
     subsections:
       - "Вступні фрази з іменем автора: 'X наголошує, що...', 'За визначенням X...'"
-      - "Безособові конструкції для посилання: 'Встановлено, що...', 'У науковій літературі зазначається...'"
-      - "Синоніми до дієслів мовлення в науковому контексті (стверджувати, зауважувати, акцентувати)"
+      - "Безособові конструкції для посилання: 'Встановлено, що...', 'У науковій літературі
+        зазначається...'"
+      - "Синоніми до дієслів мовлення в науковому контексті (стверджувати, зауважувати,
+        акцентувати)"
     key_concepts:
       - "атрибуція"
       - "дискурсивна формула"
@@ -98,15 +114,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate citation practices in a Ukrainian academic text — identify proper attribution, paraphrase quality, and potential patchwriting."
+    description: "Evaluate citation practices in a Ukrainian academic text — identify
+      proper attribution, paraphrase quality, and potential patchwriting."
   - type: error-correction
-    description: "Fix citation formatting errors and transform poorly paraphrased passages into proper academic paraphrases."
+    description: "Fix citation formatting errors and transform poorly paraphrased
+      passages into proper academic paraphrases."
   - type: match-up
-    description: "Match introductory citation phrases (за словами, як зазначає, згідно з позицією) with appropriate contexts."
+    description: "Match introductory citation phrases (за словами, як зазначає, згідно
+      з позицією) with appropriate contexts."
   - type: essay-response
-    description: "Write a short analysis (150-200 words) integrating two direct quotes and one paraphrase from a Ukrainian literary work."
+    description: "Write a short analysis (150-200 words) integrating two direct quotes
+      and one paraphrase from a Ukrainian literary work."
   - type: fill-in
-    description: "Complete sentences with appropriate verbs of declaration (стверджувати, зауважувати, акцентувати) for introducing citations."
+    description: "Complete sentences with appropriate verbs of declaration (стверджувати,
+      зауважувати, акцентувати) for introducing citations."
 
 activities:
   types_required:
@@ -126,3 +147,4 @@ references:
 connects_to:
   previous: "hedging-modality"
   next: "essay-structure"
+phase: C1.1 [Academic Foundation]

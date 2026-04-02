@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "simplification-consonants",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T01:56:34.798780+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T01:57:42.370010+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T01:58:16.987337+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T01:58:56.990206+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:02.158167+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:03.292959+00:00"
+    }
+  }
+}

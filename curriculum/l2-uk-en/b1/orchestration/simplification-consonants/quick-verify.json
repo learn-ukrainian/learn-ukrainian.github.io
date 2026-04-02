@@ -1,0 +1,24 @@
+{
+  "attempt": 2,
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Підсумок i практика'"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: закріплений (fixed — reflected in standard spelling), морфонологія (morphophonology — sound changes in morphology)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T02:25:59.221756+00:00"
+}

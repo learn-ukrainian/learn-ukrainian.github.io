@@ -1,6 +1,6 @@
 # Build Summary: please-do-this (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 20:30:37 |
 | enrich | complete | 2026-03-30 20:30:38 |
 | verify | complete | 2026-03-30 20:30:38 |
-| review | complete | 2026-03-30 20:34:21 |
-| stress | complete | 2026-03-31 09:58:44 |
-| publish | complete | 2026-03-31 09:58:44 |
+| review | complete | 2026-04-01 11:44:38 |
+| stress | complete | 2026-04-01 11:44:38 |
+| publish | complete | 2026-04-01 11:44:44 |
 
 ## Reviews
 
@@ -38,6 +38,8 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 206s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 19s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 223s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 4s | ❌ |
 
 ## Files
 

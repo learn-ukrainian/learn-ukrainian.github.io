@@ -6,19 +6,19 @@ Tests pure helper functions in scripts/audit/core.py (no file I/O).
 Run with: pytest tests/test_audit_core_helpers.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.core import (
-    parse_frontmatter,
-    detect_level,
-    parse_sections,
     check_typography,
+    detect_level,
+    parse_frontmatter,
+    parse_sections,
 )
-
 
 # =============================================================================
 # TEST: parse_frontmatter

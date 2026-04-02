@@ -23,12 +23,13 @@ import csv
 import json
 import re
 import subprocess
-import yaml
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import MagicMock
+
+import yaml
 
 TESTBED_DIR = Path(__file__).resolve().parent
 ROOT_DIR = TESTBED_DIR.parent.parent
@@ -143,8 +144,8 @@ def audit_module(mod: dict) -> dict:
                     word_target = int(m.group(2))
 
     # Check orchestration state for fix loop count and self-audit status
-    from pipeline_v5 import load_state as _load_v5_state
     from pipeline_lib import ModuleContext as _MC
+    from pipeline_v5 import load_state as _load_v5_state
     _ctx = MagicMock(spec=_MC)
     _ctx.orch_dir = CURDIR / track / "orchestration" / slug
     _ctx.track = track
@@ -356,7 +357,7 @@ def save_results(results: list[dict], run_id: str) -> Path:
         for r in results:
             cr = r.get("content_review")
             writer.writerow([
-                datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                datetime.now(UTC).strftime("%Y-%m-%d"),
                 run_id,
                 r["track"], r["num"], r["slug"],
                 r.get("grade", "?"),
@@ -487,7 +488,7 @@ def cmd_audit(args):
         r["combined_grade"] = combined_grade(r["grade"], review_grade)
         results.append(r)
 
-    run_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    run_id = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     result_file = save_results(results, run_id)
     baseline = load_baseline()
     print_report(results, baseline)

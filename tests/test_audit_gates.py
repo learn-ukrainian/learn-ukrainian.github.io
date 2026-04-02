@@ -7,31 +7,31 @@ These are pure functions with no I/O dependencies.
 Run with: pytest tests/test_audit_gates.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.gates import (
     GateResult,
-    evaluate_word_count,
-    evaluate_activity_count,
-    evaluate_density,
-    evaluate_unique_types,
-    evaluate_priority_types,
-    evaluate_engagement,
-    evaluate_audio,
-    evaluate_vocab,
-    evaluate_structure,
-    evaluate_lint,
-    evaluate_pedagogy,
-    evaluate_immersion,
-    evaluate_naturalness,
-    evaluate_content_heavy,
     compute_recommendation,
+    evaluate_activity_count,
+    evaluate_audio,
+    evaluate_content_heavy,
+    evaluate_density,
+    evaluate_engagement,
+    evaluate_immersion,
+    evaluate_lint,
+    evaluate_naturalness,
+    evaluate_pedagogy,
+    evaluate_priority_types,
+    evaluate_structure,
+    evaluate_unique_types,
+    evaluate_vocab,
+    evaluate_word_count,
 )
-
 
 # =============================================================================
 # TEST: evaluate_word_count

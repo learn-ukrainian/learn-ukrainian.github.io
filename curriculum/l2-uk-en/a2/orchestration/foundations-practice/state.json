@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "foundations-practice",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:54.318768+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:54.319079+00:00"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections (including cultural context and summary) are present. All
+    plan points (declension patterns, -ин drop, кличний відмінок) covered. Word count
+    (4595) exceeds the 4000 target.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: No critical grammatical errors or Russianisms found (ы/э/ё/ъ absent).
+    However, stylistic naturalness could be improved by replacing "приймає" with "має"
+    and "хранителями" with "охоронцями" (see findin
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar is contextualized with professional examples.
+    Clear distinction between hard/soft groups. The "plural drop" rule for -ин is
+    explained very thoroughly with "before/after" lo
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (пекар, лікар, школяр, киянин, громадянин, etc.) and
+    recommended terms (бондар, гончар, вівчар, каменяр) are integrated naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed immediately after the relevant theory sections. IDs
+    and focus match the plan's `activity_hints` exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is patient and encouraging ("Ця могутня машина словотвору працює
+    дуже передбачувано"). Avoids generic "Numbers unlock Ukraine" filler, focusing
+    instead on the cultural weight of "Кобзар" and '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, correct H2 headers matching the plan, no meta-commentary
+    artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly identifies the significance of Shevchenko's "Кобзар" and Franko's
+    epithet "Каменяр". Decolonized perspective on traditional crafts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue between the Village Head and Guest is natural and provides
+    a good context for "столяр", "бондар", "киянин", and "полтавчанин".
+findings: []

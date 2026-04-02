@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "verbal-nouns",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T05:59:38.866026+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T06:01:03.994055+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T06:01:44.279078+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T06:09:48.891868+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:27.223424+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:28.263440+00:00"
+    }
+  }
+}

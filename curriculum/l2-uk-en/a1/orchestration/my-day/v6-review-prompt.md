@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 25: My Day (A1, A1.4 [Time and Nature])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -135,29 +135,19 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 You already know how to tell time, name the days of the week, and describe the weather outside. Now it's time to put it all together — telling someone about your whole day. Below are two conversations: one about yesterday, one about tomorrow. The past-tense and future forms here are frozen phrases — just memorize them as chunks for now. The full grammar comes later.
 
-**(Як пройшов твій день? / How was your day?)**
+**(Як пройшо́в твій день? / How was your day?)**
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Привіт! Як пройшов твій день? *(Hi! How was your day?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Добре! Вранці я працювала в офісі. *(Good! In the morning I worked at the office.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> А **потім**? *(And then?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> **Потім** обідала о першій. **Після обіду** гуляла у парку. *(Then I had lunch at one. After lunch I walked in the park.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> А ввечері що робила? *(And in the evening, what did you do?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Ввечері дивилася фільм і читала книгу. **Нарешті** лягла спати о дванадцятій. *(In the evening I watched a film and read a book. Finally I went to bed at twelve.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> О дванадцятій? Пізно! *(At twelve? Late!)*</div>
-
-</div>
+> — **Марко́:** Приві́т! Як пройшов твій день? *(Hi! How was your day?)*
+> — **Оле́нка:** До́бре! Вра́нці я працюва́ла в о́фісі. *(Good! In the morning I worked at the office.)*
+> — **Марко:** А **по́тім**? *(And then?)*
+> — **Оленка:** **Потім** обі́дала о пе́ршій. **Пі́сля обі́ду** гуля́ла у парку. *(Then I had lunch at one. After lunch I walked in the park.)*
+> — **Марко:** А вве́чері що роби́ла? *(And in the evening, what did you do?)*
+> — **Оленка:** Ввечері диви́лася фільм і чита́ла кни́гу. **Наре́шті** лягла́ спа́ти о двана́дцятій. *(In the evening I watched a film and read a book. Finally I went to bed at twelve.)*
+> — **Марко:** О дванадцятій? Пі́зно! *(At twelve? Late!)*
 
 The past forms — **працювала** *(worked)*, **обідала** *(had lunch)*, **гуляла** *(walked)*, **дивилася** *(watched)*, **читала** *(read)*, **лягла** *(went to bed)* — are chunks for now. Full past-tense grammar comes in M48–49.
 
@@ -165,23 +155,14 @@ The past forms — **працювала** *(worked)*, **обідала** *(had l
 Notice the pattern: **sequence word + verb + time**. For example: **Потім обідала о першій.** The sequence word opens the sentence, the verb follows, and time closes it.
 :::
 
-**(Що ти будеш робити завтра? / What will you do tomorrow?)**
+**(Що ти бу́деш роби́ти за́втра? / What will you do tomorrow?)**
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Що ти будеш робити завтра? *(What will you do tomorrow?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Вранці **буду працювати**. *(In the morning I will work.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А **після обіду**? *(And in the afternoon?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> **Після обіду** буду вивчати українську. *(In the afternoon I will study Ukrainian.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А ввечері? *(And in the evening?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Ввечері **буду** гуляти. А вночі? **Нарешті буду** спати! *(In the evening I'll walk. And at night? Finally I'll sleep!)*</div>
-
-</div>
+> — **Оленка:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
+> — **Марко:** Вранці **бу́ду працюва́ти**. *(In the morning I will work.)*
+> — **Оленка:** А **після обіду**? *(And in the afternoon?)*
+> — **Марко:** **Після обіду** буду вивча́ти украї́нську. *(In the afternoon I will study Ukrainian.)*
+> — **Оленка:** А ввечері? *(And in the evening?)*
+> — **Марко:** Ввечері **буду** гуля́ти. А вночі́? **Нарешті буду** спати! *(In the evening I'll walk. And at night? Finally I'll sleep!)*
 
 The future pattern **буду** *(I will)* + infinitive works like a chunk: **буду працювати** *(I will work)*, **буду вивчати** *(I will study)*, **буду гуляти** *(I will walk)*. Full future-tense grammar is in M46.
 
@@ -191,9 +172,9 @@ Same structure, two timelines — yesterday Olenka **працювала** *(work
 
 Below is a complete model day — a narrative using the present tense you already know from A1.3, combined with time expressions from M22 and the parts-of-day adverbs you'll master in this module. Read it through like a short story, then study how it's built.
 
-> **Я прокидаюся о сьомій. Спочатку вмиваюся і одягаюся. Потім снідаю о восьмій. О дев'ятій починаю працювати. Вдень я працюю до першої. О першій обідаю. Після обіду ще працюю до п'ятої. Ввечері готую вечерю і відпочиваю. О дев'ятій дивлюся фільм або читаю книгу. Нарешті о дванадцятій лягаю спати.**
+> **Я прокида́юся о сьо́мій. Споча́тку вмива́юся і одяга́юся. Потім сні́даю о во́сьмій. О дев'я́тій почина́ю працювати. Вдень я працю́ю до пе́ршої. О першій обі́даю. Після обіду ще працюю до п'я́тої. Ввечері готу́ю вече́рю і відпочива́ю. О дев'ятій дивлю́ся фільм або́ чита́ю книгу. Нарешті о дванадцятій ляга́ю спати.**
 
-Every verb here is present tense — forms you already know from M16–M21. The sequence words **спочатку**, **потім**, **після обіду**, **нарешті** connect the actions into a story instead of a random list.
+Every verb here is present tense — forms you already know from M16–M21. The sequence words **спочатку**, **потім**, and **нарешті** connect the actions into a story instead of a random list.
 
 Now let's look at the five parts-of-day adverbs that make this narrative possible:
 
@@ -203,39 +184,39 @@ Now let's look at the five parts-of-day adverbs that make this narrative possibl
 - **ввечері** (in the evening) — roughly 18 to 22. *Ввечері я читаю.*
 - **вночі** (at night) — roughly 22 to 6. *Вночі я сплю.*
 
-These are adverbs — unchanging words. No case endings, no conjugation. Just place them at the start of a sentence: **Ввечері я читаю.** Compare this with clock time: **о сьомій** *(at seven)* uses a preposition and an ordinal number, while **вранці** *(in the morning)* is a single adverb — no preposition needed.
+Four of these are single adverbs — unchanging words. No case endings, no conjugation. Just place them at the start of a sentence: **Ввечері я читаю.** Compare this with clock time: **о сьомій** *(at seven)* uses a preposition and an ordinal number, while **вранці** *(in the morning)* is a single adverb — no preposition needed.
 
 <!-- INJECT_ACTIVITY: fill-in-part-of-day -->
 
-One more detail: **після обіду** is two words functioning together as a time marker. You can use it alone — **Після обіду я відпочиваю.** *(In the afternoon I rest.)* — or pair it with a clock time: **Після обіду, о третій, я вчу українську.** *(In the afternoon, at three, I study Ukrainian.)*
+One more detail: **після обіду** is two words functioning together as a time marker. You can use it alone — **Після обіду я відпочиваю.** *(In the afternoon I rest.)* — or pair it with a clock time: **Після обіду, о тре́тій, я вчу українську.** *(In the afternoon, at three, I study Ukrainian.)*
 
-## Від ранку до вечора (From Morning to Evening)
+## Від ра́нку до ве́чора (From Morning to Evening)
 
 You've seen **потім** and **нарешті** in the dialogues. Here is the full set of sequence words that let you connect one event to the next, turning isolated sentences into a coherent story:
 
 - **спочатку** (first, to start with) — *Спочатку я снідаю.* *(First I have breakfast.)*
-- **потім** (then, next) — *Потім я йду на роботу.* *(Then I go to work.)*
-- **після того** / **після цього** (after that) — *Після того я відпочиваю.* *(After that I rest.)*
+- **потім** (then, next) — *Потім я йду на робо́ту.* *(Then I go to work.)*
+- **після того́** / **після цього́** (after that) — *Після того я відпочиваю.* *(After that I rest.)*
 - **нарешті** (finally) — *Нарешті я лягаю спати.* *(Finally I go to bed.)*
-- **також** (also) — *Я також читаю вранці.* *(I also read in the morning.)*
-- **а потім** (and then — with a light contrast) — *Я снідаю, а потім іду до офісу.* *(I have breakfast, and then I go to the office.)*
+- **та́ко́ж** (also) — *Я також читаю вранці.* *(I also read in the morning.)*
+- **а потім** (and then — with a light contrast) — *Я снідаю, а потім іду́ до о́фісу.* *(I have breakfast, and then I go to the office.)*
 
-A quick note: **спочатку** is a sequence marker — it means "first" in a chain of events. Don't confuse it with **на початку** *(at the beginning of something)*. At A1, **після того** and **після цього** are interchangeable — use whichever feels natural.
+A quick note: **спочатку** is a sequence marker — it means "first" in a chain of events. Don't confuse it with **на поча́тку** *(at the beginning of something)*. At A1, **після того** and **після цього** are interchangeable — use whichever feels natural.
 
-Now let's expand your daily activity verbs. You already know **снідати** *(to have breakfast)* from M20. Here are the other two meal verbs — together they form a natural triad:
+Now let's expand your daily activity verbs. You already know **сні́дати** *(to have breakfast)* from M20. Here are the other two meal verbs — together they form a natural triad:
 
 - **снідати** (to have breakfast) — review from M20
-- **обідати** (to have lunch) — new
-- **вечеряти** (to have dinner) — new
+- **обі́дати** (to have lunch) — new
+- **вече́ряти** (to have dinner) — new
 
-All three are Group I verbs ending in **-ати**, conjugated exactly like **читати**: **я снідаю**, **ти снідаєш**, **він/вона снідає**. The pattern is identical for **обідати** *(я обідаю)* and **вечеряти** *(я вечеряю)*.
+All three are Group I verbs, conjugated exactly like **чита́ти**: **я снідаю**, **ти сні́даєш**, **він/вона́ сні́дає**. The pattern is identical for **обідати** *(я обідаю)* and **вечеряти** *(я вече́ряю)*.
 
-Two more useful verbs: **відпочивати** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочиваєш**. And the chunk **лягати спати** *(to go to bed)* — treat it as one unit at A1. Full reflexive verb grammar comes in M38.
+Two more useful verbs: **відпочива́ти** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочива́єш**. And the chunk **ляга́ти спати** *(to go to bed)* — treat it as one unit at A1. Full reflexive verb grammar comes in M38.
 
 Combine any verb with a time expression and you have a sentence about your day:
 
 - **О першій я обідаю.** *(At one I have lunch.)*
-- **Після роботи я відпочиваю.** *(After work I rest.)*
+- **Після робо́ти я відпочиваю.** *(After work I rest.)*
 - **Ввечері я вечеряю о сьомій.** *(In the evening I have dinner at seven.)*
 - **О дванадцятій я лягаю спати.** *(At twelve I go to bed.)*
 
@@ -247,7 +228,7 @@ Here's how all three tools — sequence words, time adverbs, and activity verbs 
 
 Every sentence you've built in this module follows one formula:
 
-**[Time expression] + [Sequence word] + [Verb + object]**
+**[Sequence word] + [Time expression] + [Verb + object]**
 
 The pieces are interchangeable. Look at how they combine:
 
@@ -259,7 +240,7 @@ Time expressions and sequence words both sit at the start of the sentence. You c
 
 Here is a longer model day that weaves everything from this module together. Read it, then write your own version below:
 
-> **Мій типовий понеділок починається о шостій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю каву і їм бутерброд. О дев'ятій починаю працювати. Вдень я дуже зайнятий. О першій обідаю в кафе. Після обіду ще працюю до шостої. Ввечері відпочиваю — готую вечерю і дивлюся серіал. Також читаю перед сном. Нарешті о дванадцятій лягаю спати. Завтра — те саме!**
+> **Мій типовий понеді́лок почина́ється о шо́стій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю ка́ву і їм бутербро́д. О дев'ятій починаю працювати. Вдень я ду́же за́йнятий. О першій обідаю в кафе́. Після обіду ще працюю до шо́стої. Ввечері відпочиваю — готую вечерю і дивлюся серіа́л. Також читаю пе́ред сном. Нарешті о дванадцятій лягаю спати. Завтра — те са́ме!**
 
 *(My typical Monday starts at six. First I wash up and get dressed. Then I have breakfast — I drink coffee and eat a sandwich. At nine I start working. During the day I'm very busy. At one I have lunch at a café. After lunch I work until six. In the evening I rest — I cook dinner and watch a series. I also read before bed. Finally at twelve I go to bed. Tomorrow — the same!)*
 
@@ -275,7 +256,7 @@ Now it's your turn. Describe your own typical day using what you've learned:
 
 Try reading your text aloud. Does it flow from one event to the next? If two sentences feel disconnected, add **потім** or **після того** between them — that's all it takes to turn a list into a story.
 
-**Deterministic word count: 1526 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1519 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -453,12 +434,58 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 114 words | Not found: 1 words
+Verified: 117 words | Not found: 47 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ ати — NOT IN VESUM
+  ✗ Вра — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Наре — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Споча — NOT IN VESUM
+  ✗ бутербро — NOT IN VESUM
+  ✗ вве — NOT IN VESUM
+  ✗ вече — NOT IN VESUM
+  ✗ втра — NOT IN VESUM
+  ✗ гуля — NOT IN VESUM
+  ✗ двана — NOT IN VESUM
+  ✗ дев'я — NOT IN VESUM
+  ✗ деш — NOT IN VESUM
+  ✗ дцятій — NOT IN VESUM
+  ✗ зно — NOT IN VESUM
+  ✗ йнятий — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ лася — NOT IN VESUM
+  ✗ лок — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нську — NOT IN VESUM
+  ✗ нці — NOT IN VESUM
+  ✗ п'я — NOT IN VESUM
+  ✗ понеді — NOT IN VESUM
+  ✗ поча — NOT IN VESUM
+  ✗ працюва — NOT IN VESUM
+  ✗ пройшо — NOT IN VESUM
+  ✗ ред — NOT IN VESUM
+  ✗ ршої — NOT IN VESUM
+  ✗ ршій — NOT IN VESUM
+  ✗ ряти — NOT IN VESUM
+  ✗ ряю — NOT IN VESUM
+  ✗ серіа — NOT IN VESUM
+  ✗ сля — NOT IN VESUM
+  ✗ стої — NOT IN VESUM
+  ✗ сьмій — NOT IN VESUM
+  ✗ сьо — NOT IN VESUM
+  ✗ тку — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
+  ✗ фісу — NOT IN VESUM
+  ✗ фісі — NOT IN VESUM
+  ✗ чора — NOT IN VESUM
+  ✗ шті — NOT IN VESUM
+  ✗ юся — NOT IN VESUM
+  ✗ ється — NOT IN VESUM
 
-All 114 other words are confirmed to exist in VESUM.
+All 117 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

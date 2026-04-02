@@ -1,6 +1,6 @@
 # Build Summary: at-the-cafe (A1)
 
-Generated: 2026-03-31 11:48
+Generated: 2026-04-01 13:43
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:48
 | vocab | complete | 2026-03-30 14:18:42 |
 | enrich | complete | 2026-03-30 14:18:43 |
 | verify | complete | 2026-03-30 14:18:43 |
-| review | complete | 2026-03-30 14:21:11 |
-| stress | complete | 2026-03-31 09:48:10 |
-| publish | complete | 2026-03-31 09:48:10 |
+| review | complete | 2026-04-01 11:43:44 |
+| stress | complete | 2026-04-01 11:43:44 |
+| publish | complete | 2026-04-01 11:43:50 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:48
 | activities | claude-tools (claude-sonnet-4-6) | 104s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 31s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 147s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

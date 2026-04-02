@@ -1,163 +1,163 @@
-module: b1-065
+module: b1-061
 level: B1
-sequence: 65
+sequence: 61
 slug: checkpoint-participles
 version: '3.0'
 title: "Контрольна робота 7"
 subtitle: "Перевірка знань: дієприкметники, короткі прикметники, дієприслівники, освіта"
 focus: review
 pedagogy: PPP
-phase: "B1.7 [Participles & Gerunds]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
-- "Learner can demonstrate mastery of active and passive participle formation,
-  including suffix selection and consonant alternations"
-- "Learner can correctly punctuate sentences with дієприкметникові and
-  дієприслівникові звороти, including exception cases"
-- "Learner can distinguish natural Ukrainian participles from Russian calques
-  and apply appropriate replacement strategies"
-- "Learner can form and use both imperfective and perfective gerunds,
-  choosing correctly based on temporal logic (одночасність vs різночасність)"
-- "Learner can apply all Phase 7 grammar in academic and literary contexts"
+  - "Learner can demonstrate mastery of active and passive participle formation, including
+    suffix selection and consonant alternations"
+  - "Learner can correctly punctuate sentences with дієприкметникові and дієприслівникові
+    звороти, including exception cases"
+  - "Learner can distinguish natural Ukrainian participles from Russian calques and
+    apply appropriate replacement strategies"
+  - "Learner can form and use both imperfective and perfective gerunds, choosing correctly
+    based on temporal logic (одночасність vs різночасність)"
+  - "Learner can apply all Phase 7 grammar in academic and literary contexts"
 dialogue_situations:
-- setting: 'Literary analysis seminar — students discuss a Шевченко poem using participles
-    and gerunds: Написаний Шевченком вірш (m, poem)... Читаючи ці рядки (pl, lines),
-    розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим.'
-  speakers:
-  - Викладач літератури
-  - Студенти
-  motivation: 'Consolidation: active/passive participles, imperfective/perfective
-    gerunds in literary analysis'
+  - setting: 'Literary analysis seminar — students discuss a Шевченко poem using participles
+      and gerunds: Написаний Шевченком вірш (m, poem)... Читаючи ці рядки (pl, lines),
+      розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим.'
+    speakers:
+      - Викладач літератури
+      - Студенти
+    motivation: 'Consolidation: active/passive participles, imperfective/perfective
+      gerunds in literary analysis'
 content_outline:
-- section: "Вступ: як працювати з контрольною"
-  words: 350
-  points:
-  - "Overview: this checkpoint tests everything from M57-M64 (Phase 7):
-    активні дієприкметники (M57), пасивні дієприкметники (M58),
-    дієприкметниковий зворот (M59), короткі прикметники (M60),
-    дієприслівники недоконаного виду (M61), дієприслівники доконаного
-    виду (M62), дієприслівниковий зворот (M63), освіта (M64)."
-  - "Self-assessment framework: after each block, rate confidence:
-    впевнено / потребую повторення / не розумію."
-- section: "Блок 1: Дієприкметники"
-  words: 600
-  points:
-  - "Formation exercise: form active and passive participles from 12 verbs.
-    Learners must choose correct suffix and apply consonant alternations:
-    квітнути → ?, носити → ?, прочитати → ?, зів'яти → ?,
-    побачити → ?, мити → ?, закрутити → ?, робити → ?"
-  - "Classification: given 10 participles, classify as активний теперішній,
-    активний минулий, or пасивний. Then determine whether each active
-    present participle is natural Ukrainian or a Russian calque."
-  - "Russian calque editing: rewrite 6 phrases replacing unnatural
-    participles with natural Ukrainian equivalents (descriptions,
-    adjectives, descriptive clauses)."
-- section: "Блок 2: Звороти і пунктуація"
-  words: 600
-  points:
-  - "Punctuation exercise: 10 sentences with дієприкметникові and
-    дієприслівникові звороти — learners place all commas correctly.
-    Include edge cases: preposed participle phrases, pronoun referents,
-    phraseological gerund expressions."
-  - "Classification: identify whether each phrase is дієприкметниковий
-    (означення) or дієприслівниковий (обставина) and state the rule
-    that determines comma placement."
-  - "Transformation: convert 6 participle/gerund phrases to subordinate
-    clauses with який/коли/після того як, and vice versa."
-- section: "Блок 3: Дієприслівники"
-  words: 550
-  points:
-  - "Formation: form imperfective and perfective gerunds from 10 verbs.
-    Include reflexive verbs. Learners must choose correct suffix
-    (-учи/-ючи/-ачи/-ячи vs -вши/-ши)."
-  - "Temporal logic: given 8 sentence contexts, learners choose
-    imperfective (одночасність) or perfective (різночасність) gerund."
-  - "Logical subject check: identify and fix 4 dangling gerund errors."
-- section: "Блок 4: Короткі прикметники"
-  words: 400
-  points:
-  - "Identification: find short-form adjectives in 5 literary/folk excerpts
-    and give their full forms."
-  - "Modern usage: complete 6 sentences with correct short-form adjective
-    (потрібен/певен/годен/ладен/варт/рад) in predicative position."
-- section: "Блок 5: Освіта та академічний стиль"
-  words: 550
-  points:
-  - "Academic vocabulary: match 10 academic terms to definitions."
-  - "Register transformation: rewrite 5 informal sentences about
-    university life in academic register using participle phrases
-    and gerund constructions."
-  - "Reading comprehension: a short academic passage using Phase 7 grammar.
-    Questions test language: identify all дієприкметники, звороти, стиль."
-- section: "Блок 6: Інтегроване завдання"
-  words: 550
-  points:
-  - "Cloze passage: an academic text with 10 blanks. Learners fill in
-    correct participle/gerund forms, choosing between active/passive,
-    imperfective/perfective, with correct agreement and punctuation."
-  - "Production: write a short paragraph (5-7 sentences) describing
-    a research project or study experience, using at least 2 participle
-    phrases, 2 gerund phrases, and 1 short-form adjective."
-- section: "Підсумок та самооцінка"
-  words: 400
-  points:
-  - "Self-assessment checklist:
-    Дієприкметники: Чи правильно я утворюю активні й пасивні форми?
-    Звороти: Чи правильно я ставлю розділові знаки?
-    Дієприслівники: Чи розрізняю одночасність і різночасність?
-    Короткі прикметники: Чи вживаю потрібен/певен/годен правильно?
-    Освіта: Чи можу я говорити про навчання науковим стилем?"
-  - "Recommendations: if any block scores below 70%, return to the
-    corresponding module. Phase 8 (Complex Syntax) builds on this
-    foundation to construct multi-clause sentences."
+  - section: "Вступ: як працювати з контрольною"
+    words: 350
+    points:
+      - "Overview: this checkpoint tests everything from M57-M64 (Phase 7): активні
+        дієприкметники (M57), пасивні дієприкметники (M58), дієприкметниковий зворот
+        (M59), короткі прикметники (M60), дієприслівники недоконаного виду (M61),
+        дієприслівники доконаного виду (M62), дієприслівниковий зворот (M63), освіта
+        (M64)."
+      - "Self-assessment framework: after each block, rate confidence: впевнено /
+        потребую повторення / не розумію."
+  - section: "Блок 1: Дієприкметники"
+    words: 600
+    points:
+      - "Formation exercise: form active and passive participles from 12 verbs. Learners
+        must choose correct suffix and apply consonant alternations: квітнути → ?,
+        носити → ?, прочитати → ?, зів'яти → ?, побачити → ?, мити → ?, закрутити
+        → ?, робити → ?"
+      - "Classification: given 10 participles, classify as активний теперішній, активний
+        минулий, or пасивний. Then determine whether each active present participle
+        is natural Ukrainian or a Russian calque."
+      - "Russian calque editing: rewrite 6 phrases replacing unnatural participles
+        with natural Ukrainian equivalents (descriptions, adjectives, descriptive
+        clauses)."
+  - section: "Блок 2: Звороти і пунктуація"
+    words: 600
+    points:
+      - "Punctuation exercise: 10 sentences with дієприкметникові and дієприслівникові
+        звороти — learners place all commas correctly. Include edge cases: preposed
+        participle phrases, pronoun referents, phraseological gerund expressions."
+      - "Classification: identify whether each phrase is дієприкметниковий (означення)
+        or дієприслівниковий (обставина) and state the rule that determines comma
+        placement."
+      - "Transformation: convert 6 participle/gerund phrases to subordinate clauses
+        with який/коли/після того як, and vice versa."
+  - section: "Блок 3: Дієприслівники"
+    words: 550
+    points:
+      - "Formation: form imperfective and perfective gerunds from 10 verbs. Include
+        reflexive verbs. Learners must choose correct suffix (-учи/-ючи/-ачи/-ячи
+        vs -вши/-ши)."
+      - "Temporal logic: given 8 sentence contexts, learners choose imperfective (одночасність)
+        or perfective (різночасність) gerund."
+      - "Logical subject check: identify and fix 4 dangling gerund errors."
+  - section: "Блок 4: Короткі прикметники"
+    words: 400
+    points:
+      - "Identification: find short-form adjectives in 5 literary/folk excerpts and
+        give their full forms."
+      - "Modern usage: complete 6 sentences with correct short-form adjective (потрібен/певен/годен/ладен/варт/рад)
+        in predicative position."
+  - section: "Блок 5: Освіта та академічний стиль"
+    words: 550
+    points:
+      - "Academic vocabulary: match 10 academic terms to definitions."
+      - "Register transformation: rewrite 5 informal sentences about university life
+        in academic register using participle phrases and gerund constructions."
+      - "Reading comprehension: a short academic passage using Phase 7 grammar. Questions
+        test language: identify all дієприкметники, звороти, стиль."
+  - section: "Блок 6: Інтегроване завдання"
+    words: 550
+    points:
+      - "Cloze passage: an academic text with 10 blanks. Learners fill in correct
+        participle/gerund forms, choosing between active/passive, imperfective/perfective,
+        with correct agreement and punctuation."
+      - "Production: write a short paragraph (5-7 sentences) describing a research
+        project or study experience, using at least 2 participle phrases, 2 gerund
+        phrases, and 1 short-form adjective."
+  - section: "Підсумок та самооцінка"
+    words: 400
+    points:
+      - "Self-assessment checklist: Дієприкметники: Чи правильно я утворюю активні
+        й пасивні форми? Звороти: Чи правильно я ставлю розділові знаки? Дієприслівники:
+        Чи розрізняю одночасність і різночасність? Короткі прикметники: Чи вживаю
+        потрібен/певен/годен правильно? Освіта: Чи можу я говорити про навчання науковим
+        стилем?"
+      - "Recommendations: if any block scores below 70%, return to the corresponding
+        module. Phase 8 (Complex Syntax) builds on this foundation to construct multi-clause
+        sentences."
 vocabulary_hints:
   required:
-  - "контрольна робота (test/assessment)"
-  - "дієприкметник (participle)"
-  - "дієприслівник (gerund/adverbial participle)"
-  - "дієприкметниковий зворот (participle phrase)"
-  - "дієприслівниковий зворот (gerund phrase)"
-  - "короткий прикметник (short-form adjective)"
-  - "одночасність (simultaneity)"
-  - "різночасність (temporal non-simultaneity)"
+    - "контрольна робота (test/assessment)"
+    - "дієприкметник (participle)"
+    - "дієприслівник (gerund/adverbial participle)"
+    - "дієприкметниковий зворот (participle phrase)"
+    - "дієприслівниковий зворот (gerund phrase)"
+    - "короткий прикметник (short-form adjective)"
+    - "одночасність (simultaneity)"
+    - "різночасність (temporal non-simultaneity)"
   recommended:
-  - "самооцінка (self-assessment)"
-  - "повторення (review)"
-  - "перевірка (check/verification)"
-  - "впевнено (confidently)"
+    - "самооцінка (self-assessment)"
+    - "повторення (review)"
+    - "перевірка (check/verification)"
+    - "впевнено (confidently)"
 activity_hints:
-- type: quiz
-  focus: "Mixed: participle classification, gerund вид choice, comma rules, calque identification"
-  items: 12
-- type: fill-in
-  focus: "Form participles and gerunds with correct suffixes and alternations"
-  items: 10
-- type: error-correction
-  focus: "Fix errors: Russian calques, dangling gerunds, wrong commas, wrong вид"
-  items: 8
-- type: match-up
-  focus: "Match Phase 7 terms to definitions and examples"
-  items: 10
-- type: mark-the-words
-  focus: "In a passage, identify all дієприкметники, дієприслівники, and короткі прикметники"
-  items: 8
-- type: free-write
-  focus: "Write an academic paragraph using Phase 7 grammar: participle phrases, gerund phrases, short adjectives"
-  items: 6
+  - type: quiz
+    focus: "Mixed: participle classification, gerund вид choice, comma rules, calque
+      identification"
+    items: 12
+  - type: fill-in
+    focus: "Form participles and gerunds with correct suffixes and alternations"
+    items: 10
+  - type: error-correction
+    focus: "Fix errors: Russian calques, dangling gerunds, wrong commas, wrong вид"
+    items: 8
+  - type: match-up
+    focus: "Match Phase 7 terms to definitions and examples"
+    items: 10
+  - type: mark-the-words
+    focus: "In a passage, identify all дієприкметники, дієприслівники, and короткі
+      прикметники"
+    items: 8
+  - type: free-write
+    focus: "Write an academic paragraph using Phase 7 grammar: participle phrases,
+      gerund phrases, short adjectives"
+    items: 6
 connects_to:
-- "b1-057 to b1-064 (all Phase 7 modules)"
-- "b1-066 (complex-compound — first module of Phase 8)"
+  - "b1-057 to b1-064 (all Phase 7 modules)"
+  - "b1-066 (complex-compound — first module of Phase 8)"
 prerequisites:
-- "b1-064 (Education and university — all Phase 7 complete)"
+  - "b1-064 (Education and university — all Phase 7 complete)"
 grammar:
-- "Review: active participles (-уч-/-юч-, -ач-/-яч-, -л-) and Russian calque avoidance"
-- "Review: passive participles (-н-, -ен-/-єн-, -т-) with consonant alternations"
-- "Review: дієприкметниковий зворот punctuation"
-- "Review: короткі прикметники (поетичні and сучасні предикативні)"
-- "Review: дієприслівники (недоконаний -учи/-ючи, доконаний -вши/-ши)"
-- "Review: дієприслівниковий зворот punctuation and exceptions"
-- "Integration: Phase 7 grammar in academic register"
+  - "Review: active participles (-уч-/-юч-, -ач-/-яч-, -л-) and Russian calque avoidance"
+  - "Review: passive participles (-н-, -ен-/-єн-, -т-) with consonant alternations"
+  - "Review: дієприкметниковий зворот punctuation"
+  - "Review: короткі прикметники (поетичні and сучасні предикативні)"
+  - "Review: дієприслівники (недоконаний -учи/-ючи, доконаний -вши/-ши)"
+  - "Review: дієприслівниковий зворот punctuation and exceptions"
+  - "Integration: Phase 7 grammar in academic register"
 register: науково-навчальний
 references:
-- title: "All Phase 7 module references"
-  notes: "This checkpoint draws on textbook sources cited in M57-M64."
+  - title: "All Phase 7 module references"
+    notes: "This checkpoint draws on textbook sources cited in M57-M64."

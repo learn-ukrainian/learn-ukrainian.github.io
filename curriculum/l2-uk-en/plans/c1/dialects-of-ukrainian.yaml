@@ -4,13 +4,15 @@ sequence: 31
 slug: dialects-of-ukrainian
 version: '1.1'
 title: "Діалекти української мови: Територіальні різновиди та мовна стійкість"
-subtitle: "Dialects of Ukrainian"
+subtitle: "Діалекти української мови"
 focus: cultural
 pedagogy: seminar
 word_target: 4000
 objectives:
-  - "Розуміти структуру діалектного членування української мови (наріччя, діалекти, говори)."
-  - "Визначати фонетичні, морфологічні та лексичні особливості північного, південно-західного та південно-східного наріч."
+  - "Розуміти структуру діалектного членування української мови (наріччя, діалекти,
+    говори)."
+  - "Визначати фонетичні, морфологічні та лексичні особливості північного, південно-західного
+    та південно-східного наріч."
   - "Аналізувати роль діалектів у збагаченні літературної мови та художнього стилю."
   - "Ознайомитися з працями видатних діалектологів (І. Матвіяс, Й. Дзендзелівський)."
 
@@ -18,24 +20,31 @@ reading_situations:
   - source_type: "наукова стаття"
     topic: "Атлас української мови: історія створення та методологія картографування."
     key_elements: ["ізоглоса", "ареал", "континіум"]
-    motivation: "Ознайомлення з академічним інструментарієм дослідження територіальних діалектів."
+    motivation: "Ознайомлення з академічним інструментарієм дослідження територіальних
+      діалектів."
   - source_type: "художній уривок"
     topic: "Гуцульський говір у творах Михайла Коцюбинського ('Тіні забутих предків')."
     key_elements: ["діалектизм", "архаїзм", "екзотизм"]
-    motivation: "Аналіз стилістичного використання діалектної лексики для створення колориту."
+    motivation: "Аналіз стилістичного використання діалектної лексики для створення
+      колориту."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Виступ філолога про загрозу нівелювання діалектів під впливом урбанізації та засобів масової інформації."
+    setting: "Виступ філолога про загрозу нівелювання діалектів під впливом урбанізації
+      та засобів масової інформації."
     focus_points: ["архаїчні риси", "мовна інтерференція", "регіональна ідентичність"]
     motivation: "Обговорення сучасної долі територіальних говорів."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Чи є діалекти загрозою для літературної мови, чи її невичерпним джерелом? Обґрунтуйте свою думку на прикладі одного з наріч."
-    requirements: ["мінімум 350 слів", "використання термінів: 'етнолект', 'мовна норма', 'субстрат'", "посилання на культурний контекст"]
+    prompt: "Чи є діалекти загрозою для літературної мови, чи її невичерпним джерелом?
+      Обґрунтуйте свою думку на прикладі одного з наріч."
+    requirements: ["мінімум 350 слів", "використання термінів: 'етнолект', 'мовна
+          норма', 'субстрат'", "посилання на культурний контекст"]
     motivation: "Розвиток навичок критичного аналізу соціолінгвістичних процесів."
-    model_answer: "Текст повинен демонструвати розуміння діалекту як органічної складової національної мови. Важливо згадати про те, як діалектизми збагачують синоніміку та емоційну палітру мовлення."
+    model_answer: "Текст повинен демонструвати розуміння діалекту як органічної складової
+      національної мови. Важливо згадати про те, як діалектизми збагачують синоніміку
+      та емоційну палітру мовлення."
 
 discussion_topics:
   - context: "Використання діалектів у сучасному медіапросторі: від подкастів до реклами."
@@ -60,7 +69,8 @@ content_outline:
     words: 1000
     subsections:
       - "Поліські говори: архаїзми у фонетиці та лексиці (дифтонги, наголос)"
-      - "Південно-західне наріччя: специфіка галицьких, волинських та закарпатських говорів"
+      - "Південно-західне наріччя: специфіка галицьких, волинських та закарпатських
+        говорів"
       - "Вплив іншомовних запозичень (германізми, мадяризми) на західні діалекти"
     key_concepts:
       - "дифтонг"
@@ -106,15 +116,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze dialect features in Kotsyubynsky's 'Shadows of Forgotten Ancestors' — identify Hutsul lexical, phonetic, and morphological markers."
+    description: "Analyze dialect features in Kotsyubynsky's 'Shadows of Forgotten
+      Ancestors' — identify Hutsul lexical, phonetic, and morphological markers."
   - type: match-up
-    description: "Match Ukrainian dialect groups (північне, південно-західне, південно-східне наріччя) with their characteristic features and geographic areas."
+    description: "Match Ukrainian dialect groups (північне, південно-західне, південно-східне
+      наріччя) with their characteristic features and geographic areas."
   - type: select
-    description: "Identify the dialect origin of specific linguistic features — distinguish between Polisian archaic forms, Galician influences, and Steppe innovations."
+    description: "Identify the dialect origin of specific linguistic features — distinguish
+      between Polisian archaic forms, Galician influences, and Steppe innovations."
   - type: error-correction
-    description: "Identify dialectal forms in a text and provide their literary Ukrainian equivalents with linguistic explanation."
+    description: "Identify dialectal forms in a text and provide their literary Ukrainian
+      equivalents with linguistic explanation."
   - type: reading
-    description: "Read a passage containing dialectal features and answer comprehension questions about the linguistic phenomena present."
+    description: "Read a passage containing dialectal features and answer comprehension
+      questions about the linguistic phenomena present."
 
 activities:
   types_required:
@@ -134,3 +149,4 @@ references:
 connects_to:
   previous: "zahalne-movoznavstvo"
   next: "surzhyk"
+phase: C1.2 [Professional & Social Context]

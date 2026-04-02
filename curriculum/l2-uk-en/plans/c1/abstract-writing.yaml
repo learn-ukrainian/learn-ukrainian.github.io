@@ -4,7 +4,7 @@ sequence: 13
 slug: abstract-writing
 version: '1.1'
 title: "Написання анотацій та тез"
-subtitle: "Abstract and Thesis Writing"
+subtitle: "Написання анотацій та тез"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -22,20 +22,28 @@ reading_situations:
   - source_type: "тези конференції"
     topic: "Розвиток відновлюваної енергетики в Карпатському регіоні."
     key_elements: ["постановка проблеми", "аналіз останніх досліджень", "висновки"]
-    motivation: "Вивчення специфіки стислого викладу наукових ідей для участі у фахових заходах."
+    motivation: "Вивчення специфіки стислого викладу наукових ідей для участі у фахових
+      заходах."
 
 listening_situations:
   - media_type: "аудіо"
-    setting: "Інструктаж для молодих науковців щодо підготовки матеріалів до міжнародної конференції в Україні."
-    focus_points: ["технічні вимоги до оформлення", "типові помилки в анотаціях", "вибір ключових слів"]
-    motivation: "Розвиток вміння сприймати на слух та фіксувати формальні вимоги до наукових текстів."
+    setting: "Інструктаж для молодих науковців щодо підготовки матеріалів до міжнародної
+      конференції в Україні."
+    focus_points: ["технічні вимоги до оформлення", "типові помилки в анотаціях",
+      "вибір ключових слів"]
+    motivation: "Розвиток вміння сприймати на слух та фіксувати формальні вимоги до
+      наукових текстів."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Напишіть анотацію (100-150 слів) до уявної статті про роль Лесі Українки в європейському модернізмі. Використайте стандартні вступні конструкції."
-    requirements: ["наявність усіх структурних частин анотації", "вживання наукових кліше", "стислість"]
-    motivation: "Закріплення навичок лаконічного та логічного викладу основних ідей дослідження."
-    model_answer: "Анотація повинна починатися з фрази 'У статті розкрито...', містити опис об'єкта та завершуватися висновком про наукову новизну."
+    prompt: "Напишіть анотацію (100-150 слів) до уявної статті про роль Лесі Українки
+      в європейському модернізмі. Використайте стандартні вступні конструкції."
+    requirements: ["наявність усіх структурних частин анотації", "вживання наукових
+          кліше", "стислість"]
+    motivation: "Закріплення навичок лаконічного та логічного викладу основних ідей
+      дослідження."
+    model_answer: "Анотація повинна починатися з фрази 'У статті розкрито...', містити
+      опис об'єкта та завершуватися висновком про наукову новизну."
 
 content_outline:
   - section: "Жанрові особливості анотації"
@@ -98,15 +106,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate a Ukrainian conference abstract — assess completeness of structural elements (мета, методи, новизна, практичне значення)."
+    description: "Evaluate a Ukrainian conference abstract — assess completeness of
+      structural elements (мета, методи, новизна, практичне значення)."
   - type: select
-    description: "Choose the most appropriate academic cliché for describing research purpose, novelty, and results in an abstract."
+    description: "Choose the most appropriate academic cliché for describing research
+      purpose, novelty, and results in an abstract."
   - type: fill-in
-    description: "Complete abstract sentences with standardized Ukrainian academic formulas (У статті розкрито..., встановлено що..., обґрунтовано доцільність...)."
+    description: "Complete abstract sentences with standardized Ukrainian academic
+      formulas (У статті розкрито..., встановлено що..., обґрунтовано доцільність...)."
   - type: match-up
-    description: "Match abstract components (мета, об'єкт, предмет, новизна) with example formulations."
+    description: "Match abstract components (мета, об'єкт, предмет, новизна) with
+      example formulations."
   - type: error-correction
-    description: "Fix wordiness, tautology, and non-standard formulations in a draft Ukrainian abstract."
+    description: "Fix wordiness, tautology, and non-standard formulations in a draft
+      Ukrainian abstract."
 
 activities:
   types_required:
@@ -126,3 +139,4 @@ references:
 connects_to:
   previous: "research-article"
   next: "literature-review"
+phase: C1.1 [Academic Foundation]

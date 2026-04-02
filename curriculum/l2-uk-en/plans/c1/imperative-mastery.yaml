@@ -4,38 +4,50 @@ sequence: 38
 slug: imperative-mastery
 version: '1.1'
 title: "Майстерність імператива: Тонкощі спонукання та етикет"
-subtitle: "Imperative Mastery"
+subtitle: "Майстерність наказового способу"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Досконало опанувати систему творення форм наказового способу (1-ша, 2-га та 3-тя особи)."
-  - "Навчитися використовувати альтернативні засоби вираження спонукання (інфінітив, майбутній час, модальні слова)."
-  - "Розуміти прагматичні відтінки різних форм наказу залежно від соціальної дистанції та контексту."
-  - "Застосовувати стратегії ввічливого прохання та пом'якшеного наказу в професійному середовищі."
+  - "Досконало опанувати систему творення форм наказового способу (1-ша, 2-га та 3-тя
+    особи)."
+  - "Навчитися використовувати альтернативні засоби вираження спонукання (інфінітив,
+    майбутній час, модальні слова)."
+  - "Розуміти прагматичні відтінки різних форм наказу залежно від соціальної дистанції
+    та контексту."
+  - "Застосовувати стратегії ввічливого прохання та пом'якшеного наказу в професійному
+    середовищі."
 
 reading_situations:
   - source_type: "художній уривок"
-    topic: "Аналіз діалогів у творах Івана Франка чи Лесі Українки: як соціальний статус персонажів впливає на вибір форми наказового способу."
+    topic: "Аналіз діалогів у творах Івана Франка чи Лесі Українки: як соціальний
+      статус персонажів впливає на вибір форми наказового способу."
     key_elements: ["модальність", "перформатив", "кличний відмінок"]
     motivation: "Розуміння історичної тяглості етикетних норм спонукання."
   - source_type: "рекламний маніфест"
-    topic: "Імператив як інструмент заклику до дії (call to action) у сучасних маркетингових текстах."
+    topic: "Імператив як інструмент заклику до дії (call to action) у сучасних маркетингових
+      текстах."
     key_elements: ["сугестія", "прямий наказ", "інклюзивна форма (на -мо)"]
     motivation: "Вивчення маніпулятивного потенціалу граматичних форм."
 
 listening_situations:
   - media_type: "аудіо"
-    setting: "Записи виступів політичних лідерів під час кризових ситуацій: як балансувати між рішучістю та повагою через форми спонукання."
+    setting: "Записи виступів політичних лідерів під час кризових ситуацій: як балансувати
+      між рішучістю та повагою через форми спонукання."
     focus_points: ["інтонація", "частки 'хай', 'нехай'", "майбутній час як наказ"]
     motivation: "Аналіз риторичних стратегій лідерства."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Проаналізуйте еволюцію форм ввічливості в українській мові. Як змінилося сприйняття наказових конструкцій у ХХІ столітті у зв'язку з демократизацією суспільства?"
-    requirements: ["мінімум 300 слів", "використання лінгвістичних термінів", "порівняння українських та англійських стратегій ввічливості"]
+    prompt: "Проаналізуйте еволюцію форм ввічливості в українській мові. Як змінилося
+      сприйняття наказових конструкцій у ХХІ столітті у зв'язку з демократизацією
+      суспільства?"
+    requirements: ["мінімум 300 слів", "використання лінгвістичних термінів", "порівняння
+          українських та англійських стратегій ввічливості"]
     motivation: "Розвиток соціолінгвістичної компетенції."
-    model_answer: "Текст має містити роздуми про перехід від вертикальних до горизонтальних моделей комунікації, роль часток 'будь ласка', 'прошу' та використання форм 1-ї особи множини ('ходімо', 'працюймо')."
+    model_answer: "Текст має містити роздуми про перехід від вертикальних до горизонтальних
+      моделей комунікації, роль часток 'будь ласка', 'прошу' та використання форм
+      1-ї особи множини ('ходімо', 'працюймо')."
 
 discussion_topics:
   - context: "Цифрова етикетка: чи сприймається імператив у месенджерах як агресія?"
@@ -106,15 +118,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix incorrect imperative forms — wrong stem alternations, misplaced particles (би/б), inappropriate register for the social context."
+    description: "Fix incorrect imperative forms — wrong stem alternations, misplaced
+      particles (би/б), inappropriate register for the social context."
   - type: critical-analysis
-    description: "Analyze imperative usage in political speeches and literary dialogues — evaluate pragmatic effects of different command strategies."
+    description: "Analyze imperative usage in political speeches and literary dialogues
+      — evaluate pragmatic effects of different command strategies."
   - type: select
-    description: "Choose the most appropriate form of encouragement for different social contexts — direct command, polite request, inclusive invitation (-мо)."
+    description: "Choose the most appropriate form of encouragement for different
+      social contexts — direct command, polite request, inclusive invitation (-мо)."
   - type: match-up
-    description: "Match imperative alternatives (наказовий спосіб, інфінітив, перформатив, майбутній час) with their pragmatic functions and register."
+    description: "Match imperative alternatives (наказовий спосіб, інфінітив, перформатив,
+      майбутній час) with their pragmatic functions and register."
   - type: fill-in
-    description: "Complete sentences with correct imperative forms of irregular verbs and appropriate politeness particles."
+    description: "Complete sentences with correct imperative forms of irregular verbs
+      and appropriate politeness particles."
 
 activities:
   types_required:

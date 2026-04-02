@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-food-shopping (A1)
 
-Generated: 2026-03-31 11:48
+Generated: 2026-04-01 13:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:48
 | vocab | complete | 2026-03-30 23:28:09 |
 | enrich | complete | 2026-03-30 23:22:09 |
 | verify | complete | 2026-03-30 23:22:09 |
-| review | complete | 2026-03-30 23:41:45 |
-| stress | complete | 2026-03-31 09:48:33 |
-| publish | complete | 2026-03-31 09:48:34 |
+| review | complete | 2026-04-01 11:44:16 |
+| stress | complete | 2026-04-01 11:44:16 |
+| publish | complete | 2026-04-01 11:44:22 |
 
 ## Reviews
 
@@ -52,6 +52,9 @@ Generated: 2026-03-31 11:48
 | review | claude-tools (claude-opus-4-6) | 132s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 141s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 194s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

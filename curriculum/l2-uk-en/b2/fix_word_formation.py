@@ -1,7 +1,6 @@
-import os
 
 path = '/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/word-formation-person-suffixes.md'
-with open(path, 'r', encoding='utf-8') as f:
+with open(path, encoding='utf-8') as f:
     content = f.read()
 
 replacements = [

@@ -1,7 +1,7 @@
 # Audit Report: M35 — checkpoint-places.md
 **Level:** A1 | **Module:** M35 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:43:37
+**Generated:** 2026-04-02 20:29:55
 
 ## Configuration
 **Type:** A1
@@ -36,32 +36,28 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[GRAMMAR]** Instrumental case used at A1: 'за рогом'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[GRAMMAR]** Instrumental case used at A1: 'за рогом'
-  - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[LEVEL_RESTRICTION]** Activity 'error-correction' not allowed at A1
-  - FIX: Use level-appropriate activities. 'error-correction' is introduced at A2+.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'can you...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2085/1200 (raw: 2632)
+- **Words:** ✅ 1541/1200 (raw: 1581)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 48/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.1% (target 20-35% (M35))
+- **Immersion:** 🇺🇦 31.4% (target 20-35% (M35))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -69,9 +65,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Що ми зна́ємо? (What Do We Know?)** | ✅ | 220 | Included in Core |
+| **Intro/Narrative** | ✅ | 220 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Грама́тика (Grammar Summary)** | ✅ | 312 | Included in Core |
-| **Діало́г (Connected Dialogue)** | ✅ | 427 | Included in Core |
-| **Підсумок — Summary** | ✅ | 707 | Included in Core |
+| **Діало́г (Connected Dialogue)** | ✅ | 413 | Included in Core |
+| **Підсумок — Summary** | ✅ | 185 | Included in Core |

@@ -1,7 +1,6 @@
-import re
 
 filepath = 'curriculum/l2-uk-en/b2/word-formation-adjective-formation.md'
-with open(filepath, 'r', encoding='utf-8') as f:
+with open(filepath, encoding='utf-8') as f:
     text = f.read()
 
 # Remove English translations in parentheses

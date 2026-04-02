@@ -13,17 +13,8 @@ Covers:
 10. scripts/lexical_sandbox.py — VESUM word bank
 """
 
-import io
-import json
-import os
-import re
 import sys
-import tempfile
-from dataclasses import dataclass, field
 from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
-
-import pytest
 
 # Add scripts/ to path
 SCRIPTS_DIR = str(Path(__file__).parent.parent / "scripts")
@@ -1565,44 +1556,44 @@ class TestExtractCase:
 
 class TestFormAllowed:
     def test_no_verbs(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint(no_verbs=True)
         assert not _form_allowed("verb:imperf:pres:s1", c)
 
     def test_no_imperatives(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint(no_imperatives=True)
         assert not _form_allowed("verb:imperf:impr:s2", c)
         assert _form_allowed("verb:imperf:pres:s1", c)
 
     def test_present_only(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint(present_only=True)
         assert not _form_allowed("verb:imperf:past:m", c)
         assert not _form_allowed("verb:perf:futr:s1", c)
         assert _form_allowed("verb:imperf:pres:s1", c)
 
     def test_nominative_only(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint(nominative_only=True)
         assert _form_allowed("noun:m:v_naz", c)
         assert _form_allowed("noun:m:v_kly", c)
         assert not _form_allowed("noun:m:v_rod", c)
 
     def test_no_accusative(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint(no_accusative=True)
         assert not _form_allowed("noun:f:v_zna", c)
         assert _form_allowed("noun:f:v_naz", c)
 
     def test_unconstrained(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         c = GrammarConstraint()
         assert _form_allowed("noun:m:v_rod", c)
         assert _form_allowed("verb:imperf:past:m", c)
@@ -1665,8 +1656,8 @@ class TestSelectPrimaryMatch:
 
 class TestDescribeConstraints:
     def test_all_constraints(self):
-        from lexical_sandbox import _describe_constraints
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _describe_constraints
         c = GrammarConstraint(no_verbs=True, no_imperatives=True, nominative_only=True,
                               no_accusative=True, present_only=True)
         desc = _describe_constraints(c)
@@ -1674,8 +1665,8 @@ class TestDescribeConstraints:
         assert "ALL verbs" in desc
 
     def test_no_constraints(self):
-        from lexical_sandbox import _describe_constraints
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _describe_constraints
         c = GrammarConstraint()
         assert len(_describe_constraints(c)) == 0
 

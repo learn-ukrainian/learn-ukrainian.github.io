@@ -6,3 +6,48 @@
 {"slug": "alternation-vowels", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-03-24T23:03:13.198489+00:00"}
 {"slug": "alternation-vowels", "error_type": "TOXIC", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-03-24T23:05:26.650109+00:00"}
 {"slug": "alternation-vowels", "error_type": "WORD_COUNT", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-03-24T23:08:56.288603+00:00"}
+{"slug": "metalanguage-phonetics", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-01T20:29:38.152234+00:00"}
+{"slug": "metalanguage-morphology", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-01T21:53:40.411382+00:00"}
+{"slug": "metalanguage-morphology", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-01T21:59:18.358765+00:00"}
+{"slug": "metalanguage-syntax-cases", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-01T22:10:42.302944+00:00"}
+{"slug": "b1-baseline-past-present", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-01T22:30:37.168883+00:00"}
+{"slug": "b1-baseline-future-aspect", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-01T22:41:33.454329+00:00"}
+{"slug": "people-and-relationships", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-01T23:14:48.887537+00:00"}
+{"slug": "people-and-relationships", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-01T23:20:38.922478+00:00"}
+{"slug": "people-and-relationships", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-01T23:20:43.623411+00:00"}
+{"slug": "checkpoint-b1-foundation", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T00:01:17.092615+00:00"}
+{"slug": "alternation-vowels", "error_type": "TOXIC, STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T00:30:49.888123+00:00"}
+{"slug": "alternation-vowels", "error_type": "TOXIC, STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T00:55:21.091144+00:00"}
+{"slug": "alternation-vowels", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T00:55:28.597550+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T01:16:41.526585+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T01:38:40.794551+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T01:56:24.626150+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T01:56:32.310988+00:00"}
+{"slug": "simplification-consonants", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T02:06:58.922862+00:00"}
+{"slug": "simplification-consonants", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T02:25:59.222153+00:00"}
+{"slug": "simplification-consonants", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T02:26:04.214608+00:00"}
+{"slug": "noun-subclasses-masculine", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T02:41:09.277070+00:00"}
+{"slug": "noun-subclasses-hissing", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T03:01:18.250506+00:00"}
+{"slug": "noun-subclasses-feminine", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T03:21:00.329830+00:00"}
+{"slug": "pluralia-tantum", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T03:39:51.814522+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T04:19:19.992177+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T04:27:25.479089+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T04:27:33.505630+00:00"}
+{"slug": "checkpoint-morphophonemics", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T04:49:25.203111+00:00"}
+{"slug": "checkpoint-morphophonemics", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T04:56:11.496521+00:00"}
+{"slug": "conditionals-real", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T05:09:25.659323+00:00"}
+{"slug": "conditionals-unreal", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T05:39:07.823344+00:00"}
+{"slug": "imperative-nuances", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T05:53:41.610634+00:00"}
+{"slug": "verbal-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T06:18:08.632277+00:00"}
+{"slug": "verbal-nouns", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T06:28:12.148695+00:00"}
+{"slug": "verbal-nouns", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T06:28:17.539836+00:00"}
+{"slug": "reflexive-verbs-nuances", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T06:49:55.457637+00:00"}
+{"slug": "passive-voice-intro", "error_type": "STRUCTURE, WORD_COUNT", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T08:07:42.816077+00:00"}
+{"slug": "b1-baseline-past-present", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T11:29:32.776292+00:00"}
+{"slug": "b1-baseline-future-aspect", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T16:10:59.435757+00:00"}
+{"slug": "people-and-relationships", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T16:37:20.905531+00:00"}
+{"slug": "people-and-relationships", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T17:19:45.662924+00:00"}
+{"slug": "alternation-vowels", "error_type": "STRUCTURE, TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T17:54:38.781974+00:00"}
+{"slug": "alternation-vowels", "error_type": "STRUCTURE, TOXIC", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T18:08:18.656998+00:00"}
+{"slug": "people-and-relationships", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T18:41:07.456938+00:00"}
+{"slug": "people-and-relationships", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T18:48:31.632663+00:00"}

@@ -1,0 +1,211 @@
+vocabulary:
+- word: хай
+  translation: let (particle for 3rd person commands)
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: неха́й
+  translation: let (slightly more formal variant of хай)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: будь ла́ска
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прошу́
+  translation: I request / please
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дава́й / дава́йте
+  translation: let's (invitation to joint action)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: до́звіл
+  translation: permission
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: спонука́ння
+  translation: encouragement / prompting to action
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: запере́чення
+  translation: negation
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: м'яки́й знак
+  translation: soft sign
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ході́мо
+  translation: let's go (correct Ukrainian form)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: обговорі́мо
+  translation: let's discuss
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: реце́пт
+  translation: recipe
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: інстру́кція
+  translation: instruction manual
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: нарі́зати
+  translation: to cut up
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дода́ти
+  translation: to add
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: переміша́ти
+  translation: to mix / stir
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вимика́ти
+  translation: to turn off
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: шанува́ти
+  translation: to honor
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: єдна́тися
+  translation: to unite
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: трима́ймося
+  translation: let's hold on / stay strong
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проха́ння
+  translation: request
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: нака́з
+  translation: command
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пора́да
+  translation: advice
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: побажа́ння
+  translation: wish / wishes
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: непрями́й нака́з
+  translation: indirect command
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: застере́ження
+  translation: warning
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: чи не могли́ б ви
+  translation: could you possibly
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неха́й щасти́ть
+  translation: good luck / may you have luck
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: будьмо
+  translation: let's be / cheers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: паради́гма
+  translation: paradigm
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: скоромо́вка
+  translation: tongue twister
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дру́га осо́ба однини́
+  translation: second person singular
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пе́рша осо́ба множини́
+  translation: first person plural
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дру́га осо́ба множини́
+  translation: second person plural
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: тре́тя осо́ба
+  translation: third person
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false

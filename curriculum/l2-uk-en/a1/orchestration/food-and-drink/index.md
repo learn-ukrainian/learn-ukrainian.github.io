@@ -1,6 +1,6 @@
 # Build Summary: food-and-drink (A1)
 
-Generated: 2026-03-31 11:47
+Generated: 2026-04-01 13:43
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:47
 | vocab | complete | 2026-03-30 13:50:21 |
 | enrich | complete | 2026-03-30 13:50:22 |
 | verify | complete | 2026-03-30 13:50:22 |
-| review | complete | 2026-03-30 13:53:32 |
-| stress | complete | 2026-03-31 09:47:38 |
-| publish | complete | 2026-03-31 09:47:38 |
+| review | complete | 2026-04-01 11:43:22 |
+| stress | complete | 2026-04-01 11:43:22 |
+| publish | complete | 2026-04-01 11:43:29 |
 
 ## Reviews
 
@@ -38,6 +38,9 @@ Generated: 2026-03-31 11:47
 | activities | claude-tools (claude-sonnet-4-6) | 203s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 38s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 190s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

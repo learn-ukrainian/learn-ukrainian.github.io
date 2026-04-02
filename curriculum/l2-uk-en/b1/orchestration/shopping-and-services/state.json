@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "shopping-and-services",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:41.586415+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:41.586793+00:00"
+    }
+  }
+}

@@ -4,9 +4,10 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

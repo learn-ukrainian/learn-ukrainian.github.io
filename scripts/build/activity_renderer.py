@@ -112,8 +112,12 @@ def _j(value: Any) -> str:
 
 
 def _prop(name: str, value: Any) -> str:
-    """Build a JSX prop string. Strings become {\"...\"}, others become {json}."""
+    """Build a JSX prop string. Strings become {"..."}, others become {json}."""
     if isinstance(value, str):
+        if "\n" in value:
+            # MDX chokes on physical newlines inside double quotes. Use template literals.
+            safe_val = value.replace('`', '\\`').replace('${', '\\${')
+            return f' {name}={{`{safe_val}`}}'
         return f' {name}={{{_j(value)}}}'
     return f' {name}={{{_j(value)}}}'
 

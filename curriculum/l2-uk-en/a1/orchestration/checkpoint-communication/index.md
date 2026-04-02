@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-communication (A1)
 
-Generated: 2026-03-31 11:49
+Generated: 2026-04-01 13:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:49
 | vocab | complete | 2026-03-30 21:36:41 |
 | enrich | complete | 2026-03-30 21:36:42 |
 | verify | complete | 2026-03-30 21:36:42 |
-| review | complete | 2026-03-30 21:40:53 |
-| stress | complete | 2026-03-31 09:49:07 |
-| publish | complete | 2026-03-31 09:49:08 |
+| review | complete | 2026-04-01 11:45:21 |
+| stress | complete | 2026-04-01 11:45:21 |
+| publish | complete | 2026-04-01 11:45:26 |
 
 ## Reviews
 
@@ -42,6 +42,8 @@ Generated: 2026-03-31 11:49
 | vocab | claude (claude-sonnet-4-6) | 33s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 126s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 123s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

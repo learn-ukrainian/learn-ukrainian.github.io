@@ -1,8 +1,9 @@
 import re
+
 import yaml
 
 md_path = "curriculum/l2-uk-en/a2/a2-final-exam.md"
-with open(md_path, "r", encoding="utf-8") as f:
+with open(md_path, encoding="utf-8") as f:
     text = f.read()
 
 # 1. Participles
@@ -33,7 +34,6 @@ text = text.replace("Ми відповідаємо не на папір. Ми в
 text = text.replace("Ми відповідаємо (кому?) викладачу, професору, другу.", "Студент відповідає (кому?) професору, другу.")
 
 # 6. Engagement callout formats (remove [!tip] > to > [!tip])
-import re
 text = re.sub(r'\[!([a-z-]+)\]\n>\s*\*\*', r'> [!\1]\n> **', text)
 
 # 7. Checkpoint Format Errors
@@ -83,7 +83,7 @@ with open(md_path, "w", encoding="utf-8") as f:
 # Fix Activities
 act_path = "curriculum/l2-uk-en/a2/activities/a2-final-exam.yaml"
 try:
-    with open(act_path, "r", encoding="utf-8") as f:
+    with open(act_path, encoding="utf-8") as f:
         acts = yaml.safe_load(f)
     for act in acts:
         if act.get('id') == 'mark-the-words-a2-final-exam-9':
@@ -101,9 +101,9 @@ except Exception as e:
 # Add vocab words
 vocab_path = "curriculum/l2-uk-en/a2/vocabulary/a2-final-exam.yaml"
 try:
-    with open(vocab_path, "r", encoding="utf-8") as f:
+    with open(vocab_path, encoding="utf-8") as f:
         voc = yaml.safe_load(f)
-    
+
     new_vocabs = [
         {"lemma": "недоконаний", "ipa": "[nɛdɔˈkɔnɑnɪj]", "translation": "imperfective (aspect)", "pos": "adj"},
         {"lemma": "родовий", "ipa": "[rɔdɔˈʋɪj]", "translation": "genitive (case)", "pos": "adj"},

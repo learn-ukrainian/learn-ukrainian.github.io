@@ -1,7 +1,7 @@
 # Audit Report: M05 — who-am-i.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:42
+**Generated:** 2026-04-02 20:30:14
 
 ## Configuration
 **Type:** A1-vocab
@@ -40,28 +40,26 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2543/1200 (raw: 3500)
+- **Words:** ✅ 1737/1200 (raw: 1914)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/1
+- **Engagement:** ✅ 2/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 72/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 19.2% (target 8-25% (M05))
+- **Immersion:** 🇺🇦 20.1% (target 8-25% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -69,11 +67,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 469 | Included in Core |
-| **Мене звати... (My name is...)** | ✅ | 344 | Included in Core |
-| **Це... (This is...)** | ✅ | 220 | Included in Core |
+| **Intro/Narrative** | ✅ | 455 | Included in Core |
+| **Мене звати... (My name is...)** | ✅ | 341 | Included in Core |
+| **Це... (This is...)** | ✅ | 218 | Included in Core |
 | **Особо́ві займе́нники (Personal Pronouns)** | ✅ | 100 | Included in Core |
-| **Я — студе́нт (I am a student)** | ✅ | 267 | Included in Core |
+| **Я — студе́нт (I am a student)** | ✅ | 265 | Included in Core |
 | **Звідки? (Where from?)** | ✅ | 258 | Included in Core |
-| **Підсумок — Summary** | ✅ | 885 | Included in Core |
+| **Підсумок — Summary** | ✅ | 100 | Included in Core |

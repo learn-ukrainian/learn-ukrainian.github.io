@@ -1,7 +1,7 @@
 # Audit Report: M21 — checkpoint-actions.md
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:25:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:29:53
 
 ## Configuration
 **Type:** A1
@@ -24,37 +24,41 @@
 | 4 | fill-in |  | 6 | 6 | ✅ |
 | 5 | match-up |  | 6 | 6 | ✅ |
 | 6 | true-false |  | 6 | 6 | ✅ |
-| 7 | fill-in |  | 6 | 6 | ✅ |
+| 7 | error-correction |  | 6 | 6 | ✅ |
+| 8 | fill-in |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
+- Total activities: 8 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (12 occurrences): (She can help), (He must work), (You can speak) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
+- Immersion 6% off target (minor)
 
 ## Gates
-- **Words:** ✅ 2054/1200 (raw: 2723)
-- **Activities:** ✅ 7/0
+- **Words:** ✅ 1472/1200 (raw: 1571)
+- **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 27.5% (target 15-25%, within tolerance (M21))
+- **Immersion:** ❌ 30.8% HIGH (target 15-25% (M21))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -62,9 +66,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Що ми зна́ємо? (What Do We Know?)** | ✅ | 292 | Included in Core |
+| **Intro/Narrative** | ✅ | 292 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Грама́тика (Grammar Summary)** | ✅ | 266 | Included in Core |
-| **Діало́г (Connected Dialogue)** | ✅ | 410 | Included in Core |
-| **Підсумок — Summary** | ✅ | 780 | Included in Core |
+| **Діало́г (Connected Dialogue)** | ✅ | 392 | Included in Core |
+| **Підсумок — Summary** | ✅ | 216 | Included in Core |

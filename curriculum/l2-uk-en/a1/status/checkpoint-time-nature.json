@@ -2,15 +2,15 @@
   "module": "checkpoint-time-nature",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:26:02.612161Z",
+  "last_audit": "2026-04-02T20:29:56.304558Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T13:41:12.939320Z",
+    "md": "2026-03-31T17:27:15.870653Z",
     "meta": null,
     "activities": "2026-03-30T08:43:30.536520Z",
     "vocabulary": "2026-03-30T08:44:12.691093Z",
     "research": null,
-    "plan": "2026-03-30T02:07:01.308888Z"
+    "plan": "2026-03-30T22:17:20.654251Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1888/1200 (raw: 2530)"
+      "message": "1288/1200 (raw: 1324)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/0"
+      "message": "7/0"
     },
     "vocabulary": {
       "status": "pass",

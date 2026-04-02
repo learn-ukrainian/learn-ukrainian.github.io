@@ -1,7 +1,7 @@
 # Audit Report: M37 — i-eat-i-drink.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-31 17:26:31
+**Generated:** 2026-04-02 20:30:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -43,12 +43,12 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1633/1200 (raw: 2214)
+- **Words:** ⚠️ 1132/1200 (raw: 1328) (68 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
@@ -63,8 +63,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 334 | Included in Core |
+| **Intro/Narrative** | ✅ | 334 | Included in Core |
 | **Їсти і пити (To Eat and To Drink)** | ✅ | 271 | Included in Core |
 | **Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)** | ✅ | 360 | Included in Core |
-| **Підсумок — Summary** | ✅ | 668 | Included in Core |
+| **Підсумок — Summary** | ✅ | 167 | Included in Core |

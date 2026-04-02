@@ -2,15 +2,15 @@
   "module": "free-time",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:26:01.798495Z",
+  "last_audit": "2026-04-02T20:29:58.831668Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T08:28:06.530388Z",
+    "md": "2026-03-31T17:27:15.872698Z",
     "meta": null,
     "activities": "2026-03-30T08:01:09.787864Z",
     "vocabulary": "2026-03-30T08:01:48.651477Z",
     "research": null,
-    "plan": "2026-03-30T11:51:34.876047Z"
+    "plan": "2026-03-30T22:17:20.657215Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1979/1200 (raw: 2595)"
+      "message": "1596/1200 (raw: 1642)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",

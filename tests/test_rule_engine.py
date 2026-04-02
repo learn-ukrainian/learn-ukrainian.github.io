@@ -3,20 +3,14 @@
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from audit.checks.rule_engine import (
-    RULES,
     ValidationRule,
-    _check_charset,
-    _check_patterns,
     _extract_marked_sections,
     _rule_applies,
     run_rule_engine,
 )
-
 
 # ---------------------------------------------------------------------------
 # _rule_applies

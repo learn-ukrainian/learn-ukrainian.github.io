@@ -1,0 +1,343 @@
+{
+  "total_items": 159,
+  "grounded_items": 95,
+  "ungrounded": [
+    {
+      "word": "вихідних",
+      "exercise_type": "quiz",
+      "context": "Я хотів би завітати до вас на вихідних."
+    },
+    {
+      "word": "зателефонуйте",
+      "exercise_type": "quiz",
+      "context": "Зателефонуйте мені заздалегідь!"
+    },
+    {
+      "word": "пораджу",
+      "exercise_type": "quiz",
+      "context": "Якщо буде нагода, я пораджу йому цю книгу."
+    },
+    {
+      "word": "йому",
+      "exercise_type": "quiz",
+      "context": "Якщо буде нагода, я пораджу йому цю книгу."
+    },
+    {
+      "word": "допомогла",
+      "exercise_type": "quiz",
+      "context": "Вона з радістю допомогла б вам із розкладом."
+    },
+    {
+      "word": "розкладом",
+      "exercise_type": "quiz",
+      "context": "Вона з радістю допомогла б вам із розкладом."
+    },
+    {
+      "word": "відкрити",
+      "exercise_type": "quiz",
+      "context": "Чи не могли б ви відкрити вікно?"
+    },
+    {
+      "word": "заперечуєте",
+      "exercise_type": "quiz",
+      "context": "Якщо не заперечуєте, я почекаю тут."
+    },
+    {
+      "word": "почекаю",
+      "exercise_type": "quiz",
+      "context": "Якщо не заперечуєте, я почекаю тут."
+    },
+    {
+      "word": "перевірте",
+      "exercise_type": "quiz",
+      "context": "Будь ласка, перевірте розклад на завтра."
+    },
+    {
+      "word": "реальність",
+      "exercise_type": "group-sort",
+      "context": "Дійсний спосіб (реальність)"
+    },
+    {
+      "word": "зустріч",
+      "exercise_type": "group-sort",
+      "context": "Ми обов'язково встигнемо на зустріч."
+    },
+    {
+      "word": "поговоримо",
+      "exercise_type": "group-sort",
+      "context": "Якщо буде нагода, ми поговоримо."
+    },
+    {
+      "word": "перевіряє",
+      "exercise_type": "group-sort",
+      "context": "Він завжди перевіряє розклад поїздів."
+    },
+    {
+      "word": "поїздів",
+      "exercise_type": "group-sort",
+      "context": "Він завжди перевіряє розклад поїздів."
+    },
+    {
+      "word": "хорошу",
+      "exercise_type": "group-sort",
+      "context": "Завтра я пораджу тобі хорошу статтю."
+    },
+    {
+      "word": "завітала",
+      "exercise_type": "group-sort",
+      "context": "Вона з радістю завітала б до нас."
+    },
+    {
+      "word": "відпочити",
+      "exercise_type": "group-sort",
+      "context": "Було б чудово відпочити на вихідних."
+    },
+    {
+      "word": "поїдемо",
+      "exercise_type": "fill-in",
+      "context": "Якщо погода _____ гарна, ми поїдемо в Карпати."
+    },
+    {
+      "word": "був",
+      "exercise_type": "fill-in",
+      "context": "був би"
+    },
+    {
+      "word": "виїхали",
+      "exercise_type": "fill-in",
+      "context": "виїхали б"
+    },
+    {
+      "word": "виїжджали",
+      "exercise_type": "fill-in",
+      "context": "виїжджали"
+    },
+    {
+      "word": "виїдуть",
+      "exercise_type": "fill-in",
+      "context": "виїдуть"
+    },
+    {
+      "word": "знайшов",
+      "exercise_type": "fill-in",
+      "context": "знайшов би"
+    },
+    {
+      "word": "знайдете",
+      "exercise_type": "fill-in",
+      "context": "знайдете"
+    },
+    {
+      "word": "приєднається",
+      "exercise_type": "fill-in",
+      "context": "Якщо він _____ нагоду, він приєднається до нас на вихідних."
+    },
+    {
+      "word": "мали",
+      "exercise_type": "fill-in",
+      "context": "мали"
+    },
+    {
+      "word": "пішов",
+      "exercise_type": "fill-in",
+      "context": "пішов би"
+    },
+    {
+      "word": "підуть",
+      "exercise_type": "fill-in",
+      "context": "підуть"
+    },
+    {
+      "word": "заперечував",
+      "exercise_type": "fill-in",
+      "context": "заперечував би"
+    },
+    {
+      "word": "заперечуємо",
+      "exercise_type": "fill-in",
+      "context": "заперечуємо"
+    },
+    {
+      "word": "повернемося",
+      "exercise_type": "fill-in",
+      "context": "Якщо все _____ гаразд, ми повернемося в неділю."
+    },
+    {
+      "word": "неділю",
+      "exercise_type": "fill-in",
+      "context": "Якщо все _____ гаразд, ми повернемося в неділю."
+    },
+    {
+      "word": "прокинемося",
+      "exercise_type": "fill-in",
+      "context": "прокинемося"
+    },
+    {
+      "word": "піднімемося",
+      "exercise_type": "fill-in",
+      "context": "Ми піднімемося на Говерлу, якщо _____ рано-вранці."
+    },
+    {
+      "word": "прокинулися",
+      "exercise_type": "fill-in",
+      "context": "прокинулися б"
+    },
+    {
+      "word": "прокинутись",
+      "exercise_type": "fill-in",
+      "context": "прокинутись"
+    },
+    {
+      "word": "прокинуться",
+      "exercise_type": "fill-in",
+      "context": "прокинуться"
+    },
+    {
+      "word": "відвідайте",
+      "exercise_type": "match-up",
+      "context": "обов'язково відвідайте цей музей."
+    },
+    {
+      "word": "музей",
+      "exercise_type": "match-up",
+      "context": "обов'язково відвідайте цей музей."
+    },
+    {
+      "word": "купите",
+      "exercise_type": "match-up",
+      "context": "Якщо ви купите квитки заздалегідь,"
+    },
+    {
+      "word": "зекономите",
+      "exercise_type": "match-up",
+      "context": "ви зекономите гроші."
+    },
+    {
+      "word": "гроші",
+      "exercise_type": "match-up",
+      "context": "ви зекономите гроші."
+    },
+    {
+      "word": "зміниться",
+      "exercise_type": "match-up",
+      "context": "Якщо зміниться розклад поїздів,"
+    },
+    {
+      "word": "сьомій",
+      "exercise_type": "match-up",
+      "context": "Якщо ми виїдемо о сьомій,"
+    },
+    {
+      "word": "початку",
+      "exercise_type": "match-up",
+      "context": "то встигнемо до початку вистави."
+    },
+    {
+      "word": "вистави",
+      "exercise_type": "match-up",
+      "context": "то встигнемо до початку вистави."
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "match-up",
+      "context": "Якщо хтось завітає до нас у гості,"
+    },
+    {
+      "word": "завітає",
+      "exercise_type": "match-up",
+      "context": "Якщо хтось завітає до нас у гості,"
+    },
+    {
+      "word": "гості",
+      "exercise_type": "match-up",
+      "context": "Якщо хтось завітає до нас у гості,"
+    },
+    {
+      "word": "пригостимо",
+      "exercise_type": "match-up",
+      "context": "ми пригостимо їх чаєм."
+    },
+    {
+      "word": "чаєм",
+      "exercise_type": "match-up",
+      "context": "ми пригостимо їх чаєм."
+    },
+    {
+      "word": "потрібна",
+      "exercise_type": "match-up",
+      "context": "Якщо вам потрібна допомога,"
+    },
+    {
+      "word": "допомога",
+      "exercise_type": "match-up",
+      "context": "Якщо вам потрібна допомога,"
+    },
+    {
+      "word": "хотівби",
+      "exercise_type": "error-correction",
+      "context": "Я хотівби дізнатися розклад на завтра."
+    },
+    {
+      "word": "прочитала",
+      "exercise_type": "error-correction",
+      "context": "прочитала б"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "error-correction",
+      "context": "прочитав би"
+    },
+    {
+      "word": "мала",
+      "exercise_type": "error-correction",
+      "context": "мала б"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "error-correction",
+      "context": "Чи не міг б ти порадити мені цікаву книгу?"
+    },
+    {
+      "word": "могла",
+      "exercise_type": "error-correction",
+      "context": "могла б"
+    },
+    {
+      "word": "заперечували",
+      "exercise_type": "error-correction",
+      "context": "Якщо ви не заперечували б, ми зустрінемося ввечері."
+    },
+    {
+      "word": "заперечують",
+      "exercise_type": "error-correction",
+      "context": "заперечують"
+    },
+    {
+      "word": "встиглиб",
+      "exercise_type": "error-correction",
+      "context": "Ми встиглиб на поїзд, якщо виїдемо зараз."
+    },
+    {
+      "word": "встигла",
+      "exercise_type": "error-correction",
+      "context": "встигла б"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 28,
+    "tested_in_exercises": 18,
+    "not_tested": [
+      "вихідні",
+      "встигнути",
+      "заперечувати",
+      "милозвучність",
+      "повнозначне",
+      "реальний",
+      "слово",
+      "сполучник",
+      "умова",
+      "частка"
+    ]
+  },
+  "all_grounded": false
+}

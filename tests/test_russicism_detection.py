@@ -13,15 +13,12 @@ Issue: #520, #596
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.russicism_detection import (
-    check_russicisms,
     _is_in_quote_context,
+    check_russicisms,
 )
-
 
 # =============================================================================
 # HELPERS

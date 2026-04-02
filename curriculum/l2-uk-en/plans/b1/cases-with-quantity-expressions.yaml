@@ -1,177 +1,163 @@
-module: b1-053
+module: b1-049
 level: B1
-sequence: 53
+sequence: 49
 slug: cases-with-quantity-expressions
 version: '3.0'
 title: "Кількісні вирази"
 subtitle: "Узгодження числівників з іменниками та неозначено-кількісні слова"
 focus: grammar
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can correctly agree cardinal numerals with nouns:
-  один стіл (Н.в.), два/три/чотири столи (Н.в. мн.), п'ять столів (Р.в. мн.)"
-- "Learner can decline cardinal numerals in oblique cases and maintain
-  agreement: двох столів (Р.в.), двом столам (Д.в.), двома столами (Ор.в.)"
-- "Learner can use indefinite quantity words with correct case:
-  багато/мало/кілька/декілька/чимало + Р.в."
-- "Learner can use collective numerals (збірні) with the right noun classes:
-  двоє дітей, четверо хлопців, троє дверей"
-- "Learner can use quantity expressions in real contexts: prices, statistics,
-  recipes, and descriptions of groups"
+  - "Learner can correctly agree cardinal numerals with nouns: один стіл (Н.в.), два/три/чотири
+    столи (Н.в. мн.), п'ять столів (Р.в. мн.)"
+  - "Learner can decline cardinal numerals in oblique cases and maintain agreement:
+    двох столів (Р.в.), двом столам (Д.в.), двома столами (Ор.в.)"
+  - "Learner can use indefinite quantity words with correct case: багато/мало/кілька/декілька/чимало
+    + Р.в."
+  - "Learner can use collective numerals (збірні) with the right noun classes: двоє
+    дітей, четверо хлопців, троє дверей"
+  - "Learner can use quantity expressions in real contexts: prices, statistics, recipes,
+    and descriptions of groups"
 dialogue_situations:
-- setting: 'Census worker visiting a village household — counting everything: Скільки
-    людей? П''ятеро. Двоє дітей (n, children). Кілька кімнат (f, rooms). Багато землі
-    (f, land). Мало худоби (f, livestock).'
-  speakers:
-  - Переписувач (census worker)
-  - Господар
-  motivation: 'Quantity expressions: п''ятеро людей, двоє дітей, кілька кімнат, багато
-    землі'
+  - setting: 'Census worker visiting a village household — counting everything: Скільки
+      людей? П''ятеро. Двоє дітей (n, children). Кілька кімнат (f, rooms). Багато
+      землі (f, land). Мало худоби (f, livestock).'
+    speakers:
+      - Переписувач (census worker)
+      - Господар
+    motivation: 'Quantity expressions: п''ятеро людей, двоє дітей, кілька кімнат,
+      багато землі'
 content_outline:
-- section: "Узгодження кількісних числівників з іменниками"
-  words: 800
-  points:
-  - "From Литвінова Grade 6 p.240-241:
-    один/одна/одне + Н.в. одн.: один студент, одна книжка, одне вікно.
-    два/дві/три/чотири + Н.в. мн.: два студенти, три книжки, чотири вікна.
-    (Note: дві for feminine: дві книжки, not *два книжки.)
-    п'ять — двадцять, тридцять + Р.в. мн.: п'ять студентів, десять книжок."
-  - "Special cases (Литвінова Grade 6 p.241):
-    Nouns with суфікс -ин-: два селянина, три громадянина (Р.в. одн.!).
-    Nouns of ІV відміна (pluralia tantum type): cannot use два/три/чотири,
-    use збірні instead: троє дверей, двоє окулярів.
-    тисяча + Р.в. мн.: тисяча гривень. мільйон + Р.в. мн.: мільйон людей."
-  - "Compound numerals: the LAST numeral determines agreement.
-    двадцять один студент (один → Н.в. одн.)
-    двадцять два студенти (два → Н.в. мн.)
-    двадцять п'ять студентів (п'ять → Р.в. мн.)
-    Practice: 15 number + noun pairs for correct agreement."
-- section: "Відмінювання кількісних числівників"
-  words: 700
-  points:
-  - "From Авраменко Grade 11 p.37 and Заболотний Grade 7 p.171:
-    один: like an adjective (одного, одному, одним, одному).
-    два/дві: двох, двом, двох/два, двома, двох.
-    три: трьох, трьом, трьох/три, трьома, трьох.
-    чотири: чотирьох, чотирьом, чотирьох/чотири, чотирма, чотирьох."
-  - "5-20, 30: like ІІІ відміна feminine nouns:
-    п'яти, п'яти, п'ять, п'ятьма, п'яти.
-    50-80: both parts decline:
-    п'ятдесяти, п'ятдесяти, п'ятдесяти, п'ятдесятьма, п'ятдесяти."
-  - "In oblique cases, ALL parts of compound numerals decline:
-    з двадцятьма п'ятьма студентами (Ор.в.).
-    However, in practice many speakers simplify this, especially
-    in speech. Written standard requires full declension.
-    Practice: decline двадцять три книжки through all cases."
-- section: "Збірні числівники"
-  words: 600
-  points:
-  - "Formation: двоє, троє, четверо, п'ятеро, шестеро, семеро...
-    From Голуб Grade 6 p.163:
-    Used with: masculine persons (двоє хлопців), children (троє дітей),
-    pluralia tantum nouns (четверо дверей, двоє ножиць),
-    nouns that only exist in plural (п'ятеро саней).
-    NOT with: feminine persons (*двоє дівчат → дві дівчини)
-    or inanimate countables (*троє столів → три столи)."
-  - "Collective numerals always take Р.в. мн.:
-    двоє друзів, троє братів, четверо дітей.
-    In oblique cases, they decline like cardinal п'ять:
-    двох, двом, двох, двома, двох."
-  - "Practice: choose cardinal or collective numeral for 10 noun groups,
-    explaining why."
-- section: "Неозначено-кількісні слова"
-  words: 500
-  points:
-  - "Words expressing indefinite quantity + Р.в.:
-    багато людей, мало часу, кілька книжок, декілька разів,
-    чимало зусиль, достатньо грошей, забагато роботи.
-    All govern Р.в. — same pattern as numbers 5-20."
-  - "Approximation: близько + Р.в. (about/approximately),
-    понад + Зн.в. (more than), до + Р.в. (up to).
-    'Близько ста людей прийшло.' 'Понад тисячу гривень.'
-    Practice: describe quantities using approximate expressions."
-- section: "Кількісні вирази в контексті"
-  words: 700
-  points:
-  - "Recipes: Візьміть двісті грамів масла, три яйця, п'ятсот грамів борошна.
-    Додайте чайну ложку солі та дві столові ложки цукру.
-    Practice: read a Ukrainian recipe and identify all quantity expressions."
-  - "Statistics: В Україні живе понад сорок мільйонів людей.
-    Київ має близько трьох мільйонів мешканців.
-    Practice: describe a city or country using quantity expressions."
-  - "Shopping: Дайте, будь ласка, два кілограми картоплі,
-    півкіло помідорів і триста грамів сиру.
-    Скільки коштують п'ять яблук?
-    Self-check: 10 quantity expressions to form correctly."
-- section: "Підсумок"
-  words: 200
-  points:
-  - "Agreement rules summary table:
-    1 + Н.в.одн., 2-4 + Н.в.мн., 5-20 + Р.в.мн., збірні + Р.в.мн.
-    Oblique cases: all parts of compound numerals decline.
-    Preview: advanced pronouns — the final grammar module before
-    the communication module and checkpoint."
+  - section: "Узгодження кількісних числівників з іменниками"
+    words: 800
+    points:
+      - "From Литвінова Grade 6 p.240-241: один/одна/одне + Н.в. одн.: один студент,
+        одна книжка, одне вікно. два/дві/три/чотири + Н.в. мн.: два студенти, три
+        книжки, чотири вікна. (Note: дві for feminine: дві книжки, not *два книжки.)
+        п'ять — двадцять, тридцять + Р.в. мн.: п'ять студентів, десять книжок."
+      - "Special cases (Литвінова Grade 6 p.241): Nouns with суфікс -ин-: два селянина,
+        три громадянина (Р.в. одн.!). Nouns of ІV відміна (pluralia tantum type):
+        cannot use два/три/чотири, use збірні instead: троє дверей, двоє окулярів.
+        тисяча + Р.в. мн.: тисяча гривень. мільйон + Р.в. мн.: мільйон людей."
+      - "Compound numerals: the LAST numeral determines agreement. двадцять один студент
+        (один → Н.в. одн.) двадцять два студенти (два → Н.в. мн.) двадцять п'ять студентів
+        (п'ять → Р.в. мн.) Practice: 15 number + noun pairs for correct agreement."
+  - section: "Відмінювання кількісних числівників"
+    words: 700
+    points:
+      - "From Авраменко Grade 11 p.37 and Заболотний Grade 7 p.171: один: like an
+        adjective (одного, одному, одним, одному). два/дві: двох, двом, двох/два,
+        двома, двох. три: трьох, трьом, трьох/три, трьома, трьох. чотири: чотирьох,
+        чотирьом, чотирьох/чотири, чотирма, чотирьох."
+      - "5-20, 30: like ІІІ відміна feminine nouns: п'яти, п'яти, п'ять, п'ятьма,
+        п'яти. 50-80: both parts decline: п'ятдесяти, п'ятдесяти, п'ятдесяти, п'ятдесятьма,
+        п'ятдесяти."
+      - "In oblique cases, ALL parts of compound numerals decline: з двадцятьма п'ятьма
+        студентами (Ор.в.). However, in practice many speakers simplify this, especially
+        in speech. Written standard requires full declension. Practice: decline двадцять
+        три книжки through all cases."
+  - section: "Збірні числівники"
+    words: 600
+    points:
+      - "Formation: двоє, троє, четверо, п'ятеро, шестеро, семеро... From Голуб Grade
+        6 p.163: Used with: masculine persons (двоє хлопців), children (троє дітей),
+        pluralia tantum nouns (четверо дверей, двоє ножиць), nouns that only exist
+        in plural (п'ятеро саней). NOT with: feminine persons (*двоє дівчат → дві
+        дівчини) or inanimate countables (*троє столів → три столи)."
+      - "Collective numerals always take Р.в. мн.: двоє друзів, троє братів, четверо
+        дітей. In oblique cases, they decline like cardinal п'ять: двох, двом, двох,
+        двома, двох."
+      - "Practice: choose cardinal or collective numeral for 10 noun groups, explaining
+        why."
+  - section: "Неозначено-кількісні слова"
+    words: 500
+    points:
+      - "Words expressing indefinite quantity + Р.в.: багато людей, мало часу, кілька
+        книжок, декілька разів, чимало зусиль, достатньо грошей, забагато роботи.
+        All govern Р.в. — same pattern as numbers 5-20."
+      - "Approximation: близько + Р.в. (about/approximately), понад + Зн.в. (more
+        than), до + Р.в. (up to). 'Близько ста людей прийшло.' 'Понад тисячу гривень.'
+        Practice: describe quantities using approximate expressions."
+  - section: "Кількісні вирази в контексті"
+    words: 700
+    points:
+      - "Recipes: Візьміть двісті грамів масла, три яйця, п'ятсот грамів борошна.
+        Додайте чайну ложку солі та дві столові ложки цукру. Practice: read a Ukrainian
+        recipe and identify all quantity expressions."
+      - "Statistics: В Україні живе понад сорок мільйонів людей. Київ має близько
+        трьох мільйонів мешканців. Practice: describe a city or country using quantity
+        expressions."
+      - "Shopping: Дайте, будь ласка, два кілограми картоплі, півкіло помідорів і
+        триста грамів сиру. Скільки коштують п'ять яблук? Self-check: 10 quantity
+        expressions to form correctly."
+  - section: "Підсумок"
+    words: 200
+    points:
+      - "Agreement rules summary table: 1 + Н.в.одн., 2-4 + Н.в.мн., 5-20 + Р.в.мн.,
+        збірні + Р.в.мн. Oblique cases: all parts of compound numerals decline. Preview:
+        advanced pronouns — the final grammar module before the communication module
+        and checkpoint."
 vocabulary_hints:
   required:
-  - "кількісний числівник (cardinal numeral — один, два, сто)"
-  - "збірний числівник (collective numeral — двоє, троє, четверо)"
-  - "узгодження (agreement — matching numeral with noun form)"
-  - "неозначено-кількісний (indefinite-quantitative — багато, кілька)"
-  - "кілька (several — governs Р.в.)"
-  - "декілька (several — synonym of кілька)"
-  - "чимало (quite a lot — governs Р.в.)"
-  - "достатньо (enough — governs Р.в.)"
-  - "понад (more than — governs Зн.в.)"
-  - "близько (about/approximately — governs Р.в.)"
+    - "кількісний числівник (cardinal numeral — один, два, сто)"
+    - "збірний числівник (collective numeral — двоє, троє, четверо)"
+    - "узгодження (agreement — matching numeral with noun form)"
+    - "неозначено-кількісний (indefinite-quantitative — багато, кілька)"
+    - "кілька (several — governs Р.в.)"
+    - "декілька (several — synonym of кілька)"
+    - "чимало (quite a lot — governs Р.в.)"
+    - "достатньо (enough — governs Р.в.)"
+    - "понад (more than — governs Зн.в.)"
+    - "близько (about/approximately — governs Р.в.)"
   recommended:
-  - "тисяча (thousand — governs Р.в.мн.)"
-  - "мільйон (million — governs Р.в.мн.)"
-  - "половина (half — + Р.в.)"
-  - "чверть (quarter — + Р.в.)"
-  - "забагато (too much — governs Р.в.)"
-  - "замало (too little — governs Р.в.)"
+    - "тисяча (thousand — governs Р.в.мн.)"
+    - "мільйон (million — governs Р.в.мн.)"
+    - "половина (half — + Р.в.)"
+    - "чверть (quarter — + Р.в.)"
+    - "забагато (too much — governs Р.в.)"
+    - "замало (too little — governs Р.в.)"
 activity_hints:
-- type: quiz
-  focus: "Choose correct noun form after cardinal, collective, and quantity words"
-  items: 8
-- type: fill-in
-  focus: "Complete quantity expressions with correct numeral + case agreement"
-  items: 8
-- type: match-up
-  focus: "Match numeral type (cardinal/collective/indefinite) to noun category"
-  items: 8
-- type: error-correction
-  focus: "Fix agreement errors: *два книжки, *двоє столів, *п'ять студент"
-  items: 6
-- type: sentence-builder
-  focus: "Build sentences with quantity expressions for recipes and statistics"
-  items: 6
-- type: group-sort
-  focus: "Sort nouns into 'use cardinal' vs 'use collective' numeral categories"
-  items: 10
+  - type: quiz
+    focus: "Choose correct noun form after cardinal, collective, and quantity words"
+    items: 8
+  - type: fill-in
+    focus: "Complete quantity expressions with correct numeral + case agreement"
+    items: 8
+  - type: match-up
+    focus: "Match numeral type (cardinal/collective/indefinite) to noun category"
+    items: 8
+  - type: error-correction
+    focus: "Fix agreement errors: *два книжки, *двоє столів, *п'ять студент"
+    items: 6
+  - type: sentence-builder
+    focus: "Build sentences with quantity expressions for recipes and statistics"
+    items: 6
+  - type: group-sort
+    focus: "Sort nouns into 'use cardinal' vs 'use collective' numeral categories"
+    items: 10
 connects_to:
-- "b1-052 (Порядкові числівники — ordinal declension and dates)"
-- "b1-046 (Родовий відмінок деталі — Р.в. governed by quantity words)"
-- "b1-044 (Покупки і послуги — quantity expressions in shopping)"
+  - "b1-052 (Порядкові числівники — ordinal declension and dates)"
+  - "b1-046 (Родовий відмінок деталі — Р.в. governed by quantity words)"
+  - "b1-044 (Покупки і послуги — quantity expressions in shopping)"
 prerequisites:
-- "A2 completion (numbers, basic quantity)"
-- "b1-046 (Родовий відмінок деталі — Р.в. forms)"
-- "b1-052 (Порядкові числівники і відмінки — ordinal declension)"
+  - "A2 completion (numbers, basic quantity)"
+  - "b1-046 (Родовий відмінок деталі — Р.в. forms)"
+  - "b1-052 (Порядкові числівники і відмінки — ordinal declension)"
 grammar:
-- "Узгодження: один + Н.в.одн., 2-4 + Н.в.мн., 5+ + Р.в.мн."
-- "Збірні числівники: двоє, троє + Р.в.мн. (з чоловічими особами, pluralia tantum)"
-- "Відмінювання кількісних: один (як прикметник), два-чотири, п'ять-двадцять"
-- "Неозначено-кількісні: багато, мало, кілька, достатньо + Р.в."
-- "Складені числівники: всі частини відмінюються в непрямих відмінках"
+  - "Узгодження: один + Н.в.одн., 2-4 + Н.в.мн., 5+ + Р.в.мн."
+  - "Збірні числівники: двоє, троє + Р.в.мн. (з чоловічими особами, pluralia tantum)"
+  - "Відмінювання кількісних: один (як прикметник), два-чотири, п'ять-двадцять"
+  - "Неозначено-кількісні: багато, мало, кілька, достатньо + Р.в."
+  - "Складені числівники: всі частини відмінюються в непрямих відмінках"
 register: науково-навчальний
 references:
-- title: "Литвінова Grade 6, p.240-241"
-  notes: "Agreement rules: один, два-чотири, п'ять+, special -ин- nouns."
-- title: "Голуб Grade 6, p.163-166"
-  notes: "Collective numerals, fraction declension, agreement table."
-- title: "Авраменко Grade 11, p.37"
-  notes: "Cardinal numeral declension tables."
-- title: "Заболотний Grade 7, p.167-171"
-  notes: "Numeral classification, declension types, parallel usage."
+  - title: "Литвінова Grade 6, p.240-241"
+    notes: "Agreement rules: один, два-чотири, п'ять+, special -ин- nouns."
+  - title: "Голуб Grade 6, p.163-166"
+    notes: "Collective numerals, fraction declension, agreement table."
+  - title: "Авраменко Grade 11, p.37"
+    notes: "Cardinal numeral declension tables."
+  - title: "Заболотний Grade 7, p.167-171"
+    notes: "Numeral classification, declension types, parallel usage."

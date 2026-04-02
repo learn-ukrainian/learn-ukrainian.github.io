@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "preferences-and-choices",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:00.263170+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:00.264042+00:00"
+    }
+  }
+}

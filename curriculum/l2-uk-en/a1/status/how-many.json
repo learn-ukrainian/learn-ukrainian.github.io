@@ -2,10 +2,10 @@
   "module": "how-many",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:26:30.620407Z",
+  "last_audit": "2026-04-02T20:30:00.525666Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:43:22.878039Z",
+    "md": "2026-03-31T17:27:15.874336Z",
     "meta": null,
     "activities": "2026-03-30T14:35:18.827050Z",
     "vocabulary": "2026-03-30T14:36:09.440745Z",
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2080/1200 (raw: 2834) | immersion: 33.7% HIGH (target 10-30% (M11))"
+      "violations": 2,
+      "message": "1349/1200 (raw: 1384) | engagement: 0/1 | immersion: 36.3% HIGH (target 10-30% (M11))"
     },
     "activities": {
       "status": "pass",

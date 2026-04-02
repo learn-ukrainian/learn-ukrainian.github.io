@@ -172,10 +172,6 @@ IMMERSION_RULES: dict[str, str] = {
         "Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
     ),
-    "b1-bridge": (
-        "Bridge modules: teach grammar metalanguage. English scaffolding for abstract concepts. "
-        "Parenthetical equivalents for new terms. Sentences max 30 words."
-    ),
     "b1-core": (
         "Full Ukrainian immersion. Grammar explained IN Ukrainian. "
         "English only for disambiguation of false friends. Sentences max 30 words."
@@ -1134,10 +1130,7 @@ def get_immersion_rule(track: str, module_num: int) -> str:
         else:
             return IMMERSION_RULES["a2-m51-70"]
     elif base == "b1":
-        if module_num <= 5:
-            return IMMERSION_RULES["b1-bridge"]
-        else:
-            return IMMERSION_RULES["b1-core"]
+        return IMMERSION_RULES["b1-core"]
     else:
         return IMMERSION_RULES["b2+"]
 

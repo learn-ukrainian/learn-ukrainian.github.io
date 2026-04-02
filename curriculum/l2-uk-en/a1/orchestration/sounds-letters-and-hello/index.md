@@ -1,6 +1,6 @@
 # Build Summary: sounds-letters-and-hello (A1)
 
-Generated: 2026-03-31 17:51
+Generated: 2026-04-01 12:30
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 17:51
 | vocab | complete | 2026-03-29 19:22:58 |
 | enrich | complete | 2026-03-29 19:22:59 |
 | verify | complete | 2026-03-29 19:22:59 |
-| review | complete | 2026-03-29 19:28:03 |
-| stress | complete | 2026-03-31 15:51:17 |
-| publish | complete | 2026-03-31 15:51:18 |
+| review | complete | 2026-04-01 10:29:58 |
+| stress | complete | 2026-04-01 10:30:06 |
+| publish | complete | 2026-04-01 10:30:07 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-03-31 17:51
 |-------|------|
 | 1 | sounds-letters-and-hello-review-r1.md |
 | 2 | sounds-letters-and-hello-review-r2.md |
+| 3 | sounds-letters-and-hello-review-r3.md |
 
 ## Dispatch Log
 
@@ -42,6 +43,9 @@ Generated: 2026-03-31 17:51
 | vocab | claude (claude-sonnet-4-6) | 11s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 131s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 169s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 278s | ✅ |
 
 ## Files
 
@@ -52,6 +56,7 @@ Generated: 2026-03-31 17:51
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

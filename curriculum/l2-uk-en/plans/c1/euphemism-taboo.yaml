@@ -4,45 +4,59 @@ sequence: 57
 slug: euphemism-taboo
 version: '1.1'
 title: "Евфемізми та табу: мовна етика та стратегії ввічливості"
-subtitle: "Euphemisms and Taboos: Language Ethics and Politeness Strategies"
+subtitle: "Евфемізми й табу: мовна етика та стратегії ввічливості"
 focus: vocabulary
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Розуміти соціолінгвістичну природу табу та механізми виникнення евфемізмів."
-  - "Опанувати мистецтво використання евфемізмів у дипломатичному, діловому та академічному мовленні."
-  - "Аналізувати роль політичної коректності у формуванні сучасної української лексичної норми."
+  - "Опанувати мистецтво використання евфемізмів у дипломатичному, діловому та академічному
+    мовленні."
+  - "Аналізувати роль політичної коректності у формуванні сучасної української лексичної
+    норми."
   - "Розрізняти конструктивну евфемізацію та маніпулятивну підміну понять у медіадискурсі."
 
 reading_situations:
   - source_type: "офіційне комюніке"
-    topic: "Дипломатичні переговори щодо врегулювання військового конфлікту: мова компромісів."
+    topic: "Дипломатичні переговори щодо врегулювання військового конфлікту: мова
+      компромісів."
     key_elements: ["дипломатичний протокол", "стриманість", "евфемічні замінники"]
     motivation: "Аналіз 'мови напівнатяків' у високій політиці для уникнення ескалації."
   - source_type: "соціологічне дослідження"
-    topic: "Зміна ставлення до табуйованих тем (смерть, хвороби, інклюзія) в українському суспільстві."
+    topic: "Зміна ставлення до табуйованих тем (смерть, хвороби, інклюзія) в українському
+      суспільстві."
     key_elements: ["коректність", "інклюзивна лексика", "соціальна норма"]
     motivation: "Вивчення динаміки мовної норми під впливом соціальних змін."
 
 listening_situations:
   - media_type: "подкаст"
-    setting: "Дискусія лінгвістів про 'мовну гігієну' та доцільність запозичення західних стандартів політкоректності."
-    focus_points: ["аргументи за і проти", "мовна ідентичність", "специфіка українського контексту"]
+    setting: "Дискусія лінгвістів про 'мовну гігієну' та доцільність запозичення західних
+      стандартів політкоректності."
+    focus_points: ["аргументи за і проти", "мовна ідентичність", "специфіка українського
+          контексту"]
     motivation: "Формування власної позиції щодо етичних аспектів слововживання."
 
 writing_tasks:
   - task_type: "офіційний лист"
-    prompt: "Напишіть лист-відмову бізнес-партнеру щодо продовження співпраці, використовуючи евфемізми для пом'якшення негативної інформації."
-    requirements: ["мінімум 200 слів", "високий рівень ввічливості", "збереження професійної дистанції"]
-    motivation: "Відпрацювання практичних навичок 'м'якої комунікації' у кризових ситуаціях."
-    model_answer: "Текст має демонструвати вміння замінювати прямі негативні оцінки ('ми не хочемо', 'ви погано працюєте') на конструктивні евфемізми ('реорганізація стратегії', 'оптимізація партнерства')."
+    prompt: "Напишіть лист-відмову бізнес-партнеру щодо продовження співпраці, використовуючи
+      евфемізми для пом'якшення негативної інформації."
+    requirements: ["мінімум 200 слів", "високий рівень ввічливості", "збереження професійної
+          дистанції"]
+    motivation: "Відпрацювання практичних навичок 'м'якої комунікації' у кризових
+      ситуаціях."
+    model_answer: "Текст має демонструвати вміння замінювати прямі негативні оцінки
+      ('ми не хочемо', 'ви погано працюєте') на конструктивні евфемізми ('реорганізація
+      стратегії', 'оптимізація партнерства')."
 
 discussion_topics:
-  - context: "Політкоректність: чи звільняє вона мову від дискримінації чи обмежує свободу слова?"
+  - context: "Політкоректність: чи звільняє вона мову від дискримінації чи обмежує
+      свободу слова?"
     questions:
       - "Чи існують теми, які назавжди залишаться табуйованими?"
-      - "Як евфемізми в медіа можуть спотворювати сприйняття реальності (наприклад, у новинах про війну)?"
-      - "Яка роль обсценної лексики в умовах екстремального стресу та чи стає вона новою 'нормою'?"
+      - "Як евфемізми в медіа можуть спотворювати сприйняття реальності (наприклад,
+        у новинах про війну)?"
+      - "Яка роль обсценної лексики в умовах екстремального стресу та чи стає вона
+        новою 'нормою'?"
     motivation: "Критичний аналіз етичних меж мовної поведінки."
 
 content_outline:
@@ -106,15 +120,22 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a diplomatic communique and identify all euphemisms — explain what each replaces and evaluate whether it serves transparency or concealment."
+    description: "Analyze a diplomatic communique and identify all euphemisms — explain
+      what each replaces and evaluate whether it serves transparency or concealment."
   - type: select
-    description: "Choose the appropriate euphemism for professional contexts — identify which euphemisms are constructive (ввічливість) and which are manipulative (вуалювання правди)."
+    description: "Choose the appropriate euphemism for professional contexts — identify
+      which euphemisms are constructive (ввічливість) and which are manipulative (вуалювання
+      правди)."
   - type: error-correction
-    description: "Fix register violations in a professional text — replace inappropriate direct language with euphemisms, and remove manipulative euphemisms that obscure facts."
+    description: "Fix register violations in a professional text — replace inappropriate
+      direct language with euphemisms, and remove manipulative euphemisms that obscure
+      facts."
   - type: match-up
-    description: "Match euphemistic expressions with their direct equivalents and classify by sphere (дипломатія, медицина, військова справа, бізнес)."
+    description: "Match euphemistic expressions with their direct equivalents and
+      classify by sphere (дипломатія, медицина, військова справа, бізнес)."
   - type: essay-response
-    description: "Write a professional rejection letter (100-150 words) using appropriate euphemisms, then analyze how the euphemisms soften the negative message."
+    description: "Write a professional rejection letter (100-150 words) using appropriate
+      euphemisms, then analyze how the euphemisms soften the negative message."
 
 activities:
   types_required:
@@ -134,3 +155,4 @@ references:
 connects_to:
   previous: "hyperbole-litotes"
   next: "rhetorical-questions"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

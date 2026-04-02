@@ -1,6 +1,6 @@
 # Build Summary: my-day (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 05:43:42 |
 | enrich | complete | 2026-03-30 05:43:43 |
 | verify | complete | 2026-03-30 05:43:43 |
-| review | complete | 2026-03-30 05:47:05 |
-| stress | complete | 2026-03-31 09:58:00 |
-| publish | complete | 2026-03-31 09:58:01 |
+| review | complete | 2026-04-01 11:41:23 |
+| stress | complete | 2026-04-01 11:41:23 |
+| publish | complete | 2026-04-01 11:41:29 |
 
 ## Reviews
 
@@ -38,6 +38,9 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 239s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 26s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 203s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

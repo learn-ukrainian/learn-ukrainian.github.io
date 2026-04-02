@@ -1,6 +1,6 @@
 # Build Summary: many-things (A1)
 
-Generated: 2026-03-31 11:43
+Generated: 2026-04-01 13:31
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-03-31 11:43
 | vocab | complete | 2026-03-30 13:12:43 |
 | enrich | complete | 2026-03-30 13:12:44 |
 | verify | complete | 2026-03-30 13:12:44 |
-| review | complete | 2026-03-30 13:16:54 |
-| stress | complete | 2026-03-31 09:43:37 |
-| publish | complete | 2026-03-31 09:43:37 |
+| review | complete | 2026-04-01 11:31:16 |
+| stress | complete | 2026-04-01 11:31:16 |
+| publish | complete | 2026-04-01 11:31:22 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | many-things-review-r1.md |
+| 2 | many-things-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,6 +39,9 @@ Generated: 2026-03-31 11:43
 | activities | claude-tools (claude-sonnet-4-6) | 188s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 15s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 250s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 195s | ✅ |
 
 ## Files
 
@@ -47,6 +51,7 @@ Generated: 2026-03-31 11:43
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

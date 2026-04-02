@@ -2,7 +2,7 @@ import re
 
 # FIX MARKDOWN
 path_md = '/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/register-colloquial-style.md'
-with open(path_md, 'r', encoding='utf-8') as f:
+with open(path_md, encoding='utf-8') as f:
     text = f.read()
 
 # Fix Dialogue
@@ -42,7 +42,7 @@ with open(path_md, 'w', encoding='utf-8') as f:
 
 # FIX YAML
 path_yaml = '/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/activities/register-colloquial-style.yaml'
-with open(path_yaml, 'r', encoding='utf-8') as f:
+with open(path_yaml, encoding='utf-8') as f:
     text_yaml = f.read()
 
 new_yaml = """- type: group-sort

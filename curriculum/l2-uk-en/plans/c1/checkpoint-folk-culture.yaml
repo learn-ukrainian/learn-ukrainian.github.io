@@ -4,45 +4,64 @@ sequence: 96
 slug: checkpoint-folk-culture
 version: '1.2'
 title: "Контрольна точка: Традиційна українська культура та побут"
-subtitle: "Checkpoint: Traditional Ukrainian Culture and Life"
+subtitle: "Підсумковий контроль: традиційна українська культура"
 focus: checkpoint
 pedagogy: review
 word_target: 4000
 objectives:
-  - "Перевірити та систематизувати знання про основні компоненти матеріальної та духовної культури України."
+  - "Перевірити та систематизувати знання про основні компоненти матеріальної та духовної
+    культури України."
   - "Продемонструвати вміння аналізувати складні етнографічні тексти та артефакти."
-  - "Підтвердити навички порівняльного аналізу регіональних особливостей традиційного побуту."
-  - "Висловити аргументовану позицію щодо актуальності народної спадщини в сучасному світі."
+  - "Підтвердити навички порівняльного аналізу регіональних особливостей традиційного
+    побуту."
+  - "Висловити аргументовану позицію щодо актуальності народної спадщини в сучасному
+    світі."
 
 reading_situations:
   - source_type: "комплексний текст"
-    topic: "Синтетичний огляд традиційної культури України: від архаїки до сучасної інтерпретації."
-    key_elements: ["семантика", "ревіталізація", "етногенез", "ізоморфізм", "культурна матриця"]
-    motivation: "Підсумкова перевірка розуміння ключової термінології та складних концептуальних зв'язків."
+    topic: "Синтетичний огляд традиційної культури України: від архаїки до сучасної
+      інтерпретації."
+    key_elements: ["семантика", "ревіталізація", "етногенез", "ізоморфізм", "культурна
+          матриця"]
+    motivation: "Підсумкова перевірка розуміння ключової термінології та складних
+      концептуальних зв'язків."
   - source_type: "текст для редагування"
-    topic: "Опис народного свята з навмисними фактичними та стилістичними помилками (змішування регіональних традицій)."
+    topic: "Опис народного свята з навмисними фактичними та стилістичними помилками
+      (змішування регіональних традицій)."
     key_elements: ["автентичність", "анахронізм", "стилістична норма"]
-    motivation: "Перевірка уважності до деталей та знання конкретних етнографічних фактів."
+    motivation: "Перевірка уважності до деталей та знання конкретних етнографічних
+      фактів."
 
 listening_situations:
   - media_type: "аудіо"
-    setting: "Добірка фрагментів інтерв'ю з представниками різних етнографічних груп (гуцули, поліщуки, подоляни)."
-    focus_points: ["ідентифікація регіону за говіркою", "визначення специфічних реалій побуту за описом", "розуміння загального змісту та емоційного тону"]
-    motivation: "Підсумкова перевірка навичок сприйняття на слух автентичного мовлення з регіональними особливостями."
+    setting: "Добірка фрагментів інтерв'ю з представниками різних етнографічних груп
+      (гуцули, поліщуки, подоляни)."
+    focus_points: ["ідентифікація регіону за говіркою", "визначення специфічних реалій
+          побуту за описом", "розуміння загального змісту та емоційного тону"]
+    motivation: "Підсумкова перевірка навичок сприйняття на слух автентичного мовлення
+      з регіональними особливостями."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Сформулюйте та обґрунтуйте свою відповідь на запитання: 'Чи може традиційна культура бути фундаментом для модернізації сучасної нації, чи вона є лише експонатом у музеї пам'яті?'"
-    requirements: ["мінімум 350 слів", "аргументація з посиланнями на вивчені модулі", "використання академічного стилю"]
+    prompt: "Сформулюйте та обґрунтуйте свою відповідь на запитання: 'Чи може традиційна
+      культура бути фундаментом для модернізації сучасної нації, чи вона є лише експонатом
+      у музеї пам'яті?'"
+    requirements: ["мінімум 350 слів", "аргументація з посиланнями на вивчені модулі",
+      "використання академічного стилю"]
     motivation: "Синтез отриманих знань та розвиток критичного мислення."
-    model_answer: "Текст повинен демонструвати глибоке розуміння функцій традиції, наводити приклади успішної інтеграції етно-елементів у сучасне життя (дизайн, дипломатія, ідентичність) та робити висновок про динамічну природу культури."
+    model_answer: "Текст повинен демонструвати глибоке розуміння функцій традиції,
+      наводити приклади успішної інтеграції етно-елементів у сучасне життя (дизайн,
+      дипломатія, ідентичність) та робити висновок про динамічну природу культури."
 
 discussion_topics:
   - context: "Завершальна дискусія за результатами блоку 'Народна культура'."
     questions:
-      - "Який аспект української традиції (костюм, кухня, архітектура, фольклор) видається вам найстійкішим до змін часу? Чому?"
-      - "Як знання народної культури допомагає краще розуміти сучасне українське суспільство та його цінності?"
-    motivation: "Рефлексія над вивченим матеріалом та розвиток навичок підсумкового узагальнення."
+      - "Який аспект української традиції (костюм, кухня, архітектура, фольклор) видається
+        вам найстійкішим до змін часу? Чому?"
+      - "Як знання народної культури допомагає краще розуміти сучасне українське суспільство
+        та його цінності?"
+    motivation: "Рефлексія над вивченим матеріалом та розвиток навичок підсумкового
+      узагальнення."
 
 content_outline:
   - section: "Матеріальний світ: підсумковий огляд"
@@ -95,15 +114,22 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a complex ethnographic text — evaluate arguments about the role of traditional culture in modern nation-building, identifying strengths and weaknesses."
+    description: "Analyze a complex ethnographic text — evaluate arguments about the
+      role of traditional culture in modern nation-building, identifying strengths
+      and weaknesses."
   - type: error-correction
-    description: "Fix factual and stylistic errors in a text about Ukrainian folk traditions — mixed regional traditions, anachronisms, incorrect terminology."
+    description: "Fix factual and stylistic errors in a text about Ukrainian folk
+      traditions — mixed regional traditions, anachronisms, incorrect terminology."
   - type: match-up
-    description: "Match traditional Ukrainian cultural elements (вишиванка, писанка, хата, колядка) with their regional variants, symbolic meanings, and historical contexts."
+    description: "Match traditional Ukrainian cultural elements (вишиванка, писанка,
+      хата, колядка) with their regional variants, symbolic meanings, and historical
+      contexts."
   - type: true-false
-    description: "Evaluate statements about Ukrainian folk culture — distinguish accurate ethnographic facts from common misconceptions and stereotypes."
+    description: "Evaluate statements about Ukrainian folk culture — distinguish accurate
+      ethnographic facts from common misconceptions and stereotypes."
   - type: select
-    description: "Identify the ethnographic region (Галичина, Полісся, Подоляни, Гуцульщина) based on descriptions of traditional customs, architecture, or costume elements."
+    description: "Identify the ethnographic region (Галичина, Полісся, Подоляни, Гуцульщина)
+      based on descriptions of traditional customs, architecture, or costume elements."
 
 activities:
   types_required:

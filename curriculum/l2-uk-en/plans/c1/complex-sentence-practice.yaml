@@ -4,38 +4,46 @@ sequence: 51
 slug: complex-sentence-practice
 version: '1.1'
 title: "Практикум зі складного синтаксису"
-subtitle: "Complex Syntax Workshop"
+subtitle: "Практикум зі складного синтаксису"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Закріпити практичні навички вживання всіх типів складних речей у власному мовленні."
   - "Вдосконалити вміння пунктуаційного оформлення складних синтаксичних конструкцій."
-  - "Навчитися стилістично обґрунтовано вибирати тип складного речення залежно від мети комунікації."
+  - "Навчитися стилістично обґрунтовано вибирати тип складного речення залежно від
+    мети комунікації."
   - "Підготуватися до фінального тестування зі складного синтаксису української мови."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Методологія лінгвістичного аналізу тексту: використання складного синтаксису для точності формулювань."
+    topic: "Методологія лінгвістичного аналізу тексту: використання складного синтаксису
+      для точності формулювань."
     key_elements: ["верифікація", "дедукція", "емпіричні дані"]
     motivation: "Аналіз ролі синтаксису в забезпеченні наукової об'єктивності."
   - source_type: "художній уривок"
-    topic: "Психологічна проза Миколи Хвильового: складний синтаксис як дзеркало внутрішнього хаосу та пошуку."
+    topic: "Психологічна проза Миколи Хвильового: складний синтаксис як дзеркало внутрішнього
+      хаосу та пошуку."
     key_elements: ["модернізм", "потік свідомості", "ритмізована проза"]
     motivation: "Вивчення експресивних можливостей синтаксису в літературі."
 
 listening_situations:
   - media_type: "відео"
     setting: "Виступ українського інтелектуала на конференції TEDx про майбутнє освіти."
-    focus_points: ["використання складних речей у публічній промові", "паузація та інтонація як засоби структурування думки"]
-    motivation: "Сприйняття та аналіз складних конструкцій у сучасному ораторському мистецтві."
+    focus_points: ["використання складних речей у публічній промові", "паузація та
+          інтонація як засоби структурування думки"]
+    motivation: "Сприйняття та аналіз складних конструкцій у сучасному ораторському
+      мистецтві."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть підсумкове есе на тему 'Сила слова в епоху цифрових технологій', інтегруючи різні типи складних речей (ССР, СПР, БСР, змішані)."
-    requirements: ["мінімум 350 слів", "використання принаймні по два речення кожного вивченого типу", "бездоганна пунктуація"]
+    prompt: "Напишіть підсумкове есе на тему 'Сила слова в епоху цифрових технологій',
+      інтегруючи різні типи складних речей (ССР, СПР, БСР, змішані)."
+    requirements: ["мінімум 350 слів", "використання принаймні по два речення кожного
+          вивченого типу", "бездоганна пунктуація"]
     motivation: "Фінальна демонстрація володіння складним синтаксисом."
-    model_answer: "Есе має бути зразком академічного стилю з багатим лексичним наповненням та досконалою синтаксичною структурою."
+    model_answer: "Есе має бути зразком академічного стилю з багатим лексичним наповненням
+      та досконалою синтаксичною структурою."
 
 discussion_topics:
   - context: "Чи може мова бути інструментом маніпуляції свідомістю мас?"
@@ -105,15 +113,21 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix all types of syntactic and punctuation errors in a complex academic text — including nested clauses, conjunction clashes, and run-on sentences."
+    description: "Fix all types of syntactic and punctuation errors in a complex academic
+      text — including nested clauses, conjunction clashes, and run-on sentences."
   - type: critical-analysis
-    description: "Compare two versions of the same text — one using simple sentences and one using complex syntax — and analyze how complexity affects persuasiveness and register."
+    description: "Compare two versions of the same text — one using simple sentences
+      and one using complex syntax — and analyze how complexity affects persuasiveness
+      and register."
   - type: essay-response
-    description: "Write a structured academic paragraph (150-200 words) using at least one example of each complex sentence type (ССР, СПР, БСР, змішане)."
+    description: "Write a structured academic paragraph (150-200 words) using at least
+      one example of each complex sentence type (ССР, СПР, БСР, змішане)."
   - type: match-up
-    description: "Match sentence types with their most common functional contexts (науковий стиль, публіцистика, офіційно-діловий)."
+    description: "Match sentence types with their most common functional contexts
+      (науковий стиль, публіцистика, офіційно-діловий)."
   - type: select
-    description: "Choose the most stylistically appropriate sentence structure for given communicative situations (academic paper, news article, official letter)."
+    description: "Choose the most stylistically appropriate sentence structure for
+      given communicative situations (academic paper, news article, official letter)."
 
 activities:
   types_required:
@@ -132,4 +146,4 @@ references:
 
 connects_to:
   previous: "combined-complex-sentences"
-  next: null
+  next:

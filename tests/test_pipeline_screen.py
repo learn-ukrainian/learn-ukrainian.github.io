@@ -12,8 +12,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.screen import (
@@ -21,7 +19,6 @@ from pipeline.screen import (
     _fix_ipa_brackets,
     _run_ipa_scan,
 )
-
 
 # =============================================================================
 # _fix_extra_h1

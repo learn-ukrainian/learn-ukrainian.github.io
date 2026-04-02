@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "noun-subclasses-feminine",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T03:05:00.825782+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T03:06:12.486400+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T03:07:48.722979+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T03:08:47.076968+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-02T03:21:00.330203+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-02T03:21:00.330344+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-02T03:22:48.731128+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-02T03:22:48.753017+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-02T03:22:48.762527+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-02T03:24:18.596595+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-02T03:24:18.596721+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-02T03:24:18.964201+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-02T03:26:09.295592+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T03:26:13.926668+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T03:26:15.404657+00:00"
+    }
+  }
+}

@@ -1,8 +1,8 @@
 """Tests for assess_research.py --coverage functionality."""
 
+import json
 import subprocess
 import sys
-import json
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from assess_research import _coverage_for_track, TRACKS
+from assess_research import _coverage_for_track
 
 
 @pytest.fixture

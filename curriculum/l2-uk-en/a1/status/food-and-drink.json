@@ -2,15 +2,15 @@
   "module": "food-and-drink",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:26:09.955115Z",
+  "last_audit": "2026-04-02T20:29:58.409115Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T15:53:41.664896Z",
+    "md": "2026-03-31T17:27:15.872427Z",
     "meta": null,
     "activities": "2026-03-30T15:49:39.918908Z",
     "vocabulary": "2026-03-30T15:50:21.093921Z",
     "research": null,
-    "plan": "2026-03-30T10:59:40.283394Z"
+    "plan": "2026-03-30T22:17:20.656912Z"
   },
   "gates": {
     "meta": {
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2386/1200 (raw: 3053)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1649/1200 (raw: 1687) | engagement: 0/1"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/0"
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -164,7 +164,7 @@ class TestApiEndpoints:
             if not found:
                 missing.append(endpoint)
 
-        assert not missing, f"API endpoints referenced in dashboards but not found in routers:\n" + "\n".join(missing)
+        assert not missing, "API endpoints referenced in dashboards but not found in routers:\n" + "\n".join(missing)
 
     def test_fetch_calls_in_html(self):
         """Verify all fetch calls reference known endpoints."""

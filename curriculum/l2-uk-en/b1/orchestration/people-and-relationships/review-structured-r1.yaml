@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all 6 sections and plan points (Avramenko/Zabolotnyi logic), though
+    the specific "м'який" character comparison was skipped.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: High quality, but the **«Наталію!»** vocative error is a critical grammar
+    mistake in a section teaching grammar. Terminology "прийом" is a major quality
+    issue.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Deep linguistic explanations (e.g., *кохати* vs *любити*,
+    *стосунки* vs *відносини*) are perfectly targeted for B1.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 16 required and 12 recommended words are integrated naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are perfectly positioned. The logic of suggested items (e.g.,
+    the portrait of *дідусь Іван*) provides a great basis for activities.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural teacher tone. No "Magic of numbers" filler. Concrete cultural
+    details like **«кров із молоком»** and the wedding context are great.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4985 (target 4000), which is excellent for B1 richness.
+    Clean markdown structure.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent coverage of Ukrainian kinship (свекруха/теща distinction) and
+    the concept of "Рід".
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: The wedding reception dialogue is natural and serves the pedagogical goal
+    of adjective agreement perfectly.
+findings: []

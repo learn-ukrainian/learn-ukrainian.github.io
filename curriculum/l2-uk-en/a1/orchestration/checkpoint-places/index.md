@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-places (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:43
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 19:34:26 |
 | enrich | complete | 2026-03-30 19:34:27 |
 | verify | complete | 2026-03-30 19:34:28 |
-| review | complete | 2026-03-30 19:38:25 |
-| stress | complete | 2026-03-31 09:57:07 |
-| publish | complete | 2026-03-31 09:57:08 |
+| review | complete | 2026-04-01 11:43:12 |
+| stress | complete | 2026-04-01 11:43:12 |
+| publish | complete | 2026-04-01 11:43:18 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 287s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 33s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 238s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

@@ -1,180 +1,168 @@
-module: b1-061
+module: b1-057
 level: B1
-sequence: 61
+sequence: 57
 slug: gerunds-imperfective
 version: '3.0'
 title: "Дієприслівники недоконаного виду"
 subtitle: "Додаткова дія, одночасна з основною: читаючи, слухаючи"
 focus: grammar
 pedagogy: PPP
-phase: "B1.7 [Participles & Gerunds]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
-- "Learner can define дієприслівник as an unchangeable verb form that
-  expresses a secondary action and answers the question що роблячи?"
-- "Learner can form imperfective gerunds using суфікси -учи/-ючи
-  (I дієвідміна) and -ачи/-ячи (II дієвідміна)"
-- "Learner can distinguish дієприслівник from дієприкметник:
-  дієприслівник is an обставина (adverb-like), дієприкметник is an означення"
-- "Learner can correctly identify the logical subject: the дієприслівник
-  and the main verb must share the same subject"
-- "Learner can use imperfective gerunds to express simultaneous actions
-  in both spoken and written Ukrainian"
+  - "Learner can define дієприслівник as an unchangeable verb form that expresses
+    a secondary action and answers the question що роблячи?"
+  - "Learner can form imperfective gerunds using суфікси -учи/-ючи (I дієвідміна)
+    and -ачи/-ячи (II дієвідміна)"
+  - "Learner can distinguish дієприслівник from дієприкметник: дієприслівник is an
+    обставина (adverb-like), дієприкметник is an означення"
+  - "Learner can correctly identify the logical subject: the дієприслівник and the
+    main verb must share the same subject"
+  - "Learner can use imperfective gerunds to express simultaneous actions in both
+    spoken and written Ukrainian"
 dialogue_situations:
-- setting: 'Morning jog along the Дніпро (m) embankment — describing simultaneous
-    actions: Біжучи (while running), слухаю музику. Переходячи (while crossing) міст
-    (m, bridge), бачу схід сонця (m, sunrise). Дихаючи (breathing) свіжим повітрям
-    (n, air), почуваюся живим.'
-  speakers:
-  - Бігун (runner, narrating)
-  - Друг (слухає)
-  motivation: 'Imperfective gerunds: біжучи, переходячи, дихаючи — simultaneous actions'
+  - setting: 'Morning jog along the Дніпро (m) embankment — describing simultaneous
+      actions: Біжучи (while running), слухаю музику. Переходячи (while crossing)
+      міст (m, bridge), бачу схід сонця (m, sunrise). Дихаючи (breathing) свіжим повітрям
+      (n, air), почуваюся живим.'
+    speakers:
+      - Бігун (runner, narrating)
+      - Друг (слухає)
+    motivation: 'Imperfective gerunds: біжучи, переходячи, дихаючи — simultaneous
+      actions'
 content_outline:
-- section: "Що таке дієприслівник?"
-  words: 700
-  points:
-  - "Definition from Литвінова Grade 7 p.114: дієприслівник — це
-    незмінювана форма дієслова, яка означає додаткову дію й відповідає
-    на питання що роблячи? що зробивши? Combines ознаки дієслова
-    (вид, час, перехідність) i прислівника (незмінюваність, роль
-    обставини в реченні)."
-  - "Contrast with дієприкметник:
-    Дієприкметник = ознака предмета за дією → означення (який?):
-    Читаюча дівчина... (the girl who is reading — describes the noun).
-    Дієприслівник = додаткова дія → обставина (як? коли? чому?):
-    Читаючи, дівчина усміхалася. (while reading, the girl smiled —
-    describes HOW/WHEN the main action happened).
-    Key: дієприкметник → adjective-like, дієприслівник → adverb-like."
-  - "The logical subject rule: дієприслівник and the присудок must
-    share the SAME subject. The person doing the secondary action IS
-    the person doing the main action:
-    Читаючи книгу, Марія усміхалася. (Марія reads AND smiles — correct)
-    *Читаючи книгу, мені стало цікаво. (nobody reads — WRONG,
-    the logical subject of 'читаючи' is unclear)."
-- section: "Творення дієприслівників недоконаного виду"
-  words: 750
-  points:
-  - "Formation from Литвінова Grade 7 p.118 and Заболотний Grade 7 p.131:
-    I дієвідміна: основа теперішнього часу + -учи/-ючи:
-    читати → читають → читаючи, нести → несуть → несучи,
-    писати → пишуть → пишучи, бігти → біжать → біжучи.
-    II дієвідміна: основа теперішнього часу + -ачи/-ячи:
-    стояти → стоять → стоячи, лежати → лежать → лежачи,
-    бачити → бачать → бачачи, говорити → говорять → говорячи."
-  - "Important: дієприслівники недоконаного виду виражають дію,
-    одночасну з основною. The gerund action happens AT THE SAME TIME
-    as the main verb action:
-    Слухаючи музику, я працюю. (I work WHILE listening to music.)
-    Гуляючи парком, ми розмовляли. (We talked WHILE walking in the park.)
-    This simultaneity is the key semantic feature."
-  - "Not all verbs form дієприслівники. From Авраменко Grade 7 p.123:
-    verbs without present tense forms, verbs like бути (будучи exists
-    but is rare). Practice: form gerunds from 12-15 verbs, including
-    verbs with consonant alternations in the present tense stem
-    (писати → пишуть → пишучи, сидіти → сидять → сидячи)."
-  - "Reflexive gerunds: -ся remains after the suffix:
-    усміхатися → усміхаючись, дивитися → дивлячись,
-    навчатися → навчаючись. Note: -сь (not -ся) after vowel."
-- section: "Дієприслівник як обставина"
-  words: 600
-  points:
-  - "Syntactic role: дієприслівник is ALWAYS an обставина in the sentence.
-    Types of circumstance it expresses:
-    Обставина способу дії (manner): Він ішов усміхаючись. (How? — smiling.)
-    Обставина часу (time): Снідаючи, я читаю новини. (When? — while having breakfast.)
-    Обставина причини (reason): Хвилюючись за дітей, мати не спала. (Why? — worrying.)
-    Обставина умови (condition): Працюючи разом, ми досягнемо більшого. (Under what condition?)"
-  - "Position in the sentence: flexible, but placement affects emphasis.
-    Читаючи газету, батько пив каву. (emphasis on reading)
-    Батько, читаючи газету, пив каву. (embedded — balanced)
-    Батько пив каву, читаючи газету. (emphasis on coffee drinking)
-    All three are grammatically correct."
-  - "Practice: determine the type of обставина for given дієприслівники
-    in sentences, and experiment with repositioning them."
-- section: "Поширені помилки та практика"
-  words: 600
-  points:
-  - "Dangling gerund (найпоширеніша помилка):
-    *Їдучи в автобусі, мені зателефонували. (Who is riding? Not clear.)
-    → Їдучи в автобусі, я отримав дзвінок. (I am riding AND receiving.)
-    *Слухаючи музику, кімната наповнилася звуками.
-    → Слухаючи музику, я помітив, як кімната наповнилася звуками."
-  - "Gerund vs subordinate clause equivalent:
-    Читаючи книгу, я думав про автора.
-    = Коли я читав книгу, я думав про автора.
-    The gerund is more concise; the clause is more natural in speech.
-    Learners should master both and choose based on register."
-  - "Reading passage with gerunds: a description of a person's
-    daily routine using дієприслівники to show simultaneous actions.
-    Learners identify all gerunds, check logical subject alignment,
-    and transform selected gerunds into subordinate clauses."
-- section: "Підсумок та перехід до M62"
-  words: 350
-  points:
-  - "Summary: дієприслівник недоконаного виду = додаткова дія,
-    одночасна з основною. Суфікси: -учи/-ючи (I), -ачи/-ячи (II).
-    Незмінюваний. Роль обставини. Логічний підмет = спільний.
-    Self-check: Я можу утворити дієприслівники ✓/✗,
-    Я перевіряю спільність підмета ✓/✗."
-  - "Preview: M62 — Дієприслівники доконаного виду. Secondary action
-    that happens BEFORE the main action: прочитавши книгу, я віддав її."
+  - section: "Що таке дієприслівник?"
+    words: 700
+    points:
+      - "Definition from Литвінова Grade 7 p.114: дієприслівник — це незмінювана форма
+        дієслова, яка означає додаткову дію й відповідає на питання що роблячи? що
+        зробивши? Combines ознаки дієслова (вид, час, перехідність) i прислівника
+        (незмінюваність, роль обставини в реченні)."
+      - "Contrast with дієприкметник: Дієприкметник = ознака предмета за дією → означення
+        (який?): Читаюча дівчина... (the girl who is reading — describes the noun).
+        Дієприслівник = додаткова дія → обставина (як? коли? чому?): Читаючи, дівчина
+        усміхалася. (while reading, the girl smiled — describes HOW/WHEN the main
+        action happened). Key: дієприкметник → adjective-like, дієприслівник → adverb-like."
+      - "The logical subject rule: дієприслівник and the присудок must share the SAME
+        subject. The person doing the secondary action IS the person doing the main
+        action: Читаючи книгу, Марія усміхалася. (Марія reads AND smiles — correct)
+        *Читаючи книгу, мені стало цікаво. (nobody reads — WRONG, the logical subject
+        of 'читаючи' is unclear)."
+  - section: "Творення дієприслівників недоконаного виду"
+    words: 750
+    points:
+      - "Formation from Литвінова Grade 7 p.118 and Заболотний Grade 7 p.131: I дієвідміна:
+        основа теперішнього часу + -учи/-ючи: читати → читають → читаючи, нести →
+        несуть → несучи, писати → пишуть → пишучи, бігти → біжать → біжучи. II дієвідміна:
+        основа теперішнього часу + -ачи/-ячи: стояти → стоять → стоячи, лежати → лежать
+        → лежачи, бачити → бачать → бачачи, говорити → говорять → говорячи."
+      - "Important: дієприслівники недоконаного виду виражають дію, одночасну з основною.
+        The gerund action happens AT THE SAME TIME as the main verb action: Слухаючи
+        музику, я працюю. (I work WHILE listening to music.) Гуляючи парком, ми розмовляли.
+        (We talked WHILE walking in the park.) This simultaneity is the key semantic
+        feature."
+      - "Not all verbs form дієприслівники. From Авраменко Grade 7 p.123: verbs without
+        present tense forms, verbs like бути (будучи exists but is rare). Practice:
+        form gerunds from 12-15 verbs, including verbs with consonant alternations
+        in the present tense stem (писати → пишуть → пишучи, сидіти → сидять → сидячи)."
+      - "Reflexive gerunds: -ся remains after the suffix: усміхатися → усміхаючись,
+        дивитися → дивлячись, навчатися → навчаючись. Note: -сь (not -ся) after vowel."
+  - section: "Дієприслівник як обставина"
+    words: 600
+    points:
+      - "Syntactic role: дієприслівник is ALWAYS an обставина in the sentence. Types
+        of circumstance it expresses: Обставина способу дії (manner): Він ішов усміхаючись.
+        (How? — smiling.) Обставина часу (time): Снідаючи, я читаю новини. (When?
+        — while having breakfast.) Обставина причини (reason): Хвилюючись за дітей,
+        мати не спала. (Why? — worrying.) Обставина умови (condition): Працюючи разом,
+        ми досягнемо більшого. (Under what condition?)"
+      - "Position in the sentence: flexible, but placement affects emphasis. Читаючи
+        газету, батько пив каву. (emphasis on reading) Батько, читаючи газету, пив
+        каву. (embedded — balanced) Батько пив каву, читаючи газету. (emphasis on
+        coffee drinking) All three are grammatically correct."
+      - "Practice: determine the type of обставина for given дієприслівники in sentences,
+        and experiment with repositioning them."
+  - section: "Поширені помилки та практика"
+    words: 600
+    points:
+      - "Dangling gerund (найпоширеніша помилка): *Їдучи в автобусі, мені зателефонували.
+        (Who is riding? Not clear.) → Їдучи в автобусі, я отримав дзвінок. (I am riding
+        AND receiving.) *Слухаючи музику, кімната наповнилася звуками. → Слухаючи
+        музику, я помітив, як кімната наповнилася звуками."
+      - "Gerund vs subordinate clause equivalent: Читаючи книгу, я думав про автора.
+        = Коли я читав книгу, я думав про автора. The gerund is more concise; the
+        clause is more natural in speech. Learners should master both and choose based
+        on register."
+      - "Reading passage with gerunds: a description of a person's daily routine using
+        дієприслівники to show simultaneous actions. Learners identify all gerunds,
+        check logical subject alignment, and transform selected gerunds into subordinate
+        clauses."
+  - section: "Підсумок та перехід до M62"
+    words: 350
+    points:
+      - "Summary: дієприслівник недоконаного виду = додаткова дія, одночасна з основною.
+        Суфікси: -учи/-ючи (I), -ачи/-ячи (II). Незмінюваний. Роль обставини. Логічний
+        підмет = спільний. Self-check: Я можу утворити дієприслівники ✓/✗, Я перевіряю
+        спільність підмета ✓/✗."
+      - "Preview: M62 — Дієприслівники доконаного виду. Secondary action that happens
+        BEFORE the main action: прочитавши книгу, я віддав її."
 vocabulary_hints:
   required:
-  - "дієприслівник (adverbial participle/gerund — unchangeable verb form)"
-  - "недоконаний вид (imperfective aspect — ongoing/repeated action)"
-  - "читаючи (while reading — imperfective gerund)"
-  - "слухаючи (while listening — imperfective gerund)"
-  - "пишучи (while writing — imperfective gerund)"
-  - "говорячи (while speaking — imperfective gerund)"
-  - "обставина (adverbial modifier — syntactic role of the gerund)"
-  - "додаткова дія (secondary/additional action)"
-  - "одночасність (simultaneity — actions happening at the same time)"
-  - "логічний підмет (logical subject — must be shared)"
+    - "дієприслівник (adverbial participle/gerund — unchangeable verb form)"
+    - "недоконаний вид (imperfective aspect — ongoing/repeated action)"
+    - "читаючи (while reading — imperfective gerund)"
+    - "слухаючи (while listening — imperfective gerund)"
+    - "пишучи (while writing — imperfective gerund)"
+    - "говорячи (while speaking — imperfective gerund)"
+    - "обставина (adverbial modifier — syntactic role of the gerund)"
+    - "додаткова дія (secondary/additional action)"
+    - "одночасність (simultaneity — actions happening at the same time)"
+    - "логічний підмет (logical subject — must be shared)"
   recommended:
-  - "незмінюваний (invariable — does not decline or conjugate)"
-  - "усміхаючись (while smiling — reflexive gerund)"
-  - "дивлячись (while watching — reflexive gerund)"
-  - "стоячи (while standing — from II дієвідміна)"
-  - "біжучи (while running — from бігти)"
-  - "сидячи (while sitting — from сидіти)"
-  - "хвилюючись (while worrying — reflexive gerund)"
+    - "незмінюваний (invariable — does not decline or conjugate)"
+    - "усміхаючись (while smiling — reflexive gerund)"
+    - "дивлячись (while watching — reflexive gerund)"
+    - "стоячи (while standing — from II дієвідміна)"
+    - "біжучи (while running — from бігти)"
+    - "сидячи (while sitting — from сидіти)"
+    - "хвилюючись (while worrying — reflexive gerund)"
 activity_hints:
-- type: fill-in
-  focus: "Form imperfective gerunds from given verbs using correct suffixes"
-  items: 10
-- type: quiz
-  focus: "Is the gerund used correctly? Check logical subject alignment"
-  items: 8
-- type: match-up
-  focus: "Match gerunds to their base verbs and identify the дієвідміна"
-  items: 8
-- type: error-correction
-  focus: "Fix dangling gerund errors by aligning logical subjects"
-  items: 8
-- type: sentence-builder
-  focus: "Combine two actions into one sentence using a gerund for simultaneity"
-  items: 6
+  - type: fill-in
+    focus: "Form imperfective gerunds from given verbs using correct suffixes"
+    items: 10
+  - type: quiz
+    focus: "Is the gerund used correctly? Check logical subject alignment"
+    items: 8
+  - type: match-up
+    focus: "Match gerunds to their base verbs and identify the дієвідміна"
+    items: 8
+  - type: error-correction
+    focus: "Fix dangling gerund errors by aligning logical subjects"
+    items: 8
+  - type: sentence-builder
+    focus: "Combine two actions into one sentence using a gerund for simultaneity"
+    items: 6
 connects_to:
-- "b1-062 (Дієприслівники доконаного виду — perfective gerunds)"
-- "b1-063 (Дієприслівниковий зворот — gerund phrases)"
-- "b1-057 (Активні дієприкметники — contrast: означення vs обставина)"
+  - "b1-062 (Дієприслівники доконаного виду — perfective gerunds)"
+  - "b1-063 (Дієприслівниковий зворот — gerund phrases)"
+  - "b1-057 (Активні дієприкметники — contrast: означення vs обставина)"
 prerequisites:
-- "b1-060 (Short-form adjectives — Phase 7 sequence)"
+  - "b1-060 (Short-form adjectives — Phase 7 sequence)"
 grammar:
-- "Дієприслівник: незмінювана дієслівна форма, роль обставини"
-- "Formation: -учи/-ючи (I дієвідміна), -ачи/-ячи (II дієвідміна)"
-- "Зворотні дієприслівники: -учись/-ючись, -ачись/-ячись"
-- "Одночасність дії з основним дієсловом"
-- "Logical subject rule: gerund and main verb share the subject"
-- "Syntactic role: обставина способу дії, часу, причини, умови"
+  - "Дієприслівник: незмінювана дієслівна форма, роль обставини"
+  - "Formation: -учи/-ючи (I дієвідміна), -ачи/-ячи (II дієвідміна)"
+  - "Зворотні дієприслівники: -учись/-ючись, -ачись/-ячись"
+  - "Одночасність дії з основним дієсловом"
+  - "Logical subject rule: gerund and main verb share the subject"
+  - "Syntactic role: обставина способу дії, часу, причини, умови"
 register: науково-навчальний
 references:
-- title: "Литвінова Grade 7, p.114-121"
-  notes: "Розділ 3 Дієприслівник: definition, formation of imperfective
-    gerunds, exercises, §21 Вид i час дієприслівників."
-- title: "Заболотний Grade 7, p.131"
-  notes: "Дієприслівники доконаного й недоконаного виду: comparison
-    table, що роблячи? vs що зробивши?"
-- title: "Авраменко Grade 7, p.123"
-  notes: "§55 Вид i час дієприслівників: test-format exercises,
-    suffix identification, formation rules."
+  - title: "Литвінова Grade 7, p.114-121"
+    notes: "Розділ 3 Дієприслівник: definition, formation of imperfective gerunds,
+      exercises, §21 Вид i час дієприслівників."
+  - title: "Заболотний Grade 7, p.131"
+    notes: "Дієприслівники доконаного й недоконаного виду: comparison table, що роблячи?
+      vs що зробивши?"
+  - title: "Авраменко Grade 7, p.123"
+    notes: "§55 Вид i час дієприслівників: test-format exercises, suffix identification,
+      formation rules."

@@ -1,0 +1,19 @@
+{
+  "attempt": 2,
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Підсумок та перехід до M22'"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T06:28:12.148251+00:00"
+}

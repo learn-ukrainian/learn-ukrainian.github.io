@@ -4,34 +4,41 @@ sequence: 53
 slug: checkpoint-complex-sentences
 version: '1.1'
 title: "Контроль знань: Складне речення в академічному дискурсі"
-subtitle: "Checkpoint: Complex Sentences in Academic Discourse"
+subtitle: "Підсумковий контроль: складні речення в академічному дискурсі"
 focus: checkpoint
 pedagogy: review
 word_target: 4000
 objectives:
-  - "Систематизувати знання про типи складних речень та їх функціонування у наукових текстах."
+  - "Систематизувати знання про типи складних речень та їх функціонування у наукових
+    текстах."
   - "Перевірити вміння будувати складні синтаксичні конструкції з різними видами зв'язку."
   - "Оцінити навички редагування текстів з порушенням синтаксичних норм."
-  - "Підтвердити здатність використовувати складні речення для вираження причиново-наслідкових зв'язків у аргументації."
+  - "Підтвердити здатність використовувати складні речення для вираження причиново-наслідкових
+    зв'язків у аргументації."
 
 reading_situations:
   - source_type: "наукова доповідь"
     topic: "Аналіз соціолінгвістичної ситуації в Україні початку XXI століття."
-    key_elements: ["складні речення з сурядністю та підрядністю", "когерентність", "логічні конектори"]
+    key_elements: ["складні речення з сурядністю та підрядністю", "когерентність",
+      "логічні конектори"]
     motivation: "Перевірка розуміння складної архітектоніки наукового тексту."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Фрагмент лекції Юрія Шевельова про історичний синтаксис української мови."
+    setting: "Фрагмент лекції Юрія Шевельова про історичний синтаксис української
+      мови."
     focus_points: ["структурні особливості речень", "аргументація", "термінологія"]
     motivation: "Оцінка здатності сприймати на слух складні інтелектуальні конструкції."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть критичний відгук на наукову статтю, присвячену питанням європейської інтеграції України, використовуючи складні речення для деталізації аргументів."
-    requirements: ["мінімум 400 слів", "використання щонайменше 10 складних речень різних типів", "дотримання академічного етикету"]
+    prompt: "Напишіть критичний відгук на наукову статтю, присвячену питанням європейської
+      інтеграції України, використовуючи складні речення для деталізації аргументів."
+    requirements: ["мінімум 400 слів", "використання щонайменше 10 складних речень
+          різних типів", "дотримання академічного етикету"]
     motivation: "Фінальна перевірка продуктивних навичок володіння складним синтаксисом."
-    model_answer: "Текст має бути структурно досконалим, з чітким вираженням умови, мети та допустовості через відповідні сполучні засоби."
+    model_answer: "Текст має бути структурно досконалим, з чітким вираженням умови,
+      мети та допустовості через відповідні сполучні засоби."
 
 discussion_topics:
   - context: "Чи є складний синтаксис ознакою інтелектуальної елітарності мови?"
@@ -65,7 +72,8 @@ content_outline:
   - section: "Культура синтаксису: редагування та норма"
     words: 1000
     subsections:
-      - "Типові помилки у побудові складних речень (нанизування підрядних, розрив зв'язку)"
+      - "Типові помилки у побудові складних речень (нанизування підрядних, розрив
+        зв'язку)"
       - "Пунктуаційна норма у реченнях з різними видами зв'язку"
       - "Стилістичне редагування: перетворення складного на просте і навпаки"
     key_concepts:
@@ -102,15 +110,21 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix all syntactic and punctuation errors in a complex academic text containing compound, complex, asyndetic, and mixed sentences."
+    description: "Fix all syntactic and punctuation errors in a complex academic text
+      containing compound, complex, asyndetic, and mixed sentences."
   - type: critical-analysis
-    description: "Analyze a legal or philosophical text — identify each sentence type, draw structural diagrams, and evaluate syntactic appropriateness for academic register."
+    description: "Analyze a legal or philosophical text — identify each sentence type,
+      draw structural diagrams, and evaluate syntactic appropriateness for academic
+      register."
   - type: select
-    description: "Choose the correct punctuation and conjunction in sentences where multiple clause types intersect."
+    description: "Choose the correct punctuation and conjunction in sentences where
+      multiple clause types intersect."
   - type: fill-in
-    description: "Complete a passage from a scientific article with missing conjunctions, relative pronouns, and punctuation marks."
+    description: "Complete a passage from a scientific article with missing conjunctions,
+      relative pronouns, and punctuation marks."
   - type: match-up
-    description: "Match sentence analysis tasks — given structural diagrams, identify the corresponding written sentences and their semantic relationships."
+    description: "Match sentence analysis tasks — given structural diagrams, identify
+      the corresponding written sentences and their semantic relationships."
 
 activities:
   types_required:

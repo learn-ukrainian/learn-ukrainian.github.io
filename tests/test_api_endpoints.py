@@ -14,11 +14,7 @@ Validates:
 """
 
 import json
-import tempfile
-from pathlib import Path
-from unittest.mock import patch
 
-import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app

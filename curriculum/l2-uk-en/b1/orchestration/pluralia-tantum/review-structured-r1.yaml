@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered all sections and references. Cites Zabolotnyi, Lytvinova, etc.
+    correctly. Missed the distinct "travel narrative about Carpathians" block as a
+    reading practice, though Carpathians are discussed
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Several critical errors: `радощей` (Genitive), `дверями` (Instrumental),
+    `існуючі` (Russicism), `позавідмінюваними` (wrong term), and typo `відповід`.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent "Test of One" explanation. Clear contrast between *pluralia*
+    and *singularia*. Good comparison between English and Ukrainian (furniture/меблі).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (`окуляри`, `гроші`, `двері`, `ножиці`, `ліки`, `Карпати`,
+    etc.) and recommended words (`радощі`, `хитрощі`, `жнива`, etc.) used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed perfectly after relevant theory. Types match plan exactly.
+    Extra exercise adds value.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional, patient tutor voice. Natural dialogue. Specific cultural
+    details (Carpathians, Chernivtsi) avoid generic praise.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count (5425) is well within B1 range (target 4000). H2 headings match
+    plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct use of Ukrainian cities and decolonized focus. Rites like `заручини`
+    and `жнива` explained well.
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: '"Packing for a move" situation is realistic and uses *pluralia tantum*
+    nouns naturally in context.'
+findings: []

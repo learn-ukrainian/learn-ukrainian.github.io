@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "shopping-and-health",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:55.201028+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:55.201342+00:00"
+    }
+  }
+}

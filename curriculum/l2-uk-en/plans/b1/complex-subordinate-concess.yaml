@@ -1,163 +1,153 @@
-module: b1-073
+module: b1-069
 level: B1
-sequence: 73
+sequence: 69
 slug: complex-subordinate-concess
 version: '3.0'
 title: "Речення допусту"
 subtitle: "Хоча, дарма що, незважаючи на те що"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Complex Syntax]"
+phase: "B1.7 [Complex Syntax]"
 word_target: 4000
 objectives:
-- "Learner can construct підрядні обставинні допусту expressing concession
-  using хоч/хоча, дарма що, незважаючи на те що, попри те що"
-- "Learner can express the concessive logic: despite X, Y still happens"
-- "Learner can distinguish допустові from причинні and умовні clauses"
-- "Learner can use concessive clauses naturally in argumentation and
-  opinion expression at B1 level"
-- "Learner can correctly punctuate допустові речення"
+  - "Learner can construct підрядні обставинні допусту expressing concession using
+    хоч/хоча, дарма що, незважаючи на те що, попри те що"
+  - "Learner can express the concessive logic: despite X, Y still happens"
+  - "Learner can distinguish допустові from причинні and умовні clauses"
+  - "Learner can use concessive clauses naturally in argumentation and opinion expression
+    at B1 level"
+  - "Learner can correctly punctuate допустові речення"
 dialogue_situations:
-- setting: 'Debate club at a Харківський ліцей (m, Kharkiv lyceum) — concessive clauses:
-    Хоча це складно, варто спробувати. Незважаючи на те що час (m) обмежений, ми встигнемо.
-    Дарма що вона молодша, вона розумніша.'
-  speakers:
-  - Учасники дебатного клубу
-  motivation: 'Concessive clauses: хоча, незважаючи на те що, дарма що — argumentation'
+  - setting: 'Debate club at a Харківський ліцей (m, Kharkiv lyceum) — concessive
+      clauses: Хоча це складно, варто спробувати. Незважаючи на те що час (m) обмежений,
+      ми встигнемо. Дарма що вона молодша, вона розумніша.'
+    speakers:
+      - Учасники дебатного клубу
+    motivation: 'Concessive clauses: хоча, незважаючи на те що, дарма що — argumentation'
 content_outline:
-- section: "Підрядні обставинні допусту"
-  words: 600
-  points:
-  - "Definition from Заболотний Grade 8 p.112: підрядне обставинне допусту
-    називає умову, всупереч якій відбувається дія головної частини.
-    Відповідає на питання незважаючи на що? попри що?
-    Хоч було холодно, ми пішли на прогулянку.
-    (Despite the cold, we went for a walk.)"
-  - "The concessive logic: the підрядне describes a circumstance that
-    SHOULD prevent the main action, but DOESN'T:
-    Expected: cold → stay home. Actual: cold → went walking anyway.
-    This 'despite' relationship is the core of допуст."
-  - "Key conjunctions: хоч/хоча (although), дарма що (even though),
-    незважаючи на те що (despite the fact that),
-    попри те що (despite the fact that),
-    хай/нехай (even if — literary)."
-- section: "Хоч/хоча — основний сполучник"
-  words: 700
-  points:
-  - "Хоч/хоча — the most common and versatile:
-    Хоча він запізнився, ми почекали на нього.
-    Ми пішли на прогулянку, хоч було холодно.
-    Position: flexible — before or after main clause."
-  - "Correlative words in the main clause: але, проте, однак, та, зате, все ж:
-    Хоча він запізнився, але ми почекали на нього.
-    Хоч було холодно, проте ми пішли на прогулянку.
-    Хоча вона хворіла, та все ж прийшла на роботу.
-    The correlative STRENGTHENS the contrast."
-  - "Хоч vs хоча: both are standard Ukrainian. Хоч is slightly more
-    colloquial, хоча slightly more formal. Both correct everywhere."
-  - "Practice: construct 8 concessive sentences with хоч/хоча,
-    with and without correlative words."
-- section: "Інші допустові сполучники"
-  words: 600
-  points:
-  - "Дарма що — emphasizes that the circumstance is futile/irrelevant:
-    Дарма що він старався, нічого не вийшло.
-    (Even though he tried, nothing worked — his effort was wasted.)"
-  - "Незважаючи на те що — formal, calque-like but established:
-    Незважаючи на те що погода погіршилася, захід відбувся.
-    Попри те що — Ukrainian alternative, slightly less formal:
-    Попри те що погода погіршилася, захід відбувся."
-  - "Хай/нехай (literary/folk — even if/let it be that):
-    Хай лютує зима, а весна все одно прийде.
-    Нехай дорога важка, ми дійдемо.
-    These add emotional/literary color."
-  - "Register pyramid: хоч (neutral) → дарма що (expressive) →
-    незважаючи на те що (formal) → попри те що (formal Ukrainian)."
-- section: "Допуст vs причина vs умова"
-  words: 550
-  points:
-  - "Three-way contrast:
-    Причина: Ми не пішли, бо було холодно. (cause → result)
-    Умова: Ми не підемо, якщо буде холодно. (condition → consequence)
-    Допуст: Хоч було холодно, ми пішли. (obstacle → action despite it)
-    The допуст REVERSES the expected cause-effect."
-  - "Допуст vs протиставне складносурядне (M66):
-    Допуст: Хоча він хворів, він прийшов. (subordinate)
-    Протиставне: Він хворів, але прийшов. (coordinate)
-    Both express contrast, but the syntactic structure differs.
-    Practice: rewrite 4 допустові as протиставні and vice versa."
-  - "Practice: classify 8 sentences as причинні, умовні, or допустові."
-- section: "Практика: допустові речення у мовленні"
-  words: 650
-  points:
-  - "Argumentation patterns (useful for M87 — debate):
-    Хоча деякі люди вважають, що..., проте я переконаний, що...
-    Дарма що цей аргумент здається переконливим, він має слабкі місця.
-    Незважаючи на те що дослідження показують..., ситуація складніша."
-  - "Reading passage: an opinion text using допустові речення.
-    Learners identify all concessive clauses, note conjunctions,
-    and explain the concessive logic."
-  - "Production: write 6 concessive sentences about opinions, experiences,
-    or current events. Use at least 3 different conjunctions."
-- section: "Підсумок та перехід до M74"
-  words: 300
-  points:
-  - "Summary: допустові = незважаючи на що? попри що? Хоч/хоча (нейтральний),
-    дарма що (емоційний), незважаючи на те що (офіційний). Логіка: перешкода
-    не заважає дії. Self-check: Я розрізняю допуст, причину і умову ✓/✗."
-  - "Preview: M74 — Пряма і непряма мова. Quoting and reporting speech."
+  - section: "Підрядні обставинні допусту"
+    words: 600
+    points:
+      - "Definition from Заболотний Grade 8 p.112: підрядне обставинне допусту називає
+        умову, всупереч якій відбувається дія головної частини. Відповідає на питання
+        незважаючи на що? попри що? Хоч було холодно, ми пішли на прогулянку. (Despite
+        the cold, we went for a walk.)"
+      - "The concessive logic: the підрядне describes a circumstance that SHOULD prevent
+        the main action, but DOESN'T: Expected: cold → stay home. Actual: cold → went
+        walking anyway. This 'despite' relationship is the core of допуст."
+      - "Key conjunctions: хоч/хоча (although), дарма що (even though), незважаючи
+        на те що (despite the fact that), попри те що (despite the fact that), хай/нехай
+        (even if — literary)."
+  - section: "Хоч/хоча — основний сполучник"
+    words: 700
+    points:
+      - "Хоч/хоча — the most common and versatile: Хоча він запізнився, ми почекали
+        на нього. Ми пішли на прогулянку, хоч було холодно. Position: flexible — before
+        or after main clause."
+      - "Correlative words in the main clause: але, проте, однак, та, зате, все ж:
+        Хоча він запізнився, але ми почекали на нього. Хоч було холодно, проте ми
+        пішли на прогулянку. Хоча вона хворіла, та все ж прийшла на роботу. The correlative
+        STRENGTHENS the contrast."
+      - "Хоч vs хоча: both are standard Ukrainian. Хоч is slightly more colloquial,
+        хоча slightly more formal. Both correct everywhere."
+      - "Practice: construct 8 concessive sentences with хоч/хоча, with and without
+        correlative words."
+  - section: "Інші допустові сполучники"
+    words: 600
+    points:
+      - "Дарма що — emphasizes that the circumstance is futile/irrelevant: Дарма що
+        він старався, нічого не вийшло. (Even though he tried, nothing worked — his
+        effort was wasted.)"
+      - "Незважаючи на те що — formal, calque-like but established: Незважаючи на
+        те що погода погіршилася, захід відбувся. Попри те що — Ukrainian alternative,
+        slightly less formal: Попри те що погода погіршилася, захід відбувся."
+      - "Хай/нехай (literary/folk — even if/let it be that): Хай лютує зима, а весна
+        все одно прийде. Нехай дорога важка, ми дійдемо. These add emotional/literary
+        color."
+      - "Register pyramid: хоч (neutral) → дарма що (expressive) → незважаючи на те
+        що (formal) → попри те що (formal Ukrainian)."
+  - section: "Допуст vs причина vs умова"
+    words: 550
+    points:
+      - "Three-way contrast: Причина: Ми не пішли, бо було холодно. (cause → result)
+        Умова: Ми не підемо, якщо буде холодно. (condition → consequence) Допуст:
+        Хоч було холодно, ми пішли. (obstacle → action despite it) The допуст REVERSES
+        the expected cause-effect."
+      - "Допуст vs протиставне складносурядне (M66): Допуст: Хоча він хворів, він
+        прийшов. (subordinate) Протиставне: Він хворів, але прийшов. (coordinate)
+        Both express contrast, but the syntactic structure differs. Practice: rewrite
+        4 допустові as протиставні and vice versa."
+      - "Practice: classify 8 sentences as причинні, умовні, or допустові."
+  - section: "Практика: допустові речення у мовленні"
+    words: 650
+    points:
+      - "Argumentation patterns (useful for M87 — debate): Хоча деякі люди вважають,
+        що..., проте я переконаний, що... Дарма що цей аргумент здається переконливим,
+        він має слабкі місця. Незважаючи на те що дослідження показують..., ситуація
+        складніша."
+      - "Reading passage: an opinion text using допустові речення. Learners identify
+        all concessive clauses, note conjunctions, and explain the concessive logic."
+      - "Production: write 6 concessive sentences about opinions, experiences, or
+        current events. Use at least 3 different conjunctions."
+  - section: "Підсумок та перехід до M74"
+    words: 300
+    points:
+      - "Summary: допустові = незважаючи на що? попри що? Хоч/хоча (нейтральний),
+        дарма що (емоційний), незважаючи на те що (офіційний). Логіка: перешкода не
+        заважає дії. Self-check: Я розрізняю допуст, причину і умову ✓/✗."
+      - "Preview: M74 — Пряма і непряма мова. Quoting and reporting speech."
 vocabulary_hints:
   required:
-  - "підрядне обставинне допусту (concessive subordinate clause)"
-  - "хоч/хоча (although)"
-  - "дарма що (even though — futile circumstance)"
-  - "незважаючи на те що (despite the fact that)"
-  - "попри те що (despite the fact that — Ukrainian alternative)"
-  - "допуст (concession)"
-  - "всупереч (despite, contrary to)"
+    - "підрядне обставинне допусту (concessive subordinate clause)"
+    - "хоч/хоча (although)"
+    - "дарма що (even though — futile circumstance)"
+    - "незважаючи на те що (despite the fact that)"
+    - "попри те що (despite the fact that — Ukrainian alternative)"
+    - "допуст (concession)"
+    - "всупереч (despite, contrary to)"
   recommended:
-  - "однак (however — correlative)"
-  - "проте (nevertheless — correlative)"
-  - "все ж (still, nevertheless)"
-  - "хай/нехай (even if — literary concessive)"
-  - "зате (but on the other hand — correlative)"
+    - "однак (however — correlative)"
+    - "проте (nevertheless — correlative)"
+    - "все ж (still, nevertheless)"
+    - "хай/нехай (even if — literary concessive)"
+    - "зате (but on the other hand — correlative)"
 activity_hints:
-- type: fill-in
-  focus: "Complete concessive sentences with correct conjunction and correlative"
-  items: 10
-- type: quiz
-  focus: "Classify: причинне, умовне, чи допустове речення?"
-  items: 10
-- type: sentence-builder
-  focus: "Construct concessive sentences from given contrasting facts"
-  items: 8
-- type: match-up
-  focus: "Match допустові сполучники to register levels and usage patterns"
-  items: 6
-- type: error-correction
-  focus: "Fix misused conjunctions (допуст vs причина vs умова confusion)"
-  items: 6
+  - type: fill-in
+    focus: "Complete concessive sentences with correct conjunction and correlative"
+    items: 10
+  - type: quiz
+    focus: "Classify: причинне, умовне, чи допустове речення?"
+    items: 10
+  - type: sentence-builder
+    focus: "Construct concessive sentences from given contrasting facts"
+    items: 8
+  - type: match-up
+    focus: "Match допустові сполучники to register levels and usage patterns"
+    items: 6
+  - type: error-correction
+    focus: "Fix misused conjunctions (допуст vs причина vs умова confusion)"
+    items: 6
 connects_to:
-- "b1-072 (Речення мети)"
-- "b1-074 (Пряма і непряма мова)"
-- "b1-070 (Речення причини — contrast: cause vs concession)"
-- "b1-071 (Речення умови — contrast: condition vs concession)"
+  - "b1-072 (Речення мети)"
+  - "b1-074 (Пряма і непряма мова)"
+  - "b1-070 (Речення причини — contrast: cause vs concession)"
+  - "b1-071 (Речення умови — contrast: condition vs concession)"
 prerequisites:
-- "b1-072 (Purpose clauses — all обставинні types covered)"
+  - "b1-072 (Purpose clauses — all обставинні types covered)"
 grammar:
-- "Підрядні обставинні допусту: логіка всупереч"
-- "Conjunctions: хоч/хоча, дарма що, незважаючи на те що, попри те що"
-- "Correlative words: але, проте, однак, все ж, зате"
-- "Three-way contrast: причина vs умова vs допуст"
-- "Допуст vs протиставне складносурядне"
+  - "Підрядні обставинні допусту: логіка всупереч"
+  - "Conjunctions: хоч/хоча, дарма що, незважаючи на те що, попри те що"
+  - "Correlative words: але, проте, однак, все ж, зате"
+  - "Three-way contrast: причина vs умова vs допуст"
+  - "Допуст vs протиставне складносурядне"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 8, p.112"
-  notes: "§21 Підрядні частини мети, умови, допусту: допустові conjunctions,
-    examples with хай/нехай, аби."
-- title: "Ворон Grade 9, p.80"
-  notes: "Підрядні обставинні допустові: незважаючи на що? попри що?,
-    conjunction inventory, position flexibility."
-- title: "Авраменко Grade 8, p.86-87"
-  notes: "§24 Складнопідрядні з підрядними причини, мети, умови:
-    context for comparison with concessive."
+  - title: "Заболотний Grade 8, p.112"
+    notes: "§21 Підрядні частини мети, умови, допусту: допустові conjunctions, examples
+      with хай/нехай, аби."
+  - title: "Ворон Grade 9, p.80"
+    notes: "Підрядні обставинні допустові: незважаючи на що? попри що?, conjunction
+      inventory, position flexibility."
+  - title: "Авраменко Grade 8, p.86-87"
+    notes: "§24 Складнопідрядні з підрядними причини, мети, умови: context for comparison
+      with concessive."

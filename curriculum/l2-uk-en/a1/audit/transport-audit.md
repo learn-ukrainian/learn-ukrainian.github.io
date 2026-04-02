@@ -1,7 +1,7 @@
 # Audit Report: M32 — transport.md
 **Level:** A1 | **Module:** M32 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:28:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:30:09
 
 ## Configuration
 **Type:** A1
@@ -37,28 +37,26 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1675/1200 (raw: 2269)
+- **Words:** ✅ 1238/1200 (raw: 1356)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 4/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ❌ 0/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.3% (target 15-30% (M32))
+- **Immersion:** ⚠️ 32.7% (target 15-30%, within tolerance (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -66,8 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 460 | Included in Core |
+| **Intro/Narrative** | ✅ | 439 | Included in Core |
 | **Транспорт (Transport Types)** | ✅ | 257 | Included in Core |
-| **Ко́ри́сні фра́зи (Useful Phrases)** | ✅ | 369 | Included in Core |
-| **Підсумок — Summary** | ✅ | 589 | Included in Core |
+| **Ко́ри́сні фра́зи (Useful Phrases)** | ✅ | 361 | Included in Core |
+| **Підсумок — Summary** | ✅ | 181 | Included in Core |

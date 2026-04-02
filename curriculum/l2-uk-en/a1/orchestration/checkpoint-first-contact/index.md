@@ -1,26 +1,14 @@
 # Build Summary: checkpoint-first-contact (A1)
 
-Generated: 2026-03-31 11:42
+Generated: 2026-04-02 20:36
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-03-29 22:18:20 |
-| research | complete | 2026-03-29 22:19:16 |
-| skeleton | complete | 2026-03-29 22:20:24 |
-| pre-verify | complete | 2026-03-29 22:22:31 |
-| write | complete | 2026-03-29 22:23:55 |
-| exercises | complete | 2026-03-29 22:23:55 |
-| activities | complete | 2026-03-29 22:40:10 |
-| verify-exercises | complete | 2026-03-29 22:40:10 |
-| annotate | complete | 2026-03-29 22:40:10 |
-| vocab | complete | 2026-03-29 22:41:50 |
-| enrich | complete | 2026-03-29 22:41:51 |
-| verify | complete | 2026-03-29 22:41:51 |
-| review | complete | 2026-03-29 22:46:49 |
-| stress | complete | 2026-03-31 09:42:05 |
-| publish | complete | 2026-03-31 09:42:06 |
+| review | complete | 2026-04-01 11:07:58 |
+| stress | complete | 2026-04-02 18:36:46 |
+| publish | complete | 2026-04-02 18:36:53 |
 
 ## Reviews
 
@@ -28,6 +16,8 @@ Generated: 2026-03-31 11:42
 |-------|------|
 | 1 | checkpoint-first-contact-review-r1.md |
 | 2 | checkpoint-first-contact-review-r2.md |
+| 3 | checkpoint-first-contact-review-r3.md |
+| 4 | checkpoint-first-contact-review-r4.md |
 
 ## Dispatch Log
 
@@ -41,6 +31,12 @@ Generated: 2026-03-31 11:42
 | vocab | claude (claude-sonnet-4-6) | 96s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 212s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 208s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 219s | ✅ |
 
 ## Friction
 
@@ -56,8 +52,12 @@ Generated: 2026-03-31 11:42
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
+- `state.legacy.json`
 - `v6-activities-prompt.md`
 - `v6-pre-verify-prompt.md`
 - `v6-prompt.md`

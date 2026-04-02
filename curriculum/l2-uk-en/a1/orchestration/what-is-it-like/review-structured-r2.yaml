@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present and ordered correctly. Textbook
+    references cited: Пономарова Grade 3 p.98 (RAG-confirmed verbatim quote), Вашуленко
+    Grade 3 p.128-131 (RAG-confirmed), Вашуленко '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All adjective forms verified against VESUM. Gender agreement correct
+    throughout: велика кімната (f), новий стіл (m), старе ліжко (n), чисте вікно (n),
+    маленька листівка (f). Grammar rules accurate: -и'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'PPP flow executed well: dialogues present adjectives in context (Presentation)
+    → grammar section extracts the pattern (Pattern) → adjective pairs with example
+    sentences (Practice) → self-check with wr'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 9 required vocab items used in prose: який/яка/яке (dialogues + grammar
+    section), великий, маленький, новий, старий, гарний, чистий, дорогий, дешевий
+    (all in both dialogues and adjective pairs). A'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 activity_hints have corresponding markers with matching types and
+    focus. Markers placed after relevant teaching sections. Cannot verify exercise
+    content (generated separately), but marker placem
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "unlock" language, no corporate-speak. Direct
+    teacher voice: "Notice what just happened" is showing, not telling. Dialogues
+    grounded in real situations (room at home, book '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present and correctly ordered (Діалоги → Який? Яка?
+    Яке? → Прикметники → Підсумок). Clean markdown. No duplicate summaries, no stray
+    tags, no formatting artifacts. Word count 1529 vs
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian taught on its own terms — no "like Russian but..." framing.
+    The мій/моя/моє connection references M08 (the learner's own prior knowledge),
+    not Russian. Textbook references are all Ukrainian-
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Named speakers throughout (Тарас/Оля in D1, Тарас/Софія in D2). Dialogue
+    1 (room description) — natural domestic situation with varied nouns across genders.
+    Dialogue 2 (book fair) — browsing and react
+findings: []

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 41: Checkpoint: Food and Shopping (A1, A1.6 [Food and Shopping])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1000
 
 ## Plan (source of truth)
@@ -218,156 +218,120 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми знаємо? (What Do We Know?)
-Welcome to the checkpoint module for phase A1.6. This is where we pause to review and consolidate your knowledge. A1.6 covered five essential topics. Let's see what you can do! Can you comfortably perform these tasks in Ukrainian?
+## Що ми зна́ємо? (What Do We Know?)
+Phase A1.6 taught you to talk about food, order at cafés, shop at markets, and use the accusative case for things and people. Before moving on, let's check how well you remember it all. Can you comfortably perform these tasks in Ukrainian?
 - [x] Name 10 foods and 5 drinks (М36)
 - [x] Say what you eat and drink using the accusative case (М37)
 - [x] Order food and drinks at a café (М38)
 - [x] Ask for prices and buy things at a market (М39)
 - [x] Use the accusative case for people (М40)
 Here is a quick vocabulary warm-up. Cover the English words below. Can you recall 10 foods and 5 drinks in Ukrainian without looking? Then you are ready.
-**Їжа** (food): **борщ** (borscht), **вареники** (dumplings), **салат** (salad), **хліб** (bread), **сир** (cheese), **піца** (pizza), **каша** (porridge), **яєчня** (fried eggs), **суп** (soup), **котлета** (cutlet).
-**Напої** (drinks): **кава** (coffee), **чай** (tea), **вода** (water), **сік** (juice), **молоко** (milk).
+**Ї́жа** (food): **борщ** (borscht), **варе́ники** (dumplings), **сала́т** (salad), **хліб** (bread), **сир** (cheese), **пі́ца** (pizza), **ка́ша** (porridge), **яє́чня** (fried eggs), **суп** (soup), **котле́та** (cutlet).
+**Напо́ї** (drinks): **ка́ва** (coffee), **чай** (tea), **вода́** (water), **сік** (juice), **молоко́** (milk).
 Let's do a quick grammar warm-up. Check if these four patterns feel completely natural to you:
 1. Я їм ___: **борщ** (borscht) → **борщ**, **салат** (salad) → **салат**, **суп** (soup) → **суп**.
-2. Я п'ю ___: **кава** (coffee) → **каву**, **вода** (water) → **воду**, **сік** (juice) → **сік**.
-3. Мені ___, будь ласка: **піца** (pizza) → **піцу**, **кава** (coffee) → **каву**.
-4. Я бачу ___: **Олена** (Olena) → **Олену**, **брат** (brother) → **брата**, **друг** (friend) → **друга**.
+2. Я п'ю ___: **кава** (coffee) → **ка́ву**, **вода** (water) → **воду́**, **сік** (juice) → **сік**.
+3. Ме́ні ___, будь ла́ска: **піца** (pizza) → **пі́цу**, **кава** (coffee) → **каву**.
+4. Я ба́чу ___: **Оле́на** (Olena) → **Оле́ну**, **брат** (brother) → **бра́та**, **друг** (friend) → **дру́га**.
 If all four feel natural, you are in a great place. If not, revisit modules M37 and M40. Let's test your knowledge!
 <!-- INJECT_ACTIVITY: quiz-accusative-check -->
-## Читання (Reading Practice)
+## Чита́ння (Reading Practice)
 Read about Anna's day. Notice how she uses the accusative case for food, drinks, and people. Try to find at least six accusative forms as you read.
-**День Анни** (Anna's Day)
-Анна прокидається. Вона їсть **кашу** (porridge) і п'є **каву з молоком** (coffee with milk) на сніданок. Потім вона іде на **ринок** (market).
-<div class="dialogue">
+**День А́нни** (Anna's Day)
+А́нна прокидається. Вона́ їсть **ка́шу** (porridge) і п'є **каву з молоко́м** (coffee with milk) на сніда́нок. По́тім вона іде́ на **ри́нок** (market).
+> — Скі́льки ко́шту́ють помідо́ри?
+> — Три́дцять гри́вень кілогра́м.
+> — Да́йте кілограм, будь ласка.
 
-<div class="dialogue-line">— Скільки коштують помідори?</div>
+Анна купу́є **хліб** (bread), **сир** (cheese), **я́блука** (apples) і **салат** (salad).
+Потім вона іде в **кафе́** (café).
+> — Тут ві́льно?
+> — Так, сіда́йте.
+> — Мені **борщ** (borscht) і **воду** (water), будь ласка.
 
-<div class="dialogue-line">— Тридцять гривень кілограм.</div>
+Ра́птом вона ба́чить по́другу:
+— О, я бачу **Олену** (Olena)! Оле́но, приві́т!
+Олена підхо́дить до не́ї. Анна ка́же:
+— Ти зна́єш мого **брата Миха́йла** (brother Mykhailo)? Це мій брат.
+Вони́ обі́дають ра́зом.
+> — Раху́нок, будь ласка. Мо́жна ка́рткою?
+> — Звича́йно.
 
-<div class="dialogue-line">— Дайте кілограм, будь ласка.</div>
-
-</div>
-Анна купує **хліб** (bread), **сир** (cheese), **яблука** (apples), і **салат** (salad).
-Потім вона іде в **кафе** (café).
-<div class="dialogue">
-
-<div class="dialogue-line">— Тут вільно?</div>
-
-<div class="dialogue-line">— Так, сідайте.</div>
-
-<div class="dialogue-line">— Мені **борщ** (borscht) і **воду** (water), будь ласка.</div>
-
-</div>
-Раптом вона бачить подругу:
-— О, я бачу **Олену** (Olena)! Олено, привіт!
-Олена підходить до неї. Анна каже:
-— Ти знаєш мого **брата Михайла** (brother Mykhailo)? Це мій брат.
-Вони обідають разом.
-<div class="dialogue">
-
-<div class="dialogue-line">— Рахунок, будь ласка. Можна карткою?</div>
-
-<div class="dialogue-line">— Звичайно.</div>
-
-</div>
 Check your understanding. Answer these three questions using full Ukrainian sentences. Try to answer them aloud before moving on.
-1. Що Анна купує на ринку?
-2. Що вона замовляє в кафе?
+1. Що Анна купує на ри́нку?
+2. Що вона замовля́є в кафе?
 3. Кого вона бачить у кафе?
 <!-- INJECT_ACTIVITY: fill-in-cafe-market -->
-## Граматика (Grammar Summary)
-**Чотири ключових шаблони A1.6**
+## Грама́тика (Grammar Summary)
+**Чоти́ри ключови́х шабло́ни A1.6**
 You learned all of these patterns in modules M36 through M40. Here is a quick-reference summary so you have everything in one place.
 **Pattern 1: Food and drink vocabulary chunks**
-You know words for **їжа** (food), **напої** (drinks), and meals: **сніданок** (breakfast), **обід** (lunch), **вечеря** (dinner).
-Notice how we group words using the instrumental case to say "with": **кава з молоком** (coffee with milk), **борщ зі сметаною** (borscht with sour cream), **хліб із сиром** (bread with cheese).
+You know words for **їжа** (food), **напої** (drinks), and meals: **сніданок** (breakfast), **обід** (lunch), **вече́ря** (dinner).
+Notice how we group words using the instrumental case to say "with": **кава з молоком** (coffee with milk), **борщ зі смета́ною** (borscht with sour cream), **хліб із си́ром** (bread with cheese).
 - Я їм кашу на сніданок. (I eat porridge for breakfast.)
 - Я п'ю каву з молоком. (I drink coffee with milk.)
 **Pattern 2: Accusative case for inanimate nouns**
-When an object receives an action (like being eaten, bought, or ordered), its ending changes. Masculine inanimate nouns do not change. They look exactly like their dictionary forms: **борщ** → **борщ**, **хліб** → **хліб**, **сік** → **сік**. Feminine nouns ending in -а/-я change to -у/-ю: **кава** → **каву**, **вода** → **воду**, **піца** → **піцу**, **яєчня** → **яєчню**.
+When an object receives an action (like being eaten, bought, or ordered), its ending changes. Masculine inanimate nouns do not change. They look exactly like their dictionary forms: **борщ** → **борщ**, **хліб** → **хліб**, **сік** → **сік**. Feminine nouns ending in -а/-я change to -у/-ю: **кава** → **каву**, **вода** → **воду**, **піца** → **піцу**, **яєчня** → **яє́чню**.
 | Nominative (Що це?) | Accusative (Що ти їш?) | Example Sentence |
 |---|---|---|
 | **вода** (water) | **воду** | Я п'ю **воду**. (I am drinking water.) |
 | **піца** (pizza) | **піцу** | Я їм **піцу**. (I am eating pizza.) |
-| **суп** (soup) | **суп** | Я замовляю **суп**. (I am ordering soup.) |
+| **суп** (soup) | **суп** | Я замовля́ю **суп**. (I am ordering soup.) |
 | **каша** (porridge) | **кашу** | Я їм **кашу**. (I am eating porridge.) |
 **Pattern 3: Ordering and prices**
 You can navigate a café and a market using these fixed phrases. Note how they build on the vocabulary you already know:
 - **Мені ___, будь ласка.** (To me ___, please. / I'll have ___, please.)
-- **Скільки коштує?** (How much does it cost?)
+- **Скільки ко́шту́є?** (How much does it cost?)
 - **Скільки коштують помідори?** (How much do the tomatoes cost?)
 - **Дайте ___, будь ласка.** (Give [me] ___, please.)
 - **Рахунок, будь ласка.** (The bill, please.)
 - **Можна карткою?** (Can I pay by card?)
-Remember the currency forms depending on the number: **одна гривня** (1), **дві гривні** (2), **п'ять гривень** (5+).
+Remember the currency forms depending on the number: **одна́ гри́вня** (1), **дві гри́вні** (2), **п'ять гривень** (5+).
 **Pattern 4: Accusative case for animate nouns**
-When a person is the object of an action (whom you see or know), the rules differ. Feminine animate nouns follow the same rule as inanimate: **Олена** → **Олену**, **мама** → **маму**. Masculine animate nouns take the genitive ending (-а/-я): **брат** → **брата**, **лікар** → **лікаря**, **друг** → **друга**, **вчитель** → **вчителя**.
+When a person is the object of an action (whom you see or know), the rules differ. Feminine animate nouns follow the same rule as inanimate: **Олена** → **Олену**, **ма́ма** → **ма́му**. Masculine animate nouns take the genitive ending (-а/-я): **брат** → **брата**, **лі́кар** → **лі́каря**, **друг** → **друга**, **вчи́тель** → **вчи́теля**.
 Compare these two sentences. One uses an inanimate object, and the other uses an animate object:
 - Я бачу **борщ**. (I see the borscht. — inanimate, masculine, no change)
 - Я бачу **брата**. (I see the brother. — animate, masculine, ends in -а)
 <!-- INJECT_ACTIVITY: group-sort-accusative -->
-## Діалог (Connected Dialogue)
-Наталя та Дмитро починають день. Читайте і стежте за відмінками. (Natalia and Dmytro start their day. Read and watch the cases.)
+## Діало́г (Connected Dialogue)
+Ната́ля та Дмитро́ почина́ють день. Чита́йте і сте́жте за відмі́нками. (Natalia and Dmytro start their day. Read and watch the cases.)
 **(Сніданок / Breakfast)**
-<div class="dialogue">
+> — **Наталя:** Що ти їш на сніданок? *(What are you eating for breakfast?)*
+> — **Дмитро:** Я їм кашу і п'ю каву з молоком. А ти? *(I am eating porridge and drinking coffee with milk. And you?)*
+> — **Наталя:** Я їм яєчню і хліб із сиром. *(I am eating fried eggs and bread with cheese.)*
 
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Що ти їш на сніданок? *(What are you eating for breakfast?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Я їм кашу і п'ю каву з молоком. А ти? *(I am eating porridge and drinking coffee with milk. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Я їм яєчню і хліб із сиром. *(I am eating fried eggs and bread with cheese.)*</div>
-
-</div>
 **(На ринку / At the market)**
-<div class="dialogue">
+> — **Наталя:** Скільки коштують помідори? *(How much do the tomatoes cost?)*
+> — **Продаве́ць:** П'ятна́дцять гривень кілограм. *(Fifteen hryvnias a kilo.)*
+> — **Наталя:** До́рого! А яблука? *(Expensive! And the apples?)*
+> — **Продавець:** Два́дцять гривень. Ду́же смачні́! *(Twenty hryvnias. Very tasty!)*
+> — **Наталя:** До́бре, дайте кілограм я́блук, будь ласка. *(Okay, give me a kilo of apples, please.)*
 
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Скільки коштують помідори? *(How much do the tomatoes cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> П'ятнадцять гривень кілограм. *(Fifteen hryvnias a kilo.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Дорого! А яблука? *(Expensive! And the apples?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Двадцять гривень. Дуже смачні! *(Twenty hryvnias. Very tasty!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Добре, дайте кілограм яблук, будь ласка. *(Okay, give me a kilo of apples, please.)*</div>
-
-</div>
 **(У кафе / At the café)**
-<div class="dialogue">
+> — **Дмитро:** Тут вільно? *(Is it free here?)*
+> — **Офіціа́нт:** Так, сідайте! *(Yes, sit down!)*
+> — **Дмитро:** Мені борщ і воду, будь ласка. *(I'll have borscht and water, please.)*
+> — **Наталя:** О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра́? *(Oh, I see Olena! Olena, hi! Do you know my brother Dmytro?)*
+> — **Олена:** Ні, не зна́ю. Дуже приє́мно, Дмитре! *(No, I don't. Very nice to meet you, Dmytro!)*
+> — **Дмитро:** Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*
+> — **Офіціант:** Звичайно. *(Of course.)*
+> — **Наталя:** Все було́ дуже сма́чно! *(Everything was very tasty!)*
 
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Тут вільно? *(Is it free here?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Так, сідайте! *(Yes, sit down!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Мені борщ і воду, будь ласка. *(I'll have borscht and water, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра? *(Oh, I see Olena! Olena, hi! Do you know my brother Dmytro?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ні, не знаю. Дуже приємно, Дмитре! *(No, I don't. Very nice to meet you, Dmytro!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Звичайно. *(Of course.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Все було дуже смачно! *(Everything was very tasty!)*</div>
-
-</div>
 Did you spot all the key grammar patterns in the dialogue? Let's highlight a few:
 1. Accusative inanimate nouns: **кашу**, **яєчню**, **воду**, **борщ**.
 2. Accusative animate nouns: **Олену**, **брата Дмитра**.
 3. Everyday café and market phrases: **Мені борщ**, **Дайте кілограм**, **Рахунок, будь ласка**.
 <!-- INJECT_ACTIVITY: quiz-shopping-cafe -->
 ## Підсумок — Summary
-You have successfully completed phase A1.6 — Food and Shopping. You have expanded your vocabulary and grammar significantly. Here is exactly what you can now do in Ukrainian:
+Phase A1.6 — Food and Shopping — is done. Here is what you can now do in Ukrainian:
 - ✓ Talk about **їжа та напої** (food and drinks) and meals (М36).
 - ✓ Use the accusative case for inanimate nouns to describe what you eat and drink: **борщ**, **каву**, **воду**, **піцу** (М37).
 - ✓ Order at a **кафе** (café) with confidence: «Мені борщ, будь ласка» / «Рахунок, будь ласка» / «Можна карткою?» (М38).
 - ✓ Shop at the **ринок** (market): «Скільки коштує?» / «Дайте кілограм» / **гривня**, **гривні**, **гривень** (М39).
 - ✓ Use the accusative case for animate nouns to talk about people: «Я бачу Олену» / «Я знаю брата» (М40).
-**Наступний крок — A1.7: Спілкування.** (Next step — A1.7: Communication.) You will learn to make plans, write messages, and talk on the phone. You are ready for A1.7!
+**Насту́пний крок — A1.7: Спілкува́ння.** (Next step — A1.7: Communication.) You will learn to make plans, write messages, and talk on the phone. You are ready for A1.7!
 
-**Deterministic word count: 1386 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1362 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -545,21 +509,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 128 words | Not found: 10 words
+Verified: 115 words | Not found: 69 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
-  ✗ Анни — NOT IN VESUM
   ✗ Дмитра — NOT IN VESUM
   ✗ Дмитре — NOT IN VESUM
   ✗ Дмитро — NOT IN VESUM
-  ✗ Михайла — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Звича — NOT IN VESUM
+  ✗ Миха — NOT IN VESUM
+  ✗ Напо — NOT IN VESUM
+  ✗ Ната — NOT IN VESUM
   ✗ Наталя — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Олено — NOT IN VESUM
   ✗ Олену — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
+  ✗ П'ятна — NOT IN VESUM
+  ✗ Продаве — NOT IN VESUM
+  ✗ Раху — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
+  ✗ Спілкува — NOT IN VESUM
+  ✗ блук — NOT IN VESUM
+  ✗ вень — NOT IN VESUM
+  ✗ вече — NOT IN VESUM
+  ✗ вня — NOT IN VESUM
+  ✗ вні — NOT IN VESUM
+  ✗ відмі — NOT IN VESUM
+  ✗ дить — NOT IN VESUM
+  ✗ дру — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ жте — NOT IN VESUM
+  ✗ замовля — NOT IN VESUM
+  ✗ зом — NOT IN VESUM
+  ✗ йла — NOT IN VESUM
+  ✗ йте — NOT IN VESUM
+  ✗ каря — NOT IN VESUM
+  ✗ ключови — NOT IN VESUM
+  ✗ кілогра — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ льно — NOT IN VESUM
+  ✗ мно — NOT IN VESUM
+  ✗ ники — NOT IN VESUM
+  ✗ нками — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нна — NOT IN VESUM
+  ✗ нни — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ ною — NOT IN VESUM
+  ✗ пний — NOT IN VESUM
 
-All 128 other words are confirmed to exist in VESUM.
+All 115 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -568,23 +572,23 @@ All 128 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

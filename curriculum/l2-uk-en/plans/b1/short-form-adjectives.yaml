@@ -1,189 +1,177 @@
-module: b1-060
+module: b1-056
 level: B1
-sequence: 60
+sequence: 56
 slug: short-form-adjectives
 version: '3.0'
 title: "Короткі прикметники (зелен, потрібен)"
 subtitle: "Повні та короткі форми якісних прикметників"
 focus: grammar
 pedagogy: PPP
-phase: "B1.7 [Participles & Gerunds]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
-- "Learner can define короткі прикметники as truncated forms of якісні
-  прикметники that lack case endings (зелен, ясен, повен, дрібен)"
-- "Learner can recognize that короткі прикметники are characteristic of
-  народнопоетичний and художній registers, not everyday speech"
-- "Learner can use common short-form adjectives in appropriate contexts:
-  потрібен/потрібна/потрібне, певен/певна, годен/годна, ладен/ладна"
-- "Learner can identify short-form adjectives in folk songs, poetry,
-  and literary texts and understand their expressive function"
-- "Learner can distinguish between short-form adjectives and усічені
-  прикметники (shortened for meter) in poetry"
+  - "Learner can define короткі прикметники as truncated forms of якісні прикметники
+    that lack case endings (зелен, ясен, повен, дрібен)"
+  - "Learner can recognize that короткі прикметники are characteristic of народнопоетичний
+    and художній registers, not everyday speech"
+  - "Learner can use common short-form adjectives in appropriate contexts: потрібен/потрібна/потрібне,
+    певен/певна, годен/годна, ладен/ладна"
+  - "Learner can identify short-form adjectives in folk songs, poetry, and literary
+    texts and understand their expressive function"
+  - "Learner can distinguish between short-form adjectives and усічені прикметники
+    (shortened for meter) in poetry"
 dialogue_situations:
-- setting: 'Reading a classic Ukrainian poem aloud at a літературний вечір (m, literary
-    evening) in Чернігові — discussing archaic and elevated forms: Рад (glad) бачити
-    вас! Годен (capable) працювати. Певен (certain) у собі. Ладен (willing) допомогти.'
-  speakers:
-  - Ведучий вечора
-  - Слухачі
-  motivation: 'Short-form adjectives: рад, годен, певен, ладен — elevated/literary
-    usage'
+  - setting: 'Reading a classic Ukrainian poem aloud at a літературний вечір (m, literary
+      evening) in Чернігові — discussing archaic and elevated forms: Рад (glad) бачити
+      вас! Годен (capable) працювати. Певен (certain) у собі. Ладен (willing) допомогти.'
+    speakers:
+      - Ведучий вечора
+      - Слухачі
+    motivation: 'Short-form adjectives: рад, годен, певен, ладен — elevated/literary
+      usage'
 content_outline:
-- section: "Повні та короткі форми прикметників"
-  words: 700
-  points:
-  - "Definition from Авраменко Grade 6 p.130:
-    'В українській мові розрізняють повні та короткі прикметники.
-    Повні прикметники змінюємо за відмінками, родами та числами:
-    зелений → зеленого, зелена, зелені.
-    Короткі прикметники не змінюються за відмінками.'
-    They exist only in називний відмінок and change by рід and число:
-    зелен (ч.р.), зелена (ж.р.), зелене (с.р.), зелені (мн.)."
-  - "From Литвінова Grade 6 p.191: 'Деякі якісні прикметники можуть
-    утворювати повну й коротку форми: повний i повен, зелений i зелен.
-    Короткі форми вживають переважно в народних піснях, приказках
-    та у художній літературі.' This is their natural habitat —
-    not bureaucratic or technical writing."
-  - "The key insight: short forms are not 'errors' or 'lazy speech' —
-    they are a distinct grammatical form with specific expressive value.
-    They make speech more vivid, poetic, emotionally charged."
-- section: "Які прикметники мають короткі форми?"
-  words: 700
-  points:
-  - "Only якісні прикметники can form short versions. Відносні and
-    присвійні cannot: *дерев'ян, *мамин (already possessive form).
-    Common short-form adjectives from Заболотний Grade 7 p.157:
-    зелен, ясен, повен, дрібен, красній (= красний), білен, чорен."
-  - "Functionally active short forms (used in modern standard Ukrainian):
-    потрібен/потрібна/потрібне (needed — predicative: Мені потрібна допомога)
-    певен/певна (certain — predicative: Я певен, що...)
-    годен/годна (fit, capable — predicative: Він годен працювати)
-    ладен/ладна (willing, ready — predicative: Вона ладна допомогти)
-    варт/варта (worth — Ця книга варта уваги)
-    рад/рада (glad — Я рада тебе бачити)
-    жив/жива (alive — used predicatively: Він живий → predicative Він жив)
-    These are NOT archaic — they are standard modern Ukrainian."
-  - "The difference: full form is neutral/descriptive, short form is
-    emotionally heightened or predicative:
-    Зелений луг (neutral description) vs Як ішли ми зелен лугом (poetic).
-    Дрібний дощик (neutral) vs Шумить i гуде, дрібен дощик іде (folk song)."
-- section: "Короткі прикметники у фольклорі та літературі"
-  words: 700
-  points:
-  - "Folk songs from Заболотний Grade 7 p.157:
-    'Як ішли ми зелен лугом к зелен гаю, солов'ї нам ткали пісню
-    диво-дивну' (Б. Олійник).
-    'I шумить, i гуде, дрібен дощик іде' (Нар. творчість).
-    'Літо краснеє минуло, сніг лежить на полі' (Леся Українка).
-    These show the народнопоетичний register at its most expressive."
-  - "Literary usage:
-    'Ой зійди, зійди, ясен місяцю' (Нар. творчість) — calling the moon.
-    'Чорен ворон kрячe на дубі' — folk imagery.
-    The short form creates a specific rhythmic and emotional effect:
-    it makes the adjective more dynamic, less static."
-  - "Comprehension exercise: read 5-6 folk song excerpts and literary
-    passages. Identify all short-form adjectives, give their full forms,
-    explain why the author chose the short form (rhythm, emotion, tradition)."
-- section: "Короткі форми у сучасній мові"
-  words: 600
-  points:
-  - "Predicative short forms in everyday modern Ukrainian:
-    Мені потрібна допомога. (I need help.)
-    Я певен, що він прийде. (I'm certain he'll come.)
-    Вона годна це зробити. (She's capable of doing this.)
-    Це варто побачити. / Ця вистава варта уваги. (It's worth seeing.)
-    Я рад вас бачити. / Я рада вас бачити. (I'm glad to see you.)
-    These are standard grammar, not poetry."
-  - "Collocation patterns:
-    потрібен + іменник: Мені потрібен час. Мені потрібна книга.
-    певен + що: Я певен, що це правда.
-    годен/ладен + інфінітив: Він годен працювати. Вона ладна допомогти.
-    варт/варта + іменник/інфінітив: Це варто зробити. Ця річ варта уваги."
-  - "Practice: complete 8-10 sentences using short-form adjectives
-    in predicative position. Distinguish when short form is mandatory
-    (потрібен) vs optional but stylistically preferred (певен vs певний)."
-- section: "Усічені прикметники — інше явище"
-  words: 350
-  points:
-  - "Усічені (truncated) adjectives are different from короткі:
-    вечірня зоря → вечірня (dropped -я for meter in poetry).
-    тиха ніч → тиха (this IS the full form).
-    Усічення is a poetic device for rhythm; short forms are a
-    grammatical category. Do not confuse them."
-  - "Practice: classify forms as короткі прикметники, повні прикметники,
-    or усічені прикметники in literary excerpts."
-- section: "Підсумок та перехід до M61"
-  words: 350
-  points:
-  - "Summary: короткі прикметники = тільки називний відмінок,
-    змінюються за родом i числом. Фольклор: зелен, ясен, дрібен.
-    Сучасна мова: потрібен, певен, годен, ладен, варт, рад.
-    Self-check: Я розумію різницю між повною i короткою формою ✓/✗,
-    Я вживаю потрібен/певен/годен правильно ✓/✗."
-  - "Preview: M61 — Дієприслівники недоконаного виду. A new verb form:
-    reading-writing → reading, they walked."
+  - section: "Повні та короткі форми прикметників"
+    words: 700
+    points:
+      - "Definition from Авраменко Grade 6 p.130: 'В українській мові розрізняють
+        повні та короткі прикметники. Повні прикметники змінюємо за відмінками, родами
+        та числами: зелений → зеленого, зелена, зелені. Короткі прикметники не змінюються
+        за відмінками.' They exist only in називний відмінок and change by рід and
+        число: зелен (ч.р.), зелена (ж.р.), зелене (с.р.), зелені (мн.)."
+      - "From Литвінова Grade 6 p.191: 'Деякі якісні прикметники можуть утворювати
+        повну й коротку форми: повний i повен, зелений i зелен. Короткі форми вживають
+        переважно в народних піснях, приказках та у художній літературі.' This is
+        their natural habitat — not bureaucratic or technical writing."
+      - "The key insight: short forms are not 'errors' or 'lazy speech' — they are
+        a distinct grammatical form with specific expressive value. They make speech
+        more vivid, poetic, emotionally charged."
+  - section: "Які прикметники мають короткі форми?"
+    words: 700
+    points:
+      - "Only якісні прикметники can form short versions. Відносні and присвійні cannot:
+        *дерев'ян, *мамин (already possessive form). Common short-form adjectives
+        from Заболотний Grade 7 p.157: зелен, ясен, повен, дрібен, красній (= красний),
+        білен, чорен."
+      - "Functionally active short forms (used in modern standard Ukrainian): потрібен/потрібна/потрібне
+        (needed — predicative: Мені потрібна допомога) певен/певна (certain — predicative:
+        Я певен, що...) годен/годна (fit, capable — predicative: Він годен працювати)
+        ладен/ладна (willing, ready — predicative: Вона ладна допомогти) варт/варта
+        (worth — Ця книга варта уваги) рад/рада (glad — Я рада тебе бачити) жив/жива
+        (alive — used predicatively: Він живий → predicative Він жив) These are NOT
+        archaic — they are standard modern Ukrainian."
+      - "The difference: full form is neutral/descriptive, short form is emotionally
+        heightened or predicative: Зелений луг (neutral description) vs Як ішли ми
+        зелен лугом (poetic). Дрібний дощик (neutral) vs Шумить i гуде, дрібен дощик
+        іде (folk song)."
+  - section: "Короткі прикметники у фольклорі та літературі"
+    words: 700
+    points:
+      - "Folk songs from Заболотний Grade 7 p.157: 'Як ішли ми зелен лугом к зелен
+        гаю, солов'ї нам ткали пісню диво-дивну' (Б. Олійник). 'I шумить, i гуде,
+        дрібен дощик іде' (Нар. творчість). 'Літо краснеє минуло, сніг лежить на полі'
+        (Леся Українка). These show the народнопоетичний register at its most expressive."
+      - "Literary usage: 'Ой зійди, зійди, ясен місяцю' (Нар. творчість) — calling
+        the moon. 'Чорен ворон kрячe на дубі' — folk imagery. The short form creates
+        a specific rhythmic and emotional effect: it makes the adjective more dynamic,
+        less static."
+      - "Comprehension exercise: read 5-6 folk song excerpts and literary passages.
+        Identify all short-form adjectives, give their full forms, explain why the
+        author chose the short form (rhythm, emotion, tradition)."
+  - section: "Короткі форми у сучасній мові"
+    words: 600
+    points:
+      - "Predicative short forms in everyday modern Ukrainian: Мені потрібна допомога.
+        (I need help.) Я певен, що він прийде. (I'm certain he'll come.) Вона годна
+        це зробити. (She's capable of doing this.) Це варто побачити. / Ця вистава
+        варта уваги. (It's worth seeing.) Я рад вас бачити. / Я рада вас бачити. (I'm
+        glad to see you.) These are standard grammar, not poetry."
+      - "Collocation patterns: потрібен + іменник: Мені потрібен час. Мені потрібна
+        книга. певен + що: Я певен, що це правда. годен/ладен + інфінітив: Він годен
+        працювати. Вона ладна допомогти. варт/варта + іменник/інфінітив: Це варто
+        зробити. Ця річ варта уваги."
+      - "Practice: complete 8-10 sentences using short-form adjectives in predicative
+        position. Distinguish when short form is mandatory (потрібен) vs optional
+        but stylistically preferred (певен vs певний)."
+  - section: "Усічені прикметники — інше явище"
+    words: 350
+    points:
+      - "Усічені (truncated) adjectives are different from короткі: вечірня зоря →
+        вечірня (dropped -я for meter in poetry). тиха ніч → тиха (this IS the full
+        form). Усічення is a poetic device for rhythm; short forms are a grammatical
+        category. Do not confuse them."
+      - "Practice: classify forms as короткі прикметники, повні прикметники, or усічені
+        прикметники in literary excerpts."
+  - section: "Підсумок та перехід до M61"
+    words: 350
+    points:
+      - "Summary: короткі прикметники = тільки називний відмінок, змінюються за родом
+        i числом. Фольклор: зелен, ясен, дрібен. Сучасна мова: потрібен, певен, годен,
+        ладен, варт, рад. Self-check: Я розумію різницю між повною i короткою формою
+        ✓/✗, Я вживаю потрібен/певен/годен правильно ✓/✗."
+      - "Preview: M61 — Дієприслівники недоконаного виду. A new verb form: reading-writing
+        → reading, they walked."
 vocabulary_hints:
   required:
-  - "короткий прикметник (short-form adjective)"
-  - "повний прикметник (full-form adjective)"
-  - "потрібен/потрібна/потрібне (needed — short form, predicative)"
-  - "певен/певна (certain, sure — short form)"
-  - "годен/годна (fit, capable — short form)"
-  - "ладен/ладна (willing, ready — short form)"
-  - "варт/варта (worth — short form)"
-  - "рад/рада (glad — short form)"
-  - "зелен (green — poetic short form)"
-  - "ясен (bright, clear — poetic short form)"
-  - "народнопоетичний (folk-poetic register)"
+    - "короткий прикметник (short-form adjective)"
+    - "повний прикметник (full-form adjective)"
+    - "потрібен/потрібна/потрібне (needed — short form, predicative)"
+    - "певен/певна (certain, sure — short form)"
+    - "годен/годна (fit, capable — short form)"
+    - "ладен/ладна (willing, ready — short form)"
+    - "варт/варта (worth — short form)"
+    - "рад/рада (glad — short form)"
+    - "зелен (green — poetic short form)"
+    - "ясен (bright, clear — poetic short form)"
+    - "народнопоетичний (folk-poetic register)"
   recommended:
-  - "дрібен (fine, small — poetic short form, as in дрібен дощик)"
-  - "повен (full — short form of повний)"
-  - "жив/жива (alive — short predicative form)"
-  - "усічений (truncated — for meter in poetry, different from short form)"
-  - "присудковий (predicative — used as predicate)"
-  - "якісний прикметник (qualitative adjective — the only type with short forms)"
+    - "дрібен (fine, small — poetic short form, as in дрібен дощик)"
+    - "повен (full — short form of повний)"
+    - "жив/жива (alive — short predicative form)"
+    - "усічений (truncated — for meter in poetry, different from short form)"
+    - "присудковий (predicative — used as predicate)"
+    - "якісний прикметник (qualitative adjective — the only type with short forms)"
 activity_hints:
-- type: quiz
-  focus: "Identify short-form adjectives and distinguish from full forms in context"
-  items: 8
-- type: fill-in
-  focus: "Complete sentences with correct short-form adjective (потрібен/певен/годен/ладен)"
-  items: 8
-- type: match-up
-  focus: "Match short forms to their full forms and meanings"
-  items: 8
-- type: mark-the-words
-  focus: "In folk song and literary excerpts, mark all short-form adjectives"
-  items: 6
-- type: group-sort
-  focus: "Sort: поетична коротка форма (зелен) vs сучасна предикативна (потрібен) vs повна форма"
-  items: 12
-- type: error-correction
-  focus: "Fix sentences where short/full form is used inappropriately for the register"
-  items: 6
+  - type: quiz
+    focus: "Identify short-form adjectives and distinguish from full forms in context"
+    items: 8
+  - type: fill-in
+    focus: "Complete sentences with correct short-form adjective (потрібен/певен/годен/ладен)"
+    items: 8
+  - type: match-up
+    focus: "Match short forms to their full forms and meanings"
+    items: 8
+  - type: mark-the-words
+    focus: "In folk song and literary excerpts, mark all short-form adjectives"
+    items: 6
+  - type: group-sort
+    focus: "Sort: поетична коротка форма (зелен) vs сучасна предикативна (потрібен)
+      vs повна форма"
+    items: 12
+  - type: error-correction
+    focus: "Fix sentences where short/full form is used inappropriately for the register"
+    items: 6
 connects_to:
-- "b1-057 (Активні дієприкметники — related morphological forms)"
-- "b1-077 (Лексична стилістика — register and stylistic choices)"
+  - "b1-057 (Активні дієприкметники — related morphological forms)"
+  - "b1-077 (Лексична стилістика — register and stylistic choices)"
 prerequisites:
-- "b1-059 (Participle phrases — Phase 7 grammar sequence)"
+  - "b1-059 (Participle phrases — Phase 7 grammar sequence)"
 grammar:
-- "Короткі прикметники: тільки називний відмінок, рід, число"
-- "Тільки якісні прикметники мають короткі форми"
-- "Поетичні форми: зелен, ясен, дрібен (народнопоетичний стиль)"
-- "Сучасні предикативні: потрібен, певен, годен, ладен, варт, рад"
-- "Різниця між короткими та усіченими прикметниками"
+  - "Короткі прикметники: тільки називний відмінок, рід, число"
+  - "Тільки якісні прикметники мають короткі форми"
+  - "Поетичні форми: зелен, ясен, дрібен (народнопоетичний стиль)"
+  - "Сучасні предикативні: потрібен, певен, годен, ладен, варт, рад"
+  - "Різниця між короткими та усіченими прикметниками"
 register: науково-навчальний
 references:
-- title: "Авраменко Grade 6, p.130"
-  notes: "Повні та короткі прикметники: definition, examples with
-    ясне/яснії/ясен, exercise on identifying forms."
-- title: "Литвінова Grade 6, p.191"
-  notes: "Короткі форми прикметників: повний/повен, зелений/зелен,
-    register restriction to folk songs and literature."
-- title: "Заболотний Grade 7, p.157"
-  notes: "§62 Повні i короткі форми прикметників: literary examples
-    from Олійник, Леся Українка, народна творчість."
-- title: "Голуб Grade 6, p.127"
-  notes: "§49 Повні й короткі форми прикметників: introduction through
-    folk songs, connection to якісні прикметники."
+  - title: "Авраменко Grade 6, p.130"
+    notes: "Повні та короткі прикметники: definition, examples with ясне/яснії/ясен,
+      exercise on identifying forms."
+  - title: "Литвінова Grade 6, p.191"
+    notes: "Короткі форми прикметників: повний/повен, зелений/зелен, register restriction
+      to folk songs and literature."
+  - title: "Заболотний Grade 7, p.157"
+    notes: "§62 Повні i короткі форми прикметників: literary examples from Олійник,
+      Леся Українка, народна творчість."
+  - title: "Голуб Grade 6, p.127"
+    notes: "§49 Повні й короткі форми прикметників: introduction through folk songs,
+      connection to якісні прикметники."

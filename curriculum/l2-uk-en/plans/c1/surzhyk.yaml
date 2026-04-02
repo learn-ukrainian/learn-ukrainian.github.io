@@ -4,41 +4,52 @@ sequence: 32
 slug: surzhyk
 version: '1.1'
 title: "Суржик: Соціолінгвістичний феномен, історія та сучасність"
-subtitle: "Surzhyk: Sociolinguistic Analysis"
+subtitle: "Суржик: соціолінгвістичний аналіз"
 focus: cultural
 pedagogy: seminar
 word_target: 4000
 objectives:
   - "Дослідити витоки суржику як наслідку тривалого українсько-російського білінгвізму."
-  - "Аналізувати структурні особливості суржику на різних рівнях (фонетичному, лексичному, граматичному)."
+  - "Аналізувати структурні особливості суржику на різних рівнях (фонетичному, лексичному,
+    граматичному)."
   - "Розуміти соціолінгвістичні функції суржику в сучасній Україні."
-  - "Вивчити погляди науковців (Л. Масенко, В. Труб) на природу та майбутнє цього явища."
+  - "Вивчити погляди науковців (Л. Масенко, В. Труб) на природу та майбутнє цього
+    явища."
 
 reading_situations:
   - source_type: "наукове есе"
     topic: "Суржик як маркер постколоніальної ідентичності в працях Лариси Масенко."
     key_elements: ["мовно-культурна маргіналізація", "гібридність", "диглосія"]
-    motivation: "Глибоке розуміння політичних та соціальних причин виникнення змішаного мовлення."
+    motivation: "Глибоке розуміння політичних та соціальних причин виникнення змішаного
+      мовлення."
   - source_type: "художній текст"
-    topic: "Стилістичне використання суржику в сучасній літературі (Лесь Подерв'янський, Сергій Жадан)."
+    topic: "Стилістичне використання суржику в сучасній літературі (Лесь Подерв'янський,
+      Сергій Жадан)."
     key_elements: ["комічний ефект", "характеристика персонажа", "модальність"]
-    motivation: "Аналіз суржику як інструмента художньої виразності та соціальної критики."
+    motivation: "Аналіз суржику як інструмента художньої виразності та соціальної
+      критики."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Дискусія лінгвістів про те, чи є суржик самостійним піджаргоном чи лише сукупністю індивідуальних помилок."
+    setting: "Дискусія лінгвістів про те, чи є суржик самостійним піджаргоном чи лише
+      сукупністю індивідуальних помилок."
     focus_points: ["мовна компетенція", "інтерференція", "престижність мовлення"]
     motivation: "Формування навичок розрізнення діалекту, просторіччя та суржику."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Суржик — це хвороба мови чи природний етап її розвитку в умовах двомовності? Наведіть аргументи, спираючись на соціолінгвістичний контекст."
-    requirements: ["мінімум 350 слів", "використання наукового стилю", "критичний аналіз аргументів 'за' і 'проти'"]
+    prompt: "Суржик — це хвороба мови чи природний етап її розвитку в умовах двомовності?
+      Наведіть аргументи, спираючись на соціолінгвістичний контекст."
+    requirements: ["мінімум 350 слів", "використання наукового стилю", "критичний
+          аналіз аргументів 'за' і 'проти'"]
     motivation: "Розвиток здатності до наукової аргументації та синтезу знань."
-    model_answer: "Відповідь має містити розмежування між територіальним діалектом та суржиком, аналіз колоніальної спадщини та розгляд суржику як перехідного стану до україномовного середовища."
+    model_answer: "Відповідь має містити розмежування між територіальним діалектом
+      та суржиком, аналіз колоніальної спадщини та розгляд суржику як перехідного
+      стану до україномовного середовища."
 
 discussion_topics:
-  - context: "Суржик у медіа: реклама, серіали та соціальні мережі. Популяризація чи відображення реальності?"
+  - context: "Суржик у медіа: реклама, серіали та соціальні мережі. Популяризація
+      чи відображення реальності?"
     questions:
       - "Чи допомагає суржик у медіа швидшому переходу на українську мову?"
       - "Чому суржик часто використовується для створення комічних образів?"
@@ -106,15 +117,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Identify surzhyk features at phonetic, lexical, and grammatical levels in text samples — provide correct Ukrainian equivalents."
+    description: "Identify surzhyk features at phonetic, lexical, and grammatical
+      levels in text samples — provide correct Ukrainian equivalents."
   - type: critical-analysis
-    description: "Analyze Masenko's arguments about surzhyk as a postcolonial identity marker — evaluate sociolinguistic evidence and conclusions."
+    description: "Analyze Masenko's arguments about surzhyk as a postcolonial identity
+      marker — evaluate sociolinguistic evidence and conclusions."
   - type: match-up
-    description: "Match surzhyk types (фонетичний, лексичний, граматичний) with example sentences and their corrected Ukrainian versions."
+    description: "Match surzhyk types (фонетичний, лексичний, граматичний) with example
+      sentences and their corrected Ukrainian versions."
   - type: select
-    description: "Identify whether a given language sample represents dialect, surzhyk, or colloquial Ukrainian — justify the classification."
+    description: "Identify whether a given language sample represents dialect, surzhyk,
+      or colloquial Ukrainian — justify the classification."
   - type: fill-in
-    description: "Replace surzhyk forms with normative Ukrainian in sentences about everyday and professional situations."
+    description: "Replace surzhyk forms with normative Ukrainian in sentences about
+      everyday and professional situations."
 
 activities:
   types_required:
@@ -134,3 +150,4 @@ references:
 connects_to:
   previous: "dialects-of-ukrainian"
   next: "history-of-language"
+phase: C1.2 [Professional & Social Context]

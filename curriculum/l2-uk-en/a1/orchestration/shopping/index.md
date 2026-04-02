@@ -1,6 +1,6 @@
 # Build Summary: shopping (A1)
 
-Generated: 2026-03-31 11:48
+Generated: 2026-04-01 13:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:48
 | vocab | complete | 2026-03-30 14:40:09 |
 | enrich | complete | 2026-03-30 14:40:11 |
 | verify | complete | 2026-03-30 14:40:11 |
-| review | complete | 2026-03-30 14:42:37 |
-| stress | complete | 2026-03-31 09:48:32 |
-| publish | complete | 2026-03-31 09:48:32 |
+| review | complete | 2026-04-01 11:43:55 |
+| stress | complete | 2026-04-01 11:43:55 |
+| publish | complete | 2026-04-01 11:44:01 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:48
 | activities | claude-tools (claude-sonnet-4-6) | 336s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 20s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 145s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

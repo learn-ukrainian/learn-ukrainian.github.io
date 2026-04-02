@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 33: Around the City (A1, A1.5 [Places])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -144,25 +144,17 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
+Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
 
-### Діалог 1 — Asking for Directions
+### Діало́г 1 — Asking for Directions
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Турист:</span> Вибачте, як дістатися до бібліотеки? *(Excuse me, how do I get to the library?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Ідіть прямо, потім направо. Бібліотека на розі. *(Go straight, then right. The library is at the corner.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Турист:</span> А музей? *(And the museum?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Музей далеко. Їдьте на метро до центру. *(The museum is far. Take the metro to the center.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Турист:</span> Дякую! *(Thank you!)*</div>
-
-</div>
+> — **Тури́ст:** Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how do I get to the library?)*
+> — **Перехо́жий:** Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then right. The library is at the corner.)*
+> — **Турист:** А музе́й? *(And the museum?)*
+> — **Перехожий:** Музей дале́ко. Ї́дьте на метро́ до це́нтру. *(The museum is far. Take the metro to the center.)*
+> — **Турист:** Дякую! *(Thank you!)*
 
 The tourist opens with **вибачте** (excuse me) — the standard polite formula for addressing a stranger. The full question **як дістатися до...?** (how to get to...?) is a survival phrase — memorize it as one chunk. You will study the verb **дістатися** (to get to) properly at B1; for now, just use the whole phrase.
 
@@ -170,67 +162,60 @@ Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go 
 
 ### Діалог 2 — Describing Your Route
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Як ти дістаєшся на роботу? *(How do you get to work?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Спочатку йду на зупинку. Потім їду автобусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> А потім? *(And then?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Потім іду пішки п'ять хвилин. Робота в офісі на площі. *(Then I walk five minutes. Work is in an office on the square.)*</div>
-
-</div>
+> — **Оле́на:** Як ти дістає́шся на робо́ту? *(How do you get to work?)*
+> — **Тара́с:** Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I walk to the stop. Then I ride the bus to the center.)*
+> — **Олена:** А потім? *(And then?)*
+> — **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*
 
 Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative: **на зупинку** (to the stop), **до центру** (to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
 
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 
-## Де і куди разом (Where and Where To Together)
+## Де і куди ра́зом (Where and Where To Together)
 
 Real Ukrainian navigation constantly switches between two questions. When you say where you are, you use **де?** with locative case. When you say where you are heading, you use **куди?** with accusative case. A single journey might alternate between these several times:
 
-- **Я зараз у парку.** (I'm in the park now.) — де? → locative: у парку
-- **Я йду в магазин.** (I'm going to the store.) — куди? → accusative: в магазин
-- **Магазин на вулиці Шевченка.** (The store is on Shevchenko Street.) — де? → locative: на вулиці
+- **Я за́раз у парку.** (I'm in the park now.) — де? → locative: у парку
+- **Я йду в магази́н.** (I'm going to the store.) — куди? → accusative: в магазин
+- **Магазин на ву́лиці Шевче́нка.** (The store is on Shevchenko Street.) — де? → locative: на вулиці
 - **Потім їду на роботу.** (Then I ride to work.) — куди? → accusative: на роботу
 
 The pattern is consistent: **question → preposition → case**. Static location = locative. Motion toward = accusative.
 
 Here is the full navigation toolkit in one table:
 
-| Ситуація | Питання | Форма | Приклад |
+| Ситуа́ція | Пита́ння | Фо́рма | Приклад |
 |---|---|---|---|
 | Static location | Де? | в/на + locative | Я в офісі. На площі. |
-| Motion toward | Куди? | в/на + accusative | Іду в театр. На роботу. |
+| Motion toward | Куди? | в/на + accusative | Іду в теа́тр. На роботу. |
 | Transport mode | Як? Чим? | автобусом / на метро / пішки | Їду автобусом. |
-| Distance | Далеко? | далеко / близько / хвилин пішки | П'ять хвилин пішки. |
+| Distance | Далеко? | далеко / бли́зько / хвилин пішки | П'ять хвилин пішки. |
 
 :::tip
-Streets, avenues, and squares always use **на**: **на вулиці Франка**, **на площі**, **на проспекті**. Buildings you enter use **в/у**: **в магазині**, **в офісі**, **у театрі**. Metro always stays with **на**: **на метро** — both for location and transport.
+Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro always stays with **на**: **на метро** — both for location and transport.
 :::
 
-Now see how all four rows work together in connected speech. **Марія** lives in Lviv and is heading to the theater:
+Now see how all four rows work together in connected speech. **Марі́я** lives in Lviv and is heading to the theater:
 
-**Марія живе у Львові** (де? — locative). **Сьогодні вона йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона їде на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде пішки** три хвилини. The question type shifts six times in this short passage — and that is completely natural.
+**Марія живе́ у Льво́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts six times in this short passage — and that is completely natural.
 
 <!-- INJECT_ACTIVITY: quiz-de-kudy -->
 
-## Мій район (My Neighborhood)
+## Мій райо́н (My Neighborhood)
 
 Every learner needs to describe where they live. Here is a model paragraph you can adapt with your own details:
 
-**Я живу на вулиці Франка.** **Біля мого дому є парк і маленький магазин.** **Школа далеко** — треба їхати автобусом десять хвилин. **Аптека близько**, можна піти **пішки**. **У моєму районі є кафе, два ресторани і бібліотека.**
+**Я живу́ на вулиці Франка.** **Бі́ля мого до́му є парк і мале́нький магазин.** **Шко́ла далеко** — тре́ба ї́хати автобусом де́сять хвилин. **Апте́ка близько**, мо́жна піти **пішки**. **У моє́му райо́ні є кафе́, два рестора́ни і бібліотека.**
 
 Key structures to notice: **біля мого дому** (near my house) is a genitive chunk — learn it as a fixed unit. The construction **є** + noun list means "there is / there are." Two modal chunks appear: **треба їхати** (must go by vehicle) and **можна піти** (can go on foot).
 
 Now put the required vocabulary into full sentences:
 
 - **пішки** (on foot) → Аптека близько — іду **пішки**.
-- **хвилина** (minute) → П'ять **хвилин** пішки від зупинки.
-- **далеко від** / **близько від** (far from / near) → Школа **далеко від** дому. Парк **близько від** роботи.
-- **у центрі міста** (in the city center) → Готель **у центрі міста**.
-- **на околиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
+- **хвили́на** (minute) → П'ять **хвилин** пішки від зупи́нки.
+- **далеко від** / **близько від** (far from / near) → Школа **далеко від** дому. Парк **близько від** робо́ти.
+- **у це́нтрі мі́ста** (in the city center) → Готе́ль **у центрі міста**.
+- **на око́лиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
 
 :::note
 The chunks **далеко від** and **близько від** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько від роботи, далеко від зупинки.
@@ -238,15 +223,15 @@ The chunks **далеко від** and **близько від** are followed by
 
 Now try building your own description using these sentence frames:
 
-1. **Я живу** [де — вулиця / місто]. **Біля мого дому є** [що].
-2. [Місце] [далеко / близько]. **Треба їхати** [чим] / **Можна піти пішки.**
+1. **Я живу** [де — ву́лиця / мі́сто]. **Біля мого дому є** [що].
+2. [Мі́сце] [далеко / близько]. **Треба їхати** [чим] / **Можна піти пішки.**
 3. **У моєму районі є** [list 3 places].
 
 Three example outputs for different situations:
 
-- City center: **Я живу на вулиці Хрещатик. Біля мого дому є метро. Парк близько — п'ять хвилин пішки. У моєму районі є театр, музей і кафе.**
-- Suburb: **Я живу на околиці. Біля мого дому є зупинка. Центр далеко — треба їхати автобусом. У моєму районі є школа, магазин і аптека.**
-- Small town: **Я живу у маленькому місті. Біля мого дому є парк. Магазин близько — три хвилини пішки. У моєму районі є бібліотека, кафе і школа.**
+- City center: **Я живу на вулиці Хреща́тик. Біля мого дому є метро. Парк близько — п'ять хвилин пішки. У моєму районі є театр, музей і кафе.**
+- Suburb: **Я живу на околиці. Біля мого дому є зупи́нка. Центр далеко — треба їхати автобусом. У моєму районі є школа, магазин і аптека.**
+- Small town: **Я живу у мале́нькому мі́сті. Біля мого дому є парк. Магазин близько — три хвилини пішки. У моєму районі є бібліотека, кафе і школа.**
 
 The sentence frames stay identical — only the details change.
 
@@ -256,18 +241,18 @@ The sentence frames stay identical — only the details change.
 
 Here is your urban communication toolkit — a reference card for navigating any Ukrainian city:
 
-**Запитати дорогу** (asking for directions):
-- Вибачте, як дістатися до [місця]?
-- Де знаходиться [місце]?
+**Запита́ти доро́гу** (asking for directions):
+- Вибачте, як дістатися до [місця́]?
+- Де є [місце]?
 
-**Напрямок** (direction):
-- **прямо** (straight) → **направо** (right) → **наліво** (left) → **на розі** (at the corner)
+**На́прямок** (direction):
+- **прямо** (straight) → **направо** (right) → **налі́во** (left) → **на розі** (at the corner)
 
 **Де?** (locative — static):
 - в/на + locative: **у парку**, **в театрі**, **на вулиці**, **на площі**
 
 **Куди?** (accusative — motion):
-- в/на + accusative: **у парк**, **в театр**, **на вулицю**, **на площу**
+- в/на + accusative: **у парк**, **в театр**, **на ву́лицю**, **на пло́щу**
 
 **Транспорт** (transport):
 - **автобусом** / **на метро** / **пішки** — П'ять **хвилин** пішки.
@@ -288,7 +273,7 @@ Answer these five prompts mentally or aloud, then check your answers:
 
 <!-- INJECT_ACTIVITY: match-navigation -->
 
-**Deterministic word count: 1287 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1281 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -466,17 +451,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 126 words | Not found: 6 words
+Verified: 125 words | Not found: 54 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Львові — NOT IN VESUM
+  ✗ Іді — NOT IN VESUM
+  ✗ Апте — NOT IN VESUM
+  ✗ Бібліоте — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Льво — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
+  ✗ Перехо — NOT IN VESUM
+  ✗ Ситуа — NOT IN VESUM
+  ✗ Споча — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
-  ✗ Хрещатик — NOT IN VESUM
-  ✗ Шевченка — NOT IN VESUM
+  ✗ Хреща — NOT IN VESUM
+  ✗ Шко — NOT IN VESUM
+  ✗ бли — NOT IN VESUM
+  ✗ бібліоте — NOT IN VESUM
+  ✗ доро — NOT IN VESUM
+  ✗ дьте — NOT IN VESUM
+  ✗ діста — NOT IN VESUM
+  ✗ жий — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ зом — NOT IN VESUM
+  ✗ зько — NOT IN VESUM
+  ✗ кті — NOT IN VESUM
+  ✗ магази — NOT IN VESUM
+  ✗ музе — NOT IN VESUM
+  ✗ налі — NOT IN VESUM
+  ✗ напра — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нки — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ нтру — NOT IN VESUM
+  ✗ нтрі — NOT IN VESUM
+  ✗ нький — NOT IN VESUM
+  ✗ нькому — NOT IN VESUM
+  ✗ пло — NOT IN VESUM
+  ✗ проспе — NOT IN VESUM
+  ✗ прямок — NOT IN VESUM
+  ✗ райо — NOT IN VESUM
+  ✗ рестора — NOT IN VESUM
+  ✗ рма — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ сце — NOT IN VESUM
+  ✗ сять — NOT IN VESUM
+  ✗ теа — NOT IN VESUM
+  ✗ тися — NOT IN VESUM
+  ✗ тку — NOT IN VESUM
+  ✗ трі — NOT IN VESUM
+  ✗ фісі — NOT IN VESUM
 
-All 126 other words are confirmed to exist in VESUM.
+All 125 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -485,23 +514,23 @@ All 126 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

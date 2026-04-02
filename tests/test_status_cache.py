@@ -8,22 +8,19 @@ Tests for status cache correctness.
 
 import json
 import os
+import shutil
 import sys
 import tempfile
-import shutil
 import time
-from pathlib import Path
 from datetime import datetime
-
-import pytest
+from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.report import save_status_cache
+from scripts.audit.status_cache import StatusResult, get_source_paths, read_status
 from scripts.generate_level_status import get_json_cache
-from scripts.audit.status_cache import read_status, get_source_paths, StatusResult
-
 
 # =============================================================================
 # Fix 1: Plan path uses track directory, not level_code

@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All `content_outline` points covered: Dialogue 1 (hobbies exchange with
+    "люблю + infinitive" pattern) ✓, Dialogue 2 (подобається as fixed chunk) ✓, infinitive
+    -ти pattern with 9 verbs ✓, "подобається '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All verb forms verified in VESUM: люблю (pres:s:1), любиш (pres:s:2),
+    любить (pres:s:3), готуєш (pres:s:2), подобається. All nouns verified: вареники,
+    борщ, шахи, гітара/гітарі (locative), страва, пос'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Clear PPP flow: Presentation (dialogues introduce both patterns in natural
+    context), Pattern (explicit rules with 6+ examples per structure — "Я люблю читати/гуляти/готувати/слухати"
+    for люблю+inf; "М'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required: любити ✓ (люблю/любиш throughout), подобатися ✓ (подобається
+    throughout), читати ✓, гуляти ✓, готувати ✓, слухати ✓, дивитися ✓ (in "Я люблю
+    дивитися фільми"), грати ✓ (грати в ігри/в шахи/н'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints mapped to markers. Placement is logical — each
+    follows its teaching section. Item counts specified in plan (8, 8, 8, 6 = 30 items
+    total). Cannot evaluate actual exercise cont
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Direct teaching voice without motivational fluff. Cultural specifics:
+    борщ, вареники, джаз, Київ. "Did you spot the pattern?" is a natural pedagogical
+    prompt, not meta-commentary. No "magic of..." or '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All H2 headings match plan: Діалоги ✓, Я люблю... ✓, Мені подобається...
+    ✓, Підсумок ✓. Clean markdown throughout. Word count 1477 vs target 1200 — 23%
+    over target (above minimum, no section criticall'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms — no "like Russian but..." comparisons.
+    Борщ and вареники as Ukrainian cultural items. Decolonized approach throughout.
+    Language exchange in Kyiv as a natural sett
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Dialogue 1: natural multi-turn conversation between named speakers (Анна,
+    Віктор) at a language exchange café — sharing hobbies over tea. Real situation,
+    not interrogation. Culturally appropriate resp'
+findings: []

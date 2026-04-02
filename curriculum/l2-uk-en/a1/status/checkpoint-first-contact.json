@@ -2,10 +2,10 @@
   "module": "checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:32:50.276175Z",
+  "last_audit": "2026-04-02T20:29:54.647903Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.869410Z",
+    "md": "2026-04-01T13:07:58.530571Z",
     "meta": null,
     "activities": "2026-03-30T22:17:20.538367Z",
     "vocabulary": "2026-03-30T22:17:20.646021Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1400/1200 (raw: 1440) | engagement: 0/1"
+      "message": "1432/1200 (raw: 1472) | engagement: 0/1"
     },
     "activities": {
       "status": "pass",

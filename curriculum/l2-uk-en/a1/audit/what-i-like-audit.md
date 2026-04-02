@@ -1,7 +1,7 @@
 # Audit Report: M15 — what-i-like.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:28:49
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:30:11
 
 ## Configuration
 **Type:** A1-grammar
@@ -33,29 +33,20 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[LEVEL_RESTRICTION]** Activity 'translate' not allowed at A1
-  - FIX: Use level-appropriate activities. 'translate' is introduced at A2+.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1825/1200 (raw: 2379)
+- **Words:** ✅ 1395/1200 (raw: 1477)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ❌ 0/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 26.0% (target 15-25%, within tolerance (M15))
+- **Immersion:** ❌ 28.8% HIGH (target 15-25% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -63,8 +54,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 322 | Included in Core |
+| **Intro/Narrative** | ✅ | 306 | Included in Core |
 | **Я люблю... (I Like...)** | ✅ | 397 | Included in Core |
-| **Мені подобається... (I Like...)** | ✅ | 376 | Included in Core |
-| **Підсумок — Summary** | ✅ | 730 | Included in Core |
+| **Мені подобається... (I Like...)** | ✅ | 374 | Included in Core |
+| **Підсумок — Summary** | ✅ | 318 | Included in Core |

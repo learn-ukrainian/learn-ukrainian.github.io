@@ -4,41 +4,50 @@ sequence: 26
 slug: media-landscape
 version: '1.1'
 title: "Медіаландшафт України: Інформаційна гігієна та критичний аналіз"
-subtitle: "Media Landscape and Information Hygiene"
+subtitle: "Медіаландшафт та інформаційна гігієна"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Аналізувати структуру, власність та жанрову специфіку сучасних українських медіа."
   - "Опанувати методи деконструкції маніпуляцій, фейків та пропаганди."
-  - "Розвинути навички критичного споживання контенту в різних форматах (ТБ, преса, соцмережі)."
+  - "Розвинути навички критичного споживання контенту в різних форматах (ТБ, преса,
+    соцмережі)."
   - "Розуміти роль журналістської етики та свободи слова в демократичному суспільстві."
 
 reading_situations:
   - source_type: "новина"
-    topic: "Порівняльний аналіз висвітлення резонансної події в різних медіа (державних, олігархічних, незалежних)."
+    topic: "Порівняльний аналіз висвітлення резонансної події в різних медіа (державних,
+      олігархічних, незалежних)."
     key_elements: ["фреймінг", "емоційне забарвлення", "баланс думок"]
     motivation: "Виявлення прихованих підтекстів та журналістської упередженості."
   - source_type: "художній уривок"
-    topic: "Сатира на медійне середовище у сучасній українській літературі (напр., Сергій Жадан)."
+    topic: "Сатира на медійне середовище у сучасній українській літературі (напр.,
+      Сергій Жадан)."
     key_elements: ["іронія", "гротеск", "симулякр"]
     motivation: "Розуміння культурної рефлексії на медійну реальність."
 
 listening_situations:
   - media_type: "відео"
-    setting: "Випуск проекту 'StopFake' про викриття чергової дезінформаційної кампанії проти України."
+    setting: "Випуск проекту 'StopFake' про викриття чергової дезінформаційної кампанії
+      проти України."
     focus_points: ["першоджерела", "маніпуляція зображеннями", "логічні помилки"]
     motivation: "Формування навичок перевірки фактів (fact-checking) на слух."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Напишіть аналітичну записку про стан свободи слова в Україні в умовах воєнного стану. Де межа між безпекою та цензурою?"
-    requirements: ["мінімум 250 слів", "використання термінів 'акредитація', 'дискредитація', 'плюралізм'", "об'єктивність"]
+    prompt: "Напишіть аналітичну записку про стан свободи слова в Україні в умовах
+      воєнного стану. Де межа між безпекою та цензурою?"
+    requirements: ["мінімум 250 слів", "використання термінів 'акредитація', 'дискредитація',
+          'плюралізм'", "об'єктивність"]
     motivation: "Відпрацювання навичок публіцистичного письма на складні теми."
-    model_answer: "Текст має збалансовано висвітлювати аргументи на користь інформаційної безпеки та необхідності громадського контролю. Використання складних синтаксичних конструкцій з підрядним причини та наслідку."
+    model_answer: "Текст має збалансовано висвітлювати аргументи на користь інформаційної
+      безпеки та необхідності громадського контролю. Використання складних синтаксичних
+      конструкцій з підрядним причини та наслідку."
 
 discussion_topics:
-  - context: "Соціальні мережі як замінник традиційних ЗМІ: переваги оперативності vs ризики 'ехо-камер'."
+  - context: "Соціальні мережі як замінник традиційних ЗМІ: переваги оперативності
+      vs ризики 'ехо-камер'."
     questions:
       - "Чи несе Telegram загрозу національній безпеці через анонімність?"
       - "Як алгоритми Facebook впливають на поляризацію українського суспільства?"
@@ -106,15 +115,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Compare coverage of the same event across different Ukrainian media (state, oligarchic, independent) — identify framing, bias, and manipulation techniques."
+    description: "Compare coverage of the same event across different Ukrainian media
+      (state, oligarchic, independent) — identify framing, bias, and manipulation
+      techniques."
   - type: error-correction
-    description: "Identify and correct manipulative language techniques in news headlines — replace clickbait and emotional markers with neutral formulations."
+    description: "Identify and correct manipulative language techniques in news headlines
+      — replace clickbait and emotional markers with neutral formulations."
   - type: match-up
-    description: "Match media manipulation techniques (фреймінг, клікбейт, дискредитація) with real-world examples and countermeasures."
+    description: "Match media manipulation techniques (фреймінг, клікбейт, дискредитація)
+      with real-world examples and countermeasures."
   - type: select
-    description: "Choose the correct fact-checking approach for different types of misinformation (фейк, маніпуляція, ІПСО)."
+    description: "Choose the correct fact-checking approach for different types of
+      misinformation (фейк, маніпуляція, ІПСО)."
   - type: essay-response
-    description: "Write an analytical note (250+ words) about freedom of speech during martial law — balance security concerns with democratic principles."
+    description: "Write an analytical note (250+ words) about freedom of speech during
+      martial law — balance security concerns with democratic principles."
 
 activities:
   types_required:
@@ -134,3 +149,4 @@ references:
 connects_to:
   previous: "political-system"
   next: "global-context"
+phase: C1.2 [Professional & Social Context]

@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-01T12:44:55.719486",
+  "phase": "review",
+  "agent": "claude-tools (claude-opus-4-6)",
+  "ok": true,
+  "returncode": 0,
+  "prompt_chars": 32162,
+  "response_chars": 10660,
+  "duration_s": 271.1
+}

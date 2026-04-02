@@ -1,19 +1,19 @@
 """Tests for scripts/slug_utils.py — slug stripping and path construction."""
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.slug_utils import (
-    to_bare_slug,
-    review_path,
     audit_report_path,
     grammar_path,
     quality_path,
+    review_path,
     status_path,
+    to_bare_slug,
 )
 
 

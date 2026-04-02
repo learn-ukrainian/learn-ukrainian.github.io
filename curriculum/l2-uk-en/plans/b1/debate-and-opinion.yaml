@@ -1,234 +1,208 @@
-module: b1-086
+module: b1-082
 level: B1
-sequence: 86
+sequence: 82
 slug: debate-and-opinion
 version: '3.0'
 title: "Аргументація"
 subtitle: "Теза, аргументи, дискусія — переконуємо українською"
 focus: communication
 pedagogy: PPP
-phase: "B1.10 [Synthesis & Graduation]"
+phase: "B1.9 [Synthesis & Graduation]"
 word_target: 4000
 objectives:
-- "Learner can construct a structured argument in Ukrainian following the
-  теза → аргумент → приклад → висновок pattern"
-- "Learner can participate in a Ukrainian дискусія, defending a position
-  with логічні докази and responding to counterarguments"
-- "Learner can use складнопідрядні речення (причини, мети, умови, допусту)
-  to express complex reasoning in argumentation"
-- "Learner can employ вставні слова to structure arguments (по-перше,
-  по-друге, отже) and express varying degrees of certainty"
-- "Learner can write a short есе-міркування (200+ words) on a given topic,
-  presenting a thesis, supporting arguments, and a conclusion"
+  - "Learner can construct a structured argument in Ukrainian following the теза →
+    аргумент → приклад → висновок pattern"
+  - "Learner can participate in a Ukrainian дискусія, defending a position with логічні
+    докази and responding to counterarguments"
+  - "Learner can use складнопідрядні речення (причини, мети, умови, допусту) to express
+    complex reasoning in argumentation"
+  - "Learner can employ вставні слова to structure arguments (по-перше, по-друге,
+    отже) and express varying degrees of certainty"
+  - "Learner can write a short есе-міркування (200+ words) on a given topic, presenting
+    a thesis, supporting arguments, and a conclusion"
 dialogue_situations:
-- setting: 'Student council debate at a Харківський ліцей — arguing about school uniform:
-    По-перше, форма обмежує свободу (f, freedom). На мою думку, це застаріло. Навпаки,
-    форма виховує дисципліну (f, discipline). Хоча аргументи (pl) сильні, я не погоджуюся.'
-  speakers:
-  - Учасники дебатів (за і проти)
-  motivation: 'Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся'
+  - setting: 'Student council debate at a Харківський ліцей — arguing about school
+      uniform: По-перше, форма обмежує свободу (f, freedom). На мою думку, це застаріло.
+      Навпаки, форма виховує дисципліну (f, discipline). Хоча аргументи (pl) сильні,
+      я не погоджуюся.'
+    speakers:
+      - Учасники дебатів (за і проти)
+    motivation: 'Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся'
 content_outline:
-- section: "Що таке аргументація?"
-  words: 600
-  points:
-  - "Definition from Авраменко Grade 8 p.8-9:
-    Дискусія — обговорення певного суперечливого питання з метою
-    дійти згоди. В основі словесного змагання — відстоювання
-    власної позиції.
-    Будова дискусійного висловлення:
-    1. Теза (позиція): 'Вважаю, що...'
-    2. Аргумент (доведення): '...бо; ...тому, що.'
-    3. Приклади: 'Яскравим прикладом цього є...'
-    4. Висновок: 'Отже, ...'"
-  - "Теза vs аргумент vs приклад from Авраменко Grade 10 p.190:
-    Теза — основне твердження, яке потрібно довести.
-    Аргумент — доведене твердження на підтримку тези
-    (логічні закони, факти, статистика).
-    Приклад — конкретний випадок, що ілюструє аргумент.
-    Practice: learners identify теза, аргумент, приклад in a text."
-  - "Rules of дискусія from Авраменко Grade 8 p.9:
-    'Суть дискусії полягає не в перемозі, а в пошуку істини.'
-    Правила: вислуховувати опонента, аргументувати свою думку,
-    не переходити на особистості, поважати іншу точку зору."
-  - "Practice: learners read a short дискусійний текст and identify
-    the thesis, arguments, and examples."
-- section: "Мовні засоби аргументації"
-  words: 700
-  points:
-  - "Складнопідрядні речення for reasoning (applying Phase 8):
-    Причина: 'Це важливо, тому що / бо / через те що...'
-    Мета: 'Це потрібно, щоб...'
-    Умова: 'Якщо ми не зробимо..., то...'
-    Допуст: 'Хоча це складно, проте...'
-    Practice: learners construct arguments using each type."
-  - "Вставні слова for argument structure (applying M81):
-    Порядок: по-перше, по-друге, нарешті, отже.
-    Впевненість: безумовно, безперечно, без сумніву.
-    Невпевненість: мабуть, можливо (for acknowledging uncertainty).
-    Джерело: за даними, на думку, як відомо.
-    Протиставлення: навпаки, проте, однак, натомість.
-    Practice: learners structure a paragraph using these markers."
-  - "Формули для дискусії — useful phrases:
-    Висловлення думки: 'Я вважаю, що...', 'На мою думку,...',
-    'Мені здається, що...'
-    Погодження: 'Я з вами згоден/згодна', 'Ви маєте рацію',
-    'Це цікава думка.'
-    Заперечення: 'Не можу погодитися з тим, що...',
-    'Дозвольте не погодитися,' 'Навпаки, я вважаю...'
-    Підсумок: 'Отже,...', 'Підсумовуючи,...', 'Таким чином,...'"
-  - "Practice: learners complete a dialogue using формули для дискусії."
-- section: "Помилки в аргументації"
-  words: 550
-  points:
-  - "Common logical errors from Заболотний Grade 10 p.177:
-    1. Нечітко сформульовані аргументи — too complex or vague.
-    2. Хибні аргументи — partially or fully false premises.
-    3. Аргумент до особи — attacking the person, not the argument.
-    4. Підміна тези — shifting the topic during debate."
-  - "Practice: learners identify logical errors in sample arguments.
-    Given 6 arguments, classify each as valid or containing a fallacy.
-    Rewrite fallacious arguments correctly."
-  - "The emotional vs logical distinction:
-    Аргументи — об'єктивний вплив (facts, logic, statistics).
-    Докази — суб'єктивний, емоційний вплив (authority, promises).
-    From Авраменко Grade 10 p.191: arguments convince through reason,
-    proofs through emotion. Both are valid but serve different purposes."
-  - "Ukrainian-specific note: in Ukrainian дискусія culture, quoting
-    proverbs and folk wisdom is considered legitimate argumentation.
-    'Як кажуть у народі,...' — this is not fallacy but cultural authority."
-- section: "Есе-міркування"
-  words: 650
-  points:
-  - "Essay structure from Заболотний Grade 10 p.97 and Авраменко Grade 8 p.28:
-    Есе — невеликий прозовий твір із довільною будовою, що виражає
-    індивідуальні думки та враження.
-    В есе поєднано жанрові особливості художнього та публіцистичного стилів.
-    Structure for міркування: 1. Теза. 2. Аргументи. 3. Висновок."
-  - "Model есе (200 words) on an accessible B1 topic
-    (e.g., 'Чи важливо знати іноземні мови?' or
-    'Чи впливають соціальні мережі на наше життя?').
-    Analysis: identify structure, аргументи, мовні засоби,
-    вставні слова, складні речення."
-  - "Writing practice: learners choose from 3 topics and write
-    an есе-міркування (150-200 words) following the structure:
-    1. Вступ: формулювання тези (2-3 sentences).
-    2. Основна частина: 2-3 аргументи з прикладами (8-10 sentences).
-    3. Висновок: підсумок (2-3 sentences).
-    Use: вставні слова, складнопідрядні речення, формули аргументації."
-  - "Revision checklist: learners review their own essay for:
-    чі є чітка теза? чи є аргументи? чи є висновок?
-    чи правильно вжито вставні слова? чи є різні типи речень?"
-- section: "Дискусія на практиці"
-  words: 550
-  points:
-  - "Guided discussion format:
-    Topic presented → individual preparation (теза + 2 аргументи) →
-    pair exchange → group discussion → класний висновок.
-    Practice topics: technology in education, city vs village life,
-    environmental responsibility."
-  - "Agreeing and disagreeing with nuance:
-    Повне погодження: 'Абсолютно погоджуюся.'
-    Часткове: 'Загалом ви маєте рацію, але...'
-    М'яке заперечення: 'Мені здається, що це не зовсім так.'
-    Різке заперечення: 'Категорично не згоден/не згодна.'
-    Practice: learners respond to statements with varying degrees."
-  - "Active listening phrases:
-    'Якщо я правильно зрозумів/зрозуміла, ви вважаєте, що...'
-    'Ви маєте на увазі, що...?'
-    'Чи правильно я розумію, що...?'
-    These show engagement and prevent misunderstanding."
-  - "Cultural note: Ukrainian дискусійна культура values прямота
-    (directness) but also ввічливість (politeness). Balancing these
-    is a skill — being honest without being rude."
-- section: "Підсумок: мистецтво переконання"
-  words: 300
-  points:
-  - "Complete reference: argument structure, мовні засоби,
-    формули дискусії, логічні помилки."
-  - "Self-check in Ukrainian:
-    1. Назвіть чотири частини дискусійного висловлення.
-    2. Побудуйте аргумент 'за' i 'проти' на тему 'Iнтернет i навчання'.
-    3. Знайдіть логічну помилку в аргументі.
-    4. Напишіть короткий висновок до дискусії."
-  - "Preview: Суспільство i медіа (M87) — applying argumentation skills
-    to real-world media texts and social issues."
+  - section: "Що таке аргументація?"
+    words: 600
+    points:
+      - "Definition from Авраменко Grade 8 p.8-9: Дискусія — обговорення певного суперечливого
+        питання з метою дійти згоди. В основі словесного змагання — відстоювання власної
+        позиції. Будова дискусійного висловлення: 1. Теза (позиція): 'Вважаю, що...'
+        2. Аргумент (доведення): '...бо; ...тому, що.' 3. Приклади: 'Яскравим прикладом
+        цього є...' 4. Висновок: 'Отже, ...'"
+      - "Теза vs аргумент vs приклад from Авраменко Grade 10 p.190: Теза — основне
+        твердження, яке потрібно довести. Аргумент — доведене твердження на підтримку
+        тези (логічні закони, факти, статистика). Приклад — конкретний випадок, що
+        ілюструє аргумент. Practice: learners identify теза, аргумент, приклад in
+        a text."
+      - "Rules of дискусія from Авраменко Grade 8 p.9: 'Суть дискусії полягає не в
+        перемозі, а в пошуку істини.' Правила: вислуховувати опонента, аргументувати
+        свою думку, не переходити на особистості, поважати іншу точку зору."
+      - "Practice: learners read a short дискусійний текст and identify the thesis,
+        arguments, and examples."
+  - section: "Мовні засоби аргументації"
+    words: 700
+    points:
+      - "Складнопідрядні речення for reasoning (applying Phase 8): Причина: 'Це важливо,
+        тому що / бо / через те що...' Мета: 'Це потрібно, щоб...' Умова: 'Якщо ми
+        не зробимо..., то...' Допуст: 'Хоча це складно, проте...' Practice: learners
+        construct arguments using each type."
+      - "Вставні слова for argument structure (applying M81): Порядок: по-перше, по-друге,
+        нарешті, отже. Впевненість: безумовно, безперечно, без сумніву. Невпевненість:
+        мабуть, можливо (for acknowledging uncertainty). Джерело: за даними, на думку,
+        як відомо. Протиставлення: навпаки, проте, однак, натомість. Practice: learners
+        structure a paragraph using these markers."
+      - "Формули для дискусії — useful phrases: Висловлення думки: 'Я вважаю, що...',
+        'На мою думку,...', 'Мені здається, що...' Погодження: 'Я з вами згоден/згодна',
+        'Ви маєте рацію', 'Це цікава думка.' Заперечення: 'Не можу погодитися з тим,
+        що...', 'Дозвольте не погодитися,' 'Навпаки, я вважаю...' Підсумок: 'Отже,...',
+        'Підсумовуючи,...', 'Таким чином,...'"
+      - "Practice: learners complete a dialogue using формули для дискусії."
+  - section: "Помилки в аргументації"
+    words: 550
+    points:
+      - "Common logical errors from Заболотний Grade 10 p.177: 1. Нечітко сформульовані
+        аргументи — too complex or vague. 2. Хибні аргументи — partially or fully
+        false premises. 3. Аргумент до особи — attacking the person, not the argument.
+        4. Підміна тези — shifting the topic during debate."
+      - "Practice: learners identify logical errors in sample arguments. Given 6 arguments,
+        classify each as valid or containing a fallacy. Rewrite fallacious arguments
+        correctly."
+      - "The emotional vs logical distinction: Аргументи — об'єктивний вплив (facts,
+        logic, statistics). Докази — суб'єктивний, емоційний вплив (authority, promises).
+        From Авраменко Grade 10 p.191: arguments convince through reason, proofs through
+        emotion. Both are valid but serve different purposes."
+      - "Ukrainian-specific note: in Ukrainian дискусія culture, quoting proverbs
+        and folk wisdom is considered legitimate argumentation. 'Як кажуть у народі,...'
+        — this is not fallacy but cultural authority."
+  - section: "Есе-міркування"
+    words: 650
+    points:
+      - "Essay structure from Заболотний Grade 10 p.97 and Авраменко Grade 8 p.28:
+        Есе — невеликий прозовий твір із довільною будовою, що виражає індивідуальні
+        думки та враження. В есе поєднано жанрові особливості художнього та публіцистичного
+        стилів. Structure for міркування: 1. Теза. 2. Аргументи. 3. Висновок."
+      - "Model есе (200 words) on an accessible B1 topic (e.g., 'Чи важливо знати
+        іноземні мови?' or 'Чи впливають соціальні мережі на наше життя?'). Analysis:
+        identify structure, аргументи, мовні засоби, вставні слова, складні речення."
+      - "Writing practice: learners choose from 3 topics and write an есе-міркування
+        (150-200 words) following the structure: 1. Вступ: формулювання тези (2-3
+        sentences). 2. Основна частина: 2-3 аргументи з прикладами (8-10 sentences).
+        3. Висновок: підсумок (2-3 sentences). Use: вставні слова, складнопідрядні
+        речення, формули аргументації."
+      - "Revision checklist: learners review their own essay for: чі є чітка теза?
+        чи є аргументи? чи є висновок? чи правильно вжито вставні слова? чи є різні
+        типи речень?"
+  - section: "Дискусія на практиці"
+    words: 550
+    points:
+      - "Guided discussion format: Topic presented → individual preparation (теза
+        + 2 аргументи) → pair exchange → group discussion → класний висновок. Practice
+        topics: technology in education, city vs village life, environmental responsibility."
+      - "Agreeing and disagreeing with nuance: Повне погодження: 'Абсолютно погоджуюся.'
+        Часткове: 'Загалом ви маєте рацію, але...' М'яке заперечення: 'Мені здається,
+        що це не зовсім так.' Різке заперечення: 'Категорично не згоден/не згодна.'
+        Practice: learners respond to statements with varying degrees."
+      - "Active listening phrases: 'Якщо я правильно зрозумів/зрозуміла, ви вважаєте,
+        що...' 'Ви маєте на увазі, що...?' 'Чи правильно я розумію, що...?' These
+        show engagement and prevent misunderstanding."
+      - "Cultural note: Ukrainian дискусійна культура values прямота (directness)
+        but also ввічливість (politeness). Balancing these is a skill — being honest
+        without being rude."
+  - section: "Підсумок: мистецтво переконання"
+    words: 300
+    points:
+      - "Complete reference: argument structure, мовні засоби, формули дискусії, логічні
+        помилки."
+      - "Self-check in Ukrainian: 1. Назвіть чотири частини дискусійного висловлення.
+        2. Побудуйте аргумент 'за' i 'проти' на тему 'Iнтернет i навчання'. 3. Знайдіть
+        логічну помилку в аргументі. 4. Напишіть короткий висновок до дискусії."
+      - "Preview: Суспільство i медіа (M87) — applying argumentation skills to real-world
+        media texts and social issues."
 vocabulary_hints:
   required:
-  - "аргументація (argumentation — process of presenting arguments)"
-  - "теза (thesis — main claim to be proven)"
-  - "аргумент (argument — logical support for a thesis)"
-  - "дискусія (discussion/debate — structured exchange of opinions)"
-  - "висновок (conclusion — final summary of reasoning)"
-  - "переконувати (to persuade — to make someone agree)"
-  - "погоджуватися (to agree — to accept another's position)"
-  - "заперечувати (to object/deny — to disagree with a claim)"
-  - "доведення (proof — demonstration of truth)"
-  - "позиція (position — one's stance on an issue)"
-  - "опонент (opponent — person holding the opposing view)"
-  - "міркування (reasoning/reflection — logical thinking)"
+    - "аргументація (argumentation — process of presenting arguments)"
+    - "теза (thesis — main claim to be proven)"
+    - "аргумент (argument — logical support for a thesis)"
+    - "дискусія (discussion/debate — structured exchange of opinions)"
+    - "висновок (conclusion — final summary of reasoning)"
+    - "переконувати (to persuade — to make someone agree)"
+    - "погоджуватися (to agree — to accept another's position)"
+    - "заперечувати (to object/deny — to disagree with a claim)"
+    - "доведення (proof — demonstration of truth)"
+    - "позиція (position — one's stance on an issue)"
+    - "опонент (opponent — person holding the opposing view)"
+    - "міркування (reasoning/reflection — logical thinking)"
   recommended:
-  - "помилка в аргументації (logical fallacy)"
-  - "підміна тези (topic substitution — shifting the argument)"
-  - "аргумент до особи (ad hominem — attacking the person)"
-  - "натомість (instead — contrast connector)"
-  - "категорично (categorically — emphatic disagreement)"
-  - "прямота (directness — open communication style)"
-  - "погодження (agreement — act of agreeing)"
-  - "підсумовуючи (summarizing — concluding marker)"
-  - "істина (truth — goal of discussion)"
+    - "помилка в аргументації (logical fallacy)"
+    - "підміна тези (topic substitution — shifting the argument)"
+    - "аргумент до особи (ad hominem — attacking the person)"
+    - "натомість (instead — contrast connector)"
+    - "категорично (categorically — emphatic disagreement)"
+    - "прямота (directness — open communication style)"
+    - "погодження (agreement — act of agreeing)"
+    - "підсумовуючи (summarizing — concluding marker)"
+    - "істина (truth — goal of discussion)"
 activity_hints:
-- type: quiz
-  focus: "Identify теза, аргумент, приклад in text excerpts. Recognize
-    logical fallacies. Choose correct формули дискусії."
-  items: 12
-- type: fill-in
-  focus: "Complete argumentative sentences with correct складнопідрядні
-    сполучники (тому що, щоб, якщо, хоча) and вставні слова."
-  items: 12
-- type: match-up
-  focus: "Match аргументація terms to definitions, формули дискусії to
-    their functions (agreeing, disagreeing, summarizing)."
-  items: 12
-- type: error-correction
-  focus: "Identify and fix logical fallacies and argument structure errors
-    in sample Ukrainian argumentative texts."
-  items: 12
-- type: free-write
-  focus: "Write an есе-міркування (150-200 words) on a given topic:
-    теза, 2-3 аргументи з прикладами, висновок."
-  items: 12
-- type: role-play
-  focus: "Conduct a structured дискусія in pairs: one defends a position,
-    the other opposes. Use формули дискусії and вставні слова."
-  items: 12
+  - type: quiz
+    focus: "Identify теза, аргумент, приклад in text excerpts. Recognize logical fallacies.
+      Choose correct формули дискусії."
+    items: 12
+  - type: fill-in
+    focus: "Complete argumentative sentences with correct складнопідрядні сполучники
+      (тому що, щоб, якщо, хоча) and вставні слова."
+    items: 12
+  - type: match-up
+    focus: "Match аргументація terms to definitions, формули дискусії to their functions
+      (agreeing, disagreeing, summarizing)."
+    items: 12
+  - type: error-correction
+    focus: "Identify and fix logical fallacies and argument structure errors in sample
+      Ukrainian argumentative texts."
+    items: 12
+  - type: free-write
+    focus: "Write an есе-міркування (150-200 words) on a given topic: теза, 2-3 аргументи
+      з прикладами, висновок."
+    items: 12
+  - type: role-play
+    focus: "Conduct a structured дискусія in pairs: one defends a position, the other
+      opposes. Use формули дискусії and вставні слова."
+    items: 12
 connects_to:
-- "b1-085 (narrative-mastery — structured writing, different purpose)"
-- "b1-087 (society-and-media — argumentation about social topics)"
-- "b1-081 (introductory-words — вставні слова for structuring arguments)"
-- "b1-065 to b1-072 (complex syntax — sentence types for reasoning)"
+  - "b1-085 (narrative-mastery — structured writing, different purpose)"
+  - "b1-087 (society-and-media — argumentation about social topics)"
+  - "b1-081 (introductory-words — вставні слова for structuring arguments)"
+  - "b1-065 to b1-072 (complex syntax — sentence types for reasoning)"
 prerequisites:
-- "b1-065 to b1-072 (complex subordinate sentences — the grammar of reasoning)"
-- "b1-081 (introductory-words — вставні слова for structuring)"
-- "b1-073 (reported-speech — quoting others' arguments)"
+  - "b1-065 to b1-072 (complex subordinate sentences — the grammar of reasoning)"
+  - "b1-081 (introductory-words — вставні слова for structuring)"
+  - "b1-073 (reported-speech — quoting others' arguments)"
 grammar:
-- "Argument structure: теза → аргумент → приклад → висновок"
-- "Складнопідрядні речення in argumentation: причини, мети, умови, допусту"
-- "Вставні слова as argument organizers: по-перше, по-друге, отже"
-- "Формули дискусії: погодження, заперечення, підсумок"
-- "Есе-міркування structure and language features"
+  - "Argument structure: теза → аргумент → приклад → висновок"
+  - "Складнопідрядні речення in argumentation: причини, мети, умови, допусту"
+  - "Вставні слова as argument organizers: по-перше, по-друге, отже"
+  - "Формули дискусії: погодження, заперечення, підсумок"
+  - "Есе-міркування structure and language features"
 register: розмовний
 references:
-- title: "Авраменко Grade 8, p.8-9"
-  notes: "Дискусія: definition, structure of дискусійне висловлення,
-    rules of constructive debate."
-- title: "Авраменко Grade 10, p.190-191"
-  notes: "Теза й аргументи: difference between аргументи (objective)
-    and докази (subjective/emotional). Практична риторика."
-- title: "Заболотний Grade 10, p.177"
-  notes: "Помилки в аргументації: нечітко сформульовані, хибні,
-    аргумент до особи, підміна тези."
-- title: "Заболотний Grade 10, p.97"
-  notes: "Есе на актуальну тему — structure, вимоги, зразок."
-- title: "Авраменко Grade 8, p.28-30"
-  notes: "Есе: definition, вільна будова, поєднання художнього та
-    публіцистичного стилів."
+  - title: "Авраменко Grade 8, p.8-9"
+    notes: "Дискусія: definition, structure of дискусійне висловлення, rules of constructive
+      debate."
+  - title: "Авраменко Grade 10, p.190-191"
+    notes: "Теза й аргументи: difference between аргументи (objective) and докази
+      (subjective/emotional). Практична риторика."
+  - title: "Заболотний Grade 10, p.177"
+    notes: "Помилки в аргументації: нечітко сформульовані, хибні, аргумент до особи,
+      підміна тези."
+  - title: "Заболотний Grade 10, p.97"
+    notes: "Есе на актуальну тему — structure, вимоги, зразок."
+  - title: "Авраменко Grade 8, p.28-30"
+    notes: "Есе: definition, вільна будова, поєднання художнього та публіцистичного
+      стилів."

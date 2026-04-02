@@ -1,6 +1,6 @@
 # Build Summary: around-the-city (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:42
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 13:12:10 |
 | enrich | complete | 2026-03-30 13:12:12 |
 | verify | complete | 2026-03-30 13:12:12 |
-| review | complete | 2026-03-30 13:14:04 |
-| stress | complete | 2026-03-31 09:57:07 |
-| publish | complete | 2026-03-31 09:57:07 |
+| review | complete | 2026-04-01 11:42:51 |
+| stress | complete | 2026-04-01 11:42:51 |
+| publish | complete | 2026-04-01 11:42:57 |
 
 ## Reviews
 
@@ -38,6 +38,9 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 226s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 31s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 112s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

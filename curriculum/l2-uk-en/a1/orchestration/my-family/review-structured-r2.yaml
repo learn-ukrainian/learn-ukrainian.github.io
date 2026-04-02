@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All three content_outline dialogues present and faithful (Ep6-7 photo
+    showing, Ep7 family photo, Ep10 connected speech). All five sections present in
+    correct order. All vocabulary_hints (required + re
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 20 core vocabulary words VESUM-verified. Gender agreement correct
+    throughout (мій брат, моя сестра, моє місто). Genitive correctly deferred to A2.
+    немає correctly deferred. є as universal present '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present natural situations → explanation sections
+    extract patterns → activity markers test understanding. Correct decision to teach
+    genitive forms as frozen chunks. Appropri'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 11 required vocabulary items used naturally in prose (not listed,
+    contextualized). All 13 recommended items present: батьки ("мої батьки"), дядько/тітка
+    (extended family paragraph), дочка/син, дру'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 plan activity_hints have corresponding markers. Types match exactly
+    (quiz, fill-in ×2, match-up). Markers placed after relevant teaching content.
+    Focus areas align with plan: quiz tests "У тебе '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers, no meta-commentary, no "Let us explore." Dialogues
+    feel natural — friends scrolling through photos, showing birthday pictures, reacting
+    with "Ого!" and "Класно!" Cultural deta
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All five H2 sections present and correctly ordered per plan. Clean markdown.
+    No stray tags or formatting artifacts. Word count 1627 well above 1200 target.
+    No duplicate sections. Activity markers prop
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian treated on its own terms throughout. No "like Russian but..."
+    framing. The "У мене є" structure explained relative to English, not Russian.
+    Both сім''я and родина presented as equally valid. '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Three distinct dialogues with named speakers (Оля, Марк). Natural situations:
+    scrolling through phone photos, pointing at faces in a birthday picture, rehearsing
+    a self-introduction. Multi-turn exchan'
+findings: []

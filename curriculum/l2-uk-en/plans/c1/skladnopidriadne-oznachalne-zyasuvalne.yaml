@@ -4,45 +4,56 @@ sequence: 47
 slug: skladnopidriadne-oznachalne-zyasuvalne
 version: '1.1'
 title: "Складнопідрядні означальні та з'ясувальні речення"
-subtitle: "Attributive and Object Complex Sentences"
+subtitle: "Означальні та з'ясувальні складнопідрядні речення"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Детально вивчити структуру та функції складнопідрядних означальних речей."
-  - "Опанувати складнопідрядні з'ясувальні речення як засіб передачі непрямої мови та думок."
+  - "Опанувати складнопідрядні з'ясувальні речення як засіб передачі непрямої мови
+    та думок."
   - "Навчитися розрізняти сполучники та сполучні слова у підрядних конструкціях."
-  - "Вміти використовувати ці типи речень для уточнення та деталізації інформації в академічних текстах."
+  - "Вміти використовувати ці типи речень для уточнення та деталізації інформації
+    в академічних текстах."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Опис психологічних характеристик особистості: використання означальних підрядних."
+    topic: "Опис психологічних характеристик особистості: використання означальних
+      підрядних."
     key_elements: ["термінологічне визначення", "характеристика", "деталізація"]
     motivation: "Розуміння ролі означальних речей у науковому описі."
   - source_type: "художній уривок"
-    topic: "Внутрішній монолог героя у прозі Ольги Кобилянської: роль з'ясувальних речень."
+    topic: "Внутрішній монолог героя у прозі Ольги Кобилянської: роль з'ясувальних
+      речень."
     key_elements: ["рефлексія", "непряма мова", "емоційний стан"]
     motivation: "Аналіз способів передачі думок та почуттів через з'ясувальні конструкції."
 
 listening_situations:
   - media_type: "подкаст"
     setting: "Обговорення літературним критиком нових тенденцій в українській прозі."
-    focus_points: ["вживання з'ясувальних речень для цитування думок авторів", "означальні конструкції в описах персонажів"]
-    motivation: "Тренування розпізнавання складних синтаксичних структур у потоці мовлення."
+    focus_points: ["вживання з'ясувальних речень для цитування думок авторів", "означальні
+          конструкції в описах персонажів"]
+    motivation: "Тренування розпізнавання складних синтаксичних структур у потоці
+      мовлення."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть розгорнутий відгук на прочитану книгу або переглянутий фільм, акцентуючи увагу на детальних описах (використовуйте означальні речення) та власних роздумах (використовуйте з'ясувальні речення)."
-    requirements: ["мінімум 250 слів", "використання сполучних слів 'який', 'що', 'чий'", "вживання сполучників 'що', 'як', 'щоб'"]
+    prompt: "Напишіть розгорнутий відгук на прочитану книгу або переглянутий фільм,
+      акцентуючи увагу на детальних описах (використовуйте означальні речення) та
+      власних роздумах (використовуйте з'ясувальні речення)."
+    requirements: ["мінімум 250 слів", "використання сполучних слів 'який', 'що',
+          'чий'", "вживання сполучників 'що', 'як', 'щоб'"]
     motivation: "Практика функціонального використання вивчених типів речень."
-    model_answer: "Відгук має бути структурованим, містити опис сюжету з використанням означальних речень та аналіз ідей автора з використанням з'ясувальних речень."
+    model_answer: "Відгук має бути структурованим, містити опис сюжету з використанням
+      означальних речень та аналіз ідей автора з використанням з'ясувальних речень."
 
 discussion_topics:
   - context: "Важливість критичного мислення у сучасному інформаційному суспільстві."
     questions:
       - "Які джерела інформації ви вважаєте надійними і чому?"
       - "Як ви ставитеся до того, що алгоритми соцмереж формують наш світогляд?"
-    motivation: "Використання з'ясувальних речень для вираження ставлення та думок ('я вважаю, що...', 'мене турбує, що...')."
+    motivation: "Використання з'ясувальних речень для вираження ставлення та думок
+      ('я вважаю, що...', 'мене турбує, що...')."
 
 content_outline:
   - section: "Складнопідрядне означальне речення"
@@ -105,15 +116,20 @@ vocabulary:
 
 activity_hints:
   - type: fill-in
-    description: "Complete complex sentences with appropriate relative pronouns (який, що, чий, котрий) and conjunctions (що, як, щоб, чи)."
+    description: "Complete complex sentences with appropriate relative pronouns (який,
+      що, чий, котрий) and conjunctions (що, як, щоб, чи)."
   - type: error-correction
-    description: "Fix errors in attributive and object clauses — wrong conjunction/relative pronoun choice, misplaced subordinate clause, punctuation."
+    description: "Fix errors in attributive and object clauses — wrong conjunction/relative
+      pronoun choice, misplaced subordinate clause, punctuation."
   - type: match-up
-    description: "Match the function of 'що' in different sentences — as a conjunction (сполучник) vs. as a relative pronoun (сполучне слово)."
+    description: "Match the function of 'що' in different sentences — as a conjunction
+      (сполучник) vs. as a relative pronoun (сполучне слово)."
   - type: critical-analysis
-    description: "Transform a passage of direct speech into indirect speech using object clauses, then analyze how meaning shifts."
+    description: "Transform a passage of direct speech into indirect speech using
+      object clauses, then analyze how meaning shifts."
   - type: select
-    description: "Identify the type of subordinate clause (означальне vs з'ясувальне) in complex sentences from academic and literary texts."
+    description: "Identify the type of subordinate clause (означальне vs з'ясувальне)
+      in complex sentences from academic and literary texts."
 
 activities:
   types_required:
@@ -127,7 +143,8 @@ activities:
 
 references:
   - "Заболотний, 9 клас (2017): §29-33 — Складнопідрядне речення, означальне, з'ясувальне"
-  - "Авраменко, 9 клас (2017): §17-20 — Складнопідрядні означальні та з'ясувальні речення"
+  - "Авраменко, 9 клас (2017): §17-20 — Складнопідрядні означальні та з'ясувальні
+    речення"
   - "Глазова, 11 клас (2019): §25 — Правила будови складних речень"
 
 connects_to:

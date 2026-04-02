@@ -1,223 +1,203 @@
-module: b1-085
+module: b1-081
 level: B1
-sequence: 85
+sequence: 81
 slug: narrative-mastery
 version: '3.0'
 title: "Мистецтво розповіді"
-subtitle: "Поєднання часів, видів, рухових дієслів i дієприкметників у текстах"
+subtitle: "Поєднання часів, видів, рухових дієслів і дієприкметників у текстах"
 focus: communication
 pedagogy: PPP
-phase: "B1.10 [Synthesis & Graduation]"
+phase: "B1.9 [Synthesis & Graduation]"
 word_target: 4000
 objectives:
-- "Learner can construct a coherent Ukrainian narrative combining минулий,
-  теперішній, and майбутній часи with correct aspect (вид) choices"
-- "Learner can use prefixed motion verbs (прийти, вийти, перейти, об'їхати)
-  naturally within narratives about journeys and events"
-- "Learner can incorporate дієприкметникові та дієприслівникові звороти
-  to add descriptive and temporal detail to stories"
-- "Learner can apply text structure (зачин, основна частина, кінцівка)
-  to produce well-organized Ukrainian розповіді of 150-200 words"
-- "Learner can use appropriate register shifts within a narrative (dialogue
-  in розмовний стиль, narration in нейтральний or художній стиль)"
+  - "Learner can construct a coherent Ukrainian narrative combining минулий, теперішній,
+    and майбутній часи with correct aspect (вид) choices"
+  - "Learner can use prefixed motion verbs (прийти, вийти, перейти, об'їхати) naturally
+    within narratives about journeys and events"
+  - "Learner can incorporate дієприкметникові та дієприслівникові звороти to add descriptive
+    and temporal detail to stories"
+  - "Learner can apply text structure (зачин, основна частина, кінцівка) to produce
+    well-organized Ukrainian розповіді of 150-200 words"
+  - "Learner can use appropriate register shifts within a narrative (dialogue in розмовний
+    стиль, narration in нейтральний or художній стиль)"
 dialogue_situations:
-- setting: 'Creative writing competition in Чернівцях — students read their short
-    stories aloud: Він, увійшовши в кімнату, зупинився. ''Хто тут?'' — запитав він.
-    Ніхто не відповів. Хоча серце калатало, він пішов далі.'
-  speakers:
-  - Автор (reading)
-  - Журі (commenting)
-  motivation: 'Narrative techniques: gerunds, reported speech, double negation, concessive
-    in storytelling'
+  - setting: 'Creative writing competition in Чернівцях — students read their short
+      stories aloud: Він, увійшовши в кімнату, зупинився. ''Хто тут?'' — запитав він.
+      Ніхто не відповів. Хоча серце калатало, він пішов далі.'
+    speakers:
+      - Автор (reading)
+      - Журі (commenting)
+    motivation: 'Narrative techniques: gerunds, reported speech, double negation,
+      concessive in storytelling'
 content_outline:
-- section: "Будова розповіді"
-  words: 600
-  points:
-  - "Text structure from Варзацька Grade 4 p.14 (scaled to B1):
-    Розповідь answers 'Що сталося?' Structure:
-    Зачин — час i місце події (setting).
-    Основна частина — розгортання події (development).
-    Кінцівка — завершення події (resolution).
-    B1 expansion: зав'язка (inciting incident), кульмінація (climax),
-    розв'язка (resolution) from Заболотний Grade 5 p.134."
-  - "Мікротеми i абзаци — organizing a narrative into logical paragraphs:
-    Each paragraph = one мікротема (sub-topic).
-    Connecting words: потім, після того, тоді, нарешті, раптом,
-    тим часом, водночас, несподівано, зрештою.
-    Practice: learners outline a narrative using мікротеми."
-  - "Model narrative (200 words) — a well-structured Ukrainian розповідь
-    about a trip or event. Analysis: identify зачин, основна частина,
-    кінцівка, мікротеми, connecting words, and tense/aspect choices."
-  - "Planning a narrative: learners create a план for their own розповідь
-    before writing, following the textbook structure."
-- section: "Часи та вид у розповіді"
-  words: 700
-  points:
-  - "Tense switching in Ukrainian narratives — when and why:
-    Минулий час (default for past narratives): 'Ми приїхали о п'ятій.'
-    Теперішній історичний (present for vivid storytelling):
-    'Раптом він зупиняється i дивиться на мене.'
-    Майбутній (for predictions/plans within stories):
-    'Завтра ми поїдемо далі.'
-    Practice: learners identify tense shifts in a model narrative."
-  - "Aspect choices — доконаний vs недоконаний у розповіді:
-    Недоконаний for background/ongoing: 'Сонце світило, птахи співали.'
-    Доконаний for completed events: 'Раптом почався дощ.'
-    Alternation creates narrative rhythm:
-    'Ми йшли (НДВ) лісом. Раптом побачили (ДВ) лисицю.
-    Вона стояла (НДВ) й дивилася (НДВ). Потім утекла (ДВ).'
-    Practice: learners complete narratives choosing correct aspect."
-  - "Tense consistency and intentional shifts:
-    Rule: maintain one base tense, shift only for effect.
-    Error: random mixing without purpose.
-    Practice: learners edit a narrative with inconsistent tense usage."
-  - "The 'раптом effect': how a single доконаний дієслово after a series
-    of недоконаних creates narrative surprise. Ukrainian storytelling
-    technique paralleled in folk казки."
-- section: "Рухові дієслова у розповіді"
-  words: 600
-  points:
-  - "Review of prefixed motion verbs (from Phase 4) in narrative context:
-    'Ми вийшли з дому, пішли вулицею, зайшли в кав'ярню,
-    перейшли через міст, дійшли до парку.'
-    Each prefix verb advances the story spatially."
-  - "Motion verbs as narrative framework — a journey story:
-    Narrative built around a sequence of movements.
-    'Вирушили зранку. Доїхали до Львова о третій. Обійшли старе
-    місто. Зайшли в книгарню. Пішли до ратуші. Повернулися ввечері.'
-    Practice: learners write their own journey narrative."
-  - "Figurative motion verbs adding depth (from M35):
-    'Час летів,' 'Розмова потекла,' 'Думки побігли.'
-    These metaphorical uses enrich narratives beyond literal movement."
-  - "Practice: learners transform a flat narrative ('Ми поїхали до Києва.
-    Ми бачили Хрещатик.') into a rich one using prefixed motion verbs,
-    aspect, and connecting words."
-- section: "Дієприкметники та дієприслівники у розповіді"
-  words: 600
-  points:
-  - "Дієприкметникові звороти for description within narrative:
-    'Місто, залите вечірнім сонцем, виглядало казковим.'
-    'Ми зупинилися біля зруйнованої церкви.'
-    These add visual detail without breaking narrative flow.
-    Practice: learners expand simple sentences with participial phrases."
-  - "Дієприслівникові звороти for simultaneous/preceding actions:
-    'Виходячи з дому, я помітив хмари.' (simultaneous)
-    'Прочитавши листа, вона усміхнулася.' (preceding)
-    These connect actions smoothly in narrative.
-    Practice: learners combine sentence pairs using дієприслівники."
-  - "Overuse warning: too many звороти make text heavy and literary.
-    In розповідь, balance: 1-2 participial/gerund phrases per paragraph.
-    Practice: learners edit an overloaded passage for naturalness."
-  - "Register note: дієприкметникові/дієприслівникові звороти raise
-    the register. Appropriate for written narratives, less common in
-    casual spoken storytelling."
-- section: "Від плану до тексту: практика"
-  words: 600
-  points:
-  - "Step-by-step narrative writing:
-    1. Тема (topic): Моя подорож / Незвичайний день / Зустріч.
-    2. План: зачин, 3-4 мікротеми, кінцівка.
-    3. Чернетка (draft): write freely, focus on ideas.
-    4. Редагування (editing): check tense/aspect, add motion verbs
-    and descriptive phrases, ensure coherence.
-    5. Чистовий варіант (final version): 150-200 words."
-  - "Dialogue within narrative: learners embed short dialogues in
-    розмовний стиль within their narratives, using correct punctuation
-    (пряма мова rules from M73). Register shift: narration is neutral,
-    dialogue is colloquial."
-  - "Peer review: learners read each other's narratives and identify:
-    1. Чи є зачин, основна частина, кінцівка?
-    2. Чи правильно вжито часи та вид?
-    3. Чи є рухові дієслова?
-    4. Чи є художні засоби?"
-  - "Model analysis: learners compare their narrative to a model and
-    identify areas for improvement."
-- section: "Підсумок: розповідь — це мистецтво"
-  words: 300
-  points:
-  - "Complete narrative toolkit reference: structure, tense/aspect,
-    motion verbs, participial/gerund phrases, dialogue embedding."
-  - "Self-check in Ukrainian:
-    1. Назвіть три частини розповіді.
-    2. Коли вживаємо теперішній історичний у розповіді?
-    3. Напишіть три речення з різними рухівними дієсловами.
-    4. Напишіть розповідь (10-12 речень) про свій вихідний день."
-  - "Preview: Аргументація (M86) — from narrative to argumentation,
-    where structure serves persuasion rather than storytelling."
+  - section: "Будова розповіді"
+    words: 600
+    points:
+      - "Text structure from Варзацька Grade 4 p.14 (scaled to B1): Розповідь answers
+        'Що сталося?' Structure: Зачин — час i місце події (setting). Основна частина
+        — розгортання події (development). Кінцівка — завершення події (resolution).
+        B1 expansion: зав'язка (inciting incident), кульмінація (climax), розв'язка
+        (resolution) from Заболотний Grade 5 p.134."
+      - "Мікротеми i абзаци — organizing a narrative into logical paragraphs: Each
+        paragraph = one мікротема (sub-topic). Connecting words: потім, після того,
+        тоді, нарешті, раптом, тим часом, водночас, несподівано, зрештою. Practice:
+        learners outline a narrative using мікротеми."
+      - "Model narrative (200 words) — a well-structured Ukrainian розповідь about
+        a trip or event. Analysis: identify зачин, основна частина, кінцівка, мікротеми,
+        connecting words, and tense/aspect choices."
+      - "Planning a narrative: learners create a план for their own розповідь before
+        writing, following the textbook structure."
+  - section: "Часи та вид у розповіді"
+    words: 700
+    points:
+      - "Tense switching in Ukrainian narratives — when and why: Минулий час (default
+        for past narratives): 'Ми приїхали о п'ятій.' Теперішній історичний (present
+        for vivid storytelling): 'Раптом він зупиняється i дивиться на мене.' Майбутній
+        (for predictions/plans within stories): 'Завтра ми поїдемо далі.' Practice:
+        learners identify tense shifts in a model narrative."
+      - "Aspect choices — доконаний vs недоконаний у розповіді: Недоконаний for background/ongoing:
+        'Сонце світило, птахи співали.' Доконаний for completed events: 'Раптом почався
+        дощ.' Alternation creates narrative rhythm: 'Ми йшли (НДВ) лісом. Раптом побачили
+        (ДВ) лисицю. Вона стояла (НДВ) й дивилася (НДВ). Потім утекла (ДВ).' Practice:
+        learners complete narratives choosing correct aspect."
+      - "Tense consistency and intentional shifts: Rule: maintain one base tense,
+        shift only for effect. Error: random mixing without purpose. Practice: learners
+        edit a narrative with inconsistent tense usage."
+      - "The 'раптом effect': how a single доконаний дієслово after a series of недоконаних
+        creates narrative surprise. Ukrainian storytelling technique paralleled in
+        folk казки."
+  - section: "Рухові дієслова у розповіді"
+    words: 600
+    points:
+      - "Review of prefixed motion verbs (from Phase 4) in narrative context: 'Ми
+        вийшли з дому, пішли вулицею, зайшли в кав'ярню, перейшли через міст, дійшли
+        до парку.' Each prefix verb advances the story spatially."
+      - "Motion verbs as narrative framework — a journey story: Narrative built around
+        a sequence of movements. 'Вирушили зранку. Доїхали до Львова о третій. Обійшли
+        старе місто. Зайшли в книгарню. Пішли до ратуші. Повернулися ввечері.' Practice:
+        learners write their own journey narrative."
+      - "Figurative motion verbs adding depth (from M35): 'Час летів,' 'Розмова потекла,'
+        'Думки побігли.' These metaphorical uses enrich narratives beyond literal
+        movement."
+      - "Practice: learners transform a flat narrative ('Ми поїхали до Києва. Ми бачили
+        Хрещатик.') into a rich one using prefixed motion verbs, aspect, and connecting
+        words."
+  - section: "Дієприкметники та дієприслівники у розповіді"
+    words: 600
+    points:
+      - "Дієприкметникові звороти for description within narrative: 'Місто, залите
+        вечірнім сонцем, виглядало казковим.' 'Ми зупинилися біля зруйнованої церкви.'
+        These add visual detail without breaking narrative flow. Practice: learners
+        expand simple sentences with participial phrases."
+      - "Дієприслівникові звороти for simultaneous/preceding actions: 'Виходячи з
+        дому, я помітив хмари.' (simultaneous) 'Прочитавши листа, вона усміхнулася.'
+        (preceding) These connect actions smoothly in narrative. Practice: learners
+        combine sentence pairs using дієприслівники."
+      - "Overuse warning: too many звороти make text heavy and literary. In розповідь,
+        balance: 1-2 participial/gerund phrases per paragraph. Practice: learners
+        edit an overloaded passage for naturalness."
+      - "Register note: дієприкметникові/дієприслівникові звороти raise the register.
+        Appropriate for written narratives, less common in casual spoken storytelling."
+  - section: "Від плану до тексту: практика"
+    words: 600
+    points:
+      - "Step-by-step narrative writing: 1. Тема (topic): Моя подорож / Незвичайний
+        день / Зустріч. 2. План: зачин, 3-4 мікротеми, кінцівка. 3. Чернетка (draft):
+        write freely, focus on ideas. 4. Редагування (editing): check tense/aspect,
+        add motion verbs and descriptive phrases, ensure coherence. 5. Чистовий варіант
+        (final version): 150-200 words."
+      - "Dialogue within narrative: learners embed short dialogues in розмовний стиль
+        within their narratives, using correct punctuation (пряма мова rules from
+        M73). Register shift: narration is neutral, dialogue is colloquial."
+      - "Peer review: learners read each other's narratives and identify: 1. Чи є
+        зачин, основна частина, кінцівка? 2. Чи правильно вжито часи та вид? 3. Чи
+        є рухові дієслова? 4. Чи є художні засоби?"
+      - "Model analysis: learners compare their narrative to a model and identify
+        areas for improvement."
+  - section: "Підсумок: розповідь — це мистецтво"
+    words: 300
+    points:
+      - "Complete narrative toolkit reference: structure, tense/aspect, motion verbs,
+        participial/gerund phrases, dialogue embedding."
+      - "Self-check in Ukrainian: 1. Назвіть три частини розповіді. 2. Коли вживаємо
+        теперішній історичний у розповіді? 3. Напишіть три речення з різними рухівними
+        дієсловами. 4. Напишіть розповідь (10-12 речень) про свій вихідний день."
+      - "Preview: Аргументація (M86) — from narrative to argumentation, where structure
+        serves persuasion rather than storytelling."
 vocabulary_hints:
   required:
-  - "розповідь (narrative/story — text about events)"
-  - "зачин (beginning/opening — introduction of a narrative)"
-  - "кінцівка (ending — conclusion of a narrative)"
-  - "зав'язка (inciting incident — event that starts the conflict)"
-  - "кульмінація (climax — peak of narrative tension)"
-  - "розв'язка (resolution — conclusion of the conflict)"
-  - "мікротема (sub-topic — one aspect within a larger text)"
-  - "раптом (suddenly — narrative surprise marker)"
-  - "тим часом (meanwhile — temporal connector)"
-  - "нарешті (finally — sequential connector)"
-  - "несподівано (unexpectedly — narrative surprise)"
-  - "чернетка (draft — preliminary version of text)"
-  - "редагування (editing — revising text)"
+    - "розповідь (narrative/story — text about events)"
+    - "зачин (beginning/opening — introduction of a narrative)"
+    - "кінцівка (ending — conclusion of a narrative)"
+    - "зав'язка (inciting incident — event that starts the conflict)"
+    - "кульмінація (climax — peak of narrative tension)"
+    - "розв'язка (resolution — conclusion of the conflict)"
+    - "мікротема (sub-topic — one aspect within a larger text)"
+    - "раптом (suddenly — narrative surprise marker)"
+    - "тим часом (meanwhile — temporal connector)"
+    - "нарешті (finally — sequential connector)"
+    - "несподівано (unexpectedly — narrative surprise)"
+    - "чернетка (draft — preliminary version of text)"
+    - "редагування (editing — revising text)"
   recommended:
-  - "водночас (at the same time — simultaneous events)"
-  - "зрештою (after all / in the end — concluding connector)"
-  - "теперішній історичний (historical present — vivid narrative tense)"
-  - "розгортання події (development of events)"
-  - "зв'язність (coherence — logical flow of text)"
-  - "чистовий варіант (final version — clean copy)"
-  - "пряма мова (direct speech — quoted dialogue)"
+    - "водночас (at the same time — simultaneous events)"
+    - "зрештою (after all / in the end — concluding connector)"
+    - "теперішній історичний (historical present — vivid narrative tense)"
+    - "розгортання події (development of events)"
+    - "зв'язність (coherence — logical flow of text)"
+    - "чистовий варіант (final version — clean copy)"
+    - "пряма мова (direct speech — quoted dialogue)"
 activity_hints:
-- type: quiz
-  focus: "Identify narrative structure elements (зачин, кульмінація, розв'язка)
-    and tense/aspect choices in text excerpts."
-  items: 12
-- type: fill-in
-  focus: "Complete a narrative with correct tense, aspect, and motion verb
-    forms. Insert connecting words in appropriate positions."
-  items: 12
-- type: error-correction
-  focus: "Fix tense inconsistencies, incorrect aspect choices, and
-    missing connecting words in a draft narrative."
-  items: 12
-- type: match-up
-  focus: "Match narrative structure terms to their definitions and
-    connecting words to their functions."
-  items: 12
-- type: free-write
-  focus: "Write a complete narrative (150-200 words) with зачин, основна
-    частина, кінцівка, using motion verbs, aspect alternation, and
-    at least one dialogue fragment."
-  items: 12
-- type: group-sort
-  focus: "Sort дієслова by вид (ДВ/НДВ) and sort connecting words by
-    function (послідовність, одночасність, несподіваність)."
-  items: 12
+  - type: quiz
+    focus: "Identify narrative structure elements (зачин, кульмінація, розв'язка)
+      and tense/aspect choices in text excerpts."
+    items: 12
+  - type: fill-in
+    focus: "Complete a narrative with correct tense, aspect, and motion verb forms.
+      Insert connecting words in appropriate positions."
+    items: 12
+  - type: error-correction
+    focus: "Fix tense inconsistencies, incorrect aspect choices, and missing connecting
+      words in a draft narrative."
+    items: 12
+  - type: match-up
+    focus: "Match narrative structure terms to their definitions and connecting words
+      to their functions."
+    items: 12
+  - type: free-write
+    focus: "Write a complete narrative (150-200 words) with зачин, основна частина,
+      кінцівка, using motion verbs, aspect alternation, and at least one dialogue
+      fragment."
+    items: 12
+  - type: group-sort
+    focus: "Sort дієслова by вид (ДВ/НДВ) and sort connecting words by function (послідовність,
+      одночасність, несподіваність)."
+    items: 12
 connects_to:
-- "b1-086 (Аргументація — structured writing, different purpose)"
-- "b1-073 (reported-speech — embedding speech in narrative)"
-- "b1-035 (figurative-motion — metaphorical motion verbs)"
-- "b1-091 (b1-finale — capstone uses narrative skills)"
+  - "b1-086 (Аргументація — structured writing, different purpose)"
+  - "b1-073 (reported-speech — embedding speech in narrative)"
+  - "b1-035 (figurative-motion — metaphorical motion verbs)"
+  - "b1-091 (b1-finale — capstone uses narrative skills)"
 prerequisites:
-- "b1-004 to b1-005 (tense and aspect foundation)"
-- "b1-027 to b1-037 (motion verb phase)"
-- "b1-057 to b1-062 (participles and gerunds)"
-- "b1-073 (reported-speech — пряма мова rules)"
+  - "b1-004 to b1-005 (tense and aspect foundation)"
+  - "b1-027 to b1-037 (motion verb phase)"
+  - "b1-057 to b1-062 (participles and gerunds)"
+  - "b1-073 (reported-speech — пряма мова rules)"
 grammar:
-- "Tense alternation in narrative: минулий, теперішній історичний, майбутній"
-- "Aspect alternation: НДВ for background, ДВ for events"
-- "Prefixed motion verbs in sequential narrative"
-- "Дієприкметникові/дієприслівникові звороти for descriptive enrichment"
-- "Text structure: зачин, зав'язка, кульмінація, розв'язка, кінцівка"
+  - "Tense alternation in narrative: минулий, теперішній історичний, майбутній"
+  - "Aspect alternation: НДВ for background, ДВ for events"
+  - "Prefixed motion verbs in sequential narrative"
+  - "Дієприкметникові/дієприслівникові звороти for descriptive enrichment"
+  - "Text structure: зачин, зав'язка, кульмінація, розв'язка, кінцівка"
 register: розмовний
 references:
-- title: "Варзацька Grade 4, p.14"
-  notes: "Будова тексту: розповідь, опис, міркування, есе —
-    basic text structures adapted to B1."
-- title: "Заболотний Grade 5, p.134, 223-226"
-  notes: "Сюжет: зав'язка, кульмінація, розв'язка. Зачин, основна частина,
-    кінцівка. План тексту."
-- title: "Заболотний Grade 7, p.54-65"
-  notes: "Часи дієслова, вид дієслова — tense and aspect for narratives."
-- title: "Авраменко Grade 8, p.28-30"
-  notes: "Есе — structure of opinion writing, applicable to narrative organization."
+  - title: "Варзацька Grade 4, p.14"
+    notes: "Будова тексту: розповідь, опис, міркування, есе — basic text structures
+      adapted to B1."
+  - title: "Заболотний Grade 5, p.134, 223-226"
+    notes: "Сюжет: зав'язка, кульмінація, розв'язка. Зачин, основна частина, кінцівка.
+      План тексту."
+  - title: "Заболотний Grade 7, p.54-65"
+    notes: "Часи дієслова, вид дієслова — tense and aspect for narratives."
+  - title: "Авраменко Grade 8, p.28-30"
+    notes: "Есе — structure of opinion writing, applicable to narrative organization."

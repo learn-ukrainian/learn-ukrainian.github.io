@@ -1,374 +1,158 @@
 ---
-title: "HIST"
-description: " — 140 modules"
-template: splash
+title: HIST - Історія України
+sidebar:
+  order: 1
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="HIST"
-  title="HIST"
-  subtitle=" — 0/140 modules complete"
-  moduleCount={140}
-  wordTarget={4000}
-  color="#546E7A"
+  level="hist"
+  levelName="HIST - Історія України"
+  subtitle="History Track — 140 modules"
+  introduction="History — Ukrainian history from origins to present"
+  totalPlanned={140}
   modules={[
-    {
-      unit: "HIST.1 [Витоки]",
-      items: [
-        { num: 1, slug: "trypillian-civilization", title: "Трипільська цивілізація", sub: "Trypillian Civilization — Origins of Ukrainian Land", status: "locked" },
-        { num: 2, slug: "scythians-sarmatians", title: "Скіфи та сармати — Володарі степу", sub: "Scythians and Sarmatians", status: "locked" },
-        { num: 3, slug: "greeks-crimea-olbia", title: "Грецькі міста-держави: Ольвія, Херсонес", sub: "Antiquity on Ukrainian Lands", status: "locked" },
-        { num: 4, slug: "sloviany-origins", title: "Слов'яни на українських землях: Витоки державності", sub: "Slavic Origins and Statehood", status: "locked" },
-        { num: 5, slug: "slavic-tribes", title: "Слов'янські племена на українських землях", sub: "Mosaic of Tribal Unions", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.1 [Origins]",
-      items: [
-        { num: 6, slug: "zasnuvannia-kyieva", title: "Заснування Києва", sub: "Legend and Archaeology of the Capital", status: "locked" },
-        { num: 7, slug: "khozary-i-sloviany", title: "Хозарський каганат і слов'яни", sub: "The Khazar Khaganate and the Slavs", status: "locked" },
-        { num: 8, slug: "syntez-vytoky-1", title: "Синтез: Від Трипілля до Києва", sub: "Synthesis: From Trypillia to Kyiv", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.1 [Kyivan Rus]",
-      items: [
-        { num: 9, slug: "oleh-ihor", title: "Олег та Ігор: Перші правителі", sub: "Oleh and Ihor: First Rulers", status: "locked" },
-        { num: 10, slug: "olha-sviatoslav", title: "Ольга та Святослав", sub: "", status: "locked" },
-        { num: 11, slug: "volodymyr-khreshchennia", title: "Володимир і Хрещення Русі", sub: "", status: "locked" },
-        { num: 12, slug: "yaroslav-wise", title: "Ярослав Мудрий: Золота доба", sub: "", status: "locked" },
-        { num: 13, slug: "ruska-pravda", title: "Руська Правда: Перший законодавчий кодекс", sub: "", status: "locked" },
-        { num: 14, slug: "sofiya-kyivska", title: "Софія Київська та культурний розквіт", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.2 [Kyivan Rus]",
-      items: [
-        { num: 15, slug: "volodymyr-monomakh", title: "Володимир Мономах", sub: "The Last Great Prince of United Rus", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.1 [Kyivan Rus]",
-      items: [
-        { num: 16, slug: "kultura-kyivskoi-rusi", title: "Культура Київської Русі", sub: "", status: "locked" },
-        { num: 17, slug: "kniazivski-usobiytsi", title: "Княжі усобиці та роздроблення", sub: "", status: "locked" },
-        { num: 18, slug: "ludy-rusi", title: "Люди Русі: Суспільство та побут", sub: "", status: "locked" },
-        { num: 19, slug: "rus-ta-susidy", title: "Русь та сусіди: Візантія, Польща, Угорщина", sub: "", status: "locked" },
-        { num: 20, slug: "syntez-kyivska-rus", title: "Синтез: Київська Русь — спадщина", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.2 [Fragmentation]",
-      items: [
-        { num: 21, slug: "mongolska-navala", title: "Монгольська навала 1240", sub: "Падіння Києва та кінець Київської Русі", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.3 [Mongol Era & Galicia-Volhynia]",
-      items: [
-        { num: 22, slug: "mykhailo-chernigivskyi", title: "Михайло Чернігівський: Опір Орді", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3a [Українська історія]",
-      items: [
-        { num: 23, slug: "danylo-halytskyi", title: "Королювання Данила Романовича", sub: "Король України та європейський вибір", status: "locked" },
-        { num: 24, slug: "galytsko-volynska-derzhava", title: "Галицько-Волинська держава: Розквіт", sub: "Західний оплот Русі", status: "locked" },
-        { num: 25, slug: "boiare-i-shliakhta", title: "Бояри та шляхта: Соціальна еліта", sub: "Лицарська честь та політична суб'єктність", status: "locked" },
-        { num: 26, slug: "kinets-halytsko-volyni", title: "Занепад Галицько-Волинської держави", sub: "Трагедія 1340 року та боротьба за спадщину", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3c [Українська історія]",
-      items: [
-        { num: 27, slug: "krymske-khanstvo", title: "Кримське ханство: Золотоординська спадщина", sub: "Виникнення та державність Гіреїв", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3 [Ukrainian History] Synthesis",
-      items: [
-        { num: 28, slug: "syntez-dvokniazivstvo", title: "Синтез: Від монгольської навали до кримської державності", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3a [Українська історія]",
-      items: [
-        { num: 29, slug: "velyke-kniazivstvo-lytovske", title: "Велике князівство Литовське — Руська держава", sub: "Спадщина Gediminids та руська мова", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3b [Українська історія]",
-      items: [
-        { num: 30, slug: "ukrainski-zemli-u-vkl", title: "Українські землі у ВКЛ", sub: "Регіональна автономія та магнатська влада", status: "locked" },
-        { num: 31, slug: "liublinska-uniia", title: "Люблінська унія 1569: Народження Речі Посполитої", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3a [Українська історія]",
-      items: [
-        { num: 32, slug: "rich-pospolyta", title: "Річ Посполита — полонізація та кріпацтво", sub: "", status: "locked" },
-        { num: 33, slug: "beresteyska-uniia", title: "Берестейська унія: Церковний розкол", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.4 [Lithuanian-Polish Era]",
-      items: [
-        { num: 34, slug: "pravoslavna-tserkva-17", title: "Православна церква XVII століття", sub: "The Orthodox Church in 17th Century: Struggle for Survival", status: "locked" },
-        { num: 35, slug: "petro-mohyla", title: "Петро Могила: Реформатор церкви", sub: "Petro Mohyla: The Church Reformer", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3a [Українська історія]",
-      items: [
-        { num: 36, slug: "bratstva-i-osvita", title: "Братства та освіта: Острозька академія", sub: "", status: "locked" },
-        { num: 37, slug: "bukovyna-zakarpattia", title: "Буковина та Закарпаття під сусідами", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.4",
-      items: [
-        { num: 38, slug: "slobozhanshchyna", title: "Слобожанщина: Заселення і розвиток", sub: "Українська колонізація дикого степу", status: "locked" },
-        { num: 39, slug: "liudy-ricchi-pospolytoi", title: "Люди Речі Посполитої: Суспільство", sub: "Соціальна структура польсько-литовської держави", status: "locked" },
-        { num: 40, slug: "syntez-lytva-polska", title: "Синтез: Литовсько-польська доба", sub: "Узагальнення литовсько-польського періоду в історії України", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.5 [Становлення козацтва]",
-      items: [
-        { num: 41, slug: "kozatstvo-vytoky", title: "Козацтво: витоки", sub: "Origins of Cossackdom", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3b [Українська історія]",
-      items: [
-        { num: 42, slug: "zaporizka-sich", title: "Запорозька Січ — козацька республіка", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.5 [Rise of Cossacks]",
-      items: [
-        { num: 43, slug: "dmytro-vyshnevetskyi", title: "Дмитро Вишневецький: Перший кошовий", sub: "The Legendary Founder of the First Sich", status: "locked" },
-        { num: 44, slug: "kozatski-povstannia-16", title: "Козацькі повстання XVI століття", sub: "The First Great Clashes for Rights and Freedoms", status: "locked" },
-        { num: 45, slug: "petro-sahaidachnyi", title: "Петро Сагайдачний: Гетьман і меценат", sub: "The Knight of Orthodox Culture and Naval Glory", status: "locked" },
-        { num: 46, slug: "khotynska-viyna", title: "Хотинська війна 1621: Козацький щит Європи", sub: "The Battle That Saved Christian Civilization", status: "locked" },
-        { num: 47, slug: "kozatska-kultura", title: "Козацька культура — кобзарі, думи та бароко", sub: "Cossack Culture: Kobzars, Dumas, and Baroque", status: "locked" },
-        { num: 48, slug: "kozatske-viisko", title: "Козацьке військо та озброєння", sub: "Cossack Army and Weaponry", status: "locked" },
-        { num: 49, slug: "morski-pokhody", title: "Морські походи козаків", sub: "Cossack Naval Expeditions", status: "locked" },
-        { num: 50, slug: "syntez-kozatstvo-vytoky", title: "Синтез: Становлення козацтва", sub: "Synthesis: The Formation of the Cossacks", status: "locked" },
-        { num: 51, slug: "khmelnychchyna-prychyny", title: "Хмельниччина I: причини та початок", sub: "The Khmelnytsky Uprising: Causes and Outbreak", status: "locked" },
-        { num: 52, slug: "bohdan-khmelnytskyi", title: "Богдан Хмельницький: Постать в історії", sub: "Bohdan Khmelnytsky: A Figure in History", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.6 [Khmelnytsky & Cossack State]",
-      items: [
-        { num: 53, slug: "bitva-pid-zhovtymy-vodamy", title: "Битва під Жовтими Водами", sub: "The Battle of Zhovti Vody", status: "locked" },
-        { num: 54, slug: "zborivska-bila-tserkva", title: "Зборівська та Білоцерківська угоди", sub: "The Treaties of Zboriv and Bila Tserkva", status: "locked" },
-        { num: 55, slug: "kozatska-derzhava", title: "Хмельниччина: Козацька держава", sub: "The Cossack State: Structure and Administration of the Hetmanate", status: "locked" },
-        { num: 56, slug: "pereyaslavska-uhoda", title: "Переяславська угода 1654: Міфи та реальність", sub: "The Treaty of Pereiaslav 1654: Myths and Reality", status: "locked" },
-        { num: 57, slug: "yurii-nemyrych", title: "Юрій Немирич: Гадяцька угода", sub: "Yurii Nemyrych: The Treaty of Hadiach", status: "locked" },
-        { num: 58, slug: "ruina-i", title: "Руїна I: Виговщина і розкол", sub: "The Ruin I: Vyhovsky and the Split", status: "locked" },
-        { num: 59, slug: "ruina-ii", title: "Руїна II: Дорошенко і надія", sub: "The Ruin II: Doroshenko and Hope", status: "locked" },
-        { num: 60, slug: "andrusivske-peremyrya", title: "Андрусівське перемир'я: Поділ України", sub: "The Truce of Andrusovo: The Partition of Ukraine", status: "locked" },
-        { num: 61, slug: "ivan-sirko", title: "Іван Сірко: Легендарний кошовий", sub: "Ivan Sirko: The Legendary Koshovyi Otaman", status: "locked" },
-        { num: 62, slug: "syntez-khmelnychchyna", title: "Синтез: Козацька революція", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.7 [Mazepa & End of Hetmanate]",
-      items: [
-        { num: 63, slug: "ivan-mazepa-derzhavnyk", title: "Іван Мазепа I: Державник", sub: "Ivan Mazepa I: The Statesman", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3b [Українська історія]",
-      items: [
-        { num: 64, slug: "ivan-mazepa-kultura", title: "Іван Мазепа II: освіта і культура", sub: "", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.7 [Mazepa & End of Hetmanate]",
-      items: [
-        { num: 65, slug: "kost-hordiyenko-sich", title: "Кость Гордієнко та Січ", sub: "Kost Hordiyenko and the Sich", status: "locked" },
-        { num: 66, slug: "ivan-mazepa-poltava", title: "Іван Мазепа III: Полтава і вигнання", sub: "Ivan Mazepa III: Poltava and Exile", status: "locked" },
-        { num: 67, slug: "pylyp-orlyk-konstytutsiia", title: "Пилип Орлик і перша Конституція", sub: "Pylyp Orlyk and the First Constitution", status: "locked" },
-        { num: 68, slug: "hryhorii-skovoroda", title: "Григорій Сковорода: Мандрівний філософ", sub: "Hryhorii Skovoroda: The Wandering Philosopher", status: "locked" },
-      ]
-    },
-    {
-      unit: "B2.3b [Українська історія]",
-      items: [
-        { num: 69, slug: "pavlo-polubotok", title: "Павло Полуботок: Останній наказний", sub: "", status: "locked" },
-        { num: 70, slug: "danylo-apostol", title: "Данило Апостол та Кирило Розумовський", sub: "The Last Hetmans: Apostol and Rozumovsky", status: "locked" },
-        { num: 71, slug: "koliivshchyna", title: "Коліївщина: Гайдамацький дух", sub: "Koliivshchyna: The Haidamaka Spirit", status: "locked" },
-        { num: 72, slug: "opryshky", title: "Опришки Карпат: Легенда Довбуша", sub: "Opryshky of the Carpathians: The Legend of Dovbush", status: "locked" },
-        { num: 73, slug: "petro-kalnyshevskyi", title: "Петро Калнишевський: Останній кошовий", sub: "Petro Kalnyshevskyi: The Last Koshovyi", status: "locked" },
-        { num: 74, slug: "kinets-hetmanshchyny", title: "Кінець Гетьманщини", sub: "The End of the Hetmanate", status: "locked" },
-        { num: 75, slug: "rosiiska-imperiia-ukraina", title: "Південь України: Колонізація та міфи", sub: "Southern Ukraine: Colonization and Myths", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.8 [Imperial Era]",
-      items: [
-        { num: 76, slug: "habsburzka-halichyna", title: "Габсбурзька Галичина", sub: "Habsburg Galicia: The Ukrainian Piedmont 1772-1918", status: "locked" },
-        { num: 77, slug: "pivden-novorosiia", title: "Південь України: Міфи «Новоросії»", sub: "Southern Ukraine: Myths of 'Novorossiya'", status: "locked" },
-        { num: 78, slug: "nova-serbiya", title: "Нова Сербія та Слов'яносербія", sub: "New Serbia and Slavo-Serbia: The Balkan Factor", status: "locked" },
-        { num: 79, slug: "krypatsvo-selo", title: "Кріпацтво на Півдні", sub: "Serfdom in Southern Ukraine", status: "locked" },
-        { num: 80, slug: "kyrylo-mefodiivtsi", title: "Кирило-Мефодіївське братство", sub: "The Cyril and Methodius Brotherhood", status: "locked" },
-        { num: 81, slug: "shevchenko-awakening", title: "Шевченко і пробудження", sub: "Shevchenko and the National Awakening", status: "locked" },
-        { num: 82, slug: "valuevskyi-emskyi", title: "Валуєвський циркуляр та Емський указ", sub: "The Valuev Circular and Ems Decree", status: "locked" },
-        { num: 83, slug: "hromady", title: "Громадівський рух", sub: "The Hromada Movement", status: "locked" },
-        { num: 84, slug: "drahomanov", title: "Михайло Драгоманов", sub: "Mykhailo Drahomanov: Father of Ukrainian Political Thought", status: "locked" },
-        { num: 85, slug: "franko-lesia-hrinchenko", title: "Франко, Леся, Грінченко", sub: "Franko, Lesia Ukrainka, Hrinchenko: Titans of Ukrainian Modernism", status: "locked" },
-        { num: 86, slug: "syntez-imperska-doba", title: "Синтез: Імперська доба", sub: "Synthesis: The Imperial Era", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.9 [WWI & Revolution]",
-      items: [
-        { num: 87, slug: "hrushevskyi", title: "Михайло Грушевський", sub: "Mykhailo Hrushevsky: Father of Ukrainian Historiography", status: "locked" },
-        { num: 88, slug: "persha-svitova", title: "Перша світова війна: Брат проти брата", sub: "World War I: Brother Against Brother", status: "locked" },
-        { num: 89, slug: "sichovi-striltsi", title: "Українські січові стрільці", sub: "The Ukrainian Sich Riflemen", status: "locked" },
-        { num: 90, slug: "tsentralna-rada", title: "Центральна Рада: Від автономії до незалежності", sub: "The Central Rada: From Autonomy to Independence", status: "locked" },
-        { num: 91, slug: "skoropadskyi", title: "Павло Скоропадський: Гетьманат", sub: "Pavlo Skoropadskyi: The Hetmanate", status: "locked" },
-        { num: 92, slug: "zunr", title: "ЗУНР та Акт Злуки", sub: "ZUNR and the Act of Unification", status: "locked" },
-        { num: 93, slug: "dyrektoriia", title: "Директорія УНР", sub: "The Directory of the Ukrainian People's Republic 1918-1920", status: "locked" },
-        { num: 94, slug: "symon-petliura-revolution", title: "Симон Петлюра: Головний отаман", sub: "Symon Petliura: The Supreme Commander", status: "locked" },
-        { num: 95, slug: "bilshovytsko-ukrainska-viyna", title: "Більшовицько-українська війна", sub: "The Bolshevik-Ukrainian War 1917-1921", status: "locked" },
-        { num: 96, slug: "kholodnyi-yar", title: "Холодний Яр: Останній опір", sub: "Kholodny Yar: The Last Resistance", status: "locked" },
-        { num: 97, slug: "syntez-revoliutsiia", title: "Синтез: Українська революція", sub: "Synthesis: The Ukrainian Revolution", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [WWII & Soviet Terror]",
-      items: [
-        { num: 98, slug: "rozstriliane-vidrodzennia", title: "Розстріляне відродження: Постаті", sub: "The Executed Renaissance: Key Figures", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [Soviet Terror]",
-      items: [
-        { num: 99, slug: "pacyfikatsiia", title: "Пацифікація: Поляки в Галичині", sub: "Pacification: Polish Repressions in Galicia", status: "locked" },
-        { num: 100, slug: "oun", title: "ОУН: Формування", sub: "OUN: The Formation of Ukrainian Nationalism", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10",
-      items: [
-        { num: 101, slug: "holodomor-mekhanizm", title: "Голодомор I: Механізм", sub: "Holodomor I: Mechanism", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [Soviet Period & Tragedies]",
-      items: [
-        { num: 102, slug: "holodomor-pamiat", title: "Голодомор: Пам'ять та визнання", sub: "Holodomor: Memory and Recognition", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [Soviet Terror]",
-      items: [
-        { num: 103, slug: "mekhanizm-teroru", title: "Розстріляне відродження II: Механізм терору", sub: "The Executed Renaissance II: The Mechanism of Terror", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.9 [WWI & Revolution]",
-      items: [
-        { num: 104, slug: "karpatska-ukraina", title: "Карпатська Україна 1938-1939", sub: "Carpatho-Ukraine: A Brief Independence", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [Soviet Period & Tragedies]",
-      items: [
-        { num: 105, slug: "druha-svitova-pochatok", title: "Друга світова: Початок", sub: "WWII: The Beginning 1939-1941", status: "locked" },
-        { num: 106, slug: "babyn-yar", title: "Бабин Яр та Голокост в Україні", sub: "Babi Yar and the Holocaust in Ukraine", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.10 [WWII & Soviet Terror]",
-      items: [
-        { num: 107, slug: "upa", title: "УПА: Збройний опір", sub: "UPA: The Armed Resistance", status: "locked" },
-        { num: 108, slug: "syntez-trahedii", title: "Синтез: Трагедії XX століття", sub: "Synthesis: 20th Century Tragedies", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.11 [Post-War Soviet Ukraine]",
-      items: [
-        { num: 109, slug: "povoienne-vidbudova", title: "Повоєнна відбудова", sub: "Post-War Reconstruction", status: "locked" },
-        { num: 110, slug: "deportatsii-ukraintsiv", title: "Депортації українців 1944-1951", sub: "Deportations of Ukrainians 1944-1951", status: "locked" },
-        { num: 111, slug: "surgunlik", title: "Sürgünlik: Депортації кримських татар та інших народів", sub: "Sürgünlik and Soviet Deportations of Minorities 1941-1949", status: "locked" },
-        { num: 112, slug: "krym-1954", title: "Крим 1954: Передача УРСР", sub: "Crimea 1954: Transfer to Ukraine", status: "locked" },
-        { num: 113, slug: "destalinizatsiia", title: "Десталінізація в Україні", sub: "De-Stalinization in Ukraine", status: "locked" },
-        { num: 114, slug: "shistdesiatnyky", title: "Шістдесятники: Бунт проти сірості", sub: "", status: "locked" },
-        { num: 115, slug: "ukrainska-helsinska-hrupa", title: "Українська Гельсінська група", sub: "The Ukrainian Helsinki Group", status: "locked" },
-        { num: 116, slug: "afhanistan", title: "Українці в Афганістані", sub: "", status: "locked" },
-        { num: 117, slug: "chornobyl", title: "Чорнобиль: Трагедія і Попередження", sub: "", status: "locked" },
-        { num: 118, slug: "diaspora", title: "Діаспора: Ковчег держави", sub: "The Diaspora: Ark of the Nation", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.12 [Independence & Modern Era]",
-      items: [
-        { num: 119, slug: "shliakh-nezalezhnosti", title: "Шлях до незалежності", sub: "The Path to Independence", status: "locked" },
-        { num: 120, slug: "rukh", title: "Рух: Народний рух України", sub: "Rukh: The People's Movement of Ukraine", status: "locked" },
-        { num: 121, slug: "nezalezhnist-1991", title: "Україна 1991-2004: Становлення", sub: "Ukraine 1991-2004: Formation of a State", status: "locked" },
-        { num: 122, slug: "ukraine-90s", title: "Україна 1990-х: Кучма та олігархи", sub: "Ukraine in the 1990s: Kuchma and the Oligarchs", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.12 [Independence & Modern Ukraine]",
-      items: [
-        { num: 123, slug: "pomarancheva-revoliutsiia", title: "Помаранчева революція", sub: "Orange Revolution: Ukraine's Democratic Awakening", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.12 [Independence & Modern Era]",
-      items: [
-        { num: 124, slug: "yanukovych", title: "Епоха Януковича: Реванш", sub: "The Yanukovych Era: The Revanche", status: "locked" },
-        { num: 125, slug: "movna-polityka", title: "Мовна політика незалежної України", sub: "Language Policy in Independent Ukraine", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.13 [Russian Aggression]",
-      items: [
-        { num: 126, slug: "revoliutsiia-hidnosti", title: "Революція Гідності: Євромайдан", sub: "The Revolution of Dignity: Euromaidan", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.12 [Independence]",
-      items: [
-        { num: 127, slug: "aneksiia-krymu", title: "Анексія Криму: Початок війни", sub: "Annexation of Crimea: The Beginning of War", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.12 [Independence & Modern Era]",
-      items: [
-        { num: 128, slug: "krymski-tatary-pislia-2014", title: "Кримські татари після 2014", sub: "Crimean Tatars After Russian Annexation", status: "locked" },
-        { num: 129, slug: "tomos", title: "Томос: Духовна незалежність", sub: "Tomos: Spiritual Independence", status: "locked" },
-        { num: 130, slug: "syntez-nezalezhnist", title: "Синтез: Незалежна Україна", sub: "Synthesis: Independent Ukraine", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.13 [Russian Aggression]",
-      items: [
-        { num: 131, slug: "viyna-donbas", title: "Війна на Донбасі 2014-2022", sub: "The War in Donbas 2014-2022", status: "locked" },
-        { num: 132, slug: "povnomasshtabne-vtorhnessnia", title: "Повномасштабне вторгнення", sub: "The Full-Scale Invasion", status: "locked" },
-        { num: 133, slug: "mariupol-azovstal", title: "Маріуполь та Азовсталь", sub: "Mariupol and Azovstal: The Siege", status: "locked" },
-        { num: 134, slug: "bucha-irpin", title: "Буча та Ірпінь: Злочини", sub: "Bucha and Irpin: War Crimes", status: "locked" },
-        { num: 135, slug: "kakhovska-hes", title: "Каховська ГЕС: Екоцид", sub: "Kakhovka Dam: Ecocide", status: "locked" },
-        { num: 136, slug: "voienna-ekonomika", title: "Воєнна економіка України", sub: "Ukraine's War Economy", status: "locked" },
-        { num: 137, slug: "hromadske-suspilstvo", title: "Громадянське суспільство у війні", sub: "Civil Society in Wartime", status: "locked" },
-        { num: 138, slug: "mizhnarodna-pidtrymka", title: "Міжнародна підтримка", sub: "International Support for Ukraine", status: "locked" },
-        { num: 139, slug: "zlochyny-stiikist", title: "Злочини і стійкість", sub: "Crimes and Resilience", status: "locked" },
-      ]
-    },
-    {
-      unit: "HIST.13 [Full-Scale War]",
-      items: [
-        { num: 140, slug: "syntez-viyna", title: "Синтез: Війна за існування", sub: "Synthesis: War for Existence", status: "locked" },
-      ]
-    },
+  { num: 1, title: "Трипільська цивілізація", slug: "trypillian-civilization", status: "wip" },
+  { num: 2, title: "Скіфи та сармати — Володарі степу", slug: "scythians-sarmatians", status: "wip" },
+  { num: 3, title: "Грецькі міста-держави: Ольвія, Херсонес", slug: "greeks-crimea-olbia", status: "wip" },
+  { num: 4, title: "Слов'яни на українських землях: Витоки державності", slug: "sloviany-origins", status: "wip" },
+  { num: 5, title: "Слов'янські племена на українських землях", slug: "slavic-tribes", status: "wip" },
+  { num: 6, title: "Заснування Києва", slug: "zasnuvannia-kyieva", status: "wip" },
+  { num: 7, title: "Хозарський каганат і слов'яни", slug: "khozary-i-sloviany", status: "wip" },
+  { num: 8, title: "Синтез: Від Трипілля до Києва", slug: "syntez-vytoky-1", status: "wip" },
+  { num: 9, title: "Олег та Ігор: Перші правителі", slug: "oleh-ihor", status: "wip" },
+  { num: 10, title: "Ольга та Святослав", slug: "olha-sviatoslav", status: "wip" },
+  { num: 11, title: "Володимир і Хрещення Русі", slug: "volodymyr-khreshchennia", status: "wip" },
+  { num: 12, title: "Ярослав Мудрий: Золота доба", slug: "yaroslav-wise", status: "wip" },
+  { num: 13, title: "Руська Правда: Перший законодавчий кодекс", slug: "ruska-pravda", status: "wip" },
+  { num: 14, title: "Софія Київська та культурний розквіт", slug: "sofiya-kyivska", status: "wip" },
+  { num: 15, title: "Володимир Мономах", slug: "volodymyr-monomakh", status: "wip" },
+  { num: 16, title: "Культура Київської Русі", slug: "kultura-kyivskoi-rusi", status: "wip" },
+  { num: 17, title: "Княжі усобиці та роздроблення", slug: "kniazivski-usobiytsi", status: "wip" },
+  { num: 18, title: "Люди Русі: Суспільство та побут", slug: "ludy-rusi", status: "wip" },
+  { num: 19, title: "Русь та сусіди: Візантія, Польща, Угорщина", slug: "rus-ta-susidy", status: "wip" },
+  { num: 20, title: "Синтез: Київська Русь — спадщина", slug: "syntez-kyivska-rus", status: "wip" },
+  { num: 21, title: "Монгольська навала 1240", slug: "mongolska-navala", status: "wip" },
+  { num: 22, title: "Михайло Чернігівський: Опір Орді", slug: "mykhailo-chernigivskyi", status: "wip" },
+  { num: 23, title: "Королювання Данила Романовича", slug: "danylo-halytskyi", status: "wip" },
+  { num: 24, title: "Галицько-Волинська держава: Розквіт", slug: "galytsko-volynska-derzhava", status: "wip" },
+  { num: 25, title: "Бояри та шляхта: Соціальна еліта", slug: "boiare-i-shliakhta", status: "wip" },
+  { num: 26, title: "Занепад Галицько-Волинської держави", slug: "kinets-halytsko-volyni", status: "wip" },
+  { num: 27, title: "Кримське ханство: Золотоординська спадщина", slug: "krymske-khanstvo", status: "wip" },
+  { num: 28, title: "Синтез: Від монгольської навали до кримської державності", slug: "syntez-dvokniazivstvo", status: "wip" },
+  { num: 29, title: "Велике князівство Литовське — Руська держава", slug: "velyke-kniazivstvo-lytovske", status: "wip" },
+  { num: 30, title: "Українські землі у ВКЛ", slug: "ukrainski-zemli-u-vkl", status: "wip" },
+  { num: 31, title: "Люблінська унія 1569: Народження Речі Посполитої", slug: "liublinska-uniia", status: "wip" },
+  { num: 32, title: "Річ Посполита — полонізація та кріпацтво", slug: "rich-pospolyta", status: "wip" },
+  { num: 33, title: "Берестейська унія: Церковний розкол", slug: "beresteyska-uniia", status: "wip" },
+  { num: 34, title: "Православна церква XVII століття", slug: "pravoslavna-tserkva-17", status: "wip" },
+  { num: 35, title: "Петро Могила: Реформатор церкви", slug: "petro-mohyla", status: "wip" },
+  { num: 36, title: "Братства та освіта: Острозька академія", slug: "bratstva-i-osvita", status: "wip" },
+  { num: 37, title: "Буковина та Закарпаття під сусідами", slug: "bukovyna-zakarpattia", status: "wip" },
+  { num: 38, title: "Слобожанщина: Заселення і розвиток", slug: "slobozhanshchyna", status: "wip" },
+  { num: 39, title: "Люди Речі Посполитої: Суспільство", slug: "liudy-ricchi-pospolytoi", status: "wip" },
+  { num: 40, title: "Синтез: Литовсько-польська доба", slug: "syntez-lytva-polska", status: "wip" },
+  { num: 41, title: "Козацтво: витоки", slug: "kozatstvo-vytoky", status: "wip" },
+  { num: 42, title: "Запорозька Січ — козацька республіка", slug: "zaporizka-sich", status: "wip" },
+  { num: 43, title: "Дмитро Вишневецький: Перший кошовий", slug: "dmytro-vyshnevetskyi", status: "wip" },
+  { num: 44, title: "Козацькі повстання XVI століття", slug: "kozatski-povstannia-16", status: "wip" },
+  { num: 45, title: "Петро Сагайдачний: Гетьман і меценат", slug: "petro-sahaidachnyi", status: "wip" },
+  { num: 46, title: "Хотинська війна 1621: Козацький щит Європи", slug: "khotynska-viyna", status: "wip" },
+  { num: 47, title: "Козацька культура — кобзарі, думи та бароко", slug: "kozatska-kultura", status: "wip" },
+  { num: 48, title: "Козацьке військо та озброєння", slug: "kozatske-viisko", status: "wip" },
+  { num: 49, title: "Морські походи козаків", slug: "morski-pokhody", status: "wip" },
+  { num: 50, title: "Синтез: Становлення козацтва", slug: "syntez-kozatstvo-vytoky", status: "wip" },
+  { num: 51, title: "Хмельниччина I: причини та початок", slug: "khmelnychchyna-prychyny", status: "wip" },
+  { num: 52, title: "Богдан Хмельницький: Постать в історії", slug: "bohdan-khmelnytskyi", status: "wip" },
+  { num: 53, title: "Битва під Жовтими Водами", slug: "bitva-pid-zhovtymy-vodamy", status: "wip" },
+  { num: 54, title: "Зборівська та Білоцерківська угоди", slug: "zborivska-bila-tserkva", status: "wip" },
+  { num: 55, title: "Хмельниччина: Козацька держава", slug: "kozatska-derzhava", status: "wip" },
+  { num: 56, title: "Переяславська угода 1654: Міфи та реальність", slug: "pereyaslavska-uhoda", status: "wip" },
+  { num: 57, title: "Юрій Немирич: Гадяцька угода", slug: "yurii-nemyrych", status: "wip" },
+  { num: 58, title: "Руїна I: Виговщина і розкол", slug: "ruina-i", status: "wip" },
+  { num: 59, title: "Руїна II: Дорошенко і надія", slug: "ruina-ii", status: "wip" },
+  { num: 60, title: "Андрусівське перемир'я: Поділ України", slug: "andrusivske-peremyrya", status: "wip" },
+  { num: 61, title: "Іван Сірко: Легендарний кошовий", slug: "ivan-sirko", status: "wip" },
+  { num: 62, title: "Синтез: Козацька революція", slug: "syntez-khmelnychchyna", status: "wip" },
+  { num: 63, title: "Іван Мазепа I: Державник", slug: "ivan-mazepa-derzhavnyk", status: "wip" },
+  { num: 64, title: "Іван Мазепа II: освіта і культура", slug: "ivan-mazepa-kultura", status: "wip" },
+  { num: 65, title: "Кость Гордієнко та Січ", slug: "kost-hordiyenko-sich", status: "wip" },
+  { num: 66, title: "Іван Мазепа III: Полтава і вигнання", slug: "ivan-mazepa-poltava", status: "wip" },
+  { num: 67, title: "Пилип Орлик і перша Конституція", slug: "pylyp-orlyk-konstytutsiia", status: "wip" },
+  { num: 68, title: "Григорій Сковорода: Мандрівний філософ", slug: "hryhorii-skovoroda", status: "wip" },
+  { num: 69, title: "Павло Полуботок: Останній наказний", slug: "pavlo-polubotok", status: "wip" },
+  { num: 70, title: "Данило Апостол та Кирило Розумовський", slug: "danylo-apostol", status: "wip" },
+  { num: 71, title: "Коліївщина: Гайдамацький дух", slug: "koliivshchyna", status: "wip" },
+  { num: 72, title: "Опришки Карпат: Легенда Довбуша", slug: "opryshky", status: "wip" },
+  { num: 73, title: "Петро Калнишевський: Останній кошовий", slug: "petro-kalnyshevskyi", status: "wip" },
+  { num: 74, title: "Кінець Гетьманщини", slug: "kinets-hetmanshchyny", status: "wip" },
+  { num: 75, title: "Південь України: Колонізація та міфи", slug: "rosiiska-imperiia-ukraina", status: "wip" },
+  { num: 76, title: "Габсбурзька Галичина", slug: "habsburzka-halichyna", status: "wip" },
+  { num: 77, title: "Південь України: Міфи «Новоросії»", slug: "pivden-novorosiia", status: "wip" },
+  { num: 78, title: "Нова Сербія та Слов'яносербія", slug: "nova-serbiya", status: "wip" },
+  { num: 79, title: "Кріпацтво на Півдні", slug: "krypatsvo-selo", status: "wip" },
+  { num: 80, title: "Кирило-Мефодіївське братство", slug: "kyrylo-mefodiivtsi", status: "wip" },
+  { num: 81, title: "Шевченко і пробудження", slug: "shevchenko-awakening", status: "wip" },
+  { num: 82, title: "Валуєвський циркуляр та Емський указ", slug: "valuevskyi-emskyi", status: "wip" },
+  { num: 83, title: "Громадівський рух", slug: "hromady", status: "wip" },
+  { num: 84, title: "Михайло Драгоманов", slug: "drahomanov", status: "wip" },
+  { num: 85, title: "Франко, Леся, Грінченко", slug: "franko-lesia-hrinchenko", status: "wip" },
+  { num: 86, title: "Синтез: Імперська доба", slug: "syntez-imperska-doba", status: "wip" },
+  { num: 87, title: "Михайло Грушевський", slug: "hrushevskyi", status: "wip" },
+  { num: 88, title: "Перша світова війна: Брат проти брата", slug: "persha-svitova", status: "wip" },
+  { num: 89, title: "Українські січові стрільці", slug: "sichovi-striltsi", status: "wip" },
+  { num: 90, title: "Центральна Рада: Від автономії до незалежності", slug: "tsentralna-rada", status: "wip" },
+  { num: 91, title: "Павло Скоропадський: Гетьманат", slug: "skoropadskyi", status: "wip" },
+  { num: 92, title: "ЗУНР та Акт Злуки", slug: "zunr", status: "wip" },
+  { num: 93, title: "Директорія УНР", slug: "dyrektoriia", status: "wip" },
+  { num: 94, title: "Симон Петлюра: Головний отаман", slug: "symon-petliura-revolution", status: "wip" },
+  { num: 95, title: "Більшовицько-українська війна", slug: "bilshovytsko-ukrainska-viyna", status: "wip" },
+  { num: 96, title: "Холодний Яр: Останній опір", slug: "kholodnyi-yar", status: "wip" },
+  { num: 97, title: "Синтез: Українська революція", slug: "syntez-revoliutsiia", status: "wip" },
+  { num: 98, title: "Розстріляне відродження: Постаті", slug: "rozstriliane-vidrodzennia", status: "wip" },
+  { num: 99, title: "Пацифікація: Поляки в Галичині", slug: "pacyfikatsiia", status: "wip" },
+  { num: 100, title: "ОУН: Формування", slug: "oun", status: "wip" },
+  { num: 101, title: "Голодомор I: Механізм", slug: "holodomor-mekhanizm", status: "wip" },
+  { num: 102, title: "Голодомор: Пам'ять та визнання", slug: "holodomor-pamiat", status: "wip" },
+  { num: 103, title: "Розстріляне відродження II: Механізм терору", slug: "mekhanizm-teroru", status: "wip" },
+  { num: 104, title: "Карпатська Україна 1938-1939", slug: "karpatska-ukraina", status: "wip" },
+  { num: 105, title: "Друга світова: Початок", slug: "druha-svitova-pochatok", status: "wip" },
+  { num: 106, title: "Бабин Яр та Голокост в Україні", slug: "babyn-yar", status: "wip" },
+  { num: 107, title: "УПА: Збройний опір", slug: "upa", status: "wip" },
+  { num: 108, title: "Синтез: Трагедії XX століття", slug: "syntez-trahedii", status: "wip" },
+  { num: 109, title: "Повоєнна відбудова", slug: "povoienne-vidbudova", status: "wip" },
+  { num: 110, title: "Депортації українців 1944-1951", slug: "deportatsii-ukraintsiv", status: "wip" },
+  { num: 111, title: "Sürgünlik: Депортації кримських татар та інших народів", slug: "surgunlik", status: "wip" },
+  { num: 112, title: "Крим 1954: Передача УРСР", slug: "krym-1954", status: "wip" },
+  { num: 113, title: "Десталінізація в Україні", slug: "destalinizatsiia", status: "wip" },
+  { num: 114, title: "Шістдесятники: Бунт проти сірості", slug: "shistdesiatnyky", status: "wip" },
+  { num: 115, title: "Українська Гельсінська група", slug: "ukrainska-helsinska-hrupa", status: "wip" },
+  { num: 116, title: "Українці в Афганістані", slug: "afhanistan", status: "wip" },
+  { num: 117, title: "Чорнобиль: Трагедія і Попередження", slug: "chornobyl", status: "wip" },
+  { num: 118, title: "Діаспора: Ковчег держави", slug: "diaspora", status: "wip" },
+  { num: 119, title: "Шлях до незалежності", slug: "shliakh-nezalezhnosti", status: "wip" },
+  { num: 120, title: "Рух: Народний рух України", slug: "rukh", status: "wip" },
+  { num: 121, title: "Україна 1991-2004: Становлення", slug: "nezalezhnist-1991", status: "wip" },
+  { num: 122, title: "Україна 1990-х: Кучма та олігархи", slug: "ukraine-90s", status: "wip" },
+  { num: 123, title: "Помаранчева революція", slug: "pomarancheva-revoliutsiia", status: "wip" },
+  { num: 124, title: "Епоха Януковича: Реванш", slug: "yanukovych", status: "wip" },
+  { num: 125, title: "Мовна політика незалежної України", slug: "movna-polityka", status: "wip" },
+  { num: 126, title: "Революція Гідності: Євромайдан", slug: "revoliutsiia-hidnosti", status: "wip" },
+  { num: 127, title: "Анексія Криму: Початок війни", slug: "aneksiia-krymu", status: "wip" },
+  { num: 128, title: "Кримські татари після 2014", slug: "krymski-tatary-pislia-2014", status: "wip" },
+  { num: 129, title: "Томос: Духовна незалежність", slug: "tomos", status: "wip" },
+  { num: 130, title: "Синтез: Незалежна Україна", slug: "syntez-nezalezhnist", status: "wip" },
+  { num: 131, title: "Війна на Донбасі 2014-2022", slug: "viyna-donbas", status: "wip" },
+  { num: 132, title: "Повномасштабне вторгнення", slug: "povnomasshtabne-vtorhnessnia", status: "wip" },
+  { num: 133, title: "Маріуполь та Азовсталь", slug: "mariupol-azovstal", status: "wip" },
+  { num: 134, title: "Буча та Ірпінь: Злочини", slug: "bucha-irpin", status: "wip" },
+  { num: 135, title: "Каховська ГЕС: Екоцид", slug: "kakhovska-hes", status: "wip" },
+  { num: 136, title: "Воєнна економіка України", slug: "voienna-ekonomika", status: "wip" },
+  { num: 137, title: "Громадянське суспільство у війні", slug: "hromadske-suspilstvo", status: "wip" },
+  { num: 138, title: "Міжнародна підтримка", slug: "mizhnarodna-pidtrymka", status: "wip" },
+  { num: 139, title: "Злочини і стійкість", slug: "zlochyny-stiikist", status: "wip" },
+  { num: 140, title: "Синтез: Війна за існування", slug: "syntez-viyna", status: "wip" }
   ]}
 />

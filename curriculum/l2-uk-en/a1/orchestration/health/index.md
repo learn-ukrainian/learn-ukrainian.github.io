@@ -1,6 +1,6 @@
 # Build Summary: health (A1)
 
-Generated: 2026-03-31 11:50
+Generated: 2026-04-01 13:46
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:50
 | vocab | complete | 2026-03-30 22:21:22 |
 | enrich | complete | 2026-03-30 22:21:23 |
 | verify | complete | 2026-03-30 22:21:23 |
-| review | complete | 2026-03-30 22:24:44 |
-| stress | complete | 2026-03-31 09:50:13 |
-| publish | complete | 2026-03-31 09:50:13 |
+| review | complete | 2026-04-01 11:46:27 |
+| stress | complete | 2026-04-01 11:46:33 |
+| publish | complete | 2026-04-01 11:46:34 |
 
 ## Reviews
 
@@ -41,6 +41,8 @@ Generated: 2026-03-31 11:50
 | activities | claude-tools (claude-sonnet-4-6) | 162s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 19s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 201s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

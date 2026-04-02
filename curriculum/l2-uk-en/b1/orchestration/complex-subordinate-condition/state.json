@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "complex-subordinate-condition",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:44.979851+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:44.980411+00:00"
+    }
+  }
+}

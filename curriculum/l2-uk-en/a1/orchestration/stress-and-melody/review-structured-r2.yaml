@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct ordering. All plan
+    points covered: stress pairs (замок, мука, атлас), intonation patterns (↘ ↗ ↘↘),
+    sentence types (розповідні, питальні, спонукальн'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two factual errors. (1) "Як справи? ↗" and "Як тебе звати? ↗" contradict
+    the module''s own rule that question-word questions use falling intonation. "Як"
+    is a standard question word (confirmed: Grade 2'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situation (say "наголос" aloud → feel the stress) →
+    pattern (stress is free, changes meaning) → practice (read aloud with 3-step method).
+    Multiple examples per concept: 5 first-syllab'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required vocab: наголос ✓ (metalanguage, explained in opening), замок
+    castle ✓, замок lock ✓, кава ✓, вода ✓, столиця ✓ ("Київ — столиця України" in
+    Reading Aloud). All recommended vocab: мука ✓ ('
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints have corresponding markers. Placement is pedagogically
+    correct (after teaching, not before). Types match exactly (quiz, match-up, quiz,
+    fill-in). Cannot fully evaluate exerci
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers or generic enthusiasm. The Білоус riddle about
+    замок is a nice cultural touch. The identity paragraph about Київ stress is powerful
+    and specific ("Getting stress right is not j
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All H2 headings from plan present and correctly ordered: Наголос → Інтонація
+    → Читаємо вголос → Підсумок. Clean markdown throughout. Word count 1782 above
+    1200 target. No duplicate sections, no meta-c'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized throughout — Ukrainian presented on its own terms. The Київ/українська
+    stress paragraph frames stress as identity without reference to Russian as a baseline.
+    No "like Russian but..." frami
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Two dialogues with named speakers. The Кирилко/Соломійка metro dialogue
+    is natural — two friends near a station, one asks directions, short and functional.
+    Models all three intonation patterns organic
+findings: []

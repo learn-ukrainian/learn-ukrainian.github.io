@@ -2,15 +2,15 @@
   "module": "verbs-group-one",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:53.620392Z",
+  "last_audit": "2026-04-02T20:30:09.690982Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T12:47:54.717095Z",
+    "md": "2026-03-31T17:27:15.882081Z",
     "meta": null,
     "activities": "2026-03-30T04:29:48.079579Z",
     "vocabulary": "2026-03-30T04:30:18.520889Z",
     "research": null,
-    "plan": "2026-03-30T02:07:01.275519Z"
+    "plan": "2026-03-30T22:17:20.667708Z"
   },
   "gates": {
     "meta": {
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1505/1200 (raw: 1957)"
+      "message": "1143/1200 (raw: 1330) (57 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0,
     "deferred_count": 0
   }

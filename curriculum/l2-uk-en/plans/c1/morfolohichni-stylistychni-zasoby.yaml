@@ -4,45 +4,59 @@ sequence: 60
 slug: morfolohichni-stylistychni-zasoby
 version: '1.1'
 title: "Стилістичні ресурси морфології"
-subtitle: "Stylistic Resources of Morphology"
+subtitle: "Стилістичні ресурси морфології"
 focus: integration
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Вивчити стилістичний потенціал частин мови та їх категоріальних значень."
-  - "Аналізувати використання варіантних форм (іменникових закінчень, дієслівних синонімів) для досягнення стилістичного ефекту."
+  - "Аналізувати використання варіантних форм (іменникових закінчень, дієслівних синонімів)
+    для досягнення стилістичного ефекту."
   - "Опанувати мистецтво морфологічної експресії в художньому та публіцистичному текстах."
-  - "Використовувати граматичну синоніміку для уникнення тавтології та посилення точності викладу."
+  - "Використовувати граматичну синоніміку для уникнення тавтології та посилення точності
+    викладу."
 
 reading_situations:
   - source_type: "фрагмент роману"
-    topic: "Світ речей та світ дій: аналіз домінування іменників vs дієслів у прозі Ольги Кобилянської."
+    topic: "Світ речей та світ дій: аналіз домінування іменників vs дієслів у прозі
+      Ольги Кобилянської."
     key_elements: ["субстантивація", "дієслівна енергія", "прикметникова палітра"]
-    motivation: "Розуміння ролі морфологічного складу тексту у формуванні авторського ідіостилю."
+    motivation: "Розуміння ролі морфологічного складу тексту у формуванні авторського
+      ідіостилю."
   - source_type: "публіцистична стаття"
-    topic: "Займенникова політика: як вибір між 'ми', 'ви' та 'вони' формує ідеологічний підтекст."
+    topic: "Займенникова політика: як вибір між 'ми', 'ви' та 'вони' формує ідеологічний
+      підтекст."
     key_elements: ["інклюзивне ми", "дистанціювання", "персоніфікація"]
     motivation: "Вивчення прагматики займенників у маніпулятивних та агітаційних текстах."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Мовознавча лекція про 'силу дієслова' в українській мові: від праслов'янських коренів до сучасного сленгу."
+    setting: "Мовознавча лекція про 'силу дієслова' в українській мові: від праслов'янських
+      коренів до сучасного сленгу."
     focus_points: ["видо-часові форми", "способи дії", "експресивні суфікси"]
     motivation: "Глибоке розуміння дієслівної динаміки як основи українського синтаксису."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть опис зимового вечора (300 слів), використовуючи виключно іменники та прикметники (номінативний стиль), а потім перепишіть його, додавши динамічні дієслова."
-    requirements: ["мінімум 2 варіанти тексту", "аналіз зміни сприйняття", "високий рівень образності"]
-    motivation: "Відпрацювання навичок свідомого вибору морфологічних засобів для керування увагою читача."
-    model_answer: "Текст має продемонструвати перехід від статичного споглядання до активного руху через зміну морфологічного домінанта."
+    prompt: "Напишіть опис зимового вечора (300 слів), використовуючи виключно іменники
+      та прикметники (номінативний стиль), а потім перепишіть його, додавши динамічні
+      дієслова."
+    requirements: ["мінімум 2 варіанти тексту", "аналіз зміни сприйняття", "високий
+          рівень образності"]
+    motivation: "Відпрацювання навичок свідомого вибору морфологічних засобів для
+      керування увагою читача."
+    model_answer: "Текст має продемонструвати перехід від статичного споглядання до
+      активного руху через зміну морфологічного домінанта."
 
 discussion_topics:
   - context: "Чи може неправильний вибір граматичної форми зруйнувати професійну репутацію?"
     questions:
-      - "Чому українська мова надає перевагу дієслівним конструкціям над іменниковими (номіналізацією)?"
-      - "Які стилістичні відтінки мають варіантні закінчення (наприклад, -у/-а в родовому відмінку)?"
-      - "Як зменшувально-пестливі суфікси в офіційному мовленні впливають на імідж установи?"
+      - "Чому українська мова надає перевагу дієслівним конструкціям над іменниковими
+        (номіналізацією)?"
+      - "Які стилістичні відтінки мають варіантні закінчення (наприклад, -у/-а в родовому
+        відмінку)?"
+      - "Як зменшувально-пестливі суфікси в офіційному мовленні впливають на імідж
+        установи?"
     motivation: "Обговорення морфологічної норми як компонента професійного етикету."
 
 content_outline:
@@ -59,7 +73,8 @@ content_outline:
   - section: "Дієслово: енергія та динаміка тексту"
     words: 1000
     subsections:
-      - "Стилістичне використання часових та способових форм (теперішній історичний та ін.)"
+      - "Стилістичне використання часових та способових форм (теперішній історичний
+        та ін.)"
       - "Дієприкметник та дієприслівник: лаконізація vs обтяження синтаксису"
       - "Синоніміка дієслівних префіксів як засіб передачі тонких нюансів дії"
     key_concepts:
@@ -106,15 +121,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a literary passage — identify the morphological dominant (noun-heavy = static, verb-heavy = dynamic) and explain its stylistic effect."
+    description: "Analyze a literary passage — identify the morphological dominant
+      (noun-heavy = static, verb-heavy = dynamic) and explain its stylistic effect."
   - type: match-up
-    description: "Match morphological stylistic devices (субстантивація, теперішній історичний, експресивні суфікси) with their functions and example sentences."
+    description: "Match morphological stylistic devices (субстантивація, теперішній
+      історичний, експресивні суфікси) with their functions and example sentences."
   - type: error-correction
-    description: "Fix morphological style errors — inappropriate diminutives in official text, nominalization where verbs would be clearer, wrong variant case endings."
+    description: "Fix morphological style errors — inappropriate diminutives in official
+      text, nominalization where verbs would be clearer, wrong variant case endings."
   - type: select
-    description: "Choose the stylistically appropriate variant form for a given register (e.g., -у/-а in genitive singular, -ові/-у in dative, -ію/-ею in instrumental)."
+    description: "Choose the stylistically appropriate variant form for a given register
+      (e.g., -у/-а in genitive singular, -ові/-у in dative, -ію/-ею in instrumental)."
   - type: essay-response
-    description: "Write two versions of a winter evening description — one noun-dominated (static) and one verb-dominated (dynamic) — then analyze the difference."
+    description: "Write two versions of a winter evening description — one noun-dominated
+      (static) and one verb-dominated (dynamic) — then analyze the difference."
 
 activities:
   types_required:

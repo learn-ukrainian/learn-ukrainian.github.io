@@ -1,7 +1,7 @@
 # Audit Report: M54 — emergencies.md
 **Level:** A1 | **Module:** M54 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-31 17:26:34
+**Generated:** 2026-04-02 20:29:57
 
 ## Configuration
 **Type:** A1
@@ -35,9 +35,11 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'пові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'язкові' (taught formally at A2)
+- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'пові' (taught formally at A2)
+- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
+- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[GRAMMAR]** Perfective aspect used at A1: 'загубив'
   - FIX: Use imperfective forms at A1. Perfective taught at A2+.
@@ -54,23 +56,23 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 8 violations (significant)
+- 9 violations (significant)
 - 3 grammar-level violations (fundamental)
 
 ## Gates
-- **Words:** ✅ 1788/1200 (raw: 2372)
+- **Words:** ✅ 1299/1200 (raw: 1327)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.1% (target 20-35% (M54))
+- **Immersion:** 🇺🇦 26.0% (target 20-35% (M54))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -78,8 +80,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Dialogues** | ✅ | 420 | Included in Core |
+| **Intro/Narrative** | ✅ | 420 | Included in Core |
 | **Е́кстрені ситуа́ції (Emergencies)** | ✅ | 290 | Included in Core |
 | **Допомога (Getting Help)** | ✅ | 350 | Included in Core |
-| **Summary** | ✅ | 728 | Included in Core |
+| **Summary** | ✅ | 239 | Included in Core |

@@ -1,0 +1,528 @@
+{
+  "total_items": 226,
+  "grounded_items": 127,
+  "ungrounded": [
+    {
+      "word": "маріє",
+      "exercise_type": "fill-in",
+      "context": "Маріє Василівно, будь ласка, ____ на цей стілець."
+    },
+    {
+      "word": "василівно",
+      "exercise_type": "fill-in",
+      "context": "Маріє Василівно, будь ласка, ____ на цей стілець."
+    },
+    {
+      "word": "стілець",
+      "exercise_type": "fill-in",
+      "context": "Маріє Василівно, будь ласка, ____ на цей стілець."
+    },
+    {
+      "word": "сядте",
+      "exercise_type": "fill-in",
+      "context": "сядте"
+    },
+    {
+      "word": "сяди",
+      "exercise_type": "fill-in",
+      "context": "сяди"
+    },
+    {
+      "word": "хлопці",
+      "exercise_type": "fill-in",
+      "context": "Хлопці, швиденько ____ на цю фотографію!"
+    },
+    {
+      "word": "швиденько",
+      "exercise_type": "fill-in",
+      "context": "Хлопці, швиденько ____ на цю фотографію!"
+    },
+    {
+      "word": "фотографію",
+      "exercise_type": "fill-in",
+      "context": "Хлопці, швиденько ____ на цю фотографію!"
+    },
+    {
+      "word": "глянте",
+      "exercise_type": "fill-in",
+      "context": "глянте"
+    },
+    {
+      "word": "гляніть",
+      "exercise_type": "fill-in",
+      "context": "гляніть"
+    },
+    {
+      "word": "іде",
+      "exercise_type": "fill-in",
+      "context": "Колеги, час іде, ____ нашу нараду!"
+    },
+    {
+      "word": "починаємо",
+      "exercise_type": "fill-in",
+      "context": "починаємо"
+    },
+    {
+      "word": "починайте",
+      "exercise_type": "fill-in",
+      "context": "починайте"
+    },
+    {
+      "word": "почати",
+      "exercise_type": "fill-in",
+      "context": "почати"
+    },
+    {
+      "word": "сидіть",
+      "exercise_type": "fill-in",
+      "context": "сидіть"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "fill-in",
+      "context": "Діти, ____ спокійно, не кричіть."
+    },
+    {
+      "word": "спокійно",
+      "exercise_type": "fill-in",
+      "context": "Діти, ____ спокійно, не кричіть."
+    },
+    {
+      "word": "сидьте",
+      "exercise_type": "fill-in",
+      "context": "сидьте"
+    },
+    {
+      "word": "сидімо",
+      "exercise_type": "fill-in",
+      "context": "сидімо"
+    },
+    {
+      "word": "сидіти",
+      "exercise_type": "fill-in",
+      "context": "сидіти"
+    },
+    {
+      "word": "оксано",
+      "exercise_type": "fill-in",
+      "context": "Оксано, ____ книгу на стіл і ходи сюди."
+    },
+    {
+      "word": "ходи",
+      "exercise_type": "fill-in",
+      "context": "Оксано, ____ книгу на стіл і ходи сюди."
+    },
+    {
+      "word": "поставь",
+      "exercise_type": "fill-in",
+      "context": "поставь"
+    },
+    {
+      "word": "поставе",
+      "exercise_type": "fill-in",
+      "context": "поставе"
+    },
+    {
+      "word": "поставити",
+      "exercise_type": "fill-in",
+      "context": "поставити"
+    },
+    {
+      "word": "бійся",
+      "exercise_type": "fill-in",
+      "context": "Не бійся, ніколи не здавайся і завжди ____ у свої сили!"
+    },
+    {
+      "word": "здавайся",
+      "exercise_type": "fill-in",
+      "context": "Не бійся, ніколи не здавайся і завжди ____ у свої сили!"
+    },
+    {
+      "word": "сили",
+      "exercise_type": "fill-in",
+      "context": "Не бійся, ніколи не здавайся і завжди ____ у свої сили!"
+    },
+    {
+      "word": "вірь",
+      "exercise_type": "fill-in",
+      "context": "вірь"
+    },
+    {
+      "word": "вірте",
+      "exercise_type": "fill-in",
+      "context": "вірте"
+    },
+    {
+      "word": "вірити",
+      "exercise_type": "fill-in",
+      "context": "вірити"
+    },
+    {
+      "word": "тож",
+      "exercise_type": "fill-in",
+      "context": "Ми українці, тож ____ нашу рідну мову!"
+    },
+    {
+      "word": "бережемо",
+      "exercise_type": "fill-in",
+      "context": "бережемо"
+    },
+    {
+      "word": "бережіть",
+      "exercise_type": "fill-in",
+      "context": "бережіть"
+    },
+    {
+      "word": "салату",
+      "exercise_type": "fill-in",
+      "context": "Для салату ____ капусту та моркву, панове."
+    },
+    {
+      "word": "панове",
+      "exercise_type": "fill-in",
+      "context": "Для салату ____ капусту та моркву, панове."
+    },
+    {
+      "word": "наріж",
+      "exercise_type": "fill-in",
+      "context": "наріж"
+    },
+    {
+      "word": "наріжіть",
+      "exercise_type": "fill-in",
+      "context": "наріжіть"
+    },
+    {
+      "word": "спробуймо",
+      "exercise_type": "fill-in",
+      "context": "спробуймо"
+    },
+    {
+      "word": "ідея",
+      "exercise_type": "fill-in",
+      "context": "У нас є чудова ідея. ____ новий рецепт разом!"
+    },
+    {
+      "word": "спробуємо",
+      "exercise_type": "fill-in",
+      "context": "спробуємо"
+    },
+    {
+      "word": "спробувати",
+      "exercise_type": "fill-in",
+      "context": "спробувати"
+    },
+    {
+      "word": "відчиняєш",
+      "exercise_type": "quiz",
+      "context": "відчиняєш"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "quiz",
+      "context": "Вчитель сказав: «_____ домашнє завдання щодня»."
+    },
+    {
+      "word": "домашнє",
+      "exercise_type": "quiz",
+      "context": "Вчитель сказав: «_____ домашнє завдання щодня»."
+    },
+    {
+      "word": "зробіть",
+      "exercise_type": "quiz",
+      "context": "Зробіть"
+    },
+    {
+      "word": "робимо",
+      "exercise_type": "quiz",
+      "context": "Робимо"
+    },
+    {
+      "word": "мамо",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ свій найкращий пиріг на мій день народження!"
+    },
+    {
+      "word": "найкращий",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ свій найкращий пиріг на мій день народження!"
+    },
+    {
+      "word": "пиріг",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ свій найкращий пиріг на мій день народження!"
+    },
+    {
+      "word": "день",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ свій найкращий пиріг на мій день народження!"
+    },
+    {
+      "word": "народження",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ свій найкращий пиріг на мій день народження!"
+    },
+    {
+      "word": "печи",
+      "exercise_type": "quiz",
+      "context": "печи"
+    },
+    {
+      "word": "спечи",
+      "exercise_type": "quiz",
+      "context": "спечи"
+    },
+    {
+      "word": "пекти",
+      "exercise_type": "quiz",
+      "context": "пекти"
+    },
+    {
+      "word": "спечеш",
+      "exercise_type": "quiz",
+      "context": "спечеш"
+    },
+    {
+      "word": "лід",
+      "exercise_type": "quiz",
+      "context": "Обережно, лід дуже слизький! _____!"
+    },
+    {
+      "word": "слизький",
+      "exercise_type": "quiz",
+      "context": "Обережно, лід дуже слизький! _____!"
+    },
+    {
+      "word": "падай",
+      "exercise_type": "quiz",
+      "context": "Не падай"
+    },
+    {
+      "word": "впадай",
+      "exercise_type": "quiz",
+      "context": "Не впадай"
+    },
+    {
+      "word": "падали",
+      "exercise_type": "quiz",
+      "context": "Не падали"
+    },
+    {
+      "word": "студенти",
+      "exercise_type": "quiz",
+      "context": "Студенти, ніколи _____ на мої заняття."
+    },
+    {
+      "word": "спізніться",
+      "exercise_type": "quiz",
+      "context": "не спізніться"
+    },
+    {
+      "word": "запізніться",
+      "exercise_type": "quiz",
+      "context": "запізніться"
+    },
+    {
+      "word": "запізняться",
+      "exercise_type": "quiz",
+      "context": "не запізняться"
+    },
+    {
+      "word": "хвилину",
+      "exercise_type": "quiz",
+      "context": "_____ мені цю ручку на хвилину, я маю підписати документ."
+    },
+    {
+      "word": "підписати",
+      "exercise_type": "quiz",
+      "context": "_____ мені цю ручку на хвилину, я маю підписати документ."
+    },
+    {
+      "word": "документ",
+      "exercise_type": "quiz",
+      "context": "_____ мені цю ручку на хвилину, я маю підписати документ."
+    },
+    {
+      "word": "давати",
+      "exercise_type": "quiz",
+      "context": "Давати"
+    },
+    {
+      "word": "даси",
+      "exercise_type": "quiz",
+      "context": "Даси"
+    },
+    {
+      "word": "інструменти",
+      "exercise_type": "quiz",
+      "context": "____ свої інструменти з собою щоразу, коли йдеш на роботу."
+    },
+    {
+      "word": "йдеш",
+      "exercise_type": "quiz",
+      "context": "____ свої інструменти з собою щоразу, коли йдеш на роботу."
+    },
+    {
+      "word": "візьми",
+      "exercise_type": "quiz",
+      "context": "Візьми"
+    },
+    {
+      "word": "бери",
+      "exercise_type": "quiz",
+      "context": "Бери"
+    },
+    {
+      "word": "береш",
+      "exercise_type": "quiz",
+      "context": "Береш"
+    },
+    {
+      "word": "взяти",
+      "exercise_type": "quiz",
+      "context": "Взяти"
+    },
+    {
+      "word": "важливий",
+      "exercise_type": "quiz",
+      "context": "Ми готові починати. _____ нам цей важливий документ."
+    },
+    {
+      "word": "передавай",
+      "exercise_type": "quiz",
+      "context": "Передавай"
+    },
+    {
+      "word": "передай",
+      "exercise_type": "quiz",
+      "context": "Передай"
+    },
+    {
+      "word": "передаєш",
+      "exercise_type": "quiz",
+      "context": "Передаєш"
+    },
+    {
+      "word": "кулінарний",
+      "exercise_type": "match-up",
+      "context": "Кулінарний рецепт"
+    },
+    {
+      "word": "шкільне",
+      "exercise_type": "match-up",
+      "context": "Шкільне правило"
+    },
+    {
+      "word": "уроки",
+      "exercise_type": "match-up",
+      "context": "не запізнюйтеся на уроки"
+    },
+    {
+      "word": "застереження",
+      "exercise_type": "match-up",
+      "context": "Застереження від небезпеки"
+    },
+    {
+      "word": "небезпеки",
+      "exercise_type": "match-up",
+      "context": "Застереження від небезпеки"
+    },
+    {
+      "word": "іншій",
+      "exercise_type": "match-up",
+      "context": "Побажання іншій людині"
+    },
+    {
+      "word": "спільна",
+      "exercise_type": "match-up",
+      "context": "Спільна дія (ми)"
+    },
+    {
+      "word": "втомилися",
+      "exercise_type": "error-correction",
+      "context": "Ми дуже втомилися, тому пішли додому!"
+    },
+    {
+      "word": "ходимо",
+      "exercise_type": "error-correction",
+      "context": "ходимо"
+    },
+    {
+      "word": "дує",
+      "exercise_type": "error-correction",
+      "context": "Ніколи не відчини це вікно, тут дуже дує."
+    },
+    {
+      "word": "відчинив",
+      "exercise_type": "error-correction",
+      "context": "відчинив"
+    },
+    {
+      "word": "вазу",
+      "exercise_type": "error-correction",
+      "context": "Хлопці, поставь цю вазу на стіл."
+    },
+    {
+      "word": "постави",
+      "exercise_type": "error-correction",
+      "context": "постави"
+    },
+    {
+      "word": "забудь",
+      "exercise_type": "error-correction",
+      "context": "Діти, не забудь свої зошити вдома!"
+    },
+    {
+      "word": "зошити",
+      "exercise_type": "error-correction",
+      "context": "Діти, не забудь свої зошити вдома!"
+    },
+    {
+      "word": "забудьте",
+      "exercise_type": "error-correction",
+      "context": "забудьте"
+    },
+    {
+      "word": "забули",
+      "exercise_type": "error-correction",
+      "context": "забули"
+    },
+    {
+      "word": "звіт",
+      "exercise_type": "error-correction",
+      "context": "Хай вона пишуть цей звіт самостійно."
+    },
+    {
+      "word": "писатиме",
+      "exercise_type": "error-correction",
+      "context": "писатиме"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 30,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "вид",
+      "вимикати",
+      "давайте",
+      "додати",
+      "дозвіл",
+      "доконаний",
+      "заперечення",
+      "знак",
+      "м'який",
+      "наказовий",
+      "недоконаний",
+      "обговорімо",
+      "перемішати",
+      "спонукання",
+      "спосіб",
+      "тримаймося",
+      "тримайся",
+      "шанувати",
+      "єднатися",
+      "інструкція"
+    ]
+  },
+  "all_grounded": false
+}

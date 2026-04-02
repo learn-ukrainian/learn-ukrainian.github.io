@@ -1,6 +1,6 @@
 # Build Summary: weather (A1)
 
-Generated: 2026-03-31 11:46
+Generated: 2026-04-01 13:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:46
 | vocab | complete | 2026-03-30 05:29:56 |
 | enrich | complete | 2026-03-30 05:29:57 |
 | verify | complete | 2026-03-30 05:29:57 |
-| review | complete | 2026-03-30 05:32:42 |
-| stress | complete | 2026-03-31 09:46:00 |
-| publish | complete | 2026-03-31 09:46:01 |
+| review | complete | 2026-04-01 11:41:13 |
+| stress | complete | 2026-04-01 11:41:13 |
+| publish | complete | 2026-04-01 11:41:19 |
 
 ## Reviews
 
@@ -38,6 +38,8 @@ Generated: 2026-03-31 11:46
 | activities | claude-tools (claude-sonnet-4-6) | 315s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 30s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 165s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

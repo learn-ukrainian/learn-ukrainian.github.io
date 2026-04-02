@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 14: Checkpoint: My World (A1, A1.2 [My World])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -111,113 +111,92 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми знаємо? (What Do We Know?)
+## Що ми зна́ємо? (What Do We Know?)
 
 You have completed A1.2 — six modules covering the building blocks of describing your world in Ukrainian. Before moving forward, take a moment to check whether the skills from M08–M13 have stuck. Work through each self-check question honestly. If any answer feels uncertain, the grammar summary and reading practice below will help you solidify it.
 
 **Self-check — one question per module:**
 
-- **M08 — Gender:** What gender is **стіл** (table)? **книга** (book)? **вікно** (window)? Test with pronouns: **він** (he) → **стіл** is masculine. **вона** (she) → **книга** is feminine. **воно** (it) → **вікно** is neuter.
+- **M08 — Gender:** What gender is **стіл** (table)? **кни́га** (book)? **вікно́** (window)? Test with pronouns: **він** (he) → **стіл** is masculine. **вона́** (she) → **книга** is feminine. **воно́** (it) → **вікно** is neuter.
 
-- **M09 — Adjectives:** What does **великий стіл** (big table) / **велика книга** (big book) / **велике вікно** (big window) show? The adjective ending changes to agree with the noun's gender: **-ий** for masculine, **-а** for feminine, **-е** for neuter.
+- **M09 — Adjectives:** What does **вели́кий стіл** (big table) / **вели́ка книга** (big book) / **вели́ке вікно** (big window) show? The adjective ending changes to agree with the noun's gender: **-ий** for masculine, **-а** for feminine, **-е** for neuter.
 
-- **M10 — Colors:** What are the two Ukrainian words for "blue"? **Синій** means dark or navy blue. **Блакитний** means sky blue or light blue. Two separate words — not one.
+- **M10 — Colors:** What are the two Ukrainian words for "blue"? **Си́ній** means dark or navy blue. **Блаки́тний** means sky blue or light blue. Two separate words — not one.
 
-- **M11 — Numbers and prices:** How do you say "twenty hryvnias"? **Двадцять гривень**. Numbers are vocabulary — memorize each one as a word, not a formula.
+- **M11 — Numbers and prices:** How do you say "twenty hryvnias"? **Два́дцять гри́вень**. Numbers are vocabulary — memorize each one as a word, not a formula.
 
-- **M12 — Demonstratives:** How do you say "this table" / "this lamp" / "this window"? **Цей стіл** / **ця лампа** / **це вікно**. The demonstrative matches the noun's gender, just like adjectives.
+- **M12 — Demonstratives:** How do you say "this table" / "this lamp" / "this window"? **Цей стіл** / **ця ла́мпа** / **це вікно**. The demonstrative matches the noun's gender, just like adjectives.
 
-- **M13 — Plurals:** How do you make **стіл**, **книга**, **вікно** plural? **Столи**, **книги**, **вікна**. Masculine and feminine nouns take **-и/-і**, neuter nouns take **-а**.
+- **M13 — Plurals:** How do you make **стіл**, **книга**, **вікно** plural? **Столи́**, **кни́ги**, **ві́кна**. Masculine and feminine nouns take **-и/-і**, neuter nouns take **-а**.
 
 Six questions, six patterns — these are the grammar tools that drive every sentence in this module. If you answered all six correctly, you are ready for A1.3. If one or two felt shaky, read the sections below carefully. Then come back and try the self-check again.
 
 <!-- INJECT_ACTIVITY: quiz-gender-agreement -->
 
-## Читання (Reading Practice)
+## Чита́ння (Reading Practice)
 
 Read the text below aloud — slowly, one sentence at a time. Every word comes from M08–M13. There is no new vocabulary here. Your goal is to understand without translating word by word. If you can picture what the room looks like as you read, you are reading Ukrainian.
 
-> **Це моя кімната.** *(This is my room.)*
-> **Мій стіл великий і коричневий.** *(My table is big and brown.)*
-> **На столі є три книги.** *(On the table there are three books.)*
-> **Ці книги нові й цікаві.** *(These books are new and interesting.)*
-> **Моя лампа маленька і біла.** *(My lamp is small and white.)*
-> **А та лампа жовта.** *(And that lamp is yellow.)*
-> **Вікна великі.** *(The windows are big.)*
-> **Мої стіни білі.** *(My walls are white.)*
-> **Ця сумка синя, а та червона.** *(This bag is navy blue, and that one is red.)*
-> **У мене є два зошити.** *(I have two notebooks.)*
-> **У мене є чотири олівці.** *(I have four pencils.)*
-> **Олівці жовті й сині.** *(The pencils are yellow and blue.)*
-> **Це моє вікно.** *(This is my window.)*
-> **За вікном є парк.** *(Beyond the window there is a park.)*
-> **Парк гарний.** *(The park is nice.)*
+> **Це моя́ кімна́та.** *(This is my room.)*
+> **Мій стіл великий і кори́чневий.** *(My table is big and brown.)*
+> **На столі́ є три книги.** *(On the table there are three books.)*
+> **Ці книги нові́ й ціка́ві.** *(These books are new and interesting.)*
+> **Моя лампа мале́нька і бі́ла.** *(My lamp is small and white.)*
+> **А та лампа жо́вта.** *(And that lamp is yellow.)*
+> **Вікна вели́кі.** *(The windows are big.)*
+> **Мої́ сті́ни бі́лі.** *(My walls are white.)*
+> **Ця су́мка си́ня, а та черво́на.** *(This bag is navy blue, and that one is red.)*
+> **У мене́ є два зо́шити.** *(I have two notebooks.)*
+> **У мене є чоти́ри олівці́.** *(I have four pencils.)*
+> **Олівці жо́вті й си́ні.** *(The pencils are yellow and blue.)*
+> **Це моє́ вікно.** *(This is my window.)*
+> **За вікно́м є парк.** *(Beyond the window there is a park.)*
+> **Парк га́рний.** *(The park is nice.)*
 
 Now check your comprehension — answer these three questions mentally, in Ukrainian if you can:
 
-- **Який стіл?** (What is the table like?) → **великий і коричневий** (big and brown)
-- **Скільки книг на столі?** (How many books on the table?) → **три** (three)
+- **Яки́й стіл?** (What is the table like?) → **великий і коричневий** (big and brown)
+- **Скі́льки книг на столі?** (How many books on the table?) → **три** (three)
 - **Яка маленька лампа?** (What is the small lamp like?) → **біла** (white)
 
 The point is immediate confirmation: Ukrainian text → understanding, with no English translation step in between. If you answered all three without scrolling back up, your reading is working.
 
-## Граматика (Grammar Summary)
+## Грама́тика (Grammar Summary)
 
-**Gender and agreement.** The **він/вона/воно** test works like this: replace the noun with a pronoun — whichever fits tells you the gender. Endings follow a pattern. Consonant-final nouns are masculine — **він**: **стіл**, **глечик** (jug). Nouns ending in **-а/-я** are feminine — **вона**: **книга**, **вишиванка** (embroidered shirt). Nouns ending in **-о/-е** are neuter — **воно**: **вікно**, **намисто** (necklace). The adjective ending must always match: **великий стіл** / **велика книга** / **велике вікно**.
+**Gender and agreement.** The **він/вона/воно** test works like this: replace the noun with a pronoun — whichever fits tells you the gender. Endings follow a pattern. Consonant-final nouns are masculine — **він**: **стіл**, **гле́чик** (jug). Nouns ending in **-а/-я** are feminine — **вона**: **книга**, **виши́ва́нка** (embroidered shirt). Nouns ending in **-о/-е** are neuter — **воно**: **вікно**, **нами́сто** (necklace). The adjective ending must always match: **великий стіл** / **велика книга** / **велике вікно**.
 
-**Hard vs. soft adjective stems.** Most adjectives use hard endings: **червоний** (red), **новий** (new), **великий** (big) — all end in **-ий**. Adjectives with soft stems use **-ій** instead: **синій** (navy blue), **останній** (last). The difference is the stem's final consonant — the **н** in **синій** is soft. Rule of thumb: if the masculine form ends in **-ій**, it is a soft-stem adjective; if it ends in **-ий**, it is hard.
+**Hard vs. soft adjective stems.** Most adjectives use hard endings: **черво́ний** (red), **нови́й** (new), **великий** (big) — all end in **-ий**. Adjectives with soft stems use **-ій** instead: **синій** (navy blue), **оста́нній** (last). The difference is the stem's final consonant — the **н** in **синій** is soft. Rule of thumb: if the masculine form ends in **-ій**, it is a soft-stem adjective; if it ends in **-ий**, it is hard.
 
 **Demonstratives.** **Цей/ця/це** (this — close to the speaker) and **той/та/те** (that — further away) agree with noun gender: **цей глечик** (m), **ця вишиванка** (f), **це намисто** (n); **той глечик**, **та вишиванка**, **те намисто**. The plural forms are **ці** (these) and **ті** (those) for all genders.
 
-**Nominative plurals.** Masculine and feminine nouns take **-и** or **-і**: **столи** (tables), **книги** (books), **олівці** (pencils). Neuter nouns take **-а** or **-я**: **вікна** (windows), **поля** (fields). Adjectives in the plural always end in **-і** regardless of noun gender: **великі столи**, **великі книги**, **великі вікна**.
+**Nominative plurals.** Masculine and feminine nouns take **-и** or **-і**: **столи** (tables), **книги** (books), **олівці** (pencils). Neuter nouns take **-а** or **-я**: **вікна** (windows), **поля́** (fields). Adjectives in the plural always end in **-і** regardless of noun gender: **великі столи**, **великі книги**, **великі вікна**.
 
-**Numbers as vocabulary.** At this stage, treat numbers as standalone words — no morphology rules needed yet. For counting objects: **один зошит** (one notebook), **два зошити** (two notebooks), **п'ять зошитів** (five notebooks). For prices: **двадцять гривень** (twenty hryvnias), **сто гривень** (one hundred hryvnias), **двісті гривень** (two hundred hryvnias). Memorize the forms you have seen rather than trying to derive them.
+**Numbers as vocabulary.** At this stage, treat numbers as standalone words — no morphology rules needed yet. For counting objects: **оди́н зо́шит** (one notebook), **два зошити** (two notebooks), **п'ять зо́шитів** (five notebooks). For prices: **двадцять гривень** (twenty hryvnias), **сто гривень** (one hundred hryvnias), **дві́сті гривень** (two hundred hryvnias). Memorize the forms you have seen rather than trying to derive them.
 
 <!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
 
-## Діалог (Connected Dialogue)
+## Діало́г (Connected Dialogue)
 
-Іванко is visiting a Ukrainian **ярмарок** (outdoor street market) — a lively fair selling handmade crafts. His friend Катя is helping him choose souvenirs. The table in front of them is covered with **вишиванки** (embroidered shirts), **глечики** (jugs), **намисто** (necklaces), and **писанки** (decorated eggs). Іванко wants to buy something, but he needs to ask about colors, sizes, and prices — everything from A1.2.
+Іва́нко is visiting a Ukrainian **я́рмарок** (outdoor street market) — a lively fair selling handmade crafts. His friend Катя́ is helping him choose souvenirs. The table in front of them is covered with **виши́ва́нки** (embroidered shirts), **гле́чики** (jugs), **намисто** (necklaces), and **писанки́** (decorated eggs). Іванко wants to buy something, but he needs to ask about colors, sizes, and prices — everything from A1.2.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Катю, дивись! Що це? *(Katia, look! What is this?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Це вишиванка. Вона дуже гарна. *(This is a vyshyvanka. It is very beautiful.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Яка ця вишиванка — біла чи жовта? *(What is this vyshyvanka like — white or yellow?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Ця біла, а та жовта. *(This one is white, and that one is yellow.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Скільки вона коштує? *(How much does it cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Триста гривень. *(Three hundred hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> А цей глечик? Він великий? *(And this jug? Is it big?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Цей великий, а той маленький. *(This one is big, and that one is small.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Скільки коштує маленький? *(How much does the small one cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Сто гривень. *(One hundred hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Добре. А це що? Це намисто? *(Good. And what is this? Is this a necklace?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Так, це намисто. Воно синє й біле. *(Yes, this is a necklace. It is blue and white.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Гарне! А ці писанки? *(Beautiful! And these pysanky?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Одна писанка — двадцять п'ять гривень. *(One pysanka — twenty-five hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Я хочу три писанки. *(I want three pysanky.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Це сімдесят п'ять гривень. *(That is seventy-five hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Правильно! Дякую, Катю. *(Correct! Thank you, Katia.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Авжеж! Це українська традиція. *(Of course! This is a Ukrainian tradition.)*</div>
-
-</div>
+> — **Іванко:** Катю, диви́сь! Що це? *(Katia, look! What is this?)*
+> — **Катя:** Це вишиванка. Вона ду́же га́рна. *(This is a vyshyvanka. It is very beautiful.)*
+> — **Іванко:** Яка ця вишиванка — біла чи жовта? *(What is this vyshyvanka like — white or yellow?)*
+> — **Катя:** Ця біла, а та жовта. *(This one is white, and that one is yellow.)*
+> — **Іванко:** Скільки вона ко́шту́є? *(How much does it cost?)*
+> — **Катя:** Три́ста гривень. *(Three hundred hryvnias.)*
+> — **Іванко:** А цей глечик? Він великий? *(And this jug? Is it big?)*
+> — **Катя:** Цей великий, а той мале́нький. *(This one is big, and that one is small.)*
+> — **Іванко:** Скільки коштує маленький? *(How much does the small one cost?)*
+> — **Катя:** Сто гривень. *(One hundred hryvnias.)*
+> — **Іванко:** До́бре. А це що? Це намисто? *(Good. And what is this? Is this a necklace?)*
+> — **Катя:** Так, це намисто. Воно си́нє й бі́ле. *(Yes, this is a necklace. It is blue and white.)*
+> — **Іванко:** Га́рне! А ці писанки? *(Beautiful! And these pysanky?)*
+> — **Катя:** Одна́ пи́санка — двадцять п'ять гривень. *(One pysanka — twenty-five hryvnias.)*
+> — **Іванко:** Я хо́чу три писанки. *(I want three pysanky.)*
+> — **Катя:** Це сімдеся́т п'ять гривень. *(That is seventy-five hryvnias.)*
+> — **Іванко:** Пра́вильно! Дякую, Катю. *(Correct! Thank you, Katia.)*
+> — **Катя:** Авже́ж! Це украї́нська тради́ція. *(Of course! This is a Ukrainian tradition.)*
 
 Notice how gender drives every choice in this conversation. **Вона** refers to **вишиванка** (feminine) — so the adjectives are **біла**, **гарна**. **Він** refers to **глечик** (masculine) — so the adjectives are **великий**, **маленький**. **Воно** refers to **намисто** (neuter) — so the adjective is **синє й біле**. The demonstratives **цей/ця/це** appear throughout, always matching the noun's gender. Every price uses the number vocabulary from M11. This single dialogue puts all of A1.2 into action.
 
@@ -227,15 +206,15 @@ Notice how gender drives every choice in this conversation. **Вона** refers 
 
 You have completed A1.2 — My World. In six modules you built the grammar architecture for describing everything around you. You know how to determine noun gender using the **він/вона/воно** test. You can choose the right adjective ending based on gender and stem type — **-ий** for hard masculine, **-ій** for soft masculine, **-а/-я** for feminine, **-е/-є** for neuter. You know both Ukrainian blues: **синій** for navy and **блакитний** for sky blue. You can count objects and ask prices. You can point at things near and far with **цей/ця/це** and **той/та/те**. And you can speak about groups using plural forms with **-и/-і/-а**.
 
-By the end of A1.2, you actively use over twenty objects with correct genders — **стіл** (m), **книга** (f), **вікно** (n), **вишиванка** (f), **глечик** (m), **намисто** (n), and many more. You know ten or more adjectives with full agreement: **великий/велика/велике**, **новий/нова/нове**, **червоний/червона/червоне**, **синій/синя/синє**. You use six demonstrative forms — **цей, ця, це, той, та, те** — and their plurals **ці** and **ті**. You handle numbers from one to a thousand as vocabulary. And you form plurals for all three genders.
+By the end of A1.2, you actively use over twenty objects with correct genders — **стіл** (m), **книга** (f), **вікно** (n), **вишиванка** (f), **глечик** (m), **намисто** (n), and many more. You know ten or more adjectives with full agreement: **великий/велика/велике**, **новий/нова́/нове́**, **червоний/червона/черво́не**, **синій/синя/синє**. You use six demonstrative forms — **цей, ця, це, той, та, те** — and their plurals **ці** and **ті**. You handle numbers from one to a thousand as vocabulary. And you form plurals for all three genders.
 
 What comes next? In A1.3 — *Actions* — you will meet Ukrainian verbs for the first time. What do you do? What do you like? The nouns and adjectives from A1.2 will combine with verbs to make real sentences about real life. The building blocks are ready — now they start to move.
 
-Ukrainian is not built in one day. It is built in six modules at a time, then six more. You just finished the second set. The language is already yours to describe the world around you. **Молодець! Продовжуємо.** *(Well done! We continue.)*
+Ukrainian is not built in one day. It is built in six modules at a time, then six more. You just finished the second set. The language is already yours to describe the world around you. **Молоде́ць! Продо́вжуємо.** *(Well done! We continue.)*
 
 <!-- INJECT_ACTIVITY: quiz-singular-plural -->
 
-**Deterministic word count: 1581 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1578 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -413,14 +392,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 112 words | Not found: 3 words
+Verified: 96 words | Not found: 52 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Іва — NOT IN VESUM
   ✗ Іванко — NOT IN VESUM
+  ✗ Авже — NOT IN VESUM
+  ✗ Блаки — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
   ✗ Катю — NOT IN VESUM
   ✗ Катя — NOT IN VESUM
+  ✗ Пра — NOT IN VESUM
+  ✗ Продо — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
+  ✗ вень — NOT IN VESUM
+  ✗ вжуємо — NOT IN VESUM
+  ✗ вильно — NOT IN VESUM
+  ✗ виши — NOT IN VESUM
+  ✗ вта — NOT IN VESUM
+  ✗ вті — NOT IN VESUM
+  ✗ гле — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ кна — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ кімна — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ мка — NOT IN VESUM
+  ✗ мпа — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нки — NOT IN VESUM
+  ✗ нко — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ нній — NOT IN VESUM
+  ✗ нови — NOT IN VESUM
+  ✗ нська — NOT IN VESUM
+  ✗ нька — NOT IN VESUM
+  ✗ нький — NOT IN VESUM
+  ✗ оста — NOT IN VESUM
+  ✗ рмарок — NOT IN VESUM
+  ✗ рна — NOT IN VESUM
+  ✗ рне — NOT IN VESUM
+  ✗ рний — NOT IN VESUM
+  ✗ санка — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ сімдеся — NOT IN VESUM
+  ✗ тний — NOT IN VESUM
+  ✗ тради — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
+  ✗ ціка — NOT IN VESUM
+  ✗ ція — NOT IN VESUM
+  ✗ чики — NOT IN VESUM
+  ✗ чневий — NOT IN VESUM
+  ✗ шит — NOT IN VESUM
+  ✗ шитів — NOT IN VESUM
 
-All 112 other words are confirmed to exist in VESUM.
+All 96 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -429,23 +455,23 @@ All 112 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

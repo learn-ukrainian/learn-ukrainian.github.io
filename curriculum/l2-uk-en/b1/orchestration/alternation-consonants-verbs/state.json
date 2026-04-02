@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "alternation-consonants-verbs",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T01:20:12.223988+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T01:21:24.676888+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T01:28:39.904698+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T01:29:25.167021+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:44.917596+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:48.275456+00:00"
+    }
+  }
+}

@@ -4,23 +4,29 @@ sequence: 36
 slug: morfolohichna-norma-c1
 version: '1.1'
 title: "Морфологічна норма C1: Складні випадки відмінювання та узгодження"
-subtitle: "Morphological Norm C1"
+subtitle: "Морфологічна норма C1"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Опанувати правила вживання варіантних закінчень іменників чоловічого роду в родовому відмінку (а/я vs у/ю)."
-  - "Навчитися правильно відмінювати власні назви, прізвища та абревіатури в офіційних текстах."
-  - "Засвоїти норми вживання ступенів порівняння прикметників та уникнення типових помилок (найбільш кращий тощо)."
-  - "Вдосконалити навички використання дієслівних форм, зокрема обмежень у вживанні активних дієприкметників."
+  - "Опанувати правила вживання варіантних закінчень іменників чоловічого роду в родовому
+    відмінку (а/я vs у/ю)."
+  - "Навчитися правильно відмінювати власні назви, прізвища та абревіатури в офіційних
+    текстах."
+  - "Засвоїти норми вживання ступенів порівняння прикметників та уникнення типових
+    помилок (найбільш кращий тощо)."
+  - "Вдосконалити навички використання дієслівних форм, зокрема обмежень у вживанні
+    активних дієприкметників."
 
 reading_situations:
   - source_type: "офіційний документ"
-    topic: "Аналіз юридичного тексту на предмет дотримання морфологічних норм (відмінювання прізвищ, посад, установ)."
+    topic: "Аналіз юридичного тексту на предмет дотримання морфологічних норм (відмінювання
+      прізвищ, посад, установ)."
     key_elements: ["кличний відмінок", "узгодження", "паралельні форми"]
     motivation: "Розвиток професійної пильності до граматичних деталей."
   - source_type: "наукова стаття"
-    topic: "Проблема заміни активних дієприкметників на -учий/-ячий описовими конструкціями в українській науковій мові."
+    topic: "Проблема заміни активних дієприкметників на -учий/-ячий описовими конструкціями
+      в українській науковій мові."
     key_elements: ["дієприкметник", "трансформація", "ад'єктивація"]
     motivation: "Формування навичок автентичного академічного письма без кальок."
 
@@ -32,10 +38,15 @@ listening_situations:
 
 writing_tasks:
   - task_type: "офіційний лист"
-    prompt: "Напишіть звернення до Міністерства освіти від імені наукової спільноти. Використайте правильні форми кличного відмінка, відмінювання складних прізвищ та назв інституцій."
-    requirements: ["мінімум 250 слів", "дотримання офіційно-ділового стилю", "використання щонайменше 5 невідмінюваних іменників іншомовного походження"]
+    prompt: "Напишіть звернення до Міністерства освіти від імені наукової спільноти.
+      Використайте правильні форми кличного відмінка, відмінювання складних прізвищ
+      та назв інституцій."
+    requirements: ["мінімум 250 слів", "дотримання офіційно-ділового стилю", "використання
+          щонайменше 5 невідмінюваних іменників іншомовного походження"]
     motivation: "Практичне застосування складних правил морфології в реальному контексті."
-    model_answer: "Лист повинен містити коректні форми: 'пане Міністре', 'високошановний колего', правильні закінчення родового відмінка (університету, інституту) та узгодження абревіатур."
+    model_answer: "Лист повинен містити коректні форми: 'пане Міністре', 'високошановний
+      колего', правильні закінчення родового відмінка (університету, інституту) та
+      узгодження абревіатур."
 
 discussion_topics:
   - context: "Варіантність у морфології: свобода вибору чи загроза нормативності?"
@@ -49,7 +60,8 @@ content_outline:
   - section: "Складні випадки іменникових форм"
     words: 1000
     subsections:
-      - "Родовий відмінок однини іменників чоловічого роду: -а/-я vs -у/-ю (системний підхід)"
+      - "Родовий відмінок однини іменників чоловічого роду: -а/-я vs -у/-ю (системний
+        підхід)"
       - "Рід невідмінюваних іменників (географічні назви, назви тварин, абревіатури)"
       - "Специфіка кличного відмінка в офіційному та приватному спілкуванні"
     key_concepts:
@@ -106,15 +118,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix morphological norm violations — incorrect genitive endings (-а/-я vs -у/-ю), degree of comparison errors (найбільш кращий), participle calques."
+    description: "Fix morphological norm violations — incorrect genitive endings (-а/-я
+      vs -у/-ю), degree of comparison errors (найбільш кращий), participle calques."
   - type: fill-in
-    description: "Complete official document sentences with correct vocative case forms, abbreviation agreements, and indeclinable noun genders."
+    description: "Complete official document sentences with correct vocative case
+      forms, abbreviation agreements, and indeclinable noun genders."
   - type: select
-    description: "Choose the normative morphological form from variants — parallel endings, compound adjective spellings, pronoun usage."
+    description: "Choose the normative morphological form from variants — parallel
+      endings, compound adjective spellings, pronoun usage."
   - type: match-up
-    description: "Match morphological categories (рід, відмінок, ступінь порівняння) with their problematic cases and correct resolution rules."
+    description: "Match morphological categories (рід, відмінок, ступінь порівняння)
+      with their problematic cases and correct resolution rules."
   - type: group-sort
-    description: "Categorize masculine genitive nouns by ending pattern (-а/-я for concrete/countable vs -у/-ю for abstract/collective/mass)."
+    description: "Categorize masculine genitive nouns by ending pattern (-а/-я for
+      concrete/countable vs -у/-ю for abstract/collective/mass)."
 
 activities:
   types_required:

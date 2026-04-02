@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "health-at-the-doctor",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-02T03:53:02.110719+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-02T03:54:16.255672+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T03:55:54.203846+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T04:06:00.150637+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:14.466822+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:15.503690+00:00"
+    }
+  }
+}

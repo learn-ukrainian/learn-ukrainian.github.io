@@ -1,6 +1,6 @@
 import re
 
-with open("curriculum/l2-uk-en/b1/conditionals-mixed-complex.md", "r", encoding="utf-8") as f:
+with open("curriculum/l2-uk-en/b1/conditionals-mixed-complex.md", encoding="utf-8") as f:
     text = f.read()
 
 sentences = re.split(r'(?<=[.!?])\s+', text)

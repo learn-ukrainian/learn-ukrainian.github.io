@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "real-conditionals",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:59.257117+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:59.257397+00:00"
+    }
+  }
+}

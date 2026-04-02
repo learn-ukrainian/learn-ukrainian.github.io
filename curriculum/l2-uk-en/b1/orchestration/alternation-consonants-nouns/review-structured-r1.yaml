@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections present, word targets exceeded (4825 words), all grammar
+    points from plan covered (including [ц'] -> [ч] and masculine plural `друзі`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical Error:** Describes hushing sounds [ж, ч, ш] as "м''які" (soft).
+    Quote: "переходить у м''який шиплячий [ж]". In Ukrainian, they are hard (тверді).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong PPP flow. Excellent transition from B1.1 (vowels) to B1.2 (consonants).
+    Uses anatomy (hand, foot, ear) as anchor points.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required metalanguage used. Recommended terms like "шиплячий", "свистячий",
+    "продуктивний" integrated naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Varied types. Markers placed immediately after theory. Covers the tricky
+    Vocative `-ець` alternation.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Professional and encouraging. However, suffers from extreme Gemini padding
+    ("абсолютно", "надзвичайно", "максимально" used in almost every sentence).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. H2s match plan. Dialogue clearly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach (Prague, America, Africa). Uses traditional names
+    (Olga, Marichka) and folk proverbs correctly.
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: Natural interaction in a Lviv bookshop. "Друже" used as a vocative vocative
+    in a social setting.
+findings: []

@@ -1,103 +1,99 @@
-module: a2-058
+module: a2-061
 level: A2
-sequence: 58
+sequence: 61
 slug: a2-comprehensive-review
 version: '1.1'
 title: Повна картина
 subtitle: Повторення всієї граматики рівня A2
 focus: review
 pedagogy: Review
-phase: A2.8 [Refinement and Graduation]
+phase: A2.10 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can correctly use all seven cases in singular and plural with
-  nouns, adjectives, and pronouns in mixed exercises.
-- Learner can distinguish and use perfective and imperfective aspect
-  appropriately in past, present, and future contexts.
-- Learner can form and use comparative and superlative adjectives, including
-  suppletive forms, in connected speech.
-- Learner can construct complex sentences using subordinate conjunctions
-  (що, тому що, коли, щоб, якщо) and express opinions with justification.
+  - Learner can correctly use all seven cases in singular and plural with nouns,
+    adjectives, and pronouns in mixed exercises.
+  - Learner can distinguish and use perfective and imperfective aspect 
+    appropriately in past, present, and future contexts.
+  - Learner can form and use comparative and superlative adjectives, including 
+    suppletive forms, in connected speech.
+  - Learner can construct complex sentences using subordinate conjunctions (що, 
+    тому що, коли, щоб, якщо) and express opinions with justification.
 dialogue_situations:
-  - situation: "Two friends reviewing for a B1 placement test — quizzing each other on cases, aspect, and conjunctions using mixed everyday examples"
+  - situation: "Two friends reviewing for a B1 placement test — quizzing each other
+      on cases, aspect, and conjunctions using mixed everyday examples"
     functions: ["testing grammatical knowledge", "self-assessing readiness"]
     key_vocabulary: ["відмінок", "дієслово", "сполучник", "впевнено"]
-  - situation: "A student explaining to a new classmate what they learned at A2 level — summarizing grammar topics and giving example sentences"
+  - situation: "A student explaining to a new classmate what they learned at A2 level
+      — summarizing grammar topics and giving example sentences"
     functions: ["summarizing knowledge", "giving examples", "explaining grammar"]
     key_vocabulary: ["граматика", "повторення", "речення", "помилка"]
 content_outline:
-- section: 'Відмінки: від називного до кличного (Cases: From Nominative
-    to Vocative)'
-  words: 450
-  points:
-  - 'Systematic review of all seven cases: when each is used, key
-    prepositions, and typical verb government. Quick reference chart
-    with the most important triggers for each case.'
-  - 'Mixed exercise: sentences requiring the learner to choose the
-    correct case based on context — verbs, prepositions, and
-    constructions from across A2.'
-  - 'Error correction: sentences with deliberate case mistakes for
-    the learner to find and fix.'
-- section: 'Дієслово: вид, час, спосіб (The Verb: Aspect, Tense, Mood)'
-  words: 400
-  points:
-  - 'Review of aspect pairs and their usage in context. When to use
-    imperfective (process, repetition, general) vs. perfective
-    (result, completion, single event).'
-  - 'Tense review: past, present, future — including compound future
-    (буду + infinitive) and synthetic future (-му).'
-  - 'Imperative and conditional: quick review of commands and wishes
-    (Прочитай! Якщо б я мав час, я б поїхав).'
-- section: 'Прикметники, порівняння, займенники (Adjectives, Comparison,
-    Pronouns)'
-  words: 350
-  points:
-  - 'Adjective declension review: hard and soft stems across all cases.
-    Comparative and superlative forms, including irregular (кращий,
-    більший, гірший).'
-  - 'Pronoun system review: personal, possessive (including свій),
-    demonstrative, interrogative, indefinite, negative, reflexive
-    (себе).'
-  - 'Practice: fill in the correct pronoun or adjective form in
-    connected text.'
-- section: 'Складне речення: з''єднуємо думки (Complex Sentences: Connecting
-    Ideas)'
-  words: 300
-  points:
-  - 'Review of conjunctions and their usage: що (that), тому що
-    (because), бо (because), коли (when), якщо (if), щоб (in order
-    to), хоча (although).'
-  - 'Practice: combine simple sentences into complex ones using the
-    appropriate conjunction.'
-  - 'Self-assessment: rate your confidence in each grammar area.
-    Which topics need more practice before B1?'
+  - section: 'Відмінки: від називного до кличного (Cases: From Nominative to Vocative)'
+    words: 450
+    points:
+      - 'Systematic review of all seven cases: when each is used, key prepositions,
+        and typical verb government. Quick reference chart with the most important
+        triggers for each case.'
+      - 'Mixed exercise: sentences requiring the learner to choose the correct case
+        based on context — verbs, prepositions, and constructions from across A2.'
+      - 'Error correction: sentences with deliberate case mistakes for the learner
+        to find and fix.'
+  - section: 'Дієслово: вид, час, спосіб (The Verb: Aspect, Tense, Mood)'
+    words: 400
+    points:
+      - 'Review of aspect pairs and their usage in context. When to use imperfective
+        (process, repetition, general) vs. perfective (result, completion, single
+        event).'
+      - 'Tense review: past, present, future — including compound future (буду + infinitive)
+        and synthetic future (-му).'
+      - 'Imperative and conditional: quick review of commands and wishes (Прочитай!
+        Якщо б я мав час, я б поїхав).'
+  - section: 'Прикметники, порівняння, займенники (Adjectives, Comparison, Pronouns)'
+    words: 350
+    points:
+      - 'Adjective declension review: hard and soft stems across all cases. Comparative
+        and superlative forms, including irregular (кращий, більший, гірший).'
+      - 'Pronoun system review: personal, possessive (including свій), demonstrative,
+        interrogative, indefinite, negative, reflexive (себе).'
+      - 'Practice: fill in the correct pronoun or adjective form in connected text.'
+  - section: 'Складне речення: з''єднуємо думки (Complex Sentences: Connecting Ideas)'
+    words: 300
+    points:
+      - 'Review of conjunctions and their usage: що (that), тому що (because), бо
+        (because), коли (when), якщо (if), щоб (in order to), хоча (although).'
+      - 'Practice: combine simple sentences into complex ones using the appropriate
+        conjunction.'
+      - 'Self-assessment: rate your confidence in each grammar area. Which topics
+        need more practice before B1?'
 vocabulary_hints:
   required:
-  - повторення (review, revision)
-  - граматика (grammar)
-  - відмінок (grammatical case)
-  - дієслово (verb)
-  - прикметник (adjective)
-  - займенник (pronoun)
-  - речення (sentence)
-  - помилка (error, mistake)
+    - повторення (review, revision)
+    - граматика (grammar)
+    - відмінок (grammatical case)
+    - дієслово (verb)
+    - прикметник (adjective)
+    - займенник (pronoun)
+    - речення (sentence)
+    - помилка (error, mistake)
   recommended:
-  - впевненість (confidence)
-  - складний (complex, compound)
-  - сполучник (conjunction)
+    - впевненість (confidence)
+    - складний (complex, compound)
+    - сполучник (conjunction)
 activity_hints:
-- type: fill-in
-  focus: Mixed case drill — all seven cases in one exercise
-  items: 8
-- type: quiz
-  focus: Choose perfective or imperfective aspect for the context
-  items: 8
-- type: group-sort
-  focus: Sort grammar concepts by category (case, aspect, comparison, conjunction)
-  items: 8
+  - type: fill-in
+    focus: Mixed case drill — all seven cases in one exercise
+    items: 8
+  - type: quiz
+    focus: Choose perfective or imperfective aspect for the context
+    items: 8
+  - type: group-sort
+    focus: Sort grammar concepts by category (case, aspect, comparison, 
+      conjunction)
+    items: 8
+  - error-correction
 references:
-- title: Заболотний Grade 6, Повторення вивченого
-  notes: End-of-year review format for all grammar topics
-- title: "ULP: A2 Grammar Summary"
-  url: "https://www.ukrainianlessons.com/a2-grammar/"
-  notes: Overview of A2-level grammar structures
+  - title: Заболотний Grade 6, Повторення вивченого
+    notes: End-of-year review format for all grammar topics
+  - title: "ULP: A2 Grammar Summary"
+    url: "https://www.ukrainianlessons.com/a2-grammar/"
+    notes: Overview of A2-level grammar structures

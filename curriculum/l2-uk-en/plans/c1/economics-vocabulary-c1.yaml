@@ -4,21 +4,24 @@ sequence: 28
 slug: economics-vocabulary-c1
 version: '1.1'
 title: "Економічний дискурс: Ризики, інновації та макроекономіка"
-subtitle: "Economics Vocabulary and Market Analysis"
+subtitle: "Економічна лексика та аналіз ринку"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Опанувати термінологію макро- та мікроекономіки для професійного аналізу ринків."
-  - "Розуміти принципи функціонування банківської системи та інвестиційного клімату в Україні."
+  - "Розуміти принципи функціонування банківської системи та інвестиційного клімату
+    в Україні."
   - "Навчитися аналізувати фінансову звітність та бізнес-плани в офіційному стилі."
-  - "Вивчати історію української економічної думки: від Михайла Туган-Барановського до сучасності."
+  - "Вивчати історію української економічної думки: від Михайла Туган-Барановського
+    до сучасності."
 
 reading_situations:
   - source_type: "науковий огляд"
     topic: "Еволюція економічної теорії циклів у працях Михайла Туган-Барановського."
     key_elements: ["конь'юнктура", "інвестиції", "ринкова рівновага"]
-    motivation: "Вивчення наукового економічного дискурсу з опорою на класичну українську школу."
+    motivation: "Вивчення наукового економічного дискурсу з опорою на класичну українську
+      школу."
   - source_type: "наукова стаття"
     topic: "Аналіз впливу цифровізації на банківський сектор України: кейс необанків."
     key_elements: ["диджиталізація", "ліквідність", "фінтех"]
@@ -26,16 +29,20 @@ reading_situations:
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Бесіда з головою Національного банку України про монетарну політику та інфляційне таргетування."
+    setting: "Бесіда з головою Національного банку України про монетарну політику
+      та інфляційне таргетування."
     focus_points: ["облікова ставка", "валютні резерви", "дефіцит бюджету"]
     motivation: "Розвиток здатності сприймати складну економічну аргументацію."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Напишіть звіт про інвестиційну привабливість конкретного регіону України для іноземного інвестора (напр., Львівщина або Київщина)."
-    requirements: ["мінімум 250 слів", "використання статистичних даних", "аналіз SWOT"]
+    prompt: "Напишіть звіт про інвестиційну привабливість конкретного регіону України
+      для іноземного інвестора (напр., Львівщина або Київщина)."
+    requirements: ["мінімум 250 слів", "використання статистичних даних", "аналіз
+          SWOT"]
     motivation: "Відпрацювання навичок бізнес-аналітики та економічного прогнозування."
-    model_answer: "Текст має містити аналіз інфраструктури, трудових ресурсів та податкових пільг. Використання термінів 'рентабельність', 'активи', 'інвестиційний клімат'."
+    model_answer: "Текст має містити аналіз інфраструктури, трудових ресурсів та податкових
+      пільг. Використання термінів 'рентабельність', 'активи', 'інвестиційний клімат'."
 
 discussion_topics:
   - context: "Повоєнна відбудова України: план Маршалла 2.0 чи опора на власні ресурси?"
@@ -106,15 +113,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a Ukrainian economic report on investment attractiveness — evaluate use of macroeconomic terminology and SWOT methodology."
+    description: "Analyze a Ukrainian economic report on investment attractiveness
+      — evaluate use of macroeconomic terminology and SWOT methodology."
   - type: error-correction
-    description: "Fix imprecise economic terminology and calques from English/Russian in a financial analysis text."
+    description: "Fix imprecise economic terminology and calques from English/Russian
+      in a financial analysis text."
   - type: match-up
-    description: "Match economic concepts (інфляція, ліквідність, рентабельність, диверсифікація) with definitions and contextual usage."
+    description: "Match economic concepts (інфляція, ліквідність, рентабельність,
+      диверсифікація) with definitions and contextual usage."
   - type: select
-    description: "Choose the correct Ukrainian economic term in context — distinguish between similar concepts (прибуток vs дохід, актив vs капітал)."
+    description: "Choose the correct Ukrainian economic term in context — distinguish
+      between similar concepts (прибуток vs дохід, актив vs капітал)."
   - type: fill-in
-    description: "Complete economic analysis sentences with appropriate financial terminology and discourse markers."
+    description: "Complete economic analysis sentences with appropriate financial
+      terminology and discourse markers."
 
 activities:
   types_required:

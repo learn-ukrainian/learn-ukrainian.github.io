@@ -2,15 +2,15 @@
   "module": "shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:28:55.954831Z",
+  "last_audit": "2026-04-02T20:30:06.758800Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T16:42:50.802766Z",
+    "md": "2026-03-31T17:27:15.879654Z",
     "meta": null,
     "activities": "2026-03-30T16:39:47.198222Z",
     "vocabulary": "2026-03-30T16:40:09.928299Z",
     "research": null,
-    "plan": "2026-03-30T10:59:40.296577Z"
+    "plan": "2026-03-30T22:17:20.664857Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2197/1200 (raw: 2832)"
+      "message": "1588/1200 (raw: 1624)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",

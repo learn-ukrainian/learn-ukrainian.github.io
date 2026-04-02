@@ -77,6 +77,7 @@ class TestReviewModule:
 
     def test_claude_not_found(self):
         from unittest.mock import patch
+
         from run_testbed import review_module
         mod = {"track": "a1", "num": 1, "slug": "test-slug"}
         with patch("subprocess.run", side_effect=FileNotFoundError):
@@ -87,6 +88,7 @@ class TestReviewModule:
     def test_claude_timeout(self):
         import subprocess
         from unittest.mock import patch
+
         from run_testbed import review_module
         mod = {"track": "a1", "num": 1, "slug": "test-slug"}
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("claude", 300)):
@@ -101,7 +103,7 @@ def test_no_regressions_vs_baseline():
     if not BASELINE_JSON.exists():
         pytest.skip("No baseline.json — run 'run_testbed.py baseline' first")
 
-    from run_testbed import audit_module, grade_module, load_baseline, load_config, find_regressions
+    from run_testbed import audit_module, find_regressions, grade_module, load_baseline, load_config
 
     baseline = load_baseline()
     modules = load_config()
@@ -113,4 +115,4 @@ def test_no_regressions_vs_baseline():
         results.append(r)
 
     regressions = find_regressions(results, baseline)
-    assert not regressions, f"Regressions detected:\n" + "\n".join(regressions)
+    assert not regressions, "Regressions detected:\n" + "\n".join(regressions)

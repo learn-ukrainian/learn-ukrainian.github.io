@@ -4,41 +4,54 @@ sequence: 70
 slug: literaturoznavcha-terminolohiia
 version: '1.1'
 title: "Теорія літератури та науковий інструментарій"
-subtitle: "Literary Terminology and Scientific Toolkit"
+subtitle: "Літературознавча термінологія та науковий інструментарій"
 focus: literature
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Опанувати професійний термінологічний апарат для аналізу художніх творів різних родів та жанрів."
-  - "Розуміти різницю між традиційними та сучасними (постструктуралістськими) методами літературного аналізу."
-  - "Застосовувати поняття сюжету, композиції, хронотопу та нарації в практичному дослідженні тексту."
-  - "Аналізувати систему художніх засобів (тропів та фігур) на рівні професійного літературознавця."
+  - "Опанувати професійний термінологічний апарат для аналізу художніх творів різних
+    родів та жанрів."
+  - "Розуміти різницю між традиційними та сучасними (постструктуралістськими) методами
+    літературного аналізу."
+  - "Застосовувати поняття сюжету, композиції, хронотопу та нарації в практичному
+    дослідженні тексту."
+  - "Аналізувати систему художніх засобів (тропів та фігур) на рівні професійного
+    літературознавця."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Концепція хронотопу Михайла Бахтіна у прочитанні сучасних українських дослідників."
+    topic: "Концепція хронотопу Михайла Бахтіна у прочитанні сучасних українських
+      дослідників."
     key_elements: ["часопростір", "діалогізм", "жанрова специфіка"]
-    motivation: "Вивчення фундаментальних категорій літературознавства на рівні високої академічної дискусії."
+    motivation: "Вивчення фундаментальних категорій літературознавства на рівні високої
+      академічної дискусії."
   - source_type: "рецензія"
     topic: "Критичний аналіз структури роману Софії Андрухович 'Амадока'."
     key_elements: ["багатошаровість", "інтертекстуальність", "наратор"]
-    motivation: "Приклад використання термінології для опису складних сучасних літературних форм."
+    motivation: "Приклад використання термінології для опису складних сучасних літературних
+      форм."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть розгорнутий літературознавчий відгук (250-300 слів) на будь-який прочитаний український твір, використовуючи щонайменше 10 термінів із теорії літератури (наприклад: експозиція, кульмінація, метафора, алюзія, архетип)."
+    prompt: "Напишіть розгорнутий літературознавчий відгук (250-300 слів) на будь-який
+      прочитаний український твір, використовуючи щонайменше 10 термінів із теорії
+      літератури (наприклад: експозиція, кульмінація, метафора, алюзія, архетип)."
     requirements: ["науковий стиль", "точність дефініцій", "обґрунтованість оцінок"]
     motivation: "Тренування навичок професійного письма в галузі гуманітарних наук."
-    model_answer: "Текст повинен демонструвати вміння аналізувати твір не на рівні 'подобається-не подобається', а через призму його поетики та структури."
+    model_answer: "Текст повинен демонструвати вміння аналізувати твір не на рівні
+      'подобається-не подобається', а через призму його поетики та структури."
 
 discussion_topics:
-  - context: "Смерть автора: чи має значення біографія та намір письменника для розуміння твору?"
+  - context: "Смерть автора: чи має значення біографія та намір письменника для розуміння
+      твору?"
     questions:
       - "Як концепція Ролана Барта змінила сучасне літературознавство?"
       - "Чи може читач бути співавтором тексту?"
       - "Роль інтертекстуальності в сучасному українському романі."
-    motivation: "Дискусія про зміну парадигми сприйняття літературного твору в XX-XXI століттях."
-  - context: "Жанрові трансформації: чому старі жанри (ода, елегія, трагедія) зникають або перетворюються на щось нове?"
+    motivation: "Дискусія про зміну парадигми сприйняття літературного твору в XX-XXI
+      століттях."
+  - context: "Жанрові трансформації: чому старі жанри (ода, елегія, трагедія) зникають
+      або перетворюються на щось нове?"
     questions:
       - "Чи живий роман як жанр у цифрову епоху?"
       - "Феномен 'автофікшн' та його популярність."
@@ -107,15 +120,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a contemporary Ukrainian novel excerpt — identify literary devices (сюжет, фабула, композиція, хронотоп, нарація) and write a structured literary analysis."
+    description: "Analyze a contemporary Ukrainian novel excerpt — identify literary
+      devices (сюжет, фабула, композиція, хронотоп, нарація) and write a structured
+      literary analysis."
   - type: match-up
-    description: "Match literary terms (експозиція, зав'язка, кульмінація, розв'язка, епілог) with their definitions and examples from Ukrainian literature."
+    description: "Match literary terms (експозиція, зав'язка, кульмінація, розв'язка,
+      епілог) with their definitions and examples from Ukrainian literature."
   - type: select
-    description: "Identify the narrative perspective (наратор від першої/третьої особи, фокалізація) in literary excerpts and explain its effect on reader perception."
+    description: "Identify the narrative perspective (наратор від першої/третьої особи,
+      фокалізація) in literary excerpts and explain its effect on reader perception."
   - type: essay-response
-    description: "Write a literary review (150-200 words) of a Ukrainian work using at least 10 literary analysis terms correctly."
+    description: "Write a literary review (150-200 words) of a Ukrainian work using
+      at least 10 literary analysis terms correctly."
   - type: reading
-    description: "Read a literary criticism article about Софія Андрухович's prose and identify how the critic uses literary terminology to build their argument."
+    description: "Read a literary criticism article about Софія Андрухович's prose
+      and identify how the critic uses literary terminology to build their argument."
 
 activities:
   types_required:
@@ -135,3 +154,4 @@ references:
 connects_to:
   previous: "istoriia-ukrainskoi-literatury"
   next: "analiz-poezii"
+phase: C1.5 [Literature]

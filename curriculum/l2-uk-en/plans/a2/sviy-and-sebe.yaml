@@ -10,111 +10,105 @@ pedagogy: PPP
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can use свій correctly to show that the possessor is the subject
-  of the sentence, and distinguish it from мій/твій/його/її.
-- Learner can decline свій in all cases, genders, and numbers (свого,
-  своїй, своїм, etc.).
-- Learner can use the reflexive pronoun себе in all cases (себе, собі,
-  собою) and understand that it has no Nominative form.
-- Learner can use common expressions with себе and свій in natural
-  Ukrainian speech.
+  - Learner can use свій correctly to show that the possessor is the subject of 
+    the sentence, and distinguish it from мій/твій/його/її.
+  - Learner can decline свій in all cases, genders, and numbers (свого, своїй, 
+    своїм, etc.).
+  - Learner can use the reflexive pronoun себе in all cases (себе, собі, собою) 
+    and understand that it has no Nominative form.
+  - Learner can use common expressions with себе and свій in natural Ukrainian 
+    speech.
 dialogue_situations:
-- setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні, це
-    свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться на
-    себе у дзеркало (n).'
-  speakers:
-  - Брат
-  - Сестра
-  - Мама (розводить руками)
-  motivation: 'Свій vs мій/твій, себе: светр(m), сумка(f), дзеркало(n)'
+  - setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні,
+      це свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться
+      на себе у дзеркало (n).'
+    speakers:
+      - Брат
+      - Сестра
+      - Мама (розводить руками)
+    motivation: 'Свій vs мій/твій, себе: светр(m), сумка(f), дзеркало(n)'
 content_outline:
-- section: 'Свій: чий саме? (Свій: Whose Exactly?)'
-  words: 600
-  points:
-  - 'The key rule: свій replaces мій/твій/його when the possessor is the
-    subject. Я читаю свою книгу (= my own book). Він читає свою
-    книгу (= his own book). Without свій: Він читає його книгу (=
-    someone else''s book).'
-  - 'Why this matters: English uses "his" for both cases. Ukrainian
-    distinguishes them. Він любить свою дружину (his own wife) vs.
-    Він любить його дружину (another man''s wife).'
-  - 'When NOT to use свій: in 1st/2nd person, мій/твій are also
-    acceptable (Я читаю мою/свою книгу — both correct). In 3rd person,
-    свій is essential for clarity.'
-  - 'Practice: rewrite sentences replacing мій/його with свій where
-    appropriate.'
-- section: 'Свій у відмінках (Свій in All Cases)'
-  words: 450
-  points:
-  - 'Declension table: свій follows the pattern of мій/твій.
-    Masculine: свій, свого, своєму, свій/свого, своїм, своєму/своїм.
-    Feminine: своя, своєї, своїй, свою, своєю, своїй.
-    Neuter: своє, свого, своєму, своє, своїм, своєму/своїм.
-    Plural: свої, своїх, своїм, свої/своїх, своїми, своїх.'
-  - 'Practice with cases: Я горджуся своїм містом (Instr.).
-    Він розповів про свою родину (Acc.). Вона допомагає своїй
-    сестрі (Dat.).'
-  - 'Common collocations: свій час, своя думка, своє місце, свої люди.'
-- section: 'Себе: зворотний займенник (Себе: The Reflexive Pronoun)'
-  words: 550
-  points:
-  - 'Себе has no Nominative form — it cannot be the subject. It refers
-    back to the subject: Він бачить себе у дзеркалі (He sees himself
-    in the mirror).'
-  - 'Declension: Родовий/Знахідний: себе, Давальний/Місцевий: собі,
-    Орудний: собою.'
-  - 'Common expressions: почувати себе (to feel), вести себе (to behave),
-    уявити собі (to imagine), взяти собі (to take for oneself),
-    сам/сама по собі (by oneself).'
-  - 'Contrast with -ся verbs: милуватися = милувати себе. The reflexive
-    suffix -ся is historically від себе. Connection to verbs they
-    already know (називатися, вчитися).'
-- section: 'Свій та себе у мовленні (Свій and Себе in Speech)'
-  words: 400
-  points:
-  - 'Dialogue: friends discuss their habits and routines using свій and
-    себе naturally (Я завжди беру з собою парасольку. А ти?
-    Я почуваю себе добре у своєму місті).'
-  - 'Reading practice: a short text about a person describing their daily
-    routine, using свій and себе throughout.'
-  - 'Common mistakes: *Він любить його дружину (ambiguous without
-    свій), *Я почуваю себе (missing adverb — як?).'
+  - section: 'Свій: чий саме? (Свій: Whose Exactly?)'
+    words: 600
+    points:
+      - 'The key rule: свій replaces мій/твій/його when the possessor is the subject.
+        Я читаю свою книгу (= my own book). Він читає свою книгу (= his own book).
+        Without свій: Він читає його книгу (= someone else''s book).'
+      - 'Why this matters: English uses "his" for both cases. Ukrainian distinguishes
+        them. Він любить свою дружину (his own wife) vs. Він любить його дружину (another
+        man''s wife).'
+      - 'When NOT to use свій: in 1st/2nd person, мій/твій are also acceptable (Я
+        читаю мою/свою книгу — both correct). In 3rd person, свій is essential for
+        clarity.'
+      - 'Practice: rewrite sentences replacing мій/його with свій where appropriate.'
+  - section: 'Свій у відмінках (Свій in All Cases)'
+    words: 450
+    points:
+      - 'Declension table: свій follows the pattern of мій/твій. Masculine: свій,
+        свого, своєму, свій/свого, своїм, своєму/своїм. Feminine: своя, своєї, своїй,
+        свою, своєю, своїй. Neuter: своє, свого, своєму, своє, своїм, своєму/своїм.
+        Plural: свої, своїх, своїм, свої/своїх, своїми, своїх.'
+      - 'Practice with cases: Я горджуся своїм містом (Instr.). Він розповів про свою
+        родину (Acc.). Вона допомагає своїй сестрі (Dat.).'
+      - 'Common collocations: свій час, своя думка, своє місце, свої люди.'
+  - section: 'Себе: зворотний займенник (Себе: The Reflexive Pronoun)'
+    words: 550
+    points:
+      - 'Себе has no Nominative form — it cannot be the subject. It refers back to
+        the subject: Він бачить себе у дзеркалі (He sees himself in the mirror).'
+      - 'Declension: Родовий/Знахідний: себе, Давальний/Місцевий: собі, Орудний: собою.'
+      - 'Common expressions: почувати себе (to feel), вести себе (to behave), уявити
+        собі (to imagine), взяти собі (to take for oneself), сам/сама по собі (by
+        oneself).'
+      - 'Contrast with -ся verbs: милуватися = милувати себе. The reflexive suffix
+        -ся is historically від себе. Connection to verbs they already know (називатися,
+        вчитися).'
+  - section: 'Свій та себе у мовленні (Свій and Себе in Speech)'
+    words: 400
+    points:
+      - 'Dialogue: friends discuss their habits and routines using свій and себе naturally
+        (Я завжди беру з собою парасольку. А ти? Я почуваю себе добре у своєму місті).'
+      - 'Reading practice: a short text about a person describing their daily routine,
+        using свій and себе throughout.'
+      - 'Common mistakes: *Він любить його дружину (ambiguous without свій), *Я почуваю
+        себе (missing adverb — як?).'
 vocabulary_hints:
   required:
-  - свій (one's own)
-  - себе (oneself, accusative/genitive)
-  - собі (oneself, dative)
-  - собою (oneself, instrumental)
-  - почувати себе (to feel)
-  - вести себе (to behave)
-  - горджуся (I am proud)
-  - уявити (to imagine)
-  - дзеркало (mirror)
-  - парасолька (umbrella)
+    - свій (one's own)
+    - себе (oneself, accusative/genitive)
+    - собі (oneself, dative)
+    - собою (oneself, instrumental)
+    - почувати себе (to feel)
+    - вести себе (to behave)
+    - горджуся (I am proud)
+    - уявити (to imagine)
+    - дзеркало (mirror)
+    - парасолька (umbrella)
   recommended:
-  - власний (own, one's own)
-  - самостійно (independently)
-  - звичка (habit)
-  - щоденний (daily)
+    - власний (own, one's own)
+    - самостійно (independently)
+    - звичка (habit)
+    - щоденний (daily)
 activity_hints:
-- type: quiz
-  focus: Choose свій or мій/його/її based on sentence context
-  items: 8
-- type: fill-in
-  focus: Insert the correct case form of себе (себе, собі, собою)
-  items: 8
-- type: true-false
-  focus: Identify whether свій is used correctly in each sentence
-  items: 8
-- type: match-up
-  focus: Match expressions with себе to their meanings
-  items: 8
-- type: error-correction
-  focus: Find and fix incorrect usage of свій and себе (e.g., *Він читає його книгу when meaning his own → свою, *Я почуваю себе when missing adverb)
-  items: 6
+  - type: quiz
+    focus: Choose свій or мій/його/її based on sentence context
+    items: 8
+  - type: fill-in
+    focus: Insert the correct case form of себе (себе, собі, собою)
+    items: 8
+  - type: true-false
+    focus: Identify whether свій is used correctly in each sentence
+    items: 8
+  - type: match-up
+    focus: Match expressions with себе to their meanings
+    items: 8
+  - type: error-correction
+    focus: Find and fix incorrect usage of свій and себе (e.g., *Він читає його 
+      книгу when meaning his own → свою, *Я почуваю себе when missing adverb)
+    items: 6
 references:
-- title: Заболотний Grade 6, Займенник
-  notes: Section on possessive and reflexive pronouns with exercises
-- title: "ULP: Ukrainian Pronouns — Свій and Себе"
-  url: "https://www.ukrainianlessons.com/e157/"
-  notes: Episode explaining свій vs мій/його distinction
+  - title: Заболотний Grade 6, Займенник
+    notes: Section on possessive and reflexive pronouns with exercises
+  - title: "ULP: Ukrainian Pronouns — Свій and Себе"
+    url: "https://www.ukrainianlessons.com/e157/"
+    notes: Episode explaining свій vs мій/його distinction

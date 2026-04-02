@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "double-negation",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:46.105964+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:46.106402+00:00"
+    }
+  }
+}

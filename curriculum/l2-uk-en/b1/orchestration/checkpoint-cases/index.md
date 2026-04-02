@@ -1,0 +1,15 @@
+# Build Summary: checkpoint-cases (B1)
+
+Generated: 2026-04-02 16:58
+
+## Pipeline Phases
+
+| Phase | Status | Timestamp |
+|-------|--------|-----------|
+| stress | complete | 2026-04-02 14:58:43 |
+| publish | complete | 2026-04-02 14:58:43 |
+
+## Files
+
+- `.build.lock`
+- `state.json`

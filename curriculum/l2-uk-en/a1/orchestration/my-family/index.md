@@ -1,6 +1,6 @@
 # Build Summary: my-family (A1)
 
-Generated: 2026-03-31 11:56
+Generated: 2026-04-01 13:00
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-03-31 11:56
 | vocab | complete | 2026-03-29 21:28:35 |
 | enrich | complete | 2026-03-29 21:28:37 |
 | verify | complete | 2026-03-29 21:28:37 |
-| review | complete | 2026-03-29 21:32:17 |
-| stress | complete | 2026-03-31 09:56:29 |
-| publish | complete | 2026-03-31 09:56:29 |
+| review | complete | 2026-04-01 11:00:37 |
+| stress | complete | 2026-04-01 11:00:45 |
+| publish | complete | 2026-04-01 11:00:46 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | my-family-review-r1.md |
+| 2 | my-family-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,6 +39,9 @@ Generated: 2026-03-31 11:56
 | activities | claude-tools (claude-sonnet-4-6) | 225s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 23s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 220s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 210s | ✅ |
 
 ## Files
 
@@ -47,6 +51,7 @@ Generated: 2026-03-31 11:56
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**DEDUCTION:** Dialogue setting deviates from plan. Plan specifies "Conference
+    coffee break — two professionals" with Богдан (engineer) and Соломія (teacher).
+    Module has "university gathering in Lviv"'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms verified against VESUM. No Russianisms, surzhyk, or
+    calques found. Phonetic claims correct (33 letters, 6 vowels). Case forms correct
+    throughout (vocatives Богдане/Соломіє, genitiv
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: self-check → reading practice → grammar summary → capstone
+    dialogue → graduation monologue. Grammar patterns presented with 2+ examples each.
+    The "pattern map" framing in Граматика is'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All vocabulary from M01-M06 is recycled effectively. Required vocab "ім'я"
+    is used ("Моє ім'я"). However, recommended "прізвище" (surname) is absent. The
+    reading passage introduces several words (живе
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Three well-placed markers matching all plan activity_hints. Inline comprehension
+    questions test reading/listening comprehension, not content recall ("Ким працює
+    її тато?" requires understanding the te
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Opening "Перевір себе — ти вже знаєш більше, ніж думаєш" is direct and
+    encouraging without being sycophantic. "This module is not a test. It is a mirror."
+    — good framing. "Цей монолог — твій підпис" i
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 5 plan sections present with correct H2 headings in correct order.
+    Clean markdown, no stray tags. Word count 1440 ≥ 1200. Minor: the apostrophe description
+    inconsistency between Що ми знаємо ("a c'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms. No "like Russian but..." framing.
+    Cities used (Харків, Львів, Київ, Тернопіль, Дніпро, Одеса) represent geographic
+    diversity. Ukrainian-specific cultural element:'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: '**DEDUCTION:** Plan specifies professionals at a conference; module has
+    students at a university. The professional setting would be more engaging and
+    realistic for adult/teen learners than yet another'
+findings: []

@@ -1,0 +1,348 @@
+{
+  "total_items": 154,
+  "grounded_items": 92,
+  "ungrounded": [
+    {
+      "word": "день",
+      "exercise_type": "quiz",
+      "context": "Ми **будемо працювати** весь день."
+    },
+    {
+      "word": "відчинила",
+      "exercise_type": "quiz",
+      "context": "Вона **відчинила** вікно."
+    },
+    {
+      "word": "щовечора",
+      "exercise_type": "quiz",
+      "context": "Щовечора я **дивлюся** новини."
+    },
+    {
+      "word": "дивлюся",
+      "exercise_type": "quiz",
+      "context": "Щовечора я **дивлюся** новини."
+    },
+    {
+      "word": "новини",
+      "exercise_type": "quiz",
+      "context": "Щовечора я **дивлюся** новини."
+    },
+    {
+      "word": "знайдуть",
+      "exercise_type": "quiz",
+      "context": "Вони **знайдуть** правильне рішення."
+    },
+    {
+      "word": "рішення",
+      "exercise_type": "quiz",
+      "context": "Вони **знайдуть** правильне рішення."
+    },
+    {
+      "word": "домашнє",
+      "exercise_type": "quiz",
+      "context": "Ти **робитимеш** домашнє завдання?"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "quiz",
+      "context": "Я обов'язково **візьму** твій телефон."
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "quiz",
+      "context": "Я обов'язково **візьму** твій телефон."
+    },
+    {
+      "word": "статтю",
+      "exercise_type": "fill-in",
+      "context": "Завтра я обов'язково ____ цю статтю до кінця."
+    },
+    {
+      "word": "читав",
+      "exercise_type": "fill-in",
+      "context": "читав"
+    },
+    {
+      "word": "готуватися",
+      "exercise_type": "fill-in",
+      "context": "будемо готуватися"
+    },
+    {
+      "word": "наступний",
+      "exercise_type": "fill-in",
+      "context": "Весь наступний тиждень ми ____ до іспиту."
+    },
+    {
+      "word": "тиждень",
+      "exercise_type": "fill-in",
+      "context": "Весь наступний тиждень ми ____ до іспиту."
+    },
+    {
+      "word": "іспиту",
+      "exercise_type": "fill-in",
+      "context": "Весь наступний тиждень ми ____ до іспиту."
+    },
+    {
+      "word": "готуємося",
+      "exercise_type": "fill-in",
+      "context": "готуємося"
+    },
+    {
+      "word": "підготуємося",
+      "exercise_type": "fill-in",
+      "context": "підготуємося"
+    },
+    {
+      "word": "підготуються",
+      "exercise_type": "fill-in",
+      "context": "підготуються"
+    },
+    {
+      "word": "казав",
+      "exercise_type": "fill-in",
+      "context": "казав"
+    },
+    {
+      "word": "говоритиму",
+      "exercise_type": "fill-in",
+      "context": "говоритиму"
+    },
+    {
+      "word": "житимуть",
+      "exercise_type": "fill-in",
+      "context": "житимуть"
+    },
+    {
+      "word": "києві",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ в Києві багато років."
+    },
+    {
+      "word": "багато",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ в Києві багато років."
+    },
+    {
+      "word": "років",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ в Києві багато років."
+    },
+    {
+      "word": "жили",
+      "exercise_type": "fill-in",
+      "context": "жили"
+    },
+    {
+      "word": "поживуть",
+      "exercise_type": "fill-in",
+      "context": "поживуть"
+    },
+    {
+      "word": "поживемо",
+      "exercise_type": "fill-in",
+      "context": "поживемо"
+    },
+    {
+      "word": "зателефонуй",
+      "exercise_type": "fill-in",
+      "context": "Коли ти ____ це завдання, зателефонуй мені."
+    },
+    {
+      "word": "вчити",
+      "exercise_type": "fill-in",
+      "context": "буде вчити"
+    },
+    {
+      "word": "вчить",
+      "exercise_type": "fill-in",
+      "context": "вчить"
+    },
+    {
+      "word": "вивчить",
+      "exercise_type": "fill-in",
+      "context": "вивчить"
+    },
+    {
+      "word": "вивчать",
+      "exercise_type": "fill-in",
+      "context": "вивчать"
+    },
+    {
+      "word": "знайдемо",
+      "exercise_type": "fill-in",
+      "context": "знайдемо"
+    },
+    {
+      "word": "цікаве",
+      "exercise_type": "fill-in",
+      "context": "Ми неодмінно ____ цікаве рішення для цієї проблеми."
+    },
+    {
+      "word": "проблеми",
+      "exercise_type": "fill-in",
+      "context": "Ми неодмінно ____ цікаве рішення для цієї проблеми."
+    },
+    {
+      "word": "шукаємо",
+      "exercise_type": "fill-in",
+      "context": "шукаємо"
+    },
+    {
+      "word": "шукатимемо",
+      "exercise_type": "fill-in",
+      "context": "шукатимемо"
+    },
+    {
+      "word": "малюватиму",
+      "exercise_type": "fill-in",
+      "context": "малюватиму"
+    },
+    {
+      "word": "сьогоднішній",
+      "exercise_type": "fill-in",
+      "context": "Я із задоволенням ____ ескізи весь сьогоднішній вечір."
+    },
+    {
+      "word": "вечір",
+      "exercise_type": "fill-in",
+      "context": "Я із задоволенням ____ ескізи весь сьогоднішній вечір."
+    },
+    {
+      "word": "малював",
+      "exercise_type": "fill-in",
+      "context": "малював"
+    },
+    {
+      "word": "намалюю",
+      "exercise_type": "fill-in",
+      "context": "намалюю"
+    },
+    {
+      "word": "намалюють",
+      "exercise_type": "fill-in",
+      "context": "намалюють"
+    },
+    {
+      "word": "побачить",
+      "exercise_type": "group-sort",
+      "context": "побачить"
+    },
+    {
+      "word": "читатимеш",
+      "exercise_type": "group-sort",
+      "context": "читатимеш"
+    },
+    {
+      "word": "другові",
+      "exercise_type": "error-correction",
+      "context": "Завтра я буду напишу листа другові."
+    },
+    {
+      "word": "працюватимемо",
+      "exercise_type": "error-correction",
+      "context": "Ми будемо працюватимемо весь вечір."
+    },
+    {
+      "word": "працюємо",
+      "exercise_type": "error-correction",
+      "context": "працюємо"
+    },
+    {
+      "word": "попрацюємо",
+      "exercise_type": "error-correction",
+      "context": "попрацюємо"
+    },
+    {
+      "word": "працювали",
+      "exercise_type": "error-correction",
+      "context": "працювали"
+    },
+    {
+      "word": "звіт",
+      "exercise_type": "error-correction",
+      "context": "Вона напише звіт весь наступний тиждень."
+    },
+    {
+      "word": "написала",
+      "exercise_type": "error-correction",
+      "context": "написала"
+    },
+    {
+      "word": "пише",
+      "exercise_type": "error-correction",
+      "context": "пише"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "error-correction",
+      "context": "Вчора він дуже довго прочитав цю статтю."
+    },
+    {
+      "word": "читає",
+      "exercise_type": "error-correction",
+      "context": "читає"
+    },
+    {
+      "word": "читатиме",
+      "exercise_type": "error-correction",
+      "context": "читатиме"
+    },
+    {
+      "word": "собою",
+      "exercise_type": "error-correction",
+      "context": "Я буду взяти з собою теплий одяг."
+    },
+    {
+      "word": "теплий",
+      "exercise_type": "error-correction",
+      "context": "Я буду взяти з собою теплий одяг."
+    },
+    {
+      "word": "одяг",
+      "exercise_type": "error-correction",
+      "context": "Я буду взяти з собою теплий одяг."
+    },
+    {
+      "word": "беру",
+      "exercise_type": "error-correction",
+      "context": "беру"
+    },
+    {
+      "word": "брав",
+      "exercise_type": "error-correction",
+      "context": "брав"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 34,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "видова",
+      "допоміжне",
+      "дійсний",
+      "дія",
+      "дієвідміна",
+      "дієвідмінювання",
+      "дієслова",
+      "дієслово",
+      "завершена",
+      "закінчення",
+      "майбутній",
+      "наголос",
+      "основа",
+      "особове",
+      "пара",
+      "повторювана",
+      "приголосних",
+      "спосіб",
+      "суфікс",
+      "тривала",
+      "час",
+      "часова",
+      "чергування",
+      "інфінітив",
+      "інфінітива"
+    ]
+  },
+  "all_grounded": false
+}

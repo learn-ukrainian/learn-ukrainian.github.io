@@ -10,88 +10,91 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can confidently recall and use the Nominative, Accusative, Locative, and
-  Vocative cases for nouns and adjectives learned in A1.
-- Learner can recognize and predict common vowel alternations (e.g., о/і, е/і in closed
-  syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb stems.
-- Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to produce more
-  natural-sounding Ukrainian.
-- Learner can understand the roadmap for the A2 level, including the introduction
-  of the Genitive, Dative, and Instrumental cases.
+  - Learner can confidently recall and use the Nominative, Accusative, Locative,
+    and Vocative cases for nouns and adjectives learned in A1.
+  - Learner can recognize and predict common vowel alternations (e.g., о/і, е/і 
+    in closed syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb
+    stems.
+  - Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to 
+    produce more natural-sounding Ukrainian.
+  - Learner can understand the roadmap for the A2 level, including the 
+    introduction of the Genitive, Dative, and Instrumental cases.
 dialogue_situations:
-- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
-    you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську мову (accusative).
-    Я живу в Києві (locative).'
-  speakers:
-  - Новий студент
-  - Викладач (teacher)
-  motivation: Review all A1 cases in a natural intro conversation
+  - setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing
+      what you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську
+      мову (accusative). Я живу в Києві (locative).'
+    speakers:
+      - Новий студент
+      - Викладач (teacher)
+    motivation: Review all A1 cases in a natural intro conversation
 content_outline:
-- section: Пригадуємо відмінки (Reviewing Cases)
-  words: 600
-  points:
-  - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого? Що?),
-    Locative (Де? На кому? На чому?), and Vocative (звертання).'
-  - 'Practice exercises: identifying case usage in sentences and declining familiar
-    noun-adjective pairs.'
-  - 'Introducing the full case system map: showing all seven cases and highlighting
-    the three new ones for A2 (Genitive, Dative, Instrumental).'
-- section: Магія української фонології (The Magic of Ukrainian Phonology)
-  words: 700
-  points:
-  - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва). Explaining
-    the ''closed syllable'' rule.'
-  - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч, х/ш)
-    and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
-  - 'Introduction to stress patterns: identifying common patterns and using stress
-    to disambiguate words (e.g., замок "castle" vs. замок "lock").'
-  - 'Consonant assimilation: дж and дз as single sounds (affricates), not
-    two separate consonants — джерело, дзвінок, бджола. Voicing
-    assimilation before voiced consonants: просьба → [проз''ба],
-    боротьба → [бород''ба], вокзал → [воґзал].'
-  - 'Mobile stress in noun paradigms: stress shifts between stem and ending
-    across cases — вода́/во́ду, рука́/ру́ки, голова́/го́лову, нога́/но́гу.
-    Recognizing this pattern helps predict pronunciation of new nouns.'
-- section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
-  words: 400
-  points:
-  - Formalizing the rules for у/в and і/й alternation based on surrounding sounds
-    (vowel vs. consonant).
-  - Explaining the use of з/зі/із before difficult consonant clusters.
-  - Practice creating fluid sentences by choosing the correct euphonic particle.
-- section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
-  words: 300
-  points:
-  - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all seven
-    noun cases, verb conjugation patterns, and verbs of motion.'
-  - 'Setting expectations: A2 is where learners begin to express more complex ideas
-    and move beyond simple statements.'
+  - section: Пригадуємо відмінки (Reviewing Cases)
+    words: 600
+    points:
+      - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого?
+        Що?), Locative (Де? На кому? На чому?), and Vocative (звертання).'
+      - 'Practice exercises: identifying case usage in sentences and declining familiar
+        noun-adjective pairs.'
+      - 'Introducing the full case system map: showing all seven cases and highlighting
+        the three new ones for A2 (Genitive, Dative, Instrumental).'
+  - section: Магія української фонології (The Magic of Ukrainian Phonology)
+    words: 700
+    points:
+      - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва).
+        Explaining the ''closed syllable'' rule.'
+      - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч,
+        х/ш) and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
+      - 'Introduction to stress patterns: identifying common patterns and using stress
+        to disambiguate words (e.g., замок "castle" vs. замок "lock").'
+      - 'Consonant assimilation: дж and дз as single sounds (affricates), not two
+        separate consonants — джерело, дзвінок, бджола. Voicing assimilation before
+        voiced consonants: просьба → [проз''ба], боротьба → [бород''ба], вокзал →
+        [воґзал].'
+      - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
+        cases — вода́/во́ду, рука́/ру́ки, голова́/го́лову, нога́/но́гу. Recognizing
+        this pattern helps predict pronunciation of new nouns.'
+  - section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
+    words: 400
+    points:
+      - Formalizing the rules for у/в and і/й alternation based on surrounding 
+        sounds (vowel vs. consonant).
+      - Explaining the use of з/зі/із before difficult consonant clusters.
+      - Practice creating fluid sentences by choosing the correct euphonic 
+        particle.
+  - section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
+    words: 300
+    points:
+      - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all
+        seven noun cases, verb conjugation patterns, and verbs of motion.'
+      - 'Setting expectations: A2 is where learners begin to express more complex
+        ideas and move beyond simple statements.'
 vocabulary_hints:
   required:
-  - відмінок (case)
-  - називний (nominative)
-  - знахідний (accusative)
-  - місцевий (locative)
-  - кличний (vocative)
-  - чергування (alternation)
-  - голосний (vowel)
-  - приголосний (consonant)
-  - наголос (stress (accent))
+    - відмінок (case)
+    - називний (nominative)
+    - знахідний (accusative)
+    - місцевий (locative)
+    - кличний (vocative)
+    - чергування (alternation)
+    - голосний (vowel)
+    - приголосний (consonant)
+    - наголос (stress (accent))
   recommended:
-  - милозвучність (euphony, melodiousness)
-  - огляд (review, overview)
-  - система (system)
-  - правило (rule)
+    - милозвучність (euphony, melodiousness)
+    - огляд (review, overview)
+    - система (system)
+    - правило (rule)
 activity_hints:
-- type: quiz
-  focus: Case Identification Drill
-  items: 8
-- type: fill-in
-  focus: Phonological Alternation Pairs
-  items: 8
-- type: match-up
-  focus: Euphony Choice Exercise
-  items: 8
+  - type: quiz
+    focus: Case Identification Drill
+    items: 8
+  - type: fill-in
+    focus: Phonological Alternation Pairs
+    items: 8
+  - type: match-up
+    focus: Euphony Choice Exercise
+    items: 8
+  - error-correction
 references:
-- title: Заболотний Grade 5, §1-10
-  notes: Повторення вивченого в початкових класах
+  - title: Заболотний Grade 5, §1-10
+    notes: Повторення вивченого в початкових класах

@@ -16,8 +16,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.parsing import (
@@ -32,7 +30,6 @@ from pipeline.parsing import (
     _parse_factual_review,
     _scan_llm_filler,
 )
-
 
 # =============================================================================
 # _scan_llm_filler

@@ -10,95 +10,96 @@ pedagogy: PPP
 phase: A2.2 [Genitive Case Complete]
 word_target: 2000
 objectives:
-- Learner can form the Genitive plural of masculine nouns using the correct ending
-  (-ів/-їв or zero ending).
-- Learner can form the Genitive plural of feminine nouns using zero ending with
-  possible vowel insertion or -ей.
-- Learner can form the Genitive plural of neuter nouns (zero ending, -ів for
-  exceptions).
-- Learner can use Genitive plural correctly after quantity words (кілька, багато,
-  мало, скільки) and numerals 5+.
+  - Learner can form the Genitive plural of masculine nouns using the correct 
+    ending (-ів/-їв or zero ending).
+  - Learner can form the Genitive plural of feminine nouns using zero ending 
+    with possible vowel insertion or -ей.
+  - Learner can form the Genitive plural of neuter nouns (zero ending, -ів for 
+    exceptions).
+  - Learner can use Genitive plural correctly after quantity words (кілька, 
+    багато, мало, скільки) and numerals 5+.
 dialogue_situations:
-- setting: 'Inventory check at a small village shop — counting what''s left: Скільки
-    пляшок (f, bottles) води? П''ять. Скільки банок (f, jars) меду? Три. А булок (f,
-    buns)? Немає булок!'
-  speakers:
-  - Продавець
-  - Помічник (assistant)
-  motivation: 'Genitive plural: пляшок, банок, булок — feminine zero ending'
+  - setting: 'Inventory check at a small village shop — counting what''s left: Скільки
+      пляшок (f, bottles) води? П''ять. Скільки банок (f, jars) меду? Три. А булок
+      (f, buns)? Немає булок!'
+    speakers:
+      - Продавець
+      - Помічник (assistant)
+    motivation: 'Genitive plural: пляшок, банок, булок — feminine zero ending'
 content_outline:
-- section: 'Чоловічий рід: -ів, -їв та нульове закінчення (Masculine: -ів, -їв and
-    Zero Ending)'
-  words: 650
-  points:
-  - 'Main pattern -ів: столів, братів, студентів, будинків, підручників. Most hard-stem
-    masculine nouns take -ів.'
-  - 'Soft-stem -їв: учителів, олівців. Note: soft sign drops, -ів attaches to the
-    softened consonant. But -ар nouns like лікар→лікарів (not -їв).'
-  - 'Zero ending (rare in masculine): чоловік→чоловіків (regular), BUT: солдат→солдатів,
-    місяць→місяців. Masculine zero endings are uncommon — flag exceptions explicitly.'
-  - 'Fleeting vowels: день→днів (е drops), хлопець→хлопців (е drops). Practice recognizing
-    stem changes in the Genitive plural.'
-- section: 'Жіночий рід: нульове закінчення та -ей (Feminine: Zero Ending and -ей)'
-  words: 700
-  points:
-  - 'Hard-stem zero ending: книга→книг, жінка→жінок (vowel insertion о), сестра→сестер
-    (vowel insertion е). The main feminine pattern removes -а and uses zero ending.'
-  - 'Vowel insertion rules: consonant clusters at the end of the stem often require
-    о or е insertion. студентка→студенток, зупинка→зупинок, сумка→сумок.'
-  - 'Soft-stem -ей: пісня→пісень (zero + ь), стаття→статей, сім''я→сімей. The -ія
-    group: станція→станцій, лекція→лекцій (zero ending, й drops).'
-  - 'Mixed group: площа→площ, задача→задач. Stems ending in ж, ч, ш, щ take zero ending
-    without vowel insertion.'
-  - 'Practice with common words: кілька книг, багато жінок, мало сестер, скільки пісень,
-    декілька лекцій.'
-- section: 'Середній рід та узагальнення (Neuter and Summary)'
-  words: 650
-  points:
-  - 'Neuter zero ending: вікно→вікон, слово→слів, місто→міст. The -о drops and zero
-    ending applies. Vowel insertion where needed: вікон (о inserted).'
-  - 'Soft neuter: море→морів, поле→полів (-ів ending, not zero). But: завдання→завдань
-    (-ь ending), питання→питань.'
-  - '-тя neuter: ім''я→імен, теля→телят. These have special stem changes in the plural.'
-  - 'Summary table: masculine (-ів/-їв), feminine (zero/-ей), neuter (zero/-ів). Key
-    insight: Genitive plural has the MOST variation of any case — memorize common words,
-    learn patterns, accept exceptions.'
-  - 'Quantity expressions: багато студентів, кілька книг, мало міст, декілька днів,
-    скільки людей.'
+  - section: 'Чоловічий рід: -ів, -їв та нульове закінчення (Masculine: -ів, -їв and
+      Zero Ending)'
+    words: 650
+    points:
+      - 'Main pattern -ів: столів, братів, студентів, будинків, підручників. Most
+        hard-stem masculine nouns take -ів.'
+      - 'Soft-stem -їв: учителів, олівців. Note: soft sign drops, -ів attaches to
+        the softened consonant. But -ар nouns like лікар→лікарів (not -їв).'
+      - 'Zero ending (rare in masculine): чоловік→чоловіків (regular), BUT: солдат→солдатів,
+        місяць→місяців. Masculine zero endings are uncommon — flag exceptions explicitly.'
+      - 'Fleeting vowels: день→днів (е drops), хлопець→хлопців (е drops). Practice
+        recognizing stem changes in the Genitive plural.'
+  - section: 'Жіночий рід: нульове закінчення та -ей (Feminine: Zero Ending and -ей)'
+    words: 700
+    points:
+      - 'Hard-stem zero ending: книга→книг, жінка→жінок (vowel insertion о), сестра→сестер
+        (vowel insertion е). The main feminine pattern removes -а and uses zero ending.'
+      - 'Vowel insertion rules: consonant clusters at the end of the stem often require
+        о or е insertion. студентка→студенток, зупинка→зупинок, сумка→сумок.'
+      - 'Soft-stem -ей: пісня→пісень (zero + ь), стаття→статей, сім''я→сімей. The
+        -ія group: станція→станцій, лекція→лекцій (zero ending, й drops).'
+      - 'Mixed group: площа→площ, задача→задач. Stems ending in ж, ч, ш, щ take zero
+        ending without vowel insertion.'
+      - 'Practice with common words: кілька книг, багато жінок, мало сестер, скільки
+        пісень, декілька лекцій.'
+  - section: 'Середній рід та узагальнення (Neuter and Summary)'
+    words: 650
+    points:
+      - 'Neuter zero ending: вікно→вікон, слово→слів, місто→міст. The -о drops and
+        zero ending applies. Vowel insertion where needed: вікон (о inserted).'
+      - 'Soft neuter: море→морів, поле→полів (-ів ending, not zero). But: завдання→завдань
+        (-ь ending), питання→питань.'
+      - '-тя neuter: ім''я→імен, теля→телят. These have special stem changes in the
+        plural.'
+      - 'Summary table: masculine (-ів/-їв), feminine (zero/-ей), neuter (zero/-ів).
+        Key insight: Genitive plural has the MOST variation of any case — memorize
+        common words, learn patterns, accept exceptions.'
+      - 'Quantity expressions: багато студентів, кілька книг, мало міст, декілька
+        днів, скільки людей.'
 vocabulary_hints:
   required:
-  - множина (plural)
-  - нульове закінчення (zero ending)
-  - кілька (a few, several)
-  - багато (a lot, many)
-  - мало (a little, few)
-  - скільки (how many)
-  - людина (person) / люди (people)
-  - стаття (article)
-  - завдання (task, assignment)
-  - питання (question)
+    - множина (plural)
+    - нульове закінчення (zero ending)
+    - кілька (a few, several)
+    - багато (a lot, many)
+    - мало (a little, few)
+    - скільки (how many)
+    - людина (person) / люди (people)
+    - стаття (article)
+    - завдання (task, assignment)
+    - питання (question)
   recommended:
-  - чоловічий рід (masculine gender)
-  - жіночий рід (feminine gender)
-  - середній рід (neuter gender)
-  - виняток (exception)
-  - вставний голосний (inserted vowel)
+    - чоловічий рід (masculine gender)
+    - жіночий рід (feminine gender)
+    - середній рід (neuter gender)
+    - виняток (exception)
+    - вставний голосний (inserted vowel)
 activity_hints:
-- type: fill-in
-  focus: Form the Genitive plural of given nouns (all three genders)
-  items: 8
-- type: quiz
-  focus: Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв)
-  items: 8
-- type: match-up
-  focus: Match Nominative singular nouns to their Genitive plural forms
-  items: 8
-- type: group-sort
-  focus: Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей)
-  items: 8
+  - type: fill-in
+    focus: Form the Genitive plural of given nouns (all three genders)
+    items: 8
+  - type: quiz
+    focus: Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв)
+    items: 8
+  - type: match-up
+    focus: Match Nominative singular nouns to their Genitive plural forms
+    items: 8
+  - type: group-sort
+    focus: Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей)
+    items: 8
 references:
-- title: Заболотний Grade 6, §34-36
-  notes: Родовий відмінок множини іменників усіх родів
-- title: 'ULP: 10 Uses of Genitive Case'
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: Genitive plural patterns and exceptions
+  - title: Заболотний Grade 6, §34-36
+    notes: Родовий відмінок множини іменників усіх родів
+  - title: 'ULP: 10 Uses of Genitive Case'
+    url: https://www.ukrainianlessons.com/genitive-case/
+    notes: Genitive plural patterns and exceptions

@@ -33,7 +33,7 @@ class TestGetTrackConfig:
         assert config["module_count"] > 0
 
     def test_all_standard_variants_resolvable(self):
-        from scoring.config import get_track_config, STANDARD_TRACK_VARIANTS
+        from scoring.config import STANDARD_TRACK_VARIANTS, get_track_config
         for track_id in STANDARD_TRACK_VARIANTS:
             config = get_track_config(track_id)
             assert config["level_dir"] == STANDARD_TRACK_VARIANTS[track_id]["level_dir"]
@@ -60,7 +60,7 @@ class TestGetAllTrackIds:
         assert "standard" not in ids
 
     def test_all_ids_are_valid(self):
-        from scoring.config import get_track_config, get_all_track_ids
+        from scoring.config import get_all_track_ids, get_track_config
         for track_id in get_all_track_ids():
             config = get_track_config(track_id)
             assert isinstance(config, dict)

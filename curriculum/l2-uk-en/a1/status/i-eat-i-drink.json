@@ -2,10 +2,10 @@
   "module": "i-eat-i-drink",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:26:31.281294Z",
+  "last_audit": "2026-04-02T20:30:00.931616Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:55:10.377762Z",
+    "md": "2026-03-31T17:27:15.874702Z",
     "meta": null,
     "activities": "2026-03-30T16:01:24.639533Z",
     "vocabulary": "2026-03-30T16:01:41.145610Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1633/1200 (raw: 2214)"
+      "message": "1132/1200 (raw: 1328) (68 short)"
     },
     "activities": {
       "status": "pass",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0,
     "deferred_count": 0
   }

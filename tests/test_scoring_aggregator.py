@@ -8,9 +8,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from scoring.aggregator import (
-    TrackMetrics,
     aggregate_track_metrics,
-    calculate_criterion_score,
     calculate_track_score,
 )
 from scoring.metrics import ModuleMetrics

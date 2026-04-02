@@ -4,7 +4,7 @@ sequence: 45
 slug: checkpoint-movoznavstvo
 version: '1.1'
 title: "Контрольна точка: загальне мовознавство та норми"
-subtitle: "Checkpoint: General Linguistics and Norms"
+subtitle: "Підсумковий контроль: загальне мовознавство та норми"
 focus: checkpoint
 pedagogy: review
 word_target: 4000
@@ -20,25 +20,31 @@ reading_situations:
     key_elements: ["індоєвропейська сім'я", "праслов'янська мова", "діалектний континуум"]
     motivation: "Перевірка здатності розуміти фундаментальні лінгвістичні тексти."
   - source_type: "офіційний документ"
-    topic: "Постанова Кабінету Міністрів України про затвердження нової редакції Українського правопису."
+    topic: "Постанова Кабінету Міністрів України про затвердження нової редакції Українського
+      правопису."
     key_elements: ["варіантність", "фемінітиви", "транслітерація"]
     motivation: "Оцінка знання нормативної бази сучасної мови."
 
 listening_situations:
   - media_type: "подкаст"
     setting: "Дискусія лінгвістів про майбутнє мовних норм в епоху інтернету."
-    focus_points: ["демократизація мови", "вплив англіцизмів", "межа між помилкою та інновацією"]
+    focus_points: ["демократизація мови", "вплив англіцизмів", "межа між помилкою
+          та інновацією"]
     motivation: "Перевірка розуміння складних наукових дебатів на слух."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть коротке аналітичне есе на тему 'Чому знання історії мови є важливим для сучасного фахівця?'."
-    requirements: ["мінімум 300 слів", "використання лінгвістичної термінології", "посилання на історичні факти"]
+    prompt: "Напишіть коротке аналітичне есе на тему 'Чому знання історії мови є важливим
+      для сучасного фахівця?'."
+    requirements: ["мінімум 300 слів", "використання лінгвістичної термінології",
+      "посилання на історичні факти"]
     motivation: "Синтез знань з мовознавства та навичок академічного письма."
-    model_answer: "Есе має демонструвати глибоке розуміння зв'язку між розвитком суспільства та мовними змінами, використовуючи терміни 'архаїзм', 'неологізм', 'мовна норма'."
+    model_answer: "Есе має демонструвати глибоке розуміння зв'язку між розвитком суспільства
+      та мовними змінами, використовуючи терміни 'архаїзм', 'неологізм', 'мовна норма'."
 
 discussion_topics:
-  - context: "Чи повинен правопис бути консервативним, чи він має швидко адаптуватися до змін у розмовній мові?"
+  - context: "Чи повинен правопис бути консервативним, чи він має швидко адаптуватися
+      до змін у розмовній мові?"
     questions:
       - "Яка основна функція літературної норми?"
       - "Як мовні зміни впливають на національну ідентичність?"
@@ -105,15 +111,20 @@ vocabulary:
 
 activity_hints:
   - type: quiz
-    description: "Test knowledge of key linguistics concepts — language as a sign system, levels of language structure, Ukrainian language family classification."
+    description: "Test knowledge of key linguistics concepts — language as a sign
+      system, levels of language structure, Ukrainian language family classification."
   - type: error-correction
-    description: "Fix orthographic and punctuation errors based on Правопис 2019 rules — варіантність, фемінітиви, compound words."
+    description: "Fix orthographic and punctuation errors based on Правопис 2019 rules
+      — варіантність, фемінітиви, compound words."
   - type: critical-analysis
-    description: "Analyze a media text for violations of lexical and grammatical norms — identify surzhyk, calques, and unjustified borrowings."
+    description: "Analyze a media text for violations of lexical and grammatical norms
+      — identify surzhyk, calques, and unjustified borrowings."
   - type: fill-in
-    description: "Complete sentences about the history of Ukrainian literary language with correct dates, names, and terminology."
+    description: "Complete sentences about the history of Ukrainian literary language
+      with correct dates, names, and terminology."
   - type: match-up
-    description: "Match linguistic branches (фонетика, морфологія, синтаксис, лексикологія) with their objects of study and key terminology."
+    description: "Match linguistic branches (фонетика, морфологія, синтаксис, лексикологія)
+      with their objects of study and key terminology."
 
 activities:
   types_required:

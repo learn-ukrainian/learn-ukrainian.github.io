@@ -2,15 +2,15 @@
   "module": "stress-and-melody",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:41.551440Z",
+  "last_audit": "2026-04-02T20:30:08.056874Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T22:31:09.869416Z",
+    "md": "2026-04-01T12:52:37.150020Z",
     "meta": null,
-    "activities": "2026-03-29T22:55:18.508601Z",
-    "vocabulary": "2026-03-29T22:30:01.597915Z",
+    "activities": "2026-03-30T22:17:20.540405Z",
+    "vocabulary": "2026-03-30T22:17:20.647010Z",
     "research": null,
-    "plan": "2026-03-28T22:26:24.673431Z"
+    "plan": "2026-03-30T22:17:20.665936Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2165/1200 (raw: 2692)"
+      "message": "1790/1200 (raw: 1823)"
     },
     "activities": {
       "status": "pass",

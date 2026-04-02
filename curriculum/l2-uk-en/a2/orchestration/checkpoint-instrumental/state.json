@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "checkpoint-instrumental",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:56.998554+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:56:56.998878+00:00"
+    }
+  }
+}

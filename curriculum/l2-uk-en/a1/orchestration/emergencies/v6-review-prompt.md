@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 54: Emergencies (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -176,79 +176,49 @@ references:
 <generated_module_content>
 ## Dialogues
 
-<div class="dialogue">
+> — **Опера́тор:** Слу́жба поряту́нку, слу́хаю вас. *(Emergency service, I'm listening.)*
+> — **Адам:** Допоможі́ть! Тут ава́рія! *(Help! There's an accident here!)*
+> — **Адам:** Люди́на не ру́хається! *(A person isn't moving!)*
+> — **Оператор:** Де ви? *(Where are you?)*
+> — **Адам:** На ву́лиці Хреща́тик, бі́ля метро́ Майда́н Незале́жності. *(On Khreshchatyk street, near Maidan Nezalezhnosti metro.)*
+> — **Оператор:** Зрозумі́ло. Швидка́ вже ї́де. *(Understood. The ambulance is already on its way.)*
+> — **Оператор:** Як вас зва́ти? *(What's your name?)*
+> — **Адам:** Ме́не звати Адам. *(My name is Adam.)*
+> — **Адам:** Мій но́мер — нуль дев'яно́сто три... *(My number is zero ninety-three...)*
+> — **Оператор:** Дякую. Залиша́йтеся на мі́сці. *(Thank you. Stay where you are.)*
 
-<div class="dialogue-line"><span class="speaker">Оператор:</span> Служба порятунку, слухаю вас. *(Emergency service, I'm listening.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Допоможіть! Тут аварія! *(Help! There's an accident here!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Людина не рухається! *(A person isn't moving!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оператор:</span> Де ви? *(Where are you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> На вулиці Хрещатик, біля метро Майдан Незалежності. *(On Khreshchatyk street, near Maidan Nezalezhnosti metro.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оператор:</span> Зрозуміло. Швидка вже їде. *(Understood. The ambulance is already on its way.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оператор:</span> Як вас звати? *(What's your name?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Мене звати Адам. *(My name is Adam.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Мій номер — нуль дев'яносто три... *(My number is zero ninety-three...)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оператор:</span> Дякую. Залишайтеся на місці. *(Thank you. Stay where you are.)*</div>
-
-</div>
-
-Адам is walking near Maidan when he sees a car crash. He dials **112** (один один два) — Ukraine's universal emergency number. The operator at **служба порятунку** (rescue service) picks up immediately. Notice how Адам uses short, urgent phrases: **Допоможіть!** (Help!), **Тут аварія!** (There's an accident!). No long sentences — just the essential information. The operator asks **Де ви?** (Where are you?) and Адам gives the street name and a landmark. Only after confirming the ambulance is coming does the operator ask for personal details.
+Адам is walking near Maidan when he sees a car crash. He dials **112** (оди́н один два) — Ukraine's universal emergency number. The operator at **служба порятунку** (rescue service) picks up immediately. Notice how Адам uses short, urgent phrases: **Допоможіть!** (Help!), **Тут аварія!** (There's an accident!). No long sentences — just the essential information. The operator asks **Де ви?** (Where are you?) and Адам gives the street name and a landmark. Only after confirming the ambulance is coming does the operator ask for personal details.
 
 Now Адам has a second problem — his passport is gone.
 
-<div class="dialogue">
+> — **Адам:** Ви́бачте, де тут полі́ція? *(Excuse me, where is the police station here?)*
+> — **Перехо́жий:** Поліція? Пря́мо і налі́во. *(Police? Straight and to the left.)*
+> — **Адам:** Дякую! *(Thanks!)*
 
-<div class="dialogue-line"><span class="speaker">Адам:</span> Вибачте, де тут поліція? *(Excuse me, where is the police station here?)*</div>
+> — **Адам:** До́брий день. Я загуби́в па́спорт. *(Good day. I lost my passport.)*
+> — **Офіце́р:** Де ви йо́го загуби́ли? *(Where did you lose it?)*
+> — **Адам:** Я не зна́ю. Мо́же, в метро. *(I don't know. Maybe in the metro.)*
+> — **Офіцер:** Як ва́ше прі́звище? *(What is your surname?)*
+> — **Адам:** Сміт. Адам Сміт. *(Smith. Adam Smith.)*
+> — **Офіцер:** Ваш номер телефо́ну? *(Your phone number?)*
+> — **Адам:** Нуль дев'яносто три, п'ятсо́т два́дцять один... *(Zero ninety-three, five hundred twenty-one...)*
+> — **Офіцер:** До́бре. Запо́вніть цю фо́рму, будь ла́ска. *(Good. Fill out this form, please.)*
 
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Поліція? Прямо і наліво. *(Police? Straight and to the left.)*</div>
+Read both dialogues again and notice three things. First, emergency imperatives open the conversation — **Допоможіть!** and **Ви́кличте!** get immediate attention. Second, when talking to emergency services, location comes before your name: the operator needs to know *where* before *who*. Third, at the police station, the key vocabulary shifts to documents: **паспорт** (passport), **прізвище** (surname), and **фо́рма** (form). Read both dialogues aloud — the rhythm of short emergency phrases will stick in your memory.
 
-<div class="dialogue-line"><span class="speaker">Адам:</span> Дякую! *(Thanks!)*</div>
-
-</div>
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Добрий день. Я загубив паспорт. *(Good day. I lost my passport.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіцер:</span> Де ви його загубили? *(Where did you lose it?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Я не знаю. Може, в метро. *(I don't know. Maybe in the metro.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіцер:</span> Як ваше прізвище? *(What is your surname?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Сміт. Адам Сміт. *(Smith. Adam Smith.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіцер:</span> Ваш номер телефону? *(Your phone number?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Адам:</span> Нуль дев'яносто три, п'ятсот двадцять один... *(Zero ninety-three, five hundred twenty-one...)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіцер:</span> Добре. Заповніть цю форму, будь ласка. *(Good. Fill out this form, please.)*</div>
-
-</div>
-
-Read both dialogues again and notice three things. First, emergency imperatives open the conversation — **Допоможіть!** and **Викличте!** get immediate attention. Second, when talking to emergency services, location comes before your name: the operator needs to know *where* before *who*. Third, at the police station, the key vocabulary shifts to documents: **паспорт** (passport), **прізвище** (surname), and **форма** (form). Read both dialogues aloud — the rhythm of short emergency phrases will stick in your memory.
-
-## Екстрені ситуації (Emergencies)
+## Е́кстрені ситуа́ції (Emergencies)
 
 Ukraine's universal emergency number is **112** (**один один два**). It works from any phone — mobile or landline — and connects you to ambulance, police, or fire services. You can also call specific services directly: **103** reaches the ambulance (**швидка**), and **102** reaches the police (**поліція**). Before your first trip to Ukraine, save these numbers in your phone. You do not need perfect grammar to use them — you need the right phrase at the right moment.
 
 Here are the survival phrases every learner must memorise as fixed chunks. Do not analyze the grammar — just learn them whole:
 
 - **Допоможіть!** — Help!
-- **Викличте швидку!** — Call an ambulance!
-- **Викличте поліцію!** — Call the police!
+- **Викличте швидку́!** — Call an ambulance!
+- **Викличте полі́цію!** — Call the police!
 - **Тут аварія!** — There's an accident here!
-- **Тут пожежа!** — There's a fire here!
-- **Людині погано!** — Someone is feeling unwell!
-- **Мені потрібна допомога!** — I need help!
+- **Тут поже́жа!** — There's a fire here!
+- **Люди́ні пога́но!** — Someone is feeling unwell!
+- **Ме́ні потрі́бна допомо́га!** — I need help!
 
 You already know **Допоможіть** and **Викличте** — these are imperative forms reviewed from Module 43. The vocabulary is new, but the grammar pattern is familiar. **Аварія** (accident) and **пожежа** (fire) are passive recognition words — you will hear and understand them, and you use them only inside these fixed phrases.
 
@@ -257,7 +227,7 @@ Once the operator answers, they will ask **Де ви?** (Where are you?). Give y
 - **Я на вулиці...** — I'm on … street.
 - **Я біля...** — I'm near...
 - **Я в метро...** — I'm in the metro...
-- **Адреса: вулиця Хрещатик, будинок десять.** — Address: Khreshchatyk street, building 10.
+- **Адре́са: ву́лиця Хрещатик, буди́нок де́сять.** — Address: Khreshchatyk street, building 10.
 
 :::tip
 Know your hotel address in Ukrainian. Programme it into your phone before you travel — if you are stressed in an emergency, reading from your screen is much easier than translating on the fly.
@@ -267,26 +237,26 @@ Know your hotel address in Ukrainian. Programme it into your phone before you tr
 
 ## Допомога (Getting Help)
 
-At a hospital (**лікарня**), three phrases will carry you through the first minutes. **Мені потрібен лікар** (I need a doctor) uses the fixed chunk **мені потрібен** — treat it as a memorised formula, just as you learned **мені подобається** earlier. From Module 53 you already know **У мене болить...** (My … hurts) — plug in **голова** (head), **спина** (back), **рука** (arm/hand), or **нога** (leg/foot). If you have allergies, say **У мене алергія на...** (I'm allergic to...) followed by the allergen: **ці таблетки** (these pills), **горіхи** (nuts), **пеніцилін** (penicillin). The word **алергія** looks and sounds almost identical to its English equivalent — one less thing to memorise under pressure.
+At a hospital (**ліка́рня**), three phrases will carry you through the first minutes. **Мені потрі́бен лі́кар** (I need a doctor) uses the fixed chunk **мені потрібен** — treat it as a memorised formula, just as you learned **мені подо́бається** earlier. From Module 53 you already know **У мене боли́ть...** (My … hurts) — plug in **голова́** (head), **спи́на** (back), **рука́** (arm/hand), or **нога́** (leg/foot). If you have allergies, say **У мене алергі́я на...** (I'm allergic to...) followed by the allergen: **ці табле́тки** (these pills), **горі́хи** (nuts), **пеніцилі́н** (penicillin). The word **алергія** looks and sounds almost identical to its English equivalent — one less thing to memorise under pressure.
 
 When Ukrainian comes too fast or you simply cannot follow, use these phrases as your emergency brake — reach for them immediately rather than nodding and hoping:
 
-- **Я не розумію.** — I don't understand.
-- **Повторіть, будь ласка.** — Please repeat.
-- **Говоріть повільніше, будь ласка.** — Please speak more slowly.
-- **Ви говорите англійською?** — Do you speak English?
+- **Я не розумі́ю.** — I don't understand.
+- **Повторі́ть, будь ласка.** — Please repeat.
+- **Говорі́ть пові́льніше, будь ласка.** — Please speak more slowly.
+- **Ви гово́рите англі́йською?** — Do you speak English?
 
 **Повторіть** and **говоріть** are imperative forms — the same pattern as **Допоможіть** and **Викличте**. You are not learning new grammar here, just applying familiar patterns in a new, critical context.
 
 Finally, in any emergency — hospital, police station, or phone call — you will need the same block of personal information. Here is your checklist:
 
 - **Мене звати Адам.** — My name is Adam.
-- **Моє прізвище — Сміт.** — My surname is Smith.
+- **Моє́ прізвище — Сміт.** — My surname is Smith.
 - **Мій номер телефону — нуль дев'яносто три...** — My phone number is zero ninety-three...
-- **Я з Канади.** — I'm from Canada.
+- **Я з Кана́ди.** — I'm from Canada.
 - **Я загубив паспорт.** — I lost my passport. *(male speaker)*
-- **Я загубила паспорт.** — I lost my passport. *(female speaker)*
-- **Мій готель — «Прем'єр Палас».** — My hotel is Premier Palace.
+- **Я загуби́ла паспорт.** — I lost my passport. *(female speaker)*
+- **Мій готе́ль — «Прем'є́р Пала́с».** — My hotel is Premier Palace.
 
 Every item here is review from earlier modules — **Мене звати** from Module 2, **Я з** from Module 10, **Мій номер** from Module 20. The difference is the stakes: now you are not introducing yourself at a café, you are giving information that may determine how quickly help reaches you.
 
@@ -296,7 +266,7 @@ Every item here is review from earlier modules — **Мене звати** from 
 
 ## Summary
 
-The three scenarios in this module — calling **112** for an accident, reporting a lost document at the **поліція**, and asking for help at the **лікарня** — all follow the same structure. You state the problem, give your location, and share personal details: **ім'я** (first name), **прізвище** (surname), **номер телефону** (phone number), and **адреса** (address). Master this pattern once and it works everywhere.
+The three scenarios in this module — calling **112** for an accident, reporting a lost document at the **поліція**, and asking for help at the **лікарня** — all follow the same structure. You state the problem, give your location, and share personal details: **ім'я́** (first name), **прізвище** (surname), **номер телефону** (phone number), and **адреса** (address). Master this pattern once and it works everywhere.
 
 Here is your emergency survival kit — a reference block to save on your phone:
 
@@ -306,7 +276,7 @@ Here is your emergency survival kit — a reference block to save on your phone:
 - **Я на вулиці... / Я біля...** — give your location
 - **У мене болить... / Мені потрібен лікар.** — at the hospital
 - **Я загубив/загубила [document].** — at the police station
-- **Ім'я, прізвище, номер телефону, країна, адреса** — personal info always needed
+- **Ім'я, прізвище, номер телефону, краї́на, адреса** — personal info always needed
 
 Test yourself with these questions — answer each one aloud in Ukrainian before checking:
 
@@ -319,7 +289,7 @@ Test yourself with these questions — answer each one aloud in Ukrainian before
 
 <!-- INJECT_ACTIVITY: fill-in-police-hospital -->
 
-**Deterministic word count: 1300 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1291 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -497,15 +467,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 110 words | Not found: 4 words
+Verified: 98 words | Not found: 59 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Адам — NOT IN VESUM
-  ✗ Канади — NOT IN VESUM
+  ✗ Адре — NOT IN VESUM
+  ✗ Допоможі — NOT IN VESUM
+  ✗ Запо — NOT IN VESUM
+  ✗ Зрозумі — NOT IN VESUM
+  ✗ Кана — NOT IN VESUM
+  ✗ Майда — NOT IN VESUM
+  ✗ Незале — NOT IN VESUM
+  ✗ Офіце — NOT IN VESUM
+  ✗ Перехо — NOT IN VESUM
+  ✗ Прем'є — NOT IN VESUM
+  ✗ Слу — NOT IN VESUM
   ✗ Сміт — NOT IN VESUM
+  ✗ Хреща — NOT IN VESUM
   ✗ Хрещатик — NOT IN VESUM
+  ✗ алергі — NOT IN VESUM
+  ✗ англі — NOT IN VESUM
+  ✗ бається — NOT IN VESUM
+  ✗ бна — NOT IN VESUM
+  ✗ вніть — NOT IN VESUM
+  ✗ гово — NOT IN VESUM
+  ✗ дев'яно — NOT IN VESUM
+  ✗ допомо — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ жба — NOT IN VESUM
+  ✗ жий — NOT IN VESUM
+  ✗ жності — NOT IN VESUM
+  ✗ зва — NOT IN VESUM
+  ✗ йською — NOT IN VESUM
+  ✗ йтеся — NOT IN VESUM
+  ✗ кстрені — NOT IN VESUM
+  ✗ льніше — NOT IN VESUM
+  ✗ ліка — NOT IN VESUM
+  ✗ налі — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ п'ятсо — NOT IN VESUM
+  ✗ пеніцилі — NOT IN VESUM
+  ✗ пові — NOT IN VESUM
+  ✗ пога — NOT IN VESUM
+  ✗ подо — NOT IN VESUM
+  ✗ поже — NOT IN VESUM
+  ✗ поряту — NOT IN VESUM
+  ✗ потрі — NOT IN VESUM
+  ✗ рма — NOT IN VESUM
+  ✗ рму — NOT IN VESUM
+  ✗ рня — NOT IN VESUM
+  ✗ рія — NOT IN VESUM
+  ✗ ситуа — NOT IN VESUM
+  ✗ слу — NOT IN VESUM
 
-All 110 other words are confirmed to exist in VESUM.
+All 98 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -514,23 +530,23 @@ All 110 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

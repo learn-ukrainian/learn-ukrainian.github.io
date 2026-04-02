@@ -4,45 +4,55 @@ sequence: 44
 slug: speaking-practice
 version: '1.1'
 title: "Практикум з усного мовлення: дискусії та дебати"
-subtitle: "Oral Communication Workshop: Discussions and Debates"
+subtitle: "Практикум з усного мовлення: дискусії та дебати"
 focus: integration
 pedagogy: seminar
 word_target: 4000
 objectives:
-  - "Розвинути навички ведення аргументованої дискусії на абстрактні та професійні теми."
+  - "Розвинути навички ведення аргументованої дискусії на абстрактні та професійні
+    теми."
   - "Опанувати стратегії переконання та використання риторичних прийомів."
   - "Навчитися швидко реагувати на контраргументи опонента українською мовою."
   - "Вдосконалити вимову та інтонаційне оформлення публічного виступу."
 
 reading_situations:
   - source_type: "офіційний лист"
-    topic: "Відкрите звернення діячів культури щодо захисту української мови в медійному просторі."
+    topic: "Відкрите звернення діячів культури щодо захисту української мови в медійному
+      просторі."
     key_elements: ["мовна квота", "державна політика", "суспільний консенсус"]
     motivation: "Вивчення лексики для вираження громадської позиції."
   - source_type: "художній уривок"
-    topic: "Полеміка між персонажами у драмі Лесі Українки 'Кассандра' як приклад майстерної риторики."
+    topic: "Полеміка між персонажами у драмі Лесі Українки 'Кассандра' як приклад
+      майстерної риторики."
     key_elements: ["пророцтво", "істина", "переконання", "метафора"]
     motivation: "Аналіз класичних зразків української полемічної майстерності."
 
 listening_situations:
   - media_type: "відео"
-    setting: "Запис телевізійних дебатів про доцільність впровадження штучного інтелекту в освіту."
-    focus_points: ["тези сторін", "способи маніпуляції увагою", "мовні кліше для вираження незгоди"]
-    motivation: "Навчання критичному сприйняттю та аналізу аргументів у реальному часі."
+    setting: "Запис телевізійних дебатів про доцільність впровадження штучного інтелекту
+      в освіту."
+    focus_points: ["тези сторін", "способи маніпуляції увагою", "мовні кліше для вираження
+          незгоди"]
+    motivation: "Навчання критичному сприйняттю та аналізу аргументів у реальному
+      часі."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть критичний відгук на публічний виступ відомого політика чи громадського діяча, аналізуючи його риторичну майстерність."
-    requirements: ["мінімум 200 слів", "аналіз логіки побудови промови", "оцінка лексичного багатства"]
+    prompt: "Напишіть критичний відгук на публічний виступ відомого політика чи громадського
+      діяча, аналізуючи його риторичну майстерність."
+    requirements: ["мінімум 200 слів", "аналіз логіки побудови промови", "оцінка лексичного
+          багатства"]
     motivation: "Перехід від усного сприйняття до письмового аналізу дискурсу."
-    model_answer: "Відгук має містити вступ з описом події, аналіз структури виступу (вступ, основна частина, висновок) та висновки про ефективність аргументації."
+    model_answer: "Відгук має містити вступ з описом події, аналіз структури виступу
+      (вступ, основна частина, висновок) та висновки про ефективність аргументації."
 
 discussion_topics:
   - context: "Чи є глобалізація загрозою для збереження національних культурних особливостей?"
     questions:
       - "Як знайти баланс між інтеграцією у світову спільноту та збереженням коріння?"
       - "Яку роль відіграє мова у процесі глобальної уніфікації?"
-    motivation: "Стимулювання глибокої філософської дискусії з використанням складної лексики."
+    motivation: "Стимулювання глибокої філософської дискусії з використанням складної
+      лексики."
 
 content_outline:
   - section: "Основи риторики та ораторського мистецтва"
@@ -105,15 +115,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a recorded debate — identify the strongest and weakest arguments, rhetorical techniques used, and moments of logical fallacy."
+    description: "Analyze a recorded debate — identify the strongest and weakest arguments,
+      rhetorical techniques used, and moments of logical fallacy."
   - type: error-correction
-    description: "Fix register and style errors in a debate preparation script — inappropriate colloquialisms, weak argumentation phrases, missing hedging."
+    description: "Fix register and style errors in a debate preparation script — inappropriate
+      colloquialisms, weak argumentation phrases, missing hedging."
   - type: match-up
-    description: "Match rhetorical figures (анафора, антитеза, градація) with their definitions and examples from Ukrainian political speeches."
+    description: "Match rhetorical figures (анафора, антитеза, градація) with their
+      definitions and examples from Ukrainian political speeches."
   - type: essay-response
-    description: "Write an opening statement (100-150 words) for a debate on a given topic, using at least 3 different rhetorical devices."
+    description: "Write an opening statement (100-150 words) for a debate on a given
+      topic, using at least 3 different rhetorical devices."
   - type: select
-    description: "Choose the most effective counter-argument strategy for given debate scenarios — refutation, reframing, or concession."
+    description: "Choose the most effective counter-argument strategy for given debate
+      scenarios — refutation, reframing, or concession."
 
 activities:
   types_required:
@@ -133,3 +148,4 @@ references:
 connects_to:
   previous: "review"
   next: "checkpoint-movoznavstvo"
+phase: C1.2 [Professional & Social Context]

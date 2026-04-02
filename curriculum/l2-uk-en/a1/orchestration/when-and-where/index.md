@@ -1,6 +1,6 @@
 # Build Summary: when-and-where (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 21:03:40 |
 | enrich | complete | 2026-03-30 21:03:41 |
 | verify | complete | 2026-03-30 21:03:41 |
-| review | complete | 2026-03-30 21:06:00 |
-| stress | complete | 2026-03-31 09:57:41 |
-| publish | complete | 2026-03-31 09:57:41 |
+| review | complete | 2026-04-01 11:44:59 |
+| stress | complete | 2026-04-01 11:45:05 |
+| publish | complete | 2026-04-01 11:45:06 |
 
 ## Reviews
 
@@ -40,6 +40,8 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 216s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 14s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 139s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

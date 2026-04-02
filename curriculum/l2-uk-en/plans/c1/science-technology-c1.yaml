@@ -4,13 +4,15 @@ sequence: 29
 slug: science-technology-c1
 version: '1.1'
 title: "Наука та технології: Від фундаментальних досліджень до ШІ"
-subtitle: "Science and Technology"
+subtitle: "Наука і технології"
 focus: professional
 pedagogy: seminar
 word_target: 4000
 objectives:
-  - "Досконало володіти науковою термінологією для опису інновацій та технологічних процесів."
-  - "Аналізувати вплив штучного інтелекту та автоматизації на суспільство та ринок праці."
+  - "Досконало володіти науковою термінологією для опису інновацій та технологічних
+    процесів."
+  - "Аналізувати вплив штучного інтелекту та автоматизації на суспільство та ринок
+    праці."
   - "Опанувати стандарти академічного письма в галузі природничих та технічних наук."
   - "Вивчати внесок українських вчених (Сікорський, Корольов, Пулюй) у світову науку."
 
@@ -20,29 +22,36 @@ reading_situations:
     key_elements: ["суперпозиція", "алгоритм", "обчислювальна потужність"]
     motivation: "Вивчення сучасної фізико-математичної термінології."
   - source_type: "художній уривок"
-    topic: "Елементи наукової фантастики у сучасній українській прозі (напр., Макс Кідрук)."
+    topic: "Елементи наукової фантастики у сучасній українській прозі (напр., Макс
+      Кідрук)."
     key_elements: ["техногенна катастрофа", "екзопланета", "біотехнології"]
     motivation: "Розуміння наукового дискурсу в художній інтерпретації."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Виступ розробника ШІ про етичні виклики використання нейромереж у медицині та освіті."
+    setting: "Виступ розробника ШІ про етичні виклики використання нейромереж у медицині
+      та освіті."
     focus_points: ["алгоритмічна упередженість", "конфіденційність даних", "сингулярність"]
     motivation: "Розвиток навичок критичного сприйняття футурологічних прогнозів."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Чи може штучний інтелект повністю замінити людину в творчих професіях? Проаналізуйте на прикладі перекладу та копірайтингу."
-    requirements: ["мінімум 300 слів", "використання наукової аргументації", "структура 'Теза-Антитеза-Синтез'"]
+    prompt: "Чи може штучний інтелект повністю замінити людину в творчих професіях?
+      Проаналізуйте на прикладі перекладу та копірайтингу."
+    requirements: ["мінімум 300 слів", "використання наукової аргументації", "структура
+          'Теза-Антитеза-Синтез'"]
     motivation: "Відпрацювання навичок дискурсивного есе на межі технологій та гуманітаристики."
-    model_answer: "Текст має містити аналіз когнітивних обмежень ШІ та переваг людської інтуїції. Використання термінів 'нейронна мережа', 'семантичний аналіз', 'креативність'."
+    model_answer: "Текст має містити аналіз когнітивних обмежень ШІ та переваг людської
+      інтуїції. Використання термінів 'нейронна мережа', 'семантичний аналіз', 'креативність'."
 
 discussion_topics:
-  - context: "Мілітарі-тек (MilTech) як рушій інновацій в Україні: чи стане це фундаментом для цивільної науки?"
+  - context: "Мілітарі-тек (MilTech) як рушій інновацій в Україні: чи стане це фундаментом
+      для цивільної науки?"
     questions:
       - "Які технології подвійного призначення є найбільш перспективними?"
       - "Як запобігти 'відтоку мізків' (brain drain) після війни?"
-      - "Чи варто Україні зосереджуватися на фундаментальних дослідженнях чи на прикладних розробках?"
+      - "Чи варто Україні зосереджуватися на фундаментальних дослідженнях чи на прикладних
+        розробках?"
     motivation: "Обговорення стратегії науково-технічного розвитку держави."
 
 content_outline:
@@ -106,15 +115,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate a Ukrainian scientific article about quantum computing — assess terminological precision, argument structure, and academic style markers."
+    description: "Evaluate a Ukrainian scientific article about quantum computing
+      — assess terminological precision, argument structure, and academic style markers."
   - type: error-correction
-    description: "Fix anglicisms and calques in a Ukrainian technology text — propose native Ukrainian equivalents where appropriate."
+    description: "Fix anglicisms and calques in a Ukrainian technology text — propose
+      native Ukrainian equivalents where appropriate."
   - type: match-up
-    description: "Match scientific domains (ШІ, біомедицина, кібербезпека, екотехнології) with their Ukrainian terminology sets."
+    description: "Match scientific domains (ШІ, біомедицина, кібербезпека, екотехнології)
+      with their Ukrainian terminology sets."
   - type: select
-    description: "Choose the correct Ukrainian scientific term over anglicism where a native equivalent exists."
+    description: "Choose the correct Ukrainian scientific term over anglicism where
+      a native equivalent exists."
   - type: essay-response
-    description: "Write a discursive essay (300+ words) on whether AI can replace humans in creative professions, using Thesis-Antithesis-Synthesis structure."
+    description: "Write a discursive essay (300+ words) on whether AI can replace
+      humans in creative professions, using Thesis-Antithesis-Synthesis structure."
 
 activities:
   types_required:

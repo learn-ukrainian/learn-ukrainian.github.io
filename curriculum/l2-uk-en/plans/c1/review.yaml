@@ -4,7 +4,7 @@ sequence: 43
 slug: review
 version: '1.1'
 title: "Підсумкове повторення та узагальнення"
-subtitle: "Final Review and Synthesis"
+subtitle: "Фінальний огляд і синтез"
 focus: review
 pedagogy: review
 word_target: 4000
@@ -26,23 +26,29 @@ reading_situations:
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Публічна лекція про вплив української діаспори на збереження мовної ідентичності."
-    focus_points: ["історичні етапи еміграції", "мовні особливості діаспорного мовлення", "культурна спадщина"]
+    setting: "Публічна лекція про вплив української діаспори на збереження мовної
+      ідентичності."
+    focus_points: ["історичні етапи еміграції", "мовні особливості діаспорного мовлення",
+      "культурна спадщина"]
     motivation: "Розвиток навичок синтезу інформації з тривалого аудіопотоку."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Висловіть свою думку щодо тези: 'Мова — це не лише засіб спілкування, а й інструмент формування світогляду'."
-    requirements: ["мінімум 250 слів", "використання тез, аргументів та прикладів з літератури", "логічність та послідовність"]
+    prompt: "Висловіть свою думку щодо тези: 'Мова — це не лише засіб спілкування,
+      а й інструмент формування світогляду'."
+    requirements: ["мінімум 250 слів", "використання тез, аргументів та прикладів
+          з літератури", "логічність та послідовність"]
     motivation: "Підготовка до формату іспитів та закріплення навичок аргументації."
-    model_answer: "Твір має містити чітку тезу, два аргументи, приклад з української історії або літератури (наприклад, роль Василя Стуса) та висновок."
+    model_answer: "Твір має містити чітку тезу, два аргументи, приклад з української
+      історії або літератури (наприклад, роль Василя Стуса) та висновок."
 
 discussion_topics:
   - context: "Дискусія про майбутнє паперових книг в епоху тотальної цифровізації."
     questions:
       - "Чи зникне друковане слово як матеріальний об'єкт?"
       - "Як зміниться процес сприйняття тексту при читанні з екрана?"
-    motivation: "Практика спонтанного мовлення з використанням вивчених модальних конструкцій."
+    motivation: "Практика спонтанного мовлення з використанням вивчених модальних
+      конструкцій."
 
 content_outline:
   - section: "Систематизація морфологічних норм"
@@ -105,15 +111,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix morphological, syntactic, and stylistic errors in a mixed-style text — including surzhyk forms, calques, and incorrect participial phrases."
+    description: "Fix morphological, syntactic, and stylistic errors in a mixed-style
+      text — including surzhyk forms, calques, and incorrect participial phrases."
   - type: match-up
-    description: "Match linguistic terms from C1.1-C1.4 modules (парадигма, когерентність, предикативність) with correct definitions and example sentences."
+    description: "Match linguistic terms from C1.1-C1.4 modules (парадигма, когерентність,
+      предикативність) with correct definitions and example sentences."
   - type: critical-analysis
-    description: "Analyze a student essay and provide structured feedback — identify 3 strengths and 3 areas for improvement with specific textual evidence."
+    description: "Analyze a student essay and provide structured feedback — identify
+      3 strengths and 3 areas for improvement with specific textual evidence."
   - type: essay-response
-    description: "Write a synthesis paragraph connecting language, identity, and culture using at least 5 complex sentence types studied in C1."
+    description: "Write a synthesis paragraph connecting language, identity, and culture
+      using at least 5 complex sentence types studied in C1."
   - type: fill-in
-    description: "Complete a review exercise with correct morphological forms — numeral declension, participial phrases, and complex punctuation."
+    description: "Complete a review exercise with correct morphological forms — numeral
+      declension, participial phrases, and complex punctuation."
 
 activities:
   types_required:
@@ -133,3 +144,4 @@ references:
 connects_to:
   previous: "case-studies"
   next: "speaking-practice"
+phase: C1.2 [Professional & Social Context]

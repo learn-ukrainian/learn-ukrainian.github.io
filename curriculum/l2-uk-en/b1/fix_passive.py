@@ -1,7 +1,8 @@
 import re
 
+
 def fix_module(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         content = f.read()
 
     # 1. Fix Complexity (long sentences)
@@ -70,7 +71,7 @@ def fix_module(filepath):
     content = content.replace("(instrumental case, відповідає на питання ким/чим)", "(відповідає на питання ким/чим)")
     # `(повсякденний розмовний стиль - conversational style)`
     content = content.replace("(повсякденний розмовний стиль - conversational style)", "(повсякденний розмовний стиль)")
-    
+
     # And there are some like:
     # `(This brilliant poem was written in cold exile. — Ми свідомо не кажемо ким саме; ми лише об'єктивно констатуємо історичний факт, місце і кінцевий результат написання.)`
     # Replace English part + em-dash:

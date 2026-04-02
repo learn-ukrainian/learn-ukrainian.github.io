@@ -1,7 +1,7 @@
 # Audit Report: M55 — a1-finale.md
 **Level:** A1 | **Module:** M55 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-31 17:26:35
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:29:52
 
 ## Configuration
 **Type:** A1
@@ -41,36 +41,33 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'прові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'язкові' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Переві' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[GRAMMAR]** Instrumental case used at A1: 'з Оленою'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[GRAMMAR]** Instrumental case used at A1: 'За рогом'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '/ fem.)...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 25/100)
 
-- 7 violations (significant)
+- 5 violations (moderate)
+- Immersion 5% off target (minor)
 
 ## Gates
-- **Words:** ✅ 2002/1200 (raw: 2435)
+- **Words:** ✅ 1605/1200 (raw: 1636)
 - **Activities:** ✅ 11/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 41.1% (target 25-40%, within tolerance (M55))
+- **Immersion:** ❌ 45.3% HIGH (target 25-40% (M55))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -78,8 +75,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Ра́нок (Morning)** | ✅ | 389 | Included in Core |
+| **Intro/Narrative** | ✅ | 389 | Included in Core |
 | **День (Daytime)** | ✅ | 410 | Included in Core |
 | **Ве́чір (Evening)** | ✅ | 438 | Included in Core |
-| **Підсумок: ти гото́вий/гото́ва! (You're Ready!)** | ✅ | 765 | Included in Core |
+| **Підсумок: ти гото́вий/гото́ва! (You're Ready!)** | ✅ | 368 | Included in Core |

@@ -1,175 +1,161 @@
-module: b1-055
+module: b1-051
 level: B1
-sequence: 55
+sequence: 51
 slug: housing-and-renting
 version: '3.0'
 title: "Житло і оренда"
 subtitle: "Пошук квартири, оренда, комунальні послуги — відмінки в дії"
 focus: communication
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can describe an apartment/house using spatial vocabulary and
-  case constructions: кімната з балконом (Ор.в.), вікна на подвір'я (Зн.в.),
-  квартира на третьому поверсі (М.в.)"
-- "Learner can read and respond to rental advertisements in Ukrainian,
-  understanding abbreviations: 1к, 2к, б/м, ремонт, під ключ"
-- "Learner can negotiate rental terms: deposit (завдаток), lease (договір оренди),
-  duration (на рік, на місяць), utilities (комунальні послуги)"
-- "Learner can describe housing problems and request repairs:
-  протікає кран, не працює опалення, зламалася пральна машина"
-- "Learner can use Phase 6 grammar naturally in housing contexts:
-  genitive for addresses, dative for tenants, instrumental for features"
+  - "Learner can describe an apartment/house using spatial vocabulary and case constructions:
+    кімната з балконом (Ор.в.), вікна на подвір'я (Зн.в.), квартира на третьому поверсі
+    (М.в.)"
+  - "Learner can read and respond to rental advertisements in Ukrainian, understanding
+    abbreviations: 1к, 2к, б/м, ремонт, під ключ"
+  - "Learner can negotiate rental terms: deposit (завдаток), lease (договір оренди),
+    duration (на рік, на місяць), utilities (комунальні послуги)"
+  - "Learner can describe housing problems and request repairs: протікає кран, не
+    працює опалення, зламалася пральна машина"
+  - "Learner can use Phase 6 grammar naturally in housing contexts: genitive for addresses,
+    dative for tenants, instrumental for features"
 dialogue_situations:
-- setting: 'Renting a квартира (f, apartment) in Львів — viewing and negotiating:
-    Оренда (f, rent) — вісім тисяч на місяць. Комунальні (pl, utilities) включені?
-    Меблі (pl, furniture) є? Коли можна заїхати? Договір (m, contract) — на рік.'
-  speakers:
-  - Орендар (tenant)
-  - Власник (landlord)
-  motivation: 'Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)'
+  - setting: 'Renting a квартира (f, apartment) in Львів — viewing and negotiating:
+      Оренда (f, rent) — вісім тисяч на місяць. Комунальні (pl, utilities) включені?
+      Меблі (pl, furniture) є? Коли можна заїхати? Договір (m, contract) — на рік.'
+    speakers:
+      - Орендар (tenant)
+      - Власник (landlord)
+    motivation: 'Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)'
 content_outline:
-- section: "Опис житла"
-  words: 700
-  points:
-  - "Types of housing: квартира, будинок, приватний будинок, гуртожиток,
-    однокімнатна/двокімнатна/трикімнатна квартира.
-    Rooms: вітальня, спальня, кухня, ванна кімната, туалет, коридор,
-    балкон, комора, підвал, горище."
-  - "Describing features using case constructions:
-    Р.в.: квартира площею сорок квадратних метрів.
-    Ор.в.: кімната з великим вікном, квартира з меблями (вмебльована).
-    М.в.: на першому/другому/п'ятому поверсі, у новому будинку.
-    Зн.в.: вікна виходять на подвір'я/на вулицю."
-  - "Furniture and appliances: меблі (pl.), шафа, ліжко, стіл, крісло,
-    диван, плита, холодильник, пральна машина, посудомийка.
-    Practice: describe your ideal apartment using 10+ case constructions."
-- section: "Оголошення про оренду"
-  words: 600
-  points:
-  - "Reading real-format Ukrainian rental ads:
-    'Здається 2к квартира, 55 кв.м, 3/9 поверх, євроремонт,
-    вмебльована, поруч метро. 12 000 грн/міс + комунальні.'
-    Abbreviation key: к = кімнатна, кв.м = квадратних метрів,
-    3/9 = третій поверх із дев'яти, грн/міс = гривень на місяць."
-  - "Responding to ads: Добрий день, я телефоную щодо оголошення
-    про оренду квартири. Чи вона ще вільна? Коли можна подивитися?
-    Скільки коштує оренда? Чи входять комунальні у вартість?"
-  - "Practice: read 3 rental ads, extract key information, write
-    a response message for the one you prefer."
-- section: "Переговори про оренду"
-  words: 700
-  points:
-  - "Key rental vocabulary:
-    оренда (rent), орендар (tenant), орендодавець (landlord),
-    договір оренди (lease agreement), завдаток (deposit),
-    комунальні послуги (utilities), опалення (heating),
-    водопостачання (water supply), електрика (electricity),
-    інтернет, сміття (garbage)."
-  - "Negotiation dialogue:
-    'Яка вартість оренди на місяць?'
-    'Дванадцять тисяч гривень. Комунальні окремо.'
-    'Який завдаток?' 'Одна місячна оплата.' 'На який термін?'
-    'Мінімум на рік. Можна продовжити.'
-    Using temporal prepositions (на рік, на місяць) and quantity expressions."
-  - "Rights and rules: Хто оплачує ремонт? Чи можна з тваринами?
-    Чи можна замінити меблі? Як повідомити про виїзд?
-    Practice: role-play a lease negotiation using formal register."
-- section: "Проблеми з житлом"
-  words: 600
-  points:
-  - "Common problems and complaints:
-    Протікає кран/дах. Не працює опалення/гаряча вода.
-    Зламалася пральна машина. Не працює ліфт.
-    У кімнаті цвіль (mould). Сусіди шумлять.
-    Using reflexive and passive constructions from earlier modules."
-  - "Requesting repairs:
-    'Добрий день, хочу повідомити, що в квартирі не працює опалення.
-    Прошу надіслати майстра якнайшвидше. Дякую.'
-    Using formal register with vocative (Шановний орендодавцю!)
-    and purpose constructions (для ремонту, щоб полагодити)."
-  - "Practice: write a complaint message about a housing problem,
-    using formal register, vocative, and purpose/cause prepositions."
-- section: "Практика: пошук квартири"
-  words: 600
-  points:
-  - "Extended role play: the full process from ad to lease.
-    1. Read three ads, compare (using ступені порівняння from Phase 5).
-    2. Call the landlord (using vocative, formal register).
-    3. Visit and describe the apartment (using cases for features).
-    4. Negotiate terms (using quantity expressions and temporal preps).
-    5. Report a problem after moving in (using cause/purpose preps)."
-  - "Integrated grammar checklist: did you use...
-    Р.в. (площею, без меблів, близько ста метрів)?
-    Д.в. (мені потрібна, орендарю)?
-    Ор.в. (з балконом, за адресою)?
-    Кл.в. (Шановний пане)?
-    порівняння (ця квартира більша, але дорожча)?
-    числівники (на третьому поверсі, двадцять п'ять тисяч)?"
-- section: "Підсумок"
-  words: 300
-  points:
-  - "Key housing vocabulary organized by category: types, rooms,
-    furniture, rental terms, problems.
-    Grammar integration: all Phase 6 cases and prepositions in action."
-  - "Preview: контрольна робота 6 — comprehensive review of Phase 6."
+  - section: "Опис житла"
+    words: 700
+    points:
+      - "Types of housing: квартира, будинок, приватний будинок, гуртожиток, однокімнатна/двокімнатна/трикімнатна
+        квартира. Rooms: вітальня, спальня, кухня, ванна кімната, туалет, коридор,
+        балкон, комора, підвал, горище."
+      - "Describing features using case constructions: Р.в.: квартира площею сорок
+        квадратних метрів. Ор.в.: кімната з великим вікном, квартира з меблями (вмебльована).
+        М.в.: на першому/другому/п'ятому поверсі, у новому будинку. Зн.в.: вікна виходять
+        на подвір'я/на вулицю."
+      - "Furniture and appliances: меблі (pl.), шафа, ліжко, стіл, крісло, диван,
+        плита, холодильник, пральна машина, посудомийка. Practice: describe your ideal
+        apartment using 10+ case constructions."
+  - section: "Оголошення про оренду"
+    words: 600
+    points:
+      - "Reading real-format Ukrainian rental ads: 'Здається 2к квартира, 55 кв.м,
+        3/9 поверх, євроремонт, вмебльована, поруч метро. 12 000 грн/міс + комунальні.'
+        Abbreviation key: к = кімнатна, кв.м = квадратних метрів, 3/9 = третій поверх
+        із дев'яти, грн/міс = гривень на місяць."
+      - "Responding to ads: Добрий день, я телефоную щодо оголошення про оренду квартири.
+        Чи вона ще вільна? Коли можна подивитися? Скільки коштує оренда? Чи входять
+        комунальні у вартість?"
+      - "Practice: read 3 rental ads, extract key information, write a response message
+        for the one you prefer."
+  - section: "Переговори про оренду"
+    words: 700
+    points:
+      - "Key rental vocabulary: оренда (rent), орендар (tenant), орендодавець (landlord),
+        договір оренди (lease agreement), завдаток (deposit), комунальні послуги (utilities),
+        опалення (heating), водопостачання (water supply), електрика (electricity),
+        інтернет, сміття (garbage)."
+      - "Negotiation dialogue: 'Яка вартість оренди на місяць?' 'Дванадцять тисяч
+        гривень. Комунальні окремо.' 'Який завдаток?' 'Одна місячна оплата.' 'На який
+        термін?' 'Мінімум на рік. Можна продовжити.' Using temporal prepositions (на
+        рік, на місяць) and quantity expressions."
+      - "Rights and rules: Хто оплачує ремонт? Чи можна з тваринами? Чи можна замінити
+        меблі? Як повідомити про виїзд? Practice: role-play a lease negotiation using
+        formal register."
+  - section: "Проблеми з житлом"
+    words: 600
+    points:
+      - "Common problems and complaints: Протікає кран/дах. Не працює опалення/гаряча
+        вода. Зламалася пральна машина. Не працює ліфт. У кімнаті цвіль (mould). Сусіди
+        шумлять. Using reflexive and passive constructions from earlier modules."
+      - "Requesting repairs: 'Добрий день, хочу повідомити, що в квартирі не працює
+        опалення. Прошу надіслати майстра якнайшвидше. Дякую.' Using formal register
+        with vocative (Шановний орендодавцю!) and purpose constructions (для ремонту,
+        щоб полагодити)."
+      - "Practice: write a complaint message about a housing problem, using formal
+        register, vocative, and purpose/cause prepositions."
+  - section: "Практика: пошук квартири"
+    words: 600
+    points:
+      - "Extended role play: the full process from ad to lease. 1. Read three ads,
+        compare (using ступені порівняння from Phase 5). 2. Call the landlord (using
+        vocative, formal register). 3. Visit and describe the apartment (using cases
+        for features). 4. Negotiate terms (using quantity expressions and temporal
+        preps). 5. Report a problem after moving in (using cause/purpose preps)."
+      - "Integrated grammar checklist: did you use... Р.в. (площею, без меблів, близько
+        ста метрів)? Д.в. (мені потрібна, орендарю)? Ор.в. (з балконом, за адресою)?
+        Кл.в. (Шановний пане)? порівняння (ця квартира більша, але дорожча)? числівники
+        (на третьому поверсі, двадцять п'ять тисяч)?"
+  - section: "Підсумок"
+    words: 300
+    points:
+      - "Key housing vocabulary organized by category: types, rooms, furniture, rental
+        terms, problems. Grammar integration: all Phase 6 cases and prepositions in
+        action."
+      - "Preview: контрольна робота 6 — comprehensive review of Phase 6."
 vocabulary_hints:
   required:
-  - "квартира (apartment)"
-  - "оренда (rent/rental)"
-  - "орендар (tenant)"
-  - "орендодавець (landlord)"
-  - "договір оренди (lease agreement)"
-  - "завдаток (deposit)"
-  - "комунальні послуги (utilities)"
-  - "опалення (heating)"
-  - "вмебльована (furnished)"
-  - "поверх (floor/storey)"
-  - "площа (area/square footage)"
-  - "ремонт (renovation/repair)"
+    - "квартира (apartment)"
+    - "оренда (rent/rental)"
+    - "орендар (tenant)"
+    - "орендодавець (landlord)"
+    - "договір оренди (lease agreement)"
+    - "завдаток (deposit)"
+    - "комунальні послуги (utilities)"
+    - "опалення (heating)"
+    - "вмебльована (furnished)"
+    - "поверх (floor/storey)"
+    - "площа (area/square footage)"
+    - "ремонт (renovation/repair)"
   recommended:
-  - "гуртожиток (dormitory)"
-  - "водопостачання (water supply)"
-  - "електрика (electricity)"
-  - "цвіль (mould)"
-  - "ліфт (elevator)"
-  - "протікати (to leak)"
-  - "полагодити (to fix/repair)"
-  - "під ключ (turnkey — ready to move in)"
-  - "окремо (separately — for utilities)"
+    - "гуртожиток (dormitory)"
+    - "водопостачання (water supply)"
+    - "електрика (electricity)"
+    - "цвіль (mould)"
+    - "ліфт (elevator)"
+    - "протікати (to leak)"
+    - "полагодити (to fix/repair)"
+    - "під ключ (turnkey — ready to move in)"
+    - "окремо (separately — for utilities)"
 activity_hints:
-- type: quiz
-  focus: "Choose correct case and preposition for housing descriptions"
-  items: 12
-- type: fill-in
-  focus: "Complete rental ad and negotiation dialogue with correct forms"
-  items: 12
-- type: match-up
-  focus: "Match housing problem to correct complaint phrase"
-  items: 12
-- type: dialogue-completion
-  focus: "Complete apartment viewing and negotiation dialogue"
-  items: 12
-- type: free-write
-  focus: "Write a rental ad for your apartment or a complaint about a problem"
-  items: 12
-- type: sentence-builder
-  focus: "Describe apartments using spatial cases and comparisons"
-  items: 12
+  - type: quiz
+    focus: "Choose correct case and preposition for housing descriptions"
+    items: 12
+  - type: fill-in
+    focus: "Complete rental ad and negotiation dialogue with correct forms"
+    items: 12
+  - type: match-up
+    focus: "Match housing problem to correct complaint phrase"
+    items: 12
+  - type: dialogue-completion
+    focus: "Complete apartment viewing and negotiation dialogue"
+    items: 12
+  - type: free-write
+    focus: "Write a rental ad for your apartment or a complaint about a problem"
+    items: 12
+  - type: sentence-builder
+    focus: "Describe apartments using spatial cases and comparisons"
+    items: 12
 connects_to:
-- "b1-046 through b1-054 (Phase 6 grammar modules applied in context)"
-- "b1-044 (Покупки і послуги — transactional language)"
-- "b1-056 (Контрольна робота 6 — review of Phase 6)"
+  - "b1-046 through b1-054 (Phase 6 grammar modules applied in context)"
+  - "b1-044 (Покупки і послуги — transactional language)"
+  - "b1-056 (Контрольна робота 6 — review of Phase 6)"
 prerequisites:
-- "b1-046 through b1-054 (Phase 6 grammar modules)"
-- "b1-044 (Покупки і послуги — transactional register)"
+  - "b1-046 through b1-054 (Phase 6 grammar modules)"
+  - "b1-044 (Покупки і послуги — transactional register)"
 grammar:
-- "Application of Р.в., Д.в., Ор.в., М.в. in housing descriptions"
-- "Application of temporal and purpose prepositions in rental contexts"
-- "Application of quantity expressions and ordinals for addresses/prices"
-- "Application of vocative in formal correspondence with landlords"
+  - "Application of Р.в., Д.в., Ор.в., М.в. in housing descriptions"
+  - "Application of temporal and purpose prepositions in rental contexts"
+  - "Application of quantity expressions and ordinals for addresses/prices"
+  - "Application of vocative in formal correspondence with landlords"
 register: розмовно-побутовий
 references:
-- title: "Communicative context module"
-  notes: "Applies all Phase 6 grammar in housing, rental, and domestic contexts."
+  - title: "Communicative context module"
+    notes: "Applies all Phase 6 grammar in housing, rental, and domestic contexts."

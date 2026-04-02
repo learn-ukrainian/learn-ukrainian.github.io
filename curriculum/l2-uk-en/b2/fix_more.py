@@ -1,7 +1,6 @@
-import re
 
 path = '/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/register-colloquial-style.md'
-with open(path, 'r', encoding='utf-8') as f:
+with open(path, encoding='utf-8') as f:
     text = f.read()
 
 # Fix transliterations

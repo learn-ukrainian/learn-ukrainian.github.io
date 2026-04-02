@@ -1,7 +1,7 @@
 import yaml
 
 file_path = "curriculum/l2-uk-en/b1/activities/conditionals-mixed-complex.yaml"
-with open(file_path, "r", encoding="utf-8") as f:
+with open(file_path, encoding="utf-8") as f:
     data = yaml.safe_load(f)
 
 for act in data:

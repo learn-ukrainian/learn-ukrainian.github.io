@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct word budget distribution.
+    Textbook references cited accurately (Vashulenko p.110, p.112; Ponomarova p.86
+    — all confirmed via RAG). All required voca
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Zero Russianisms, surzhyk, or calques. All forms verified via VESUM. Gender
+    assignments correct throughout. Phonetic/grammar claims verified against Vashulenko
+    and Ponomarova textbooks via RAG. Stress
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present gender naturally (Presentation) →
+    explicit він/вона/воно test with step-by-step examples (Pattern) → exercises at
+    each stage (Practice). Each grammar rule accompanie'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocab items used naturally in prose: стіл, книга, вікно,
+    кімната, ліжко, стілець, лампа, телефон, комп''ютер, він/вона/воно. All 8 recommended
+    items present: зошит, ручка, сумка, крісло'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan activity_hints in type and focus. Placed
+    after relevant teaching sections. Summary self-test has 5 items mixing identification
+    (gender of стіл/книга/вікно) and production
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no meta-commentary, no "Let us explore" or "The
+    magic of." Dialogues feel natural: "Класно! У тебе є стіл?" / "Книга — це цікаво!
+    Яка книга?" Direct teaching voice: "Do you ha'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections present and correctly ordered (Діалоги → Він/вона/воно
+    → Предмети навколо → Підсумок). Clean markdown. Word count 1283 (target 1200,
+    +7% — within range). No stray tags, no duplicate '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." framing.
+    Gender system taught using Ukrainian textbook methodology (Vashulenko, Ponomarova)
+    — not through comparison with other languages
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Named speakers (Марія, Оленка) with distinct voices. Dialogue 1: showing
+    a room — natural situation with personality ("Класно!", "Моє крісло дуже зручне!",
+    "А моє — нове!"). Dialogue 2: comparing bag '
+findings: []

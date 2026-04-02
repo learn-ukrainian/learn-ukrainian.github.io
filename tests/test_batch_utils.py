@@ -11,15 +11,14 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from batch_utils import (
+    BatchLock,
+    ErrorCategory,
+    ExponentialBackoff,
+    LockConflictError,
     atomic_write,
     atomic_write_json,
-    ExponentialBackoff,
-    BatchLock,
-    LockConflictError,
     classify_error,
-    ErrorCategory,
 )
-
 
 # ---------------------------------------------------------------------------
 # atomic_write / atomic_write_json

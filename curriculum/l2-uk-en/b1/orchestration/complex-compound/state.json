@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "complex-compound",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:44.356223+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:44.356605+00:00"
+    }
+  }
+}

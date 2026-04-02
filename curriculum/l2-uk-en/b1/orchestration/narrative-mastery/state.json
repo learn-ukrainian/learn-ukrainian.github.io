@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "narrative-mastery",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:46.759463+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:58:46.760219+00:00"
+    }
+  }
+}

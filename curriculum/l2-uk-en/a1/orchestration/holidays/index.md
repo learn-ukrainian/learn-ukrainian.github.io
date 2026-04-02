@@ -1,6 +1,6 @@
 # Build Summary: holidays (A1)
 
-Generated: 2026-03-31 11:49
+Generated: 2026-04-01 13:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:49
 | vocab | complete | 2026-03-30 21:17:13 |
 | enrich | complete | 2026-03-30 21:17:14 |
 | verify | complete | 2026-03-30 21:17:14 |
-| review | complete | 2026-03-30 21:21:43 |
-| stress | complete | 2026-03-31 09:49:07 |
-| publish | complete | 2026-03-31 09:49:07 |
+| review | complete | 2026-04-01 11:45:11 |
+| stress | complete | 2026-04-01 11:45:11 |
+| publish | complete | 2026-04-01 11:45:17 |
 
 ## Reviews
 
@@ -38,6 +38,9 @@ Generated: 2026-03-31 11:49
 | activities | claude-tools (claude-sonnet-4-6) | 304s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 26s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 270s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

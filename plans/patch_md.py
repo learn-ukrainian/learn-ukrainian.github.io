@@ -1,7 +1,7 @@
 import re
 
 file_path = "curriculum/l2-uk-en/b1/conditionals-mixed-complex.md"
-with open(file_path, "r", encoding="utf-8") as f:
+with open(file_path, encoding="utf-8") as f:
     text = f.read()
 
 # Fix 2 again: "Якби ми ще минулого місяця..."

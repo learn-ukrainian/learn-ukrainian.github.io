@@ -17,8 +17,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from fill_template import fill_template, find_unresolved, main, PLACEHOLDER_RE
-
+from fill_template import PLACEHOLDER_RE, fill_template, find_unresolved, main
 
 # =============================================================================
 # fill_template() UNIT TESTS

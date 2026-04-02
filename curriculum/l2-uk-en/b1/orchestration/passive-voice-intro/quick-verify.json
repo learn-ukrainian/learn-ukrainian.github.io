@@ -1,0 +1,24 @@
+{
+  "attempt": 1,
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Активний i пасивний стан'"
+    },
+    {
+      "check": "WORD_COUNT",
+      "severity": "ERROR",
+      "message": "Too short: 2809 words (target: 4000, minimum: 3400)"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/14 required vocab: неперехідне дієслово (intransitive verb — no direct object)"
+    }
+  ],
+  "timestamp": "2026-04-02T08:07:42.810567+00:00"
+}

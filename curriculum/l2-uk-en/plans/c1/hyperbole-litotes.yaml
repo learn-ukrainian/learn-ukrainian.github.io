@@ -4,14 +4,17 @@ sequence: 56
 slug: hyperbole-litotes
 version: '1.1'
 title: "Гіпербола та літота: мистецтво кількісної трансформації образу"
-subtitle: "Hyperbole and Litotes: The Art of Quantitative Image Transformation"
+subtitle: "Гіпербола і літота: мистецтво кількісної трансформації"
 focus: integration
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Дослідити механізми перебільшення (гіпербола) та применшення (літота) у художньому та публіцистичному текстах."
-  - "Аналізувати експресивну функцію гіперболізації в українському фольклорі та бароковій літературі."
-  - "Опанувати техніку літоти як засобу ввічливості, скромності та іронії в професійному дискурсі."
+  - "Дослідити механізми перебільшення (гіпербола) та применшення (літота) у художньому
+    та публіцистичному текстах."
+  - "Аналізувати експресивну функцію гіперболізації в українському фольклорі та бароковій
+    літературі."
+  - "Опанувати техніку літоти як засобу ввічливості, скромності та іронії в професійному
+    дискурсі."
   - "Використовувати кількісні трансформації для посилення переконливості аргументації."
 
 reading_situations:
@@ -26,16 +29,21 @@ reading_situations:
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Мистецтвознавча лекція про 'естетику надмірності' у творчості українських художників-наївістів."
+    setting: "Мистецтвознавча лекція про 'естетику надмірності' у творчості українських
+      художників-наївістів."
     focus_points: ["візуальна гіпербола", "емоційний вплив", "символіка"]
     motivation: "Розуміння міждисциплінарного характеру гіперболи як засобу виразності."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть футурологічне есе про Україну 2050 року, використовуючи гіперболу для опису технологічних досягнень та літоту для опису колишніх проблем."
-    requirements: ["мінімум 350 слів", "виразне використання контрасту", "багата образна мова"]
-    motivation: "Практичне відпрацювання навичок художнього моделювання майбутнього через кількісні тропи."
-    model_answer: "Текст має бути футуристичним маніфестом, де масштабні звершення підкреслюються через гіперболічні образи 'міст-садів' та 'цифрового безсмертя'."
+    prompt: "Напишіть футурологічне есе про Україну 2050 року, використовуючи гіперболу
+      для опису технологічних досягнень та літоту для опису колишніх проблем."
+    requirements: ["мінімум 350 слів", "виразне використання контрасту", "багата образна
+          мова"]
+    motivation: "Практичне відпрацювання навичок художнього моделювання майбутнього
+      через кількісні тропи."
+    model_answer: "Текст має бути футуристичним маніфестом, де масштабні звершення
+      підкреслюються через гіперболічні образи 'міст-садів' та 'цифрового безсмертя'."
 
 discussion_topics:
   - context: "Чи є гіпербола в рекламі обманом чи необхідним засобом привернення уваги?"
@@ -106,15 +114,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a Cossack chronicle excerpt — identify all hyperboles, explain their function in heroic narrative, and compare with modern media hyperbole."
+    description: "Analyze a Cossack chronicle excerpt — identify all hyperboles, explain
+      their function in heroic narrative, and compare with modern media hyperbole."
   - type: select
-    description: "Identify whether excerpts use гіпербола, літота, мейозис, or градація — and classify their pragmatic function (persuasion, humor, politeness)."
+    description: "Identify whether excerpts use гіпербола, літота, мейозис, or градація
+      — and classify their pragmatic function (persuasion, humor, politeness)."
   - type: match-up
-    description: "Match examples of hyperbole and litotes from different registers (folklore, academic, diplomatic, media) with their stylistic function."
+    description: "Match examples of hyperbole and litotes from different registers
+      (folklore, academic, diplomatic, media) with their stylistic function."
   - type: essay-response
-    description: "Rewrite a neutral news report using hyperbole for dramatic effect, then rewrite the same report using litotes for diplomatic understatement."
+    description: "Rewrite a neutral news report using hyperbole for dramatic effect,
+      then rewrite the same report using litotes for diplomatic understatement."
   - type: mark-the-words
-    description: "Identify all instances of quantitative tropes (гіпербола, літота, градація) in a literary and a journalistic text."
+    description: "Identify all instances of quantitative tropes (гіпербола, літота,
+      градація) in a literary and a journalistic text."
 
 activities:
   types_required:
@@ -134,3 +147,4 @@ references:
 connects_to:
   previous: "irony-sarcasm"
   next: "euphemism-taboo"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

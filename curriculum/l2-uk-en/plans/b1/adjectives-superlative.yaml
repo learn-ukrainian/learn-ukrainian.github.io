@@ -1,185 +1,168 @@
-module: b1-039
+module: b1-035
 level: B1
-sequence: 39
+sequence: 35
 slug: adjectives-superlative
 version: '3.0'
 title: "Найвищий ступінь прикметників"
 subtitle: "Проста та складена форми найвищого ступеня порівняння"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Degrees of Comparison & Word Formation]"
 word_target: 4000
 objectives:
-- "Learner can form the simple superlative using prefix най- added to the
-  comparative form (найсильніший, найдорожчий, найвищий)"
-- "Learner can form the compound superlative using найбільш/найменш +
-  base adjective (найбільш цікавий, найменш складний)"
-- "Learner can use intensified superlatives with що- and як- prefixes
-  (щонайкращий, якнайшвидший) and explain their stylistic effect"
-- "Learner can distinguish correct superlative usage from common errors
-  (*самий кращий, *найбільш найкращий)"
-- "Learner can use superlatives naturally in descriptive and argumentative
-  contexts (reviews, recommendations, debates)"
+  - "Learner can form the simple superlative using prefix най- added to the comparative
+    form (найсильніший, найдорожчий, найвищий)"
+  - "Learner can form the compound superlative using найбільш/найменш + base adjective
+    (найбільш цікавий, найменш складний)"
+  - "Learner can use intensified superlatives with що- and як- prefixes (щонайкращий,
+    якнайшвидший) and explain their stylistic effect"
+  - "Learner can distinguish correct superlative usage from common errors (*самий
+    кращий, *найбільш найкращий)"
+  - "Learner can use superlatives naturally in descriptive and argumentative contexts
+    (reviews, recommendations, debates)"
 dialogue_situations:
-- setting: 'Ukrainian geography lesson — discussing extremes: Говерла — найвища (f)
-    гора (f) в Україні. Дніпро — найдовша (f) річка (f). Київ — найбільше (n) місто
-    (n). Одеса — найвеселіше місто на узбережжі.'
-  speakers:
-  - Вчитель географії
-  - Учні
-  motivation: 'Superlative: найвищий, найдовший, найбільший with гора(f), річка(f),
-    місто(n)'
+  - setting: 'Ukrainian geography lesson — discussing extremes: Говерла — найвища
+      (f) гора (f) в Україні. Дніпро — найдовша (f) річка (f). Київ — найбільше (n)
+      місто (n). Одеса — найвеселіше місто на узбережжі.'
+    speakers:
+      - Вчитель географії
+      - Учні
+    motivation: 'Superlative: найвищий, найдовший, найбільший with гора(f), річка(f),
+      місто(n)'
 content_outline:
-- section: "Проста форма найвищого ступеня"
-  words: 800
-  points:
-  - "Formation rule from Литвінова Grade 6 p.198:
-    prefix най- + проста форма вищого ступеня.
-    сильніший → найсильніший, молодший → наймолодший,
-    дорожчий → найдорожчий, вищий → найвищий.
-    The superlative inherits all alternations from the comparative."
-  - "The simple superlative declines like a regular adjective:
-    Н. найсильніший / найсильніша / найсильніше / найсильніші
-    Р. найсильнішого / найсильнішої / найсильнішого / найсильніших
-    Practice with declined forms in sentences:
-    Це найцікавіша книжка, яку я читав.
-    Ми живемо в найгарнішому місті."
-  - "Common formation patterns — practice batch:
-    дорогий → дорожчий → найдорожчий
-    високий → вищий → найвищий
-    широкий → ширший → найширший
-    тихий → тихіший → найтихіший
-    10-12 adjectives for learners to form full chains."
-  - "Reading practice: a travel blog ranking Ukrainian cities and landmarks,
-    using простa форма найвищого ступеня throughout."
-- section: "Складена форма найвищого ступеня"
-  words: 600
-  points:
-  - "Formation from Заболотний Grade 8 p.18:
-    найбільш/найменш + початкова форма прикметника.
-    найбільш цікавий, найменш відомий, найбільш поширений.
-    The adjective declines; найбільш/найменш is invariable."
-  - "Register difference: складена form is formal, academic, official.
-    'найбільш поширена хвороба' (medical text) vs
-    'найпоширеніша хвороба' (everyday speech).
-    Practice: rewrite formal sentences into informal and vice versa."
-  - "Critical error prevention:
-    NEVER combine най- with більш (*найбільш найкращий).
-    NEVER use самий (*самий кращий — this is a Russicism from самый лучший).
-    Correct: найкращий or найбільш добрий."
-- section: "Підсилені форми: що- та як-"
-  words: 600
-  points:
-  - "Ukrainian has a unique intensifying mechanism absent in English:
-    що- + найвищий ступінь: щонайкращий, щонайшвидший, щонайвищий.
-    як- + найвищий ступінь: якнайкращий, якнайшвидший, якнайвищий.
-    Meaning: 'the very best possible,' 'as fast as absolutely possible.'"
-  - "Usage context: що- forms express absolute maximum/minimum;
-    як- forms express desire or effort toward the maximum.
-    Зроби це якнайшвидше (do it as fast as you can — effort implied).
-    Це щонайкращий варіант (this is the absolute best option — factual)."
-  - "Practice sentences in context: instructions, advice, evaluations.
-    Приходьте якнайскоріше. Це щонайменша ціна.
-    Він обрав якнайпростіший шлях."
-- section: "Синонімічні засоби"
-  words: 550
-  points:
-  - "From Заболотний Grade 8 p.21: alternatives that express the superlative
-    idea without formal superlative forms:
-    дуже, вельми, занадто, вкрай, особливо, надзвичайно + adjective.
-    вельми чемний, особливо уважний, вкрай виважений."
-  - "Emphatic repetition and prefixes (Заболотний Grade 8 p.21):
-    гарний-прегарний, білий-білісінький, синій-синій.
-    Prefix пре-: предобрий, прегарний, прекрасний.
-    These are stylistically richer than formal superlatives."
-  - "Practice: rewrite sentences using different synonymic means.
-    'Це найкращий фільм' → 'Цей фільм надзвичайно гарний.'
-    Discussion: which version sounds more natural in which context?"
-- section: "Ступені порівняння в контексті"
-  words: 650
-  points:
-  - "Combined practice using вищий and найвищий ступені together:
-    a product comparison text (choosing a phone, a laptop, or a car),
-    where the writer systematically compares options and concludes
-    with a superlative recommendation."
-  - "Cultural note: Ukrainian proverbs and folk sayings using comparisons:
-    'Що темніша ніч, то ясніші зорі.' (Заболотний Grade 6 p.138)
-    'Свій хліб більш ситний.' 'З усіх скарбів найбільш цінним є молодість.'
-    Discussion of comparison as a rhetorical device in Ukrainian culture."
-  - "Self-check questions:
-    1. Утворіть найвищий ступінь: тихий, широкий, близький, дешевий.
-    2. Чим відрізняється щонайкращий від найкращий?
-    3. Чому *самий кращий — помилка?"
-- section: "Підсумок"
-  words: 300
-  points:
-  - "Complete comparison chain diagram:
-    початкова форма → вищий ступінь → найвищий ступінь.
-    проста: гарний → гарніший → найгарніший.
-    складена: — → більш гарний → найбільш гарний.
-    підсилена: — → — → щонайгарніший / якнайгарніший."
-  - "Preview: next module covers суплетивні (irregular) comparison forms
-    where the comparative comes from a completely different root
-    (гарний-кращий, поганий-гірший)."
+  - section: "Проста форма найвищого ступеня"
+    words: 800
+    points:
+      - "Formation rule from Литвінова Grade 6 p.198: prefix най- + проста форма вищого
+        ступеня. сильніший → найсильніший, молодший → наймолодший, дорожчий → найдорожчий,
+        вищий → найвищий. The superlative inherits all alternations from the comparative."
+      - "The simple superlative declines like a regular adjective: Н. найсильніший
+        / найсильніша / найсильніше / найсильніші Р. найсильнішого / найсильнішої
+        / найсильнішого / найсильніших Practice with declined forms in sentences:
+        Це найцікавіша книжка, яку я читав. Ми живемо в найгарнішому місті."
+      - "Common formation patterns — practice batch: дорогий → дорожчий → найдорожчий
+        високий → вищий → найвищий широкий → ширший → найширший тихий → тихіший →
+        найтихіший 10-12 adjectives for learners to form full chains."
+      - "Reading practice: a travel blog ranking Ukrainian cities and landmarks, using
+        простa форма найвищого ступеня throughout."
+  - section: "Складена форма найвищого ступеня"
+    words: 600
+    points:
+      - "Formation from Заболотний Grade 8 p.18: найбільш/найменш + початкова форма
+        прикметника. найбільш цікавий, найменш відомий, найбільш поширений. The adjective
+        declines; найбільш/найменш is invariable."
+      - "Register difference: складена form is formal, academic, official. 'найбільш
+        поширена хвороба' (medical text) vs 'найпоширеніша хвороба' (everyday speech).
+        Practice: rewrite formal sentences into informal and vice versa."
+      - "Critical error prevention: NEVER combine най- with більш (*найбільш найкращий).
+        NEVER use самий (*самий кращий — this is a Russicism from самый лучший). Correct:
+        найкращий or найбільш добрий."
+  - section: "Підсилені форми: що- та як-"
+    words: 600
+    points:
+      - "Ukrainian has a unique intensifying mechanism absent in English: що- + найвищий
+        ступінь: щонайкращий, щонайшвидший, щонайвищий. як- + найвищий ступінь: якнайкращий,
+        якнайшвидший, якнайвищий. Meaning: 'the very best possible,' 'as fast as absolutely
+        possible.'"
+      - "Usage context: що- forms express absolute maximum/minimum; як- forms express
+        desire or effort toward the maximum. Зроби це якнайшвидше (do it as fast as
+        you can — effort implied). Це щонайкращий варіант (this is the absolute best
+        option — factual)."
+      - "Practice sentences in context: instructions, advice, evaluations. Приходьте
+        якнайскоріше. Це щонайменша ціна. Він обрав якнайпростіший шлях."
+  - section: "Синонімічні засоби"
+    words: 550
+    points:
+      - "From Заболотний Grade 8 p.21: alternatives that express the superlative idea
+        without formal superlative forms: дуже, вельми, занадто, вкрай, особливо,
+        надзвичайно + adjective. вельми чемний, особливо уважний, вкрай виважений."
+      - "Emphatic repetition and prefixes (Заболотний Grade 8 p.21): гарний-прегарний,
+        білий-білісінький, синій-синій. Prefix пре-: предобрий, прегарний, прекрасний.
+        These are stylistically richer than formal superlatives."
+      - "Practice: rewrite sentences using different synonymic means. 'Це найкращий
+        фільм' → 'Цей фільм надзвичайно гарний.' Discussion: which version sounds
+        more natural in which context?"
+  - section: "Ступені порівняння в контексті"
+    words: 650
+    points:
+      - "Combined practice using вищий and найвищий ступені together: a product comparison
+        text (choosing a phone, a laptop, or a car), where the writer systematically
+        compares options and concludes with a superlative recommendation."
+      - "Cultural note: Ukrainian proverbs and folk sayings using comparisons: 'Що
+        темніша ніч, то ясніші зорі.' (Заболотний Grade 6 p.138) 'Свій хліб більш
+        ситний.' 'З усіх скарбів найбільш цінним є молодість.' Discussion of comparison
+        as a rhetorical device in Ukrainian culture."
+      - "Self-check questions: 1. Утворіть найвищий ступінь: тихий, широкий, близький,
+        дешевий. 2. Чим відрізняється щонайкращий від найкращий? 3. Чому *самий кращий
+        — помилка?"
+  - section: "Підсумок"
+    words: 300
+    points:
+      - "Complete comparison chain diagram: початкова форма → вищий ступінь → найвищий
+        ступінь. проста: гарний → гарніший → найгарніший. складена: — → більш гарний
+        → найбільш гарний. підсилена: — → — → щонайгарніший / якнайгарніший."
+      - "Preview: next module covers суплетивні (irregular) comparison forms where
+        the comparative comes from a completely different root (гарний-кращий, поганий-гірший)."
 vocabulary_hints:
   required:
-  - "найвищий ступінь (superlative degree)"
-  - "префікс (prefix — word-forming element before the root)"
-  - "найбільш (most — used in compound superlative)"
-  - "найменш (least — used in compound superlative)"
-  - "щонайкращий (the very best — intensified superlative with що-)"
-  - "якнайшвидший (as fast as possible — intensified superlative with як-)"
-  - "вельми (very, exceedingly — formal synonym of дуже)"
-  - "вкрай (extremely — degree intensifier)"
-  - "надзвичайно (extraordinarily — degree intensifier)"
+    - "найвищий ступінь (superlative degree)"
+    - "префікс (prefix — word-forming element before the root)"
+    - "найбільш (most — used in compound superlative)"
+    - "найменш (least — used in compound superlative)"
+    - "щонайкращий (the very best — intensified superlative with що-)"
+    - "якнайшвидший (as fast as possible — intensified superlative with як-)"
+    - "вельми (very, exceedingly — formal synonym of дуже)"
+    - "вкрай (extremely — degree intensifier)"
+    - "надзвичайно (extraordinarily — degree intensifier)"
   recommended:
-  - "підсилений (intensified — describing що-/як- forms)"
-  - "синонімічний (synonymic — alternative way of expressing the same idea)"
-  - "стилістичний (stylistic — relating to register and style choices)"
-  - "прегарний (very beautiful — emphatic prefix пре-)"
-  - "білісінький (absolutely white — emphatic suffix -ісіньк-)"
-  - "занадто (too much — degree word showing excess)"
+    - "підсилений (intensified — describing що-/як- forms)"
+    - "синонімічний (synonymic — alternative way of expressing the same idea)"
+    - "стилістичний (stylistic — relating to register and style choices)"
+    - "прегарний (very beautiful — emphatic prefix пре-)"
+    - "білісінький (absolutely white — emphatic suffix -ісіньк-)"
+    - "занадто (too much — degree word showing excess)"
 activity_hints:
-- type: quiz
-  focus: "Choose correct superlative form and identify errors (*самий, *найбільш найкращий)"
-  items: 8
-- type: fill-in
-  focus: "Form the complete comparison chain: base → comparative → superlative"
-  items: 8
-- type: match-up
-  focus: "Match проста superlative to its складена equivalent"
-  items: 8
-- type: error-correction
-  focus: "Fix Russicisms and formation errors in superlative sentences"
-  items: 6
-- type: sentence-builder
-  focus: "Build sentences using що-/як- intensified superlatives"
-  items: 6
-- type: free-write
-  focus: "Write a short review (5-7 sentences) recommending something, using superlatives"
-  items: 6
+  - type: quiz
+    focus: "Choose correct superlative form and identify errors (*самий, *найбільш
+      найкращий)"
+    items: 8
+  - type: fill-in
+    focus: "Form the complete comparison chain: base → comparative → superlative"
+    items: 8
+  - type: match-up
+    focus: "Match проста superlative to its складена equivalent"
+    items: 8
+  - type: error-correction
+    focus: "Fix Russicisms and formation errors in superlative sentences"
+    items: 6
+  - type: sentence-builder
+    focus: "Build sentences using що-/як- intensified superlatives"
+    items: 6
+  - type: free-write
+    focus: "Write a short review (5-7 sentences) recommending something, using superlatives"
+    items: 6
 connects_to:
-- "b1-038 (Вищий ступінь прикметників — comparative degree)"
-- "b1-040 (Суплетивні форми — irregular superlatives: найкращий, найгірший)"
-- "b1-041 (Ступені порівняння прислівників — adverb superlatives)"
+  - "b1-038 (Вищий ступінь прикметників — comparative degree)"
+  - "b1-040 (Суплетивні форми — irregular superlatives: найкращий, найгірший)"
+  - "b1-041 (Ступені порівняння прислівників — adverb superlatives)"
 prerequisites:
-- "b1-038 (Вищий ступінь прикметників — comparative formation and alternations)"
+  - "b1-038 (Вищий ступінь прикметників — comparative formation and alternations)"
 grammar:
-- "Найвищий ступінь: проста форма (най- + вищий ступінь)"
-- "Найвищий ступінь: складена форма (найбільш/найменш + прикметник)"
-- "Підсилені форми: що- + найвищий, як- + найвищий"
-- "Синонімічні засоби: дуже, вельми, пре-, -ісіньк-, повтор"
-- "Типові помилки: *самий кращий, *найбільш найкращий"
+  - "Найвищий ступінь: проста форма (най- + вищий ступінь)"
+  - "Найвищий ступінь: складена форма (найбільш/найменш + прикметник)"
+  - "Підсилені форми: що- + найвищий, як- + найвищий"
+  - "Синонімічні засоби: дуже, вельми, пре-, -ісіньк-, повтор"
+  - "Типові помилки: *самий кращий, *найбільш найкращий"
 register: науково-навчальний
 references:
-- title: "Литвінова Grade 6, p.198"
-  notes: "Formation table: проста (суфікси + най-) vs складена (найбільш/найменш)."
-- title: "Заболотний Grade 6, p.137-138"
-  notes: "Найвищий ступінь definition, practice with proverbs."
-- title: "Заболотний Grade 8, p.18-21"
-  notes: "Complete formation table, synonymic alternatives (дуже, вельми, пре-,
-    повтори), common errors."
-- title: "Авраменко Grade 11, p.29"
-  notes: "Stylistic play: comparatives from relative adjectives in ads."
-- title: "Заболотний Grade 8, p.28"
-  notes: "Side-by-side comparison of adjective and adverb degree forms."
+  - title: "Литвінова Grade 6, p.198"
+    notes: "Formation table: проста (суфікси + най-) vs складена (найбільш/найменш)."
+  - title: "Заболотний Grade 6, p.137-138"
+    notes: "Найвищий ступінь definition, practice with proverbs."
+  - title: "Заболотний Grade 8, p.18-21"
+    notes: "Complete formation table, synonymic alternatives (дуже, вельми, пре-,
+      повтори), common errors."
+  - title: "Авраменко Grade 11, p.29"
+    notes: "Stylistic play: comparatives from relative adjectives in ads."
+  - title: "Заболотний Grade 8, p.28"
+    notes: "Side-by-side comparison of adjective and adverb degree forms."

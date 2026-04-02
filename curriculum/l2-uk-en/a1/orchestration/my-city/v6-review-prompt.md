@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 30: My City (A1, A1.5 [Places])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -125,45 +125,43 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-**Аліна** has just moved to a new part of Kyiv. She stops a stranger on the street.
+**А́ліна** has just moved to a new part of Kyiv. She stops a stranger on the street.
 
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Вибачте, де тут аптека? *(Excuse me, where is the pharmacy here?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Аптека на вулиці Шевченка, біля парку. *(The pharmacy is on Shevchenko Street, near the park.)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> А бібліотека? *(And the library?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Бібліотека в центрі міста. *(The library is in the city center.)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Це далеко? *(Is it far?)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Ні, близько. *(No, it's close.)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Дякую! *(Thank you!)*</div>
-> <div class="dialogue-line"><span class="speaker">Перехожий:</span> Будь ласка! *(You're welcome!)*</div>
+> — **Аліна:** Ви́бачте, де тут апте́ка? *(Excuse me, where is the pharmacy here?)*
+> — **Перехо́жий:** Аптека на ву́лиці Шевче́нка, бі́ля парку. *(The pharmacy is on Shevchenko Street, near the park.)*
+> — **Аліна:** А бібліоте́ка? *(And the library?)*
+> — **Перехожий:** Бібліотека в це́нтрі мі́ста. *(The library is in the city center.)*
+> — **Аліна:** Це дале́ко? *(Is it far?)*
+> — **Перехожий:** Ні, бли́зько. *(No, it's close.)*
+> — **Аліна:** Дякую! *(Thank you!)*
+> — **Перехожий:** Будь ла́ска! *(You're welcome!)*
 
-Notice the polite register here. **Вибачте** (excuse me) is how you address a stranger on the street — this matches the textbook pattern from Заболотний Grade 6: *Вибачте, ви не скажете, де...* The stranger answers with specific locations: **на вулиці Шевченка** (on Shevchenko Street) uses **на** + locative for streets, and **біля парку** (near the park) pins the pharmacy to a landmark. The reply **в центрі міста** (in the city center) uses **в** + locative. Two location adverbs close the exchange: **далеко** (far) and **близько** (near/close).
+Notice the polite register here. **Вибачте** (excuse me) is how you address a stranger on the street — this matches the textbook pattern from Заболо́тний Grade 6: *Вибачте, ви не ска́жете, де...* The stranger answers with specific locations: **на вулиці Шевченка** (on Shevchenko Street) uses **на** + locative for streets, and **біля парку** (near the park) pins the pharmacy to a landmark. The reply **в центрі міста** (in the city center) uses **в** + locative. Two location adverbs close the exchange: **далеко** (far) and **близько** (near/close).
 
-Now Аліна is chatting with her friend **Ігор** about their neighborhoods.
+Now Аліна is chatting with her friend **І́гор** about their neighborhoods.
 
-> <div class="dialogue-line"><span class="speaker">Ігор:</span> Що є біля твого дому? *(What's near your house?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Біля дому є магазин і кафе. *(Near the house there's a shop and a café.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ігор:</span> А лікарня? *(And a hospital?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Лікарня там, далеко від центру. *(The hospital is over there, far from the center.)*</div>
-> <div class="dialogue-line"><span class="speaker">Ігор:</span> У тебе є стадіон? *(Do you have a stadium nearby?)*</div>
-> <div class="dialogue-line"><span class="speaker">Аліна:</span> Так, стадіон на вулиці Лесі Українки. *(Yes, the stadium is on Lesya Ukrainka Street.)*</div>
+> — **Ігор:** Що є біля твого́ до́му? *(What's near your house?)*
+> — **Аліна:** Біля дому є магази́н і кафе́. *(Near the house there's a shop and a café.)*
+> — **Ігор:** А ліка́рня? *(And a hospital?)*
+> — **Аліна:** Лікарня там, далеко від це́нтру. *(The hospital is over there, far from the center.)*
+> — **Ігор:** У тебе́ є стадіо́н? *(Do you have a stadium nearby?)*
+> — **Аліна:** Так, стадіон на вулиці Ле́сі Украї́нки. *(Yes, the stadium is on Lesya Ukrainka Street.)*
 
 This dialogue recycles **є** (there is/are) from earlier modules — now it works with city places. **Біля дому** (near the house) is a fixed chunk with **біля** + genitive. Notice **магазин** (shop) and **кафе** (café) — two essential neighborhood words. The phrase **далеко від центру** (far from the center) pairs the adverb **далеко** with a genitive chunk.
 
-These two dialogues show city vocabulary in action — asking for directions with a stranger, then describing your neighborhood with a friend. Now let's meet all the city vocabulary in full.
+Every Ukrainian **мі́сто** (city) has its landmarks: a **ри́нок** (market), a **пло́ща** (square), a **вокза́л** (train station), a **по́шта** (post office). Kyiv's most famous street is **Хреща́тик** — the main **ву́лиця** (street) that runs through the heart of the capital. Close by sits **Майда́н Незале́жності** (Independence Square), the central square that every Ukrainian knows — **центра́льна площа**. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
 
-Every Ukrainian **місто** (city) has its landmarks: a **ринок** (market), a **площа** (square), a **вокзал** (train station), a **пошта** (post office). Kyiv's most famous street is **Хрещатик** — the main **вулиця** (street) that runs through the heart of the capital. Close by sits **Майдан Незалежності** (Independence Square), the центральна площа that every Ukrainian knows. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
-
-## Місця в місті (City Places)
+## Місця́ в мі́сті (City Places)
 
 Here are 17 essential city places. Gender matters because locative endings differ — feminine, masculine, and neuter nouns each have their own pattern from M29.
 
 **Feminine (f):**
-- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **церква** (church) · **зупинка** (bus stop)
+- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **це́рква** (church) · **зупи́нка** (bus stop)
 
 **Masculine (m):**
-- **магазин** (shop) · **супермаркет** (supermarket) · **ресторан** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готель** (hotel) · **музей** (museum) · **театр** (theatre) · **кінотеатр** (cinema) · **стадіон** (stadium) · **університет** (university)
+- **магазин** (shop) · **суперма́ркет** (supermarket) · **рестора́н** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готе́ль** (hotel) · **музе́й** (museum) · **теа́тр** (theatre) · **кінотеа́тр** (cinema) · **стадіон** (stadium) · **університе́т** (university)
 
 **Neuter (n):**
 - **кафе** (café)
@@ -171,25 +169,25 @@ Here are 17 essential city places. Gender matters because locative endings diffe
 Two prepositions control where you are. Most places take **в/у** + locative. A small group — transit and service infrastructure — takes **на** + locative. Here are the locative forms:
 
 **В/у + locative:**
-- аптека → **в аптеці** · бібліотека → **у бібліотеці** · магазин → **в магазині** · банк → **у банку** · готель → **у готелі** · ресторан → **у ресторані** · музей → **в музеї** · університет → **в університеті** · лікарня → **у лікарні** · кінотеатр → **у кінотеатрі** · театр → **у театрі** · церква → **у церкві**
+- аптека → **в апте́ці** · бібліотека → **у бібліоте́ці** · магазин → **в магази́ні** · банк → **у ба́нку** · готель → **у готе́лі** · ресторан → **у рестора́ні** · музей → **в музе́ї** · університет → **в університе́ті** · лікарня → **у ліка́рні** · кінотеатр → **у кінотеа́трі** · театр → **у теа́трі** · церква → **у це́ркві**
 
 **На + locative:**
-- пошта → **на пошті** · вокзал → **на вокзалі** · стадіон → **на стадіоні** · зупинка → **на зупинці** · площа → **на площі**
+- пошта → **на по́шті** · вокзал → **на вокза́лі** · стадіон → **на стадіо́ні** · зупинка → **на зупи́нці** · площа → **на пло́щі**
 
-The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**. This is confirmed by Ukrainian grammar textbooks (Avramenko Grade 11): *прийменник «на» вживають з назвами установ типу пошта, вокзал.*
+The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**. This is confirmed by Ukrainian grammar textbooks (Avramenko Grade 11): *прийме́нник «на» вжива́ють з на́звами устано́в ти́пу пошта, вокзал.*
 
 <!-- INJECT_ACTIVITY: quiz-prepositions -->
 
 Now combine these places with verbs you already know from A1.3. What do you do at each place?
 
-- **Я купую ліки в аптеці.** — I buy medicine at the pharmacy.
-- **Я читаю книги у бібліотеці.** — I read books at the library.
-- **Я їм піцу в ресторані.** — I eat pizza at the restaurant.
-- **Я п'ю каву в кафе.** — I drink coffee at the café.
-- **Я надсилаю листи на пошті.** — I send letters at the post office.
-- **Я дивлюся фільм у кінотеатрі.** — I watch a film at the cinema.
-- **Я відпочиваю в парку.** — I relax in the park.
-- **Я чекаю на потяг на вокзалі.** — I wait for a train at the station.
+- **Я купу́ю лі́ки в аптеці.** — I buy medicine at the pharmacy.
+- **Я чита́ю кни́ги у бібліотеці.** — I read books at the library.
+- **Я їм пі́цу в ресторані.** — I eat pizza at the restaurant.
+- **Я п'ю ка́ву в кафе.** — I drink coffee at the café.
+- **Я надсила́ю листи́ на пошті.** — I send letters at the post office.
+- **Я дивлю́ся фільм у кінотеатрі.** — I watch a film at the cinema.
+- **Я відпочива́ю в парку.** — I relax in the park.
+- **Я чека́ю на по́тяг на вокзалі.** — I wait for a train at the station.
 
 Notice how familiar verbs — **купую**, **читаю**, **їм**, **п'ю** — now appear in locative context. The place tells you *where* the action happens. And **кафе** never changes form: **в кафе**, **біля кафе** — it stays the same in every case, because it is an indeclinable noun.
 
@@ -209,14 +207,14 @@ Four core adverbs let you describe where anything is. They come in natural pairs
 - **Стадіон далеко.** — The stadium is far.
 - **Бібліотека близько від парку.** — The library is near the park.
 
-A useful synonym: **недалеко** means the same as **близько** (confirmed by Заболотний Grade 5 synonyms appendix: *близько, недалеко, поблизу*).
+A useful synonym: **недале́ко** means the same as **близько** (confirmed by Заболотний Grade 5 synonyms appendix: *близько, недалеко, поблизу́*).
 
 The preposition **біля** always takes the genitive case — but at A1, learn these as memorized chunks, not grammar rules. Just remember: **біля** + a fixed word form.
 
 - **біля парку** — near the park
 - **біля дому** — near the house
-- **біля університету** — near the university
-- **біля вокзалу** — near the station
+- **біля університе́ту** — near the university
+- **біля вокза́лу** — near the station
 - **біля кафе** — near the café (кафе never changes!)
 
 Six example sentences:
@@ -228,22 +226,22 @@ Six example sentences:
 - **Готель біля кафе.** — The hotel is near the café.
 
 :::tip
-**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for all borrowed words ending in **-е** or **-о**: **метро**, **кіно**, **кафе**.
+**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for all borrowed words ending in **-е** or **-о**: **метро́**, **кіно́**, **кафе**.
 :::
 
 Three more location phrases for describing your neighborhood:
 
 - **у центрі міста** (in the city center) — **Театр у центрі міста.** The theatre is in the city center.
-- **на розі вулиці** (on the corner of the street) — **Аптека на розі вулиці Шевченка.** The pharmacy is on the corner of Shevchenko Street.
-- **у нашому районі** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
+- **на ро́зі вулиці** (on the corner of the street) — **Аптека на розі вулиці Шевченка.** The pharmacy is on the corner of Shevchenko Street.
+- **у на́шому райо́ні** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
 
 Now describe your whole city using **є** (there is/are). The construction is simple: **У** + place + **є** + what's there.
 
-- **У Києві є метро.** — Kyiv has a metro.
-- **У нашому місті є великий парк.** — Our city has a big park.
-- **У цьому районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
+- **У Ки́єві є метро.** — Kyiv has a metro.
+- **У нашому місті є вели́кий парк.** — Our city has a big park.
+- **У цьому́ районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
 
-For the negative, use **немає** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
+For the negative, use **нема́є** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
 
 <!-- INJECT_ACTIVITY: quiz-where-would-you-go -->
 
@@ -267,24 +265,24 @@ Location words at a glance:
 - **біля** + gen — next to: **Аптека біля дому.**
 - **у центрі** — in the center: **Театр у центрі.**
 - **на розі** — on the corner: **Банк на розі.**
-- **у районі** — in the neighborhood: **Школа у районі.**
+- **у районі** — in the neighborhood: **Шко́ла у районі.**
 
 Self-check — answer these questions about your own city:
 
-- **Де ти купуєш ліки?** → В аптеці.
-- **Де ти їси?** → У ресторані / у кафе.
-- **Де ти читаєш книги?** → У бібліотеці.
-- **Де ти чекаєш на потяг?** → На вокзалі.
+- **Де ти купу́єш ліки?** → В аптеці.
+- **Де ти їси́?** → У ресторані / у кафе.
+- **Де ти чита́єш книги?** → У бібліотеці.
+- **Де ти чека́єш на потяг?** → На вокзалі.
 - **Що є біля твого дому?** → Біля мого дому є … (your answer).
 - **Твій університет далеко чи близько?** → (open answer).
 
 <!-- INJECT_ACTIVITY: fill-in-your-city -->
 
-You now know where things are in a city and how to describe your neighborhood. The next module (M31 — Where To?) introduces **куди** — movement *toward* places using the accusative case: **Я іду до бібліотеки. Я їду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
+The next module (M31 — Where To?) introduces **куди́** — movement *toward* places using the accusative case: **Я іду́ до бібліоте́ки. Я ї́ду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
 
 <!-- INJECT_ACTIVITY: quiz-mixed-review -->
 
-**Deterministic word count: 1624 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1567 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -462,14 +460,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 134 words | Not found: 3 words
+Verified: 126 words | Not found: 58 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Аліна — NOT IN VESUM
-  ✗ Хрещатик — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Заболо — NOT IN VESUM
+  ✗ Майда — NOT IN VESUM
+  ✗ Незале — NOT IN VESUM
+  ✗ Перехо — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ Хреща — NOT IN VESUM
   ✗ Шевченка — NOT IN VESUM
+  ✗ Шко — NOT IN VESUM
+  ✗ апте — NOT IN VESUM
+  ✗ бли — NOT IN VESUM
+  ✗ бібліоте — NOT IN VESUM
+  ✗ вжива — NOT IN VESUM
+  ✗ вокза — NOT IN VESUM
+  ✗ гор — NOT IN VESUM
+  ✗ жете — NOT IN VESUM
+  ✗ жий — NOT IN VESUM
+  ✗ жності — NOT IN VESUM
+  ✗ звами — NOT IN VESUM
+  ✗ зько — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ кінотеа — NOT IN VESUM
+  ✗ льна — NOT IN VESUM
+  ✗ ліка — NOT IN VESUM
+  ✗ ліна — NOT IN VESUM
+  ✗ магази — NOT IN VESUM
+  ✗ музе — NOT IN VESUM
+  ✗ недале — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нки — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нник — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ нтру — NOT IN VESUM
+  ✗ нтрі — NOT IN VESUM
+  ✗ нці — NOT IN VESUM
+  ✗ пло — NOT IN VESUM
+  ✗ райо — NOT IN VESUM
+  ✗ рестора — NOT IN VESUM
+  ✗ рква — NOT IN VESUM
+  ✗ ркві — NOT IN VESUM
+  ✗ ркет — NOT IN VESUM
+  ✗ рня — NOT IN VESUM
+  ✗ рні — NOT IN VESUM
+  ✗ стадіо — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ суперма — NOT IN VESUM
+  ✗ теа — NOT IN VESUM
+  ✗ тний — NOT IN VESUM
 
-All 134 other words are confirmed to exist in VESUM.
+All 126 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -478,23 +523,23 @@ All 134 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

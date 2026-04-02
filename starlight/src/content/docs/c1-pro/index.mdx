@@ -1,74 +1,68 @@
 ---
-title: "C1-PRO"
-description: " — 50 modules"
-template: splash
+title: C1-PRO - Фахова українська
+sidebar:
+  order: 1
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="C1-PRO"
-  title="C1-PRO"
-  subtitle=" — 0/50 modules complete"
-  moduleCount={50}
-  wordTarget={4000}
-  color="#546E7A"
+  level="c1-pro"
+  levelName="C1-PRO - Фахова українська"
+  subtitle="Professional Mastery — 50 modules"
+  introduction="Professional Mastery — Executive, academic, specialized"
+  totalPlanned={50}
   modules={[
-    {
-      unit: "C1-PRO Modules",
-      items: [
-        { num: 1, slug: "executive-email", title: "Executive Email", sub: "", status: "locked" },
-        { num: 2, slug: "stakeholder-communication", title: "Stakeholder Communication", sub: "", status: "locked" },
-        { num: 3, slug: "board-presentations", title: "Board Presentations", sub: "", status: "locked" },
-        { num: 4, slug: "strategic-reports", title: "Strategic Reports", sub: "", status: "locked" },
-        { num: 5, slug: "crisis-communication", title: "Crisis Communication", sub: "", status: "locked" },
-        { num: 6, slug: "change-management", title: "Change Management", sub: "", status: "locked" },
-        { num: 7, slug: "leadership-rhetoric", title: "Leadership Rhetoric", sub: "", status: "locked" },
-        { num: 8, slug: "negotiation-advanced", title: "Negotiation Advanced", sub: "", status: "locked" },
-        { num: 9, slug: "conflict-resolution", title: "Conflict Resolution", sub: "", status: "locked" },
-        { num: 10, slug: "mentoring-coaching", title: "Mentoring Coaching", sub: "", status: "locked" },
-        { num: 11, slug: "executive-networking", title: "Executive Networking", sub: "", status: "locked" },
-        { num: 12, slug: "media-relations", title: "Media Relations", sub: "", status: "locked" },
-        { num: 13, slug: "executive-checkpoint", title: "Executive Checkpoint", sub: "", status: "locked" },
-        { num: 14, slug: "executive-integration", title: "Executive Integration", sub: "", status: "locked" },
-        { num: 15, slug: "executive-capstone", title: "Executive Capstone", sub: "", status: "locked" },
-        { num: 16, slug: "academic-writing-structure", title: "Academic Writing Structure", sub: "", status: "locked" },
-        { num: 17, slug: "literature-review-academic", title: "Literature Review Academic", sub: "", status: "locked" },
-        { num: 18, slug: "methodology-writing", title: "Methodology Writing", sub: "", status: "locked" },
-        { num: 19, slug: "results-presentation", title: "Results Presentation", sub: "", status: "locked" },
-        { num: 20, slug: "discussion-writing", title: "Discussion Writing", sub: "", status: "locked" },
-        { num: 21, slug: "peer-review-process", title: "Peer Review Process", sub: "", status: "locked" },
-        { num: 22, slug: "conference-abstracts", title: "Conference Abstracts", sub: "", status: "locked" },
-        { num: 23, slug: "conference-presentations", title: "Conference Presentations", sub: "", status: "locked" },
-        { num: 24, slug: "grant-writing", title: "Grant Writing", sub: "", status: "locked" },
-        { num: 25, slug: "academic-correspondence", title: "Academic Correspondence", sub: "", status: "locked" },
-        { num: 26, slug: "citation-referencing", title: "Citation Referencing", sub: "", status: "locked" },
-        { num: 27, slug: "thesis-dissertation", title: "Thesis Dissertation", sub: "", status: "locked" },
-        { num: 28, slug: "academic-checkpoint", title: "Academic Checkpoint", sub: "", status: "locked" },
-        { num: 29, slug: "academic-integration", title: "Academic Integration", sub: "", status: "locked" },
-        { num: 30, slug: "academic-capstone", title: "Academic Capstone", sub: "", status: "locked" },
-        { num: 31, slug: "it-management", title: "It Management", sub: "", status: "locked" },
-        { num: 32, slug: "it-architecture", title: "It Architecture", sub: "", status: "locked" },
-        { num: 33, slug: "fintech-banking", title: "Fintech Banking", sub: "", status: "locked" },
-        { num: 34, slug: "investment-analysis", title: "Investment Analysis", sub: "", status: "locked" },
-        { num: 35, slug: "corporate-law", title: "Corporate Law", sub: "", status: "locked" },
-        { num: 36, slug: "international-law", title: "International Law", sub: "", status: "locked" },
-        { num: 37, slug: "healthcare-management", title: "Healthcare Management", sub: "", status: "locked" },
-        { num: 38, slug: "pharmaceutical", title: "Pharmaceutical", sub: "", status: "locked" },
-        { num: 39, slug: "energy-sector", title: "Energy Sector", sub: "", status: "locked" },
-        { num: 40, slug: "agriculture-agribusiness", title: "Agriculture Agribusiness", sub: "", status: "locked" },
-        { num: 41, slug: "translation-basics", title: "Translation Basics", sub: "", status: "locked" },
-        { num: 42, slug: "interpretation-basics", title: "Interpretation Basics", sub: "", status: "locked" },
-        { num: 43, slug: "cross-cultural-communication", title: "Cross Cultural Communication", sub: "", status: "locked" },
-        { num: 44, slug: "industry-checkpoint", title: "Industry Checkpoint", sub: "", status: "locked" },
-        { num: 45, slug: "industry-integration", title: "Industry Integration", sub: "", status: "locked" },
-        { num: 46, slug: "professional-portfolio", title: "Professional Portfolio", sub: "", status: "locked" },
-        { num: 47, slug: "personal-branding", title: "Personal Branding", sub: "", status: "locked" },
-        { num: 48, slug: "career-development", title: "Career Development", sub: "", status: "locked" },
-        { num: 49, slug: "c1-pro-integration", title: "C1 Pro Integration", sub: "", status: "locked" },
-        { num: 50, slug: "c1-pro-capstone", title: "C1 Pro Capstone", sub: "", status: "locked" },
-      ]
-    },
+  { num: 1, title: "executive-email", slug: "executive-email", status: "wip" },
+  { num: 2, title: "stakeholder-communication", slug: "stakeholder-communication", status: "wip" },
+  { num: 3, title: "board-presentations", slug: "board-presentations", status: "wip" },
+  { num: 4, title: "strategic-reports", slug: "strategic-reports", status: "wip" },
+  { num: 5, title: "crisis-communication", slug: "crisis-communication", status: "wip" },
+  { num: 6, title: "change-management", slug: "change-management", status: "wip" },
+  { num: 7, title: "leadership-rhetoric", slug: "leadership-rhetoric", status: "wip" },
+  { num: 8, title: "negotiation-advanced", slug: "negotiation-advanced", status: "wip" },
+  { num: 9, title: "conflict-resolution", slug: "conflict-resolution", status: "wip" },
+  { num: 10, title: "mentoring-coaching", slug: "mentoring-coaching", status: "wip" },
+  { num: 11, title: "executive-networking", slug: "executive-networking", status: "wip" },
+  { num: 12, title: "media-relations", slug: "media-relations", status: "wip" },
+  { num: 13, title: "executive-checkpoint", slug: "executive-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 14, title: "executive-integration", slug: "executive-integration", status: "wip" },
+  { num: 15, title: "executive-capstone", slug: "executive-capstone", status: "wip" },
+  { num: 16, title: "academic-writing-structure", slug: "academic-writing-structure", status: "wip" },
+  { num: 17, title: "literature-review-academic", slug: "literature-review-academic", status: "wip" },
+  { num: 18, title: "methodology-writing", slug: "methodology-writing", status: "wip" },
+  { num: 19, title: "results-presentation", slug: "results-presentation", status: "wip" },
+  { num: 20, title: "discussion-writing", slug: "discussion-writing", status: "wip" },
+  { num: 21, title: "peer-review-process", slug: "peer-review-process", status: "wip" },
+  { num: 22, title: "conference-abstracts", slug: "conference-abstracts", status: "wip" },
+  { num: 23, title: "conference-presentations", slug: "conference-presentations", status: "wip" },
+  { num: 24, title: "grant-writing", slug: "grant-writing", status: "wip" },
+  { num: 25, title: "academic-correspondence", slug: "academic-correspondence", status: "wip" },
+  { num: 26, title: "citation-referencing", slug: "citation-referencing", status: "wip" },
+  { num: 27, title: "thesis-dissertation", slug: "thesis-dissertation", status: "wip" },
+  { num: 28, title: "academic-checkpoint", slug: "academic-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 29, title: "academic-integration", slug: "academic-integration", status: "wip" },
+  { num: 30, title: "academic-capstone", slug: "academic-capstone", status: "wip" },
+  { num: 31, title: "it-management", slug: "it-management", status: "wip" },
+  { num: 32, title: "it-architecture", slug: "it-architecture", status: "wip" },
+  { num: 33, title: "fintech-banking", slug: "fintech-banking", status: "wip" },
+  { num: 34, title: "investment-analysis", slug: "investment-analysis", status: "wip" },
+  { num: 35, title: "corporate-law", slug: "corporate-law", status: "wip" },
+  { num: 36, title: "international-law", slug: "international-law", status: "wip" },
+  { num: 37, title: "healthcare-management", slug: "healthcare-management", status: "wip" },
+  { num: 38, title: "pharmaceutical", slug: "pharmaceutical", status: "wip" },
+  { num: 39, title: "energy-sector", slug: "energy-sector", status: "wip" },
+  { num: 40, title: "agriculture-agribusiness", slug: "agriculture-agribusiness", status: "wip" },
+  { num: 41, title: "translation-basics", slug: "translation-basics", status: "wip" },
+  { num: 42, title: "interpretation-basics", slug: "interpretation-basics", status: "wip" },
+  { num: 43, title: "cross-cultural-communication", slug: "cross-cultural-communication", status: "wip" },
+  { num: 44, title: "industry-checkpoint", slug: "industry-checkpoint", status: "wip", isCheckpoint: true },
+  { num: 45, title: "industry-integration", slug: "industry-integration", status: "wip" },
+  { num: 46, title: "professional-portfolio", slug: "professional-portfolio", status: "wip" },
+  { num: 47, title: "personal-branding", slug: "personal-branding", status: "wip" },
+  { num: 48, title: "career-development", slug: "career-development", status: "wip" },
+  { num: 49, title: "c1-pro-integration", slug: "c1-pro-integration", status: "wip" },
+  { num: 50, title: "c1-pro-capstone", slug: "c1-pro-capstone", status: "wip" }
   ]}
 />

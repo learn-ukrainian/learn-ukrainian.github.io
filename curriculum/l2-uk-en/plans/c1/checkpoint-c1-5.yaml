@@ -4,38 +4,51 @@ sequence: 73
 slug: checkpoint-c1-5
 version: '1.1'
 title: "Підсумковий контроль: рівень C1.5"
-subtitle: "Assessment: Level C1.5"
+subtitle: "Підсумковий контроль: C1.5"
 focus: checkpoint
 pedagogy: review
 word_target: 4000
 objectives:
-  - "Оцінити рівень засвоєння складних граматичних та лексичних конструкцій блоку C1.5."
+  - "Оцінити рівень засвоєння складних граматичних та лексичних конструкцій блоку
+    C1.5."
   - "Перевірити навички критичного аналізу текстів різних функціональних стилів."
-  - "Проконтролювати вміння створювати розгорнуті аргументативні тексти з дотриманням стилістичних норм."
+  - "Проконтролювати вміння створювати розгорнуті аргументативні тексти з дотриманням
+    стилістичних норм."
   - "Підтвердити готовність до переходу на наступний етап вивчення мови (C1+ / C2)."
 
 reading_situations:
   - source_type: "науково-теоретична стаття"
     topic: "Специфіка українського наукового дискурсу в умовах постколоніальної трансформації."
     key_elements: ["дискурсивні практики", "деколонізація", "термінологічна уніфікація"]
-    motivation: "Перевірка розуміння глибоких концептуальних зв'язків та вміння виокремлювати авторську позицію."
+    motivation: "Перевірка розуміння глибоких концептуальних зв'язків та вміння виокремлювати
+      авторську позицію."
 
 listening_situations:
   - media_type: "відео"
-    setting: "Круглий стіл експертів з питань мовної політики та національної безпеки України."
-    focus_points: ["аргументація сторін", "використання риторичних фігур", "підсумовування дискусії"]
-    motivation: "Оцінка навичок сприйняття на слух спонтанного фахового мовлення з високим темпом."
+    setting: "Круглий стіл експертів з питань мовної політики та національної безпеки
+      України."
+    focus_points: ["аргументація сторін", "використання риторичних фігур", "підсумовування
+          дискусії"]
+    motivation: "Оцінка навичок сприйняття на слух спонтанного фахового мовлення з
+      високим темпом."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть академічне есе (450-500 слів) на тему: 'Вплив цифрових технологій на розвиток та трансформацію сучасної літературної мови'."
-    requirements: ["використання складного синтаксису", "вживання термінології", "логічна послідовність аргументів"]
-    motivation: "Підсумкова перевірка письмової компетенції та здатності до синтезу ідей."
-    model_answer: "Твір має містити чітке формулювання тези, два-три розгорнуті аргументи з прикладами та висновок. Важливо використати засоби хеджингу та складну пунктуацію."
+    prompt: "Напишіть академічне есе (450-500 слів) на тему: 'Вплив цифрових технологій
+      на розвиток та трансформацію сучасної літературної мови'."
+    requirements: ["використання складного синтаксису", "вживання термінології", "логічна
+          послідовність аргументів"]
+    motivation: "Підсумкова перевірка письмової компетенції та здатності до синтезу
+      ідей."
+    model_answer: "Твір має містити чітке формулювання тези, два-три розгорнуті аргументи
+      з прикладами та висновок. Важливо використати засоби хеджингу та складну пунктуацію."
 
 discussion_topics:
-  - context: "Дебати на тему: 'Чи є пуризм необхідним заходом для захисту української мови від суржику та запозичень?'"
-    questions: ["Які аргументи 'за' та 'проти' радикального очищення мови ви можете навести?", "Як знайти баланс між збереженням традиції та природним розвитком мови?", "Яка роль індивіда у формуванні мовної культури суспільства?"]
+  - context: "Дебати на тему: 'Чи є пуризм необхідним заходом для захисту української
+      мови від суржику та запозичень?'"
+    questions: ["Які аргументи 'за' та 'проти' радикального очищення мови ви можете
+          навести?", "Як знайти баланс між збереженням традиції та природним розвитком
+          мови?", "Яка роль індивіда у формуванні мовної культури суспільства?"]
     motivation: "Оцінка навичок ведення полеміки, швидкості реакції та багатства вокабуляру."
 
 content_outline:
@@ -63,7 +76,8 @@ content_outline:
     words: 1000
     subsections:
       - "Визначення функціональних стилів та їх маркерів у запропонованих текстах"
-      - "Трансформація тексту з одного стилю в інший (наприклад, з публіцистичного в науковий)"
+      - "Трансформація тексту з одного стилю в інший (наприклад, з публіцистичного
+        в науковий)"
       - "Критика стилістичних помилок та кальок у професійних текстах"
     key_concepts:
       - "стилістична адекватність"
@@ -99,15 +113,22 @@ vocabulary:
 
 activity_hints:
   - type: essay-response
-    description: "Write an academic essay (200-250 words) synthesizing knowledge from C1.5 modules — stylistics, syntax, register — on a given topic about language and technology."
+    description: "Write an academic essay (200-250 words) synthesizing knowledge from
+      C1.5 modules — stylistics, syntax, register — on a given topic about language
+      and technology."
   - type: critical-analysis
-    description: "Analyze a complex text and perform full linguistic evaluation — identify register, stylistic devices, syntactic patterns, and evaluate argumentation quality."
+    description: "Analyze a complex text and perform full linguistic evaluation —
+      identify register, stylistic devices, syntactic patterns, and evaluate argumentation
+      quality."
   - type: error-correction
-    description: "Fix all types of errors in a deliberately flawed academic text — lexical calques, register mixing, syntactic errors, punctuation mistakes."
+    description: "Fix all types of errors in a deliberately flawed academic text —
+      lexical calques, register mixing, syntactic errors, punctuation mistakes."
   - type: fill-in
-    description: "Complete a cloze passage from a scientific article with missing modal markers, connectors, and complex syntactic constructions."
+    description: "Complete a cloze passage from a scientific article with missing
+      modal markers, connectors, and complex syntactic constructions."
   - type: select
-    description: "Choose the most appropriate stylistic variant for given communicative situations — from high formal to intimate register."
+    description: "Choose the most appropriate stylistic variant for given communicative
+      situations — from high formal to intimate register."
 
 activities:
   types_required:

@@ -4,13 +4,14 @@ sequence: 35
 slug: leksykolohiia-c1
 version: '1.1'
 title: "Лексикологія C1: Синонімічне багатство та точність слововживання"
-subtitle: "Lexicology C1"
+subtitle: "Лексикологія C1"
 focus: vocabulary
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Вдосконалити навички добору контекстуально доречних синонімів для уникнення тавтології."
-  - "Навчитися розрізняти відтінки значень паронімів у науковому та офіційно-діловому стилях."
+  - "Навчитися розрізняти відтінки значень паронімів у науковому та офіційно-діловому
+    стилях."
   - "Опанувати активний словник фразеологізмів для підсилення експресивності мовлення."
   - "Аналізувати процеси неологізації та доцільність використання іншомовних запозичень."
 
@@ -20,25 +21,33 @@ reading_situations:
     key_elements: ["домінанта", "коннотація", "евфемізм"]
     motivation: "Розуміння того, як вибір слова впливає на прагматику тексту."
   - source_type: "словникова стаття"
-    topic: "Аналіз складних гнізд паронімів (наприклад, 'дільниця' — 'ділянка', 'ефектний' — 'ефективний')."
+    topic: "Аналіз складних гнізд паронімів (наприклад, 'дільниця' — 'ділянка', 'ефектний'
+      — 'ефективний')."
     key_elements: ["семантичне поле", "диференційна ознака", "словосполучуваність"]
-    motivation: "Запобігання типовим лексичним помилкам на високому рівні володіння мовою."
+    motivation: "Запобігання типовим лексичним помилкам на високому рівні володіння
+      мовою."
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Виступ мовознавця (наприклад, Олександра Авраменка або Святослава Караванського) про культуру мовлення та боротьбу з мовним сміттям."
+    setting: "Виступ мовознавця (наприклад, Олександра Авраменка або Святослава Караванського)
+      про культуру мовлення та боротьбу з мовним сміттям."
     focus_points: ["мовна норма", "лексичний пуризм", "точність вислову"]
     motivation: "Формування естетичного смаку та відповідального ставлення до слова."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Проаналізуйте роль англіцизмів у сучасній ІТ-термінології. Чи є цей процес неминучим, чи українська мова має достатній ресурс для творення власних відповідників?"
-    requirements: ["мінімум 300 слів", "використання термінів: 'деривація', 'пуризм', 'адаптація'", "наведення прикладів успішного словотвору"]
+    prompt: "Проаналізуйте роль англіцизмів у сучасній ІТ-термінології. Чи є цей процес
+      неминучим, чи українська мова має достатній ресурс для творення власних відповідників?"
+    requirements: ["мінімум 300 слів", "використання термінів: 'деривація', 'пуризм',
+          'адаптація'", "наведення прикладів успішного словотвору"]
     motivation: "Розвиток навичок критичного аналізу лексичних процесів."
-    model_answer: "Текст має збалансовано оцінювати переваги (уніфікація) та недоліки (втрата самобутності) запозичень. Важливо згадати про досвід інших мов та традицію українського термінотворення 1920-х років."
+    model_answer: "Текст має збалансовано оцінювати переваги (уніфікація) та недоліки
+      (втрата самобутності) запозичень. Важливо згадати про досвід інших мов та традицію
+      українського термінотворення 1920-х років."
 
 discussion_topics:
-  - context: "Фразеологія в офіційному мовленні: ознака майстерності чи недоречна надмірність?"
+  - context: "Фразеологія в офіційному мовленні: ознака майстерності чи недоречна
+      надмірність?"
     questions:
       - "Які фразеологізми є припустимими в дипломатичному листуванні?"
       - "Як знання крилатих висловів допомагає розумінню культурного коду?"
@@ -61,7 +70,8 @@ content_outline:
     subsections:
       - "Причини виникнення паронімів та типи помилок у їх вживанні"
       - "Омоніми, омографи та омофони: розрізнення в контексті"
-      - "Міжмовна омонімія ('фальшиві друзі перекладача') в українсько-англійських парах"
+      - "Міжмовна омонімія ('фальшиві друзі перекладача') в українсько-англійських
+        парах"
     key_concepts:
       - "паронім"
       - "омограф"
@@ -106,15 +116,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix paronym confusion (дільниця↔ділянка, ефектний↔ефективний) and tautology in academic and professional Ukrainian texts."
+    description: "Fix paronym confusion (дільниця↔ділянка, ефектний↔ефективний) and
+      tautology in academic and professional Ukrainian texts."
   - type: match-up
-    description: "Match synonymic rows with their dominant word and differentiate by connotation, register, and context."
+    description: "Match synonymic rows with their dominant word and differentiate
+      by connotation, register, and context."
   - type: critical-analysis
-    description: "Analyze anglicisms in Ukrainian IT terminology — evaluate necessity of borrowings vs potential for native word formation (деривація)."
+    description: "Analyze anglicisms in Ukrainian IT terminology — evaluate necessity
+      of borrowings vs potential for native word formation (деривація)."
   - type: select
-    description: "Choose the contextually appropriate synonym from a synonymic row for academic, journalistic, and colloquial registers."
+    description: "Choose the contextually appropriate synonym from a synonymic row
+      for academic, journalistic, and colloquial registers."
   - type: fill-in
-    description: "Complete sentences with correct paronyms, avoiding common confusion in scientific and official texts."
+    description: "Complete sentences with correct paronyms, avoiding common confusion
+      in scientific and official texts."
 
 activities:
   types_required:

@@ -1,214 +1,199 @@
-module: b1-057
+module: b1-053
 level: B1
-sequence: 57
+sequence: 53
 slug: participles-active
 version: '3.0'
 title: "Активні дієприкметники"
 subtitle: "Ознака за дією, яку виконує сам предмет"
 focus: grammar
 pedagogy: PPP
-phase: "B1.7 [Participles & Gerunds]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
-- "Learner can define дієприкметник as a verb form expressing ознака предмета
-  за дією and distinguish it from прикметник and дієслово"
-- "Learner can form active participles of present tense using суфікси
-  -уч-/-юч- (I дієвідміна) and -ач-/-яч- (II дієвідміна)"
-- "Learner can form active participles of past tense using суфікс -л-
-  from perfective verbs (зів'ялий, розквітлий, посивілий)"
-- "Learner can recognize which active participles are natural in Ukrainian
-  and which are calques from Russian (головуючий, діючий → голова, чинний)"
-- "Learner can decline active participles like adjectives, agreeing
-  in рід, число, and відмінок with the noun they modify"
+  - "Learner can define дієприкметник as a verb form expressing ознака предмета за
+    дією and distinguish it from прикметник and дієслово"
+  - "Learner can form active participles of present tense using суфікси -уч-/-юч-
+    (I дієвідміна) and -ач-/-яч- (II дієвідміна)"
+  - "Learner can form active participles of past tense using суфікс -л- from perfective
+    verbs (зів'ялий, розквітлий, посивілий)"
+  - "Learner can recognize which active participles are natural in Ukrainian and which
+    are calques from Russian (головуючий, діючий → голова, чинний)"
+  - "Learner can decline active participles like adjectives, agreeing in рід, число,
+    and відмінок with the noun they modify"
 dialogue_situations:
-- setting: 'Nature documentary narration about Карпати — describing animals and scenery:
-    Олень (m, deer), що біжить через поляну (f, meadow). Водоспад (m, waterfall),
-    що падає зі скелі (f, cliff). Квітучі (blooming) луки (pl, meadows). Мандруючі
-    (wandering) хмари (pl, clouds).'
-  speakers:
-  - Оповідач (narrator)
-  motivation: 'Active participles: біжучий, падаючий, квітучий, мандруючий'
+  - setting: 'Nature documentary narration about Карпати — describing animals and
+      scenery: Олень (m, deer), що біжить через поляну (f, meadow). Водоспад (m, waterfall),
+      що падає зі скелі (f, cliff). Квітучі (blooming) луки (pl, meadows). Мандруючі
+      (wandering) хмари (pl, clouds).'
+    speakers:
+      - Оповідач (narrator)
+    motivation: 'Active participles: біжучий, падаючий, квітучий, мандруючий'
 content_outline:
-- section: "Що таке дієприкметник?"
-  words: 600
-  points:
-  - "Definition from Литвінова Grade 7 p.82: дієприкметник — це особлива
-    форма дієслова, яка означає ознаку предмета за дією або станом.
-    Поєднує ознаки дієслова (час, вид, стан) i прикметника (рід, число,
-    відмінок). Key insight: it answers який? яка? яке? які? like
-    an adjective, but derives from a verb."
-  - "Comparison with прикметник and дієслово:
-    красивий (прикметник — permanent quality)
-    квітучий (дієприкметник — quality arising from action: квітнути)
-    квітне (дієслово — action itself).
-    From Заболотний Grade 8 p.51: 'Дієприкметник виражає ознаку предмета
-    за дією або станом: сяючий, в'янучий, розквітлий, вишитий.'"
-  - "The two main categories: активні (subject performs the action:
-    палаючий вогонь — вогонь сам палає) vs пасивні (subject receives
-    the action: прочитана книга — книгу хтось прочитав).
-    This module covers активні; M58 covers пасивні."
-- section: "Активні дієприкметники теперішнього часу (-уч-/-юч-, -ач-/-яч-)"
-  words: 800
-  points:
-  - "Formation from Литвінова Grade 7 p.88:
-    I дієвідміна: основа теперішнього часу + -уч-/-юч-:
-    синіти → синіють → синіючий, квітнути → квітнуть → квітнучий.
-    II дієвідміна: основа теперішнього часу + -ач-/-яч-:
-    лежати → лежать → лежачий (but see restrictions below)."
-  - "CRITICAL: Ukrainian restrictions on active present participles.
-    From Авраменко Grade 11 p.58: 'Активні дієприкметники виражають
-    ознаку за дією, яку виконує сам предмет.' However, many -ущий/-ющий
-    forms are Russian calques, not natural Ukrainian.
-    NATURAL: квітучий, пекучий, лежачий, киплячий (lexicalized adjectives).
-    UNNATURAL (Russian calques): головуючий → голова, діючий → чинний,
-    домінуючий → панівний, існуючий → наявний, миючий → мийний.
-    Rule from Авраменко Grade 11 p.59: if the participle can be replaced
-    by a regular adjective or noun, the replacement is preferred."
-  - "Lexicalized forms that have become adjectives:
-    пекучий біль (burning pain), киплячий чайник (boiling kettle),
-    лежачий камінь (lying stone — under a lying stone water does not flow),
-    палаючий вогонь (blazing fire), квітучий сад (blooming garden).
-    These are acceptable because they express PERMANENT characteristics."
-  - "Practice: 10-12 examples forming active present participles,
-    with learners identifying which are natural Ukrainian and which
-    should be replaced: працюючий → ? (not natural, use той, хто працює
-    or робітник), зростаючий → ? (зростальний or що зростає)."
-- section: "Активні дієприкметники минулого часу (-л-)"
-  words: 700
-  points:
-  - "Formation from Заболотний Grade 7 p.92:
-    Основа інфінітива доконаного виду + суфікс -л-:
-    розквітнути → розквітлий, зів'яти → зів'ялий,
-    посивіти → посивілий, опасти → опалий, зникнути → зниклий.
-    These are MORE natural in Ukrainian than present-tense active participles."
-  - "Semantic nuance: past active participles express a COMPLETED change
-    of state. The subject underwent the action and now carries its result:
-    зів'ялий листок (a leaf that has wilted — completed process),
-    побілілі гори (mountains that have turned white),
-    потерпілий (a person who has suffered — also used as a legal noun)."
-  - "Declension: active participles decline exactly like прикметники:
-    зів'ялий, зів'ялого, зів'ялому, зів'ялий/зів'ялого, зів'ялим, зів'ялому.
-    Feminine: зів'яла, зів'ялої... Neuter: зів'яле, зів'ялого...
-    Plural: зів'ялі, зів'ялих..."
-  - "Practice: form past active participles from given verbs and use
-    them in sentences. Emphasize natural usage:
-    опасти → опале листя, змарніти → змарнілий хлопець,
-    зрости → зрослий попит, збанкрутіти → збанкрутіле підприємство."
-- section: "Чого уникати: русизми у дієприкметниках"
-  words: 600
-  points:
-  - "From Авраменко Grade 7 p.95 (editorial exercise):
-    'Відредагуйте та запишіть словосполучення:
-    стоячі місця, перебуваючий за кордоном, лідируюча команда,
-    потопаючий чоловік, пануючий клас, оточуюче середовище,
-    блукаючий сюжет, миючий засіб, знаюча людина, бігуча дівчина,
-    координуючий центр, підростаюче покоління, головуючий на зборах,
-    завідуючий кафедрою.'
-    Each must be replaced with natural Ukrainian."
-  - "Replacement strategies:
-    1. Описовий зворот: який + дієслово (людина, яка знає).
-    2. Iменник: головуючий → голова, завідуючий → завідувач.
-    3. Прикметник: діючий → чинний, існуючий → наявний,
-    миючий → мийний, домінуючий → панівний.
-    4. Дієприкметник минулого часу: потопаючий → той, хто тоне
-    (but потонулий exists for the result)."
-  - "Reading practice: a short text containing both natural and
-    unnatural active participles. Learners identify and correct the calques."
-- section: "Дієприкметник у тексті"
-  words: 700
-  points:
-  - "Reading passage: a literary description of nature using participles
-    naturally. Example from Голуб: 'Побілілі від снігу гори виднілися
-    вдалині. Зів'яле листя шелестіло під ногами. Квітучий сад
-    наповнював повітря солодким ароматом.'
-    Comprehension: identify all дієприкметники, determine their час and стан."
-  - "Production exercise: learners write a short nature description
-    (5-6 sentences) using at least 4 active participles (both present
-    and past). Constraint: all participles must be natural Ukrainian."
-  - "Register awareness: active participles are more common in
-    художній and науковий styles. In розмовний style, Ukrainians
-    prefer описові звороти: не 'квітучий сад' but 'сад, що квітне'
-    in everyday speech."
-- section: "Підсумок та перехід до M58"
-  words: 400
-  points:
-  - "Summary: дієприкметник = ознака за дією. Активні = суб'єкт
-    діє сам. Теперішній час: -уч-/-юч-, -ач-/-яч- (обережно з русизмами!).
-    Минулий час: -л- (більш природні для української).
-    Self-check: Я можу утворити активні дієприкметники ✓/✗,
-    Я розрізняю природні й неприродні форми ✓/✗."
-  - "Preview: M58 — Пасивні дієприкметники. The other side: ознака
-    за дією, якої зазнає предмет: прочитана книга, збудований міст.
-    These are far more productive and natural in Ukrainian."
+  - section: "Що таке дієприкметник?"
+    words: 600
+    points:
+      - "Definition from Литвінова Grade 7 p.82: дієприкметник — це особлива форма
+        дієслова, яка означає ознаку предмета за дією або станом. Поєднує ознаки дієслова
+        (час, вид, стан) i прикметника (рід, число, відмінок). Key insight: it answers
+        який? яка? яке? які? like an adjective, but derives from a verb."
+      - "Comparison with прикметник and дієслово: красивий (прикметник — permanent
+        quality) квітучий (дієприкметник — quality arising from action: квітнути)
+        квітне (дієслово — action itself). From Заболотний Grade 8 p.51: 'Дієприкметник
+        виражає ознаку предмета за дією або станом: сяючий, в'янучий, розквітлий,
+        вишитий.'"
+      - "The two main categories: активні (subject performs the action: палаючий вогонь
+        — вогонь сам палає) vs пасивні (subject receives the action: прочитана книга
+        — книгу хтось прочитав). This module covers активні; M58 covers пасивні."
+  - section: "Активні дієприкметники теперішнього часу (-уч-/-юч-, -ач-/-яч-)"
+    words: 800
+    points:
+      - "Formation from Литвінова Grade 7 p.88: I дієвідміна: основа теперішнього
+        часу + -уч-/-юч-: синіти → синіють → синіючий, квітнути → квітнуть → квітнучий.
+        II дієвідміна: основа теперішнього часу + -ач-/-яч-: лежати → лежать → лежачий
+        (but see restrictions below)."
+      - "CRITICAL: Ukrainian restrictions on active present participles. From Авраменко
+        Grade 11 p.58: 'Активні дієприкметники виражають ознаку за дією, яку виконує
+        сам предмет.' However, many -ущий/-ющий forms are Russian calques, not natural
+        Ukrainian. NATURAL: квітучий, пекучий, лежачий, киплячий (lexicalized adjectives).
+        UNNATURAL (Russian calques): головуючий → голова, діючий → чинний, домінуючий
+        → панівний, існуючий → наявний, миючий → мийний. Rule from Авраменко Grade
+        11 p.59: if the participle can be replaced by a regular adjective or noun,
+        the replacement is preferred."
+      - "Lexicalized forms that have become adjectives: пекучий біль (burning pain),
+        киплячий чайник (boiling kettle), лежачий камінь (lying stone — under a lying
+        stone water does not flow), палаючий вогонь (blazing fire), квітучий сад (blooming
+        garden). These are acceptable because they express PERMANENT characteristics."
+      - "Practice: 10-12 examples forming active present participles, with learners
+        identifying which are natural Ukrainian and which should be replaced: працюючий
+        → ? (not natural, use той, хто працює or робітник), зростаючий → ? (зростальний
+        or що зростає)."
+  - section: "Активні дієприкметники минулого часу (-л-)"
+    words: 700
+    points:
+      - "Formation from Заболотний Grade 7 p.92: Основа інфінітива доконаного виду
+        + суфікс -л-: розквітнути → розквітлий, зів'яти → зів'ялий, посивіти → посивілий,
+        опасти → опалий, зникнути → зниклий. These are MORE natural in Ukrainian than
+        present-tense active participles."
+      - "Semantic nuance: past active participles express a COMPLETED change of state.
+        The subject underwent the action and now carries its result: зів'ялий листок
+        (a leaf that has wilted — completed process), побілілі гори (mountains that
+        have turned white), потерпілий (a person who has suffered — also used as a
+        legal noun)."
+      - "Declension: active participles decline exactly like прикметники: зів'ялий,
+        зів'ялого, зів'ялому, зів'ялий/зів'ялого, зів'ялим, зів'ялому. Feminine: зів'яла,
+        зів'ялої... Neuter: зів'яле, зів'ялого... Plural: зів'ялі, зів'ялих..."
+      - "Practice: form past active participles from given verbs and use them in sentences.
+        Emphasize natural usage: опасти → опале листя, змарніти → змарнілий хлопець,
+        зрости → зрослий попит, збанкрутіти → збанкрутіле підприємство."
+  - section: "Чого уникати: русизми у дієприкметниках"
+    words: 600
+    points:
+      - "From Авраменко Grade 7 p.95 (editorial exercise): 'Відредагуйте та запишіть
+        словосполучення: стоячі місця, перебуваючий за кордоном, лідируюча команда,
+        потопаючий чоловік, пануючий клас, оточуюче середовище, блукаючий сюжет, миючий
+        засіб, знаюча людина, бігуча дівчина, координуючий центр, підростаюче покоління,
+        головуючий на зборах, завідуючий кафедрою.' Each must be replaced with natural
+        Ukrainian."
+      - "Replacement strategies: 1. Описовий зворот: який + дієслово (людина, яка
+        знає). 2. Iменник: головуючий → голова, завідуючий → завідувач. 3. Прикметник:
+        діючий → чинний, існуючий → наявний, миючий → мийний, домінуючий → панівний.
+        4. Дієприкметник минулого часу: потопаючий → той, хто тоне (but потонулий
+        exists for the result)."
+      - "Reading practice: a short text containing both natural and unnatural active
+        participles. Learners identify and correct the calques."
+  - section: "Дієприкметник у тексті"
+    words: 700
+    points:
+      - "Reading passage: a literary description of nature using participles naturally.
+        Example from Голуб: 'Побілілі від снігу гори виднілися вдалині. Зів'яле листя
+        шелестіло під ногами. Квітучий сад наповнював повітря солодким ароматом.'
+        Comprehension: identify all дієприкметники, determine their час and стан."
+      - "Production exercise: learners write a short nature description (5-6 sentences)
+        using at least 4 active participles (both present and past). Constraint: all
+        participles must be natural Ukrainian."
+      - "Register awareness: active participles are more common in художній and науковий
+        styles. In розмовний style, Ukrainians prefer описові звороти: не 'квітучий
+        сад' but 'сад, що квітне' in everyday speech."
+  - section: "Підсумок та перехід до M58"
+    words: 400
+    points:
+      - "Summary: дієприкметник = ознака за дією. Активні = суб'єкт діє сам. Теперішній
+        час: -уч-/-юч-, -ач-/-яч- (обережно з русизмами!). Минулий час: -л- (більш
+        природні для української). Self-check: Я можу утворити активні дієприкметники
+        ✓/✗, Я розрізняю природні й неприродні форми ✓/✗."
+      - "Preview: M58 — Пасивні дієприкметники. The other side: ознака за дією, якої
+        зазнає предмет: прочитана книга, збудований міст. These are far more productive
+        and natural in Ukrainian."
 vocabulary_hints:
   required:
-  - "дієприкметник (participle — verb form expressing attribute by action)"
-  - "активний дієприкметник (active participle — subject performs the action)"
-  - "пасивний дієприкметник (passive participle — subject receives the action)"
-  - "квітучий (blooming — natural active participle)"
-  - "палаючий (blazing — natural active participle)"
-  - "зів'ялий (wilted — past active participle)"
-  - "розквітлий (blossomed — past active participle)"
-  - "опалий (fallen, shed — past active participle, leaves)"
-  - "зниклий (disappeared — past active participle)"
-  - "посивілий (gone grey — past active participle)"
-  - "чинний (current, valid — replaces Russian calque діючий)"
-  - "наявний (existing, available — replaces Russian calque існуючий)"
-  - "описовий зворот (descriptive phrase — alternative to participle)"
+    - "дієприкметник (participle — verb form expressing attribute by action)"
+    - "активний дієприкметник (active participle — subject performs the action)"
+    - "пасивний дієприкметник (passive participle — subject receives the action)"
+    - "квітучий (blooming — natural active participle)"
+    - "палаючий (blazing — natural active participle)"
+    - "зів'ялий (wilted — past active participle)"
+    - "розквітлий (blossomed — past active participle)"
+    - "опалий (fallen, shed — past active participle, leaves)"
+    - "зниклий (disappeared — past active participle)"
+    - "посивілий (gone grey — past active participle)"
+    - "чинний (current, valid — replaces Russian calque діючий)"
+    - "наявний (existing, available — replaces Russian calque існуючий)"
+    - "описовий зворот (descriptive phrase — alternative to participle)"
   recommended:
-  - "пекучий (burning, scorching — lexicalized active participle)"
-  - "киплячий (boiling — lexicalized active participle)"
-  - "лежачий (lying — lexicalized, as in лежачий камінь)"
-  - "потерпілий (victim — past active participle used as noun)"
-  - "збанкрутілий (bankrupt — past active participle)"
-  - "змарнілий (emaciated — past active participle)"
-  - "панівний (dominant — replaces Russian calque домінуючий)"
-  - "мийний (washing/cleaning — replaces Russian calque миючий)"
-  - "завідувач (head/manager — replaces Russian calque завідуючий)"
+    - "пекучий (burning, scorching — lexicalized active participle)"
+    - "киплячий (boiling — lexicalized active participle)"
+    - "лежачий (lying — lexicalized, as in лежачий камінь)"
+    - "потерпілий (victim — past active participle used as noun)"
+    - "збанкрутілий (bankrupt — past active participle)"
+    - "змарнілий (emaciated — past active participle)"
+    - "панівний (dominant — replaces Russian calque домінуючий)"
+    - "мийний (washing/cleaning — replaces Russian calque миючий)"
+    - "завідувач (head/manager — replaces Russian calque завідуючий)"
 activity_hints:
-- type: quiz
-  focus: "Identify дієприкметники in sentences: is it active or passive? present or past?"
-  items: 10
-- type: fill-in
-  focus: "Form active participles from given verbs using correct suffixes"
-  items: 8
-- type: error-correction
-  focus: "Replace Russian calque participles with natural Ukrainian equivalents"
-  items: 8
-- type: match-up
-  focus: "Match active participles to their base verbs and meanings"
-  items: 8
-- type: group-sort
-  focus: "Sort participles into categories: natural Ukrainian vs Russian calque"
-  items: 12
-- type: sentence-builder
-  focus: "Write sentences using past active participles to describe nature"
-  items: 6
+  - type: quiz
+    focus: "Identify дієприкметники in sentences: is it active or passive? present
+      or past?"
+    items: 10
+  - type: fill-in
+    focus: "Form active participles from given verbs using correct suffixes"
+    items: 8
+  - type: error-correction
+    focus: "Replace Russian calque participles with natural Ukrainian equivalents"
+    items: 8
+  - type: match-up
+    focus: "Match active participles to their base verbs and meanings"
+    items: 8
+  - type: group-sort
+    focus: "Sort participles into categories: natural Ukrainian vs Russian calque"
+    items: 12
+  - type: sentence-builder
+    focus: "Write sentences using past active participles to describe nature"
+    items: 6
 connects_to:
-- "b1-058 (Пасивні дієприкметники — passive participles)"
-- "b1-059 (Дієприкметниковий зворот — participle phrases)"
-- "b1-023 (Пасивний стан — passive voice introduction)"
+  - "b1-058 (Пасивні дієприкметники — passive participles)"
+  - "b1-059 (Дієприкметниковий зворот — participle phrases)"
+  - "b1-023 (Пасивний стан — passive voice introduction)"
 prerequisites:
-- "b1-056 (Контрольна робота 6 — Phase 6 complete)"
+  - "b1-056 (Контрольна робота 6 — Phase 6 complete)"
 grammar:
-- "Дієприкметник: definition, ознаки дієслова i прикметника"
-- "Активні дієприкметники теперішнього часу: -уч-/-юч- (I), -ач-/-яч- (II)"
-- "Активні дієприкметники минулого часу: -л- (from perfective verbs)"
-- "Відмінювання дієприкметників як прикметників"
-- "Russian calques: identification and natural Ukrainian replacements"
+  - "Дієприкметник: definition, ознаки дієслова i прикметника"
+  - "Активні дієприкметники теперішнього часу: -уч-/-юч- (I), -ач-/-яч- (II)"
+  - "Активні дієприкметники минулого часу: -л- (from perfective verbs)"
+  - "Відмінювання дієприкметників як прикметників"
+  - "Russian calques: identification and natural Ukrainian replacements"
 register: науково-навчальний
 references:
-- title: "Литвінова Grade 7, p.82-89"
-  notes: "Дієприкметник chapter: definition, активні/пасивні classification,
-    formation table with suffixes, exercises on distinguishing types."
-- title: "Заболотний Grade 7, p.92-96"
-  notes: "§25 Творення та відмінювання активних дієприкметників: суфіксальний
-    спосіб, -уч-/-юч-, -ач-/-яч-, -л- suffixes with formation diagrams."
-- title: "Авраменко Grade 7, p.95-98"
-  notes: "§42 Активні й пасивні дієприкметники: editorial exercise replacing
-    Russian calques, test format exercises, formation rules."
-- title: "Авраменко Grade 11, p.58-59"
-  notes: "§18 Морфологічна норма: active participle restrictions in Ukrainian,
-    replacement strategies for Russian calques."
-- title: "Заболотний Grade 8, p.51"
-  notes: "Definition of дієприкметник, classification into active/passive."
+  - title: "Литвінова Grade 7, p.82-89"
+    notes: "Дієприкметник chapter: definition, активні/пасивні classification, formation
+      table with suffixes, exercises on distinguishing types."
+  - title: "Заболотний Grade 7, p.92-96"
+    notes: "§25 Творення та відмінювання активних дієприкметників: суфіксальний спосіб,
+      -уч-/-юч-, -ач-/-яч-, -л- suffixes with formation diagrams."
+  - title: "Авраменко Grade 7, p.95-98"
+    notes: "§42 Активні й пасивні дієприкметники: editorial exercise replacing Russian
+      calques, test format exercises, formation rules."
+  - title: "Авраменко Grade 11, p.58-59"
+    notes: "§18 Морфологічна норма: active participle restrictions in Ukrainian, replacement
+      strategies for Russian calques."
+  - title: "Заболотний Grade 8, p.51"
+    notes: "Definition of дієприкметник, classification into active/passive."

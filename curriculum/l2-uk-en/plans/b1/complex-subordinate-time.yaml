@@ -1,167 +1,159 @@
-module: b1-069
+module: b1-065
 level: B1
-sequence: 69
+sequence: 65
 slug: complex-subordinate-time
 version: '3.0'
 title: "Часові речення"
 subtitle: "Одночасність і різночасність: коли, поки, доки, щойно"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Complex Syntax]"
+phase: "B1.7 [Complex Syntax]"
 word_target: 4000
 objectives:
-- "Learner can construct підрядні обставинні часу expressing when the main
-  action happens, using conjunctions коли, поки, доки, щойно, як тільки, перш ніж"
-- "Learner can express одночасність (simultaneity) and різночасність
-  (non-simultaneity) through aspectual and conjunction choice"
-- "Learner can use tense correlation: present-present, past-past, past-past
-  perfective for sequence, combining aspect and syntax"
-- "Learner can connect часові речення to дієприслівники (M61-62) as
-  alternative means of expressing temporal relations"
-- "Learner can correctly punctuate часові речення in all positions"
+  - "Learner can construct підрядні обставинні часу expressing when the main action
+    happens, using conjunctions коли, поки, доки, щойно, як тільки, перш ніж"
+  - "Learner can express одночасність (simultaneity) and різночасність (non-simultaneity)
+    through aspectual and conjunction choice"
+  - "Learner can use tense correlation: present-present, past-past, past-past perfective
+    for sequence, combining aspect and syntax"
+  - "Learner can connect часові речення to дієприслівники (M61-62) as alternative
+    means of expressing temporal relations"
+  - "Learner can correctly punctuate часові речення in all positions"
 dialogue_situations:
-- setting: 'Grandfather telling his life story at a сімейна вечеря (f, family dinner)
-    — time clauses: Коли я був молодим, жив у Полтаві. Після того як закінчив інститут
-    (m), переїхав до Києва. Поки працював, побудував хату (f, house).'
-  speakers:
-  - Дідусь
-  - Онуки
-  motivation: 'Time clauses: коли, після того як, поки, щойно in life narration'
+  - setting: 'Grandfather telling his life story at a сімейна вечеря (f, family dinner)
+      — time clauses: Коли я був молодим, жив у Полтаві. Після того як закінчив інститут
+      (m), переїхав до Києва. Поки працював, побудував хату (f, house).'
+    speakers:
+      - Дідусь
+      - Онуки
+    motivation: 'Time clauses: коли, після того як, поки, щойно in life narration'
 content_outline:
-- section: "Підрядні обставинні часу"
-  words: 650
-  points:
-  - "Definition: підрядні обставинні часу відповідають на питання коли?
-    відколи? доки? як довго? They relate to the main clause AS A WHOLE
-    (not to a specific word, unlike означальні and з'ясувальні).
-    Коли ми прийшли додому, почався дощ.
-    Поки я готував вечерю, діти робили уроки."
-  - "Key conjunctions from Заболотний Grade 8 p.112:
-    коли (when), поки/доки (while/until), щойно/як тільки (as soon as),
-    перш ніж/перед тим як (before), після того як (after),
-    з тих пір як (since), доти...доки (until)."
-  - "Position flexibility: часові підрядні can come before or after main:
-    Коли пішов дощ, ми сховалися. (before — temporal frame set first)
-    Ми сховалися, коли пішов дощ. (after — result then explanation)"
-- section: "Одночасність: коли, поки"
-  words: 650
-  points:
-  - "Коли for simultaneity (imperfective verbs in both clauses):
-    Коли ми йшли парком, ми розмовляли. (both ongoing at the same time)
-    Коли сонце заходить, небо стає червоним. (habitual — present tense)"
-  - "Поки/доки for 'while' (duration):
-    Поки я читав, вона готувала вечерю. (during the whole time)
-    Доки батьки на роботі, діти в школі. (for the duration)
-    Поки + imperfective = during the time that."
-  - "Connection to дієприслівники (M61): the same meaning differently:
-    Коли ми йшли парком, ми розмовляли.
-    = Ідучи парком, ми розмовляли. (gerund — more concise)
-    The clause is clearer when subjects differ:
-    Коли мама готувала, тато прибирав. (different subjects — clause needed)"
-- section: "Різночасність: коли, щойно, після того як, перш ніж"
-  words: 700
-  points:
-  - "Коли for sequence (perfective verb in підрядне):
-    Коли ми прийшли додому, почався дощ. (arrived → then rain started)
-    Коли він закінчив роботу, пішов додому. (finished → then went home)
-    Key: perfective in підрядне = completed before main clause."
-  - "Щойно/як тільки (as soon as — immediate sequence):
-    Щойно він зайшов, усі замовкли. (as soon as he entered)
-    Як тільки вона побачила його, усміхнулася.
-    These emphasize immediacy of the sequence."
-  - "Після того як (after) and перш ніж/перед тим як (before):
-    Після того як ми пообідали, пішли на прогулянку.
-    Перш ніж виходити, перевір, чи взяв ключі.
-    Перед тим як почати, прочитайте інструкцію."
-  - "Connection to дієприслівники (M62):
-    Після того як прочитав книгу, я віддав її. = Прочитавши книгу, я віддав її.
-    Practice: 8 sentences — express the same temporal relation using
-    both a часове речення and a дієприслівник."
-- section: "Дієвидові та часові кореляції"
-  words: 550
-  points:
-  - "Aspect determines the temporal relationship:
-    Одночасність: недок. + недок. — Коли я читав, вона спала.
-    Послідовність: док. + док. — Коли я прочитав, я заснув.
-    Mixed: док. + недок. — Коли пішов дощ, ми ще гуляли.
-    (rain started while we were still walking)"
-  - "Tense correlation:
-    Минулий: Коли сонце зайшло, стало темно.
-    Теперішній (habitual): Коли я приходжу додому, завжди п'ю чай.
-    Майбутній: Коли приїдеш, зателефонуй. (imperative in main)"
-  - "Practice: choose correct aspect and tense in 8 temporal constructions."
-- section: "Практика: часові речення в контексті"
-  words: 600
-  points:
-  - "Reading passage: a narrative with dense temporal structure.
-    Learners identify all часові підрядні, determine одночасність
-    vs різночасність, and note conjunction choice."
-  - "Dialogue using temporal clauses: planning a schedule, discussing
-    when events happened. Natural usage of коли, поки, щойно."
-  - "Production: write 6-8 sentences about your day using different
-    temporal conjunctions. At least 2 одночасність, 2 різночасність."
-- section: "Підсумок та перехід до M70"
-  words: 350
-  points:
-  - "Summary: часові = коли? відколи? доки? Одночасність (поки, коли + недок.)
-    vs різночасність (щойно, після того як, перш ніж, коли + док.).
-    Self-check: Я розрізняю одночасність і різночасність ✓/✗."
-  - "Preview: M70 — Речення причини. Why things happen: бо, тому що."
+  - section: "Підрядні обставинні часу"
+    words: 650
+    points:
+      - "Definition: підрядні обставинні часу відповідають на питання коли? відколи?
+        доки? як довго? They relate to the main clause AS A WHOLE (not to a specific
+        word, unlike означальні and з'ясувальні). Коли ми прийшли додому, почався
+        дощ. Поки я готував вечерю, діти робили уроки."
+      - "Key conjunctions from Заболотний Grade 8 p.112: коли (when), поки/доки (while/until),
+        щойно/як тільки (as soon as), перш ніж/перед тим як (before), після того як
+        (after), з тих пір як (since), доти...доки (until)."
+      - "Position flexibility: часові підрядні can come before or after main: Коли
+        пішов дощ, ми сховалися. (before — temporal frame set first) Ми сховалися,
+        коли пішов дощ. (after — result then explanation)"
+  - section: "Одночасність: коли, поки"
+    words: 650
+    points:
+      - "Коли for simultaneity (imperfective verbs in both clauses): Коли ми йшли
+        парком, ми розмовляли. (both ongoing at the same time) Коли сонце заходить,
+        небо стає червоним. (habitual — present tense)"
+      - "Поки/доки for 'while' (duration): Поки я читав, вона готувала вечерю. (during
+        the whole time) Доки батьки на роботі, діти в школі. (for the duration) Поки
+        + imperfective = during the time that."
+      - "Connection to дієприслівники (M61): the same meaning differently: Коли ми
+        йшли парком, ми розмовляли. = Ідучи парком, ми розмовляли. (gerund — more
+        concise) The clause is clearer when subjects differ: Коли мама готувала, тато
+        прибирав. (different subjects — clause needed)"
+  - section: "Різночасність: коли, щойно, після того як, перш ніж"
+    words: 700
+    points:
+      - "Коли for sequence (perfective verb in підрядне): Коли ми прийшли додому,
+        почався дощ. (arrived → then rain started) Коли він закінчив роботу, пішов
+        додому. (finished → then went home) Key: perfective in підрядне = completed
+        before main clause."
+      - "Щойно/як тільки (as soon as — immediate sequence): Щойно він зайшов, усі
+        замовкли. (as soon as he entered) Як тільки вона побачила його, усміхнулася.
+        These emphasize immediacy of the sequence."
+      - "Після того як (after) and перш ніж/перед тим як (before): Після того як ми
+        пообідали, пішли на прогулянку. Перш ніж виходити, перевір, чи взяв ключі.
+        Перед тим як почати, прочитайте інструкцію."
+      - "Connection to дієприслівники (M62): Після того як прочитав книгу, я віддав
+        її. = Прочитавши книгу, я віддав її. Practice: 8 sentences — express the same
+        temporal relation using both a часове речення and a дієприслівник."
+  - section: "Дієвидові та часові кореляції"
+    words: 550
+    points:
+      - "Aspect determines the temporal relationship: Одночасність: недок. + недок.
+        — Коли я читав, вона спала. Послідовність: док. + док. — Коли я прочитав,
+        я заснув. Mixed: док. + недок. — Коли пішов дощ, ми ще гуляли. (rain started
+        while we were still walking)"
+      - "Tense correlation: Минулий: Коли сонце зайшло, стало темно. Теперішній (habitual):
+        Коли я приходжу додому, завжди п'ю чай. Майбутній: Коли приїдеш, зателефонуй.
+        (imperative in main)"
+      - "Practice: choose correct aspect and tense in 8 temporal constructions."
+  - section: "Практика: часові речення в контексті"
+    words: 600
+    points:
+      - "Reading passage: a narrative with dense temporal structure. Learners identify
+        all часові підрядні, determine одночасність vs різночасність, and note conjunction
+        choice."
+      - "Dialogue using temporal clauses: planning a schedule, discussing when events
+        happened. Natural usage of коли, поки, щойно."
+      - "Production: write 6-8 sentences about your day using different temporal conjunctions.
+        At least 2 одночасність, 2 різночасність."
+  - section: "Підсумок та перехід до M70"
+    words: 350
+    points:
+      - "Summary: часові = коли? відколи? доки? Одночасність (поки, коли + недок.)
+        vs різночасність (щойно, після того як, перш ніж, коли + док.). Self-check:
+        Я розрізняю одночасність і різночасність ✓/✗."
+      - "Preview: M70 — Речення причини. Why things happen: бо, тому що."
 vocabulary_hints:
   required:
-  - "підрядне обставинне часу (temporal subordinate clause)"
-  - "коли (when — main temporal conjunction)"
-  - "поки/доки (while, until — duration)"
-  - "щойно (as soon as — immediate sequence)"
-  - "як тільки (as soon as — synonym of щойно)"
-  - "перш ніж (before)"
-  - "після того як (after)"
-  - "одночасність (simultaneity)"
-  - "різночасність (non-simultaneity)"
-  - "послідовність (sequence)"
+    - "підрядне обставинне часу (temporal subordinate clause)"
+    - "коли (when — main temporal conjunction)"
+    - "поки/доки (while, until — duration)"
+    - "щойно (as soon as — immediate sequence)"
+    - "як тільки (as soon as — synonym of щойно)"
+    - "перш ніж (before)"
+    - "після того як (after)"
+    - "одночасність (simultaneity)"
+    - "різночасність (non-simultaneity)"
+    - "послідовність (sequence)"
   recommended:
-  - "перед тим як (before — synonym of перш ніж)"
-  - "з тих пір як (since — from the time that)"
-  - "доти...доки (until)"
-  - "відколи (since when)"
-  - "кореляція (correlation — aspect/tense matching)"
+    - "перед тим як (before — synonym of перш ніж)"
+    - "з тих пір як (since — from the time that)"
+    - "доти...доки (until)"
+    - "відколи (since when)"
+    - "кореляція (correlation — aspect/tense matching)"
 activity_hints:
-- type: fill-in
-  focus: "Insert correct temporal conjunction (коли/поки/щойно/перш ніж/після того як)"
-  items: 10
-- type: quiz
-  focus: "Is this одночасність or різночасність? Determine temporal relation"
-  items: 8
-- type: sentence-builder
-  focus: "Combine two events into temporal clauses with correct aspect/tense"
-  items: 8
-- type: match-up
-  focus: "Match temporal clauses to their дієприслівник equivalents"
-  items: 8
-- type: error-correction
-  focus: "Fix aspect/tense mismatches in temporal constructions"
-  items: 6
+  - type: fill-in
+    focus: "Insert correct temporal conjunction (коли/поки/щойно/перш ніж/після того
+      як)"
+    items: 10
+  - type: quiz
+    focus: "Is this одночасність or різночасність? Determine temporal relation"
+    items: 8
+  - type: sentence-builder
+    focus: "Combine two events into temporal clauses with correct aspect/tense"
+    items: 8
+  - type: match-up
+    focus: "Match temporal clauses to their дієприслівник equivalents"
+    items: 8
+  - type: error-correction
+    focus: "Fix aspect/tense mismatches in temporal constructions"
+    items: 6
 connects_to:
-- "b1-068 (Означальні речення)"
-- "b1-070 (Речення причини)"
-- "b1-061 (Дієприслівники недок. — alternative for simultaneity)"
-- "b1-062 (Дієприслівники док. — alternative for sequence)"
+  - "b1-068 (Означальні речення)"
+  - "b1-070 (Речення причини)"
+  - "b1-061 (Дієприслівники недок. — alternative for simultaneity)"
+  - "b1-062 (Дієприслівники док. — alternative for sequence)"
 prerequisites:
-- "b1-068 (Relative clauses — subordinate clause practice)"
+  - "b1-068 (Relative clauses — subordinate clause practice)"
 grammar:
-- "Підрядні обставинні часу: коли, поки, доки, щойно, як тільки"
-- "Перш ніж, після того як — sequence conjunctions"
-- "Одночасність (недок. + недок.) vs різночасність (док. + док./недок.)"
-- "Tense correlation in temporal constructions"
-- "Comparison with дієприслівники for temporal relations"
+  - "Підрядні обставинні часу: коли, поки, доки, щойно, як тільки"
+  - "Перш ніж, після того як — sequence conjunctions"
+  - "Одночасність (недок. + недок.) vs різночасність (док. + док./недок.)"
+  - "Tense correlation in temporal constructions"
+  - "Comparison with дієприслівники for temporal relations"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 8, p.106-112"
-  notes: "Складнопідрядні речення з підрядними обставинними часу:
-    conjunctions, examples, exercises."
-- title: "Ворон Grade 9, p.80"
-  notes: "Підрядні обставинні: classification including часові,
-    dependency from entire main clause."
-- title: "Авраменко Grade 8, p.86"
-  notes: "Складнопідрядні речення з підрядними причини, мети, умови:
-    context for temporal comparison."
+  - title: "Заболотний Grade 8, p.106-112"
+    notes: "Складнопідрядні речення з підрядними обставинними часу: conjunctions,
+      examples, exercises."
+  - title: "Ворон Grade 9, p.80"
+    notes: "Підрядні обставинні: classification including часові, dependency from
+      entire main clause."
+  - title: "Авраменко Grade 8, p.86"
+    notes: "Складнопідрядні речення з підрядними причини, мети, умови: context for
+      temporal comparison."

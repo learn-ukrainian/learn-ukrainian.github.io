@@ -4,21 +4,25 @@ sequence: 55
 slug: irony-sarcasm
 version: '1.1'
 title: "Іронія та сарказм як інструменти інтелектуальної комунікації"
-subtitle: "Irony and Sarcasm as Tools of Intellectual Communication"
+subtitle: "Іронія і сарказм як інструменти інтелектуальної комунікації"
 focus: integration
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Розрізняти відтінки комічного: від м'якого гумору та іронії до гострого сарказму."
-  - "Аналізувати мовні засоби вираження іронічного змісту в публіцистиці та художній літературі."
-  - "Опанувати стратегії розпізнавання прихованої іронії в академічній дискусії та офіційному листуванні."
+  - "Аналізувати мовні засоби вираження іронічного змісту в публіцистиці та художній
+    літературі."
+  - "Опанувати стратегії розпізнавання прихованої іронії в академічній дискусії та
+    офіційному листуванні."
   - "Використовувати іронію як засіб інтелектуального захисту та аргументації."
 
 reading_situations:
   - source_type: "публіцистичне есе"
-    topic: "Феномен української іронії: від 'Енеїди' Котляревського до сучасних соціальних мереж."
+    topic: "Феномен української іронії: від 'Енеїди' Котляревського до сучасних соціальних
+      мереж."
     key_elements: ["підтекст", "антифразис", "культурний контекст"]
-    motivation: "Розуміння історичних коренів та національної специфіки українського гумору."
+    motivation: "Розуміння історичних коренів та національної специфіки українського
+      гумору."
   - source_type: "критичний огляд"
     topic: "Сарказм як зброя в політичній риториці: аналіз виступів та памфлетів."
     key_elements: ["гіпербола", "інтонація", "парадокс"]
@@ -26,19 +30,24 @@ reading_situations:
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Розмова з відомим українським стендап-коміком про межу між самоіронією та приниженням."
+    setting: "Розмова з відомим українським стендап-коміком про межу між самоіронією
+      та приниженням."
     focus_points: ["мовленнєві маркери іронії", "паузи", "реакція слухачів"]
     motivation: "Аналіз живої іронічної комунікації та її соціальних функцій."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Напишіть іронічний репортаж (300-400 слів) про абсурдну бюрократичну ситуацію, використовуючи засоби прихованої насмішки."
-    requirements: ["використання евфемізмів для створення контрасту", "наявність інтелектуального підтексту", "відсутність прямої образи"]
+    prompt: "Напишіть іронічний репортаж (300-400 слів) про абсурдну бюрократичну
+      ситуацію, використовуючи засоби прихованої насмішки."
+    requirements: ["використання евфемізмів для створення контрасту", "наявність інтелектуального
+          підтексту", "відсутність прямої образи"]
     motivation: "Розвиток майстерності володіння тонкою іронією в письмі."
-    model_answer: "Текст має бути витриманий у стилі 'серйозного абсурду', де за офіційними формулами ховається гостра критика."
+    model_answer: "Текст має бути витриманий у стилі 'серйозного абсурду', де за офіційними
+      формулами ховається гостра критика."
 
 discussion_topics:
-  - context: "Чи є іронія ознакою інтелектуальної зрілості чи вона заважає щирості в суспільстві?"
+  - context: "Чи є іронія ознакою інтелектуальної зрілості чи вона заважає щирості
+      в суспільстві?"
     questions:
       - "Чому сарказм вважають 'нижчою' формою іронії?"
       - "Як уникнути конфліктів при використанні іронії в кроскультурному спілкуванні?"
@@ -106,15 +115,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze an ironic newspaper column — identify all markers of irony (antiphrase, context mismatch, hyperbole in service of irony) and explain their effect."
+    description: "Analyze an ironic newspaper column — identify all markers of irony
+      (antiphrase, context mismatch, hyperbole in service of irony) and explain their
+      effect."
   - type: essay-response
-    description: "Write a short ironic commentary (100-150 words) on a given absurd situation, using subtle linguistic irony without direct insults."
+    description: "Write a short ironic commentary (100-150 words) on a given absurd
+      situation, using subtle linguistic irony without direct insults."
   - type: select
-    description: "Identify whether excerpts use гумор, іронія, сарказм, or самоіронія — and explain the linguistic markers that distinguish them."
+    description: "Identify whether excerpts use гумор, іронія, сарказм, or самоіронія
+      — and explain the linguistic markers that distinguish them."
   - type: error-correction
-    description: "Rewrite sentences where intended irony fails — fix cases where the ironic meaning is unclear or the tone shifts to unintended aggression."
+    description: "Rewrite sentences where intended irony fails — fix cases where the
+      ironic meaning is unclear or the tone shifts to unintended aggression."
   - type: match-up
-    description: "Match literary examples of irony (from Котляревський, Шевченко, Бу-Ба-Бу) with the type of comic effect and the social target."
+    description: "Match literary examples of irony (from Котляревський, Шевченко,
+      Бу-Ба-Бу) with the type of comic effect and the social target."
 
 activities:
   types_required:
@@ -134,3 +149,4 @@ references:
 connects_to:
   previous: "metaphor-simile"
   next: "hyperbole-litotes"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

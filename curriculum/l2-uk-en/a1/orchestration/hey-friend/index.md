@@ -1,6 +1,6 @@
 # Build Summary: hey-friend (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 20:13:28 |
 | enrich | complete | 2026-03-30 20:13:29 |
 | verify | complete | 2026-03-30 20:13:29 |
-| review | complete | 2026-03-30 20:20:50 |
-| stress | complete | 2026-03-31 09:57:27 |
-| publish | complete | 2026-03-31 09:57:27 |
+| review | complete | 2026-04-01 11:44:26 |
+| stress | complete | 2026-04-01 11:44:26 |
+| publish | complete | 2026-04-01 11:44:31 |
 
 ## Reviews
 
@@ -40,6 +40,8 @@ Generated: 2026-03-31 11:57
 | vocab | claude (claude-sonnet-4-6) | 27s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 208s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 230s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

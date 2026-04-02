@@ -4,21 +4,24 @@ sequence: 17
 slug: irregular-verbs-complete
 version: '1.1'
 title: "Складна дієслівна парадигма та нетипові форми"
-subtitle: "Complex Verb Paradigm and Non-standard Forms"
+subtitle: "Складна парадигма дієслова та нестандартні форми"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Вивчити особливості відмінювання дієслів з нетиповим чергуванням основ (їсти, дати, бути, іти)."
+  - "Вивчити особливості відмінювання дієслів з нетиповим чергуванням основ (їсти,
+    дати, бути, іти)."
   - "Опанувати складні випадки творення наказового та умовного способів."
   - "Вивчити стилістичне використання застарілих та рідковживаних дієслівних форм."
-  - "Навчитися правильно вживати безособові форми на -но, -то в офіційно-діловому та науковому стилях."
+  - "Навчитися правильно вживати безособові форми на -но, -то в офіційно-діловому
+    та науковому стилях."
 
 reading_situations:
   - source_type: "художній уривок"
     topic: "Архаїзми та діалектизми у прозі Василя Стефаника: аналіз дієслівних форм."
     key_elements: ["діалектне дієслово", "архаїчна форма", "експресивність"]
-    motivation: "Дослідження нетипових дієслівних форм у художньому тексті для підсилення емоційного впливу."
+    motivation: "Дослідження нетипових дієслівних форм у художньому тексті для підсилення
+      емоційного впливу."
   - source_type: "офіційний документ"
     topic: "Укази гетьманів України XVII століття: мовний аналіз дієслівних конструкцій."
     key_elements: ["безособові форми", "наказовий спосіб", "староукраїнська мова"]
@@ -26,16 +29,22 @@ reading_situations:
 
 listening_situations:
   - media_type: "аудіо"
-    setting: "Запис радіовистави за мотивами драми Лесі Українки: аналіз високого стилю мовлення."
-    focus_points: ["вживання рідковживаних дієслів", "інтонаційне вираження способу дієслова", "чергування в основах"]
+    setting: "Запис радіовистави за мотивами драми Лесі Українки: аналіз високого
+      стилю мовлення."
+    focus_points: ["вживання рідковживаних дієслів", "інтонаційне вираження способу
+          дієслова", "чергування в основах"]
     motivation: "Розпізнавання складних морфологічних форм у живому мовленні."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Напишіть коротку розповідь (150-200 слів) про подорож у часі, використовуючи якомога більше дієслів з нетиповим відмінюванням (їсти, відповісти, бігти, хотіти)."
-    requirements: ["використання щонайменше 5 різних 'неправильних' дієслів", "правильне творення форм наказового способу"]
-    motivation: "Закріплення навичок вживання складних дієслівних парадигм у творчому контексті."
-    model_answer: "Текст має демонструвати правильні форми типу 'даси', 'їжте', 'хочуть', 'розповіси'."
+    prompt: "Напишіть коротку розповідь (150-200 слів) про подорож у часі, використовуючи
+      якомога більше дієслів з нетиповим відмінюванням (їсти, відповісти, бігти, хотіти)."
+    requirements: ["використання щонайменше 5 різних 'неправильних' дієслів", "правильне
+          творення форм наказового способу"]
+    motivation: "Закріплення навичок вживання складних дієслівних парадигм у творчому
+      контексті."
+    model_answer: "Текст має демонструвати правильні форми типу 'даси', 'їжте', 'хочуть',
+      'розповіси'."
 
 content_outline:
   - section: "Дієслова з нетиповою парадигмою відмінювання"
@@ -98,15 +107,20 @@ vocabulary:
 
 activity_hints:
   - type: fill-in
-    description: "Complete sentences with correct forms of irregular verbs (дати→даси, їсти→їжте, бути→буде) in various tenses and moods."
+    description: "Complete sentences with correct forms of irregular verbs (дати→даси,
+      їсти→їжте, бути→буде) in various tenses and moods."
   - type: match-up
-    description: "Match irregular verb infinitives with their conjugation patterns and identify the type of stem alternation."
+    description: "Match irregular verb infinitives with their conjugation patterns
+      and identify the type of stem alternation."
   - type: error-correction
-    description: "Fix incorrect conjugation forms of irregular verbs in academic and literary contexts."
+    description: "Fix incorrect conjugation forms of irregular verbs in academic and
+      literary contexts."
   - type: select
-    description: "Choose the correct imperative form for irregular verbs in different registers (formal, informal, inclusive)."
+    description: "Choose the correct imperative form for irregular verbs in different
+      registers (formal, informal, inclusive)."
   - type: critical-analysis
-    description: "Analyze verb forms in excerpts from Stefanyk and Lesya Ukrainka — identify archaic, dialectal, and stylistically marked forms."
+    description: "Analyze verb forms in excerpts from Stefanyk and Lesya Ukrainka
+      — identify archaic, dialectal, and stylistically marked forms."
 
 activities:
   types_required:
@@ -126,3 +140,4 @@ references:
 connects_to:
   previous: "advanced-punctuation"
   next: "essay-writing-practice"
+phase: C1.1 [Academic Foundation]

@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-time-nature (A1)
 
-Generated: 2026-03-31 11:46
+Generated: 2026-04-01 13:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:46
 | vocab | complete | 2026-03-30 06:44:12 |
 | enrich | complete | 2026-03-30 06:44:13 |
 | verify | complete | 2026-03-30 06:44:13 |
-| review | complete | 2026-03-30 11:40:55 |
-| stress | complete | 2026-03-31 09:46:15 |
-| publish | complete | 2026-03-31 09:46:15 |
+| review | complete | 2026-04-01 11:41:45 |
+| stress | complete | 2026-04-01 11:41:45 |
+| publish | complete | 2026-04-01 11:41:51 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:46
 | activities | claude-tools (claude-sonnet-4-6) | 261s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 40s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 102s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

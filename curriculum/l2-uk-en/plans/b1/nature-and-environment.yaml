@@ -1,236 +1,212 @@
-module: b1-082
+module: b1-078
 level: B1
-sequence: 82
+sequence: 78
 slug: nature-and-environment
 version: '3.0'
-title: "Природа i довкілля"
+title: "Природа і довкілля"
 subtitle: "Погода, рослини, тварини, екологія — природа українською"
 focus: communication
 pedagogy: PPP
-phase: "B1.9 [Text and Register]"
+phase: "B1.8 [Text and Register]"
 word_target: 4000
 objectives:
-- "Learner can describe weather, seasons, and natural phenomena in Ukrainian
-  using precise meteorological vocabulary (температура, опади, хмарно, мряка)"
-- "Learner can name common Ukrainian рослини (trees, flowers, crops) and
-  тварини (domestic, wild, birds, insects) using authentic Ukrainian names"
-- "Learner can discuss environmental issues (забруднення, переробка, збереження)
-  using appropriate vocabulary and complex sentence structures from Phase 8"
-- "Learner can read and understand Ukrainian nature descriptions in художньому
-  стилі, identifying образні засоби (епітети, порівняння, метафори)"
-- "Learner can express opinions about environmental protection using
-  аргументація structures and вставні слова from previous modules"
+  - "Learner can describe weather, seasons, and natural phenomena in Ukrainian using
+    precise meteorological vocabulary (температура, опади, хмарно, мряка)"
+  - "Learner can name common Ukrainian рослини (trees, flowers, crops) and тварини
+    (domestic, wild, birds, insects) using authentic Ukrainian names"
+  - "Learner can discuss environmental issues (забруднення, переробка, збереження)
+    using appropriate vocabulary and complex sentence structures from Phase 8"
+  - "Learner can read and understand Ukrainian nature descriptions in художньому стилі,
+    identifying образні засоби (епітети, порівняння, метафори)"
+  - "Learner can express opinions about environmental protection using аргументація
+    structures and вставні слова from previous modules"
 dialogue_situations:
-- setting: 'Ecology lesson in a Карпатський біосферний заповідник (m, Carpathian biosphere
-    reserve) — field trip: На жаль, забруднення (n, pollution) зростає. Хоча ліси
-    (pl, forests) захищені, є загрози (pl, threats). Щоб зберегти природу (f, nature),
-    треба діяти. Безумовно, це наш обов''язок (m, duty).'
-  speakers:
-  - Еколог (ecologist)
-  - Студенти-біологи
-  motivation: 'Environment topic: забруднення(n), ліс(m), природа(f) + all B1 syntax
-    structures'
+  - setting: 'Ecology lesson in a Карпатський біосферний заповідник (m, Carpathian
+      biosphere reserve) — field trip: На жаль, забруднення (n, pollution) зростає.
+      Хоча ліси (pl, forests) захищені, є загрози (pl, threats). Щоб зберегти природу
+      (f, nature), треба діяти. Безумовно, це наш обов''язок (m, duty).'
+    speakers:
+      - Еколог (ecologist)
+      - Студенти-біологи
+    motivation: 'Environment topic: забруднення(n), ліс(m), природа(f) + all B1 syntax
+      structures'
 content_outline:
-- section: "Погода та пори року"
-  words: 650
-  points:
-  - "Weather vocabulary — precise Ukrainian terms:
-    Температура: спека (heat), мороз (frost), відлига (thaw).
-    Опади: дощ, злива (downpour), мряка (drizzle), сніг, град, крига (ice).
-    Небо: хмарно (cloudy), безхмарно (clear), похмуро (overcast).
-    Вітер: вітряно (windy), штиль (calm), шторм (storm), буря (storm).
-    Атмосферні явища: туман, роса, іній (frost/rime), веселка (rainbow)."
-  - "Пори року — seasonal descriptions:
-    Весна: бруньки розпускаються, пташки повертаються, тане сніг.
-    Літо: палюче сонце, грози, цвітіння, урожай.
-    Осінь: листопад, зливи, перші заморозки, бабине літо.
-    Зима: морози, снігопади, завірюха, ожеледиця.
-    Practice: learners describe their favorite season using B1 vocabulary."
-  - "Prогноз погоди — weather forecast register:
-    'Завтра очікується хмарна погода з проясненнями. Температура
-    повітря — 5-8 градусів тепла. Можливі короткочасні дощі.'
-    This is публіцистичний стиль applied to weather.
-    Practice: learners read and compose simple weather forecasts."
-  - "Cultural note: Ukrainian folk погодні прикмети (weather signs):
-    'Ластівки низько літають — на дощ.'
-    'Соняшники опускають голівки — до негоди.'
-    These connect nature vocabulary to Ukrainian folk wisdom."
-- section: "Рослинний світ"
-  words: 600
-  points:
-  - "Дерева: дуб (oak), береза (birch), верба (willow), тополя (poplar),
-    калина (viburnum), сосна (pine), ялина (spruce), каштан (chestnut),
-    липа (linden), клен (maple), яблуня (apple tree), вишня (cherry).
-    Калина — a cultural symbol of Ukraine.
-    Practice: match дерева to their descriptions."
-  - "Квіти та рослини: ромашка (chamomile), соняшник (sunflower),
-    чорнобривці (marigolds), барвінок (periwinkle), маки (poppies),
-    волошки (cornflowers), конвалії (lilies of the valley).
-    Соняшник i чорнобривці — Ukrainian cultural symbols.
-    Practice: describe a Ukrainian garden or meadow."
-  - "Сільськогосподарські культури: пшениця (wheat), жито (rye),
-    кукурудза (corn), ячмінь (barley), соняшник, буряк (beet).
-    Ukraine as the breadbasket of Europe — cultural context.
-    Vocabulary for harvest: урожай, жнива, сіяти, збирати."
-  - "Literary nature descriptions from textbooks:
-    Learners read a poetic passage about Ukrainian nature
-    (Шевченко, Коцюбинський, or adapted excerpt) and identify
-    образні засоби: епітети, порівняння, персоніфікації."
-- section: "Тваринний світ"
-  words: 600
-  points:
-  - "Свійські тварини: кіт, собака, кінь, корова, свиня, вівця,
-    коза, курка, качка, гуска, кролик.
-    Careful: кіт/кітка (not *кот — that is Russian).
-    Practice: describe a Ukrainian село with its тварини."
-  - "Дикі тварини: лисиця (fox), заєць (hare), вовк (wolf),
-    ведмідь (bear), олень (deer), їжак (hedgehog), білка (squirrel),
-    борсук (badger), видра (otter), козуля (roe deer).
-    Зубр (European bison) — symbol of Ukrainian nature."
-  - "Птахи: лелека (stork), ластівка (swallow), горобець (sparrow),
-    ворона (crow), сорока (magpie), синиця (tit), дятел (woodpecker),
-    жайворонок (lark), соловейко (nightingale), журавель (crane).
-    Лелека — symbol of good fortune in Ukrainian culture."
-  - "Комахи та інші: бджола (bee), метелик (butterfly), мурашка (ant),
-    жук (beetle), коник (grasshopper), павук (spider).
-    Practice: learners describe the ecosystem of a Ukrainian ліс or поле,
-    using the vocabulary from all three categories."
-- section: "Екологія та довкілля"
-  words: 650
-  points:
-  - "Environmental vocabulary:
-    довкілля (environment), екологія (ecology), забруднення (pollution),
-    відходи (waste), сортування (sorting), переробка (recycling),
-    збереження (conservation), вимирання (extinction), заповідник (nature reserve).
-    Practice: learners discuss environmental problems using this vocabulary."
-  - "Environmental issues in Ukraine:
-    Забруднення повітря i води, вирубка лісів, наслідки Чорнобиля,
-    наслідки війни для довкілля (мінування, забруднення, знищення
-    екосистем). Чорнобильська зона — paradox of rewilding.
-    Practice: reading a B1-level Ukrainian text about environmental challenges."
-  - "Захист довкілля — what can be done:
-    сортувати відходи, зменшувати споживання, берегти воду,
-    садити дерева, підтримувати заповідники.
-    Ukrainian заповідники: Асканія-Нова, Карпатський, Поліський.
-    Practice: learners express opinions using вставні слова (M81)
-    and аргументація structures."
-  - "Dialogue: two Ukrainians discussing environmental issues,
-    using складнопідрядні речення (M65-72), вставні слова (M81),
-    and подвійне заперечення (M80) in natural context.
-    Practice: learners participate in a guided discussion."
-- section: "Природа в літературі"
-  words: 550
-  points:
-  - "Ukrainian nature descriptions as an artistic tradition:
-    Краєвид (landscape) as a genre — from Заболотний Grade 7.
-    Ukrainian writers are famous for їхні описи природи.
-    Literary devices: епітет (сонячний промінь), метафора (вітер співає),
-    порівняння (білий, наче сніг), персоніфікація (ліс шепоче)."
-  - "Adapted literary excerpt — a nature описання from Ukrainian literature
-    (150-200 words). Learners identify: пора року, настрій,
-    образні засоби, лексика природи.
-    Analysis connects to M83 (Читання художніх текстів)."
-  - "Народні приказки про природу:
-    'Де горобці купаються, там дощ збирається.'
-    'Без верби i калини нема України.'
-    'Природа — найкращий учитель.'
-    These connect vocabulary to cultural identity."
-  - "Writing practice: learners compose a short опис природи (8-10 sentences)
-    about a place they know, using weather, plant, and animal vocabulary
-    with at least two образні засоби."
-- section: "Підсумок: природа — це Україна"
-  words: 350
-  points:
-  - "Complete vocabulary reference organized by category:
-    погода, рослини, тварини, екологія, літературні засоби."
-  - "Self-check in Ukrainian:
-    1. Опишіть погоду сьогодні (5 речень).
-    2. Назвіть 5 дерев, 5 квітів, 5 тварин українською.
-    3. Які екологічні проблеми є в Україні?
-    4. Напишіть короткий прогноз погоди на завтра."
-  - "Preview: Читання художніх текстів (M83) — moving from nature
-    descriptions to broader literary reading comprehension."
+  - section: "Погода та пори року"
+    words: 650
+    points:
+      - "Weather vocabulary — precise Ukrainian terms: Температура: спека (heat),
+        мороз (frost), відлига (thaw). Опади: дощ, злива (downpour), мряка (drizzle),
+        сніг, град, крига (ice). Небо: хмарно (cloudy), безхмарно (clear), похмуро
+        (overcast). Вітер: вітряно (windy), штиль (calm), шторм (storm), буря (storm).
+        Атмосферні явища: туман, роса, іній (frost/rime), веселка (rainbow)."
+      - "Пори року — seasonal descriptions: Весна: бруньки розпускаються, пташки повертаються,
+        тане сніг. Літо: палюче сонце, грози, цвітіння, урожай. Осінь: листопад, зливи,
+        перші заморозки, бабине літо. Зима: морози, снігопади, завірюха, ожеледиця.
+        Practice: learners describe their favorite season using B1 vocabulary."
+      - "Prогноз погоди — weather forecast register: 'Завтра очікується хмарна погода
+        з проясненнями. Температура повітря — 5-8 градусів тепла. Можливі короткочасні
+        дощі.' This is публіцистичний стиль applied to weather. Practice: learners
+        read and compose simple weather forecasts."
+      - "Cultural note: Ukrainian folk погодні прикмети (weather signs): 'Ластівки
+        низько літають — на дощ.' 'Соняшники опускають голівки — до негоди.' These
+        connect nature vocabulary to Ukrainian folk wisdom."
+  - section: "Рослинний світ"
+    words: 600
+    points:
+      - "Дерева: дуб (oak), береза (birch), верба (willow), тополя (poplar), калина
+        (viburnum), сосна (pine), ялина (spruce), каштан (chestnut), липа (linden),
+        клен (maple), яблуня (apple tree), вишня (cherry). Калина — a cultural symbol
+        of Ukraine. Practice: match дерева to their descriptions."
+      - "Квіти та рослини: ромашка (chamomile), соняшник (sunflower), чорнобривці
+        (marigolds), барвінок (periwinkle), маки (poppies), волошки (cornflowers),
+        конвалії (lilies of the valley). Соняшник i чорнобривці — Ukrainian cultural
+        symbols. Practice: describe a Ukrainian garden or meadow."
+      - "Сільськогосподарські культури: пшениця (wheat), жито (rye), кукурудза (corn),
+        ячмінь (barley), соняшник, буряк (beet). Ukraine as the breadbasket of Europe
+        — cultural context. Vocabulary for harvest: урожай, жнива, сіяти, збирати."
+      - "Literary nature descriptions from textbooks: Learners read a poetic passage
+        about Ukrainian nature (Шевченко, Коцюбинський, or adapted excerpt) and identify
+        образні засоби: епітети, порівняння, персоніфікації."
+  - section: "Тваринний світ"
+    words: 600
+    points:
+      - "Свійські тварини: кіт, собака, кінь, корова, свиня, вівця, коза, курка, качка,
+        гуска, кролик. Careful: кіт/кітка (not *кот — that is Russian). Practice:
+        describe a Ukrainian село with its тварини."
+      - "Дикі тварини: лисиця (fox), заєць (hare), вовк (wolf), ведмідь (bear), олень
+        (deer), їжак (hedgehog), білка (squirrel), борсук (badger), видра (otter),
+        козуля (roe deer). Зубр (European bison) — symbol of Ukrainian nature."
+      - "Птахи: лелека (stork), ластівка (swallow), горобець (sparrow), ворона (crow),
+        сорока (magpie), синиця (tit), дятел (woodpecker), жайворонок (lark), соловейко
+        (nightingale), журавель (crane). Лелека — symbol of good fortune in Ukrainian
+        culture."
+      - "Комахи та інші: бджола (bee), метелик (butterfly), мурашка (ant), жук (beetle),
+        коник (grasshopper), павук (spider). Practice: learners describe the ecosystem
+        of a Ukrainian ліс or поле, using the vocabulary from all three categories."
+  - section: "Екологія та довкілля"
+    words: 650
+    points:
+      - "Environmental vocabulary: довкілля (environment), екологія (ecology), забруднення
+        (pollution), відходи (waste), сортування (sorting), переробка (recycling),
+        збереження (conservation), вимирання (extinction), заповідник (nature reserve).
+        Practice: learners discuss environmental problems using this vocabulary."
+      - "Environmental issues in Ukraine: Забруднення повітря i води, вирубка лісів,
+        наслідки Чорнобиля, наслідки війни для довкілля (мінування, забруднення, знищення
+        екосистем). Чорнобильська зона — paradox of rewilding. Practice: reading a
+        B1-level Ukrainian text about environmental challenges."
+      - "Захист довкілля — what can be done: сортувати відходи, зменшувати споживання,
+        берегти воду, садити дерева, підтримувати заповідники. Ukrainian заповідники:
+        Асканія-Нова, Карпатський, Поліський. Practice: learners express opinions
+        using вставні слова (M81) and аргументація structures."
+      - "Dialogue: two Ukrainians discussing environmental issues, using складнопідрядні
+        речення (M65-72), вставні слова (M81), and подвійне заперечення (M80) in natural
+        context. Practice: learners participate in a guided discussion."
+  - section: "Природа в літературі"
+    words: 550
+    points:
+      - "Ukrainian nature descriptions as an artistic tradition: Краєвид (landscape)
+        as a genre — from Заболотний Grade 7. Ukrainian writers are famous for їхні
+        описи природи. Literary devices: епітет (сонячний промінь), метафора (вітер
+        співає), порівняння (білий, наче сніг), персоніфікація (ліс шепоче)."
+      - "Adapted literary excerpt — a nature описання from Ukrainian literature (150-200
+        words). Learners identify: пора року, настрій, образні засоби, лексика природи.
+        Analysis connects to M83 (Читання художніх текстів)."
+      - "Народні приказки про природу: 'Де горобці купаються, там дощ збирається.'
+        'Без верби i калини нема України.' 'Природа — найкращий учитель.' These connect
+        vocabulary to cultural identity."
+      - "Writing practice: learners compose a short опис природи (8-10 sentences)
+        about a place they know, using weather, plant, and animal vocabulary with
+        at least two образні засоби."
+  - section: "Підсумок: природа — це Україна"
+    words: 350
+    points:
+      - "Complete vocabulary reference organized by category: погода, рослини, тварини,
+        екологія, літературні засоби."
+      - "Self-check in Ukrainian: 1. Опишіть погоду сьогодні (5 речень). 2. Назвіть
+        5 дерев, 5 квітів, 5 тварин українською. 3. Які екологічні проблеми є в Україні?
+        4. Напишіть короткий прогноз погоди на завтра."
+      - "Preview: Читання художніх текстів (M83) — moving from nature descriptions
+        to broader literary reading comprehension."
 vocabulary_hints:
   required:
-  - "довкілля (environment — surroundings, natural world)"
-  - "погода (weather — atmospheric conditions)"
-  - "опади (precipitation — rain, snow, etc.)"
-  - "хмарно (cloudy — overcast sky)"
-  - "мряка (drizzle — fine rain)"
-  - "злива (downpour — heavy rain)"
-  - "калина (viburnum/guelder rose — Ukrainian cultural symbol)"
-  - "соняшник (sunflower — Ukrainian symbol)"
-  - "лелека (stork — symbol of good fortune)"
-  - "забруднення (pollution — environmental contamination)"
-  - "заповідник (nature reserve — protected area)"
-  - "переробка (recycling — waste processing)"
-  - "вимирання (extinction — dying out of species)"
-  - "урожай (harvest — agricultural yield)"
-  - "краєвид (landscape — scenic view)"
+    - "довкілля (environment — surroundings, natural world)"
+    - "погода (weather — atmospheric conditions)"
+    - "опади (precipitation — rain, snow, etc.)"
+    - "хмарно (cloudy — overcast sky)"
+    - "мряка (drizzle — fine rain)"
+    - "злива (downpour — heavy rain)"
+    - "калина (viburnum/guelder rose — Ukrainian cultural symbol)"
+    - "соняшник (sunflower — Ukrainian symbol)"
+    - "лелека (stork — symbol of good fortune)"
+    - "забруднення (pollution — environmental contamination)"
+    - "заповідник (nature reserve — protected area)"
+    - "переробка (recycling — waste processing)"
+    - "вимирання (extinction — dying out of species)"
+    - "урожай (harvest — agricultural yield)"
+    - "краєвид (landscape — scenic view)"
   recommended:
-  - "завірюха (blizzard — snowstorm)"
-  - "ожеледиця (ice on roads — glazed frost)"
-  - "бабине літо (Indian summer — warm autumn days)"
-  - "іній (hoarfrost — frozen dew on surfaces)"
-  - "чорнобривці (marigolds — Ukrainian cultural flower)"
-  - "барвінок (periwinkle — evergreen flower)"
-  - "борсук (badger — forest animal)"
-  - "зубр (European bison — rare Ukrainian animal)"
-  - "сортувати (to sort — waste sorting)"
-  - "екосистема (ecosystem — biological community)"
+    - "завірюха (blizzard — snowstorm)"
+    - "ожеледиця (ice on roads — glazed frost)"
+    - "бабине літо (Indian summer — warm autumn days)"
+    - "іній (hoarfrost — frozen dew on surfaces)"
+    - "чорнобривці (marigolds — Ukrainian cultural flower)"
+    - "барвінок (periwinkle — evergreen flower)"
+    - "борсук (badger — forest animal)"
+    - "зубр (European bison — rare Ukrainian animal)"
+    - "сортувати (to sort — waste sorting)"
+    - "екосистема (ecosystem — biological community)"
 activity_hints:
-- type: quiz
-  focus: "Identify погода vocabulary from descriptions, match тварини/рослини
-    to their Ukrainian names, and classify environmental terms."
-  items: 12
-- type: match-up
-  focus: "Match Ukrainian рослини/тварини to their descriptions or images,
-    match weather terms to weather phenomena."
-  items: 12
-- type: fill-in
-  focus: "Complete a weather forecast and nature description with appropriate
-    vocabulary, using correct gender agreement and cases."
-  items: 12
-- type: group-sort
-  focus: "Sort vocabulary into categories: погода, дерева, квіти, дикі тварини,
-    свійські тварини, екологія."
-  items: 12
-- type: free-write
-  focus: "Write a description of your favorite season or place in nature
-    (10-12 sentences) using weather, plant, and animal vocabulary
-    with образні засоби."
-  items: 12
-- type: role-play
-  focus: "Discuss environmental protection: one person argues for сортування
-    відходів, the other questions whether individual actions matter.
-    Use вставні слова and аргументація."
-  items: 12
+  - type: quiz
+    focus: "Identify погода vocabulary from descriptions, match тварини/рослини to
+      their Ukrainian names, and classify environmental terms."
+    items: 12
+  - type: match-up
+    focus: "Match Ukrainian рослини/тварини to their descriptions or images, match
+      weather terms to weather phenomena."
+    items: 12
+  - type: fill-in
+    focus: "Complete a weather forecast and nature description with appropriate vocabulary,
+      using correct gender agreement and cases."
+    items: 12
+  - type: group-sort
+    focus: "Sort vocabulary into categories: погода, дерева, квіти, дикі тварини,
+      свійські тварини, екологія."
+    items: 12
+  - type: free-write
+    focus: "Write a description of your favorite season or place in nature (10-12
+      sentences) using weather, plant, and animal vocabulary with образні засоби."
+    items: 12
+  - type: role-play
+    focus: "Discuss environmental protection: one person argues for сортування відходів,
+      the other questions whether individual actions matter. Use вставні слова and
+      аргументація."
+    items: 12
 connects_to:
-- "b1-081 (Вставні слова — expressing opinions about nature and ecology)"
-- "b1-083 (Читання художніх текстів — literary nature descriptions)"
-- "b1-078 (Розмовний стиль — everyday conversations about weather)"
-- "b1-084 (Контрольна робота 9 — checkpoint testing thematic vocabulary)"
+  - "b1-081 (Вставні слова — expressing opinions about nature and ecology)"
+  - "b1-083 (Читання художніх текстів — literary nature descriptions)"
+  - "b1-078 (Розмовний стиль — everyday conversations about weather)"
+  - "b1-084 (Контрольна робота 9 — checkpoint testing thematic vocabulary)"
 prerequisites:
-- "b1-077 to b1-081 (register awareness and grammar tools for expression)"
-- "b1-039 to b1-041 (adjective comparison — describing nature requires comparisons)"
-- "b1-065 to b1-072 (complex syntax — discussing ecology needs complex sentences)"
+  - "b1-077 to b1-081 (register awareness and grammar tools for expression)"
+  - "b1-039 to b1-041 (adjective comparison — describing nature requires comparisons)"
+  - "b1-065 to b1-072 (complex syntax — discussing ecology needs complex sentences)"
 grammar:
-- "Review: прикметники for descriptions (температура + gender agreement)"
-- "Review: складнопідрядні речення for expressing ecological arguments"
-- "Вставні слова applied to nature opinions (на жаль, безумовно)"
-- "Подвійне заперечення in ecological discourse (нічого не зробили)"
-- "Публіцистичний стиль for weather forecasts"
+  - "Review: прикметники for descriptions (температура + gender agreement)"
+  - "Review: складнопідрядні речення for expressing ecological arguments"
+  - "Вставні слова applied to nature opinions (на жаль, безумовно)"
+  - "Подвійне заперечення in ecological discourse (нічого не зробили)"
+  - "Публіцистичний стиль for weather forecasts"
 register: розмовний
 references:
-- title: "Авраменко Grade 7, p.28-31"
-  notes: "Засоби масової інформації, медіатексти — media context for
-    weather forecasts and environmental news."
-- title: "Заболотний Grade 7, p.24-28"
-  notes: "Джерела інформації — sourcing and evaluating information,
-    applicable to ecological data."
-- title: "Болшакова Grade 2, p.63"
-  notes: "Опис природи — basic Ukrainian nature vocabulary from early grades,
-    foundation for B1 expansion."
-- title: "Авраменко Grade 7, p.137"
-  notes: "Nature description text: autumn passage with literary devices,
-    model for B1 literary reading."
+  - title: "Авраменко Grade 7, p.28-31"
+    notes: "Засоби масової інформації, медіатексти — media context for weather forecasts
+      and environmental news."
+  - title: "Заболотний Grade 7, p.24-28"
+    notes: "Джерела інформації — sourcing and evaluating information, applicable to
+      ecological data."
+  - title: "Болшакова Grade 2, p.63"
+    notes: "Опис природи — basic Ukrainian nature vocabulary from early grades, foundation
+      for B1 expansion."
+  - title: "Авраменко Grade 7, p.137"
+    notes: "Nature description text: autumn passage with literary devices, model for
+      B1 literary reading."

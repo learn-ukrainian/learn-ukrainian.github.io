@@ -4,21 +4,24 @@ sequence: 3
 slug: research-verbs
 version: '1.1'
 title: "Дієслова наукового дослідження та верифікації"
-subtitle: "Research and Verification Verbs"
+subtitle: "Дієслова дослідження та перевірки"
 focus: vocabulary
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Розширити дієслівний інвентар для точного опису етапів наукового пошуку."
   - "Опанувати семантичні відтінки дієслів верифікації, апробації та спростування."
-  - "Навчитися коректно вживати дієслова у пасивних та безособових конструкціях наукового стилю."
+  - "Навчитися коректно вживати дієслова у пасивних та безособових конструкціях наукового
+    стилю."
   - "Вивчити специфіку керування наукових дієслів для уникнення типових мовних помилок."
 
 reading_situations:
   - source_type: "науковий звіт"
     topic: "Методи верифікації історичних джерел періоду Гетьманщини."
-    key_elements: ["підтвердження автентичності", "зіставлення фактів", "спростування міфів"]
-    motivation: "Аналіз дієслів, що описують процес критичного аналізу історичних документів."
+    key_elements: ["підтвердження автентичності", "зіставлення фактів", "спростування
+          міфів"]
+    motivation: "Аналіз дієслів, що описують процес критичного аналізу історичних
+      документів."
   - source_type: "методологічний розділ статті"
     topic: "Алгоритм проведення лінгвістичного експерименту."
     key_elements: ["планування", "здійснення", "коригування", "узагальнення"]
@@ -26,16 +29,23 @@ reading_situations:
 
 listening_situations:
   - media_type: "лекція"
-    setting: "Університетська лекція про сучасні методи соціологічних досліджень в Україні."
-    focus_points: ["термінологічні дієслова", "етапи верифікації гіпотез", "мовні кліше викладача"]
-    motivation: "Розвиток навичок розпізнавання академічної лексики на слух у швидкому темпі."
+    setting: "Університетська лекція про сучасні методи соціологічних досліджень в
+      Україні."
+    focus_points: ["термінологічні дієслова", "етапи верифікації гіпотез", "мовні
+          кліше викладача"]
+    motivation: "Розвиток навичок розпізнавання академічної лексики на слух у швидкому
+      темпі."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Опишіть методологію вашого (реального або уявного) дослідження в галузі гуманітарних наук (150-200 слів). Використайте щонайменше 10 нових дієслів наукового пошуку."
-    requirements: ["логічність викладу", "використання дієслів верифікації", "науковий регістр"]
+    prompt: "Опишіть методологію вашого (реального або уявного) дослідження в галузі
+      гуманітарних наук (150-200 слів). Використайте щонайменше 10 нових дієслів наукового
+      пошуку."
+    requirements: ["логічність викладу", "використання дієслів верифікації", "науковий
+          регістр"]
     motivation: "Практичне застосування нової лексики для побудови професійного тексту."
-    model_answer: "Текст повинен містити такі дієслова, як 'з'ясувати', 'обґрунтувати', 'систематизувати', 'проаналізувати', 'актуалізувати'."
+    model_answer: "Текст повинен містити такі дієслова, як 'з'ясувати', 'обґрунтувати',
+      'систематизувати', 'проаналізувати', 'актуалізувати'."
 
 content_outline:
   - section: "Дієслова ініціації та планування"
@@ -72,7 +82,8 @@ content_outline:
     words: 1000
     subsections:
       - "Типові помилки: опанувати (що?) vs володіти (чим?)"
-      - "Дієслова, що потребують прийменникового керування (зосереджуватися на, полягати в)"
+      - "Дієслова, що потребують прийменникового керування (зосереджуватися на, полягати
+        в)"
       - "Трансформація активних дієслів у пасивні форми (досліджувати - досліджується)"
     key_concepts:
       - "синтаксичне керування"
@@ -98,15 +109,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix incorrect verb government (керування) in academic sentences — e.g., опанувати (що?) vs володіти (чим?)."
+    description: "Fix incorrect verb government (керування) in academic sentences
+      — e.g., опанувати (що?) vs володіти (чим?)."
   - type: fill-in
-    description: "Complete methodology descriptions with appropriate research verbs (обґрунтовувати, з'ясовувати, систематизувати) in correct forms."
+    description: "Complete methodology descriptions with appropriate research verbs
+      (обґрунтовувати, з'ясовувати, систематизувати) in correct forms."
   - type: match-up
-    description: "Match research process stages (ініціація, аналіз, верифікація) with their corresponding verb sets."
+    description: "Match research process stages (ініціація, аналіз, верифікація) with
+      their corresponding verb sets."
   - type: select
-    description: "Choose the correct research verb and its grammatical form for describing specific academic activities."
+    description: "Choose the correct research verb and its grammatical form for describing
+      specific academic activities."
   - type: cloze
-    description: "Fill in missing research verbs in a methodology section of a Ukrainian scientific article."
+    description: "Fill in missing research verbs in a methodology section of a Ukrainian
+      scientific article."
 
 activities:
   types_required:
@@ -126,3 +142,4 @@ references:
 connects_to:
   previous: "academic-style-markers"
   next: "analysis-vocabulary"
+phase: C1.1 [Academic Foundation]

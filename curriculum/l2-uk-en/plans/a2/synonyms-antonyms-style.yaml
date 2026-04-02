@@ -10,114 +10,107 @@ pedagogy: PPP
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can identify synonyms and antonyms in Ukrainian and use them to
-  enrich speech and avoid repetition.
-- Learner can recognize and use basic literary devices such as epithets
-  (золота осінь) and metaphors (море квітів).
-- Learner can form and use diminutives with Ukrainian suffixes such as
-  -ик, -ок, -ечк-, -очк- to express endearment and emotional nuance.
-- "Learner can recognize syntactic stylistic devices — еліпсис (ellipsis)
-  and повтор (repetition) — in Ukrainian texts and proverbs."
+  - Learner can identify synonyms and antonyms in Ukrainian and use them to 
+    enrich speech and avoid repetition.
+  - Learner can recognize and use basic literary devices such as epithets 
+    (золота осінь) and metaphors (море квітів).
+  - Learner can form and use diminutives with Ukrainian suffixes such as -ик, 
+    -ок, -ечк-, -очк- to express endearment and emotional nuance.
+  - "Learner can recognize syntactic stylistic devices — еліпсис (ellipsis) and повтор
+    (repetition) — in Ukrainian texts and proverbs."
 dialogue_situations:
-- setting: 'Creative writing workshop — improving a bland text: Замість ''великий
-    будинок'' — ''величезний палац (m, palace)''. Замість ''маленька дівчинка'' —
-    ''крихітна дівчинка''. Антонім: ''холодний вітер (m)'' ↔ ''теплий вечір (m)''.'
-  speakers:
-  - Викладач
-  - Студенти-письменники
-  motivation: 'Synonyms/antonyms/diminutives: палац(m), дівчинка(f), вітер(m)'
+  - setting: 'Creative writing workshop — improving a bland text: Замість ''великий
+      будинок'' — ''величезний палац (m, palace)''. Замість ''маленька дівчинка''
+      — ''крихітна дівчинка''. Антонім: ''холодний вітер (m)'' ↔ ''теплий вечір (m)''.'
+    speakers:
+      - Викладач
+      - Студенти-письменники
+    motivation: 'Synonyms/antonyms/diminutives: палац(m), дівчинка(f), вітер(m)'
 content_outline:
-- section: 'Синоніми та антоніми: збагачуємо мовлення (Synonyms and Antonyms:
-    Enriching Speech)'
-  words: 500
-  points:
-  - 'What synonyms are and why they matter: говорити — казати — розповідати,
-    великий — чималий — величезний, гарний — красивий — вродливий.
-    Each synonym carries a different shade of meaning.'
-  - 'What antonyms are: великий — малий, день — ніч, початок — кінець,
-    радість — сум. Antonym pairs in proverbs: Не знаючи лиха, не
-    пізнаєш і добра.'
-  - 'Practical exercise: replace repeated words in a paragraph with
-    synonyms to improve style.'
-- section: 'Епітети та метафори: мова, що малює (Epithets and Metaphors:
-    Language That Paints)'
-  words: 450
-  points:
-  - 'Epithets — expressive adjectives that create imagery: золота осінь,
-    срібний дощ, палке серце, синє небо. Epithets go beyond literal
-    description.'
-  - 'Metaphors — comparing without "like": море квітів (a sea of flowers),
-    крила мрії (wings of a dream), зоря надії (star of hope).
-    Ukrainian poetry is rich in metaphor.'
-  - 'Examples from Ukrainian songs and poetry: Реве та стогне Дніпр
-    широкий (Шевченко) — personification as metaphor.'
-  - 'Practice: identify epithets and metaphors in short text excerpts.'
-- section: 'Зменшувальні суфікси: ласкаві слова (Diminutive Suffixes:
-    Words of Endearment)'
-  words: 500
-  points:
-  - 'The main diminutive suffixes: -ик (хлопчик, котик, столик),
-    -ок (батько → батечко, note: -ок for masculine), -ечк- (книжечка,
-    рученька via -еньк-), -очк- (зірочка, квіточка, ніченька via
-    -еньк-).'
-  - 'Emotional function: diminutives express tenderness, affection,
-    familiarity. Мамочка, серденько, сонечко — everyday Ukrainian
-    is full of these.'
-  - 'Names get diminutives too: Оксана → Оксаночка, Тарас → Тарасик,
-    Марія → Марійка, Іван → Іванко.'
-  - 'When diminutives change meaning: рука → ручка (also: pen/handle),
-    голова → головка (also: garlic head, nail head).'
-- section: 'Синтаксична стилістика: еліпсис і повтор (Syntactic Stylistics:
-    Ellipsis and Repetition)'
-  words: 550
-  points:
-  - 'Еліпсис (ellipsis) — omitting a verb or subject that is understood
-    from context. Ukrainian uses this naturally: Усе найкраще — дітям!
-    (= Усе найкраще належить/дається дітям). Кожному — своє.'
-  - 'Еліпсис in everyday speech: Він — додому, вона — на роботу.
-    Я — каву, а ти? These are not errors — they are natural Ukrainian
-    style.'
-  - 'Повтор (repetition) — deliberate repetition for emphasis or
-    expression: думали-думали (thought and thought), ходили-ходили
-    (walked and walked), де-де? (where?). Reduplication as stylistic
-    device.'
-  - 'Повтор in proverbs and folk speech: Тихше їдеш — далі будеш.
-    Ішов, ішов та й прийшов. Тут тобі і хліб, тут тобі і сіль.'
-  - 'Practice: identify еліпсис and повтор in Ukrainian proverbs
-    and short texts.'
+  - section: 'Синоніми та антоніми: збагачуємо мовлення (Synonyms and Antonyms: Enriching
+      Speech)'
+    words: 500
+    points:
+      - 'What synonyms are and why they matter: говорити — казати — розповідати, великий
+        — чималий — величезний, гарний — красивий — вродливий. Each synonym carries
+        a different shade of meaning.'
+      - 'What antonyms are: великий — малий, день — ніч, початок — кінець, радість
+        — сум. Antonym pairs in proverbs: Не знаючи лиха, не пізнаєш і добра.'
+      - 'Practical exercise: replace repeated words in a paragraph with synonyms to
+        improve style.'
+  - section: 'Епітети та метафори: мова, що малює (Epithets and Metaphors: Language
+      That Paints)'
+    words: 450
+    points:
+      - 'Epithets — expressive adjectives that create imagery: золота осінь, срібний
+        дощ, палке серце, синє небо. Epithets go beyond literal description.'
+      - 'Metaphors — comparing without "like": море квітів (a sea of flowers), крила
+        мрії (wings of a dream), зоря надії (star of hope). Ukrainian poetry is rich
+        in metaphor.'
+      - 'Examples from Ukrainian songs and poetry: Реве та стогне Дніпр широкий (Шевченко)
+        — personification as metaphor.'
+      - 'Practice: identify epithets and metaphors in short text excerpts.'
+  - section: 'Зменшувальні суфікси: ласкаві слова (Diminutive Suffixes: Words of Endearment)'
+    words: 500
+    points:
+      - 'The main diminutive suffixes: -ик (хлопчик, котик, столик), -ок (батько →
+        батечко, note: -ок for masculine), -ечк- (книжечка, рученька via -еньк-),
+        -очк- (зірочка, квіточка, ніченька via -еньк-).'
+      - 'Emotional function: diminutives express tenderness, affection, familiarity.
+        Мамочка, серденько, сонечко — everyday Ukrainian is full of these.'
+      - 'Names get diminutives too: Оксана → Оксаночка, Тарас → Тарасик, Марія → Марійка,
+        Іван → Іванко.'
+      - 'When diminutives change meaning: рука → ручка (also: pen/handle), голова
+        → головка (also: garlic head, nail head).'
+  - section: 'Синтаксична стилістика: еліпсис і повтор (Syntactic Stylistics: Ellipsis
+      and Repetition)'
+    words: 550
+    points:
+      - 'Еліпсис (ellipsis) — omitting a verb or subject that is understood from context.
+        Ukrainian uses this naturally: Усе найкраще — дітям! (= Усе найкраще належить/дається
+        дітям). Кожному — своє.'
+      - 'Еліпсис in everyday speech: Він — додому, вона — на роботу. Я — каву, а ти?
+        These are not errors — they are natural Ukrainian style.'
+      - 'Повтор (repetition) — deliberate repetition for emphasis or expression: думали-думали
+        (thought and thought), ходили-ходили (walked and walked), де-де? (where?).
+        Reduplication as stylistic device.'
+      - 'Повтор in proverbs and folk speech: Тихше їдеш — далі будеш. Ішов, ішов та
+        й прийшов. Тут тобі і хліб, тут тобі і сіль.'
+      - 'Practice: identify еліпсис and повтор in Ukrainian proverbs and short texts.'
 vocabulary_hints:
   required:
-  - синонім (synonym)
-  - антонім (antonym)
-  - епітет (epithet)
-  - метафора (metaphor)
-  - зменшувальний (diminutive)
-  - суфікс (suffix)
-  - еліпсис (ellipsis)
-  - повтор (repetition)
-  - образний (figurative, expressive)
-  - ласкавий (tender, affectionate)
+    - синонім (synonym)
+    - антонім (antonym)
+    - епітет (epithet)
+    - метафора (metaphor)
+    - зменшувальний (diminutive)
+    - суфікс (suffix)
+    - еліпсис (ellipsis)
+    - повтор (repetition)
+    - образний (figurative, expressive)
+    - ласкавий (tender, affectionate)
   recommended:
-  - стилістика (stylistics)
-  - порівняння (comparison, simile)
-  - відтінок (shade, nuance)
-  - прислів'я (proverb)
-  - виразність (expressiveness)
+    - стилістика (stylistics)
+    - порівняння (comparison, simile)
+    - відтінок (shade, nuance)
+    - прислів'я (proverb)
+    - виразність (expressiveness)
 activity_hints:
-- type: match-up
-  focus: Match synonyms and antonyms in pairs
-  items: 8
-- type: quiz
-  focus: Identify the literary device (epithet, metaphor, ellipsis, repetition)
-  items: 8
-- type: fill-in
-  focus: Form diminutives from base words using correct suffixes
-  items: 8
-- type: group-sort
-  focus: Sort examples into syntactic stylistic categories (еліпсис vs повтор)
-  items: 8
+  - type: match-up
+    focus: Match synonyms and antonyms in pairs
+    items: 8
+  - type: quiz
+    focus: Identify the literary device (epithet, metaphor, ellipsis, 
+      repetition)
+    items: 8
+  - type: fill-in
+    focus: Form diminutives from base words using correct suffixes
+    items: 8
+  - type: group-sort
+    focus: Sort examples into syntactic stylistic categories (еліпсис vs повтор)
+    items: 8
 references:
-- title: Заболотний Grade 5, Лексикологія
-  notes: Synonyms, antonyms, and enriching vocabulary
-- title: Авраменко Grade 7, Стилістичні засоби мови
-  notes: Epithets, metaphors, and syntactic figures of speech
+  - title: Заболотний Grade 5, Лексикологія
+    notes: Synonyms, antonyms, and enriching vocabulary
+  - title: Авраменко Grade 7, Стилістичні засоби мови
+    notes: Epithets, metaphors, and syntactic figures of speech

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 39: Shopping (A1, A1.6 [Food and Shopping])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -191,67 +191,38 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Taras is at a busy outdoor **ринок** (market) in Kyiv. He needs **яблука** (apples) and **помідори** (tomatoes). Listen to how he asks the price, hears the total, and places his order.
+Taras is at a busy outdoor **ри́нок** (market) in Kyiv. He needs **я́блука** (apples) and **помідо́ри** (tomatoes). Listen to how he asks the price, hears the total, and places his order.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Добрий день! *(Good day!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Добрий день! *(Good day!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Скільки коштує кілограм яблук? *(How much does a kilogram of apples cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Сорок гривень. *(Forty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А помідори? *(And tomatoes?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Тридцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Дайте, будь ласка, два кілограми помідорів і кілограм яблук. *(Please give me two kilograms of tomatoes and a kilogram of apples.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Сімдесят п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Ось, будь ласка. *(Here you go.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Дякую! До побачення! *(Thank you! Goodbye!)*</div>
-
-</div>
+> — **Тара́с:** До́брий день! *(Good day!)*
+> — **Продаве́ць:** Добрий день! *(Good day!)*
+> — **Тарас:** Скі́льки ко́шту́є кілогра́м я́блук? *(How much does a kilogram of apples cost?)*
+> — **Продавець:** Соро́к гри́вень. *(Forty hryvnias.)*
+> — **Тарас:** А помідори? *(And tomatoes?)*
+> — **Продавець:** Три́дцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*
+> — **Тарас:** Да́йте, будь ла́ска, два кілогра́ми помідо́рів і кілограм яблук. *(Please give me two kilograms of tomatoes and a kilogram of apples.)*
+> — **Продавець:** Сімдеся́т п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*
+> — **Тарас:** Ось, будь ласка. *(Here you go.)*
+> — **Продавець:** Дякую! До поба́чення! *(Thank you! Goodbye!)*
 
 Two key phrases to notice here. First, **за кілограм** means "per kilogram" — the vendor states the unit price. Second, **Дайте, будь ласка** followed by a quantity and an item is the standard buying request at any Ukrainian market or shop.
 
-Now a different setting. **Мама** (Mom) and **Дочка** (Daughter) are in a **супермаркет** (supermarket). They need to find bread, compare cheese prices, and pay.
+Now a different setting. **Ма́ма** (Mom) and **Дочка́** (Daughter) are in a **суперма́ркет** (supermarket). They need to find bread, compare cheese prices, and pay.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Дочка:</span> Мамо, де тут хліб? *(Mom, where is the bread here?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Хліб у третьому ряді. *(Bread is in the third aisle.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дочка:</span> А молоко? *(And milk?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Молоко в холодильнику, там. *(Milk is in the fridge, over there.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дочка:</span> Скільки коштує цей сир? *(How much does this cheese cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Сто двадцять гривень. *(One hundred twenty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дочка:</span> Дорого! А є дешевший? *(Expensive! Is there a cheaper one?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Так, ось цей — вісімдесят. *(Yes, this one — eighty.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дочка:</span> Добре, беру. *(OK, I'll take it.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Скільки за все? *(How much is everything?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Касир:</span> Сто сорок сім гривень. *(One hundred forty-seven hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Мама:</span> Можна карткою? *(Can I pay by card?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Касир:</span> Так, звичайно. Дякуємо за покупку! *(Yes, of course. Thanks for the purchase!)*</div>
-
-</div>
+> — **Дочка:** Ма́мо, де тут хліб? *(Mom, where is the bread here?)*
+> — **Мама:** Хліб у тре́тьому ря́ді. *(Bread is in the third aisle.)*
+> — **Дочка:** А молоко́? *(And milk?)*
+> — **Мама:** Молоко в холоди́льнику, там. *(Milk is in the fridge, over there.)*
+> — **Дочка:** Скільки коштує цей сир? *(How much does this cheese cost?)*
+> — **Мама:** Сто два́дцять гривень. *(One hundred twenty hryvnias.)*
+> — **Дочка:** До́рого! А є деше́вший? *(Expensive! Is there a cheaper one?)*
+> — **Мама:** Так, ось цей — вісімдеся́т. *(Yes, this one — eighty.)*
+> — **Дочка:** До́бре, беру́. *(OK, I'll take it.)*
+> — **Мама:** Скільки за все? *(How much is everything?)*
+> — **Каси́р:** Сто сорок сім гривень. *(One hundred forty-seven hryvnias.)*
+> — **Мама:** Мо́жна ка́рткою? *(Can I pay by card?)*
+> — **Касир:** Так, звича́йно. Дякуємо за поку́пку! *(Yes, of course. Thanks for the purchase!)*
 
 :::tip
 Four phrases from this dialogue to memorize now: **Дорого!** (Expensive!), **Добре, беру.** (OK, I'll take it.), **Скільки за все?** (How much total?), **Можна карткою?** (Can I pay by card?)
@@ -259,14 +230,14 @@ Four phrases from this dialogue to memorize now: **Дорого!** (Expensive!),
 
 ## Скільки коштує? (How Much?)
 
-The question **Скільки коштує?** (How much does it cost?) uses the verb **коштувати** (to cost) in third person singular. When the item is plural, the verb changes: **Скільки коштують?** (How much do they cost?). The verb agrees with the item — singular item, singular verb; plural item, plural verb. Compare:
+The question **Скільки коштує?** (How much does it cost?) uses the verb **ко́штува́ти** (to cost) in third person singular. When the item is plural, the verb changes: **Скільки ко́шту́ють?** (How much do they cost?). The verb agrees with the item — singular item, singular verb; plural item, plural verb. Compare:
 
 - **Скільки коштує хліб?** — How much does the bread cost?
 - **Скільки коштує молоко?** — How much does the milk cost?
 - **Скільки коштують яблука?** — How much do the apples cost?
 - **Скільки коштують помідори?** — How much do the tomatoes cost?
 
-The word **гривня** (hryvnia — Ukraine's currency) changes form depending on the number before it. Learn this as a pattern rather than a grammar rule. After **1**, use **гривня**. After **2, 3, 4** (and compounds ending in them), use **гривні**. After **5 and above**, use **гривень**. Here are real prices to practice:
+The word **гри́вня** (hryvnia — Ukraine's currency) changes form depending on the number before it. Learn this as a pattern rather than a grammar rule. After **1**, use **гривня**. After **2, 3, 4** (and compounds ending in them), use **гри́вні**. After **5 and above**, use **гривень**. Here are real prices to practice:
 
 - **1 гривня** — one hryvnia
 - **2 гривні** — two hryvnias
@@ -277,7 +248,7 @@ The word **гривня** (hryvnia — Ukraine's currency) changes form dependin
 - **32 гривні** — thirty-two hryvnias (ends in 2 → гривні)
 - **100 гривень** — one hundred hryvnias
 
-The smaller unit, **копійка** (kopeck), follows a similar pattern: 1 **копійка**, 2 **копійки**, 5 **копійок**. In everyday speech, prices are usually rounded to whole **гривні**, so you will hear **копійки** mostly on receipts.
+The smaller unit, **копі́йка** (kopeck), follows a similar pattern: 1 **копійка**, 2 **копійки́**, 5 **копійо́к**. In everyday speech, prices are usually rounded to whole **гривні**, so you will hear **копійки** mostly on receipts.
 
 <!-- INJECT_ACTIVITY: quiz-currency-forms -->
 
@@ -285,49 +256,49 @@ Now practice reading prices aloud. Here are the five items from the supermarket 
 
 - **Хліб — двадцять п'ять гривень.** Bread — 25 hryvnias.
 - **Молоко — сорок дві гривні.** Milk — 42 hryvnias.
-- **Сир — вісімдесят дев'ять гривень.** Cheese — 89 hryvnias.
-- **Ковбаса — сто двадцять гривень.** Sausage — 120 hryvnias.
-- **Масло — шістдесят п'ять гривень.** Butter — 65 hryvnias.
+- **Сир — вісімдесят де́в'ять гривень.** Cheese — 89 hryvnias.
+- **Ковбаса́ — сто двадцять гривень.** Sausage — 120 hryvnias.
+- **Ма́сло — шістдеся́т п'ять гривень.** Butter — 65 hryvnias.
 
 Notice **сорок дві гривні** — the number **дві** is feminine here because **гривня** is a feminine noun. With masculine nouns you would say **два**, but with **гривня** it is always **дві**.
 
 After you hear a price, you react. Here are six useful expressions:
 
 - **Дорого!** — Expensive! (when ковбаса is 120 гривень)
-- **Дешево!** — Cheap! (a pleasant surprise)
-- **Нормальна ціна.** — Fair price.
-- **Є знижка?** — Is there a discount?
-- **За все — сто п'ятдесят гривень.** — The total is 150 hryvnias.
+- **Де́шево!** — Cheap! (a pleasant surprise)
+- **Норма́льна ціна́.** — Fair price.
+- **Є зни́жка?** — Is there a discount?
+- **За все — сто п'ятдеся́т гривень.** — The total is 150 hryvnias.
 - **Добре, беру.** — OK, I'll take it.
 
 <!-- INJECT_ACTIVITY: fill-in-prices -->
 
-## Де купити? (Where to Buy)
+## Де купи́ти? (Where to Buy)
 
 Ukraine has several types of shopping locations, each with its own character. Here are the five most common:
 
-- **Магазин** (shop) — a general store. **Я йду в магазин.** (I'm going to the shop.)
-- **Супермаркет** (supermarket) — a large self-service store. **У супермаркеті є все.** (The supermarket has everything.)
-- **Ринок** (market) — an open-air market where prices are often lower. **На ринку часто дешевше.** (At the market it's often cheaper.)
-- **Крамниця** (store) — a distinctly Ukrainian word, synonym for **магазин**. Common in western Ukraine and literary language. **У нашій крамниці гарний вибір.** (Our store has a good selection.)
-- **Аптека** (pharmacy) — for medicines and cosmetics, not food. **Ліки купують в аптеці.** (Medicine is bought at the pharmacy.)
+- **Магази́н** (shop) — a general store. **Я йду в магазин.** (I'm going to the shop.)
+- **Супермаркет** (supermarket) — a large self-service store. **У суперма́ркеті є все.** (The supermarket has everything.)
+- **Ринок** (market) — an open-air market where prices are often lower. **На ри́нку ча́сто деше́вше.** (At the market it's often cheaper.)
+- **Крамни́ця** (store) — a distinctly Ukrainian word, synonym for **магазин**. Common in western Ukraine and literary language. **У на́шій крамни́ці га́рний ви́бір.** (Our store has a good selection.)
+- **Апте́ка** (pharmacy) — for medicines and cosmetics, not food. **Лі́ки купу́ють в апте́ці.** (Medicine is bought at the pharmacy.) You can also hear: **У мене́ нема́є грошей** (I don't have money) — a phrase you'll need if you've spent too much at the **ринок**!
 
 Inside a **супермаркет**, products are organized into sections called **відділ** (section/department):
 
-- **Де тут молочний відділ?** — Where is the dairy section? — **Там, праворуч.** (Over there, to the right.)
-- **Де тут хлібний відділ?** — Where is the bread section? — **Перший ряд, ліворуч.** (First aisle, to the left.)
-- **М'ясний відділ** — the meat section.
-- **Овочевий відділ** — the vegetable/produce section.
+- **Де тут моло́чний відділ?** — Where is the dairy section? — **Там, право́руч.** (Over there, to the right.)
+- **Де тут хлі́бний відділ?** — Where is the bread section? — **Пе́рший ряд, ліво́руч.** (First aisle, to the left.)
+- **М'ясни́й відділ** — the meat section.
+- **Овоче́вий відділ** — the vegetable/produce section.
 
 This connects back to Dialogue 2: **Де тут хліб? — Хліб у третьому ряді.**
 
 When you buy food, you need quantity words. Learn these as ready-made chunks — the item form after each quantity is fixed, and you will study why in A2. For now, just copy the pattern:
 
 - **Кілограм** (kilogram): **кілограм яблук**, **два кілограми помідорів** — **Дайте, будь ласка, кілограм яблук.** (Please give me a kilogram of apples.)
-- **Літр** (liter): **літр молока**, **два літри соку** — **Дайте, будь ласка, літр молока.** (Please give me a liter of milk.)
-- **Пачка** (pack): **пачка масла**, **пачка чаю** — **Дайте, будь ласка, дві пачки кави.** (Please give me two packs of coffee.)
-- **Пляшка** (bottle): **пляшка води**, **пляшка соку** — **Дайте, будь ласка, пляшку води.** (Please give me a bottle of water.)
-- **Буханка** (loaf — used only for bread): **буханка хліба** — **Дайте, будь ласка, буханку хліба.** (Please give me a loaf of bread.)
+- **Літр** (liter): **літр молока́**, **два лі́три со́ку** — **Дайте, будь ласка, літр молока.** (Please give me a liter of milk.)
+- **Па́чка** (pack): **пачка ма́сла**, **пачка ча́ю** — **Дайте, будь ласка, дві пачки́ ка́ви.** (Please give me two packs of coffee.)
+- **Пля́шка** (bottle): **пляшка во́ди**, **пляшка соку** — **Дайте, будь ласка, пля́шку води.** (Please give me a bottle of water.)
+- **Буха́нка** (loaf — used only for bread): **буханка хлі́ба** — **Дайте, будь ласка, буха́нку хліба.** (Please give me a loaf of bread.)
 
 You will see these genitive endings again in A2. For now, learn the chunks — they are the same ones native speakers use automatically.
 
@@ -337,7 +308,7 @@ The buying formula is always the same: **Дайте, будь ласка,** + qu
 - **Дайте, будь ласка, літр молока.** (Please give me a liter of milk.)
 - **Дайте, будь ласка, буханку хліба.** (Please give me a loaf of bread.)
 
-The quantity word changes form with the number (**кілограм** → **два кілограми**), and the item stays in the same form after the quantity. For now, just copy these chunks as whole units.
+The quantity word changes form with the number (**кілограм** → **два кілограми**), and the item after the quantity also has a special form (you will learn why in A2). For now, just copy these chunks as whole units.
 
 <!-- INJECT_ACTIVITY: fill-in-quantities -->
 
@@ -367,39 +338,26 @@ Here is your complete shopping toolkit, organized by what you need to do:
 **Pay:**
 - **Скільки за все?** — How much is everything?
 - **Можна карткою?** — Can I pay by card?
-- **Можна готівкою?** — Can I pay cash?
+- **Можна готі́вкою?** — Can I pay cash?
 
 ### Self-Check
 
 Test yourself. You are at a Kyiv market and need three things: 2 kg of tomatoes (**помідори**, 50 грн/кг), 1 bottle of juice (**сік**, 30 грн), and 1 loaf of bread (**хліб**, 20 грн). Walk through the full exchange:
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштують помідори? *(How much do the tomatoes cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> П'ятдесят гривень за кілограм. *(Fifty hryvnias per kilogram.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштує сік? *(How much does the juice cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Тридцять гривень. *(Thirty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ви:</span> Скільки коштує хліб? *(How much does the bread cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Двадцять гривень. *(Twenty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ви:</span> Дайте, будь ласка, два кілограми помідорів, пляшку соку і буханку хліба. *(Please give me two kilograms of tomatoes, a bottle of juice, and a loaf of bread.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ви:</span> Можна карткою? *(Can I pay by card?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Так, звичайно. *(Yes, of course.)*</div>
-
-</div>
+> — **Ви:** Скільки коштують помідори? *(How much do the tomatoes cost?)*
+> — **Продавець:** П'ятдесят гривень за кілограм. *(Fifty hryvnias per kilogram.)*
+> — **Ви:** Скільки коштує сік? *(How much does the juice cost?)*
+> — **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
+> — **Ви:** Скільки коштує хліб? *(How much does the bread cost?)*
+> — **Продавець:** Двадцять гривень. *(Twenty hryvnias.)*
+> — **Ви:** Дайте, будь ласка, два кілограми помідорів, пляшку соку і буханку хліба. *(Please give me two kilograms of tomatoes, a bottle of juice, and a loaf of bread.)*
+> — **Продавець:** Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*
+> — **Ви:** Можна карткою? *(Can I pay by card?)*
+> — **Продавець:** Так, звичайно. *(Yes, of course.)*
 
 Can you do this without looking at the toolkit above? That is your goal.
 
-**Deterministic word count: 1571 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1593 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -577,12 +535,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 133 words | Not found: 1 words
+Verified: 120 words | Not found: 69 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Апте — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Крамни — NOT IN VESUM
+  ✗ М'ясни — NOT IN VESUM
+  ✗ Магази — NOT IN VESUM
+  ✗ Овоче — NOT IN VESUM
+  ✗ Пля — NOT IN VESUM
+  ✗ Продаве — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
+  ✗ Соро — NOT IN VESUM
+  ✗ Сімдеся — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
+  ✗ апте — NOT IN VESUM
+  ✗ блук — NOT IN VESUM
+  ✗ бний — NOT IN VESUM
+  ✗ в'ять — NOT IN VESUM
+  ✗ вень — NOT IN VESUM
+  ✗ вня — NOT IN VESUM
+  ✗ вні — NOT IN VESUM
+  ✗ вше — NOT IN VESUM
+  ✗ вісімдеся — NOT IN VESUM
+  ✗ деше — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ жка — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ звича — NOT IN VESUM
+  ✗ зни — NOT IN VESUM
+  ✗ йка — NOT IN VESUM
+  ✗ йте — NOT IN VESUM
+  ✗ копійо — NOT IN VESUM
+  ✗ крамни — NOT IN VESUM
+  ✗ кілогра — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ льна — NOT IN VESUM
+  ✗ льнику — NOT IN VESUM
+  ✗ ліво — NOT IN VESUM
+  ✗ моло — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ п'ятдеся — NOT IN VESUM
+  ✗ пку — NOT IN VESUM
+  ✗ пля — NOT IN VESUM
+  ✗ поба — NOT IN VESUM
+  ✗ поку — NOT IN VESUM
+  ✗ помідо — NOT IN VESUM
+  ✗ ркет — NOT IN VESUM
+  ✗ ркеті — NOT IN VESUM
+  ✗ рний — NOT IN VESUM
+  ✗ рого — NOT IN VESUM
 
-All 133 other words are confirmed to exist in VESUM.
+All 120 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -591,23 +598,23 @@ All 133 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

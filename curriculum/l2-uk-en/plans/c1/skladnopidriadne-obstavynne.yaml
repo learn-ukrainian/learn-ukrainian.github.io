@@ -4,7 +4,7 @@ sequence: 48
 slug: skladnopidriadne-obstavynne
 version: '1.1'
 title: "Складнопідрядні обставинні речення: види та вживання"
-subtitle: "Adverbial Complex Sentences: Types and Usage"
+subtitle: "Складнопідрядні обставинні речення"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
@@ -12,37 +12,45 @@ objectives:
   - "Систематизувати знання про всі види складнопідрядних обставинних речень."
   - "Навчитися правильно використовувати сполучники умови, мети, причини та наслідку."
   - "Опанувати нюанси вживання підрядних допустових та порівняльних речень."
-  - "Розвинути вміння будувати складні логічні конструкції для наукового та офіційного дискурсу."
+  - "Розвинути вміння будувати складні логічні конструкції для наукового та офіційного
+    дискурсу."
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Причинно-наслідкові зв'язки в історичних процесах: аналіз підрядних причини та наслідку."
+    topic: "Причинно-наслідкові зв'язки в історичних процесах: аналіз підрядних причини
+      та наслідку."
     key_elements: ["детермінізм", "передумова", "чинник", "результат"]
     motivation: "Вивчення засобів вираження логіки історичного розвитку."
   - source_type: "офіційний лист"
-    topic: "Умови надання грантової підтримки для культурних проектів: підрядні умови та мети."
+    topic: "Умови надання грантової підтримки для культурних проектів: підрядні умови
+      та мети."
     key_elements: ["критерій", "вимога", "цільове призначення"]
     motivation: "Робота з нормативними текстами та формальними вимогами."
 
 listening_situations:
   - media_type: "інтерв'ю"
     setting: "Розмова з екологом про наслідки глобального потепління для України."
-    focus_points: ["підрядні умови ('якщо...'), наслідку ('так що...'), допустові ('хоча...')"]
+    focus_points: ["підрядні умови ('якщо...'), наслідку ('так що...'), допустові
+          ('хоча...')"]
     motivation: "Сприйняття складної аргументації в науково-популярному контексті."
 
 writing_tasks:
   - task_type: "офіційний лист"
-    prompt: "Напишіть мотиваційний лист для участі в освітній програмі, використовуючи різні види обставинних підрядних речень (мети, умови, причини)."
-    requirements: ["мінімум 200 слів", "вживання сполучників 'аби', 'якби', 'оскільки', 'незважаючи на те що'", "дотримання офіційно-ділового стилю"]
+    prompt: "Напишіть мотиваційний лист для участі в освітній програмі, використовуючи
+      різні види обставинних підрядних речень (мети, умови, причини)."
+    requirements: ["мінімум 200 слів", "вживання сполучників 'аби', 'якби', 'оскільки',
+          'незважаючи на те що'", "дотримання офіційно-ділового стилю"]
     motivation: "Застосування граматичних знань у професійній комунікації."
-    model_answer: "Лист має чітко формулювати мету кандидата, умови його успішної участі та обґрунтування вибору саме цієї програми."
+    model_answer: "Лист має чітко формулювати мету кандидата, умови його успішної
+      участі та обґрунтування вибору саме цієї програми."
 
 discussion_topics:
   - context: "Чи виправдовує мета засоби її досягнення?"
     questions:
       - "У яких ситуаціях етичні норми можуть бути порушені заради вищої мети?"
       - "Які наслідки має нехтування мораллю в політиці чи бізнесі?"
-    motivation: "Використання підрядних мети, умови та допустових для ведення етичної дискусії."
+    motivation: "Використання підрядних мети, умови та допустових для ведення етичної
+      дискусії."
 
 content_outline:
   - section: "Підрядні речення місця та часу"
@@ -105,15 +113,20 @@ vocabulary:
 
 activity_hints:
   - type: fill-in
-    description: "Complete sentences with appropriate subordinating conjunctions for different adverbial clause types (аби, якби, оскільки, незважаючи на те що)."
+    description: "Complete sentences with appropriate subordinating conjunctions for
+      different adverbial clause types (аби, якби, оскільки, незважаючи на те що)."
   - type: error-correction
-    description: "Fix errors in adverbial clauses — incorrect conjunction choice, wrong mood in conditional clauses, punctuation with compound conjunctions."
+    description: "Fix errors in adverbial clauses — incorrect conjunction choice,
+      wrong mood in conditional clauses, punctuation with compound conjunctions."
   - type: match-up
-    description: "Match adverbial clause types (причини, мети, умови, наслідку, допустове) with their conjunctions and example sentences."
+    description: "Match adverbial clause types (причини, мети, умови, наслідку, допустове)
+      with their conjunctions and example sentences."
   - type: critical-analysis
-    description: "Analyze a legal document excerpt and identify all adverbial clauses, explaining how they construct the logical argument."
+    description: "Analyze a legal document excerpt and identify all adverbial clauses,
+      explaining how they construct the logical argument."
   - type: select
-    description: "Choose between real condition (якщо) and unreal condition (якби) based on context, and identify the correct verb mood."
+    description: "Choose between real condition (якщо) and unreal condition (якби)
+      based on context, and identify the correct verb mood."
 
 activities:
   types_required:

@@ -34,7 +34,7 @@ SVC_PORT[api]=8765
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
 
-SVC_CMD[starlight]="npm run dev --prefix starlight"
+SVC_CMD[starlight]="npm run dev --prefix starlight -- --force"
 SVC_PORT[starlight]=4321
 SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
 SVC_DESC[starlight]="Starlight Dev Server (Astro)"
@@ -118,6 +118,11 @@ _stop_service() {
         if [[ -f "$cache_file" ]]; then
             rm -f "$cache_file"
             echo "  Cleared Astro content cache (data-store.json)"
+        fi
+        local vite_cache_dir="$PROJECT_ROOT/starlight/node_modules/.vite"
+        if [[ -d "$vite_cache_dir" ]]; then
+            rm -rf "$vite_cache_dir"
+            echo "  Cleared Vite cache (.vite)"
         fi
     fi
 

@@ -1,6 +1,6 @@
 # Build Summary: questions (A1)
 
-Generated: 2026-03-31 11:56
+Generated: 2026-04-01 13:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:56
 | vocab | complete | 2026-03-30 03:38:26 |
 | enrich | complete | 2026-03-30 03:38:27 |
 | verify | complete | 2026-03-30 03:38:27 |
-| review | complete | 2026-03-30 03:57:16 |
-| stress | complete | 2026-03-31 09:56:44 |
-| publish | complete | 2026-03-31 09:56:45 |
+| review | complete | 2026-04-01 11:40:19 |
+| stress | complete | 2026-04-01 11:40:25 |
+| publish | complete | 2026-04-01 11:40:26 |
 
 ## Reviews
 
@@ -42,6 +42,9 @@ Generated: 2026-03-31 11:56
 | review | gemini-tools (gemini-3.1-pro-preview) | 600s | ❌ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 294s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 204s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

@@ -4,19 +4,24 @@ sequence: 41
 slug: professional-scenarios
 version: '1.1'
 title: "Професійні сценарії: Мистецтво високої комунікації в бізнесі та медіа"
-subtitle: "Professional Scenarios"
+subtitle: "Професійні сценарії"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Опанувати стратегії переконливої аргументації та контраргументації в ділових перемовинах."
-  - "Розвинути навички публічного виступу з використанням складних риторичних фігур та методів утримання уваги."
-  - "Навчитися керувати комунікацією в кризових ситуаціях, зокрема під час інтерв'ю та прес-конференцій."
-  - "Засвоїти тонкощі дипломатичного етикету та особливості міжкультурної ділової взаємодії."
+  - "Опанувати стратегії переконливої аргументації та контраргументації в ділових
+    перемовинах."
+  - "Розвинути навички публічного виступу з використанням складних риторичних фігур
+    та методів утримання уваги."
+  - "Навчитися керувати комунікацією в кризових ситуаціях, зокрема під час інтерв'ю
+    та прес-конференцій."
+  - "Засвоїти тонкощі дипломатичного етикету та особливості міжкультурної ділової
+    взаємодії."
 
 reading_situations:
   - source_type: "кейс-стаді"
-    topic: "Аналіз успішної PR-кампанії українського бренду на міжнародному ринку: мовні стратегії позиціонування."
+    topic: "Аналіз успішної PR-кампанії українського бренду на міжнародному ринку:
+      мовні стратегії позиціонування."
     key_elements: ["брендинг", "меседж", "цільова аудиторія"]
     motivation: "Розуміння прагматики ділового тексту."
   - source_type: "дипломатична нота"
@@ -26,16 +31,22 @@ reading_situations:
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Політичне ток-шоу: аналіз того, як гості відповідають на 'гострі' запитання, використовують техніки ухилення та перехоплення ініціативи."
+    setting: "Політичне ток-шоу: аналіз того, як гості відповідають на 'гострі' запитання,
+      використовують техніки ухилення та перехоплення ініціативи."
     focus_points: ["риторичні маніпуляції", "логічні пастки", "невербальна комунікація"]
     motivation: "Розвиток критичного сприйняття публічного дискурсу."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть аналітичну записку щодо стратегії виходу компанії на новий ринок в умовах високої конкуренції. Обґрунтуйте вибір комунікаційних каналів та мовних засобів."
-    requirements: ["мінімум 350 слів", "використання професійної лексики (маркетинг, менеджмент)", "чітка аргументація за моделлю Тулміна"]
+    prompt: "Напишіть аналітичну записку щодо стратегії виходу компанії на новий ринок
+      в умовах високої конкуренції. Обґрунтуйте вибір комунікаційних каналів та мовних
+      засобів."
+    requirements: ["мінімум 350 слів", "використання професійної лексики (маркетинг,
+          менеджмент)", "чітка аргументація за моделлю Тулміна"]
     motivation: "Відпрацювання навичок стратегічного планування та ділового письма."
-    model_answer: "Текст має містити SWOT-аналіз (українською), опис ключових повідомлень та прогнозовані результати. Важливо дотримуватися стриманого, але переконливого тону."
+    model_answer: "Текст має містити SWOT-аналіз (українською), опис ключових повідомлень
+      та прогнозовані результати. Важливо дотримуватися стриманого, але переконливого
+      тону."
 
 discussion_topics:
   - context: "Етика в бізнес-комунікації: де межа між переконанням та маніпуляцією?"
@@ -106,15 +117,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a political talk-show transcript — identify rhetorical manipulation techniques, logical fallacies, and evasion strategies."
+    description: "Analyze a political talk-show transcript — identify rhetorical manipulation
+      techniques, logical fallacies, and evasion strategies."
   - type: select
-    description: "Choose the most appropriate communication strategy for different professional crisis scenarios (press conference, investor meeting, media interview)."
+    description: "Choose the most appropriate communication strategy for different
+      professional crisis scenarios (press conference, investor meeting, media interview)."
   - type: match-up
-    description: "Match negotiation strategies (Win-Win, жорсткий стиль, компроміс) with their linguistic markers and example phrases."
+    description: "Match negotiation strategies (Win-Win, жорсткий стиль, компроміс)
+      with their linguistic markers and example phrases."
   - type: error-correction
-    description: "Fix diplomatic protocol errors in a business letter — wrong register, inappropriate directness, missing courtesy formulas."
+    description: "Fix diplomatic protocol errors in a business letter — wrong register,
+      inappropriate directness, missing courtesy formulas."
   - type: essay-response
-    description: "Write a crisis communication press release (150-200 words) responding to a reputational challenge, using appropriate hedging and factual language."
+    description: "Write a crisis communication press release (150-200 words) responding
+      to a reputational challenge, using appropriate hedging and factual language."
 
 activities:
   types_required:
@@ -134,3 +150,4 @@ references:
 connects_to:
   previous: "tekstoznavstvo"
   next: "case-studies"
+phase: C1.2 [Professional & Social Context]

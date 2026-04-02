@@ -204,7 +204,7 @@ workbook:
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
 - **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
+- **essay-response**: Required: prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
 - **reading**: Required: passage, questions[]
 - **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
 

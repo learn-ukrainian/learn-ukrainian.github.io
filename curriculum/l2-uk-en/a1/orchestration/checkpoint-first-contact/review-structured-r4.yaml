@@ -1,0 +1,78 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 5 content_outline sections present and correctly ordered. All 6 grammar
+    patterns covered (Це+noun, Subject—Noun, У мене є, Як звати, Мій/моя/моє, Звідки).
+    Dialogue covers full cycle (greeting→name
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All Ukrainian verified correct. Vocative forms: Богдане (masc -ан → -ане
+    ✓), Соломіє (fem -ія → -іє ✓). Case: "сестру Соломії" (acc + gen ✓), "тато Богдана"
+    (gen ✓). Gender: "Гарне фото" (neuter adj +'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: self-assessment → reading practice → grammar consolidation
+    → capstone dialogue → production. Each grammar pattern has 2+ examples. The "mirror"
+    framing in section 1 is pedagogically s'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required: "All vocabulary from M01-M06 recycled" — core vocabulary appears
+    throughout (сіль, день, м''яч, сім''я, молоко, читати, зупинка for M01-M04; лікар/лікарка,
+    інженер, студентка, вчителька for M0'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 3 plan activity types have corresponding markers. Inline comprehension
+    questions test language skill, not content recall — "Ким працює її тато?" requires
+    understanding the Ukrainian text, not memo
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: '"This module is not a test. It is a mirror." — specific framing, not
+    generic. Ukrainian sentences woven throughout English explanations ("Навіть якщо
+    ти читаєш повільно — це нормально"). Closing in Uk'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 5 H2 sections present matching plan (Що ми знаємо, Читання, Граматика,
+    Діалог, Підсумок). Clean markdown. No stray tags or formatting artifacts. Word
+    count 1459 vs target 1200 — comfortably over m
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized — Ukrainian presented on its own terms, never compared to
+    Russian. Cities mentioned (Харків, Львів, Київ, Тернопіль, Дніпро, Одеса) are
+    all Ukrainian with correct Ukrainian names. Surnames
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Named speakers (Богдан, Соломія) with distinct voices. Natural multi-turn
+    flow: greeting → name → origin → profession → surname → family → photo → farewell.
+    Vocative forms used naturally ("Богдане!", '
+findings:
+- dimension: PLAN ADHERENCE
+  severity: MAJOR
+  location: 'Читання section, paragraph 1: "Every word here comes from M01–M06. There
+    is nothing new."'
+  issue: The reading passage contains words that are unlikely to have been taught
+    in M01-M06, specifically "розкажи" (imperative of розказати — tell!) and possibly
+    "селі" (locative of село — village). Telling learners "there is nothing new" and
+    then presenting unfamiliar words undermines confidence at a checkpoint whose purpose
+    is consolidation.
+  fix: Soften the claim to acknowledge that almost all words are recycled while a
+    few natural additions appear with translation.
+- dimension: DIALOGUE QUALITY
+  severity: MINOR
+  location: Діалог section — entire dialogue between Богдан and Соломія
+  issue: Two professionals meeting at a conference coffee break would typically begin
+    with formal "ви" in Ukrainian culture, especially as strangers. The dialogue uses
+    "ти" exclusively. While defensible at A1 for simplicity, the grammar summary explicitly
+    teaches both Як тебе/вас звати? — the dialogue misses an opportunity to model
+    the formal→informal switch.
+  fix: No content fix needed — this is a pedagogical trade-off acceptable at A1. Noted
+    for future modules.

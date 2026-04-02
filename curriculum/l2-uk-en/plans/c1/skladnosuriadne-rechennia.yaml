@@ -4,19 +4,23 @@ sequence: 46
 slug: skladnosuriadne-rechennia
 version: '1.1'
 title: "Складносурядне речення: смислові зв'язки та пунктуація"
-subtitle: "Compound Sentences: Semantic Relations and Punctuation"
+subtitle: "Складносурядні речення: семантика і пунктуація"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Глибоко вивчити типи смислових зв'язків між частинами складносурядного речення (ССР)."
+  - "Глибоко вивчити типи смислових зв'язків між частинами складносурядного речення
+    (ССР)."
   - "Опанувати складні випадки пунктуації в ССР, включаючи вживання тире та коми."
-  - "Навчитися використовувати ССР для створення ритмічно збалансованих текстів в академічному стилі."
-  - "Розуміти стилістичні функції сполучників сурядності в художньому та публіцистичному мовленні."
+  - "Навчитися використовувати ССР для створення ритмічно збалансованих текстів в
+    академічному стилі."
+  - "Розуміти стилістичні функції сполучників сурядності в художньому та публіцистичному
+    мовленні."
 
 reading_situations:
   - source_type: "художній уривок"
-    topic: "Описи природи в прозі Михайла Коцюбинського: аналіз ССР з одночасністю подій."
+    topic: "Описи природи в прозі Михайла Коцюбинського: аналіз ССР з одночасністю
+      подій."
     key_elements: ["імпресіонізм", "паралелізм", "єднальні сполучники"]
     motivation: "Вивчення естетичної ролі ССР у художньому тексті."
   - source_type: "публіцистична стаття"
@@ -27,15 +31,19 @@ reading_situations:
 listening_situations:
   - media_type: "лекція"
     setting: "Фрагмент лекції з історії української філософії про ідеї Григорія Сковороди."
-    focus_points: ["використання складних синтаксичних конструкцій у мовленні лектора", "єднальні та розділові зв'язки в аргументації"]
+    focus_points: ["використання складних синтаксичних конструкцій у мовленні лектора",
+      "єднальні та розділові зв'язки в аргументації"]
     motivation: "Сприйняття ССР у науково-навчальному дискурсі."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть есе-роздум на тему 'Свобода та відповідальність: дві сторони однієї медалі', використовуючи щонайменше 5 різних типів ССР."
-    requirements: ["мінімум 250 слів", "правильне вживання розділових знаків", "різноманітність сполучників сурядності"]
+    prompt: "Напишіть есе-роздум на тему 'Свобода та відповідальність: дві сторони
+      однієї медалі', використовуючи щонайменше 5 різних типів ССР."
+    requirements: ["мінімум 250 слів", "правильне вживання розділових знаків", "різноманітність
+          сполучників сурядності"]
     motivation: "Закріплення граматичних навичок у зв'язному аналітичному тексті."
-    model_answer: "Текст має демонструвати вміння будувати речення з єднальними, протиставними та розділовими зв'язками, а також правильне вживання тире при різкій зміні подій."
+    model_answer: "Текст має демонструвати вміння будувати речення з єднальними, протиставними
+      та розділовими зв'язками, а також правильне вживання тире при різкій зміні подій."
 
 discussion_topics:
   - context: "Чи може технологічний прогрес повністю замінити людську творчість?"
@@ -105,15 +113,20 @@ vocabulary:
 
 activity_hints:
   - type: fill-in
-    description: "Complete compound sentences with appropriate coordinating conjunctions (єднальні, протиставні, розділові) based on semantic context."
+    description: "Complete compound sentences with appropriate coordinating conjunctions
+      (єднальні, протиставні, розділові) based on semantic context."
   - type: error-correction
-    description: "Fix punctuation errors in compound sentences — missing commas, incorrect semicolons, wrong dash placement."
+    description: "Fix punctuation errors in compound sentences — missing commas, incorrect
+      semicolons, wrong dash placement."
   - type: match-up
-    description: "Match types of semantic relations in compound sentences (одночасність, послідовність, протиставлення) with example sentences."
+    description: "Match types of semantic relations in compound sentences (одночасність,
+      послідовність, протиставлення) with example sentences."
   - type: critical-analysis
-    description: "Analyze a literary passage by Коцюбинський and identify all compound sentences, classifying their semantic and stylistic functions."
+    description: "Analyze a literary passage by Коцюбинський and identify all compound
+      sentences, classifying their semantic and stylistic functions."
   - type: select
-    description: "Identify cases where commas are NOT required between parts of compound sentences (shared secondary member, common adverbial clause)."
+    description: "Identify cases where commas are NOT required between parts of compound
+      sentences (shared secondary member, common adverbial clause)."
 
 activities:
   types_required:

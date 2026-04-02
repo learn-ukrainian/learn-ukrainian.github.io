@@ -1,8 +1,7 @@
-import re
 
 file_path = '/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/regions-south.md'
 
-with open(file_path, 'r', encoding='utf-8') as f:
+with open(file_path, encoding='utf-8') as f:
     content = f.read()
 
 replacements = [

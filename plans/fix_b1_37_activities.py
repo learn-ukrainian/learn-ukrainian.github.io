@@ -1,9 +1,7 @@
-import yaml
-from pathlib import Path
 import re
 
 filepath = 'curriculum/l2-uk-en/b1/activities/temporal-clauses.yaml'
-with open(filepath, 'r', encoding='utf-8') as f:
+with open(filepath, encoding='utf-8') as f:
     content = f.read()
 
 # Fix unjumble word counts (need to be 9-16 words)
@@ -87,7 +85,6 @@ content = content.replace(
     '    - left: "Відтоді як ми переїхали в нове місто,"\\n      right: "наше життя дуже змінилося."\\n' + match_up_addition
 )
 # Wait, replacing using exact string is safer.
-import re
 content = re.sub(
     r'(\s*- left: "Відтоді як ми переїхали в нове місто,"\s*right: "наше життя дуже змінилося.")',
     r'\1\n' + match_up_addition,

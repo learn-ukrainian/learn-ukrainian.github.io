@@ -4,21 +4,25 @@ sequence: 9
 slug: thesis-development
 version: '1.1'
 title: "Формулювання тези та розвиток думки"
-subtitle: "Thesis Development and Argument Expansion"
+subtitle: "Формулювання тези та розгортання аргументу"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Досягти досконалості у формулюванні аналітичних тез для наукових та публіцистичних робіт."
+  - "Досягти досконалості у формулюванні аналітичних тез для наукових та публіцистичних
+    робіт."
   - "Навчитися розгортати абстрактну тезу в систему конкретних, взаємопов'язаних аргументів."
-  - "Опанувати техніки поглиблення аргументації через використання історичних аналогій та статистичних даних."
-  - "Розвинути вміння витримувати логічну лінію доказування від початку до кінця академічного тексту."
+  - "Опанувати техніки поглиблення аргументації через використання історичних аналогій
+    та статистичних даних."
+  - "Розвинути вміння витримувати логічну лінію доказування від початку до кінця академічного
+    тексту."
 
 reading_situations:
   - source_type: "фрагмент історичного нарису"
     topic: "Еволюція ідеї соборності України: від декларації до реалізації."
     key_elements: ["ідеологічна теза", "історичні докази", "етапність розвитку думки"]
-    motivation: "Аналіз того, як широка політична теза розгортається у багатогранне історичне дослідження."
+    motivation: "Аналіз того, як широка політична теза розгортається у багатогранне
+      історичне дослідження."
   - source_type: "наукова стаття з філології"
     topic: "Концепт 'волі' в українській народній пісні та професійній поезії."
     key_elements: ["компаративний аналіз", "лінгвістична аргументація", "узагальнення"]
@@ -26,18 +30,26 @@ reading_situations:
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Сформулюйте складну тезу щодо ролі української мови у формуванні єдиного інформаційного простору України (250-300 слів). Розгорніть цю тезу, використовуючи два різні типи аргументації (наприклад, соціокультурну та політичну)."
-    requirements: ["використання дієслів верифікації", "логічна зв'язність", "глибина аналізу"]
-    motivation: "Відпрацювання навичок самостійної побудови складної ієрархічної структури тексту."
-    model_answer: "Текст повинен містити чітку тезу у вступі, яка послідовно розвивається в основній частині за допомогою специфічної лексики розвитку ('ба більше', 'варто також зазначити', 'це зумовлює')."
+    prompt: "Сформулюйте складну тезу щодо ролі української мови у формуванні єдиного
+      інформаційного простору України (250-300 слів). Розгорніть цю тезу, використовуючи
+      два різні типи аргументації (наприклад, соціокультурну та політичну)."
+    requirements: ["використання дієслів верифікації", "логічна зв'язність", "глибина
+          аналізу"]
+    motivation: "Відпрацювання навичок самостійної побудови складної ієрархічної структури
+      тексту."
+    model_answer: "Текст повинен містити чітку тезу у вступі, яка послідовно розвивається
+      в основній частині за допомогою специфічної лексики розвитку ('ба більше', 'варто
+      також зазначити', 'це зумовлює')."
 
 discussion_topics:
-  - context: "Проблема 'вузького' та 'широкого' розуміння національної культури в сучасній Україні."
+  - context: "Проблема 'вузького' та 'широкого' розуміння національної культури в
+      сучасній Україні."
     questions:
       - "Яка теза щодо майбутнього української культури видається вам найбільш переконливою?"
       - "Як уникнути логічних пасток при розгортанні власної думки в дискусії?"
       - "Роль критичного аналізу чужої тези у формуванні власної позиції."
-    motivation: "Розвиток навичок швидкого формулювання та аргументованого захисту тези в усному мовленні."
+    motivation: "Розвиток навичок швидкого формулювання та аргументованого захисту
+      тези в усному мовленні."
 
 content_outline:
   - section: "Анатомія успішної тези"
@@ -45,7 +57,8 @@ content_outline:
     subsections:
       - "Характеристики тези на рівні C1: фокус, спірність, глибина"
       - "Трансформація описової тези в аналітичну та аргументаційну"
-      - "Мовні маркери тези: 'стверджуємо, що...', 'нашою метою є доведення...', 'видається очевидним, що...'"
+      - "Мовні маркери тези: 'стверджуємо, що...', 'нашою метою є доведення...', 'видається
+        очевидним, що...'"
     key_concepts:
       - "аналітичність"
       - "аргументованість"
@@ -100,15 +113,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate thesis statements from Ukrainian academic texts — assess specificity, arguability, and depth of analysis."
+    description: "Evaluate thesis statements from Ukrainian academic texts — assess
+      specificity, arguability, and depth of analysis."
   - type: essay-response
-    description: "Formulate a complex thesis about the role of Ukrainian language in national identity and develop it with two types of argumentation (250-300 words)."
+    description: "Formulate a complex thesis about the role of Ukrainian language
+      in national identity and develop it with two types of argumentation (250-300
+      words)."
   - type: fill-in
-    description: "Complete thesis development sentences with appropriate expansion markers (ба більше, варто також зазначити, це зумовлює)."
+    description: "Complete thesis development sentences with appropriate expansion
+      markers (ба більше, варто також зазначити, це зумовлює)."
   - type: match-up
-    description: "Match thesis types (описова, аналітична, аргументаційна) with examples and characteristics."
+    description: "Match thesis types (описова, аналітична, аргументаційна) with examples
+      and characteristics."
   - type: error-correction
-    description: "Transform weak descriptive theses into strong analytical ones with clear argumentation potential."
+    description: "Transform weak descriptive theses into strong analytical ones with
+      clear argumentation potential."
 
 activities:
   types_required:
@@ -128,3 +147,4 @@ references:
 connects_to:
   previous: "essay-structure"
   next: "counterarguments"
+phase: C1.1 [Academic Foundation]

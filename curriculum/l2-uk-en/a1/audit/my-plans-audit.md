@@ -1,7 +1,7 @@
 # Audit Report: M51 — my-plans.md
 **Level:** A1 | **Module:** M51 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-31 17:26:33
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:30:04
 
 ## Configuration
 **Type:** A1
@@ -39,8 +39,6 @@
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[GRAMMAR]** Instrumental case used at A1: 'З задоволенням'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[GRAMMAR]** Instrumental case used at A1: 'з задоволенням'
-  - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[COMPLEXITY]** group-sort '' has 7 items (target: 8-999)
   - FIX: Adjust number of items to sort to 8-999.
 - **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
@@ -49,23 +47,23 @@
 ## Recommendation
 **📝 UPDATE** (severity 35/100)
 
-- 6 violations (moderate)
-- 4 grammar-level violations (fundamental)
+- 5 violations (moderate)
+- 3 grammar-level violations (fundamental)
 
 ## Gates
-- **Words:** ✅ 2209/1200 (raw: 2541)
+- **Words:** ✅ 1878/1200 (raw: 1902)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ❌ 0/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 24.0% (target 20-35% (M51))
+- **Immersion:** 🇺🇦 24.1% (target 20-35% (M51))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -73,8 +71,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Dialogues** | ✅ | 517 | Included in Core |
+| **Intro/Narrative** | ✅ | 517 | Included in Core |
 | **Планува́ння (Planning)** | ✅ | 639 | Included in Core |
 | **Мій тиждень (My Week)** | ✅ | 509 | Included in Core |
-| **Summary** | ✅ | 544 | Included in Core |
+| **Summary** | ✅ | 213 | Included in Core |

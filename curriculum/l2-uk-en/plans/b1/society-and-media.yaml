@@ -1,228 +1,208 @@
-module: b1-087
+module: b1-083
 level: B1
-sequence: 87
+sequence: 83
 slug: society-and-media
 version: '3.0'
-title: "Суспільство i медіа"
+title: "Суспільство і медіа"
 subtitle: "Новини, ЗМI, суспільне життя — розуміємо та обговорюємо"
 focus: communication
 pedagogy: PPP
-phase: "B1.10 [Synthesis & Graduation]"
+phase: "B1.9 [Synthesis & Graduation]"
 word_target: 4000
 objectives:
-- "Learner can read and understand B1-level Ukrainian news articles,
-  extracting основну думку, деталі, and авторську позицію"
-- "Learner can distinguish факт (fact) from думка (opinion) in Ukrainian
-  media texts and identify прийоми маніпулювання"
-- "Learner can discuss current Ukrainian social topics using суспільно-
-  політична лексика and публіцистичний стиль vocabulary"
-- "Learner can use абревіатури (M79), складні речення (Phase 8), and
-  аргументація (M86) in media-related discussions"
-- "Learner can write a short summary or response to a Ukrainian news article
-  using appropriate публіцистичний стиль language"
+  - "Learner can read and understand B1-level Ukrainian news articles, extracting
+    основну думку, деталі, and авторську позицію"
+  - "Learner can distinguish факт (fact) from думка (opinion) in Ukrainian media texts
+    and identify прийоми маніпулювання"
+  - "Learner can discuss current Ukrainian social topics using суспільно- політична
+    лексика and публіцистичний стиль vocabulary"
+  - "Learner can use абревіатури (M79), складні речення (Phase 8), and аргументація
+    (M86) in media-related discussions"
+  - "Learner can write a short summary or response to a Ukrainian news article using
+    appropriate публіцистичний стиль language"
 dialogue_situations:
-- setting: 'Newsroom at a Київська телестудія (f, Kyiv TV studio) — editing the evening
-    news: Журналіст повідомив, що рятувальники прибули вчасно. Незважаючи на складні
-    умови, евакуацію (f, evacuation) завершено. Як стало відомо, уряд (m, government)
-    виділив кошти (pl, funds).'
-  speakers:
-  - Головний редактор
-  - Журналіст
-  motivation: 'Media/journalism: reported speech, passive voice, formal register in
-    news'
+  - setting: 'Newsroom at a Київська телестудія (f, Kyiv TV studio) — editing the
+      evening news: Журналіст повідомив, що рятувальники прибули вчасно. Незважаючи
+      на складні умови, евакуацію (f, evacuation) завершено. Як стало відомо, уряд
+      (m, government) виділив кошти (pl, funds).'
+    speakers:
+      - Головний редактор
+      - Журналіст
+    motivation: 'Media/journalism: reported speech, passive voice, formal register
+      in news'
 content_outline:
-- section: "Що таке медіа?"
-  words: 550
-  points:
-  - "Definition from Авраменко Grade 7 p.28:
-    Засоби масової інформації (ЗМI), або масмедіа — це засоби
-    передавання, зберігання та відтворення інформації для великої
-    кількості людей: радіо, телебачення, кіно, вебсайти; газети,
-    журнали, книжки, буклети; рекламні щити."
-  - "Types of media in Ukrainian:
-    Друковані: газета, журнал, книжка, буклет.
-    Електронні: вебсайт, соціальна мережа, подкаст, блог.
-    Візуальні: телебачення, кіно, рекламний щит.
-    Аудіо: радіо, подкаст.
-    Practice: classify Ukrainian media sources by type."
-  - "Публіцистичний стиль from Авраменко Grade 7 p.15:
-    Стиль засобів масової інформації. Формує громадську думку.
-    Characteristics: суспільно-політична лексика, емоційно забарвлені
-    слова, фразеологізми, риторичні запитання та звертання."
-  - "Cultural note: Ukrainian media landscape — key outlets.
-    Українська правда, Новинарня, Суспільне, ТСН.
-    The importance of Ukrainian-language media for diaspora and learners."
-- section: "Читання новин"
-  words: 700
-  points:
-  - "Structure of a news article:
-    Заголовок (headline) — short, informative, often without verbs.
-    Лід (lead) — first paragraph answering хто, що, де, коли, чому.
-    Основна частина — details, quotes, background.
-    Practice: learners read a B1-adapted news article and identify elements."
-  - "News vocabulary:
-    подія (event), повідомлення (report), заява (statement),
-    прес-конференція (press conference), кореспондент (correspondent),
-    джерело (source), за словами (according to), як повідомляє (as reported by).
-    Verbs: повідомити (to report), оголосити (to announce),
-    заявити (to state), підтвердити (to confirm), спростувати (to deny)."
-  - "Fact vs opinion in media texts:
-    Факт: 'Температура повітря становить 15 градусів.'
-    Думка: 'Це надзвичайно тепла погода для березня.'
-    Practice: learners mark facts and opinions in a news article.
-    The вставні слова signal opinions: 'на думку,' 'мабуть,' 'можливо.'"
-  - "Practice: learners read two short Ukrainian news articles (100-150 words
-    each) on accessible topics and answer comprehension questions in Ukrainian."
-- section: "Медіаманіпулювання"
-  words: 600
-  points:
-  - "Definition from Авраменко Grade 7 p.184:
-    Маніпулювання — приховане управління людиною з корисливою метою.
-    Медіаманіпулювання — вид психологічного впливу в ЗМI, соцмережах.
-    Learners must recognize these techniques to read critically."
-  - "Common manipulation techniques:
-    1. Емоційний вплив — using fear, anger, or sympathy instead of facts.
-    2. Підміна фактів — presenting opinions as facts.
-    3. Вибіркове цитування — quoting out of context.
-    4. Навішування ярликів — labeling people instead of discussing ideas.
-    5. Звернення до авторитету — 'experts say' without naming them."
-  - "Critical reading questions:
-    Хто автор? Яке джерело? Чи є докази?
-    Чи є емоційно забарвлена лексика? Чи подано обидві сторони?
-    Practice: learners evaluate a sample text for manipulation markers."
-  - "The decolonization connection: Russian media manipulation about Ukraine
-    uses all these techniques. Learning to read critically in Ukrainian
-    is not just a language skill — it is cultural self-defense."
-- section: "Суспільне життя"
-  words: 600
-  points:
-  - "Суспільно-політична лексика for B1:
-    суспільство (society), громадянин (citizen), держава (state),
-    уряд (government), парламент (parliament), вибори (elections),
-    демократія (democracy), права людини (human rights),
-    волонтерство (volunteering), громадянське суспільство (civil society)."
-  - "Ukrainian civil society vocabulary:
-    волонтер (volunteer), благодійність (charity), громада (community),
-    петиція (petition), протест (protest), мітинг (rally).
-    Cultural note: Ukrainian волонтерський рух is extraordinary —
-    one of the strongest civil societies in the world, especially since 2014."
-  - "Discussing social issues using B1 grammar:
-    'Я вважаю, що волонтерство важливе, тому що воно допомагає
-    тим, хто потребує підтримки.' (теза + аргумент)
-    'На думку експертів, громадянське суспільство — основа демократії.'
-    (вставне слово + складнопідрядне речення)
-    Practice: learners discuss social topics using full B1 toolkit."
-  - "Reading practice: a B1-adapted article about волонтерство в Україні,
-    with comprehension and vocabulary exercises."
-- section: "Медіатекст: аналіз i створення"
-  words: 600
-  points:
-  - "Analyzing a Ukrainian media text:
-    1. Визначте стиль (публіцистичний, офіційний, розмовний?)
-    2. Знайдіть факти та думки.
-    3. Знайдіть абревіатури — розшифруйте.
-    4. Знайдіть вставні слова — визначте групу.
-    5. Визначте позицію автора — за чи проти?
-    Practice with a real Ukrainian media text (adapted to B1)."
-  - "Writing a media response:
-    Learners write a comment or response (100-150 words) to a news article,
-    expressing their opinion using аргументація structure (M86).
-    Requirements: теза, 2 аргументи, висновок."
-  - "Creating a short news report:
-    Learners write a short новина (100-120 words) about a school or
-    community event using публіцистичний стиль: заголовок, лід,
-    основна частина. Include at least 2 абревіатури."
-  - "Oral practice: learners present their new report to the class,
-    then answer questions — applying all B1 skills in an integrated task."
-- section: "Підсумок: медіаграмотність"
-  words: 350
-  points:
-  - "Complete reference: media vocabulary, news text structure,
-    manipulation techniques, критичне читання questions."
-  - "Self-check in Ukrainian:
-    1. Назвіть 5 типів ЗМI.
-    2. Чим факт відрізняється від думки?
-    3. Назвіть 3 прийоми медіаманіпулювання.
-    4. Напишіть заголовок i лід до новини про шкільну подію."
-  - "Preview: Загальне повторення B1 (M88) — comprehensive review
-    of all B1 grammar and vocabulary before final exams."
+  - section: "Що таке медіа?"
+    words: 550
+    points:
+      - "Definition from Авраменко Grade 7 p.28: Засоби масової інформації (ЗМI),
+        або масмедіа — це засоби передавання, зберігання та відтворення інформації
+        для великої кількості людей: радіо, телебачення, кіно, вебсайти; газети, журнали,
+        книжки, буклети; рекламні щити."
+      - "Types of media in Ukrainian: Друковані: газета, журнал, книжка, буклет. Електронні:
+        вебсайт, соціальна мережа, подкаст, блог. Візуальні: телебачення, кіно, рекламний
+        щит. Аудіо: радіо, подкаст. Practice: classify Ukrainian media sources by
+        type."
+      - "Публіцистичний стиль from Авраменко Grade 7 p.15: Стиль засобів масової інформації.
+        Формує громадську думку. Characteristics: суспільно-політична лексика, емоційно
+        забарвлені слова, фразеологізми, риторичні запитання та звертання."
+      - "Cultural note: Ukrainian media landscape — key outlets. Українська правда,
+        Новинарня, Суспільне, ТСН. The importance of Ukrainian-language media for
+        diaspora and learners."
+  - section: "Читання новин"
+    words: 700
+    points:
+      - "Structure of a news article: Заголовок (headline) — short, informative, often
+        without verbs. Лід (lead) — first paragraph answering хто, що, де, коли, чому.
+        Основна частина — details, quotes, background. Practice: learners read a B1-adapted
+        news article and identify elements."
+      - "News vocabulary: подія (event), повідомлення (report), заява (statement),
+        прес-конференція (press conference), кореспондент (correspondent), джерело
+        (source), за словами (according to), як повідомляє (as reported by). Verbs:
+        повідомити (to report), оголосити (to announce), заявити (to state), підтвердити
+        (to confirm), спростувати (to deny)."
+      - "Fact vs opinion in media texts: Факт: 'Температура повітря становить 15 градусів.'
+        Думка: 'Це надзвичайно тепла погода для березня.' Practice: learners mark
+        facts and opinions in a news article. The вставні слова signal opinions: 'на
+        думку,' 'мабуть,' 'можливо.'"
+      - "Practice: learners read two short Ukrainian news articles (100-150 words
+        each) on accessible topics and answer comprehension questions in Ukrainian."
+  - section: "Медіаманіпулювання"
+    words: 600
+    points:
+      - "Definition from Авраменко Grade 7 p.184: Маніпулювання — приховане управління
+        людиною з корисливою метою. Медіаманіпулювання — вид психологічного впливу
+        в ЗМI, соцмережах. Learners must recognize these techniques to read critically."
+      - "Common manipulation techniques: 1. Емоційний вплив — using fear, anger, or
+        sympathy instead of facts. 2. Підміна фактів — presenting opinions as facts.
+        3. Вибіркове цитування — quoting out of context. 4. Навішування ярликів —
+        labeling people instead of discussing ideas. 5. Звернення до авторитету —
+        'experts say' without naming them."
+      - "Critical reading questions: Хто автор? Яке джерело? Чи є докази? Чи є емоційно
+        забарвлена лексика? Чи подано обидві сторони? Practice: learners evaluate
+        a sample text for manipulation markers."
+      - "The decolonization connection: Russian media manipulation about Ukraine uses
+        all these techniques. Learning to read critically in Ukrainian is not just
+        a language skill — it is cultural self-defense."
+  - section: "Суспільне життя"
+    words: 600
+    points:
+      - "Суспільно-політична лексика for B1: суспільство (society), громадянин (citizen),
+        держава (state), уряд (government), парламент (parliament), вибори (elections),
+        демократія (democracy), права людини (human rights), волонтерство (volunteering),
+        громадянське суспільство (civil society)."
+      - "Ukrainian civil society vocabulary: волонтер (volunteer), благодійність (charity),
+        громада (community), петиція (petition), протест (protest), мітинг (rally).
+        Cultural note: Ukrainian волонтерський рух is extraordinary — one of the strongest
+        civil societies in the world, especially since 2014."
+      - "Discussing social issues using B1 grammar: 'Я вважаю, що волонтерство важливе,
+        тому що воно допомагає тим, хто потребує підтримки.' (теза + аргумент) 'На
+        думку експертів, громадянське суспільство — основа демократії.' (вставне слово
+        + складнопідрядне речення) Practice: learners discuss social topics using
+        full B1 toolkit."
+      - "Reading practice: a B1-adapted article about волонтерство в Україні, with
+        comprehension and vocabulary exercises."
+  - section: "Медіатекст: аналіз і створення"
+    words: 600
+    points:
+      - "Analyzing a Ukrainian media text: 1. Визначте стиль (публіцистичний, офіційний,
+        розмовний?) 2. Знайдіть факти та думки. 3. Знайдіть абревіатури — розшифруйте.
+        4. Знайдіть вставні слова — визначте групу. 5. Визначте позицію автора — за
+        чи проти? Practice with a real Ukrainian media text (adapted to B1)."
+      - "Writing a media response: Learners write a comment or response (100-150 words)
+        to a news article, expressing their opinion using аргументація structure (M86).
+        Requirements: теза, 2 аргументи, висновок."
+      - "Creating a short news report: Learners write a short новина (100-120 words)
+        about a school or community event using публіцистичний стиль: заголовок, лід,
+        основна частина. Include at least 2 абревіатури."
+      - "Oral practice: learners present their new report to the class, then answer
+        questions — applying all B1 skills in an integrated task."
+  - section: "Підсумок: медіаграмотність"
+    words: 350
+    points:
+      - "Complete reference: media vocabulary, news text structure, manipulation techniques,
+        критичне читання questions."
+      - "Self-check in Ukrainian: 1. Назвіть 5 типів ЗМI. 2. Чим факт відрізняється
+        від думки? 3. Назвіть 3 прийоми медіаманіпулювання. 4. Напишіть заголовок
+        i лід до новини про шкільну подію."
+      - "Preview: Загальне повторення B1 (M88) — comprehensive review of all B1 grammar
+        and vocabulary before final exams."
 vocabulary_hints:
   required:
-  - "засоби масової інформації (mass media — channels of public communication)"
-  - "суспільство (society — organized community of people)"
-  - "громадянин (citizen — member of a state)"
-  - "публіцистичний стиль (publicistic style — media register)"
-  - "новина (news item — report of a recent event)"
-  - "заголовок (headline — title of a news article)"
-  - "факт (fact — verifiable statement)"
-  - "думка (opinion — personal view)"
-  - "маніпулювання (manipulation — hidden influence)"
-  - "волонтер (volunteer — person working without pay)"
-  - "джерело (source — origin of information)"
-  - "кореспондент (correspondent — reporter)"
-  - "повідомити (to report — to convey news)"
+    - "засоби масової інформації (mass media — channels of public communication)"
+    - "суспільство (society — organized community of people)"
+    - "громадянин (citizen — member of a state)"
+    - "публіцистичний стиль (publicistic style — media register)"
+    - "новина (news item — report of a recent event)"
+    - "заголовок (headline — title of a news article)"
+    - "факт (fact — verifiable statement)"
+    - "думка (opinion — personal view)"
+    - "маніпулювання (manipulation — hidden influence)"
+    - "волонтер (volunteer — person working without pay)"
+    - "джерело (source — origin of information)"
+    - "кореспондент (correspondent — reporter)"
+    - "повідомити (to report — to convey news)"
   recommended:
-  - "медіаграмотність (media literacy — ability to critically read media)"
-  - "лід (lead — opening paragraph of news article)"
-  - "ярлик (label — simplistic categorization)"
-  - "спростувати (to deny/refute — to reject a claim)"
-  - "підтвердити (to confirm — to verify as true)"
-  - "благодійність (charity — giving to those in need)"
-  - "громада (community — local organized group)"
-  - "петиція (petition — formal written request)"
-  - "прес-конференція (press conference — media briefing)"
-  - "електорат (electorate — body of voters)"
+    - "медіаграмотність (media literacy — ability to critically read media)"
+    - "лід (lead — opening paragraph of news article)"
+    - "ярлик (label — simplistic categorization)"
+    - "спростувати (to deny/refute — to reject a claim)"
+    - "підтвердити (to confirm — to verify as true)"
+    - "благодійність (charity — giving to those in need)"
+    - "громада (community — local organized group)"
+    - "петиція (petition — formal written request)"
+    - "прес-конференція (press conference — media briefing)"
+    - "електорат (electorate — body of voters)"
 activity_hints:
-- type: quiz
-  focus: "Distinguish facts from opinions in text excerpts. Identify
-    manipulation techniques. Match media terms to definitions."
-  items: 12
-- type: fill-in
-  focus: "Complete news article templates with correct vocabulary, стиль
-    markers, and абревіатури. Write a лід paragraph."
-  items: 12
-- type: match-up
-  focus: "Match суспільно-політична лексика to definitions, media types
-    to categories, manipulation techniques to examples."
-  items: 12
-- type: error-correction
-  focus: "Identify стиль violations in media texts (розмовна лексика in
-    news articles, missing facts, unsubstantiated claims)."
-  items: 12
-- type: free-write
-  focus: "Write a response to a news article (100-150 words) using
-    аргументація structure and публіцистичний стиль language."
-  items: 12
-- type: group-sort
-  focus: "Sort statements into факти vs думки, and sort vocabulary into
-    публіцистичний vs розмовний register."
-  items: 12
+  - type: quiz
+    focus: "Distinguish facts from opinions in text excerpts. Identify manipulation
+      techniques. Match media terms to definitions."
+    items: 12
+  - type: fill-in
+    focus: "Complete news article templates with correct vocabulary, стиль markers,
+      and абревіатури. Write a лід paragraph."
+    items: 12
+  - type: match-up
+    focus: "Match суспільно-політична лексика to definitions, media types to categories,
+      manipulation techniques to examples."
+    items: 12
+  - type: error-correction
+    focus: "Identify стиль violations in media texts (розмовна лексика in news articles,
+      missing facts, unsubstantiated claims)."
+    items: 12
+  - type: free-write
+    focus: "Write a response to a news article (100-150 words) using аргументація
+      structure and публіцистичний стиль language."
+    items: 12
+  - type: group-sort
+    focus: "Sort statements into факти vs думки, and sort vocabulary into публіцистичний
+      vs розмовний register."
+    items: 12
 connects_to:
-- "b1-086 (Аргументація — argumentation skills applied to media)"
-- "b1-079 (Абревіатури — abbreviations in news texts)"
-- "b1-077 (Офіційний стиль — contrast with публіцистичний стиль)"
-- "b1-088 (comprehensive-b1-review — review before final exams)"
+  - "b1-086 (Аргументація — argumentation skills applied to media)"
+  - "b1-079 (Абревіатури — abbreviations in news texts)"
+  - "b1-077 (Офіційний стиль — contrast with публіцистичний стиль)"
+  - "b1-088 (comprehensive-b1-review — review before final exams)"
 prerequisites:
-- "b1-077 to b1-084 (Phase 9 — register awareness)"
-- "b1-085 to b1-086 (narrative and argumentation skills)"
-- "b1-065 to b1-072 (complex syntax for expressing opinions)"
+  - "b1-077 to b1-084 (Phase 9 — register awareness)"
+  - "b1-085 to b1-086 (narrative and argumentation skills)"
+  - "b1-065 to b1-072 (complex syntax for expressing opinions)"
 grammar:
-- "Публіцистичний стиль: ознаки, мовні засоби, жанри"
-- "News text structure: заголовок, лід, основна частина"
-- "Факт vs думка: linguistic markers of each"
-- "Суспільно-політична лексика: vocabulary and usage"
-- "Integration of all B1 grammar in media-related contexts"
+  - "Публіцистичний стиль: ознаки, мовні засоби, жанри"
+  - "News text structure: заголовок, лід, основна частина"
+  - "Факт vs думка: linguistic markers of each"
+  - "Суспільно-політична лексика: vocabulary and usage"
+  - "Integration of all B1 grammar in media-related contexts"
 register: розмовний
 references:
-- title: "Авраменко Grade 7, p.15, 28-31"
-  notes: "Публіцистичний стиль: definition, characteristics. ЗМI/масмедіа:
-    types, медіатексти, критичне сприйняття інформації."
-- title: "Авраменко Grade 7, p.184-187"
-  notes: "Медіаманіпулювання: definition, types, awareness training.
-    Маніпуляція в пресі, на телебаченні, в інтернеті."
-- title: "Заболотний Grade 7, p.24-28"
-  notes: "Джерела інформації: evaluation of sources, critical thinking
-    about media content."
-- title: "Вашуленко Grade 3, p.28"
-  notes: "Медіатексти — early introduction to media literacy concepts,
-    foundation for B1 expansion."
+  - title: "Авраменко Grade 7, p.15, 28-31"
+    notes: "Публіцистичний стиль: definition, characteristics. ЗМI/масмедіа: types,
+      медіатексти, критичне сприйняття інформації."
+  - title: "Авраменко Grade 7, p.184-187"
+    notes: "Медіаманіпулювання: definition, types, awareness training. Маніпуляція
+      в пресі, на телебаченні, в інтернеті."
+  - title: "Заболотний Grade 7, p.24-28"
+    notes: "Джерела інформації: evaluation of sources, critical thinking about media
+      content."
+  - title: "Вашуленко Grade 3, p.28"
+    notes: "Медіатексти — early introduction to media literacy concepts, foundation
+      for B1 expansion."

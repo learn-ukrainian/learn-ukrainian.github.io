@@ -1,185 +1,162 @@
-module: b1-088
+module: b1-084
 level: B1
-sequence: 88
+sequence: 84
 slug: comprehensive-b1-review
 version: '3.0'
 title: "Загальне повторення B1"
 subtitle: "Від фонетики до аргументації — повний огляд граматики B1"
 focus: review
 pedagogy: PPP
-phase: "B1.10 [Synthesis & Graduation]"
+phase: "B1.9 [Synthesis & Graduation]"
 word_target: 4000
 objectives:
-- "Learner can demonstrate integrated mastery of all B1 grammar: чергування,
-  рухові дієслова, ступені порівняння, відмінки, дієприкметники, складні речення"
-- "Learner can identify and correct errors across all B1 grammar areas
-  in a comprehensive Ukrainian text"
-- "Learner can use metalanguage from Phase 1 to analyze and explain
-  Ukrainian grammar phenomena encountered throughout B1"
-- "Learner can produce coherent Ukrainian texts combining grammar from
-  all 10 phases: narratives, descriptions, arguments, formal documents"
-- "Learner can self-diagnose areas of weakness and plan targeted review
-  before the B1 practice exams"
+  - "Learner can demonstrate integrated mastery of all B1 grammar: чергування, рухові
+    дієслова, ступені порівняння, відмінки, дієприкметники, складні речення"
+  - "Learner can identify and correct errors across all B1 grammar areas in a comprehensive
+    Ukrainian text"
+  - "Learner can use metalanguage from Phase 1 to analyze and explain Ukrainian grammar
+    phenomena encountered throughout B1"
+  - "Learner can produce coherent Ukrainian texts combining grammar from all 10 phases:
+    narratives, descriptions, arguments, formal documents"
+  - "Learner can self-diagnose areas of weakness and plan targeted review before the
+    B1 practice exams"
 dialogue_situations:
-- setting: 'End-of-year oral presentation at a Київський університет — student summarizes
-    everything learned in B1: describes their journey through Ukraine, using all tenses,
-    moods, subordinate clauses, participles, gerunds, registers.'
-  speakers:
-  - Студент (presenting)
-  - Комісія (examination board)
-  motivation: 'Full B1 review: all grammar structures in a coherent autobiographical
-    presentation'
+  - setting: 'End-of-year oral presentation at a Київський університет — student summarizes
+      everything learned in B1: describes their journey through Ukraine, using all
+      tenses, moods, subordinate clauses, participles, gerunds, registers.'
+    speakers:
+      - Студент (presenting)
+      - Комісія (examination board)
+    motivation: 'Full B1 review: all grammar structures in a coherent autobiographical
+      presentation'
 content_outline:
-- section: "Фонетика та морфологія"
-  words: 600
-  points:
-  - "Quick review of metalanguage: звук/літера, голосний/приголосний,
-    дзвінкий/глухий/сонорний, наголос, транскрипція.
-    Будова слова: корінь, префікс, суфікс, закінчення.
-    Частини мови: іменник, прикметник, дієслово, прислівник."
-  - "Чергування голосних i приголосних (Phase 2):
-    [о/е] → [i] in closed syllables: рік-року, річ-речі.
-    Consonant alternations: друг-друже, сидіти-сиджу.
-    Спрощення: щастя-щасливий, тиждень-тижня.
-    Practice: apply чергування in word form generation."
-  - "Iменникові субкласи (Phase 2):
-    Masculine: -ар/-яр/-ин (пекар, школяр, киянин).
-    Hissing stems (сторож, товариш).
-    Feminine zero-ending (любов, осінь, подорож).
-    Pluralia tantum (двері, окуляри, Карпати).
-    Practice: decline іменники from each subclass."
-  - "Diagnostic: learners complete exercises covering all Phase 1-2 topics,
-    rating their confidence per area."
-- section: "Дієслова та рух"
-  words: 650
-  points:
-  - "Умовний та наказовий способи (Phase 3):
-    Реальна i нереальна умова (якщо vs якби).
-    Наказовий з хай/нехай, ввічливі прохання.
-    Зворотні дієслова: -ся/-сь нюанси.
-    Пасивний стан introduction."
-  - "Рухові дієслова з префіксами (Phase 4):
-    при- (прийти), до- (доїхати), пі-/по- (піти), від- (від'їхати),
-    за- (зайти), ви- (вийти), пере- (перейти), про- (проїхати),
-    об- (об'їхати), під- (підійти).
-    Figurative uses: час іде, дощ іде.
-    Practice: narrate a journey using correct prefixed motion verbs."
-  - "Віддієслівні іменники (Phase 3): читання, бачення.
-    Творення дієслів suffixes (Phase 3): prefix/suffix meaning changes.
-    Practice: form verbal nouns and identify prefix meanings."
-  - "Diagnostic: learners produce verb forms in conditional, imperative,
-    reflexive, and motion contexts."
-- section: "Порівняння та словотвір"
-  words: 550
-  points:
-  - "Ступені порівняння прикметників:
-    Проста: важчий, найважчий.
-    Складена: більш важкий, найбільш важкий.
-    Суплетивні: гарний-кращий, поганий-гірший.
-    Прислівники: швидко-швидше-найшвидше."
-  - "Словотвір — прикметники та іменники:
-    Від іменників: осінь-осінній.
-    Назви осіб: співак, читальня.
-    Practice: form adjectives and nouns from given base words."
-  - "Diagnostic: comparison exercises and word formation tasks."
-- section: "Відмінки, числівники, займенники"
-  words: 650
-  points:
-  - "Нюанси відмінків:
-    Родовий: частина від цілого, об'єкт бажання, дати.
-    Давальний: суб'єкт стану (мені не спиться), вік.
-    Орудний: характеристика за професією, шлях.
-    Practice: choose the correct case in context."
-  - "Часові та причинні прийменники:
-    через, за, на, перед, після (час).
-    від, з, через, для, до (причина/мета).
-    Practice: use прийменники with correct case government."
-  - "Числівники: відмінювання та узгодження.
-    Займенники: питально-відносні, зворотний (себе), неозначені.
-    Practice: decline числівники, use advanced pronouns."
-  - "Diagnostic: mixed case/numeral/pronoun exercises."
-- section: "Дієприкметники, синтаксис, стилі"
-  words: 650
-  points:
-  - "Дієприкметники та дієприслівники (Phase 7):
-    Активні i пасивні дієприкметники, звороти.
-    Дієприслівники -учи/-ючи (НДВ), -вши/-ши (ДВ).
-    Practice: expand sentences with participial/gerund phrases."
-  - "Складне речення (Phase 8):
-    Складносурядне: i, а, але, або.
-    Складнопідрядне: що, який, коли, тому що, якщо, щоб, хоча.
-    Пряма i непряма мова.
-    Practice: construct complex sentences of each type."
-  - "Стилі мовлення та заперечення (Phase 9):
-    Офіційно-діловий, розмовний, художній, публіцистичний.
-    Подвійне заперечення, вставні слова, абревіатури.
-    Practice: register identification and transformation."
-  - "Diagnostic: integrated exercises combining syntax, register, and
-    grammar from Phases 7-9."
-- section: "Iнтегроване завдання та самодіагностика"
-  words: 500
-  points:
-  - "Comprehensive text analysis: a Ukrainian text (250-300 words)
-    containing grammar from all 10 phases. Learners identify:
-    чергування, вид дієслова, рухові дієслова, ступені порівняння,
-    відмінкові форми, дієприкметники, складні речення, стилі, вставні слова."
-  - "Self-diagnostic checklist by phase:
-    Phase 1-2: фонетика, морфологія, чергування — впевнено?
-    Phase 3-4: дієслова, рухові — впевнено?
-    Phase 5: порівняння, словотвір — впевнено?
-    Phase 6: відмінки, числівники — впевнено?
-    Phase 7-9: дієприкметники, синтаксис, стилі — впевнено?
-    Learners create a personalized review plan."
-  - "Preview: Екзамен (M89-M90) — practice exams testing all B1 skills.
-    Use the self-diagnostic to focus review on weak areas."
+  - section: "Фонетика та морфологія"
+    words: 600
+    points:
+      - "Quick review of metalanguage: звук/літера, голосний/приголосний, дзвінкий/глухий/сонорний,
+        наголос, транскрипція. Будова слова: корінь, префікс, суфікс, закінчення.
+        Частини мови: іменник, прикметник, дієслово, прислівник."
+      - "Чергування голосних i приголосних (Phase 2): [о/е] → [i] in closed syllables:
+        рік-року, річ-речі. Consonant alternations: друг-друже, сидіти-сиджу. Спрощення:
+        щастя-щасливий, тиждень-тижня. Practice: apply чергування in word form generation."
+      - "Iменникові субкласи (Phase 2): Masculine: -ар/-яр/-ин (пекар, школяр, киянин).
+        Hissing stems (сторож, товариш). Feminine zero-ending (любов, осінь, подорож).
+        Pluralia tantum (двері, окуляри, Карпати). Practice: decline іменники from
+        each subclass."
+      - "Diagnostic: learners complete exercises covering all Phase 1-2 topics, rating
+        their confidence per area."
+  - section: "Дієслова та рух"
+    words: 650
+    points:
+      - "Умовний та наказовий способи (Phase 3): Реальна i нереальна умова (якщо vs
+        якби). Наказовий з хай/нехай, ввічливі прохання. Зворотні дієслова: -ся/-сь
+        нюанси. Пасивний стан introduction."
+      - "Рухові дієслова з префіксами (Phase 4): при- (прийти), до- (доїхати), пі-/по-
+        (піти), від- (від'їхати), за- (зайти), ви- (вийти), пере- (перейти), про-
+        (проїхати), об- (об'їхати), під- (підійти). Figurative uses: час іде, дощ
+        іде. Practice: narrate a journey using correct prefixed motion verbs."
+      - "Віддієслівні іменники (Phase 3): читання, бачення. Творення дієслів suffixes
+        (Phase 3): prefix/suffix meaning changes. Practice: form verbal nouns and
+        identify prefix meanings."
+      - "Diagnostic: learners produce verb forms in conditional, imperative, reflexive,
+        and motion contexts."
+  - section: "Порівняння та словотвір"
+    words: 550
+    points:
+      - "Ступені порівняння прикметників: Проста: важчий, найважчий. Складена: більш
+        важкий, найбільш важкий. Суплетивні: гарний-кращий, поганий-гірший. Прислівники:
+        швидко-швидше-найшвидше."
+      - "Словотвір — прикметники та іменники: Від іменників: осінь-осінній. Назви
+        осіб: співак, читальня. Practice: form adjectives and nouns from given base
+        words."
+      - "Diagnostic: comparison exercises and word formation tasks."
+  - section: "Відмінки, числівники, займенники"
+    words: 650
+    points:
+      - "Нюанси відмінків: Родовий: частина від цілого, об'єкт бажання, дати. Давальний:
+        суб'єкт стану (мені не спиться), вік. Орудний: характеристика за професією,
+        шлях. Practice: choose the correct case in context."
+      - "Часові та причинні прийменники: через, за, на, перед, після (час). від, з,
+        через, для, до (причина/мета). Practice: use прийменники with correct case
+        government."
+      - "Числівники: відмінювання та узгодження. Займенники: питально-відносні, зворотний
+        (себе), неозначені. Practice: decline числівники, use advanced pronouns."
+      - "Diagnostic: mixed case/numeral/pronoun exercises."
+  - section: "Дієприкметники, синтаксис, стилі"
+    words: 650
+    points:
+      - "Дієприкметники та дієприслівники (Phase 7): Активні i пасивні дієприкметники,
+        звороти. Дієприслівники -учи/-ючи (НДВ), -вши/-ши (ДВ). Practice: expand sentences
+        with participial/gerund phrases."
+      - "Складне речення (Phase 8): Складносурядне: i, а, але, або. Складнопідрядне:
+        що, який, коли, тому що, якщо, щоб, хоча. Пряма i непряма мова. Practice:
+        construct complex sentences of each type."
+      - "Стилі мовлення та заперечення (Phase 9): Офіційно-діловий, розмовний, художній,
+        публіцистичний. Подвійне заперечення, вставні слова, абревіатури. Practice:
+        register identification and transformation."
+      - "Diagnostic: integrated exercises combining syntax, register, and grammar
+        from Phases 7-9."
+  - section: "Iнтегроване завдання та самодіагностика"
+    words: 500
+    points:
+      - "Comprehensive text analysis: a Ukrainian text (250-300 words) containing
+        grammar from all 10 phases. Learners identify: чергування, вид дієслова, рухові
+        дієслова, ступені порівняння, відмінкові форми, дієприкметники, складні речення,
+        стилі, вставні слова."
+      - "Self-diagnostic checklist by phase: Phase 1-2: фонетика, морфологія, чергування
+        — впевнено? Phase 3-4: дієслова, рухові — впевнено? Phase 5: порівняння, словотвір
+        — впевнено? Phase 6: відмінки, числівники — впевнено? Phase 7-9: дієприкметники,
+        синтаксис, стилі — впевнено? Learners create a personalized review plan."
+      - "Preview: Екзамен (M89-M90) — practice exams testing all B1 skills. Use the
+        self-diagnostic to focus review on weak areas."
 vocabulary_hints:
   required:
-  - "повторення (review/revision — revisiting material)"
-  - "самодіагностика (self-diagnosis — identifying own weaknesses)"
-  - "інтегрований (integrated — combining multiple elements)"
-  - "впевнено (confidently — self-assessment level)"
-  - "слабке місце (weak point — area needing improvement)"
+    - "повторення (review/revision — revisiting material)"
+    - "самодіагностика (self-diagnosis — identifying own weaknesses)"
+    - "інтегрований (integrated — combining multiple elements)"
+    - "впевнено (confidently — self-assessment level)"
+    - "слабке місце (weak point — area needing improvement)"
   recommended:
-  - "систематизувати (to systematize — to organize knowledge)"
-  - "закріпити (to reinforce — to strengthen knowledge)"
-  - "прогалина (gap — area of missing knowledge)"
-  - "готовність (readiness — preparedness for exam)"
+    - "систематизувати (to systematize — to organize knowledge)"
+    - "закріпити (to reinforce — to strengthen knowledge)"
+    - "прогалина (gap — area of missing knowledge)"
+    - "готовність (readiness — preparedness for exam)"
 activity_hints:
-- type: quiz
-  focus: "Comprehensive mixed quiz covering grammar from all 10 phases:
-    чергування, вид, рухові дієслова, відмінки, дієприкметники, стилі."
-  items: 15
-- type: fill-in
-  focus: "Complete a comprehensive text requiring grammar from multiple
-    phases: correct verb forms, case endings, word formation."
-  items: 10
-- type: error-correction
-  focus: "Find and correct errors across all B1 grammar areas in a
-    Ukrainian text containing deliberate mistakes."
-  items: 10
-- type: group-sort
-  focus: "Sort grammar concepts by phase/category: verb forms by тип,
-    речення by складність, words by стиль."
-  items: 12
-- type: match-up
-  focus: "Match metalanguage terms to examples across all phases."
-  items: 10
-- type: free-write
-  focus: "Write an integrated text (200+ words) combining narrative,
-    description, and argument, demonstrating B1 grammar range."
-  items: 6
+  - type: quiz
+    focus: "Comprehensive mixed quiz covering grammar from all 10 phases: чергування,
+      вид, рухові дієслова, відмінки, дієприкметники, стилі."
+    items: 15
+  - type: fill-in
+    focus: "Complete a comprehensive text requiring grammar from multiple phases:
+      correct verb forms, case endings, word formation."
+    items: 10
+  - type: error-correction
+    focus: "Find and correct errors across all B1 grammar areas in a Ukrainian text
+      containing deliberate mistakes."
+    items: 10
+  - type: group-sort
+    focus: "Sort grammar concepts by phase/category: verb forms by тип, речення by
+      складність, words by стиль."
+    items: 12
+  - type: match-up
+    focus: "Match metalanguage terms to examples across all phases."
+    items: 10
+  - type: free-write
+    focus: "Write an integrated text (200+ words) combining narrative, description,
+      and argument, demonstrating B1 grammar range."
+    items: 6
 connects_to:
-- "All B1 modules (comprehensive review)"
-- "b1-089 (practice-exam-reading — exam simulation)"
-- "b1-090 (practice-exam-writing — exam simulation)"
+  - "All B1 modules (comprehensive review)"
+  - "b1-089 (practice-exam-reading — exam simulation)"
+  - "b1-090 (practice-exam-writing — exam simulation)"
 prerequisites:
-- "b1-001 to b1-087 (all B1 content modules)"
+  - "b1-001 to b1-087 (all B1 content modules)"
 grammar:
-- "Review: all B1 grammar topics from Phases 1-9"
-- "Integration: combining multiple grammar areas in single texts"
-- "Self-diagnosis: identifying and addressing weaknesses"
+  - "Review: all B1 grammar topics from Phases 1-9"
+  - "Integration: combining multiple grammar areas in single texts"
+  - "Self-diagnosis: identifying and addressing weaknesses"
 register: розмовний
 references:
-- title: "All B1 module references"
-  notes: "This review draws on all textbook sources cited across the
-    92-module B1 curriculum."
+  - title: "All B1 module references"
+    notes: "This review draws on all textbook sources cited across the 92-module B1
+      curriculum."

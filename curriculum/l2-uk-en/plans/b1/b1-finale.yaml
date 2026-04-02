@@ -1,211 +1,187 @@
-module: b1-091
+module: b1-087
 level: B1
-sequence: 91
+sequence: 87
 slug: b1-finale
 version: '3.0'
-title: "B1 Фінал"
+title: "B1: Фінал"
 subtitle: "Підсумковий проєкт: розгорнуте есе та усна презентація"
 focus: review
 pedagogy: PPP
-phase: "B1.10 [Synthesis & Graduation]"
+phase: "B1.9 [Synthesis & Graduation]"
 word_target: 4000
 objectives:
-- "Learner can produce an extended Ukrainian essay (300+ words) demonstrating
-  full B1 grammatical range: complex sentences, participles, aspect control,
-  register awareness, and structured argumentation"
-- "Learner can deliver a prepared Ukrainian oral presentation (3-5 minutes)
-  on a topic of personal significance, demonstrating fluency, pronunciation
-  accuracy, and communicative competence"
-- "Learner can reflect on their B1 learning journey in Ukrainian, identifying
-  growth areas, persistent challenges, and strategies for B2 preparation"
-- "Learner can demonstrate awareness of all five Ukrainian стилі мовлення
-  and choose appropriate register for different communicative contexts"
-- "Learner can set concrete language learning goals for B2 based on
-  self-assessment of current strengths and weaknesses"
+  - "Learner can produce an extended Ukrainian essay (300+ words) demonstrating full
+    B1 grammatical range: complex sentences, participles, aspect control, register
+    awareness, and structured argumentation"
+  - "Learner can deliver a prepared Ukrainian oral presentation (3-5 minutes) on a
+    topic of personal significance, demonstrating fluency, pronunciation accuracy,
+    and communicative competence"
+  - "Learner can reflect on their B1 learning journey in Ukrainian, identifying growth
+    areas, persistent challenges, and strategies for B2 preparation"
+  - "Learner can demonstrate awareness of all five Ukrainian стилі мовлення and choose
+    appropriate register for different communicative contexts"
+  - "Learner can set concrete language learning goals for B2 based on self-assessment
+    of current strengths and weaknesses"
 dialogue_situations:
-- setting: 'Graduation ceremony at a Ukrainian language school — the student gives
-    a speech about their journey from A1 to B1: reflecting on what they learned, people
-    they met, places they visited in Ukraine. All tenses, moods, clause types, registers
-    — a celebration of progress.'
-  speakers:
-  - Випускник B1 (graduating student)
-  - Викладачі та одногрупники
-  motivation: 'Full B1 capstone: every grammar structure in an emotional personal
-    speech'
+  - setting: 'Graduation ceremony at a Ukrainian language school — the student gives
+      a speech about their journey from A1 to B1: reflecting on what they learned,
+      people they met, places they visited in Ukraine. All tenses, moods, clause types,
+      registers — a celebration of progress.'
+    speakers:
+      - Випускник B1 (graduating student)
+      - Викладачі та одногрупники
+    motivation: 'Full B1 capstone: every grammar structure in an emotional personal
+      speech'
 content_outline:
-- section: "Підсумковий проєкт: вступ"
-  words: 400
-  points:
-  - "The B1 Фінал is a capstone project combining all skills learned:
-    1. Розгорнуте есе (extended essay — 300+ words).
-    2. Усна презентація (oral presentation — 3-5 minutes).
-    3. Рефлексія (reflection — personal learning journal entry).
-    This is not a test — it is a demonstration of what the learner can DO."
-  - "Topic selection — choose one theme for both essay and presentation:
-    A. 'Мій шлях до української мови' — personal language journey.
-    B. 'Україна, яку я відкрив/відкрила' — discoveries about Ukraine.
-    C. 'Проблема, яка мене хвилює' — a social/environmental issue.
-    D. Free choice (approved by teacher/self)."
-  - "Timeline: планування (1 session), чернетка (1 session),
-    редагування (1 session), презентація (1 session).
-    Quality matters more than speed."
-- section: "Розгорнуте есе"
-  words: 800
-  points:
-  - "Essay requirements — demonstrating B1 range:
-    Length: 300+ words. Structure: зачин, основна частина (3+ абзаци), висновок.
-    Must include: складнопідрядні речення (мінімум 3 різних типи),
-    вставні слова (мінімум 5), дієприкметниковий або дієприслівниковий
-    зворот (мінімум 1), подвійне заперечення (мінімум 1),
-    ступені порівняння (мінімум 2)."
-  - "Writing process:
-    1. Планування: обрати тему, скласти план, зібрати лексику.
-    2. Чернетка: написати вільно, не зупиняючись на помилках.
-    3. Перша перевірка: граматика (відмінки, вид, узгодження).
-    4. Друга перевірка: лексика (чи немає русизмів? чи різноманітна?).
-    5. Третя перевірка: структура (зв'язність, зв'язкові слова).
-    6. Чистовий варіант."
-  - "Evaluation rubric (self-assessed):
-    Граматична правильність: 0-10 (чи немає помилок у відмінках, виді, часах?).
-    Лексичне багатство: 0-10 (чи використано різні слова, не повторення?).
-    Структура: 0-10 (чи є зачин, основна частина, висновок?).
-    Зв'язність: 0-10 (чи є зв'язкові слова, вставні слова?).
-    Стиль: 0-10 (чи відповідний регістр? чи немає суржику?).
-    Target: 35+/50 = strong B1. Below 25 = review needed."
-  - "Model essay annotations: a model essay (300 words) with highlighted
-    grammar features. Learners compare their essay to the model."
-- section: "Усна презентація"
-  words: 700
-  points:
-  - "Presentation requirements — demonstrating B1 speaking range:
-    Length: 3-5 minutes. Structure: привітання, вступ, 3 основні пункти,
-    висновок, відповіді на запитання (if in group setting).
-    Must demonstrate: чітка вимова, правильний наголос,
-    відповідна інтонація, зв'язне мовлення."
-  - "Preparation steps:
-    1. Написати план (not a full script — key points only).
-    2. Підготувати ключові фрази (opening, transitions, closing).
-    3. Тренуватися вголос (practice aloud — at least 3 times).
-    4. Записати себе i прослухати (record and listen — fix pronunciation).
-    5. Тренувати відповіді на можливі запитання."
-  - "Presentation language toolkit:
-    Відкриття: 'Добрий день! Мене звати... Сьогодні я хочу розповісти про...'
-    Перехід: 'По-перше,... По-друге,... Нарешті,...'
-    Приклади: 'Наприклад,...' 'Яскравим прикладом є...'
-    Висновок: 'Отже,...' 'Підсумовуючи,...' 'На завершення хочу сказати,...'
-    Дякування: 'Дякую за увагу! Чи є запитання?'"
-  - "Self-evaluation after presentation:
-    Чи дотримався/дотрималася я плану?
-    Чи говорив/говорила я зв'язно?
-    Чи правильний наголос у ключових словах?
-    Чи реагував/реагувала я на запитання?"
-- section: "Рефлексія: мій B1 шлях"
-  words: 600
-  points:
-  - "Learning reflection in Ukrainian (150-200 words):
-    Learners write about their B1 journey answering:
-    Що було найцікавішим? (What was most interesting?)
-    Що було найскладнішим? (What was most difficult?)
-    Що я вмію тепер, чого не вмів/не вміла раніше? (What can I do now?)
-    Чого я ще хочу навчитися? (What do I still want to learn?)"
-  - "B1 achievement inventory — what the learner can now do:
-    Читати: новини, літературні уривки, офіційні документи.
-    Писати: розповіді, есе, заяви, листи.
-    Слухати: діалоги, монологи, медіатексти.
-    Говорити: описувати, розповідати, аргументувати, дискутувати.
-    Граматика: чергування, рухові дієслова, складні речення, дієприкметники,
-    стилі мовлення, подвійне заперечення, вставні слова."
-  - "B2 preview — what comes next:
-    Пасивний стан (passive voice — full system).
-    Субстантивовані прикметники та дієприкметники.
-    Складні випадки словотвору.
-    Фразеологія та ідіоматика.
-    Публічне мовлення та дебати.
-    Reading authentic Ukrainian literature without adaptation."
-  - "Goal setting for B2: learners write 3 concrete goals:
-    1. Граматична ціль (what grammar to master).
-    2. Лексична ціль (what vocabulary to expand).
-    3. Комунікативна ціль (what situations to handle)."
-- section: "Вітання та сертифікація"
-  words: 400
-  points:
-  - "Congratulations text in Ukrainian:
-    'Вітаємо! Ви завершили рівень B1 української мови.
-    Тепер ви — незалежний користувач. Ви можете розуміти основний зміст
-    зрозумілих висловлювань на знайомі теми. Ви можете описувати події,
-    висловлювати думки та пояснювати свою позицію.
-    Це серйозне досягнення. Пишайтеся собою!'"
-  - "B1 → B2 transition advice:
-    Read Ukrainian news daily (Українська правда, Суспільне).
-    Watch Ukrainian YouTube/TikTok with subtitles.
-    Start reading adapted Ukrainian literature.
-    Find a мовний партнер for conversation practice.
-    Write a journal in Ukrainian (навіть 3-5 речень щодня)."
-  - "The journey continues: B2 is where Ukrainian opens up fully —
-    authentic literature, professional communication, deep cultural
-    engagement. The foundation is solid. Далі — більше!"
-  - "Final self-assessment: learners complete a comprehensive B1
-    самооцінка form covering all four skills and all grammar areas.
-    This becomes the baseline for B2 planning."
+  - section: "Підсумковий проєкт: вступ"
+    words: 400
+    points:
+      - "The B1 Фінал is a capstone project combining all skills learned: 1. Розгорнуте
+        есе (extended essay — 300+ words). 2. Усна презентація (oral presentation
+        — 3-5 minutes). 3. Рефлексія (reflection — personal learning journal entry).
+        This is not a test — it is a demonstration of what the learner can DO."
+      - "Topic selection — choose one theme for both essay and presentation: A. 'Мій
+        шлях до української мови' — personal language journey. B. 'Україна, яку я
+        відкрив/відкрила' — discoveries about Ukraine. C. 'Проблема, яка мене хвилює'
+        — a social/environmental issue. D. Free choice (approved by teacher/self)."
+      - "Timeline: планування (1 session), чернетка (1 session), редагування (1 session),
+        презентація (1 session). Quality matters more than speed."
+  - section: "Розгорнуте есе"
+    words: 800
+    points:
+      - "Essay requirements — demonstrating B1 range: Length: 300+ words. Structure:
+        зачин, основна частина (3+ абзаци), висновок. Must include: складнопідрядні
+        речення (мінімум 3 різних типи), вставні слова (мінімум 5), дієприкметниковий
+        або дієприслівниковий зворот (мінімум 1), подвійне заперечення (мінімум 1),
+        ступені порівняння (мінімум 2)."
+      - "Writing process: 1. Планування: обрати тему, скласти план, зібрати лексику.
+        2. Чернетка: написати вільно, не зупиняючись на помилках. 3. Перша перевірка:
+        граматика (відмінки, вид, узгодження). 4. Друга перевірка: лексика (чи немає
+        русизмів? чи різноманітна?). 5. Третя перевірка: структура (зв'язність, зв'язкові
+        слова). 6. Чистовий варіант."
+      - "Evaluation rubric (self-assessed): Граматична правильність: 0-10 (чи немає
+        помилок у відмінках, виді, часах?). Лексичне багатство: 0-10 (чи використано
+        різні слова, не повторення?). Структура: 0-10 (чи є зачин, основна частина,
+        висновок?). Зв'язність: 0-10 (чи є зв'язкові слова, вставні слова?). Стиль:
+        0-10 (чи відповідний регістр? чи немає суржику?). Target: 35+/50 = strong
+        B1. Below 25 = review needed."
+      - "Model essay annotations: a model essay (300 words) with highlighted grammar
+        features. Learners compare their essay to the model."
+  - section: "Усна презентація"
+    words: 700
+    points:
+      - "Presentation requirements — demonstrating B1 speaking range: Length: 3-5
+        minutes. Structure: привітання, вступ, 3 основні пункти, висновок, відповіді
+        на запитання (if in group setting). Must demonstrate: чітка вимова, правильний
+        наголос, відповідна інтонація, зв'язне мовлення."
+      - "Preparation steps: 1. Написати план (not a full script — key points only).
+        2. Підготувати ключові фрази (opening, transitions, closing). 3. Тренуватися
+        вголос (practice aloud — at least 3 times). 4. Записати себе i прослухати
+        (record and listen — fix pronunciation). 5. Тренувати відповіді на можливі
+        запитання."
+      - "Presentation language toolkit: Відкриття: 'Добрий день! Мене звати... Сьогодні
+        я хочу розповісти про...' Перехід: 'По-перше,... По-друге,... Нарешті,...'
+        Приклади: 'Наприклад,...' 'Яскравим прикладом є...' Висновок: 'Отже,...' 'Підсумовуючи,...'
+        'На завершення хочу сказати,...' Дякування: 'Дякую за увагу! Чи є запитання?'"
+      - "Self-evaluation after presentation: Чи дотримався/дотрималася я плану? Чи
+        говорив/говорила я зв'язно? Чи правильний наголос у ключових словах? Чи реагував/реагувала
+        я на запитання?"
+  - section: "Рефлексія: мій шлях на рівні B1"
+    words: 600
+    points:
+      - "Learning reflection in Ukrainian (150-200 words): Learners write about their
+        B1 journey answering: Що було найцікавішим? (What was most interesting?) Що
+        було найскладнішим? (What was most difficult?) Що я вмію тепер, чого не вмів/не
+        вміла раніше? (What can I do now?) Чого я ще хочу навчитися? (What do I still
+        want to learn?)"
+      - "B1 achievement inventory — what the learner can now do: Читати: новини, літературні
+        уривки, офіційні документи. Писати: розповіді, есе, заяви, листи. Слухати:
+        діалоги, монологи, медіатексти. Говорити: описувати, розповідати, аргументувати,
+        дискутувати. Граматика: чергування, рухові дієслова, складні речення, дієприкметники,
+        стилі мовлення, подвійне заперечення, вставні слова."
+      - "B2 preview — what comes next: Пасивний стан (passive voice — full system).
+        Субстантивовані прикметники та дієприкметники. Складні випадки словотвору.
+        Фразеологія та ідіоматика. Публічне мовлення та дебати. Reading authentic
+        Ukrainian literature without adaptation."
+      - "Goal setting for B2: learners write 3 concrete goals: 1. Граматична ціль
+        (what grammar to master). 2. Лексична ціль (what vocabulary to expand). 3.
+        Комунікативна ціль (what situations to handle)."
+  - section: "Вітання та сертифікація"
+    words: 400
+    points:
+      - "Congratulations text in Ukrainian: 'Вітаємо! Ви завершили рівень B1 української
+        мови. Тепер ви — незалежний користувач. Ви можете розуміти основний зміст
+        зрозумілих висловлювань на знайомі теми. Ви можете описувати події, висловлювати
+        думки та пояснювати свою позицію. Це серйозне досягнення. Пишайтеся собою!'"
+      - "B1 → B2 transition advice: Read Ukrainian news daily (Українська правда,
+        Суспільне). Watch Ukrainian YouTube/TikTok with subtitles. Start reading adapted
+        Ukrainian literature. Find a мовний партнер for conversation practice. Write
+        a journal in Ukrainian (навіть 3-5 речень щодня)."
+      - "The journey continues: B2 is where Ukrainian opens up fully — authentic literature,
+        professional communication, deep cultural engagement. The foundation is solid.
+        Далі — більше!"
+      - "Final self-assessment: learners complete a comprehensive B1 самооцінка form
+        covering all four skills and all grammar areas. This becomes the baseline
+        for B2 planning."
 vocabulary_hints:
   required:
-  - "фінал (finale — concluding event)"
-  - "проєкт (project — extended piece of work)"
-  - "презентація (presentation — oral delivery)"
-  - "рефлексія (reflection — thinking about one's learning)"
-  - "досягнення (achievement — something accomplished)"
-  - "незалежний користувач (independent user — B1 CEFR descriptor)"
-  - "самооцінка (self-assessment — evaluating own skills)"
-  - "ціль (goal — target for future learning)"
-  - "чернетка (draft — preliminary text version)"
-  - "чистовий варіант (final version — polished text)"
+    - "фінал (finale — concluding event)"
+    - "проєкт (project — extended piece of work)"
+    - "презентація (presentation — oral delivery)"
+    - "рефлексія (reflection — thinking about one's learning)"
+    - "досягнення (achievement — something accomplished)"
+    - "незалежний користувач (independent user — B1 CEFR descriptor)"
+    - "самооцінка (self-assessment — evaluating own skills)"
+    - "ціль (goal — target for future learning)"
+    - "чернетка (draft — preliminary text version)"
+    - "чистовий варіант (final version — polished text)"
   recommended:
-  - "підсумковий (final/summary — concluding)"
-  - "розгорнутий (extended — expanded, detailed)"
-  - "зростання (growth — improvement over time)"
-  - "виклик (challenge — something difficult to overcome)"
-  - "мовний партнер (language partner — practice companion)"
-  - "щоденник (journal — daily writing practice)"
-  - "пишатися (to be proud — pride in achievement)"
-  - "сертифікат (certificate — proof of completion)"
+    - "підсумковий (final/summary — concluding)"
+    - "розгорнутий (extended — expanded, detailed)"
+    - "зростання (growth — improvement over time)"
+    - "виклик (challenge — something difficult to overcome)"
+    - "мовний партнер (language partner — practice companion)"
+    - "щоденник (journal — daily writing practice)"
+    - "пишатися (to be proud — pride in achievement)"
+    - "сертифікат (certificate — proof of completion)"
 activity_hints:
-- type: free-write
-  focus: "Write the extended essay (300+ words) on chosen topic,
-    demonstrating full B1 grammatical range."
-  items: 6
-- type: role-play
-  focus: "Deliver oral presentation (3-5 minutes) on chosen topic.
-    Self-record and evaluate."
-  items: 6
-- type: free-write
-  focus: "Write personal reflection (150-200 words) on B1 journey:
-    achievements, challenges, goals for B2."
-  items: 6
-- type: quiz
-  focus: "Final self-assessment quiz covering all B1 grammar areas:
-    identify own confidence level per topic."
-  items: 15
-- type: match-up
-  focus: "Match B1 skills to CEFR descriptors: what the learner can now
-    do in reading, writing, listening, speaking."
-  items: 8
+  - type: free-write
+    focus: "Write the extended essay (300+ words) on chosen topic, demonstrating full
+      B1 grammatical range."
+    items: 6
+  - type: role-play
+    focus: "Deliver oral presentation (3-5 minutes) on chosen topic. Self-record and
+      evaluate."
+    items: 6
+  - type: free-write
+    focus: "Write personal reflection (150-200 words) on B1 journey: achievements,
+      challenges, goals for B2."
+    items: 6
+  - type: quiz
+    focus: "Final self-assessment quiz covering all B1 grammar areas: identify own
+      confidence level per topic."
+    items: 15
+  - type: match-up
+    focus: "Match B1 skills to CEFR descriptors: what the learner can now do in reading,
+      writing, listening, speaking."
+    items: 8
 connects_to:
-- "b1-088 to b1-090 (review and exam modules — preparation for capstone)"
-- "b2-001 (first B2 module — the journey continues)"
+  - "b1-088 to b1-090 (review and exam modules — preparation for capstone)"
+  - "b2-001 (first B2 module — the journey continues)"
 prerequisites:
-- "b1-001 to b1-090 (all B1 modules completed)"
+  - "b1-001 to b1-090 (all B1 modules completed)"
 grammar:
-- "Integration: all B1 grammar demonstrated in extended writing and speaking"
-- "Self-assessment: metalanguage used to analyze own performance"
-- "Register control: appropriate style for essay, presentation, reflection"
-- "Goal-setting: identifying grammar targets for B2"
+  - "Integration: all B1 grammar demonstrated in extended writing and speaking"
+  - "Self-assessment: metalanguage used to analyze own performance"
+  - "Register control: appropriate style for essay, presentation, reflection"
+  - "Goal-setting: identifying grammar targets for B2"
 register: розмовний
 references:
-- title: "CEFR B1 global descriptor"
-  notes: "Can understand the main points of clear standard input on familiar
-    matters regularly encountered in work, school, leisure. Can deal with
-    most situations likely to arise while travelling. Can produce simple
-    connected text on topics which are familiar or of personal interest.
-    Can describe experiences, events, dreams, and ambitions."
-- title: "All B1 module references"
-  notes: "The capstone project draws on all 91 B1 modules."
+  - title: "CEFR B1 global descriptor"
+    notes: "Can understand the main points of clear standard input on familiar matters
+      regularly encountered in work, school, leisure. Can deal with most situations
+      likely to arise while travelling. Can produce simple connected text on topics
+      which are familiar or of personal interest. Can describe experiences, events,
+      dreams, and ambitions."
+  - title: "All B1 module references"
+    notes: "The capstone project draws on all 91 B1 modules."

@@ -4,8 +4,6 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from pipeline_lib import check_prompt_health, log_prompt_health

@@ -1,0 +1,43 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All 7 sections covered. All 5 objectives addressed. Word target (4000)
+    exceeded (4670).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Prose is natural, but contains a typo ("уніка") and a case agreement error
+    ("сонорний звука").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of the doubling rule vs. clusters vs. labials. Very
+    clear explanation of the "тиша" trap.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers match plan requirements exactly in type and count.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, tutor-like tone. Concrete situation in a Kharkiv hospital adds authenticity.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Proper H2 usage, summary with self-check questions, and preview of M15.
+    Minor typos lower this slightly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct focus on Ukrainian linguistic categories (відміна, чергування).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural interaction between a doctor and nurse during a night shift.
+findings: []

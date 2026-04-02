@@ -1,6 +1,6 @@
 # Build Summary: days-and-months (A1)
 
-Generated: 2026-03-31 11:56
+Generated: 2026-04-01 13:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:56
 | vocab | complete | 2026-03-30 05:12:34 |
 | enrich | complete | 2026-03-30 05:12:35 |
 | verify | complete | 2026-03-30 05:12:35 |
-| review | complete | 2026-03-30 05:18:01 |
-| stress | complete | 2026-03-31 09:56:47 |
-| publish | complete | 2026-03-31 09:56:48 |
+| review | complete | 2026-04-01 11:41:02 |
+| stress | complete | 2026-04-01 11:41:02 |
+| publish | complete | 2026-04-01 11:41:08 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:56
 | activities | claude-tools (claude-sonnet-4-6) | 130s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 28s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 325s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

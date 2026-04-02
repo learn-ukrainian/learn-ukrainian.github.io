@@ -15,19 +15,16 @@ Issue: #520, #610, #773
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.content_gaming import (
-    check_section_balance,
-    check_ipa_density,
-    check_filler_phrases,
-    check_section_depth,
     check_example_diversity,
+    check_filler_phrases,
+    check_ipa_density,
+    check_section_balance,
+    check_section_depth,
     check_ukrainian_block_repetition,
 )
-
 
 # =============================================================================
 # HELPERS

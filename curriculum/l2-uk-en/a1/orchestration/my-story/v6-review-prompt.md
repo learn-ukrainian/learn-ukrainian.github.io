@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 52: My Story (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -160,103 +160,79 @@ references:
 
 Two people meet at a language school in Kyiv. One has lived here for years; the other just arrived. They want to know each other's full story — where they come from, what they do now, and what comes next.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Розкажи про себе! *(Tell me about yourself!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Я народився в Канаді, у Торонто. *(I was born in Canada, in Toronto.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А зараз ти живеш тут? *(And now you live here?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Так, зараз я живу в Києві. *(Yes, now I live in Kyiv.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Чому ти переїхав? *(Why did you move?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Я хотів вивчати українську. *(I wanted to study Ukrainian.)* Мої бабуся і дідусь з України. *(My grandma and grandpa are from Ukraine.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А що ти будеш робити далі? *(And what will you do next?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Я буду працювати тут і вчити мову. *(I will work here and learn the language.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Чудово! Успіхів тобі! *(Wonderful! Best of luck!)*</div>
-
-</div>
+> — **Окса́на:** Розкажи́ про себе́! *(Tell me about yourself!)*
+> — **Макси́м:** Я народи́вся в Кана́ді, у Торо́нто. *(I was born in Canada, in Toronto.)*
+> — **Оксана:** А за́раз ти живе́ш тут? *(And now you live here?)*
+> — **Максим:** Так, зараз я живу́ в Ки́єві. *(Yes, now I live in Kyiv.)*
+> — **Оксана:** Чо́му ти переї́хав? *(Why did you move?)*
+> — **Максим:** Я хоті́в вивча́ти украї́нську. *(I wanted to study Ukrainian.)* Мої́ бабу́ся і діду́сь з Украї́ни. *(My grandma and grandpa are from Ukraine.)*
+> — **Оксана:** А що ти бу́деш роби́ти да́лі? *(And what will you do next?)*
+> — **Максим:** Я бу́ду працюва́ти тут і вчи́ти мо́ву. *(I will work here and learn the language.)*
+> — **Оксана:** Чудо́во! У́спіхів тобі́! *(Wonderful! Best of luck!)*
 
 All three tenses appear in this single conversation. **Народився** (was born) — past. **Живу** (live) — present. **Буду працювати** (will work) — future. Maksym moves naturally from his childhood in Canada, through his present life in Kyiv, to his future plans. That is the shape of every life story.
 
 Now hear Anna tell her story — from birth to future dreams.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Я народилася у Львові. *(I was born in Lviv.)* Там я вчилася в школі. *(I studied at school there.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега:</span> А потім? *(And then?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Потім я переїхала в Київ. *(Then I moved to Kyiv.)* Я закінчила університет. *(I finished university.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега:</span> А зараз? *(And now?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Зараз я працюю вчителькою. *(Now I work as a teacher.)* Я живу в центрі міста. *(I live in the city centre.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега:</span> А що далі? *(And what's next?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Я буду подорожувати! *(I will travel!)* Я хочу побачити Японію. *(I want to see Japan.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега:</span> І ти будеш вчити японську? *(And you'll learn Japanese?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Може! Але спочатку — українська для тебе! *(Maybe! But first — Ukrainian for you!)*</div>
-
-</div>
+> — **А́нна:** Я народи́лася у Льво́ві. *(I was born in Lviv.)* Там я вчи́лася в шко́лі. *(I studied at school there.)*
+> — **Коле́га:** А по́тім? *(And then?)*
+> — **Анна:** Потім я переї́хала в Ки́їв. *(Then I moved to Kyiv.)* Я закі́нчи́ла університе́т. *(I finished university.)*
+> — **Колега:** А зараз? *(And now?)*
+> — **Анна:** Зараз я працю́ю вчи́телькою. *(Now I work as a teacher.)* Я живу в це́нтрі мі́ста. *(I live in the city centre.)*
+> — **Колега:** А що далі? *(And what's next?)*
+> — **Анна:** Я буду подорожува́ти! *(I will travel!)* Я хо́чу поба́чити Япо́нію. *(I want to see Japan.)*
+> — **Колега:** І ти будеш вчити япо́нську? *(And you'll learn Japanese?)*
+> — **Анна:** Мо́же! Але́ споча́тку — украї́нська для тебе́! *(Maybe! But first — Ukrainian for you!)*
 
 Notice how Anna's story flows: past (**народилася**, **вчилася**, **переїхала**, **закінчила**) → present (**працюю**, **живу**) → future (**буду подорожувати**). The story moves forward in time, just like Maksym's. Past events first, then what is true now, then dreams. That is the shape of every life story in Ukrainian.
 
-## Три часи разом (Three Tenses Together)
+## Три часи́ ра́зом (Three Tenses Together)
 
 Every life story has three parts. Here is the scaffold you need:
 
-**МИНУЛИЙ ЧАС** (past tense) — things that already happened:
+**МИНУ́ЛИЙ ЧАС** (past tense) — things that already happened:
 - **Я народився** / **народилася** в... *(I was born in...)*
-- **Я жив** / **жила** в... *(I lived in...)*
-- **Я вчився** / **вчилася**... *(I studied...)*
-- **Я працював** / **працювала**... *(I worked...)*
+- **Я жив** / **жила́** в... *(I lived in...)*
+- **Я вчи́вся** / **вчилася**... *(I studied...)*
+- **Я працюва́в** / **працюва́ла**... *(I worked...)*
 
-**ТЕПЕРІШНІЙ ЧАС** (present tense) — what is true right now:
+**ТЕПЕ́РІШНІЙ ЧАС** (present tense) — what is true right now:
 - **Зараз я живу** в... *(Now I live in...)*
 - **Я працюю**... *(I work...)*
-- **Я вивчаю**... *(I study/am learning...)*
-- **Я люблю**... *(I love...)*
+- **Я вивча́ю**... *(I study/am learning...)*
+- **Я люблю́**... *(I love...)*
 
-**МАЙБУТНІЙ ЧАС** (future tense) — what will come:
+**МАЙБУ́ТНІЙ ЧАС** (future tense) — what will come:
 - **Я буду працювати**... *(I will work...)*
 - **Я буду вивчати**... *(I will study...)*
-- **Я буду жити**... *(I will live...)*
+- **Я буду жи́ти**... *(I will live...)*
 
 Look at the past tense forms closely. Gender matters: **-в** for masculine (**я народивСЯ**) and **-ла** for feminine (**я народиЛАся**). Three more pairs: **жив** / **жила**, **вчився** / **вчилася**, **працював** / **працювала**. A man says **я народився**, a woman says **я народилася** — the ending always tells you.
 
 Signal words are the listener's roadmap. They tell the listener which tense is coming before the verb arrives:
 
-**Past signals:** **раніше** (before/earlier), **у дитинстві** (in childhood), **тоді** (back then).
-**Present signals:** **зараз** (now), **сьогодні** (today), **цього року** (this year).
-**Future signals:** **потім** (then/later), **далі** (further/next), **наступного року** (next year), **скоро** (soon).
+**Past signals:** **рані́ше** (before/earlier), **у дити́нстві** (in childhood), **тоді́** (back then).
+**Present signals:** **зараз** (now), **сього́дні** (today), **цього́ ро́ку** (this year).
+**Future signals:** **потім** (then/later), **далі** (further/next), **насту́пного року** (next year), **ско́ро** (soon).
 
-Compare this pair: **Раніше я жив у Канаді** *(Before, I lived in Canada)* vs. **Зараз я живу в Україні** *(Now I live in Ukraine)*. Same verb root **жи-**, opposite tense, different signal word. The signal word does the work.
+Compare this pair: **Раніше я жив у Канаді** *(Before, I lived in Canada)* vs. **Зараз я живу в Украї́ні** *(Now I live in Ukraine)*. Same verb root **жи-**, opposite tense, different signal word. The signal word does the work.
 
-Ukrainian speakers use **А потім...** *(And then...)* to move from past to present and **А далі...** *(And next...)* to move from present to future. These two phrases are the hinges of every life story. Try it: **Я народився в Одесі. А потім я переїхав у Київ. А далі — я буду подорожувати!** *(I was born in Odesa. And then I moved to Kyiv. And next — I will travel!)*
+Ukrainian speakers use **А потім...** *(And then...)* to move from past to present and **А далі...** *(And next...)* to move from present to future. These two phrases are the hinges of every life story. Try it: **Я народився в Оде́сі. А потім я переїхав у Київ. А далі — я буду подорожувати!** *(I was born in Odesa. And then I moved to Kyiv. And next — I will travel!)*
 
 <!-- INJECT_ACTIVITY: fill-in-signal-words -->
 
-## Моя історія (My Story)
+## Моя́ істо́рія (My Story)
 
 Now read a full model story. Taras is a programmer from Odesa who moved to Kyiv. Read his story and notice how all three tenses flow together naturally.
 
 :::note
-**Тарас розповідає** *(Taras tells his story)*
+**Тара́с розповіда́є** *(Taras tells his story)*
 
-**Я народився в Одесі.** *(I was born in Odesa.)* **Я жив там з батьками і сестрою.** *(I lived there with my parents and sister.)* **У дитинстві я ходив у школу.** *(In childhood I went to school.)* **Я любив математику.** *(I loved maths.)* **Потім я переїхав у Київ.** *(Then I moved to Kyiv.)* **Я вчився в університеті.** *(I studied at university.)*
+**Я народився в Одесі.** *(I was born in Odesa.)* **Я жив там з батька́ми і сестро́ю.** *(I lived there with my parents and sister.)* **У дитинстві я ходи́в у шко́лу.** *(In childhood I went to school.)* **Я люби́в матема́тику.** *(I loved maths.)* **Потім я переїхав у Київ.** *(Then I moved to Kyiv.)* **Я вчився в університе́ті.** *(I studied at university.)*
 
-**Зараз я живу в Києві.** *(Now I live in Kyiv.)* **Я працюю програмістом.** *(I work as a programmer.)* **Я люблю свою роботу.** *(I love my job.)* **На дозвіллі я граю у футбол.** *(In my free time I play football.)* **Я читаю книжки.** *(I read books.)*
+**Зараз я живу в Києві.** *(Now I live in Kyiv.)* **Я працюю програмі́стом.** *(I work as a programmer.)* **Я люблю свою́ робо́ту.** *(I love my job.)* **На дозві́ллі я гра́ю у футбо́л.** *(In my free time I play football.)* **Я чита́ю книжки́.** *(I read books.)*
 
-**Далі я буду подорожувати.** *(Next I will travel.)* **Я буду вивчати англійську.** *(I will study English.)* **І я буду жити в Києві.** *(And I will live in Kyiv.)* **Це моє місто!** *(This is my city!)*
+**Далі я буду подорожувати.** *(Next I will travel.)* **Я буду вивчати англі́йську.** *(I will study English.)* **І я буду жити в Києві.** *(And I will live in Kyiv.)* **Це моє́ мі́сто!** *(This is my city!)*
 :::
 
 The tense shifts are clear. Past verbs: **народився**, **жив**, **ходив**, **любив**, **переїхав**, **вчився**. Present verbs: **живу**, **працюю**, **люблю**, **граю**, **читаю**. Future constructions: **буду подорожувати**, **буду вивчати**, **буду жити**. Each block has its own signal word: **у дитинстві** and **потім** for the past, **зараз** for the present, **далі** for the future.
@@ -265,13 +241,13 @@ The tense shifts are clear. Past verbs: **народився**, **жив**, **х
 
 Now your turn. Tell YOUR story using the same scaffold:
 
-**Past** — start with: **Я народився** / **народилася** в [місто/країна]. Then add: **Я жив/жила...** **Я вчився/вчилася...** Use at least three past verbs with the correct gender ending (**-в** or **-ла**).
+**Past** — start with: **Я народився** / **народилася** в [місто/краї́на]. Then add: **Я жив/жила...** **Я вчився/вчилася...** Use at least three past verbs with the correct gender ending (**-в** or **-ла**).
 
-**Present** — shift with **зараз**: **Зараз я живу...** **Я працюю...** **Я вивчаю українську.** Why are you learning? **Я вивчаю українську, тому що...** *(I'm studying Ukrainian because...)*
+**Present** — shift with **зараз**: **Зараз я живу...** **Я працюю...** **Я вивчаю українську.** Why are you learning? **Я вивчаю українську, тому́ що...** *(I'm studying Ukrainian because...)*
 
 **Future** — shift with **далі**: **Я буду...** **Я хочу...** Use at least three **буду** + infinitive constructions.
 
-Target: 8–10 sentences. Use **раніше** / **зараз** / **далі** to signal each tense shift.
+Target: 8–10 sentences. Use **раніше** / **зараз** / **далі** to signal each tense shift. Remember: past verbs change by gender (**-в** for he, **-ла** for she), present verbs change by person (**я живу**, **ти живеш**), and future always uses **буду** + infinitive.
 
 <!-- INJECT_ACTIVITY: fill-in-biography -->
 
@@ -280,18 +256,18 @@ Target: 8–10 sentences. Use **раніше** / **зараз** / **далі** t
 Three tenses — three patterns. Here they are side by side.
 
 **Минулий час** (past tense) — add **-в** (masculine), **-ла** (feminine), **-ло** (neuter), or **-ли** (plural) to the verb stem:
-- **народи-в** / **народи-ла** *(was born)*
+- **народи́в-ся** / **народи́ла-ся** *(was born)*
 - **жи-в** / **жи-ла** *(lived)*
 - **вчи-в-ся** / **вчи-ла-ся** *(studied)*
 
 **Теперішній час** (present tense) — person endings:
-- **я живу**, **ти живеш**, **він/вона живе**
-- **ми живемо**, **ви живете**, **вони живуть**
+- **я живу**, **ти живеш**, **він/вона́ живе́**
+- **ми живемо́**, **ви живете́**, **вони́ живу́ть**
 
 **Майбутній час** (future tense) — **буду** + infinitive:
 - **я буду подорожувати** *(I will travel)*
 - **ти будеш працювати** *(you will work)*
-- **він/вона буде вивчати** *(he/she will study)*
+- **він/вона бу́де вивчати** *(he/she will study)*
 
 At A1, future tense always uses **буду** + infinitive — never a single conjugated form.
 
@@ -307,17 +283,17 @@ The word **потім** can signal a past sequence OR a future plan — context 
 
 **Life story vocabulary** — words every story needs:
 
-- **народитися** *(to be born)* — я народився / народилася
+- **народи́тися** *(to be born)* — я народився / народилася
 - **жити** *(to live)* — я жив / жила / живу / буду жити
-- **вчитися** *(to study)* — я вчився / вчилася / буду вчитися
-- **переїхати** *(to move/relocate)* — я переїхав / переїхала
+- **вчи́тися** *(to study)* — я вчився / вчилася / буду вчитися
+- **переї́хати** *(to move/relocate)* — я переїхав / переїхала
 - **подорожувати** *(to travel)* — я буду подорожувати
-- **закінчити** *(to finish/graduate)* — я закінчив / закінчила
-- **розповідати** *(to tell/narrate)* — я розповідаю / буду розповідати
+- **закі́нчи́ти** *(to finish/graduate)* — я закі́нчи́в / закінчила
+- **розповіда́ти** *(to tell/narrate)* — я розповіда́ю / буду розповідати
 
 <!-- INJECT_ACTIVITY: matching-verb-tense -->
 
-**Deterministic word count: 1186 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1208 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -495,19 +471,60 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 126 words | Not found: 8 words
+Verified: 119 words | Not found: 49 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
+  ✗ Кана — NOT IN VESUM
   ✗ Канаді — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
+  ✗ Льво — NOT IN VESUM
+  ✗ Макси — NOT IN VESUM
+  ✗ Оде — NOT IN VESUM
   ✗ Одесі — NOT IN VESUM
+  ✗ Окса — NOT IN VESUM
   ✗ Оксана — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Торонто — NOT IN VESUM
-  ✗ Японію — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ Япо — NOT IN VESUM
+  ✗ англі — NOT IN VESUM
+  ✗ деш — NOT IN VESUM
+  ✗ дозві — NOT IN VESUM
+  ✗ закі — NOT IN VESUM
+  ✗ зом — NOT IN VESUM
+  ✗ йську — NOT IN VESUM
+  ✗ лася — NOT IN VESUM
+  ✗ ллі — NOT IN VESUM
+  ✗ матема — NOT IN VESUM
+  ✗ нна — NOT IN VESUM
+  ✗ нстві — NOT IN VESUM
+  ✗ нська — NOT IN VESUM
+  ✗ нську — NOT IN VESUM
+  ✗ нто — NOT IN VESUM
+  ✗ нтрі — NOT IN VESUM
+  ✗ нчи — NOT IN VESUM
+  ✗ нію — NOT IN VESUM
+  ✗ переї — NOT IN VESUM
+  ✗ пного — NOT IN VESUM
+  ✗ поба — NOT IN VESUM
+  ✗ подорожува — NOT IN VESUM
+  ✗ працюва — NOT IN VESUM
+  ✗ рія — NOT IN VESUM
+  ✗ ско — NOT IN VESUM
+  ✗ споча — NOT IN VESUM
+  ✗ спіхів — NOT IN VESUM
+  ✗ телькою — NOT IN VESUM
+  ✗ тися — NOT IN VESUM
+  ✗ тку — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
+  ✗ університе — NOT IN VESUM
+  ✗ футбо — NOT IN VESUM
+  ✗ хав — NOT IN VESUM
+  ✗ чити — NOT IN VESUM
+  ✗ шко — NOT IN VESUM
+  ✗ япо — NOT IN VESUM
+  ✗ єві — NOT IN VESUM
+  ✗ істо — NOT IN VESUM
 
-All 126 other words are confirmed to exist in VESUM.
+All 119 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -516,23 +533,23 @@ All 126 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

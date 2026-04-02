@@ -2,15 +2,15 @@
   "module": "reading-ukrainian",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:28:53.597665Z",
+  "last_audit": "2026-04-02T20:30:06.335728Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-29T22:51:21.499382Z",
+    "md": "2026-04-01T12:33:37.808295Z",
     "meta": null,
-    "activities": "2026-03-29T22:14:05.126905Z",
-    "vocabulary": "2026-03-29T22:14:23.256238Z",
+    "activities": "2026-03-31T13:54:03.429263Z",
+    "vocabulary": "2026-03-31T13:02:31.069760Z",
     "research": null,
-    "plan": "2026-03-29T00:33:54.498004Z"
+    "plan": "2026-03-31T12:56:26.663903Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2087/1200 (raw: 2600)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1741/1200 (raw: 1778) | engagement: 0/1"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/0"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "48/1"
+      "message": "50/1"
     },
     "naturalness": {
       "status": "info",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

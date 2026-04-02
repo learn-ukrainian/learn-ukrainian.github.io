@@ -11,8 +11,6 @@ import json
 import os
 import sys
 import time
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -20,14 +18,13 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.verify_track import (
-    find_content_file,
-    read_status,
-    is_status_stale,
-    classify_module,
     check_sidecar_files,
+    classify_module,
+    find_content_file,
+    is_status_stale,
     parse_range,
+    read_status,
 )
-
 
 # ---------------------------------------------------------------------------
 # find_content_file

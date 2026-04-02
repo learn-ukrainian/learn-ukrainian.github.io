@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "synonyms-antonyms-style",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:00.134595+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:00.134961+00:00"
+    }
+  }
+}

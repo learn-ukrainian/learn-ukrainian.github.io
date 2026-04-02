@@ -3,8 +3,8 @@ level: C1
 sequence: 42
 slug: case-studies
 version: '1.1'
-title: "Аналіз практичних ситуацій (Case Studies)"
-subtitle: "Practical Case Analysis"
+title: "Аналіз практичних ситуацій"
+subtitle: "Практичний аналіз ситуацій"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -20,25 +20,32 @@ reading_situations:
     key_elements: ["протекціонізм", "меркантилізм", "фільварок", "експорт"]
     motivation: "Аналіз історичного кейсу з використанням академічної лексики."
   - source_type: "офіційний звіт"
-    topic: "Релокація українського бізнесу в умовах повномасштабного вторгнення: виклики та рішення."
-    key_elements: ["логістичний ланцюг", "кризовий менеджмент", "адаптивність", "інституційна підтримка"]
+    topic: "Релокація українського бізнесу в умовах повномасштабного вторгнення: виклики
+      та рішення."
+    key_elements: ["логістичний ланцюг", "кризовий менеджмент", "адаптивність", "інституційна
+          підтримка"]
     motivation: "Робота з сучасним професійним контекстом та термінологією."
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Розмова з СЕО успішного українського ІТ-стартапу про вихід на міжнародні ринки."
+    setting: "Розмова з СЕО успішного українського ІТ-стартапу про вихід на міжнародні
+      ринки."
     focus_points: ["стратегія масштабування", "культурні бар'єри", "залучення інвестицій"]
     motivation: "Розуміння живої професійної мови та бізнес-дискурсу."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Підготуйте аналітичний звіт (кейс-стаді) про успішний досвід відновлення культурної пам'ятки у вашому регіоні."
-    requirements: ["мінімум 300 слів", "використання термінів стратегічного планування", "чітка структура: проблема-рішення-результат"]
+    prompt: "Підготуйте аналітичний звіт (кейс-стаді) про успішний досвід відновлення
+      культурної пам'ятки у вашому регіоні."
+    requirements: ["мінімум 300 слів", "використання термінів стратегічного планування",
+      "чітка структура: проблема-рішення-результат"]
     motivation: "Практика написання структурованих аналітичних текстів."
-    model_answer: "Звіт має містити вступ з описом проблеми, аналіз вжитих заходів (з використанням складних синтаксичних конструкцій) та оцінку ефективності."
+    model_answer: "Звіт має містити вступ з описом проблеми, аналіз вжитих заходів
+      (з використанням складних синтаксичних конструкцій) та оцінку ефективності."
 
 discussion_topics:
-  - context: "Вибір між збереженням історичної автентичності та необхідністю сучасної модернізації міського простору."
+  - context: "Вибір між збереженням історичної автентичності та необхідністю сучасної
+      модернізації міського простору."
     questions:
       - "Які критерії мають бути пріоритетними при реставрації пам'яток?"
       - "Чи можливо досягти балансу між комерційною вигодою та культурною цінністю?"
@@ -105,15 +112,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Read a historical case study (e.g., Просвіта movement) and evaluate the strategic decisions using cause-effect analysis in Ukrainian."
+    description: "Read a historical case study (e.g., Просвіта movement) and evaluate
+      the strategic decisions using cause-effect analysis in Ukrainian."
   - type: essay-response
-    description: "Write a structured case analysis (150-200 words) of a modern Ukrainian business success story using the 'проблема-рішення-результат' framework."
+    description: "Write a structured case analysis (150-200 words) of a modern Ukrainian
+      business success story using the 'проблема-рішення-результат' framework."
   - type: error-correction
-    description: "Fix logical and stylistic errors in a draft analytical report — broken cause-effect chains, mixed registers, imprecise terminology."
+    description: "Fix logical and stylistic errors in a draft analytical report —
+      broken cause-effect chains, mixed registers, imprecise terminology."
   - type: match-up
-    description: "Match strategic planning terms (SWOT-аналіз, місія, візія, стейкголдери) with their Ukrainian definitions and usage examples."
+    description: "Match strategic planning terms (SWOT-аналіз, місія, візія, стейкголдери)
+      with their Ukrainian definitions and usage examples."
   - type: fill-in
-    description: "Complete sentences in a case study with appropriate causal connectors and analytical vocabulary (внаслідок, з огляду на, відповідно до)."
+    description: "Complete sentences in a case study with appropriate causal connectors
+      and analytical vocabulary (внаслідок, з огляду на, відповідно до)."
 
 activities:
   types_required:
@@ -133,3 +145,4 @@ references:
 connects_to:
   previous: "professional-scenarios"
   next: "review"
+phase: C1.2 [Professional & Social Context]

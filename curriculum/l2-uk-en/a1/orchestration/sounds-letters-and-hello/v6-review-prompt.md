@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 1: Sounds, Letters, and Hello (A1, A1.1 [Sounds, Letters, and First Contact])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -214,13 +214,13 @@ pronunciation_videos:
 ## Generated Content
 
 <generated_module_content>
-## Звуки і літери (Sounds and Letters)
+## Зву́ки і лі́тери (Sounds and Letters)
 
-Look at this page. What you see are letters — shapes printed in ink. Now say a word out loud. Any word. What your mouth just produced is a sound — vibrations shaped by breath, lips, and tongue. In Ukrainian, this distinction is not a footnote. It is the absolute foundation of how the language is taught. Every Ukrainian student learns a golden rule in their first year of school, from the textbook of Заболотний (Grade 5, p. 83): **Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо** — "We hear and pronounce sounds, but we see and write letters." Take the word **мама** (mother). You *hear* and *say* two sounds repeating — [м] then [а], [м] then [а]. You *see* and *write* four letters: М-А-М-А. A **звук** (sound) is breath shaped by your mouth and throat. A **літера** (letter) is ink on paper. These are not the same thing.
+Look at this page. What you see are letters — shapes printed in ink. Now say a word out loud. Any word. What your mouth just produced is a sound — vibrations shaped by breath, lips, and tongue. In Ukrainian, this distinction is not a footnote. It is the absolute foundation of how the language is taught. Every Ukrainian student learns a golden rule in their first year of school, from the textbook of Заболо́тний (Grade 5, p. 83): **Звуки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо** — "We hear and pronounce sounds, but we see and write letters." Take the word **ма́ма** (mother). You *hear* and *say* two sounds repeating — [м] then [а], [м] then [а]. You *see* and *write* four letters: М-А-М-А. A **звук** (sound) is breath shaped by your mouth and throat. A **лі́тера** (letter) is ink on paper. These are not the same thing.
 
-Ukrainian has **33 літери** (letters) in its alphabet, but **38 звуків** (sounds). Why the mismatch? Two reasons. First, four letters — **Я**, **Ю**, **Є**, **Ї** — can each represent *two* sounds in certain positions. You will master how this works in M02. Second, the letter **Ь** (called **м'який знак**, the soft sign) represents *no sound at all*. It is a silent instruction — it tells you that the consonant before it should be pronounced softly, and then it disappears from the sound picture entirely. There is a famous pedagogical question from Litvinova (Grade 5, p. 130): "Чи можна говорити «голосна літера»?" — "Can you say 'vowel letter'?" The answer is no. Sounds are **голосні** (vowel) or **приголосні** (consonant). Letters only *represent* sounds. They are not sounds themselves. This distinction matters throughout all of Ukrainian phonetics.
+Ukrainian has **33 літери** (letters) in its alphabet, but **38 зву́ків** (sounds). Why the mismatch? Two reasons. First, four letters — **Я**, **Ю**, **Є**, **Ї** — can each represent *two* sounds in certain positions. You will master how this works in M02. Second, the letter **Ь** (called **м'яки́й знак**, the soft sign) represents *no sound at all*. It is a silent instruction — it tells you that the consonant before it should be pronounced softly, and then it disappears from the sound picture entirely. There is a famous pedagogical question from Litvinova (Grade 5, p. 130): "Чи мо́жна говори́ти «голосна́ літера»?" — "Can you say 'vowel letter'?" The answer is no. Sounds are **голосні́** (vowel) or **при́голосні** (consonant). Letters only *represent* sounds. They are not sounds themselves. This distinction matters throughout all of Ukrainian phonetics.
 
-The Ukrainian alphabet is called **абетка** (also **алфавіт**). Its 33 letters run in a fixed order from **А** to **Я**. Unlike English, Ukrainian spelling is largely phonetic — what you see on the page is almost always what you say aloud. There are no "silent e" surprises, no "gh" ambiguities, no letters pretending to be other letters. Once you know the 38 sounds and which letters represent them, you can read any Ukrainian word aloud — even before you understand its meaning. From Вашуленко (Grade 2, p. 26): "Усі тут літери живуть, їх 33 — від А до Я" — "All the letters live here, all 33 — from А to Я."
+The Ukrainian alphabet is called **абе́тка** (also **алфа́ві́т**). Its 33 letters run in a fixed order from **А** to **Я**. Unlike English, Ukrainian spelling is largely phonetic — what you see on the page is almost always what you say aloud. There are no "silent e" surprises, no "gh" ambiguities, no letters pretending to be other letters. Once you know the 38 sounds and which letters represent them, you can read any Ukrainian word aloud — even before you understand its meaning. From Вашуленко (Grade 2, p. 26): "Усі тут літери живу́ть, їх 33 — від А до Я" — "All the letters live here, all 33 — from А to Я."
 
 Here is the full **абетка** — your map for every module ahead. Ten of these letters represent vowel sounds (marked below). Twenty-two represent consonant sounds. One — **Ь** — represents no sound at all.
 
@@ -241,39 +241,39 @@ Vowel letters: А, Е, И, І, О, У + Я, Ю, Є, Ї. Consonant letters: Б, �
 
 ## Голосні звуки (Vowel Sounds)
 
-Ukrainian first-graders learn vowels through a poem from Большакова (Grade 1, p. 24): "Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело співаються!" — "You'll hear vowels in a song, and in a dark forest, when you're surprised, and when you're delighted. Easy to pronounce, fun to sing!" **Голосні** (vowel sounds) are produced when air flows freely through the mouth with nothing blocking the way. Voice alone shapes them — no lips pressing together, no tongue touching the roof of your mouth, no teeth getting in the way. Because nothing obstructs the air, you can sustain a голосний indefinitely: **А-А-А-А** across a field, **О-О-О** into an empty room. You can sing every vowel. That singability is the definition.
+Ukrainian first-graders learn vowels through a poem from Большако́ва (Grade 1, p. 24): "Голосні почу́єш в пі́сні, і у те́мному у лі́сі, і коли́ диву́єшся, і коли милу́єшся. Ле́гко вимовля́ються, ве́село співа́ються!" — "You'll hear vowels in a song, and in a dark forest, when you're surprised, and when you're delighted. Easy to pronounce, fun to sing!" **Голосні** (vowel sounds) are produced when air flows freely through the mouth with nothing blocking the way. Voice alone shapes them — no lips pressing together, no tongue touching the roof of your mouth, no teeth getting in the way. Because nothing obstructs the air, you can sustain a голосни́й indefinitely: **А-А-А-А** across a field, **О-О-О** into an empty room. You can sing every vowel. That singability is the definition.
 
-There are six vowel *sounds*: [а], [о], [у], [е], [и], [і]. But ten vowel *letters*: А, О, У, Е, И, І — plus Я, Ю, Є, Ї. From Кравцова (Grade 2, p. 9), the chart makes this mapping explicit: the sound [а] can be written as А or Я; [у] as У or Ю; [е] as Е or Є; [і] as І or Ї. Those extra four letters — Я, Ю, Є, Ї — are called "iotated." They can add a [й] sound before the vowel in certain positions. A full explanation waits in M02. For now, the key lesson: count the *sounds*, not the letters. Ukrainian has six голосні звуки, not ten.
+There are six vowel *sounds*: [а], [о], [у], [е], [и], [і]. But ten vowel *letters*: А, О, У, Е, И, І — plus Я, Ю, Є, Ї. From Кравцо́ва (Grade 2, p. 9), the chart makes this mapping explicit: the sound [а] can be written as А or Я; [у] as У or Ю; [е] as Е or Є; [і] as І or Ї. Those extra four letters — Я, Ю, Є, Ї — are called "iotated." They can add a [й] sound before the vowel in certain positions. A full explanation waits in M02. For now, the key lesson: count the *sounds*, not the letters. Ukrainian has six голосні звуки, not ten.
 
-Hear vowels in real words. **мАмА** — two [а] sounds. **мОлОкО** (milk) — three [о] sounds (from Большакова, p. 24). **око** (eye) — two [о] sounds. **дім** (house) — one [і] sound. **ніс** (nose) — one [і] sound. Every syllable in Ukrainian contains exactly one голосний звук. Vowels are the heartbeat of syllables. A word with three vowel sounds has three syllables. When you meet a new Ukrainian word, finding the голосні is always your first step.
+In Ukrainian school sound models (like Захарійчук Grade 1, p. 13), vowel sounds are marked with a dot: **[•]**. Hear vowels in real words. **мАмА** — two [а] sounds. **мОлОкО́** (milk) — three [о] sounds (from Большакова, p. 24). **о́ко** (eye) — two [о] sounds. **дім** (house) — one [і] sound. **ніс** (nose) — one [і] sound. Every syllable in Ukrainian contains exactly one голосний звук. Vowels are the heartbeat of syllables. A word with three vowel sounds has three syllables. When you meet a new Ukrainian word, finding the голосні is always your first step.
 
 <!-- INJECT_ACTIVITY: watch-and-repeat -->
 
 ## Приголосні звуки (Consonant Sounds)
 
-Where голосні flow freely, **приголосні** (consonant sounds) are blocked. Большакова (Grade 1, p. 24) captures the contrast in another poem: "Приголосні деренчать і тихенько шелестять, голосно свистять, скриплять, і гарчать, і точуть, співати не хочуть." — "Consonants rattle and quietly rustle, whistle loudly, screech, growl, and grind — they don't want to sing!" The obstruction comes from different places: lips pressing together ([м], [б], [п]), tongue touching teeth ([с], [з], [т], [д]), or the back of the throat ([г], [х]). That obstruction creates noise — hissing [с-с-с], buzzing [з-з-з], tapping [р-р-р]. Try holding [к] or [п] for three seconds. You cannot. That unsingability is what defines a приголосний.
+Where голосні flow freely, **приголосні** (consonant sounds) are blocked. Большакова (Grade 1, p. 24) captures the contrast in another poem: "Приголосні деренча́ть і тихе́нько шелестя́ть, го́лосно свистя́ть, скрипля́ть, і гарча́ть, і точуть, співа́ти не хо́чуть." — "Consonants rattle and quietly rustle, whistle loudly, screech, growl, and grind — they don't want to sing!" The obstruction comes from different places: lips pressing together ([м], [б], [п]), tongue touching teeth ([с], [з], [т], [д]), or the back of the throat ([г], [х]). That obstruction creates noise — hissing [с-с-с], buzzing [з-з-з], tapping [р-р-р]. Try holding [к] or [п] for three seconds. You cannot. That unsingability is what defines a при́голосний.
 
-Ukrainian has 32 consonant *sounds* from just 22 consonant letters. The reason: many consonants come in pairs — **тверді** (hard) and **м'які** (soft). From Большакова (Grade 2, p. 42): "Приголосні звуки бувають тверді та м'які." A hard [д] and a soft [д'] are two different sounds represented by the same letter **Д**. A hard [н] and a soft [н'] — same letter **Н**, two sounds. Захарійчук (Grade 1, p. 15) marks them in sound models: [–] for hard consonants, [=] for soft consonants. This hard/soft pairing does not exist in English. It is one of the distinctly Slavic features of Ukrainian phonetics, and you will return to it in depth in M03.
+Ukrainian has 32 consonant *sounds* from just 22 consonant letters. The reason: many consonants come in pairs — **тверді** (hard) and **м'які́** (soft). From Большакова (Grade 2, p. 42): "Приголосні звуки бува́ють тверді та м'які." A hard [д] and a soft [д'] are two different sounds represented by the same letter **Д**. A hard [н] and a soft [н'] — same letter **Н**, two sounds. Захарійчук (Grade 1, p. 15) marks them in sound models: [–] for hard consonants, [=] for soft consonants. This hard/soft pairing does not exist in English. It is one of the distinctly Slavic features of Ukrainian phonetics, and you will return to it in depth in M03.
 
-Three special consonant facts to note now. First, **Ґ** — a letter unique to Ukrainian, representing a hard [ґ] sound, as in **ґанок** (porch). It looks like Г but sounds different. Second, **Щ** always represents *two* sounds together: [шч]. The word **щука** (pike, the fish) starts with [шч], not a single sound. Third, the **м'який знак** (**Ь**) represents *zero* sounds. It is a softness signal, not a sound. In the word **сіль** (salt), the Ь tells you the final [л] is soft — and then Ь vanishes from the sound picture completely.
+Three special consonant facts to note now. First, **Ґ** — a letter unique to Ukrainian, representing a hard [ґ] sound, as in **ґа́нок** (porch). It looks like Г but sounds different. Second, **Щ** always represents *two* sounds together: [шч]. The word **щу́ка** (pike, the fish) starts with [шч], not a single sound. Third, the **м'який знак** (**Ь**) represents *zero* sounds. It is a softness signal, not a sound. In the word **сіль** (salt), the Ь tells you the final [л] is soft — and then Ь vanishes from the sound picture completely.
 
 <!-- INJECT_ACTIVITY: watch-and-repeat -->
 
 <!-- INJECT_ACTIVITY: group-sort -->
 
-## Привіт! (Hello!)
+## Приві́т! (Hello!)
 
-Time for your first real Ukrainian conversation. **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як справи?** (How are you?). Three answers you will hear every day: **Добре** (fine, good), **Чудово** (great, wonderful), **Нормально** (okay, so-so). To return the question: **А у тебе?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
+Time for your first real Ukrainian conversation. **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як спра́ви?** (How are you?). Three answers you will hear every day: **До́бре** (fine, good), **Чудо́во** (great, wonderful), **Норма́льно** (okay, so-so). To return the question: **А в тебе́?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
 
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Привіт, Олю! *(Hi, Olya!)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Привіт, Тарасе! Як справи? *(Hi, Taras! How are you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> Добре, дякую. А у тебе? *(Good, thanks. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Оля:</span> Чудово! Рада тебе бачити. *(Great! Glad to see you.)*</div>
-> <div class="dialogue-line"><span class="speaker">Тарас:</span> І я радий тебе бачити! *(And I'm glad to see you!)*</div>
+> — **Тара́с:** Привіт, Олю! *(Hi, Olya!)*
+> — **Оля:** Привіт, Тара́се! Як справи? *(Hi, Taras! How are you?)*
+> — **Тарас:** Добре, дякую. А в тебе? *(Good, thanks. And you?)*
+> — **Оля:** Чудово! Ра́да тебе ба́чити. *(Great! Glad to see you.)*
+> — **Тарас:** І я ра́дий тебе бачити! *(And I'm glad to see you!)*
 
 Notice something: Оля says **рада** while Тарас says **радий**. Both mean "glad," but **рада** is the feminine form and **радий** is the masculine form. Ukrainian adjectives agree with the speaker's gender — confirmed in Заболотний (Grade 5, p. 218). This is your very first glimpse of grammatical gender, a major topic from M08 onward. For now, just notice the difference and use the form that matches you.
 
-Now, a **звуковий аналіз** (sound analysis) of **Привіт** — following the method from Большакова (Grade 1, p. 29). Letter by letter: **П** [п] — приголосний; **р** [р] — приголосний; **и** [и] — голосний; **в** [в] — приголосний; **і** [і] — голосний; **т** [т] — приголосний. Count: 2 голосні, 4 приголосні. Six letters, six sounds. This single word contains every type of sound you learned today — vowels and consonants together in one real Ukrainian greeting.
+Now, a **звукови́й ана́ліз** (sound analysis) of **Привіт** — following the method from Большакова (Grade 1, p. 29). Letter by letter: **П** [п] — приголосний; **р** [р] — приголосний; **и** [и] — голосний; **в** [в] — приголосний; **і** [і] — голосний; **т** [т] — приголосний. Count: 2 голосні, 4 приголосні. Six letters, six sounds. This single word contains every type of sound you learned today — vowels and consonants together in one real Ukrainian greeting.
 
 <!-- INJECT_ACTIVITY: fill-in -->
 
@@ -295,11 +295,11 @@ Test yourself with these questions — every answer comes from what you learned 
 
 **What does Привіт mean?** → Hi! (informal greeting).
 
-**What do you say after Як справи?** → **Добре**, **Чудово**, or **Нормально** — then **А у тебе?**
+**What do you say after Як справи?** → **Добре**, **Чудово**, or **Нормально** — then **А в тебе?**
 
 **What is the difference between рада and радий?** → **Рада** is the feminine form (a woman speaking); **радий** is the masculine form (a man speaking). Both mean "glad."
 
-**Deterministic word count: 1756 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1770 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -364,6 +364,19 @@ For each exercise (DSL or marker), check:
 Also check: Are there enough exercise markers/blocks total? The plan's `activity_hints` specifies the expected count.
 
 **Note:** Exercise content is generated by a separate tool from YAML. If exercise LOGIC is wrong, flag it. If the FORMAT looks unusual (React components, YAML structure), that is expected.
+
+### PROOF OF ABSENCE — mandatory before claiming ANYTHING is missing
+
+**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use your MCP tools (`verify_words`, `search_text`) or carefully re-read the specific section where it should appear.
+
+Rules:
+- If you claim "[•] notation is missing" — you must have searched the content for `[•]` and confirmed 0 occurrences
+- If you claim "vocabulary word X is missing" — you must have searched for that exact word
+- If you claim "plan point Y was not covered" — you must quote which section you expected it in and confirm it's not there
+- **NO CLAIMS OF ABSENCE WITHOUT EVIDENCE.** Your tokenizer can miss special characters like [•], [–], [=], «», and other non-alphanumeric symbols. Do not trust a quick scan.
+- Euphony alternation (у/в, і/й) is a MINOR stylistic issue, NEVER a critical error. Both forms are attested in published Ukrainian literature.
+
+**A false finding wastes an entire rebuild cycle. Be precise.**
 
 ### Step 3: Score on 9 dimensions
 
@@ -464,20 +477,55 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 73 words | Not found: 9 words
+Verified: 58 words | Not found: 44 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Большако — NOT IN VESUM
   ✗ Большакова — NOT IN VESUM
   ✗ Вашуленко — NOT IN VESUM
+  ✗ Заболо — NOT IN VESUM
   ✗ Захарійчук — NOT IN VESUM
-  ✗ Кравцова — NOT IN VESUM
+  ✗ Кравцо — NOT IN VESUM
   ✗ Олю — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
-  ✗ Тарасе — NOT IN VESUM
+  ✗ абе — NOT IN VESUM
+  ✗ алфа — NOT IN VESUM
+  ✗ ана — NOT IN VESUM
+  ✗ гко — NOT IN VESUM
+  ✗ голосни — NOT IN VESUM
+  ✗ деренча — NOT IN VESUM
+  ✗ дий — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ звукови — NOT IN VESUM
+  ✗ кви — NOT IN VESUM
+  ✗ ків — NOT IN VESUM
+  ✗ лосно — NOT IN VESUM
+  ✗ льно — NOT IN VESUM
+  ✗ м'яки — NOT IN VESUM
+  ✗ мному — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ нько — NOT IN VESUM
+  ✗ почу — NOT IN VESUM
+  ✗ свистя — NOT IN VESUM
+  ✗ скрипля — NOT IN VESUM
+  ✗ спра — NOT IN VESUM
+  ✗ тера — NOT IN VESUM
+  ✗ тери — NOT IN VESUM
+  ✗ тка — NOT IN VESUM
+  ✗ тний — NOT IN VESUM
   ✗ точуть — NOT IN VESUM
+  ✗ чимо — NOT IN VESUM
+  ✗ чити — NOT IN VESUM
+  ✗ шелестя — NOT IN VESUM
+  ✗ шемо — NOT IN VESUM
+  ✗ ють — NOT IN VESUM
+  ✗ ються — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
+  ✗ єшся — NOT IN VESUM
 
-All 73 other words are confirmed to exist in VESUM.
+All 58 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

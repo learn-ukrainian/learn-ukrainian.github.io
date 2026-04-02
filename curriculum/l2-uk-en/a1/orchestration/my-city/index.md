@@ -1,6 +1,6 @@
 # Build Summary: my-city (A1)
 
-Generated: 2026-03-31 11:47
+Generated: 2026-04-01 13:42
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:47
 | vocab | complete | 2026-03-30 12:26:35 |
 | enrich | complete | 2026-03-30 12:26:36 |
 | verify | complete | 2026-03-30 12:26:36 |
-| review | complete | 2026-03-30 12:33:21 |
-| stress | complete | 2026-03-31 09:47:05 |
-| publish | complete | 2026-03-31 09:47:05 |
+| review | complete | 2026-04-01 11:42:19 |
+| stress | complete | 2026-04-01 11:42:19 |
+| publish | complete | 2026-04-01 11:42:25 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:47
 | vocab | claude (claude-sonnet-4-6) | 31s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 215s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 188s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 | section-rewrite | claude-tools (claude-opus-4-6) | 42s | ✅ |
 
 ## Files

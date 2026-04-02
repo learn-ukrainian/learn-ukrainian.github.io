@@ -9,8 +9,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 sys.path.insert(0, "scripts")
 
 
@@ -111,7 +109,6 @@ class TestPrefetchActivityExamples:
 
     def test_a1_m15_plus_uses_targeted_grades(self):
         """A1 M15+ should search grades 3,5,6,7 (where grammar is taught)."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="a1", module_num=47,
@@ -128,6 +125,7 @@ class TestPrefetchActivityExamples:
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             with patch("pipeline_lib.search_text", mock_search, create=True):
                 import importlib
+
                 import pipeline_lib
                 importlib.reload(pipeline_lib)
                 result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -140,7 +138,6 @@ class TestPrefetchActivityExamples:
 
     def test_a1_m15_plus_uses_section_titles_as_queries(self):
         """A1 M15+ should derive search terms from content_outline section titles."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="a1", module_num=47,
@@ -156,6 +153,7 @@ class TestPrefetchActivityExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -166,13 +164,13 @@ class TestPrefetchActivityExamples:
 
     def test_a1_early_uses_bukvar(self):
         """A1 M1-14 should search bukvar with grades 1-2."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(track="a1", module_num=5)
         mock_search = MagicMock(return_value=[])
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -184,7 +182,6 @@ class TestPrefetchActivityExamples:
 
     def test_filters_non_exercise_content(self):
         """Chunks without exercise marker verbs should be filtered out."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="b1", module_num=10,
@@ -197,6 +194,7 @@ class TestPrefetchActivityExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -205,7 +203,6 @@ class TestPrefetchActivityExamples:
 
     def test_grade_label_formatting(self):
         """Grade label in output must show actual grades, not None."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="a1", module_num=47,
@@ -218,6 +215,7 @@ class TestPrefetchActivityExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -228,7 +226,6 @@ class TestPrefetchActivityExamples:
 
     def test_deduplicates_chunks(self):
         """Same chunk_id from different search terms should not appear twice."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="b1", module_num=10,
@@ -242,6 +239,7 @@ class TestPrefetchActivityExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -251,7 +249,6 @@ class TestPrefetchActivityExamples:
 
     def test_caps_at_5_results(self):
         """Should return at most 5 textbook exercise blocks."""
-        from pipeline_lib import _prefetch_textbook_activity_examples
 
         ctx = FakeContext(
             track="b1", module_num=10,
@@ -265,6 +262,7 @@ class TestPrefetchActivityExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_activity_examples(ctx)
@@ -290,7 +288,6 @@ class TestPrefetchTextbookExamples:
 
     def test_a1_m15_plus_searches_grammar_grades(self):
         """A1 M15+ should search higher grades first, no subject filter."""
-        from pipeline_lib import _prefetch_textbook_examples
 
         ctx = FakeContext(
             track="a1", module_num=20,
@@ -304,6 +301,7 @@ class TestPrefetchTextbookExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_examples(ctx)
@@ -315,7 +313,6 @@ class TestPrefetchTextbookExamples:
 
     def test_uses_plan_keywords_as_search_terms(self):
         """Should use plan keywords first, then section titles."""
-        from pipeline_lib import _prefetch_textbook_examples
 
         ctx = FakeContext(
             track="b1", module_num=10,
@@ -327,6 +324,7 @@ class TestPrefetchTextbookExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             pipeline_lib._prefetch_textbook_examples(ctx)
@@ -338,7 +336,6 @@ class TestPrefetchTextbookExamples:
     def test_strips_english_parenthetical_from_section_titles(self):
         """Section titles like 'Наказовий спосіб (The Imperative Mood)' should
         search only the Ukrainian part 'Наказовий спосіб'."""
-        from pipeline_lib import _prefetch_textbook_examples
 
         ctx = FakeContext(
             track="a1", module_num=47,
@@ -353,6 +350,7 @@ class TestPrefetchTextbookExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             pipeline_lib._prefetch_textbook_examples(ctx)
@@ -369,7 +367,6 @@ class TestPrefetchTextbookExamples:
     def test_handles_english_first_emdash_titles(self):
         """Section titles like 'Capstone — Комплексний проєкт' should
         extract the Ukrainian part after the em-dash."""
-        from pipeline_lib import _prefetch_textbook_examples
 
         ctx = FakeContext(
             track="b2", module_num=10,
@@ -383,6 +380,7 @@ class TestPrefetchTextbookExamples:
 
         with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": MagicMock(search_text=mock_search)}):
             import importlib
+
             import pipeline_lib
             importlib.reload(pipeline_lib)
             pipeline_lib._prefetch_textbook_examples(ctx)

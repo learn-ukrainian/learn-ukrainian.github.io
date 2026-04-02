@@ -10,105 +10,107 @@ pedagogy: PPP
 phase: A2.7 [Complex Sentences and Conditionals]
 word_target: 2000
 objectives:
-- Learner can form relative clauses using який/яка/яке/які, agreeing in gender and
-  number with the noun they describe.
-- Learner can use де, куди, and звідки as relative words to describe places in
-  subordinate clauses.
-- Learner can distinguish який in questions (Який це будинок?) from який in relative
-  clauses (Будинок, який стоїть на розі...).
-- Learner can produce natural sentences with relative clauses to describe people,
-  objects, and places.
+  - Learner can form relative clauses using який/яка/яке/які, agreeing in gender
+    and number with the noun they describe.
+  - Learner can use де, куди, and звідки as relative words to describe places in
+    subordinate clauses.
+  - Learner can distinguish який in questions (Який це будинок?) from який in 
+    relative clauses (Будинок, який стоїть на розі...).
+  - Learner can produce natural sentences with relative clauses to describe 
+    people, objects, and places.
 dialogue_situations:
-- setting: 'Real estate agent showing apartments — describing features: Це квартира
-    (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який
-    живе поруч, дуже тихий.'
-  speakers:
-  - Ріелтор
-  - Покупець
-  motivation: Який/яка/яке, де, куди with квартира(f), балкон(m), кімната(f)
+  - setting: 'Real estate agent showing apartments — describing features: Це квартира
+      (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який
+      живе поруч, дуже тихий.'
+    speakers:
+      - Ріелтор
+      - Покупець
+    motivation: Який/яка/яке, де, куди with квартира(f), балкон(m), кімната(f)
 content_outline:
-- section: 'Який? Яка? Яке? Які? (Which? What Kind?)'
-  words: 750
-  points:
-  - 'Introducing relative clauses (означальні підрядні речення): a clause that
-    describes a noun in the main sentence. The relative pronoun який agrees with the
-    noun it refers to in gender and number.'
-  - 'Gender and number agreement: Книжка, яка лежить на столі... Хлопець, який
-    прийшов вчора... Місто, яке я люблю... Друзі, які живуть у Києві...'
-  - 'Case of який: it takes the case required by its role in the subordinate clause,
-    not the main clause. Людина, яку я зустрів (Acc.) vs. Людина, яка мене зустріла
-    (Nom.). At A2 level, focus on Nominative and Accusative cases of який.'
-  - 'Comma placement: always a comma before який/яка/яке/які when introducing a
-    relative clause.'
-  - 'Contrast with questions: Який це фільм? (question) vs. Фільм, який ми
-    дивилися вчора, був цікавий (relative clause). Same word, different function.'
-- section: 'Де, куди, звідки — місце (Where, Where To, Where From — Place)'
-  words: 600
-  points:
-  - 'Using де as a relative word for places: Кафе, де ми зустрілися, було затишне.
-    Місто, де я народився, знаходиться на заході.'
-  - 'Using куди for direction: Парк, куди ми ходимо гуляти, дуже гарний.'
-  - 'Using звідки for origin: Країна, звідки вона приїхала, — це Україна.'
-  - 'When to use де vs. який: Будинок, де живе мій друг = Будинок, в якому живе
-    мій друг. At A2 level, де is simpler and more natural for places.'
-- section: 'Описуємо людей, речі та місця (Describing People, Things, and Places)'
-  words: 650
-  points:
-  - 'Building longer descriptions by combining relative clauses with previously
-    learned grammar: Подруга, яка живе у Львові, працює вчителькою. Ресторан, де
-    ми вчора вечеряли, знаходиться біля парку.'
-  - 'Avoiding common errors: redundant pronoun (Книжка, яка вона цікава = WRONG),
-    wrong gender agreement (Хлопець, яке = WRONG), missing comma.'
-  - 'Stacking information naturally: instead of many short sentences (Це мій друг.
-    Він живе у Києві. Він працює програмістом.), combine with який: Це мій друг,
-    який живе у Києві і працює програмістом.'
-  - 'Practical production: describe your favorite place, a person you admire, an
-    object you use daily — using relative clauses.'
-  - 'Intonation of означальні речення: the main clause begins with neutral
-    intonation, then the relative clause (який/яка/яке, де, куди) carries
-    a slightly lower pitch as a parenthetical insert, before the sentence
-    returns to normal pitch or falls at the end. The comma pause before
-    який signals the listener to expect a descriptive addition.'
+  - section: 'Який? Яка? Яке? Які? (Which? What Kind?)'
+    words: 750
+    points:
+      - 'Introducing relative clauses (означальні підрядні речення): a clause that
+        describes a noun in the main sentence. The relative pronoun який agrees with
+        the noun it refers to in gender and number.'
+      - 'Gender and number agreement: Книжка, яка лежить на столі... Хлопець, який
+        прийшов вчора... Місто, яке я люблю... Друзі, які живуть у Києві...'
+      - 'Case of який: it takes the case required by its role in the subordinate clause,
+        not the main clause. Людина, яку я зустрів (Acc.) vs. Людина, яка мене зустріла
+        (Nom.). At A2 level, focus on Nominative and Accusative cases of який.'
+      - 'Comma placement: always a comma before який/яка/яке/які when introducing
+        a relative clause.'
+      - 'Contrast with questions: Який це фільм? (question) vs. Фільм, який ми дивилися
+        вчора, був цікавий (relative clause). Same word, different function.'
+  - section: 'Де, куди, звідки — місце (Where, Where To, Where From — Place)'
+    words: 600
+    points:
+      - 'Using де as a relative word for places: Кафе, де ми зустрілися, було затишне.
+        Місто, де я народився, знаходиться на заході.'
+      - 'Using куди for direction: Парк, куди ми ходимо гуляти, дуже гарний.'
+      - 'Using звідки for origin: Країна, звідки вона приїхала, — це Україна.'
+      - 'When to use де vs. який: Будинок, де живе мій друг = Будинок, в якому живе
+        мій друг. At A2 level, де is simpler and more natural for places.'
+  - section: 'Описуємо людей, речі та місця (Describing People, Things, and Places)'
+    words: 650
+    points:
+      - 'Building longer descriptions by combining relative clauses with previously
+        learned grammar: Подруга, яка живе у Львові, працює вчителькою. Ресторан,
+        де ми вчора вечеряли, знаходиться біля парку.'
+      - 'Avoiding common errors: redundant pronoun (Книжка, яка вона цікава = WRONG),
+        wrong gender agreement (Хлопець, яке = WRONG), missing comma.'
+      - 'Stacking information naturally: instead of many short sentences (Це мій друг.
+        Він живе у Києві. Він працює програмістом.), combine with який: Це мій друг,
+        який живе у Києві і працює програмістом.'
+      - 'Practical production: describe your favorite place, a person you admire,
+        an object you use daily — using relative clauses.'
+      - 'Intonation of означальні речення: the main clause begins with neutral intonation,
+        then the relative clause (який/яка/яке, де, куди) carries a slightly lower
+        pitch as a parenthetical insert, before the sentence returns to normal pitch
+        or falls at the end. The comma pause before який signals the listener to expect
+        a descriptive addition.'
 vocabulary_hints:
   required:
-  - який (which, that — masc.)
-  - яка (which, that — fem.)
-  - яке (which, that — neut.)
-  - які (which, that — pl.)
-  - де (where — relative)
-  - куди (where to — relative)
-  - звідки (where from — relative)
-  - означальний (attributive, defining)
-  - описувати (to describe)
-  - речення (sentence, clause)
+    - який (which, that — masc.)
+    - яка (which, that — fem.)
+    - яке (which, that — neut.)
+    - які (which, that — pl.)
+    - де (where — relative)
+    - куди (where to — relative)
+    - звідки (where from — relative)
+    - означальний (attributive, defining)
+    - описувати (to describe)
+    - речення (sentence, clause)
   recommended:
-  - котрий (which — formal synonym of який)
-  - затишний (cozy, comfortable)
-  - знаходитися (to be located)
-  - стояти (to stand, to be situated)
+    - котрий (which — formal synonym of який)
+    - затишний (cozy, comfortable)
+    - знаходитися (to be located)
+    - стояти (to stand, to be situated)
 activity_hints:
-- type: fill-in
-  focus: Insert the correct form of який (яка, яке, які) into relative clauses,
-    matching gender and number
-  items: 8
-- type: quiz
-  focus: Choose де, куди, or звідки to complete sentences about places
-  items: 8
-- type: match-up
-  focus: Combine two simple sentences into one using a relative clause
-  items: 8
-- type: true-false
-  focus: Judge whether relative clauses have correct agreement and comma placement
-  items: 8
-- type: unjumble
-  focus: Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки
-  items: 6
+  - type: fill-in
+    focus: Insert the correct form of який (яка, яке, які) into relative 
+      clauses, matching gender and number
+    items: 8
+  - type: quiz
+    focus: Choose де, куди, or звідки to complete sentences about places
+    items: 8
+  - type: match-up
+    focus: Combine two simple sentences into one using a relative clause
+    items: 8
+  - type: true-false
+    focus: Judge whether relative clauses have correct agreement and comma 
+      placement
+    items: 8
+  - type: unjumble
+    focus: Reorder words to form correct relative clauses with який/яка/яке and 
+      де/куди/звідки
+    items: 6
 references:
-- title: Заболотний Grade 5, §28
-  notes: Означальні підрядні речення — який, котрий, де, куди, звідки as relative
-    words, with agreement rules and examples
-- title: Заболотний Grade 6
-  notes: Relative clauses with який — exercises and literary examples
-- title: 'ULP: Relative Clauses in Ukrainian'
-  url: https://www.ukrainianlessons.com/який/
-  notes: Practical overview of який in relative clauses
+  - title: Заболотний Grade 5, §28
+    notes: Означальні підрядні речення — який, котрий, де, куди, звідки as 
+      relative words, with agreement rules and examples
+  - title: Заболотний Grade 6
+    notes: Relative clauses with який — exercises and literary examples
+  - title: 'ULP: Relative Clauses in Ukrainian'
+    url: https://www.ukrainianlessons.com/який/
+    notes: Practical overview of який in relative clauses

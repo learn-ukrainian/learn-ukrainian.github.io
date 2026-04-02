@@ -2,15 +2,15 @@
   "module": "where-is-it",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:26:04.246418Z",
+  "last_audit": "2026-04-02T20:30:13.856383Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T21:25:51.376087Z",
+    "md": "2026-03-31T17:27:15.886107Z",
     "meta": null,
     "activities": "2026-03-30T21:22:26.463125Z",
     "vocabulary": "2026-03-30T21:22:57.148889Z",
     "research": null,
-    "plan": "2026-03-30T10:59:40.259646Z"
+    "plan": "2026-03-30T22:17:20.671259Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2017/1200 (raw: 2651)"
+      "message": "1598/1200 (raw: 1634)"
     },
     "activities": {
       "status": "pass",

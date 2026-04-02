@@ -1,0 +1,187 @@
+vocabulary:
+- word: аби́
+  translation: if only / in order to
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: соло́мка
+  translation: little straw
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підстели́ти
+  translation: to spread underneath
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прислі́в'я
+  translation: proverb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мрі́я
+  translation: dream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фанта́зія
+  translation: fantasy / imagination
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: столі́ття
+  translation: century
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: доскона́ло
+  translation: perfectly / thoroughly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: впа́сти
+  translation: to fall
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: якби́
+  translation: if (for unreal conditions)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: нереа́льний
+  translation: unreal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нереальна умова
+  translation: unreal condition
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жаль
+  translation: regret / pity
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: шко́да́
+  translation: a pity
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: впо́ратися
+  translation: to cope / manage
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іна́кше
+  translation: otherwise / differently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тоді́
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: обов'язко́во
+  translation: definitely / certainly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: знав/зна́ла
+  translation: knew
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: міг/могла́
+  translation: could
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: наго́да
+  translation: opportunity / occasion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: перешко́да
+  translation: obstacle / hindrance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фестива́ль
+  translation: festival
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: умовний спосіб
+  translation: conditional mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: б / би
+  translation: would (conditional particle)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: якби не
+  translation: if not for
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якби ж то
+  translation: if only / if only it were possible
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кна́йпа
+  translation: pub / tavern
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ха́та
+  translation: house
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гриби́
+  translation: mushrooms
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

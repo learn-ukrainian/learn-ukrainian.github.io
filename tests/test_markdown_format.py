@@ -6,19 +6,19 @@ Tests scripts/audit/checks/markdown_format.py functions.
 Run with: pytest tests/test_markdown_format.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.markdown_format import (
+    check_forbidden_headers,
     check_frontmatter_spacing,
     check_heading_levels,
     check_table_column_consistency,
-    check_forbidden_headers,
 )
-
 
 # =============================================================================
 # TEST: check_frontmatter_spacing

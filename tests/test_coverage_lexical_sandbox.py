@@ -4,12 +4,9 @@ Mocks VESUM database access to test pure logic: word extraction, form filtering,
 constraint checking, sandbox formatting, resource request parsing.
 """
 
-import json
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -133,8 +130,8 @@ class TestExtractCase:
 
 class TestFormAllowed:
     def _import(self):
-        from lexical_sandbox import _form_allowed
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _form_allowed
         return _form_allowed, GrammarConstraint
 
     def test_no_constraints(self):
@@ -215,7 +212,7 @@ class TestFormAllowed:
 
 class TestCollectCandidates:
     def _import(self):
-        from lexical_sandbox import _collect_candidates, COMMON_WORDS
+        from lexical_sandbox import COMMON_WORDS, _collect_candidates
         return _collect_candidates, COMMON_WORDS
 
     def test_empty_plan(self):
@@ -340,8 +337,8 @@ class TestSelectPrimaryMatch:
 
 class TestDescribeConstraints:
     def _import(self):
-        from lexical_sandbox import _describe_constraints
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _describe_constraints
         return _describe_constraints, GrammarConstraint
 
     def test_no_constraints(self):
@@ -519,14 +516,13 @@ class TestExtractWordsFromRequest:
 
 class TestFetchTextbookExamples:
     def _import(self):
-        from lexical_sandbox import _fetch_textbook_examples
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _fetch_textbook_examples
         return _fetch_textbook_examples, GrammarConstraint
 
     def test_import_error_returns_empty(self):
         f, GC = self._import()
         # Remove rag.query from modules to trigger ImportError
-        import importlib
         orig = sys.modules.get("rag.query")
         sys.modules["rag.query"] = None  # Force ImportError on import
         try:
@@ -568,8 +564,8 @@ class TestFetchTextbookExamples:
 
 class TestFormatSandbox:
     def _import(self):
-        from lexical_sandbox import _format_sandbox
         from audit.checks.morphological_validator import GrammarConstraint
+        from lexical_sandbox import _format_sandbox
         return _format_sandbox, GrammarConstraint
 
     def test_empty_sections(self):

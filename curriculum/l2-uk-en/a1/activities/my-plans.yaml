@@ -2,7 +2,7 @@ version: '1.0'
 module: my-plans
 level: a1
 inline:
-- id: '1'
+- id: quiz-days-of-week
   type: match-up
   instruction: З'єднайте запрошення з відповідями (Match each invitation with the
     correct response)
@@ -19,7 +19,7 @@ inline:
     right: Звичайно буду!
   - left: Може, підемо в кіно у п'ятницю?
     right: Добре!
-- id: '2'
+- id: fill-in-invitations
   type: fill-in
   instruction: Вставте правильне слово (Fill in the correct word)
   items:
@@ -65,7 +65,7 @@ inline:
     - суботу
     - понеділок
     answer: неділю
-- id: '3'
+- id: fill-in-schedule-formula
   type: fill-in
   instruction: Виберіть правильну форму майбутнього часу (Choose the correct future
     tense form)

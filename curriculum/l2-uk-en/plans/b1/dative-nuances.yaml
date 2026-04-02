@@ -1,181 +1,166 @@
-module: b1-047
+module: b1-043
 level: B1
-sequence: 47
+sequence: 43
 slug: dative-nuances
 version: '3.0'
 title: "Давальний відмінок (деталі)"
 subtitle: "Суб'єкт стану, вік, потреба — розширені значення давального"
 focus: grammar
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can use the dative to express the experiencer of a state
-  (мені холодно, йому сумно, їй не спиться, нам весело)"
-- "Learner can use the dative to express age
-  (мені двадцять років, йому було п'ять років)"
-- "Learner can use the dative with impersonal verbs and predicatives
-  (мені потрібно, тобі варто, їй вдалося, нам можна)"
-- "Learner can use the dative to express the recipient/beneficiary
-  with expanded verb range (дарувати другові, завдячувати батькам)"
-- "Learner can distinguish dative from other cases in ambiguous
-  constructions and explain why the dative is required"
+  - "Learner can use the dative to express the experiencer of a state (мені холодно,
+    йому сумно, їй не спиться, нам весело)"
+  - "Learner can use the dative to express age (мені двадцять років, йому було п'ять
+    років)"
+  - "Learner can use the dative with impersonal verbs and predicatives (мені потрібно,
+    тобі варто, їй вдалося, нам можна)"
+  - "Learner can use the dative to express the recipient/beneficiary with expanded
+    verb range (дарувати другові, завдячувати батькам)"
+  - "Learner can distinguish dative from other cases in ambiguous constructions and
+    explain why the dative is required"
 dialogue_situations:
-- setting: 'A cold winter day in Київ — everyone experiencing different states: Мені
-    холодно (I''m cold). Дитині (f, child) нудно (bored). Бабусі (f) важко ходити.
-    Студентам (pl) цікаво на лекції (f).'
-  speakers:
-  - Родина на прогулянці
-  motivation: 'Experiencer dative: мені холодно, дитині нудно, бабусі важко, студентам
-    цікаво'
+  - setting: 'A cold winter day in Київ — everyone experiencing different states:
+      Мені холодно (I''m cold). Дитині (f, child) нудно (bored). Бабусі (f) важко
+      ходити. Студентам (pl) цікаво на лекції (f).'
+    speakers:
+      - Родина на прогулянці
+    motivation: 'Experiencer dative: мені холодно, дитині нудно, бабусі важко, студентам
+      цікаво'
 content_outline:
-- section: "Давальний суб'єкта стану"
-  words: 800
-  points:
-  - "Core concept: in Ukrainian, physical and emotional states are expressed
-    with the EXPERIENCER in Д.в. + impersonal predicate/verb:
-    Мені холодно. Тобі сумно? Йому погано. Нам весело. Їм страшно.
-    The person EXPERIENCING the state is in dative, not nominative.
-    This is a fundamental Ukrainian thought pattern."
-  - "Physical states: мені тепло/холодно/жарко/гаряче/боляче/запаморочливо.
-    Emotional states: мені сумно/весело/страшно/нудно/цікаво/соромно.
-    Mental states: мені зрозуміло/незрозуміло/байдуже/важко/легко.
-    The predicate is invariable (neuter form)."
-  - "With verbs: мені (не) спиться, мені (не) працюється,
-    мені (не) хочеться, мені (не) віриться.
-    From Авраменко Grade 7 p.60: безособові дієслова that take a dative
-    experiencer. Compare: Я не сплю (active) vs Мені не спиться (state)."
-  - "Reading passage: a character describing their day using dative states.
-    'Зранку мені було холодно. Потім стало веселіше. Увечері мені
-    не спалося, і я читав книжку.' Learners identify all dative constructions."
-- section: "Давальний у виразах віку"
-  words: 500
-  points:
-  - "Pattern: [person in Д.в.] + [number] + рік/роки/років:
-    Мені двадцять років. Йому тридцять один рік.
-    Їй було п'ять років. Нам буде тридцять.
-    Past: Мені було... Future: Мені буде..."
-  - "Asking about age: Скільки тобі/вам років?
-    Answering with approximation: Мені майже тридцять.
-    Йому за сорок (he is over forty). Їй під п'ятдесят (she is close to fifty)."
-  - "Practice: a class introduction scenario where people share ages
-    using dative constructions. Include past tense: Коли мені було десять..."
-- section: "Давальний з безособовими конструкціями"
-  words: 700
-  points:
-  - "Impersonal predicatives + Д.в.:
-    мені потрібно / треба (I need to)
-    тобі варто (you should, it is worth it for you)
-    йому слід (he should — more formal)
-    їй можна (she is allowed / she can)
-    нам не можна (we are not allowed)
-    вам довелося (you had to — past)"
-  - "Impersonal verbs + Д.в.:
-    мені вдалося (I succeeded), тобі пощастило (you were lucky),
-    йому належить (he is supposed to), їм доведеться (they will have to).
-    Note: вдатися, пощастити, довестися are perfective —
-    the dative marks who experienced the outcome."
-  - "Practice: transform personal constructions to impersonal with dative.
-    'Я повинен працювати' → 'Мені потрібно працювати.'
-    'Вона змогла приїхати' → 'Їй вдалося приїхати.'
-    10-12 transformation exercises."
-- section: "Давальний адресата і зацікавленої особи"
-  words: 600
-  points:
-  - "Expanded recipient verbs beyond давати/говорити (known from A2):
-    дарувати подарунок другові (give a gift to a friend)
-    завдячувати батькам (owe gratitude to parents)
-    допомагати сусідці (help a neighbour)
-    заважати колезі (bother a colleague)
-    радити лікарю (advise a doctor)
-    відповідати вчительці (answer the teacher)"
-  - "Dative of interested party (for whose benefit):
-    Мамі це сподобається (Mom will like this).
-    Дітям потрібен відпочинок (Children need rest).
-    Нам цього достатньо (That is enough for us)."
-  - "Practice dialogue: giving advice to friends using dative constructions.
-    'Тобі варто відпочити. Тобі потрібно більше спати.
-    Тобі краще зателефонувати лікарю.'"
-- section: "Давальний vs інші відмінки"
-  words: 500
-  points:
-  - "Common confusion points:
-    Д.в. vs Р.в.: допомагати другові (Д.в.) vs потребувати друга (Р.в.)
-    Д.в. vs Зн.в.: телефонувати лікарю (Д.в.) vs викликати лікаря (Зн.в.)
-    Д.в. vs Ор.в.: раді(т)и другові (Д.в.) vs захоплюватися другом (Ор.в.)"
-  - "Verb governance list: verbs that take Д.в. in Ukrainian
-    (some differ from English expectations):
-    дзвонити/телефонувати комусь (call someone — Д.в., not Зн.в.)
-    заважати комусь (bother someone — Д.в.)
-    завдячувати комусь (owe to someone — Д.в.)
-    радити комусь (advise someone — Д.в.)"
-  - "Practice: choose the correct case for 12 sentences,
-    each requiring careful analysis of the verb's governance."
-- section: "Підсумок"
-  words: 400
-  points:
-  - "Four semantic roles of Д.в.:
-    1. Суб'єкт стану (мені холодно). 2. Вік (мені двадцять років).
-    3. Безособові конструкції (мені потрібно). 4. Адресат (дарувати другові)."
-  - "Key verbs governing Д.в.: допомагати, заважати, радити, дзвонити,
-    телефонувати, завдячувати, відповідати.
-    Preview: next module — орудний відмінок (деталі)."
+  - section: "Давальний суб'єкта стану"
+    words: 800
+    points:
+      - "Core concept: in Ukrainian, physical and emotional states are expressed with
+        the EXPERIENCER in Д.в. + impersonal predicate/verb: Мені холодно. Тобі сумно?
+        Йому погано. Нам весело. Їм страшно. The person EXPERIENCING the state is
+        in dative, not nominative. This is a fundamental Ukrainian thought pattern."
+      - "Physical states: мені тепло/холодно/жарко/гаряче/боляче/запаморочливо. Emotional
+        states: мені сумно/весело/страшно/нудно/цікаво/соромно. Mental states: мені
+        зрозуміло/незрозуміло/байдуже/важко/легко. The predicate is invariable (neuter
+        form)."
+      - "With verbs: мені (не) спиться, мені (не) працюється, мені (не) хочеться,
+        мені (не) віриться. From Авраменко Grade 7 p.60: безособові дієслова that
+        take a dative experiencer. Compare: Я не сплю (active) vs Мені не спиться
+        (state)."
+      - "Reading passage: a character describing their day using dative states. 'Зранку
+        мені було холодно. Потім стало веселіше. Увечері мені не спалося, і я читав
+        книжку.' Learners identify all dative constructions."
+  - section: "Давальний у виразах віку"
+    words: 500
+    points:
+      - "Pattern: [person in Д.в.] + [number] + рік/роки/років: Мені двадцять років.
+        Йому тридцять один рік. Їй було п'ять років. Нам буде тридцять. Past: Мені
+        було... Future: Мені буде..."
+      - "Asking about age: Скільки тобі/вам років? Answering with approximation: Мені
+        майже тридцять. Йому за сорок (he is over forty). Їй під п'ятдесят (she is
+        close to fifty)."
+      - "Practice: a class introduction scenario where people share ages using dative
+        constructions. Include past tense: Коли мені було десять..."
+  - section: "Давальний з безособовими конструкціями"
+    words: 700
+    points:
+      - "Impersonal predicatives + Д.в.: мені потрібно / треба (I need to) тобі варто
+        (you should, it is worth it for you) йому слід (he should — more formal) їй
+        можна (she is allowed / she can) нам не можна (we are not allowed) вам довелося
+        (you had to — past)"
+      - "Impersonal verbs + Д.в.: мені вдалося (I succeeded), тобі пощастило (you
+        were lucky), йому належить (he is supposed to), їм доведеться (they will have
+        to). Note: вдатися, пощастити, довестися are perfective — the dative marks
+        who experienced the outcome."
+      - "Practice: transform personal constructions to impersonal with dative. 'Я
+        повинен працювати' → 'Мені потрібно працювати.' 'Вона змогла приїхати' → 'Їй
+        вдалося приїхати.' 10-12 transformation exercises."
+  - section: "Давальний адресата і зацікавленої особи"
+    words: 600
+    points:
+      - "Expanded recipient verbs beyond давати/говорити (known from A2): дарувати
+        подарунок другові (give a gift to a friend) завдячувати батькам (owe gratitude
+        to parents) допомагати сусідці (help a neighbour) заважати колезі (bother
+        a colleague) радити лікарю (advise a doctor) відповідати вчительці (answer
+        the teacher)"
+      - "Dative of interested party (for whose benefit): Мамі це сподобається (Mom
+        will like this). Дітям потрібен відпочинок (Children need rest). Нам цього
+        достатньо (That is enough for us)."
+      - "Practice dialogue: giving advice to friends using dative constructions. 'Тобі
+        варто відпочити. Тобі потрібно більше спати. Тобі краще зателефонувати лікарю.'"
+  - section: "Давальний vs інші відмінки"
+    words: 500
+    points:
+      - "Common confusion points: Д.в. vs Р.в.: допомагати другові (Д.в.) vs потребувати
+        друга (Р.в.) Д.в. vs Зн.в.: телефонувати лікарю (Д.в.) vs викликати лікаря
+        (Зн.в.) Д.в. vs Ор.в.: раді(т)и другові (Д.в.) vs захоплюватися другом (Ор.в.)"
+      - "Verb governance list: verbs that take Д.в. in Ukrainian (some differ from
+        English expectations): дзвонити/телефонувати комусь (call someone — Д.в.,
+        not Зн.в.) заважати комусь (bother someone — Д.в.) завдячувати комусь (owe
+        to someone — Д.в.) радити комусь (advise someone — Д.в.)"
+      - "Practice: choose the correct case for 12 sentences, each requiring careful
+        analysis of the verb's governance."
+  - section: "Підсумок"
+    words: 400
+    points:
+      - "Four semantic roles of Д.в.: 1. Суб'єкт стану (мені холодно). 2. Вік (мені
+        двадцять років). 3. Безособові конструкції (мені потрібно). 4. Адресат (дарувати
+        другові)."
+      - "Key verbs governing Д.в.: допомагати, заважати, радити, дзвонити, телефонувати,
+        завдячувати, відповідати. Preview: next module — орудний відмінок (деталі)."
 vocabulary_hints:
   required:
-  - "давальний відмінок (dative case)"
-  - "суб'єкт стану (experiencer of a state)"
-  - "безособовий (impersonal — no grammatical subject)"
-  - "адресат (recipient/addressee)"
-  - "потрібно (necessary — impersonal predicative + Д.в.)"
-  - "варто (it is worth / one should — + Д.в.)"
-  - "вдалося (succeeded — impersonal + Д.в.)"
-  - "довелося (had to — impersonal + Д.в.)"
-  - "байдуже (indifferent — predicate of state + Д.в.)"
-  - "соромно (ashamed — predicate of state + Д.в.)"
+    - "давальний відмінок (dative case)"
+    - "суб'єкт стану (experiencer of a state)"
+    - "безособовий (impersonal — no grammatical subject)"
+    - "адресат (recipient/addressee)"
+    - "потрібно (necessary — impersonal predicative + Д.в.)"
+    - "варто (it is worth / one should — + Д.в.)"
+    - "вдалося (succeeded — impersonal + Д.в.)"
+    - "довелося (had to — impersonal + Д.в.)"
+    - "байдуже (indifferent — predicate of state + Д.в.)"
+    - "соромно (ashamed — predicate of state + Д.в.)"
   recommended:
-  - "слід (should — formal, + Д.в.)"
-  - "належить (is supposed to — formal, + Д.в.)"
-  - "пощастило (was lucky — + Д.в.)"
-  - "доведеться (will have to — + Д.в.)"
-  - "заважати (to bother/disturb — governs Д.в.)"
-  - "завдячувати (to owe gratitude — governs Д.в.)"
+    - "слід (should — formal, + Д.в.)"
+    - "належить (is supposed to — formal, + Д.в.)"
+    - "пощастило (was lucky — + Д.в.)"
+    - "доведеться (will have to — + Д.в.)"
+    - "заважати (to bother/disturb — governs Д.в.)"
+    - "завдячувати (to owe gratitude — governs Д.в.)"
 activity_hints:
-- type: quiz
-  focus: "Identify why dative is used in each sentence (state, age, recipient, etc.)"
-  items: 8
-- type: fill-in
-  focus: "Put pronouns/nouns into correct dative form in impersonal constructions"
-  items: 8
-- type: match-up
-  focus: "Match impersonal predicate/verb to its dative experiencer sentence"
-  items: 8
-- type: sentence-builder
-  focus: "Transform personal sentences to impersonal with dative experiencer"
-  items: 6
-- type: error-correction
-  focus: "Fix case errors: wrong case after verbs governing dative"
-  items: 6
-- type: dialogue-completion
-  focus: "Complete advice dialogue using Д.в. constructions (тобі варто, тобі потрібно)"
-  items: 6
+  - type: quiz
+    focus: "Identify why dative is used in each sentence (state, age, recipient, etc.)"
+    items: 8
+  - type: fill-in
+    focus: "Put pronouns/nouns into correct dative form in impersonal constructions"
+    items: 8
+  - type: match-up
+    focus: "Match impersonal predicate/verb to its dative experiencer sentence"
+    items: 8
+  - type: sentence-builder
+    focus: "Transform personal sentences to impersonal with dative experiencer"
+    items: 6
+  - type: error-correction
+    focus: "Fix case errors: wrong case after verbs governing dative"
+    items: 6
+  - type: dialogue-completion
+    focus: "Complete advice dialogue using Д.в. constructions (тобі варто, тобі потрібно)"
+    items: 6
 connects_to:
-- "b1-046 (Родовий відмінок деталі — genitive nuances)"
-- "b1-048 (Орудний відмінок деталі — instrumental nuances)"
-- "b1-022 (Зворотні дієслова — reflexive verbs with impersonal meaning)"
+  - "b1-046 (Родовий відмінок деталі — genitive nuances)"
+  - "b1-048 (Орудний відмінок деталі — instrumental nuances)"
+  - "b1-022 (Зворотні дієслова — reflexive verbs with impersonal meaning)"
 prerequisites:
-- "A2 completion (basic Д.в. forms, indirect object)"
-- "b1-022 (Зворотні дієслова — не спиться, не працюється)"
+  - "A2 completion (basic Д.в. forms, indirect object)"
+  - "b1-022 (Зворотні дієслова — не спиться, не працюється)"
 grammar:
-- "Давальний суб'єкта стану: мені холодно/сумно/не спиться"
-- "Давальний віку: мені двадцять років"
-- "Давальний з безособовими конструкціями: потрібно, варто, вдалося, довелося"
-- "Давальний адресата: допомагати, заважати, радити, дзвонити"
-- "Дієслівне керування: дієслова, що вимагають Д.в."
+  - "Давальний суб'єкта стану: мені холодно/сумно/не спиться"
+  - "Давальний віку: мені двадцять років"
+  - "Давальний з безособовими конструкціями: потрібно, варто, вдалося, довелося"
+  - "Давальний адресата: допомагати, заважати, радити, дзвонити"
+  - "Дієслівне керування: дієслова, що вимагають Д.в."
 register: науково-навчальний
 references:
-- title: "Авраменко Grade 7, p.60-63"
-  notes: "Безособові дієслова: state, nature, impersonal use of personal verbs."
-- title: "Заболотний Grade 6, p.93"
-  notes: "Case meanings table: Д.в. = 'особу чи предмет, для яких відбувається дія.'"
-- title: "Заболотний Grade 8, p.84"
-  notes: "Pronominal prepositional constructions including dative governance."
+  - title: "Авраменко Grade 7, p.60-63"
+    notes: "Безособові дієслова: state, nature, impersonal use of personal verbs."
+  - title: "Заболотний Grade 6, p.93"
+    notes: "Case meanings table: Д.в. = 'особу чи предмет, для яких відбувається дія.'"
+  - title: "Заболотний Grade 8, p.84"
+    notes: "Pronominal prepositional constructions including dative governance."

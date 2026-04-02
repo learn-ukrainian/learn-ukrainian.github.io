@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: хотів би / хотіла б (would like — polite form of хотіти), повнозначне слово (content word — as opposed to service word)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T05:09:25.659117+00:00"
+}

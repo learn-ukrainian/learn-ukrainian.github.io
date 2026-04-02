@@ -4,7 +4,7 @@ sequence: 16
 slug: advanced-punctuation
 version: '1.1'
 title: "Складна пунктуація в академічному письмі"
-subtitle: "Advanced Punctuation in Academic Writing"
+subtitle: "Просунута пунктуація в академічному письмі"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
@@ -12,30 +12,40 @@ objectives:
   - "Поглибити знання про вживання розділових знаків у складних синтаксичних конструкціях."
   - "Вивчити особливості пунктуації при цитуванні та оформленні покликань."
   - "Навчитися розрізняти складні випадки вживання тире та двокрапки в наукових текстах."
-  - "Опанувати правила виділення вставних слів, словосполучень та речень у науковому дискурсі."
+  - "Опанувати правила виділення вставних слів, словосполучень та речень у науковому
+    дискурсі."
 
 reading_situations:
   - source_type: "художній уривок"
     topic: "Аналіз синтаксису в поезії Миколи Вінграновського: роль авторської пунктуації."
     key_elements: ["авторський знак", "експресивний синтаксис", "багатокрапку", "тире"]
-    motivation: "Дослідження того, як розділові знаки впливають на ритм та зміст художнього тексту."
+    motivation: "Дослідження того, як розділові знаки впливають на ритм та зміст художнього
+      тексту."
   - source_type: "наукова стаття"
-    topic: "Юридична термінологія в Конституції Пилипа Орлика: складні випадки узгодження та пунктуації."
+    topic: "Юридична термінологія в Конституції Пилипа Орлика: складні випадки узгодження
+      та пунктуації."
     key_elements: ["відокремлені члени речення", "складнопідрядне речення", "цитування"]
     motivation: "Вивчення пунктуаційних норм у текстах офіційного та історичного характеру."
 
 listening_situations:
   - media_type: "подкаст"
-    setting: "Радіопередача 'Слово про слово': обговорення змін у правописі та пунктуації 2019 року."
+    setting: "Радіопередача 'Слово про слово': обговорення змін у правописі та пунктуації
+      2019 року."
     focus_points: ["новації в пунктуації", "дискусійні моменти", "типові помилки"]
-    motivation: "Актуалізація знань про сучасні норми української пунктуації через аудіальний канал."
+    motivation: "Актуалізація знань про сучасні норми української пунктуації через
+      аудіальний канал."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть коротке есе (200-250 слів) на тему 'Чи замінять емодзі розділові знаки у майбутньому?'. Обов'язково використайте речення зі складним синтаксичним зв'язком."
-    requirements: ["вживання тире між підметом і присудком", "відокремлені обставини", "складна цитата"]
-    motivation: "Практика вживання розділових знаків у текстах різних стилів з елементами аргументації."
-    model_answer: "Текст повинен демонструвати правильне вживання двокрапки при однорідних членах, тире в безсполучникових реченнях та знаків при вставних конструкціях."
+    prompt: "Напишіть коротке есе (200-250 слів) на тему 'Чи замінять емодзі розділові
+      знаки у майбутньому?'. Обов'язково використайте речення зі складним синтаксичним
+      зв'язком."
+    requirements: ["вживання тире між підметом і присудком", "відокремлені обставини",
+      "складна цитата"]
+    motivation: "Практика вживання розділових знаків у текстах різних стилів з елементами
+      аргументації."
+    model_answer: "Текст повинен демонструвати правильне вживання двокрапки при однорідних
+      членах, тире в безсполучникових реченнях та знаків при вставних конструкціях."
 
 content_outline:
   - section: "Пунктуація у складному реченні"
@@ -98,15 +108,20 @@ vocabulary:
 
 activity_hints:
   - type: error-correction
-    description: "Fix punctuation errors in complex Ukrainian sentences — commas at conjunction boundaries, dashes in asyndetic constructions, parenthetical expressions."
+    description: "Fix punctuation errors in complex Ukrainian sentences — commas at
+      conjunction boundaries, dashes in asyndetic constructions, parenthetical expressions."
   - type: critical-analysis
-    description: "Analyze authorial punctuation in Vinhranovsky's poetry — evaluate how punctuation marks affect rhythm and meaning."
+    description: "Analyze authorial punctuation in Vinhranovsky's poetry — evaluate
+      how punctuation marks affect rhythm and meaning."
   - type: fill-in
-    description: "Insert correct punctuation marks in complex academic sentences with embedded clauses, citations, and parenthetical constructions."
+    description: "Insert correct punctuation marks in complex academic sentences with
+      embedded clauses, citations, and parenthetical constructions."
   - type: match-up
-    description: "Match punctuation rules (відокремлення, вставність, парантеза) with sentence examples requiring specific punctuation."
+    description: "Match punctuation rules (відокремлення, вставність, парантеза) with
+      sentence examples requiring specific punctuation."
   - type: select
-    description: "Choose the correct punctuation variant for ambiguous cases (тире vs двокрапка, кома vs крапка з комою)."
+    description: "Choose the correct punctuation variant for ambiguous cases (тире
+      vs двокрапка, кома vs крапка з комою)."
 
 activities:
   types_required:
@@ -126,3 +141,4 @@ references:
 connects_to:
   previous: "oral-presentations"
   next: "irregular-verbs-complete"
+phase: C1.1 [Academic Foundation]

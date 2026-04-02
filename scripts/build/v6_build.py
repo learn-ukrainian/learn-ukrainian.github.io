@@ -1215,9 +1215,13 @@ def step_write(level: str, module_num: int, slug: str,
         name = s.get("section", "")
         words = s.get("words", 0)
         section_titles.append(f"- `## {name}` (~{words} words)")
-    # Add summary
+
     summary_heading = "Summary" if module_num <= 3 else "Підсумок — Summary" if module_num <= 14 else "Підсумок"
-    section_titles.append(f"- `## {summary_heading}` (~150 words)")
+
+    # Add summary only if not already in the plan outline
+    has_summary = any("Підсумок" in s.get("section", "") or "Summary" in s.get("section", "") for s in sections)
+    if not has_summary:
+        section_titles.append(f"- `## {summary_heading}` (~150 words)")
 
     # Build vocabulary hints
     vocab = plan.get("vocabulary_hints", {})
@@ -3551,10 +3555,47 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
             # Consume any trailing stress mark attached to the last character
             if end < len(content) and content[end] == STRESS_MARK:
                 end += 1
-
             content = content[:start] + replace_unstressed + content[end:]
             applied += 1
             _log(f"  ✅ Fix applied (stress-aware): '{find_unstressed[:50]}...'")
+            continue
+
+        # Try punctuation-normalized regex match (handles « » vs " ", and - vs —)
+        import re as _re
+        find_regex = _re.escape(find_unstressed)
+        # allow any quote type
+        find_regex = _re.sub(r'(?:\\["\'«»]|["\'«»])', r'["\'«»]', find_regex)
+        # allow any dash/hyphen
+        find_regex = _re.sub(r'(?:\\[\-—–]|[-—–])', r'[-—–]', find_regex)
+
+        matches = list(_re.finditer(find_regex, content_unstressed))
+        if len(matches) == 1:
+            match = matches[0]
+
+            # Map unstressed match bounds back to stressed content
+            pos_unstressed_start = match.start()
+            pos_unstressed_end = match.end()
+
+            stressed_idx = 0
+            unstressed_idx = 0
+            while unstressed_idx < pos_unstressed_start and stressed_idx < len(content):
+                if content[stressed_idx] != STRESS_MARK:
+                    unstressed_idx += 1
+                stressed_idx += 1
+            start = stressed_idx
+
+            while unstressed_idx < pos_unstressed_end and stressed_idx < len(content):
+                if content[stressed_idx] != STRESS_MARK:
+                    unstressed_idx += 1
+                stressed_idx += 1
+            end = stressed_idx
+
+            if end < len(content) and content[end] == STRESS_MARK:
+                end += 1
+
+            content = content[:start] + replace_unstressed + content[end:]
+            applied += 1
+            _log(f"  ✅ Fix applied (punctuation-aware): '{find_unstressed[:50]}...'")
             continue
 
         _log(f"  ⚠️  Fix not matched: '{find_unstressed[:60]}...'")
@@ -3824,15 +3865,19 @@ def _inject_inline_activities(
     Unmatched activities (marker not found in prose) are returned for
     fallback into the Зошит tab.
     """
+    import re
+
     from build.activity_renderer import render_activity_to_jsx
 
     unmatched = []
     for act in inline_activities:
         act_id = act.get("id", "")
-        marker = f"<!-- INJECT_ACTIVITY: {act_id} -->"
-        if marker in mdx_content:
+        # LLMs often inject extra text into the marker (e.g. <!-- INJECT_ACTIVITY: id, hint text -->)
+        marker_pattern = re.compile(rf"<!--\s*INJECT_ACTIVITY:\s*{re.escape(act_id)}\b.*?-->", re.IGNORECASE)
+
+        if marker_pattern.search(mdx_content):
             jsx = render_activity_to_jsx(act)
-            mdx_content = mdx_content.replace(marker, jsx, 1)
+            mdx_content = marker_pattern.sub(jsx, mdx_content, count=1)
         else:
             unmatched.append(act)
 
@@ -4111,11 +4156,19 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     modules = data.get("levels", {}).get(level, {}).get("modules", [])
     order = modules.index(slug) + 1 if slug in modules else 1
 
+    plan_title = slug.replace('-', ' ').title()
+    try:
+        plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+        if "title" in plan_data:
+            plan_title = plan_data["title"]
+    except Exception:
+        pass
+
     frontmatter = f"""---
-title: "{slug.replace('-', ' ').title()}"
+title: "{plan_title}"
 sidebar:
   order: {order}
-  label: "{order:02d}. {slug.replace('-', ' ').title()}"
+  label: "{order:02d}. {plan_title}"
 pipeline: v6
 build_status: draft
 ---
@@ -4559,32 +4612,6 @@ def main():
             final_applied, final_count = _apply_review_fixes(review_text, content_path)
             if final_applied:
                 _log(f"\n🔧 Final fix pass: applied {final_count}/{total_fixes} fix(es) from latest review")
-
-                # ── VERIFY FIXES IMMEDIATELY (before enrich changes the content) ──
-                _STRESS = "\u0301"
-                content_text = content_path.read_text("utf-8") if content_path.exists() else ""
-                content_unstressed = content_text.replace(_STRESS, "")
-                unapplied = []
-                applied_ok = []
-                for fix in latest_fixes:
-                    find_str = fix.get("find", "")
-                    replace_str = fix.get("replace", "")
-                    if not find_str:
-                        continue
-                    find_clean = find_str.replace(_STRESS, "")
-                    replace_clean = replace_str.replace(_STRESS, "")
-                    old_gone = find_clean not in content_unstressed
-                    new_present = not replace_clean or replace_clean in content_unstressed
-                    if old_gone and new_present:
-                        applied_ok.append(find_str[:50])
-                    else:
-                        unapplied.append(find_str[:80])
-                if unapplied:
-                    _log(f"\n⚠️  FIX VERIFICATION: {len(unapplied)}/{total_fixes} fix(es) NOT applied:")
-                    for u in unapplied[:5]:
-                        _log(f"    ❌ '{u}...'")
-                else:
-                    _log(f"\n✅ FIX VERIFICATION: all {len(applied_ok)} fix(es) confirmed in content")
             else:
                 _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
 

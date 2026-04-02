@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 2: Reading Ukrainian (A1, A1.1 [Sounds, Letters, and First Contact])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -139,68 +139,83 @@ references:
 <generated_module_content>
 ## Склади (Syllables)
 
-Every Ukrainian first-grader learns one golden rule before reading a single word. The textbook states it plainly: **«У слові стільки складів, скільки голосних звуків»** — a word has as many syllables as it has vowel sounds. This rule never breaks. Look at **мама** (mother): two vowels, А and А, so two syllables — **ма-ма**. Now **молоко** (milk): three vowels, О, О, О — three syllables, **мо-ло-ко**. And **банк** (bank): one vowel, А — one syllable, just **банк**. Count the vowels, count the syllables. Every time.
+Every Ukrainian first-grader learns one golden rule before reading a single word. The textbook states it plainly: **«У сло́ві сті́льки складів, скі́льки голосни́х зву́ків»** — a word has as many syllables as it has vowel sounds. This rule never breaks. Look at **ма́ма** (mother): two vowels, А and А, so two syllables — **ма-ма**. Now **молоко́** (milk): three vowels, О, О, О — three syllables, **мо-ло-ко**. And **банк** (bank): one vowel, А — one syllable, just **банк**. Count the vowels, count the syllables. Every time.
 
-> **Марко:** Скільки складів у слові "молоко"? *(How many syllables in the word "moloko"?)*
-> **Аня:** Три голосні — О, О, О. Отже, три склади: мо-ло-ко! *(Three vowels — O, O, O. So, three syllables: mo-lo-ko!)*
-> **Марко:** Правильно! А "банк"? *(Correct! And "bank"?)*
-> **Аня:** Тільки один! *(Only one!)*
+> **Марко́:** Скільки складів у слові "молоко"? *(How many syllables in the word "moloko"?)*
+> **Аня:** Три голосні́ — О, О, О. О́тже, три склади: мо-ло-ко! *(Three vowels — O, O, O. So, three syllables: mo-lo-ko!)*
+> **Марко:** Пра́вильно! А "банк"? *(Correct! And "bank"?)*
+> **Аня:** Ті́льки оди́н! *(Only one!)*
 
-With that rule in hand, Ukrainian textbooks teach a four-step method called **звуковий аналіз слова** (sound analysis of a word). Большакова's Grade 1 textbook (p.29) lays it out: (1) **Визначаю голосні звуки** — find all the vowels in the word. (2) **Ділю слово на склади** — split the word into syllables, one vowel per syllable. Ukrainian syllables tend to be open (ending in a vowel) — this process is called **складоподіл** (syllable division). (3) **Ставлю наголос** — mark which syllable carries the stress. (4) **Позначаю приголосні звуки** — identify consonants as hard or soft. Walk through it with **мама** (mother): vowels А, А → two syllables **ма-ма** → stress on the first syllable → both М sounds are hard. Now **аптека** (pharmacy): vowels А, Е, А → three syllables **а-пте-ка** → stress on the second syllable → consonants П, Т, К are hard.
+With that rule in hand, Ukrainian textbooks teach a four-step method called **звукови́й ана́ліз слова́** (sound analysis of a word). Большако́ва's Grade 1 textbook (p.29) lays it out: (1) **Визнача́ю голосні зву́ки** — find all the vowels in the word. (2) **Ділю́ сло́во на склади** — split the word into syllables, one vowel per syllable. Ukrainian syllables tend to be open (ending in a vowel) — this process is called **складопо́діл** (syllable division). (3) **Ста́влю на́голос** — mark which syllable carries the stress. (4) **Познача́ю при́голосні звуки** — identify consonants as hard or soft. Walk through it with **мама** (mother): vowels А, А → two syllables **ма-ма** → stress on the first syllable → both М sounds are hard. Now **апте́ка** (pharmacy): vowels А, Е, А → three syllables **а-пте-ка** → stress on the second syllable → consonants П, Т, К are hard.
 
 For reading, apply звуковий аналіз as a practical strategy: (1) spot the vowels, (2) split into syllables, (3) read each syllable aloud slowly, (4) blend the syllables together at natural speed. Try it: **а-пте-ка** → а... пте... ка → **аптека**. Done.
 
-Here is a physical trick from Кравцова's Grade 2 textbook (p.13): place your palm under your chin and say the word aloud. Each time your chin touches your hand, that is one syllable. Try it with **мо-ло-ко** — you should feel three touches.
+Here is a physical trick from Кравцо́ва's Grade 2 textbook (p.13): place your palm under your chin and say the word aloud. Each time your chin touches your hand, that is one syllable. Try it with **мо-ло-ко** — you should feel three touches.
 
-Ukrainian Grade 1 textbooks (Захарійчук, p.15) use a simple notation for sound analysis: **[●]** marks a vowel sound, **[—]** marks a hard consonant, and **[=]** marks a soft consonant. For **мама**: [— ● | — ●] — two hard consonants, two vowels, two syllables. For **пісня**: [— ● | — = ●] — the Н before Я is soft. Every Ukrainian child learns these symbols in first grade.
+Ukrainian Grade 1 textbooks (Захарійчук, p.15) use a simple notation for sound analysis: **[●]** marks a vowel sound, **[—]** marks a hard consonant, and **[=]** marks a soft consonant. For **мама**: [— ● | — ●] — two hard consonants, two vowels, two syllables. For **пі́сня**: [— ● | — = ●] — the Н before Я is soft. Every Ukrainian child learns these symbols in first grade.
 
-Ukrainian children build reading skill through **складові ланцюжки** (syllable chains). Start with one consonant and cycle through vowels: **М → ма, мо, му, ми, мі, ме**. Then reverse: **ам, ом, ум**. Then build words from the chains: **ма-ма**, **мо-ло-ко**. Add a second consonant: **Т → та, то, ту, ти, ті, те**. Now combine: **та-то**, **мо-ло-то**. This is bottom-up reading: sound → syllable → word.
+Ukrainian children build reading skill through **складові ланцюжки́** (syllable chains). Start with one consonant and cycle through vowels: **М → ма, мо, му, ми, мі, ме**. Then reverse: **ам, ом, ум**. Then build words from the chains: **ма-ма**, **мо-ло-ко**. Add a second consonant: **Т → та, то, ту, ти, ті, те**. Now combine: **та-то**, **мо-ло-то**. This is bottom-up reading: sound → syllable → word.
 
-This method conquers even intimidating long words. Take **шоколад** (chocolate): three vowels О, О, А give **шо-ко-лад** — three syllables. **Університет** (university): five vowels У, І, Е, И, Е give **у-ні-вер-си-тет** — five syllables. **Бібліотека** (library): five vowels І, І, О, Е, А give **бі-блі-о-те-ка** — five syllables. A word that looked impossible becomes five manageable pieces. The rule never fails: count the vowels, and the word opens up.
+This method conquers even intimidating long words. Take **шокола́д** (chocolate): three vowels О, О, А give **шо-ко-лад** — three syllables. **Університе́т** (university): five vowels У, І, Е, И, Е give **у-ні-вер-си-тет** — five syllables. **Бібліоте́ка** (library): five vowels І, І, О, Е, А give **бі-блі-о-те-ка** — five syllables. A word that looked impossible becomes five manageable pieces. The rule never fails: count the vowels, and the word opens up.
 
 <!-- INJECT_ACTIVITY: count-syllables -->
 
-## Голосні літери (Vowel Letters)
+## Голосні лі́тери (Vowel Letters)
 
-You already know from M01 that Ukrainian has six vowel sounds but ten vowel letters. The first six are the simple vowels — each letter makes exactly one sound, every time, no surprises. **А** sounds like the "a" in "father" — **аптека** (pharmacy). **О** as in "or" — **молоко** (milk). **У** as in "moon" — **рука** (hand). **Е** is between English "e" in "met" and "a" in "cat" — **вечір** (evening). **И** is a sound English does not have, deeper and more central than "i" — **кит** (whale). **І** is a high front sound, close to "ee" in "see" — **кіт** (cat). These six are completely reliable: what you see is what you say.
+You already know from M01 that Ukrainian has six vowel sounds but ten vowel letters. The first six are the simple vowels — each letter makes exactly one sound, every time, no surprises:
 
-The remaining four vowel letters are called iotated vowels: **Я**, **Ю**, **Є**, **Ї**. They follow a two-sound rule. When **Я** appears at the start of a word or after another vowel, it produces two sounds — [й] + [а]. Say **яблуко** (apple): the Я at the beginning gives [йа], so you hear [йа]-блу-ко. The same happens in **моя** (my, feminine): мо-[йа]. But when **Я** comes after a consonant, it does something different — it softens that consonant and adds only [а]. In **пісня** (song), the Н before Я becomes soft. The same pattern applies to **Ю** ([йу] at word start, softening + [у] after consonant) and **Є** ([йе] at word start, softening + [е] after consonant). Look at **людина** (person): Л is softened by Ю. In **вечірнє** (evening, neuter adjective), Н is softened by Є.
+**А, О, У, Е, И, І**
+
+Text cannot teach you pronunciation — you need to hear real Ukrainian speakers. Watch Anna Ohoiko's [Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) and the [Speak Ukrainian Alphabet video](https://www.youtube.com/watch?v=Gt7O4FLGxjI) to hear each vowel. Then practise with these words:
+
+- **А** — **а́птека** (pharmacy), **ма́ма** (mother)
+- **О** — **моло́ко** (milk), **око́** (eye)
+- **У** — **ру́ка** (hand), **ву́лиця** (street)
+- **Е** — **ве́чір** (evening), **мед** (honey)
+- **И** — **кит** (whale), **дим** (smoke)
+- **І** — **кіт** (cat), **дім** (house)
+
+The critical pair is **И** vs **І** — they change word meanings: **кит** (whale) vs **кіт** (cat), **дим** (smoke) vs **дім** (house). Listen to these pairs in the videos, then say them aloud yourself. These six are completely reliable: what you see is what you say.
+
+The remaining four vowel letters are called iotated vowels: **Я**, **Ю**, **Є**, **Ї**. They follow a two-sound rule. When **Я** appears at the start of a word or after another vowel, it produces two sounds — [й] + [а]. Say **я́блуко** (apple): the Я at the beginning gives [йа], so you hear [йа]-блу-ко. The same happens in **моя́** (my, feminine): мо-[йа]. But when **Я** comes after a consonant, it does something different — it softens that consonant and adds only [а]. In **пісня** (song), the Н before Я becomes soft. The same pattern applies to **Ю** ([йу] at word start, softening + [у] after consonant) and **Є** ([йе] at word start, softening + [е] after consonant). Look at **люди́на** (person): Л is softened by Ю. In **вечі́рнє** (evening, neuter adjective), Н is softened by Є.
 
 <!-- INJECT_ACTIVITY: match-up -->
 
-**Ї** stands apart. It always produces two sounds — [й] + [і] — with zero exceptions. **Ї** never appears directly after a consonant, so it never softens anything. You find it at the start of a word (**їжак** — hedgehog), after a vowel (**країна** — country), or after an apostrophe. **Ї** is distinctly Ukrainian — Russian has no equivalent letter.
+**Ї** stands apart. It always produces two sounds — [й] + [і] — with zero exceptions. **Ї** never appears directly after a consonant, so it never softens anything. You find it at the start of a word (**їжа́к** — hedgehog), after a vowel (**краї́на** — country), or after an apostrophe. **Ї** is distinctly Ukrainian — Russian has no equivalent letter.
 
 Now, the critical minimal pairs: **И** vs **І**. These two sounds distinguish meaning. **Кит** (whale) vs **кіт** (cat). **Дим** (smoke) vs **дім** (house). The difference between [и] (more central, deeper) and [і] (high, front) changes the word entirely. They are two separate phonemes — never interchangeable. Listen carefully to model pronunciations and practice hearing the contrast before you drill.
 
 <!-- INJECT_ACTIVITY: divide-words -->
 
-## Читання слів (Reading Words)
+## Чита́ння слів (Reading Words)
 
-The syllable method is a scaffold, not a permanent crutch. The goal is to internalize the rhythm so you stop reading letter-by-letter and start reading syllable-by-syllable, then word-by-word. Here is the reading strategy in order: (1) spot the vowels — they are the cores of each syllable. (2) Build the consonant clusters around them. (3) Read syllable-by-syllable. (4) Repeat until the word flows at natural speed. Try it with **книга** (book): vowels И and А give two syllables — **кни-га**. Read each piece, then blend: **книга**.
+The syllable method is a scaffold, not a permanent crutch. The goal is to internalize the rhythm so you stop reading letter-by-letter and start reading syllable-by-syllable, then word-by-word. Here is the reading strategy in order: (1) spot the vowels — they are the cores of each syllable. (2) Build the consonant clusters around them. (3) Read syllable-by-syllable. (4) Repeat until the word flows at natural speed. Try it with **кни́га** (book): vowels И and А give two syllables — **кни-га**. Read each piece, then blend: **книга**.
 
-Ukrainian words follow recognizable patterns. The easiest pattern alternates consonant-vowel: **мама** (mother), **тато** (father), **каша** (porridge), **вода** (water), **рука** (hand), **хата** (house), **коза** (goat). These words practically read themselves — each syllable is open, ending on a vowel. Slightly harder are words with consonant clusters before a vowel: **школа** (school), **книга** (book). And then closed-syllable words, where a syllable ends on a consonant: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank). Practice each group separately before mixing them. Most Ukrainian syllables are open — ending in a vowel — which makes blending easier than you might expect.
+Ukrainian words follow recognizable patterns. The easiest pattern alternates consonant-vowel: **мама** (mother), **та́то** (father), **ка́ша** (porridge), **вода́** (water), **рука** (hand), **ха́та** (house), **коза́** (goat). These words practically read themselves — each syllable is open, ending on a vowel. Slightly harder are words with consonant clusters before a vowel: **шко́ла** (school), **книга** (book). And then closed-syllable words, where a syllable ends on a consonant: **дім** (house), **сон** (dream), **ліс** (forest), **дуб** (oak), **хліб** (bread), **банк** (bank). Practice each group separately before mixing them. Most Ukrainian syllables are open — ending in a vowel — which makes blending easier than you might expect.
 
 <!-- INJECT_ACTIVITY: quiz -->
 
-Time to read. Start with two-syllable words. Read each one twice — first split, then blended:
+Time to read. Ukrainian classifies words by syllable count — use the proper terms from the start:
+
+**Двоскладові́ сло́ва** (two-syllable words). Read each one twice — first split, then blended:
 
 **ма-ма** → **мама** (mother). **та-то** → **тато** (father). **во-да** → **вода** (water). **ру-ка** → **рука** (hand). **ха-та** → **хата** (house). **ка-ша** → **каша** (porridge).
 
-Now three-syllable words. Split first, then blend:
+**Трискладові́ сло́ва** (three-syllable words). Split first, then blend:
 
-**а-пте-ка** → **аптека** (pharmacy). **мо-ло-ко** → **молоко** (milk). **лю-ди-на** → **людина** (person). **ву-ли-ця** → **вулиця** (street). **сто-ли-ця** → **столиця** (capital) — **Київ** (Kyiv) is **столиця** України.
+**а-пте-ка** → **аптека** (pharmacy). **мо-ло-ко** → **молоко** (milk). **лю-ди-на** → **людина** (person). **ву-ли-ця** → **ву́лиця** (street). **сто-ли-ця** → **столи́ця** (capital) — **Ки́їв** (Kyiv) is **столиця** Украї́ни.
 
-Now the long words. Count the vowels, split, and conquer:
+**Багатоскладові́ сло́ва** (many-syllable words). Count the vowels, split, and conquer:
 
-**у-ні-вер-си-тет** → **університет** (university) — five syllables. **бі-блі-о-те-ка** → **бібліотека** (library) — five syllables. **фо-то-гра-фі-я** → **фотографія** (photography) — five syllables. These look intimidating, but the vowel-counting method handles them completely. Finish with Ukrainian city names as a confidence-builder: **Ки-їв** (Kyiv — note the Ї), **О-де-са** (Odesa), **Хар-ків** (Kharkiv), **Дні-про** (Dnipro), **Пол-та-ва** (Poltava).
+**у-ні-вер-си-тет** → **університет** (university) — five syllables. **бі-блі-о-те-ка** → **бібліотека** (library) — five syllables. **фо-то-гра-фі-я** → **фотогра́фія** (photography) — five syllables. These look intimidating, but the vowel-counting method handles them completely. Finish with Ukrainian city names as a confidence-builder: **Ки-їв** (Kyiv — note the Ї), **О-де-са** (Odesa), **Хар-ків** (Kharkiv), **Дні-про** (Dnipro), **Пол-та-ва** (Poltava).
 
 Three special combinations appear in Ukrainian words that you should recognize now. They will be drilled thoroughly in M03 — today, just notice them when they appear.
 
 First: **Щ** always reads as [шч] — one letter, two sounds. **Що** means "what," **ще** means "still" or "more." Never read Щ as [ш] alone.
 
-Second: **Ь** (the soft sign, **м'який знак**) has no sound of its own. It only softens the consonant before it. **День** (day) — the Н is soft. **Сіль** (salt) — the Л is soft. **Кінь** (horse) — the Н is soft. Think of Ь as a silent softener.
+Second: **Ь** (the soft sign, **м'яки́й знак**) has no sound of its own. It only softens the consonant before it. **День** (day) — the Н is soft. **Сіль** (salt) — the Л is soft. **Кінь** (horse) — the Н is soft. Think of Ь as a silent softener.
 
-Third: the apostrophe (**'**) separates — it prevents the iotated vowel from softening the preceding consonant. **Сім'я** (family) — the М stays hard, then Я gives [йа]. **М'ясо** (meat) — same pattern. **П'ять** (five) — П stays hard. These three features will be explored fully in M03; for now, recognize them when you see them.
+Third: the apostrophe (**'**) separates — it prevents the iotated vowel from softening the preceding consonant. **Сім'я́** (family) — the М stays hard, then Я gives [йа]. **М'я́со** (meat) — same pattern. **П'ять** (five) — П stays hard. These three features will be explored fully in M03; for now, recognize them when you see them.
 
 > **Аня:** Бі-блі-о-те-ка... **бібліотека**! *(Library!)*
 > **Марко:** Так! А це? *(Yes! And this?)*
@@ -224,7 +239,7 @@ Self-check — answer each question before reading the answer:
 - **What does the apostrophe do?** → It separates the consonant from a following iotated vowel, preventing softening.
 - **Read this word and count syllables: бібліотека.** → **Бі-блі-о-те-ка**. Five syllables — five vowels: І, І, О, Е, А.
 
-**Deterministic word count: 1675 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1737 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -402,22 +417,54 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 91 words | Not found: 11 words
+Verified: 82 words | Not found: 43 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Аня — NOT IN VESUM
-  ✗ Большакова' — NOT IN VESUM
+  ✗ Большако — NOT IN VESUM
+  ✗ Бібліоте — NOT IN VESUM
   ✗ Захарійчук — NOT IN VESUM
-  ✗ Кравцова' — NOT IN VESUM
+  ✗ Кравцо — NOT IN VESUM
+  ✗ М'я — NOT IN VESUM
   ✗ Пол — NOT IN VESUM
+  ✗ Пра — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ Університе — NOT IN VESUM
+  ✗ ана — NOT IN VESUM
+  ✗ апте — NOT IN VESUM
   ✗ блу — NOT IN VESUM
+  ✗ блуко — NOT IN VESUM
   ✗ блі — NOT IN VESUM
+  ✗ ва' — NOT IN VESUM
   ✗ вер — NOT IN VESUM
+  ✗ вечі — NOT IN VESUM
+  ✗ вильно — NOT IN VESUM
+  ✗ влю — NOT IN VESUM
+  ✗ голосни — NOT IN VESUM
+  ✗ звукови — NOT IN VESUM
   ✗ кни — NOT IN VESUM
   ✗ ків — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ м'яки — NOT IN VESUM
+  ✗ моло — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
   ✗ пте — NOT IN VESUM
+  ✗ птека — NOT IN VESUM
+  ✗ рнє — NOT IN VESUM
+  ✗ складопо — NOT IN VESUM
+  ✗ скі — NOT IN VESUM
+  ✗ сло — NOT IN VESUM
+  ✗ сня — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ тери — NOT IN VESUM
+  ✗ тже — NOT IN VESUM
+  ✗ фотогра — NOT IN VESUM
+  ✗ фія — NOT IN VESUM
+  ✗ чір — NOT IN VESUM
+  ✗ шко — NOT IN VESUM
+  ✗ шокола — NOT IN VESUM
 
-All 91 other words are confirmed to exist in VESUM.
+All 82 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -426,23 +473,23 @@ All 91 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

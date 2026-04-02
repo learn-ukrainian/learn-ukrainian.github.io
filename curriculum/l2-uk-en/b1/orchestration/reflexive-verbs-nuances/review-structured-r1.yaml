@@ -1,0 +1,46 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missing the specific contrastive pairs `повертати / повертатися` and `дивитися`
+    required in Section 5.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Russicism `існуючі`, non-standard `переживачем`, and hallucinated meaning
+    for `боїти`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Good use of the "self test" (сам себе) and clear categorization of semantic
+    groups.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are integrated into the
+    prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are logically placed and match the plan's focus exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Excessive "cheerleading" and generic filler ("неймовірна мелодійність",
+    "справжня магія", "щоденне мовлення лилося вільно, як пісня").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is within a healthy range (4857 words), and headers match the
+    plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized perspective on the origin of -ся from the pronoun *себе*.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The student dormitory dialogue is natural and applies the target grammar
+    well.
+findings: []

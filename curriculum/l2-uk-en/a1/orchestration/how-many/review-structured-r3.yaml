@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All four content_outline sections present in correct order. All required
+    vocabulary covered in context. All activity_hints mapped 1:1 to markers. Textbook
+    references integrated (Vashulenko Grade 3, Kr
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Zero Russianisms, zero surzhyk, zero calques. All number forms VESUM-verified.
+    Gender agreement correct across all examples (одне тістечко, три булочки, дві
+    гривні, п'ятнадцять гривень). Factual claim
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'PPP flow: dialogues present numbers in real situations → sections teach
+    patterns systematically → self-check and exercises produce. Consistent "chunks
+    not grammar" approach per plan ("These changes fo'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocabulary items present in prose context: один–п''ять,
+    шість–десять, двадцять/тридцять/сорок, сто/тисяча, скільки, коштує, гривня, рік/роки/років.
+    All 6 recommended items present: п''ятд'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers matching all 4 plan hints in type and focus. Each placed after
+    relevant teaching. Distribution across 3 sections prevents clustering. Self-check
+    in Summary adds a 5th practice point. Cannot '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no meta-commentary, no gamified language, no
+    generic enthusiasm. Counting rhyme (Вознюк) provides genuine cultural engagement.
+    Practical framing: "the single most useful phras'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All four H2 headings present and ordered per plan: Діалоги → Числа 1-20
+    → Десятки і сотні → Підсумок. Word count 1384 vs 1200 target = 115%, well within
+    range. Clean markdown, no stray tags, no duplic'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No "like Russian but..." framing. Ukrainian presented on its own terms
+    throughout. "сім is the Ukrainian word for seven — it is NOT 'сем,' which is a
+    Russian ghost form" — explicitly decolonized. соро
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Named speakers throughout (Покупець/Пекар, Оленка/Тарас). Age dialogue
+    is natural multi-turn: extends to siblings (сестра, брат), uses three different
+    pronoun-age forms (мені, їй, йому). Bakery dialog'
+findings: []

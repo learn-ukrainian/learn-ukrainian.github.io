@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 5 content_outline sections covered with specific examples matching
+    the plan. Dialogue 1 follows plan script closely ("Скільки коштує ця сумка?" →
+    "Ні, та синя" → "А цей рюкзак?"). Dialogue 2 cover
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 18 core words verified in VESUM. Gender assignments correct throughout:
+    стіл(m)/книга(f)/вікно(n)/стілець(m)/крісло(n)/сумка(f)/рюкзак(m). Demonstrative
+    paradigm цей/ця/це and той/та/те correctly '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Clear PPP flow: dialogues present demonstratives in context (Presentation)
+    → grammar sections extract patterns with 6+ examples each (Practice) → summary
+    table + self-check exercise (Production). Each'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required: цей/ця/це ✅, той/та/те ✅, чи ✅ — all used naturally in multiple
+    contexts. Recommended: ось ✅ ("Ось цей телефон — дорогий"), там ✅ ("А той, там,
+    — ні"). Missing from prose: тут (here), він/во'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '5 markers match or exceed plan''s 4 activity_hints. Types align: 2 quizzes
+    (this/that), 1 fill-in, 1 match-up, 1 bonus contrast fill-in. Markers placed after
+    relevant teaching. The inline self-check in'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no meta-commentary, no "Let us explore." Opening
+    sets a concrete scene: "Іри́на walks into a department store. Bags hang on the
+    wall..." — showing, not telling. Explanations a'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections from plan present in correct order: Діалоги → Цей,
+    ця, це → Той, та, те → Підсумок. Clean markdown with consistent formatting. Word
+    count 1366 vs 1200 target (114% — well within rang'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No "like Russian but..." framing. Ukrainian presented on its own terms.
+    The та/та disambiguation treats the conjunction and demonstrative as independent
+    Ukrainian features without reference to Russian
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: Both dialogues feature named speakers (Ірина, Консультант) in natural
+    situations. Dialogue 1 is a genuine shopping exchange — Ірина points at bags,
+    disambiguates via color, compares prices, makes a pu
+findings: []

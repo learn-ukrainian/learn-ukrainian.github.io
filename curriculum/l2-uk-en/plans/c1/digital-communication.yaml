@@ -4,23 +4,27 @@ sequence: 24
 slug: digital-communication
 version: '1.1'
 title: "Цифрова комунікація та мережевий етикет у професійній сфері"
-subtitle: "Digital Communication and Netiquette"
+subtitle: "Цифрова комунікація та нетикет"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Ефективно використовувати інструменти цифрової комунікації для професійної взаємодії."
-  - "Володіти правилами мережевого етикету (netiquette) в різних каналах (email, Slack, Telegram)."
+  - "Володіти правилами мережевого етикету (netiquette) в різних каналах (email, Slack,
+    Telegram)."
   - "Критично оцінювати та управляти своєю цифровою репутацією та особистим брендом."
   - "Розрізняти маніпулятивні техніки та токсичність у мережевому дискурсі."
 
 reading_situations:
   - source_type: "блог"
-    topic: "Аналіз публічного конфлікту в українському Facebook: причини, динаміка та мовні засоби."
+    topic: "Аналіз публічного конфлікту в українському Facebook: причини, динаміка
+      та мовні засоби."
     key_elements: ["мобільна агресія", "риторика ненависті", "кризовий піар"]
-    motivation: "Вивчення розмовного стилю в цифровому середовищі та його впливу на професійне життя."
+    motivation: "Вивчення розмовного стилю в цифровому середовищі та його впливу на
+      професійне життя."
   - source_type: "наукова стаття"
-    topic: "Вплив диджиталізації на трансформацію української мови: нові лексеми та синтаксичні моделі."
+    topic: "Вплив диджиталізації на трансформацію української мови: нові лексеми та
+      синтаксичні моделі."
     key_elements: ["англіцизми", "компресія мовлення", "гіпертекст"]
     motivation: "Розуміння лінгвістичних змін, зумовлених технологіями."
 
@@ -32,21 +36,26 @@ listening_situations:
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Напишіть звіт (Post-mortem) про невдалу комунікаційну кампанію бренду в соціальних мережах, проаналізувавши помилки в тоні голосу (tone of voice)."
-    requirements: ["мінімум 250 слів", "використання аналітичної лексики", "конкретні рекомендації"]
+    prompt: "Напишіть звіт (Post-mortem) про невдалу комунікаційну кампанію бренду
+      в соціальних мережах, проаналізувавши помилки в тоні голосу (tone of voice)."
+    requirements: ["мінімум 250 слів", "використання аналітичної лексики", "конкретні
+          рекомендації"]
     motivation: "Розвиток аналітичного письма в контексті цифрового маркетингу."
-    model_answer: "Текст має демонструвати вміння оперувати поняттями 'цільова аудиторія', 'репутаційні ризики', 'комунікаційний провал' та пропонувати стратегію відновлення довіри."
+    model_answer: "Текст має демонструвати вміння оперувати поняттями 'цільова аудиторія',
+      'репутаційні ризики', 'комунікаційний провал' та пропонувати стратегію відновлення
+      довіри."
 
 discussion_topics:
   - context: "Право на забуття (Right to be forgotten) vs прозорість цифрового сліду."
     questions:
-      - "Чи має роботодавець право оцінювати кандидата за його особистими дописами 10-річної давнини?"
+      - "Чи має роботодавець право оцінювати кандидата за його особистими дописами
+        10-річної давнини?"
       - "Де проходить межа між публічним та приватним в епоху соціальних мереж?"
       - "Як цифрова гігієна впливає на психічне здоров'я та продуктивність?"
     motivation: "Обговорення етичних та правових викликів сучасного світу."
 
 content_outline:
-  - section: "Епістолярний жанр 2.0: Email та месенджери"
+  - section: "Епістолярний жанр: електронна пошта та месенджери"
     words: 1000
     subsections:
       - "Структура ділового листа в цифрову епоху: від теми до підпису"
@@ -106,15 +115,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a Ukrainian social media crisis case — evaluate communication failures, tone of voice issues, and propose response strategies."
+    description: "Analyze a Ukrainian social media crisis case — evaluate communication
+      failures, tone of voice issues, and propose response strategies."
   - type: error-correction
-    description: "Fix tone and register violations in professional digital messages — adjust for appropriate platform (email vs Telegram vs LinkedIn)."
+    description: "Fix tone and register violations in professional digital messages
+      — adjust for appropriate platform (email vs Telegram vs LinkedIn)."
   - type: match-up
-    description: "Match digital communication platforms (email, Slack, LinkedIn) with appropriate register, formality level, and message structure."
+    description: "Match digital communication platforms (email, Slack, LinkedIn) with
+      appropriate register, formality level, and message structure."
   - type: select
-    description: "Choose the most effective formulation for different digital contexts — cold messages to recruiters, crisis responses, professional posts."
+    description: "Choose the most effective formulation for different digital contexts
+      — cold messages to recruiters, crisis responses, professional posts."
   - type: essay-response
-    description: "Write a post-mortem report (250+ words) analyzing a brand's communication failure in social media — use analytical vocabulary."
+    description: "Write a post-mortem report (250+ words) analyzing a brand's communication
+      failure in social media — use analytical vocabulary."
 
 activities:
   types_required:
@@ -134,3 +148,4 @@ references:
 connects_to:
   previous: "business-etiquette"
   next: "political-system"
+phase: C1.2 [Professional & Social Context]

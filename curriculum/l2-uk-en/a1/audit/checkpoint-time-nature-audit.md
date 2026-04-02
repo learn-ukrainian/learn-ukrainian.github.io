@@ -1,7 +1,7 @@
 # Audit Report: M27 — checkpoint-time-nature.md
 **Level:** A1 | **Module:** M27 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:26:02
+**Generated:** 2026-04-02 20:29:56
 
 ## Configuration
 **Type:** A1
@@ -24,27 +24,28 @@
 | 4 | quiz |  | 6 | 6 | ✅ |
 | 5 | true-false |  | 7 | 6 | ✅ |
 | 6 | group-sort |  | 12 | 6 | ✅ |
+| 7 | error-correction |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
+- Total activities: 7 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1888/1200 (raw: 2530)
-- **Activities:** ✅ 6/0
+- **Words:** ✅ 1288/1200 (raw: 1324)
+- **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 1/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 59/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.0% (target 15-30% (M27))
+- **Immersion:** 🇺🇦 29.9% (target 15-30% (M27))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -52,9 +53,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Що ми зна́ємо? (What Do We Know?)** | ✅ | 237 | Included in Core |
+| **Intro/Narrative** | ✅ | 237 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Грама́тика (Grammar Summary)** | ✅ | 264 | Included in Core |
-| **Діало́г (Connected Dialogue)** | ✅ | 309 | Included in Core |
-| **Підсумок — Summary** | ✅ | 839 | Included in Core |
+| **Діало́г (Connected Dialogue)** | ✅ | 306 | Included in Core |
+| **Підсумок — Summary** | ✅ | 242 | Included in Core |

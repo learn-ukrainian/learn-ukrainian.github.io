@@ -1,0 +1,271 @@
+vocabulary:
+- word: гара́зд
+  translation: fine, okay
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: наго́да
+  translation: opportunity, occasion
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: запере́чувати
+  translation: to object, to deny
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пора́дити
+  translation: to advise
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: завіта́ти
+  translation: to visit, drop by
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: заздалегі́дь
+  translation: in advance
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ро́зклад
+  translation: schedule, timetable
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: обов'язко́во
+  translation: definitely, without fail
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вихідні́
+  translation: weekend
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: всти́гнути
+  translation: to make it in time
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: умо́вний спо́сіб
+  translation: conditional mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ді́йсний спо́сіб
+  translation: indicative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: наказо́вий спо́сіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ча́стка
+  translation: particle
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: умо́ва
+  translation: condition
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: реа́льний
+  translation: real
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: якщо́
+  translation: if
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вві́чливість
+  translation: politeness
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: бажа́ння
+  translation: wish, desire
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: хоті́в би / хоті́ла б
+  translation: would like
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: могли́ б
+  translation: could
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: повнозна́чне сло́во
+  translation: content word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: спо́сіб дієсло́ва
+  translation: verbal mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мину́лий час
+  translation: past tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тепері́шній час
+  translation: present tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: майбу́тній час
+  translation: future tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: голо́сний
+  translation: vowel
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: то
+  translation: then (conjunctional part)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: логі́чний акце́нт
+  translation: logical emphasis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: недоко́наний вид
+  translation: imperfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: доко́наний вид
+  translation: perfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якщо́ хо́чеш
+  translation: if you want
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якщо́ мо́жна
+  translation: if possible
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якщо́ не запере́чуєш
+  translation: if you don't mind
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якщо́ все бу́де гара́зд
+  translation: if everything is fine / if everything goes well
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: було́ б до́бре
+  translation: it would be good
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: було́ б чудо́во
+  translation: it would be great
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: я б пора́див / я б пора́дила
+  translation: I would advise
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на ва́шому мі́сці я б...
+  translation: in your place I would...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хоті́ла б дізна́тися
+  translation: would like to find out
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чи не могли́ б ви розповісти́
+  translation: could you tell / could you possibly tell
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якби́
+  translation: if only / if (counterfactual)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: гру́бо
+  translation: rudely, roughly
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пом'я́кшити
+  translation: to soften
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false

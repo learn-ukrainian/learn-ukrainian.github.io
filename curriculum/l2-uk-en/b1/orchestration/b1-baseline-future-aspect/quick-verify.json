@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 4/14 required vocab: видова пара (aspect pair — two verbs differing only in aspect), дієвідміна (verb conjugation class — I or II), двовидовий (biaspectual — verb that can be either aspect: атакувати), одновидовий (single-aspect — verb existing in only one aspect)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T16:10:59.435241+00:00"
+}

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 55: A1 Finale (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -179,190 +179,130 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Ранок (Morning)
+## Ра́нок (Morning)
 
-Сьомий ранку. Ти **прокинувся** (woke up, masc.) — або **прокинулася** (woke up, fem.) — у **готелі** (hotel) в Києві. Ти **відчинив/відчинила** (opened) вікно. **Надворі** (outside) тепло і сонячно — близько двадцять градусів. **Доброго ранку!** Час **снідати** (to have breakfast). Ти одягаєшся і йдеш у кафе на першому поверсі.
+Сьома ра́нку. Ти **проки́нувся** (woke up, masc.) — або́ **проки́нулася** (woke up, fem.) — у **готе́лі** (hotel) в Ки́єві. Ти **відчини́в/відчини́ла** (opened) вікно́. **Надво́рі** (outside) тепло́ і со́нячно — бли́зько двадцяти́ гра́дусів. **До́брого ранку!** Час **сні́дати** (to have breakfast). Ти одяга́єшся і йдеш у кафе́ на пе́ршому по́версі.
 
 Notice the past tense forms: **прокинувся** for masculine, **прокинулася** for feminine. This is how Ukrainian marks gender in the past tense — a pattern you learned in M48. Throughout this module, you'll see both forms separated by a slash. Pick the one that fits you.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Доброго ранку! *(Good morning!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Доброго ранку! Що бажаєте? *(Good morning! What would you like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Будь ласка, каву з молоком і **круасан** (croissant). *(A coffee with milk and a croissant, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Звичайно. Щось іще? *(Of course. Anything else?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую, це все. **Скільки коштує?** *(Thanks, that's all. How much does it cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Сто двадцять гривень. *(One hundred twenty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ось, будь ласка. *(Here you go.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Дякую! **Смачного!** *(Thanks! Enjoy your meal!)*</div>
-
-</div>
+> — **Ти:** Доброго ранку! *(Good morning!)*
+> — **Офіціа́нт:** Доброго ранку! Що бажа́єте? *(Good morning! What would you like?)*
+> — **Ти:** Будь ла́ска, ка́ву з молоко́м і **круаса́н** (croissant). *(A coffee with milk and a croissant, please.)*
+> — **Офіціант:** Звича́йно. Щось іще́? *(Of course. Anything else?)*
+> — **Ти:** Дякую, це все. **Скі́льки ко́шту́є?** *(Thanks, that's all. How much does it cost?)*
+> — **Офіціант:** Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*
+> — **Ти:** Ось, будь ласка. *(Here you go.)*
+> — **Офіціант:** Дякую! **Смачно́го!** *(Thanks! Enjoy your meal!)*
 
 Everything here is review: greetings from M01, café ordering from M28, food from M36, numbers from M10, and **будь ласка** — the polite formula from M43. The phrase **смачного** literally means "of tasty" — it's the standard Ukrainian way to say "bon appétit."
 
-Після сніданку ти **виходиш** (go out) із готелю. **Тобі потрібна** (you need) зелена **лінія** (line) метро — станція Хрещатик. Ти **купуєш** (buy) один **квиток** (ticket). Transport vocabulary from M34, colors from M22 — all coming together now.
+Пі́сля сніда́нку ти **виходиш** (go out) із готе́лю. **То́бі потрі́бна** (you need) зеле́на **лі́нія** (line) метро́ — ста́нція Хреща́тик. Ти **купу́єш** (buy) оди́н **квито́к** (ticket). Transport vocabulary from M34, colors from M22 — all coming together now.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Вибачте, де тут метро? *(Excuse me, where is the metro here?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Ідіть прямо, потім **ліворуч** (to the left). *(Go straight, then left.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! *(Thanks!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Будь ласка, гарного дня! *(You're welcome, have a good day!)*</div>
-
-</div>
+> — **Ти:** Ви́бачте, де тут метро? *(Excuse me, where is the metro here?)*
+> — **Перехо́жий:** Іді́ть пря́мо, по́тім **ліво́руч** (to the left). *(Go straight, then left.)*
+> — **Ти:** Дякую! *(Thanks!)*
+> — **Перехожий:** Будь ласка, га́рного дня! *(You're welcome, have a good day!)*
 
 Directions from M31, polite phrases from M43 — short and natural.
 
-**Зранку** (in the morning) ти **снідав/снідала** (had breakfast) у кафе, потім **їхав/їхала** (rode) на метро. Усе добре! Ти вже в центрі Києва. **Хрещатик** — головна вулиця міста. Тут гарні магазини, кафе і парки. Notice how the narration switches between tenses: **зранку ти снідав** (past — what already happened) and **ти вже в центрі** (present — where you are now). Ukrainian does this naturally when recapping events.
+**Зра́нку** (in the morning) ти **сні́дав/сні́дала** (had breakfast) у кафе, потім **ї́хав/ї́хала** (rode) на метро. У́се до́бре! Ти вже в це́нтрі Ки́єва. **Хрещатик** — головна́ ву́лиця мі́ста. Тут га́рні магази́ни, кафе і парки. Notice how the narration switches between tenses: **зранку ти снідав** (past — what already happened) and **ти вже в центрі** (present — where you are now). Ukrainian does this naturally when recapping events.
 
 <!-- INJECT_ACTIVITY: order-day-events -->
 
 ## День (Daytime)
 
-Ти **гуляєш** (stroll) по Хрещатику. Яка гарна вулиця! Ти **бачиш** (see) великий магазин — і заходиш. На стінах — **вишиванки** (embroidered shirts). Вишиванка — це і традиція, і сучасна мода. Елементи вишивки сьогодні носять не тільки в Україні. Гарний **сувенір** (souvenir)!
+Ти **гуля́єш** (stroll) по Хреща́тику. Яка га́рна вулиця! Ти **ба́чиш** (see) вели́кий магази́н — і захо́диш. На сті́нах — **виши́ва́нки** (embroidered shirts). Виши́ва́нка — це і тради́ція, і суча́сна мо́да. Елеме́нти ви́шивки сього́дні но́сять не ті́льки в Украї́ні. Га́рний **сувені́р** (souvenir)!
 
-<div class="dialogue">
+> — **Ти:** Скільки коштує **ця** (this) вишиванка? *(How much does this vyshyvanka cost?)*
+> — **Продаве́ць:** Ти́сяча дві́сті гривень. *(One thousand two hundred hryvnias.)*
+> — **Ти:** О, до́рого! А **ця**? *(Oh, expensive! And this one?)*
+> — **Продавець:** Ця — вісімсо́т. *(This one is eight hundred.)*
+> — **Ти:** Добре, я **беру́** (I'll take it)! *(Alright, I'll take it!)*
+> — **Продавець:** Будь ласка. Чудо́вий ви́бір! *(Here you go. Wonderful choice!)*
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Скільки коштує **ця** (this) вишиванка? *(How much does this vyshyvanka cost?)*</div>
+The demonstrative pronoun **ця** (this, feminine) points to a specific item — review from M12. The seller says **чудовий вибір** (wonderful choice) — a phrase you'll hear in real Ukrainian shops. Notice the register: this is casual, friendly **розмо́вний** (colloquial) Ukrainian.
 
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Тисяча двісті гривень. *(One thousand two hundred hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> О, дорого! А **ця**? *(Oh, expensive! And this one?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Ця — вісімсот. *(This one is eight hundred.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Добре, я **беру** (I'll take it)! *(Alright, I'll take it!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Будь ласка. Чудовий вибір! *(Here you go. Wonderful choice!)*</div>
-
-</div>
-
-The demonstrative pronoun **ця** (this, feminine) points to a specific item — review from M12. The seller says **чудовий вибір** (wonderful choice) — a phrase you'll hear in real Ukrainian shops. Notice the register: this is casual, friendly **розмовний** (colloquial) Ukrainian.
-
-Ти виходиш із магазину з пакетом. На годиннику — **дванадцята** (twelve o'clock). Час **обідати** (to have lunch)! Time-telling from M26 helps you plan the day naturally.
+Ти виходиш із магази́ну з паке́том. На годи́ннику — **двана́дцята** (twelve o'clock). Час **обі́дати** (to have lunch)! Time-telling from M26 helps you plan the day naturally.
 
 You walk into a café nearby — and someone is waving at you.
 
-<div class="dialogue">
+> — **Оле́на:** Приві́т! Зві́дки ти? *(Hi! Where are you from?)*
+> — **Ти:** Я з Кана́ди. А ти? *(I'm from Canada. And you?)*
+> — **Олена:** Я з Ха́ркова. Ме́не зва́ти Олена. *(I'm from Kharkiv. My name is Olena.)*
+> — **Ти:** Ду́же приє́мно! *(Very nice to meet you!)*
+> — **Олена:** **Ході́мо** (let's go) обідати! *(Let's have lunch!)*
+> — **Ти:** Із задово́ленням! *(With pleasure!)*
+> — **Олена:** Що **замовля́єш** (are you ordering)? *(What are you ordering?)*
+> — **Ти:** Борщ і варе́ники. Тут дуже сма́чно! *(Borshch and varenyky. It's very tasty here!)*
+> — **Олена:** Я теж борщ! *(I'll have borshch too!)*
+> — **Ти:** Смачно! *(Delicious!)*
+> — **Олена:** Ти добре гово́риш украї́нською! *(You speak Ukrainian well!)*
+> — **Ти:** Дякую! Я вивча́ю вже три місяці́. *(Thanks! I've been learning for three months.)*
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Привіт! Звідки ти? *(Hi! Where are you from?)*</div>
+This dialogue packs in: introductions (M06), the imperative **ходімо** (M43), food ordering (M36), and a genuine compliment. The verb **замовля́ти** (to order food) is the correct Ukrainian word — never use the Russian-influenced *заказа́ти* for ordering at a restaurant.
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Я з Канади. А ти? *(I'm from Canada. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Я з Харкова. Мене звати Олена. *(I'm from Kharkiv. My name is Olena.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дуже приємно! *(Very nice to meet you!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> **Ходімо** (let's go) обідати! *(Let's have lunch!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Із задоволенням! *(With pleasure!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Що **замовляєш** (are you ordering)? *(What are you ordering?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Борщ і вареники. Тут дуже смачно! *(Borshch and varenyky. It's very tasty here!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Я теж борщ! *(I'll have borshch too!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Смачно! *(Delicious!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ти добре говориш українською! *(You speak Ukrainian well!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! Я вивчаю вже три місяці. *(Thanks! I've been learning for three months.)*</div>
-
-</div>
-
-This dialogue packs in: introductions (M06), the imperative **ходімо** (M43), food ordering (M36), and a genuine compliment. The verb **замовляти** (to order food) is the correct Ukrainian word — never use the Russian-influenced *заказати* for ordering at a restaurant.
-
-**Вдень** (during the day) ти **познайомився/познайомилася** (got acquainted) з Оленою і **пообідав/пообідала** (had lunch) у кафе. Гарний день! The verb **познайомитися** (to get acquainted) is a preview of A2 vocabulary — you'll use it a lot at the next level.
+**Вдень** (during the day) ти **познайо́мився/познайо́милася** (got acquainted) з Оле́ною і **пообі́дав/пообі́дала** (had lunch) у кафе. Гарний день! The verb **познайо́митися** (to get acquainted) is a preview of A2 vocabulary — you'll use it a lot at the next level.
 
 <!-- INJECT_ACTIVITY: fill-in-tenses -->
 
-## Вечір (Evening)
+## Ве́чір (Evening)
 
 After lunch, you and Olena walk through the city together. Evening is approaching — time to make plans.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Що **будемо робити** (will we do) ввечері? *(What are we going to do this evening?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ходімо в кіно! Є гарний український **фільм** (film). *(Let's go to the cinema! There's a good Ukrainian film.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> О котрій? *(At what time?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> О сьомій. *(At seven.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Чудово! Де **зустрінемося** (will we meet)? *(Great! Where shall we meet?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Біля **кінотеатру** (cinema) о шостій п'ятдесят. *(Near the cinema at six fifty.)*</div>
-
-</div>
+> — **Олена:** Що **бу́демо роби́ти** (will we do) вве́чері? *(What are we going to do this evening?)*
+> — **Ти:** Ходімо в кіно́! Є гарний украї́нський **фільм** (film). *(Let's go to the cinema! There's a good Ukrainian film.)*
+> — **Олена:** О котрі́й? *(At what time?)*
+> — **Ти:** О сьо́мій. *(At seven.)*
+> — **Олена:** Чудо́во! Де **зустрі́немося** (will we meet)? *(Great! Where shall we meet?)*
+> — **Ти:** Бі́ля **кінотеа́тру** (cinema) о шо́стій п'ятдеся́т. *(Near the cinema at six fifty.)*
 
 The future tense **будемо робити** (we will do) — the analytical form you learned in M50. And **ходімо** appears again — this imperative for suggestions is one of the most useful words in spoken Ukrainian.
 
-Ви сидите в кінотеатрі. **Фільм** починається. Ти не все розумієш, але багато слів вже знайомі: **родина** (family), **місто** (city), **Україна**. Це приємно! After sixty-four modules, Ukrainian on screen is no longer just noise — you catch real words, real phrases. Ukrainian cinema is vibrant and growing. Remember this feeling.
+Ви сидите́ в кінотеа́трі. **Фільм** почина́ється. Ти не все розумі́єш, але́ бага́то слів вже знайо́мі: **роди́на** (family), **мі́сто** (city), **Украї́на**. Це приємно! After sixty-four modules, Ukrainian on screen is no longer just noise — you catch real words, real phrases. Ukrainian cinema is vibrant and growing. Remember this feeling.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ну, як фільм? *(So, how was the film?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дуже цікаво! *(Very interesting!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> (сміється) Ходімо в ресторан! *((laughs) Let's go to a restaurant!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Добре! Де тут ресторан? *(Sure! Where's a restaurant here?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Он там, за рогом. *(Over there, around the corner.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ідемо! *(Let's go!)*</div>
-
-</div>
+> — **Олена:** Ну, як фільм? *(So, how was the film?)*
+> — **Ти:** Дуже ціка́во! *(Very interesting!)*
+> — **Олена:** (сміє́ться) Ходімо в рестора́н! *((laughs) Let's go to a restaurant!)*
+> — **Ти:** Добре! Де тут ресторан? *(Sure! Where's a restaurant here?)*
+> — **Олена:** Он там, за ро́гом. *(Over there, around the corner.)*
+> — **Ти:** Ідемо́! *(Let's go!)*
 
 Short, punchy, completely natural — this is how two friends talk after a movie. **За рогом** (around the corner) — a useful location phrase from M31.
 
-**Ввечері** (in the evening) в готелі ти думаєш про свій день. **Сьогодні був чудовий день!** Зранку я снідав/снідала у кафе і їхав/їхала на метро. Потім я гуляв/гуляла по Хрещатику і купив/купила **сувенір**. Вдень я познайомився/познайомилася з Оленою і пообідав/пообідала. Ввечері ми ходили в кіно і ресторан. **Завтра я буду їздити по Києву.** Я хочу побачити **Лавру** (Lavra — the famous Kyiv monastery)!
+**Ввечері** (in the evening) в готелі ти ду́маєш про свій день. **Сьогодні був чудовий день!** Зранку я снідав/снідала у кафе і їхав/їхала на метро. Потім я гуля́в/гуля́ла по Хрещатику і купи́в/купи́ла **сувенір**. Вдень я познайомився/познайомилася з Оленою і пообідав/пообідала. Ввечері ми ходи́ли в кіно і ресторан. **За́втра я бу́ду ї́здити по Ки́єву.** Я хо́чу поба́чити **Лавру** (Lavra — the famous Kyiv monastery)!
 
-This paragraph is the grammatical heart of the module. Three tenses appear naturally: **past** (зранку я снідав, я гуляв, ми ходили), **present** (я думаю, я хочу), and **future** (завтра я буду їздити). Masculine and feminine pairs throughout — pick your set. You are already combining all three tenses the way native speakers do: telling what happened, feeling something now, planning for tomorrow.
+This paragraph is the grammatical heart of the module. Three tenses appear naturally: **past** (зранку я снідав, я гуляв, ми ходили), **present** (я ду́маю, я хочу), and **future** (завтра я буду їздити). Masculine and feminine pairs throughout — pick your set. You are already combining all three tenses the way native speakers do: telling what happened, feeling something now, planning for tomorrow.
 
 :::tip
-**Зверни увагу** (pay attention): in that reflection paragraph, three tenses work together. **Минулий час** (past): я снідав, я гуляв. **Теперішній час** (present): я думаю, я хочу. **Майбутній час** (future): я буду їздити. You're already using all three naturally. Це А1!
+**Зверни́ ува́гу** (pay attention): in that reflection paragraph, three tenses work together. **Мину́лий час** (past): я снідав, я гуляв. **Тепе́рішній час** (present): я думаю, я хочу. **Майбу́тній час** (future): я буду їздити. You're already using all three naturally. Це А1!
 :::
 
 <!-- INJECT_ACTIVITY: match-situation-phrase -->
 
-## Підсумок: ти готовий/готова! (You're Ready!)
+## Підсумок: ти гото́вий/гото́ва! (You're Ready!)
 
 Fifty-five modules. Hundreds of words. And today — a whole day in Kyiv, entirely in Ukrainian. Here is everything you can now do:
 
-- **Привітатися й познайомитися** (greet and introduce yourself) — «Привіт! Мене звати Адам. Я з Канади.» (A1.1)
-- **Описати людину, сім'ю, речі** (describe people, family, things) — «Моя мама висока і добра. У мене є сестра.» (A1.2)
-- **Розповісти про дії та звички** (talk about actions and habits) — «Я люблю читати. Щодня я ходжу в парк.» (A1.3)
-- **Говорити про час і погоду** (talk about time and weather) — «Сьогодні вівторок, дванадцята година. Надворі холодно.» (A1.4)
-- **Орієнтуватися в місті** (navigate a city) — «Їдьте на метро, станція Хрещатик.» (A1.5)
-- **Замовляти їжу, робити покупки** (order food, shop) — «Будь ласка, борщ і каву. Скільки коштує?» (A1.6)
-- **Звертатися ввічливо** (address people politely) — «Вибачте, допоможіть, будь ласка.» (A1.7)
-- **Розповідати про минуле, робити плани** (talk about the past, make plans) — «Учора я був у кіно. Завтра буду вдома. Допоможіть! Викличте швидку!» (A1.8)
+- **Привіта́тися й познайомитися** (greet and introduce yourself) — «Привіт! Мене звати Адам. Я з Канади.» (A1.1)
+- **Описа́ти люди́ну, сім'ю́, ре́чі** (describe people, family, things) — «Моя́ ма́ма висо́ка і до́бра. У мене є сестра́.» (A1.2)
+- **Розпові́сти́ про ді́ї та зви́чки** (talk about actions and habits) — «Я люблю́ чита́ти. Щодня́ я ходжу́ в парк.» (A1.3)
+- **Говори́ти про час і пого́ду** (talk about time and weather) — «Сьогодні вівто́рок, дванадцята годи́на. Надворі хо́лодно.» (A1.4)
+- **Орієнтува́тися в мі́сті** (navigate a city) — «Ї́дьте на метро, станція Хрещатик.» (A1.5)
+- **Замовляти ї́жу, робити поку́пки** (order food, shop) — «Будь ласка, борщ і каву. Скільки коштує?» (A1.6)
+- **Зверта́тися вві́чливо** (address people politely) — «Вибачте, допоможі́ть, будь ласка.» (A1.7)
+- **Розповіда́ти про мину́ле, робити пла́ни** (talk about the past, make plans) — «Учо́ра я був у кіно. Завтра буду вдо́ма. Допоможіть! Ви́кличте швидку́!» (A1.8)
 
-At **A2**, you'll discover **відмінки** (cases — how words change form depending on their role in a sentence), **вид дієслова** (verb aspect — perfective and imperfective), the **синтетичний майбутній час** (synthetic future: **прочитаю**, **скажу** instead of **буду читати**), and more complex sentences. The grammar deepens — but the foundation is solid. **Святкуй!** (Celebrate!) Ти вивчив/вивчила А1. **Вітаю!** (Congratulations!) Ти вже можеш жити в українському місті. Це тільки **початок** (beginning)!
+At **A2**, you'll discover **відмі́нки** (cases — how words change form depending on their role in a sentence), **вид дієслова́** (verb aspect — perfective and imperfective), the **синтети́чний майбутній час** (synthetic future: **прочита́ю**, **скажу́** instead of **буду читати**), and more complex sentences. The grammar deepens — but the foundation is solid. **Святку́й!** (Celebrate!) Ти ви́вчив/ви́вчила А1. **Віта́ю!** (Congratulations!) Ти вже мо́жеш жи́ти в украї́нському місті. Це тільки **поча́ток** (beginning)!
 
-**Перевір себе** (check yourself): can you describe your day in a Ukrainian city in ten or more sentences? Use past, present, and future tense. Start like this: «Сьогодні вранці я прокинувся/прокинулася…» If you can — ти **готовий/готова** (ready) до А2. **Вперед!** (Forward!)
+**Переві́р себе́** (check yourself): can you describe your day in a Ukrainian city in ten or more sentences? Use past, present, and future tense. Start like this: «Сьогодні вра́нці я прокинувся/прокинулася…» If you can — ти **готовий/готова** (ready) до А2. **Впере́д!** (Forward!)
 
 <!-- INJECT_ACTIVITY: quiz-a1-review -->
 
-Дякуємо, що ти вивчаєш українську. Ця мова — жива, красива і важлива. Вона звучить у піснях, у книжках, на вулицях Києва, Львова, Харкова. Тепер вона трохи твоя теж. **До зустрічі на А2!** (See you at A2!)
+Дякуємо, що ти вивча́єш украї́нську. Ця мо́ва — жива́, краси́ва і важли́ва. Вона́ звучи́ть у пісня́х, у книжка́х, на ву́лицях Києва, Льво́ва, Харкова. Тепе́р вона тро́хи твоя́ теж. **До зу́стрічі на А2!** (See you at A2!)
 
-Хрещатик, метро, борщ, вишиванка, **Лавра** — за цей модуль ти **провів/провела** (spent) цілий день у Києві. Ці слова більше не просто слова — це твій досвід. Україна — це не тільки мова. Це культура, люди, міста. Ти тільки починаєш **відкривати** (to discover) для себе цю країну. А попереду — ще так багато цікавого.
+Хрещатик, метро, борщ, вишиванка, **Ла́вра** — за цей мо́дуль ти **прові́в/провела́** (spent) ці́лий день у Києві. Ці слова́ бі́льше не про́сто слова — це твій до́свід. Україна — це не тільки мова. Це культу́ра, лю́ди, міста. Ти тільки почина́єш **відкрива́ти** (to discover) для себе цю краї́ну. А попе́реду — ще так багато ціка́вого.
 
-**Deterministic word count: 1612 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1594 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -540,21 +480,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 314 words | Not found: 10 words
+Verified: 242 words | Not found: 170 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Іді — NOT IN VESUM
   ✗ Адам — NOT IN VESUM
+  ✗ Виши — NOT IN VESUM
+  ✗ Впере — NOT IN VESUM
+  ✗ Елеме — NOT IN VESUM
+  ✗ Звича — NOT IN VESUM
+  ✗ Зві — NOT IN VESUM
+  ✗ Зра — NOT IN VESUM
+  ✗ Кана — NOT IN VESUM
   ✗ Канади — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
-  ✗ Києву — NOT IN VESUM
-  ✗ Львова — NOT IN VESUM
+  ✗ Льво — NOT IN VESUM
+  ✗ Майбу — NOT IN VESUM
+  ✗ Надво — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Оленою — NOT IN VESUM
+  ✗ Описа — NOT IN VESUM
+  ✗ Орієнтува — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
+  ✗ Переві — NOT IN VESUM
+  ✗ Перехо — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Продаве — NOT IN VESUM
+  ✗ Розпові — NOT IN VESUM
+  ✗ Святку — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
+  ✗ Тепе — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ Учо — NOT IN VESUM
   ✗ Харкова — NOT IN VESUM
+  ✗ Хреща — NOT IN VESUM
   ✗ Хрещатик — NOT IN VESUM
   ✗ Хрещатику — NOT IN VESUM
+  ✗ бага — NOT IN VESUM
+  ✗ бли — NOT IN VESUM
+  ✗ бна — NOT IN VESUM
+  ✗ брого — NOT IN VESUM
+  ✗ важли — NOT IN VESUM
+  ✗ вве — NOT IN VESUM
+  ✗ вдо — NOT IN VESUM
+  ✗ вень — NOT IN VESUM
+  ✗ висо — NOT IN VESUM
+  ✗ виши — NOT IN VESUM
+  ✗ вний — NOT IN VESUM
+  ✗ вого — NOT IN VESUM
+  ✗ вра — NOT IN VESUM
+  ✗ втра — NOT IN VESUM
+  ✗ вівто — NOT IN VESUM
+  ✗ відмі — NOT IN VESUM
 
-All 314 other words are confirmed to exist in VESUM.
+All 242 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -563,23 +543,23 @@ All 314 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

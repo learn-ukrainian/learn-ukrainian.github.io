@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-actions (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 04:30:08 |
 | enrich | complete | 2026-03-30 04:30:09 |
 | verify | complete | 2026-03-30 04:30:10 |
-| review | complete | 2026-03-30 04:37:39 |
-| stress | complete | 2026-03-31 09:58:00 |
-| publish | complete | 2026-03-31 09:58:00 |
+| review | complete | 2026-04-01 11:40:41 |
+| stress | complete | 2026-04-01 11:40:41 |
+| publish | complete | 2026-04-01 11:40:47 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:58
 | vocab | claude (claude-sonnet-4-6) | 42s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 338s | ❌ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 82s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

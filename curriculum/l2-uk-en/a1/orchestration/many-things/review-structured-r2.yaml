@@ -1,0 +1,82 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 content_outline sections covered with matching structure. Both dialogues
+    follow plan script closely ("Що тут є? — Столи, стільці і вікна", "У вас є ручки?").
+    Большакова Grade 2 p.18 and p.42 cit
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All plural forms verified against VESUM (34/34 found). Grammar rules
+    are correct: -и/-і for m/f, -а for neuter -о, adjective plural always -і in nominative.
+    Guidelines "after г, к, х → -и" correctly p'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues introduce plurals naturally (Presentation)
+    → explicit tables with pattern explanation (Practice) → self-check and production
+    prompts (Production). 6+ examples per grammar'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocabulary items used naturally in prose: столи, книги,
+    вікна, стільці, ці, ті, мої, які. All 7 recommended items present: ручки, сумки,
+    лампи, зошити, дзеркала, крісла, речі. Additiona'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints have matching INJECT markers. Markers follow
+    the relevant teaching section. Self-check in Підсумок has 8 varied items testing
+    plural formation, adjective endings, and demonst
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Direct, clean prose. No motivational openers, no "Let us explore," no
+    gamified language. "Notice what just happened" is slightly meta but works as a
+    pedagogical bridge. "One honest caveat" feels genui
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present in plan order. Word count 1448 vs target 1200
+    — comfortably above minimum. Clean markdown, no stray tags or artifacts. Tables
+    are well-formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms — no "like Russian" comparisons.
+    Classroom setting is culturally natural. No decolonization concerns.
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: Named speakers (Олена, Іван) with distinct voices. Multi-turn exchanges
+    (6 and 7 turns respectively). Natural classroom setup scenario. Second dialogue
+    integrates shopping/supplies context extending M
+findings:
+- dimension: Plan adherence
+  severity: Major
+  location: '"Один → багато" section, after the neuter noun table'
+  issue: 'Plan content_outline explicitly includes the point: "Neuter -е → -я (not
+    covered yet)." The module discusses neuter -о → -а thoroughly but never mentions
+    that neuter nouns ending in -е form plurals with -я. This is a plan point that
+    sets expectations for future learning.'
+  fix: Add one sentence after the neuter table acknowledging -е → -я exists but is
+    deferred.
+- dimension: Plan adherence
+  severity: Minor
+  location: Діалоги section, introductory paragraph
+  issue: 'Plan references Вашуленко Grade 3, p.114-115 for the Dialogue 1 setting
+    ("Іменники мають два числа: однину і множину"). The module cites Большакова twice
+    but never mentions Вашуленко, despite the plan listing it as a reference.'
+  fix: Add a brief Вашуленко citation in the noun plural section where the concept
+    of однина/множина is introduced.
+- dimension: Linguistic accuracy
+  severity: Minor
+  location: '"Один → багато" section, paragraph after neuter table: "The word річ
+    (thing) becomes речі (things) — not a standard pattern."'
+  issue: VESUM confirms речі as the regular nominative plural of річ (feminine soft-sign
+    noun). The ending -і is standard for this noun class. The stem vowel alternation
+    і→е is the notable feature, not the pattern itself. Calling it "not a standard
+    pattern" misleads learners into thinking it's irregular.
+  fix: Recharacterize as a stem change rather than a non-standard pattern.

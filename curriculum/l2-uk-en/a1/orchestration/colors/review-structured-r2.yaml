@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct H2 headings. All 3
+    textbook references (Большакова p.38, Вашуленко p.130, Кравцова p.22) cited naturally
+    in prose. All 10 required and 7 recommended
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 56 Ukrainian word forms batch-verified against VESUM — all confirmed.
+    All gender agreements correct across dialogues, tables, and prose examples. Hard-stem
+    (-ий/-а/-е) and soft-stem (-ій/-я/-є) paradi
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues introduce colors in natural situations → systematic
+    grammar tables → practice via exercises. "Memorized chunk" approach for "Мені
+    подобається" is pedagogically sound — corre'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocabulary items used naturally: червоний (Dialogue 1
+    + tables), жовтий (Dialogue 1 + tables), зелений (Dialogue 1 + tables), синій
+    (extensive coverage), блакитний (dedicated section),'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints mapped to markers. Placement is pedagogically
+    sound — exercises test what was just taught. Types match plan exactly (fill-in,
+    group-sort, 2× quiz). Cannot fully evaluate exer
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers or gamified language. Cultural hooks are specific:
+    the Поклад flag poem with "синє — небо, жовте — жито," regional вишиванка color
+    schemes (Полісся: червоний і чорний; Полтавщи'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present and correctly ordered (Діалоги → Кольори → Синій
+    ≠ блакитний → Підсумок). Clean markdown throughout. Word count 1520 vs 1200 target
+    (127% — comfortably above minimum). No str
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — no "like Russian but..." framing. Ukrainian presented
+    on its own terms. голубий addressed with nuance (valid Ukrainian word, not dismissed
+    as purely Russian). Flag symbolism correc
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Two multi-turn dialogues with named speakers (Наталка/Продавець, Дмитро/Ліза).
+    Dialogue 1 (flower market) follows plan's dialogue_situations exactly — uses троянди,
+    лілії, соняшники, ваза, листя as sp
+findings: []

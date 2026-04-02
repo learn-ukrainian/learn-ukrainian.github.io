@@ -2,15 +2,15 @@
   "module": "i-want-i-can",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:25:55.289351Z",
+  "last_audit": "2026-04-02T20:30:01.346213Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T12:57:20.781538Z",
+    "md": "2026-03-31T17:27:15.875072Z",
     "meta": null,
     "activities": "2026-03-30T05:03:34.305886Z",
     "vocabulary": "2026-03-30T05:04:01.206382Z",
     "research": null,
-    "plan": "2026-03-30T02:07:01.281139Z"
+    "plan": "2026-03-30T22:17:20.659948Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1846/1200 (raw: 2467)"
+      "message": "1400/1200 (raw: 1604)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",

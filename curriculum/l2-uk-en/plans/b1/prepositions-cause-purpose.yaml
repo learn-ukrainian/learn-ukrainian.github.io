@@ -1,184 +1,168 @@
-module: b1-051
+module: b1-047
 level: B1
-sequence: 51
+sequence: 47
 slug: prepositions-cause-purpose
 version: '3.0'
 title: "Причина і мета"
 subtitle: "Прийменники і конструкції для вираження причини та мети"
 focus: grammar
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can express cause using через + Зн.в. (negative cause),
-  завдяки + Д.в. (positive cause), від + Р.в. (emotional/physical cause),
-  з + Р.в. (inner cause)"
-- "Learner can distinguish завдяки (positive) from через (negative)
-  causes and never mix them (*завдяки хворобі)"
-- "Learner can express purpose using для + Р.в. (for/for the sake of),
-  заради + Р.в. (for the sake of — emphatic), щоб + infinitive (in order to),
-  за + Ор.в. (to fetch)"
-- "Learner can use the constructions через те що, завдяки тому що,
-  для того щоб in complex sentences (preview of Phase 8 subordination)"
-- "Learner can distinguish cause from purpose in ambiguous contexts
-  and choose the appropriate construction"
+  - "Learner can express cause using через + Зн.в. (negative cause), завдяки + Д.в.
+    (positive cause), від + Р.в. (emotional/physical cause), з + Р.в. (inner cause)"
+  - "Learner can distinguish завдяки (positive) from через (negative) causes and never
+    mix them (*завдяки хворобі)"
+  - "Learner can express purpose using для + Р.в. (for/for the sake of), заради +
+    Р.в. (for the sake of — emphatic), щоб + infinitive (in order to), за + Ор.в.
+    (to fetch)"
+  - "Learner can use the constructions через те що, завдяки тому що, для того щоб
+    in complex sentences (preview of Phase 8 subordination)"
+  - "Learner can distinguish cause from purpose in ambiguous contexts and choose the
+    appropriate construction"
 dialogue_situations:
-- setting: 'Student explaining absences to the dean at a Одеський університет — giving
-    reasons: Через хворобу (f, illness) пропустив лекції. Для отримання стипендії
-    (f, scholarship) треба здати іспити. Завдяки допомозі (f, help) друзів встиг.'
-  speakers:
-  - Декан
-  - Студент
-  motivation: 'Cause/purpose: через + acc, для + gen, завдяки + dat, заради + gen'
+  - setting: 'Student explaining absences to the dean at a Одеський університет —
+      giving reasons: Через хворобу (f, illness) пропустив лекції. Для отримання стипендії
+      (f, scholarship) треба здати іспити. Завдяки допомозі (f, help) друзів встиг.'
+    speakers:
+      - Декан
+      - Студент
+    motivation: 'Cause/purpose: через + acc, для + gen, завдяки + dat, заради + gen'
 content_outline:
-- section: "Причина: через та завдяки"
-  words: 800
-  points:
-  - "через + Зн.в. — negative or neutral cause (Заболотний Grade 7 p.193):
-    через хворобу (because of illness), через неуважність (due to carelessness),
-    через погану погоду (due to bad weather), через війну (because of the war).
-    'Прийменник через вказує на причину, що заважає здійсненню чогось.'"
-  - "завдяки + Д.в. — positive cause:
-    завдяки допомозі друзів (thanks to friends' help),
-    завдяки наполегливості (thanks to perseverance),
-    завдяки вчителям (thanks to teachers).
-    'Прийменник завдяки містить вказівку на причину, яка СПРИЯЄ здійсненню.'
-    Critical rule: NEVER use завдяки for negative outcomes.
-    *Завдяки хворобі він не прийшов — WRONG.
-    Через хворобу він не прийшов — CORRECT."
-  - "Practice: 12 sentences — learners choose через or завдяки
-    based on whether the cause is positive or negative.
-    'Я запізнився _____ затор на дорозі.' (через)
-    'Ми перемогли _____ вашій підтримці.' (завдяки)"
-- section: "Причина: від та з"
-  words: 600
-  points:
-  - "від + Р.в. — physical or emotional cause (external stimulus):
-    від радості (from joy), від сорому (from shame), від болю (from pain),
-    від холоду (from cold), від страху (from fear).
-    'Він почервонів від сорому. Вона тремтіла від холоду.'
-    These express involuntary reactions to a cause."
-  - "з + Р.в. — inner cause (motivation, character):
-    з цікавості (out of curiosity), з повагою (with respect — manner, not cause),
-    зі страху (from fear — close to від страху but more internal).
-    'Він зробив це з цікавості (He did it out of curiosity).'
-    Note: з + Р.в. often overlaps with від + Р.в. for emotions,
-    but з emphasises MOTIVATION while від emphasises REACTION."
-  - "Practice: choose від or з in 8 sentences, discussing the nuance
-    of external reaction vs internal motivation."
-- section: "Мета: для, заради, за, щоб"
-  words: 700
-  points:
-  - "для + Р.в. — 'for (the purpose/benefit of)':
-    для друга (for a friend), для здоров'я (for health),
-    для роботи (for work), для навчання (for studying).
-    This is the most common purpose preposition."
-  - "заради + Р.в. — 'for the sake of' (emphatic purpose):
-    заради миру (for the sake of peace), заради дітей (for the sake of children),
-    заради справедливості (for the sake of justice).
-    More emotionally charged than для."
-  - "за + Ор.в. — 'to fetch/get' (purpose of going):
-    піти за хлібом (go for bread), зайти за другом (drop by for a friend),
-    поїхати за покупками (go shopping).
-    From Заболотний Grade 7 p.193: 'Зайти за книжкою' means to go and
-    pick up a book; 'зайти по книжку' is an equivalent (по + Зн.в. for purpose)."
-  - "щоб + infinitive — 'in order to':
-    Я прийшов, щоб допомогти. Вона вивчає українську, щоб розуміти бабусю.
-    Він працює, щоб заробити гроші.
-    Preview: щоб-clauses with subjunctive in Phase 8 complex syntax."
-- section: "Складні конструкції причини і мети"
-  words: 500
-  points:
-  - "Compound prepositions for cause:
-    через те що + clause: Через те що він захворів, він не прийшов.
-    завдяки тому що + clause: Завдяки тому що вона допомогла, ми встигли.
-    у зв'язку з + Ор.в. (in connection with — formal): у зв'язку з карантином."
-  - "Compound prepositions for purpose:
-    для того щоб + infinitive: Для того щоб зрозуміти, треба прочитати.
-    з метою + Р.в. (with the aim of — formal): з метою покращення.
-    заради того щоб + infinitive (emphatic purpose)."
-  - "Practice: combine simple sentences into complex ones using compound
-    cause/purpose constructions. 'Він не прийшов. Він захворів.' →
-    'Він не прийшов через те, що захворів.'"
-- section: "Причина vs мета: розрізнення"
-  words: 500
-  points:
-  - "Cause answers ЧОМУ? (why did it happen?): Він запізнився через затор.
-    Purpose answers НАВІЩО? ДЛЯ ЧОГО? (what for?): Він прийшов для зустрічі.
-    Same preposition, different meaning:
-    Він прийшов через парк (path — not cause or purpose!).
-    Він не прийшов через хворобу (cause).
-    Context and the question word (чому/навіщо) disambiguate."
-  - "Practice: classify 12 sentences as expressing cause, purpose, or path.
-    Then rewrite each using an alternative construction:
-    'Завдяки вашій допомозі ми перемогли' →
-    'Ми перемогли, бо ви допомогли' (subordinate clause alternative)."
-- section: "Підсумок"
-  words: 400
-  points:
-  - "Reference table:
-    CAUSE: через + Зн.в. (negative), завдяки + Д.в. (positive),
-    від + Р.в. (reaction), з + Р.в. (motivation).
-    PURPOSE: для + Р.в. (general), заради + Р.в. (emphatic),
-    за + Ор.в. (to fetch), щоб + inf. (in order to)."
-  - "Golden rule: завдяки = GOOD cause, через = BAD cause. Never mix them.
-    Preview: порядкові числівники і відмінки."
+  - section: "Причина: через та завдяки"
+    words: 800
+    points:
+      - "через + Зн.в. — negative or neutral cause (Заболотний Grade 7 p.193): через
+        хворобу (because of illness), через неуважність (due to carelessness), через
+        погану погоду (due to bad weather), через війну (because of the war). 'Прийменник
+        через вказує на причину, що заважає здійсненню чогось.'"
+      - "завдяки + Д.в. — positive cause: завдяки допомозі друзів (thanks to friends'
+        help), завдяки наполегливості (thanks to perseverance), завдяки вчителям (thanks
+        to teachers). 'Прийменник завдяки містить вказівку на причину, яка СПРИЯЄ
+        здійсненню.' Critical rule: NEVER use завдяки for negative outcomes. *Завдяки
+        хворобі він не прийшов — WRONG. Через хворобу він не прийшов — CORRECT."
+      - "Practice: 12 sentences — learners choose через or завдяки based on whether
+        the cause is positive or negative. 'Я запізнився _____ затор на дорозі.' (через)
+        'Ми перемогли _____ вашій підтримці.' (завдяки)"
+  - section: "Причина: від та з"
+    words: 600
+    points:
+      - "від + Р.в. — physical or emotional cause (external stimulus): від радості
+        (from joy), від сорому (from shame), від болю (from pain), від холоду (from
+        cold), від страху (from fear). 'Він почервонів від сорому. Вона тремтіла від
+        холоду.' These express involuntary reactions to a cause."
+      - "з + Р.в. — inner cause (motivation, character): з цікавості (out of curiosity),
+        з повагою (with respect — manner, not cause), зі страху (from fear — close
+        to від страху but more internal). 'Він зробив це з цікавості (He did it out
+        of curiosity).' Note: з + Р.в. often overlaps with від + Р.в. for emotions,
+        but з emphasises MOTIVATION while від emphasises REACTION."
+      - "Practice: choose від or з in 8 sentences, discussing the nuance of external
+        reaction vs internal motivation."
+  - section: "Мета: для, заради, за, щоб"
+    words: 700
+    points:
+      - "для + Р.в. — 'for (the purpose/benefit of)': для друга (for a friend), для
+        здоров'я (for health), для роботи (for work), для навчання (for studying).
+        This is the most common purpose preposition."
+      - "заради + Р.в. — 'for the sake of' (emphatic purpose): заради миру (for the
+        sake of peace), заради дітей (for the sake of children), заради справедливості
+        (for the sake of justice). More emotionally charged than для."
+      - "за + Ор.в. — 'to fetch/get' (purpose of going): піти за хлібом (go for bread),
+        зайти за другом (drop by for a friend), поїхати за покупками (go shopping).
+        From Заболотний Grade 7 p.193: 'Зайти за книжкою' means to go and pick up
+        a book; 'зайти по книжку' is an equivalent (по + Зн.в. for purpose)."
+      - "щоб + infinitive — 'in order to': Я прийшов, щоб допомогти. Вона вивчає українську,
+        щоб розуміти бабусю. Він працює, щоб заробити гроші. Preview: щоб-clauses
+        with subjunctive in Phase 8 complex syntax."
+  - section: "Складні конструкції причини і мети"
+    words: 500
+    points:
+      - "Compound prepositions for cause: через те що + clause: Через те що він захворів,
+        він не прийшов. завдяки тому що + clause: Завдяки тому що вона допомогла,
+        ми встигли. у зв'язку з + Ор.в. (in connection with — formal): у зв'язку з
+        карантином."
+      - "Compound prepositions for purpose: для того щоб + infinitive: Для того щоб
+        зрозуміти, треба прочитати. з метою + Р.в. (with the aim of — formal): з метою
+        покращення. заради того щоб + infinitive (emphatic purpose)."
+      - "Practice: combine simple sentences into complex ones using compound cause/purpose
+        constructions. 'Він не прийшов. Він захворів.' → 'Він не прийшов через те,
+        що захворів.'"
+  - section: "Причина vs мета: розрізнення"
+    words: 500
+    points:
+      - "Cause answers ЧОМУ? (why did it happen?): Він запізнився через затор. Purpose
+        answers НАВІЩО? ДЛЯ ЧОГО? (what for?): Він прийшов для зустрічі. Same preposition,
+        different meaning: Він прийшов через парк (path — not cause or purpose!).
+        Він не прийшов через хворобу (cause). Context and the question word (чому/навіщо)
+        disambiguate."
+      - "Practice: classify 12 sentences as expressing cause, purpose, or path. Then
+        rewrite each using an alternative construction: 'Завдяки вашій допомозі ми
+        перемогли' → 'Ми перемогли, бо ви допомогли' (subordinate clause alternative)."
+  - section: "Підсумок"
+    words: 400
+    points:
+      - "Reference table: CAUSE: через + Зн.в. (negative), завдяки + Д.в. (positive),
+        від + Р.в. (reaction), з + Р.в. (motivation). PURPOSE: для + Р.в. (general),
+        заради + Р.в. (emphatic), за + Ор.в. (to fetch), щоб + inf. (in order to)."
+      - "Golden rule: завдяки = GOOD cause, через = BAD cause. Never mix them. Preview:
+        порядкові числівники і відмінки."
 vocabulary_hints:
   required:
-  - "причина (cause/reason)"
-  - "мета (purpose/goal)"
-  - "через (because of — negative cause; through — path)"
-  - "завдяки (thanks to — positive cause, governs Д.в.)"
-  - "від (from — physical/emotional cause, governs Р.в.)"
-  - "для (for — purpose, governs Р.в.)"
-  - "заради (for the sake of — emphatic purpose, governs Р.в.)"
-  - "щоб (in order to — purpose conjunction)"
+    - "причина (cause/reason)"
+    - "мета (purpose/goal)"
+    - "через (because of — negative cause; through — path)"
+    - "завдяки (thanks to — positive cause, governs Д.в.)"
+    - "від (from — physical/emotional cause, governs Р.в.)"
+    - "для (for — purpose, governs Р.в.)"
+    - "заради (for the sake of — emphatic purpose, governs Р.в.)"
+    - "щоб (in order to — purpose conjunction)"
   recommended:
-  - "у зв'язку з (in connection with — formal cause, governs Ор.в.)"
-  - "з метою (with the aim of — formal purpose, governs Р.в.)"
-  - "з цікавості (out of curiosity — з + Р.в. motivation)"
-  - "від сорому (from shame — від + Р.в. reaction)"
-  - "навіщо (what for — purpose question word)"
-  - "чому (why — cause question word)"
+    - "у зв'язку з (in connection with — formal cause, governs Ор.в.)"
+    - "з метою (with the aim of — formal purpose, governs Р.в.)"
+    - "з цікавості (out of curiosity — з + Р.в. motivation)"
+    - "від сорому (from shame — від + Р.в. reaction)"
+    - "навіщо (what for — purpose question word)"
+    - "чому (why — cause question word)"
 activity_hints:
-- type: quiz
-  focus: "Choose correct cause/purpose preposition (through vs thanks to, etc.)"
-  items: 8
-- type: fill-in
-  focus: "Complete sentences with через/завдяки/від/для/заради + correct case"
-  items: 8
-- type: match-up
-  focus: "Match preposition to its semantic function (positive cause, purpose, etc.)"
-  items: 8
-- type: error-correction
-  focus: "Fix errors: *завдяки хворобі, *через допомозі, wrong case"
-  items: 6
-- type: sentence-builder
-  focus: "Build complex sentences with compound cause/purpose constructions"
-  items: 6
-- type: group-sort
-  focus: "Sort sentences into CAUSE vs PURPOSE categories"
-  items: 10
+  - type: quiz
+    focus: "Choose correct cause/purpose preposition (through vs thanks to, etc.)"
+    items: 8
+  - type: fill-in
+    focus: "Complete sentences with через/завдяки/від/для/заради + correct case"
+    items: 8
+  - type: match-up
+    focus: "Match preposition to its semantic function (positive cause, purpose, etc.)"
+    items: 8
+  - type: error-correction
+    focus: "Fix errors: *завдяки хворобі, *через допомозі, wrong case"
+    items: 6
+  - type: sentence-builder
+    focus: "Build complex sentences with compound cause/purpose constructions"
+    items: 6
+  - type: group-sort
+    focus: "Sort sentences into CAUSE vs PURPOSE categories"
+    items: 10
 connects_to:
-- "b1-050 (Часові прийменники — temporal prepositions)"
-- "b1-069 (Речення причини — cause clauses in Phase 8)"
-- "b1-071 (Речення мети — purpose clauses in Phase 8)"
+  - "b1-050 (Часові прийменники — temporal prepositions)"
+  - "b1-069 (Речення причини — cause clauses in Phase 8)"
+  - "b1-071 (Речення мети — purpose clauses in Phase 8)"
 prerequisites:
-- "b1-046 through b1-048 (advanced case knowledge)"
-- "b1-050 (Часові прийменники — через in temporal sense already covered)"
+  - "b1-046 through b1-048 (advanced case knowledge)"
+  - "b1-050 (Часові прийменники — через in temporal sense already covered)"
 grammar:
-- "Причина: через + Зн.в. (негативна), завдяки + Д.в. (позитивна)"
-- "Причина: від + Р.в. (реакція), з + Р.в. (мотивація)"
-- "Мета: для + Р.в., заради + Р.в., за + Ор.в., щоб + інфінітив"
-- "Складні конструкції: через те що, завдяки тому що, для того щоб"
-- "Розрізнення: причина (чому?) vs мета (навіщо?)"
+  - "Причина: через + Зн.в. (негативна), завдяки + Д.в. (позитивна)"
+  - "Причина: від + Р.в. (реакція), з + Р.в. (мотивація)"
+  - "Мета: для + Р.в., заради + Р.в., за + Ор.в., щоб + інфінітив"
+  - "Складні конструкції: через те що, завдяки тому що, для того щоб"
+  - "Розрізнення: причина (чому?) vs мета (навіщо?)"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 7, p.193"
-  notes: "завдяки vs через distinction, за + Ор.в. for purpose."
-- title: "Авраменко Grade 8, p.86"
-  notes: "Складнопідрядні речення з підрядними причини, мети, умови."
-- title: "Авраменко Grade 11, p.72"
-  notes: "Preposition по for purpose: піти по гриби."
-- title: "Заболотний Grade 8, p.84"
-  notes: "Prepositional constructions for cause and purpose."
+  - title: "Заболотний Grade 7, p.193"
+    notes: "завдяки vs через distinction, за + Ор.в. for purpose."
+  - title: "Авраменко Grade 8, p.86"
+    notes: "Складнопідрядні речення з підрядними причини, мети, умови."
+  - title: "Авраменко Grade 11, p.72"
+    notes: "Preposition по for purpose: піти по гриби."
+  - title: "Заболотний Grade 8, p.84"
+    notes: "Prepositional constructions for cause and purpose."

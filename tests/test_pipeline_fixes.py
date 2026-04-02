@@ -13,16 +13,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.fixes import (
+    _apply_find_replace_fixes,
     _clean_fix_text,
     _count_diff_lines,
-    _apply_find_replace_fixes,
 )
-
 
 # =============================================================================
 # _clean_fix_text

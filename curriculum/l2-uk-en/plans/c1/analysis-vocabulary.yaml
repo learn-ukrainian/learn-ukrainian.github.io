@@ -4,40 +4,52 @@ sequence: 4
 slug: analysis-vocabulary
 version: '1.1'
 title: "Словник аналітичного мислення та синтезу"
-subtitle: "Analysis and Synthesis Vocabulary"
+subtitle: "Лексика аналізу та синтезу"
 focus: vocabulary
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Опанувати термінологію для глибокого аналізу та оцінки наукових і культурних явищ."
-  - "Вивчити синонімічні ряди прикметників та іменників, що описують складні когнітивні процеси."
-  - "Розвинути вміння здійснювати концептуальний синтез інформації за допомогою специфічної лексики."
-  - "Навчитися диференціювати відтінки значень слів, що позначають структуру та елементи цілого."
+  - "Опанувати термінологію для глибокого аналізу та оцінки наукових і культурних
+    явищ."
+  - "Вивчити синонімічні ряди прикметників та іменників, що описують складні когнітивні
+    процеси."
+  - "Розвинути вміння здійснювати концептуальний синтез інформації за допомогою специфічної
+    лексики."
+  - "Навчитися диференціювати відтінки значень слів, що позначають структуру та елементи
+    цілого."
 
 reading_situations:
   - source_type: "філософське есе"
     topic: "Аналіз категорій буття та небуття в поезії Василя Стуса."
     key_elements: ["екзистенційний вимір", "когнітивний дисонанс", "семантична глибина"]
-    motivation: "Вивчення лексики аналізу та синтезу на прикладі високої літературної критики."
+    motivation: "Вивчення лексики аналізу та синтезу на прикладі високої літературної
+      критики."
   - source_type: "стаття з культурології"
     topic: "Синтез західноєвропейських та візантійських традицій в архітектурі Києва."
     key_elements: ["культурна дифузія", "стилістична еклектика", "архітектонічна цілісність"]
-    motivation: "Аналіз термінів, що описують процеси поєднання та взаємопроникнення елементів."
+    motivation: "Аналіз термінів, що описують процеси поєднання та взаємопроникнення
+      елементів."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Проаналізуйте вплив цифрових технологій на трансформацію української ідентичності (250-300 слів). Використовуйте терміни для аналізу та синтезу."
-    requirements: ["визначення ключових чинників", "структурування аргументів", "використання абстрактних іменників"]
-    motivation: "Перевірка здатності студента синтезувати розрізнені факти в цілісну аналітичну картину."
-    model_answer: "Текст повинен демонструвати використання таких понять, як 'детермінованість', 'реконтекстуалізація', 'цілісність', 'диференціація'."
+    prompt: "Проаналізуйте вплив цифрових технологій на трансформацію української
+      ідентичності (250-300 слів). Використовуйте терміни для аналізу та синтезу."
+    requirements: ["визначення ключових чинників", "структурування аргументів", "використання
+          абстрактних іменників"]
+    motivation: "Перевірка здатності студента синтезувати розрізнені факти в цілісну
+      аналітичну картину."
+    model_answer: "Текст повинен демонструвати використання таких понять, як 'детермінованість',
+      'реконтекстуалізація', 'цілісність', 'диференціація'."
 
 discussion_topics:
-  - context: "Сучасна українська література: процес аналізу канону vs необхідність створення нових сенсів."
+  - context: "Сучасна українська література: процес аналізу канону vs необхідність
+      створення нових сенсів."
     questions:
       - "Які елементи класичної літератури потребують переосмислення (деконструкції)?"
       - "Як здійснити синтез традиції та новаторства в сучасній культурі?"
       - "Роль критичного мислення у формуванні національного наративу."
-    motivation: "Розвиток дискусійних навичок з використанням високого академічного регістру."
+    motivation: "Розвиток дискусійних навичок з використанням високого академічного
+      регістру."
 
 content_outline:
   - section: "Структура та декомпозиція явища"
@@ -100,15 +112,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate the analytical depth of a Ukrainian cultural studies text — identify key analytical terms and assess argument structure."
+    description: "Evaluate the analytical depth of a Ukrainian cultural studies text
+      — identify key analytical terms and assess argument structure."
   - type: match-up
-    description: "Match analytical vocabulary (релевантний, валідний, каузальність) with definitions and contextual usage examples."
+    description: "Match analytical vocabulary (релевантний, валідний, каузальність)
+      with definitions and contextual usage examples."
   - type: error-correction
-    description: "Fix imprecise word choices in analytical texts — replace vague terms with precise analytical vocabulary."
+    description: "Fix imprecise word choices in analytical texts — replace vague terms
+      with precise analytical vocabulary."
   - type: essay-response
-    description: "Write a short analytical synthesis (150-200 words) on the impact of digital technologies on Ukrainian identity using analysis/synthesis vocabulary."
+    description: "Write a short analytical synthesis (150-200 words) on the impact
+      of digital technologies on Ukrainian identity using analysis/synthesis vocabulary."
   - type: fill-in
-    description: "Complete sentences with appropriate terms for decomposition, evaluation, and synthesis processes."
+    description: "Complete sentences with appropriate terms for decomposition, evaluation,
+      and synthesis processes."
 
 activities:
   types_required:
@@ -128,3 +145,4 @@ references:
 connects_to:
   previous: "research-verbs"
   next: "logical-connectors"
+phase: C1.1 [Academic Foundation]

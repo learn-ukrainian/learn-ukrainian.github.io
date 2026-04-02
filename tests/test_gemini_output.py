@@ -8,8 +8,6 @@ YAML parsing, validation, truncation detection, edge cases.
 import os
 import sys
 
-import pytest
-
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -24,7 +22,6 @@ from scripts.gemini_output import (
     has_complete_pair,
     validate_output,
 )
-
 
 # =============================================================================
 # extract_delimited

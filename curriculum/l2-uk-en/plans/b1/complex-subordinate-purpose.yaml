@@ -1,164 +1,153 @@
-module: b1-072
+module: b1-068
 level: B1
-sequence: 72
+sequence: 68
 slug: complex-subordinate-purpose
 version: '3.0'
 title: "Речення мети"
 subtitle: "Для чого? Щоб, для того щоб, аби"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Complex Syntax]"
+phase: "B1.7 [Complex Syntax]"
 word_target: 4000
 objectives:
-- "Learner can construct підрядні обставинні мети expressing purpose
-  using щоб, для того щоб, аби, з тим щоб"
-- "Learner can use щоб with infinitive (same subject) vs щоб with past
-  tense form (different subjects): Я прийшов, щоб допомогти vs
-  Я прийшов, щоб ти побачив мене"
-- "Learner can distinguish щоб in purpose clauses from щоб in з'ясувальних
-  (M67): desire vs purpose"
-- "Learner can connect purpose clauses to прийменники мети from M51
-  (для, задля, заради) for stylistic variety"
-- "Learner can use purpose clauses naturally in both spoken and written Ukrainian"
+  - "Learner can construct підрядні обставинні мети expressing purpose using щоб,
+    для того щоб, аби, з тим щоб"
+  - "Learner can use щоб with infinitive (same subject) vs щоб with past tense form
+    (different subjects): Я прийшов, щоб допомогти vs Я прийшов, щоб ти побачив мене"
+  - "Learner can distinguish щоб in purpose clauses from щоб in з'ясувальних (M67):
+    desire vs purpose"
+  - "Learner can connect purpose clauses to прийменники мети from M51 (для, задля,
+    заради) for stylistic variety"
+  - "Learner can use purpose clauses naturally in both spoken and written Ukrainian"
 dialogue_situations:
-- setting: 'Parent helping a teenager prepare for ЗНО (n, Ukrainian standardized test)
-    — purpose clauses: Вчи, щоб скласти іспит. Я записала тебе на курси (pl, courses),
-    аби ти підготувався. Для того щоб вступити (enroll), потрібен високий бал (m,
-    score).'
-  speakers:
-  - Мама
-  - Випускник (graduate)
-  motivation: 'Purpose clauses: щоб, аби, для того щоб — motivation and goal structures'
+  - setting: 'Parent helping a teenager prepare for ЗНО (n, Ukrainian standardized
+      test) — purpose clauses: Вчи, щоб скласти іспит. Я записала тебе на курси (pl,
+      courses), аби ти підготувався. Для того щоб вступити (enroll), потрібен високий
+      бал (m, score).'
+    speakers:
+      - Мама
+      - Випускник (graduate)
+    motivation: 'Purpose clauses: щоб, аби, для того щоб — motivation and goal structures'
 content_outline:
-- section: "Підрядні обставинні мети"
-  words: 600
-  points:
-  - "Definition: підрядне обставинне мети вказує на мету, з якою
-    здійснюється дія головної частини. Відповідає на питання
-    для чого? з якою метою? навіщо?
-    Лелека крилатий вернувся до білої хати, аби лише вдома вмирати (М. Ткачук)."
-  - "Key conjunctions from Заболотний Grade 8 p.112:
-    щоб (main, most common), для того щоб (formal emphasis),
-    аби (literary/folk), з тим щоб (formal)."
-  - "Position: purpose clauses typically FOLLOW the main clause:
-    Я вивчаю українську, щоб розуміти людей.
-    But can precede for emphasis: Щоб розуміти людей, я вивчаю українську."
-- section: "Щоб + інфінітив vs щоб + особова форма"
-  words: 800
-  points:
-  - "SAME subject → щоб + інфінітив:
-    Я прийшов, щоб допомогти. (I came to help — same person)
-    Вона вивчає мову, щоб працювати в Україні.
-    Ми зібралися, щоб обговорити плани."
-  - "DIFFERENT subjects → щоб + past tense form (conditional mood):
-    Я прийшов, щоб ти побачив мене. (I came so that YOU would see me)
-    Мати приготувала вечерю, щоб діти поїли.
-    Учитель пояснив тему ще раз, щоб усі зрозуміли.
-    Note: the verb after щоб takes past-tense form (not future!)
-    This is a key Ukrainian grammatical pattern."
-  - "Common error: using future tense after щоб:
-    *Я прийшов, щоб ти побачиш мене. → WRONG.
-    Я прийшов, щоб ти побачив мене. → CORRECT.
-    The past-tense form after щоб does NOT express past time —
-    it expresses purpose/desire (subjunctive meaning)."
-  - "Practice: 12 sentences — determine whether to use infinitive or
-    past-tense form based on subject identity."
-- section: "Щоб у з'ясувальних vs обставинних"
-  words: 550
-  points:
-  - "Distinction from M67 (з'ясувальне з щоб):
-    З'ясувальне: Я хочу, щоб ти прийшов. (desire — answers що хочу?)
-    Мети: Я подзвонив, щоб ти прийшов. (purpose — answers для чого?)
-    Test: the pояснюване слово. З'ясувальне has a specific word (хочу, прошу).
-    Мети relates to the whole main action."
-  - "More examples:
-    З'ясувальне: Вона попросила, щоб я допоміг. (попросила — пояснюване слово)
-    Мети: Вона приїхала, щоб я допоміг. (приїхала — whole action, purpose = my help)"
-  - "Practice: classify 8 sentences with щоб as з'ясувальне or мети."
-- section: "Варіанти сполучників мети"
-  words: 500
-  points:
-  - "Для того щоб — emphasizes purpose, slightly formal:
-    Для того щоб досягти мети, потрібно працювати.
-    Split: Для того, щоб досягти мети, потрібно працювати."
-  - "Аби — literary, slightly archaic, folk:
-    Аби лише вдома вмирати (М. Ткачук).
-    Аби здоров'я було, а решта буде. (folk wisdom)
-    More emotional/expressive than neutral щоб."
-  - "З тим щоб — formal/bureaucratic:
-    З тим щоб забезпечити виконання, створено комісію.
-    Practice: rewrite 4 purpose sentences using different conjunctions."
-- section: "Практика: речення мети у мовленні"
-  words: 650
-  points:
-  - "High-frequency patterns:
-    Я вивчаю..., щоб... / Потрібно..., щоб... / Ми зробили..., для того щоб...
-    Dialogue: discussing motivation and goals using purpose clauses."
-  - "Reading passage: a motivational text about learning Ukrainian.
-    Contains purpose clauses naturally. Comprehension questions test
-    ability to identify мети vs з'ясувальні підрядні."
-  - "Connection to прийменники мети (M51): для + Р.в., задля + Р.в.:
-    Я вивчаю мову для роботи. = Я вивчаю мову, щоб працювати.
-    Both express purpose, but the clause version is more flexible."
-  - "Production: write 6-8 sentences about why you do things, using
-    both щоб + infinitive and щоб + past-tense (different subjects)."
-- section: "Підсумок та перехід до M73"
-  words: 300
-  points:
-  - "Summary: мети = для чого? навіщо? Щоб + інфінітив (one subject),
-    щоб + мин. час (different subjects). Variants: для того щоб, аби.
-    Distinction: з'ясувальне vs мети з щоб.
-    Self-check: Я правильно вживаю щоб + інфін./мин. час ✓/✗."
-  - "Preview: M73 — Речення допусту. Despite/although: хоч, дарма що."
+  - section: "Підрядні обставинні мети"
+    words: 600
+    points:
+      - "Definition: підрядне обставинне мети вказує на мету, з якою здійснюється
+        дія головної частини. Відповідає на питання для чого? з якою метою? навіщо?
+        Лелека крилатий вернувся до білої хати, аби лише вдома вмирати (М. Ткачук)."
+      - "Key conjunctions from Заболотний Grade 8 p.112: щоб (main, most common),
+        для того щоб (formal emphasis), аби (literary/folk), з тим щоб (formal)."
+      - "Position: purpose clauses typically FOLLOW the main clause: Я вивчаю українську,
+        щоб розуміти людей. But can precede for emphasis: Щоб розуміти людей, я вивчаю
+        українську."
+  - section: "Щоб + інфінітив vs щоб + особова форма"
+    words: 800
+    points:
+      - "SAME subject → щоб + інфінітив: Я прийшов, щоб допомогти. (I came to help
+        — same person) Вона вивчає мову, щоб працювати в Україні. Ми зібралися, щоб
+        обговорити плани."
+      - "DIFFERENT subjects → щоб + past tense form (conditional mood): Я прийшов,
+        щоб ти побачив мене. (I came so that YOU would see me) Мати приготувала вечерю,
+        щоб діти поїли. Учитель пояснив тему ще раз, щоб усі зрозуміли. Note: the
+        verb after щоб takes past-tense form (not future!) This is a key Ukrainian
+        grammatical pattern."
+      - "Common error: using future tense after щоб: *Я прийшов, щоб ти побачиш мене.
+        → WRONG. Я прийшов, щоб ти побачив мене. → CORRECT. The past-tense form after
+        щоб does NOT express past time — it expresses purpose/desire (subjunctive
+        meaning)."
+      - "Practice: 12 sentences — determine whether to use infinitive or past-tense
+        form based on subject identity."
+  - section: "Щоб у з'ясувальних vs обставинних"
+    words: 550
+    points:
+      - "Distinction from M67 (з'ясувальне з щоб): З'ясувальне: Я хочу, щоб ти прийшов.
+        (desire — answers що хочу?) Мети: Я подзвонив, щоб ти прийшов. (purpose —
+        answers для чого?) Test: the pояснюване слово. З'ясувальне has a specific
+        word (хочу, прошу). Мети relates to the whole main action."
+      - "More examples: З'ясувальне: Вона попросила, щоб я допоміг. (попросила — пояснюване
+        слово) Мети: Вона приїхала, щоб я допоміг. (приїхала — whole action, purpose
+        = my help)"
+      - "Practice: classify 8 sentences with щоб as з'ясувальне or мети."
+  - section: "Варіанти сполучників мети"
+    words: 500
+    points:
+      - "Для того щоб — emphasizes purpose, slightly formal: Для того щоб досягти
+        мети, потрібно працювати. Split: Для того, щоб досягти мети, потрібно працювати."
+      - "Аби — literary, slightly archaic, folk: Аби лише вдома вмирати (М. Ткачук).
+        Аби здоров'я було, а решта буде. (folk wisdom) More emotional/expressive than
+        neutral щоб."
+      - "З тим щоб — formal/bureaucratic: З тим щоб забезпечити виконання, створено
+        комісію. Practice: rewrite 4 purpose sentences using different conjunctions."
+  - section: "Практика: речення мети у мовленні"
+    words: 650
+    points:
+      - "High-frequency patterns: Я вивчаю..., щоб... / Потрібно..., щоб... / Ми зробили...,
+        для того щоб... Dialogue: discussing motivation and goals using purpose clauses."
+      - "Reading passage: a motivational text about learning Ukrainian. Contains purpose
+        clauses naturally. Comprehension questions test ability to identify мети vs
+        з'ясувальні підрядні."
+      - "Connection to прийменники мети (M51): для + Р.в., задля + Р.в.: Я вивчаю
+        мову для роботи. = Я вивчаю мову, щоб працювати. Both express purpose, but
+        the clause version is more flexible."
+      - "Production: write 6-8 sentences about why you do things, using both щоб +
+        infinitive and щоб + past-tense (different subjects)."
+  - section: "Підсумок та перехід до M73"
+    words: 300
+    points:
+      - "Summary: мети = для чого? навіщо? Щоб + інфінітив (one subject), щоб + мин.
+        час (different subjects). Variants: для того щоб, аби. Distinction: з'ясувальне
+        vs мети з щоб. Self-check: Я правильно вживаю щоб + інфін./мин. час ✓/✗."
+      - "Preview: M73 — Речення допусту. Despite/although: хоч, дарма що."
 vocabulary_hints:
   required:
-  - "підрядне обставинне мети (purpose subordinate clause)"
-  - "щоб (in order to/that — purpose conjunction)"
-  - "для того щоб (in order to — formal purpose)"
-  - "аби (in order to — literary/folk)"
-  - "мета (purpose, goal)"
-  - "інфінітив (infinitive — used after щоб with same subject)"
+    - "підрядне обставинне мети (purpose subordinate clause)"
+    - "щоб (in order to/that — purpose conjunction)"
+    - "для того щоб (in order to — formal purpose)"
+    - "аби (in order to — literary/folk)"
+    - "мета (purpose, goal)"
+    - "інфінітив (infinitive — used after щоб with same subject)"
   recommended:
-  - "з тим щоб (in order to — formal/bureaucratic)"
-  - "задля (for the sake of — preposition, review from M51)"
-  - "навіщо (what for — question word for purpose)"
-  - "для чого (what for — question phrase for purpose)"
+    - "з тим щоб (in order to — formal/bureaucratic)"
+    - "задля (for the sake of — preposition, review from M51)"
+    - "навіщо (what for — question word for purpose)"
+    - "для чого (what for — question phrase for purpose)"
 activity_hints:
-- type: fill-in
-  focus: "Complete purpose sentences: щоб + infinitive or щоб + past-tense form"
-  items: 10
-- type: quiz
-  focus: "Classify: з'ясувальне чи обставинне мети?"
-  items: 8
-- type: sentence-builder
-  focus: "Construct purpose sentences for given goals (same and different subjects)"
-  items: 8
-- type: error-correction
-  focus: "Fix verb form errors after щоб (future → past-tense correction)"
-  items: 6
-- type: match-up
-  focus: "Match purpose clauses to their prepositional equivalents (щоб ↔ для + Р.в.)"
-  items: 6
+  - type: fill-in
+    focus: "Complete purpose sentences: щоб + infinitive or щоб + past-tense form"
+    items: 10
+  - type: quiz
+    focus: "Classify: з'ясувальне чи обставинне мети?"
+    items: 8
+  - type: sentence-builder
+    focus: "Construct purpose sentences for given goals (same and different subjects)"
+    items: 8
+  - type: error-correction
+    focus: "Fix verb form errors after щоб (future → past-tense correction)"
+    items: 6
+  - type: match-up
+    focus: "Match purpose clauses to their prepositional equivalents (щоб ↔ для +
+      Р.в.)"
+    items: 6
 connects_to:
-- "b1-071 (Речення умови)"
-- "b1-073 (Речення допусту)"
-- "b1-067 (З'ясувальні речення — щоб in object clauses)"
-- "b1-051 (Причина і мета — prepositional alternatives)"
+  - "b1-071 (Речення умови)"
+  - "b1-073 (Речення допусту)"
+  - "b1-067 (З'ясувальні речення — щоб in object clauses)"
+  - "b1-051 (Причина і мета — prepositional alternatives)"
 prerequisites:
-- "b1-071 (Conditional clauses — обставинне clause types continue)"
+  - "b1-071 (Conditional clauses — обставинне clause types continue)"
 grammar:
-- "Підрядні обставинні мети: відповідають на для чого? навіщо?"
-- "Щоб + infinitive (same subject) vs щоб + past-tense form (different subjects)"
-- "Purpose conjunctions: щоб, для того щоб, аби, з тим щоб"
-- "Distinction: purpose щоб vs з'ясувальне щоб"
+  - "Підрядні обставинні мети: відповідають на для чого? навіщо?"
+  - "Щоб + infinitive (same subject) vs щоб + past-tense form (different subjects)"
+  - "Purpose conjunctions: щоб, для того щоб, аби, з тим щоб"
+  - "Distinction: purpose щоб vs з'ясувальне щоб"
 register: науково-навчальний
 references:
-- title: "Заболотний Grade 8, p.112"
-  notes: "§21 Підрядні частини мети: definition, conjunction inventory,
-    examples with аби."
-- title: "Ворон Grade 9, p.80"
-  notes: "Підрядні обставинні мети: для чого? з якою метою?,
-    conjunction list, dependency from whole main clause."
-- title: "Авраменко Grade 8, p.86-87"
-  notes: "§24 Підрядні причини, мети, умови: classification,
-    exercises distinguishing the three types."
+  - title: "Заболотний Grade 8, p.112"
+    notes: "§21 Підрядні частини мети: definition, conjunction inventory, examples
+      with аби."
+  - title: "Ворон Grade 9, p.80"
+    notes: "Підрядні обставинні мети: для чого? з якою метою?, conjunction list, dependency
+      from whole main clause."
+  - title: "Авраменко Grade 8, p.86-87"
+    notes: "§24 Підрядні причини, мети, умови: classification, exercises distinguishing
+      the three types."

@@ -20,7 +20,7 @@ import asyncio
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -30,7 +30,7 @@ import aiosqlite
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
-    from mcp.types import Tool, TextContent
+    from mcp.types import TextContent, Tool
 except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
@@ -318,7 +318,7 @@ async def handle_send_message(args: dict) -> list[TextContent]:
     async with _write_lock:
         db = await get_db()
         try:
-            timestamp = datetime.now(timezone.utc).isoformat()
+            timestamp = datetime.now(UTC).isoformat()
 
             # Merge model info into data field as JSON
             data = args.get("data")
@@ -380,8 +380,8 @@ async def handle_receive_messages(args: dict) -> list[TextContent]:
     async with _write_lock:
         db = await get_db()
         try:
-            session_id = args.get("session_id") or f"pid-{os.getpid()}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
-            now = datetime.now(timezone.utc).isoformat()
+            session_id = args.get("session_id") or f"pid-{os.getpid()}-{datetime.now(UTC).strftime('%H%M%S')}"
+            now = datetime.now(UTC).isoformat()
 
             # Release stale claims (session crashed or timed out — 10 min TTL)
             await db.execute("""
@@ -545,7 +545,7 @@ async def handle_acknowledge_message(args: dict) -> list[TextContent]:
     async with _write_lock:
         db = await get_db()
         try:
-            now = datetime.now(timezone.utc).isoformat()
+            now = datetime.now(UTC).isoformat()
 
             # Fetch the original message for history logging
             cursor = await db.execute("""

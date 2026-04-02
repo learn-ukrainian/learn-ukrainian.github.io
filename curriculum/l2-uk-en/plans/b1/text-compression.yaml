@@ -1,242 +1,209 @@
-module: b1-079
+module: b1-075
 level: B1
-sequence: 79
+sequence: 75
 slug: text-compression
 version: '3.0'
 title: "Абревіатури та скорочення"
 subtitle: "Складноскорочені слова, абревіатури, графічні скорочення"
 focus: grammar
 pedagogy: PPP
-phase: "B1.9 [Text and Register]"
+phase: "B1.8 [Text and Register]"
 word_target: 4000
 objectives:
-- "Learner can explain what абревіація is and how складноскорочені слова are
-  formed in Ukrainian (складання початкових частин, звуків, літер)"
-- "Learner can read, pronounce, and decode common Ukrainian абревіатури
-  (ЗСУ, ООН, ЗМI, ЄС, ЗЗСО, МВФ, ЦНАП, СБУ)"
-- "Learner can determine граматичний рід of абревіатури and use them correctly
-  in sentences with proper agreement"
-- "Learner can use standard графічні скорочення in Ukrainian writing
-  (вул., кг, грн, р-н, ун-т, б-ка) and understand their rules"
-- "Learner can write numbers, dates, and measurements correctly in Ukrainian
-  formal and informal contexts"
+  - "Learner can explain what абревіація is and how складноскорочені слова are formed
+    in Ukrainian (складання початкових частин, звуків, літер)"
+  - "Learner can read, pronounce, and decode common Ukrainian абревіатури (ЗСУ, ООН,
+    ЗМI, ЄС, ЗЗСО, МВФ, ЦНАП, СБУ)"
+  - "Learner can determine граматичний рід of абревіатури and use them correctly in
+    sentences with proper agreement"
+  - "Learner can use standard графічні скорочення in Ukrainian writing (вул., кг,
+    грн, р-н, ун-т, б-ка) and understand their rules"
+  - "Learner can write numbers, dates, and measurements correctly in Ukrainian formal
+    and informal contexts"
 dialogue_situations:
-- setting: 'Reading Ukrainian news headlines and official documents — decoding abbreviations:
-    ЗНО, КНУ ім. Шевченка, МОЗ (Ministry of Health), ЗСУ (Armed Forces of Ukraine),
-    м. Київ, вул. Хрещатик.'
-  speakers:
-  - Студент (reads aloud)
-  - Викладач (explains)
-  motivation: 'Abbreviations: ЗНО, КНУ, МОЗ, ЗСУ, м., вул. — decoding Ukrainian compressed
-    text'
+  - setting: 'Reading Ukrainian news headlines and official documents — decoding abbreviations:
+      ЗНО, КНУ ім. Шевченка, МОЗ (Ministry of Health), ЗСУ (Armed Forces of Ukraine),
+      м. Київ, вул. Хрещатик.'
+    speakers:
+      - Студент (reads aloud)
+      - Викладач (explains)
+    motivation: 'Abbreviations: ЗНО, КНУ, МОЗ, ЗСУ, м., вул. — decoding Ukrainian
+      compressed text'
 content_outline:
-- section: "Складноскорочені слова та абревіатури"
-  words: 700
-  points:
-  - "Definition from Заболотний Grade 6 p.71:
-    Складноскорочені — слова, які утворено складанням початкових
-    частин слів, початкових звуків чи літер.
-    Різновид складних слів. Абревіатура — складноскорочене слово,
-    утворене з початкових звуків чи букв."
-  - "Types of складноскорочені слова from Голуб Grade 6 p.52:
-    1. Початкові частини слів: спецвипуск (спеціальний випуск),
-       лісгосп (лісове господарство), Кабмін (Кабінет Міністрів).
-    2. Початкові звуки (звукові абревіатури — read as words):
-       ЗСУ [зесу], ЦНАП [цнап], ТЮГ [тюг].
-    3. Початкові літери (літерні абревіатури — spelled out):
-       ООН [оон], МВФ [емвеф], СБУ [есбеу].
-    Practice: learners classify абревіатури by type."
-  - "Essential Ukrainian абревіатури for B1 from Голуб Grade 6 p.52:
-    ЗСУ (Збройні сили України), ЗЗСО (заклад загальної середньої
-    освіти), ООН (Організація Об'єднаних Націй), МВФ (Міжнародний
-    валютний фонд), ЗМI (засоби масової інформації), ЄС (Європейський
-    Союз), СБУ (Служба безпеки України), ПАРЄ (Парламентська асамблея
-    Ради Європи), НБУ (Національний банк України).
-    Practice: learners match абревіатури to their full forms."
-  - "Formation practice from Голуб Grade 6 p.53:
-    Learners create складноскорочені слова from given словосполучення:
-    міська рада → міськрада, головний бухгалтер → головбух,
-    заробітна плата → зарплата, технічне завдання → техзавдання.
-    And абревіатури: Українська повстанська армія → УПА,
-    Мала академія наук → МАН."
-- section: "Граматичні особливості абревіатур"
-  words: 600
-  points:
-  - "Рід абревіатур — how to determine grammatical gender:
-    Рід визначаємо за головним словом: ООН — жіночий рід
-    (Організація), ЗМI — середній рід? Ні — множина (засоби),
-    МВФ — чоловічий рід (фонд), ЄС — чоловічий рід (Союз).
-    Складні випадки: НАТО, ЮНЕСКО — рід за останнім словом
-    або за традицією."
-  - "Agreement in sentences:
-    'ООН ухвалила резолюцію' (feminine — Організація).
-    'ЗСУ звільнили місто' (plural — Сили).
-    'НБУ знизив облікову ставку' (masculine — Банк).
-    Common error: treating all абревіатури as masculine.
-    Practice: learners write sentences with абревіатури ensuring
-    correct gender/number agreement."
-  - "Відмінювання абревіатур:
-    Some абревіатури decline: ЗАГ → у ЗАГСі, вуз → у вузі.
-    Most літерні абревіатури do NOT decline: в ООН (not *в ООНі).
-    Складові абревіатури often decline: у ЦНАПі, до ЗАГСу.
-    Rule of thumb: if it reads as a word and sounds like a noun,
-    it often declines."
-  - "Правопис: абревіатури write with великі літери without крапок:
-    ООН, МВФ, ЗСУ (not О.О.Н. or М.В.Ф.).
-    Складноскорочені слова from початкових частин: з малої літери
-    (спецвипуск, лісгосп) unless they are власні назви (Кабмін)."
-- section: "Графічні скорочення"
-  words: 600
-  points:
-  - "Rules from Глазова Grade 10 p.143:
-    Types of графічні скорочення:
-    1. Усічення: вул. (вулиця), м. (місто), р. (рік/ріка), с. (село/сторінка).
-    2. Відкидання внутрішньої частини: р-н (район), ун-т (університет),
-       б-ка (бібліотека), вид-во (видавництво).
-    3. Перші літери: грн (гривня), кг (кілограм), км (кілометр),
-       м (метр), г (грам), л (літр).
-    Rule: графічне скорочення з крапкою, якщо остання літера скорочення
-    не є останньою літерою повного слова."
-  - "Одиниці виміру — abbreviations for measurements:
-    кг, г, мг (маса), км, м, см, мм (довжина), л, мл (об'єм),
-    грн, коп. (гроші). НЕ ставимо крапку після одиниць виміру:
-    5 кг, 10 км, 3 л (not 5 кг., 10 км.).
-    Practice: learners write measurements correctly."
-  - "Скорочення в адресах та документах:
-    вул. Хрещатик, м. Київ, Київська обл.,
-    буд. 15, кв. 7, пл. Незалежності.
-    Practice: learners write a Ukrainian address using
-    standard скорочення."
-  - "Reading practice: a formal Ukrainian document (оголошення or довідка)
-    containing абревіатури and графічні скорочення. Learners decode
-    all abbreviated forms and rewrite the document in full."
-- section: "Числа, дати та вимірювання"
-  words: 600
-  points:
-  - "Dates in Ukrainian:
-    Повна форма: двадцять друге березня дві тисячі двадцять шостого року.
-    Скорочена: 22 березня 2026 р. or 22.03.2026.
-    Родовий відмінок for month names in dates: січня, лютого, березня...
-    Common error: *22 березень (називний instead of родовий)."
-  - "Time expressions:
-    о п'ятій годині, о двадцять першій, пів на третю.
-    Written: 17:00, 21:30.
-    Practice: learners write and read times in Ukrainian."
-  - "Money and prices:
-    100 гривень (not *100 гривень грн), 50 грн, 99 коп.
-    Узгодження: одна гривня, дві гривні, п'ять гривень.
-    Practice: reading Ukrainian price tags and receipts."
-  - "Measurements in context:
-    Зріст: 175 см (сто сімдесят п'ять сантиметрів).
-    Вага: 70 кг (сімдесят кілограмів).
-    Відстань: 450 км (чотириста п'ятдесят кілометрів).
-    Practice: learners describe objects and distances using
-    числівники with correct узгодження."
-- section: "Абревіатури в повсякденному житті"
-  words: 550
-  points:
-  - "Абревіатури в новинах та ЗМI:
-    Learners read a short news excerpt containing ЗСУ, ООН, ЄС, МЗС
-    (Міністерство закордонних справ), ВР (Верховна Рада) and practice
-    decoding and using them in summaries."
-  - "Абревіатури в побуті:
-    ДСНС (Державна служба з надзвичайних ситуацій),
-    ОСББ (об'єднання співвласників багатоквартирного будинку),
-    ФОП (фізична особа-підприємець), КНЕУ, КПI, ЛНУ (university names).
-    Practice: learners explain what each абревіатура stands for."
-  - "Digital abbreviations in Ukrainian:
-    Common online скорочення: до речі (д/р is NOT used — full form),
-    Modern usage: гуглити, чатити, лайкати (adapted verbs).
-    Important: Ukrainian internet language should remain Ukrainian,
-    not default to Russian or English abbreviations."
-- section: "Підсумок: мова скорочень"
-  words: 350
-  points:
-  - "Complete reference table: types of скорочення, правопис rules,
-    граматичні особливості. Quick-reference for абревіатури studied."
-  - "Self-check in Ukrainian:
-    1. Розшифруйте: ЗСУ, ООН, ЗМI, ЄС, ЦНАП.
-    2. Визначте рід: ООН (вона), МВФ (він), ЗСУ (вони).
-    3. Напишіть адресу з правильними скороченнями.
-    4. Запишіть дату прописом: 14.08.1991."
-  - "Preview of next module: Подвійне заперечення (M80) —
-    the Ukrainian system of double (and triple) negation,
-    which differs fundamentally from English."
+  - section: "Складноскорочені слова та абревіатури"
+    words: 700
+    points:
+      - "Definition from Заболотний Grade 6 p.71: Складноскорочені — слова, які утворено
+        складанням початкових частин слів, початкових звуків чи літер. Різновид складних
+        слів. Абревіатура — складноскорочене слово, утворене з початкових звуків чи
+        букв."
+      - "Types of складноскорочені слова from Голуб Grade 6 p.52: 1. Початкові частини
+        слів: спецвипуск (спеціальний випуск), лісгосп (лісове господарство), Кабмін
+        (Кабінет Міністрів). 2. Початкові звуки (звукові абревіатури — read as words):
+        ЗСУ [зесу], ЦНАП [цнап], ТЮГ [тюг]. 3. Початкові літери (літерні абревіатури
+        — spelled out): ООН [оон], МВФ [емвеф], СБУ [есбеу]. Practice: learners classify
+        абревіатури by type."
+      - "Essential Ukrainian абревіатури for B1 from Голуб Grade 6 p.52: ЗСУ (Збройні
+        сили України), ЗЗСО (заклад загальної середньої освіти), ООН (Організація
+        Об'єднаних Націй), МВФ (Міжнародний валютний фонд), ЗМI (засоби масової інформації),
+        ЄС (Європейський Союз), СБУ (Служба безпеки України), ПАРЄ (Парламентська
+        асамблея Ради Європи), НБУ (Національний банк України). Practice: learners
+        match абревіатури to their full forms."
+      - "Formation practice from Голуб Grade 6 p.53: Learners create складноскорочені
+        слова from given словосполучення: міська рада → міськрада, головний бухгалтер
+        → головбух, заробітна плата → зарплата, технічне завдання → техзавдання. And
+        абревіатури: Українська повстанська армія → УПА, Мала академія наук → МАН."
+  - section: "Граматичні особливості абревіатур"
+    words: 600
+    points:
+      - "Рід абревіатур — how to determine grammatical gender: Рід визначаємо за головним
+        словом: ООН — жіночий рід (Організація), ЗМI — середній рід? Ні — множина
+        (засоби), МВФ — чоловічий рід (фонд), ЄС — чоловічий рід (Союз). Складні випадки:
+        НАТО, ЮНЕСКО — рід за останнім словом або за традицією."
+      - "Agreement in sentences: 'ООН ухвалила резолюцію' (feminine — Організація).
+        'ЗСУ звільнили місто' (plural — Сили). 'НБУ знизив облікову ставку' (masculine
+        — Банк). Common error: treating all абревіатури as masculine. Practice: learners
+        write sentences with абревіатури ensuring correct gender/number agreement."
+      - "Відмінювання абревіатур: Some абревіатури decline: ЗАГ → у ЗАГСі, вуз → у
+        вузі. Most літерні абревіатури do NOT decline: в ООН (not *в ООНі). Складові
+        абревіатури often decline: у ЦНАПі, до ЗАГСу. Rule of thumb: if it reads as
+        a word and sounds like a noun, it often declines."
+      - "Правопис: абревіатури write with великі літери without крапок: ООН, МВФ,
+        ЗСУ (not О.О.Н. or М.В.Ф.). Складноскорочені слова from початкових частин:
+        з малої літери (спецвипуск, лісгосп) unless they are власні назви (Кабмін)."
+  - section: "Графічні скорочення"
+    words: 600
+    points:
+      - "Rules from Глазова Grade 10 p.143: Types of графічні скорочення: 1. Усічення:
+        вул. (вулиця), м. (місто), р. (рік/ріка), с. (село/сторінка). 2. Відкидання
+        внутрішньої частини: р-н (район), ун-т (університет), б-ка (бібліотека), вид-во
+        (видавництво). 3. Перші літери: грн (гривня), кг (кілограм), км (кілометр),
+        м (метр), г (грам), л (літр). Rule: графічне скорочення з крапкою, якщо остання
+        літера скорочення не є останньою літерою повного слова."
+      - "Одиниці виміру — abbreviations for measurements: кг, г, мг (маса), км, м,
+        см, мм (довжина), л, мл (об'єм), грн, коп. (гроші). НЕ ставимо крапку після
+        одиниць виміру: 5 кг, 10 км, 3 л (not 5 кг., 10 км.). Practice: learners write
+        measurements correctly."
+      - "Скорочення в адресах та документах: вул. Хрещатик, м. Київ, Київська обл.,
+        буд. 15, кв. 7, пл. Незалежності. Practice: learners write a Ukrainian address
+        using standard скорочення."
+      - "Reading practice: a formal Ukrainian document (оголошення or довідка) containing
+        абревіатури and графічні скорочення. Learners decode all abbreviated forms
+        and rewrite the document in full."
+  - section: "Числа, дати та вимірювання"
+    words: 600
+    points:
+      - "Dates in Ukrainian: Повна форма: двадцять друге березня дві тисячі двадцять
+        шостого року. Скорочена: 22 березня 2026 р. or 22.03.2026. Родовий відмінок
+        for month names in dates: січня, лютого, березня... Common error: *22 березень
+        (називний instead of родовий)."
+      - "Time expressions: о п'ятій годині, о двадцять першій, пів на третю. Written:
+        17:00, 21:30. Practice: learners write and read times in Ukrainian."
+      - "Money and prices: 100 гривень (not *100 гривень грн), 50 грн, 99 коп. Узгодження:
+        одна гривня, дві гривні, п'ять гривень. Practice: reading Ukrainian price
+        tags and receipts."
+      - "Measurements in context: Зріст: 175 см (сто сімдесят п'ять сантиметрів).
+        Вага: 70 кг (сімдесят кілограмів). Відстань: 450 км (чотириста п'ятдесят кілометрів).
+        Practice: learners describe objects and distances using числівники with correct
+        узгодження."
+  - section: "Абревіатури в повсякденному житті"
+    words: 550
+    points:
+      - "Абревіатури в новинах та ЗМI: Learners read a short news excerpt containing
+        ЗСУ, ООН, ЄС, МЗС (Міністерство закордонних справ), ВР (Верховна Рада) and
+        practice decoding and using them in summaries."
+      - "Абревіатури в побуті: ДСНС (Державна служба з надзвичайних ситуацій), ОСББ
+        (об'єднання співвласників багатоквартирного будинку), ФОП (фізична особа-підприємець),
+        КНЕУ, КПI, ЛНУ (university names). Practice: learners explain what each абревіатура
+        stands for."
+      - "Digital abbreviations in Ukrainian: Common online скорочення: до речі (д/р
+        is NOT used — full form), Modern usage: гуглити, чатити, лайкати (adapted
+        verbs). Important: Ukrainian internet language should remain Ukrainian, not
+        default to Russian or English abbreviations."
+  - section: "Підсумок: мова скорочень"
+    words: 350
+    points:
+      - "Complete reference table: types of скорочення, правопис rules, граматичні
+        особливості. Quick-reference for абревіатури studied."
+      - "Self-check in Ukrainian: 1. Розшифруйте: ЗСУ, ООН, ЗМI, ЄС, ЦНАП. 2. Визначте
+        рід: ООН (вона), МВФ (він), ЗСУ (вони). 3. Напишіть адресу з правильними скороченнями.
+        4. Запишіть дату прописом: 14.08.1991."
+      - "Preview of next module: Подвійне заперечення (M80) — the Ukrainian system
+        of double (and triple) negation, which differs fundamentally from English."
 vocabulary_hints:
   required:
-  - "абревіатура (abbreviation/acronym — word from initial letters or sounds)"
-  - "складноскорочене слово (abbreviated compound word)"
-  - "графічне скорочення (graphic abbreviation — shortened written form)"
-  - "розшифрувати (to decipher/decode — to expand an abbreviation)"
-  - "одиниці виміру (units of measurement)"
-  - "гривня (hryvnia — Ukrainian currency)"
-  - "літерна абревіатура (letter abbreviation — spelled out: О-О-Н)"
-  - "звукова абревіатура (sound abbreviation — read as word: ЗСУ)"
-  - "скорочення (abbreviation — shortened form of a word)"
-  - "відмінювання (declension — changing word forms by case)"
-  - "узгодження (agreement — grammatical matching)"
+    - "абревіатура (abbreviation/acronym — word from initial letters or sounds)"
+    - "складноскорочене слово (abbreviated compound word)"
+    - "графічне скорочення (graphic abbreviation — shortened written form)"
+    - "розшифрувати (to decipher/decode — to expand an abbreviation)"
+    - "одиниці виміру (units of measurement)"
+    - "гривня (hryvnia — Ukrainian currency)"
+    - "літерна абревіатура (letter abbreviation — spelled out: О-О-Н)"
+    - "звукова абревіатура (sound abbreviation — read as word: ЗСУ)"
+    - "скорочення (abbreviation — shortened form of a word)"
+    - "відмінювання (declension — changing word forms by case)"
+    - "узгодження (agreement — grammatical matching)"
   recommended:
-  - "спецвипуск (special edition — compound abbreviated word)"
-  - "зарплата (salary — shortened from заробітна плата)"
-  - "Кабмін (Cabinet of Ministers — shortened proper name)"
-  - "Верховна Рада (Supreme Council — Ukrainian parliament)"
-  - "кілограм (kilogram)"
-  - "сантиметр (centimeter)"
-  - "прописом (in words — writing numbers as words, not digits)"
-  - "власна назва (proper name)"
+    - "спецвипуск (special edition — compound abbreviated word)"
+    - "зарплата (salary — shortened from заробітна плата)"
+    - "Кабмін (Cabinet of Ministers — shortened proper name)"
+    - "Верховна Рада (Supreme Council — Ukrainian parliament)"
+    - "кілограм (kilogram)"
+    - "сантиметр (centimeter)"
+    - "прописом (in words — writing numbers as words, not digits)"
+    - "власна назва (proper name)"
 activity_hints:
-- type: quiz
-  focus: "Decode абревіатури: match abbreviated forms to full names,
-    determine граматичний рід, and identify type of abbreviation."
-  items: 10
-- type: match-up
-  focus: "Match графічні скорочення to their full forms (вул. ↔ вулиця,
-    грн ↔ гривня, р-н ↔ район)."
-  items: 8
-- type: fill-in
-  focus: "Write dates, times, addresses, and measurements using correct
-    Ukrainian скорочення and number agreement."
-  items: 8
-- type: error-correction
-  focus: "Find and correct errors in абревіатури usage: wrong gender agreement,
-    incorrect скорочення format, missing/extra крапки."
-  items: 6
-- type: group-sort
-  focus: "Sort абревіатури by type: літерні, звукові, складноскорочені.
-    Sort скорочення by rules: з крапкою vs без крапки."
-  items: 10
-- type: free-write
-  focus: "Write a short news summary (8-10 sentences) using at least
-    5 абревіатури with correct agreement and скорочення."
-  items: 6
+  - type: quiz
+    focus: "Decode абревіатури: match abbreviated forms to full names, determine граматичний
+      рід, and identify type of abbreviation."
+    items: 10
+  - type: match-up
+    focus: "Match графічні скорочення to their full forms (вул. ↔ вулиця, грн ↔ гривня,
+      р-н ↔ район)."
+    items: 8
+  - type: fill-in
+    focus: "Write dates, times, addresses, and measurements using correct Ukrainian
+      скорочення and number agreement."
+    items: 8
+  - type: error-correction
+    focus: "Find and correct errors in абревіатури usage: wrong gender agreement,
+      incorrect скорочення format, missing/extra крапки."
+    items: 6
+  - type: group-sort
+    focus: "Sort абревіатури by type: літерні, звукові, складноскорочені. Sort скорочення
+      by rules: з крапкою vs без крапки."
+    items: 10
+  - type: free-write
+    focus: "Write a short news summary (8-10 sentences) using at least 5 абревіатури
+      with correct agreement and скорочення."
+    items: 6
 connects_to:
-- "b1-077 (Офіційний стиль — абревіатури are essential in formal documents)"
-- "b1-080 (Подвійне заперечення — continues grammar of B1.9 phase)"
-- "b1-087 (Суспільство i медіа — abbreviations in news and media)"
-- "b1-084 (Контрольна робота 9 — checkpoint testing abbreviation competence)"
+  - "b1-077 (Офіційний стиль — абревіатури are essential in formal documents)"
+  - "b1-080 (Подвійне заперечення — continues grammar of B1.8 phase)"
+  - "b1-087 (Суспільство i медіа — abbreviations in news and media)"
+  - "b1-084 (Контрольна робота 9 — checkpoint testing abbreviation competence)"
 prerequisites:
-- "b1-077 (text-register-formal — official style where абревіатури are most common)"
-- "b1-052 (numerals-declension — number agreement rules)"
-- "b1-053 (numerals-agreement — числівник-іменник agreement)"
+  - "b1-077 (text-register-formal — official style where абревіатури are most common)"
+  - "b1-052 (numerals-declension — number agreement rules)"
+  - "b1-053 (numerals-agreement — числівник-іменник agreement)"
 grammar:
-- "Абревіація: types of abbreviated word formation in Ukrainian"
-- "Граматичний рід абревіатур determined by головне слово"
-- "Відмінювання абревіатур: which decline, which do not"
-- "Графічні скорочення: rules for крапки, дефіси, великі/малі літери"
-- "Числівники з одиницями виміру: узгодження (п'ять кілограмів, дві гривні)"
-- "Дати: родовий відмінок for month names"
+  - "Абревіація: types of abbreviated word formation in Ukrainian"
+  - "Граматичний рід абревіатур determined by головне слово"
+  - "Відмінювання абревіатур: which decline, which do not"
+  - "Графічні скорочення: rules for крапки, дефіси, великі/малі літери"
+  - "Числівники з одиницями виміру: узгодження (п'ять кілограмів, дві гривні)"
+  - "Дати: родовий відмінок for month names"
 register: академічний
 references:
-- title: "Заболотний Grade 6, p.71-72"
-  notes: "Складноскорочені слова: definition, types, абревіатура as a subtype.
-    Exercises on creating abbreviated forms from словосполучення."
-- title: "Голуб Grade 6, p.52-53"
-  notes: "Абревіація: what it is, how it works, essential Ukrainian
-    абревіатури (ЗСУ, ЗЗСО, ООН, МВФ, ТЮГ, ЦНАП, ЗМI, СБУ, ПАРЄ).
-    Formation exercises."
-- title: "Глазова Grade 10, p.143"
-  notes: "Правила графічних скорочень слів: усічення, відкидання
-    внутрішньої частини, позначення дефісом. Одиниці виміру."
-- title: "Авраменко Grade 10, p.148"
-  notes: "Написання ні з різними частинами мови — includes абревіатури
-    context for заперечні займенники."
+  - title: "Заболотний Grade 6, p.71-72"
+    notes: "Складноскорочені слова: definition, types, абревіатура as a subtype. Exercises
+      on creating abbreviated forms from словосполучення."
+  - title: "Голуб Grade 6, p.52-53"
+    notes: "Абревіація: what it is, how it works, essential Ukrainian абревіатури
+      (ЗСУ, ЗЗСО, ООН, МВФ, ТЮГ, ЦНАП, ЗМI, СБУ, ПАРЄ). Formation exercises."
+  - title: "Глазова Grade 10, p.143"
+    notes: "Правила графічних скорочень слів: усічення, відкидання внутрішньої частини,
+      позначення дефісом. Одиниці виміру."
+  - title: "Авраменко Grade 10, p.148"
+    notes: "Написання ні з різними частинами мови — includes абревіатури context for
+      заперечні займенники."

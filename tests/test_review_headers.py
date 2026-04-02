@@ -12,10 +12,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "audit" / "checks"))
 from review_validation import (
-    _HEADER_SCORES,
     _HEADER_ISSUES,
-    _HEADER_VERIFICATION,
     _HEADER_RECOMMENDATION,
+    _HEADER_SCORES,
+    _HEADER_VERIFICATION,
 )
 
 

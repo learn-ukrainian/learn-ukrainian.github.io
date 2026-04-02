@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: відміна (declension class — noun classification by ending pattern), тверда група (hard group — nouns with hard stem-final consonant)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T01:16:41.526394+00:00"
+}

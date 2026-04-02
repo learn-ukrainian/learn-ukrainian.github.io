@@ -5,19 +5,19 @@ Tests vocabulary table format, column validation, and transliteration policy.
 Run with: pytest tests/test_vocabulary.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.vocabulary import (
     check_vocab_table_format,
-    extract_vocab_items,
     count_vocab_rows,
+    extract_vocab_items,
 )
-
 
 # =============================================================================
 # TEST: Vocabulary Table Format

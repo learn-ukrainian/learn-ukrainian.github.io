@@ -1,0 +1,72 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 5 content_outline sections present with correct headings. All plan
+    points covered: golden rule from Заболотний (§1¶1), 33/38 mismatch (§1¶2), Litvinova
+    "голосна літера" question (§1¶2), Большакова'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian verified via VESUM batch check (58/58 real words confirmed;
+    44 "not found" are stress-mark tokenization artifacts — Большако́ва split as "Большако"+"ва",
+    etc.). Phonetic claims match Авр
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Exemplary PPP flow: situation (textbook poems, real examples) → pattern
+    (rules with 3+ examples each) → practice (activity markers). Every concept grounded
+    in Grade 1-5 textbook pedagogy: Большакова''s'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required vocab used naturally in prose: звук (§1¶1), літера (§1¶1),
+    голосний (§2¶1), приголосний (§3¶1), привіт (§4¶1), як справи (§4¶1), добре (§4¶1),
+    чудово (§4¶1), мама (§1¶1 "Take the word '
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 plan activity types present with correct focus. Markers placed after
+    teaching, not before. quiz tests sounds-vs-letters distinction (just taught).
+    match-up follows alphabet table. group-sort fol
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Opening is concrete and interactive: "Look at this page... Now say a
+    word out loud." No motivational filler, no "incredibly melodic," no "Let us explore."
+    Teacher voice throughout — demonstrating, not'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 5 H2 sections present in plan order. Clean markdown. Alphabet table
+    well-formatted. No duplicate summaries, no meta-commentary sections, no stray
+    tags. Word count 1770 — well above 1200 minimum. N
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented entirely on its own terms. No "like Russian but..."
+    framing. The hard/soft distinction described as "distinctly Slavic" rather than
+    comparing to Russian. Ґ described as "unique to '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural multi-turn greeting between named speakers (Тарас and Оля) with
+    distinct voices. Culturally appropriate — informal привіт between friends, дякую
+    in response. Gender difference (рада/радий) dem
+findings:
+- dimension: VOCABULARY COVERAGE
+  severity: MINOR
+  location: '§2 "Голосні звуки" — vowel examples paragraph: "мАмА — two [а] sounds.
+    мОлОкО́ (milk) — three [о] sounds. о́ко (eye) — two [о] sounds. дім (house) —
+    one [і] sound. ніс (nose) — one [і] sound."'
+  issue: Recommended vocabulary тато and сон are absent from the prose. Both are natural
+    fits for the vowel examples list (тато has two [а], сон has one [о]).
+  fix: Add тато and сон to the vowel examples.
+- dimension: PLAN ADHERENCE
+  severity: MINOR
+  location: §4 "Привіт!" — opening paragraph
+  issue: Plan point says "Following Anna Ohoiko ULP Episode 1" but the module does
+    not mention ULP or Anna Ohoiko by name in this section. The greeting content matches
+    ULP Episode 1's material but the source attribution is missing.
+  fix: Add a brief ULP reference to the opening of the Привіт section.

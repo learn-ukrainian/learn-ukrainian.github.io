@@ -1,0 +1,223 @@
+vocabulary:
+- word: вид дієсло́ва
+  translation: verbal aspect
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: про́ста́ фо́рма
+  translation: simple form
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: складна фо́рма
+  translation: synthetic form
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: скла́дена фо́рма
+  translation: analytic form
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: інфініти́в
+  translation: infinitive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієвідмі́на
+  translation: verb conjugation class
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: особо́ве закі́нчення
+  translation: personal ending
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дієвідмі́нювання
+  translation: conjugation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: двовидовий
+  translation: biaspectual
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: одновидовий
+  translation: single-aspect
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: трива́ла ді́я
+  translation: ongoing action
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: заве́ршена ді́я
+  translation: completed action
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: повто́рювана ді́я
+  translation: repeated action
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: допомі́жне́ дієсло́во
+  translation: auxiliary verb
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ді́йсний спо́сіб
+  translation: indicative mood
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: часова́ фо́рма
+  translation: tense form
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: на́голос
+  translation: stress
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: писати / написати
+  translation: to write (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: читати / прочитати
+  translation: to read (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: робити / зробити
+  translation: to do, to make (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відповідати / відповісти
+  translation: to answer (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: показувати / показати
+  translation: to show (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: брати / взяти
+  translation: to take (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: говорити / сказати
+  translation: to talk / to say (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шукати / знайти
+  translation: to look for / to find (impf / pf)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: атакува́ти
+  translation: to attack
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: придба́ти
+  translation: to purchase
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сподіва́тися
+  translation: to hope
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приї́хати
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пам'ята́ти
+  translation: to remember
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збира́ти
+  translation: to collect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: на власні очі
+  translation: with one's own eyes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сьогодні ввечері
+  translation: this evening
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: завтра вранці
+  translation: tomorrow morning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після обіду
+  translation: in the afternoon
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

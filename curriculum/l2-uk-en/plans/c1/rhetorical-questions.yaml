@@ -4,14 +4,15 @@ sequence: 58
 slug: rhetorical-questions
 version: '1.1'
 title: "Риторичне питання та оклик: синтаксис переконання"
-subtitle: "Rhetorical Question and Exclamation: The Syntax of Persuasion"
+subtitle: "Риторичні питання і оклики"
 focus: integration
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Дослідити прагматичну функцію риторичних фігур у публічному мовленні та літературі."
   - "Аналізувати структурні особливості риторичних питань, окликів та звертань."
-  - "Використовувати риторичні конструкції для посилення емоційного та логічного впливу на аудиторію."
+  - "Використовувати риторичні конструкції для посилення емоційного та логічного впливу
+    на аудиторію."
   - "Відрізняти щиру патетику від маніпулятивної риторики в сучасному медіадискурсі."
 
 reading_situations:
@@ -21,24 +22,31 @@ reading_situations:
     motivation: "Вивчення класичних канонів української риторики."
   - source_type: "публіцистична стаття"
     topic: "Майбутнє штучного інтелекту: чи залишиться місце для людини?"
-    key_elements: ["питально-відповідна форма", "інтонація сумніву", "діалогізація мовлення"]
-    motivation: "Аналіз сучасних методів залучення читача до дискусії через риторичні засоби."
+    key_elements: ["питально-відповідна форма", "інтонація сумніву", "діалогізація
+          мовлення"]
+    motivation: "Аналіз сучасних методів залучення читача до дискусії через риторичні
+      засоби."
 
 listening_situations:
   - media_type: "відео"
     setting: "Виступ на конференції TEDxUA про роль критичного мислення в епоху постправди."
-    focus_points: ["використання пауз", "риторичні оклики як маркери важливих тез", "контакт з аудиторією"]
+    focus_points: ["використання пауз", "риторичні оклики як маркери важливих тез",
+      "контакт з аудиторією"]
     motivation: "Аналіз живої ораторської майстерності та її синтаксичного інструментарію."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Напишіть маніфест (300-400 слів) на захист української культури, активно використовуючи риторичні питання та оклики для створення високого стилю."
-    requirements: ["мінімум 5 риторичних питань", "логічна завершеність кожної тези", "емоційна насиченість"]
+    prompt: "Напишіть маніфест (300-400 слів) на захист української культури, активно
+      використовуючи риторичні питання та оклики для створення високого стилю."
+    requirements: ["мінімум 5 риторичних питань", "логічна завершеність кожної тези",
+      "емоційна насиченість"]
     motivation: "Відпрацювання навичок переконливого письма."
-    model_answer: "Текст має бути пристрасним, але логічно вибудованим, де кожне риторичне питання слугує містком до наступного вагомого аргументу."
+    model_answer: "Текст має бути пристрасним, але логічно вибудованим, де кожне риторичне
+      питання слугує містком до наступного вагомого аргументу."
 
 discussion_topics:
-  - context: "Чи не знецінилися риторичні фігури через їх надмірне використання в рекламі та соцмережах?"
+  - context: "Чи не знецінилися риторичні фігури через їх надмірне використання в
+      рекламі та соцмережах?"
     questions:
       - "Чому риторичне питання не потребує відповіді, але змушує про неї думати?"
       - "У яких професійних ситуаціях риторичний оклик може бути недоречним?"
@@ -60,7 +68,8 @@ content_outline:
     words: 1000
     subsections:
       - "Синтаксис емоційної напруги: від вигуку до розгорнутого окличного речення"
-      - "Риторичне звертання до абстрактних понять, неживих предметів та відсутніх осіб"
+      - "Риторичне звертання до абстрактних понять, неживих предметів та відсутніх
+        осіб"
       - "Пунктуаційне оформлення експресивного синтаксису"
     key_concepts:
       - "риторичний оклик"
@@ -106,15 +115,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a political speech — identify all rhetorical questions and exclamations, classify their pragmatic function (ствердження, заперечення, сумнів, заклик)."
+    description: "Analyze a political speech — identify all rhetorical questions and
+      exclamations, classify their pragmatic function (ствердження, заперечення, сумнів,
+      заклик)."
   - type: select
-    description: "Determine whether a given question is genuine or rhetorical based on context, and explain the intended communicative effect."
+    description: "Determine whether a given question is genuine or rhetorical based
+      on context, and explain the intended communicative effect."
   - type: match-up
-    description: "Match rhetorical figures (риторичне питання, риторичний оклик, апострофа) with their definitions, functions, and literary examples."
+    description: "Match rhetorical figures (риторичне питання, риторичний оклик, апострофа)
+      with their definitions, functions, and literary examples."
   - type: essay-response
-    description: "Write a persuasive manifesto paragraph (100-150 words) using at least 3 rhetorical questions and 2 rhetorical exclamations as structural elements."
+    description: "Write a persuasive manifesto paragraph (100-150 words) using at
+      least 3 rhetorical questions and 2 rhetorical exclamations as structural elements."
   - type: error-correction
-    description: "Fix inappropriate use of rhetorical questions in academic texts — replace where they weaken argumentation, keep where they strengthen it."
+    description: "Fix inappropriate use of rhetorical questions in academic texts
+      — replace where they weaken argumentation, keep where they strengthen it."
 
 activities:
   types_required:
@@ -134,3 +149,4 @@ references:
 connects_to:
   previous: "euphemism-taboo"
   next: "fonetychni-stylistychni-zasoby"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

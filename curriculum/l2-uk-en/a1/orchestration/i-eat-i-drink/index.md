@@ -1,6 +1,6 @@
 # Build Summary: i-eat-i-drink (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:43
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 14:01:41 |
 | enrich | complete | 2026-03-30 14:01:41 |
 | verify | complete | 2026-03-30 14:01:42 |
-| review | complete | 2026-03-30 14:04:30 |
-| stress | complete | 2026-03-31 09:58:42 |
-| publish | complete | 2026-03-31 09:58:42 |
+| review | complete | 2026-04-01 11:43:33 |
+| stress | complete | 2026-04-01 11:43:39 |
+| publish | complete | 2026-04-01 11:43:40 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 147s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 14s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 169s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

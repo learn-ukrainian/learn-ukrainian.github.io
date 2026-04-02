@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 16: Verbs Group I (A1, A1.3 [Actions])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -129,14 +129,14 @@ references:
 
 Ю́ля is in the kitchen. Something smells amazing. Сашко́ walks in and can't resist asking questions.
 
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Що ти ро́биш, Ю́лю? *(What are you doing, Yulia?)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Я готу́ю вече́рю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Я чита́ю. *(I'm reading.)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Що чита́єш? *(What are you reading?)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Я читаю кни́гу. А де Оле́на? *(I'm reading a book. And where's Olena?)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Вона́ слу́хає му́зику. *(She's listening to music.)*</div>
-> <div class="dialogue-line"><span class="speaker">Сашко:</span> Вона за́вжди́ слухає музику! *(She always listens to music!)*</div>
-> <div class="dialogue-line"><span class="speaker">Юля:</span> Так, але́ вона зна́є бага́то пісе́нь! *(Yes, but she knows many songs!)*</div>
+> — **Сашко:** Що ти ро́биш, Ю́лю? *(What are you doing, Yulia?)*
+> — **Юля:** Я готу́ю вече́рю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*
+> — **Сашко:** Я чита́ю. *(I'm reading.)*
+> — **Юля:** Що чита́єш? *(What are you reading?)*
+> — **Сашко:** Я читаю кни́гу. А де Оле́на? *(I'm reading a book. And where's Olena?)*
+> — **Юля:** Вона́ слу́хає му́зику. *(She's listening to music.)*
+> — **Сашко:** Вона за́вжди́ слухає музику! *(She always listens to music!)*
+> — **Юля:** Так, але́ вона зна́є бага́то пісе́нь! *(Yes, but she knows many songs!)*
 
 :::tip
 Помі́тив/-ла? Three different persons appeared in that exchange: **я готую** (I cook), **ти читаєш** (you read), **вона слухає** (she listens). Those endings — **-ю**, **-єш**, **-є** — are Group I conjugation. That's the pattern you're learning today.
@@ -144,28 +144,28 @@ references:
 
 Here's a second situation — two people meet after work.
 
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Де ти працю́єш? *(Where do you work?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Так, я вивча́ю! *(Yes, I'm studying it!)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> До́бре! Я теж вивчаю. *(Great! I'm studying too.)*</div>
-> <div class="dialogue-line"><span class="speaker">Андрій:</span> Ти гуля́єш уве́чері? *(Do you walk in the evening?)*</div>
-> <div class="dialogue-line"><span class="speaker">Марина:</span> Так, я гуля́ю в парку. *(Yes, I walk in the park.)*</div>
+> — **Андрі́й:** Де ти працю́єш? *(Where do you work?)*
+> — **Мари́на:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
+> — **Андрій:** Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*
+> — **Марина:** Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*
+> — **Андрій:** Так, я вивча́ю! *(Yes, I'm studying it!)*
+> — **Марина:** До́бре! Я теж вивчаю. *(Great! I'm studying too.)*
+> — **Андрій:** Ти гуля́єш уве́чері? *(Do you walk in the evening?)*
+> — **Марина:** Так, я гуля́ю в парку. *(Yes, I walk in the park.)*
 
-Count the verbs that appeared across both dialogues: **готувати** (to cook), **читати** (to read), **слухати** (to listen), **знати** (to know), **працювати** (to work), **вивчати** (to study), **гуляти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **робити** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
+Count the verbs that appeared across both dialogues: **готува́ти** (to cook), **чита́ти** (to read), **слу́хати** (to listen), **зна́ти** (to know), **працюва́ти** (to work), **вивча́ти** (to study), **гуля́ти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **роби́ти** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
 
 ## Пе́рша дієвідмі́на (Group I Verbs)
 
-All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-ати** (**читати**, **слухати**, **гуляти**, **знати**), **-увати** (**готувати**, **працювати**), or **-яти** (**вивчати**, **малювати** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
+All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-а́ти** (**читати**, **слухати**, **гуляти**, **знати**, **вивчати**) or **-увати/-ювати** (**готувати**, **працювати**, **малюва́ти** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
 
-Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита-**, and add endings:
+Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита́-**, and add endings:
 
 | Осо́ба (Person) | Однина́ (Singular) | Множина́ (Plural) |
 |---|---|---|
-| 1-ша (я / ми) | я **читаю** | ми **читаємо** |
-| 2-га (ти / ви) | ти **читаєш** | ви **читаєте** |
-| 3-тя (він, вона / вони́) | він/вона **читає** | вони **читають** |
+| 1-ша (я / ми) | я **читаю** | ми **чита́ємо** |
+| 2-га (ти / ви) | ти **читаєш** | ви **чита́єте** |
+| 3-тя (він, вона / вони́) | він/вона **чита́є** | вони **чита́ють** |
 
 This table comes from Варзацька, Grade 4 (p. 129) — the standard Ukrainian school approach. Notice the vowel **є** running through the forms from **ти** to **ви**: -**є**ш, -**є**, -**є**мо, -**є**те (with -**ють** for **вони**). That consistent **є** is the signature of Group I.
 
@@ -180,11 +180,11 @@ Now apply the same pattern to all six essential verbs. Here are the three singul
 | **гуляти** (to walk) | гуляю | гуляєш | гуля́є |
 | **готувати** (to cook) | готую | готу́єш | готу́є |
 
-One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **готу-** (not *готува-*), **працювати** → **працю-** (not *працюва-*). The endings stay the same — only the stem changes.
+One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **го́ту-** (not *готува-*), **працювати** → **пра́цю-** (not *працюва-*). The endings stay the same — only the stem changes.
 
 <!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
-A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **робить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
+A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **ро́бить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
 
 ## Я, ти, він/вона (Persons)
 
@@ -203,7 +203,7 @@ Each sentence follows the same structure: **person + verb form + object**. The v
 
 <!-- INJECT_ACTIVITY: quiz-verb-forms -->
 
-You may have noticed something: **книга** became **книгу**, **пісня** became **пісню**, **музика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
+You may have noticed something: **кни́га** became **книгу**, **пі́сня** became **пісню**, **му́зика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
 
 <!-- INJECT_ACTIVITY: match-person-to-form -->
 
@@ -237,9 +237,9 @@ Test yourself before moving on:
 - Ask "What are you doing?" → **Що ти робиш?** ✓
 - Say two things you do every day: **Я читаю...** **Я слухаю...** (open production — use any Group I verb)
 
-**Coming next:** M17 — Group II verbs (**говорити**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
+**Coming next:** M17 — Group II verbs (**говори́ти**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
 
-**Deterministic word count: 1308 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1291 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -417,9 +417,10 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 68 words | Not found: 35 words
+Verified: 65 words | Not found: 40 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Андрі — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
   ✗ Варзацька — NOT IN VESUM
   ✗ Діало — NOT IN VESUM
@@ -436,11 +437,14 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ гуля — NOT IN VESUM
   ✗ дієвідмі — NOT IN VESUM
   ✗ кни — NOT IN VESUM
+  ✗ малюва — NOT IN VESUM
   ✗ нську — NOT IN VESUM
+  ✗ пра — NOT IN VESUM
   ✗ працюва — NOT IN VESUM
   ✗ пісе — NOT IN VESUM
   ✗ рша — NOT IN VESUM
   ✗ слу — NOT IN VESUM
+  ✗ сня — NOT IN VESUM
   ✗ студе — NOT IN VESUM
   ✗ тив — NOT IN VESUM
   ✗ увати — NOT IN VESUM
@@ -450,13 +454,14 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ хаю — NOT IN VESUM
   ✗ хає — NOT IN VESUM
   ✗ хаєш — NOT IN VESUM
+  ✗ ювати — NOT IN VESUM
   ✗ юся — NOT IN VESUM
   ✗ ють — NOT IN VESUM
   ✗ яти — NOT IN VESUM
   ✗ ємо — NOT IN VESUM
   ✗ єте — NOT IN VESUM
 
-All 68 other words are confirmed to exist in VESUM.
+All 65 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -465,23 +470,23 @@ All 68 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

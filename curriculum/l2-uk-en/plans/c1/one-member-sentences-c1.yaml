@@ -4,46 +4,60 @@ sequence: 52
 slug: one-member-sentences-c1
 version: '1.1'
 title: "Стилістичний потенціал односкладних речень"
-subtitle: "Stylistic Potential of One-Member Sentences"
+subtitle: "Стилістичний потенціал односкладних речень"
 focus: grammar
 pedagogy: workshop
 word_target: 4000
 objectives:
-  - "Глибоко аналізувати функціонально-стилістичну роль односкладних речень у різних типах дискурсу."
-  - "Використовувати безособові конструкції для досягнення наукової об'єктивності та офіційності."
-  - "Застосовувати означено- та неозначено-особові речення для створення динамічного та експресивного викладу."
-  - "Опанувати мистецтво використання називних речень у художніх описах та публіцистичних заголовках."
+  - "Глибоко аналізувати функціонально-стилістичну роль односкладних речень у різних
+    типах дискурсу."
+  - "Використовувати безособові конструкції для досягнення наукової об'єктивності
+    та офіційності."
+  - "Застосовувати означено- та неозначено-особові речення для створення динамічного
+    та експресивного викладу."
+  - "Опанувати мистецтво використання називних речень у художніх описах та публіцистичних
+    заголовках."
 
 reading_situations:
   - source_type: "наукова стаття"
     topic: "Еволюція фізико-технічних терміносистем у працях Івана Пулюя."
     key_elements: ["безособові конструкції", "термінологічна точність", "логічна послідовність"]
-    motivation: "Вивчення ролі безособових речень у науковому тексті для підкреслення об'єктивності процесу."
+    motivation: "Вивчення ролі безособових речень у науковому тексті для підкреслення
+      об'єктивності процесу."
   - source_type: "публіцистичний нарис"
     topic: "Ритміка сучасного міста: від гомону площ до тиші бібліотек."
     key_elements: ["називні речення", "означено-особові форми", "емоційна напруженість"]
-    motivation: "Аналіз експресивної функції називних та особових речень у створенні динамічної картини світу."
+    motivation: "Аналіз експресивної функції називних та особових речень у створенні
+      динамічної картини світу."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть аналітичне есе на тему 'Мова як дзеркало національної ідентичності', використовуючи узагальнено-особові речення (прислів'я, афоризми) для посилення аргументації."
-    requirements: ["мінімум 300 слів", "використання щонайменше 5 типів односкладних речень", "академічний стиль"]
-    motivation: "Практичне застосування стилістичних ресурсів односкладного речення у власному висловленні."
-    model_answer: "Текст має демонструвати вміння гармонійно поєднувати називні речення в експозиції з безособовими у висновках."
+    prompt: "Напишіть аналітичне есе на тему 'Мова як дзеркало національної ідентичності',
+      використовуючи узагальнено-особові речення (прислів'я, афоризми) для посилення
+      аргументації."
+    requirements: ["мінімум 300 слів", "використання щонайменше 5 типів односкладних
+          речень", "академічний стиль"]
+    motivation: "Практичне застосування стилістичних ресурсів односкладного речення
+      у власному висловленні."
+    model_answer: "Текст має демонструвати вміння гармонійно поєднувати називні речення
+      в експозиції з безособовими у висновках."
 
 discussion_topics:
-  - context: "Проблема 'надмірної суб'єктивності' в сучасних медіа: чи варто повертатися до безособових стандартів?"
+  - context: "Проблема 'надмірної суб'єктивності' в сучасних медіа: чи варто повертатися
+      до безособових стандартів?"
     questions:
       - "Як вибір типу речення впливає на довіру читача до інформації?"
       - "У яких ситуаціях неозначено-особові речення можуть бути маніпулятивними?"
       - "Чи зберігають називні речення свою актуальність у цифровому лаконічному письмі?"
-    motivation: "Критичне осмислення прагматичного аспекту синтаксичних структур у медіадискурсі."
+    motivation: "Критичне осмислення прагматичного аспекту синтаксичних структур у
+      медіадискурсі."
 
 content_outline:
   - section: "Типологія та стилістика односкладних речень"
     words: 1000
     subsections:
-      - "Граматична природа односкладності: відсутність чи необов'язковість другого головного члена"
+      - "Граматична природа односкладності: відсутність чи необов'язковість другого
+        головного члена"
       - "Синоніміка двоскладних та односкладних конструкцій"
       - "Жанрова специфіка використання різних типів односкладних речень"
     key_concepts:
@@ -100,15 +114,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a scientific text and a literary passage — compare how безособові речення function differently in each (objectivity vs. emotional state)."
+    description: "Analyze a scientific text and a literary passage — compare how безособові
+      речення function differently in each (objectivity vs. emotional state)."
   - type: error-correction
-    description: "Fix stylistic errors where one-member sentence types are used inappropriately — e.g., називне речення in a legal document, безособове in informal speech."
+    description: "Fix stylistic errors where one-member sentence types are used inappropriately
+      — e.g., називне речення in a legal document, безособове in informal speech."
   - type: select
-    description: "Identify the type of one-member sentence (означено-особове, неозначено-особове, узагальнено-особове, безособове, називне) in excerpts from different registers."
+    description: "Identify the type of one-member sentence (означено-особове, неозначено-особове,
+      узагальнено-особове, безособове, називне) in excerpts from different registers."
   - type: essay-response
-    description: "Rewrite a text passage first using only називні речення for a static, contemplative effect, then using дієслівні односкладні for dynamic impact."
+    description: "Rewrite a text passage first using only називні речення for a static,
+      contemplative effect, then using дієслівні односкладні for dynamic impact."
   - type: fill-in
-    description: "Complete text passages with appropriate one-member sentence constructions matching the required register and stylistic effect."
+    description: "Complete text passages with appropriate one-member sentence constructions
+      matching the required register and stylistic effect."
 
 activities:
   types_required:

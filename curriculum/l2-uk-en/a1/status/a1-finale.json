@@ -2,10 +2,10 @@
   "module": "a1-finale",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:26:35.342272Z",
+  "last_audit": "2026-04-02T20:29:52.473323Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:55:17.497238Z",
+    "md": "2026-03-31T17:27:15.867335Z",
     "meta": null,
     "activities": "2026-03-31T00:59:01.340073Z",
     "vocabulary": "2026-03-31T00:59:45.026699Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2002/1200 (raw: 2435)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1605/1200 (raw: 1636) | immersion: 45.3% HIGH (target 25-40% (M55))"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -1,6 +1,6 @@
 # Build Summary: what-will-happen (A1)
 
-Generated: 2026-03-31 11:49
+Generated: 2026-04-01 13:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:49
 | vocab | complete | 2026-03-30 21:16:16 |
 | enrich | complete | 2026-03-30 21:16:17 |
 | verify | complete | 2026-03-30 21:16:17 |
-| review | complete | 2026-03-30 21:21:42 |
-| stress | complete | 2026-03-31 09:49:37 |
-| publish | complete | 2026-03-31 09:49:37 |
+| review | complete | 2026-04-01 11:45:54 |
+| stress | complete | 2026-04-01 11:45:54 |
+| publish | complete | 2026-04-01 11:45:59 |
 
 ## Reviews
 
@@ -40,6 +40,9 @@ Generated: 2026-03-31 11:49
 | vocab | claude (claude-sonnet-4-6) | 33s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 215s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 109s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

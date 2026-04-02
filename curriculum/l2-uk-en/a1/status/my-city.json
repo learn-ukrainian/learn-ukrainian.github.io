@@ -2,10 +2,10 @@
   "module": "my-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:25:43.374780Z",
+  "last_audit": "2026-04-02T20:30:02.580749Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:47:05.311323Z",
+    "md": "2026-03-31T17:27:15.876085Z",
     "meta": null,
     "activities": "2026-03-30T14:26:00.580653Z",
     "vocabulary": "2026-03-30T14:26:35.426887Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2069/1200 (raw: 2615) | immersion: 34.1% HIGH (target 15-30% (M30))"
+      "message": "1562/1200 (raw: 1601) | immersion: 38.3% HIGH (target 15-30% (M30))"
     },
     "activities": {
       "status": "pass",

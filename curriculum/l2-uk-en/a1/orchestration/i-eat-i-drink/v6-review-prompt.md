@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 37: I Eat, I Drink (A1, A1.6 [Food and Shopping])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -164,51 +164,33 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Two colleagues sit down for lunch at work, unpacking their food containers. What do they eat? What do they drink?
+What do people eat and drink during the day? In the first dialogue, Марі́я and Оле́г chat about breakfast — what they eat, what their family eats. In the second, two colleagues unpack their lunch at work. Listen for the verbs **ї́сти** and **пи́ти** — they change with every speaker.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Що ти їси на сніданок? *(What do you eat for breakfast?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Я їм кашу і п'ю каву. *(I eat porridge and drink coffee.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> А Олена? *(And Olena?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Вона їсть хліб з маслом і п'є чай. *(She eats bread with butter and drinks tea.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> А діти? *(And the kids?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Вони їдять яйця і п'ють молоко. *(They eat eggs and drink milk.)*</div>
-
-</div>
+> — **Марія:** Що ти їси́ на сніда́нок? *(What do you eat for breakfast?)*
+> — **Олег:** Я їм ка́шу і п'ю ка́ву. *(I eat porridge and drink coffee.)*
+> — **Марія:** А Оле́на? *(And Olena?)*
+> — **Олег:** Вона́ їсть хліб з ма́слом і п'є чай. *(She eats bread with butter and drinks tea.)*
+> — **Марія:** А ді́ти? *(And the kids?)*
+> — **Олег:** Вони́ їдя́ть я́йця і п'ють молоко́. *(They eat eggs and drink milk.)*
 
 Notice how the verb **їсти** (to eat) changes with every person: **я їм**, **вона їсть**, **вони їдять**. The verb **пити** (to drink) does the same: **п'ю**, **п'є**, **п'ють**. These two verbs will look different for every subject — but by the end of this module, you will know all six forms of each.
 
 Now the same verbs appear at lunch, with plural subjects.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Колега 1:</span> Що ви їсте на обід? *(What are you eating for lunch?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега 2:</span> Ми їмо суп і салат. *(We're eating soup and salad.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега 1:</span> А що п'єте? *(And what are you drinking?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега 2:</span> Ми п'ємо воду або сік. *(We're drinking water or juice.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега 1:</span> Я теж хочу суп. *(I want soup too.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Колега 2:</span> Добре, замовляй! *(Okay, go ahead and order!)*</div>
-
-</div>
+> — **Коле́га 1:** Що ви їсте́ на обід? *(What are you eating for lunch?)*
+> — **Колега 2:** Ми їмо́ суп і сала́т. *(We're eating soup and salad.)*
+> — **Колега 1:** А що п'єте́? *(And what are you drinking?)*
+> — **Колега 2:** Ми п'ємо́ воду́ або́ сік. *(We're drinking water or juice.)*
+> — **Колега 1:** Я теж хо́чу суп. *(I want soup too.)*
+> — **Колега 2:** До́бре, замовля́й! *(Okay, go ahead and order!)*
 
 Look back at both dialogues and answer these questions aloud: **Що їсть Олена?** (What does Olena eat?) **Що п'ють діти?** (What do the children drink?) **Що ми їмо на обід?** (What do we eat for lunch?) Each answer uses a noun right after the verb — **хліб**, **молоко**, **суп**. Some nouns change their ending, some do not. That pattern is the core of this module.
 
 ## Їсти і пити (To Eat and To Drink)
 
-The verb **їсти** (to eat) is irregular. It does not follow Group I or Group II conjugation — it has its own pattern. Ukrainian textbooks (Заболотний, Grade 7) treat it as a special class alongside **дати** (to give). Memorize these six forms:
+The verb **їсти** (to eat) is irregular. It does not follow Group I or Group II conjugation — it has its own pattern. Ukrainian textbooks (Заболо́тний, Grade 7) treat it as a special class alongside **да́ти** (to give). Memorize these six forms:
 
 | Person | Singular | Plural |
 |--------|----------|--------|
@@ -219,7 +201,7 @@ The verb **їсти** (to eat) is irregular. It does not follow Group I or Group
 Three sentences to anchor the pattern:
 
 - **Я їм хліб.** — I eat bread.
-- **Він їсть рибу.** — He eats fish.
+- **Він їсть ри́бу.** — He eats fish.
 - **Вони їдять кашу.** — They eat porridge.
 
 The verb **пити** (to drink) follows regular Group I conjugation. Notice the apostrophe before **ю**, **є** — this is a standard Ukrainian spelling rule when **п** meets a soft vowel.
@@ -254,31 +236,31 @@ Ukrainian schools (Grade 4, Заболотний) teach the accusative case thro
 - **Я їм (що?) хліб.** — I eat (what?) bread.
 - **Я п'ю (що?) каву.** — I drink (what?) coffee.
 
-This is the **бачу що? / їм що? / п'ю що?** rule from Ukrainian textbooks. Build a habit: every time you use **їсти** or **пити**, ask **що?** — and the noun that follows takes the accusative form.
+This is the **ба́чу що? / їм що? / п'ю що?** rule from Ukrainian textbooks. Build a habit: every time you use **їсти** or **пити**, ask **що?** — and the noun that follows takes the accusative form.
 
 <!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
-## Знахідний відмінок — неживе (Accusative Inanimate)
+## Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)
 
 Masculine inanimate nouns do not change in the accusative — they look exactly like the nominative. The same is true for neuter nouns. Here are the examples:
 
 - **хліб → хліб** — Я їм хліб. *(I eat bread.)*
 - **суп → суп** — Я їм суп. *(I eat soup.)*
 - **сік → сік** — Я п'ю сік. *(I drink juice.)*
-- **банан → банан** — Я їм банан. *(I eat a banana.)*
+- **бана́н → банан** — Я їм банан. *(I eat a banana.)*
 - **молоко → молоко** — Я п'ю молоко. *(I drink milk.)*
-- **яйце → яйце** — Я їм яйце. *(I eat an egg.)*
+- **яйце́ → яйце** — Я їм яйце. *(I eat an egg.)*
 
 Rule: masculine and neuter inanimate nouns stay the same after **їсти** and **пити**. No ending changes at all.
 
 Feminine nouns are different — and this is the key change to learn. Feminine nouns ending in **-а** change to **-у**. Feminine nouns ending in **-я** change to **-ю**. Eight examples:
 
-- **кава → каву** — Я п'ю каву. *(I drink coffee.)*
-- **вода → воду** — Я п'ю воду. *(I drink water.)*
-- **риба → рибу** — Я їм рибу. *(I eat fish.)*
-- **каша → кашу** — Я їм кашу. *(I eat porridge.)*
-- **картопля → картоплю** — Я їм картоплю. *(I eat potatoes.)*
-- **сметана → сметану** — Я їм сметану. *(I eat sour cream.)*
+- **ка́ва → каву** — Я п'ю каву. *(I drink coffee.)*
+- **вода́ → воду** — Я п'ю воду. *(I drink water.)*
+- **ри́ба → рибу** — Я їм рибу. *(I eat fish.)*
+- **ка́ша → кашу** — Я їм кашу. *(I eat porridge.)*
+- **карто́пля → карто́плю** — Я їм картоплю. *(I eat potatoes.)*
+- **смета́на → смета́ну** — Я їм сметану. *(I eat sour cream.)*
 
 The pattern is simple: **-а** becomes **-у**; **-я** becomes **-ю**. This is the only accusative ending change you need at A1. Everything else stays the same.
 
@@ -325,7 +307,7 @@ Test yourself — fill in the correct form:
 
 Now try this on your own: say three things you eat today and three things you drink. Use the correct accusative form for each noun. For example: **Я їм кашу, рибу і хліб. Я п'ю каву, воду і сік.** Check each feminine noun — did you change **-а** to **-у**? Did masculine and neuter nouns stay the same? If yes, you have the pattern.
 
-**Deterministic word count: 1264 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1288 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -503,14 +485,31 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 62 words | Not found: 3 words
+Verified: 55 words | Not found: 20 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Діало — NOT IN VESUM
+  ✗ Заболо — NOT IN VESUM
+  ✗ Знахі — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
+  ✗ бана — NOT IN VESUM
+  ✗ відмі — NOT IN VESUM
+  ✗ дний — NOT IN VESUM
+  ✗ замовля — NOT IN VESUM
+  ✗ йця — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ плю — NOT IN VESUM
+  ✗ пля — NOT IN VESUM
+  ✗ слом — NOT IN VESUM
+  ✗ смета — NOT IN VESUM
+  ✗ сти — NOT IN VESUM
+  ✗ тний — NOT IN VESUM
+  ✗ їдя — NOT IN VESUM
 
-All 62 other words are confirmed to exist in VESUM.
+All 55 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -519,23 +518,23 @@ All 62 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

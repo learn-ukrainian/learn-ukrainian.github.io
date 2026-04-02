@@ -1,6 +1,6 @@
 # Build Summary: my-plans (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-02 20:38
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 21:34:35 |
 | enrich | complete | 2026-03-30 21:34:36 |
 | verify | complete | 2026-03-30 21:34:36 |
-| review | complete | 2026-03-30 21:41:11 |
-| stress | complete | 2026-03-31 09:58:57 |
-| publish | complete | 2026-03-31 09:58:57 |
+| review | complete | 2026-04-01 11:46:04 |
+| stress | complete | 2026-04-02 18:38:39 |
+| publish | complete | 2026-04-02 18:38:40 |
 
 ## Reviews
 
@@ -43,6 +43,8 @@ Generated: 2026-03-31 11:58
 | vocab | claude (claude-sonnet-4-6) | 13s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 205s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 189s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 | section-rewrite | claude-tools (claude-opus-4-6) | 103s | ✅ |
 
 ## Files
@@ -56,6 +58,7 @@ Generated: 2026-03-31 11:58
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

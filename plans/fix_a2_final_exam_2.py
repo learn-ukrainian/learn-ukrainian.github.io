@@ -1,8 +1,7 @@
-import re
 import yaml
 
 md_path = "curriculum/l2-uk-en/a2/a2-final-exam.md"
-with open(md_path, "r", encoding="utf-8") as f:
+with open(md_path, encoding="utf-8") as f:
     text = f.read()
 
 # 1. Euphony
@@ -23,7 +22,7 @@ with open(md_path, "w", encoding="utf-8") as f:
 
 # Fix Activities
 act_path = "curriculum/l2-uk-en/a2/activities/a2-final-exam.yaml"
-with open(act_path, "r", encoding="utf-8") as f:
+with open(act_path, encoding="utf-8") as f:
     acts = yaml.safe_load(f)
 
 for act in acts:

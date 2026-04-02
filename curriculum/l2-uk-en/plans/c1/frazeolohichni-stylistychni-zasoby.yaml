@@ -4,35 +4,44 @@ sequence: 62
 slug: frazeolohichni-stylistychni-zasoby
 version: '1.1'
 title: "Фразеологічні стилістичні засоби"
-subtitle: "Phraseological Stylistic Means"
+subtitle: "Фразеологічні стилістичні засоби"
 focus: vocabulary
 pedagogy: seminar
 word_target: 4000
 objectives:
   - "Аналізувати стилістичні функції фразеологізмів у різних типах дискурсу."
   - "Диференціювати книжну, розмовну та нейтральну фразеологію."
-  - "Використовувати фразеологічні одиниці для посилення експресивності та переконуваності мовлення."
+  - "Використовувати фразеологічні одиниці для посилення експресивності та переконуваності
+    мовлення."
   - "Розуміти культурно-історичний підтекст українських фразеологізмів."
 
 reading_situations:
   - source_type: "публіцистичне есе"
     topic: "Роль метафоричної фразеології в сучасному українському політичному дискурсі."
     key_elements: ["ідеогеми", "експресивне забарвлення", "трансформація значень"]
-    motivation: "Дослідження того, як стійкі сполуки слів формують суспільну думку та емоційне ставлення."
+    motivation: "Дослідження того, як стійкі сполуки слів формують суспільну думку
+      та емоційне ставлення."
   - source_type: "художній уривок"
     topic: "Використання народної фразеології у творах Івана Нечуя-Левицького."
     key_elements: ["ідіоми", "приказки", "етнографізми"]
-    motivation: "Вивчення джерел народної мудрості та їхньої стилізації в класичній літературі."
+    motivation: "Вивчення джерел народної мудрості та їхньої стилізації в класичній
+      літературі."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Напишіть критичний відгук на сучасну статтю (250-300 слів), інтегруючи щонайменше п'ять фразеологізмів книжного стилю для аргументації своєї позиції."
-    requirements: ["використання термінологічної фразеології", "логічність викладу", "дотримання академічної норми"]
-    motivation: "Практичне застосування фразеологічних засобів у професійній письмовій комунікації."
-    model_answer: "Текст повинен демонструвати глибоке розуміння контекстуального вживання фразеологізмів на кшталт 'наріжний камінь', 'альфа і омега', 'грати першу скрипку'."
+    prompt: "Напишіть критичний відгук на сучасну статтю (250-300 слів), інтегруючи
+      щонайменше п'ять фразеологізмів книжного стилю для аргументації своєї позиції."
+    requirements: ["використання термінологічної фразеології", "логічність викладу",
+      "дотримання академічної норми"]
+    motivation: "Практичне застосування фразеологічних засобів у професійній письмовій
+      комунікації."
+    model_answer: "Текст повинен демонструвати глибоке розуміння контекстуального
+      вживання фразеологізмів на кшталт 'наріжний камінь', 'альфа і омега', 'грати
+      першу скрипку'."
 
 discussion_topics:
-  - context: "Проблема 'вторинності' або 'калькування' фразеологізмів з інших мов (зокрема російської) у сучасному медійному просторі."
+  - context: "Проблема 'вторинності' або 'калькування' фразеологізмів з інших мов
+      (зокрема російської) у сучасному медійному просторі."
     questions:
       - "Чому важливо зберігати автентичну українську фразеологію?"
       - "Як фразеологізми впливають на національну ідентичність мовця?"
@@ -100,15 +109,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a newspaper article — identify all phraseological units, classify their stylistic register (книжна, розмовна, нейтральна), and evaluate their effectiveness."
+    description: "Analyze a newspaper article — identify all phraseological units,
+      classify their stylistic register (книжна, розмовна, нейтральна), and evaluate
+      their effectiveness."
   - type: select
-    description: "Identify whether a given phraseological unit is authentic Ukrainian or a calque from Russian — choose the correct Ukrainian equivalent."
+    description: "Identify whether a given phraseological unit is authentic Ukrainian
+      or a calque from Russian — choose the correct Ukrainian equivalent."
   - type: match-up
-    description: "Match phraseological units with their sources (біблеїзми, античні ремінісценції, козацький фольклор, крилаті вислови класиків)."
+    description: "Match phraseological units with their sources (біблеїзми, античні
+      ремінісценції, козацький фольклор, крилаті вислови класиків)."
   - type: error-correction
-    description: "Fix phraseological errors in texts — contaminated idioms, pleonastic combinations, calqued expressions from Russian."
+    description: "Fix phraseological errors in texts — contaminated idioms, pleonastic
+      combinations, calqued expressions from Russian."
   - type: essay-response
-    description: "Write a critical review paragraph (100-150 words) integrating at least 5 Ukrainian book-style phraseological units naturally."
+    description: "Write a critical review paragraph (100-150 words) integrating at
+      least 5 Ukrainian book-style phraseological units naturally."
 
 activities:
   types_required:

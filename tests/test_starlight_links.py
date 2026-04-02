@@ -13,9 +13,9 @@ Run: pytest tests/test_starlight_links.py -v
 Run only website tests: pytest -m website
 """
 
+import os
 import re
 import sys
-import os
 from pathlib import Path
 
 import pytest

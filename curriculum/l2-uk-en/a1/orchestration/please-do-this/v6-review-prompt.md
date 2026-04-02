@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 43: Please Do This (A1, A1.7 [Communication])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -131,76 +131,52 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 A morning Ukrainian lesson. The teacher walks in, opens her book, and class begins.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Відкрийте підручники, будь ласка. *(Open your textbooks, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Читайте текст на сторінці двадцять три. *(Read the text on page twenty-three.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Учень:</span> Вибачте, яку сторінку? *(Sorry, which page?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Сторінку двадцять три. Читайте тихо. *(Page twenty-three. Read quietly.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Добре. Тепер пишіть. Напишіть три речення. *(Good. Now write. Write three sentences.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Учениця:</span> Можна запитати? *(May I ask a question?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Так, запитуйте! *(Yes, go ahead and ask!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Учениця:</span> Що означає це слово? *(What does this word mean?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Вчителька:</span> Подивіться у словник. Відкрийте його. *(Look in the dictionary. Open it.)*</div>
-
-</div>
+> — **Вчителька:** Відкри́йте підру́чники, будь ла́ска. *(Open your textbooks, please.)*
+> — **Вчителька:** Чита́йте текст на сторі́нці два́дцять три. *(Read the text on page twenty-three.)*
+> — **Учень:** Ви́бачте, яку сторі́нку? *(Sorry, which page?)*
+> — **Вчителька:** Сторінку двадцять три. Читайте ти́хо. *(Page twenty-three. Read quietly.)*
+> — **Вчителька:** До́бре. Тепе́р пиші́ть. Напиші́ть три речення. *(Good. Now write. Write three sentences.)*
+> — **Учениця:** Мо́жна запита́ти? *(May I ask a question?)*
+> — **Вчителька:** Так, запи́туйте! *(Yes, go ahead and ask!)*
+> — **Учениця:** Що означа́є це сло́во? *(What does this word mean?)*
+> — **Вчителька:** Подиві́ться у словни́к. Відкрийте йо́го. *(Look in the dictionary. Open it.)*
 
 The teacher used **ви**-forms throughout: **відкрийте** (open), **читайте** (read), **пишіть** (write), **напишіть** (write — completed action), **запитуйте** (ask), **подивіться** (look). She is speaking to the whole class — a group — so the **ви**-form is natural.
 
 After school, two friends walk outside together.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олесь:</span> Слухай, ходімо в кафе! *(Listen, let's go to a café!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олесь:</span> Подивись, яка гарна погода! *(Look, what nice weather!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дарина:</span> Добре! Іди, я зараз. *(OK! Go ahead, I'm coming.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олесь:</span> Сідай тут, це гарне місце. *(Sit here, it's a nice spot.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дарина:</span> Дай мені меню, будь ласка. *(Give me the menu, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олесь:</span> Ось, дивись. Скажи, що ти хочеш? *(Here, look. Tell me, what do you want?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дарина:</span> Я хочу каву і тістечко. *(I want coffee and a pastry.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олесь:</span> Добре. Офіціанте, принесіть каву і тістечко, будь ласка! *(OK. Waiter, bring a coffee and a pastry, please!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Дарина:</span> Дякую, Олесю! *(Thanks, Oles!)*</div>
-
-</div>
+> — **Олесь:** Слу́хай, ході́мо в кафе́! *(Listen, let's go to a café!)*
+> — **Олесь:** Подиви́сь, яка га́рна пого́да! *(Look, what nice weather!)*
+> — **Дарина:** Добре! І́ди, я за́раз. *(OK! Go ahead, I'm coming.)*
+> — **Олесь:** Сіда́й тут, це га́рне мі́сце. *(Sit here, it's a nice spot.)*
+> — **Дарина:** Дай мені́ меню́, будь ласка. *(Give me the menu, please.)*
+> — **Олесь:** Ось, диви́сь. Скажи́, що ти хо́чеш? *(Here, look. Tell me, what do you want?)*
+> — **Дарина:** Я хо́чу ка́ву і ті́стечко. *(I want coffee and a pastry.)*
+> — **Олесь:** Добре. Офіціа́нте, принесі́ть каву і тістечко, будь ласка! *(OK. Waiter, bring a coffee and a pastry, please!)*
+> — **Дарина:** Дякую, Олесю! *(Thanks, Oles!)*
 
 Between friends, Oles used **ти**-forms: **слухай** (listen), **подивись** (look), **іди** (go), **сідай** (sit), **дай** (give), **дивись** (look), **скажи** (say). But when he spoke to the waiter — a stranger — he switched to the **ви**-form: **принесіть** (bring). Notice **будь ласка** appearing in both dialogues: Дарина used it with her friend, and Oles used it with the waiter. Which words were direct commands and which were polite requests? Any imperative + **будь ласка** becomes a request.
 
-## Наказовий спосіб (The Imperative Mood)
+## Наказо́вий спо́сіб (The Imperative Mood)
 
-In Ukrainian Grade 5, this grammar topic has a name: **наказовий спосіб** (imperative mood). You use it for commands (**Читай!** — Read!), requests (**Дай, будь ласка.** — Give me, please.), instructions (**Напишіть три речення.** — Write three sentences.), and invitations (**Ходімо в кафе!** — Let's go to a café!). At A1, you need two forms: the **ти**-form for one person you know well — a friend, a sibling, a classmate — and the **ви**-form for formal situations — a teacher, a stranger, a doctor — or when speaking to more than one person. A quick comparison: **Дай!** (to your friend) vs. **Дайте!** (to your teacher or a group).
+In Ukrainian Grade 5, this grammar topic has a name: **наказовий спосіб** (imperative mood). You use it for commands (**Чита́й!** — Read!), requests (**Дай, будь ласка.** — Give me, please.), instructions (**Напишіть три речення.** — Write three sentences.), and invitations (**Ходімо в кафе!** — Let's go to a café!). At A1, you need two forms: the **ти**-form for one person you know well — a friend, a sibling, a classmate — and the **ви**-form for formal situations — a teacher, a stranger, a doctor — or when speaking to more than one person. A quick comparison: **Дай!** (to your friend) vs. **Да́йте!** (to your teacher or a group).
 
 The word **будь ласка** (please) transforms any imperative into a polite request. Watch the same verb escalate in formality:
 
 - **Дай!** — Give! *(direct, to a friend)*
 - **Дай, будь ласка.** — Please give. *(polite, to a friend)*
 - **Дайте, будь ласка.** — Please give. *(polite, to a teacher or group)*
-- **Пане Іване, дайте, будь ласка.** — Mr. Ivan, please give. *(very polite, with name)*
+- **Пане Іва́не, дайте, будь ласка.** — Mr. Ivan, please give. *(very polite, with name)*
 
-Ukrainian imperatives without **будь ласка** are NOT rude. Teachers, coaches, and parents use bare imperatives all the time. That is normal, professional speech. Tone and using someone's name add warmth: **Оленко, прочитай, будь ласка.** *(Olenka, please read.)*
+Ukrainian imperatives without **будь ласка** are NOT rude. Teachers, coaches, and parents use bare imperatives all the time. That is normal, professional speech. Tone and using someone's name add warmth: **Оленко, прочита́й, будь ласка.** *(Olenka, please read.)*
 
-English speakers sometimes feel Ukrainian commands sound blunt. In Ukrainian classrooms, **Читайте!** and **Пишіть!** are standard instructions — not harsh at all. If you open any Ukrainian textbook by Заболотний, every page says **Робіть вправу!** (Do the exercise!) or **Спишіть речення!** (Copy the sentences!). Adding **будь ласка** is for extra politeness, not basic courtesy. Three natural classroom examples from Dialogue 1 worked perfectly without it: **Читайте текст.** **Напишіть три речення.** **Запитуйте!**
+English speakers sometimes feel Ukrainian commands sound blunt. In Ukrainian classrooms, **Читайте!** and **Пишіть!** are standard instructions — not harsh at all. If you open any Ukrainian textbook by Заболо́тний, every page says **Робіть впра́ву!** (Do the exercise!) or **Спишіть речення!** (Copy the sentences!). Adding **будь ласка** is for extra politeness, not basic courtesy. Three natural classroom examples from Dialogue 1 worked perfectly without it: **Читайте текст.** **Напишіть три речення.** **Запитуйте!**
 
-When MUST you use the **ви**-form? Two situations. First, when speaking to one adult you address formally — your teacher, a stranger, a doctor: **Скажіть, будь ласка, де зупинка?** *(Tell me, please, where is the bus stop?)* Second, when speaking to more than one person, regardless of age: **Діти, сідайте!** *(Children, sit down!)* Real-life examples:
+When MUST you use the **ви**-form? Two situations. First, when speaking to one adult you address formally — your teacher, a stranger, a doctor: **Скажіть, будь ласка, де зупи́нка?** *(Tell me, please, where is the bus stop?)* Second, when speaking to more than one person, regardless of age: **Ді́ти, сіда́йте!** *(Children, sit down!)* Real-life examples:
 
 - Telling your whole family: **Сідайте!** *(Sit down!)*
 - Asking a shop assistant: **Покажіть, будь ласка.** *(Please show me.)*
@@ -210,7 +186,7 @@ When MUST you use the **ви**-form? Two situations. First, when speaking to one
 **Ходімо!** is a uniquely Ukrainian form — the 1st person plural imperative ("let's go!"). Russian does not have this form and uses a workaround with *давайте*. In standard Ukrainian, do NOT say *давай підемо* — just say **ходімо** or **підемо**.
 :::
 
-## Як утворити? (How to Form It)
+## Як утвори́ти? (How to Form It)
 
 Formation takes two steps. First, find the stem from the present tense (the **вони** form): **вони читають** → the stem is **читай-**. Second, add the imperative ending. Two patterns: **-й** after a vowel stem (**читай, слухай**) and **-и/-і** after a consonant stem (**пиши, говори**). A simple summary: vowel at the end of the stem → **-й**; consonant → **-и**.
 
@@ -218,23 +194,25 @@ Here are eight high-frequency **ти**-forms. Notice two groups:
 
 **Vowel-stem group** (ending in **-й**):
 - **читати** (читають → **читай**) — read
-- **слухати** (слухають → **слухай**) — listen
+- **слухати** (слу́хають → **слухай**) — listen
 
 **Consonant-stem group** (ending in **-и/-і/-ь**):
-- **писати** (пишуть → **пиши**) — write
-- **говорити** (говорять → **говори**) — speak
-- **дивитися** (дивляться → **дивись**) — look/watch
-- **ходити** (ходять → **ходи**) — walk/go
-- **іти** (ідуть → **іди**) — go
-- **сісти** (сядуть → **сядь**) — sit down
+- **писати** (пи́шуть → **пиши**) — write
+- **говорити** (гово́рять → **говори**) — speak
+- **дивитися** (ди́вляться → **дивись**) — look/watch
+- **ходити** (хо́дять → **ходи**) — walk/go
+- **іти** (іду́ть → **іди**) — go
+- **сісти** (ся́дуть → **сядь**) — sit down
 
-The verbs **іди** and **сядь** are irregular but essential — learn them as vocabulary. Note the soft sign in **сядь**: Ukrainian writes **ь** after **д** in imperative forms (confirmed by Авраменко, Grade 7).
+The verbs **іди** and **сядь** are irregular but essential — learn them as vocabulary. Note the soft sign in **сядь**: Ukrainian writes **ь** after **д** in imperative forms (confirmed by Авра́менко, Grade 7).
 
 For **ви**-forms, add **-те** or **-іть** to the **ти**-form. The rule: if the **ти**-form ends in **-й**, add **-те**; if it ends in **-и**, change to **-іть**:
 
 - читай → **читайте**, слухай → **слухайте**
 - пиши → **пишіть**, говори → **говоріть**, ходи → **ходіть**
-- дивись → **дивіться**, сядь → **сядьте**, іди → **ідіть**
+- іди → **ідіть**
+
+Two special cases: reflexive **дивись** adds **-ся** → **дивіться**, and soft-sign **сядь** simply adds **-те** → **сядьте**.
 
 <!-- INJECT_ACTIVITY: fill-in-imperative-forms -->
 
@@ -251,9 +229,9 @@ All four have short **ти**-forms: **дай, скажи, їж, візьми**. 
 
 ## Підсумок — Summary
 
-Here are the essential imperatives you now know. You can give instructions in the classroom, order at a café, and direct a volleyball warm-up. Two forms: **ти** for friends and family, **ви** for teachers, strangers, and groups.
+Here are the essential imperatives you now know. You can give instructions in the classroom, order at a café, and make polite requests to strangers. Two forms: **ти** for friends and family, **ви** for teachers, strangers, and groups.
 
-| Інфінітив | Ти | Ви | Meaning |
+| Інфініти́в | Ти | Ви | Meaning |
 |---|---|---|---|
 | читати | читай | читайте | read |
 | писати | пиши | пишіть | write |
@@ -264,7 +242,7 @@ Here are the essential imperatives you now know. You can give instructions in th
 | дати | дай | дайте | give |
 | сказати | скажи | скажіть | say/tell |
 | сісти | сядь | сядьте | sit down |
-| відкрити | відкрий | відкрийте | open |
+| відкри́ти | відкри́й | відкрийте | open |
 
 Three ready-made polite phrases to memorize as chunks — they work in shops, at school, and at the doctor's:
 
@@ -278,7 +256,7 @@ Learn the whole phrase, not just the verb. When you need something from a strang
 
 <!-- INJECT_ACTIVITY: fill-in-context-ty-vy -->
 
-**Deterministic word count: 1263 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1269 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -456,17 +434,60 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 134 words | Not found: 6 words
+Verified: 112 words | Not found: 49 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іване — NOT IN VESUM
-  ✗ Авраменко — NOT IN VESUM
+  ✗ Іва — NOT IN VESUM
+  ✗ Інфініти — NOT IN VESUM
+  ✗ Відкри — NOT IN VESUM
   ✗ Дарина — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Заболо — NOT IN VESUM
+  ✗ Наказо — NOT IN VESUM
+  ✗ Напиші — NOT IN VESUM
   ✗ Олесь — NOT IN VESUM
   ✗ Олесю — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
+  ✗ Слу — NOT IN VESUM
+  ✗ Тепе — NOT IN VESUM
+  ✗ вляться — NOT IN VESUM
+  ✗ впра — NOT IN VESUM
+  ✗ відкри — NOT IN VESUM
+  ✗ гово — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ дять — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ запи — NOT IN VESUM
+  ✗ йте — NOT IN VESUM
+  ✗ менко — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нте — NOT IN VESUM
+  ✗ нці — NOT IN VESUM
+  ✗ пиші — NOT IN VESUM
+  ✗ пого — NOT IN VESUM
+  ✗ принесі — NOT IN VESUM
+  ✗ підру — NOT IN VESUM
+  ✗ рна — NOT IN VESUM
+  ✗ рне — NOT IN VESUM
+  ✗ рять — NOT IN VESUM
+  ✗ сло — NOT IN VESUM
+  ✗ словни — NOT IN VESUM
+  ✗ слу — NOT IN VESUM
+  ✗ спо — NOT IN VESUM
+  ✗ стечко — NOT IN VESUM
+  ✗ сце — NOT IN VESUM
+  ✗ сіб — NOT IN VESUM
+  ✗ тний — NOT IN VESUM
+  ✗ туйте — NOT IN VESUM
+  ✗ ться — NOT IN VESUM
+  ✗ хають — NOT IN VESUM
+  ✗ чеш — NOT IN VESUM
+  ✗ чники — NOT IN VESUM
+  ✗ шуть — NOT IN VESUM
   ✗ іть — NOT IN VESUM
 
-All 134 other words are confirmed to exist in VESUM.
+All 112 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -475,23 +496,23 @@ All 134 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

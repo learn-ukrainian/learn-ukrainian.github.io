@@ -1,9 +1,7 @@
-import re
-import os
 
 filepath = 'curriculum/l2-uk-en/b1/temporal-clauses.md'
 
-with open(filepath, 'r', encoding='utf-8') as f:
+with open(filepath, encoding='utf-8') as f:
     content = f.read()
 
 # Fix Euphony

@@ -4,7 +4,7 @@ sequence: 8
 slug: essay-structure
 version: '1.1'
 title: "Структура академічного есе та аргументація"
-subtitle: "Academic Essay Structure and Argumentation"
+subtitle: "Структура академічного есе та аргументація"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -12,30 +12,40 @@ objectives:
   - "Детально вивчити архітектоніку академічного есе: від вступу до висновків."
   - "Навчитися будувати логічну ієрархію аргументів для переконливого викладу думок."
   - "Опанувати засоби створення текстової когезії між абзацами та розділами."
-  - "Розвинути вміння формулювати чіткі тези та підкріплювати їх доказами в українському культурному контексті."
+  - "Розвинути вміння формулювати чіткі тези та підкріплювати їх доказами в українському
+    культурному контексті."
 
 reading_situations:
   - source_type: "зразкове академічне есе"
     topic: "Феномен шістдесятництва в Україні: боротьба за культурну суб'єктність."
     key_elements: ["структура абзацу", "тезисне речення", "логічні переходи"]
-    motivation: "Аналіз класичної структури есе на прикладі актуальної теми з історії української культури."
+    motivation: "Аналіз класичної структури есе на прикладі актуальної теми з історії
+      української культури."
   - source_type: "фрагмент філософського трактату"
     topic: "Діалогічність у творчості Лесі Українки."
     key_elements: ["аргументація", "контраргументація", "синтез думок"]
-    motivation: "Вивчення способів побудови складної аргументації в літературознавчому есе."
+    motivation: "Вивчення способів побудови складної аргументації в літературознавчому
+      есе."
 
 listening_situations:
   - media_type: "подкаст"
     setting: "Подкаст про культуру академічного письма в українських ЗВО."
-    focus_points: ["типові помилки у структурі есе", "важливість вступної частини", "функції висновків"]
-    motivation: "Розвиток здатності критично оцінювати структуру почутого тексту та виокремлювати його ключові вузли."
+    focus_points: ["типові помилки у структурі есе", "важливість вступної частини",
+      "функції висновків"]
+    motivation: "Розвиток здатності критично оцінювати структуру почутого тексту та
+      виокремлювати його ключові вузли."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Складіть детальний план-проспект есе (100-150 слів) на тему: 'Трансформація українського міського простору: виклики деколонізації'. Визначте основну тезу та три ключові аргументи."
-    requirements: ["логічна послідовність", "чіткість тези", "використання термінології аналізу"]
-    motivation: "Підготовка до написання повноформатного есе через фокусування на його структурі."
-    model_answer: "План має включати вступ з проблематизацією, основну частину з аргументами та висновки, що підтверджують початкову тезу."
+    prompt: "Складіть детальний план-проспект есе (100-150 слів) на тему: 'Трансформація
+      українського міського простору: виклики деколонізації'. Визначте основну тезу
+      та три ключові аргументи."
+    requirements: ["логічна послідовність", "чіткість тези", "використання термінології
+          аналізу"]
+    motivation: "Підготовка до написання повноформатного есе через фокусування на
+      його структурі."
+    model_answer: "План має включати вступ з проблематизацією, основну частину з аргументами
+      та висновки, що підтверджують початкову тезу."
 
 content_outline:
   - section: "Вступна частина: Проблематизація та теза"
@@ -61,7 +71,8 @@ content_outline:
   - section: "Зв'язність та переходи між частинами"
     words: 1000
     subsections:
-      - "Лексичні засоби переходу: 'з одного боку', 'враховуючи вищесказане', 'на противагу цьому'"
+      - "Лексичні засоби переходу: 'з одного боку', 'враховуючи вищесказане', 'на
+        противагу цьому'"
       - "Логічна когерентність: збереження фокусу протягом усього тексту"
       - "Синтаксичні паралелізми як засіб посилення переконливості"
     key_concepts:
@@ -98,15 +109,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze the structure of a model Ukrainian academic essay about Шістдесятництво — evaluate thesis, argument hierarchy, and transitions."
+    description: "Analyze the structure of a model Ukrainian academic essay about
+      Шістдесятництво — evaluate thesis, argument hierarchy, and transitions."
   - type: essay-response
-    description: "Write a detailed essay outline (100-150 words) with thesis, three key arguments, and conclusion on a Ukrainian cultural topic."
+    description: "Write a detailed essay outline (100-150 words) with thesis, three
+      key arguments, and conclusion on a Ukrainian cultural topic."
   - type: fill-in
-    description: "Complete transition sentences between essay paragraphs with appropriate cohesion devices."
+    description: "Complete transition sentences between essay paragraphs with appropriate
+      cohesion devices."
   - type: match-up
-    description: "Match essay components (вступ, теза, аргумент, висновок) with their functions and example sentences."
+    description: "Match essay components (вступ, теза, аргумент, висновок) with their
+      functions and example sentences."
   - type: cloze
-    description: "Fill in missing structural elements and transition phrases in a partially written essay about urban decolonization."
+    description: "Fill in missing structural elements and transition phrases in a
+      partially written essay about urban decolonization."
 
 activities:
   types_required:
@@ -126,3 +142,4 @@ references:
 connects_to:
   previous: "citation-reference"
   next: "thesis-development"
+phase: C1.1 [Academic Foundation]

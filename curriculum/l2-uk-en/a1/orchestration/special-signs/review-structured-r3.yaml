@@ -1,0 +1,56 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 5 plan sections present in correct order. All content_outline points
+    covered: three-way consonant system (Авраменко/Большакова cited), Літвінова mnemonic,
+    apostrophe labial rule (Захарійчук p.97 c'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms verified correct. Phonetic descriptions accurate per
+    Правопис and textbooks. No Russianisms, surzhyk, calques, or Russian characters.
+    Case endings correct (e.g., "трьох" genitive).
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: each section opens with explanation, provides multiple
+    examples, then activity marker for practice. Soft sign section has 6+ example
+    words. Apostrophe section walks through 6 core wor'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required vocab items used naturally in prose: сім''я (apostrophe
+    section), день (soft sign section), сіль (soft sign section), м''ясо (apostrophe
+    section), п''ять (apostrophe section), гарно (Г sec'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 7 plan activity_hints have corresponding markers. Markers are correctly
+    placed after teaching (not before). Types match: odd-one-out for consonant identification,
+    fill-in for Ь/apostrophe distinct'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Clean, direct tone. No motivational openers, no "incredible"/"magic" language,
+    no gamification. Opens with a concrete hook ("a letter that breaks that rule").
+    Uses kinesthetic pedagogy ("Place your fi
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 5 H2 sections present and correctly ordered per plan. Word count 1472
+    vs 1200 target — well within range. Clean markdown formatting. Appropriate use
+    of :::tip, :::note, :::caution blocks. No stray
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Consistently decolonized: Ukrainian sounds presented on their own terms,
+    never "like Russian but..." Ґ explicitly described as "an important part of Ukrainian
+    phonetic identity" (matching Літвінова). '
+- dimension: 9
+  name: Dialogue quality
+  score: 8
+  evidence: Phonetics module — no dialogues required by plan, none present. N/A for
+    this module type. Score reflects absence of applicable content rather than deficiency.
+findings: []

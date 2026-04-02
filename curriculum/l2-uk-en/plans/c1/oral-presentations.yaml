@@ -4,7 +4,7 @@ sequence: 15
 slug: oral-presentations
 version: '1.1'
 title: "Мистецтво наукової та професійної презентації"
-subtitle: "The Art of Scientific and Professional Presentation"
+subtitle: "Мистецтво наукової та професійної презентації"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -18,24 +18,33 @@ reading_situations:
   - source_type: "тези доповіді"
     topic: "Аналіз структури та мови тез наукової доповіді на конференції з кібербезпеки."
     key_elements: ["логічна архітектоніка", "маркери переходу", "академічна лаконічність"]
-    motivation: "Вивчення письмової підготовки до публічного виступу як основи для усної презентації."
+    motivation: "Вивчення письмової підготовки до публічного виступу як основи для
+      усної презентації."
 
 listening_situations:
   - media_type: "відео"
     setting: "Виступ українського вченого на міжнародному симпозіумі з питань кібербезпеки."
-    focus_points: ["структура доповіді", "використання риторичних запитань", "взаємодія з аудиторією"]
-    motivation: "Аналіз реального прикладу успішної професійної презентації українською мовою."
+    focus_points: ["структура доповіді", "використання риторичних запитань", "взаємодія
+          з аудиторією"]
+    motivation: "Аналіз реального прикладу успішної професійної презентації українською
+      мовою."
 
 writing_tasks:
   - task_type: "репортаж"
-    prompt: "Складіть план-конспект (тези) вашої майбутньої доповіді на тему 'Вплив творчості шістдесятників на сучасну українську культуру'. Обсяг — 300 слів."
-    requirements: ["використання фраз-переходів", "логічна послідовність", "наявність вступу та висновків"]
+    prompt: "Складіть план-конспект (тези) вашої майбутньої доповіді на тему 'Вплив
+      творчості шістдесятників на сучасну українську культуру'. Обсяг — 300 слів."
+    requirements: ["використання фраз-переходів", "логічна послідовність", "наявність
+          вступу та висновків"]
     motivation: "Тренування навичок підготовки до усного виступу в письмовій формі."
-    model_answer: "Текст повинен містити фрази на кшталт 'Перейдемо до наступного аспекту...', 'Як ілюструє цей графік...', 'Підбиваючи підсумки, варто зазначити...'"
+    model_answer: "Текст повинен містити фрази на кшталт 'Перейдемо до наступного
+      аспекту...', 'Як ілюструє цей графік...', 'Підбиваючи підсумки, варто зазначити...'"
 
 discussion_topics:
-  - context: "Чи є візуальний супровід (слайди) обов'язковим для якісної наукової доповіді?"
-    questions: ["Як не перетворити презентацію на читання зі слайдів?", "Які культурні особливості публічного виступу в Україні?", "Як впоратися з хвилюванням перед великою аудиторією?"]
+  - context: "Чи є візуальний супровід (слайди) обов'язковим для якісної наукової
+      доповіді?"
+    questions: ["Як не перетворити презентацію на читання зі слайдів?", "Які культурні
+          особливості публічного виступу в Україні?", "Як впоратися з хвилюванням
+          перед великою аудиторією?"]
     motivation: "Обговорення практичних аспектів та етики публічних виступів."
 
 content_outline:
@@ -59,7 +68,7 @@ content_outline:
       - "дискурсивні слова"
       - "риторичні прийоми"
       - "інтонаційне виділення"
-  - section: "Робота з аудиторією та Q&A сесія"
+  - section: "Робота з аудиторією"
     words: 1000
     subsections:
       - "Техніки відповідей на уточнювальні та критичні запитання"
@@ -99,15 +108,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate a Ukrainian academic presentation transcript — assess structure, audience engagement techniques, and Q&A handling."
+    description: "Evaluate a Ukrainian academic presentation transcript — assess structure,
+      audience engagement techniques, and Q&A handling."
   - type: fill-in
-    description: "Complete presentation scripts with appropriate transition phrases (Перейдемо до..., Як ілюструє цей графік..., Підбиваючи підсумки...)."
+    description: "Complete presentation scripts with appropriate transition phrases
+      (Перейдемо до..., Як ілюструє цей графік..., Підбиваючи підсумки...)."
   - type: match-up
-    description: "Match presentation sections (вступ, основна частина, висновки, Q&A) with their characteristic discourse markers."
+    description: "Match presentation sections (вступ, основна частина, висновки, Q&A)
+      with their characteristic discourse markers."
   - type: error-correction
-    description: "Fix register errors in a presentation script — replace informal language with appropriate professional Ukrainian."
+    description: "Fix register errors in a presentation script — replace informal
+      language with appropriate professional Ukrainian."
   - type: select
-    description: "Choose the most effective rhetorical technique for different presentation situations (opening hook, data commentary, audience question)."
+    description: "Choose the most effective rhetorical technique for different presentation
+      situations (opening hook, data commentary, audience question)."
 
 activities:
   types_required:
@@ -127,3 +141,4 @@ references:
 connects_to:
   previous: "literature-review"
   next: "advanced-punctuation"
+phase: C1.1 [Academic Foundation]

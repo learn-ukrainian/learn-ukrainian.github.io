@@ -1,0 +1,15 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "metalanguage-morphology",
+  "phases": {
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:01.004797+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T14:57:01.005144+00:00"
+    }
+  }
+}

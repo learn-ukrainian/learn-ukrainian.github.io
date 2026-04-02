@@ -9,11 +9,11 @@ phases_gates, phases_report.
 Run with: pytest tests/test_audit_helpers.py -v
 """
 
-import pytest
-import sys
 import os
-from unittest.mock import MagicMock, patch
-from dataclasses import dataclass
+import sys
+from unittest.mock import MagicMock
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -24,10 +24,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.lint import (
     _lint_activity_structure,
-    _lint_line_patterns,
     _lint_ai_contamination,
+    _lint_line_patterns,
     run_lint_checks,
-    check_typography,
 )
 
 
@@ -146,13 +145,9 @@ class TestRunLintChecks:
 # =============================================================================
 
 from scripts.audit.parsing import (
-    AuditContext,
     AuditState,
-    parse_frontmatter,
-    validate_required_metadata,
-    detect_level,
     detect_focus,
-    parse_sections,
+    validate_required_metadata,
 )
 
 
@@ -256,10 +251,9 @@ class TestDetectFocus:
 # =============================================================================
 
 from scripts.audit.validators import (
-    validate_tone,
-    validate_checkpoint_format,
-    validate_checkpoint_coverage,
     check_structure,
+    validate_checkpoint_format,
+    validate_tone,
 )
 
 
@@ -331,15 +325,14 @@ class TestCheckStructure:
 # TEST: scripts/audit/report_helpers.py
 # =============================================================================
 
+from scripts.audit.gates import GateResult
 from scripts.audit.report_helpers import (
-    serialize_gate,
-    build_gates_dict,
-    compute_overall_status,
     DRYNESS_FLAG_FIXES,
     LOW_DENSITY_SUGGESTIONS,
+    build_gates_dict,
+    compute_overall_status,
+    serialize_gate,
 )
-
-from scripts.audit.gates import GateResult
 
 
 class TestSerializeGate:
@@ -453,16 +446,16 @@ class TestDrynessAndDensityConstants:
 # =============================================================================
 
 from scripts.audit.checks.activity_helpers import (
-    get_title,
+    _normalize_quotes,
+    count_error_correction_placeholders,
     get_field,
     get_items,
+    get_title,
     get_type,
     has_hint,
-    is_blank_or_placeholder,
     is_arrow_placeholder,
+    is_blank_or_placeholder,
     is_placeholder_error,
-    count_error_correction_placeholders,
-    _normalize_quotes,
 )
 
 
@@ -598,17 +591,13 @@ class TestNormalizeQuotes:
 # =============================================================================
 
 from scripts.audit.checks.activity_format_checks import (
-    check_mark_the_words_format,
-    check_hints_in_activities,
-    check_error_correction_hints,
-    check_malformed_cloze_activities,
-    check_cloze_syntax_errors,
-    check_error_correction_format,
-    check_forbidden_activity_types,
-    check_yaml_activity_types,
-    check_activity_header_format,
-    _is_error_highlighted,
     _is_dialogue_blank,
+    _is_error_highlighted,
+    check_activity_header_format,
+    check_cloze_syntax_errors,
+    check_hints_in_activities,
+    check_mark_the_words_format,
+    check_yaml_activity_types,
 )
 
 
@@ -745,15 +734,10 @@ class TestCheckActivityHeaderFormat:
 # =============================================================================
 
 from scripts.audit.checks.activity_pedagogy_checks import (
-    check_matchup_misuse,
-    check_activity_focus_alignment,
-    check_activity_sequencing,
-    check_answer_position_bias,
+    _determine_focus,
+    _is_sorting_prompt,
     check_activity_variety,
     check_advanced_activities_presence,
-    _is_sorting_prompt,
-    _has_symmetric_pairs,
-    _determine_focus,
 )
 
 
@@ -828,7 +812,6 @@ class TestCheckActivityVariety:
 from scripts.audit.checks.activity_counting import (
     _count_markdown_items,
     check_activity_ukrainian_content,
-    check_unjumble_word_match,
 )
 
 
@@ -868,20 +851,20 @@ class TestCheckActivityUkrainianContent:
 # =============================================================================
 
 from scripts.audit.checks.yaml_item_fixers import (
+    DEFAULT_INSTRUCTIONS,
+    fix_cloze_blank_lines,
+    fix_error_correction_items,
+    fix_fill_in_items,
+    fix_group_sort_groups,
     fix_invalid_top_level_properties,
     fix_mark_the_words,
-    fix_unjumble_items,
+    fix_match_up_pairs,
+    fix_missing_instruction,
+    fix_quiz_select_items,
+    fix_select_property_renames,
     fix_translate_items,
     fix_true_false_items,
-    fix_fill_in_items,
-    fix_error_correction_items,
-    fix_group_sort_groups,
-    fix_select_property_renames,
-    fix_missing_instruction,
-    fix_cloze_blank_lines,
-    fix_quiz_select_items,
-    fix_match_up_pairs,
-    DEFAULT_INSTRUCTIONS,
+    fix_unjumble_items,
 )
 
 
@@ -1056,11 +1039,10 @@ class TestFixMatchUpPairs:
 # =============================================================================
 
 from scripts.audit.checks.yaml_schema_fixes import (
-    fix_raw_yaml_text,
-    _fix_first_entry_indent,
-    _fix_asterisk_quoting,
     _convert_quotes_to_guillemets,
     _filter_activities,
+    _fix_first_entry_indent,
+    fix_raw_yaml_text,
 )
 
 
@@ -1123,8 +1105,8 @@ class TestFilterActivities:
 # =============================================================================
 
 from scripts.audit.phases_activity import (
-    _print_violations,
     _get_density_target,
+    _print_violations,
 )
 
 

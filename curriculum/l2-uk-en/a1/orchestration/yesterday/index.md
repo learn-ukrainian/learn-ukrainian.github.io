@@ -1,6 +1,6 @@
 # Build Summary: yesterday (A1)
 
-Generated: 2026-03-31 11:57
+Generated: 2026-04-01 13:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:57
 | vocab | complete | 2026-03-30 22:35:00 |
 | enrich | complete | 2026-03-30 22:35:02 |
 | verify | complete | 2026-03-30 22:35:02 |
-| review | complete | 2026-03-30 22:38:11 |
-| stress | complete | 2026-03-31 09:57:42 |
-| publish | complete | 2026-03-31 09:57:42 |
+| review | complete | 2026-04-01 11:45:43 |
+| stress | complete | 2026-04-01 11:45:43 |
+| publish | complete | 2026-04-01 11:45:49 |
 
 ## Reviews
 
@@ -39,6 +39,9 @@ Generated: 2026-03-31 11:57
 | activities | claude-tools (claude-sonnet-4-6) | 223s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 25s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 189s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 | pre-verify-retry | claude-tools (claude-sonnet-4-6) | 112s | ✅ |
 
 ## Files

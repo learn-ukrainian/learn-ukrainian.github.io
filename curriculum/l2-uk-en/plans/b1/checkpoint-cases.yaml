@@ -1,169 +1,155 @@
-module: b1-056
+module: b1-052
 level: B1
-sequence: 56
+sequence: 52
 slug: checkpoint-cases
 version: '3.0'
 title: "Контрольна робота 6"
-subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники, житло"
+subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники,
+  житло"
 focus: review
 pedagogy: PPP
-phase: "B1.6 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Advanced Case Usages & Prepositions]"
 word_target: 4000
 objectives:
-- "Learner can demonstrate mastery of advanced genitive (partitive, negation,
-  dates, -а/-я vs -у/-ю), dative (experiencer, age, impersonal), and
-  instrumental (characterisation, means, path, agent) usage"
-- "Learner can correctly use temporal prepositions (через, за, перед, після,
-  протягом) and cause/purpose prepositions (через, завдяки, для, заради, щоб)"
-- "Learner can use vocative in formal contexts with patronymics and titles"
-- "Learner can decline ordinal and cardinal numerals, agree quantity
-  expressions with nouns, and use collective numerals appropriately"
-- "Learner can use interrogative, indefinite, negative, and reflexive
-  pronouns with correct spelling, case forms, and preposition splitting"
+  - "Learner can demonstrate mastery of advanced genitive (partitive, negation, dates,
+    -а/-я vs -у/-ю), dative (experiencer, age, impersonal), and instrumental (characterisation,
+    means, path, agent) usage"
+  - "Learner can correctly use temporal prepositions (через, за, перед, після, протягом)
+    and cause/purpose prepositions (через, завдяки, для, заради, щоб)"
+  - "Learner can use vocative in formal contexts with patronymics and titles"
+  - "Learner can decline ordinal and cardinal numerals, agree quantity expressions
+    with nouns, and use collective numerals appropriately"
+  - "Learner can use interrogative, indefinite, negative, and reflexive pronouns with
+    correct spelling, case forms, and preposition splitting"
 dialogue_situations:
-- setting: 'University seminar presentation — student presents on Ukrainian cities
-    using all case nuances: Для мешканців Києва (gen). Завдяки інвестиціям (dat).
-    Славиться архітектурою (inst). У центрі міста (loc). Пане професоре! (voc)'
-  speakers:
-  - Студент (presenting)
-  - Професор (questioning)
-  motivation: 'Consolidation: partitive gen, experiencer dat, instrumental characterization,
-    formal voc'
+  - setting: 'University seminar presentation — student presents on Ukrainian cities
+      using all case nuances: Для мешканців Києва (gen). Завдяки інвестиціям (dat).
+      Славиться архітектурою (inst). У центрі міста (loc). Пане професоре! (voc)'
+    speakers:
+      - Студент (presenting)
+      - Професор (questioning)
+    motivation: 'Consolidation: partitive gen, experiencer dat, instrumental characterization,
+      formal voc'
 content_outline:
-- section: "Повторення: відмінки"
-  words: 800
-  points:
-  - "Genitive review — five semantic roles:
-    1. Частковий: склянка води, багато часу.
-    2. Бажання/пошуку: шукати правди, бажати щастя.
-    3. Заперечення: немає часу, не бачив друга.
-    4. Дати: п'ятнадцятого березня, цього тижня.
-    5. -а/-я vs -у/-ю: стола vs часу (semantic categories).
-    Drill: 12 sentences requiring correct Р.в. usage."
-  - "Dative review — four semantic roles:
-    1. Суб'єкт стану: мені холодно, тобі не спиться.
-    2. Вік: мені двадцять років.
-    3. Безособові: потрібно, варто, вдалося, довелося.
-    4. Адресат: допомагати другові, телефонувати лікарю.
-    Drill: 10 sentences requiring correct Д.в. usage."
-  - "Instrumental review — five semantic roles:
-    1. Характеристика: працювати лікарем, стати вчителькою.
-    2. Засіб: писати ручкою, їхати автобусом.
-    3. Шлях: іти вулицею, їхати дорогою.
-    4. Керування: захоплюватися, цікавитися, пишатися.
-    5. Агент пасиву: написано автором.
-    Drill: 10 sentences requiring correct Ор.в. usage."
-- section: "Повторення: прийменники"
-  words: 600
-  points:
-  - "Temporal prepositions reference:
-    через + Зн.в. (after period), за + Зн.в. (within period),
-    перед + Ор.в. (before), після + Р.в. (after),
-    до + Р.в. (until), під час + Р.в. (during),
-    протягом + Р.в. (throughout), на + Зн.в. (for duration)."
-  - "Cause/purpose prepositions reference:
-    Cause: через (neg.), завдяки (pos.), від (reaction), з (motivation).
-    Purpose: для, заради, за + Ор.в. (fetch), щоб + inf.
-    Golden rule: завдяки = GOOD, через = BAD.
-    Drill: 12 mixed sentences choosing correct preposition + case."
-- section: "Повторення: кличний, числівники, займенники"
-  words: 600
-  points:
-  - "Vocative in formal contexts:
-    ім'я + по батькові: Іване Петровичу, Маріє Степанівно.
-    Title + прізвище: лікарю Петренко (тільки перше в Кл.в.).
-    Practice: form correct vocative for 8 formal address scenarios."
-  - "Numerals: ordinal declension (like adjectives, compound — last word only),
-    cardinal agreement (1 + Н.в., 2-4 + Н.в.мн., 5+ + Р.в.мн.),
-    collective numerals (двоє, троє + Р.в.мн.),
-    dates (Р.в.) and time (о + М.в., за десять хвилин).
-    Drill: 10 numeral usage exercises."
-  - "Pronouns: interrogative-relative (хто, який, чий — declension),
-    reflexive (себе/собі/собою), indefinite (хтось, будь-хто, -небудь),
-    negative (ніхто, ніщо — preposition splits: ні з ким).
-    Drill: 10 pronoun exercises with spelling and case."
-- section: "Комплексні завдання"
-  words: 1000
-  points:
-  - "Text analysis: a Ukrainian newspaper article about housing in a city.
-    Tasks: identify all case usages, prepositions, numerals, and pronouns.
-    Answer comprehension questions requiring correct grammar in responses."
-  - "Error correction block: 12-15 sentences with mixed errors across
-    ALL Phase 6 topics — wrong case, wrong preposition, agreement errors,
-    pronoun spelling, vocative mistakes, Russicisms in time/cause expressions.
-    Each error must be identified, categorised, and corrected."
-  - "Production task: write a formal email to a landlord describing
-    your housing needs, asking about availability, and negotiating terms.
-    Must include: vocative address, case constructions, temporal prepositions,
-    cause/purpose expressions, quantity expressions.
-    Self-assessment rubric provided."
-  - "Dialogue reconstruction: rearrange lines of a housing negotiation,
-    filling in missing case forms, prepositions, and numeral agreements."
-- section: "Самооцінка та підготовка до Фази 7"
-  words: 500
-  points:
-  - "Self-check grid for all Phase 6 topics:
-    Can I use Р.в. for partitive, negation, dates? ___
-    Can I use Д.в. for experiencer, age, impersonal? ___
-    Can I use Ор.в. for characterisation, means, path? ___
-    Can I form vocative for formal address? ___
-    Can I decline and agree numerals? ___
-    Can I use indefinite and negative pronouns? ___
-    Can I choose correct temporal and cause/purpose prepositions? ___"
-  - "Gap analysis: which areas need more practice?
-    Preview of Phase 7: дієприкметники і дієприслівники (participles and gerunds).
-    The shift from USING cases precisely to BUILDING complex modifiers."
-  - "Diagnostic: 15 quick-check questions covering all Phase 6 topics,
-    with answer key and explanations."
-- section: "Підсумок"
-  words: 200
-  points:
-  - "Phase 6 achievement summary: advanced case usage, prepositions for time
-    and cause/purpose, formal vocative, numeral agreement, pronoun system.
-    These are the building blocks for Phase 7 (participles) and Phase 8
-    (complex syntax), where precise case knowledge becomes essential."
+  - section: "Повторення: відмінки"
+    words: 800
+    points:
+      - "Genitive review — five semantic roles: 1. Частковий: склянка води, багато
+        часу. 2. Бажання/пошуку: шукати правди, бажати щастя. 3. Заперечення: немає
+        часу, не бачив друга. 4. Дати: п'ятнадцятого березня, цього тижня. 5. -а/-я
+        vs -у/-ю: стола vs часу (semantic categories). Drill: 12 sentences requiring
+        correct Р.в. usage."
+      - "Dative review — four semantic roles: 1. Суб'єкт стану: мені холодно, тобі
+        не спиться. 2. Вік: мені двадцять років. 3. Безособові: потрібно, варто, вдалося,
+        довелося. 4. Адресат: допомагати другові, телефонувати лікарю. Drill: 10 sentences
+        requiring correct Д.в. usage."
+      - "Instrumental review — five semantic roles: 1. Характеристика: працювати лікарем,
+        стати вчителькою. 2. Засіб: писати ручкою, їхати автобусом. 3. Шлях: іти вулицею,
+        їхати дорогою. 4. Керування: захоплюватися, цікавитися, пишатися. 5. Агент
+        пасиву: написано автором. Drill: 10 sentences requiring correct Ор.в. usage."
+  - section: "Повторення: прийменники"
+    words: 600
+    points:
+      - "Temporal prepositions reference: через + Зн.в. (after period), за + Зн.в.
+        (within period), перед + Ор.в. (before), після + Р.в. (after), до + Р.в. (until),
+        під час + Р.в. (during), протягом + Р.в. (throughout), на + Зн.в. (for duration)."
+      - "Cause/purpose prepositions reference: Cause: через (neg.), завдяки (pos.),
+        від (reaction), з (motivation). Purpose: для, заради, за + Ор.в. (fetch),
+        щоб + inf. Golden rule: завдяки = GOOD, через = BAD. Drill: 12 mixed sentences
+        choosing correct preposition + case."
+  - section: "Повторення: кличний, числівники, займенники"
+    words: 600
+    points:
+      - "Vocative in formal contexts: ім'я + по батькові: Іване Петровичу, Маріє Степанівно.
+        Title + прізвище: лікарю Петренко (тільки перше в Кл.в.). Practice: form correct
+        vocative for 8 formal address scenarios."
+      - "Numerals: ordinal declension (like adjectives, compound — last word only),
+        cardinal agreement (1 + Н.в., 2-4 + Н.в.мн., 5+ + Р.в.мн.), collective numerals
+        (двоє, троє + Р.в.мн.), dates (Р.в.) and time (о + М.в., за десять хвилин).
+        Drill: 10 numeral usage exercises."
+      - "Pronouns: interrogative-relative (хто, який, чий — declension), reflexive
+        (себе/собі/собою), indefinite (хтось, будь-хто, -небудь), negative (ніхто,
+        ніщо — preposition splits: ні з ким). Drill: 10 pronoun exercises with spelling
+        and case."
+  - section: "Комплексні завдання"
+    words: 1000
+    points:
+      - "Text analysis: a Ukrainian newspaper article about housing in a city. Tasks:
+        identify all case usages, prepositions, numerals, and pronouns. Answer comprehension
+        questions requiring correct grammar in responses."
+      - "Error correction block: 12-15 sentences with mixed errors across ALL Phase
+        6 topics — wrong case, wrong preposition, agreement errors, pronoun spelling,
+        vocative mistakes, Russicisms in time/cause expressions. Each error must be
+        identified, categorised, and corrected."
+      - "Production task: write a formal email to a landlord describing your housing
+        needs, asking about availability, and negotiating terms. Must include: vocative
+        address, case constructions, temporal prepositions, cause/purpose expressions,
+        quantity expressions. Self-assessment rubric provided."
+      - "Dialogue reconstruction: rearrange lines of a housing negotiation, filling
+        in missing case forms, prepositions, and numeral agreements."
+  - section: "Самооцінка та підготовка до Фази 7"
+    words: 500
+    points:
+      - "Self-check grid for all Phase 6 topics: Can I use Р.в. for partitive, negation,
+        dates? ___ Can I use Д.в. for experiencer, age, impersonal? ___ Can I use
+        Ор.в. for characterisation, means, path? ___ Can I form vocative for formal
+        address? ___ Can I decline and agree numerals? ___ Can I use indefinite and
+        negative pronouns? ___ Can I choose correct temporal and cause/purpose prepositions?
+        ___"
+      - "Gap analysis: which areas need more practice? Preview of Phase 7: дієприкметники
+        і дієприслівники (participles and gerunds). The shift from USING cases precisely
+        to BUILDING complex modifiers."
+      - "Diagnostic: 15 quick-check questions covering all Phase 6 topics, with answer
+        key and explanations."
+  - section: "Підсумок"
+    words: 200
+    points:
+      - "Phase 6 achievement summary: advanced case usage, prepositions for time and
+        cause/purpose, formal vocative, numeral agreement, pronoun system. These are
+        the building blocks for Phase 7 (participles) and Phase 8 (complex syntax),
+        where precise case knowledge becomes essential."
 vocabulary_hints:
   required:
-  - "повторення (review)"
-  - "самооцінка (self-assessment)"
-  - "комплексний (comprehensive)"
-  - "діагностика (diagnostics)"
+    - "повторення (review)"
+    - "самооцінка (self-assessment)"
+    - "комплексний (comprehensive)"
+    - "діагностика (diagnostics)"
   recommended:
-  - "рубрика (rubric)"
-  - "аналіз помилок (error analysis)"
-  - "прогалина (gap — in knowledge)"
+    - "рубрика (rubric)"
+    - "аналіз помилок (error analysis)"
+    - "прогалина (gap — in knowledge)"
 activity_hints:
-- type: quiz
-  focus: "Comprehensive case/preposition/numeral/pronoun quiz (all Phase 6 topics)"
-  items: 12
-- type: fill-in
-  focus: "Mixed exercises across cases, prepositions, numerals, pronouns"
-  items: 10
-- type: error-correction
-  focus: "Find and fix errors across ALL Phase 6 topics"
-  items: 10
-- type: match-up
-  focus: "Match grammatical construction to its semantic function"
-  items: 10
-- type: free-write
-  focus: "Write a formal email about housing using all Phase 6 grammar"
-  items: 6
-- type: dialogue-completion
-  focus: "Complete housing negotiation dialogue with Phase 6 constructions"
-  items: 6
+  - type: quiz
+    focus: "Comprehensive case/preposition/numeral/pronoun quiz (all Phase 6 topics)"
+    items: 12
+  - type: fill-in
+    focus: "Mixed exercises across cases, prepositions, numerals, pronouns"
+    items: 10
+  - type: error-correction
+    focus: "Find and fix errors across ALL Phase 6 topics"
+    items: 10
+  - type: match-up
+    focus: "Match grammatical construction to its semantic function"
+    items: 10
+  - type: free-write
+    focus: "Write a formal email about housing using all Phase 6 grammar"
+    items: 6
+  - type: dialogue-completion
+    focus: "Complete housing negotiation dialogue with Phase 6 constructions"
+    items: 6
 connects_to:
-- "b1-046 through b1-055 (all Phase 6 modules)"
-- "b1-057 (Активні дієприкметники — first module of Phase 7)"
+  - "b1-046 through b1-055 (all Phase 6 modules)"
+  - "b1-057 (Активні дієприкметники — first module of Phase 7)"
 prerequisites:
-- "b1-046 through b1-055 (Phase 6 completion)"
+  - "b1-046 through b1-055 (Phase 6 completion)"
 grammar:
-- "Review: розширені значення Р.в., Д.в., Ор.в."
-- "Review: кличний відмінок у формальному контексті"
-- "Review: часові та причиново-цільові прийменники"
-- "Review: порядкові і кількісні числівники з відмінками"
-- "Review: неозначені, заперечні, зворотний займенники"
-- "Integration: all Phase 6 grammar in housing communication"
+  - "Review: розширені значення Р.в., Д.в., Ор.в."
+  - "Review: кличний відмінок у формальному контексті"
+  - "Review: часові та причиново-цільові прийменники"
+  - "Review: порядкові і кількісні числівники з відмінками"
+  - "Review: неозначені, заперечні, зворотний займенники"
+  - "Integration: all Phase 6 grammar in housing communication"
 register: науково-навчальний
 references:
-- title: "Review module"
-  notes: "Consolidates M46-55 (Phase 6: Advanced Case Usages & Prepositions)."
+  - title: "Review module"
+    notes: "Consolidates M46-55 (Phase 6: Advanced Case Usages & Prepositions)."

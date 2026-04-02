@@ -7,110 +7,113 @@ title: Дія і час
 subtitle: Дієслівні категорії та словникова грамотність
 focus: bridge
 pedagogy: Bridge
-phase: A2.8 [Refinement and Graduation]
+phase: A2.9 [Metalanguage Bridge & Foundation]
 word_target: 2000
 objectives:
-- Learner can name Ukrainian verb categories (час, вид, спосіб, дієвідміна,
-  особа) and identify them in verb forms.
-- Learner can distinguish доконаний/недоконаний вид (perfective/imperfective
-  aspect) using Ukrainian terminology.
-- Learner can read and interpret dictionary entries from goroh.pp.ua,
-  understanding abbreviations (ж.р., док., недок., одн., мн., etc.).
-- Learner can use Ukrainian adverb terminology (прислівник місця, часу,
-  способу дії) to classify adverbs they already know.
+  - Learner can name Ukrainian verb categories (час, вид, спосіб, дієвідміна, 
+    особа) and identify them in verb forms.
+  - Learner can distinguish доконаний/недоконаний вид (perfective/imperfective 
+    aspect) using Ukrainian terminology.
+  - Learner can read and interpret dictionary entries from goroh.pp.ua, 
+    understanding abbreviations (ж.р., док., недок., одн., мн., etc.).
+  - Learner can use Ukrainian adverb terminology (прислівник місця, часу, 
+    способу дії) to classify adverbs they already know.
 dialogue_situations:
-  - situation: "A student asking the teacher to explain verb aspect terminology — Що означає 'доконаний вид'? Як визначити дієвідміну? Teacher uses familiar verbs as examples"
-    functions: ["asking about grammar concepts", "understanding Ukrainian terminology", "connecting terms to known grammar"]
+  - situation: "A student asking the teacher to explain verb aspect terminology —
+      Що означає 'доконаний вид'? Як визначити дієвідміну? Teacher uses familiar verbs
+      as examples"
+    functions: ["asking about grammar concepts", "understanding Ukrainian terminology",
+      "connecting terms to known grammar"]
     key_vocabulary: ["доконаний", "недоконаний", "дієвідміна", "особа"]
-  - situation: "A student trying to look up a word in an online dictionary — reading the entry aloud and asking a classmate what the abbreviations mean"
-    functions: ["reading dictionary entries", "interpreting abbreviations", "peer help"]
+  - situation: "A student trying to look up a word in an online dictionary — reading
+      the entry aloud and asking a classmate what the abbreviations mean"
+    functions: ["reading dictionary entries", "interpreting abbreviations", "peer
+          help"]
     key_vocabulary: ["словник", "скорочення", "ж.р.", "док.", "недок."]
 content_outline:
-- section: 'Дієслово: категорії та терміни (The Verb: Categories and Terms)'
-  words: 600
-  points:
-  - 'Re-labeling what they know: the learner already uses tenses and
-    aspects — now they learn the Ukrainian terms. Method: Grade 4-5
-    textbook excerpts.'
-  - 'Час (tense): минулий час (past), теперішній час (present), майбутній
-    час (future). Examples with verbs they know: читав (мин.), читаю
-    (теп.), читатиму/буду читати (майб.).'
-  - 'Вид (aspect): доконаний вид (perfective) — що зробити? прочитати,
-    написати. Недоконаний вид (imperfective) — що робити? читати,
-    писати. Connect to what they learned in A2.1 aspect modules.'
-  - 'Спосіб (mood): дійсний спосіб (indicative — stating facts),
-    наказовий спосіб (imperative — giving commands: читай!),
-    умовний спосіб (conditional — label only: читав би. Production
-    is B1; here we learn the term so learners can read grammar
-    references).'
-- section: 'Дієвідміна та особа (Conjugation and Person)'
-  words: 450
-  points:
-  - 'Дієвідміна (conjugation class): I дієвідміна (-еш, -е pattern:
-    пишеш, пише) vs. II дієвідміна (-иш, -ить pattern: говориш,
-    говорить). How to determine: look at the 3rd person singular.'
-  - 'Особа (person): перша особа (1st — я, ми), друга особа (2nd —
-    ти, ви), третя особа (3rd — він/вона/воно, вони).'
-  - 'Число (number) in verbs: однина (singular — читаю, читаєш, читає),
-    множина (plural — читаємо, читаєте, читають).'
-  - 'Practice: identify час, вид, особа, число for given verb forms.'
-- section: 'Словникова грамотність: читаємо словник (Dictionary Literacy:
-    Reading a Dictionary)'
-  words: 550
-  points:
-  - 'How to read a goroh.pp.ua entry: headword, stress mark, part of
-    speech abbreviation, grammatical information, definitions.'
-  - 'Key abbreviations: ім. (іменник), прикм. (прикметник), дієсл.
-    (дієслово), займ. (займенник), присл. (прислівник), ч.р.
-    (чоловічий рід), ж.р. (жіночий рід), с.р. (середній рід),
-    док. (доконаний), недок. (недоконаний), одн. (однина), мн.
-    (множина).'
-  - 'Practice: read 5-6 real dictionary entries and extract grammatical
-    information. What part of speech? What gender? What aspect?'
-  - 'Why this matters: B1 and beyond will use Ukrainian-language
-    references. This skill is essential for independent learning.'
-- section: 'Прислівник: види та приклади (The Adverb: Types and Examples)'
-  words: 400
-  points:
-  - 'Adverb classification using Ukrainian terms:
-    прислівник місця (adverb of place) — тут, там, далеко, близько;
-    прислівник часу (adverb of time) — сьогодні, завтра, вчора, завжди;
-    прислівник способу дії (adverb of manner) — швидко, повільно, добре.'
-  - 'Practice: sort known adverbs into categories using Ukrainian terms.'
-  - 'Connection to прикметник: many adverbs derive from adjectives
-    (швидкий → швидко, гарний → гарно). The -о ending pattern.'
+  - section: 'Дієслово: категорії та терміни (The Verb: Categories and Terms)'
+    words: 600
+    points:
+      - 'Re-labeling what they know: the learner already uses tenses and aspects —
+        now they learn the Ukrainian terms. Method: Grade 4-5 textbook excerpts.'
+      - 'Час (tense): минулий час (past), теперішній час (present), майбутній час
+        (future). Examples with verbs they know: читав (мин.), читаю (теп.), читатиму/буду
+        читати (майб.).'
+      - 'Вид (aspect): доконаний вид (perfective) — що зробити? прочитати, написати.
+        Недоконаний вид (imperfective) — що робити? читати, писати. Connect to what
+        they learned in A2.1 aspect modules.'
+      - 'Спосіб (mood): дійсний спосіб (indicative — stating facts), наказовий спосіб
+        (imperative — giving commands: читай!), умовний спосіб (conditional — label
+        only: читав би. Production is B1; here we learn the term so learners can read
+        grammar references).'
+  - section: 'Дієвідміна та особа (Conjugation and Person)'
+    words: 450
+    points:
+      - 'Дієвідміна (conjugation class): I дієвідміна (-еш, -е pattern: пишеш, пише)
+        vs. II дієвідміна (-иш, -ить pattern: говориш, говорить). How to determine:
+        look at the 3rd person singular.'
+      - 'Особа (person): перша особа (1st — я, ми), друга особа (2nd — ти, ви), третя
+        особа (3rd — він/вона/воно, вони).'
+      - 'Число (number) in verbs: однина (singular — читаю, читаєш, читає), множина
+        (plural — читаємо, читаєте, читають).'
+      - 'Practice: identify час, вид, особа, число for given verb forms.'
+  - section: 'Словникова грамотність: читаємо словник (Dictionary Literacy: Reading
+      a Dictionary)'
+    words: 550
+    points:
+      - 'How to read a goroh.pp.ua entry: headword, stress mark, part of speech abbreviation,
+        grammatical information, definitions.'
+      - 'Key abbreviations: ім. (іменник), прикм. (прикметник), дієсл. (дієслово),
+        займ. (займенник), присл. (прислівник), ч.р. (чоловічий рід), ж.р. (жіночий
+        рід), с.р. (середній рід), док. (доконаний), недок. (недоконаний), одн. (однина),
+        мн. (множина).'
+      - 'Practice: read 5-6 real dictionary entries and extract grammatical information.
+        What part of speech? What gender? What aspect?'
+      - 'Why this matters: B1 and beyond will use Ukrainian-language references. This
+        skill is essential for independent learning.'
+  - section: 'Прислівник: види та приклади (The Adverb: Types and Examples)'
+    words: 400
+    points:
+      - 'Adverb classification using Ukrainian terms: прислівник місця (adverb of
+        place) — тут, там, далеко, близько; прислівник часу (adverb of time) — сьогодні,
+        завтра, вчора, завжди; прислівник способу дії (adverb of manner) — швидко,
+        повільно, добре.'
+      - 'Practice: sort known adverbs into categories using Ukrainian terms.'
+      - 'Connection to прикметник: many adverbs derive from adjectives (швидкий →
+        швидко, гарний → гарно). The -о ending pattern.'
 vocabulary_hints:
   required:
-  - дієслово (verb)
-  - час (tense, time)
-  - вид (aspect)
-  - доконаний (perfective)
-  - недоконаний (imperfective)
-  - спосіб (mood, manner)
-  - дієвідміна (conjugation class)
-  - особа (person, grammatical)
-  - прислівник (adverb)
-  - словник (dictionary)
+    - дієслово (verb)
+    - час (tense, time)
+    - вид (aspect)
+    - доконаний (perfective)
+    - недоконаний (imperfective)
+    - спосіб (mood, manner)
+    - дієвідміна (conjugation class)
+    - особа (person, grammatical)
+    - прислівник (adverb)
+    - словник (dictionary)
   recommended:
-  - дійсний спосіб (indicative mood)
-  - наказовий спосіб (imperative mood)
-  - умовний спосіб (conditional mood — label only, production is B1)
-  - скорочення (abbreviation)
+    - дійсний спосіб (indicative mood)
+    - наказовий спосіб (imperative mood)
+    - умовний спосіб (conditional mood — label only, production is B1)
+    - скорочення (abbreviation)
 activity_hints:
-- type: match-up
-  focus: Match verb category terms to their definitions
-  items: 8
-- type: quiz
-  focus: Read a dictionary entry and answer questions about its grammatical info
-  items: 8
-- type: group-sort
-  focus: Sort verb forms by час (минулий, теперішній, майбутній)
-  items: 8
-- type: fill-in
-  focus: Complete sentences about verbs using Ukrainian metalanguage terms
-  items: 8
+  - type: match-up
+    focus: Match verb category terms to their definitions
+    items: 8
+  - type: quiz
+    focus: Read a dictionary entry and answer questions about its grammatical 
+      info
+    items: 8
+  - type: group-sort
+    focus: Sort verb forms by час (минулий, теперішній, майбутній)
+    items: 8
+  - type: fill-in
+    focus: Complete sentences about verbs using Ukrainian metalanguage terms
+    items: 8
 references:
-- title: Заболотний Grade 5, Дієслово як частина мови
-  notes: Verb categories as introduced in Ukrainian school curriculum
-- title: Вашуленко Grade 4, Дієслово
-  notes: Primary school approach to verb tense and aspect terminology
+  - title: Заболотний Grade 5, Дієслово як частина мови
+    notes: Verb categories as introduced in Ukrainian school curriculum
+  - title: Вашуленко Grade 4, Дієслово
+    notes: Primary school approach to verb tense and aspect terminology

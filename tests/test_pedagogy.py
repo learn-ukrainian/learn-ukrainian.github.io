@@ -5,9 +5,10 @@ Tests PPP structure, duplicate content detection, and IPA validation.
 Run with: pytest tests/test_pedagogy.py -v
 """
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -16,7 +17,6 @@ from scripts.audit.checks.pedagogy import (
     check_duplicate_content,
     check_topic_consistency,
 )
-
 
 # =============================================================================
 # TEST: Duplicate Content Detection

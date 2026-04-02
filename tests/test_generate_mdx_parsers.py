@@ -3,23 +3,21 @@
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate_mdx.parsers import (
-    parse_quiz,
-    parse_match_up,
-    parse_fill_in,
-    parse_true_false,
-    parse_unjumble,
-    parse_group_sort,
+    has_morpheme_patterns,
     parse_cloze,
+    parse_error_correction,
+    parse_fill_in,
+    parse_group_sort,
+    parse_mark_the_words,
+    parse_match_up,
+    parse_quiz,
     parse_select,
     parse_translate,
-    parse_mark_the_words,
-    parse_error_correction,
-    has_morpheme_patterns,
+    parse_true_false,
+    parse_unjumble,
 )
 
 

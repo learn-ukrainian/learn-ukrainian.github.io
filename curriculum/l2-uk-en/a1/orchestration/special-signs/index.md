@@ -1,6 +1,6 @@
 # Build Summary: special-signs (A1)
 
-Generated: 2026-03-31 17:53
+Generated: 2026-04-01 12:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 17:53
 | vocab | complete | 2026-03-31 14:19:13 |
 | enrich | complete | 2026-03-31 14:19:14 |
 | verify | complete | 2026-03-31 14:19:14 |
-| review | complete | 2026-03-31 14:35:34 |
-| stress | complete | 2026-03-31 15:53:11 |
-| publish | complete | 2026-03-31 15:53:13 |
+| review | complete | 2026-04-01 10:40:13 |
+| stress | complete | 2026-04-01 10:40:20 |
+| publish | complete | 2026-04-01 10:40:21 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-03-31 17:53
 |-------|------|
 | 1 | special-signs-review-r1.md |
 | 2 | special-signs-review-r2.md |
+| 3 | special-signs-review-r3.md |
 
 ## Dispatch Log
 
@@ -44,6 +45,8 @@ Generated: 2026-03-31 17:53
 | review | gemini (gemini-3.1-pro-preview) | 120s | ❌ |
 | review | gemini (auto) | 120s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 289s | ✅ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 385s | ✅ |
 
 ## Friction
 
@@ -59,6 +62,7 @@ Generated: 2026-03-31 17:53
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

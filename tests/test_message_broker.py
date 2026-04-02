@@ -7,11 +7,8 @@ import asyncio
 import json
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
-import pytest
 import aiosqlite
-
 
 # Path to the broker module
 SERVER_DIR = Path(__file__).resolve().parent.parent / ".mcp" / "servers" / "message-broker"

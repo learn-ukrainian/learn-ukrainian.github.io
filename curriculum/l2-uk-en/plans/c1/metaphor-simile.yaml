@@ -4,7 +4,7 @@ sequence: 54
 slug: metaphor-simile
 version: '1.1'
 title: "Метафора та порівняння: когнітивний та стилістичний аспекти"
-subtitle: "Metaphor and Simile: Cognitive and Stylistic Aspects"
+subtitle: "Метафора і порівняння: когнітивний і стилістичний аспекти"
 focus: literature
 pedagogy: seminar
 word_target: 4000
@@ -12,7 +12,8 @@ objectives:
   - "Дослідити механізми метафоризації як засобу пізнання світу в українській мові."
   - "Диференціювати художнє порівняння та метафору за структурою та функцією."
   - "Аналізувати індивідуально-авторські метафори у творах українських модерністів."
-  - "Застосовувати метафоричні моделі у професійному дискурсі (бізнес-метафори, політичні метафори)."
+  - "Застосовувати метафоричні моделі у професійному дискурсі (бізнес-метафори, політичні
+    метафори)."
 
 reading_situations:
   - source_type: "літературознавча стаття"
@@ -22,20 +23,25 @@ reading_situations:
   - source_type: "аналітичний огляд"
     topic: "Метафоричне моделювання політичного дискурсу в сучасних українських ЗМІ."
     key_elements: ["метафора війни", "спортивна метафора", "фрейм"]
-    motivation: "Вивчення маніпулятивного та концептуального потенціалу метафори в публіцистиці."
+    motivation: "Вивчення маніпулятивного та концептуального потенціалу метафори в
+      публіцистиці."
 
 listening_situations:
   - media_type: "подкаст"
-    setting: "Бесіда філологів про 'теорію концептуальної метафори' Лакоффа і Джонсона на українському грунті."
+    setting: "Бесіда філологів про 'теорію концептуальної метафори' Лакоффа і Джонсона
+      на українському грунті."
     focus_points: ["когнітивна база метафори", "культурні коди", "приклади з повсякдення"]
     motivation: "Розуміння метафори не як прикраси, а як способу мислення."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Напишіть порівняльний аналіз метафорики двох українських авторів (на вибір), використовуючи термінологію когнітивної лінгвістики."
-    requirements: ["мінімум 350 слів", "використання понять 'донорська зона', 'реципієнтна зона'", "академічний стиль"]
+    prompt: "Напишіть порівняльний аналіз метафорики двох українських авторів (на
+      вибір), використовуючи термінологію когнітивної лінгвістики."
+    requirements: ["мінімум 350 слів", "використання понять 'донорська зона', 'реципієнтна
+          зона'", "академічний стиль"]
     motivation: "Розвиток навичок наукового аналізу художніх засобів."
-    model_answer: "Текст має демонструвати здатність автора виокремлювати ядерні та периферійні компоненти метафоричного перенесення."
+    model_answer: "Текст має демонструвати здатність автора виокремлювати ядерні та
+      периферійні компоненти метафоричного перенесення."
 
 discussion_topics:
   - context: "Чи може метафора бути доказом у науковому чи юридичному дискурсі?"
@@ -106,15 +112,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze metaphorical systems in a poem by Богдан-Ігор Антонич — identify donor and recipient domains, classify metaphor types (мовна, мовленнєва, авторська)."
+    description: "Analyze metaphorical systems in a poem by Богдан-Ігор Антонич —
+      identify donor and recipient domains, classify metaphor types (мовна, мовленнєва,
+      авторська)."
   - type: match-up
-    description: "Match stylistic devices (метафора, метонімія, синекдоха, персоніфікація, катахреза) with their definitions and literary examples."
+    description: "Match stylistic devices (метафора, метонімія, синекдоха, персоніфікація,
+      катахреза) with their definitions and literary examples."
   - type: select
-    description: "Identify the type of figurative language in excerpts from Ukrainian literature and media — distinguish metaphor from simile, metonymy, and personification."
+    description: "Identify the type of figurative language in excerpts from Ukrainian
+      literature and media — distinguish metaphor from simile, metonymy, and personification."
   - type: essay-response
-    description: "Write a comparative analysis (150-200 words) of metaphor use in two different registers — literary and political/business discourse."
+    description: "Write a comparative analysis (150-200 words) of metaphor use in
+      two different registers — literary and political/business discourse."
   - type: mark-the-words
-    description: "Identify all metaphors and similes in a literary passage, classifying each as розгорнуте порівняння, заперечне порівняння, or метафора-епітет."
+    description: "Identify all metaphors and similes in a literary passage, classifying
+      each as розгорнуте порівняння, заперечне порівняння, or метафора-епітет."
 
 activities:
   types_required:
@@ -134,3 +146,4 @@ references:
 connects_to:
   previous: "checkpoint-complex-sentences"
   next: "irony-sarcasm"
+phase: C1.3 [Advanced Stylistics & Rhetoric]

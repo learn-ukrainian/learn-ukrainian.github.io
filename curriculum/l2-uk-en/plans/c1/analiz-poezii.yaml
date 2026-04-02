@@ -4,7 +4,7 @@ sequence: 71
 slug: analiz-poezii
 version: '1.1'
 title: "Аналіз поетичного тексту: версифікація та семантика"
-subtitle: "Analysis of Poetic Text: Versification and Semantics"
+subtitle: "Аналіз поетичного тексту: віршування та семантика"
 focus: literature
 pedagogy: workshop
 word_target: 4000
@@ -20,19 +20,25 @@ reading_situations:
     key_elements: ["екзистенційна напруга", "алітерація", "складна метафора"]
     motivation: "Вивчення зразків найвищої герметичної поезії в українській літературі."
   - source_type: "літературна критика"
-    topic: "Аналіз ритмічної структури 'Кобзаря' Тараса Шевченка та його зв'язок із народною піснею."
+    topic: "Аналіз ритмічної структури 'Кобзаря' Тараса Шевченка та його зв'язок із
+      народною піснею."
     key_elements: ["коломийковий вірш", "цезура", "ритмомелодика"]
     motivation: "Розуміння витоків та національної специфіки української версифікації."
 
 writing_tasks:
   - task_type: "власне висловлення"
-    prompt: "Проведіть цілісний аналіз поетичного твору (на вибір: Ліна Костенко, Василь Симоненко або Сергій Жадан) (300-350 слів). Зверніть увагу на єдність форми та змісту."
-    requirements: ["визначення віршового розміру", "аналіз системи римування", "інтерпретація центральної метафори"]
+    prompt: "Проведіть цілісний аналіз поетичного твору (на вибір: Ліна Костенко,
+      Василь Симоненко або Сергій Жадан) (300-350 слів). Зверніть увагу на єдність
+      форми та змісту."
+    requirements: ["визначення віршового розміру", "аналіз системи римування", "інтерпретація
+          центральної метафори"]
     motivation: "Відпрацювання навичок комплексного філологічного аналізу лірики."
-    model_answer: "Аналіз повинен містити висновки про те, як ритм та звукопис допомагають розкрити ліричний сюжет та емоційний стан героя."
+    model_answer: "Аналіз повинен містити висновки про те, як ритм та звукопис допомагають
+      розкрити ліричний сюжет та емоційний стан героя."
 
 discussion_topics:
-  - context: "Верлібр (вільний вірш) проти традиційного римованого вірша: чи є майбутнє у класичної силабо-тоніки?"
+  - context: "Верлібр (вільний вірш) проти традиційного римованого вірша: чи є майбутнє
+      у класичної силабо-тоніки?"
     questions:
       - "Чому сучасні поети все частіше відмовляються від рими?"
       - "Чи зберігається 'магія' поезії у верлібрі?"
@@ -105,15 +111,20 @@ vocabulary:
 
 activity_hints:
   - type: reading
-    description: "Read a poem by Василь Стус or Ліна Костенко and perform a complete versification analysis — meter, rhyme scheme, strophic structure."
+    description: "Read a poem by Василь Стус or Ліна Костенко and perform a complete
+      versification analysis — meter, rhyme scheme, strophic structure."
   - type: critical-analysis
-    description: "Analyze the unity of form and content in a Ukrainian poem — how does the rhythmic pattern support the emotional and semantic content?"
+    description: "Analyze the unity of form and content in a Ukrainian poem — how
+      does the rhythmic pattern support the emotional and semantic content?"
   - type: select
-    description: "Identify the verse meter (ямб, хорей, дактиль, амфібрахій, анапест, верлібр) in given poetic excerpts and mark stressed/unstressed syllables."
+    description: "Identify the verse meter (ямб, хорей, дактиль, амфібрахій, анапест,
+      верлібр) in given poetic excerpts and mark stressed/unstressed syllables."
   - type: essay-response
-    description: "Write a comprehensive literary analysis (150-200 words) of a Ukrainian poem covering versification, tropes, and interpretation."
+    description: "Write a comprehensive literary analysis (150-200 words) of a Ukrainian
+      poem covering versification, tropes, and interpretation."
   - type: match-up
-    description: "Match types of lyric poetry (інтимна, пейзажна, громадянська, філософська) with their defining features and representative poems."
+    description: "Match types of lyric poetry (інтимна, пейзажна, громадянська, філософська)
+      with their defining features and representative poems."
 
 activities:
   types_required:
@@ -132,4 +143,5 @@ references:
 
 connects_to:
   previous: "literaturoznavcha-terminolohiia"
-  next: null
+  next:
+phase: C1.5 [Literature]

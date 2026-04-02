@@ -1,7 +1,7 @@
 # Audit Report: M23 — days-and-months.md
 **Level:** A1 | **Module:** M23 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-30 21:28:54
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-02 20:29:57
 
 ## Configuration
 **Type:** A1-vocab
@@ -33,29 +33,20 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[LEVEL_RESTRICTION]** Activity 'translate' not allowed at A1
-  - FIX: Use level-appropriate activities. 'translate' is introduced at A2+.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1906/1200 (raw: 2682)
+- **Words:** ✅ 1318/1200 (raw: 1455)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ❌ 0/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 69/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 25.4% (target 15-25%, within tolerance (M23))
+- **Immersion:** ❌ 29.1% HIGH (target 15-25% (M23))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -63,8 +54,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діало́ги (Dialogues)** | ✅ | 398 | Included in Core |
+| **Intro/Narrative** | ✅ | 385 | Included in Core |
 | **Дні тижня (Days of the Week)** | ✅ | 332 | Included in Core |
 | **Мі́сяці і по́ри ро́ку (Months and Seasons)** | ✅ | 390 | Included in Core |
-| **Підсумок — Summary** | ✅ | 786 | Included in Core |
+| **Підсумок — Summary** | ✅ | 211 | Included in Core |

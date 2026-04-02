@@ -1,183 +1,171 @@
-module: b1-064
+module: b1-060
 level: B1
-sequence: 64
+sequence: 60
 slug: education-and-university
 version: '3.0'
 title: "Освіта і навчання"
 subtitle: "Академічна лексика, дисципліни та дієприкметники в науковому стилі"
 focus: communication
 pedagogy: PPP
-phase: "B1.7 [Participles & Gerunds]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
-- "Learner can discuss education, university life, and academic disciplines
-  using appropriate vocabulary (факультет, спеціальність, залік, іспит)"
-- "Learner can use participles and gerunds from M57-M63 in academic register:
-  написана дипломна робота, захищаючи проєкт, прочитавши статтю"
-- "Learner can describe educational processes using віддієслівні іменники
-  and passive participles: вивчення, дослідження, опублікований"
-- "Learner can participate in academic conversations: discussing courses,
-  schedules, exams, and study plans at B1 complexity"
-- "Learner can write a short academic paragraph using formal register
-  with participle phrases and gerund constructions"
+  - "Learner can discuss education, university life, and academic disciplines using
+    appropriate vocabulary (факультет, спеціальність, залік, іспит)"
+  - "Learner can use participles and gerunds from M57-M63 in academic register: написана
+    дипломна робота, захищаючи проєкт, прочитавши статтю"
+  - "Learner can describe educational processes using віддієслівні іменники and passive
+    participles: вивчення, дослідження, опублікований"
+  - "Learner can participate in academic conversations: discussing courses, schedules,
+    exams, and study plans at B1 complexity"
+  - "Learner can write a short academic paragraph using formal register with participle
+    phrases and gerund constructions"
 dialogue_situations:
-- setting: 'First week at Київський національний університет — navigating the system:
-    Де деканат (m, dean''s office)? Записавшись на курс, отримаєш залікову книжку
-    (f, grade book). Стипендія (f, scholarship) виплачується щомісяця. Захистивши
-    курсову (f, coursework), здаси сесію (f, exam period).'
-  speakers:
-  - Старшокурсник (senior student)
-  - Першокурсник
-  motivation: 'Education integration: gerunds + participles + passive in university
-    context'
+  - setting: 'First week at Київський національний університет — navigating the system:
+      Де деканат (m, dean''s office)? Записавшись на курс, отримаєш залікову книжку
+      (f, grade book). Стипендія (f, scholarship) виплачується щомісяця. Захистивши
+      курсову (f, coursework), здаси сесію (f, exam period).'
+    speakers:
+      - Старшокурсник (senior student)
+      - Першокурсник
+    motivation: 'Education integration: gerunds + participles + passive in university
+      context'
 content_outline:
-- section: "Система освіти в Україні"
-  words: 700
-  points:
-  - "Overview of Ukrainian education levels:
-    початкова школа (1-4 класи), середня школа (5-9 класи),
-    старша школа (10-11/12 класи), університет/інститут.
-    Ступені вищої освіти: бакалавр, магістр, доктор філософії.
-    Типи закладів: університет, інститут, академія, коледж."
-  - "Academic vocabulary cluster:
-    факультет (faculty/department), кафедра (department/chair),
-    спеціальність (major/specialization), курс (year of study),
-    семестр (semester), залікова книжка (grade book),
-    залік (pass/fail exam), іспит (exam), диплом (diploma/thesis).
-    Dialogue 1: two students discussing their specializations."
-  - "Cultural context: the Ukrainian academic system compared to
-    Western models. ЗНО/НМТ (standardized testing for university
-    admission). The concept of державне замовлення (state-funded places)
-    vs контрактна форма (self-funded)."
-- section: "Навчальні дисципліни та спеціальності"
-  words: 650
-  points:
-  - "Subject vocabulary using дієприкметники and дієприслівники:
-    Вивчаючи фізику, студенти проводять досліди.
-    Написана професором монографія отримала премію.
-    Захищена минулого року дисертація стосувалась...
-    Natural integration of Phase 7 grammar in academic context."
-  - "Discipline names: математика, фізика, хімія, біологія,
-    філологія, історія, юриспруденція, медицина, інженерія,
-    інформатика, економіка, філософія, психологія, мистецтво.
-    Formation patterns: many are international words adapted to Ukrainian."
-  - "Dialogue 2: a student describing their studies to a friend.
-    Uses gerunds for simultaneous/sequential actions:
-    Готуючись до іспиту, я прочитав три підручники.
-    Закінчивши бакалаврат, планую вступити до магістратури."
-- section: "Академічне середовище"
-  words: 650
-  points:
-  - "University life vocabulary:
-    лекція (lecture), семінар (seminar), практика (practice/internship),
-    лабораторна робота (lab work), курсова робота (term paper),
-    дипломна робота (thesis), конференція (conference),
-    стипендія (scholarship/stipend), гуртожиток (dormitory),
-    бібліотека (library), читальний зал (reading room)."
-  - "Passive participles in academic descriptions:
-    Опублікована стаття, рекомендована література,
-    запланована конференція, затверджений розклад,
-    проведене дослідження, отримані результати.
-    These are natural and high-frequency in academic Ukrainian."
-  - "Dialogue 3: a student and professor discussing a research project.
-    Uses participle phrases: Дослідження, проведене нашою групою,
-    показало цікаві результати. Прочитавши вашу роботу, я маю
-    кілька зауважень."
-- section: "Навчальний процес: дієприкметники і дієприслівники"
-  words: 650
-  points:
-  - "Describing academic activities with Phase 7 grammar:
-    Студент, який пише курсову → студент, що пише курсову
-    (preferred over працюючий студент — Russian calque).
-    Прочитавши статтю, зробіть конспект. (perfective gerund — sequence)
-    Готуючись до семінару, перегляньте матеріали. (imperfective — process)"
-  - "Academic register: gerund phrases are MORE acceptable in academic
-    Ukrainian than in speech. They create concise, formal prose:
-    Використовуючи новий метод, дослідники отримали точніші дані.
-    Проаналізувавши результати, автор дійшов висновку."
-  - "Practice: rewrite 6 informal sentences about studies into formal
-    academic register using participle phrases and gerund constructions."
-- section: "Порівняння систем освіти"
-  words: 500
-  points:
-  - "Reading passage: a comparison of Ukrainian and international
-    education systems. Uses complex sentences with subordinate clauses
-    (preview of Phase 8) and Phase 7 grammar naturally.
-    Comprehension questions test LANGUAGE, not facts:
-    — Знайдіть усі дієприкметникові звороти в тексті.
-    — Яку роль виконують дієприслівники в другому абзаці?"
-  - "Discussion prompts: learners describe their own education
-    experience using Phase 7 grammar structures."
-- section: "Підсумок фази 7 та перехід до M65"
-  words: 400
-  points:
-  - "Summary of Phase 7 grammar applied in academic context:
-    M57-58: дієприкметники (активні/пасивні) — academic descriptions.
-    M59: дієприкметниковий зворот — concise formal attributes.
-    M60: короткі прикметники — потрібен (essential in academic register).
-    M61-62: дієприслівники (недок./док.) — temporal relations in process.
-    M63: дієприслівниковий зворот — formal prose constructions."
-  - "Self-check: Я можу говорити про навчання українською ✓/✗,
-    Я вживаю дієприкметники в академічному стилі ✓/✗.
-    Preview: M65 — Контрольна робота 7, reviewing Phase 7."
+  - section: "Система освіти в Україні"
+    words: 700
+    points:
+      - "Overview of Ukrainian education levels: початкова школа (1-4 класи), середня
+        школа (5-9 класи), старша школа (10-11/12 класи), університет/інститут. Ступені
+        вищої освіти: бакалавр, магістр, доктор філософії. Типи закладів: університет,
+        інститут, академія, коледж."
+      - "Academic vocabulary cluster: факультет (faculty/department), кафедра (department/chair),
+        спеціальність (major/specialization), курс (year of study), семестр (semester),
+        залікова книжка (grade book), залік (pass/fail exam), іспит (exam), диплом
+        (diploma/thesis). Dialogue 1: two students discussing their specializations."
+      - "Cultural context: the Ukrainian academic system compared to Western models.
+        ЗНО/НМТ (standardized testing for university admission). The concept of державне
+        замовлення (state-funded places) vs контрактна форма (self-funded)."
+  - section: "Навчальні дисципліни та спеціальності"
+    words: 650
+    points:
+      - "Subject vocabulary using дієприкметники and дієприслівники: Вивчаючи фізику,
+        студенти проводять досліди. Написана професором монографія отримала премію.
+        Захищена минулого року дисертація стосувалась... Natural integration of Phase
+        7 grammar in academic context."
+      - "Discipline names: математика, фізика, хімія, біологія, філологія, історія,
+        юриспруденція, медицина, інженерія, інформатика, економіка, філософія, психологія,
+        мистецтво. Formation patterns: many are international words adapted to Ukrainian."
+      - "Dialogue 2: a student describing their studies to a friend. Uses gerunds
+        for simultaneous/sequential actions: Готуючись до іспиту, я прочитав три підручники.
+        Закінчивши бакалаврат, планую вступити до магістратури."
+  - section: "Академічне середовище"
+    words: 650
+    points:
+      - "University life vocabulary: лекція (lecture), семінар (seminar), практика
+        (practice/internship), лабораторна робота (lab work), курсова робота (term
+        paper), дипломна робота (thesis), конференція (conference), стипендія (scholarship/stipend),
+        гуртожиток (dormitory), бібліотека (library), читальний зал (reading room)."
+      - "Passive participles in academic descriptions: Опублікована стаття, рекомендована
+        література, запланована конференція, затверджений розклад, проведене дослідження,
+        отримані результати. These are natural and high-frequency in academic Ukrainian."
+      - "Dialogue 3: a student and professor discussing a research project. Uses participle
+        phrases: Дослідження, проведене нашою групою, показало цікаві результати.
+        Прочитавши вашу роботу, я маю кілька зауважень."
+  - section: "Навчальний процес: дієприкметники і дієприслівники"
+    words: 650
+    points:
+      - "Describing academic activities with Phase 7 grammar: Студент, який пише курсову
+        → студент, що пише курсову (preferred over працюючий студент — Russian calque).
+        Прочитавши статтю, зробіть конспект. (perfective gerund — sequence) Готуючись
+        до семінару, перегляньте матеріали. (imperfective — process)"
+      - "Academic register: gerund phrases are MORE acceptable in academic Ukrainian
+        than in speech. They create concise, formal prose: Використовуючи новий метод,
+        дослідники отримали точніші дані. Проаналізувавши результати, автор дійшов
+        висновку."
+      - "Practice: rewrite 6 informal sentences about studies into formal academic
+        register using participle phrases and gerund constructions."
+  - section: "Порівняння систем освіти"
+    words: 500
+    points:
+      - "Reading passage: a comparison of Ukrainian and international education systems.
+        Uses complex sentences with subordinate clauses (preview of Phase 8) and Phase
+        7 grammar naturally. Comprehension questions test LANGUAGE, not facts: — Знайдіть
+        усі дієприкметникові звороти в тексті. — Яку роль виконують дієприслівники
+        в другому абзаці?"
+      - "Discussion prompts: learners describe their own education experience using
+        Phase 7 grammar structures."
+  - section: "Підсумок фази 7 та перехід до M65"
+    words: 400
+    points:
+      - "Summary of Phase 7 grammar applied in academic context: M57-58: дієприкметники
+        (активні/пасивні) — academic descriptions. M59: дієприкметниковий зворот —
+        concise formal attributes. M60: короткі прикметники — потрібен (essential
+        in academic register). M61-62: дієприслівники (недок./док.) — temporal relations
+        in process. M63: дієприслівниковий зворот — formal prose constructions."
+      - "Self-check: Я можу говорити про навчання українською ✓/✗, Я вживаю дієприкметники
+        в академічному стилі ✓/✗. Preview: M65 — Контрольна робота 7, reviewing Phase
+        7."
 vocabulary_hints:
   required:
-  - "освіта (education)"
-  - "університет (university)"
-  - "факультет (faculty, department)"
-  - "спеціальність (major, specialization)"
-  - "лекція (lecture)"
-  - "семінар (seminar)"
-  - "іспит (exam)"
-  - "залік (pass/fail assessment)"
-  - "стипендія (scholarship, stipend)"
-  - "курсова робота (term paper)"
-  - "дипломна робота (thesis)"
-  - "дослідження (research)"
-  - "бакалавр (bachelor's degree)"
-  - "магістр (master's degree)"
+    - "освіта (education)"
+    - "університет (university)"
+    - "факультет (faculty, department)"
+    - "спеціальність (major, specialization)"
+    - "лекція (lecture)"
+    - "семінар (seminar)"
+    - "іспит (exam)"
+    - "залік (pass/fail assessment)"
+    - "стипендія (scholarship, stipend)"
+    - "курсова робота (term paper)"
+    - "дипломна робота (thesis)"
+    - "дослідження (research)"
+    - "бакалавр (bachelor's degree)"
+    - "магістр (master's degree)"
   recommended:
-  - "кафедра (department/chair)"
-  - "гуртожиток (dormitory)"
-  - "розклад занять (class schedule)"
-  - "залікова книжка (grade book)"
-  - "конференція (conference)"
-  - "лабораторна робота (lab work)"
-  - "підручник (textbook)"
-  - "конспект (lecture notes)"
-  - "монографія (monograph)"
-  - "дисертація (dissertation)"
-  - "науковий керівник (academic advisor)"
+    - "кафедра (department/chair)"
+    - "гуртожиток (dormitory)"
+    - "розклад занять (class schedule)"
+    - "залікова книжка (grade book)"
+    - "конференція (conference)"
+    - "лабораторна робота (lab work)"
+    - "підручник (textbook)"
+    - "конспект (lecture notes)"
+    - "монографія (monograph)"
+    - "дисертація (dissertation)"
+    - "науковий керівник (academic advisor)"
 activity_hints:
-- type: fill-in
-  focus: "Complete academic sentences using participle phrases and gerund constructions"
-  items: 12
-- type: quiz
-  focus: "Choose the correct Phase 7 form for academic contexts (participle vs gerund vs clause)"
-  items: 12
-- type: match-up
-  focus: "Match academic vocabulary to definitions and contexts"
-  items: 12
-- type: sentence-builder
-  focus: "Transform informal study descriptions into formal academic register using Phase 7 grammar"
-  items: 12
-- type: error-correction
-  focus: "Fix Russian calque participles and register mismatches in academic texts"
-  items: 12
+  - type: fill-in
+    focus: "Complete academic sentences using participle phrases and gerund constructions"
+    items: 12
+  - type: quiz
+    focus: "Choose the correct Phase 7 form for academic contexts (participle vs gerund
+      vs clause)"
+    items: 12
+  - type: match-up
+    focus: "Match academic vocabulary to definitions and contexts"
+    items: 12
+  - type: sentence-builder
+    focus: "Transform informal study descriptions into formal academic register using
+      Phase 7 grammar"
+    items: 12
+  - type: error-correction
+    focus: "Fix Russian calque participles and register mismatches in academic texts"
+    items: 12
 connects_to:
-- "b1-057 to b1-063 (all Phase 7 grammar modules)"
-- "b1-065 (Контрольна робота 7 — Phase 7 review)"
+  - "b1-057 to b1-063 (all Phase 7 grammar modules)"
+  - "b1-065 (Контрольна робота 7 — Phase 7 review)"
 prerequisites:
-- "b1-063 (Gerund phrases — all Phase 7 grammar complete)"
+  - "b1-063 (Gerund phrases — all Phase 7 grammar complete)"
 grammar:
-- "Integration of M57-63 grammar in academic communicative context"
-- "Participle phrases in academic descriptions (опублікована стаття)"
-- "Gerund phrases in academic processes (аналізуючи дані)"
-- "Register: науковий style with participle and gerund phrases"
-- "Short-form adjectives in academic context (потрібен, певен)"
+  - "Integration of M57-63 grammar in academic communicative context"
+  - "Participle phrases in academic descriptions (опублікована стаття)"
+  - "Gerund phrases in academic processes (аналізуючи дані)"
+  - "Register: науковий style with participle and gerund phrases"
+  - "Short-form adjectives in academic context (потрібен, певен)"
 register: науково-навчальний
 references:
-- title: "Phase 7 module references (M57-M63)"
-  notes: "All textbook sources from Grade 7 priority textbooks."
-- title: "Заболотний Grade 8, §54-56"
-  notes: "Науковий стиль мовлення. Лексичні та граматичні особливості (participles, verbal nouns in academic register)."
+  - title: "Phase 7 module references (M57-M63)"
+    notes: "All textbook sources from Grade 7 priority textbooks."
+  - title: "Заболотний Grade 8, §54-56"
+    notes: "Науковий стиль мовлення. Лексичні та граматичні особливості (participles,
+      verbal nouns in academic register)."

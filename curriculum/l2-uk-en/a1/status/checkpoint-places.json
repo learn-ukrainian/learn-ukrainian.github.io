@@ -2,15 +2,15 @@
   "module": "checkpoint-places",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-30T21:43:37.561719Z",
+  "last_audit": "2026-04-02T20:29:55.896787Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-30T21:38:37.041810Z",
+    "md": "2026-03-31T17:27:15.870379Z",
     "meta": null,
     "activities": "2026-03-30T21:33:49.881728Z",
     "vocabulary": "2026-03-30T21:34:26.967869Z",
     "research": null,
-    "plan": "2026-03-30T10:59:40.279084Z"
+    "plan": "2026-03-30T22:17:20.653961Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2085/1200 (raw: 2632)"
+      "message": "1541/1200 (raw: 1581)"
     },
     "activities": {
       "status": "pass",

@@ -13,9 +13,9 @@
 
 ## Чита́ння (Reading Practice)
 
-Read the following text aloud at least twice. The first time, focus on pronouncing each word correctly — sound out every letter. The second time, focus on understanding the meaning. Every word here comes from M01–M06. There is nothing new.
+Read the following text aloud at least twice. The first time, focus on pronouncing each word correctly — sound out every letter. The second time, focus on understanding the meaning. Nearly every word here comes from M01–M06. A few natural additions appear with their translations — focus on the words you already know.
 
-> Приві́т! Мене звати Дари́на. Я — студе́нтка. Я з Ха́ркова. Моя сім'я живе́ у Льво́ві. Моя мама — лі́карка. Мій тато — інжене́р. У мене є старший брат. Йо́го звати Миха́йло. Михайло — програмі́ст. Він працю́є у Ки́єві. У мене є бабу́ся і діду́сь. Вони́ живу́ть у селі́. Я ду́же люблю́ свою́ роди́ну. А ти? Розкажи́ про свою сім'ю́!
+> Приві́т! Мене звати Дари́на. Я — студе́нтка. Я з Ха́ркова. Моя сім'я зі Львова. Моя мама — лі́карка. Мій тато — інжене́р. У мене є старший брат. Йо́го звати Миха́йло. Михайло — програмі́ст. Він працю́є у Ки́єві. У мене є бабу́ся і діду́сь. Вони з села. Я ду́же люблю́ свою́ роди́ну. А ти? Розкажи́ про свою сім'ю́!
 
 *(Hi! My name is Daryna. I am a student. I am from Kharkiv. My family lives in Lviv. My mom is a doctor. My dad is an engineer. I have an older brother. His name is Mykhailo. Mykhailo is a programmer. He works in Kyiv. I have a grandmother and a grandfather. They live in a village. I love my family very much. And you? Tell me about your family!)*
 
@@ -55,17 +55,19 @@ One key insight ties these patterns together: Ukrainian does not use a verb "to 
 
 ## Діало́г (Capstone Dialogue)
 
-Imagine you are at a university gathering in Lviv. You meet someone you have never spoken to before. Here is how that first conversation might go. Both speakers are students — the setting is natural, not a classroom drill.
+Imagine you are at a conference coffee break in Lviv. Two professionals meet between sessions. Here is how that first conversation might go — the setting is natural, not a classroom drill.
 
 > — **Богдан:** Привіт! Я — Богдан. Як тебе звати? *(Hi! I'm Bohdan. What's your name?)*
 > — **Соломія:** Привіт, Богдане! Мене звати Соломія. *(Hi, Bohdane! My name is Solomiia.)*
 > — **Богдан:** Дуже приє́мно! Звідки ти, Соломі́є? *(Nice to meet you! Where are you from, Solomiia?)*
 > — **Соломія:** Я з Терно́поля. А ти? *(I'm from Ternopil. And you?)*
 > — **Богдан:** Я з Дніпра́. *(I'm from Dnipro.)*
-> — **Соломія:** Ти студент? *(Are you a student?)*
-> — **Богдан:** Так, я — студент. А ти? *(Yes, I'm a student. And you?)*
-> — **Соломія:** Я теж студентка. *(I'm a student too.)*
-> — **Богдан:** Ціка́во! Моя мама — лікарка. *(Interesting! My mom is a doctor.)*
+> — **Соломія:** Ти інженер? *(Are you an engineer?)*
+> — **Богдан:** Так, я — інженер. А ти? *(Yes, I'm an engineer. And you?)*
+> — **Соломія:** Я — вчителька. *(I'm a teacher.)*
+> — **Богдан:** Ціка́во! А яке твоє прі́звище? *(Interesting! And what is your surname?)*
+> — **Соломія:** Коваленко. А твоє? *(Kovalenko. And yours?)*
+> — **Богдан:** Шевче́нко. Моя мама — лікарка. *(Shevchenko. My mom is a doctor.)*
 > — **Соломія:** Спра́вді? А твій тато? *(Really? And your dad?)*
 > — **Богдан:** Мій тато — вчи́тель. А у тебе? *(My dad is a teacher. And yours?)*
 > — **Соломія:** Мій тато — інженер. *(My dad is an engineer.)*
@@ -86,7 +88,7 @@ Without rereading the dialogue, answer these questions:
 
 Now it is your turn. Fill in this template with your own information. This is your connected self-introduction — read it aloud without stopping.
 
-> Привіт! Мене звати ___. Я — ___ [nationality]. Я живу́ у ___ [city].
+> Привіт! Мене звати ___. Я — ___ [nationality]. Я з ___ [city/country].
 > Я — ___ [profession or student]. Моя мама — ___ [profession]. Мій тато — ___ [profession].
 > У мене є ___ [family member]. Його/Її звати ___ [name].
 > Я дуже люблю свою родину!
@@ -103,7 +105,7 @@ Read your completed monologue aloud once more. If you can say it smoothly, witho
 
 - **Скільки лі́тер в украї́нському алфа́ві́ті?** — 33 лі́тери. Six vowel sounds: а, е, и, і, о, у.
 - **Що ро́бить м'яки́й знак (ь)?** — It softens the preceding consonant: **сіль** (salt), **день** (day).
-- **Що робить апо́стро́ф (')?** — It separates a labial consonant from a following vowel: **м'яч** (ball), **сім'я** (family).
+- **Що робить апо́стро́ф (')?** — It separates a consonant from a following iotated vowel (я, ю, є, ї): **м'яч** (ball), **сім'я** (family).
 - **Привітайся форма́льно та неформа́льно.** — **Добрий день!** (formal) / **Привіт!** (informal).
 - **Представ себе у 3–4 реченнях.** — **Мене звати ___.** **Я з ___.** **Я — ___.** **У мене є ___.**
 - **Назви чле́нів роди́ни з присві́йними займе́нниками.** — **Мій тато, моя мама, мій брат, моя сестра, мій дідусь, моя бабуся.**

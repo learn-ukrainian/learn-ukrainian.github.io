@@ -4,7 +4,7 @@ sequence: 14
 slug: literature-review
 version: '1.1'
 title: "Огляд літератури: синтез та аналіз"
-subtitle: "Literature Review: Synthesis and Analysis"
+subtitle: "Огляд літератури: синтез та аналіз"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -16,31 +16,44 @@ objectives:
 
 reading_situations:
   - source_type: "фрагмент дисертації"
-    topic: "Історіографія питання про походження козацтва в українській науці XIX-XX століть."
+    topic: "Історіографія питання про походження козацтва в українській науці XIX-XX
+      століть."
     key_elements: ["першоджерела", "концептуальні розбіжності", "еволюція поглядів"]
     motivation: "Аналіз прикладів професійного синтезу різних наукових шкіл та підходів."
   - source_type: "науковий огляд"
     topic: "Сучасні напрями в українському мовознавстві: від описовості до когнітивістики."
     key_elements: ["синтез думок", "критична оцінка", "перспективні напрямки"]
-    motivation: "Вивчення структури аналітичного огляду та способів зіставлення наукових парадигм."
+    motivation: "Вивчення структури аналітичного огляду та способів зіставлення наукових
+      парадигм."
 
 listening_situations:
   - media_type: "лекція"
     setting: "Вебінар для аспірантів: 'Як написати якісний Literature Review'."
-    focus_points: ["вимоги до джерельної бази", "техніки синтезу інформації", "виокремлення недосліджених аспектів"]
-    motivation: "Розвиток навичок аудіювання фахових рекомендацій щодо академічного письма."
+    focus_points: ["вимоги до джерельної бази", "техніки синтезу інформації", "виокремлення
+          недосліджених аспектів"]
+    motivation: "Розвиток навичок аудіювання фахових рекомендацій щодо академічного
+      письма."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть фрагмент огляду літератури (200-250 слів), у якому зіставте погляди двох-трьох українських науковців на певну проблему. Виявіть розбіжності та спільні позиції."
-    requirements: ["використання конструкцій порівняння", "критична оцінка", "виокремлення 'research gap'"]
+    prompt: "Напишіть фрагмент огляду літератури (200-250 слів), у якому зіставте
+      погляди двох-трьох українських науковців на певну проблему. Виявіть розбіжності
+      та спільні позиції."
+    requirements: ["використання конструкцій порівняння", "критична оцінка", "виокремлення
+          'research gap'"]
     motivation: "Практика синтезу наукових джерел як найвищого рівня аналітичної роботи."
-    model_answer: "Текст має демонструвати вміння групувати авторів за підходами, використовуючи конструкції 'на противагу позиції X, Y вважає...', 'якщо X наголошує на..., то Y зосереджується на...'."
+    model_answer: "Текст має демонструвати вміння групувати авторів за підходами,
+      використовуючи конструкції 'на противагу позиції X, Y вважає...', 'якщо X наголошує
+      на..., то Y зосереджується на...'."
 
 discussion_topics:
-  - context: "Яка роль національної традиції в огляді світової літератури з певної проблеми?"
-    questions: ["Як збалансувати вітчизняні та зарубіжні джерела?", "Чому важливо уникати надмірної цитованості на користь аналізу?", "Як ідентифікувати упередженість у наукових працях минулого?"]
-    motivation: "Обговорення стратегій критичного відбору та інтерпретації наукових джерел."
+  - context: "Яка роль національної традиції в огляді світової літератури з певної
+      проблеми?"
+    questions: ["Як збалансувати вітчизняні та зарубіжні джерела?", "Чому важливо
+          уникати надмірної цитованості на користь аналізу?", "Як ідентифікувати упередженість
+          у наукових працях минулого?"]
+    motivation: "Обговорення стратегій критичного відбору та інтерпретації наукових
+      джерел."
 
 content_outline:
   - section: "Принципи організації огляду літератури"
@@ -103,15 +116,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze a Ukrainian historiographical literature review about Kozak origins — evaluate source grouping, critical analysis quality, and research gap identification."
+    description: "Analyze a Ukrainian historiographical literature review about Kozak
+      origins — evaluate source grouping, critical analysis quality, and research
+      gap identification."
   - type: match-up
-    description: "Match literature review organizational strategies (хронологічний, тематичний, методологічний) with example text structures."
+    description: "Match literature review organizational strategies (хронологічний,
+      тематичний, методологічний) with example text structures."
   - type: error-correction
-    description: "Fix 'patchwriting' and excessive citation in a literature review draft — improve synthesis and critical voice."
+    description: "Fix 'patchwriting' and excessive citation in a literature review
+      draft — improve synthesis and critical voice."
   - type: essay-response
-    description: "Write a synthesis paragraph (150-200 words) comparing views of different Ukrainian scholars on a linguistic topic."
+    description: "Write a synthesis paragraph (150-200 words) comparing views of different
+      Ukrainian scholars on a linguistic topic."
   - type: fill-in
-    description: "Complete comparison sentences with appropriate phrases for agreement, disagreement, and alternative viewpoints."
+    description: "Complete comparison sentences with appropriate phrases for agreement,
+      disagreement, and alternative viewpoints."
 
 activities:
   types_required:
@@ -131,3 +150,4 @@ references:
 connects_to:
   previous: "abstract-writing"
   next: "oral-presentations"
+phase: C1.1 [Academic Foundation]

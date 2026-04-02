@@ -2,10 +2,10 @@
   "module": "hey-friend",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-31T17:26:29.234012Z",
+  "last_audit": "2026-04-02T20:29:59.671155Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T11:48:48.117885Z",
+    "md": "2026-03-31T17:27:15.873638Z",
     "meta": null,
     "activities": "2026-03-30T22:12:57.335970Z",
     "vocabulary": "2026-03-30T22:13:28.705229Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1391/1200 (raw: 1833)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1087/1200 (raw: 1265) | engagement: 0/1"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

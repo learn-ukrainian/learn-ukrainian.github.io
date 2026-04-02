@@ -13,13 +13,13 @@ Issue: #783
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
+from audit.checks.morphological_validator import GrammarConstraint
 from lexical_sandbox import (
     COMMON_WORDS,
     _collect_candidates,
@@ -33,8 +33,6 @@ from lexical_sandbox import (
     extract_words_from_request,
     parse_resource_request,
 )
-from audit.checks.morphological_validator import GrammarConstraint
-
 
 # =============================================================================
 # _extract_ukr_word

@@ -4,7 +4,7 @@ sequence: 25
 slug: political-system
 version: '1.1'
 title: "Політична система України: Інституції, виклики та державотворення"
-subtitle: "Political System and State Institutions"
+subtitle: "Політична система та державні інституції"
 focus: professional
 pedagogy: seminar
 word_target: 4000
@@ -12,11 +12,13 @@ objectives:
   - "Глибоко розуміти структуру державної влади та конституційні основи України."
   - "Аналізувати політичний дискурс, виборчі процеси та роль партій у суспільстві."
   - "Оцінювати вплив громадянського суспільства на прийняття державних рішень."
-  - "Вивчати історію українського парламентаризму від козацьких рад до сучасної Верховної Ради."
+  - "Вивчати історію українського парламентаризму від козацьких рад до сучасної Верховної
+    Ради."
 
 reading_situations:
   - source_type: "офіційний документ"
-    topic: "Аналіз ключових положень Конституції України про повноваження Президента та Парламенту."
+    topic: "Аналіз ключових положень Конституції України про повноваження Президента
+      та Парламенту."
     key_elements: ["суверенітет", "законодавча ініціатива", "стримування та противаги"]
     motivation: "Вивчення юридичної термінології та офіційного стилю."
   - source_type: "історичне джерело"
@@ -26,19 +28,25 @@ reading_situations:
 
 listening_situations:
   - media_type: "інтерв'ю"
-    setting: "Бесіда з політологом про реформу децентралізації та її вплив на місцеве самоврядування."
+    setting: "Бесіда з політологом про реформу децентралізації та її вплив на місцеве
+      самоврядування."
     focus_points: ["субсидіарність", "громади", "бюджетна автономія"]
     motivation: "Розуміння складних соціально-політичних термінів у контексті реформ."
 
 writing_tasks:
   - task_type: "есе"
-    prompt: "Проаналізуйте роль електронної демократії (петиції, додаток 'Дія') у сучасному політичному житті України. Чи змінює це баланс сил?"
-    requirements: ["мінімум 300 слів", "використання вставних слів для аргументації", "приклади конкретних ініціатив"]
+    prompt: "Проаналізуйте роль електронної демократії (петиції, додаток 'Дія') у
+      сучасному політичному житті України. Чи змінює це баланс сил?"
+    requirements: ["мінімум 300 слів", "використання вставних слів для аргументації",
+      "приклади конкретних ініціатив"]
     motivation: "Відпрацювання аналітичного письма на актуальну суспільну тематику."
-    model_answer: "Текст має містити тезу про трансформацію взаємодії держави та громадянина, аргументи щодо інклюзивності та ризиків цифровізації, висновок про зміцнення демократії. Використання понять 'прозорість', 'підзвітність', 'цифровий розрив'."
+    model_answer: "Текст має містити тезу про трансформацію взаємодії держави та громадянина,
+      аргументи щодо інклюзивності та ризиків цифровізації, висновок про зміцнення
+      демократії. Використання понять 'прозорість', 'підзвітність', 'цифровий розрив'."
 
 discussion_topics:
-  - context: "Парламентська vs Президентська республіка: який формат є оптимальним для повоєнної відбудови України?"
+  - context: "Парламентська vs Президентська республіка: який формат є оптимальним
+      для повоєнної відбудови України?"
     questions:
       - "Які ризики несе концентрація влади в руках однієї особи?"
       - "Як забезпечити ефективність колегіальних рішень у кризові періоди?"
@@ -106,15 +114,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Analyze constitutional provisions about presidential and parliamentary powers — evaluate legal terminology and argumentation structure."
+    description: "Analyze constitutional provisions about presidential and parliamentary
+      powers — evaluate legal terminology and argumentation structure."
   - type: error-correction
-    description: "Fix imprecise political terminology and register violations in a political analysis text."
+    description: "Fix imprecise political terminology and register violations in a
+      political analysis text."
   - type: match-up
-    description: "Match Ukrainian state institutions (Верховна Рада, Кабінет Міністрів, Конституційний Суд) with their constitutional functions and terminology."
+    description: "Match Ukrainian state institutions (Верховна Рада, Кабінет Міністрів,
+      Конституційний Суд) with their constitutional functions and terminology."
   - type: select
-    description: "Choose correct legal and political terms in context — distinguish between similar concepts (суверенітет vs незалежність, легітимність vs законність)."
+    description: "Choose correct legal and political terms in context — distinguish
+      between similar concepts (суверенітет vs незалежність, легітимність vs законність)."
   - type: essay-response
-    description: "Write an analytical essay (300+ words) about the role of electronic democracy (Дія, e-petitions) in Ukrainian political life."
+    description: "Write an analytical essay (300+ words) about the role of electronic
+      democracy (Дія, e-petitions) in Ukrainian political life."
 
 activities:
   types_required:
@@ -134,3 +147,4 @@ references:
 connects_to:
   previous: "digital-communication"
   next: "media-landscape"
+phase: C1.2 [Professional & Social Context]

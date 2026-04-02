@@ -8,22 +8,19 @@ Layer 3: Fix apply_output safety guards
 
 import json
 import os
+import shutil
 import sys
 import tempfile
-import shutil
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-import pytest
 import yaml
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.batch_gemini_runner import BatchRunner
-from scripts.batch_gemini_config import get_module_paths, PROJECT_ROOT
 from scripts.audit.report import save_status_cache
-
+from scripts.batch_gemini_runner import BatchRunner
 
 # =============================================================================
 # Layer 1: Review gate in status JSON
@@ -383,7 +380,7 @@ class TestFixTemplateRegistration:
 
     def test_all_seminar_tracks_have_fix_content_template(self):
         """All seminar tracks need fix-content and fix-activities templates."""
-        from scripts.batch_gemini_config import get_track_config, SEMINAR_TRACKS
+        from scripts.batch_gemini_config import SEMINAR_TRACKS, get_track_config
         for track in SEMINAR_TRACKS:
             config = get_track_config(track)
             assert "fix-content" in config["templates"], f"{track} missing fix-content template"
@@ -742,7 +739,6 @@ class TestSchemaFilterVerification:
     def test_all_priority_types_exist_in_all_types(self):
         """Every priority_type in LEVEL_CONFIG must be in the filter's ALL_TYPES set."""
         from scripts.audit.config import LEVEL_CONFIG
-        from scripts.batch_gemini_runner import _filter_schema_for_track
 
         # ALL_TYPES is defined inside the function; extract by checking all known types
         ALL_TYPES = {
@@ -779,7 +775,6 @@ class TestSchemaFilterVerification:
             if stripped.startswith('### '):
                 header_text = stripped[4:].strip().lower()
                 # Match the same heuristic used in _filter_schema_for_track
-                from scripts.batch_gemini_runner import _filter_schema_for_track
                 ALL_TYPES = {
                     'quiz', 'fill-in', 'match-up', 'true-false', 'group-sort',
                     'unjumble', 'error-correction', 'anagram', 'select',
@@ -805,8 +800,8 @@ class TestSchemaFilterVerification:
 
     def test_filter_produces_nonempty_for_seminar_priority_types(self):
         """_filter_schema_for_track must return non-empty output for each seminar track."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
         from scripts.audit.config import LEVEL_CONFIG
+        from scripts.batch_gemini_runner import _filter_schema_for_track
 
         schema_path = Path(__file__).parent.parent / "docs" / "ACTIVITY-YAML-REFERENCE.md"
         schema_content = schema_path.read_text()

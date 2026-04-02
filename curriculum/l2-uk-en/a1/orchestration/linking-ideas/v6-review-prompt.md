@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 44: Linking Ideas (A1, A1.7 [Communication])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -129,43 +129,26 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 Two friends are meeting after work. Listen to how they connect their thoughts — not with pauses or separate sentences, but with small linking words that make Ukrainian flow naturally.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Привіт, Марку! Ти хочеш каву чи чай? *(Hi, Marko! Do you want coffee or tea?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Каву, бо я дуже втомлений. *(Coffee, because I'm very tired.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> А я хочу чай, але без цукру. *(And I want tea, but without sugar.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Ходімо в кафе, і я візьму ще тістечко. *(Let's go to a café, and I'll get a pastry too.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Я теж хочу, але я на дієті! *(I want one too, but I'm on a diet!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Добре, але тільки одне! *(Okay, but just one!)*</div>
-
-</div>
+> — **Оля:** Приві́т, Марку! Ти хо́чеш ка́ву чи чай? *(Hi, Marko! Do you want coffee or tea?)*
+> — **Марко:** Каву, бо я ду́же вто́млений. *(Coffee, because I'm very tired.)*
+> — **Оля:** А я хо́чу чай, але́ без цу́кру. *(And I want tea, but without sugar.)*
+> — **Марко:** Ході́мо в кафе́, і я візьму́ ще ті́стечко. *(Let's go to a café, and I'll get a pastry too.)*
+> — **Оля:** Я теж хочу, але я на діє́ті! *(I want one too, but I'm on a diet!)*
+> — **Марко:** До́бре, але ті́льки одне́! *(Okay, but just one!)*
 
 Notice the four words doing all the heavy lifting here: **і** (and), **а** (and/but — a shift), **але** (but), **бо** (because). Each one connects thoughts in a different way.
 
-Now an evening text exchange. Данило and Соня are catching up about their day.
+Now an evening text exchange. Дани́ло and Со́ня are catching up about their day.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Данило:</span> Я працював, а потім ходив у магазин. *(I worked, and then went to the store.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Соня:</span> Я хотів зателефонувати, але ти не відповів. *(I wanted to call, but you didn't answer.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Данило:</span> Вибач, бо телефон був без звуку. *(Sorry, because my phone was on silent.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Соня:</span> Нічого! *(No problem!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Данило:</span> Завтра я вільний, і ми можемо зустрітися. *(Tomorrow I'm free, and we can meet up.)*</div>
-
-</div>
+> — **Данило:** Я працюва́в, а по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*
+> — **Соня:** Я хоті́ла зателефонува́ти, але ти не відпові́в. *(I wanted to call, but you didn't answer.)*
+> — **Данило:** Ви́бач, бо телефо́н був без зву́ку. *(Sorry, because my phone was on silent.)*
+> — **Соня:** Нічого! *(No problem!)*
+> — **Данило:** За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(Tomorrow I'm free, and we can meet up.)*
 
 **Бо** explains a reason. **А** and **але** show contrast. **І** adds information. All four are natural, everyday Ukrainian — you'll hear them in every conversation.
 
@@ -177,7 +160,7 @@ These four **сполучники** (conjunctions) are among the most common wor
 
 The Ukrainian word **сполучник** (conjunction) comes from **сполучити** — to connect, to link. That's exactly what conjunctions do: they connect words, phrases, or whole sentences. Without them, your Ukrainian sounds choppy and disconnected. Compare:
 
-- *Я люблю каву. Я люблю чай.* — two short, separate thoughts
+- *Я люблю́ каву. Я люблю чай.* — two short, separate thoughts
 - **Я люблю каву і чай.** — one natural sentence
 
 Or:
@@ -191,10 +174,10 @@ One conjunction replaces an entire sentence. That's efficient.
 
 **Та** is a full synonym of **і** — same meaning, same grammar. **Та** appears more in writing and literary style, while **і** dominates in speech. Both are correct everywhere: **мама і тато**, **хліб та масло**. Four examples:
 
-- **Я читаю і пишу.** *(I read and write.)*
-- **Він грає на гітарі та співає.** *(He plays guitar and sings.)*
-- **Київ і Львів — красиві міста.** *(Kyiv and Lviv are beautiful cities.)*
-- **Ми купили хліб та молоко.** *(We bought bread and milk.)*
+- **Я чита́ю і пишу́.** *(I read and write.)*
+- **Він гра́є на гіта́рі та співа́є.** *(He plays guitar and sings.)*
+- **Київ і Львів — краси́ві міста́.** *(Kyiv and Lviv are beautiful cities.)*
+- **Ми купи́ли хліб та молоко́.** *(We bought bread and milk.)*
 
 The pattern: **і** and **та** join equal, compatible things — two actions, two objects, two places.
 
@@ -203,8 +186,8 @@ The pattern: **і** and **та** join equal, compatible things — two actions, 
 **А** doesn't mean "but" exactly — it shifts focus or contrasts two different subjects. Think of it as "and meanwhile" or "and on the other hand":
 
 - **Я люблю каву, а ти?** *(I like coffee, and you?)*
-- **Він працює, а вона відпочиває.** *(He works, and she rests.)*
-- **Я читаю, а він дивиться телевізор.** *(I'm reading, and he's watching TV.)*
+- **Він працю́є, а вона́ відпочива́є.** *(He works, and she rests.)*
+- **Я читаю, а він ди́виться телеві́зор.** *(I'm reading, and he's watching TV.)*
 
 How is **а** different from **але**? **А** is a smooth pivot between two subjects or actions. **Але** is a real contradiction — one part limits or opposes the other. Think: **а** = "and meanwhile," **але** = "but actually."
 
@@ -212,9 +195,9 @@ How is **а** different from **але**? **А** is a smooth pivot between two su
 
 When one part contradicts or limits the other, use **але**:
 
-- **Я хочу, але не можу.** *(I want to, but I can't.)*
-- **Він молодий, але дуже розумний.** *(He's young, but very smart.)*
-- **Погода гарна, але холодно.** *(The weather is nice, but it's cold.)*
+- **Я хочу, але не мо́жу.** *(I want to, but I can't.)*
+- **Він молоди́й, але дуже розу́мний.** *(He's young, but very smart.)*
+- **Погода га́рна, але хо́лодно.** *(The weather is nice, but it's cold.)*
 
 Comma rule: **always put a comma before але.** The same applies before **а** when it connects two full clauses with different subjects.
 
@@ -222,11 +205,11 @@ Comma rule: **always put a comma before але.** The same applies before **а**
 
 Quick recap: **і/та** = addition. **А** = soft contrast or subject switch. **Але** = strong contrast or limitation.
 
-## Бо і тому що (Because)
+## Бо і тому́ що (Because)
 
 Ukrainian has two ways to say "because": **бо** (short, conversational) and **тому що** (longer, common in writing). Both are fully correct Standard Ukrainian. **Бо** is not slang, not informal, not wrong — it appears in proverbs, literature, and everyday speech. It's simply the natural spoken form. Compare:
 
-- **Я не йду, бо я хворий.** *(I'm not going, because I'm sick.)*
+- **Я не йду, бо я хво́рий.** *(I'm not going, because I'm sick.)*
 - **Я не йду, тому що я хворий.** *(I'm not going, because I'm sick.)*
 
 The meaning is identical. The only difference is register: **бо** sounds more conversational, **тому що** more formal or written.
@@ -235,24 +218,24 @@ The meaning is identical. The only difference is register: **бо** sounds more 
 
 Always put a comma before both **бо** and **тому що**. The reason clause always comes second:
 
-- **Я втомлений, бо багато працював.** *(I'm tired, because I worked a lot.)*
-- **Ми не гуляємо, бо йде дощ.** *(We're not going for a walk, because it's raining.)*
-- **Він не прийшов, бо забув.** *(He didn't come, because he forgot.)*
+- **Я втомлений, бо бага́то працював.** *(I'm tired, because I worked a lot.)*
+- **Ми не гуля́ємо, бо йде дощ.** *(We're not going for a walk, because it's raining.)*
+- **Він не прийшо́в, бо забу́в.** *(He didn't come, because he forgot.)*
 
 With **тому що**:
 
 - **Ми не гуляємо, тому що йде дощ.** *(We're not going for a walk, because it's raining.)*
-- **Я вчу українську, тому що люблю Україну.** *(I'm learning Ukrainian, because I love Ukraine.)*
+- **Я вчу украї́нську, тому що люблю Украї́ну.** *(I'm learning Ukrainian, because I love Ukraine.)*
 - **Він не прийшов, тому що забув.** *(He didn't come, because he forgot.)*
 
-### Чому? → Бо / Тому що…
+### Чо́му? → Бо / Тому що…
 
 The question **Чому?** (Why?) gets answered with **бо** or **тому що**. This is how Ukrainians explain things in everyday speech:
 
 - **— Чому ти вчиш українську?** — *Бо я люблю Україну.*
-- **— Чому ти не їси?** — *Тому що я не голодний.*
-- **— Чому ви тут?** — *Бо ми чекаємо друга.*
-- **— Чому ти не спиш?** — *Бо я читаю цікаву книжку.*
+- **— Чому ти не їси́?** — *Тому що я не голо́дний.*
+- **— Чому ви тут?** — *Бо ми чека́ємо дру́га.*
+- **— Чому ти не спиш?** — *Бо я читаю ціка́ву кни́жку.*
 - **— Чому він не прийшов?** — *Тому що він хворий.*
 
 **Чому?** always gets **бо** or **тому що** as the answer opener.
@@ -261,17 +244,10 @@ The question **Чому?** (Why?) gets answered with **бо** or **тому що
 
 Now let's see all five conjunctions working together. A couple is debating their vacation — **Карпати** (the Carpathians) or **море** (the sea):
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Гори гарні, але далеко. *(The mountains are beautiful, but far away.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ліна:</span> Море тепле, бо літо. *(The sea is warm, because it's summer.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Я хочу в гори, а ти — на море. *(I want the mountains, and you — the sea.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ліна:</span> Поїдемо в Карпати, бо там дешевше. *(Let's go to the Carpathians, because it's cheaper there.)*</div>
-
-</div>
+> — **Олег:** Го́ри га́рні, але дале́ко. *(The mountains are beautiful, but far away.)*
+> — **Ліна:** Море те́пле, бо лі́то. *(The sea is warm, because it's summer.)*
+> — **Олег:** Я хочу в гори, а ти — на море. *(I want the mountains, and you — the sea.)*
+> — **Ліна:** Пої́демо в Карпати, бо там деше́вше. *(Let's go to the Carpathians, because it's cheaper there.)*
 
 Four lines, four conjunctions: **але**, **бо**, **а**, **бо** — same words you already know, different functions, natural flow.
 
@@ -281,10 +257,10 @@ Four lines, four conjunctions: **але**, **бо**, **а**, **бо** — same w
 
 Here are all five conjunctions in one place:
 
-| Сполучник | Значення | Приклад |
+| Сполучник | Зна́чення | Приклад |
 |---|---|---|
-| **і / та** | and (addition) | **Я їм хліб і п'ю воду.** |
-| **а** | and (contrast/shift) | **Я читаю, а він пише.** |
+| **і / та** | and (addition) | **Я їм хліб і п'ю воду́.** |
+| **а** | and (contrast/shift) | **Я читаю, а він пи́ше.** |
 | **але** | but (contradiction) | **Я хочу, але не можу.** |
 | **бо** | because (spoken) | **Я не йду, бо хворий.** |
 | **тому що** | because (written) | **Я не йду, тому що хворий.** |
@@ -293,7 +269,7 @@ Here are all five conjunctions in one place:
 
 **Rule 1:** Always put a comma before **а**, **але**, **бо**, and **тому що**.
 
-**Rule 2:** Put a comma before **і / та** only when connecting two full sentences with different subjects: **Сонце зайшло, і стало темно.** *(The sun set, and it got dark.)* — but NOT for joining two words: **хліб і масло** *(bread and butter)*.
+**Rule 2:** Put a comma before **і / та** only when connecting two full sentences with different subjects: **Сонце зайшло́, і ста́ло те́мно.** *(The sun set, and it got dark.)* — but NOT for joining two words: **хліб і масло** *(bread and butter)*.
 
 **Rule 3:** No comma before **і / та** between two verbs with the same subject: **Я читаю і пишу.** *(I read and write.)*
 
@@ -303,13 +279,13 @@ Connect each pair with the best conjunction:
 
 - *Я люблю каву. Я не люблю чай.* → **Я люблю каву, але не люблю чай.**
 - *Він не прийшов. Він хворий.* → **Він не прийшов, бо він хворий.**
-- *Я читаю. Моя сестра дивиться фільм.* → **Я читаю, а моя сестра дивиться фільм.**
+- *Я читаю. Моя́ сестра́ дивиться фільм.* → **Я читаю, а моя сестра дивиться фільм.**
 - *Ми купили хліб. Ми купили молоко.* → **Ми купили хліб і молоко.**
 - *Я хочу піти. Я дуже втомлений.* → **Я хочу піти, але я дуже втомлений.**
 
-Яке слово найкраще підходить? Чому? *(Which word fits best? Why?)*
+Яке́ сло́во найкра́ще підхо́дить? Чому? *(Which word fits best? Why?)*
 
-**Deterministic word count: 1385 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1376 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -487,17 +463,61 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 127 words | Not found: 6 words
+Verified: 99 words | Not found: 56 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Дани — NOT IN VESUM
   ✗ Данило — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
   ✗ Карпати — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
   ✗ Ліна — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
+  ✗ Пої — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ бага — NOT IN VESUM
+  ✗ вто — NOT IN VESUM
+  ✗ втра — NOT IN VESUM
+  ✗ вше — NOT IN VESUM
+  ✗ відпові — NOT IN VESUM
+  ✗ гуля — NOT IN VESUM
+  ✗ гіта — NOT IN VESUM
+  ✗ деше — NOT IN VESUM
+  ✗ дить — NOT IN VESUM
+  ✗ дний — NOT IN VESUM
+  ✗ дру — NOT IN VESUM
+  ✗ жемо — NOT IN VESUM
+  ✗ жку — NOT IN VESUM
+  ✗ забу — NOT IN VESUM
+  ✗ зателефонува — NOT IN VESUM
+  ✗ зор — NOT IN VESUM
+  ✗ зустрі — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ лодно — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ льний — NOT IN VESUM
+  ✗ магази — NOT IN VESUM
+  ✗ млений — NOT IN VESUM
+  ✗ мний — NOT IN VESUM
+  ✗ мно — NOT IN VESUM
+  ✗ молоди — NOT IN VESUM
+  ✗ найкра — NOT IN VESUM
+  ✗ нську — NOT IN VESUM
+  ✗ пле — NOT IN VESUM
+  ✗ працюва — NOT IN VESUM
+  ✗ прийшо — NOT IN VESUM
+  ✗ підхо — NOT IN VESUM
+  ✗ рна — NOT IN VESUM
+  ✗ рні — NOT IN VESUM
+  ✗ сло — NOT IN VESUM
+  ✗ стечко — NOT IN VESUM
+  ✗ телеві — NOT IN VESUM
+  ✗ телефо — NOT IN VESUM
+  ✗ тися — NOT IN VESUM
 
-All 127 other words are confirmed to exist in VESUM.
+All 99 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -506,23 +526,23 @@ All 127 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 38: At the Cafe (A1, A1.6 [Food and Shopping])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -188,61 +188,40 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Ростик and Іванка walk into a cozy **кафе** (café) on a quiet Lviv street. A waiter approaches their table with two leather-bound menus.
+Ростик and Іва́нка walk into a cozy **кафе́** (café) on a quiet Lviv street. A waiter approaches their table with two leather-bound menus.
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Добрий день! Ось **меню**. *(Good day! Here's the menu.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> Дякую. Що ви рекомендуєте? *(Thank you. What do you recommend?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> **Борщ** дуже **смачний**. *(The borshch is very tasty.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> Добре, **мені борщ і хліб, будь ласка**. *(Good, borshch and bread for me, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> А що будете пити? *(And what will you drink?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> **Каву з молоком**. *(Coffee with milk.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванка:</span> **Мені чай і тістечко, будь ласка**. *(Tea and a pastry for me, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Добре, одну **хвилинку**. *(Good, one moment.)*</div>
-
-</div>
+> — **Офіціа́нт:** До́брий день! Ось **меню́**. *(Good day! Here's the menu.)*
+> — **Ростик:** Дякую. Що ви рекоменду́єте? *(Thank you. What do you recommend?)*
+> — **Офіціант:** **Борщ** ду́же **смачни́й**. *(The borshch is very tasty.)*
+> — **Ростик:** До́бре, **мені́ борщ і хліб, будь ла́ска**. *(Good, borshch and bread for me, please.)*
+> — **Офіціант:** А що бу́дете пи́ти? *(And what will you drink?)*
+> — **Ростик:** **Ка́ву з молоко́м**. *(Coffee with milk.)*
+> — **Іванка:** **Мені чай і ті́стечко, будь ласка**. *(Tea and a pastry for me, please.)*
+> — **Офіціант:** Добре, одну́ **хвили́нку**. *(Good, one moment.)*
 
 Notice the pattern: every order uses **мені** + the accusative form of the food or drink word. You practised accusative endings in M37 — now they're doing real work in a real café.
 
 After the meal, Ростик signals the waiter.
 
-<div class="dialogue">
+> — **Ростик:** **Раху́нок, будь ласка**. *(The bill, please.)*
+> — **Офіціант:** Ось, **будь ласка**. Сто два́дцять гри́вень. *(Here you go. One hundred twenty hryvnias.)*
+> — **Іванка:** **Мо́жна ка́рткою?** *(Can we pay by card?)*
+> — **Офіціант:** Так, звича́йно. *(Yes, of course.)*
+> — **Ростик:** Все було́ дуже **сма́чно**! *(Everything was very delicious!)*
+> — **Ростик & Іванка:** **Дякуємо!** *(Thank you!)*
+> — **Офіціант:** Дякуємо, **прихо́дьте** ще! *(Thank you, come again!)*
 
-<div class="dialogue-line"><span class="speaker">Ростик:</span> **Рахунок, будь ласка**. *(The bill, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Ось, **будь ласка**. Сто двадцять гривень. *(Here you go. One hundred twenty hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іванка:</span> **Можна карткою?** *(Can we pay by card?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Так, звичайно. *(Yes, of course.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> Все було дуже **смачно**! *(Everything was very delicious!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ростик & Іванка:</span> **Дякуємо!** *(Thank you!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Дякуємо, **приходьте** ще! *(Thank you, come again!)*</div>
-
-</div>
-
-A **рахунок** (bill) in Ukraine doesn't come to your table automatically — you always ask for it. And **чайові** (tips)? About 10% is standard, but never obligatory.
+A **рахунок** (bill) in Ukraine doesn't come to your table automatically — you always ask for it. And **чайові́** (tips)? About 10% is standard, but never obligatory.
 
 Now test yourself — can you answer these questions from the dialogues?
 
-- What did Ростик order? → **Мені борщ і каву з молоком.**
+- What did Ростик order? → **Мені борщ, хліб і каву з молоком.**
 - What did Іванка order? → **Мені чай і тістечко.**
 - How did they pay? → **Карткою** (by card).
 
-## Як замовити (How to Order)
+## Як замо́вити (How to Order)
 
 There are four polite ways to order at a Ukrainian **кафе**. Each one uses the accusative case — the same endings you learned in M37.
 
@@ -251,64 +230,64 @@ There are four polite ways to order at a Ukrainian **кафе**. Each one uses t
 - **Мені борщ, будь ласка.** — Borshch for me, please.
 
 **Pattern 2: Можна [accusative]?**
-- **Можна воду?** — May I have water?
+- **Можна воду́?** — May I have water?
 - **Можна хліб?** — May I have bread?
 
-**Pattern 3: Дайте, будь ласка, [accusative].**
-- **Дайте, будь ласка, салат.** — Give me a salad, please.
+**Pattern 3: Да́йте, будь ласка, [accusative].**
+- **Дайте, будь ласка, сала́т.** — Give me a salad, please.
 - **Дайте, будь ласка, сік.** — Give me juice, please.
 
-**Pattern 4: Я буду [accusative].**
-- **Я буду піцу.** — I'll have pizza.
+**Pattern 4: Я бу́ду [accusative].**
+- **Я буду пі́цу.** — I'll have pizza.
 - **Я буду суп.** — I'll have soup.
 
 All four are polite. **Я буду** is slightly more casual — something you'd say to a friend working behind the counter. **Дайте, будь ласка** is the most formal.
 
-Quick accusative reminder: masculine inanimate and neuter nouns keep their nominative form (**борщ** → **борщ**, **меню** → **меню**). Feminine nouns ending in **-а** change to **-у** (**кава** → **каву**, **вода** → **воду**, **піца** → **піцу**).
+Quick accusative reminder: masculine inanimate and neuter nouns keep their nominative form (**борщ** → **борщ**, **меню** → **меню**). Feminine nouns ending in **-а** change to **-у** (**ка́ва** → **каву**, **вода́** → **воду**, **пі́ца** → **піцу**).
 
 <!-- INJECT_ACTIVITY: fill-in-order -->
 
 Once you've ordered, you might want to ask about the **меню**. Here are six essential phrases:
 
 - **Що ви рекомендуєте?** — What do you recommend?
-- **Це гостре?** — Is it spicy?
-- **Це з м'ясом?** — Is it with meat?
+- **Це го́стре?** — Is it spicy?
+- **Це з м'я́сом?** — Is it with meat?
 - **А що це?** — What is this?
-- **Скільки коштує?** — How much does it cost?
-- **Є вегетаріанське меню?** — Is there a vegetarian menu?
+- **Скі́льки ко́шту́є?** — How much does it cost?
+- **Є вегетаріа́нське меню?** — Is there a vegetarian menu?
 
-Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдесят гривень** (The borshch costs eighty hryvnias).
+Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
 
-Try building questions from this mini-menu: **борщ** 80 грн, **піца** 150 грн, **кава** 45 грн. For example: **Скільки коштує кава?** — **Кава коштує сорок п'ять гривень.** The numbers connect back to what you learned in earlier modules.
+Try building questions from this mini-menu: **борщ** 80 грн, **піца** 150 грн, **кава** 45 грн. For example: **Скільки коштує кава?** — **Кава коштує со́рок п'ять гривень.** The numbers connect back to what you learned in earlier modules.
 
 <!-- INJECT_ACTIVITY: quiz-cafe-phrases -->
 
-## Культура кафе (Cafe Culture)
+## Культу́ра кафе (Cafe Culture)
 
 Not every place with food is the same. Ukrainian has three distinct words for three distinct experiences:
 
-| | **Кафе** | **Ресторан** | **Кав'ярня** |
+| | **Кафе** | **Рестора́н** | **Кав'я́рня** |
 |---|---|---|---|
 | Style | Casual, drop-in | Formal, reservations | Coffee-focused |
 | Menu | On a board or paper | Leather-bound, multi-page | Drinks + pastries |
 | Price | Budget-friendly | Higher | Mid-range |
 
-A **кафе** (café) is where you grab a quick **борщ** and **хліб** for lunch. A **ресторан** (restaurant) is where you celebrate a birthday with a white tablecloth. A **кав'ярня** (coffee shop) is where you spend two hours with a **кава** and a laptop. After Euromaidan in 2014, independent **кав'ярні** exploded across Ukrainian cities, becoming community hubs — places to meet, work, and organize.
+A **кафе** (café) is where you grab a quick **борщ** and **хліб** for lunch. A **ресторан** (restaurant) is where you celebrate a birthday with a white tablecloth. A **кав'ярня** (coffee shop) is where you spend two hours with a **кава** and a laptop. After Euromaidan in 2014, independent **кав'я́рні** exploded across Ukrainian cities, becoming community hubs — places to meet, work, and organize.
 
-When it's time to pay, remember: the **рахунок** (bill) does not come automatically in Ukraine. You say **Рахунок, будь ласка** when you're ready. **Чайові** (tips) are around 10% — common but never obligatory. Most people leave tips in cash even when paying by **картка** (card). Here are the key payment phrases:
+When it's time to pay, remember: the **рахунок** (bill) does not come automatically in Ukraine. You say **Рахунок, будь ласка** when you're ready. **Чайові** (tips) are around 10% — common but never obligatory. Most people leave tips in cash even when paying by **ка́ртка** (card). Here are the key payment phrases:
 
 - **Можна карткою?** — Can I pay by card?
-- **Готівкою.** — In cash.
-- **Залиште решту.** — Keep the change.
+- **Готі́вкою.** — In cash.
+- **Зали́ште ре́шту.** — Keep the change.
 - **Дякуємо, все було смачно!** — Thank you, everything was delicious!
 
 And here are six phrases for everyday café moments — from arriving to leaving:
 
-- **Вільно?** / **Тут вільно?** — Is this seat free?
+- **Ві́льно?** / **Тут вільно?** — Is this seat free?
 - **Можна меню?** — May I have the menu?
 - **Ще одну каву, будь ласка.** — One more coffee, please.
-- **Без цукру.** — Without sugar.
-- **З лимоном.** — With lemon.
+- **Без цу́кру.** — Without sugar.
+- **З лимо́ном.** — With lemon.
 - **Все було дуже смачно!** — Everything was delicious!
 
 Each phrase fits a micro-situation: you walk in (**Тут вільно?**), you browse (**Можна меню?**), you reorder (**Ще одну каву**), you customize (**Без цукру**), and you leave happy (**Все було дуже смачно!**).
@@ -329,7 +308,7 @@ Here's your café communication toolkit — screenshot this for your next visit 
 | Pay by card | **Можна карткою?** | — |
 | Compliment food | **Дуже смачно!** | Все було дуже смачно! |
 
-Now put it all together. Imagine you walk into a Lviv **кав'ярня** with a friend. You need to: order a starter (**борщ**), a main (**салат**), a drink (**каву** або **сік**), ask about the price of one item, then ask for the bill and pay by card. Try it yourself before checking the model answers below:
+Now put it all together. Imagine you walk into a Lviv **кав'ярня** with a friend. You need to: order a starter (**борщ**), a main (**салат**), a drink (**каву** або́ **сік**), ask about the price of one item, then ask for the bill and pay by card. Try it yourself before checking the model answers below:
 
 - **Мені борщ, будь ласка.**
 - **Мені салат і каву, будь ласка.**
@@ -337,11 +316,11 @@ Now put it all together. Imagine you walk into a Lviv **кав'ярня** with a
 - **Рахунок, будь ласка.**
 - **Можна карткою?**
 
-Ukrainian café culture carries a deeper meaning since 2022. Many Kyiv and Lviv **кав'ярні** stayed open through air-raid alerts, operating as volunteer coordination hubs. Ordering a **кава** in Ukraine today is a small act of normalcy in extraordinary times. As one Kyiv barista put it in 2023: **«Ми варимо каву — значить, ми живемо.»** (We brew coffee — that means we're alive.)
+Ukrainian café culture carries a deeper meaning since 2022. Many Kyiv and Lviv **кав'ярні** stayed open through air-raid alerts, operating as volunteer coordination hubs. Ordering a **кава** in Ukraine today is a small act of normalcy in extraordinary times. As one Kyiv barista put it in 2023: **«Ми ва́римо каву — значить, ми живемо́.»** (We brew coffee — that means we're alive.)
 
-In the next module, you'll take your accusative skills from the **кафе** to the **ринок** (market). Same patterns, new vocabulary: **картопля** (potatoes), **яблука** (apples), **молоко** (milk). **Ходімо!** (Let's go!)
+In the next module, you'll take your accusative skills from the **кафе** to the **ри́нок** (market). Same patterns, new vocabulary: **карто́пля** (potatoes), **я́блука** (apples), **молоко́** (milk). **Ході́мо!** (Let's go!)
 
-**Deterministic word count: 1211 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1206 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -519,13 +498,56 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 95 words | Not found: 2 words
+Verified: 84 words | Not found: 45 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Іва — NOT IN VESUM
   ✗ Іванка — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Кав'я — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
+  ✗ Раху — NOT IN VESUM
+  ✗ Рестора — NOT IN VESUM
   ✗ Ростик — NOT IN VESUM
+  ✗ Скі — NOT IN VESUM
+  ✗ вегетаріа — NOT IN VESUM
+  ✗ вень — NOT IN VESUM
+  ✗ вісімдеся — NOT IN VESUM
+  ✗ дете — NOT IN VESUM
+  ✗ дцять — NOT IN VESUM
+  ✗ дьте — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
+  ✗ замо — NOT IN VESUM
+  ✗ звича — NOT IN VESUM
+  ✗ йте — NOT IN VESUM
+  ✗ кав'я — NOT IN VESUM
+  ✗ лимо — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ льно — NOT IN VESUM
+  ✗ м'я — NOT IN VESUM
+  ✗ нка — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ ном — NOT IN VESUM
+  ✗ нське — NOT IN VESUM
+  ✗ пля — NOT IN VESUM
+  ✗ прихо — NOT IN VESUM
+  ✗ рекоменду — NOT IN VESUM
+  ✗ рня — NOT IN VESUM
+  ✗ рні — NOT IN VESUM
+  ✗ ртка — NOT IN VESUM
+  ✗ рткою — NOT IN VESUM
+  ✗ сма — NOT IN VESUM
+  ✗ смачни — NOT IN VESUM
+  ✗ стечко — NOT IN VESUM
+  ✗ стре — NOT IN VESUM
+  ✗ хвили — NOT IN VESUM
+  ✗ чно — NOT IN VESUM
+  ✗ ште — NOT IN VESUM
+  ✗ шту — NOT IN VESUM
+  ✗ єте — NOT IN VESUM
 
-All 95 other words are confirmed to exist in VESUM.
+All 84 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -534,23 +556,23 @@ All 95 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

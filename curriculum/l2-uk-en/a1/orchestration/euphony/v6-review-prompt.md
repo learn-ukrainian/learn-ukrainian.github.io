@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 28: Euphony (A1, A1.5 [Places])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -119,35 +119,35 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Дарина and Олексій are sitting at a kitchen table, papers spread out. Олексій wrote a short Ukrainian essay about his **город** (garden), and Дарина — who has sharper ears for how Ukrainian flows — is helping him proofread. Their goal: find spots where the sentences stumble.
+Дари́на and Олексі́й are sitting at a kitchen table, papers spread out. Олексій wrote a short Ukrainian essay about his **город** (garden), and Дарина — who has sharper ears for how Ukrainian flows — is helping him proofread. Their goal: find spots where the sentences stumble.
 
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Слухай. «Я живу в Львові.» *(Listen. "I live in Lviv.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Стоп! «В Львові» — ні. «У Львові!» *(Stop! "V Lvovi" — no. "U Lvovi!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Чому? *(Why?)*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> «Львів» — Л, В... Важко! «У Львові» — легко. *(Lviv — L, V... Hard! "U Lvovi" — easy.)*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Добре. А «Тарас живе у Києві?» *(OK. And "Taras lives in Kyiv?")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Так, правильно! «Живе» — голосний Е. «У Києві»... Ні, «в Києві!» *(Yes, correct! "Zhyve" — vowel E. "U Kyievi"... No, "v Kyievi!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Зрозумів! А далі: «Вона працює у офісі.» *(Got it! And next: "She works in the office.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> «Працює» — голосний Є. «Офісі» — голосний О. «В офісі!» *(Pracyuye — vowel YE. Ofisi — vowel O. "V ofisi!")*</div>
+> — **Олексій:** Слу́хай. «Я живу́ в Льво́ві.» *(Listen. "I live in Lviv.")*
+> — **Дарина:** Стоп! «В Львові» — ні. «У Львові!» *(Stop! "V Lvovi" — no. "U Lvovi!")*
+> — **Олексій:** Чо́му? *(Why?)*
+> — **Дарина:** «Львів» — Л, В... Ва́жко! «У Львові» — ле́гко. *(Lviv — L, V... Hard! "U Lvovi" — easy.)*
+> — **Олексій:** До́бре. А «Тара́с живе́ у Ки́єві?» *(OK. And "Taras lives in Kyiv?")*
+> — **Дарина:** Зачека́й... «Живе» — голосни́й Е. «У Києві»... Ні, «в Києві!» *(Wait... "Zhyve" — vowel E. "U Kyievi"... No, "v Kyievi!")*
+> — **Олексій:** Зрозумі́в! А да́лі: «Вона́ працю́є у о́фісі.» *(Got it! And next: "She works in the office.")*
+> — **Дарина:** «Працює» — голосний Є. «Офісі» — голосний О. «В офісі!» *(Pracyuye — vowel YE. Ofisi — vowel O. "V ofisi!")*
 
 Notice what Дарина is doing: she listens to the **sounds** around the preposition. When consonants pile up — like Л and В in **Львові** — she switches to **у**. When vowels surround it — like the Е in **живе** before К in **Києві** — she uses **в**.
 
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Далі. «Ти й Олена йдете в парк?» *(Next. "You and Olena go to the park?")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Тут правильно? *(Is this correct?)*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Так! «Ти» — голосний И, «Олена» — голосний О. «Й» — добре. *(Yes! "Ty" — vowel Y, "Olena" — vowel O. "Y" — good.)*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> А «мама й тато»? *(And "mama y tato?")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Теж добре — голосний А, голосний А. «Й!» *(Also good — vowel A, vowel A. "Y!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Ось тут: «Максим й Семен.» *(Here: "Maksym y Semen.")*</div>
-> <div class="dialogue-line"><span class="speaker">Дарина:</span> Ні! «Максим» — приголосний М. «Семен» — приголосний С. «Максим і Семен!» *(No! "Maksym" — consonant M. "Semen" — consonant S. "Maksym i Semen!")*</div>
-> <div class="dialogue-line"><span class="speaker">Олексій:</span> Тепер мій есей звучить по-справжньому гарно! *(Now my essay sounds truly good!)*</div>
+> — **Дарина:** Далі. «Ти й Оле́на йдете́ в парк?» *(Next. "You and Olena go to the park?")*
+> — **Олексій:** Тут пра́вильно? *(Is this correct?)*
+> — **Дарина:** Так! «Ти» — голосний И, «Олена» — голосний О. «Й» — добре. *(Yes! "Ty" — vowel Y, "Olena" — vowel O. "Y" — good.)*
+> — **Олексій:** А «ма́ма й та́то»? *(And "mama y tato?")*
+> — **Дарина:** Теж добре — голосний А, голосний А. «Й!» *(Also good — vowel A, vowel A. "Y!")*
+> — **Олексій:** Ось тут: «Макси́м й Семе́н.» *(Here: "Maksym y Semen.")*
+> — **Дарина:** Ні! «Максим» — при́голосний М. «Семен» — приголосний С. «Максим і Семен!» *(No! "Maksym" — consonant M. "Semen" — consonant S. "Maksym i Semen!")*
+> — **Олексій:** Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно! *(Now my essay sounds truly good!)*
 
 Both dialogues show the same logic: Ukrainian chooses between sound variants to avoid awkward clusters. When consonants meet consonants, the language inserts a "softer" form. When vowels meet vowels, it picks a "shorter" one. Three pairs work this way: **у/в** (in, at), **і/й** (and), and **з/із/зі** (with, from). The next sections explain exactly when to use each form.
 
 ## У чи В? (У or В?)
 
-The **чергування** (alternation) of **у** and **в** exists for one reason: to prevent consonant pileups that are hard to pronounce. Two rules cover most situations:
+The **чергува́ння** (alternation) of **у** and **в** exists for one reason: to prevent consonant pileups that are hard to pronounce. Two rules cover most situations:
 
 **Rule 1 — Use в after a vowel:**
 - живу **в** Києві — "живу" ends in vowel У, "Києві" starts with consonant К
@@ -156,19 +156,19 @@ The **чергування** (alternation) of **у** and **в** exists for one r
 
 **Rule 2 — Use у after a consonant before a consonant:**
 - Тарас **у** Львові — "Тарас" ends in consonant С, "Львові" starts with consonant Л
-- Максим **у** банку — "Максим" ends in consonant М, "банку" starts with consonant Б
+- Максим **у** ба́нку — "Максим" ends in consonant М, "банку" starts with consonant Б
 
 Think of it as a listen-and-feel test: say the sentence aloud. If consonants crash together, switch to **у**. If it flows smoothly, **в** is fine.
 
-At the beginning of a sentence, always use **у** before a consonant: **«У мене є квітка»** ("I have a flower"), **«У саду тихо»** ("It's quiet in the garden"). The same applies after a pause or comma: **«Знаю, у чому секрет»** ("I know what the secret is"). The sentence-start position acts like a consonant boundary — there's silence before it, so **у** prevents an abrupt start.
+At the beginning of a sentence, always use **у** before a consonant: **«У мене́ є кві́тка»** ("I have a flower"), **«У саду́ ти́хо»** ("It's quiet in the garden"). The same applies after a pause or comma: **«Зна́ю, у чому секре́т»** ("I know what the secret is"). The sentence-start position acts like a consonant boundary — there's silence before it, so **у** prevents an abrupt start.
 
-One exception: before a vowel at the start of a sentence, use **в**: **«В Одесі тепло»** ("It's warm in Odesa"). The vowel О makes **в** easy to pronounce, even sentence-initially.
+One exception: before a vowel at the start of a sentence, use **в**: **«В Оде́сі те́пло»** ("It's warm in Odesa"). The vowel О makes **в** easy to pronounce, even sentence-initially.
 
 There's a special group of consonant clusters that always take **у**, regardless of what comes before: words starting with **в, ф, кв, тв, льв, хв**. These clusters already contain a **в**-like sound, so adding another **в** preposition would create a tongue-twister:
 
 - **у** Львові — not "в Львові" (Л+В+В is brutal)
 - **у** фоє — not "в фоє" (В+Ф crashes)
-- **у** вагоні — not "в вагоні" (В+В doubles up)
+- **у** ваго́ні — not "в вагоні" (В+В doubles up)
 
 A simple shorthand: if the next word starts with **в** or **ф** — use **у**.
 
@@ -184,33 +184,33 @@ The conjunction "and" has two forms in Ukrainian: **і** and **й**. The logic m
 - ти **й** Олена — vowel И before, vowel О after
 
 **Use і between consonants** — it breaks up the consonant cluster:
-- брат **і** сестра — consonant Т before, consonant С after
+- брат **і** сестра́ — consonant Т before, consonant С after
 - Тарас **і** Максим — consonant С before, consonant М after
 - Максим **і** Семен — consonant М before, consonant С after
 
-At the start of a sentence, always **і**: **«І він прийшов»** ("And he came").
+At the start of a sentence, **і** is standard: **«І він прийшо́в»** ("And he came").
 
 :::tip
-Quick test: does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**.
+Quick test: does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**. Exception: before words starting with **я, ю, є, ї** (which begin with a [й] sound), use **і** even after a vowel: **Оде́са і Я́лта**, **її і йо́го**.
 :::
 
 The preposition "with" or "from" has three forms: **з**, **із**, and **зі**. Here's when to use each:
 
 **З** — the default, before most words (vowels or easy consonants):
-- **з** Одеси — "from Odesa" (before vowel О)
+- **з** Оде́си — "from Odesa" (before vowel О)
 - **з** парку — "from the park" (before consonant П)
-- **з** другом — "with a friend" (before consonant Д)
+- **з** дру́гом — "with a friend" (before consonant Д)
 
 **Із** — between two consonant sounds, to break the cluster:
-- Максим **із** Семеном — consonant М before, consonant С after
-- повернувся **із** Львова — consonant С before, consonant Л after
+- Максим **із** Семе́ном — consonant М before, consonant С after
+- поверну́вся **із** Льво́ва — consonant С before, consonant Л after
 
 **Зі** — before the heaviest clusters, especially starting with з, с, ш, щ:
-- **зі** мною — before МН cluster
-- **зі** святом — before СВ cluster ("Happy holiday!")
-- **зі** школи — before ШК cluster ("from school")
+- **зі** мно́ю — before МН cluster
+- **зі** свя́том — before СВ cluster ("Happy holiday!")
+- **зі** шко́ли — before ШК cluster ("from school")
 
-Think of **зі** as a cushion — it softens the hardest consonant collisions. The rule is smaller than у/в in scope, but it appears constantly: greetings (**«Зі святом!»**), introductions (**«Я з Одеси»**), and talking about people (**«вона з братом»**). When in doubt, **з** is the default — shift to **із** or **зі** only when the consonants feel like they're crashing.
+Think of **зі** as a cushion — it softens the hardest consonant collisions. The rule is smaller than у/в in scope, but it appears constantly: greetings (**«Зі святом!»**), introductions (**«Я з Одеси»**), and talking about people (**«вона з бра́том»**). When in doubt, **з** is the default — shift to **із** or **зі** only when the consonants feel like they're crashing.
 
 <!-- INJECT_ACTIVITY: quiz-i-or-y -->
 
@@ -218,7 +218,7 @@ Think of **зі** as a cushion — it softens the hardest consonant collisions. 
 
 ## Підсумок — Summary
 
-Ukrainian **милозвучність** (euphony) is not an arbitrary set of rules — it reflects how the language naturally flows. Speakers avoid consonant pileups and vowel collisions by alternating between sound variants. Three pairs do the heavy lifting:
+Ukrainian **милозву́чність** (euphony) is not an arbitrary set of rules — it reflects how the language naturally flows. Speakers avoid consonant pileups and vowel collisions by alternating between sound variants. Three pairs do the heavy lifting:
 
 - **у/в** — look at the surrounding sounds. Consonant + consonant? → **у**. Vowel nearby? → **в**. Before в/ф/льв clusters? → always **у**.
 - **і/й** — does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**.
@@ -230,19 +230,19 @@ Test yourself — which form is correct?
 
 - Я живу (в / у) Києві. → **в** Києві — after vowel У, before consonant К
 - Я живу (в / у) Львові. → **у** Львові — before Л+В cluster
-- (В / У) мене є квіти. → **У** мене — sentence start before consonant М
+- (В / У) мене є кві́ти. → **У** мене — sentence start before consonant М
 - Мама (і / й) тато. → мама **й** тато — between vowels А and А
 - Брат (і / й) сестра. → брат **і** сестра — after consonant Т, before consonant С
 - Максим (з / із) Семеном. → **із** Семеном — consonant М before, consonant С after
 - (Зі / З) святом! → **Зі** святом — before СВ cluster
 
-Read your Ukrainian sentences aloud. Native speakers apply euphony instinctively — they don't consult tables. The goal is smooth, flowing speech, not rigid rule application. If a sentence feels like a tongue-twister, swap the variant. With practice, your ear will guide you. These alternations are one of the features that give Ukrainian its reputation as the **солов'їна мова** (nightingale language) — a language built to sing.
+Read your Ukrainian sentences aloud. Native speakers apply euphony instinctively — they don't consult tables. The goal is smooth, flowing speech, not rigid rule application. If a sentence feels like a tongue-twister, swap the variant. With practice, your ear will guide you. These alternations are one of the features that give Ukrainian its reputation as the **солов'ї́на мо́ва** (nightingale language) — a language built to sing.
 
 Next module: **Де? (Where Is It?)** — the same prepositions **у/в** and **на** return in locative constructions, telling you where things are.
 
 <!-- INJECT_ACTIVITY: quiz-which-sounds-natural -->
 
-**Deterministic word count: 1423 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1406 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -420,23 +420,59 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 71 words | Not found: 12 words
+Verified: 56 words | Not found: 48 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Дарина — NOT IN VESUM
-  ✗ Львова — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Зачека — NOT IN VESUM
+  ✗ Зрозумі — NOT IN VESUM
+  ✗ Льво — NOT IN VESUM
   ✗ Львові — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
+  ✗ Макси — NOT IN VESUM
+  ✗ Оде — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
-  ✗ Одесі — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
+  ✗ Олексі — NOT IN VESUM
   ✗ Олексій — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
+  ✗ Семе — NOT IN VESUM
   ✗ Семен — NOT IN VESUM
   ✗ Семеном — NOT IN VESUM
+  ✗ Слу — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
+  ✗ Тепе — NOT IN VESUM
+  ✗ вжньому — NOT IN VESUM
+  ✗ вильно — NOT IN VESUM
+  ✗ гко — NOT IN VESUM
+  ✗ голосни — NOT IN VESUM
+  ✗ гом — NOT IN VESUM
+  ✗ дру — NOT IN VESUM
+  ✗ жко — NOT IN VESUM
+  ✗ кві — NOT IN VESUM
+  ✗ лта — NOT IN VESUM
   ✗ льв — NOT IN VESUM
+  ✗ милозву — NOT IN VESUM
+  ✗ мно — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ ном — NOT IN VESUM
+  ✗ пло — NOT IN VESUM
+  ✗ пра — NOT IN VESUM
+  ✗ прийшо — NOT IN VESUM
+  ✗ рно — NOT IN VESUM
+  ✗ свя — NOT IN VESUM
+  ✗ секре — NOT IN VESUM
+  ✗ спра — NOT IN VESUM
+  ✗ тка — NOT IN VESUM
+  ✗ фісі — NOT IN VESUM
+  ✗ чергува — NOT IN VESUM
+  ✗ чність — NOT IN VESUM
+  ✗ шко — NOT IN VESUM
+  ✗ єві — NOT IN VESUM
 
-All 71 other words are confirmed to exist in VESUM.
+All 56 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
@@ -445,23 +481,23 @@ All 71 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

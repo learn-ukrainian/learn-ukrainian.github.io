@@ -1,6 +1,6 @@
 # Build Summary: this-and-that (A1)
 
-Generated: 2026-03-31 11:43
+Generated: 2026-04-01 13:27
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:43
 | vocab | complete | 2026-03-30 12:57:12 |
 | enrich | complete | 2026-03-30 12:57:13 |
 | verify | complete | 2026-03-30 12:57:13 |
-| review | complete | 2026-03-30 13:03:45 |
-| stress | complete | 2026-03-31 09:43:36 |
-| publish | complete | 2026-03-31 09:43:36 |
+| review | complete | 2026-04-01 11:27:51 |
+| stress | complete | 2026-04-01 11:27:57 |
+| publish | complete | 2026-04-01 11:27:58 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-03-31 11:43
 |-------|------|
 | 1 | this-and-that-review-r1.md |
 | 2 | this-and-that-review-r2.md |
+| 3 | this-and-that-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,6 +41,9 @@ Generated: 2026-03-31 11:43
 | vocab | claude (claude-sonnet-4-6) | 14s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 183s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 208s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 2s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 140s | ✅ |
 
 ## Files
 
@@ -50,6 +54,7 @@ Generated: 2026-03-31 11:43
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

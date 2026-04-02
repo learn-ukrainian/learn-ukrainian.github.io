@@ -4,38 +4,47 @@ sequence: 11
 slug: summary-paraphrase
 version: '1.1'
 title: "Реферування та перефразування"
-subtitle: "Summary and Paraphrase"
+subtitle: "Анотація та парафраз"
 focus: professional
 pedagogy: workshop
 word_target: 4000
 objectives:
   - "Навчитися виокремлювати головну та другорядну інформацію у складних текстах."
   - "Опанувати техніки компресії тексту без втрати змістової повноти."
-  - "Вивчити методи перефразування академічних тверджень з використанням синонімії та граматичних трансформацій."
-  - "Засвоїти правила академічної доброчесності та способи уникнення плагіату при реферуванні."
+  - "Вивчити методи перефразування академічних тверджень з використанням синонімії
+    та граматичних трансформацій."
+  - "Засвоїти правила академічної доброчесності та способи уникнення плагіату при
+    реферуванні."
 
 reading_situations:
   - source_type: "науково-популярна стаття"
     topic: "Філософія 'сродної праці' Григорія Сковороди в сучасному контексті."
     key_elements: ["антропоцентризм", "самопізнання", "щастя", "суспільне благо"]
-    motivation: "Аналіз складних філософських ідей для подальшого стислого переказу (реферування)."
+    motivation: "Аналіз складних філософських ідей для подальшого стислого переказу
+      (реферування)."
   - source_type: "історичний нарис"
     topic: "Культурний ренесанс 1920-х років в Україні: здобутки та трагедія."
     key_elements: ["модернізація", "літературна дискусія", "українізація"]
-    motivation: "Практика перефразування історичних фактів та оцінок без спотворення змісту."
+    motivation: "Практика перефразування історичних фактів та оцінок без спотворення
+      змісту."
 
 listening_situations:
   - media_type: "подкаст"
     setting: "Обговорення ролі перекладу у формуванні української наукової термінології."
-    focus_points: ["ключові етапи розвитку мови", "вплив іншомовних запозичень", "стратегії термінотворення"]
-    motivation: "Розвиток навичок нотування головних тез під час прослуховування для створення короткого звіту."
+    focus_points: ["ключові етапи розвитку мови", "вплив іншомовних запозичень", "стратегії
+          термінотворення"]
+    motivation: "Розвиток навичок нотування головних тез під час прослуховування для
+      створення короткого звіту."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть стислий огляд (150-200 слів) запропонованого тексту про розвиток кібернетики в Україні, використовуючи техніки перефразування."
-    requirements: ["мінімум 3 різні методи перефразування", "академічний стиль", "відсутність дослівного копіювання"]
+    prompt: "Напишіть стислий огляд (150-200 слів) запропонованого тексту про розвиток
+      кібернетики в Україні, використовуючи техніки перефразування."
+    requirements: ["мінімум 3 різні методи перефразування", "академічний стиль", "відсутність
+          дослівного копіювання"]
     motivation: "Відпрацювання навичок синтезу інформації та уникнення плагіату."
-    model_answer: "Текст має демонструвати заміну активних конструкцій пасивними, використання контекстуальних синонімів та зміну структури речень."
+    model_answer: "Текст має демонструвати заміну активних конструкцій пасивними,
+      використання контекстуальних синонімів та зміну структури речень."
 
 content_outline:
   - section: "Основи наукового реферування"
@@ -98,15 +107,20 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate the quality of a paraphrased Ukrainian academic text — identify mosaic plagiarism, assess accuracy of content preservation."
+    description: "Evaluate the quality of a paraphrased Ukrainian academic text —
+      identify mosaic plagiarism, assess accuracy of content preservation."
   - type: match-up
-    description: "Match paraphrase techniques (lexical substitution, grammatical transformation, semantic retelling) with examples."
+    description: "Match paraphrase techniques (lexical substitution, grammatical transformation,
+      semantic retelling) with examples."
   - type: error-correction
-    description: "Fix paraphrases that are too close to the original — apply proper lexical and syntactic transformations."
+    description: "Fix paraphrases that are too close to the original — apply proper
+      lexical and syntactic transformations."
   - type: essay-response
-    description: "Write a concise summary (150-200 words) of a text about Ukrainian cybernetics history using at least 3 different paraphrase methods."
+    description: "Write a concise summary (150-200 words) of a text about Ukrainian
+      cybernetics history using at least 3 different paraphrase methods."
   - type: fill-in
-    description: "Complete summary sentences with appropriate introductory phrases for indirect citations (автор наголошує, у дослідженні зазначається)."
+    description: "Complete summary sentences with appropriate introductory phrases
+      for indirect citations (автор наголошує, у дослідженні зазначається)."
 
 activities:
   types_required:
@@ -126,3 +140,4 @@ references:
 connects_to:
   previous: "counterarguments"
   next: "research-article"
+phase: C1.1 [Academic Foundation]

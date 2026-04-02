@@ -14,23 +14,20 @@ Issue: #624, #593
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.euphony import (
-    auto_fix_euphony,
-    check_euphony_violations,
     _ends_with_vowel,
-    _starts_with_vowel,
-    _starts_with_consonant_cluster,
-    _starts_with_v_or_f,
-    _starts_with_z_or_s,
-    _starts_with_z_cluster,
     _is_predominantly_latin,
     _skip_line,
+    _starts_with_consonant_cluster,
+    _starts_with_v_or_f,
+    _starts_with_vowel,
+    _starts_with_z_cluster,
+    _starts_with_z_or_s,
+    auto_fix_euphony,
+    check_euphony_violations,
 )
-
 
 # =============================================================================
 # Helper functions
@@ -217,7 +214,7 @@ class TestRule3ZIZ:
         """з before з-cluster should be flagged."""
         content = "Воїн з зброєю"
         violations = check_euphony_violations(content)
-        assert any(v for v in violations if "EUPHONY" == v["type"])
+        assert any(v for v in violations if v["type"] == "EUPHONY")
 
     def test_iz_before_sibilant_is_ok(self):
         """із before a sibilant is correct — no violation."""

@@ -1,0 +1,24 @@
+{
+  "attempt": 2,
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Підсумок: таблиця дієслівних чергувань'"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: задньоязиковий (velar — consonant formed at back of mouth: г, к, х), палаталізація (palatalization — softening of consonant)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T01:56:24.625900+00:00"
+}

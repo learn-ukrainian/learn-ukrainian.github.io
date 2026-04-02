@@ -1,6 +1,6 @@
 # Build Summary: emergencies (A1)
 
-Generated: 2026-03-31 11:58
+Generated: 2026-04-01 13:46
 
 ## Pipeline Phases
 
@@ -17,9 +17,9 @@ Generated: 2026-03-31 11:58
 | vocab | complete | 2026-03-30 22:41:01 |
 | enrich | complete | 2026-03-30 22:41:02 |
 | verify | complete | 2026-03-30 22:41:02 |
-| review | complete | 2026-03-30 22:43:53 |
-| stress | complete | 2026-03-31 09:58:59 |
-| publish | complete | 2026-03-31 09:58:59 |
+| review | complete | 2026-04-01 11:46:38 |
+| stress | complete | 2026-04-01 11:46:38 |
+| publish | complete | 2026-04-01 11:46:44 |
 | activities | complete | 2026-03-30 23:15:42 |
 
 ## Reviews
@@ -45,6 +45,9 @@ Generated: 2026-03-31 11:58
 | activities | claude-tools (claude-sonnet-4-6) | 172s | ✅ |
 | vocab | claude (claude-sonnet-4-6) | 31s | ✅ |
 | review | claude-tools (claude-opus-4-6) | 171s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 2s | ❌ |
 
 ## Files
 

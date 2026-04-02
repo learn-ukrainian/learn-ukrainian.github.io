@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: давай / давайте (let's — invitation to joint action), обговорімо (let's discuss — 1pl inclusive imperative)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T05:53:41.610427+00:00"
+}

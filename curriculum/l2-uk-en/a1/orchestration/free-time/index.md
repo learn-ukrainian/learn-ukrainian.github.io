@@ -1,6 +1,6 @@
 # Build Summary: free-time (A1)
 
-Generated: 2026-03-31 11:46
+Generated: 2026-04-01 13:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-03-31 11:46
 | vocab | complete | 2026-03-30 06:01:48 |
 | enrich | complete | 2026-03-30 06:01:49 |
 | verify | complete | 2026-03-30 06:01:49 |
-| review | complete | 2026-03-30 23:44:56 |
-| stress | complete | 2026-03-31 09:46:14 |
-| publish | complete | 2026-03-31 09:46:15 |
+| review | complete | 2026-04-01 11:41:33 |
+| stress | complete | 2026-04-01 11:41:33 |
+| publish | complete | 2026-04-01 11:41:39 |
 
 ## Reviews
 
@@ -41,6 +41,9 @@ Generated: 2026-03-31 11:46
 | review | gemini-tools (gemini-3.1-pro-preview) | 600s | ❌ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 277s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 173s | ✅ |
+| review | gemini (gemini-3-flash-preview) | 1s | ❌ |
+| review | gemini (auto) | 1s | ❌ |
+| review | claude-tools (claude-opus-4-6) | 3s | ❌ |
 
 ## Files
 

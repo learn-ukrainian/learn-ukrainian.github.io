@@ -10,122 +10,122 @@ pedagogy: PPP
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-- Learner can select the correct case for a noun based on the governing verb
-  (e.g., допомагати + Dat., бачити + Acc., користуватися + Instr.).
-- Learner can select the correct case after common prepositions, including
-  prepositions that govern different cases depending on meaning (на + Acc. for
-  direction vs. на + Loc. for location).
-- Learner can use Accusative for time expressions (у четвер, у середу), with
-  про (думати про майбутнє), and recognize Locative for characteristics
-  (хлопець у червоному светрі), path (бігати по кімнаті), and years
-  (у 2014 році).
-- Learner can apply a systematic decision process (verb/preposition → case → ending)
-  to determine the correct form of any noun in context.
+  - Learner can select the correct case for a noun based on the governing verb 
+    (e.g., допомагати + Dat., бачити + Acc., користуватися + Instr.).
+  - Learner can select the correct case after common prepositions, including 
+    prepositions that govern different cases depending on meaning (на + Acc. for
+    direction vs. на + Loc. for location).
+  - Learner can use Accusative for time expressions (у четвер, у середу), with 
+    про (думати про майбутнє), and recognize Locative for characteristics 
+    (хлопець у червоному светрі), path (бігати по кімнаті), and years (у 2014 
+    році).
+  - Learner can apply a systematic decision process (verb/preposition → case → 
+    ending) to determine the correct form of any noun in context.
 dialogue_situations:
-- setting: 'Grammar detective game — reading a Ukrainian newspaper article and identifying
-    which case is used and why: Президент (nom) зустрівся з прем''єром (inst). Для
-    журналістів (gen) підготували зал (acc).'
-  speakers:
-  - Вчитель
-  - Студенти
-  motivation: 'Case identification: nom, gen, dat, acc, inst, loc in real text'
+  - setting: 'Grammar detective game — reading a Ukrainian newspaper article and identifying
+      which case is used and why: Президент (nom) зустрівся з прем''єром (inst). Для
+      журналістів (gen) підготували зал (acc).'
+    speakers:
+      - Вчитель
+      - Студенти
+    motivation: 'Case identification: nom, gen, dat, acc, inst, loc in real text'
 content_outline:
-- section: 'Дієслово вирішує: Який відмінок після дієслова? (The Verb Decides:
-    Which Case After a Verb?)'
-  words: 550
-  points:
-  - 'Accusative verbs (most transitive): бачити, знати, любити, читати, купити,
-    шукати + Acc. Я читаю книгу. Ми шукаємо ключі.'
-  - 'Dative verbs: допомагати, телефонувати, дякувати, радити, заважати + Dat.
-    Я допомагаю сестрі. Ми дякуємо вчителям.'
-  - 'Instrumental verbs: користуватися, цікавитися, займатися, керувати + Instr.
-    Він користується комп''ютером. Вона цікавиться історією.'
-  - 'Genitive verbs/constructions: немає + Gen., боятися + Gen., потребувати + Gen.
-    У мене немає часу. Вона боїться темряви.'
-  - 'Thinking about + Acc.: думати про + Acc. (думати про майбутнє, мріяти
-    про подорож).'
-- section: 'Прийменник вирішує: Один прийменник — різні відмінки (The Preposition
-    Decides: One Preposition, Different Cases)'
-  words: 550
-  points:
-  - 'на + Acc. (direction/goal): Я йду на роботу. Поклади книгу на стіл.
-    на + Loc. (location): Я на роботі. Книга лежить на столі.'
-  - 'у/в + Acc. (direction): Я йду в магазин. Acc. for time: у четвер,
-    у середу, у п''ятницю.
-    у/в + Loc. (location): Я в магазині. Loc. for years: у 2014 році,
-    у минулому році.'
-  - 'по + Loc. (path/surface): бігати по кімнаті, ходити по вулиці,
-    подорожувати по Україні.'
-  - 'з/із + Gen. (from/out of): вийти з дому, приїхати з Києва.
-    з/із + Instr. (together with): піти з другом, кава з молоком.'
-  - 'за + Acc. (in exchange/for): дякувати за допомогу, платити за квитки.
-    за + Instr. (behind/after): за столом, бігти за автобусом.'
-- section: 'Особливі випадки: Час, характеристика, шлях (Special Uses: Time,
-    Characteristics, Path)'
-  words: 500
-  points:
-  - 'Acc. for days and time periods: у четвер, у середу, у п''ятницю.
-    Цю неділю я відпочиваю. Наступного тижня (Gen. for next/last).'
-  - 'Loc. for characteristics/description: хлопець у червоному светрі,
-    дівчина в окулярах, жінка у білому пальті. Pattern: noun + у/в + Loc.
-    describes what someone is wearing or looks like.'
-  - 'Loc. for years and time contexts: у 2014 році, у двадцять першому
-    столітті, у дитинстві.'
-  - 'Loc. for path with по: бігати по кімнаті, гуляти по парку,
-    їздити по місту.'
-- section: 'Алгоритм вибору відмінка (The Case Selection Algorithm)'
-  words: 400
-  points:
-  - 'Step 1: Is there a preposition? → Check which case(s) it governs.
-    Step 2: No preposition? → Check which case the verb requires.
-    Step 3: Still unsure? → Ask the case question (Кого? Що? Кому? Ким? etc.).'
-  - 'Decision tree visual: Preposition → Case. Verb → Case. Neither → Default Nom.
-    (subject) or context-dependent.'
-  - 'Common pitfalls: confusing на + Acc. (direction) with на + Loc. (location);
-    forgetting that думати takes про + Acc., not Loc.; using Gen. instead
-    of Dat. after допомагати.'
-  - 'Practice: mixed sentences where learner must identify the trigger
-    (verb or preposition) and choose the correct case.'
+  - section: 'Дієслово вирішує: Який відмінок після дієслова? (The Verb Decides: Which
+      Case After a Verb?)'
+    words: 550
+    points:
+      - 'Accusative verbs (most transitive): бачити, знати, любити, читати, купити,
+        шукати + Acc. Я читаю книгу. Ми шукаємо ключі.'
+      - 'Dative verbs: допомагати, телефонувати, дякувати, радити, заважати + Dat.
+        Я допомагаю сестрі. Ми дякуємо вчителям.'
+      - 'Instrumental verbs: користуватися, цікавитися, займатися, керувати + Instr.
+        Він користується комп''ютером. Вона цікавиться історією.'
+      - 'Genitive verbs/constructions: немає + Gen., боятися + Gen., потребувати +
+        Gen. У мене немає часу. Вона боїться темряви.'
+      - 'Thinking about + Acc.: думати про + Acc. (думати про майбутнє, мріяти про
+        подорож).'
+  - section: 'Прийменник вирішує: Один прийменник — різні відмінки (The Preposition
+      Decides: One Preposition, Different Cases)'
+    words: 550
+    points:
+      - 'на + Acc. (direction/goal): Я йду на роботу. Поклади книгу на стіл. на +
+        Loc. (location): Я на роботі. Книга лежить на столі.'
+      - 'у/в + Acc. (direction): Я йду в магазин. Acc. for time: у четвер, у середу,
+        у п''ятницю. у/в + Loc. (location): Я в магазині. Loc. for years: у 2014 році,
+        у минулому році.'
+      - 'по + Loc. (path/surface): бігати по кімнаті, ходити по вулиці, подорожувати
+        по Україні.'
+      - 'з/із + Gen. (from/out of): вийти з дому, приїхати з Києва. з/із + Instr.
+        (together with): піти з другом, кава з молоком.'
+      - 'за + Acc. (in exchange/for): дякувати за допомогу, платити за квитки. за
+        + Instr. (behind/after): за столом, бігти за автобусом.'
+  - section: 'Особливі випадки: Час, характеристика, шлях (Special Uses: Time, Characteristics,
+      Path)'
+    words: 500
+    points:
+      - 'Acc. for days and time periods: у четвер, у середу, у п''ятницю. Цю неділю
+        я відпочиваю. Наступного тижня (Gen. for next/last).'
+      - 'Loc. for characteristics/description: хлопець у червоному светрі, дівчина
+        в окулярах, жінка у білому пальті. Pattern: noun + у/в + Loc. describes what
+        someone is wearing or looks like.'
+      - 'Loc. for years and time contexts: у 2014 році, у двадцять першому столітті,
+        у дитинстві.'
+      - 'Loc. for path with по: бігати по кімнаті, гуляти по парку, їздити по місту.'
+  - section: 'Алгоритм вибору відмінка (The Case Selection Algorithm)'
+    words: 400
+    points:
+      - 'Step 1: Is there a preposition? → Check which case(s) it governs. Step 2:
+        No preposition? → Check which case the verb requires. Step 3: Still unsure?
+        → Ask the case question (Кого? Що? Кому? Ким? etc.).'
+      - 'Decision tree visual: Preposition → Case. Verb → Case. Neither → Default
+        Nom. (subject) or context-dependent.'
+      - 'Common pitfalls: confusing на + Acc. (direction) with на + Loc. (location);
+        forgetting that думати takes про + Acc., not Loc.; using Gen. instead of Dat.
+        after допомагати.'
+      - 'Practice: mixed sentences where learner must identify the trigger (verb or
+        preposition) and choose the correct case.'
 vocabulary_hints:
   required:
-  - відмінок (grammatical case)
-  - прийменник (preposition)
-  - дієслово (verb)
-  - напрямок (direction)
-  - місце (place, location)
-  - час (time)
-  - характеристика (characteristic, description)
-  - думати (to think)
-  - боятися (to be afraid)
-  - користуватися (to use)
+    - відмінок (grammatical case)
+    - прийменник (preposition)
+    - дієслово (verb)
+    - напрямок (direction)
+    - місце (place, location)
+    - час (time)
+    - характеристика (characteristic, description)
+    - думати (to think)
+    - боятися (to be afraid)
+    - користуватися (to use)
   recommended:
-  - алгоритм (algorithm)
-  - контекст (context)
-  - керувати (to manage, drive)
-  - майбутнє (future)
+    - алгоритм (algorithm)
+    - контекст (context)
+    - керувати (to manage, drive)
+    - майбутнє (future)
 activity_hints:
-- type: quiz
-  focus: Given a sentence with a blank, choose the correct case form based on the
-    governing verb or preposition
-  items: 8
-- type: group-sort
-  focus: Sort prepositions by which case(s) they govern (Acc., Gen., Instr., Loc.)
-  items: 8
-- type: fill-in
-  focus: Complete sentences with the correct noun form — mixed cases triggered by
-    different prepositions and verbs, including time expressions (у четвер),
-    characteristics (у червоному светрі), and path (по кімнаті)
-  items: 8
-- type: true-false
-  focus: Judge whether the case used in a sentence is correct or incorrect,
-    including tricky pairs like на роботу (Acc.) vs. на роботі (Loc.)
-  items: 8
+  - type: quiz
+    focus: Given a sentence with a blank, choose the correct case form based on 
+      the governing verb or preposition
+    items: 8
+  - type: group-sort
+    focus: Sort prepositions by which case(s) they govern (Acc., Gen., Instr., 
+      Loc.)
+    items: 8
+  - type: fill-in
+    focus: Complete sentences with the correct noun form — mixed cases triggered
+      by different prepositions and verbs, including time expressions (у 
+      четвер), characteristics (у червоному светрі), and path (по кімнаті)
+    items: 8
+  - type: true-false
+    focus: Judge whether the case used in a sentence is correct or incorrect, 
+      including tricky pairs like на роботу (Acc.) vs. на роботі (Loc.)
+    items: 8
 references:
-- title: Заболотний Grade 6, §§59-67
-  notes: Complete case system overview — when each case is used, with preposition
-    tables
-- title: Заболотний Grade 10, §§44-45
-  notes: Advanced case usage — Loc. for characteristics, time expressions with cases
-- title: "ULP: Ukrainian Cases Overview"
-  url: "https://www.ukrainianlessons.com/ukrainian-cases/"
-  notes: Practical summary of all 7 cases with usage examples
+  - title: Заболотний Grade 6, §§59-67
+    notes: Complete case system overview — when each case is used, with 
+      preposition tables
+  - title: Заболотний Grade 10, §§44-45
+    notes: Advanced case usage — Loc. for characteristics, time expressions with
+      cases
+  - title: "ULP: Ukrainian Cases Overview"
+    url: "https://www.ukrainianlessons.com/ukrainian-cases/"
+    notes: Practical summary of all 7 cases with usage examples

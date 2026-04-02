@@ -4,7 +4,7 @@ sequence: 19
 slug: practice-ii-article-critique
 version: '1.1'
 title: "Практикум ІІ: критичний розбір наукової статті"
-subtitle: "Workshop II: Research Article Critique"
+subtitle: "Практикум II: критика наукової статті"
 focus: professional
 pedagogy: workshop
 word_target: 4000
@@ -16,26 +16,34 @@ objectives:
 
 reading_situations:
   - source_type: "наукова стаття"
-    topic: "Аналіз демографічних процесів в Україні: критичний погляд на методи збору даних."
+    topic: "Аналіз демографічних процесів в Україні: критичний погляд на методи збору
+      даних."
     key_elements: ["статистична похибка", "валідація", "репрезентативність вибірки"]
     motivation: "Практика виявлення слабких місць у науковій аргументації."
   - source_type: "рецензія"
-    topic: "Відгук на монографію про вплив візантійської традиції на культуру Київської Русі."
+    topic: "Відгук на монографію про вплив візантійської традиції на культуру Київської
+      Русі."
     key_elements: ["наукова дискусія", "контраргументація", "стиль рецензування"]
     motivation: "Вивчення етичних та мовних норм наукової критики."
 
 listening_situations:
   - media_type: "відео"
-    setting: "Запис засідання спеціалізованої вченої ради: обговорення результатів дисертаційного дослідження."
-    focus_points: ["питання опонентів", "захист основних положень", "формулювання зауважень"]
+    setting: "Запис засідання спеціалізованої вченої ради: обговорення результатів
+      дисертаційного дослідження."
+    focus_points: ["питання опонентів", "захист основних положень", "формулювання
+          зауважень"]
     motivation: "Сприйняття на слух та аналіз живої наукової полеміки."
 
 writing_tasks:
   - task_type: "відгук"
-    prompt: "Напишіть критичний відгук (250-300 слів) на статтю про доцільність запровадження ШІ в початковій школі. Оцініть логіку автора та переконливість наведених прикладів."
-    requirements: ["використання фраз для висловлення незгоди", "обґрунтованість критики", "академічний етикет"]
+    prompt: "Напишіть критичний відгук (250-300 слів) на статтю про доцільність запровадження
+      ШІ в початковій школі. Оцініть логіку автора та переконливість наведених прикладів."
+    requirements: ["використання фраз для висловлення незгоди", "обґрунтованість критики",
+      "академічний етикет"]
     motivation: "Розвиток навичок написання рецензій на наукові праці."
-    model_answer: "Текст повинен містити збалансовану оцінку: визнання позитивних сторін та аргументоване вказування на недоліки з використанням кліше 'водночас варто зауважити...', 'автор залишає поза увагою...'."
+    model_answer: "Текст повинен містити збалансовану оцінку: визнання позитивних
+      сторін та аргументоване вказування на недоліки з використанням кліше 'водночас
+      варто зауважити...', 'автор залишає поза увагою...'."
 
 content_outline:
   - section: "Методологія критичного аналізу"
@@ -98,15 +106,21 @@ vocabulary:
 
 activity_hints:
   - type: critical-analysis
-    description: "Evaluate methodology and evidence in a Ukrainian research article about demographics — identify logical errors, sampling issues, and argumentation gaps."
+    description: "Evaluate methodology and evidence in a Ukrainian research article
+      about demographics — identify logical errors, sampling issues, and argumentation
+      gaps."
   - type: error-correction
-    description: "Fix inappropriate tone in a draft review — replace aggressive criticism with mitigated academic formulations."
+    description: "Fix inappropriate tone in a draft review — replace aggressive criticism
+      with mitigated academic formulations."
   - type: match-up
-    description: "Match types of logical fallacies (підміна понять, поспішне узагальнення, ad hominem) with examples from academic texts."
+    description: "Match types of logical fallacies (підміна понять, поспішне узагальнення,
+      ad hominem) with examples from academic texts."
   - type: essay-response
-    description: "Write a critical review (250-300 words) evaluating an article about AI in education — balance positive assessment with substantiated criticism."
+    description: "Write a critical review (250-300 words) evaluating an article about
+      AI in education — balance positive assessment with substantiated criticism."
   - type: fill-in
-    description: "Complete review sentences with diplomatic criticism phrases (водночас варто зауважити..., автор залишає поза увагою...)."
+    description: "Complete review sentences with diplomatic criticism phrases (водночас
+      варто зауважити..., автор залишає поза увагою...)."
 
 activities:
   types_required:
@@ -126,3 +140,4 @@ references:
 connects_to:
   previous: "essay-writing-practice"
   next: "c1-1-checkpoint"
+phase: C1.1 [Academic Foundation]

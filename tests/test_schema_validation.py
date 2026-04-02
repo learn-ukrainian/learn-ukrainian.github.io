@@ -7,23 +7,20 @@ which validate plan, meta, and vocabulary YAML against project schemas.
 Issue: #534, #520
 """
 
-import json
-import tempfile
+# Add scripts to path
+import sys
 from pathlib import Path
 
 import pytest
 import yaml
 
-# Add scripts to path
-import sys
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.yaml_schema_validation import (
-    check_plan_yaml_schema,
     check_meta_yaml_schema,
+    check_plan_yaml_schema,
     check_vocabulary_yaml_schema,
 )
-
 
 # =============================================================================
 # FIXTURES

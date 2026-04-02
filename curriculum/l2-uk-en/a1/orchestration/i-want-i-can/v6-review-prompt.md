@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 18: I Want, I Can (A1, A1.3 [Actions])
-**Writer:** Gemini Pro
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -119,29 +119,18 @@ references:
 <generated_module_content>
 ## Діало́ги (Dialogues)
 
-Before any grammar tables, hear all three modal verbs in action. Watch for **хочу** (I want), **можу** (I can), and **мушу** (I must) in every exchange below.
+Before any grammar tables, hear all three modal verbs in action. Watch for **хо́чу** (I want), **мо́жу** (I can), and **му́шу** (I must) in every exchange below.
 
 ### Dialogue 1 — Planning the weekend
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Дени́се, що ти хо́чеш роби́ти у вихідні́? *(Denys, what do you want to do on the weekend?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Я хочу гуля́ти в парку. А ти? *(I want to walk in the park. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Я теж хочу гуляти, але́ не можу — мушу працюва́ти. *(I also want to walk, but I can't — I have to work.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Шкода! А в неді́лю ти мо́жеш? *(Pity! And on Sunday, can you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Так, у неділю я можу! *(Yes, on Sunday I can!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Що ти хочеш робити? *(What do you want to do?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Хочу піти в кіно́. Ти хочеш? *(I want to go to the cinema. Do you want to?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Зві́сно хочу! Домо́вилися! *(Of course I want to! Deal!)*</div>
-
-</div>
+> — **Оля:** Дени́се, що ти хо́чеш роби́ти у вихідні́? *(Denys, what do you want to do on the weekend?)*
+> — **Дени́с:** Я хочу гуля́ти в парку. А ти? *(I want to walk in the park. And you?)*
+> — **Оля:** Я теж хочу гуляти, але́ не можу — мушу працюва́ти. *(I also want to walk, but I can't — I have to work.)*
+> — **Денис:** Шкода! А в неді́лю ти мо́жеш? *(Pity! And on Sunday, can you?)*
+> — **Оля:** Так, у неділю я можу! *(Yes, on Sunday I can!)*
+> — **Денис:** Що ти хочеш робити? *(What do you want to do?)*
+> — **Оля:** Хочу піти в кіно́. Ти хочеш? *(I want to go to the cinema. Do you want to?)*
+> — **Денис:** Зві́сно хочу! Домо́вилися! *(Of course I want to! Deal!)*
 
 :::tip
 Three modals, three meanings: **хочу** = want · **можу** = can · **мушу** = must
@@ -151,41 +140,31 @@ Every modal verb here follows the same pattern: **modal + infinitive**. Оля s
 
 ### Dialogue 2 — At a café
 
-<div class="dialogue">
+> — **Офіціа́нт:** До́брого дня! Що ви хо́чете? *(Good day! What would you like?)*
+> — **Денис:** Я хочу ка́ву, будь ла́ска. *(I want coffee, please.)*
+> — **Офіціант:** Велику чи мале́ньку? *(Large or small?)*
+> — **Денис:** Велику. І ще я хочу ї́сти. *(Large. And I also want to eat.)*
+> — **Денис:** Що ви мо́жете пора́дити? *(What can you recommend?)*
+> — **Офіціант:** Можу порадити борщ! *(I can recommend borscht!)*
+> — **Денис:** Чудо́во! Я хочу борщ. *(Wonderful! I want borscht.)*
 
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> До́брого дня! Що ви хо́чете? *(Good day! What would you like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Я хочу ка́ву, будь ла́ска. *(I want coffee, please.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Велику чи мале́ньку? *(Large or small?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Велику. І ще я хочу ї́сти. *(Large. And I also want to eat.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Що ви мо́жете пора́дити? *(What can you recommend?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Можу порадити борщ! *(I can recommend borscht!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Чудо́во! Я хочу борщ. *(Wonderful! I want borscht.)*</div>
-
-</div>
-
-Something different happened here. **Я хочу каву** — Denys wants a *thing*, not an *action*. When you want a thing, **хотіти** takes a noun directly (accusative case): **хочу каву** (coffee), **хочу борщ** (borscht). No infinitive needed. But when he says **я хочу їсти** — that's wanting an action, so the infinitive returns.
+Something different happened here. **Я хочу каву** — Denys wants a *thing*, not an *action*. When you want a thing, **хоті́ти** takes a noun directly (accusative case): **хочу каву** (coffee), **хочу борщ** (borscht). No infinitive needed. But when he says **я хочу їсти** — that's wanting an action, so the infinitive returns.
 
 You used **хочу**, **можу**, and **мушу** intuitively through both dialogues. Now let's see exactly how each one works — starting with the most irregular: **хотіти**.
 
 ## Хотіти (To Want)
 
-**Хотіти** (to want) is a Group I verb — but its infinitive ends in **-іти**, which normally signals Group II (like **робити**, **мусити**). Ukrainian grammarians list **хотіти** as an explicit exception. The key giveaway: its third person plural form ends in **-уть** (**хочуть**), not **-ять**. That **-уть** ending is the signature of Group I.
+**Хотіти** (to want) is a Group I verb — but its infinitive ends in **-іти́**, which normally signals Group II (like **робити**, **му́сити**). Ukrainian grammarians list **хотіти** as an explicit exception. The key giveaway: its third person plural form ends in **-уть** (**хо́чуть**), not **-ять**. That **-уть** ending is the signature of Group I.
 
-Every present-tense form of **хотіти** uses a changed stem. The infinitive stem is **хот-**, but in all conjugated forms it becomes **хоч-** — a **т→ч** consonant alternation. This change is absolute: there is no present-tense form that keeps the original **т**.
+Every present-tense form of **хотіти** uses a changed stem. The infinitive stem is **хот-**, but in all present-tense forms it becomes **хоч-** — a **т→ч** consonant alternation. This change is absolute: there is no present-tense form that keeps the original **т**.
 
 | | Singular | Plural |
 |---|---|---|
 | **я** | хочу | **ми** хо́чемо |
 | **ти** | хочеш | **ви** хочете |
-| **він/вона** | хо́че | **вони** хочуть |
+| **він/вона́** | хо́че | **вони́** хочуть |
 
-Compare the two stems side by side: **хот-іти** (infinitive, dictionary form) versus **хоч-у** (present, conjugated). The mutation **хот- → хоч-** is fixed across all six forms. Once you know **хоч-**, just add the regular Group I endings: **-у, -еш, -е, -емо, -ете, -уть**.
+Compare the two stems side by side: **хот-іти** (infinitive, dictionary form) versus **хоч-у** (present, conjugated). The mutation **хот- → хоч-** is fixed across all six forms. Once you know **хоч-**, just add the regular Group I endings: **-у, -еш, -е, -е́мо, -ете, -уть**.
 
 **Хотіти** has two syntactic patterns. The first: **хотіти + infinitive** — when you want to *do* something.
 
@@ -203,13 +182,13 @@ Rule of thumb: wanting to DO something → infinitive. Wanting a THING → noun.
 
 <!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
-Negation is straightforward. Place **не** directly before the verb: **Я не хочу.** **Ти не хочеш спа́ти?** (Don't you want to sleep?) **Він не хоче їсти.** (He doesn't want to eat.) A polite alternative — **хотів би** / **хотіла б** (I would like) — uses the conditional mood, which comes in B1. For now, **Я хочу...** is your direct, natural option.
+Negation is straightforward. Place **не** directly before the verb: **Я не хочу.** **Ти не хочеш спа́ти?** (Don't you want to sleep?) **Він не хоче їсти.** (He doesn't want to eat.) A polite alternative — **хоті́в би** / **хоті́ла б** (I would like) — uses the conditional mood, which comes in B1. For now, **Я хочу...** is your direct, natural option.
 
 A Ukrainian Grade 3 poem (Vashulenko textbook) shows how **хотіти** expresses deep, persistent desire — not just mild preference: *«Я страше́нно хочу ма́ти годівни́цю на вікні́»* (I desperately want to have a bird feeder on my window). The child wanted so intensely that he *«хотів, хотів, хотів»* — wanted and wanted and wanted. Eventually he realized wanting alone wasn't enough: *«Кра́ще я змайстру́ю сам»* (Better I'll build it myself). **Хотіти** carries real emotional weight — genuine desire, not just "I'd prefer."
 
 ## Могти́ і мусити (Can and Must)
 
-**Могти** (to be able to, can) is the second irregular verb in this module. Like **хотіти**, it belongs to Group I — its third person plural ends in **-уть** (**можуть**). The stem mutation here: **мог- → мож-**, a **г→ж** alternation. This г→ж pattern is common in Ukrainian: **допомогти → допоможу**, **берегти → бережу**. Whenever you see **г** in an infinitive stem, expect **ж** in conjugated forms.
+**Могти** (to be able to, can) is the second irregular verb in this module. Like **хотіти**, it belongs to Group I — its third person plural ends in **-уть** (**мо́жуть**). The stem mutation here: **мог- → мож-**, a **г→ж** alternation. This г→ж pattern is common in Ukrainian: **допомогти́ → допоможу́**, **берегти́ → бережу́**. Whenever you see **г** in an infinitive stem, expect **ж** in conjugated forms.
 
 | | Singular | Plural |
 |---|---|---|
@@ -224,7 +203,7 @@ A Ukrainian Grade 3 poem (Vashulenko textbook) shows how **хотіти** expres
 - **Він може читати.** — He can read.
 - **Ми можемо зустрі́тися.** — We can meet.
 
-Note: **могти** is about *ability*. For *permission* ("May I?"), Ukrainian uses **можна** — an impersonal word coming in a later module.
+Note: **могти** is about *ability*. For *permission* ("May I?"), Ukrainian uses **мо́жна** — an impersonal word coming in a later module.
 
 Now the contrast: **мусити** (to must, to have to). Unlike the other two, **мусити** is a regular Group II verb — with one small twist. The **я**-form has a **с→ш** alternation: **мушу**. All other forms keep the regular **с**:
 
@@ -234,7 +213,7 @@ Now the contrast: **мусити** (to must, to have to). Unlike the other two, 
 | **ти** | му́сиш | **ви** му́сите |
 | **він/вона** | му́сить | **вони** му́сять |
 
-**Мусити** means obligation — strong, unavoidable obligation. Антоне́нко-Давидо́вич, the great Ukrainian stylist, warns that **мусити** should be reserved for genuine compulsion — situations where you truly have no choice. For ordinary, everyday obligation, Ukrainian speakers often prefer **маю** (from **мати** — to have): **Я маю працювати** (I need to work — ordinary duty) versus **Я мушу працювати** (I'm forced to work — no escape). At A1, focus on **мушу** for strong obligation. You'll meet **маю** and **треба** (one needs to) in later modules.
+**Мусити** means obligation — strong, unavoidable obligation. Антоне́нко-Давидо́вич, the great Ukrainian stylist, warns that **мусити** should be reserved for genuine compulsion — situations where you truly have no choice. For ordinary, everyday obligation, Ukrainian speakers often prefer **маю** (from **мати** — to have): **Я маю працювати** (I need to work — ordinary duty) versus **Я мушу працювати** (I'm forced to work — no escape). At A1, focus on **мушу** for strong obligation. You'll meet **маю** and **тре́ба** (one needs to) in later modules.
 
 Now picture the three modals as a triangle — desire, ability, obligation — joined in one sentence: **«Я хочу гуляти, але не можу — мушу працювати.»** (I want to walk, but I can't — I must work.) **Хочу** = internal desire. **Можу** = ability or possibility. **Мушу** = external compulsion, no choice.
 
@@ -277,9 +256,9 @@ Test yourself — answer each prompt out loud before checking:
 
 <!-- INJECT_ACTIVITY: quiz-regular-irregular -->
 
-In the next modules, you'll meet **можна** (one may / it's allowed) — an impersonal construction for permission. Later, at A2, **мав би** / **мала б** (should) will build on the modal foundation you've just learned. For now, **хочу**, **можу**, **мушу** — these three verbs unlock a huge range of everyday Ukrainian expression: from ordering **каву** at a café to explaining why you can't come to a party.
+In the next modules, you'll meet **можна** (one may / it's allowed) — an impersonal construction for permission. Later, at A2, **мав би** / **ма́ла б** (should) will build on the modal foundation you've just learned. For now, **хочу**, **можу**, **мушу** — these three verbs unlock a huge range of everyday Ukrainian expression: from ordering **каву** at a café to explaining why you can't come to a party.
 
-**Deterministic word count: 1593 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1587 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -457,7 +436,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 95 words | Not found: 46 words
+Verified: 95 words | Not found: 49 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Антоне — NOT IN VESUM
@@ -470,6 +449,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Зві — NOT IN VESUM
   ✗ Кра — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
   ✗ брого — NOT IN VESUM
   ✗ вич — NOT IN VESUM
   ✗ втра — NOT IN VESUM
@@ -480,6 +460,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ жемо — NOT IN VESUM
   ✗ жете — NOT IN VESUM
   ✗ жеш — NOT IN VESUM
+  ✗ жна — NOT IN VESUM
   ✗ закі — NOT IN VESUM
   ✗ змайстру — NOT IN VESUM
   ✗ зустрі — NOT IN VESUM
@@ -494,6 +475,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ особли — NOT IN VESUM
   ✗ працюва — NOT IN VESUM
   ✗ симо — NOT IN VESUM
+  ✗ сити — NOT IN VESUM
   ✗ сиш — NOT IN VESUM
   ✗ сно — NOT IN VESUM
   ✗ сти — NOT IN VESUM
@@ -516,23 +498,23 @@ All 95 other words are confirmed to exist in VESUM.
 You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 
 **Core Verification:**
-- `mcp__rag__verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp__rag__verify_lemma` — full declension/conjugation for a lemma
-- `mcp__rag__search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp__rag__query_pravopys` — verify orthography rules (Правопис 2019)
+- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
+- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
+- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
+- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
 
 **Content Quality:**
-- `mcp__rag__query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp__rag__search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp__rag__search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp__rag__search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp__rag__search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp__rag__query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
+- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
+- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
+- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
+- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
 
 **Reference:**
-- `mcp__rag__search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp__rag__search_literary` — verify literary references against primary sources
-- `mcp__rag__query_wikipedia` — fact-check historical/cultural claims
+- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
+- `mcp_rag_search_literary` — verify literary references against primary sources
+- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
 
 **Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.

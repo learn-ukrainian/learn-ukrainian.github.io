@@ -1,0 +1,19 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-first-contact",
+  "phases": {
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-01T11:07:58.529394+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-02T18:36:46.722621+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-02T18:36:53.618810+00:00"
+    }
+  }
+}
