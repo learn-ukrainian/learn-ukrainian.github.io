@@ -1,0 +1,53 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed a few specific negative traits from the plan ("нетерплячий", "балакучий",
+    "заздрісний"). Omitted "м'який" from the gentle/tender/soft comparison. Missed
+    the exact phrase "що найперше впадає в о
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent overall grammar and vocabulary usage, but includes two stylistic
+    calques: "зустрічається" instead of "трапляється" for abstract occurrences, and
+    "розповсюджені" instead of "поширені".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear PPP structure. The distinctions between near-synonyms (щирий/чесний)
+    and relationship terms (стосунки/відносини) are taught well. The rule for "кохати"
+    (only for people) is very helpful for L2 l
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended words from the plan are seamlessly integrated.
+    The only omission is the few specific negative traits mentioned in Plan Adherence.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 activity markers are present and perfectly placed at the ends of
+    their respective sections, testing the exact skills taught in that section.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The text is generally engaging and well-written, but suffers slightly
+    from meta-commentary at the end ("Продовжуйте регулярно практикуватися і готуватися
+    до наступних цікавих мовних викликів!").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections are present, correctly ordered, and use proper Markdown headings.
+    Word count is 4944 (B1 modules have high word targets, so this is acceptable).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of cultural norms (kinship importance, formal/informal
+    introductions) and textbook references (Zabolotnyi, Avramenko). The wedding dialogue
+    correctly sets the scene in Vinnytsia.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The wedding dialogue is natural, incorporates target vocabulary ("найдобріша",
+    "старший брат"), and uses appropriate cultural formulas ("почувайся тут як удома").
+findings: []

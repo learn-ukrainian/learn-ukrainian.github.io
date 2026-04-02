@@ -61,6 +61,7 @@
     "quiz-bio": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "title",
         "items"
@@ -345,6 +346,7 @@
     "true-false-bio": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "title",
         "items"
@@ -506,7 +508,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -703,6 +710,7 @@
       "type": "object",
       "description": "Literary analysis essay. Can use 'prompt' at root OR 'items' array with prompt/model_answer structure.",
       "required": [
+        "id",
         "type",
         "title"
       ],
@@ -741,7 +749,9 @@
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["prompt"],
+            "required": [
+              "prompt"
+            ],
             "additionalProperties": false,
             "properties": {
               "prompt": {
@@ -798,6 +808,7 @@
       "type": "object",
       "description": "Deep literary analysis of a specific text excerpt. Can use 'questions' array OR 'items' with prompt/model_answer structure.",
       "required": [
+        "id",
         "type",
         "title"
       ],
@@ -844,7 +855,9 @@
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["prompt"],
+            "required": [
+              "prompt"
+            ],
             "additionalProperties": false,
             "properties": {
               "prompt": {
@@ -879,6 +892,7 @@
       "type": "object",
       "description": "Comparison of literary texts, authors, periods, or movements. Can link to reading activity via 'source_reading'.",
       "required": [
+        "id",
         "type",
         "title",
         "items_to_compare",
@@ -938,6 +952,7 @@
       "type": "object",
       "description": "Analysis of authorial purpose, literary techniques, and rhetorical strategies. Should link to reading via 'source_reading'.",
       "required": [
+        "id",
         "type",
         "title",
         "prompt",
@@ -1026,7 +1041,10 @@
         "tasks": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "minLength": 1 },
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
           "description": "Comprehension or analysis tasks for the reading"
         }
       }

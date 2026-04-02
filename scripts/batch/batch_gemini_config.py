@@ -27,7 +27,7 @@ QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 FLASH_LITE_MODEL = "gemini-3-flash-preview"          # Fast + cheap: vocab, activities, fixes
 FLASH_MODEL = "gemini-3-flash-preview"               # Same — aliased for clarity
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, content
-GEMINI_REVIEW_MODEL = FLASH_MODEL                    # Review model — switch to PRO_MODEL when Pro is stable
+GEMINI_REVIEW_MODEL = PRO_MODEL                      # Changed to Pro to handle strict review schemas
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when Pro is unavailable
 
 # Timeouts (seconds) — one place to tune for all pipeline steps

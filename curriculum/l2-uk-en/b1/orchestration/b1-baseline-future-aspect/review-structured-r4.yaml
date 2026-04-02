@@ -1,0 +1,48 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Flawless execution. The writer even identified and corrected a factual
+    linguistic error in the plan (the plan erroneously claimed `класти → покласти`
+    is suppletion; the writer swapped it for the corre
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Exceptional. Clear distinctions between forms, accurate morphophonemic
+    rules (e.g., explaining `[вмивац':а]` vs written `вмиватися`), and zero Russianisms.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The use of a fairy tale fragment to illustrate
+    aspectual narrative backgrounding vs forwarding is brilliant.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required vocabulary is fully integrated. Two recommended terms (`дійсний
+    спосіб`, `наголос`) were omitted.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers are placed logically at the end of their respective teaching
+    blocks and map perfectly to the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very engaging without being "cheerleady". The analogies (two sides of
+    a coin, grammatical matrix) are helpful and grounded.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: A word-count instruction artifact from the plan leaked into an H2 heading
+    (`## Проста форма майбутнього часу (~660 words total)`).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of standard cultural contexts (Kharkiv university, folk tales).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue serves the pedagogical goal perfectly, providing contextualized
+    exposure to the three future forms with natural interactions.
+findings: []

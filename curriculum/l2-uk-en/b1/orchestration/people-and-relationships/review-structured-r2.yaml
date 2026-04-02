@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the required Ukrainian proverbs ("У родині — сила", "Де злагода
+    в сімействі — там і добро"), replacing them entirely with a song lyric. Omitted
+    the required positive character trait "стриманий"
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: DEDUCT for the critical semantic error conflating "відносини" (formal
+    relations) with "відношення" (mathematical ratio). Otherwise, the text demonstrates
+    excellent command of Ukrainian phrasing and st
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: REWARD for excellent PPP flow. Grammar (like the Genitive and Dative constructions
+    for relationships and character traits) is taught organically through patterns
+    and immediate examples ("Йому властиво
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Integrates the vast majority of required and recommended vocabulary seamlessly
+    into the narrative. New words are contextualized properly rather than presented
+    as bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: DEDUCT for placing the `vocab-categories` marker before the concepts of
+    friendship and formal relations are actually introduced in the text, violating
+    the chronological testing rule.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: REWARD for an engaging, culturally grounded tone. The text explains *why*
+    certain words are used (e.g., specific terms for in-laws showing the importance
+    of family) instead of just lecturing.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: DEDUCT for a severe LLM generation artifact (a stuttering loop of "їх
+    ви́кликів!") at the very end of the text. Word count is also heavily skewed due
+    to the stress marks splitting words during tokeniz
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: REWARD for a highly decolonized approach. The distinction between in-laws
+    (свекруха vs теща) is explained brilliantly as a feature of Ukrainian precision,
+    and the cultural depth of "родина" is handled
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: REWARD for a highly natural, multi-turn wedding dialogue. It successfully
+    demonstrates the vocative case, adjective agreement, and the shift between formal
+    and informal registers in a realistic settin
+findings: []

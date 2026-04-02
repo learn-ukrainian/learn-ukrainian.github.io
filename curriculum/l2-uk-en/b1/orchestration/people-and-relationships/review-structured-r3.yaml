@@ -1,0 +1,54 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text covers the content outline but alters the plan for the final
+    section. Instead of presenting the "Self-check in Ukrainian" as learner-driven
+    production tasks ("Опишіть зовнішність вашого друга
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The text contains a case agreement error ("стає для вас невістка" instead
+    of "невісткою") and a Russian calque ("заводить нових цікавих друзів").
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Follows an excellent PPP flow with contextual grammar and vocabulary introduction.
+    However, the replacement of the active production self-check with passive Q&A
+    limits productive practice.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words from the plan are naturally
+    integrated, correctly contextualized, and properly bolded throughout the text.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All activity injection markers are present, matching the count from the
+    plan's `activity_hints`, and are placed after the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: DEDUCT for "telling instead of showing" and corporate-sounding meta-commentary
+    (e.g., "українська мова люб'язно пропонує", "дивовижна лінгвістична точність",
+    "найкращий і найприродніший спосіб", "Це ф
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The markdown structure is clean and correctly implements the plan's sections.
+    However, the final deterministic word count is 4943 words, which exceeds the 4000-word
+    target by more than 10%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent! The text respects Ukrainian culture, deeply explains kinship
+    terms that lack English equivalents (свекруха, теща, невістка), and correctly
+    utilizes cultural idioms and literary references (
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The wedding reception dialogue effectively contextualizes the vocabulary
+    and the vocative case. It is slightly theatrical ("Раді вітати вас у сонячній
+    Вінниці!"), but fits the formal setting nicely.
+findings: []

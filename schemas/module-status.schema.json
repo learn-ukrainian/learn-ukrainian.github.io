@@ -4,7 +4,14 @@
   "title": "Module Status Cache",
   "description": "Schema for cached module status ({level}/status/{slug}.json)",
   "type": "object",
-  "required": ["module", "level", "last_audit", "source_mtimes", "gates", "overall"],
+  "required": [
+    "module",
+    "level",
+    "last_audit",
+    "source_mtimes",
+    "gates",
+    "overall"
+  ],
   "properties": {
     "module": {
       "type": "string",
@@ -62,13 +69,21 @@
         },
         "lesson": {
           "allOf": [
-            { "$ref": "#/$defs/gateResult" },
+            {
+              "$ref": "#/$defs/gateResult"
+            },
             {
               "type": "object",
               "properties": {
-                "word_count": { "type": "integer" },
-                "word_target": { "type": "integer" },
-                "word_percentage": { "type": "number" }
+                "word_count": {
+                  "type": "integer"
+                },
+                "word_target": {
+                  "type": "integer"
+                },
+                "word_percentage": {
+                  "type": "number"
+                }
               }
             }
           ]
@@ -78,37 +93,63 @@
         },
         "vocabulary": {
           "allOf": [
-            { "$ref": "#/$defs/gateResult" },
+            {
+              "$ref": "#/$defs/gateResult"
+            },
             {
               "type": "object",
               "properties": {
-                "item_count": { "type": "integer" }
+                "item_count": {
+                  "type": "integer"
+                }
               }
             }
           ]
         },
         "naturalness": {
           "allOf": [
-            { "$ref": "#/$defs/gateResult" },
+            {
+              "$ref": "#/$defs/gateResult"
+            },
             {
               "type": "object",
               "properties": {
-                "score": { "type": "integer", "minimum": 1, "maximum": 10 },
-                "threshold": { "type": "integer" }
+                "score": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                },
+                "threshold": {
+                  "type": "integer"
+                }
               }
             }
           ]
         }
       },
-      "required": ["meta", "lesson", "activities", "vocabulary", "naturalness"]
+      "required": [
+        "meta",
+        "lesson",
+        "activities",
+        "vocabulary",
+        "naturalness"
+      ]
     },
     "overall": {
       "type": "object",
-      "required": ["status", "pass_count", "fail_count"],
+      "required": [
+        "status",
+        "pass_count",
+        "fail_count"
+      ],
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["pass", "fail", "pending"]
+          "enum": [
+            "pass",
+            "fail",
+            "pending"
+          ]
         },
         "pass_count": {
           "type": "integer",
@@ -130,11 +171,19 @@
   "$defs": {
     "gateResult": {
       "type": "object",
-      "required": ["status", "violations"],
+      "required": [
+        "status",
+        "violations"
+      ],
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["pass", "fail", "pending", "skipped"]
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "skipped"
+          ]
         },
         "violations": {
           "type": "integer",
@@ -151,14 +200,27 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["check", "message"],
+            "required": [
+              "check",
+              "message"
+            ],
             "properties": {
-              "check": { "type": "string" },
-              "message": { "type": "string" },
-              "line": { "type": "integer" },
+              "check": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer"
+              },
               "severity": {
                 "type": "string",
-                "enum": ["error", "warning", "info"]
+                "enum": [
+                  "error",
+                  "warning",
+                  "info"
+                ]
               }
             }
           }

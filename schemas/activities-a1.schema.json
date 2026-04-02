@@ -54,6 +54,7 @@
     "quiz-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -142,6 +143,7 @@
     "match-up-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "pairs"
       ],
@@ -191,6 +193,7 @@
     "fill-in-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -251,6 +254,7 @@
     "group-sort-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "groups"
       ],
@@ -316,6 +320,7 @@
     "unjumble-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -398,6 +403,7 @@
     "true-false-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -450,6 +456,7 @@
       "type": "object",
       "description": "A1 anagram — accepts both V1 (scrambled string) and V2 (letters array) formats",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -506,6 +513,7 @@
       "type": "object",
       "description": "Cyrillic modules (1-4) only. Watch Anna Ohoiko video, repeat the sound/word aloud.",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -561,6 +569,7 @@
       "type": "object",
       "description": "Cyrillic modules (1-4) only. Sort letters into categories (vowel/consonant, voiced/voiceless).",
       "required": [
+        "id",
         "type",
         "categories"
       ],
@@ -617,6 +626,7 @@
       "type": "object",
       "description": "Cyrillic modules (1-4) only. See an emoji — tap which letter the word starts with.",
       "required": [
+        "id",
         "type",
         "items"
       ],
@@ -675,6 +685,7 @@
     "observe-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "examples",
         "prompt"
@@ -713,6 +724,7 @@
     "letter-grid-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "letters"
       ],
@@ -767,6 +779,7 @@
     "translate-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "instruction",
         "items"
@@ -826,6 +839,7 @@
     "error-correction-a1": {
       "type": "object",
       "required": [
+        "id",
         "type",
         "items"
       ],

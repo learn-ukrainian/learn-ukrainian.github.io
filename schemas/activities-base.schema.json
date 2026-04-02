@@ -684,6 +684,7 @@
       "type": "object",
       "description": "Long-form writing task with model answer and rubric",
       "required": [
+        "id",
         "type",
         "title",
         "prompt",
@@ -755,6 +756,7 @@
       "type": "object",
       "description": "Deep analysis of a text or concept",
       "required": [
+        "id",
         "type",
         "title",
         "target_text",
@@ -814,6 +816,7 @@
       "type": "object",
       "description": "Comparison of two or more texts/concepts",
       "required": [
+        "id",
         "type",
         "title",
         "items_to_compare",
@@ -869,6 +872,7 @@
       "type": "object",
       "description": "Evaluation of author's purpose and techniques",
       "required": [
+        "id",
         "type",
         "title",
         "text_excerpt",
@@ -920,6 +924,7 @@
         {
           "description": "Format 1: Inline primary source text",
           "required": [
+            "id",
             "type",
             "title",
             "text",
@@ -964,6 +969,7 @@
         {
           "description": "Format 2: External resource link",
           "required": [
+            "id",
             "type",
             "title",
             "resource",

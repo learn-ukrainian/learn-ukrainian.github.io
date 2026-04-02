@@ -7,17 +7,39 @@
   "minItems": 3,
   "items": {
     "oneOf": [
-      { "$ref": "activities-base.schema.json#/definitions/reading" },
-      { "$ref": "activities-base.schema.json#/definitions/essay-response" },
-      { "$ref": "activities-base.schema.json#/definitions/critical-analysis" },
-      { "$ref": "activities-base.schema.json#/definitions/comparative-study" },
-      { "$ref": "activities-base.schema.json#/definitions/authorial-intent" },
-      { "$ref": "activities-base.schema.json#/definitions/etymology-trace" },
-      { "$ref": "activities-base.schema.json#/definitions/transcription" },
-      { "$ref": "activities-base.schema.json#/definitions/grammar-identify" },
-      { "$ref": "activities-base.schema.json#/definitions/paleography-analysis" },
-      { "$ref": "activities-base.schema.json#/definitions/dialect-comparison" },
-      { "$ref": "activities-base.schema.json#/definitions/translation-critique" }
+      {
+        "$ref": "activities-base.schema.json#/definitions/reading"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/essay-response"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/critical-analysis"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/comparative-study"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/authorial-intent"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/etymology-trace"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/transcription"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/grammar-identify"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/paleography-analysis"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/dialect-comparison"
+      },
+      {
+        "$ref": "activities-base.schema.json#/definitions/translation-critique"
+      }
     ]
   }
 }

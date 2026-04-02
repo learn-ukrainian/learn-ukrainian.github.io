@@ -1,0 +1,52 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered almost all points, but missed `повний`, `худорляве`, `широкоплечий`,
+    and `наполегливий` from the `content_outline`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Grammatical case error: "його молода дружина назавжди стає для вас невістка"
+    (requires Instrumental: "невісткою"). Syntactic awkwardness: "кажемо про когось
+    лагідний" (should be "називаємо когось лагі'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear PPP structure, numerous examples for grammar points (e.g., three
+    examples for Genitive family relationships). Minor deduction due to meta-commentary
+    blending into the pedagogy.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended vocab hints are successfully included. Missing
+    a few section-specific outline words.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Most markers match the plan, but `introductions-and-vocative-quiz` contradicts
+    the plan's specific instruction for a `role-play` activity in Section 5.
+- dimension: 6
+  name: Engagement & tone
+  score: 5
+  evidence: Heavy use of meta-commentary and generic enthusiasm ("Розглянемо уважно
+    такий чудовий приклад", "Щоб краще зрозуміти ці правила, детально розгляньмо",
+    "Найбільша лексична точність і неймовірна краса..
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: All sections are present, but the calculated word count is 5006 words,
+    exceeding the 4000-word target by >25%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of Ukrainian kinship concepts, idioms ("кров із
+    молоком"), and societal norms around introductions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The dialogue is stilted and textbook-robotic ("Пані Катерино, дозвольте
+    відрекомендуватися. Я — Антон, і я обіцяю завжди любити і поважати вашу чудову
+    онуку"). Features a robotic chorus of "Родичі" sp
+findings: []

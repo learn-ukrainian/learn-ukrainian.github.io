@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 7 planned sections, hits the word target (~4600 words), and
+    incorporates all requested pedagogical points from the cited textbooks (Lytvynova,
+    Zabolotnyi).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Citing the standard euphonic form "вмиватимусь" as a "noticeable grammatical
+    error" is a critical linguistic mistake. This teaches students a false rule.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent explanation of the aspect-tense matrix and the historical origin
+    of the synthetic future (infinitive + мати). The decision tree in the summary
+    is very effective.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Naturally integrates all required terms like "видова пара", "двовидові",
+    "синтетична форма", and "чергування приголосних".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Matches plan hints perfectly. Diversified types (quiz, sort, fill-in,
+    correction). Items are correctly targeted at B1 level.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Excessive meta-enthusiasm and AI clichés ("incredibly beautiful logic",
+    "important grammatical trait", "you now possess", "see with your own eyes"). DEDUCTION
+    for telling instead of showing.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clear H2 structure matching the plan. Word count is in range. No formatting
+    artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural university setting (Kharkiv), charity concert context, and mention
+    of folk tales as narrative background.
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: The university committee dialogue is functional and uses all three future
+    forms naturally in a realistic scenario.
+findings: []

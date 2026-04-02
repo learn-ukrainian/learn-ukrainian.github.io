@@ -1,114 +1,73 @@
 ---
-title: "A1 — Beginner"
-description: "First Steps — 55 modules"
-template: splash
+title: A1 - Початковий
+sidebar:
+  order: 1
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="A1"
-  title="Перші кроки"
-  subtitle="First Steps — 24/55 modules complete"
-  moduleCount={55}
-  wordTarget={1200}
-  color="#2E7D32"
+  level="a1"
+  levelName="A1 - Початковий"
+  subtitle="Beginner — 64 modules"
+  introduction="Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
+  totalPlanned={64}
   modules={[
-    {
-      unit: "A1.1 [Sounds, Letters, and First Contact]",
-      items: [
-        { num: 1, slug: "sounds-letters-and-hello", title: "Sounds, Letters, and Hello", sub: "33 літери, 38 звуків, Привіт!", status: "active" },
-        { num: 2, slug: "reading-ukrainian", title: "Reading Ukrainian", sub: "From letters to words to sentences", status: "active" },
-        { num: 3, slug: "special-signs", title: "Special Signs", sub: "Ь, apostrophe, and the voice of consonants", status: "active" },
-        { num: 4, slug: "stress-and-melody", title: "Stress and Melody", sub: "Наголос changes meaning, intonation changes intent", status: "done" },
-        { num: 5, slug: "who-am-i", title: "Who Am I?", sub: "Мене звати... — Your first real conversation", status: "done" },
-        { num: 6, slug: "my-family", title: "My Family", sub: "У мене є брат — Showing photos", status: "active" },
-        { num: 7, slug: "checkpoint-first-contact", title: "Checkpoint: First Contact", sub: "Can you read, greet, and introduce yourself?", status: "active" },
-      ]
-    },
-    {
-      unit: "A1.2 [My World]",
-      items: [
-        { num: 8, slug: "things-have-gender", title: "Things Have Gender", sub: "він, вона, воно — every noun has a gender", status: "active" },
-        { num: 9, slug: "what-is-it-like", title: "What Is It Like?", sub: "Великий стіл, нова книга — describing things", status: "active" },
-        { num: 10, slug: "colors", title: "Colors", sub: "Синій, жовтий — the colors of Ukraine and your world", status: "done" },
-        { num: 11, slug: "how-many", title: "How Many?", sub: "Один, два, три — numbers through prices, ages, and phones", status: "active" },
-        { num: 12, slug: "this-and-that", title: "This and That", sub: "Цей стіл, та книга — pointing at things", status: "done" },
-        { num: 13, slug: "many-things", title: "Many Things", sub: "Столи, книги, вікна — from one to many", status: "active" },
-        { num: 14, slug: "checkpoint-my-world", title: "Checkpoint: My World", sub: "Can you describe things, count, and point?", status: "active" },
-      ]
-    },
-    {
-      unit: "A1.3 [Actions]",
-      items: [
-        { num: 15, slug: "what-i-like", title: "What I Like", sub: "Я люблю читати — your first verbs", status: "active" },
-        { num: 16, slug: "verbs-group-one", title: "Verbs Group I", sub: "Читаю, читаєш, читає — your first conjugation", status: "done" },
-        { num: 17, slug: "verbs-group-two", title: "Verbs Group II", sub: "Говорю, говориш, говорить — the second pattern", status: "active" },
-        { num: 18, slug: "i-want-i-can", title: "I Want, I Can", sub: "Хочу, можу, мушу — expressing wants and abilities", status: "done" },
-        { num: 19, slug: "questions", title: "Questions", sub: "Хто? Що? Де? — asking about the world", status: "done" },
-        { num: 20, slug: "my-morning", title: "My Morning", sub: "Прокидаюся, вмиваюся — reflexive verbs and routines", status: "done" },
-        { num: 21, slug: "checkpoint-actions", title: "Checkpoint: Actions", sub: "Can you say what you do, want, and ask questions?", status: "active" },
-      ]
-    },
-    {
-      unit: "A1.4 [Time and Nature]",
-      items: [
-        { num: 22, slug: "what-time", title: "What Time?", sub: "Котра година? О котрій? — telling time in Ukrainian", status: "active" },
-        { num: 23, slug: "days-and-months", title: "Days and Months", sub: "У понеділок, у січні — the calendar in Ukrainian", status: "active" },
-        { num: 24, slug: "weather", title: "Weather", sub: "Сьогодні холодно — talking about the weather", status: "active" },
-        { num: 25, slug: "my-day", title: "My Day", sub: "Спочатку, потім, нарешті — telling a story about your day", status: "done" },
-        { num: 26, slug: "free-time", title: "Free Time", sub: "Хобі, спорт, музика — what you do for fun", status: "done" },
-        { num: 27, slug: "checkpoint-time-nature", title: "Checkpoint: Time and Nature", sub: "Can you tell time, plan a week, and describe the weather?", status: "done" },
-      ]
-    },
-    {
-      unit: "A1.5 [Places]",
-      items: [
-        { num: 28, slug: "euphony", title: "Euphony", sub: "У/в, і/й, з/із/зі — Ukrainian sounds beautiful", status: "done" },
-        { num: 29, slug: "where-is-it", title: "Where Is It?", sub: "В школі, на роботі — the locative case", status: "done" },
-        { num: 30, slug: "my-city", title: "My City", sub: "Бібліотека, аптека, ресторан — city vocabulary", status: "active" },
-        { num: 31, slug: "where-to", title: "Where To?", sub: "Іду в банк, на роботу — the accusative for direction", status: "done" },
-        { num: 32, slug: "transport", title: "Transport", sub: "Автобус, метро, таксі — getting around", status: "active" },
-        { num: 33, slug: "around-the-city", title: "Around the City", sub: "Де/куди + directions — navigating in Ukrainian", status: "active" },
-        { num: 34, slug: "where-from", title: "Where From?", sub: "Звідки ти? Я з України — origins and directions", status: "done" },
-        { num: 35, slug: "checkpoint-places", title: "Checkpoint: Places", sub: "Can you navigate a Ukrainian city?", status: "done" },
-      ]
-    },
-    {
-      unit: "A1.6 [Food and Shopping]",
-      items: [
-        { num: 36, slug: "food-and-drink", title: "Food and Drink", sub: "Їжа і напої — what Ukrainians eat and drink", status: "active" },
-        { num: 37, slug: "i-eat-i-drink", title: "I Eat, I Drink", sub: "Я їм хліб, п'ю каву — accusative for what you eat and drink", status: "done" },
-        { num: 38, slug: "at-the-cafe", title: "At the Cafe", sub: "У кафе — ordering, paying, and cafe culture", status: "active" },
-        { num: 39, slug: "shopping", title: "Shopping", sub: "Скільки коштує? — prices, quantities, and buying things", status: "done" },
-        { num: 40, slug: "people-around-me", title: "People Around Me", sub: "Я бачу маму, знаю Олену — accusative for people", status: "active" },
-        { num: 41, slug: "checkpoint-food-shopping", title: "Checkpoint: Food and Shopping", sub: "Can you order food and buy things in Ukrainian?", status: "active" },
-      ]
-    },
-    {
-      unit: "A1.7 [Communication]",
-      items: [
-        { num: 42, slug: "hey-friend", title: "Hey, Friend!", sub: "Олено! Тарасе! Друже! Мамо! — calling people by name", status: "active" },
-        { num: 43, slug: "please-do-this", title: "Please Do This", sub: "Читай! Скажіть! Дайте! — asking people to do things", status: "done" },
-        { num: 44, slug: "linking-ideas", title: "Linking Ideas", sub: "І, а, але, бо — connecting your thoughts", status: "active" },
-        { num: 45, slug: "when-and-where", title: "When and Where", sub: "Що, де, коли — building your first complex sentences", status: "active" },
-        { num: 46, slug: "holidays", title: "Holidays", sub: "Різдво, Великдень, День Незалежності — Ukrainian celebrations", status: "active" },
-        { num: 47, slug: "checkpoint-communication", title: "Checkpoint: Communication", sub: "Can you address people, give instructions, and connect ideas?", status: "active" },
-      ]
-    },
-    {
-      unit: "A1.8 [Past, Future, Graduation]",
-      items: [
-        { num: 48, slug: "what-happened", title: "What Happened?", sub: "Він читав, вона читала — past tense with gender", status: "done" },
-        { num: 49, slug: "yesterday", title: "Yesterday", sub: "Учора я прокинувся, поснідав і пішов — narrating your day", status: "done" },
-        { num: 50, slug: "what-will-happen", title: "What Will Happen?", sub: "Я буду читати — your first future tense", status: "done" },
-        { num: 51, slug: "my-plans", title: "My Plans", sub: "У суботу я буду... — scheduling and weekend plans", status: "active" },
-        { num: 52, slug: "my-story", title: "My Story", sub: "Я народився, я живу, я буду... — your life in three tenses", status: "done" },
-        { num: 53, slug: "health", title: "Health", sub: "У мене болить голова — body parts and symptoms", status: "active" },
-        { num: 54, slug: "emergencies", title: "Emergencies", sub: "Допоможіть! Викличте швидку! — survival Ukrainian", status: "done" },
-        { num: 55, slug: "a1-finale", title: "A1 Finale", sub: "One full day in a Ukrainian city — everything you've learned", status: "active" },
-      ]
-    },
+  { num: 1, title: "Sounds, Letters, and Hello", slug: "sounds-letters-and-hello", status: "ready" },
+  { num: 2, title: "Reading Ukrainian", slug: "reading-ukrainian", status: "ready" },
+  { num: 3, title: "Special Signs", slug: "special-signs", status: "ready" },
+  { num: 4, title: "Stress and Melody", slug: "stress-and-melody", status: "ready" },
+  { num: 5, title: "Who Am I?", slug: "who-am-i", status: "ready" },
+  { num: 6, title: "My Family", slug: "my-family", status: "ready" },
+  { num: 7, title: "Checkpoint: First Contact", slug: "checkpoint-first-contact", status: "ready", isCheckpoint: true },
+  { num: 8, title: "Things Have Gender", slug: "things-have-gender", status: "ready" },
+  { num: 9, title: "What Is It Like?", slug: "what-is-it-like", status: "ready" },
+  { num: 10, title: "Colors", slug: "colors", status: "ready" },
+  { num: 11, title: "How Many?", slug: "how-many", status: "ready" },
+  { num: 12, title: "This and That", slug: "this-and-that", status: "ready" },
+  { num: 13, title: "Many Things", slug: "many-things", status: "ready" },
+  { num: 14, title: "Checkpoint: My World", slug: "checkpoint-my-world", status: "ready", isCheckpoint: true },
+  { num: 15, title: "What I Like", slug: "what-i-like", status: "ready" },
+  { num: 16, title: "Verbs Group I", slug: "verbs-group-one", status: "ready" },
+  { num: 17, title: "Verbs Group II", slug: "verbs-group-two", status: "ready" },
+  { num: 18, title: "I Want, I Can", slug: "i-want-i-can", status: "ready" },
+  { num: 19, title: "Questions", slug: "questions", status: "ready" },
+  { num: 20, title: "My Morning", slug: "my-morning", status: "ready" },
+  { num: 21, title: "Checkpoint: Actions", slug: "checkpoint-actions", status: "ready", isCheckpoint: true },
+  { num: 22, title: "What Time?", slug: "what-time", status: "ready" },
+  { num: 23, title: "Days and Months", slug: "days-and-months", status: "ready" },
+  { num: 24, title: "Weather", slug: "weather", status: "ready" },
+  { num: 25, title: "My Day", slug: "my-day", status: "ready" },
+  { num: 26, title: "Free Time", slug: "free-time", status: "ready" },
+  { num: 27, title: "Checkpoint: Time and Nature", slug: "checkpoint-time-nature", status: "ready", isCheckpoint: true },
+  { num: 28, title: "Euphony", slug: "euphony", status: "ready" },
+  { num: 29, title: "Where Is It?", slug: "where-is-it", status: "ready" },
+  { num: 30, title: "My City", slug: "my-city", status: "ready" },
+  { num: 31, title: "Where To?", slug: "where-to", status: "ready" },
+  { num: 32, title: "Transport", slug: "transport", status: "ready" },
+  { num: 33, title: "Around the City", slug: "around-the-city", status: "ready" },
+  { num: 34, title: "Where From?", slug: "where-from", status: "ready" },
+  { num: 35, title: "Checkpoint: Places", slug: "checkpoint-places", status: "ready", isCheckpoint: true },
+  { num: 36, title: "Food and Drink", slug: "food-and-drink", status: "ready" },
+  { num: 37, title: "I Eat, I Drink", slug: "i-eat-i-drink", status: "ready" },
+  { num: 38, title: "At the Cafe", slug: "at-the-cafe", status: "ready" },
+  { num: 39, title: "Shopping", slug: "shopping", status: "ready" },
+  { num: 40, title: "People Around Me", slug: "people-around-me", status: "ready" },
+  { num: 41, title: "Checkpoint: Food and Shopping", slug: "checkpoint-food-shopping", status: "ready", isCheckpoint: true },
+  { num: 42, title: "Hey, Friend!", slug: "hey-friend", status: "ready" },
+  { num: 43, title: "Please Do This", slug: "please-do-this", status: "ready" },
+  { num: 44, title: "Linking Ideas", slug: "linking-ideas", status: "ready" },
+  { num: 45, title: "When and Where", slug: "when-and-where", status: "ready" },
+  { num: 46, title: "Holidays", slug: "holidays", status: "ready" },
+  { num: 47, title: "Checkpoint: Communication", slug: "checkpoint-communication", status: "ready", isCheckpoint: true },
+  { num: 48, title: "What Happened?", slug: "what-happened", status: "ready" },
+  { num: 49, title: "Yesterday", slug: "yesterday", status: "ready" },
+  { num: 50, title: "What Will Happen?", slug: "what-will-happen", status: "ready" },
+  { num: 51, title: "My Plans", slug: "my-plans", status: "ready" },
+  { num: 52, title: "My Story", slug: "my-story", status: "ready" },
+  { num: 53, title: "Health", slug: "health", status: "ready" },
+  { num: 54, title: "Emergencies", slug: "emergencies", status: "ready" },
+  { num: 55, title: "A1 Finale", slug: "a1-finale", status: "ready", isCheckpoint: true }
   ]}
 />

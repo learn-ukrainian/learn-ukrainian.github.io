@@ -4,7 +4,18 @@
   "title": "Module Plan",
   "description": "Schema for individual module plans (plans/{level}/{slug}.yaml)",
   "type": "object",
-  "required": ["module", "level", "sequence", "version", "title", "focus", "pedagogy", "objectives", "content_outline", "word_target"],
+  "required": [
+    "module",
+    "level",
+    "sequence",
+    "version",
+    "title",
+    "focus",
+    "pedagogy",
+    "objectives",
+    "content_outline",
+    "word_target"
+  ],
   "properties": {
     "module": {
       "type": "string",
@@ -34,12 +45,28 @@
     },
     "focus": {
       "type": "string",
-      "enum": ["grammar", "vocabulary", "cultural", "history", "biography", "literature", "integration", "checkpoint", "professional"],
+      "enum": [
+        "grammar",
+        "vocabulary",
+        "cultural",
+        "history",
+        "biography",
+        "literature",
+        "integration",
+        "checkpoint",
+        "professional"
+      ],
       "description": "Primary focus of the module"
     },
     "pedagogy": {
       "type": "string",
-      "enum": ["TTT", "PPP", "seminar", "workshop", "review"],
+      "enum": [
+        "TTT",
+        "PPP",
+        "seminar",
+        "workshop",
+        "review"
+      ],
       "description": "Teaching approach"
     },
     "objectives": {
@@ -54,7 +81,10 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["section", "words"],
+        "required": [
+          "section",
+          "words"
+        ],
         "properties": {
           "section": {
             "type": "string",
@@ -131,18 +161,34 @@
     },
     "activities": {
       "type": "object",
-      "required": ["types_required", "min_items_per_type"],
+      "required": [
+        "types_required",
+        "min_items_per_type"
+      ],
       "properties": {
         "types_required": {
           "type": "array",
           "items": {
             "type": "string",
             "enum": [
-              "quiz", "fill-in", "match-up", "true-false", "unjumble",
-              "group-sort", "anagram", "error-correction", "cloze",
-              "select", "translate", "mark-the-words", "highlight-morphemes",
-              "essay-response", "comparative-study", "reading",
-              "critical-analysis", "authorial-intent"
+              "quiz",
+              "fill-in",
+              "match-up",
+              "true-false",
+              "unjumble",
+              "group-sort",
+              "anagram",
+              "error-correction",
+              "cloze",
+              "select",
+              "translate",
+              "mark-the-words",
+              "highlight-morphemes",
+              "essay-response",
+              "comparative-study",
+              "reading",
+              "critical-analysis",
+              "authorial-intent"
             ]
           },
           "description": "Activity types that must be present"
@@ -169,7 +215,11 @@
       "description": "Unique dialogue settings with specific objects and genders. See docs/best-practices/dialogue-situations.md",
       "items": {
         "type": "object",
-        "required": ["setting", "speakers", "motivation"],
+        "required": [
+          "setting",
+          "speakers",
+          "motivation"
+        ],
         "properties": {
           "setting": {
             "type": "string",
@@ -178,7 +228,9 @@
           },
           "speakers": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "minItems": 1,
             "description": "Speaker names with roles in Ukrainian"
           },
@@ -195,12 +247,31 @@
       "description": "B2+ analytical reading passages. See docs/best-practices/b2-c2-plan-architecture.md",
       "items": {
         "type": "object",
-        "required": ["source_type", "topic", "motivation"],
+        "required": [
+          "source_type",
+          "topic",
+          "motivation"
+        ],
         "properties": {
-          "source_type": { "type": "string", "description": "e.g., 'наукова стаття', 'художній уривок', 'офіційний лист'" },
-          "topic": { "type": "string", "description": "What the text is about" },
-          "key_elements": { "type": "array", "items": { "type": "string" }, "description": "Terms or devices to include" },
-          "motivation": { "type": "string", "description": "Why this text motivates the grammar/focus" }
+          "source_type": {
+            "type": "string",
+            "description": "e.g., 'наукова стаття', 'художній уривок', 'офіційний лист'"
+          },
+          "topic": {
+            "type": "string",
+            "description": "What the text is about"
+          },
+          "key_elements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Terms or devices to include"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "Why this text motivates the grammar/focus"
+          }
         },
         "additionalProperties": false
       }
@@ -210,12 +281,37 @@
       "description": "B2+ listening comprehension tasks. See docs/best-practices/b2-c2-plan-architecture.md",
       "items": {
         "type": "object",
-        "required": ["media_type", "setting", "motivation"],
+        "required": [
+          "media_type",
+          "setting",
+          "motivation"
+        ],
         "properties": {
-          "media_type": { "type": "string", "enum": ["відео", "аудіо", "інтерв'ю", "подкаст", "лекція"] },
-          "setting": { "type": "string", "description": "Context of the recording" },
-          "focus_points": { "type": "array", "items": { "type": "string" }, "description": "What to capture" },
-          "motivation": { "type": "string", "description": "Pedagogical goal" }
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "відео",
+              "аудіо",
+              "інтерв'ю",
+              "подкаст",
+              "лекція"
+            ]
+          },
+          "setting": {
+            "type": "string",
+            "description": "Context of the recording"
+          },
+          "focus_points": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "What to capture"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "Pedagogical goal"
+          }
         },
         "additionalProperties": false
       }
@@ -225,13 +321,42 @@
       "description": "B2+ structured production tasks. See docs/best-practices/b2-c2-plan-architecture.md",
       "items": {
         "type": "object",
-        "required": ["task_type", "prompt", "motivation", "model_answer"],
+        "required": [
+          "task_type",
+          "prompt",
+          "motivation",
+          "model_answer"
+        ],
         "properties": {
-          "task_type": { "type": "string", "enum": ["есе", "офіційний лист", "відгук", "репортаж", "власне висловлення"] },
-          "prompt": { "type": "string", "description": "The assignment for the learner" },
-          "requirements": { "type": "array", "items": { "type": "string" }, "description": "e.g., 'мінімум 200 слів', 'використати пасивний стан'" },
-          "motivation": { "type": "string", "description": "Why this task?" },
-          "model_answer": { "type": "string", "description": "Description of what the model answer should contain" }
+          "task_type": {
+            "type": "string",
+            "enum": [
+              "есе",
+              "офіційний лист",
+              "відгук",
+              "репортаж",
+              "власне висловлення"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The assignment for the learner"
+          },
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "e.g., 'мінімум 200 слів', 'використати пасивний стан'"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "Why this task?"
+          },
+          "model_answer": {
+            "type": "string",
+            "description": "Description of what the model answer should contain"
+          }
         },
         "additionalProperties": false
       }
@@ -241,11 +366,27 @@
       "description": "B2+ oral production/debate prompts. See docs/best-practices/b2-c2-plan-architecture.md",
       "items": {
         "type": "object",
-        "required": ["context", "questions", "motivation"],
+        "required": [
+          "context",
+          "questions",
+          "motivation"
+        ],
         "properties": {
-          "context": { "type": "string", "description": "Scenario or controversial statement for debate" },
-          "questions": { "type": "array", "items": { "type": "string" }, "description": "Prompts for discussion" },
-          "motivation": { "type": "string", "description": "Pedagogical goal" }
+          "context": {
+            "type": "string",
+            "description": "Scenario or controversial statement for debate"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Prompts for discussion"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "Pedagogical goal"
+          }
         },
         "additionalProperties": false
       }
@@ -255,14 +396,31 @@
         {
           "type": "object",
           "properties": {
-            "previous": { "type": ["string", "null"] },
-            "next": { "type": ["string", "null"] },
-            "related": { "type": "array", "items": { "type": "string" } }
+            "previous": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "next": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "related": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         },
         {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       ],
       "description": "Links to related modules (object or array format)"
@@ -297,14 +455,21 @@
       "description": "Override level constraints if needed"
     },
     "sources": {
-      "type": ["object", "array"],
+      "type": [
+        "object",
+        "array"
+      ],
       "description": "Primary and secondary sources for content"
     },
     "changelog": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["version", "date", "changes"],
+        "required": [
+          "version",
+          "date",
+          "changes"
+        ],
         "properties": {
           "version": {
             "type": "string",

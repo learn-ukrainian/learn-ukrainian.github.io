@@ -678,6 +678,7 @@
       "type": "object",
       "description": "Long-form writing task with model answer and rubric - B2 requires 150+ words",
       "required": [
+        "id",
         "type",
         "title",
         "prompt",
@@ -748,6 +749,7 @@
       "type": "object",
       "description": "Deep analysis of a text or concept - B2 requires more sophisticated analysis",
       "required": [
+        "id",
         "type",
         "title",
         "target_text",
@@ -806,6 +808,7 @@
       "type": "object",
       "description": "Comparison of two or more texts/concepts",
       "required": [
+        "id",
         "type",
         "title",
         "items_to_compare",
@@ -856,6 +859,7 @@
       "type": "object",
       "description": "Evaluation of author's purpose and techniques",
       "required": [
+        "id",
         "type",
         "title",
         "text_excerpt",
@@ -903,6 +907,7 @@
       "type": "object",
       "description": "Reading comprehension task with external resource",
       "required": [
+        "id",
         "type",
         "title",
         "tasks"

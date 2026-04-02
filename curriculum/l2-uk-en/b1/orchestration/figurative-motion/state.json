@@ -3,13 +3,9 @@
   "track": "b1",
   "slug": "figurative-motion",
   "phases": {
-    "stress": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:40.460488+00:00"
-    },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-02T14:58:40.460887+00:00"
+      "ts": "2026-04-02T20:50:41.242522+00:00"
     }
   }
 }

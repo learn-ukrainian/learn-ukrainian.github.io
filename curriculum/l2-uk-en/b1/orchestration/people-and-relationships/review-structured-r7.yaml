@@ -1,0 +1,54 @@
+round: 7
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Every point from the `content_outline` is present with specific examples
+    (e.g., semantic distinctions between щирий/чесний, стосунки/відносини, and the
+    structure of an essay). However, the determinist
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: There is a calque from Russian ("заво́дить нови́х цікавих друзів"). Additionally,
+    there is a widespread typographical error where words contain double stress marks
+    (e.g., `ко́ри́сна`, `ді́вчи́на`, `во
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar rules are beautifully contextualized (e.g.,
+    "Коли ми буду́ємо такі ко́ри́сні фрази, перше слово завжди залишається у своїй
+    початко́вій формі... Водночас дру́ге слово обов'я
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present. The module naturally integrates terms
+    like "кремезний", "тендітний", "портретна деталь", and "відрекомендуватися" in
+    highly contextual sentences.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 expected activity markers are placed correctly right after their
+    respective teaching sections, testing exactly what was just introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is academic but very supportive. Good use of direct guidance.
+    Minor deduction for a slightly mechanical transition ("Закріпімо найголовніші
+    конце́пції мо́дуля за допомогою кілько́х практи́чни
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Markdown headings are correct and clean, but the overall word count is
+    significantly outside the target budget (4957 vs 4000).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Deeply grounded in Ukrainian culture. Accurately references "кров із
+    молоком", the song "Родина" by Vadym Kryshchenko, and Kotlyarevsky''s "Eneida"
+    to illustrate character traits. Accurate explanation '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue effectively demonstrates the vocative case in introductions
+    ("Антоне", "Михайле", "пані Катерино") and uses natural conversational pacing.
+findings: []

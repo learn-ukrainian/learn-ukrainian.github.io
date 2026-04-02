@@ -54,45 +54,56 @@ def validate_mdx(mdx_path: Path) -> list[str]:
 
     # ── 2. Validate JSON in component props ──
     # Match patterns like: questions={[...]} or cards={[...]} or groups={{...}}
-    for line_num, line in enumerate(lines, 1):
-        # Only check lines with JSX components
-        if not re.search(r"<[A-Z]", line):
+    # We scan the entire content because props can span multiple lines.
+    content = "".join(lines)
+    for m in re.finditer(r'<([A-Z]\w+).*?(\w+)=\{', content, re.DOTALL):
+        prop_name = m.group(2)
+        start = m.end()
+        # Find matching closing brace
+        depth = 1
+        pos = start
+        
+        # Naive parser that ignores braces inside template literals or strings
+        in_backtick = False
+        in_string = False
+        while pos < len(content) and depth > 0:
+            char = content[pos]
+            if char == "`":
+                # Toggle backtick state if not escaped
+                if content[pos-1] != "\\":
+                    in_backtick = not in_backtick
+            elif char == '"':
+                if content[pos-1] != "\\":
+                    in_string = not in_string
+                    
+            if not in_backtick and not in_string:
+                if char == "{":
+                    depth += 1
+                elif char == "}":
+                    depth -= 1
+            pos += 1
+
+        if depth != 0:
+            # We don't have accurate line numbers for this simplistic check, just append a warning
+            errors.append(f"Unmatched brace in prop '{prop_name}'")
             continue
 
-        # Extract all prop values that look like JSON
-        for m in re.finditer(r'(\w+)=\{', line):
-            prop_name = m.group(1)
-            start = m.end()
-            # Find matching closing brace
-            depth = 1
-            pos = start
-            while pos < len(line) and depth > 0:
-                if line[pos] == "{":
-                    depth += 1
-                elif line[pos] == "}":
-                    depth -= 1
-                pos += 1
+        prop_value = content[start:pos - 1].strip()
 
-            if depth != 0:
-                errors.append(f"Line {line_num}: Unmatched brace in prop '{prop_name}'")
-                continue
-
-            prop_value = line[start:pos - 1]
-
-            # Try to parse as JSON (JSX props use JS syntax which is close to JSON)
-            # Skip string props like instruction={"text"}
-            if prop_value.startswith('"') and prop_value.endswith('"'):
-                continue
-            if prop_value.startswith("[") or prop_value.startswith("{"):
-                try:
-                    json.loads(prop_value)
-                except json.JSONDecodeError as e:
-                    # Common: JS uses single quotes, trailing commas — not always JSON
-                    # Only flag if it looks like it should be JSON (arrays/objects)
-                    if "Expecting property name" not in str(e):
-                        errors.append(
-                            f"Line {line_num}: Invalid JSON in prop '{prop_name}': {str(e)[:80]}"
-                        )
+        # Try to parse as JSON (JSX props use JS syntax which is close to JSON)
+        # Skip string props and template literals
+        if prop_value.startswith('"') or prop_value.startswith('`'):
+            continue
+        if prop_value.startswith("[") or prop_value.startswith("{"):
+            try:
+                json.loads(prop_value)
+            except json.JSONDecodeError as e:
+                # Common: JS uses single quotes, trailing commas — not always JSON
+                # Only flag if it looks like it should be JSON (arrays/objects)
+                if "Expecting property name" not in str(e):
+                    errors.append(
+                        f"Invalid JSON in prop '{prop_name}': {str(e)[:80]}"
+                    )
 
     # ── 3. Check for unescaped braces in prose ──
     in_frontmatter = False

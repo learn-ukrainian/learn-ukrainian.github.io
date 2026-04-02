@@ -9,34 +9,116 @@
     "focus"
   ],
   "properties": {
-    "module": { "type": "string" },
-    "id": { "type": "string" },
-    "title": { "type": "string" },
-    "subtitle": { "type": "string" },
-    "description": { "type": "string" },
-    "slug": { "type": "string" },
-    "version": { "type": "string" },
-    "phase": { "type": "string" },
-    "focus": {
-      "type": "string",
-      "enum": ["history", "biography", "grammar", "vocabulary", "style", "checkpoint", "lit", "literature", "practical", "review", "culture", "analysis", "narrative", "linguistics", "phraseology", "communication", "domain", "project", "integration", "skills", "bridge", "cultural", "fine-arts", "exam", "practice", "phonology", "stylistics", "translation", "methodology", "historiography"]
-    },
-    "pedagogy": { 
+    "module": {
       "type": "string"
     },
-    "register": { "type": "string" },
-    "duration": { "type": ["integer", "string"] },
-    "transliteration": { "type": "string" },
-    "tags": { "type": "array", "items": { "type": "string" } },
-    "grammar": { "type": "array", "items": { "type": "string" } },
-    "objectives": { "type": "array", "items": { "type": "string" } },
-    "vocabulary_count": { "type": "integer" },
-    "vocab_count": { "type": "integer" },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string"
+    },
+    "focus": {
+      "type": "string",
+      "enum": [
+        "history",
+        "biography",
+        "grammar",
+        "vocabulary",
+        "style",
+        "checkpoint",
+        "lit",
+        "literature",
+        "practical",
+        "review",
+        "culture",
+        "analysis",
+        "narrative",
+        "linguistics",
+        "phraseology",
+        "communication",
+        "domain",
+        "project",
+        "integration",
+        "skills",
+        "bridge",
+        "cultural",
+        "fine-arts",
+        "exam",
+        "practice",
+        "phonology",
+        "stylistics",
+        "translation",
+        "methodology",
+        "historiography"
+      ]
+    },
+    "pedagogy": {
+      "type": "string"
+    },
+    "register": {
+      "type": "string"
+    },
+    "duration": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "transliteration": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "grammar": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vocabulary_count": {
+      "type": "integer"
+    },
+    "vocab_count": {
+      "type": "integer"
+    },
     "naturalness": {
       "type": "object",
       "properties": {
-        "score": { "type": ["integer", "null"] },
-        "status": { "type": "string" }
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        }
       }
     }
   }

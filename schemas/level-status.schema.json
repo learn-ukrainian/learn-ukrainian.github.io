@@ -4,7 +4,12 @@
   "title": "Level Status",
   "description": "Schema for level-wide status tracking (status/{level}.yaml)",
   "type": "object",
-  "required": ["level", "updated", "summary", "modules"],
+  "required": [
+    "level",
+    "updated",
+    "summary",
+    "modules"
+  ],
   "properties": {
     "level": {
       "type": "string",
@@ -18,7 +23,13 @@
     },
     "summary": {
       "type": "object",
-      "required": ["total", "planned", "content", "activities", "reviewed"],
+      "required": [
+        "total",
+        "planned",
+        "content",
+        "activities",
+        "reviewed"
+      ],
       "properties": {
         "total": {
           "type": "integer",
@@ -60,11 +71,18 @@
   "$defs": {
     "moduleStatus": {
       "type": "object",
-      "required": ["status"],
+      "required": [
+        "status"
+      ],
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["planned", "content", "activities", "reviewed"],
+          "enum": [
+            "planned",
+            "content",
+            "activities",
+            "reviewed"
+          ],
           "description": "Current stage: planned → content → activities → reviewed"
         },
         "plan_version": {

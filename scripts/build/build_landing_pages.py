@@ -168,7 +168,7 @@ def build_level_landing(level, config, is_track=False):
     for mod in modules:
         num = mod.local_num
         title = (mod.title or '').replace('<!-- Title -->', '').strip() or f'Module {num:02d}'
-        is_checkpoint = 'checkpoint' in title.lower()
+        is_checkpoint = any(x in mod.slug.lower() for x in ['checkpoint', 'review', 'exam', 'finale'])
 
         if num in mdx_files:
             if num in review_files:

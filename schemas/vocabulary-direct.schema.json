@@ -3,7 +3,12 @@
   "title": "l2-uk-direct vocabulary entry",
   "description": "L1-agnostic vocabulary. No translation field. Meaning anchored via images, emoji, video, and Ukrainian context.",
   "type": "object",
-  "required": ["word", "pronunciation_video", "category", "examples"],
+  "required": [
+    "word",
+    "pronunciation_video",
+    "category",
+    "examples"
+  ],
   "additionalProperties": false,
   "properties": {
     "word": {
@@ -11,7 +16,10 @@
       "description": "Ukrainian word"
     },
     "pronunciation_video": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "YouTube URL for native speaker pronunciation — primary pronunciation anchor, replaces IPA"
     },
     "emoji": {
@@ -19,11 +27,17 @@
       "description": "Semantic anchor emoji — fallback when image_url is null"
     },
     "image_url": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Cloudinary URL. Null until image is sourced via Pixabay and uploaded."
     },
     "image_alt": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Ukrainian alt text for the image"
     },
     "category": {
@@ -33,12 +47,19 @@
     "question": {
       "type": "string",
       "enum": [
-        "ХТО?", "ЩО?",
-        "ЩО РОБИТЬ?", "ЩО ЗРОБИВ?",
-        "ЯКИЙ?", "ЯК?",
-        "ДЕ?", "КУДИ?", "ЗВІДКИ?",
-        "КОЛИ?", "СКІЛЬКИ?",
-        "ЧОМУ?", "НАВІЩО?",
+        "ХТО?",
+        "ЩО?",
+        "ЩО РОБИТЬ?",
+        "ЩО ЗРОБИВ?",
+        "ЯКИЙ?",
+        "ЯК?",
+        "ДЕ?",
+        "КУДИ?",
+        "ЗВІДКИ?",
+        "КОЛИ?",
+        "СКІЛЬКИ?",
+        "ЧОМУ?",
+        "НАВІЩО?",
         "СЛОВО-ПОМІЧНИК"
       ],
       "description": "Grammar category as question word. СЛОВО-ПОМІЧНИК = function words (conjunctions, prepositions, particles) that don't answer questions but connect other words."
@@ -46,11 +67,16 @@
     "examples": {
       "type": "array",
       "minItems": 2,
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Simple Ukrainian sentences using this word. No English."
     },
     "context_video": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "YouTube URL showing the word in real Ukrainian context — pure Ukrainian content only"
     }
   }

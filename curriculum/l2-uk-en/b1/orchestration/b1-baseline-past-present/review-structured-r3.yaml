@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed the "Змішаний спосіб: кидати → кинути" point from section 3. The
+    "Самоперевірка" in the conclusion substituted the plan''s practical tasks (e.g.,
+    "Провідміняйте дієслово бачити", "Утворіть форми'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Used the calque "гра́ти ... роль" instead of "відіграва́ти роль". Typographical
+    error with a double acute "допомі́жне́". Grammatical mismatch in "Бі́льшість українських
+    дієслів існують" (should be sin
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical flow for aspect (process vs result). Provides clear
+    context and breaks down complex morphophonemic rules.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present. The terms are correctly bolded, given
+    context, and translated.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are placed strategically after concepts, testing what
+    was just taught. All 6 planned activities are present.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains some "telling instead of showing" and generic enthusiasm, e.g.,
+    "Саме тут вид українського дієслова розкрива́є свою спра́вжню стилісти́чну ма́гію."
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, precise section headers, and the word count is aligned
+    with the target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Contexts and examples feel authentic to Ukraine (e.g., Kyiv cafe, university
+    exams).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, effectively demonstrating tense/aspect switching
+    without sounding robotic.
+findings: []

@@ -178,35 +178,37 @@ workbook:
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
-- **order**: Sentence/line ordering. Required: instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
 
 ### Ukrainian pedagogy types (A1 phonetics/syllables):
-- **divide-words**: Interactive syllable division. Required: instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
-- **count-syllables**: Count syllables in a word. Required: items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
-- **pick-syllables**: Select syllables matching criteria. Required: syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
-- **odd-one-out**: Find the word that doesn't belong. Required: items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
-- **image-to-letter**: See image/emoji, identify letter. Required: instruction, items[{image, letter}]. Optional: options[]
-- **letter-grid**: Letter reference grid. Required: letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
-- **watch-and-repeat**: Watch video, repeat pronunciation. Required: items[{video}]. Optional: letter, word, note
-- **phrase-table**: Grouped phrases for communication patterns. Required: groups[{label, phrases[]}]
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 

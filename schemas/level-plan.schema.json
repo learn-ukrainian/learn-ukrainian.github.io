@@ -4,7 +4,12 @@
   "title": "Level Plan",
   "description": "Schema for level-wide curriculum plans (plans/{level}.yaml)",
   "type": "object",
-  "required": ["level", "track", "version", "phases"],
+  "required": [
+    "level",
+    "track",
+    "version",
+    "phases"
+  ],
   "properties": {
     "level": {
       "type": "string",
@@ -13,7 +18,14 @@
     },
     "track": {
       "type": "string",
-      "enum": ["core", "history", "historiography", "biography", "literature", "professional"],
+      "enum": [
+        "core",
+        "history",
+        "historiography",
+        "biography",
+        "literature",
+        "professional"
+      ],
       "description": "Track type"
     },
     "version": {
@@ -23,7 +35,10 @@
     },
     "overview": {
       "type": "object",
-      "required": ["total_modules", "description"],
+      "required": [
+        "total_modules",
+        "description"
+      ],
       "properties": {
         "total_modules": {
           "type": "integer",
@@ -42,7 +57,9 @@
     },
     "vocabulary": {
       "type": "object",
-      "required": ["new_words"],
+      "required": [
+        "new_words"
+      ],
       "properties": {
         "cumulative_from": {
           "type": "array",
@@ -76,7 +93,10 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "modules"],
+        "required": [
+          "name",
+          "modules"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -149,7 +169,11 @@
     },
     "status": {
       "type": "string",
-      "enum": ["complete", "in_progress", "planned"],
+      "enum": [
+        "complete",
+        "in_progress",
+        "planned"
+      ],
       "description": "Build status of this level"
     },
     "vocabulary_target": {
@@ -185,7 +209,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["version", "date", "changes"],
+        "required": [
+          "version",
+          "date",
+          "changes"
+        ],
         "properties": {
           "version": {
             "type": "string",

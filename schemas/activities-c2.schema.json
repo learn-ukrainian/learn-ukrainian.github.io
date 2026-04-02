@@ -482,7 +482,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -797,6 +802,7 @@
       "type": "object",
       "description": "Highly sophisticated comparison requiring near-native cultural and linguistic insight",
       "required": [
+        "id",
         "type",
         "title",
         "items_to_compare",
@@ -848,6 +854,7 @@
       "type": "object",
       "description": "Near-native evaluation of sophisticated rhetorical and cultural strategies",
       "required": [
+        "id",
         "type",
         "title",
         "text_excerpt",
@@ -894,6 +901,7 @@
       "type": "object",
       "description": "Reading comprehension with near-native authentic resources (literature, philosophy, specialized discourse)",
       "required": [
+        "id",
         "type",
         "title",
         "resource",

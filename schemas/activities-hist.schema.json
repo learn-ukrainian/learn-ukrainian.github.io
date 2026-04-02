@@ -477,7 +477,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -889,10 +894,14 @@
       "additionalProperties": false,
       "oneOf": [
         {
-          "required": ["text"]
+          "required": [
+            "text"
+          ]
         },
         {
-          "required": ["resource"]
+          "required": [
+            "resource"
+          ]
         }
       ],
       "properties": {
@@ -922,7 +931,9 @@
         "resource": {
           "type": "object",
           "description": "External resource link. Use for longer materials.",
-          "required": ["url"],
+          "required": [
+            "url"
+          ],
           "properties": {
             "type": {
               "type": "string"

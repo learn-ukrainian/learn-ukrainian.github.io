@@ -482,7 +482,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -797,6 +802,7 @@
       "type": "object",
       "description": "Sophisticated comparison requiring academic/professional analytical skills",
       "required": [
+        "id",
         "type",
         "title",
         "items_to_compare",
@@ -848,6 +854,7 @@
       "type": "object",
       "description": "Evaluation of rhetorical strategies and communicative purpose in professional contexts",
       "required": [
+        "id",
         "type",
         "title",
         "text_excerpt",
@@ -895,44 +902,103 @@
       "description": "Reading comprehension with authentic academic/professional resources. Supports two formats: inline text (source + text) or external resource (resource + tasks).",
       "oneOf": [
         {
-          "required": ["type", "title", "source", "text", "tasks"],
+          "required": [
+            "id",
+            "type",
+            "title",
+            "source",
+            "text",
+            "tasks"
+          ],
           "additionalProperties": false,
           "properties": {
-            "type": { "const": "reading" },
-            "id": { "type": "string", "description": "Unique identifier for the activity" },
-            "title": { "type": "string", "minLength": 1 },
-            "source": { "type": "string", "description": "Source attribution (e.g., 'Повість минулих літ')" },
-            "text": { "type": "string", "minLength": 1, "description": "Inline primary source text for reading" },
+            "type": {
+              "const": "reading"
+            },
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the activity"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": {
+              "type": "string",
+              "description": "Source attribution (e.g., 'Повість минулих літ')"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Inline primary source text for reading"
+            },
             "tasks": {
               "type": "array",
               "minItems": 1,
-              "items": { "type": "string", "minLength": 1 }
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             },
-            "instruction": { "type": "string", "description": "Additional instructions for the learner" }
+            "instruction": {
+              "type": "string",
+              "description": "Additional instructions for the learner"
+            }
           }
         },
         {
-          "required": ["type", "title", "resource", "tasks"],
+          "required": [
+            "id",
+            "type",
+            "title",
+            "resource",
+            "tasks"
+          ],
           "additionalProperties": false,
           "properties": {
-            "type": { "const": "reading" },
-            "id": { "type": "string", "description": "Unique identifier for the activity" },
-            "title": { "type": "string", "minLength": 1 },
-            "instruction": { "type": "string", "description": "Additional instructions for the learner" },
+            "type": {
+              "const": "reading"
+            },
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the activity"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "instruction": {
+              "type": "string",
+              "description": "Additional instructions for the learner"
+            },
             "resource": {
               "type": "object",
-              "required": ["type", "url", "title"],
+              "required": [
+                "type",
+                "url",
+                "title"
+              ],
               "additionalProperties": false,
               "properties": {
-                "type": { "type": "string", "description": "Academic article, professional report, etc." },
-                "url": { "type": "string" },
-                "title": { "type": "string" }
+                "type": {
+                  "type": "string",
+                  "description": "Academic article, professional report, etc."
+                },
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
               }
             },
             "tasks": {
               "type": "array",
               "minItems": 1,
-              "items": { "type": "string", "minLength": 1 }
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }

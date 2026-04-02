@@ -4561,48 +4561,39 @@ def main():
         # 4. GUARANTEE: before leaving this block, ALWAYS apply the latest review's <fixes>.
         #    No review fix is ever left unapplied.
 
-        if not passed and score < 9.0:
-            # Step 1: Try applying reviewer's <fixes> (deterministic find/replace)
+
+        fix_round = 1
+        max_fix_rounds = 4
+
+        while not passed and score < 9.0 and fix_round <= max_fix_rounds:
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+
             if fixes_applied:
-                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) — re-reviewing")
-                step_verify(content_path, args.level, args.module)
-
-                passed, score, review_text = step_review(
-                    content_path, args.level, args.module, slug,
-                    writer=args.writer, reviewer_override=args.reviewer,
-                )
-                _save_v6_state(args.level, slug, "review")
-
-                if passed:
-                    _log(f"\n✅ Review PASSED after fixes ({score}/10)")
-
-            # Step 2: If still failing, try section rewrite (max 1 round)
-            if not passed and score < 9.0:
-                _log(f"\n🔧 Review {score}/10 — section rewrite (fallback)")
-
+                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) (round {fix_round}) — re-reviewing")
+            else:
+                _log(f"\n🔧 Review {score}/10 — section rewrite (fallback round {fix_round})")
                 rewritten = _rewrite_weak_sections(
                     review_text, content_path, args.level, slug,
                     writer=args.writer,
                     verification_text=verification_text,
                 )
+                if not rewritten:
+                    _log(f"\n⚠️  Section rewrite produced no changes ({score}/10). Stopping fixes.")
+                    break
 
-                if rewritten:
-                    step_verify(content_path, args.level, args.module)
+            step_verify(content_path, args.level, args.module)
 
-                    passed, score, review_text = step_review(
-                        content_path, args.level, args.module, slug,
-                        writer=args.writer, reviewer_override=args.reviewer,
-                    )
-                    _save_v6_state(args.level, slug, "review")
+            passed, score, review_text = step_review(
+                content_path, args.level, args.module, slug,
+                writer=args.writer, reviewer_override=args.reviewer,
+            )
+            _save_v6_state(args.level, slug, "review")
 
-                    if passed:
-                        _log(f"\n✅ Review PASSED after section rewrite ({score}/10)")
-                    else:
-                        _log(f"\n⚠️  Review {score}/10 after section rewrite")
-                else:
-                    _log(f"\n⚠️  Section rewrite produced no changes ({score}/10)")
+            if passed:
+                _log(f"\n✅ Review PASSED after round {fix_round} ({score}/10)")
+                break
 
+            fix_round += 1
         # GUARANTEE: Always apply the latest review's <fixes> before accepting.
         # This catches typos, tone issues, and minor fixes from ANY review round.
         # Even PASSED reviews may have minor <fixes> worth applying.

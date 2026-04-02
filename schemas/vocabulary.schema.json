@@ -4,7 +4,9 @@
   "title": "Module Vocabulary",
   "description": "Schema for per-module vocabulary files (vocabulary/{slug}.yaml)",
   "type": "object",
-  "required": ["items"],
+  "required": [
+    "items"
+  ],
   "properties": {
     "module": {
       "type": "string",
@@ -23,7 +25,11 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["lemma", "translation", "pos"],
+        "required": [
+          "lemma",
+          "translation",
+          "pos"
+        ],
         "additionalProperties": false,
         "properties": {
           "lemma": {
@@ -38,17 +44,37 @@
           },
           "pos": {
             "type": "string",
-            "enum": ["noun", "verb", "adj", "adv", "num", "pron", "part", "prep", "conj", "intj", "phrase"],
+            "enum": [
+              "noun",
+              "verb",
+              "adj",
+              "adv",
+              "num",
+              "pron",
+              "part",
+              "prep",
+              "conj",
+              "intj",
+              "phrase"
+            ],
             "description": "Part of speech"
           },
           "gender": {
             "type": "string",
-            "enum": ["m", "f", "n"],
+            "enum": [
+              "m",
+              "f",
+              "n"
+            ],
             "description": "Grammatical gender (for nouns)"
           },
           "aspect": {
             "type": "string",
-            "enum": ["imperfective", "perfective", "both"],
+            "enum": [
+              "imperfective",
+              "perfective",
+              "both"
+            ],
             "description": "Verbal aspect (for verbs)"
           },
           "notes": {
