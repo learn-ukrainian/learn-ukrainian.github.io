@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed a specific point from Section 2: "Reading practice: short passage
+    using words with [о]/[е] ~ [i] alternation in natural context". The writer explained
+    the theory thoroughly but forgot to includ'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Critical error: The Russian word "стон" was used as an example of a stable
+    [o] (the Ukrainian word is "стогін", which alternates: стогін-стогону). Using
+    "стон" as a phonetic minimal pair to "сон" is f'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Solid, clear explanations with good examples. However, missing the reading
+    passage in Section 2 breaks the intended PPP flow by jumping straight to rules
+    without a contextual anchor.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required and recommended vocabulary effectively and naturally integrated
+    into the prose (e.g., "закритий склад", "наголос", "шиплячий", "чергування").
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Good logic and placement for the first 5 activities. However, the writer
+    injected an extra, unauthorized quiz marker at the very end of the text.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Tone is heavily saturated with generic, exaggerated enthusiasm ("звуки
+    ніби танцюють", "магічно змінився", "елегантний механізм", "ідеальну гармонію
+    звучання", "музика захована"). Needs to be more gro
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Sections are correctly ordered and formatted, but the word count (5110)
+    exceeds the 4000 target by >25%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic positioning of Ukrainian phonology; correctly contrasts with
+    Russian/Polish to highlight the uniqueness of Ukrainian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The dialogue is unnatural. Students respond in unison using meta-linguistic
+    textbook phrases ("Звук [о] ніби магічно змінився...", "Голосні звуки постійно
+    стрибають туди-сюди, коли ми додаємо нові зак
+findings: []

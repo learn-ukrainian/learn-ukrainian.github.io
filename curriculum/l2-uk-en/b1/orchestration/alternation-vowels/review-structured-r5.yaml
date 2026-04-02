@@ -1,0 +1,49 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered everything from the outline, but missed the specific required
+    term "біглий голосний" (using "випадний" instead).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent morphophonemic explanations overall, but the genitive form
+    of "замок" (castle) was wrongly given as "замка" (padlock) in: "А великий старовинний
+    «замок» має форму родового відмінка «замка»."'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Brilliant pedagogical PPP flow. Transitions smoothly from open/closed
+    syllable theory to specific verb suffix rules.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Used all required terms naturally except for the missing "біглий голосний"
+    which was replaced by "випадний".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 activities from the plan are injected correctly and logically follow
+    the taught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Some generic enthusiasm/meta-commentary: "Звуки ніби танцюють, динамічно
+    змінюючи свої позиції", "Ця фонетична універсальність доводить...".'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The deterministic word count (5082) is more than 25% over the target (4000).
+    All sections are present and correctly ordered.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Very strong focus on Ukrainian phonetics as a distinguishing feature from
+    other Slavic languages. Decolonized approach.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: A bit textbook-robotic ("Абсолютно точно! А тепер інший приклад..."),
+    but serves its grammar-teaching purpose very well.
+findings: []

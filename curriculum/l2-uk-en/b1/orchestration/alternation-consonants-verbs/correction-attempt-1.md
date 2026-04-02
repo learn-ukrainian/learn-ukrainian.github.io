@@ -2,8 +2,8 @@
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
 - FIX: Missing section heading: 'Підсумок: таблиця дієслівних чергувань'
-- NOTE: Missing 4/14 required vocab: теперішній час (present tense), доконаний вид (perfective aspect), недоконаний вид (imperfective aspect), палаталізація (palatalization — softening of consonant)
-- NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
+- FIX: Too short: 2579 words (target: 4000, minimum: 3400)
+- NOTE: Missing 1/14 required vocab: палаталізація (palatalization — softening of consonant)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

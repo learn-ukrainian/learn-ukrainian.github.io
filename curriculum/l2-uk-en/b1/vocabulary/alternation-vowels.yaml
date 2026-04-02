@@ -1,0 +1,643 @@
+vocabulary:
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ненаголо́шений
+  translation: unstressed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відкри́тий
+  translation: open
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: закри́тий
+  translation: closed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: морфоноло́гія
+  translation: morphophonology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тверди́й
+  translation: hard (non-palatalized)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: м'яки́й
+  translation: soft (palatalized)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: спільнокореневий
+  translation: cognate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: право́пис
+  translation: orthography
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перевірне слово
+  translation: checking word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: голосни́й
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відкритий склад
+  translation: open syllable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закритий склад
+  translation: closed syllable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ко́рінь
+  translation: root
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: на́голос
+  translation: stress
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: біглий голосний
+  translation: fleeting vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нуль звука
+  translation: zero sound
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: закі́нчення
+  translation: ending
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: шипля́чий
+  translation: hushing consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: орфогра́ма
+  translation: orthographic rule
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: форма слова
+  translation: word form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: називний відмінок
+  translation: nominative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: непрямий відмінок
+  translation: oblique case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: родовий відмінок множини
+  translation: genitive plural
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прикме́тник
+  translation: adjective
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: запозичене слово
+  translation: borrowed word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: скам'яні́лий
+  translation: fossilized
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: повноголо́сся
+  translation: pleophony
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: редукований голосний
+  translation: reduced vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вид дієслова
+  translation: verb aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кінь
+  translation: horse
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: село́
+  translation: village
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: двір
+  translation: yard
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рік
+  translation: year
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ніж
+  translation: knife
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: порі́г
+  translation: threshold
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лід
+  translation: ice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гора́
+  translation: mountain
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сло́во
+  translation: word
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: коро́ва
+  translation: cow
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: борода́
+  translation: beard
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нести́
+  translation: to carry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вести́
+  translation: to lead
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: to be able
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: плести́
+  translation: to knit; to weave
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мото́р
+  translation: motor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: а́том
+  translation: atom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сон
+  translation: sleep; dream
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тон
+  translation: tone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рот
+  translation: mouth
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: моро́з
+  translation: frost
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: горо́х
+  translation: peas
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бе́рег
+  translation: shore; bank
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: со́лод
+  translation: malt
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ше́рех
+  translation: rustle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поло́н
+  translation: captivity
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у́чень
+  translation: student; pupil
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: хло́пець
+  translation: boy
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шмато́к
+  translation: piece; morsel
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: замок
+  translation: castle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: день
+  translation: day
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: supper; dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ше́стеро
+  translation: six (collective)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: джерело́
+  translation: spring; source
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вчо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пшоно́
+  translation: millet
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: буди́ночок
+  translation: small house
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пшени́ця
+  translation: wheat
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: жени́тися
+  translation: to get married
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жона́тий
+  translation: married (man)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чепурни́й
+  translation: neat; tidy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ще́дрий
+  translation: generous
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: черстви́й
+  translation: stale
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ше́піт
+  translation: whisper
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чека́ти
+  translation: to wait
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жебоні́ти
+  translation: to murmur; to babble
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чоло́
+  translation: forehead
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: бджола́
+  translation: bee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: леті́ти
+  translation: to fly (directed)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: літа́ти
+  translation: to fly (general)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спліта́ти
+  translation: to weave together
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: коти́ти
+  translation: to roll (something)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ката́ти
+  translation: to give a ride
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допомогти́
+  translation: to help (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допомага́ти
+  translation: to help (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: те́рти
+  translation: to rub
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стира́ти
+  translation: to erase; to wipe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завме́рти
+  translation: to freeze; to die down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завмира́ти
+  translation: to fade away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бра́ти
+  translation: to take
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: забира́ти
+  translation: to take away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сіль
+  translation: salt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гони́ти
+  translation: to chase; to drive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ганя́ти
+  translation: to chase around
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ломи́ти
+  translation: to break; to ache
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лама́ти
+  translation: to break
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кро́їти
+  translation: to cut; to tailor
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кра́яти
+  translation: to carve; to slice
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Як справи?
+  translation: How are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Рада тебе бачити!
+  translation: Glad to see you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий день!
+  translation: Good day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

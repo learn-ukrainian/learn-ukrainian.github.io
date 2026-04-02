@@ -2,7 +2,7 @@
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
-**Module:** 10: Чергування приголосних (дієслова) (B1, B1.2 [Morphophonemics & Noun Subclasses])
+**Module:** 6: Чергування приголосних (дієслова) (B1, B1.1 [Baselines & Morphophonemics])
 **Section to write:** Чергування при утворенні недоконаних дієслів (~600 words total)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
@@ -11,11 +11,11 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Чергування при утворенні недоконаних дієслів (~600 words total)
-- P1 (~120 words): [Introduction to Aspectual Derivation. Explain that alternations don't just happen in conjugation; they are central to creating imperfective verbs from perfective ones using the suffixes -ати or -увати.]
-- P2 (~140 words): [Systematic mapping of derivation alternations. Examples based on Glazova Grade 10: [д] -> [дж] (зарядити — заряджати, засудити — засуджувати), [т] -> [ч] (скоротити — скорочувати, збагатити — збагачувати).]
-- P3 (~120 words): [Dealing with Sibilants in derivation: [з] -> [ж] (знизити — знижувати) and [с] -> [ш] (погасити — погашати). Contrast these with their conjugation counterparts to show the consistency of the phonological system.]
-- Exercise: [fill-in, Form imperfective verbs with -ати/-увати from perfective stems, 6 items. Includes: простити, зарядити, скоротити, знизити, засудити, погасити.]
-- P4 (~120 words): [Decoding Strategy for Reading. Teach learners how to "reverse" an alternation to find the root. If they see 'запрошувати', they should look for the dental [с] in the perfective root 'просити'. This builds lexical intuition.]
+- P1 (~150 words): [Word formation context. Explain that alternations aren't just for conjugation; they also happen when creating new verb forms, specifically shifting from perfective to imperfective aspect.]
+- P2 (~150 words): [The -ати/-увати trigger. Using Глазова Grade 10 logic: When a perfective verb takes these suffixes, the root consonant often alternates to match the new rhythm. Example: зарядити (perf) -> заряджати (impf).]
+- P3 (~150 words): [Systematic examples: [с] -> [ш] (погасити -> погашати), [т] -> [ч] (скоротити -> скорочувати), [зд] -> [ждж] (об’їздити -> об’їжджати).]
+- P4 (~150 words): [Reading strategy. Teach learners that if they see 'заряджати' and don't know it, they should look for a root with 'д' (зарядити) to find the meaning. This is "reverse-engineering" the language.]
+- Exercise: [fill-in, Form imperfective with -ати/-увати: (засудити, знизити, збагатити, простити), 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +23,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-«я ліплю». Тут критично важливо чітко засвоїти і запам'ятати одну абсолютну істину. Ця красива фонетична зміна відбувається виключно і тільки у формі **першої особи однини** *(first person singular)*. Щойно ви змінюєте граматичну особу на «ти» або «він», цей вставний звук миттєво і безслідно зникає. Ми завжди кажемо «я люблю», але обов'язково «ти любиш» і «він любить». Абсолютно така сама сувора, чітка і цілком передбачувана закономірність діє для наступних губних звуків — [в] та [м]. Вони так само слухняно і дуже послідовно перетворюються на м'які фонетичні комплекси [вл'] та [мл']. Наприклад, надзвичайно активне дієслово «ловити» у формі першої особи однини легко і абсолютно природно стає словом «я ловлю». Дуже корисне щоденне дієслово «ставити» граматично правильно і швидко змінюється на впевнену форму «я ставлю». Якщо ви хочете офіційно репрезентувати когось у новій компанії, слово «знайомити» миттєво дасть вам виразну форму «я знайомлю». А досить сильне і енергійне дієслово «ломити» цілком закономірно і за всіма правилами перетвориться на «я ломлю». З погляду чистої людської артикуляції та фізіології щоденного мовлення, українцям історично було набагато зручніше говорити саме так. Нам значно легше плавно переходити від твердого губного змикання до наступного м'якого голосного саме через цей додатковий пом'якшений звук [л']. Це справжня, жива і дуже давня музика нашої прекрасної мови. Останній губний звук у нашій великій фонетичній родині — це глухий приголосний [ф], який за всіма правилами має закономірно переходити у сполучення [фл']. Зверніть свою пильну увагу на те, що дієслів із таким специфічним звуком в українській мові об'єктивно дуже мало. Переважно це досить специфічні слова виключно іншомовного походження, які прийшли до нас із часом. Чудовим класичним прикладом тут є досить рідкісне дієслово «графити», яке буквально означає креслити рівні лінії на папері або в зошиті. У формі першої особи воно абсолютно слухняно і граматично бездоганно набуває форми «я графлю». Хоча такі слова трапляються в нашому щоденному побутовому спілкуванні вкрай нечасто, вони відіграють надзвичайно важливу роль для розуміння граматики. Вони блискуче і дуже переконливо доводять абсолютну універсальність нашого фонетичного правила. Абсолютно всі без винятку губні приголосні автоматично і безвідмовно запускають цю елегантну звукову вставку у формі «я». <!-- INJECT_ACTIVITY: error-correction, Find and fix conjugation errors in sentences, 6 items. Focus: *я робю, *я купю, *я любу. --> Щоб остаточно, глибоко і назавжди зрозуміти справжній історичний механізм цього явища, давайте спробуємо візуалізувати цей цікавий процес словотворення. Уявіть собі абсолютно чисту базову **основу** *(stem)* дієслова «люб-» і просто додайте до неї стандартне особове закінчення «-ю». Історично це дуже давнє закінчення містило в собі надзвичайно активний, агресивний і потужний звук [й]. Колись наші далекі предки регулярно намагалися вимовити цю складну комбінацію як «люб-й-у». Але безпосередній стик міцного губного звука та м'якого [й] був фонетично вкрай незручним і фізично важким для швидкої розмови. Саме тому українська мова, як дуже мудрий, живий і гнучкий організм, самостійно створила для себе ідеальну фонетичну подушку. Вона автоматично і дуже вдало вставила між цими двома звуками надзвичайно м'який, плавний і мелодійний приголосний [л']. Він справді блискуче спрацював як бездоганний фонетичний буфер, який назавжди і повністю зняв усю артикуляційну напругу. Так народилася наша ідеальна сучасна форма «люблю».
+ви повинні сказати: «я **роблю**» *(I do)*. Але вже в наступній особі вставний звук зникає: «ти **робиш**» *(you do)*. Аналогічно працює дуже важливе слово «**любити**» *(to love)*, яке перетворюється на всім відоме «я **люблю**» *(I love)*. Звук [п] поводиться абсолютно так само, утворюючи комбінацію **[пл']**. Розглянемо популярне дієслово «**купити**» *(to buy)*. У майбутньому часі доконаного виду форма першої особи звучить як «я **куплю**» *(I will buy)*. Проте ваш друг вже скаже інакше: «він **купить**» *(he will buy)*. Інший гарний приклад — дієслово «**ліпити**» *(to sculpt/mold)*. За цим же правилом ми отримуємо форму «я **ліплю**» *(I sculpt)*. Наступна пара губних звуків — це губно-зубний [в] та носовий [м]. Вони також вірно підкоряються правилу епентетичного звука. Якщо корінь дієслова має наприкінці [в], то у формі першої особи ми побачимо і почуємо сполучення **[вл']**. Візьмемо для прикладу дуже поширене слово «**ловити**» *(to catch)*. Коли ви намагаєтеся щось спіймати, ви кажете: «я **ловлю**» *(I catch)*. Ця ж закономірність працює для дієслова «**ставити**» *(to put/place)*. Виконуючи дію самостійно, ви стверджуєте: «я **ставлю**» *(I put)*. Переходячи до звука [м], ми спостерігаємо появу комбінації **[мл']**. Це явище можна побачити у слові «**дрімати**» *(to doze/slumber)*. Коли ви втомилися і хочете трохи поспати, правильна форма звучатиме так: «я **дрімлю**» *(I doze)*. Ще одне цікаве слово — «**ломити**» *(to break)*, яке означає ламати щось із силою. Якщо ви виконуєте цю дію, ви скажете: «я **ломлю**» *(I break)*. Останній губний звук, який варто розглянути — це глухий приголосний [ф]. У питомих українських словах цей звук зустрічається вкрай рідко. Однак він є дуже поширеним у словах іноземного походження, які українська мова запозичила з інших європейських мов. Незважаючи на своє чужоземне коріння, такі дієслова повністю адаптувалися до української граматичної системи і працюють за нашими місцевими правилами. Відповідно, звук [ф] перед закінченням першої особи перетворюється на сполучення **[фл']**. Класичним прикладом є слово «**графити**» *(to draw lines/rule)*, яке означає проводити лінії на папері. Якщо ви виконуєте цю креслярську дію, ви повинні сказати: «я **графлю**» *(I draw lines)*. Це підтверджує, що правило епентетичного [л'] є дуже живим і продуктивним. Воно автоматично застосовується навіть до нових слів, щойно вони починають відмінюватися як українські дієслова другої дієвідміни. Наостанок варто звернути особливу увагу на правильну вимову цього явища. Вставний звук — це не просто звичайний твердий приголосний. Це завжди дуже м'який звук **[л']** *(soft L)*. Ця м'якість є історичним спадком від того самого зниклого звука [й], який колись стояв у закінченні першої особи. Тому, коли ви вимовляєте форму «роблю», ви повинні чітко артикулювати м'якість перед голосним [у]. Не можна вимовляти це слово як «роблу» з твердим звуком — це звучатиме неприродно і видаватиме іноземний акцент. Правильна українська вимова вимагає, щоб кінчик язика притискався до піднебіння, створюючи ніжний і вологий звук. Спробуйте вимовити повільно: спочатку твердий губний [б], потім м'який [л'], і нарешті глибокий [у]. Практикуйте цю плавну комбінацію на словах «люблю», «куплю» та «ловлю», поки вона не стане для вас абсолютно природною і легкою. Це ключовий елемент автентичного українського звучання. <!-- INJECT_ACTIVITY: fill-in, Write the correct 1st person singular of labial-stem verbs: (губити, сипати, правити, ломити), 10 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -32,251 +32,221 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 ## Full Plan (for reference)
 
 <plan_content>
-module: b1-010
+module: b1-006
 level: B1
-sequence: 10
+sequence: 6
 slug: alternation-consonants-verbs
 version: '3.0'
 title: "Чергування приголосних (дієслова)"
 subtitle: "Сидіти — сиджу, плакати — плачу: приголосні в дієсловах"
 focus: grammar
 pedagogy: PPP
-phase: "B1.2 [Morphophonemics & Noun Subclasses]"
+phase: "B1.1 [Baselines & Morphophonemics]"
 word_target: 4000
 objectives:
-- "Learner can predict and produce consonant alternations in
-  the 1st person singular (я-form) of II дієвідміна verbs:
-  [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш], [ст]->[шч(щ)]
-  (водити — воджу, крутити — кручу, носити — ношу)"
-- "Learner can predict consonant alternations when forming
-  imperfective verbs with suffixes -ати/-увати:
-  зарядити — заряджати, погасити — погашати"
-- "Learner can produce the губний + [л] alternation in
-  1st person singular: робити — роблю, купити — куплю,
-  ловити — ловлю"
-- "Learner can conjugate common II дієвідміна verbs correctly
-  across all persons, recognizing that alternation occurs ONLY
-  in the 1st person singular"
+  - "Learner can predict and produce consonant alternations in the 1st person singular
+    (я-form) of II дієвідміна verbs: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш], [ст]->[шч(щ)]
+    (водити — воджу, крутити — кручу, носити — ношу)"
+  - "Learner can predict consonant alternations when forming imperfective verbs with
+    suffixes -ати/-увати: зарядити — заряджати, погасити — погашати"
+  - "Learner can produce the губний + [л] alternation in 1st person singular: робити
+    — роблю, купити — куплю, ловити — ловлю"
+  - "Learner can conjugate common II дієвідміна verbs correctly across all persons,
+    recognizing that alternation occurs ONLY in the 1st person singular"
 dialogue_situations:
-- setting: 'Cooking competition on Ukrainian TV — the host narrates actions with consonant
-    changes: Я ходжу (д→дж) по кухні. Він просить (с→с), але: прошу (с→ш). Вона возить
-    (з→з), але: я вожу (з→ж).'
-  speakers:
-  - Ведучий (host)
-  - Учасники змагання
-  motivation: 'Consonant alternation in verbs: ходити→ходжу, просити→прошу, возити→вожу'
+  - setting: 'Cooking competition on Ukrainian TV — the host narrates actions with
+      consonant changes: Я ходжу (д→дж) по кухні. Він просить (с→с), але: прошу (с→ш).
+      Вона возить (з→з), але: я вожу (з→ж).'
+    speakers:
+      - Ведучий (host)
+      - Учасники змагання
+    motivation: 'Consonant alternation in verbs: ходити→ходжу, просити→прошу, возити→вожу'
 content_outline:
-- section: "Від іменників до дієслів"
-  words: 500
-  points:
-  - "Bridge from M09 (alternation-consonants-nouns): the same
-    consonants [г/к/х] that alternate in nouns also alternate in verbs,
-    but the triggers are different. In nouns: case endings.
-    In verbs: conjugation (especially 1st person singular).
-    Заболотний Grade 7 p.52: 'Закономірними для української мови
-    стали чергування приголосних звуків, що відбулися перед
-    давнім суфіксом j.'"
-  - "Why the 1st person singular? Historically, the -у/-ю ending
-    of the 1st person contained a [й] sound that triggered
-    palatalization of the preceding consonant. This is why
-    the alternation appears ONLY in я-forms, not in ти-, він-forms.
-    Modern result: сидіти — сиджу (я), сидиш (ти), сидить (він)."
-  - "Overview of the three alternation groups in this module:
-    1. Задньоязикові: [г]->[ж], [к]->[ч], [х]->[ш] (same as nouns)
-    2. Зубні/свистячі: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
-    3. Губні + [л]: [б]->[бл], [п]->[пл], [в]->[вл], [м]->[мл], [ф]->[фл]"
-- section: "Чергування зубних i свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
-  words: 800
-  points:
-  - "From Глазова Grade 10 p.107:
-    [д] -> [дж]: водити — воджу, сидіти — сиджу, ходити — ходжу,
-    родити — роджу, будити — буджу, садити — саджу.
-    [т] -> [ч]: крутити — кручу, летіти — лечу, світити — свічу,
-    платити — плачу (note: плакати — плачу is [к]->[ч], different!).
-    [з] -> [ж]: возити — вожу, морозити — морожу, гасити — гашу.
-    [с] -> [ш]: носити — ношу, просити — прошу, косити — кошу,
-    місити — мішу."
-  - "Compound alternations:
-    [зд] -> [ждж]: їздити — їжджу, бороздити — борожджу.
-    [ст] -> [шч] (written as щ): мостити — мощу, простити — прощу,
-    чистити — чищу, пустити — пущу.
-    These are regular extensions of the basic alternations."
-  - "Practice conjugation: learners conjugate 8-10 common verbs
-    in теперішній час, all persons. Key insight: the alternation
-    ONLY affects я-form. Compare:
-    я воджу, ти водиш, він водить, ми водимо, ви водите, вони водять.
-    Pattern: alternation in 1st sg., base consonant everywhere else."
-  - "Common errors: mixing up [д]->[дж] with [д]->[ж] (the correct
-    alternation is [д]->[дж] with the affricate, not simple [ж]).
-    Writing *сижу instead of сиджу. The дж is one sound, one letter
-    combination."
-- section: "Чергування задньоязикових у дієсловах: [г]->[ж], [к]->[ч], [х]->[ш]"
-  words: 600
-  points:
-  - "Same consonants as in nouns, same targets:
-    [к] -> [ч]: плакати — плачу, тикати — тичу, пекти — печу.
-    [г] -> [ж]: могти — можу, берегти — бережу, стригти — стрижу.
-    [х] -> [ш]: колихати — колишу, махати — машу.
-    These verbs belong to I дієвідміна (unlike the зубні group above)."
-  - "Comparison with noun alternations from M09:
-    Noun: друг -> друже (кличний) — same [г]->[ж].
-    Verb: берегти -> бережу (1st sg.) — same [г]->[ж].
-    The consonant change is identical; only the trigger differs
-    (case ending vs. verb person ending)."
-  - "Practice: learners identify whether a given alternation
-    ([г]->[ж], [к]->[ч]) comes from a noun or verb context,
-    reinforcing the shared phonological system."
-- section: "Чергування губних + [л]: робити — роблю"
-  words: 600
-  points:
-  - "From Заболотний Grade 7 p.52:
-    [б] -> [бл']: робити — роблю, любити — люблю, губити — гублю.
-    [п] -> [пл']: ліпити — ліплю, купити — куплю, сипати — сиплю.
-    [в] -> [вл']: ловити — ловлю, ставити — ставлю, правити — правлю.
-    [м] -> [мл']: дрімати — дрімлю, ломити — ломлю.
-    [ф] -> [фл']: графити — графлю (rare)."
-  - "This alternation is unique: instead of replacing the consonant,
-    it INSERTS [л'] after the губний. The labial consonant stays,
-    but gains a lateral partner. This is why it only affects
-    1st person singular — the historical [й] caused [л'] insertion."
-  - "Practice: learners conjugate common verbs with губні stems
-    across all persons, confirming that [л'] appears only in я-form:
-    я ловлю, ти ловиш, він ловить, ми ловимо..."
-- section: "Чергування при утворенні недоконаних дієслів"
-  words: 550
-  points:
-  - "From Глазова Grade 10 p.107:
-    When forming imperfective verbs with -ати/-увати from perfective
-    stems, the same alternations apply:
-    [д] -> [дж]: зарядити — заряджати, засудити — засуджувати.
-    [з] -> [ж]: знизити — знижати, знижувати.
-    [с] -> [ш]: погасити — погашати, погашувати.
-    [т] -> [ч]: скоротити — скорочувати, збагатити — збагачувати."
-  - "Why this matters for word formation:
-    When learners encounter an unfamiliar imperfective verb with
-    [ж], [ч], [ш], or [дж] in the root, they can reconstruct the
-    perfective stem: прощати <- простити ([ст]->[шч(щ)]).
-    This is a powerful decoding strategy for reading."
-  - "Practice: given perfective verbs, learners form the imperfective
-    with -ати/-увати, applying the correct consonant alternation."
-- section: "Повна парадигма: від інфінітива до всіх форм"
-  words: 550
-  points:
-  - "Bringing it all together: complete conjugation of representative
-    verbs showing where alternation does and does not occur.
-    водити: воджу, водиш, водить, водимо, водите, водять;
-    водив, водила, водило, водили; водитиму; водь! водіть!
-    Alternation ONLY in теперішній час, 1st person singular."
-  - "Contrast with наказовий спосіб (imperative):
-    No consonant alternation in imperatives: носи! просіть! сидь!
-    (not *нош!, *прош!, *сидж!). This confirms the alternation
-    is specific to the 1-st person present/future context."
-  - "Decision flowchart for learners:
-    1. Is the verb II дієвідміна? -> check for [д/т/з/с/б/п/в/м]
-    2. Is it 1st person singular? -> apply alternation
-    3. Is it any other form? -> use the base consonant
-    4. Are you forming imperfective with -ати/-увати? -> apply alternation"
-- section: "Підсумок: таблиця дієслівних чергувань"
-  words: 400
-  points:
-  - "Complete reference table:
-    | Base | Alternation | Examples |
-    | [д] | [дж] | водити-воджу, сидіти-сиджу |
-    | [т] | [ч] | крутити-кручу, летіти-лечу |
-    | [з] | [ж] | возити-вожу, морозити-морожу |
-    | [с] | [ш] | носити-ношу, просити-прошу |
-    | [зд]| [ждж]| їздити-їжджу |
-    | [ст]| [шч(щ)]| простити-прощу, чистити-чищу |
-    | [б] | [бл'] | робити-роблю, любити-люблю |
-    | [п] | [пл'] | купити-куплю, ліпити-ліплю |
-    | [в] | [вл'] | ловити-ловлю, ставити-ставлю |
-    | [м] | [мл'] | ломити-ломлю |"
-  - "Self-check: Дайте відповіді на запитання:
-    1. Яке чергування відбувається у формі 'я сиджу'?
-    2. Чому в дієслові 'роблю' з'являється звук [л']?
-    3. Провідмінюйте дієслово 'просити' в теперішньому часі.
-    4. Утворіть недоконаний вид: простити, зарядити, знизити."
-  - "Preview: Спрощення приголосних (M11) — when consonant clusters
-    simplify by dropping a sound entirely."
+  - section: "Від іменників до дієслів"
+    words: 500
+    points:
+      - "Bridge from M09 (alternation-consonants-nouns): the same consonants [г/к/х]
+        that alternate in nouns also alternate in verbs, but the triggers are different.
+        In nouns: case endings. In verbs: conjugation (especially 1st person singular).
+        Заболотний Grade 7 p.52: 'Закономірними для української мови стали чергування
+        приголосних звуків, що відбулися перед давнім суфіксом j.'"
+      - "Why the 1st person singular? Historically, the -у/-ю ending of the 1st person
+        contained a [й] sound that triggered palatalization of the preceding consonant.
+        This is why the alternation appears ONLY in я-forms, not in ти-, він-forms.
+        Modern result: сидіти — сиджу (я), сидиш (ти), сидить (він)."
+      - "Overview of the three alternation groups in this module: 1. Задньоязикові:
+        [г]->[ж], [к]->[ч], [х]->[ш] (same as nouns) 2. Зубні/свистячі: [д]->[дж],
+        [т]->[ч], [з]->[ж], [с]->[ш] 3. Губні + [л]: [б]->[бл], [п]->[пл], [в]->[вл],
+        [м]->[мл], [ф]->[фл]"
+  - section: "Чергування зубних і свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
+    words: 800
+    points:
+      - "From Глазова Grade 10 p.107: [д] -> [дж]: водити — воджу, сидіти — сиджу,
+        ходити — ходжу, родити — роджу, будити — буджу, садити — саджу. [т] -> [ч]:
+        крутити — кручу, летіти — лечу, світити — свічу, платити — плачу (note: плакати
+        — плачу is [к]->[ч], different!). [з] -> [ж]: возити — вожу, морозити — морожу,
+        гасити — гашу. [с] -> [ш]: носити — ношу, просити — прошу, косити — кошу,
+        місити — мішу."
+      - "Compound alternations: [зд] -> [ждж]: їздити — їжджу, бороздити — борожджу.
+        [ст] -> [шч] (written as щ): мостити — мощу, простити — прощу, чистити — чищу,
+        пустити — пущу. These are regular extensions of the basic alternations."
+      - "Practice conjugation: learners conjugate 8-10 common verbs in теперішній
+        час, all persons. Key insight: the alternation ONLY affects я-form. Compare:
+        я воджу, ти водиш, він водить, ми водимо, ви водите, вони водять. Pattern:
+        alternation in 1st sg., base consonant everywhere else."
+      - "Common errors: mixing up [д]->[дж] with [д]->[ж] (the correct alternation
+        is [д]->[дж] with the affricate, not simple [ж]). Writing *сижу instead of
+        сиджу. The дж is one sound, one letter combination."
+  - section: "Чергування задньоязикових у дієсловах: [г]->[ж], [к]->[ч], [х]->[ш]"
+    words: 600
+    points:
+      - "Same consonants as in nouns, same targets: [к] -> [ч]: плакати — плачу, тикати
+        — тичу, пекти — печу. [г] -> [ж]: могти — можу, берегти — бережу, стригти
+        — стрижу. [х] -> [ш]: колихати — колишу, махати — машу. These verbs belong
+        to I дієвідміна (unlike the зубні group above)."
+      - "Comparison with noun alternations from M09: Noun: друг -> друже (кличний)
+        — same [г]->[ж]. Verb: берегти -> бережу (1st sg.) — same [г]->[ж]. The consonant
+        change is identical; only the trigger differs (case ending vs. verb person
+        ending)."
+      - "Practice: learners identify whether a given alternation ([г]->[ж], [к]->[ч])
+        comes from a noun or verb context, reinforcing the shared phonological system."
+  - section: "Чергування губних + [л]: робити — роблю"
+    words: 600
+    points:
+      - "From Заболотний Grade 7 p.52: [б] -> [бл']: робити — роблю, любити — люблю,
+        губити — гублю. [п] -> [пл']: ліпити — ліплю, купити — куплю, сипати — сиплю.
+        [в] -> [вл']: ловити — ловлю, ставити — ставлю, правити — правлю. [м] -> [мл']:
+        дрімати — дрімлю, ломити — ломлю. [ф] -> [фл']: графити — графлю (rare)."
+      - "This alternation is unique: instead of replacing the consonant, it INSERTS
+        [л'] after the губний. The labial consonant stays, but gains a lateral partner.
+        This is why it only affects 1st person singular — the historical [й] caused
+        [л'] insertion."
+      - "Practice: learners conjugate common verbs with губні stems across all persons,
+        confirming that [л'] appears only in я-form: я ловлю, ти ловиш, він ловить,
+        ми ловимо..."
+  - section: "Чергування при утворенні недоконаних дієслів"
+    words: 550
+    points:
+      - "From Глазова Grade 10 p.107: When forming imperfective verbs with -ати/-увати
+        from perfective stems, the same alternations apply: [д] -> [дж]: зарядити
+        — заряджати, засудити — засуджувати. [з] -> [ж]: знизити — знижати, знижувати.
+        [с] -> [ш]: погасити — погашати, погашувати. [т] -> [ч]: скоротити — скорочувати,
+        збагатити — збагачувати."
+      - "Why this matters for word formation: When learners encounter an unfamiliar
+        imperfective verb with [ж], [ч], [ш], or [дж] in the root, they can reconstruct
+        the perfective stem: прощати <- простити ([ст]->[шч(щ)]). This is a powerful
+        decoding strategy for reading."
+      - "Practice: given perfective verbs, learners form the imperfective with -ати/-увати,
+        applying the correct consonant alternation."
+  - section: "Повна парадигма: від інфінітива до всіх форм"
+    words: 550
+    points:
+      - "Bringing it all together: complete conjugation of representative verbs showing
+        where alternation does and does not occur. водити: воджу, водиш, водить, водимо,
+        водите, водять; водив, водила, водило, водили; водитиму; водь! водіть! Alternation
+        ONLY in теперішній час, 1st person singular."
+      - "Contrast with наказовий спосіб (imperative): No consonant alternation in
+        imperatives: носи! просіть! сидь! (not *нош!, *прош!, *сидж!). This confirms
+        the alternation is specific to the 1-st person present/future context."
+      - "Decision flowchart for learners: 1. Is the verb II дієвідміна? -> check for
+        [д/т/з/с/б/п/в/м] 2. Is it 1st person singular? -> apply alternation 3. Is
+        it any other form? -> use the base consonant 4. Are you forming imperfective
+        with -ати/-увати? -> apply alternation"
+  - section: "Підсумок: таблиця дієслівних чергувань"
+    words: 400
+    points:
+      - "Complete reference table: | Base | Alternation | Examples | | [д] | [дж]
+        | водити-воджу, сидіти-сиджу | | [т] | [ч] | крутити-кручу, летіти-лечу |
+        | [з] | [ж] | возити-вожу, морозити-морожу | | [с] | [ш] | носити-ношу, просити-прошу
+        | | [зд]| [ждж]| їздити-їжджу | | [ст]| [шч(щ)]| простити-прощу, чистити-чищу
+        | | [б] | [бл'] | робити-роблю, любити-люблю | | [п] | [пл'] | купити-куплю,
+        ліпити-ліплю | | [в] | [вл'] | ловити-ловлю, ставити-ставлю | | [м] | [мл']
+        | ломити-ломлю |"
+      - "Self-check: Дайте відповіді на запитання: 1. Яке чергування відбувається
+        у формі 'я сиджу'? 2. Чому в дієслові 'роблю' з'являється звук [л']? 3. Провідмінюйте
+        дієслово 'просити' в теперішньому часі. 4. Утворіть недоконаний вид: простити,
+        зарядити, знизити."
+      - "Preview: Спрощення приголосних (M11) — when consonant clusters simplify by
+        dropping a sound entirely."
 vocabulary_hints:
   required:
-  - "чергування (alternation — systematic sound change)"
-  - "дієслово (verb)"
-  - "дієвідміна (conjugation class — verb classification)"
-  - "особа (grammatical person — я/ти/він)"
-  - "теперішній час (present tense)"
-  - "інфінітив (infinitive — base verb form)"
-  - "зубний (dental — consonant formed at the teeth: д, т)"
-  - "свистячий (sibilant — whistling consonant: з, с, ц, дз)"
-  - "губний (labial — consonant formed with lips: б, п, в, м, ф)"
-  - "задньоязиковий (velar — consonant formed at back of mouth: г, к, х)"
-  - "доконаний вид (perfective aspect)"
-  - "недоконаний вид (imperfective aspect)"
-  - "парадигма (paradigm — full set of inflected forms)"
-  - "палаталізація (palatalization — softening of consonant)"
+    - "чергування (alternation — systematic sound change)"
+    - "дієслово (verb)"
+    - "дієвідміна (conjugation class — verb classification)"
+    - "особа (grammatical person — я/ти/він)"
+    - "теперішній час (present tense)"
+    - "інфінітив (infinitive — base verb form)"
+    - "зубний (dental — consonant formed at the teeth: д, т)"
+    - "свистячий (sibilant — whistling consonant: з, с, ц, дз)"
+    - "губний (labial — consonant formed with lips: б, п, в, м, ф)"
+    - "задньоязиковий (velar — consonant formed at back of mouth: г, к, х)"
+    - "доконаний вид (perfective aspect)"
+    - "недоконаний вид (imperfective aspect)"
+    - "парадигма (paradigm — full set of inflected forms)"
+    - "палаталізація (palatalization — softening of consonant)"
   recommended:
-  - "африката (affricate — compound sound: дж, дз)"
-  - "наказовий спосіб (imperative mood)"
-  - "провідмінювати (to conjugate/decline through all forms)"
-  - "основа (stem — word minus its ending)"
-  - "суфікс (suffix)"
-  - "словотворення (word formation)"
-  - "продуктивний (productive — applicable to new words)"
-  - "вимова (pronunciation)"
-  - "закономірність (regularity — systematic pattern)"
+    - "африката (affricate — compound sound: дж, дз)"
+    - "наказовий спосіб (imperative mood)"
+    - "провідмінювати (to conjugate/decline through all forms)"
+    - "основа (stem — word minus its ending)"
+    - "суфікс (suffix)"
+    - "словотворення (word formation)"
+    - "продуктивний (productive — applicable to new words)"
+    - "вимова (pronunciation)"
+    - "закономірність (regularity — systematic pattern)"
 activity_hints:
-- type: fill-in
-  focus: "Write the correct 1st person singular form of II дієвідміна
-    verbs (e.g., сидіти -> я сидж___, носити -> я нош___)"
-  items: 10
-- type: quiz
-  focus: "Identify which alternation type applies to a given verb:
-    зубний, задньоязиковий, or губний + [л]"
-  items: 8
-- type: match-up
-  focus: "Match infinitive forms with their 1st person singular
-    (e.g., водити <-> воджу, купити <-> куплю)"
-  items: 10
-- type: group-sort
-  focus: "Sort verbs by alternation type: [д]->[дж], [т]->[ч],
-    [з]->[ж], [с]->[ш], губний+[л]"
-  items: 10
-- type: fill-in
-  focus: "Form imperfective verbs with -ати/-увати from perfective
-    stems (e.g., простити -> прощ___ти, знизити -> знижув___ти)"
-  items: 6
-- type: error-correction
-  focus: "Find and fix conjugation errors in sentences
-    (e.g., *я сижу -> я сиджу, *я робю -> я роблю)"
-  items: 6
+  - type: fill-in
+    focus: "Write the correct 1st person singular form of II дієвідміна verbs (e.g.,
+      сидіти -> я сидж___, носити -> я нош___)"
+    items: 10
+  - type: quiz
+    focus: "Identify which alternation type applies to a given verb: зубний, задньоязиковий,
+      or губний + [л]"
+    items: 8
+  - type: match-up
+    focus: "Match infinitive forms with their 1st person singular (e.g., водити <->
+      воджу, купити <-> куплю)"
+    items: 10
+  - type: group-sort
+    focus: "Sort verbs by alternation type: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш],
+      губний+[л]"
+    items: 10
+  - type: fill-in
+    focus: "Form imperfective verbs with -ати/-увати from perfective stems (e.g.,
+      простити -> прощ___ти, знизити -> знижув___ти)"
+    items: 6
+  - type: error-correction
+    focus: "Find and fix conjugation errors in sentences (e.g., *я сижу -> я сиджу,
+      *я робю -> я роблю)"
+    items: 6
 connects_to:
-- "b1-009 (alternation-consonants-nouns — same consonants, noun context)"
-- "b1-008 (alternation-vowels — vowel alternations in verb roots)"
-- "b1-011 (simplification-consonants — consonant cluster simplification)"
+  - "b1-009 (alternation-consonants-nouns — same consonants, noun context)"
+  - "b1-008 (alternation-vowels — vowel alternations in verb roots)"
+  - "b1-011 (simplification-consonants — consonant cluster simplification)"
 prerequisites:
-- "A2 completion (learner can conjugate basic verbs in present tense)"
-- "b1-009 (alternation-consonants-nouns — first/second palatalization concept)"
+  - "A2 completion (learner can conjugate basic verbs in present tense)"
+  - "b1-009 (alternation-consonants-nouns — first/second palatalization concept)"
 grammar:
-- "Зубні/свистячі alternations: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
-- "Compound alternations: [зд]->[ждж], [ст]->[шч(щ)]"
-- "Задньоязикові alternations in verbs: [г]->[ж], [к]->[ч], [х]->[ш]"
-- "Губні + [л'] insertion: [б]->[бл'], [п]->[пл'], [в]->[вл'], [м]->[мл']"
-- "Alternation in imperfective formation with -ати/-увати"
-- "Alternation scope: 1st person singular only in conjugation"
+  - "Зубні/свистячі alternations: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]"
+  - "Compound alternations: [зд]->[ждж], [ст]->[шч(щ)]"
+  - "Задньоязикові alternations in verbs: [г]->[ж], [к]->[ч], [х]->[ш]"
+  - "Губні + [л'] insertion: [б]->[бл'], [п]->[пл'], [в]->[вл'], [м]->[мл']"
+  - "Alternation in imperfective formation with -ати/-увати"
+  - "Alternation scope: 1st person singular only in conjugation"
 register: академічний
 references:
-- title: "Глазова Grade 10, p.107"
-  notes: "Complete table of verb consonant alternations: зубні,
-    задньоязикові, compound groups with examples."
-- title: "Заболотний Grade 7, p.52"
-  notes: "Historical explanation: alternations before давній суфікс j,
-    full list including губні + [л'] insertion."
-- title: "Авраменко Grade 5, p.114-115"
-  notes: "Чергування приголосних звуків: exercises with verb forms
-    in прислів'я context."
-- title: "Заболотний Grade 5, p.116-119"
-  notes: "Чергування приголосних (section 28): systematic presentation
-    with cross-references to чергування голосних."
+  - title: "Глазова Grade 10, p.107"
+    notes: "Complete table of verb consonant alternations: зубні, задньоязикові, compound
+      groups with examples."
+  - title: "Заболотний Grade 7, p.52"
+    notes: "Historical explanation: alternations before давній суфікс j, full list
+      including губні + [л'] insertion."
+  - title: "Авраменко Grade 5, p.114-115"
+    notes: "Чергування приголосних звуків: exercises with verb forms in прислів'я
+      context."
+  - title: "Заболотний Grade 5, p.116-119"
+    notes: "Чергування приголосних (section 28): systematic presentation with cross-references
+      to чергування голосних."
 
 </plan_content>
 
@@ -286,355 +256,94 @@ references:
 
 <knowledge_packet>
 # Verified Knowledge Packet: Чергування приголосних (дієслова)
-**Module:** alternation-consonants-verbs | **Phase:** B1.2 [Morphophonemics & Noun Subclasses]
+**Module:** alternation-consonants-verbs | **Phase:** B1.1 [Baselines & Morphophonemics]
 **Textbook grades searched:** 1, 2, 3, 5
 
 ---
 
 ## Від іменників до дієслів
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> 123
-> Фонетика. Графіка. Орфоепія. Орфографія.  Приголосні дзвінкі та глухі
-> Звуки [в], [м], [н], [л], [р], відповідні їм м’які приголосні та  звук 
-> [й] не належать ні до дзвінких, ні до глухих.  У цих звуках голос 
-> переважає над шумом.  Їх називають сонорними (запам’ятати їх 
-> можна у  слові ­МіНеРаЛоВиЙ).
-> Через особливості вимови звуки [з], [ц], [с], [дз] називають 
-> свистячими (бо їх звучання схоже на  свист), а  [ж], [ч], [ш], [дж] 
-> шиплячими (бо їх вимовляємо шипінням).  Окремо виділяють 
-> губні звуки [б], [п], [в], [м], [ф].
+*No textbook results found for: Від іменників до дієслів Задньоязикові Зубні свистячі дж Губні*
 
-## Чергування зубних i свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
+## Чергування зубних і свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
 
-> **Source:** kravtsova, Grade 3
-> **Section:** Сторінка 8
-> **Score:** 0.50
->
-> 8
-> ПРАВИЛЬНА ВИМОВА СЛІВ 
-> ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
-> 15.
-> 1.	 Утворіть пари слів: що робити? — що роблю?
-> Сидіти — 		
-> 	
-> Будити —	 	
-> Радити — 	
-> Ходити — 		
-> 	
-> Водити — 	 	
-> Садити —
-> Зразок. Їздити — їжджу.
-> 2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
-> 	
-> 	
-> поса-джені	 	
-> за-дзвенів
-> 	
-> 	
-> посадже-ні	 	
-> задзве-нів
-> 3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
-> вірте роботу одні в одних. 
-> 16.
-> 1.	 Прочитай і відгадай загадку. 
-> Живим зерном народжений, 
-> живу я на землі. 
-> Щодня рум’яним сонечком 
-> я сходжу на столі.
-> 2.	 Як ти розумієш словосполучення рум’яним сонечком?
-> 3.	 Виконай завдання на вибір.
-> 	 Спиши загадку. Підкресли слова, у яких звуків менше, ніж букв. 
-> 	 Випиши виділені слова, поділивши їх для переносу різними 
-> способами.
-
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 24
-> **Score:** 0.25
->
-> НАВЧАЮСЯ ПРАВИЛЬНО ПЕРЕНОСИТИ СЛОВА
-> Пригадай і розкажи 
-> у класі.
-> 1
-> ДЗ
-> ДЖ
-> вихо-джу 
-> по-дзвонив
-> Я — учитель
-> Звуки [дж], [дз], [дз'] позначаються на письмі 
-> буквосполученнями дж, дз. Під час переносу слів 
-> буквосполучення дж, дз розривати не можна.
-> Придумайте мелодію і проспівайте пісню. 
-> Ходжу, ходжу по садочку, 
-> по зеленім барвіночку.
-> Ходжу, ходжу та й думаю, 
-> як на світі жити маю.
-> ходжу 
-> приходжу 
-> переходжу 
-> заходжу
-> ■_____ _____ л
-> • Запишіть і поділіть для переносу слова.
-> 8| Відгадай загадку. Випиши слова з 
-> дз і поділи їх для переносу.
-> Він мелодію зіграє, 
-> як будильник продзвенить.
+*No textbook results found for: Чергування зубних і свистячих дж Глазова водити воджу сидіти сиджу ходити ходжу родити*
 
 ## Чергування задньоязикових у дієсловах: [г]->[ж], [к]->[ч], [х]->[ш]
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 34
-> **Score:** 0.25
->
-> 34
-> 11
-> Види речень за метою  
-> висловлювання та інтонацією
-> Розпізнаю види речень за метою висловлювання  
-> та інтонацією
-> Пригадай, які є види речень. Поєднай правильно. 
-> Кожен народ плекає свою рідну мову.
-> Чи добре ти володієш  
-> українською мовою?
->  Ніколи не цурайся рідного слова.
-> спонукати, закликати
-> повідомити, розповісти
-> запитати
-> Плекати — дбайливо доглядати, піклуватися. 
-> Цуратися — триматися осторонь, уникати, від-
-> мовлятися.
-> Чуєш, друже мій, розмови?
-> З вітром листя гомонить,
-> з сонцем — ниви і діброви,
-> із озерами — блакить.
-> Розмовляють доли, води…
-> Стань, послухай, роздивись.
-> Мову рідної природи
-> розуміти серцем вчись.
-> 1   Прочитай виразно вірш Оксани Сенатович.
->   Знайди в тексті розповідні, питальні і спонукальні речення.
+*No textbook results found for: Чергування задньоязикових у дієсловах плакати плачу тикати тичу пекти печу могти можу берегти*
 
 ## Чергування губних + [л]: робити — роблю
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 87
-> **Score:** 0.50
->
-> 8   Утворіть і запишіть слова за допомогою префіксів роз-, без-.
-> 	 	
-> 9   Відгадай слова і запиши їх. 
-> безділля
-> за
-> велике
-> праця
-> краща
-> маленька
-> 	 	
->   Випиши з тексту слова із префіксами. Познач їх.
-> 	 	
->   Розкажи, якою ти уявляєш зиму з цього тексту.
-> 	 	
->   Склади і запиши речення з утвореними 
-> словами.
-> —	 Я так люблю зиму! Мені подобається …
-> —	 А мені зовсім не подобається, коли зима …
-> Продовжте розмову.
-> Хвилинка спілкування
-> мова
-> гадка
-> нести
-> бити
-> казати
-> хмарний
-> водний
-> рідний
-> ділля
-> соння
-> роз-
-> без-
->  Префікс від слова безхмарний,
->  корінь від слова перелісок, 
->  закінчення від слова білий.
-> Префікс від слова безсоння, 
-> корінь від слова крило, 
-> закінчення від слова тихий.
-> Префікс від слова розмова, 
-> корінь від слова дума, 
-> закінчення від слова сад.
-> Прочитай  
-> приховане 
-> прислів’я.
+*No textbook results found for: Чергування губних робити роблю Заболотний бл' любити люблю губити гублю пл'*
 
 ## Чергування при утворенні недоконаних дієслів
 
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 80
-> **Score:** 0.50
->
-> НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ 
-> З ДІЄСЛОВАМИ
-> Прочитайте речення. Простежте, 
-> які різні дії означає слово іде.
-> складаю
-> Іде катер. Іде поїзд. Іде зима. Іде час. Іде концерт.
-> • Замініть у кожному реченні слово іде дієсловом, близьким 
-> за значенням. Скористайтеся довідкою. Запишіть речення
-> за зразком.
-> Іде катер. 
-> Пливе катер.
-> ? годинник
-> Довідка
-> Відбувається, їде, минає, пливе, настає.
-> б| Розглянь малюнки. Напиши, хто як пересувається,
-> використавши дієслова з довідки.
-> На які питання 
-> відповідають 
-> дієслова?
-> Довідка
-> Повзає, літає, плаває, стрибає, бігає.
-> Хвилинка спілкування
-> і
-> — Як ти думаєш, як правильно сказати: 
-> собака прибіг чи собака прибігла?
-> — Я думаю, що можна вживати обидва 
-> речення.
-> — Давай перевіримо за словником. 
-> Продовжте розмову.
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 115
-> **Score:** 0.33
->
-> 115
->  § 50.  Чергування  приголосних  звуків
-> 3. Прочитайте вислови та виконайте завдання.
-> 1. Що на (думка), те й на (язик). 2. Терпи, (козак), отаманом будеш. 
-> 3. Живемо, як горох при (дорога): хто не йде, той скубне. 4. Не шукай гри-
-> бів у ведмежому (барліг). 5. Коли не знаєш дороги, не (виїхати) із дому 
-> (Нар. тв.). 
-> А. Перепишіть речення, ставлячи в потрібну форму слова, що в дужках. 
-> Б. Підкресліть букви, що позначають звуки, які чергуються.
+*No textbook results found for: Чергування при утворенні недоконаних дієслів Глазова ати увати дж зарядити заряджати засудити засуджувати прощати*
 
 ## Повна парадигма: від інфінітива до всіх форм
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 87
-> **Score:** 0.25
->
-> 87
-> Поясни значення слів. Що в них спільне? Чи можна їх назвати 
-> словами-родичами? А спільнокореневими чи спорідненими?
-> сад
-> садити
-> садовий
-> садівник
-> ліс
-> пролісок
-> лісний
-> лісник
->  
-> Визнач корінь у словах. Чому ці слова споріднені? Запиши їх. 
-> Склади речення з трьома словами на вибір.
-> Дуб, дубок, дубовий листок, 
-> дубняк (ліс).
-> Вишня, вишенька, вишневий 
-> листок, вишник (сад).
->  
-> Вилучи «зайве» слово. Спиши. Познач корінь.
-> 1. Риба, рибка, рибалка, рити, рибалити, риб’ячий.
-> 2. Вода, водичка, водити, водний.
-> 3. Сніг, сніжок, сніп, сніговий, снігур, сніговик.
->  
-> Інструкція 
-> Інструкція — це вказівки, як виконувати що-небудь.
-> • Установи послідовність дій.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 276
-> **Score:** 0.50
->
-> 276
-> Складні випадки наголошування
-> СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ
-> А
-> алфаві т
-> аркушик
-> Б
-> багаторазо вий
-> бе шкет
-> близьки й
-> болоти стий
-> боро давка
-> босо ніж
-> боя знь
-> бурштино вий
-> В
-> вантажі вка
-> весня ни й
-> ви года (користь)
-> виго да (зручність)
-> видання
-> вимо га
-> ви падок
-> виразний
-> ви сіти
-> виши ваний
-> відвезти 
-> відвести 
-> ві дгомін
-> віднести 
-> ві рші
-> віршови й
-> Г
-> гальмо , гальма
-> глядач
-> гороши на
-> граблі 
-> Д
-> дано
-> де щиця
-> джерело 
-> дичавіти
-> добу ток
-> довезти 
-> довести 
-> дові дник
-> донести 
-> до нька
-> дочка
-> дро ва
-> Е
-> експе рт
-> Ж
-> жалюзі 
-> З
-> завдання
-> завезти 
-> завести 
-> завжди 
-> завчасу 
-> загадка
-> закінчи ти
-> закладка (у книзі)
-> залиши ти
-> занести 
-> застібка
-> зви сока
+*No textbook results found for: Повна парадигма від інфінітива до всіх форм водити воджу водиш водить водимо водите водять водив*
 
 ## Підсумок: таблиця дієслівних чергувань
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 66
-> **Score:** 0.25
->
-> 66
-> При переносі слова з рядка в рядок не розривай букво- 
->  сполучення дж, дз, які позначають один звук [дж], [дз], [д
+*No textbook results found for: Підсумок таблиця дієслівних чергувань дж водити воджу сидіти сиджу крутити кручу летіти*
 
-... (truncated for context window)
+## Grammar Reference
+
+*No grammar results for: Зубні свистячі дж зд ждж ст шч Задньоязикові Губні л'*
+
+
+## МійКлас Theory (miyklas.com.ua)
+
+*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+
+### Чергування голосних у коренях слів
+> **Source:** МійКлас — [Чергування голосних у коренях слів](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/cherguvannia-golosnikh-u-koreniakh-sliv-43524)
+
+### Теорія:
+
+*www.ua.pistacja.tv*  
+При творенні спільнокореневого слова чи формотворенні один голосний звук змінюється на інший. Така зміна називається чергуванням.
+Чергування \[О\], \[Е\] — \[І\] відбувається
+   О, Е                               І
+ 
+Це чергування  властиве  українській мові. Звуки \[о\], \[е\] виступають найчастіше у відкритих складах, звук \[і\] — у закритих:
+- у **формах** слова: *сьомий — сім, шести — шість, корені — корінь, гори — гір, мого — мій, радість — радості — радістю, Канів — Канева, Харків — Харкова, Чернігів — Чернігова*;
+  
+- у **спільнокореневих** словах:* коло — кільцевий, корова — корівник, клопотатися — клопіт, нога — підніжок.* 
+Зверни увагу\!
+
+### Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності
+> **Source:** МійКлас — [Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612)
+
+### Теорія:
+
+*www.ua.pistacja.tv*  
+Правила милозвучності української мови
+Українську мову недарма називають солов'їною й співучою.  Звуки в ній  завжди  поєднуються так, щоб вимову ніщо не ускладнювало. Одна з найважливіших умов милозвучності мови: слова можна розібрати й відділити одне від одного в процесі мовлення.
+Мелодійність мови досягається завдяки певним правилам:
+- Уникаємо збігу голосних. Таке в українських словах допускається лише на межі префікса і твірної основи:  наодинці, виорав, неуважний.
+  
+- Уникаємо важкого для вимови збігу приголосних: користь — корисний, сердечний — серце, виїзд — виїзний.
+
+### Правила вживання знака м'якшення
+> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+
+### Теорія:
+  
+
+*www.ua.pistacja.tv*  
+ 
+Знаком ь позначаємо м’якість приголосних звуків на письмі.
+Знак м’якшення пишемо:
+- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
+*  
+- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+
+---
+**Total textbook excerpts found:** 1
+**Grades searched:** 1, 2, 3, 5
 </knowledge_packet>
 
 ---

@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module covers all required elements, introduces the three main alternations
+    plus verbs, and integrates the required vocabulary (чергування, відкритий склад,
+    корінь, etc.).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Uses the Russianism/calque "біглі голосні" instead of "випадні голосні"
+    in multiple places.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Contains a factual pedagogical error: it classifies "корінь - кореня"
+    as a fleeting vowel (чергування з нулем звука) when it is actually a standard
+    `[i]~[e]` alternation (the vowel [e] remains and doe'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present and correctly contextualized in the
+    prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise prompts match the plan hints exactly and logically test the immediately
+    preceding concepts.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Starts with a cliché motivational opener ("Коли ви слухаєте українську
+    мову, ви одразу помічаєте її мелодійність..."), which violates tone guidelines
+    against generic enthusiasm.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All markdown sections are correct, but the word count is 5139 words, which
+    exceeds the 4000-word target by >25%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally accurate. Mentions how the feature distinguishes Ukrainian
+    from Russian/Polish effectively.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogue contains a logical flaw. The teacher contrasts "коня" and
+    "коні" (both have [o]) and asks why they change, but Olena answers about the word
+    "кінь" which the teacher didn't use.
+findings: []

@@ -1,0 +1,229 @@
+vocabulary:
+- word: багатозна́чність
+  translation: polysemy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: багатозначне слово
+  translation: polysemous word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пряме значення
+  translation: literal meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переносне значення
+  translation: figurative meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фразеологі́зм
+  translation: phraseological unit / idiom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дощ іде
+  translation: it's raining
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: час іде
+  translation: time passes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: час летить
+  translation: time flies
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: справи йдуть
+  translation: things are going (about progress)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мова йде про
+  translation: it's about / the topic is
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти́ся
+  translation: to be about (impersonal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: йдеться про
+  translation: it concerns / it is about
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти на компроміс
+  translation: to compromise
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти на ризик
+  translation: to take a risk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти назустріч
+  translation: to meet halfway / accommodate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дійти до висновку
+  translation: to reach a conclusion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: обійти́ся
+  translation: to get by without
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: злеті́ти
+  translation: to soar / skyrocket (about prices)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: налеті́ти
+  translation: to swoop in / attack (figurative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хмари пливуть
+  translation: clouds drift
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: думки пливуть
+  translation: thoughts drift
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мурашки біжать
+  translation: 'goosebumps (literally: ants are running)'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дах їде
+  translation: to go crazy (slang)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їхати на чомусь
+  translation: to be obsessed with something (slang)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нести відповідальність
+  translation: to bear responsibility
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: носити ім'я
+  translation: to bear a name
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вести переговори
+  translation: to conduct negotiations
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вести себе
+  translation: to behave (often considered a calque)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поводитися
+  translation: to behave
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: водити за ніс
+  translation: to deceive
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: донести думку
+  translation: to convey an idea
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: провести захід
+  translation: to hold an event
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ка́лька
+  translation: calque
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: руси́зм
+  translation: Russicism
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сніг іде
+  translation: it's snowing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: годинник іде
+  translation: the clock is running
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: урок іде
+  translation: the lesson is in progress
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фільм іде
+  translation: the film is showing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

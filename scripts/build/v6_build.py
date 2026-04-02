@@ -1080,6 +1080,16 @@ def step_write_chunked(
     written_sections: list[str] = []
 
     for i, section in enumerate(sections):
+        chunk_file = orch_dir / f"chunk-{i + 1:02d}.md"
+        # Only load from cache if this is the first attempt (no correction directive)
+        if not correction_directive and chunk_file.exists():
+            chunk_content = chunk_file.read_text("utf-8")
+            chunk_words = len(chunk_content.split())
+            _log(f"\n  --- Chunk {i + 1}/{len(sections)}: {section['title']} ---")
+            _log(f"  ⏭️  Loaded completed chunk {i + 1} from disk ({chunk_words} words)")
+            written_sections.append(chunk_content)
+            continue
+
         _log(f"\n  --- Chunk {i + 1}/{len(sections)}: {section['title']} ---")
 
         previous_summary = _build_section_summary(written_sections)
@@ -1108,15 +1118,23 @@ def step_write_chunked(
 
         # Dispatch — shorter timeout per section
         from build.dispatch import CLAUDE_WRITER_TOOLS
-        ok, raw = _dispatch(
-            prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
-            orch_dir=orch_dir, timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
-            mcp_tools=use_tools,
-            allowed_tools=CLAUDE_WRITER_TOOLS if (use_tools and writer.startswith("claude")) else None,
-        )
+
+        chunk_retries = 3
+        ok, raw = False, ""
+        for attempt in range(1, chunk_retries + 1):
+            if attempt > 1:
+                _log(f"  🔄 Chunk {i + 1} retry attempt {attempt}/{chunk_retries}...")
+            ok, raw = _dispatch(
+                prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
+                orch_dir=orch_dir, timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
+                mcp_tools=use_tools,
+                allowed_tools=CLAUDE_WRITER_TOOLS if (use_tools and writer.startswith("claude")) else None,
+            )
+            if ok and raw:
+                break
 
         if not ok or not raw:
-            _log(f"  ❌ Chunk {i + 1} failed — writer returned no output")
+            _log(f"  ❌ Chunk {i + 1} failed after {chunk_retries} attempts — writer returned no output")
             return None
 
         # Extract from first ## heading
@@ -1131,6 +1149,7 @@ def step_write_chunked(
         chunk_words = len(chunk_content.split())
         _log(f"  ✅ Chunk {i + 1}: {chunk_words} words")
 
+        chunk_file.write_text(chunk_content, "utf-8")
         written_sections.append(chunk_content)
 
     # Concatenate all sections
@@ -1529,6 +1548,79 @@ def step_write(level: str, module_num: int, slug: str,
     return output_path
 
 
+
+def step_fix_output(
+    level: str, module_num: int, slug: str,
+    content: str, correction_directive: str,
+    writer: str = "gemini",
+) -> Path | None:
+    """Fix a completed (but failing) draft in-place without chunking."""
+    _log(f"\n{'='*60}")
+    _log(f"  Step 5 (Fix): FIX OUTPUT — Holistic correction ({writer})")
+    _log(f"{'='*60}")
+
+    prompt = f"""You are an expert Ukrainian linguist and curriculum designer.
+I have a completed draft of a curriculum module. However, it failed automated quality checks.
+
+Here are the errors you MUST fix:
+<errors>
+{correction_directive}
+</errors>
+
+Here is the current draft:
+<draft>
+{content}
+</draft>
+
+Please output the FULL, CORRECTED draft.
+Do not add any preamble, explanations, or markdown code block wrappers like ```markdown.
+Start immediately with the first ## heading. Keep all other formatting exactly as is.
+"""
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
+
+    use_tools = writer.endswith("-tools")
+    base_writer = "gemini-tools" if "gemini" in writer else writer
+
+    if "claude" in writer:
+        ok, raw = dispatch_agent(
+            prompt, agent=writer, phase="write-fix", orch_dir=orch_dir,
+            timeout=TIMEOUT_WRITE, mcp_tools=use_tools,
+            allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
+        )
+    else:
+        ok, raw = dispatch_agent(
+            prompt, agent=base_writer, phase="write-fix", orch_dir=orch_dir,
+            timeout=TIMEOUT_WRITE, mcp_tools=True,
+        )
+
+    if not ok or not raw:
+        _log("  ❌ Writer returned no output during fix attempt")
+        return None
+
+    # Extract content (everything from first ## heading)
+    lines = raw.split("\n")
+    content_start = -1
+    for i, line in enumerate(lines):
+        if line.startswith("## "):
+            content_start = i
+            break
+
+    final_content = raw if content_start < 0 else "\n".join(lines[content_start:])
+
+    final_content = re.sub(r"</?pacing_plan>", "", final_content)
+    final_content = re.sub(r"</?skeleton>", "", final_content)
+
+    output_dir = CURRICULUM_ROOT / level
+    output_path = output_dir / f"{slug}.md"
+    output_path.write_text(final_content, "utf-8")
+
+    _log(f"  ✅ Fixed content written ({len(final_content.split())} words)")
+    return output_path
+
 def step_write_with_retry(
     level: str, module_num: int, slug: str,
     packet_path: Path,
@@ -1560,22 +1652,35 @@ def step_write_with_retry(
     # Stats log
     stats_path = CURRICULUM_ROOT / level / "build-stats.jsonl"
 
-    other_writer = "claude" if writer in ("gemini", "gemini-tools") else "gemini"  # cross-agent fallback
-
     current_directive = ""  # No directive on first attempt
 
     for attempt in range(1, max_retries + 2):  # +2 because range is exclusive
-        current_writer = writer if attempt <= max_retries else other_writer
+        current_writer = writer
         _log(f"\n  📝 Write attempt {attempt}/{max_retries + 1} (writer: {current_writer})")
 
-        output = step_write(
-            level, module_num, slug, packet_path,
-            writer=current_writer,
-            correction_directive=current_directive,
-            skeleton=skeleton,
-            no_chunk=no_chunk,
-            verification_text=verification_text,
-        )
+        if attempt == 1:
+            output = step_write(
+                level, module_num, slug, packet_path,
+                writer=current_writer,
+                correction_directive=current_directive,
+                skeleton=skeleton,
+                no_chunk=no_chunk,
+                verification_text=verification_text,
+            )
+        else:
+            # We already have a draft but it failed verify. Use step_fix_output.
+            output_dir = CURRICULUM_ROOT / level
+            output_path = output_dir / f"{slug}.md"
+            if not output_path.exists():
+                _log("  ❌ Could not find previous output for fix attempt")
+                break
+            prev_content = output_path.read_text("utf-8")
+            output = step_fix_output(
+                level, module_num, slug,
+                content=prev_content,
+                correction_directive=current_directive,
+                writer=current_writer,
+            )
         if output is None:
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
             _log_stats(stats_path, slug, "WRITE_FAILED", attempt, current_writer, False)
@@ -3295,10 +3400,9 @@ def step_review(content_path: Path, level: str, module_num: int,
             review_timeout = max(600, min(int(probe_latency * 10), 1800))
             _log(f"  🏓 Gemini responded in {int(probe_latency)}s — review timeout set to {review_timeout}s")
         else:
-            # Gemini is down — fall back to Claude to keep the batch moving
-            _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — falling back to Claude reviewer")
-            reviewer = "claude"
-            reviewer_agent = "claude-tools"
+            # Gemini probe failed, but do not fall back. Use default timeout.
+            review_timeout = 600
+            _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — keeping Gemini reviewer with default {review_timeout}s timeout")
 
     # Re-check reviewer in case fallback happened above
     if reviewer == "gemini":
@@ -4453,7 +4557,7 @@ def main():
         if "tools" in args.writer or steps == "pre-verify":
             verification_text = step_pre_verify(
                 args.level, args.module, slug,
-                writer=args.writer if "tools" in args.writer else "claude-tools",
+                writer=args.writer if "tools" in args.writer else f"{args.writer}-tools",
             ) or ""
         else:
             _log("\n  ℹ️  Pre-verify skipped (writer has no tools — use --writer claude-tools)")
@@ -4563,7 +4667,7 @@ def main():
 
 
         fix_round = 1
-        max_fix_rounds = 4
+        max_fix_rounds = 5
 
         while not passed and score < 9.0 and fix_round <= max_fix_rounds:
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)

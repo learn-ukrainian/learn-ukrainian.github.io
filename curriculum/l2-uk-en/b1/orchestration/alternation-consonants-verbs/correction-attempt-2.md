@@ -2,7 +2,7 @@
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
 - FIX: Missing section heading: 'Підсумок: таблиця дієслівних чергувань'
-- NOTE: Missing 2/14 required vocab: задньоязиковий (velar — consonant formed at back of mouth: г, к, х), палаталізація (palatalization — softening of consonant)
+- NOTE: Missing 1/14 required vocab: теперішній час (present tense)
 - NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
 </correction_directive>
 

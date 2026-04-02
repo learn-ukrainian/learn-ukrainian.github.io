@@ -51,3 +51,12 @@
 {"slug": "alternation-vowels", "error_type": "STRUCTURE, TOXIC", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T18:08:18.656998+00:00"}
 {"slug": "people-and-relationships", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T18:41:07.456938+00:00"}
 {"slug": "people-and-relationships", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T18:48:31.632663+00:00"}
+{"slug": "alternation-vowels", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T21:09:14.317576+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T21:21:11.109104+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T21:29:13.006879+00:00"}
+{"slug": "figurative-motion", "error_type": "WRITE_FAILED", "attempt": 3, "model": "claude", "success": false, "timestamp": "2026-04-02T21:29:19.644179+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T21:54:20.916451+00:00"}
+{"slug": "figurative-motion", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-02T22:01:07.980609+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:02:37.324822+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:04:03.716500+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:04:17.574555+00:00"}

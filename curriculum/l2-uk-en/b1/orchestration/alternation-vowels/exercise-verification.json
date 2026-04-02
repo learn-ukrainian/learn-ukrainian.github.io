@@ -1,0 +1,400 @@
+{
+  "total_items": 206,
+  "grounded_items": 132,
+  "ungrounded": [
+    {
+      "word": "двору",
+      "exercise_type": "match-up",
+      "context": "двору"
+    },
+    {
+      "word": "ножа",
+      "exercise_type": "match-up",
+      "context": "ножа"
+    },
+    {
+      "word": "льоду",
+      "exercise_type": "match-up",
+      "context": "льоду"
+    },
+    {
+      "word": "порога",
+      "exercise_type": "match-up",
+      "context": "порога"
+    },
+    {
+      "word": "сучасних",
+      "exercise_type": "fill-in",
+      "context": "У нас багато сучасних ___ (школа)."
+    },
+    {
+      "word": "школа",
+      "exercise_type": "fill-in",
+      "context": "У нас багато сучасних ___ (школа)."
+    },
+    {
+      "word": "високих",
+      "exercise_type": "fill-in",
+      "context": "Навколо багато високих ___ (гора)."
+    },
+    {
+      "word": "гора",
+      "exercise_type": "fill-in",
+      "context": "Навколо багато високих ___ (гора)."
+    },
+    {
+      "word": "проїхали",
+      "exercise_type": "fill-in",
+      "context": "Ми проїхали повз кілька мальовничих ___ (село)."
+    },
+    {
+      "word": "повз",
+      "exercise_type": "fill-in",
+      "context": "Ми проїхали повз кілька мальовничих ___ (село)."
+    },
+    {
+      "word": "знає",
+      "exercise_type": "fill-in",
+      "context": "Він знає дуже багато нових ___ (слово)."
+    },
+    {
+      "word": "корів",
+      "exercise_type": "fill-in",
+      "context": "корів"
+    },
+    {
+      "word": "фермера",
+      "exercise_type": "fill-in",
+      "context": "У фермера є велике стадо ___ (корова)."
+    },
+    {
+      "word": "корова",
+      "exercise_type": "fill-in",
+      "context": "У фермера є велике стадо ___ (корова)."
+    },
+    {
+      "word": "коров",
+      "exercise_type": "fill-in",
+      "context": "коров"
+    },
+    {
+      "word": "борід",
+      "exercise_type": "fill-in",
+      "context": "борід"
+    },
+    {
+      "word": "стояли",
+      "exercise_type": "fill-in",
+      "context": "Там стояли чоловіки без ___ (борода)."
+    },
+    {
+      "word": "чоловіки",
+      "exercise_type": "fill-in",
+      "context": "Там стояли чоловіки без ___ (борода)."
+    },
+    {
+      "word": "борода",
+      "exercise_type": "fill-in",
+      "context": "Там стояли чоловіки без ___ (борода)."
+    },
+    {
+      "word": "бород",
+      "exercise_type": "fill-in",
+      "context": "бород"
+    },
+    {
+      "word": "осіб",
+      "exercise_type": "fill-in",
+      "context": "осіб"
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "fill-in",
+      "context": "У цій кімнаті зараз багато ___ (особа)."
+    },
+    {
+      "word": "зараз",
+      "exercise_type": "fill-in",
+      "context": "У цій кімнаті зараз багато ___ (особа)."
+    },
+    {
+      "word": "особа",
+      "exercise_type": "fill-in",
+      "context": "У цій кімнаті зараз багато ___ (особа)."
+    },
+    {
+      "word": "особ",
+      "exercise_type": "fill-in",
+      "context": "особ"
+    },
+    {
+      "word": "доріг",
+      "exercise_type": "fill-in",
+      "context": "доріг"
+    },
+    {
+      "word": "місті",
+      "exercise_type": "fill-in",
+      "context": "У нашому місті з'явилося багато нових ___ (дорога)."
+    },
+    {
+      "word": "з'явилося",
+      "exercise_type": "fill-in",
+      "context": "У нашому місті з'явилося багато нових ___ (дорога)."
+    },
+    {
+      "word": "дорога",
+      "exercise_type": "fill-in",
+      "context": "У нашому місті з'явилося багато нових ___ (дорога)."
+    },
+    {
+      "word": "дорог",
+      "exercise_type": "fill-in",
+      "context": "дорог"
+    },
+    {
+      "word": "ніч",
+      "exercise_type": "quiz",
+      "context": "ніч — ночі"
+    },
+    {
+      "word": "ночі",
+      "exercise_type": "quiz",
+      "context": "ніч — ночі"
+    },
+    {
+      "word": "кіт",
+      "exercise_type": "group-sort",
+      "context": "кіт — кота"
+    },
+    {
+      "word": "кота",
+      "exercise_type": "group-sort",
+      "context": "кіт — кота"
+    },
+    {
+      "word": "радість",
+      "exercise_type": "group-sort",
+      "context": "радість — радості"
+    },
+    {
+      "word": "радості",
+      "exercise_type": "group-sort",
+      "context": "радість — радості"
+    },
+    {
+      "word": "друзям",
+      "exercise_type": "error-correction",
+      "context": "Він завжди допомігає друзям."
+    },
+    {
+      "word": "допоможу",
+      "exercise_type": "error-correction",
+      "context": "допоможу"
+    },
+    {
+      "word": "каталася",
+      "exercise_type": "error-correction",
+      "context": "каталася"
+    },
+    {
+      "word": "машина",
+      "exercise_type": "error-correction",
+      "context": "Машина швидко коталася по дорозі."
+    },
+    {
+      "word": "коталася",
+      "exercise_type": "error-correction",
+      "context": "Машина швидко коталася по дорозі."
+    },
+    {
+      "word": "дорозі",
+      "exercise_type": "error-correction",
+      "context": "Машина швидко коталася по дорозі."
+    },
+    {
+      "word": "котиться",
+      "exercise_type": "error-correction",
+      "context": "котиться"
+    },
+    {
+      "word": "катає",
+      "exercise_type": "error-correction",
+      "context": "катає"
+    },
+    {
+      "word": "стирає",
+      "exercise_type": "error-correction",
+      "context": "стирає"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "error-correction",
+      "context": "Вона щодня стєрає пил з полиць."
+    },
+    {
+      "word": "стєрає",
+      "exercise_type": "error-correction",
+      "context": "Вона щодня стєрає пил з полиць."
+    },
+    {
+      "word": "пил",
+      "exercise_type": "error-correction",
+      "context": "Вона щодня стєрає пил з полиць."
+    },
+    {
+      "word": "полиць",
+      "exercise_type": "error-correction",
+      "context": "Вона щодня стєрає пил з полиць."
+    },
+    {
+      "word": "сторе",
+      "exercise_type": "error-correction",
+      "context": "сторе"
+    },
+    {
+      "word": "стерла",
+      "exercise_type": "error-correction",
+      "context": "стерла"
+    },
+    {
+      "word": "забераю",
+      "exercise_type": "error-correction",
+      "context": "Я часто забераю молодшого брата зі школи."
+    },
+    {
+      "word": "молодшого",
+      "exercise_type": "error-correction",
+      "context": "Я часто забераю молодшого брата зі школи."
+    },
+    {
+      "word": "брата",
+      "exercise_type": "error-correction",
+      "context": "Я часто забераю молодшого брата зі школи."
+    },
+    {
+      "word": "школи",
+      "exercise_type": "error-correction",
+      "context": "Я часто забераю молодшого брата зі школи."
+    },
+    {
+      "word": "забере",
+      "exercise_type": "error-correction",
+      "context": "забере"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "error-correction",
+      "context": "Діти люблять ломати старі іграшки."
+    },
+    {
+      "word": "люблять",
+      "exercise_type": "error-correction",
+      "context": "Діти люблять ломати старі іграшки."
+    },
+    {
+      "word": "ломати",
+      "exercise_type": "error-correction",
+      "context": "Діти люблять ломати старі іграшки."
+    },
+    {
+      "word": "старі",
+      "exercise_type": "error-correction",
+      "context": "Діти люблять ломати старі іграшки."
+    },
+    {
+      "word": "іграшки",
+      "exercise_type": "error-correction",
+      "context": "Діти люблять ломати старі іграшки."
+    },
+    {
+      "word": "ломить",
+      "exercise_type": "error-correction",
+      "context": "ломить"
+    },
+    {
+      "word": "треба",
+      "exercise_type": "error-correction",
+      "context": "Не треба мене гоняти по всьому місту!"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "Не треба мене гоняти по всьому місту!"
+    },
+    {
+      "word": "гоняти",
+      "exercise_type": "error-correction",
+      "context": "Не треба мене гоняти по всьому місту!"
+    },
+    {
+      "word": "всьому",
+      "exercise_type": "error-correction",
+      "context": "Не треба мене гоняти по всьому місту!"
+    },
+    {
+      "word": "місту",
+      "exercise_type": "error-correction",
+      "context": "Не треба мене гоняти по всьому місту!"
+    },
+    {
+      "word": "гоню",
+      "exercise_type": "error-correction",
+      "context": "гоню"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Слова з повноголоссям (-оро-, -оло-), як-от «мороз» або «бер"
+    },
+    {
+      "word": "вказують",
+      "exercise_type": "true-false",
+      "context": "Суфікси «-ець», «-ок», «-ень» часто вказують на наявність бі"
+    },
+    {
+      "word": "біглого",
+      "exercise_type": "true-false",
+      "context": "Суфікси «-ець», «-ок», «-ень» часто вказують на наявність бі"
+    },
+    {
+      "word": "відмінюванні",
+      "exercise_type": "true-false",
+      "context": "Суфікси «-ець», «-ок», «-ень» часто вказують на наявність бі"
+    },
+    {
+      "word": "змусити",
+      "exercise_type": "true-false",
+      "context": "Дієслівний суфікс -а- може змусити звук [о] в корені перетво"
+    },
+    {
+      "word": "перетворитися",
+      "exercise_type": "true-false",
+      "context": "Дієслівний суфікс -а- може змусити звук [о] в корені перетво"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 26,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "відкритий",
+      "відмінок",
+      "закінчення",
+      "звука",
+      "милозвучність",
+      "морфонологія",
+      "наголос",
+      "ненаголошений",
+      "нуль",
+      "орфограма",
+      "перевірне",
+      "правопис",
+      "спільнокореневий",
+      "твердий",
+      "форма",
+      "чергування",
+      "шиплячий"
+    ]
+  },
+  "all_grounded": false
+}

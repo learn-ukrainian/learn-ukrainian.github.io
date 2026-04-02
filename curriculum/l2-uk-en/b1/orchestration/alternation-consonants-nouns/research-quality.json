@@ -1,67 +1,74 @@
 {
   "exists": true,
-  "words": 2388,
-  "quality": "solid",
-  "score": 8,
-  "score_raw": 14,
+  "words": 622,
+  "quality": "stub",
+  "score": 0,
+  "score_raw": 0,
   "score_max": 17,
-  "markers": 8,
+  "markers": 0,
   "profile": "core",
   "dimensions": {
     "state_standard": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "9 sections covered"
+      "detail": "missing"
     },
     "vocabulary": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "18 excerpts (need 20+)"
+      "detail": "missing"
     },
     "cultural_hooks": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "2 cultural reference(s)"
+      "detail": "missing"
     },
     "learner_errors": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "N/A for V6 packets"
+      "detail": "missing"
     },
     "cross_references": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "10 authors"
+      "detail": "missing"
     },
     "pedagogy_notes": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "5 pedagogy references"
+      "detail": "missing"
     },
     "source_verification": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "18 cited sources"
+      "detail": "3 URLs but 0 known-good sources"
     },
     "claim_grounding": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "1172 Ukrainian terms"
+      "detail": "3 cited examples (need 5+)"
     },
     "discovery_integration": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "N/A for V6"
+      "detail": "0 resources"
     },
     "specificity": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "2388 words (need 3000+)"
+      "detail": "0 specific markers (need 5+)"
     }
   },
   "gaps": [
-    "vocabulary: 18 excerpts (need 20+)",
-    "cultural_hooks: 2 cultural reference(s)",
-    "specificity: 2388 words (need 3000+)"
+    "state_standard: missing",
+    "vocabulary: missing",
+    "cultural_hooks: missing",
+    "learner_errors: missing",
+    "cross_references: missing",
+    "pedagogy_notes: missing",
+    "source_verification: 3 URLs but 0 known-good sources",
+    "claim_grounding: 3 cited examples (need 5+)",
+    "discovery_integration: 0 resources",
+    "specificity: 0 specific markers (need 5+)"
   ]
 }

@@ -3,13 +3,21 @@
   "track": "b1",
   "slug": "traveling-ukraine",
   "phases": {
-    "stress": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:40.579601+00:00"
+      "ts": "2026-04-02T21:29:24.265566+00:00"
     },
-    "publish": {
+    "research": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:40.580158+00:00"
+      "ts": "2026-04-02T21:30:18.270667+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-02T21:30:55.106290+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-02T21:32:58.468623+00:00"
     }
   }
 }

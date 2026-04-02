@@ -1,3 +1,23 @@
+<correction_directive>
+CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
+
+- FIX: Missing section heading: 'Підсумок: таблиця дієслівних чергувань'
+- NOTE: Missing 1/14 required vocab: теперішній час (present tense)
+- NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
+</correction_directive>
+
+LEARNINGS FROM PAST BUILDS (same error patterns seen before):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
+- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
+- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
+- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
+- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
+- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
+
 # Section-by-Section Generation — Section 1/7
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
@@ -11,11 +31,10 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Від іменників до дієслів (~550 words total)
-- P1 (~110 words): [Transition from M09 (Nouns) to Verbs. Explain that while the consonant targets [г/к/х] are the same, the context is entirely different. Nouns alternate due to case endings (друг — друже), whereas verbs alternate due to conjugation, primarily the 1st person singular (я). Introduce the term "чергування приголосних у дієсловах".]
-- P2 (~130 words): [Historical context based on Zabolotnyi Grade 7. Explain the "Yod" ([j]) suffix that existed in Old East Slavic verb endings for the 1st person singular. This invisible trigger caused the palatalization of the preceding consonant. This explains why the change is restricted to the "я" form and doesn't spread to "ти" or "він" forms in Modern Ukrainian.]
-- Dialogue (~120 words): [Cooking competition setting. Ведучий (host) narrates: "Я ходжу (д→дж) між столами і бачу, як ви працюєте. Я прошу (с→ш) вас бути уважними. Кожен робить (б) свій шедевр, але я люблю (б→бл) лише гострі страви!" Motivation: show alternations in natural speech.]
-- P3 (~100 words): [Classification overview. Introduce the three primary groups we will study: 1. Dental/Sibilants (зубні/свистячі), 2. Velars (задньоязикові), and 3. Labials with inserted 'л' (губні + л). Mention that Group 1 is the most common in II-conjugation.]
-- P4 (~90 words): [Importance of this module for B1 learners. Explain that these alternations are productive and regular; mastering them prevents "robotic" or incorrect speech (like saying *я сижу* or *я робю*) and helps in recognizing root meanings across different verb forms.]
+- P1 (~120 words): [Hook: The living nature of Ukrainian phonetics. Introduce the concept of "consonant friction" (alternation) as a natural adjustment for ease of speech, specifically in verbs.]
+- P2 (~130 words): [Bridge from M09 (Nouns). Remind the learner of [г/к/х] -> [ж/ч/ш] changes in nouns like друг/друже and нога/нозі. State that verbs follow a similar logic but with different triggers.]
+- P3 (~150 words): [The "Historical Why" (Заболотний Grade 7). Explain the ancient [j] suffix that existed in the 1st person singular. Describe how this "invisible" sound melted into the preceding consonant, creating the modern alternations like сидіти + j -> сиджу.]
+- P4 (~150 words): [The "Where and When": Clarify that for conjugation, this happens ALMOST exclusively in the 1st person singular (я-form) of II conjugation verbs. Provide a brief roadmap of the three groups: Dental/Sibilant, Velar, and Labial + [л].]
 
 ---
 ## Full Plan (for reference)
@@ -245,355 +264,94 @@ references:
 
 <knowledge_packet>
 # Verified Knowledge Packet: Чергування приголосних (дієслова)
-**Module:** alternation-consonants-verbs | **Phase:** B1.2 [Morphophonemics & Noun Subclasses]
+**Module:** alternation-consonants-verbs | **Phase:** B1.1 [Baselines & Morphophonemics]
 **Textbook grades searched:** 1, 2, 3, 5
 
 ---
 
 ## Від іменників до дієслів
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> 123
-> Фонетика. Графіка. Орфоепія. Орфографія.  Приголосні дзвінкі та глухі
-> Звуки [в], [м], [н], [л], [р], відповідні їм м’які приголосні та  звук 
-> [й] не належать ні до дзвінких, ні до глухих.  У цих звуках голос 
-> переважає над шумом.  Їх називають сонорними (запам’ятати їх 
-> можна у  слові ­МіНеРаЛоВиЙ).
-> Через особливості вимови звуки [з], [ц], [с], [дз] називають 
-> свистячими (бо їх звучання схоже на  свист), а  [ж], [ч], [ш], [дж] 
-> шиплячими (бо їх вимовляємо шипінням).  Окремо виділяють 
-> губні звуки [б], [п], [в], [м], [ф].
+*No textbook results found for: Від іменників до дієслів Задньоязикові Зубні свистячі дж Губні*
 
-## Чергування зубних i свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
+## Чергування зубних і свистячих: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш]
 
-> **Source:** kravtsova, Grade 3
-> **Section:** Сторінка 8
-> **Score:** 0.50
->
-> 8
-> ПРАВИЛЬНА ВИМОВА СЛІВ 
-> ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
-> 15.
-> 1.	 Утворіть пари слів: що робити? — що роблю?
-> Сидіти — 		
-> 	
-> Будити —	 	
-> Радити — 	
-> Ходити — 		
-> 	
-> Водити — 	 	
-> Садити —
-> Зразок. Їздити — їжджу.
-> 2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
-> 	
-> 	
-> поса-джені	 	
-> за-дзвенів
-> 	
-> 	
-> посадже-ні	 	
-> задзве-нів
-> 3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
-> вірте роботу одні в одних. 
-> 16.
-> 1.	 Прочитай і відгадай загадку. 
-> Живим зерном народжений, 
-> живу я на землі. 
-> Щодня рум’яним сонечком 
-> я сходжу на столі.
-> 2.	 Як ти розумієш словосполучення рум’яним сонечком?
-> 3.	 Виконай завдання на вибір.
-> 	 Спиши загадку. Підкресли слова, у яких звуків менше, ніж букв. 
-> 	 Випиши виділені слова, поділивши їх для переносу різними 
-> способами.
-
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 24
-> **Score:** 0.25
->
-> НАВЧАЮСЯ ПРАВИЛЬНО ПЕРЕНОСИТИ СЛОВА
-> Пригадай і розкажи 
-> у класі.
-> 1
-> ДЗ
-> ДЖ
-> вихо-джу 
-> по-дзвонив
-> Я — учитель
-> Звуки [дж], [дз], [дз'] позначаються на письмі 
-> буквосполученнями дж, дз. Під час переносу слів 
-> буквосполучення дж, дз розривати не можна.
-> Придумайте мелодію і проспівайте пісню. 
-> Ходжу, ходжу по садочку, 
-> по зеленім барвіночку.
-> Ходжу, ходжу та й думаю, 
-> як на світі жити маю.
-> ходжу 
-> приходжу 
-> переходжу 
-> заходжу
-> ■_____ _____ л
-> • Запишіть і поділіть для переносу слова.
-> 8| Відгадай загадку. Випиши слова з 
-> дз і поділи їх для переносу.
-> Він мелодію зіграє, 
-> як будильник продзвенить.
+*No textbook results found for: Чергування зубних і свистячих дж Глазова водити воджу сидіти сиджу ходити ходжу родити*
 
 ## Чергування задньоязикових у дієсловах: [г]->[ж], [к]->[ч], [х]->[ш]
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 34
-> **Score:** 0.25
->
-> 34
-> 11
-> Види речень за метою  
-> висловлювання та інтонацією
-> Розпізнаю види речень за метою висловлювання  
-> та інтонацією
-> Пригадай, які є види речень. Поєднай правильно. 
-> Кожен народ плекає свою рідну мову.
-> Чи добре ти володієш  
-> українською мовою?
->  Ніколи не цурайся рідного слова.
-> спонукати, закликати
-> повідомити, розповісти
-> запитати
-> Плекати — дбайливо доглядати, піклуватися. 
-> Цуратися — триматися осторонь, уникати, від-
-> мовлятися.
-> Чуєш, друже мій, розмови?
-> З вітром листя гомонить,
-> з сонцем — ниви і діброви,
-> із озерами — блакить.
-> Розмовляють доли, води…
-> Стань, послухай, роздивись.
-> Мову рідної природи
-> розуміти серцем вчись.
-> 1   Прочитай виразно вірш Оксани Сенатович.
->   Знайди в тексті розповідні, питальні і спонукальні речення.
+*No textbook results found for: Чергування задньоязикових у дієсловах плакати плачу тикати тичу пекти печу могти можу берегти*
 
 ## Чергування губних + [л]: робити — роблю
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 87
-> **Score:** 0.50
->
-> 8   Утворіть і запишіть слова за допомогою префіксів роз-, без-.
-> 	 	
-> 9   Відгадай слова і запиши їх. 
-> безділля
-> за
-> велике
-> праця
-> краща
-> маленька
-> 	 	
->   Випиши з тексту слова із префіксами. Познач їх.
-> 	 	
->   Розкажи, якою ти уявляєш зиму з цього тексту.
-> 	 	
->   Склади і запиши речення з утвореними 
-> словами.
-> —	 Я так люблю зиму! Мені подобається …
-> —	 А мені зовсім не подобається, коли зима …
-> Продовжте розмову.
-> Хвилинка спілкування
-> мова
-> гадка
-> нести
-> бити
-> казати
-> хмарний
-> водний
-> рідний
-> ділля
-> соння
-> роз-
-> без-
->  Префікс від слова безхмарний,
->  корінь від слова перелісок, 
->  закінчення від слова білий.
-> Префікс від слова безсоння, 
-> корінь від слова крило, 
-> закінчення від слова тихий.
-> Префікс від слова розмова, 
-> корінь від слова дума, 
-> закінчення від слова сад.
-> Прочитай  
-> приховане 
-> прислів’я.
+*No textbook results found for: Чергування губних робити роблю Заболотний бл' любити люблю губити гублю пл'*
 
 ## Чергування при утворенні недоконаних дієслів
 
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 80
-> **Score:** 0.50
->
-> НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ 
-> З ДІЄСЛОВАМИ
-> Прочитайте речення. Простежте, 
-> які різні дії означає слово іде.
-> складаю
-> Іде катер. Іде поїзд. Іде зима. Іде час. Іде концерт.
-> • Замініть у кожному реченні слово іде дієсловом, близьким 
-> за значенням. Скористайтеся довідкою. Запишіть речення
-> за зразком.
-> Іде катер. 
-> Пливе катер.
-> ? годинник
-> Довідка
-> Відбувається, їде, минає, пливе, настає.
-> б| Розглянь малюнки. Напиши, хто як пересувається,
-> використавши дієслова з довідки.
-> На які питання 
-> відповідають 
-> дієслова?
-> Довідка
-> Повзає, літає, плаває, стрибає, бігає.
-> Хвилинка спілкування
-> і
-> — Як ти думаєш, як правильно сказати: 
-> собака прибіг чи собака прибігла?
-> — Я думаю, що можна вживати обидва 
-> речення.
-> — Давай перевіримо за словником. 
-> Продовжте розмову.
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 115
-> **Score:** 0.33
->
-> 115
->  § 50.  Чергування  приголосних  звуків
-> 3. Прочитайте вислови та виконайте завдання.
-> 1. Що на (думка), те й на (язик). 2. Терпи, (козак), отаманом будеш. 
-> 3. Живемо, як горох при (дорога): хто не йде, той скубне. 4. Не шукай гри-
-> бів у ведмежому (барліг). 5. Коли не знаєш дороги, не (виїхати) із дому 
-> (Нар. тв.). 
-> А. Перепишіть речення, ставлячи в потрібну форму слова, що в дужках. 
-> Б. Підкресліть букви, що позначають звуки, які чергуються.
+*No textbook results found for: Чергування при утворенні недоконаних дієслів Глазова ати увати дж зарядити заряджати засудити засуджувати прощати*
 
 ## Повна парадигма: від інфінітива до всіх форм
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 87
-> **Score:** 0.25
->
-> 87
-> Поясни значення слів. Що в них спільне? Чи можна їх назвати 
-> словами-родичами? А спільнокореневими чи спорідненими?
-> сад
-> садити
-> садовий
-> садівник
-> ліс
-> пролісок
-> лісний
-> лісник
->  
-> Визнач корінь у словах. Чому ці слова споріднені? Запиши їх. 
-> Склади речення з трьома словами на вибір.
-> Дуб, дубок, дубовий листок, 
-> дубняк (ліс).
-> Вишня, вишенька, вишневий 
-> листок, вишник (сад).
->  
-> Вилучи «зайве» слово. Спиши. Познач корінь.
-> 1. Риба, рибка, рибалка, рити, рибалити, риб’ячий.
-> 2. Вода, водичка, водити, водний.
-> 3. Сніг, сніжок, сніп, сніговий, снігур, сніговик.
->  
-> Інструкція 
-> Інструкція — це вказівки, як виконувати що-небудь.
-> • Установи послідовність дій.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 276
-> **Score:** 0.50
->
-> 276
-> Складні випадки наголошування
-> СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ
-> А
-> алфаві т
-> аркушик
-> Б
-> багаторазо вий
-> бе шкет
-> близьки й
-> болоти стий
-> боро давка
-> босо ніж
-> боя знь
-> бурштино вий
-> В
-> вантажі вка
-> весня ни й
-> ви года (користь)
-> виго да (зручність)
-> видання
-> вимо га
-> ви падок
-> виразний
-> ви сіти
-> виши ваний
-> відвезти 
-> відвести 
-> ві дгомін
-> віднести 
-> ві рші
-> віршови й
-> Г
-> гальмо , гальма
-> глядач
-> гороши на
-> граблі 
-> Д
-> дано
-> де щиця
-> джерело 
-> дичавіти
-> добу ток
-> довезти 
-> довести 
-> дові дник
-> донести 
-> до нька
-> дочка
-> дро ва
-> Е
-> експе рт
-> Ж
-> жалюзі 
-> З
-> завдання
-> завезти 
-> завести 
-> завжди 
-> завчасу 
-> загадка
-> закінчи ти
-> закладка (у книзі)
-> залиши ти
-> занести 
-> застібка
-> зви сока
+*No textbook results found for: Повна парадигма від інфінітива до всіх форм водити воджу водиш водить водимо водите водять водив*
 
 ## Підсумок: таблиця дієслівних чергувань
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 66
-> **Score:** 0.25
->
-> 66
-> При переносі слова з рядка в рядок не розривай букво- 
->  сполучення дж, дз, які позначають один звук [дж], [дз], [д
+*No textbook results found for: Підсумок таблиця дієслівних чергувань дж водити воджу сидіти сиджу крутити кручу летіти*
 
-... (truncated for context window)
+## Grammar Reference
+
+*No grammar results for: Зубні свистячі дж зд ждж ст шч Задньоязикові Губні л'*
+
+
+## МійКлас Theory (miyklas.com.ua)
+
+*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+
+### Чергування голосних у коренях слів
+> **Source:** МійКлас — [Чергування голосних у коренях слів](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/cherguvannia-golosnikh-u-koreniakh-sliv-43524)
+
+### Теорія:
+
+*www.ua.pistacja.tv*  
+При творенні спільнокореневого слова чи формотворенні один голосний звук змінюється на інший. Така зміна називається чергуванням.
+Чергування \[О\], \[Е\] — \[І\] відбувається
+   О, Е                               І
+ 
+Це чергування  властиве  українській мові. Звуки \[о\], \[е\] виступають найчастіше у відкритих складах, звук \[і\] — у закритих:
+- у **формах** слова: *сьомий — сім, шести — шість, корені — корінь, гори — гір, мого — мій, радість — радості — радістю, Канів — Канева, Харків — Харкова, Чернігів — Чернігова*;
+  
+- у **спільнокореневих** словах:* коло — кільцевий, корова — корівник, клопотатися — клопіт, нога — підніжок.* 
+Зверни увагу\!
+
+### Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності
+> **Source:** МійКлас — [Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612)
+
+### Теорія:
+
+*www.ua.pistacja.tv*  
+Правила милозвучності української мови
+Українську мову недарма називають солов'їною й співучою.  Звуки в ній  завжди  поєднуються так, щоб вимову ніщо не ускладнювало. Одна з найважливіших умов милозвучності мови: слова можна розібрати й відділити одне від одного в процесі мовлення.
+Мелодійність мови досягається завдяки певним правилам:
+- Уникаємо збігу голосних. Таке в українських словах допускається лише на межі префікса і твірної основи:  наодинці, виорав, неуважний.
+  
+- Уникаємо важкого для вимови збігу приголосних: користь — корисний, сердечний — серце, виїзд — виїзний.
+
+### Правила вживання знака м'якшення
+> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+
+### Теорія:
+  
+
+*www.ua.pistacja.tv*  
+ 
+Знаком ь позначаємо м’якість приголосних звуків на письмі.
+Знак м’якшення пишемо:
+- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
+*  
+- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+
+---
+**Total textbook excerpts found:** 1
+**Grades searched:** 1, 2, 3, 5
 </knowledge_packet>
 
 ---
