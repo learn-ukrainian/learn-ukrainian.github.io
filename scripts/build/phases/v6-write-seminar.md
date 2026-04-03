@@ -123,6 +123,8 @@ This curriculum teaches Ukrainian history and culture **on Ukrainian terms**. Ke
 {KNOWLEDGE_PACKET}
 </knowledge_packet>
 
+{WIKI_CONTEXT}
+
 {GOLDEN_FRAGMENT}
 
 {SKELETON_SECTION}

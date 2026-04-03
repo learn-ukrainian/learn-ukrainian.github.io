@@ -1326,7 +1326,19 @@ def step_write(level: str, module_num: int, slug: str,
         "{SUMMARY_HEADING}": summary_heading,
         "{SKELETON_SECTION}": "",  # Populated below for seminar templates
         "{CORRECTION_SECTION}": "",  # Populated below for seminar templates
+        "{WIKI_CONTEXT}": "",  # Populated below for seminar templates with wiki articles
     }
+
+    # Inject wiki context for seminar tracks (compiled knowledge base)
+    if is_seminar:
+        try:
+            from wiki.context import get_wiki_context
+            wiki_ctx = get_wiki_context(level, slug)
+            if wiki_ctx:
+                replacements["{WIKI_CONTEXT}"] = wiki_ctx
+                _log(f"  📚 Wiki context injected ({len(wiki_ctx):,} chars)")
+        except ImportError:
+            pass  # wiki module not available — graceful fallback
 
     # Build skeleton/correction blocks for seminar template placeholders
     if is_seminar and skeleton:
