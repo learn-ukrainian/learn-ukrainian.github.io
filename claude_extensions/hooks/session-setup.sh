@@ -105,7 +105,15 @@ else
   INFO+=("gemini-cli not found — Gemini builds unavailable")
 fi
 
-# 10. Open GH issues summary
+# 10. Check for stale decisions
+if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/check_decisions.py" ]; then
+  STALE_DECISIONS=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/check_decisions.py" --quiet 2>/dev/null)
+  if [ -n "$STALE_DECISIONS" ]; then
+    INFO+=("$STALE_DECISIONS")
+  fi
+fi
+
+# 11. Open GH issues summary
 if command -v gh >/dev/null 2>&1; then
   OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
   if [ $? -eq 0 ] && [ -n "$OPEN_ISSUES" ] && [ "$OPEN_ISSUES" != "[]" ]; then

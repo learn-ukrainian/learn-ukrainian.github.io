@@ -723,6 +723,64 @@ Response:
 
 ---
 
+## Decision Journal — `/api/decisions/`
+
+Exposes the decision journal (`docs/decisions/decisions.yaml`) — architectural and design decisions with expiry tracking.
+
+### `GET /api/decisions[?status=active]`
+
+All decisions, optionally filtered by status (`active`, `superseded`, `expired`, `archived`).
+
+```bash
+curl -s http://localhost:8765/api/decisions | python3 -m json.tool
+curl -s "http://localhost:8765/api/decisions?status=active" | python3 -m json.tool
+```
+
+### `GET /api/decisions/stale`
+
+Active decisions past their expiry date — need re-evaluation. Uses same staleness logic as `scripts/audit/check_decisions.py`.
+
+```bash
+curl -s http://localhost:8765/api/decisions/stale | python3 -m json.tool
+```
+
+### `GET /api/decisions/budget`
+
+Budget status: active count vs max (50), warning threshold (40).
+
+```bash
+curl -s http://localhost:8765/api/decisions/budget | python3 -m json.tool
+```
+
+Response:
+```json
+{
+  "active_count": 5,
+  "total_count": 5,
+  "budget_max": 50,
+  "budget_warn": 40,
+  "status": "ok"
+}
+```
+
+### `GET /api/decisions/scope/{scope}`
+
+Filter by scope: `pipeline`, `content`, `architecture`, `tooling`, `pedagogy`.
+
+```bash
+curl -s http://localhost:8765/api/decisions/scope/pipeline | python3 -m json.tool
+```
+
+### `GET /api/decisions/{dec_id}`
+
+Single decision by ID (e.g., `dec-001`). Includes `is_stale` boolean.
+
+```bash
+curl -s http://localhost:8765/api/decisions/dec-001 | python3 -m json.tool
+```
+
+---
+
 ## UI Pages
 
 | Page | URL | Data source |

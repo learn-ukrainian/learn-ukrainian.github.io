@@ -172,11 +172,12 @@ class TestDispatchAgent:
         )
         assert ok is False
         assert raw == ""
-        # Dispatch log should record the timeout
-        meta_files = list((tmp_path / "dispatch").glob("*-meta.json"))
-        assert len(meta_files) == 1
-        data = json.loads(meta_files[0].read_text())
-        assert data["ok"] is False
+        # Dispatch log should record the timeout (primary + fallback model)
+        meta_files = sorted((tmp_path / "dispatch").glob("*-meta.json"))
+        assert len(meta_files) == 2  # primary timeout + fallback timeout
+        for mf in meta_files:
+            data = json.loads(mf.read_text())
+            assert data["ok"] is False
 
     @patch("build.dispatch.subprocess.run")
     def test_failure_logged(self, mock_run, tmp_path):

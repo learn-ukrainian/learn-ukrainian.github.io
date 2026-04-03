@@ -6,6 +6,7 @@ This centralizes:
 - stderr capture (tool calls, errors, debug info)
 - structured dispatch logs to orchestration/{slug}/dispatch/
 - heartbeat logging for long-running calls
+- rate limit detection and inter-call pacing
 
 Issue: #1029 (observability)
 """
@@ -19,6 +20,44 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Rate limit detection + pacing
+# ---------------------------------------------------------------------------
+
+# Patterns in stderr that indicate rate limiting (not content errors)
+_RATE_LIMIT_PATTERNS = (
+    "429",
+    "RESOURCE_EXHAUSTED",
+    "rate limit",
+    "rate_limit",
+    "quota exceeded",
+    "No capacity available",
+    "capacity",
+    "too many requests",
+    "Too Many Requests",
+)
+
+# Minimum seconds between consecutive Gemini CLI calls (prevents burst-induced 429s)
+_GEMINI_INTER_CALL_DELAY = 3.0
+_last_gemini_call_time: float = 0.0
+
+
+def _is_rate_limited(stderr: str) -> bool:
+    """Check if a failure was caused by rate limiting."""
+    stderr_lower = stderr.lower()
+    return any(pat.lower() in stderr_lower for pat in _RATE_LIMIT_PATTERNS)
+
+
+def _pace_gemini_calls() -> None:
+    """Enforce minimum delay between Gemini CLI calls to avoid bursts."""
+    global _last_gemini_call_time
+    if _last_gemini_call_time > 0:
+        elapsed = time.monotonic() - _last_gemini_call_time
+        if elapsed < _GEMINI_INTER_CALL_DELAY:
+            wait = _GEMINI_INTER_CALL_DELAY - elapsed
+            time.sleep(wait)
+    _last_gemini_call_time = time.monotonic()
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -248,12 +287,31 @@ def dispatch_agent(
             )
             return False, ""
 
+    # Pace Gemini calls to avoid burst-induced rate limits
+    if is_gemini:
+        _pace_gemini_calls()
+
     ok, raw = _run_cmd(cmd, agent_label, timeout)
 
-    # Gemini fallback: if Pro failed (timeout/error), retry with -m auto
+    # Gemini fallback: if Pro failed, retry with -m auto
+    # BUT skip fallback if rate-limited — same quota, different model won't help
     if not ok and is_gemini:
+        # Check if this was a rate limit error
+        log_dir = orch_dir / "dispatch"
+        latest_stderr = ""
+        if log_dir.exists():
+            stderr_files = sorted(log_dir.glob(f"*-{phase}-*.stderr.log"), reverse=True)
+            if stderr_files:
+                latest_stderr = stderr_files[0].read_text()
+
+        if _is_rate_limited(latest_stderr):
+            _log("  ⏳ Rate limited — skipping fallback model (same quota)")
+            # Signal rate limit to caller via empty string with special marker
+            return False, "__RATE_LIMITED__"
+
         from batch_gemini_config import FALLBACK_MODEL
         if model != FALLBACK_MODEL:
+            _pace_gemini_calls()
             fallback_cmd = [c if c != model else FALLBACK_MODEL for c in cmd]
             fallback_label = f"{agent} ({FALLBACK_MODEL})"
             _log(f"  🔄 Retrying with fallback model: {fallback_label}")

@@ -1,0 +1,118 @@
+# Decision Journal — architectural and design decisions with expiry tracking
+#
+# Budget: 50 decisions max, 500 lines max. Archive when full.
+# Schema: schemas/decision.schema.json
+# Staleness check: .venv/bin/python scripts/check_decisions.py
+#
+# Every decision MUST have an expiry date. No permanent decisions —
+# everything gets re-evaluated. Default: 90 days.
+#
+# Status lifecycle: active → superseded | expired | archived
+# Expired decisions get a GH issue auto-created by check_decisions.py.
+
+decisions:
+  - id: dec-001
+    status: active
+    date: "2026-03-24"
+    expires: "2026-06-24"
+    scope: pipeline
+    title: "V6 uses reviewer-as-fixer, not full rewrite"
+    reasoning: >
+      Gemini proved FROM SCRATCH rewrites degrade content (9.6->9.2->8.4).
+      Reviewer outputs exact find/replace pairs in <fixes> block. Pipeline
+      applies them deterministically. No LLM regeneration, no rewriting.
+      Score should go UP across fix rounds, never down.
+    evidence: "#969, #1028, MEMORY.md session 2026-03-24"
+    alternatives:
+      - option: "Full LLM rewrite on REVISE"
+        rejected_because: "Empirical quality degradation (9.6→8.4 over 3 rounds)"
+      - option: "Human-in-loop editing"
+        rejected_because: "Does not scale past 5 modules/day"
+    superseded_by: null
+    depends_on: []
+
+  - id: dec-002
+    status: active
+    date: "2026-03-26"
+    expires: "2026-06-26"
+    scope: content
+    title: "A1 written by Claude, reviewed by Gemini"
+    reasoning: >
+      Claude produces better A1 content (pedagogically grounded, follows
+      Ukrainian textbook patterns). Gemini is an excellent adversarial
+      reviewer — strict, catches Russianisms, enforces structure. Cross-agent
+      review prevents self-review bias (writer != reviewer).
+    evidence: "#1125, memory/project_a1_build_roles.md"
+    alternatives:
+      - option: "Gemini writes, Claude reviews"
+        rejected_because: "Gemini A1 content was weaker on pedagogy (tested M01-M06)"
+      - option: "Same agent writes and reviews"
+        rejected_because: "Self-review bias — agents praise their own work (Anthropic documented)"
+    superseded_by: null
+    depends_on: []
+
+  - id: dec-003
+    status: active
+    date: "2026-04-03"
+    expires: "2026-07-03"
+    scope: pipeline
+    title: "Cap review fix rounds at 4 with degradation detection"
+    reasoning: >
+      5 rounds caused unnecessary API churn on modules where Gemini's
+      severity gate was overly conservative (checkpoint-places: 8.9/10 for
+      4 rounds). 2 rounds was too few for legitimate fixes. 4 rounds gives
+      enough room. Score degradation detection stops immediately if fixes
+      make content worse. Score >= 9.0 accepts even if severity gate fails.
+    evidence: "#1125, checkpoint-places build log, food-and-drink build log"
+    alternatives:
+      - option: "5 rounds (original)"
+        rejected_because: "Gemini severity gate too conservative, burns API quota"
+      - option: "2 rounds"
+        rejected_because: "Insufficient for modules with real issues"
+      - option: "Dynamic based on score delta"
+        rejected_because: "Over-engineered — 4 with degradation detection is simpler"
+    superseded_by: null
+    depends_on:
+      - dec-001
+
+  - id: dec-004
+    status: active
+    date: "2026-03-28"
+    expires: "2026-06-28"
+    scope: architecture
+    title: "Bare slug filenames, no number prefixes"
+    reasoning: >
+      Module ordering is defined in curriculum.yaml, not filenames.
+      Bare slugs (my-family.md) are stable across reordering. Numbered
+      prefixes (01-my-family.md) create rename cascades when modules
+      are inserted or moved.
+    evidence: "MEMORY.md, curriculum.yaml architecture"
+    alternatives:
+      - option: "Number-prefixed filenames (01-slug.md)"
+        rejected_because: "Rename cascades on reorder, breaks git history"
+    superseded_by: null
+    depends_on: []
+
+  - id: dec-005
+    status: active
+    date: "2026-04-03"
+    expires: "2026-07-03"
+    scope: tooling
+    title: "Keep gemini-cli, fix dispatch retry logic"
+    reasoning: >
+      Evaluated vibeproxy, Factory Droid, OpenCode as gemini-cli replacements.
+      Droid requires Factory API key (platform lock-in). VibeProxy/OpenCode
+      add complexity for marginal gain. The real problem was double-retry
+      (gemini-cli retries internally + pipeline retries) and insufficient
+      backoff on 429s. Fixed with rate limit detection, 3s inter-call pacing,
+      and 5-min backoff on rate limits in dispatch.py.
+    evidence: "#1125, dispatch.py refactor 2026-04-03"
+    alternatives:
+      - option: "VibeProxy + OpenCode"
+        rejected_because: "Adds moving parts, same Google quota limits apply"
+      - option: "VibeProxy + Factory Droid"
+        rejected_because: "Droid requires Factory API key — platform lock-in"
+      - option: "Google GenAI Python SDK"
+        rejected_because: "Requires API key, lower rate limits than Pro subscription"
+    superseded_by: null
+    depends_on: []

@@ -44,6 +44,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
 - **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml` — source of truth for module ordering and slug mapping
 - **Build pipeline**: `.venv/bin/python scripts/build/v6_build.py {level} {num} [--step {step}] [--writer {gemini|claude}]`
+- **Decision journal**: [`docs/decisions/`](docs/decisions/) — architectural decisions with expiry dates. Check: `.venv/bin/python scripts/check_decisions.py`
 
 ---
 

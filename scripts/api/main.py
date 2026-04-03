@@ -33,6 +33,7 @@ from .config import (
 )
 from .consultation_router import router as consultation_router
 from .dashboard_router import router as dashboard_router
+from .decisions_router import router as decisions_router
 from .gold_router import router as gold_router
 from .images_router import router as images_router
 from .rag_router import router as rag_router
@@ -71,6 +72,7 @@ app.include_router(rag_router, prefix="/api/rag")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(admin_router, prefix="/api/admin")
 app.include_router(consultation_router, prefix="/api/consultation")
+app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
 
 
 # Server start time for uptime calculation

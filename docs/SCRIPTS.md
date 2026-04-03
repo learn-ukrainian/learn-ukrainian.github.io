@@ -2199,6 +2199,49 @@ curl -s http://localhost:8765/api/consultation/metrics | python3 -m json.tool
 
 ---
 
+## Decision Tracking
+
+### check_decisions.py
+
+**Purpose:** Scan `docs/decisions/decisions.yaml` for expired or near-expiry decisions. Runs in the `session-setup` hook to surface stale decisions at session start.
+
+**Usage:**
+
+```bash
+# Full report — lists all active decisions with expiry status
+.venv/bin/python scripts/check_decisions.py
+
+# Quiet mode — exit 1 if any expired, no output otherwise (for CI/hooks)
+.venv/bin/python scripts/check_decisions.py --quiet
+
+# Create GH issues for expired decisions (label: decision:stale)
+.venv/bin/python scripts/check_decisions.py --create-issues
+```
+
+**What it checks:**
+
+- Decisions past their `expires` date → reported as EXPIRED
+- Decisions expiring within 14 days → reported as EXPIRING SOON
+- Budget compliance (max 50 active, max 500 lines)
+
+**Output example:**
+
+```
+Decision Journal Status
+═══════════════════════
+  Active: 12/50  |  Lines: 187/500
+
+  EXPIRED (action required):
+    dec-031  architecture  "Bridge module between A2 and B1"  expired 2026-03-15
+
+  EXPIRING SOON (review within 14 days):
+    dec-042  pipeline      "Use Opus for all content writing"  expires 2026-04-10
+```
+
+**Integration:** Called by `session-setup.sh` hook. See `docs/best-practices/decision-journal.md` for the full decision journal system.
+
+---
+
 ## Playgrounds (Interactive Visualizations)
 
 Interactive HTML playgrounds for exploring and prototyping curriculum architecture.

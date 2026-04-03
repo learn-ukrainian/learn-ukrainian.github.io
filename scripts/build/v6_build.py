@@ -68,6 +68,25 @@ from batch_gemini_config import (
 
 logger = logging.getLogger(__name__)
 
+# Rate limit backoff — shared by all retry loops
+_RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
+
+
+def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:
+    """Check if dispatch returned a rate limit signal. If so, back off.
+
+    Returns True if rate-limited (caller should continue the retry loop),
+    False if this was a normal failure.
+    """
+    if raw != "__RATE_LIMITED__":
+        return False
+    if attempt < max_attempts:
+        _log(f"  ⏳ Rate limited during {phase} (attempt {attempt}/{max_attempts}) — backing off {_RATE_LIMIT_BACKOFF_S}s...")
+        time.sleep(_RATE_LIMIT_BACKOFF_S)
+    else:
+        _log(f"  ❌ Rate limited during {phase} — giving up after {max_attempts} attempts")
+    return True
+
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 
@@ -1132,6 +1151,9 @@ def step_write_chunked(
             )
             if ok and raw:
                 break
+            if _handle_rate_limit_backoff(raw, attempt, chunk_retries, f"chunk-{i + 1}"):
+                raw = ""  # Reset marker
+                continue
 
         if not ok or not raw:
             _log(f"  ❌ Chunk {i + 1} failed after {chunk_retries} attempts — writer returned no output")
@@ -2741,6 +2763,9 @@ def step_activities(
             )
 
         if not ok or not raw:
+            if _handle_rate_limit_backoff(raw, attempt, max_retries + 1, "activities"):
+                raw = ""
+                continue
             _log(f"  ❌ Writer returned no output on attempt {attempt}")
             error_context = "Writer returned empty output. Please output valid YAML starting with version: '1.0'."
             continue
@@ -3408,6 +3433,8 @@ def step_review(content_path: Path, level: str, module_num: int,
     if reviewer == "gemini":
         ok, raw = None, None
         _GEMINI_REVIEW_MAX_RETRIES = 5
+        _NORMAL_BACKOFF_MIN = 60   # 1 min for non-rate-limit failures
+        _NORMAL_BACKOFF_MAX = 300  # 5 min cap
         for attempt in range(1, _GEMINI_REVIEW_MAX_RETRIES + 1):
             t0 = time.monotonic()
             ok, raw = _dispatch(
@@ -3419,10 +3446,13 @@ def step_review(content_path: Path, level: str, module_num: int,
             if ok and raw:
                 break
             if attempt < _GEMINI_REVIEW_MAX_RETRIES:
-                # Adaptive backoff: wait proportional to how long the attempt took
-                wait = max(60, min(int(elapsed * 0.5), 300))
+                if _handle_rate_limit_backoff(raw, attempt, _GEMINI_REVIEW_MAX_RETRIES, "review"):
+                    raw = None
+                    continue
+                wait = max(_NORMAL_BACKOFF_MIN, min(int(elapsed * 0.5), _NORMAL_BACKOFF_MAX))
                 _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_MAX_RETRIES}, {int(elapsed)}s) — retrying in {wait}s...")
                 time.sleep(wait)
+                raw = None
             else:
                 _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_MAX_RETRIES} attempts")
     else:
@@ -3473,15 +3503,26 @@ def step_review(content_path: Path, level: str, module_num: int,
     }
 
     # Extract per-dimension scores from the markdown table (with evidence for floor check)
+    # GUARD: Gemini sometimes outputs the score table twice. Only take first 9 dimensions.
     score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
-    raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
+    all_raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
+    num_dims = len(DIMENSION_WEIGHTS)
+    if len(all_raw_scores) > num_dims:
+        _log(f"  ⚠️  Parsed {len(all_raw_scores)} scores — trimming to first {num_dims} (duplicate table in review)")
+    raw_scores = all_raw_scores[:num_dims]
 
     # Also parse full scores with evidence for dimension floor check
+    # Same dedup: only first 9 dimensions
     full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
     parsed_scores = []
+    seen_dims: set[int] = set()
     for m in full_score_pattern.finditer(raw):
+        dim_num = int(m.group(1))
+        if dim_num in seen_dims:
+            continue  # Skip duplicate dimension
+        seen_dims.add(dim_num)
         parsed_scores.append({
-            "dimension": int(m.group(1)),
+            "dimension": dim_num,
             "name": m.group(2).strip(),
             "score": int(m.group(3)),
             "evidence": m.group(4).strip(),
@@ -4668,9 +4709,15 @@ def main():
 
 
         fix_round = 1
-        max_fix_rounds = 5
+        max_fix_rounds = 4  # Was 5, then 2 — 4 gives enough room without endless loops
+        prev_score = score
 
-        while not passed and score < 9.0 and fix_round <= max_fix_rounds:
+        while not passed and fix_round <= max_fix_rounds:
+            # Early exit: score already high enough, severity gate is just Gemini being conservative
+            if score >= 9.0:
+                _log(f"\n✅ Score {score}/10 ≥ 9.0 — accepting (severity gate override)")
+                break
+
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
 
             if fixes_applied:
@@ -4697,6 +4744,12 @@ def main():
             if passed:
                 _log(f"\n✅ Review PASSED after round {fix_round} ({score}/10)")
                 break
+
+            # Score degradation detection: fixes made it worse → stop immediately
+            if score < prev_score:
+                _log(f"\n⚠️  Score degraded ({prev_score} → {score}) — fixes are harmful, stopping")
+                break
+            prev_score = score
 
             fix_round += 1
         # GUARANTEE: Always apply the latest review's <fixes> before accepting.
