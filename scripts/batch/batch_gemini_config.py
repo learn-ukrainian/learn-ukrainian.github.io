@@ -54,7 +54,7 @@ CLAUDE_SONNET = "claude-sonnet-4-6"
 CLAUDE_OPUS   = "claude-opus-4-6"
 
 CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Research — RAG search + summarization
-CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_SONNET  # Content — Gemini is primary writer anyway
+CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_OPUS    # Content — writing quality needs Opus
 CLAUDE_MODEL_CORE_ACTIVITIES    = CLAUDE_SONNET  # Activities — schema-guided generation
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_SONNET  # Research — RAG search + summarization
 CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS    # Content — seminar depth needs Opus
