@@ -1651,9 +1651,19 @@ Start immediately with the first ## heading. Keep all other formatting exactly a
 
     output_dir = CURRICULUM_ROOT / level
     output_path = output_dir / f"{slug}.md"
+
+    # Guard: reject fix output that lost significant content.
+    # The fix step sometimes summarizes instead of correcting, producing
+    # a fraction of the original word count. Keep the original if so.
+    fix_words = len(final_content.split())
+    orig_words = len(content.split())
+    if orig_words > 500 and fix_words < orig_words * 0.6:
+        _log(f"  ❌ Fix output too short ({fix_words} words vs {orig_words} original) — keeping original")
+        return None
+
     output_path.write_text(final_content, "utf-8")
 
-    _log(f"  ✅ Fixed content written ({len(final_content.split())} words)")
+    _log(f"  ✅ Fixed content written ({fix_words} words)")
     return output_path
 
 def step_write_with_retry(
