@@ -46,18 +46,19 @@ TIMEOUT_PUBLISH = 600
 # Change these to switch models across the entire pipeline without touching CLI flags.
 # Research:      seminar tracks → Opus, core tracks → Sonnet
 # Content:       always Opus (quality content generation)
-# Activities:    seminar tracks → Opus, core tracks → Sonnet
-# Final review:  always Opus (deep semantic QA)
+# Apr 2026: Sonnet 4.6 is the better default on Pro — Opus burns ~2x faster.
+# Use Opus ONLY where deep reasoning is critical (seminar content, final review).
+# Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
 CLAUDE_SONNET = "claude-sonnet-4-6"
 CLAUDE_OPUS   = "claude-opus-4-6"
 
-CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET   # Research, core tracks
-CLAUDE_MODEL_CORE_CONTENT     = CLAUDE_OPUS     # Content, core tracks
-CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_OPUS     # Activities, core tracks
-CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS   # Research, seminar tracks
-CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS   # Content, seminar tracks
-CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Activities, seminar tracks
-CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Final review, all tracks
+CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Research — RAG search + summarization
+CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_SONNET  # Content — Gemini is primary writer anyway
+CLAUDE_MODEL_CORE_ACTIVITIES    = CLAUDE_SONNET  # Activities — schema-guided generation
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_SONNET  # Research — RAG search + summarization
+CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS    # Content — seminar depth needs Opus
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_SONNET  # Activities — schema-guided generation
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Final review — quality is non-negotiable
 
 # Default phases dispatched via Claude (instead of Gemini).
 # Set of phase letters: "A" = research, "B" = content, "C" = activities.

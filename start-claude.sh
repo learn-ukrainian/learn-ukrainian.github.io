@@ -112,7 +112,10 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
+# Token efficiency: cap context window to 200K (long sessions cost more)
+# Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000
+
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
-# See: https://reddit.com/r/ClaudeAI/comments/1s7mkn3/
 echo "Launching Claude Code via npx (cache-safe)..."
 npx @anthropic-ai/claude-code@latest --chrome --permission-mode bypassPermissions "$@"
