@@ -23,12 +23,13 @@ PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
 # Model Tiering — Gemini
-# Flash-Lite not yet available via gemini-cli (404). Using 3-flash as efficiency model.
-FLASH_LITE_MODEL = "gemini-3-flash-preview"          # Fast + cheap: vocab, activities, fixes
-FLASH_MODEL = "gemini-3-flash-preview"               # Same — aliased for clarity
-PRO_MODEL = "gemini-3.1-pro-preview"                 # Full reasoning: writing, content
-GEMINI_REVIEW_MODEL = PRO_MODEL                      # Changed to Pro to handle strict review schemas
+# Same principle as Claude: use Flash for routine, Pro only where depth matters.
+FLASH_MODEL = "gemini-3-flash-preview"               # Structured output: skeleton, vocab, activities, fixes
+PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
+GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when Pro is unavailable
+# Alias for backward compat
+FLASH_LITE_MODEL = FLASH_MODEL
 
 # Timeouts (seconds) — one place to tune for all pipeline steps
 TIMEOUT_SKELETON = 300
