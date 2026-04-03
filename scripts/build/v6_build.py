@@ -1056,7 +1056,7 @@ Write the section starting with the H2 heading. Output ONLY the section content 
             wiki_chunk_ctx = get_wiki_context(level, slug)
         except Exception:
             pass
-    section_prompt = section_prompt.replace("{{WIKI_CHUNK_CONTEXT}}", wiki_chunk_ctx)
+    section_prompt = section_prompt.replace("{WIKI_CHUNK_CONTEXT}", wiki_chunk_ctx)
 
     return section_prompt
 
