@@ -141,8 +141,8 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     # Collect and enrich source chunks
     all_chunks = enrich_sources(track, slug, sources_info)
 
-    # Build a human-readable topic from the slug
-    topic = _slug_to_topic(slug, track)
+    # Build a human-readable topic from discovery keywords (Ukrainian) or slug (fallback)
+    topic = _slug_to_topic(slug, track, sources_info)
 
     result = compile_article(
         topic=topic,
@@ -222,15 +222,11 @@ def _get_domain(track: str, slug: str) -> str:
     return domain_map.get(track, track)
 
 
-def _slug_to_topic(slug: str, track: str) -> str:
-    """Convert a URL slug to a human-readable topic name.
+def _slug_to_topic(slug: str, track: str, sources_info: dict | None = None) -> str:
+    """Build a topic name, preferring Ukrainian from discovery keywords.
 
-    Uses Ukrainian where possible.
+    Falls back to Latin slug title-case if no discovery data available.
     """
-    # Replace hyphens with spaces, title case
-    topic = slug.replace("-", " ").title()
-
-    # Add track context
     track_labels = {
         "folk": "Український фольклор",
         "hist": "Історія України",
@@ -241,6 +237,20 @@ def _slug_to_topic(slug: str, track: str) -> str:
         "ruth": "Руська (староукраїнська) мова",
     }
     label = track_labels.get(track, track.upper())
+
+    # Try to get Ukrainian topic from discovery keywords (first keyword is usually the title)
+    if sources_info:
+        discovery = sources_info.get("discovery", {})
+        keywords = discovery.get("query_keywords", [])
+        if keywords:
+            # First keyword is usually the topic title in Ukrainian
+            first_kw = keywords[0]
+            # Check if it has Cyrillic (Ukrainian)
+            if any("\u0400" <= c <= "\u04FF" for c in first_kw):
+                return f"{label}: {first_kw}"
+
+    # Fallback: Latin slug
+    topic = slug.replace("-", " ").title()
     return f"{label}: {topic}"
 
 
