@@ -539,7 +539,7 @@ Grand total: ~1200 words
 1. **Every paragraph has ONE clear purpose.** If you can't describe it in one sentence, split it.
 2. **Word budgets must sum to 1200+.** Aim for ~10% overshoot (1320 words) — writers tend to undershoot.
 3. **Section budgets must match the plan's `content_outline` word allocations** (±10%).
-4. **Spread exercises evenly.** Place one after each key teaching point, matching the plan's `activity_hints`.
+4. **Place exercises in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place that exercise AFTER the teaching content of that section, never before. If no `section:` is specified, place the exercise after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section.**
 5. **Name specific Ukrainian examples** you plan to use in each paragraph. This prevents vague skeletons that produce vague content.
 6. **Dialogues count as paragraphs.** Budget 80-120 words per multi-turn dialogue.
 7. **No meta-commentary.** Output only the `<skeleton>` block, nothing else.

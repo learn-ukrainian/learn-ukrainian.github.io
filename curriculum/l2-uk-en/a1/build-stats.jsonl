@@ -156,3 +156,4 @@
 {"slug": "when-and-where", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T20:58:33.876213+00:00"}
 {"slug": "health", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-04-03T21:13:12.966268+00:00"}
 {"slug": "health", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T21:13:43.232152+00:00"}
+{"slug": "checkpoint-my-world", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T22:38:41.262467+00:00"}

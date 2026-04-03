@@ -41,7 +41,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
@@ -50,6 +50,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -223,94 +224,91 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-**50/50 words confirmed. Zero failures.**
+### Batch 1 — Core nouns and adjectives
+- ✅ Confirmed: кімната (noun), стіл (noun), лампа (noun), книга (noun), стіна (noun), сумка (noun), зошит (noun), гривня (noun), великий (adj), новий (adj), білий (adj), жовтий (adj), червоний (adj), синій (adj)
 
-- **Confirmed (nouns):** стіл, книга, вікно, кімната, лампа, стіна, сумка, зошит, гривня, гривень, день
-- **Confirmed (adjectives — all three gender forms):** великий/велика/велике, новий/нова/нове, білий/біла/біле, жовта (→жовтий), червоний, синій, добрий
-- **Confirmed (demonstratives):** цей/ця/це, той/та/те, ці/ті
-- **Confirmed (personal pronouns):** він, вона, воно
-- **Confirmed (numerals):** двісті, двадцять, один
-- **Confirmed (verbs):** коштує (→коштувати), є (→бути)
-- **Confirmed (plurals):** столи, книги, вікна, сумки, зошити, стіни
-- **Confirmed (other):** так, ні, моя (→мій)
-- **Not found:** — (none)
+### Batch 2 — Demonstratives, pronouns, numbers, verb
+- ✅ Confirmed: цей (adj), ця (→цей), це (part/noun), той (adj), та (→той), те (→той), ці (→цей), ті (→той), він (noun), вона (noun), воно (noun), двісті (numr), двадцять (numr), один (numr), коштувати (verb), добрий (adj)
 
-> ⚠️ Note: `нове` returns matches as both adjective (→новий) and noun (→нове). The adjective form is what the plan uses — confirmed correct. Writers should be aware of the noun homograph.
+### Batch 3 — Plural forms and блакитний
+- ✅ Confirmed: блакитний (adj), столи (→стіл), книги (→книга), вікна (→вікно), стіни (→стіна)
+
+**Not found: none** — all 30 words verified in VESUM ✅
 
 ---
 
 ## Textbook Excerpts
 
-### Section: Що ми знаємо (self-check — noun gender)
-> «Іменники, до яких можна додати слова мій, він, — чоловічого роду: тато, батько, ранок. Іменники, до яких можна додати слова моя, вона, — жіночого роду. Іменники, до яких можна додати слова моє, воно — середнього роду.»
-> **Source: Вашуленко, Grade 3 (tier 2), p. 110**
+### Section: Що ми знаємо? — Noun gender (він/вона/воно test)
+> «Рід іменника визначаємо за його закінченням або підставляючи слова «він / цей», «вона / ця», «воно / це».»
+> Source: Голуб, Grade 6 (tier 1)
 
-> Also: Голуб, Grade 6 (tier 1), p. 68 confirms the parallel rule: «він/цей → ч.р., вона/ця → ж.р., воно/це → с.р.»
+Also confirmed by Вашуленко Grade 3: «Чоловічий рід — можна додати слова мій, він; Жіночий рід — моя, вона; Середній рід — моє, воно.»
+> Source: Вашуленко, Grade 3 (tier 2)
 
-### Section: Читання (room description)
-> «Стіл і ясенові лави стояли на своїх місцях... По другий бік дверей полискував жовтою дубовою фарбою дзеркальний гардероб, біля нього, під вікном, — етажерка з книгами...»
-> **Source: Заболотний, Grade 6 (tier 2), p. 241 — "Будова опису приміщення"**
+### Section: Граматика — Adjective agreement (hard vs soft stem)
+> «Відмінкові закінчення прикметників в однині залежать від кінцевого приголосного основи. Ч. р.: -ій (синій плед), Ж. р.: -я (сусідня грядка), С. р.: -є (осіннє дерево)»
+> Source: Кравцова, Grade 4 (tier 2)
 
-> Also: Авраменко, Grade 6 (tier 1), p. 94: «Завдання опису приміщення — не просто надати уявлення про предмети (розмір, форму, колір) та їхнє місце...» — confirms структура/план = **what + where + what like (color, size)**.
+General agreement rule: «Прикметник завжди стоїть у тому числі, роді та відмінку, що й іменник, з яким він зв'язаний.»
+> Source: Кравцова, Grade 4 (tier 2)
 
-### Section: Граматика (gender endings + adjective agreement)
-> «Чоловічий рід: закінчення -о або нульове (тато, вечір). Жіночий рід: закінчення -а, -я або нульове (мама, тінь). Середній рід: закінчення -о, -е, -а, -я (літо, сонце).»
-> **Source: Вашуленко, Grade 3 (tier 2), p. 112 — "Спостерігаю за закінченнями іменників різних родів"**
+### Section: Граматика — Demonstratives (цей/ця/це, той/та/те)
+> «Вказівні займенники цей, той, такий змінюємо за родами, числами, відмінками подібно до прикметників.»
+> Source: Заболотний, Grade 6 (tier 2)
 
-> For adjective agreement table: «В однині прикметники мають закінчення: чоловічий рід -ий/-ій, жіночий -а/-я, середній -е/-є. У множині прикметники за родами не змінюються й мають закінчення -і.»
-> **Source: Захарійчук, Grade 4 (tier 2), p. 83**
+Also confirmed by Літвінова Grade 6 (tier 1): «Вказівні займенники вирізняють один предмет, особу чи ознаку з-поміж інших: цей, оцей, сей, той, стільки, такий, отакий.»
 
-### Section: Діалог (shopping — prices + demonstratives)
+### Section: Граматика — Noun plurals
+> Plural forms confirmed from VESUM: столи, книги, вікна, стіни — all valid forms of стіл, книга, вікно, стіна respectively.
+> Source: Заболотний, Grade 6 (tier 2) — covers plural paradigms
+
+### Section: Читання — Colors синій vs блакитний
+> «Блакитний — колір із довжиною хвилі приблизно від 450 до 485 нанометрів, діапазон між зеленим і синім... Для позначення синього, блакитного кольорів та їхніх відтінків використовують слова: голубий, бірюзовий, сапфіровий, лазуровий, світло-синій, темно-синій...»
+> Source: Авраменко, Grade 10 (tier 2) — confirms синій ≠ блакитний is a real lexical distinction
+
+### Section: Діалог — Shopping scenario (скільки коштує)
 > «— Чи є у вас трембіта? — Так, є. — Скільки вона коштує? — Дев'ять тисяч гривень.»
-> **Source: Авраменко, Grade 6 (tier 1), p. 18 — §8 "Пряма мова. Діалог"**
+> Source: Авраменко, Grade 6 (tier 1) — exact match to plan dialogue pattern
 
-> This is the **exact structural pattern** in the plan's dialogue — «Чи є у вас...? — Так! ... — Скільки вона коштує?» — textbook-grounded ✅
-
-### Section: Підсумок
-> No single textbook excerpt needed — summary sections follow the standard A1.x achievement format. The reading description task structure (назва предметів / місце розташування / ознаки: форма, колір, розмір) is confirmed by Заболотний Grade 6, p. 243.
+### Section: Читання — Room description text
+> «Одночасно звертається увага на ознаки предметів: колір, розмір, форма. Складовими частинами опису приміщення є опис окремих предметів і місця їх розташування. Описуються, наприклад, стіни, підлога, вікна, меблі, речі (картина, ваза) тощо.»
+> Source: Авраменко, Grade 6 (tier 1) — confirms room description is canonical Grade 6 topic; plan's example text (Це моя кімната. Мій стіл великий...) follows correct pattern.
 
 ---
 
 ## Grammar Rules
 
-> ⚠️ Правопис 2019 query did not return dedicated sections for noun gender or plural morphology (those are covered in grammar textbooks, not orthography rules). The following rules are confirmed from textbook excerpts (authoritative NUS sources):
-
-- **Noun gender (він/вона/воно test):** Confirmed — Вашуленко Gr. 3 p. 110/112, Голуб Gr. 6 p. 68. Rule: substitute він/мій (masc.), вона/моя (fem.), воно/моє (neut.) to determine gender.
-- **Gender endings:** masc. = zero ending or -о; fem. = -а/-я or zero; neut. = -о/-е/-а/-я — Вашуленко Gr. 3 p. 112.
-- **Adjective agreement:** masc. -ий/-ій, fem. -а/-я, neut. -е/-є; plural always -і — Захарійчук Gr. 4 p. 83.
-- **Hard vs. soft stem:** червоний (-ий) hard, синій (-ій) soft — confirmed by VESUM tags (both return as adj).
-- **Plural noun endings:** -и/-і for masculine/feminine, -а for neuter (столи, книги, вікна) — Авраменко Gr. 6 p. 98 declension tables.
+- **Adjective agreement with noun (gender/number/case):** Правопис §§ on adjective declension. Confirmed by textbooks: «Прикметник завжди стоїть у тому числі, роді та відмінку, що й іменник.» — Кравцова Gr 4
+- **Hard stem adjectives (-ий): великий, новий, білий, жовтий, червоний** — hard consonant base → nominative sg masc -ий, fem -а, neut -е; pl -і ✅
+- **Soft stem adjectives (-ій): синій** — soft consonant base → nominative sg masc -ій, fem -я, neut -є; pl -і ✅ (confirmed Кравцова Gr 4 table: синій плед / сусідня грядка / осіннє дерево)
+- **Demonstratives decline like adjectives:** confirmed Заболотний Gr 6 and Літвінова Gr 6 — цей/ця/це, той/та/те follow adjectival paradigm ✅
+- **Noun plural adjective always -і:** Plan states «adjective always -і» in plural — correct, confirmed by paradigm tables ✅
+- **Числівник (numbers as vocabulary only at A1):** Plan correctly scopes numbers as lexical items only (no morphology), consistent with A1 CEFR expectations ✅
 
 ---
 
 ## Calque Warnings
 
-- **«скільки вона коштує»** — ✅ OK — No calque flag. Антоненко-Давидович returns unrelated entries. This is confirmed natural Ukrainian by the Авраменко textbook dialogue (exact same phrasing, p. 18).
-- **«добрий день»** — ✅ OK — No calque flag. Standard Ukrainian greeting confirmed. Style guide returns no warning.
-- **«у вас є»** — ✅ OK — No calque flag. Style guide note (ad-117) actually confirms: «Дієслово бути має в усіх особах однини й множини форму є» — «Ви є у нас...» usage cited as correct. «У вас є» is idiomatic Ukrainian.
+- **«Добрий день»** — ✅ Natural Ukrainian greeting. Style guide found no entry flagging it as a calque. Standard textbook greeting.
+- **«Скільки вона коштує?»** — ✅ Natural Ukrainian. Confirmed authentic by Авраменко Gr 6 textbook dialogue (exact same phrasing).
+- **«У вас є...?»** — ✅ Natural Ukrainian. Антоненко-Давидович confirms: «Дієслово бути має в усіх особах однини й множини форму є: "Ви є у нас..."» — this construction is authenticated. No calque issue.
 
-> ⚠️ One calque to watch: the style guide (ad-156) flags **«матися»** as a Russian calque for «є/бути/траплятися» (e.g., «мається великий вибір» → wrong). Writers must use «є» not «мається» for existential constructions. The plan correctly uses «є».
+No calques detected in plan phrases ✅
 
 ---
 
 ## CEFR Check
 
-All 10 key vocabulary items confirmed at **A1** — perfectly level-appropriate:
+- **кімната** — A1 ✅
+- **зошит** — A1 ✅
+- **коштувати** — A1 ✅
+- **гривня** — A1 ✅
+- **сумка** — A1 ✅
+- **великий** — A1 ✅
+- **блакитний** — A1 ✅ (both "blues" синій and блакитний confirmed A1)
 
-| Word | CEFR Level | Status |
-|------|-----------|--------|
-| кімната | A1 | ✅ |
-| стіл | A1 | ✅ |
-| сумка | A1 | ✅ |
-| зошит | A1 | ✅ |
-| великий | A1 | ✅ |
-| червоний | A1 | ✅ |
-| синій | A1 | ✅ |
-| коштувати | A1 | ✅ |
-| двісті | A1 | ✅ |
-| гривня | A1 | ✅ |
-
-> ⚠️ Advisory: **«приміщення»** = B2 per PULS. The plan correctly uses **«кімната»** (A1) throughout — do NOT substitute «приміщення» anywhere in this module.
+**No above-target vocabulary detected.** All checked words are A1 per PULS database ✅
 </pre_verified_facts>
 
 
@@ -726,7 +724,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -779,7 +776,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -877,85 +874,55 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 <skeleton>
 ## Що ми знаємо? (What Do We Know?) (~220 words total)
 
-- P1 (~60 words): Opening checkpoint orientation. You have completed A1.2 — six modules covering the building blocks of describing your world. This section checks whether the skills from M08–M13 have stuck. Work through each self-check question honestly: if any answer feels uncertain, the grammar summary and reading below will help.
-
-- Self-check (~120 words): Bulleted Q&A list — one question per module:
-  - M08 (Gender): What gender is *стіл*? *книга*? *вікно*? → він / вона / воно
-  - M09 (Adjectives): What does *великий стіл* / *велика книга* / *велике вікно* show? → adjective ending agrees with noun gender
-  - M10 (Colors): What are the two Ukrainian words for "blue"? → *синій* (dark/navy) and *блакитний* (sky blue)
-  - M11 (Numbers/prices): How do you say "twenty hryvnias"? → *двадцять гривень*
-  - M12 (Demonstratives): How do you say "this table" / "this lamp" / "this window"? → *цей стіл* / *ця лампа* / *це вікно*
-  - M13 (Plurals): How do you make *стіл*, *книга*, *вікно* plural? → *столи*, *книги*, *вікна*
-
-- P2 (~40 words): Short encouragement bridge: six questions, six patterns — these are the grammar tools you will use in every sentence of this module. If you answered all six correctly, you are ready for A1.3. If one or two felt shaky, read carefully and return.
-
----
+- P1 (~60 words): Framing paragraph — this module reviews A1.2 (M08–M13). No new grammar, no new vocabulary. The goal is to activate what you already know. Six skills to check: noun gender, adjective agreement, colors (including both blues), numbers and prices, demonstratives, and plurals. Introduce the checkpoint format: self-check questions, then reading, then grammar summary, then a dialogue.
+- P2 (~80 words): Six self-check questions in bulleted format with examples learners can test against — (1) Gender: Is "стіл" він, вона, or воно? (2) Agreement: "великий стіл" or "велика стіл"? (3) Colors: What is the difference between "синій" and "блакитний"? (4) Numbers: How do you say "fifty hryvnias"? (5) Demonstratives: "цей" or "ця" before "вишиванка"? (6) Plurals: What is the plural of "книга"? If all six feel familiar, you are ready. If one feels shaky, the grammar summary section will help.
+- Exercise — group-sort (~12 items): Sort words from M08–M13 into three categories: objects (стіл, книга, вікно, лампа, сумка), colors (червоний, синій, білий, жовтий), numbers (один, два, п'ять, двадцять). Tests vocabulary activation before content review.
 
 ## Читання (Reading Practice) (~275 words total)
 
-- P1 (~40 words): Reading instruction. Read the text below aloud — slowly, one sentence at a time. Every word comes from M08–M13. No new vocabulary. Your goal: understand without translating. If you can picture what Оленка's room looks like, you are reading Ukrainian.
-
-- Text (~190 words): 9-sentence Ukrainian reading passage. Each sentence uses only M08–M13 vocabulary:
-  *Це моя кімната. Мій стіл великий і коричневий. На столі є три книги. Ці книги нові й цікаві. Моя лампа маленька і біла, а та лампа — жовта. Вікна великі. Мої стіни білі. Ця сумка синя, а та — червона. У мене є два зошити і чотири олівці. Олівці жовті й сині. Це моє вікно. За вікном є парк. Парк гарний.*
-  (Sentences demonstrate: gender agreement — *мій стіл великий*, *моя лампа маленька*, *моє вікно*; demonstratives — *ці книги*, *ця сумка*, *та лампа*; plurals — *стіни білі*, *олівці жовті й сині*; numbers — *три книги*, *два зошити*, *чотири олівці*; colors — *синя*, *червона*, *жовті й сині*.)
-
-- P2 (~45 words): Comprehension check — three questions the learner answers mentally (no writing required): Який стіл у Оленки? (великий і коричневий) Скільки книг на столі? (три) Яка маленька лампа? (біла). The point is immediate confirmation: Ukrainian → understanding, no English step needed.
-
----
+- P1 (~40 words): Short instruction paragraph — read the text below aloud at least twice. Every word comes from M08–M13. No new vocabulary. Focus on reading naturally and noticing how gender, agreement, and demonstratives appear in real sentences.
+- Reading text (~180 words): A short cohesive Ukrainian text in 10 sentences describing a room: "Це моя кімната. Мій стіл великий і коричневий. На столі є лампа. Ця лампа біла. Та лампа жовта — вона стоїть у кутку. У мене є три книги. Ці книги нові й цікаві. На стіні висить картина. Картина синя й зелена. Вікно велике, а двері маленькі. Моя кімната гарна." Carefully uses він/вона/воно logic: стіл (він), лампа (вона), вікно (воно). Uses цей/ця for proximity, той/та for distance. Numerals in context: три книги. Adjective agreement visible across all three genders. No new words introduced.
+- P2 (~55 words): Comprehension prompt — three questions to answer in Ukrainian from the text: (1) Який стіл? (2) Скільки книг у кімнаті? (3) Яка лампа в кутку — біла чи жовта? Learners answer by pointing back to specific sentences, reinforcing demonstratives and adjective forms without metalinguistic explanation.
 
 ## Граматика (Grammar Summary) (~220 words total)
 
-- P1 (~50 words): Gender and agreement recap. The *він/вона/воно* test: replace the noun with a pronoun — whichever fits is the gender. Endings follow: consonant-final nouns → він (*стіл*, *глечик*); *-а/-я* endings → вона (*книга*, *вишиванка*); *-о/-е* endings → воно (*вікно*, *намисто*). Adjective ending must match: *великий стіл* / *велика книга* / *велике вікно*.
-
-- P2 (~45 words): Hard vs. soft adjective stems. Most adjectives use hard endings: *червоний*, *новий*, *великий*. Adjectives with soft stems use *-ій*: *синій*, *останній*. The difference is in the stem's final consonant — *н* in *синій* softens. Rule of thumb: if the masculine form ends in *-ій*, it is soft; if *-ий*, it is hard.
-
-- P3 (~40 words): Demonstratives. *Цей/ця/це* (this — close to speaker) and *той/та/те* (that — further away) agree with noun gender: *цей глечик* (m), *ця вишиванка* (f), *це намисто* (n); *той глечик*, *та вишиванка*, *те намисто*. Plural form: *ці* / *ті* for all genders.
-
-- P4 (~40 words): Nominative plurals. Masculine and feminine nouns take *-и* or *-і*: *столи*, *книги*, *олівці*. Neuter nouns take *-а* or *-я*: *вікна*, *поля*. Adjectives in the plural always end in *-і* regardless of gender: *великі столи*, *великі книги*, *великі вікна*.
-
-- P5 (~45 words): Numbers as vocabulary. Ukrainian numbers do not change adjective endings in A1 — treat them as standalone words: *один зошит*, *два зошити*, *п'ять зошитів*. For prices: *двадцять гривень*, *сто гривень*, *двісті гривень*. No morphology rules needed yet — memorize the forms you have seen.
-
-- Activity: fill-in — Complete the shopping dialogue (8 blanks): learner fills in missing demonstratives (*цей/ця/це/той/та/те/ці/ті*), adjective endings (*червон__*, *нов__*), and numbers (*двадцять*, *двісті*). Blanks target the five grammar patterns above.
-
----
+- P1 (~45 words): Brief framing — five key patterns from A1.2 presented as a reference table, not new instruction. Each pattern has one rule and two–three examples. Use this section to check understanding, not to learn for the first time.
+- P2 (~50 words): Pattern 1 — Noun gender: the він/вона/воно test. Consonant ending → він (стіл, глечик, зошит). Ending -а/-я → вона (книга, вишиванка, земля). Ending -о/-е → воно (вікно, намисто, поле). Pattern 2 — Adjective agreement: великий стіл / велика книга / велике вікно. The adjective ending mirrors the noun gender.
+- P3 (~50 words): Pattern 3 — Hard vs. soft adjective stems: червоний/червона/червоне (hard stem, -ий/-а/-е) vs. синій/синя/синє (soft stem, -ій/-я/-є). This explains why "блакитний" and "синій" take different endings. Pattern 4 — Demonstratives: цей глечик / ця вишиванка / це намисто (near); той/та/те (far). Gender agreement rule is the same as adjectives.
+- P4 (~45 words): Pattern 5 — Nominative plurals: столи, глечики (masculine); книги, вишиванки (feminine); вікна, намиста (neuter). Adjective plural: always -і regardless of gender — нові столи, нові книги, нові вікна. Pattern 6 — Numbers used as vocabulary: один, два, три, десять, двадцять, п'ятдесят, сто, двісті. No case changes at A1.
+- P5 (~30 words): One-sentence bridge to the dialogue — these patterns all appear together in natural speech. The next section shows them working together in a real conversation.
+- Exercise — quiz (~10 items): Mixed gender/agreement review — choose the correct adjective form for noun+adjective pairs: (новий/нова/нове) ___ глечик, ___ вишиванка, ___ намисто; (цей/ця/це) ___ стіл, ___ книга, ___ вікно; (синій/синя/синє) ___ зошит, ___ сумка, ___ небо; plus two plural transformations. Tests patterns from P2–P4 directly.
+- Exercise — quiz (~8 items): Singular or plural? Rewrite sentences: "Ця книга нова" → "Ці книги нові." "Той стіл великий" → "Ті столи великі." "Це вікно біле" → "Ці вікна білі." Plus five more. Tests Pattern 5 directly.
 
 ## Діалог (Connected Dialogue) (~330 words total)
 
-- P1 (~50 words): Scene-setting prose. Іванко is visiting a Ukrainian ярмарок — an outdoor street market selling handmade crafts. His friend Катя is helping him choose souvenirs. He sees a table covered with вишиванки, глечики, намисто, and писанки. He wants to buy something but needs to ask about colors, sizes, and prices — everything from A1.2.
-
-- Dialogue (~185 words): Multi-turn conversation, ~18 exchanges, covering all five grammar targets:
-  — *Катю, подивись! Що це?*
-  — *Це вишиванка. Вона дуже гарна.*
-  — *Яка ця вишиванка — біла чи жовта?*
-  — *Ця біла, а та — жовта. Тобі яка?*
-  — *Мені біла. Скільки вона коштує?*
-  — *Триста гривень.*
-  — *А цей глечик? Він великий чи маленький?*
-  — *Цей великий, а той маленький. Маленький коштує сто п'ятдесят гривень.*
-  — *Добре. А це що? Це намисто?*
-  — *Так, це намисто. Воно синє й біле.*
-  — *Гарне! А ці писанки? Скільки коштує одна писанка?*
-  — *Двадцять п'ять гривень.*
-  — *Я хочу три писанки. Це сімдесят п'ять гривень?*
-  — *Так, правильно! Молодець!*
-  — *Дякую, Катю. Дуже гарний ярмарок!*
-  — *Авжеж! Це українська традиція.*
-
-- P2 (~55 words): Post-dialogue annotation (prose, not a table). Notice how gender drives every choice in this conversation: *вона* for вишиванка (f) → *біла*, *гарна*; *він* for глечик (m) → *великий*, *маленький*; *воно* for намисто (n) → *синє й біле*. Цей/ця/це appear seven times. Every price uses the number vocabulary from M11. This is A1.2 in action.
-
-- Activity: group-sort — Sort 12 vocabulary items from M08–M13 into three categories: *Предмети* (objects: стіл, книга, вікно, сумка, зошит, олівець, глечик, намисто, писанка), *Кольори* (colors: червоний, синій, блакитний, жовтий, білий, коричневий), *Числа* (numbers: один, два, три, десять, двадцять, сто).
-
----
+- P1 (~50 words): Scene-setting paragraph — Іванко and Катя are walking through a Ukrainian street market (ярмарок). The stalls sell handmade crafts: вишиванки (f), глечики (m), намисто (n), писанки (pl). This is the perfect setting to use every A1.2 skill at once: pointing at objects, describing colors and sizes, asking prices, and talking about quantities.
+- Dialogue (~160 words, ~12 turns): Full scene integrating all five patterns —
+  — Катю, дивись! Що це таке?
+  — Це вишиванка. Гарна, правда?
+  — Дуже! Яка вона — біла чи синя?
+  — Та біла. А ця — синя й червона.
+  — Скільки коштує ця синя вишиванка?
+  — Вона коштує чотириста гривень.
+  — А той глечик? Він великий чи маленький?
+  — Той — великий. Цей — маленький. Скільки тобі потрібно?
+  — Один глечик. Маленький. Скільки він коштує?
+  — Сто п'ятдесят гривень.
+  — Добре. А це що — намисто?
+  — Так! Це червоне намисто. Гарне, правда?
+  — Дуже гарне. А писанки? Скільки коштує одна писанка?
+  — Двадцять п'ять гривень. Хочеш три?
+  — Так, три писанки, будь ласка!
+- P2 (~50 words): Post-dialogue annotation in plain prose — note how each pattern appears: цей/та for near/far demonstratives with gender agreement (цей глечик m, ця вишиванка f, це намисто n); adjective agreement (синя вишиванка, великий глечик, червоне намисто); number + noun (три писанки, один глечик); price question pattern Скільки коштує? + price answer with гривень.
+- P3 (~70 words): Short cultural note on the ярмарок — Ukrainian markets (ярмарки) are where craft culture lives. Вишиванка (the embroidered shirt) is the most recognizable symbol of Ukrainian identity. Писанки (decorated eggs) are an ancient Trypillian-era tradition, not just Easter decoration. Глечик (a clay jug) is a traditional household object. When you use Ukrainian words for these objects, you are connecting to something much older than grammar rules.
+- Exercise — fill-in (~8 items): Complete the shopping dialogue with missing words — blanks require correct demonstrative (цей/ця/це/той/та/те), adjective form, or number. Example: "___ (this) ___ (red, f) вишиванка коштує ___ (300) гривень." Tests the full A1.2 skill set in a single integrated exercise.
 
 ## Підсумок — Summary (~275 words total)
 
-- P1 (~100 words): A1.2 achievement recap prose. You have completed A1.2 — My World. In six modules you built the grammar architecture for describing everything around you. You know how to determine noun gender using the він/вона/воно test. You can choose the right adjective ending based on gender and stem type. You know both Ukrainian blues — *синій* for navy, *блакитний* for sky. You can count objects and ask prices. You can point at things near and far with *цей/ця/це* and *той/та/те*. And you can speak about groups using plural forms with *-и/-і/-а*.
-
-- P2 (~80 words): Vocabulary milestone. By the end of A1.2 you actively use 20+ objects with correct genders (*стіл* m, *книга* f, *вікно* n, *вишиванка* f, *глечик* m, *намисто* n); 10+ adjectives with agreement (*великий/велика/велике*, *новий/нова/нове*, *червоний/червона/червоне*, *синій/синя/синє*); 6 demonstrative forms (*цей, ця, це, той, та, те*); numbers 1–1000 as vocabulary; and plural patterns for all three genders.
-
-- P3 (~55 words): What comes next. In A1.3 — *Actions* — you will meet Ukrainian verbs for the first time. What do you do? What do you like? *Я читаю. Я люблю музику. Ти розмовляєш українською.* The nouns and adjectives from A1.2 will combine with verbs to make real sentences about real life. The building blocks are ready. Now they start to move.
-
-- P4 (~40 words): Closing motivation. Ukrainian is not built in one day — it is built in six modules at a time, then six more. You just finished the second set. The language is already yours to describe the world around you. *Молодець! Продовжуємо.*
+- P1 (~90 words): Achievement summary in encouraging second-person prose — by completing A1.2 you can now do five things in Ukrainian: (1) identify the gender of a noun and test it with він/вона/воно; (2) describe objects with adjectives in the right form — новий стіл, нова книга, нове вікно; (3) point at things near and far — цей, ця, це vs. той, та, те; (4) count and talk about prices — один, два, сто, двісті гривень; (5) talk about groups of things — столи, книги, вікна, all with adjective -і plural. This is your world in Ukrainian.
+- P2 (~80 words): Vocabulary milestone — you now know 20+ Ukrainian nouns with their genders, 10+ adjectives that you can inflect for gender, both Ukrainian words for blue (синій for saturated blue, блакитний for sky blue), and a working set of numbers for prices. These words cover your physical world: furniture, clothing, objects, colors, quantities. A Ukrainian speaker could understand you when you describe a room, a market stall, or a price tag.
+- P3 (~60 words): Bridge to A1.3 — so far, A1.2 has been about things: objects, their look, their price, their number. A1.3 shifts to actions: what people do, what they like, what they want. The next module (M15: What I Like) introduces Ukrainian verbs for the first time. Same careful, step-by-step approach — you will discover how Ukrainian verbs work through real situations, not grammar tables.
+- P4 (~45 words): One closing line of encouragement in Ukrainian, followed by translation — "Ти вже вмієш говорити про свій світ українською." (You can already talk about your world in Ukrainian.) This is real. You proved it in the dialogue above.
 
 Grand total: ~1320 words
 </skeleton>

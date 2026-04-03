@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
+- `<!-- INJECT_ACTIVITY: group-sort-vocab-categories -->`
 - `<!-- INJECT_ACTIVITY: quiz-gender-agreement -->`
-- `<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->`
-- `<!-- INJECT_ACTIVITY: group-sort-vocabulary -->`
 - `<!-- INJECT_ACTIVITY: quiz-singular-plural -->`
+- `<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -76,106 +76,110 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-You have completed A1.2 — six modules covering the building blocks of describing your world in Ukrainian. Before moving forward, take a moment to check whether the skills from M08–M13 have stuck. Work through each self-check question honestly. If any answer feels uncertain, the grammar summary and reading practice below will help you solidify it.
+You have spent six modules building your Ukrainian world — objects, colors, numbers, and more. This module introduces nothing new. No new grammar, no new vocabulary. Instead, it activates everything from M08 through M13 and tests whether it has settled into your memory. Six skills to check: noun gender, adjective agreement, colors (including both blues), numbers and prices, demonstratives, and plurals. The format is simple: self-check questions first, then a reading passage, a grammar reference, and finally a full dialogue that puts it all together.
 
-**Self-check — one question per module:**
+How many of these can you answer without looking back?
 
-- **M08 — Gender:** What gender is **стіл** (table)? **книга** (book)? **вікно** (window)? Test with pronouns: **він** (he) → **стіл** is masculine. **вона** (she) → **книга** is feminine. **воно** (it) → **вікно** is neuter.
+- **Gender:** Is **стіл** (table) він, вона, or воно?
+- **Agreement:** Which is correct — **великий стіл** or **велика стіл**?
+- **Colors:** What is the difference between **синій** (dark blue) and **блакитний** (sky blue)?
+- **Numbers:** How do you say "fifty hryvnias" — **п'ятдесят гривень**?
+- **Demonstratives:** Do you say **цей вишиванка** or **ця вишиванка** (this embroidered shirt)?
+- **Plurals:** What is the plural of **книга** (book)?
 
-- **M09 — Adjectives:** What does **великий стіл** (big table) / **велика книга** (big book) / **велике вікно** (big window) show? The adjective ending changes to agree with the noun's gender: **-ий** for masculine, **-а** for feminine, **-е** for neuter.
+If all six feel familiar, you are ready for the dialogue at the end. If even one feels shaky, the grammar summary below will set it straight.
 
-- **M10 — Colors:** What are the two Ukrainian words for "blue"? **Синій** means dark or navy blue. **Блакитний** means sky blue or light blue. Two separate words — not one.
-
-- **M11 — Numbers and prices:** How do you say "twenty hryvnias"? **Двадцять гривень**. Numbers are vocabulary — memorize each one as a word, not a formula.
-
-- **M12 — Demonstratives:** How do you say "this table" / "this lamp" / "this window"? **Цей стіл** / **ця лампа** / **це вікно**. The demonstrative matches the noun's gender, just like adjectives.
-
-- **M13 — Plurals:** How do you make **стіл**, **книга**, **вікно** plural? **Столи**, **книги**, **вікна**. Masculine and feminine nouns take **-и/-і**, neuter nouns take **-а**.
-
-Six questions, six patterns — these are the grammar tools that drive every sentence in this module. If you answered all six correctly, you are ready for A1.3. If one or two felt shaky, read the sections below carefully. Then come back and try the self-check again.
-
-<!-- INJECT_ACTIVITY: quiz-gender-agreement -->
+<!-- INJECT_ACTIVITY: group-sort-vocab-categories -->
 
 ## Читання (Reading Practice)
 
-Read the text below aloud — slowly, one sentence at a time. Every word comes from M08–M13. There is no new vocabulary here. Your goal is to understand without translating word by word. If you can picture what the room looks like as you read, you are reading Ukrainian.
+Read the text below aloud — at least twice. Every word comes from M08–M13. There is nothing new here. Focus on reading naturally and noticing how gender, agreement, and demonstratives appear together in real sentences.
 
-> **Це моя кімната.** *(This is my room.)*
-> **Мій стіл великий і коричневий.** *(My table is big and brown.)*
-> **На столі є три книги.** *(On the table there are three books.)*
-> **Ці книги нові й цікаві.** *(These books are new and interesting.)*
-> **Моя лампа маленька і біла.** *(My lamp is small and white.)*
-> **А та лампа жовта.** *(And that lamp is yellow.)*
-> **Вікна великі.** *(The windows are big.)*
-> **Мої стіни білі.** *(My walls are white.)*
-> **Ця сумка синя, а та червона.** *(This bag is navy blue, and that one is red.)*
-> **У мене є два зошити.** *(I have two notebooks.)*
-> **У мене є чотири олівці.** *(I have four pencils.)*
-> **Олівці жовті й сині.** *(The pencils are yellow and blue.)*
-> **Це моє вікно.** *(This is my window.)*
-> **За вікном є парк.** *(Beyond the window there is a park.)*
-> **Парк гарний.** *(The park is nice.)*
+:::note
+Reading aloud is essential. Your mouth needs to practice the shapes of Ukrainian words just as much as your eyes need to recognize them.
+:::
 
-Now check your comprehension — answer these three questions mentally, in Ukrainian if you can:
+> Це моя кімната. Мій стіл великий і коричневий. На столі є лампа. Ця лампа біла. А та лампа жовта — вона стоїть у кутку. У мене є три книги. Ці книги нові й цікаві. На стіні висить картина. Картина синя й зелена. Вікно велике, а двері маленькі. Моя кімната гарна!
 
-- **Який стіл?** (What is the table like?) → **великий і коричневий** (big and brown)
-- **Скільки книг на столі?** (How many books on the table?) → **три** (three)
-- **Яка маленька лампа?** (What is the small lamp like?) → **біла** (white)
+*(This is my room. My table is big and brown. On the table there is a lamp. This lamp is white. And that lamp is yellow — it stands in the corner. I have three books. These books are new and interesting. On the wall hangs a painting. The painting is blue and green. The window is big, and the door is small. My room is nice!)*
 
-The point is immediate confirmation: Ukrainian text → understanding, with no English translation step in between. If you answered all three without scrolling back up, your reading is working.
+Notice the patterns at work. **Стіл** (table) is masculine — so its adjective is **великий** (big), with the masculine ending **-ий**. **Лампа** (lamp) is feminine — so it gets **біла** (white), with **-а**. **Вікно** (window) is neuter — so its adjective is **велике** (big), with **-е**. The demonstratives follow the same logic: **ця лампа** (this lamp, feminine) vs. **ці книги** (these books, plural). And the number **три** sits naturally before **книги** (books) without any special changes.
+
+Now answer these three questions by pointing back to the text:
+
+- **Який стіл?** *(What is the table like?)*
+- **Скільки книг у кімнаті?** *(How many books are in the room?)*
+- **Яка лампа в кутку — біла чи жовта?** *(Which lamp is in the corner — white or yellow?)*
 
 ## Граматика (Grammar Summary)
 
-**Gender and agreement.** The **він/вона/воно** test works like this: replace the noun with a pronoun — whichever fits tells you the gender. Endings follow a pattern. Consonant-final nouns are masculine — **він**: **стіл**, **глечик** (jug). Nouns ending in **-а/-я** are feminine — **вона**: **книга**, **вишиванка** (embroidered shirt). Nouns ending in **-о/-е** are neuter — **воно**: **вікно**, **намисто** (necklace). The adjective ending must always match: **великий стіл** / **велика книга** / **велике вікно**.
+Five key patterns from A1.2, presented as a quick reference. This is not new instruction — it is a map of what you already know. Each pattern has one rule and examples to confirm your understanding.
 
-**Hard vs. soft adjective stems.** Most adjectives use hard endings: **червоний** (red), **новий** (new), **великий** (big) — all end in **-ий**. Adjectives with soft stems use **-ій** instead: **синій** (navy blue), **останній** (last). The difference is the stem's final consonant — the **н** in **синій** is soft. Rule of thumb: if the masculine form ends in **-ій**, it is a soft-stem adjective; if it ends in **-ий**, it is hard.
+**Pattern 1 — Noun gender** (the він/вона/воно test): consonant ending → він (**стіл**, **глечик**, **зошит**). Ending **-а/-я** → вона (**книга**, **вишиванка**, **земля**). Ending **-о/-е** → воно (**вікно**, **намисто**).
 
-**Demonstratives.** **Цей/ця/це** (this — close to the speaker) and **той/та/те** (that — further away) agree with noun gender: **цей глечик** (m), **ця вишиванка** (f), **це намисто** (n); **той глечик**, **та вишиванка**, **те намисто**. The plural forms are **ці** (these) and **ті** (those) for all genders.
+**Pattern 2 — Adjective agreement:** the adjective ending mirrors the noun gender. **Великий стіл** (big table, m), **велика книга** (big book, f), **велике вікно** (big window, n). The adjective always matches.
 
-**Nominative plurals.** Masculine and feminine nouns take **-и** or **-і**: **столи** (tables), **книги** (books), **олівці** (pencils). Neuter nouns take **-а** or **-я**: **вікна** (windows), **поля** (fields). Adjectives in the plural always end in **-і** regardless of noun gender: **великі столи**, **великі книги**, **великі вікна**.
+:::tip
+Ukrainian textbooks teach: «Прикметник завжди стоїть у тому числі, роді та відмінку, що й іменник.» The adjective always takes the same number, gender, and case as its noun.
+:::
 
-**Numbers as vocabulary.** At this stage, treat numbers as standalone words — no morphology rules needed yet. For counting objects: **один зошит** (one notebook), **два зошити** (two notebooks), **п'ять зошитів** (five notebooks). For prices: **двадцять гривень** (twenty hryvnias), **сто гривень** (one hundred hryvnias), **двісті гривень** (two hundred hryvnias). Memorize the forms you have seen rather than trying to derive them.
+**Pattern 3 — Hard vs. soft adjective stems:** hard-stem adjectives end in **-ий/-а/-е**: **червоний** (red), **червона**, **червоне**. Soft-stem adjectives end in **-ій/-я/-є**: **синій** (dark blue), **синя**, **синє**. This is why **блакитний** (sky blue) takes **-ий** (hard stem) while **синій** takes **-ій** (soft stem) — different base consonants.
 
-<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
+**Pattern 4 — Demonstratives:** **цей глечик** (this jug, m), **ця вишиванка** (this embroidered shirt, f), **це намисто** (this necklace, n) for things nearby. **Той/та/те** for things farther away. Gender agreement works exactly like adjectives.
+
+**Pattern 5 — Nominative plurals:** masculine: **столи**, **глечики**; feminine: **книги**, **вишиванки**; neuter: **вікна**, **намиста**. The adjective plural is always **-і**, regardless of gender — **нові столи**, **нові книги**, **нові вікна**.
+
+**Pattern 6 — Numbers as vocabulary:** **один** (1), **два** (2), **три** (3), **десять** (10), **двадцять** (20), **п'ятдесят** (50), **сто** (100), **двісті** (200). At this stage, use them as fixed words — no case changes needed.
+
+These patterns all appear together in natural speech. The next section shows them working in a real conversation.
+
+<!-- INJECT_ACTIVITY: quiz-gender-agreement -->
+
+<!-- INJECT_ACTIVITY: quiz-singular-plural -->
 
 ## Діалог (Connected Dialogue)
 
-Іванко is visiting a Ukrainian **ярмарок** (outdoor street market) — a lively fair selling handmade crafts. His friend Катя is helping him choose souvenirs. The table in front of them is covered with **вишиванки** (embroidered shirts), **глечики** (jugs), **намисто** (necklaces), and **писанки** (decorated eggs). Іванко wants to buy something, but he needs to ask about colors, sizes, and prices — everything from A1.2.
+Іванко is a tourist visiting Ukraine for the first time. His friend **Катя** (Katia) takes him to a **ярмарок** (street market) — an open-air market selling handmade crafts. The stalls are full of **вишиванки** (embroidered shirts, f), **глечики** (clay jugs, m), **намисто** (necklaces, n), and **писанки** (decorated eggs, pl). This is the perfect setting to use every A1.2 skill at once: pointing at objects, describing colors and sizes, asking prices, and talking about quantities.
 
-> **Іванко:** Катю, дивись! Що це? *(Katia, look! What is this?)*
-> **Катя:** Це вишиванка. Вона дуже гарна. *(This is a vyshyvanka. It is very beautiful.)*
-> **Іванко:** Яка ця вишиванка — біла чи жовта? *(What is this vyshyvanka like — white or yellow?)*
-> **Катя:** Ця біла, а та жовта. *(This one is white, and that one is yellow.)*
-> **Іванко:** Скільки вона коштує? *(How much does it cost?)*
-> **Катя:** Триста гривень. *(Three hundred hryvnias.)*
-> **Іванко:** А цей глечик? Він великий? *(And this jug? Is it big?)*
-> **Катя:** Цей великий, а той маленький. *(This one is big, and that one is small.)*
-> **Іванко:** Скільки коштує маленький? *(How much does the small one cost?)*
-> **Катя:** Сто гривень. *(One hundred hryvnias.)*
-> **Іванко:** Добре. А це що? Це намисто? *(Good. And what is this? Is this a necklace?)*
-> **Катя:** Так, це намисто. Воно синє й біле. *(Yes, this is a necklace. It is blue and white.)*
-> **Іванко:** Гарне! А ці писанки? *(Beautiful! And these pysanky?)*
-> **Катя:** Одна писанка — двадцять п'ять гривень. *(One pysanka — twenty-five hryvnias.)*
-> **Іванко:** Я хочу три писанки. *(I want three pysanky.)*
-> **Катя:** Це сімдесят п'ять гривень. *(That is seventy-five hryvnias.)*
-> **Іванко:** Правильно! Дякую, Катю. *(Correct! Thank you, Katia.)*
-> **Катя:** Авжеж! Це українська традиція. *(Of course! This is a Ukrainian tradition.)*
+> **Іванко:** Катю, дивись! Що це таке? *(Katia, look! What is this?)*
+> **Катя:** Це вишиванка. Гарна, правда? *(This is an embroidered shirt. Beautiful, right?)*
+> **Іванко:** Дуже! Яка вона — біла чи синя? *(Very! What color is it — white or blue?)*
+> **Катя:** Та біла. А ця — синя й червона. *(That one is white. And this one is blue and red.)*
+> **Іванко:** Скільки коштує ця синя вишиванка? *(How much does this blue embroidered shirt cost?)*
+> **Катя:** Вона коштує чотириста гривень. *(It costs four hundred hryvnias.)*
+> **Іванко:** А той глечик? Він великий чи маленький? *(And that jug? Is it big or small?)*
+> **Катя:** Той — великий. Цей — маленький. *(That one is big. This one is small.)*
+> **Іванко:** Один глечик. Маленький. Скільки він коштує? *(One jug. The small one. How much does it cost?)*
+> **Катя:** Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*
+> **Іванко:** Добре. А це що — намисто? *(Good. And what is this — a necklace?)*
+> **Катя:** Так! Це червоне намисто. Гарне, правда? *(Yes! This is a red necklace. Beautiful, right?)*
+> **Іванко:** Дуже гарне. А писанки? Скільки коштує одна писанка? *(Very beautiful. And the decorated eggs? How much does one decorated egg cost?)*
+> **Катя:** Двадцять п'ять гривень. Хочеш три? *(Twenty-five hryvnias. Want three?)*
+> **Іванко:** Так, три писанки, будь ласка! *(Yes, three decorated eggs, please!)*
 
-Notice how gender drives every choice in this conversation. **Вона** refers to **вишиванка** (feminine) — so the adjectives are **біла**, **гарна**. **Він** refers to **глечик** (masculine) — so the adjectives are **великий**, **маленький**. **Воно** refers to **намисто** (neuter) — so the adjective is **синє й біле**. The demonstratives **цей/ця/це** appear throughout, always matching the noun's gender. Every price uses the number vocabulary from M11. This single dialogue puts all of A1.2 into action.
+Every A1.2 pattern appears in this dialogue. The demonstratives show gender agreement: **ця** синя вишиванка (f), **той** глечик (m), **це** намисто (n). Adjectives match their nouns: **синя вишиванка**, **великий глечик**, **червоне намисто**. Numbers combine with nouns naturally: **три писанки**, **один глечик**. And the price pattern **Скільки коштує?** + amount + **гривень** runs through the whole scene.
 
-<!-- INJECT_ACTIVITY: group-sort-vocabulary -->
+:::caution
+**Ця** vs. **та** — both mean "this/that" but signal distance. Катя uses **ця** (this one, near me) for what she is holding and **та** (that one, over there) for what is farther away. This is not random — it mirrors the physical space of the market.
+:::
+
+Ukrainian markets — **ярмарки** — are where craft culture lives. **Вишиванка** (the embroidered shirt) is the most recognizable symbol of Ukrainian identity — worn at celebrations, protests, and everyday life. **Писанки** (decorated eggs) are an ancient tradition stretching back to the Trypillian era, thousands of years before they became associated with Easter. **Глечик** (a clay jug) is a traditional household object found in every Ukrainian home for centuries. When you use Ukrainian words for these objects, you are connecting to something much older than grammar rules.
+
+<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
 
 ## Підсумок — Summary
 
-You have completed A1.2 — My World. In six modules you built the grammar architecture for describing everything around you. You know how to determine noun gender using the **він/вона/воно** test. You can choose the right adjective ending based on gender and stem type — **-ий** for hard masculine, **-ій** for soft masculine, **-а/-я** for feminine, **-е/-є** for neuter. You know both Ukrainian blues: **синій** for navy and **блакитний** for sky blue. You can count objects and ask prices. You can point at things near and far with **цей/ця/це** and **той/та/те**. And you can speak about groups using plural forms with **-и/-і/-а**.
+By completing A1.2, you can now do five things in Ukrainian. First, you can identify the gender of a noun and test it with **він/вона/воно**. Second, you can describe objects with adjectives in the correct form — **новий стіл** (new table), **нова книга** (new book), **нове вікно** (new window). Third, you can point at things near and far — **цей**, **ця**, **це** vs. **той**, **та**, **те**. Fourth, you can count and talk about prices — **один**, **два**, **сто**, **двісті гривень** (two hundred hryvnias). Fifth, you can talk about groups of things — **столи**, **книги**, **вікна**, all with the adjective plural ending **-і**. This is your world in Ukrainian.
 
-By the end of A1.2, you actively use over twenty objects with correct genders — **стіл** (m), **книга** (f), **вікно** (n), **вишиванка** (f), **глечик** (m), **намисто** (n), and many more. You know ten or more adjectives with full agreement: **великий/велика/велике**, **новий/нова/нове**, **червоний/червона/червоне**, **синій/синя/синє**. You use six demonstrative forms — **цей, ця, це, той, та, те** — and their plurals **ці** and **ті**. You handle numbers from one to a thousand as vocabulary. And you form plurals for all three genders.
+Your vocabulary milestone is real. You now know 20+ Ukrainian nouns with their genders, 10+ adjectives that you can inflect for gender, both Ukrainian words for blue — **синій** (saturated, dark blue) and **блакитний** (sky blue, light blue) — and a working set of numbers for prices. These words cover your physical world: furniture, clothing, objects, colors, quantities. A Ukrainian speaker could understand you when you describe a room, a market stall, or a price tag.
 
-What comes next? In A1.3 — *Actions* — you will meet Ukrainian verbs for the first time. What do you do? What do you like? The nouns and adjectives from A1.2 will combine with verbs to make real sentences about real life. The building blocks are ready — now they start to move.
+:::tip
+Two blues, not one. English has "blue" for everything. Ukrainian distinguishes **синій** (the deep blue of the sea or a dark shirt) from **блакитний** (the pale blue of the sky). Both are basic color terms — neither is optional.
+:::
 
-Ukrainian is not built in one day. It is built in six modules at a time, then six more. You just finished the second set. The language is already yours to describe the world around you. **Молодець! Продовжуємо.** *(Well done! We continue.)*
+So far, A1.2 has been about things: objects, their appearance, their price, their number. A1.3 shifts to actions — what people do, what they like, what they want. The next module (M15: What I Like) introduces Ukrainian verbs for the first time. The same careful, step-by-step approach applies. You will discover how Ukrainian verbs work through real situations, not grammar tables.
 
-<!-- INJECT_ACTIVITY: quiz-singular-plural -->
+**Ти вже вмієш говорити про свій світ українською.** *(You can already talk about your world in Ukrainian.)* This is real. You proved it in the dialogue above.
 
 </module_content>
 
@@ -265,30 +269,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -304,54 +348,95 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-gender
-- **group-sort** — Він, вона чи воно?: Sort nouns by grammatical gender using ending rules
+### Pattern: grammar-gender [§4.2.1.1, §4.2.2]
+**Рід іменників** (Noun gender)
+- **group-sort** — Він, вона чи воно?: Розподілити іменники за граматичним родом за закінченням / Sort nouns by grammatical gender using ending rules
   - Instruction: *Розподіліть слова за родами*
-- **quiz** — Який рід?: Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
-- **fill-in** — Мій, моя чи моє?: Choose possessive that matches noun gender
+- **quiz** — Який рід?: Визначити рід за закінченням: приголосний=чол., -а/-я=жін., -о/-е=серед. / Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
+- **fill-in** — Мій, моя чи моє?: Обрати присвійний займенник, що узгоджується з родом іменника / Choose possessive that matches noun gender
   - Instruction: *Вставте правильне слово*
-- **match-up** — Іменник + займенник: Match nouns to він/вона/воно
+- **match-up** — Іменник + займенник: Зіставити іменники з він/вона/воно / Match nouns to він/вона/воно
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: На рівні A1 завжди давати варіанти для вибору
 
-### Pattern: grammar-adjectives
-- **fill-in** — Який? Яка? Яке?: Choose adjective ending to match noun gender
+### Pattern: grammar-adjectives [§4.2.1.2]
+**Прикметники та узгодження** (Adjectives and agreement)
+- **fill-in** — Який? Яка? Яке?: Обрати правильне закінчення прикметника за родом іменника / Choose adjective ending to match noun gender
   - Instruction: *Вставте правильну форму*
-- **error-correction** — Знайди помилку в узгодженні: Find gender/number agreement errors between adjective and noun
-- **match-up** — Іменник + прикметник: Match nouns to correct adjective forms
+- **error-correction** — Знайди помилку в узгодженні: Знайти помилку в узгодженні прикметника й іменника за родом/числом / Find gender/number agreement errors between adjective and noun
+- **match-up** — Іменник + прикметник: Зіставити іменники з правильними формами прикметників / Match nouns to correct adjective forms
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Узгодження — це граматика, а не лексика. Переклад не тестує закінчення
 
-### Pattern: grammar-numbers
-- **quiz** — Яке число?: Recognize written number words
-- **fill-in** — Напиши цифру словом: Write the number as a Ukrainian word
-- **match-up** — Цифра → слово: Match digits to their Ukrainian word forms
+### Pattern: grammar-numbers [§4.2.1.3]
+**Числівники** (Numerals)
+- **quiz** — Яке число?: Розпізнати числівники, записані словами / Recognize written number words
+- **fill-in** — Напиши цифру словом: Записати числівник словом по-українськи / Write the number as a Ukrainian word
+- **match-up** — Цифра → слово: Зіставити цифри з їхніми українськими назвами / Match digits to their Ukrainian word forms
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: Числівники складні для написання — давати варіанти на A1
 
-### Pattern: general-vocabulary
-- **match-up** — Слово → переклад: Match Ukrainian words to English translations
-- **fill-in** — Вставте слово: Fill in the missing word from context
-- **anagram** — Склади слово: Rearrange letters to form the target word
-- **odd-one-out** — Четверте зайве: Pick the word that doesn't belong to the semantic group
-- **translate** — Оберіть переклад: Choose correct translation from options
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pluralization [§4.2.1.1]
+**Множина іменників** (Noun plurals)
+- **fill-in** — Утвори множину: Утворити множину іменника — закінчення -и vs -і залежно від приголосного / Form noun plural — -и vs -і endings depending on consonant
+  - Instruction: *Напишіть множину*
+- **group-sort** — Закінчення -и чи -і?: Розподілити іменники за типом закінчення множини / Sort nouns by plural ending type
+  - Instruction: *Розподіліть*
+- **match-up** — Однина → множина: Зіставити форму однини з формою множини / Match singular form to plural form
+  - Instruction: *З'єднайте*
+- **error-correction** — Виправ множину: Знайти неправильну форму множини та виправити / Find incorrect plural form and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Множина — це словотворення. Учні мають продукувати форми, а не тільки вибирати
+- ❌ fill-in-no-options: На A1 завжди давати варіанти — учень ще не знає всіх закінчень
+
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
