@@ -189,13 +189,10 @@ def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
                 env=_PARENT_ENV,
             )
 
-            if proc.stdin:
-                proc.stdin.write(prompt)
-                proc.stdin.close()
-
-            # Read output with timeout (10 minutes)
+            # Use communicate() for input — handles large prompts and
+            # avoids deadlocks from pipe buffer filling up
             try:
-                stdout, stderr = proc.communicate(timeout=600)
+                stdout, stderr = proc.communicate(input=prompt, timeout=900)
             except subprocess.TimeoutExpired:
                 proc.kill()
                 stdout, stderr = proc.communicate()
