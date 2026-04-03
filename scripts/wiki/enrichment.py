@@ -283,11 +283,12 @@ def _load_folk_micro_genres(slug: str) -> list[dict]:
         "skоromovky": ["скоромовки"],
     }
 
-    # Find matching genres
-    target_genres: list[str] = []
+    # Find matching genres (deduplicate)
+    target_genres_set: set[str] = set()
     for key, genres in slug_genre_map.items():
         if key in slug:
-            target_genres.extend(genres)
+            target_genres_set.update(genres)
+    target_genres: list[str] = sorted(target_genres_set)
 
     # If no specific match, try to match any genre key in the YAML
     if not target_genres:
