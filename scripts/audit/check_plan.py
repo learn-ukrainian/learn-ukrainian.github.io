@@ -38,7 +38,10 @@ _RUSSICISMS = {
     "хорошо": "добре (well/good)",
     "получати": "отримувати (to receive)",
     "кушати": "їсти (to eat)",
-    "самий": "найкращий or найбільший",
+    # NOTE: standalone "самий" is valid Ukrainian (той самий = the same one).
+    # Only "самий + superlative adjective" is a Russicism (самий кращий → найкращий).
+    # Moved to phrase-level check below.
+    # "самий": "найкращий or найбільший",
     "дом": "дім (house)",
     "собака": "пес / собака is accepted but пес is preferred",
     "зеркало": "дзеркало (mirror)",
@@ -125,6 +128,16 @@ def check_russicisms(plan: dict) -> list[PlanIssue]:
             issues.append(PlanIssue("RUSSICISM", "ERROR",
                                     f"Possible Russicism: '{russian}'",
                                     fix))
+
+    # Phrase-level Russicism: "самий + adjective" for superlative
+    # Standalone "самий" is valid Ukrainian (той самий = the same one).
+    # Only "самий кращий/великий/etc." is a Russicism (→ найкращий/найбільший).
+    # Skip negative examples: *самий, 'самий, "самий (quoted citations of errors)
+    if re.search(r"(?<![*'\"])\bсамий\s+[а-яґєіїА-ЯҐЄІЇ]+(?:ий|ій|а|е)\b", text):
+        issues.append(PlanIssue("RUSSICISM", "ERROR",
+                                "Possible Russicism: 'самий + adjective' for superlative",
+                                "Use най- prefix: найкращий, найбільший"))
+
     return issues
 
 
